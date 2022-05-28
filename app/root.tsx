@@ -5,21 +5,21 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  useCatch
-} from "remix";
-import { NextUIProvider, Container, Text, css } from '@nextui-org/react'
-import type { MetaFunction } from "remix";
-
+  useCatch,
+} from "@remix-run/react"
+import { NextUIProvider, Container, Text, css } from "@nextui-org/react"
+import type { MetaFunction } from "@remix-run/node"
+import styles from "./styles/app.css"
 
 export const meta: MetaFunction = () => {
-  return { title: "Remix-Nextui" };
-};
+  return { title: "Remix-Nextui" }
+}
 function Document({
   children,
-  title = "App title"
+  title = "App title",
 }: {
-  children: React.ReactNode;
-  title?: string;
+  children: React.ReactNode
+  title?: string
 }) {
   return (
     <html lang="en">
@@ -37,7 +37,7 @@ function Document({
         {process.env.NODE_ENV === "development" && <LiveReload />}
       </body>
     </html>
-  );
+  )
 }
 export default function App() {
   // throw new Error("🙀 Error");
@@ -48,24 +48,24 @@ export default function App() {
         <Outlet />
       </NextUIProvider>
     </Document>
-  );
+  )
 }
 
 // How NextUIProvider should be used on CatchBoundary
 export function CatchBoundary() {
-  const caught = useCatch();
+  const caught = useCatch()
 
   return (
     <Document title={`${caught.status} ${caught.statusText}`}>
       <NextUIProvider>
         <Container>
-          <Text h1 color="warning" css={{ textAlign: "center" }} >
+          <Text h1 color="warning" css={{ textAlign: "center" }}>
             [CatchBoundary]: {caught.status} {caught.statusText}
           </Text>
         </Container>
       </NextUIProvider>
     </Document>
-  );
+  )
 }
 
 // How NextUIProvider should be used on ErrorBoundary
@@ -74,11 +74,11 @@ export function ErrorBoundary({ error }: { error: Error }) {
     <Document title="Error!">
       <NextUIProvider>
         <Container>
-          <Text h1 color="error" css={{ textAlign: "center" }} >
+          <Text h1 color="error" css={{ textAlign: "center" }}>
             [ErrorBoundary]: There was an error: {error.message}
           </Text>
         </Container>
       </NextUIProvider>
     </Document>
-  );
+  )
 }
