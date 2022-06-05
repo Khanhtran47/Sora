@@ -1,5 +1,4 @@
 import * as React from "react"
-import Container from "@mui/material/Container"
 import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles"
 import Box from "@mui/material/Box"
 import MuiDrawer from "@mui/material/Drawer"
@@ -193,6 +192,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
         {children}
+        <ProTip />
+        <Copyright />
       </Box>
     </Box>
   )
