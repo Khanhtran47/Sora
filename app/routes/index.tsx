@@ -18,7 +18,9 @@ export const meta: MetaFunction = () => {
 const Index: React.FC<IIndexProps> = (props: IIndexProps) => {
   const {} = props
   return (
+    // Home page
     <Container fluid>
+      {/* TODO film trending banner */}
       <Typography variant="h4" component="h1" gutterBottom>
         Hello World !!!
       </Typography>
