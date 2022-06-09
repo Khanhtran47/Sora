@@ -23,7 +23,7 @@ interface ILeftDrawerProps {
   theme: Theme;
 }
 
-const LeftDrawer: React.FC<ILeftDrawerProps> = function (props: ILeftDrawerProps) {
+const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
   const { open, handleDrawerClose, theme } = props;
   return (
     <Drawer variant="permanent" open={open}>

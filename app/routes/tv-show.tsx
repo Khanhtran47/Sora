@@ -4,12 +4,10 @@ import Typography from '@mui/material/Typography';
 
 // interface ITvShowProps {}
 
-const TvShow = function () {
-  return (
-    <Typography variant="h4" component="h1" gutterBottom>
-      TvShow Detail Page
-    </Typography>
-  );
-};
+const TvShow = () => (
+  <Typography variant="h4" component="h1" gutterBottom>
+    TvShow Detail Page
+  </Typography>
+);
 
 export default TvShow;

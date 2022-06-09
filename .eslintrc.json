@@ -97,6 +97,12 @@
       {
         "aspects": ["invalidHref"]
       }
+    ],
+    "react/function-component-definition": [
+      "error",
+      {
+        "namedComponents": "arrow-function"
+      }
     ]
   },
   "ignorePatterns": ["node_modules", ".cache", "public", ".vscode", "api", "*.config.js"],

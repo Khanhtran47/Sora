@@ -39,7 +39,7 @@ const pages = [
 ];
 const settings = ['Profile', 'Account', 'Logout'];
 
-const Header: React.FC<IHeaderProps> = function (props: IHeaderProps) {
+const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   const { open, handleDrawerOpen } = props;
   const [, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);

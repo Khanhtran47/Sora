@@ -9,7 +9,7 @@ import LeftDrawer from './LeftDrawer';
 import DrawerHeader from './DrawerHeader';
 import Copyright from './Copyright';
 
-function Layout({ children }: { children: React.ReactNode }) {
+const Layout = ({ children }: { children: React.ReactNode }) => {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -34,6 +34,6 @@ function Layout({ children }: { children: React.ReactNode }) {
       {/* TODO add a search button (fixed position) to the right drawer for searching */}
     </Box>
   );
-}
+};
 
 export default Layout;

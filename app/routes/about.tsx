@@ -5,17 +5,15 @@ import Button from '@mui/material/Button';
 
 // interface IAboutProps {}
 
-const About = function () {
-  return (
-    <>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Hello again !
-      </Typography>
-      <Button variant="contained" component={Link} to="/">
-        Go to the main page
-      </Button>
-    </>
-  );
-};
+const About = () => (
+  <>
+    <Typography variant="h4" component="h1" gutterBottom>
+      Hello again !
+    </Typography>
+    <Button variant="contained" component={Link} to="/">
+      Go to the main page
+    </Button>
+  </>
+);
 
 export default About;

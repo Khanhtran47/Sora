@@ -4,12 +4,10 @@ import Typography from '@mui/material/Typography';
 
 // interface IMovieProps {}
 
-const Movie = function () {
-  return (
-    <Typography variant="h4" component="h1" gutterBottom>
-      Movie Detail Page
-    </Typography>
-  );
-};
+const Movie = () => (
+  <Typography variant="h4" component="h1" gutterBottom>
+    Movie Detail Page
+  </Typography>
+);
 
 export default Movie;

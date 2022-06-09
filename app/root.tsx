@@ -73,23 +73,18 @@ export function links() {
 
 // https://remix.run/api/conventions#default-export
 // https://remix.run/api/conventions#route-filenames
-export default function App() {
-  // throw new Error("🙀 Error");
-
-  return (
-    <Document>
-      <NextUIProvider>
-        <Layout>
-          <Outlet />
-        </Layout>
-      </NextUIProvider>
-    </Document>
-  );
-}
-
+const App = () => (
+  <Document>
+    <NextUIProvider>
+      <Layout>
+        <Outlet />
+      </Layout>
+    </NextUIProvider>
+  </Document>
+);
 // How NextUIProvider should be used on CatchBoundary
 // https://remix.run/docs/en/v1/api/conventions#catchboundary
-export function CatchBoundary() {
+export const CatchBoundary = () => {
   const caught = useCatch();
 
   let message;
@@ -116,11 +111,11 @@ export function CatchBoundary() {
       </NextUIProvider>
     </Document>
   );
-}
+};
 
 // How NextUIProvider should be used on ErrorBoundary
 // https://remix.run/docs/en/v1/api/conventions#errorboundary
-export function ErrorBoundary({ error }: { error: Error }) {
+export const ErrorBoundary = ({ error }: { error: Error }) => {
   console.error(error);
   return (
     <Document title="Error!">
@@ -133,4 +128,6 @@ export function ErrorBoundary({ error }: { error: Error }) {
       </NextUIProvider>
     </Document>
   );
-}
+};
+
+export default App;

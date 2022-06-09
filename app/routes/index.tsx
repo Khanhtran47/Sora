@@ -13,19 +13,17 @@ export const meta: MetaFunction = () => ({
 });
 
 // https://remix.run/guides/routing#index-routes
-const Index = function () {
-  return (
-    // Home page
-    <Container fluid>
-      {/* TODO film trending banner */}
-      <Typography variant="h4" component="h1" gutterBottom>
-        Hello World !!!
-      </Typography>
-      <Link to="/about" color="secondary">
-        Go to the about page
-      </Link>
-    </Container>
-  );
-};
+const Index = () => (
+  // Home page
+  <Container fluid>
+    {/* TODO film trending banner */}
+    <Typography variant="h4" component="h1" gutterBottom>
+      Hello World !!!
+    </Typography>
+    <Link to="/about" color="secondary">
+      Go to the about page
+    </Link>
+  </Container>
+);
 
 export default Index;
