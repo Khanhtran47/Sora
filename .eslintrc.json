@@ -29,11 +29,7 @@
     "es2021": true
   },
   "rules": {
-    "import/extensions": [
-      "error",
-      "ignorePackages",
-      { "ts": "never", "tsx": "never" }
-    ],
+    "import/extensions": ["error", "ignorePackages", { "ts": "never", "tsx": "never" }],
     "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
     "react-hooks/rules-of-hooks": "error",
     "no-debugger": 0,
@@ -90,7 +86,7 @@
     "prettier/prettier": [
       "error",
       {
-        "trailingComma": "es5",
+        "trailingComma": "all",
         "singleQuote": true,
         "printWidth": 100
       }
@@ -101,8 +97,15 @@
       {
         "aspects": ["invalidHref"]
       }
+    ],
+    "react/function-component-definition": [
+      "error",
+      {
+        "namedComponents": "arrow-function"
+      }
     ]
   },
+  "ignorePatterns": ["node_modules", ".cache", "public", ".vscode", "api", "*.config.js"],
   "plugins": ["prettier", "react", "react-hooks", "@typescript-eslint"],
   "settings": {
     "import/resolver": {
