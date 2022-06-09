@@ -1,11 +1,10 @@
-import * as React from "react"
-import { Link } from "remix"
-import Typography from "@mui/material/Typography"
+import * as React from 'react';
+import { Link } from 'remix';
+import Typography from '@mui/material/Typography';
 
-interface IListMoviesProps {}
+// interface IListMoviesProps {}
 
-const ListMovies: React.FC<IListMoviesProps> = (props: IListMoviesProps) => {
-  const {} = props
+const ListMovies = function () {
   return (
     <>
       <Typography variant="h4" component="h1" gutterBottom>
@@ -15,7 +14,7 @@ const ListMovies: React.FC<IListMoviesProps> = (props: IListMoviesProps) => {
         Go to the movie detail page
       </Link>
     </>
-  )
-}
+  );
+};
 
-export default ListMovies
+export default ListMovies;

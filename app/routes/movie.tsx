@@ -1,18 +1,15 @@
-import * as React from "react"
-import { Link } from "remix"
-import Typography from "@mui/material/Typography"
+import * as React from 'react';
+// import { Link } from 'remix';
+import Typography from '@mui/material/Typography';
 
-interface IMovieProps {}
+// interface IMovieProps {}
 
-const Movie: React.FC<IMovieProps> = (props: IMovieProps) => {
-  const {} = props
+const Movie = function () {
   return (
-    <>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Movie Detail Page
-      </Typography>
-    </>
-  )
-}
+    <Typography variant="h4" component="h1" gutterBottom>
+      Movie Detail Page
+    </Typography>
+  );
+};
 
-export default Movie
+export default Movie;

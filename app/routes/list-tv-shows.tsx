@@ -1,11 +1,10 @@
-import * as React from "react"
-import { Link } from "remix"
-import Typography from "@mui/material/Typography"
+import * as React from 'react';
+import { Link } from 'remix';
+import Typography from '@mui/material/Typography';
 
-interface IListTvShowsProps {}
+// interface IListTvShowsProps {}
 
-const ListTvShows: React.FC<IListTvShowsProps> = (props: IListTvShowsProps) => {
-  const {} = props
+const ListTvShows = function () {
   return (
     <>
       <Typography variant="h4" component="h1" gutterBottom>
@@ -15,7 +14,7 @@ const ListTvShows: React.FC<IListTvShowsProps> = (props: IListTvShowsProps) => {
         Go to the tv show detail page
       </Link>
     </>
-  )
-}
+  );
+};
 
-export default ListTvShows
+export default ListTvShows;

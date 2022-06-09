@@ -1,4 +1,4 @@
-# Welcome to Remix x Next Ui 
+# Welcome to Remix x Next Ui
 
 - [Remix Docs](https://remix.run/docs)
 - [Nextui Docs](https://nextui.org/)

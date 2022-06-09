@@ -1,57 +1,53 @@
-import * as React from "react"
-import { Link } from "remix"
-import { Theme, useTheme } from "@mui/material/styles"
-import List from "@mui/material/List"
-import Divider from "@mui/material/Divider"
-import IconButton from "@mui/material/IconButton"
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft"
-import ChevronRightIcon from "@mui/icons-material/ChevronRight"
-import ListItem from "@mui/material/ListItem"
-import ListItemButton from "@mui/material/ListItemButton"
-import ListItemIcon from "@mui/material/ListItemIcon"
-import ListItemText from "@mui/material/ListItemText"
-import InboxIcon from "@mui/icons-material/MoveToInbox"
-import MailIcon from "@mui/icons-material/Mail"
+import * as React from 'react';
+// import { Link } from 'remix';
+import { Theme } from '@mui/material/styles';
+import List from '@mui/material/List';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import InboxIcon from '@mui/icons-material/MoveToInbox';
+import MailIcon from '@mui/icons-material/Mail';
 
 /* Components */
-import Drawer from "./Drawer"
-import DrawerHeader from "./DrawerHeader"
+import Drawer from './Drawer';
+import DrawerHeader from './DrawerHeader';
 
 interface ILeftDrawerProps {
-  open: boolean
-  handleDrawerClose: () => void
-  theme: Theme
+  open: boolean;
+  handleDrawerClose: () => void;
+  theme: Theme;
 }
 
-const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
-  const { open, handleDrawerClose, theme } = props
+const LeftDrawer: React.FC<ILeftDrawerProps> = function (props: ILeftDrawerProps) {
+  const { open, handleDrawerClose, theme } = props;
   return (
     <Drawer variant="permanent" open={open}>
       <DrawerHeader>
         <IconButton onClick={handleDrawerClose}>
-          {theme.direction === "rtl" ? (
-            <ChevronRightIcon />
-          ) : (
-            <ChevronLeftIcon />
-          )}
+          {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
         </IconButton>
       </DrawerHeader>
       <Divider />
       <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-          <ListItem key={text} disablePadding sx={{ display: "block" }}>
+        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+          <ListItem key={text} disablePadding sx={{ display: 'block' }}>
             <ListItemButton
               sx={{
                 minHeight: 48,
-                justifyContent: open ? "initial" : "center",
+                justifyContent: open ? 'initial' : 'center',
                 px: 2.5,
               }}
             >
               <ListItemIcon
                 sx={{
                   minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
+                  mr: open ? 3 : 'auto',
+                  justifyContent: 'center',
                 }}
               >
                 {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
@@ -63,20 +59,20 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
       </List>
       <Divider />
       <List>
-        {["All mail", "Trash", "Spam"].map((text, index) => (
-          <ListItem key={text} disablePadding sx={{ display: "block" }}>
+        {['All mail', 'Trash', 'Spam'].map((text, index) => (
+          <ListItem key={text} disablePadding sx={{ display: 'block' }}>
             <ListItemButton
               sx={{
                 minHeight: 48,
-                justifyContent: open ? "initial" : "center",
+                justifyContent: open ? 'initial' : 'center',
                 px: 2.5,
               }}
             >
               <ListItemIcon
                 sx={{
                   minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
+                  mr: open ? 3 : 'auto',
+                  justifyContent: 'center',
                 }}
               >
                 {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
@@ -87,7 +83,7 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
         ))}
       </List>
     </Drawer>
-  )
-}
+  );
+};
 
-export default LeftDrawer
+export default LeftDrawer;

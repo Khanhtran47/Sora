@@ -1,12 +1,11 @@
-import * as React from "react"
-import { Link } from "remix"
-import Typography from "@mui/material/Typography"
-import Button from "@mui/material/Button"
+import * as React from 'react';
+import { Link } from 'remix';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
 
-interface IAboutProps {}
+// interface IAboutProps {}
 
-const About: React.FC<IAboutProps> = (props: IAboutProps) => {
-  const {} = props
+const About = function () {
   return (
     <>
       <Typography variant="h4" component="h1" gutterBottom>
@@ -16,7 +15,7 @@ const About: React.FC<IAboutProps> = (props: IAboutProps) => {
         Go to the main page
       </Button>
     </>
-  )
-}
+  );
+};
 
-export default About
+export default About;

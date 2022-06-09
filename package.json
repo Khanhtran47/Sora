@@ -10,7 +10,9 @@
     "dev": "concurrently \"yarn run dev:css\" \"remix dev\"",
     "dev:css": "tailwindcss -o app/styles/app.css --watch",
     "postinstall": "remix setup node",
-    "start": "remix-serve build"
+    "start": "remix-serve build",
+    "check:eslint": "yarn eslint .",
+    "check:prettier": "yarn prettier --check ."
   },
   "dependencies": {
     "@emotion/react": "^11.9.0",
@@ -39,6 +41,7 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^8.17.0",
     "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-typescript": "^17.0.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.5.1",

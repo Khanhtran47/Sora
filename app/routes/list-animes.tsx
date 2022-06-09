@@ -1,11 +1,10 @@
-import * as React from "react"
-import { Link } from "remix"
-import Typography from "@mui/material/Typography"
+import * as React from 'react';
+import { Link } from 'remix';
+import Typography from '@mui/material/Typography';
 
-interface IListAnimesProps {}
+// interface IListAnimesProps {}
 
-const ListAnimes: React.FC<IListAnimesProps> = (props: IListAnimesProps) => {
-  const {} = props
+const ListAnimes = function () {
   return (
     <>
       <Typography variant="h4" component="h1" gutterBottom>
@@ -15,7 +14,7 @@ const ListAnimes: React.FC<IListAnimesProps> = (props: IListAnimesProps) => {
         Go to the anime detail page
       </Link>
     </>
-  )
-}
+  );
+};
 
-export default ListAnimes
+export default ListAnimes;
