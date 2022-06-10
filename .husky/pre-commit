@@ -1,14 +1,8 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-# check eslint standards
-yarn check:lint || (
-  echo "Please lint your code";
-  false;
-)
-
-# check prettier standards
-yarn check:format || (
-  echo "Please format your code";
+# check lint/format on staged files
+yarn lint-staged --quiet || (
+  echo "Please lint and format your code before commit!";
   false;
 )
