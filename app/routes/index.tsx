@@ -1,8 +1,16 @@
-import * as React from 'react';
 import type { MetaFunction } from '@remix-run/node';
-import { Link } from 'remix';
-import Typography from '@mui/material/Typography';
-import { Container } from '@nextui-org/react';
+import { json, useLoaderData } from 'remix';
+import { getTrending } from '~/models/tmdb.server';
+import Home from '~/src/components/Home/Home';
+
+type LoaderData = {
+  trendingItems: Awaited<ReturnType<typeof getTrending>>;
+};
+
+export const loader = async () =>
+  json<LoaderData>({
+    trendingItems: await getTrending('all', 'day'),
+  });
 
 // interface IIndexProps {}
 
@@ -13,17 +21,10 @@ export const meta: MetaFunction = () => ({
 });
 
 // https://remix.run/guides/routing#index-routes
-const Index = () => (
-  // Home page
-  <Container fluid>
-    {/* TODO film trending banner */}
-    <Typography variant="h4" component="h1" gutterBottom>
-      Hello World !!!
-    </Typography>
-    <Link to="/about" color="secondary">
-      Go to the about page
-    </Link>
-  </Container>
-);
+const Index = () => {
+  const { trendingItems } = useLoaderData<LoaderData>();
+
+  return <Home trendingItems={trendingItems} />;
+};
 
 export default Index;
