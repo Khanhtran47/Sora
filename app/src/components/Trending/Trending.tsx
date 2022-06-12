@@ -11,9 +11,7 @@ const Trending = ({ items }: ITrendingProps) => (
   <section>
     <h4>Today Trending</h4>
     <Grid.Container gap={1} justify="center">
-      {items.map((item) => (
-        <TrendingItem key={item.id} item={item} />
-      ))}
+      {items?.length > 0 && items.map((item) => <TrendingItem key={item.id} item={item} />)}
     </Grid.Container>
   </section>
 );
