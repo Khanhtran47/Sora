@@ -10,8 +10,11 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
+import WhatshotRoundedIcon from '@mui/icons-material/WhatshotRounded';
+import RecommendRoundedIcon from '@mui/icons-material/RecommendRounded';
+import NewReleasesRoundedIcon from '@mui/icons-material/NewReleasesRounded';
+import EmojiEventsRoundedIcon from '@mui/icons-material/EmojiEventsRounded';
+import HistoryRoundedIcon from '@mui/icons-material/HistoryRounded';
 
 /* Components */
 import Drawer from './Drawer';
@@ -25,6 +28,28 @@ interface ILeftDrawerProps {
 
 const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
   const { open, handleDrawerClose, theme } = props;
+  const iconItem = (index: number) => {
+    let icon;
+    switch (index) {
+      case 0:
+        icon = <WhatshotRoundedIcon />;
+        break;
+      case 1:
+        icon = <RecommendRoundedIcon />;
+        break;
+      case 2:
+        icon = <NewReleasesRoundedIcon />;
+        break;
+      case 3:
+        icon = <EmojiEventsRoundedIcon />;
+        break;
+      case 4:
+        icon = <HistoryRoundedIcon />;
+        break;
+      default:
+    }
+    return icon;
+  };
   return (
     <Drawer variant="permanent" open={open}>
       <DrawerHeader>
@@ -32,55 +57,32 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
           {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
         </IconButton>
       </DrawerHeader>
-      <Divider />
       <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? 'initial' : 'center',
-                px: 2.5,
-              }}
-            >
-              <ListItemIcon
+        {['Treding', 'Recommend', 'Recent releases', 'IMDB Top', 'Watch History'].map(
+          (text, index) => (
+            <ListItem key={text} disablePadding sx={{ display: 'block' }}>
+              <ListItemButton
                 sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : 'auto',
-                  justifyContent: 'center',
+                  minHeight: 48,
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2.5,
                 }}
               >
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? 'initial' : 'center',
-                px: 2.5,
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : 'auto',
-                  justifyContent: 'center',
-                }}
-              >
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-            </ListItemButton>
-          </ListItem>
-        ))}
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : 'auto',
+                    justifyContent: 'center',
+                  }}
+                >
+                  {iconItem(index)}
+                </ListItemIcon>
+                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+              <Divider />
+            </ListItem>
+          ),
+        )}
       </List>
     </Drawer>
   );

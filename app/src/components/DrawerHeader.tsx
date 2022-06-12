@@ -1,5 +1,6 @@
 import { styled } from '@mui/material/styles';
 
+// ts-error cant find tyoe of { theme }
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
