@@ -1,16 +1,12 @@
 import * as React from 'react';
 import { Link } from 'remix';
-import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Menu from '@mui/material/Menu';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import LocalMovies from '@mui/icons-material/LocalMovies';
+import { Avatar, Tooltip, Button, Text } from '@nextui-org/react';
 
 /* Components */
 import AppBar from './AppBar';
@@ -55,101 +51,120 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
     setAnchorElUser(null);
   };
   return (
-    <AppBar position="fixed" open={open}>
-      <Toolbar>
-        <IconButton
-          color="inherit"
-          aria-label="open drawer"
-          onClick={handleDrawerOpen}
-          edge="start"
-          sx={{
-            marginRight: 5,
-            ...(open && { display: 'none' }),
-          }}
-        >
-          <MenuIcon />
-        </IconButton>
-        <LocalMovies sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-        <Typography
-          variant="h6"
-          noWrap
-          component="a"
-          href="/"
-          sx={{
+    <AppBar
+      fluid
+      responsive={false}
+      display="flex"
+      alignItems="center"
+      open={open}
+      color="inherit"
+      className="backdrop-blur-sm bg-white/30 py-2"
+    >
+      <IconButton
+        color="inherit"
+        aria-label="open drawer"
+        onClick={handleDrawerOpen}
+        edge="start"
+        sx={{
+          marginRight: 3,
+          ...(open && { display: 'none' }),
+        }}
+      >
+        <MenuIcon />
+      </IconButton>
+      <Link to="/">
+        <Text
+          h6
+          size={34}
+          css={{
+            textGradient: '45deg, $blue600 -20%, $pink600 50%',
             mr: 2,
-            display: { xs: 'none', md: 'flex' },
             fontFamily: 'monospace',
             fontWeight: 700,
             letterSpacing: '.3rem',
-            color: 'inherit',
             textDecoration: 'none',
+            display: 'none',
+            '@sm': {
+              display: 'flex',
+            },
           }}
+          weight="bold"
         >
           LOGO
-        </Typography>
-        <LocalMovies sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-        <Typography
-          variant="h5"
-          noWrap
-          component="a"
-          href=""
-          sx={{
+        </Text>
+      </Link>
+      <Link to="/">
+        <Text
+          h5
+          size={30}
+          css={{
+            textGradient: '45deg, $blue600 -20%, $pink600 50%',
             mr: 2,
-            display: { xs: 'flex', md: 'none' },
-            flexGrow: 1,
             fontFamily: 'monospace',
             fontWeight: 700,
             letterSpacing: '.3rem',
-            color: 'inherit',
             textDecoration: 'none',
+            display: 'flex',
+            '@sm': {
+              display: 'none',
+            },
           }}
+          weight="bold"
         >
           LOGO
-        </Typography>
-        <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-          {pages.map((page) => (
-            <Button
-              key={page.pageName}
-              onClick={handleCloseNavMenu}
-              sx={{ my: 2, color: 'white', display: 'block' }}
-              component={Link}
-              to={page.pageLink}
-            >
+        </Text>
+      </Link>
+      <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+        {pages.map((page) => (
+          <Link to={page.pageLink} key={page.pageName}>
+            <Button onClick={handleCloseNavMenu} light auto>
               {page.pageName}
             </Button>
-          ))}
-        </Box>
+          </Link>
+        ))}
+      </Box>
 
-        <Box sx={{ flexGrow: 0 }}>
-          <Tooltip title="Open settings">
-            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-              <Avatar alt="Klee Cute" src={kleeCute} />
-            </IconButton>
-          </Tooltip>
-          <Menu
-            sx={{ mt: '45px' }}
-            id="menu-appbar"
-            anchorEl={anchorElUser}
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            open={Boolean(anchorElUser)}
-            onClose={handleCloseUserMenu}
-          >
-            {settings.map((setting) => (
-              <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                <Typography textAlign="center">{setting}</Typography>
-              </MenuItem>
-            ))}
-          </Menu>
-        </Box>
-      </Toolbar>
+      <Box sx={{ flexGrow: 0 }}>
+        <Tooltip
+          content="Open settings"
+          rounded
+          color="primary"
+          placement="left"
+          css={{ zIndex: 99999 }}
+        >
+          <Avatar
+            size="md"
+            alt="Klee Cute"
+            src={kleeCute}
+            color="primary"
+            bordered
+            onClick={handleOpenUserMenu}
+            css={{ cursor: 'pointer' }}
+          />
+        </Tooltip>
+        <Menu
+          sx={{ mt: '45px' }}
+          id="menu-appbar"
+          anchorEl={anchorElUser}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          keepMounted
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          open={Boolean(anchorElUser)}
+          onClose={handleCloseUserMenu}
+        >
+          {settings.map((setting) => (
+            <MenuItem key={setting} onClick={handleCloseUserMenu}>
+              <Typography textAlign="center">{setting}</Typography>
+            </MenuItem>
+          ))}
+        </Menu>
+      </Box>
     </AppBar>
   );
 };
