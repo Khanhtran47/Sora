@@ -1,15 +1,20 @@
+import { Link } from '@remix-run/react';
+import { Container } from '@nextui-org/react';
 import type { MetaFunction } from '@remix-run/node';
 import { json, useLoaderData } from 'remix';
+
 import { getTrending } from '~/models/tmdb.server';
-import Home from '~/src/components/Home/Home';
+import MediaList from '~/src/components/Media/MediaList';
 
 type LoaderData = {
-  trendingItems: Awaited<ReturnType<typeof getTrending>>;
+  todayTrending: Awaited<ReturnType<typeof getTrending>>;
+  weekTrending: Awaited<ReturnType<typeof getTrending>>;
 };
 
 export const loader = async () =>
   json<LoaderData>({
-    trendingItems: await getTrending('all', 'day'),
+    todayTrending: await getTrending('all', 'day'),
+    weekTrending: await getTrending('all', 'week'),
   });
 
 // interface IIndexProps {}
@@ -22,9 +27,18 @@ export const meta: MetaFunction = () => ({
 
 // https://remix.run/guides/routing#index-routes
 const Index = () => {
-  const { trendingItems } = useLoaderData<LoaderData>();
+  const { weekTrending } = useLoaderData<LoaderData>();
 
-  return <Home trendingItems={trendingItems} />;
+  return (
+    <Container fluid>
+      {weekTrending && weekTrending.length > 0 && (
+        <MediaList listType="grid" items={weekTrending} listName="Trending This Week" />
+      )}
+      <Link to="/about" color="secondary">
+        Go to the about page
+      </Link>
+    </Container>
+  );
 };
 
 export default Index;

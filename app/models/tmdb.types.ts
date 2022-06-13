@@ -8,16 +8,23 @@ export type StillSize = 'w92' | 'w185' | 'w300' | 'original';
 export type MediaType = 'all' | 'movie' | 'tv' | 'person';
 export type TimeWindowType = 'day' | 'week';
 
-export interface IFilm {
+/**
+ * Media here means a tv show or a movie
+ * Here is just some common fields
+ * this could be extended in the future to create more specific interface
+ */
+export interface IMedia {
   id: number;
-  title: string;
-  original_name: string;
+  title: string; // title - name - original_title - original_name
   overview: string;
-  poster_path: string;
-  backdrop_path: string;
-  release_date: string;
-  first_air_date: string;
-  // just these field for now
+  posterPath: string;
+  backdropPath: string;
+  releaseDate: string; // release_date - first-air-date
+  voteAverage: number;
+  voteCount: number;
+  mediaType: 'movie' | 'tv';
+  popularity: number;
+  originalLanguage: string;
 }
 
 export class TMDB {
@@ -30,10 +37,17 @@ export class TMDB {
   static trendingUrl = (type: MediaType, time_window: TimeWindowType): string =>
     `${this.api_base_url}trending/${type}/${time_window}?api_key=${this.key()}`;
 
-  static poster = (path: string, size?: PosterSize): string => {
+  static posterUrl = (path: string, size?: PosterSize): string => {
     if (size) {
       return `${this.media_base_url}${size}/${path}`;
     }
     return `${this.media_base_url}original/${path}`;
+  };
+
+  static backdropUrl = (path: string, size?: BackdropSize): string => {
+    if (size) {
+      return `${this.media_base_url}${size}/${path}`;
+    }
+    return `${this.media_base_url}${size}/${path}`;
   };
 }
