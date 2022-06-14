@@ -1,5 +1,5 @@
 import * as React from 'react';
-// import { Link } from 'remix';
+// import { Link } from '@remix-run/react';
 import { Theme } from '@mui/material/styles';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
@@ -58,7 +58,7 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
         </IconButton>
       </DrawerHeader>
       <List>
-        {['Treding', 'Recommend', 'Recent releases', 'IMDB Top', 'Watch History'].map(
+        {['Trending', 'Recommend', 'Recent releases', 'IMDB Top', 'Watch History'].map(
           (text, index) => (
             <ListItem key={text} disablePadding sx={{ display: 'block' }}>
               <ListItemButton

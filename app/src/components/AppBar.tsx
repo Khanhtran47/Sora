@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import { Container } from '@nextui-org/react';
+import { Grid } from '@nextui-org/react';
 
 interface AppBarProps {
   open?: boolean;
@@ -7,7 +7,7 @@ interface AppBarProps {
 
 const drawerWidth = 240;
 
-const AppBar = styled(Container, {
+const AppBar = styled(Grid.Container, {
   shouldForwardProp: (prop) => prop !== 'open',
 })<AppBarProps>(({ theme, open }) => ({
   zIndex: theme.zIndex.drawer + 1,
