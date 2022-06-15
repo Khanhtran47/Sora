@@ -1,16 +1,7 @@
 import * as React from 'react';
-import { Link } from 'remix';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
+import { Link } from '@remix-run/react';
 import MenuIcon from '@mui/icons-material/Menu';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import Menu from '@mui/material/Menu';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
-import LocalMovies from '@mui/icons-material/LocalMovies';
+import { Avatar, Button, Text, Grid, Dropdown } from '@nextui-org/react';
 
 /* Components */
 import AppBar from './AppBar';
@@ -26,130 +17,160 @@ interface IHeaderProps {
 const pages = [
   {
     pageName: 'Movies',
-    pageLink: '/list-movies',
+    pageLink: 'list-movies',
   },
   {
     pageName: 'TV Shows',
-    pageLink: '/list-tv-shows',
+    pageLink: 'list-tv-shows',
   },
   {
     pageName: 'Animes',
-    pageLink: '/list-animes',
+    pageLink: 'list-animes',
   },
 ];
-const settings = ['Profile', 'Account', 'Logout'];
 
 const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   const { open, handleDrawerOpen } = props;
   const [, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
   return (
-    <AppBar position="fixed" open={open}>
-      <Toolbar>
-        <IconButton
-          color="inherit"
-          aria-label="open drawer"
+    <AppBar
+      justify="space-between"
+      alignItems="center"
+      open={open}
+      color="inherit"
+      className="backdrop-blur-md bg-white/30"
+      gap={2}
+      wrap="nowrap"
+      css={{
+        height: 80,
+        paddingBottom: 0,
+      }}
+    >
+      {/* button and logo */}
+      <Grid xs={8} sm={3} alignItems="center">
+        <Button
           onClick={handleDrawerOpen}
-          edge="start"
-          sx={{
-            marginRight: 5,
+          light
+          auto
+          css={{
+            paddingRight: 8,
+            paddingLeft: 8,
+            marginRight: 12,
             ...(open && { display: 'none' }),
           }}
         >
           <MenuIcon />
-        </IconButton>
-        <LocalMovies sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-        <Typography
-          variant="h6"
-          noWrap
-          component="a"
-          href="/"
-          sx={{
-            mr: 2,
-            display: { xs: 'none', md: 'flex' },
-            fontFamily: 'monospace',
-            fontWeight: 700,
-            letterSpacing: '.3rem',
-            color: 'inherit',
-            textDecoration: 'none',
-          }}
-        >
-          LOGO
-        </Typography>
-        <LocalMovies sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-        <Typography
-          variant="h5"
-          noWrap
-          component="a"
-          href=""
-          sx={{
-            mr: 2,
-            display: { xs: 'flex', md: 'none' },
-            flexGrow: 1,
-            fontFamily: 'monospace',
-            fontWeight: 700,
-            letterSpacing: '.3rem',
-            color: 'inherit',
-            textDecoration: 'none',
-          }}
-        >
-          LOGO
-        </Typography>
-        <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-          {pages.map((page) => (
-            <Button
-              key={page.pageName}
-              onClick={handleCloseNavMenu}
-              sx={{ my: 2, color: 'white', display: 'block' }}
-              component={Link}
-              to={page.pageLink}
-            >
-              {page.pageName}
-            </Button>
-          ))}
-        </Box>
-
-        <Box sx={{ flexGrow: 0 }}>
-          <Tooltip title="Open settings">
-            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-              <Avatar alt="Klee Cute" src={kleeCute} />
-            </IconButton>
-          </Tooltip>
-          <Menu
-            sx={{ mt: '45px' }}
-            id="menu-appbar"
-            anchorEl={anchorElUser}
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
+        </Button>
+        <Link to="/">
+          <Text
+            h6
+            size={36}
+            css={{
+              textGradient: '45deg, $blue600 -20%, $pink600 50%',
+              mr: 2,
+              fontFamily: 'monospace',
+              fontWeight: 700,
+              letterSpacing: '.3rem',
+              textDecoration: 'none',
+              display: 'none',
+              '@sm': {
+                display: 'flex',
+              },
             }}
-            keepMounted
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            open={Boolean(anchorElUser)}
-            onClose={handleCloseUserMenu}
+            weight="bold"
           >
-            {settings.map((setting) => (
-              <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                <Typography textAlign="center">{setting}</Typography>
-              </MenuItem>
-            ))}
-          </Menu>
-        </Box>
-      </Toolbar>
+            LOGO
+          </Text>
+        </Link>
+        <Link to="/">
+          <Text
+            h5
+            size={30}
+            css={{
+              textGradient: '45deg, $blue600 -20%, $pink600 50%',
+              mr: 2,
+              fontFamily: 'monospace',
+              fontWeight: 700,
+              letterSpacing: '.3rem',
+              textDecoration: 'none',
+              display: 'flex',
+              '@sm': {
+                display: 'none',
+              },
+            }}
+            weight="bold"
+          >
+            LOGO
+          </Text>
+        </Link>
+      </Grid>
+
+      {/* link page */}
+      <Grid sm={6}>
+        {pages.map((page) => (
+          <Link to={`/${page.pageLink}`} key={page.pageName}>
+            <Button onClick={handleCloseNavMenu} light auto>
+              <Text
+                h1
+                size={20}
+                css={{
+                  textTransform: 'uppercase',
+                  display: 'none',
+                  '@sm': {
+                    display: 'flex',
+                  },
+                }}
+              >
+                {page.pageName}
+              </Text>
+            </Button>
+          </Link>
+        ))}
+      </Grid>
+
+      {/* Avatar */}
+      <Grid xs={3} sm={3} justify="flex-end">
+        <Dropdown placement="bottom-left">
+          <Dropdown.Trigger>
+            <Avatar
+              size="md"
+              alt="Klee Cute"
+              src={kleeCute}
+              color="primary"
+              bordered
+              css={{ cursor: 'pointer' }}
+            />
+          </Dropdown.Trigger>
+          <Dropdown.Menu color="secondary" aria-label="Avatar Actions">
+            <Dropdown.Item key="profile" css={{ height: '$18' }}>
+              <Text b color="inherit" css={{ d: 'flex' }}>
+                Signed in as
+              </Text>
+              <Text b color="inherit" css={{ d: 'flex' }}>
+                klee@example.com
+              </Text>
+            </Dropdown.Item>
+            <Dropdown.Item key="settings" withDivider>
+              My Settings
+            </Dropdown.Item>
+            <Dropdown.Item key="analytics" withDivider>
+              Analytics
+            </Dropdown.Item>
+            <Dropdown.Item key="system">System</Dropdown.Item>
+            <Dropdown.Item key="configurations">Configurations</Dropdown.Item>
+            <Dropdown.Item key="help_and_feedback" withDivider>
+              Help & Feedback
+            </Dropdown.Item>
+            <Dropdown.Item key="logout" color="error" withDivider>
+              Log Out
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+      </Grid>
     </AppBar>
   );
 };

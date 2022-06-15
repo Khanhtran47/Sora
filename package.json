@@ -20,7 +20,7 @@
     "@emotion/styled": "^11.8.1",
     "@mui/icons-material": "^5.8.2",
     "@mui/material": "^5.8.2",
-    "@nextui-org/react": "^1.0.6-beta.5",
+    "@nextui-org/react": "^1.0.0-beta.9",
     "@remix-run/react": "^1.3.4",
     "@remix-run/serve": "^1.3.4",
     "@remix-run/vercel": "^1.3.4",
