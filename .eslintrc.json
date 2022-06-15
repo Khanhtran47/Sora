@@ -105,7 +105,16 @@
       }
     ]
   },
-  "ignorePatterns": ["node_modules", ".cache", "public", ".vscode", "api", "*.config.js"],
+  "ignorePatterns": [
+    "node_modules",
+    ".cache",
+    "public",
+    ".vscode",
+    "api",
+    "*.config.js",
+    "*.lock",
+    "*.json"
+  ],
   "plugins": ["prettier", "react", "react-hooks", "@typescript-eslint"],
   "settings": {
     "import/resolver": {
