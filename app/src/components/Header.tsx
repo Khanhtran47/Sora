@@ -31,11 +31,6 @@ const pages = [
 
 const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   const { open, handleDrawerOpen } = props;
-  const [, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
   return (
     <AppBar
       justify="space-between"
@@ -112,8 +107,8 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       {/* link page */}
       <Grid sm={6}>
         {pages.map((page) => (
-          <Link to={`/${page.pageLink}`} key={page.pageName}>
-            <Button onClick={handleCloseNavMenu} light auto>
+          <Button light auto key={page.pageName}>
+            <Link to={`/${page.pageLink}`}>
               <Text
                 h1
                 size={20}
@@ -127,8 +122,8 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
               >
                 {page.pageName}
               </Text>
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         ))}
       </Grid>
 

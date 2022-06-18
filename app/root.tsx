@@ -8,7 +8,7 @@ import {
   ScrollRestoration,
   useCatch,
 } from '@remix-run/react';
-import { NextUIProvider, Container, Text } from '@nextui-org/react';
+import { NextUIProvider, Text } from '@nextui-org/react';
 import { withEmotionCache } from '@emotion/react';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material';
 import theme from './src/utils/theme';
@@ -59,7 +59,7 @@ const Document = withEmotionCache(
           {children}
           <ScrollRestoration />
           <Scripts />
-          {process.env.NODE_ENV === 'development' ? <LiveReload /> : null}
+          {process.env.NODE_ENV === 'development' && <LiveReload />}
         </body>
       </html>
     );
@@ -103,11 +103,11 @@ export const CatchBoundary = () => {
   return (
     <Document title={`${caught.status} ${caught.statusText}`}>
       <NextUIProvider>
-        <Container>
+        <Layout>
           <Text h1 color="warning" css={{ textAlign: 'center' }}>
             [CatchBoundary]: {caught.status} {caught.statusText} {message}
           </Text>
-        </Container>
+        </Layout>
       </NextUIProvider>
     </Document>
   );
@@ -120,11 +120,11 @@ export const ErrorBoundary = ({ error }: { error: Error }) => {
   return (
     <Document title="Error!">
       <NextUIProvider>
-        <Container>
+        <Layout>
           <Text h1 color="error" css={{ textAlign: 'center' }}>
             [ErrorBoundary]: There was an error: {error.message}
           </Text>
-        </Container>
+        </Layout>
       </NextUIProvider>
     </Document>
   );
