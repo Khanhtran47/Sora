@@ -18,7 +18,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <Container fluid display="flex" wrap="wrap" direction="row" className="px-0">
+    <Container fluid display="flex" wrap="wrap" direction="row" className="px-0 m-0">
       <Header open={open} handleDrawerOpen={handleDrawerOpen} />
       <LeftDrawer open={open} handleDrawerClose={handleDrawerClose} />
       <Container css={{ paddingTop: '94px', paddingLeft: '88px', zIndex: 0 }}>

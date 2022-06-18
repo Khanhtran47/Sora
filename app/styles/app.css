@@ -480,6 +480,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   position: absolute;
 }
 
+.m-0 {
+  margin: 0px;
+}
+
 .ml-6 {
   margin-left: 1.5rem;
 }
