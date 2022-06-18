@@ -106,11 +106,9 @@ export const CatchBoundary = () => {
   return (
     <Document title={`${caught.status} ${caught.statusText}`}>
       <NextUIProvider>
-        <Layout>
-          <Text h1 color="warning" css={{ textAlign: 'center' }}>
-            [CatchBoundary]: {caught.status} {caught.statusText} {message}
-          </Text>
-        </Layout>
+        <Text h1 color="warning" css={{ textAlign: 'center' }}>
+          [CatchBoundary]: {caught.status} {caught.statusText} {message}
+        </Text>
       </NextUIProvider>
     </Document>
   );
@@ -123,11 +121,9 @@ export const ErrorBoundary = ({ error }: { error: Error }) => {
   return (
     <Document title="Error!">
       <NextUIProvider>
-        <Layout>
-          <Text h1 color="error" css={{ textAlign: 'center' }}>
-            [ErrorBoundary]: There was an error: {error.message}
-          </Text>
-        </Layout>
+        <Text h1 color="error" css={{ textAlign: 'center' }}>
+          [ErrorBoundary]: There was an error: {error.message}
+        </Text>
       </NextUIProvider>
     </Document>
   );

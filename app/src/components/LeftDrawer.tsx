@@ -1,5 +1,5 @@
 import * as React from 'react';
-// import { Link } from '@remix-run/react';
+import { Link } from '@remix-run/react';
 import { Theme } from '@mui/material/styles';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
@@ -50,6 +50,28 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
     }
     return icon;
   };
+  const leftDrawerLink = [
+    {
+      pageName: 'Trending',
+      pageLink: 'trending',
+    },
+    {
+      pageName: 'Recommendations',
+      pageLink: 'recommendations',
+    },
+    {
+      pageName: 'New Releases',
+      pageLink: 'new-releases',
+    },
+    {
+      pageName: 'IMDB Top',
+      pageLink: 'imdb-top',
+    },
+    {
+      pageName: 'Watch History',
+      pageLink: 'watch-history',
+    },
+  ];
   return (
     <Drawer variant="permanent" open={open}>
       <DrawerHeader>
@@ -58,31 +80,29 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
         </IconButton>
       </DrawerHeader>
       <List>
-        {['Trending', 'Recommend', 'Recent releases', 'IMDB Top', 'Watch History'].map(
-          (text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-              <ListItemButton
+        {leftDrawerLink.map((page, index: number) => (
+          <ListItem key={page.pageName} disablePadding sx={{ display: 'block' }}>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? 'initial' : 'center',
+                px: 2.5,
+              }}
+            >
+              <ListItemIcon
                 sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
+                  minWidth: 0,
+                  mr: open ? 3 : 'auto',
+                  justifyContent: 'center',
                 }}
               >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
-                  }}
-                >
-                  {iconItem(index)}
-                </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-              <Divider />
-            </ListItem>
-          ),
-        )}
+                <Link to={`/${page.pageLink}`}>{iconItem(index)}</Link>
+              </ListItemIcon>
+              <ListItemText primary={page.pageName} sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+            <Divider />
+          </ListItem>
+        ))}
       </List>
     </Drawer>
   );
