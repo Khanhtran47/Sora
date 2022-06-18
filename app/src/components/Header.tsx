@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { Link } from '@remix-run/react';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Avatar, Button, Text, Grid, Dropdown } from '@nextui-org/react';
+import { Avatar, Button, Text, Grid, Dropdown, styled } from '@nextui-org/react';
 
 /* Components */
-import AppBar from './AppBar';
 
 /* Assets */
 import kleeCute from '../assets/images/klee.jpg';
@@ -29,20 +28,30 @@ const pages = [
   },
 ];
 
+const drawerWidth = 240;
+
+const AppBar = styled(Grid.Container, {
+  zIndex: 999,
+  position: 'fixed',
+});
+
 const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   const { open, handleDrawerOpen } = props;
   return (
     <AppBar
       justify="space-between"
       alignItems="center"
-      open={open}
       color="inherit"
-      className="backdrop-blur-md bg-white/30"
+      className="backdrop-blur-md bg-white/30 border-b flex justify-between"
       gap={2}
       wrap="nowrap"
       css={{
         height: 80,
         paddingBottom: 0,
+        ...(open && {
+          marginLeft: drawerWidth,
+          width: `calc(100% - ${drawerWidth}px)`,
+        }),
       }}
     >
       {/* button and logo */}

@@ -1,13 +1,9 @@
 import * as React from 'react';
 // import { Link } from '@remix-run/react';
-import Typography from '@mui/material/Typography';
+import { Text } from '@nextui-org/react';
 
 // interface IMovieProps {}
 
-const Movie = () => (
-  <Typography variant="h4" component="h1" gutterBottom>
-    Movie Detail Page
-  </Typography>
-);
+const Movie = () => <Text h1>Movie Detail Page</Text>;
 
 export default Movie;

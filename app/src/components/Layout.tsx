@@ -1,16 +1,12 @@
 import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import CssBaseline from '@mui/material/CssBaseline';
+import { Container } from '@nextui-org/react';
 
 /* Components */
 import Header from './Header';
 import LeftDrawer from './LeftDrawer';
-import DrawerHeader from './DrawerHeader';
 import Copyright from './Copyright';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-  const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
   const handleDrawerOpen = () => {
@@ -22,17 +18,17 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
+    <Container fluid display="flex" wrap="wrap" direction="row" className="px-0">
       <Header open={open} handleDrawerOpen={handleDrawerOpen} />
-      <LeftDrawer open={open} handleDrawerClose={handleDrawerClose} theme={theme} />
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <DrawerHeader />
-        {children}
-        <Copyright />
-      </Box>
+      <LeftDrawer open={open} handleDrawerClose={handleDrawerClose} />
+      <Container css={{ paddingTop: '94px', paddingLeft: '88px', zIndex: 0 }}>
+        <main>
+          {children}
+          <Copyright />
+        </main>
+      </Container>
       {/* TODO add a search button (fixed position) to the right drawer for searching */}
-    </Box>
+    </Container>
   );
 };
 

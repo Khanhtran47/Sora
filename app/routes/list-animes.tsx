@@ -1,14 +1,12 @@
 import * as React from 'react';
 import { Link } from '@remix-run/react';
-import Typography from '@mui/material/Typography';
+import { Text } from '@nextui-org/react';
 
 // interface IListAnimesProps {}
 
 const ListAnimes = () => (
   <>
-    <Typography variant="h4" component="h1" gutterBottom>
-      List Animes Page
-    </Typography>
+    <Text h1>List Animes Page</Text>
     <Link to="/anime" color="secondary">
       Go to the anime detail page
     </Link>

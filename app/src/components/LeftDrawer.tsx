@@ -1,33 +1,58 @@
 import * as React from 'react';
 import { Link } from '@remix-run/react';
-import { Theme } from '@mui/material/styles';
-import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
+import { Button, Text, Grid, Container, styled } from '@nextui-org/react';
+
+/* icons */
 import WhatshotRoundedIcon from '@mui/icons-material/WhatshotRounded';
 import RecommendRoundedIcon from '@mui/icons-material/RecommendRounded';
 import NewReleasesRoundedIcon from '@mui/icons-material/NewReleasesRounded';
 import EmojiEventsRoundedIcon from '@mui/icons-material/EmojiEventsRounded';
 import HistoryRoundedIcon from '@mui/icons-material/HistoryRounded';
 
-/* Components */
-import Drawer from './Drawer';
-import DrawerHeader from './DrawerHeader';
+const drawerWidth = 240;
 
 interface ILeftDrawerProps {
   open: boolean;
   handleDrawerClose: () => void;
-  theme: Theme;
 }
 
+const openedMixin = () => ({
+  width: drawerWidth,
+  transitionProperty: 'width',
+  transitionDuration: '225ms',
+  transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.6, 1)',
+  transitionDelay: '0ms',
+  overflowX: 'hidden',
+});
+
+const closedMixin = () => ({
+  transitionProperty: 'width',
+  transitionDuration: '195ms',
+  transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.6, 1)',
+  transitionDelay: '0ms',
+  overflowX: 'hidden',
+  width: 57,
+  '@sm': {
+    width: 65,
+  },
+});
+
+const Drawer = styled(Container, {
+  flexGrow: 0,
+  flexBasis: 'auto',
+  width: drawerWidth,
+  flexShrink: 0,
+  whiteSpace: 'nowrap',
+  boxSizing: 'border-box',
+  margin: 0,
+  height: '100vh',
+  position: 'fixed',
+  zIndex: 10,
+});
+
 const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
-  const { open, handleDrawerClose, theme } = props;
+  const { open, handleDrawerClose } = props;
   const iconItem = (index: number) => {
     let icon;
     switch (index) {
@@ -73,37 +98,49 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
     },
   ];
   return (
-    <Drawer variant="permanent" open={open}>
-      <DrawerHeader>
-        <IconButton onClick={handleDrawerClose}>
-          {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-        </IconButton>
-      </DrawerHeader>
-      <List>
+    <Drawer
+      css={{
+        ...(open && {
+          ...openedMixin(),
+        }),
+        ...(!open && {
+          ...closedMixin(),
+        }),
+      }}
+      className="backdrop-blur-md bg-white/30 px-0 border-r"
+    >
+      <Button onClick={handleDrawerClose} light auto className="pt-7">
+        <ChevronLeftIcon />
+      </Button>
+      <Grid.Container className="pt-7">
         {leftDrawerLink.map((page, index: number) => (
-          <ListItem key={page.pageName} disablePadding sx={{ display: 'block' }}>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
+          <Grid key={page.pageName} className="border-b w-full">
+            <Button
+              light
+              auto
+              css={{
+                display: 'block',
+                minHeight: 65,
                 justifyContent: open ? 'initial' : 'center',
-                px: 2.5,
               }}
             >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : 'auto',
-                  justifyContent: 'center',
-                }}
-              >
-                <Link to={`/${page.pageLink}`}>{iconItem(index)}</Link>
-              </ListItemIcon>
-              <ListItemText primary={page.pageName} sx={{ opacity: open ? 1 : 0 }} />
-            </ListItemButton>
-            <Divider />
-          </ListItem>
+              <Link to={`/${page.pageLink}`} className="flex flex-row">
+                {iconItem(index)}
+                <Text
+                  h4
+                  size={18}
+                  css={{
+                    opacity: open ? 1 : 0,
+                  }}
+                  className="ml-6"
+                >
+                  {page.pageName}
+                </Text>
+              </Link>
+            </Button>
+          </Grid>
         ))}
-      </List>
+      </Grid.Container>
     </Drawer>
   );
 };

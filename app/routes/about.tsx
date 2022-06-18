@@ -1,17 +1,16 @@
 import * as React from 'react';
 import { Link } from '@remix-run/react';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
+import { Button, Text } from '@nextui-org/react';
 
 // interface IAboutProps {}
 
 const About = () => (
   <>
-    <Typography variant="h4" component="h1" gutterBottom>
-      Hello again !
-    </Typography>
-    <Button variant="contained" component={Link} to="/">
-      Go to the main page
+    <Text>Hello again !</Text>
+    <Button>
+      <Link to="/">
+        <Text>Go to the main page</Text>
+      </Link>
     </Button>
   </>
 );
