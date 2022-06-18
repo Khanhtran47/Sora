@@ -1,14 +1,12 @@
 import * as React from 'react';
 import { Link } from '@remix-run/react';
-import Typography from '@mui/material/Typography';
+import { Text } from '@nextui-org/react';
 
 // interface IListMoviesProps {}
 
 const ListMovies = () => (
   <>
-    <Typography variant="h4" component="h1" gutterBottom>
-      List Movies Page
-    </Typography>
+    <Text h1>List Movies Page</Text>
     <Link to="/movie" color="secondary">
       Go to the movie detail page
     </Link>

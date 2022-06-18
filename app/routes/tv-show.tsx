@@ -1,13 +1,9 @@
 import * as React from 'react';
 // import { Link } from '@remix-run/react';
-import Typography from '@mui/material/Typography';
+import { Text } from '@nextui-org/react';
 
 // interface ITvShowProps {}
 
-const TvShow = () => (
-  <Typography variant="h4" component="h1" gutterBottom>
-    TvShow Detail Page
-  </Typography>
-);
+const TvShow = () => <Text h1>TvShow Detail Page</Text>;
 
 export default TvShow;

@@ -1,15 +1,11 @@
 import * as React from 'react';
-import Typography from '@mui/material/Typography';
-import Link from '@mui/material/Link';
+import { Text, Link } from '@nextui-org/react';
 
 const Copyright = () => (
-  <Typography variant="body2" color="text.secondary" align="center">
+  <Text>
     {'Copyright © '}
-    <Link color="inherit" href="https://mui.com/">
-      Your Website
-    </Link>{' '}
-    {new Date().getFullYear()}.
-  </Typography>
+    <Link href="https://mui.com/">Your Website</Link>{' '}
+  </Text>
 );
 
 export default Copyright;

@@ -1,13 +1,9 @@
 import * as React from 'react';
 // import { Link } from '@remix-run/react';
-import Typography from '@mui/material/Typography';
+import { Text } from '@nextui-org/react';
 
 // interface IAnimeProps {}
 
-const Anime = () => (
-  <Typography variant="h4" component="h1" gutterBottom>
-    Anime Detail Page
-  </Typography>
-);
+const Anime = () => <Text h4>Anime Detail Page</Text>;
 
 export default Anime;

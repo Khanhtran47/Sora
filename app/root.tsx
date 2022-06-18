@@ -10,10 +10,6 @@ import {
   useCatch,
 } from '@remix-run/react';
 import { NextUIProvider, Text } from '@nextui-org/react';
-import { withEmotionCache } from '@emotion/react';
-import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material';
-import theme from './src/utils/theme';
-import ClientStyleContext from './src/components/ClientStyleContext';
 import Layout from './src/components/Layout';
 import styles from './styles/app.css';
 
@@ -23,13 +19,7 @@ interface DocumentProps {
 }
 
 // for tailwindcss
-export const links: LinksFunction = () => [
-  { rel: 'stylesheet', href: styles },
-  {
-    rel: 'stylesheet',
-    href: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap',
-  },
-];
+export const links: LinksFunction = () => [{ rel: 'stylesheet', href: styles }];
 
 export const meta: MetaFunction = () => ({
   charset: 'utf-8',
@@ -37,42 +27,21 @@ export const meta: MetaFunction = () => ({
   viewport: 'width=device-width,initial-scale=1',
 });
 
-const Document = withEmotionCache(({ children, title }: DocumentProps, emotionCache) => {
-  const clientStyleData = React.useContext(ClientStyleContext);
-
-  // Only executed on client
-  useEnhancedEffect(() => {
-    // re-link sheet container
-    emotionCache.sheet.container = document.head;
-    // re-inject tags
-    const { tags } = emotionCache.sheet;
-    emotionCache.sheet.flush();
-    tags.forEach((tag) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (emotionCache.sheet as any)._insertTag(tag);
-    });
-    // reset cache to reapply global styles
-    clientStyleData.reset();
-  }, []);
-
-  return (
-    <html lang="en">
-      <head>
-        {title ? <title>{title}</title> : null}
-        <Meta />
-        <Links />
-        <meta name="theme-color" content={theme.palette.primary.main} />
-        <meta name="emotion-insertion-point" content="emotion-insertion-point" />
-      </head>
-      <body>
-        {children}
-        <ScrollRestoration />
-        <Scripts />
-        {process.env.NODE_ENV === 'development' && <LiveReload />}
-      </body>
-    </html>
-  );
-});
+const Document = ({ children, title }: DocumentProps) => (
+  <html lang="en">
+    <head>
+      {title ? <title>{title}</title> : null}
+      <Meta />
+      <Links />
+    </head>
+    <body>
+      {children}
+      <ScrollRestoration />
+      <Scripts />
+      {process.env.NODE_ENV === 'development' && <LiveReload />}
+    </body>
+  </html>
+);
 
 // https://remix.run/api/conventions#default-export
 // https://remix.run/api/conventions#route-filenames
