@@ -31,6 +31,7 @@ const pages = [
 const drawerWidth = 240;
 
 const AppBar = styled(Grid.Container, {
+  // TODO: add transition on opening/closing drawer
   zIndex: 999,
   position: 'fixed',
 });
