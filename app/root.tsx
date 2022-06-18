@@ -1,4 +1,5 @@
 import * as React from 'react';
+import type { LinksFunction, MetaFunction } from '@remix-run/node';
 import {
   Links,
   LiveReload,
@@ -21,55 +22,57 @@ interface DocumentProps {
   title?: string;
 }
 
-const Document = withEmotionCache(
-  ({ children, title = 'App title' }: DocumentProps, emotionCache) => {
-    const clientStyleData = React.useContext(ClientStyleContext);
-
-    // Only executed on client
-    useEnhancedEffect(() => {
-      // re-link sheet container
-      emotionCache.sheet.container = document.head;
-      // re-inject tags
-      const { tags } = emotionCache.sheet;
-      emotionCache.sheet.flush();
-      tags.forEach((tag) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (emotionCache.sheet as any)._insertTag(tag);
-      });
-      // reset cache to reapply global styles
-      clientStyleData.reset();
-    }, []);
-
-    return (
-      <html lang="en">
-        <head>
-          <meta charSet="utf-8" />
-          <meta name="viewport" content="width=device-width,initial-scale=1" />
-          <meta name="theme-color" content={theme.palette.primary.main} />
-          {title ? <title>{title}</title> : null}
-          <Meta />
-          <Links />
-          <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-          />
-          <meta name="emotion-insertion-point" content="emotion-insertion-point" />
-        </head>
-        <body>
-          {children}
-          <ScrollRestoration />
-          <Scripts />
-          {process.env.NODE_ENV === 'development' && <LiveReload />}
-        </body>
-      </html>
-    );
+// for tailwindcss
+export const links: LinksFunction = () => [
+  { rel: 'stylesheet', href: styles },
+  {
+    rel: 'stylesheet',
+    href: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap',
   },
-);
+];
 
-export function links() {
-  // for tailwindcss
-  return [{ rel: 'stylesheet', href: styles }];
-}
+export const meta: MetaFunction = () => ({
+  charset: 'utf-8',
+  title: 'Remix App',
+  viewport: 'width=device-width,initial-scale=1',
+});
+
+const Document = withEmotionCache(({ children, title }: DocumentProps, emotionCache) => {
+  const clientStyleData = React.useContext(ClientStyleContext);
+
+  // Only executed on client
+  useEnhancedEffect(() => {
+    // re-link sheet container
+    emotionCache.sheet.container = document.head;
+    // re-inject tags
+    const { tags } = emotionCache.sheet;
+    emotionCache.sheet.flush();
+    tags.forEach((tag) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (emotionCache.sheet as any)._insertTag(tag);
+    });
+    // reset cache to reapply global styles
+    clientStyleData.reset();
+  }, []);
+
+  return (
+    <html lang="en">
+      <head>
+        {title ? <title>{title}</title> : null}
+        <Meta />
+        <Links />
+        <meta name="theme-color" content={theme.palette.primary.main} />
+        <meta name="emotion-insertion-point" content="emotion-insertion-point" />
+      </head>
+      <body>
+        {children}
+        <ScrollRestoration />
+        <Scripts />
+        {process.env.NODE_ENV === 'development' && <LiveReload />}
+      </body>
+    </html>
+  );
+});
 
 // https://remix.run/api/conventions#default-export
 // https://remix.run/api/conventions#route-filenames

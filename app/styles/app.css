@@ -534,6 +534,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   display: none;
 }
 
+.transform {
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
 .bg-white\/30 {
   background-color: rgb(255 255 255 / 0.3);
 }
