@@ -1,6 +1,6 @@
-import { Link } from '@remix-run/react';
+import { Link, useLoaderData } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
-import { json, useLoaderData } from 'remix';
+import { json } from '@remix-run/node';
 
 import { getTrending } from '~/models/tmdb.server';
 import MediaList from '~/src/components/Media/MediaList';

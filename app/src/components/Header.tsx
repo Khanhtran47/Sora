@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { Link } from '@remix-run/react';
-import MenuIcon from '@mui/icons-material/Menu';
-import { Avatar, Button, Text, Grid, Dropdown, styled } from '@nextui-org/react';
+import { Avatar, Button, Text, Grid, Dropdown, Image, styled } from '@nextui-org/react';
 
 /* Components */
 
 /* Assets */
 import kleeCute from '../assets/images/klee.jpg';
+import menuIcon from '../assets/icons/menu-line.svg';
 
 interface IHeaderProps {
   open: boolean;
@@ -68,7 +68,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
             ...(open && { display: 'none' }),
           }}
         >
-          <MenuIcon />
+          <Image src={menuIcon} alt="Menu Icon" />
         </Button>
         <Link to="/">
           <Text
