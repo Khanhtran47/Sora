@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { Link } from '@remix-run/react';
-import { Button, Text, Grid, Container, styled } from '@nextui-org/react';
+import { Button, Text, Grid, Container, Image, styled } from '@nextui-org/react';
 
 /* icons */
 import arrowLeftIcon from '../assets/icons/arrow-left-s-line.svg';
 import trendingIcon from '../assets/icons/fire-fill.svg';
 import recommendIcon from '../assets/icons/thumb-up-fill.svg';
-import newReleaseIcon from '../assets/icons/new-release.svg';
+import newReleaseIcon from '../assets/icons/new-release-fill.svg';
 import topRatedIcon from '../assets/icons/trophy-fill.svg';
 import historyIcon from '../assets/icons/history-line.svg';
 
@@ -110,7 +110,7 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
       className="backdrop-blur-md bg-white/30 px-0 border-r"
     >
       <Button onClick={handleDrawerClose} light auto className="pt-7">
-        <img src={arrowLeftIcon} alt="Arrow Left Icon" />
+        <Image src={arrowLeftIcon} alt="Arrow Left Icon" />
       </Button>
       <Grid.Container className="pt-7">
         {leftDrawerLink.map((page, index: number) => (

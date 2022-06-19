@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link } from '@remix-run/react';
-import { Avatar, Button, Text, Grid, Dropdown, styled } from '@nextui-org/react';
+import { Avatar, Button, Text, Grid, Dropdown, Image, styled } from '@nextui-org/react';
 
 /* Components */
 
@@ -68,7 +68,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
             ...(open && { display: 'none' }),
           }}
         >
-          <img src={menuIcon} alt="Menu Icon" />
+          <Image src={menuIcon} alt="Menu Icon" />
         </Button>
         <Link to="/">
           <Text
