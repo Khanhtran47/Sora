@@ -4,10 +4,10 @@ import { Button, Text, Grid, Container, Image, styled } from '@nextui-org/react'
 
 /* icons */
 import arrowLeftIcon from '../assets/icons/arrow-left-s-line.svg';
-import trendingIcon from '../assets/icons/fire-fill.svg';
-import recommendIcon from '../assets/icons/thumb-up-fill.svg';
-import newReleaseIcon from '../assets/icons/new-release-fill.svg';
-import topRatedIcon from '../assets/icons/trophy-fill.svg';
+import trendingIcon from '../assets/icons/fire-line.svg';
+import recommendIcon from '../assets/icons/thumb-up-line.svg';
+import newReleaseIcon from '../assets/icons/new-release-line.svg';
+import topRatedIcon from '../assets/icons/trophy-line.svg';
 import historyIcon from '../assets/icons/history-line.svg';
 
 const drawerWidth = 240;
@@ -57,6 +57,8 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
     let icon;
     switch (index) {
       case 0:
+        // TODO: using Image (next-ui/react) instead of img
+        // https://github.com/Khanhtran47/react-movie/pull/30#issuecomment-1159779493
         icon = <img src={trendingIcon} alt="Trending Icon" />;
         break;
       case 1:
