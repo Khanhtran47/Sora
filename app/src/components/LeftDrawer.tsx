@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { Link } from '@remix-run/react';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { Button, Text, Grid, Container, styled } from '@nextui-org/react';
 
 /* icons */
-import WhatshotRoundedIcon from '@mui/icons-material/WhatshotRounded';
-import RecommendRoundedIcon from '@mui/icons-material/RecommendRounded';
-import NewReleasesRoundedIcon from '@mui/icons-material/NewReleasesRounded';
-import EmojiEventsRoundedIcon from '@mui/icons-material/EmojiEventsRounded';
-import HistoryRoundedIcon from '@mui/icons-material/HistoryRounded';
+import arrowLeftIcon from '../assets/icons/arrow-left-s-line.svg';
+import trendingIcon from '../assets/icons/fire-fill.svg';
+import recommendIcon from '../assets/icons/thumb-up-fill.svg';
+import newReleaseIcon from '../assets/icons/new-release.svg';
+import topRatedIcon from '../assets/icons/trophy-fill.svg';
+import historyIcon from '../assets/icons/history-line.svg';
 
 const drawerWidth = 240;
 
@@ -57,19 +57,19 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
     let icon;
     switch (index) {
       case 0:
-        icon = <WhatshotRoundedIcon />;
+        icon = <img src={trendingIcon} alt="Trending Icon" />;
         break;
       case 1:
-        icon = <RecommendRoundedIcon />;
+        icon = <img src={recommendIcon} alt="Recommendation Icon" />;
         break;
       case 2:
-        icon = <NewReleasesRoundedIcon />;
+        icon = <img src={newReleaseIcon} alt="New Release Icon" />;
         break;
       case 3:
-        icon = <EmojiEventsRoundedIcon />;
+        icon = <img src={topRatedIcon} alt="Top Rated Icon" />;
         break;
       case 4:
-        icon = <HistoryRoundedIcon />;
+        icon = <img src={historyIcon} alt="History Icon" />;
         break;
       default:
     }
@@ -110,7 +110,7 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
       className="backdrop-blur-md bg-white/30 px-0 border-r"
     >
       <Button onClick={handleDrawerClose} light auto className="pt-7">
-        <ChevronLeftIcon />
+        <img src={arrowLeftIcon} alt="Arrow Left Icon" />
       </Button>
       <Grid.Container className="pt-7">
         {leftDrawerLink.map((page, index: number) => (

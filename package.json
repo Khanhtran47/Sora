@@ -11,16 +11,11 @@
     "dev:css": "tailwindcss -o app/styles/app.css --watch",
     "postinstall": "remix setup node",
     "start": "remix-serve build",
-    "check:lint": "eslint . --ext ts --ext tsx --ext js",
-    "check:format": "prettier --check .",
     "prepare": "husky install"
   },
   "dependencies": {
-    "@emotion/react": "^11.9.3",
-    "@emotion/styled": "^11.9.3",
-    "@mui/icons-material": "^5.8.2",
-    "@mui/material": "^5.8.4",
     "@nextui-org/react": "^1.0.0-beta.9",
+    "@remix-run/node": "^1.6.0",
     "@remix-run/react": "^1.3.4",
     "@remix-run/serve": "^1.3.4",
     "@remix-run/vercel": "^1.3.4",
@@ -55,10 +50,8 @@
     "typescript": "^4.6.3"
   },
   "lint-staged": {
-    "*": [
-      "yarn eslint",
-      "yarn prettier -c"
-    ]
+    "*.{tsx,ts,jsx,js}": "yarn eslint",
+    "*": "yarn prettier -c"
   },
   "engines": {
     "node": ">=14"
