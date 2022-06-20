@@ -7,7 +7,13 @@ interface IFetcherReturnedData<T> {
   error?: { code: number; message: string };
 }
 
-const fetcher = async (url: string): Promise<IFetcherReturnedData<any>> => {
+interface IMediaList {
+  items: IMedia[];
+  page: number;
+  totalPages: number;
+}
+
+export const fetcher = async (url: string): Promise<IFetcherReturnedData<any>> => {
   const res = await fetch(url);
   if (res.ok) {
     return {
@@ -23,35 +29,47 @@ const fetcher = async (url: string): Promise<IFetcherReturnedData<any>> => {
   };
 };
 
-export const getTrending = async (
-  type: MediaType,
-  timeWindow: TimeWindowType,
-): Promise<IMedia[]> => {
-  const result = await fetcher(TMDB.trendingUrl(type, timeWindow));
-
-  const trendingItems: IMedia[] = [];
-
-  if (result.error) {
-    console.error(result.error);
-  }
-
-  if (result.data) {
-    result.data.results.forEach((item: any) => {
-      trendingItems.push({
-        id: item.id,
-        title: item.title || item.name || item.original_title || item.original_name,
-        overview: item.overview,
-        posterPath: TMDB.posterUrl(item.poster_path, 'w500'),
-        backdropPath: TMDB.backdropUrl(item.backdrop_path),
-        releaseDate: item.release_date || item.first_air_date,
-        voteAverage: item.vote_average,
-        voteCount: item.vote_count,
-        mediaType: item.media_type,
-        popularity: item.popularity,
-        originalLanguage: item.original_language,
-      });
+const postFetchDataHandler = (data: any): IMedia[] => {
+  const result: IMedia[] = [];
+  data?.results.forEach((item: any) => {
+    result.push({
+      id: item.id,
+      title: item.title || item.name || item.original_title || item.original_name,
+      overview: item.overview,
+      posterPath: TMDB.posterUrl(item.poster_path, 'w500'),
+      backdropPath: TMDB.backdropUrl(item.backdrop_path),
+      releaseDate: item.release_date || item.first_air_date,
+      voteAverage: item.vote_average,
+      voteCount: item.vote_count,
+      mediaType: item.media_type,
+      popularity: item.popularity,
+      originalLanguage: item.original_language,
     });
+  });
+  return result;
+};
+
+export const getTrending = async (
+  mediaType: MediaType,
+  timeWindow: TimeWindowType,
+  page?: number,
+): Promise<IMediaList> => {
+  const fetched = await fetcher(TMDB.trendingUrl(mediaType, timeWindow, page));
+  const result: IMediaList = {
+    page: 0,
+    totalPages: 0,
+    items: [],
+  };
+
+  if (fetched.error) {
+    console.error(fetched.error);
   }
 
-  return trendingItems;
+  if (fetched.data) {
+    result.page = fetched.data.page;
+    result.totalPages = fetched.data.total_pages;
+    result.items.push(...postFetchDataHandler(fetched.data));
+  }
+
+  return result;
 };
