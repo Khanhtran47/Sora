@@ -7,6 +7,7 @@ export type StillSize = 'w92' | 'w185' | 'w300' | 'original';
 
 export type MediaType = 'all' | 'movie' | 'tv' | 'person';
 export type TimeWindowType = 'day' | 'week';
+export type MediaListType = 'latest' | 'popular' | 'top_rated';
 
 /**
  * Media here means a tv show or a movie
@@ -34,8 +35,26 @@ export class TMDB {
 
   private static key = () => process.env.TMDB_API_KEY;
 
-  static trendingUrl = (type: MediaType, time_window: TimeWindowType): string =>
-    `${this.api_base_url}trending/${type}/${time_window}?api_key=${this.key()}`;
+  static mediaListUrl = (
+    mediaType: 'tv' | 'movie',
+    listType: MediaListType,
+    page?: number,
+  ): string =>
+    `${this.api_base_url}${mediaType}/${listType}?api_key=${this.key()}${
+      page ? `&page=${page}` : ''
+    }`;
+
+  static trendingUrl = (
+    mediaType: MediaType,
+    timeWindow: TimeWindowType,
+    page?: number,
+  ): string => {
+    let url = `${this.api_base_url}trending/${mediaType}/${timeWindow}?api_key=${this.key()}`;
+    if (page) {
+      url += `&page=${page}`;
+    }
+    return url;
+  };
 
   static posterUrl = (path: string, size?: PosterSize): string => {
     if (size) {

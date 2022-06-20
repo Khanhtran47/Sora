@@ -1,4 +1,4 @@
-import { Grid, Table, Button, Link } from '@nextui-org/react';
+import { Grid, Table, Link, Text, Radio, Spacer, Container } from '@nextui-org/react';
 import { useState } from 'react';
 
 import { IMedia } from '~/models/tmdb.types';
@@ -19,13 +19,16 @@ interface IMediaList {
 const MediaListGrid = ({ items }: { items: IMedia[] }) => (
   <Grid.Container gap={1} justify="center">
     {items?.length > 0 &&
-      items.map((item) => (
-        <Grid xs={12} sm={3} key={item.id}>
-          <Link href={`/${item.mediaType}/${item.id}`}>
-            <MediaItem key={item.id} type="card" item={item} />
-          </Link>
-        </Grid>
-      ))}
+      items.map((item) => {
+        const href = (item.mediaType === 'movie' ? '/movies/' : '/tv-shows/') + item.id;
+        return (
+          <Grid xs={12} sm={3} key={item.id}>
+            <Link href={href}>
+              <MediaItem key={item.id} type="card" item={item} />
+            </Link>
+          </Grid>
+        );
+      })}
   </Grid.Container>
 );
 
@@ -46,25 +49,27 @@ const MediaListTable = ({ items }: { items: IMedia[] }) => (
       <Table.Column>Type</Table.Column>
     </Table.Header>
     <Table.Body>
-      {items.map((item) => (
-        <Table.Row key={item.id}>
-          <Table.Cell>
-            <Link href={`/${item.mediaType}/${item.id}`} block color="secondary">
-              {item.title}
-            </Link>
-          </Table.Cell>
-          <Table.Cell>{item.voteAverage}</Table.Cell>
-          <Table.Cell>{item.mediaType}</Table.Cell>
-        </Table.Row>
-      ))}
+      {items.map((item) => {
+        const href = (item.mediaType === 'movie' ? '/movies/' : '/tv-shows/') + item.id;
+        return (
+          <Table.Row key={item.id}>
+            <Table.Cell>
+              <Link href={href} block color="secondary">
+                {item.title}
+              </Link>
+            </Table.Cell>
+            <Table.Cell>{item.voteAverage}</Table.Cell>
+            <Table.Cell>{item.mediaType}</Table.Cell>
+          </Table.Row>
+        );
+      })}
     </Table.Body>
-    <Table.Pagination shadow noMargin align="center" rowsPerPage={5} onPageChange={() => {}} />
   </Table>
 );
 
 const MediaList = (props: IMediaList) => {
   const { listType, listName, items } = props;
-  const [displayType, setDisplayType] = useState(listType);
+  const [displayType, setDisplayType] = useState<string>(listType as string);
 
   let list;
 
@@ -74,18 +79,30 @@ const MediaList = (props: IMediaList) => {
     list = <MediaListTable items={items} />;
   }
 
-  const changeListTypeHandler = () => {
-    if (displayType === 'grid') setDisplayType('table');
-    if (displayType === 'table') setDisplayType('grid');
-  };
   return (
-    <>
-      {listName && <h4>{listName}</h4>}
-      <Button type="button" onClick={changeListTypeHandler}>
-        Change
-      </Button>
+    <Container fluid>
+      {listName && (
+        <Text h1 size="2rem">
+          {listName}
+        </Text>
+      )}
+      {/* TODO: better and prettier way to swap list type */}
+      <Radio.Group
+        orientation="horizontal"
+        label="List type"
+        defaultValue="grid"
+        onChange={setDisplayType}
+      >
+        <Radio value="grid" color="secondary" size="sm">
+          Grid
+        </Radio>
+        <Radio value="table" color="success" size="sm">
+          Table
+        </Radio>
+      </Radio.Group>
+      <Spacer />
       {list}
-    </>
+    </Container>
   );
 };
 
