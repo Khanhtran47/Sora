@@ -1,6 +1,6 @@
 import axios from 'axios';
 import queryString from 'query-string';
-import TMDB from '../../../models/tmdb.types';
+import TMDB from './tmdb.types';
 
 const axiosClient = axios.create({
   baseURL: TMDB.api_base_url,
@@ -10,7 +10,7 @@ const axiosClient = axios.create({
   paramsSerializer: (params) =>
     queryString.stringify({
       ...params,
-      api_key: process.env.TMDB_API_KEY,
+      api_key: window.ENV.TMDB_API_KEY,
     }),
 });
 

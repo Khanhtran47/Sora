@@ -28,6 +28,12 @@ export interface IMedia {
   originalLanguage: string;
 }
 
+export interface IMediaList {
+  items: IMedia[];
+  page: number;
+  total_pages: number;
+}
+
 export default class TMDB {
   static readonly api_base_url = 'https://api.themoviedb.org/3/';
 

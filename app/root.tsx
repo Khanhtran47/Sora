@@ -1,5 +1,6 @@
 import * as React from 'react';
-import type { LinksFunction, MetaFunction } from '@remix-run/node';
+import type { LinksFunction, MetaFunction, LoaderFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import {
   Links,
   LiveReload,
@@ -8,8 +9,10 @@ import {
   Scripts,
   ScrollRestoration,
   useCatch,
+  useLoaderData,
 } from '@remix-run/react';
 import { NextUIProvider, Text } from '@nextui-org/react';
+import swiperStyles from 'swiper/swiper.min.css';
 import Layout from './src/components/Layout';
 import styles from './styles/app.css';
 
@@ -19,7 +22,10 @@ interface DocumentProps {
 }
 
 // for tailwindcss
-export const links: LinksFunction = () => [{ rel: 'stylesheet', href: styles }];
+export const links: LinksFunction = () => [
+  { rel: 'stylesheet', href: styles },
+  { rel: 'stylesheet', href: swiperStyles },
+];
 
 // https://remix.run/api/conventions#meta
 export const meta: MetaFunction = () => ({
@@ -28,21 +34,37 @@ export const meta: MetaFunction = () => ({
   viewport: 'width=device-width,initial-scale=1',
 });
 
-const Document = ({ children, title }: DocumentProps) => (
-  <html lang="en">
-    <head>
-      {title ? <title>{title}</title> : null}
-      <Meta />
-      <Links />
-    </head>
-    <body>
-      {children}
-      <ScrollRestoration />
-      <Scripts />
-      {process.env.NODE_ENV === 'development' && <LiveReload />}
-    </body>
-  </html>
-);
+export const loader: LoaderFunction = () =>
+  json({
+    ENV: {
+      TMDB_API_KEY: process.env.TMDB_API_KEY,
+    },
+  });
+
+const Document = ({ children, title }: DocumentProps) => {
+  const data = useLoaderData();
+
+  return (
+    <html lang="en">
+      <head>
+        {title ? <title>{title}</title> : null}
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        {children}
+        <ScrollRestoration />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.ENV = ${JSON.stringify(data.ENV)}`,
+          }}
+        />
+        <Scripts />
+        {process.env.NODE_ENV === 'development' && <LiveReload />}
+      </body>
+    </html>
+  );
+};
 
 // https://remix.run/api/conventions#default-export
 // https://remix.run/api/conventions#route-filenames

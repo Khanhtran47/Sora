@@ -1,37 +1,15 @@
-import { DataFunctionArgs, json, LoaderFunction } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Pagination, Spacer, Radio } from '@nextui-org/react';
-import axios, { AxiosRequestConfig } from 'axios';
+import axios from 'axios';
+import type { AxiosRequestConfig } from 'axios';
+import TMDB, { IMedia, IMediaList } from '../models/tmdb.types';
 
 /* API */
 // import { getTrending } from '~/src/models/tmdb.server';
-import Trending from '../src/api/tmdbServices/trending';
+import Trending from '../models/tmdbServices/trending';
 
 /* Components */
 import MediaList from '../src/components/MediaList';
-
-// type LoaderData = {
-//   todayTrending: Awaited<ReturnType<typeof getTrending>>;
-//   // weekTrending: Awaited<ReturnType<typeof getTrending>>;
-// };
-
-// export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
-//   console.log(request);
-//   const url = new URL(request.url);
-//   const page = Number(url.searchParams.get('page'));
-//   if (!page || page < 1 || page > 1000) {
-//     return json<LoaderData>({
-//       todayTrending: await getTrending('all', 'day'),
-//       // weekTrending: await getTrending('all', 'week'),
-//     });
-//   }
-
-//   return json<LoaderData>({
-//     todayTrending: await getTrending('all', 'day', page),
-//     // weekTrending: await getTrending('all', 'week', page),
-//   });
-// };
 
 // How this page load data:
 // First load (mount): using useLoaderData (server loaded)
@@ -39,21 +17,42 @@ import MediaList from '../src/components/MediaList';
 // TODO: choose the best strategy to load data (better for SEO, for user ex)
 // and choose a way to swap today trending and this week trending, or both ?
 const TrendingPage = () => {
-  // const { todayTrending } = useLoaderData<LoaderData>();
-
-  const [trending, setTrending] = useState([]);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
+  const [trending, setTrending] = useState<IMedia[]>([]);
+  const [page, setPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(0);
   const [listName] = useState('Today Trending');
+
+  const postFetchDataHandler = (data: any) => {
+    const result: IMedia[] = [];
+    data?.results.forEach((item: any) => {
+      result.push({
+        id: item.id,
+        title: item.title || item.name || item.original_title || item.original_name,
+        overview: item.overview,
+        posterPath: TMDB.posterUrl(item.poster_path, 'w500'),
+        backdropPath: TMDB.backdropUrl(item.backdrop_path),
+        releaseDate: item.release_date || item.first_air_date,
+        voteAverage: item.vote_average,
+        voteCount: item.vote_count,
+        mediaType: item.media_type,
+        popularity: item.popularity,
+        originalLanguage: item.original_language,
+      });
+    });
+    return result;
+  };
+
   useEffect(() => {
     const loadTrending = async (pageToLoad: number = page) => {
       const params = {
         page: pageToLoad,
       } as AxiosRequestConfig;
       try {
-        const response = await Trending.getTrending('all', 'day', { params });
+        const response: IMediaList = await Trending.getTrending('all', 'day', {
+          params,
+        });
         console.log(response);
-        setTrending(response?.results);
+        setTrending(postFetchDataHandler(response));
         setTotalPages(response?.total_pages);
         setPage(pageToLoad);
       } catch (error) {
@@ -78,15 +77,9 @@ const TrendingPage = () => {
   // };
 
   const paginationChangeHandler = async (pageToLoad: number) => {
-    // TODO: use better fetcher (axios, react-query, ... and swr (a hook))
-    // const response = await fetch(`/api/trending?mediaType=all&timeWindow=day&page=${page}`);
-    // if (response.ok) {
-    //   const data = await response.json();
-    //   setTrending({ page: data.page, totalPages: data.totalPages, items: data.items });
-    // }
     setPage(pageToLoad);
     // TODO: look for built-in hook allowing changing url without reloading page
-    window.history.pushState(null, 'tmp', `?page=${page}`);
+    window.history.pushState(null, 'tmp', `?page=${pageToLoad}`);
   };
 
   return (
@@ -106,7 +99,9 @@ const TrendingPage = () => {
         </Radio>
       </Radio.Group>
       <Spacer />
-      {trending?.length > 0 && <MediaList listType="grid" items={trending} listName={listName} />}
+      {trending?.length > 0 && (
+        <MediaList listType="grid" items={trending} listName={listName} switchListType />
+      )}
       <Pagination total={totalPages} initialPage={page} shadow onChange={paginationChangeHandler} />
       <Spacer />
     </Container>
