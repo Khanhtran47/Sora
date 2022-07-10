@@ -1,5 +1,6 @@
-import { Grid, Table, Link, Text, Radio, Spacer, Container } from '@nextui-org/react';
+import { Grid, Table, Text, Radio, Spacer, Container } from '@nextui-org/react';
 import { useState } from 'react';
+import { Link } from '@remix-run/react';
 
 import { IMedia } from '~/models/tmdb.types';
 import MediaItem from './MediaItem';
@@ -19,16 +20,13 @@ interface IMediaList {
 const MediaListGrid = ({ items }: { items: IMedia[] }) => (
   <Grid.Container gap={1} justify="center">
     {items?.length > 0 &&
-      items.map((item) => {
-        const href = (item.mediaType === 'movie' ? '/movies/' : '/tv-shows/') + item.id;
-        return (
-          <Grid xs={12} sm={3} key={item.id}>
-            <Link href={href}>
-              <MediaItem key={item.id} type="card" item={item} />
-            </Link>
-          </Grid>
-        );
-      })}
+      items.map((item) => (
+        <Grid xs={12} sm={3} key={item.id}>
+          <Link to={`/${item.mediaType === 'movie' ? 'movies/' : 'tv-shows/'}${item.id}`}>
+            <MediaItem key={item.id} type="card" item={item} />
+          </Link>
+        </Grid>
+      ))}
   </Grid.Container>
 );
 
@@ -54,9 +52,7 @@ const MediaListTable = ({ items }: { items: IMedia[] }) => (
         return (
           <Table.Row key={item.id}>
             <Table.Cell>
-              <Link href={href} block color="secondary">
-                {item.title}
-              </Link>
+              <Link to={href}>{item.title}</Link>
             </Table.Cell>
             <Table.Cell>{item.voteAverage}</Table.Cell>
             <Table.Cell>{item.mediaType}</Table.Cell>

@@ -21,6 +21,7 @@ interface DocumentProps {
 // for tailwindcss
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: styles }];
 
+// https://remix.run/api/conventions#meta
 export const meta: MetaFunction = () => ({
   charset: 'utf-8',
   title: 'Remix App',
@@ -54,6 +55,7 @@ const App = () => (
     </NextUIProvider>
   </Document>
 );
+
 // How NextUIProvider should be used on CatchBoundary
 // https://remix.run/docs/en/v1/api/conventions#catchboundary
 export const CatchBoundary = () => {

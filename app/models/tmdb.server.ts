@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable import/prefer-default-export */
-import { IMedia, MediaType, TimeWindowType, TMDB } from './tmdb.types';
+import TMDB, { IMedia, MediaType, TimeWindowType } from './tmdb.types';
 
 interface IFetcherReturnedData<T> {
   data?: T;
