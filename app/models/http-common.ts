@@ -10,7 +10,7 @@ const axiosClient = axios.create({
   paramsSerializer: (params) =>
     queryString.stringify({
       ...params,
-      api_key: window.ENV.TMDB_API_KEY,
+      api_key: process.env.TMDB_API_KEY,
     }),
 });
 
