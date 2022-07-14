@@ -1,7 +1,7 @@
 import { DataFunctionArgs, json, LoaderFunction } from '@remix-run/node';
 import { Link, useLoaderData } from '@remix-run/react';
 import { useState } from 'react';
-import { Container, Pagination, Spacer } from '@nextui-org/react';
+import { Container, Pagination, Spacer, Radio } from '@nextui-org/react';
 
 import { getTrending } from '~/models/tmdb.server';
 import MediaList from '~/src/components/Media/MediaList';
@@ -62,7 +62,7 @@ const Trending = () => {
   return (
     <Container fluid>
       {/* TODO: better and prettier way to swap trending type */}
-      {/* <Radio.Group
+      <Radio.Group
         orientation="horizontal"
         label="Time Windows"
         defaultValue="today"
@@ -75,9 +75,9 @@ const Trending = () => {
           This Week Trending
         </Radio>
       </Radio.Group>
-      <Spacer /> */}
+      <Spacer />
       {trending?.items.length > 0 && (
-        <MediaList listType="grid" items={trending.items} listName={listName} />
+        <MediaList listType="grid" items={trending.items} listName={listName} showFilter />
       )}
       <Pagination
         total={trending.totalPages}

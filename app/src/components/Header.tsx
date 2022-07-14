@@ -16,15 +16,15 @@ interface IHeaderProps {
 const pages = [
   {
     pageName: 'Movies',
-    pageLink: 'list-movies',
+    pageLink: 'movies/list',
   },
   {
     pageName: 'TV Shows',
-    pageLink: 'list-tv-shows',
+    pageLink: 'tv-shows/list',
   },
   {
     pageName: 'Animes',
-    pageLink: 'list-animes',
+    pageLink: 'animes/list',
   },
 ];
 

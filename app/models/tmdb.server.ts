@@ -37,7 +37,7 @@ const postFetchDataHandler = (data: any): IMedia[] => {
       title: item.title || item.name || item.original_title || item.original_name,
       overview: item.overview,
       posterPath: TMDB.posterUrl(item.poster_path, 'w500'),
-      backdropPath: TMDB.backdropUrl(item.backdrop_path),
+      backdropPath: TMDB.backdropUrl(item.backdrop_path, 'original'),
       releaseDate: item.release_date || item.first_air_date,
       voteAverage: item.vote_average,
       voteCount: item.vote_count,

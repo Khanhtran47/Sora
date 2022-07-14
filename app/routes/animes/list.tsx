@@ -7,7 +7,7 @@ import { Text } from '@nextui-org/react';
 const ListAnimes = () => (
   <>
     <Text h1>List Animes Page</Text>
-    <Link to="/anime" color="secondary">
+    <Link to="/" color="secondary">
       Go to the anime detail page
     </Link>
   </>

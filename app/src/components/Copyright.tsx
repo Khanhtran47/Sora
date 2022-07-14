@@ -4,7 +4,7 @@ import { Text, Link } from '@nextui-org/react';
 const Copyright = () => (
   <Text>
     {'Copyright © '}
-    <Link href="https://mui.com/">Your Website</Link>{' '}
+    <Link href="https://remix-watchmovie.vercel.app/">Remix Movie</Link>{' '}
   </Text>
 );
 

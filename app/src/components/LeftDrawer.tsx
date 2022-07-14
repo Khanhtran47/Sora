@@ -108,13 +108,20 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
         ...(!open && {
           ...closedMixin(),
         }),
+        paddingLeft: 0,
+        paddingRight: 0,
+        paddingTop: '20px',
       }}
       className="backdrop-blur-md bg-white/30 px-0 border-r"
     >
-      <Button onClick={handleDrawerClose} light auto className="pt-7">
+      <Button onClick={handleDrawerClose} light auto>
         <Image src={arrowLeftIcon} alt="Arrow Left Icon" />
       </Button>
-      <Grid.Container className="pt-7">
+      <Grid.Container
+        css={{
+          paddingTop: '8px',
+        }}
+      >
         {leftDrawerLink.map((page, index: number) => (
           <Grid key={page.pageName} className="border-b w-full">
             <Button
@@ -132,9 +139,9 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                   h4
                   size={18}
                   css={{
+                    marginLeft: '1.5rem',
                     opacity: open ? 1 : 0,
                   }}
-                  className="ml-6"
                 >
                   {page.pageName}
                 </Text>

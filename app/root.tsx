@@ -10,8 +10,9 @@ import {
   useCatch,
 } from '@remix-run/react';
 import { NextUIProvider, Text } from '@nextui-org/react';
-import Layout from './src/components/Layout';
-import styles from './styles/app.css';
+import swiperStyles from 'swiper/swiper.min.css';
+import Layout from '~/src/components/Layout';
+import styles from '~/styles/app.css';
 
 interface DocumentProps {
   children: React.ReactNode;
@@ -19,7 +20,16 @@ interface DocumentProps {
 }
 
 // for tailwindcss
-export const links: LinksFunction = () => [{ rel: 'stylesheet', href: styles }];
+export const links: LinksFunction = () => [
+  {
+    rel: 'stylesheet',
+    href: styles,
+  },
+  {
+    rel: 'stylesheet',
+    href: swiperStyles,
+  },
+];
 
 export const meta: MetaFunction = () => ({
   charset: 'utf-8',
@@ -75,9 +85,11 @@ export const CatchBoundary = () => {
   return (
     <Document title={`${caught.status} ${caught.statusText}`}>
       <NextUIProvider>
-        <Text h1 color="warning" css={{ textAlign: 'center' }}>
-          [CatchBoundary]: {caught.status} {caught.statusText} {message}
-        </Text>
+        <Layout>
+          <Text h1 color="warning" css={{ textAlign: 'center' }}>
+            [CatchBoundary]: {caught.status} {caught.statusText} {message}
+          </Text>
+        </Layout>
       </NextUIProvider>
     </Document>
   );
@@ -90,9 +102,11 @@ export const ErrorBoundary = ({ error }: { error: Error }) => {
   return (
     <Document title="Error!">
       <NextUIProvider>
-        <Text h1 color="error" css={{ textAlign: 'center' }}>
-          [ErrorBoundary]: There was an error: {error.message}
-        </Text>
+        <Layout>
+          <Text h1 color="error" css={{ textAlign: 'center' }}>
+            [ErrorBoundary]: There was an error: {error.message}
+          </Text>
+        </Layout>
       </NextUIProvider>
     </Document>
   );
