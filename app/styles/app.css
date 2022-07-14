@@ -552,6 +552,21 @@ Ensure the default browser behavior of the `hidden` attribute.
   border-right-width: 1px;
 }
 
+.border-b-black {
+  --tw-border-opacity: 1;
+  border-bottom-color: rgb(0 0 0 / var(--tw-border-opacity));
+}
+
+.border-b-gray-50 {
+  --tw-border-opacity: 1;
+  border-bottom-color: rgb(249 250 251 / var(--tw-border-opacity));
+}
+
+.border-r-black {
+  --tw-border-opacity: 1;
+  border-right-color: rgb(0 0 0 / var(--tw-border-opacity));
+}
+
 .bg-white\/30 {
   background-color: rgb(255 255 255 / 0.3);
 }

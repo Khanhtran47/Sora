@@ -10,7 +10,6 @@ import Copyright from './Copyright';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
-  console.log(location);
   const [open, setOpen] = React.useState(false);
 
   const handleDrawerOpen = () => {

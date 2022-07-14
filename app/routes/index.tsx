@@ -30,7 +30,6 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
 // https://remix.run/guides/routing#index-routes
 const Index = () => {
   const { todayTrending } = useLoaderData();
-  console.log(todayTrending.items);
   const [trending] = React.useState(todayTrending.items);
 
   return (

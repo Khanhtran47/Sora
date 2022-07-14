@@ -112,7 +112,7 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
         paddingRight: 0,
         paddingTop: '20px',
       }}
-      className="backdrop-blur-md bg-white/30 px-0 border-r"
+      className="backdrop-blur-md bg-white/30 px-0 border-r border-r-black"
     >
       <Button onClick={handleDrawerClose} light auto>
         <Image src={arrowLeftIcon} alt="Arrow Left Icon" />
@@ -123,7 +123,7 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
         }}
       >
         {leftDrawerLink.map((page, index: number) => (
-          <Grid key={page.pageName} className="border-b w-full">
+          <Grid key={page.pageName} className="border-b border-b-black w-full">
             <Button
               light
               auto

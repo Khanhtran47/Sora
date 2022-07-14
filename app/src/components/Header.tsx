@@ -43,7 +43,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       justify="space-between"
       alignItems="center"
       color="inherit"
-      className="backdrop-blur-md bg-white/30 border-b flex justify-between"
+      className="backdrop-blur-md bg-white/30 border-b border-b-black flex justify-between"
       gap={2}
       wrap="nowrap"
       css={{
