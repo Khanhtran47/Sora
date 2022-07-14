@@ -15,17 +15,17 @@ export type MediaListType = 'latest' | 'popular' | 'top_rated';
  * this could be extended in the future to create more specific interface
  */
 export interface IMedia {
-  id: number;
-  title: string; // title - name - original_title - original_name
-  overview: string;
-  posterPath: string;
   backdropPath: string;
+  id: number;
+  mediaType: 'movie' | 'tv';
+  originalLanguage: string;
+  overview: string;
+  popularity: number;
+  posterPath: string;
   releaseDate: string; // release_date - first-air-date
+  title: string; // title - name - original_title - original_name
   voteAverage: number;
   voteCount: number;
-  mediaType: 'movie' | 'tv';
-  popularity: number;
-  originalLanguage: string;
 }
 
 export class TMDB {

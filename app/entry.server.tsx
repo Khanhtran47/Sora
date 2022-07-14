@@ -1,7 +1,7 @@
-import { renderToString } from 'react-dom/server';
-import { RemixServer } from '@remix-run/react';
 import type { EntryContext } from '@remix-run/node';
-import { getCssText, NextUIProvider } from '@nextui-org/react';
+import { RemixServer } from '@remix-run/react';
+import { renderToString } from 'react-dom/server';
+import { CssBaseline } from '@nextui-org/react';
 
 export default function handleRequest(
   request: Request,
@@ -9,15 +9,15 @@ export default function handleRequest(
   responseHeaders: Headers,
   remixContext: EntryContext,
 ) {
-  const markup = renderToString(
-    <NextUIProvider>
-      <RemixServer context={remixContext} url={request.url} />
-    </NextUIProvider>,
-  ).replace('__STYLES__', getCssText());
+  const styles = CssBaseline.flush();
+  const html = renderToString(<RemixServer context={remixContext} url={request.url} />).replace(
+    /<\/head>/,
+    `<style id="stitches">${styles.props.dangerouslySetInnerHTML.__html}</style></head>`,
+  );
 
   responseHeaders.set('Content-Type', 'text/html');
 
-  return new Response(`<!DOCTYPE html>${markup}`, {
+  return new Response(`<!DOCTYPE html>${html}`, {
     status: responseStatusCode,
     headers: responseHeaders,
   });

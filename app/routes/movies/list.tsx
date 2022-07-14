@@ -7,7 +7,7 @@ import { Text } from '@nextui-org/react';
 const ListMovies = () => (
   <>
     <Text h1>List Movies Page</Text>
-    <Link to="/movie" color="secondary">
+    <Link to="/" color="secondary">
       Go to the movie detail page
     </Link>
   </>

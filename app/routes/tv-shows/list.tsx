@@ -7,7 +7,7 @@ import { Text } from '@nextui-org/react';
 const ListTvShows = () => (
   <>
     <Text h1>List Tv Shows Page</Text>
-    <Link to="/tv-show" color="secondary">
+    <Link to="/" color="secondary">
       Go to the tv show detail page
     </Link>
   </>
