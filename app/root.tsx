@@ -9,11 +9,12 @@ import {
   ScrollRestoration,
   useCatch,
 } from '@remix-run/react';
-import { NextUIProvider, Text, createTheme } from '@nextui-org/react';
+import { NextUIProvider, Text, Image, createTheme } from '@nextui-org/react';
 import useDarkMode from 'use-dark-mode';
 import swiperStyles from 'swiper/swiper.min.css';
 import Layout from '~/src/components/Layout';
 import styles from '~/styles/app.css';
+import pageNotFound from './src/assets/images/404.gif';
 
 interface DocumentProps {
   children: React.ReactNode;
@@ -84,6 +85,7 @@ const App = () => {
 // https://remix.run/docs/en/v1/api/conventions#catchboundary
 export const CatchBoundary = () => {
   const caught = useCatch();
+  const darkMode = useDarkMode(false);
 
   let message;
   switch (caught.status) {
@@ -100,11 +102,21 @@ export const CatchBoundary = () => {
 
   return (
     <Document title={`${caught.status} ${caught.statusText}`}>
-      <NextUIProvider>
+      <NextUIProvider theme={darkMode.value ? darkTheme : lightTheme}>
         <Layout>
           <Text h1 color="warning" css={{ textAlign: 'center' }}>
-            [CatchBoundary]: {caught.status} {caught.statusText} {message}
+            {caught.status} {caught.statusText} {message}
           </Text>
+          <Image
+            autoResize
+            width={480}
+            src={pageNotFound}
+            alt="404"
+            objectFit="cover"
+            css={{
+              marginTop: '20px',
+            }}
+          />
         </Layout>
       </NextUIProvider>
     </Document>
@@ -115,9 +127,10 @@ export const CatchBoundary = () => {
 // https://remix.run/docs/en/v1/api/conventions#errorboundary
 export const ErrorBoundary = ({ error }: { error: Error }) => {
   console.error(error);
+  const darkMode = useDarkMode(false);
   return (
     <Document title="Error!">
-      <NextUIProvider>
+      <NextUIProvider theme={darkMode.value ? darkTheme : lightTheme}>
         <Layout>
           <Text h1 color="error" css={{ textAlign: 'center' }}>
             [ErrorBoundary]: There was an error: {error.message}
