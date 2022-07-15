@@ -14,10 +14,10 @@ const BannerItem = ({ item }: { item: IMedia }) => {
       <Card.Header css={{ position: 'absolute', zIndex: 1 }}>
         <Row>
           <Col css={{ marginTop: '25vh', marginLeft: '10vw' }}>
-            <Text size={68} weight="bold" transform="uppercase" color="black" css={{ margin: 0 }}>
+            <Text size={68} weight="bold" transform="uppercase" css={{ margin: 0 }}>
               {title}
             </Text>
-            <Text size={18} weight="bold" color="black" css={{ margin: '5vh 0 0 0' }}>
+            <Text size={18} weight="bold" css={{ margin: '5vh 0 0 0' }}>
               {overview}
             </Text>
             <Row>

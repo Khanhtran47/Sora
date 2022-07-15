@@ -1,12 +1,28 @@
 import * as React from 'react';
 import { Link } from '@remix-run/react';
-import { Avatar, Button, Text, Grid, Dropdown, Image, styled } from '@nextui-org/react';
+import {
+  Avatar,
+  Button,
+  Text,
+  Grid,
+  Dropdown,
+  Image,
+  Switch,
+  useTheme,
+  styled,
+} from '@nextui-org/react';
+import useDarkMode from 'use-dark-mode';
 
 /* Components */
 
 /* Assets */
 import kleeCute from '../assets/images/klee.jpg';
 import menuIcon from '../assets/icons/menu-line.svg';
+// import SunIcon from '../assets/icons/sun.svg';
+// import MoonIcon from '../assets/icons/moon.svg';
+import SunIcon from '../assets/icons/SunIcon.js';
+import MoonIcon from '../assets/icons/MoonIcon.js';
+import MenuIcon from '../assets/icons/MenuIcon.js';
 
 interface IHeaderProps {
   open: boolean;
@@ -37,13 +53,17 @@ const AppBar = styled(Grid.Container, {
 });
 
 const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
+  const darkMode = useDarkMode(false);
+  const { isDark } = useTheme();
   const { open, handleDrawerOpen } = props;
   return (
     <AppBar
       justify="space-between"
       alignItems="center"
       color="inherit"
-      className="backdrop-blur-md bg-white/30 border-b border-b-black flex justify-between"
+      className={`flex justify-between backdrop-blur-md border-b ${
+        isDark ? 'bg-black/30 border-b-slate-200' : ' border-b-slate-600 bg-white/30'
+      }`}
       gap={2}
       wrap="nowrap"
       css={{
@@ -78,7 +98,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
             ...(open && { display: 'none' }),
           }}
         >
-          <Image src={menuIcon} alt="Menu Icon" />
+          <MenuIcon />
         </Button>
         <Link to="/">
           <Text
@@ -148,7 +168,19 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       </Grid>
 
       {/* Avatar */}
-      <Grid xs={3} sm={3} justify="flex-end">
+      <Grid xs={3} sm={3} justify="flex-end" alignItems="center" alignContent="center">
+        <Switch
+          checked={isDark}
+          size="lg"
+          onChange={() => darkMode.toggle()}
+          shadow
+          color="primary"
+          iconOn={<MoonIcon filled />}
+          iconOff={<SunIcon filled />}
+          css={{
+            marginRight: '30px',
+          }}
+        />
         <Dropdown placement="bottom-left">
           <Dropdown.Trigger>
             <Avatar

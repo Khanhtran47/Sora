@@ -9,7 +9,8 @@ import {
   ScrollRestoration,
   useCatch,
 } from '@remix-run/react';
-import { NextUIProvider, Text } from '@nextui-org/react';
+import { NextUIProvider, Text, createTheme } from '@nextui-org/react';
+import useDarkMode from 'use-dark-mode';
 import swiperStyles from 'swiper/swiper.min.css';
 import Layout from '~/src/components/Layout';
 import styles from '~/styles/app.css';
@@ -18,6 +19,16 @@ interface DocumentProps {
   children: React.ReactNode;
   title?: string;
 }
+
+const lightTheme = createTheme({
+  type: 'light',
+  theme: {},
+});
+
+const darkTheme = createTheme({
+  type: 'dark',
+  theme: {},
+});
 
 // for tailwindcss
 export const links: LinksFunction = () => [
@@ -55,15 +66,20 @@ const Document = ({ children, title }: DocumentProps) => (
 
 // https://remix.run/api/conventions#default-export
 // https://remix.run/api/conventions#route-filenames
-const App = () => (
-  <Document>
-    <NextUIProvider>
-      <Layout>
-        <Outlet />
-      </Layout>
-    </NextUIProvider>
-  </Document>
-);
+const App = () => {
+  const darkMode = useDarkMode(false);
+
+  return (
+    <Document>
+      <NextUIProvider theme={darkMode.value ? darkTheme : lightTheme}>
+        <Layout>
+          <Outlet />
+        </Layout>
+      </NextUIProvider>
+    </Document>
+  );
+};
+
 // How NextUIProvider should be used on CatchBoundary
 // https://remix.run/docs/en/v1/api/conventions#catchboundary
 export const CatchBoundary = () => {

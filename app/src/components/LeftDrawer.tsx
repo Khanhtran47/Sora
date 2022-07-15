@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { Link } from '@remix-run/react';
-import { Button, Text, Grid, Container, Image, styled } from '@nextui-org/react';
+import { Button, Text, Grid, Container, Image, useTheme, styled } from '@nextui-org/react';
 
 /* icons */
-import arrowLeftIcon from '../assets/icons/arrow-left-s-line.svg';
-import trendingIcon from '../assets/icons/fire-line.svg';
-import recommendIcon from '../assets/icons/thumb-up-line.svg';
-import newReleaseIcon from '../assets/icons/new-release-line.svg';
-import topRatedIcon from '../assets/icons/trophy-line.svg';
-import historyIcon from '../assets/icons/history-line.svg';
+import TrendingIcon from '../assets/icons/TrendingIcon.js';
+import RecommendIcon from '../assets/icons/RecommendIcon.js';
+import ArrowLeftIcon from '../assets/icons/ArrowLeftIcon.js';
+import NewReleaseIcon from '../assets/icons/NewReleaseIcon.js';
+import TopRatedIcon from '../assets/icons/TopRatedIcon.js';
+import HistoryIcon from '../assets/icons/HistoryIcon.js';
 
 const drawerWidth = 240;
 
@@ -52,26 +52,25 @@ const Drawer = styled(Container, {
 });
 
 const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
+  const { isDark } = useTheme();
   const { open, handleDrawerClose } = props;
   const iconItem = (index: number) => {
     let icon;
     switch (index) {
       case 0:
-        // TODO: using Image (next-ui/react) instead of img
-        // https://github.com/Khanhtran47/react-movie/pull/30#issuecomment-1159779493
-        icon = <img src={trendingIcon} alt="Trending Icon" />;
+        icon = <TrendingIcon />;
         break;
       case 1:
-        icon = <img src={recommendIcon} alt="Recommendation Icon" />;
+        icon = <RecommendIcon />;
         break;
       case 2:
-        icon = <img src={newReleaseIcon} alt="New Release Icon" />;
+        icon = <NewReleaseIcon />;
         break;
       case 3:
-        icon = <img src={topRatedIcon} alt="Top Rated Icon" />;
+        icon = <TopRatedIcon />;
         break;
       case 4:
-        icon = <img src={historyIcon} alt="History Icon" />;
+        icon = <HistoryIcon />;
         break;
       default:
     }
@@ -112,10 +111,12 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
         paddingRight: 0,
         paddingTop: '20px',
       }}
-      className="backdrop-blur-md bg-white/30 px-0 border-r border-r-black"
+      className={`backdrop-blur-md px-0 border-r ${
+        isDark ? 'bg-black/30 border-r-slate-200' : 'bg-white/30 border-r-slate-900'
+      }`}
     >
       <Button onClick={handleDrawerClose} light auto>
-        <Image src={arrowLeftIcon} alt="Arrow Left Icon" />
+        <ArrowLeftIcon />
       </Button>
       <Grid.Container
         css={{
@@ -123,7 +124,10 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
         }}
       >
         {leftDrawerLink.map((page, index: number) => (
-          <Grid key={page.pageName} className="border-b border-b-black w-full">
+          <Grid
+            key={page.pageName}
+            className={`border-b ${isDark ? 'border-b-slate-200' : 'border-b-slate-900'} w-full`}
+          >
             <Button
               light
               auto
