@@ -21,7 +21,7 @@ const openedMixin = () => ({
   width: drawerWidth,
   transitionProperty: 'width',
   transitionDuration: '225ms',
-  transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.6, 1)',
+  transitionTimingFunction: 'ease-out',
   transitionDelay: '0ms',
   overflowX: 'hidden',
 });
@@ -29,7 +29,7 @@ const openedMixin = () => ({
 const closedMixin = () => ({
   transitionProperty: 'width',
   transitionDuration: '195ms',
-  transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.6, 1)',
+  transitionTimingFunction: 'ease-in',
   transitionDelay: '0ms',
   overflowX: 'hidden',
   width: 57,

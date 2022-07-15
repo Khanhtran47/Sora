@@ -52,6 +52,16 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
         ...(open && {
           marginLeft: drawerWidth,
           width: `calc(100% - ${drawerWidth}px)`,
+          transitionProperty: 'width',
+          transitionDuration: '225ms',
+          transitionTimingFunction: 'ease-in',
+          transitionDelay: '0ms',
+        }),
+        ...(!open && {
+          transitionProperty: 'width',
+          transitionDuration: '195ms',
+          transitionTimingFunction: 'ease-out',
+          transitionDelay: '0ms',
         }),
       }}
     >
