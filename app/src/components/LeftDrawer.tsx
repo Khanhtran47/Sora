@@ -112,7 +112,7 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
         paddingTop: '20px',
       }}
       className={`backdrop-blur-md px-0 border-r ${
-        isDark ? 'bg-black/30 border-r-slate-200' : 'bg-white/30 border-r-slate-900'
+        isDark ? 'bg-black/30 border-r-slate-700' : 'bg-white/30 border-r-slate-300'
       }`}
     >
       <Button onClick={handleDrawerClose} light auto>
@@ -126,7 +126,7 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
         {leftDrawerLink.map((page, index: number) => (
           <Grid
             key={page.pageName}
-            className={`border-b ${isDark ? 'border-b-slate-200' : 'border-b-slate-900'} w-full`}
+            className={`border-b ${isDark ? 'border-b-slate-700' : 'border-b-slate-300'} w-full`}
           >
             <Button
               light

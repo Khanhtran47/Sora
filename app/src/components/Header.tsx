@@ -48,8 +48,8 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       justify="space-between"
       alignItems="center"
       color="inherit"
-      className={`flex justify-between backdrop-blur-md border-b ${
-        isDark ? 'bg-black/30 border-b-slate-200' : ' border-b-slate-600 bg-white/30'
+      className={`flex justify-between backdrop-blur-md border-b border-b-slate-400 ${
+        isDark ? 'bg-black/30 border-b-slate-700' : ' border-b-slate-300 bg-white/30'
       }`}
       gap={2}
       wrap="nowrap"
