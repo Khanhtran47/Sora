@@ -1,25 +1,12 @@
 import * as React from 'react';
 import { Link } from '@remix-run/react';
-import {
-  Avatar,
-  Button,
-  Text,
-  Grid,
-  Dropdown,
-  Image,
-  Switch,
-  useTheme,
-  styled,
-} from '@nextui-org/react';
+import { Avatar, Button, Text, Grid, Dropdown, Switch, useTheme, styled } from '@nextui-org/react';
 import useDarkMode from 'use-dark-mode';
 
 /* Components */
 
 /* Assets */
 import kleeCute from '../assets/images/klee.jpg';
-import menuIcon from '../assets/icons/menu-line.svg';
-// import SunIcon from '../assets/icons/sun.svg';
-// import MoonIcon from '../assets/icons/moon.svg';
 import SunIcon from '../assets/icons/SunIcon.js';
 import MoonIcon from '../assets/icons/MoonIcon.js';
 import MenuIcon from '../assets/icons/MenuIcon.js';

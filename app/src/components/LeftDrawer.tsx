@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link } from '@remix-run/react';
-import { Button, Text, Grid, Container, Image, useTheme, styled } from '@nextui-org/react';
+import { Button, Text, Grid, Container, useTheme, styled } from '@nextui-org/react';
 
 /* icons */
 import TrendingIcon from '../assets/icons/TrendingIcon.js';
