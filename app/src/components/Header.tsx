@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Link } from '@remix-run/react';
 import { Avatar, Button, Text, Grid, Dropdown, Image, styled } from '@nextui-org/react';
 
+import { useClerk, useUser, SignedIn, SignedOut } from '@clerk/remix';
 /* Components */
 
 /* Assets */
@@ -37,7 +38,16 @@ const AppBar = styled(Grid.Container, {
 });
 
 const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
+  const { user } = useUser();
+  const { signOut } = useClerk();
   const { open, handleDrawerOpen } = props;
+
+  const handleDropdownSelect = (key: React.Key) => {
+    if (key === 'logout') {
+      signOut();
+    }
+  };
+
   return (
     <AppBar
       justify="space-between"
@@ -149,42 +159,51 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
 
       {/* Avatar */}
       <Grid xs={3} sm={3} justify="flex-end">
-        <Dropdown placement="bottom-left">
-          <Dropdown.Trigger>
-            <Avatar
-              size="md"
-              alt="Klee Cute"
-              src={kleeCute}
-              color="primary"
-              bordered
-              css={{ cursor: 'pointer' }}
-            />
-          </Dropdown.Trigger>
-          <Dropdown.Menu color="secondary" aria-label="Avatar Actions">
-            <Dropdown.Item key="profile" css={{ height: '$18' }}>
-              <Text b color="inherit" css={{ d: 'flex' }}>
-                Signed in as
-              </Text>
-              <Text b color="inherit" css={{ d: 'flex' }}>
-                klee@example.com
-              </Text>
-            </Dropdown.Item>
-            <Dropdown.Item key="settings" withDivider>
-              My Settings
-            </Dropdown.Item>
-            <Dropdown.Item key="analytics" withDivider>
-              Analytics
-            </Dropdown.Item>
-            <Dropdown.Item key="system">System</Dropdown.Item>
-            <Dropdown.Item key="configurations">Configurations</Dropdown.Item>
-            <Dropdown.Item key="help_and_feedback" withDivider>
-              Help & Feedback
-            </Dropdown.Item>
-            <Dropdown.Item key="logout" color="error" withDivider>
-              Log Out
-            </Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
+        <SignedIn>
+          <Dropdown placement="bottom-left">
+            <Dropdown.Trigger>
+              <Avatar
+                size="md"
+                alt="Klee Cute"
+                src={kleeCute}
+                color="primary"
+                bordered
+                css={{ cursor: 'pointer' }}
+              />
+            </Dropdown.Trigger>
+            <Dropdown.Menu
+              color="secondary"
+              aria-label="Avatar Actions"
+              onAction={handleDropdownSelect}
+            >
+              <Dropdown.Item key="profile" css={{ height: '$18' }}>
+                <Text b color="inherit" css={{ d: 'flex' }}>
+                  Signed in as
+                </Text>
+                <Text b color="inherit" css={{ d: 'flex' }}>
+                  {user && user.username ? user.username : 'klee@example.com'}
+                </Text>
+              </Dropdown.Item>
+              <Dropdown.Item key="settings" withDivider>
+                My Settings
+              </Dropdown.Item>
+              <Dropdown.Item key="analytics" withDivider>
+                Analytics
+              </Dropdown.Item>
+              <Dropdown.Item key="system">System</Dropdown.Item>
+              <Dropdown.Item key="configurations">Configurations</Dropdown.Item>
+              <Dropdown.Item key="help_and_feedback" withDivider>
+                Help & Feedback
+              </Dropdown.Item>
+              <Dropdown.Item key="logout" color="error" withDivider>
+                Log Out
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </SignedIn>
+        <SignedOut>
+          <Link to="/sign-in">Sign In</Link>
+        </SignedOut>
       </Grid>
     </AppBar>
   );

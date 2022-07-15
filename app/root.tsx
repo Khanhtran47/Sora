@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { LinksFunction, MetaFunction } from '@remix-run/node';
+import type { LinksFunction, MetaFunction, LoaderFunction } from '@remix-run/node';
 import {
   Links,
   LiveReload,
@@ -11,6 +11,10 @@ import {
 } from '@remix-run/react';
 import { NextUIProvider, Text } from '@nextui-org/react';
 import swiperStyles from 'swiper/swiper.min.css';
+
+import { rootAuthLoader } from '@clerk/remix/ssr.server';
+import { ClerkApp, ClerkCatchBoundary } from '@clerk/remix';
+
 import Layout from '~/src/components/Layout';
 import styles from '~/styles/app.css';
 
@@ -18,6 +22,8 @@ interface DocumentProps {
   children: React.ReactNode;
   title?: string;
 }
+
+export const loader: LoaderFunction = (args) => rootAuthLoader(args, { loadUser: true });
 
 // for tailwindcss
 export const links: LinksFunction = () => [
@@ -66,7 +72,7 @@ const App = () => (
 );
 // How NextUIProvider should be used on CatchBoundary
 // https://remix.run/docs/en/v1/api/conventions#catchboundary
-export const CatchBoundary = () => {
+export const CatchBoundary = ClerkCatchBoundary(() => {
   const caught = useCatch();
 
   let message;
@@ -93,7 +99,7 @@ export const CatchBoundary = () => {
       </NextUIProvider>
     </Document>
   );
-};
+});
 
 // How NextUIProvider should be used on ErrorBoundary
 // https://remix.run/docs/en/v1/api/conventions#errorboundary
@@ -112,4 +118,4 @@ export const ErrorBoundary = ({ error }: { error: Error }) => {
   );
 };
 
-export default App;
+export default ClerkApp(App);

@@ -14,6 +14,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@clerk/remix": "^0.5.11",
     "@nextui-org/react": "^1.0.0-beta.9",
     "@remix-run/node": "^1.6.0",
     "@remix-run/react": "^1.3.4",
