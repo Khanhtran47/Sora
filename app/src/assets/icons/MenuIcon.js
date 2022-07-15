@@ -3,7 +3,7 @@
 /* eslint-disable react/self-closing-comp */
 const MenuIcon = ({ fill = 'currentColor', filled, size, height, width, label, ...props }) => (
   <svg
-    xmlns="http://www.w3.org/2000/svg"
+xmlns = "http://www.w3.org/2000/svg"
     width={size || width || 24}
     height={size || height || 24}
     viewBox="0 0 24 24"
@@ -13,4 +13,4 @@ const MenuIcon = ({ fill = 'currentColor', filled, size, height, width, label, .
   </svg>
 );
 
-export default MenuIcon;
+    export default MenuIcon;
