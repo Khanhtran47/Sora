@@ -73,9 +73,9 @@ const MediaListTable = ({ items }: { items: IMedia[] }) => (
 const MediaListBanner = ({ items }: { items: IMedia[] }) => {
   SwiperCore.use([Autoplay]);
   return (
-    <Grid.Container gap={1} justify="flex-start">
+    <Grid.Container gap={1} justify="flex-start" css={{ margin: 0, padding: 0 }}>
       {items?.length > 0 && (
-        <Swiper grabCursor spaceBetween={0} slidesPerView={1} autoplay={{ delay: 6000 }}>
+        <Swiper grabCursor spaceBetween={0} slidesPerView={1} autoplay={{ delay: 4500 }}>
           {items.slice(0, 10).map((item, i) => (
             <SwiperSlide key={i}>
               <MediaItem key={item.id} type="banner" item={item} />

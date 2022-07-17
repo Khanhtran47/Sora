@@ -1,20 +1,21 @@
 import * as React from 'react';
-import { Link } from '@remix-run/react';
-import { Button, Text, Grid, Container, useTheme, styled } from '@nextui-org/react';
+import { NavLink } from '@remix-run/react';
+import { Button, Switch, Text, Grid, Container, useTheme, styled } from '@nextui-org/react';
+import { useTheme as useRemixTheme } from 'next-themes';
 
 /* icons */
 import TrendingIcon from '../assets/icons/TrendingIcon.js';
 import RecommendIcon from '../assets/icons/RecommendIcon.js';
-import ArrowLeftIcon from '../assets/icons/ArrowLeftIcon.js';
 import NewReleaseIcon from '../assets/icons/NewReleaseIcon.js';
 import TopRatedIcon from '../assets/icons/TopRatedIcon.js';
 import HistoryIcon from '../assets/icons/HistoryIcon.js';
+import SunIcon from '../assets/icons/SunIcon.js';
+import MoonIcon from '../assets/icons/MoonIcon.js';
 
 const drawerWidth = 240;
 
 interface ILeftDrawerProps {
   open: boolean;
-  handleDrawerClose: () => void;
 }
 
 const openedMixin = () => ({
@@ -32,7 +33,7 @@ const closedMixin = () => ({
   transitionTimingFunction: 'ease-in',
   transitionDelay: '0ms',
   overflowX: 'hidden',
-  width: 57,
+  width: 0,
   '@sm': {
     width: 65,
   },
@@ -46,14 +47,15 @@ const Drawer = styled(Container, {
   whiteSpace: 'nowrap',
   boxSizing: 'border-box',
   margin: 0,
-  height: '100vh',
+  height: 'calc(100vh - 66px)',
   position: 'fixed',
   zIndex: 10,
 });
 
 const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
+  const { setTheme } = useRemixTheme();
   const { isDark } = useTheme();
-  const { open, handleDrawerClose } = props;
+  const { open } = props;
   const iconItem = (index: number) => {
     let icon;
     switch (index) {
@@ -109,20 +111,13 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
         }),
         paddingLeft: 0,
         paddingRight: 0,
-        paddingTop: '20px',
+        marginTop: '66px',
       }}
       className={`backdrop-blur-md px-0 border-r ${
         isDark ? 'bg-black/30 border-r-slate-700' : 'bg-white/30 border-r-slate-300'
       }`}
     >
-      <Button onClick={handleDrawerClose} light auto>
-        <ArrowLeftIcon />
-      </Button>
-      <Grid.Container
-        css={{
-          paddingTop: '8px',
-        }}
-      >
+      <Grid.Container>
         {leftDrawerLink.map((page, index: number) => (
           <Grid
             key={page.pageName}
@@ -137,7 +132,7 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                 justifyContent: open ? 'initial' : 'center',
               }}
             >
-              <Link to={`/${page.pageLink}`} className="flex flex-row">
+              <NavLink to={`/${page.pageLink}`} className="flex flex-row">
                 {iconItem(index)}
                 <Text
                   h4
@@ -149,11 +144,27 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                 >
                   {page.pageName}
                 </Text>
-              </Link>
+              </NavLink>
             </Button>
           </Grid>
         ))}
       </Grid.Container>
+      <Switch
+        checked={isDark}
+        size="lg"
+        onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}
+        shadow
+        color="primary"
+        iconOn={<MoonIcon filled />}
+        iconOff={<SunIcon filled />}
+        css={{
+          marginLeft: '90px',
+          marginTop: '42vh',
+          '@xs': {
+            display: 'none',
+          },
+        }}
+      />
     </Drawer>
   );
 };

@@ -10,20 +10,58 @@ interface IMediaItem {
 const BannerItem = ({ item }: { item: IMedia }) => {
   const { backdropPath, overview, posterPath, title, id, mediaType } = item;
   return (
-    <Card css={{ w: '100vw', h: '100vh' }}>
+    <Card variant="flat" css={{ w: '100vw', h: '100vh', borderWidth: 0 }}>
       <Card.Header css={{ position: 'absolute', zIndex: 1 }}>
         <Row>
-          <Col css={{ marginTop: '25vh', marginLeft: '10vw' }}>
-            <Text size={68} weight="bold" transform="uppercase" css={{ margin: 0 }}>
+          <Col
+            css={{
+              marginTop: '20vh',
+              marginLeft: '5vw',
+              marginRight: '5vw',
+              '@sm': {
+                marginLeft: '10vw',
+              },
+            }}
+          >
+            <Text
+              size={30}
+              weight="bold"
+              transform="uppercase"
+              css={{
+                margin: 0,
+                '@xs': {
+                  fontSize: '40px',
+                },
+                '@sm': {
+                  fontSize: '50px',
+                },
+                '@md': {
+                  fontSize: '68px',
+                },
+              }}
+            >
               {title}
             </Text>
-            <Text size={18} weight="bold" css={{ margin: '5vh 0 0 0' }}>
+            <Text
+              size={14}
+              weight="bold"
+              css={{
+                margin: '5vh 0 0 0',
+                textAlign: 'justify',
+                '@xs': {
+                  fontSize: '16px',
+                },
+                '@sm': {
+                  fontSize: '18px',
+                },
+              }}
+            >
               {overview}
             </Text>
             <Row>
               <Col span={4}>
                 <Button
-                  size="lg"
+                  auto
                   shadow
                   rounded
                   color="gradient"
@@ -32,15 +70,27 @@ const BannerItem = ({ item }: { item: IMedia }) => {
                   }}
                 >
                   <Link to={`/${mediaType === 'movie' ? 'movies/' : 'tv-shows/'}${id}`}>
-                    <Text size={24} weight="bold" transform="uppercase">
+                    <Text
+                      size={16}
+                      weight="bold"
+                      transform="uppercase"
+                      css={{
+                        '@xs': {
+                          fontSize: '18px',
+                        },
+                        '@sm': {
+                          fontSize: '20px',
+                        },
+                      }}
+                    >
                       Watch now
                     </Text>
                   </Link>
                 </Button>
               </Col>
-              <Col span={4}>
+              <Col span={6}>
                 <Button
-                  size="lg"
+                  auto
                   shadow
                   rounded
                   bordered
@@ -49,23 +99,56 @@ const BannerItem = ({ item }: { item: IMedia }) => {
                     marginTop: '5vh',
                   }}
                 >
-                  <Text size={24} weight="bold" transform="uppercase">
+                  <Text
+                    size={16}
+                    weight="bold"
+                    transform="uppercase"
+                    css={{
+                      '@xs': {
+                        fontSize: '18px',
+                      },
+                      '@sm': {
+                        fontSize: '20px',
+                      },
+                    }}
+                  >
                     Watch trailer
                   </Text>
                 </Button>
               </Col>
             </Row>
           </Col>
-          <Col>
+          <Col
+            css={{
+              '@smMax': {
+                display: 'none',
+              },
+            }}
+          >
             <Card.Image
               src={posterPath}
               alt={title}
               objectFit="cover"
-              width="40%"
-              height="40%"
+              width="50%"
               css={{
                 marginTop: '20vh',
-                borderRadius: '12px',
+                borderRadius: '24px',
+                '@mdMax': {
+                  display: 'none',
+                },
+              }}
+            />
+            <Card.Image
+              src={posterPath}
+              alt={title}
+              objectFit="cover"
+              width="70%"
+              css={{
+                marginTop: '20vh',
+                borderRadius: '24px',
+                '@md': {
+                  display: 'none',
+                },
               }}
             />
           </Col>

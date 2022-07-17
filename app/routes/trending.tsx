@@ -1,5 +1,5 @@
 import { DataFunctionArgs, json, LoaderFunction } from '@remix-run/node';
-import { Link, useLoaderData } from '@remix-run/react';
+import { useLoaderData } from '@remix-run/react';
 import { useState } from 'react';
 import { Container, Pagination, Spacer, Radio } from '@nextui-org/react';
 
@@ -85,10 +85,6 @@ const Trending = () => {
         shadow
         onChange={paginationChangeHandler}
       />
-      <Spacer />
-      <Link to="/about" color="secondary">
-        Go to the about page
-      </Link>
     </Container>
   );
 };
