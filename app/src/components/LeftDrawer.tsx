@@ -49,7 +49,7 @@ const Drawer = styled(Container, {
   margin: 0,
   height: 'calc(100vh - 66px)',
   position: 'fixed',
-  zIndex: 10,
+  zIndex: 990,
 });
 
 const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {

@@ -22,7 +22,13 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <>
+    <Container
+      fluid
+      css={{
+        margin: 0,
+        padding: 0,
+      }}
+    >
       <Header
         open={open}
         handleDrawerOpen={handleDrawerOpen}
@@ -33,17 +39,26 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         fluid
         responsive
         css={{
+          width: '100%',
           zIndex: 0,
           margin: 0,
           ...(location.pathname !== '/'
             ? {
                 paddingTop: '94px',
                 paddingLeft: '88px',
+                paddingRight: 0,
+                '@xsMax': {
+                  paddingLeft: 0,
+                  paddingBottom: '65px',
+                },
               }
             : {
                 paddingTop: '2px',
                 paddingLeft: 0,
                 paddingRight: 0,
+                '@xsMax': {
+                  paddingBottom: '65px',
+                },
               }),
         }}
       >
@@ -52,7 +67,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       </Container>
       <BottomNav />
       {/* TODO add a search button (fixed position) to the right drawer for searching */}
-    </>
+    </Container>
   );
 };
 

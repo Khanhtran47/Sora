@@ -1,5 +1,5 @@
 import { Link } from '@remix-run/react';
-import { Card, Col, Text, Row, Button } from '@nextui-org/react';
+import { Card, Col, Text, Row, Button, useTheme } from '@nextui-org/react';
 import { IMedia } from '~/models/tmdb.types';
 
 interface IMediaItem {
@@ -175,17 +175,11 @@ const BannerItem = ({ item }: { item: IMedia }) => {
 };
 
 const CardItem = ({ item }: { item: IMedia }) => {
+  const { isDark } = useTheme();
   const { title, posterPath } = item;
 
   return (
-    <Card>
-      <Card.Header css={{ position: 'absolute', zIndex: 1, top: 5 }}>
-        <Col>
-          <Text h4 color="white">
-            {title}
-          </Text>
-        </Col>
-      </Card.Header>
+    <Card variant="flat" css={{ borderWidth: 0 }}>
       <Card.Image
         src={posterPath}
         objectFit="cover"
@@ -193,6 +187,22 @@ const CardItem = ({ item }: { item: IMedia }) => {
         height={340}
         alt="Card image background"
       />
+      <Card.Footer
+        isBlurred
+        css={{
+          position: 'absolute',
+          bgBlur: isDark ? 'rgb(0 0 0 / 0.3)' : 'rgb(255 255 255 / 0.3)',
+          bottom: 0,
+          zIndex: 1,
+          height: '80px',
+          alignItems: 'center',
+        }}
+        className={isDark ? 'bg-black/30' : 'bg-white/30'}
+      >
+        <Text size={18} b transform="uppercase">
+          {title}
+        </Text>
+      </Card.Footer>
     </Card>
   );
 };
