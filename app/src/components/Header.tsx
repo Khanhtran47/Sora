@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Link } from '@remix-run/react';
+import { NavLink } from '@remix-run/react';
 import { Avatar, Button, Text, Grid, Dropdown, Switch, useTheme, styled } from '@nextui-org/react';
-import useDarkMode from 'use-dark-mode';
+import { useTheme as useRemixTheme } from 'next-themes';
 
 /* Components */
 
@@ -10,10 +10,12 @@ import kleeCute from '../assets/images/klee.jpg';
 import SunIcon from '../assets/icons/SunIcon.js';
 import MoonIcon from '../assets/icons/MoonIcon.js';
 import MenuIcon from '../assets/icons/MenuIcon.js';
+import ArrowLeftIcon from '../assets/icons/ArrowLeftIcon.js';
 
 interface IHeaderProps {
   open: boolean;
   handleDrawerOpen: () => void;
+  handleDrawerClose: () => void;
 }
 
 const pages = [
@@ -31,8 +33,6 @@ const pages = [
   },
 ];
 
-const drawerWidth = 240;
-
 const AppBar = styled(Grid.Container, {
   // TODO: add transition on opening/closing drawer
   zIndex: 999,
@@ -40,15 +40,15 @@ const AppBar = styled(Grid.Container, {
 });
 
 const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
-  const darkMode = useDarkMode(false);
+  const { setTheme } = useRemixTheme();
   const { isDark } = useTheme();
-  const { open, handleDrawerOpen } = props;
+  const { open, handleDrawerOpen, handleDrawerClose } = props;
   return (
     <AppBar
       justify="space-between"
       alignItems="center"
       color="inherit"
-      className={`flex justify-between backdrop-blur-md border-b border-b-slate-400 ${
+      className={`flex justify-between backdrop-blur-md border-b ${
         isDark ? 'bg-black/30 border-b-slate-700' : ' border-b-slate-300 bg-white/30'
       }`}
       gap={2}
@@ -56,38 +56,32 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       css={{
         height: 80,
         paddingBottom: 0,
-        ...(open && {
-          marginLeft: drawerWidth,
-          width: `calc(100% - ${drawerWidth}px)`,
-          transitionProperty: 'width',
-          transitionDuration: '225ms',
-          transitionTimingFunction: 'ease-in',
-          transitionDelay: '0ms',
-        }),
-        ...(!open && {
-          transitionProperty: 'width',
-          transitionDuration: '195ms',
-          transitionTimingFunction: 'ease-out',
-          transitionDelay: '0ms',
-        }),
       }}
     >
       {/* button and logo */}
-      <Grid xs={8} sm={3} alignItems="center">
+      <Grid
+        xs={8}
+        sm={3}
+        alignItems="center"
+        css={{
+          '@xsMax': {
+            justifyContent: 'space-between',
+          },
+        }}
+      >
         <Button
-          onClick={handleDrawerOpen}
+          onClick={open ? handleDrawerClose : handleDrawerOpen}
           light
           auto
           css={{
             paddingRight: 8,
             paddingLeft: 8,
             marginRight: 12,
-            ...(open && { display: 'none' }),
           }}
         >
-          <MenuIcon />
+          {open ? <ArrowLeftIcon /> : <MenuIcon />}
         </Button>
-        <Link to="/">
+        <NavLink to="/">
           <Text
             h6
             size={36}
@@ -107,8 +101,8 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
           >
             LOGO
           </Text>
-        </Link>
-        <Link to="/">
+        </NavLink>
+        <NavLink to="/">
           <Text
             h5
             size={30}
@@ -128,14 +122,14 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
           >
             LOGO
           </Text>
-        </Link>
+        </NavLink>
       </Grid>
 
       {/* link page */}
       <Grid sm={6}>
         {pages.map((page) => (
           <Button light auto key={page.pageName}>
-            <Link to={`/${page.pageLink}`}>
+            <NavLink to={`/${page.pageLink}`}>
               <Text
                 h1
                 size={20}
@@ -149,7 +143,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
               >
                 {page.pageName}
               </Text>
-            </Link>
+            </NavLink>
           </Button>
         ))}
       </Grid>
@@ -159,13 +153,16 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
         <Switch
           checked={isDark}
           size="lg"
-          onChange={() => darkMode.toggle()}
+          onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}
           shadow
           color="primary"
           iconOn={<MoonIcon filled />}
           iconOff={<SunIcon filled />}
           css={{
             marginRight: '30px',
+            '@xsMax': {
+              display: 'none',
+            },
           }}
         />
         <Dropdown placement="bottom-left">

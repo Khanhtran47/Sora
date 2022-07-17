@@ -9,8 +9,8 @@ import {
   ScrollRestoration,
   useCatch,
 } from '@remix-run/react';
-import { NextUIProvider, Text, Image, createTheme } from '@nextui-org/react';
-import useDarkMode from 'use-dark-mode';
+import { NextUIProvider, Text, Image, globalCss, createTheme } from '@nextui-org/react';
+import { ThemeProvider as RemixThemesProvider } from 'next-themes';
 import swiperStyles from 'swiper/swiper.min.css';
 import Layout from '~/src/components/Layout';
 import styles from '~/styles/app.css';
@@ -20,6 +20,14 @@ interface DocumentProps {
   children: React.ReactNode;
   title?: string;
 }
+
+const globalStyles = globalCss({
+  '*': {
+    margin: 0,
+    padding: 0,
+    boxSizing: 'border-box',
+  },
+});
 
 const lightTheme = createTheme({
   type: 'light',
@@ -68,15 +76,24 @@ const Document = ({ children, title }: DocumentProps) => (
 // https://remix.run/api/conventions#default-export
 // https://remix.run/api/conventions#route-filenames
 const App = () => {
-  const darkMode = useDarkMode(false);
+  globalStyles();
 
   return (
     <Document>
-      <NextUIProvider theme={darkMode.value ? darkTheme : lightTheme}>
-        <Layout>
-          <Outlet />
-        </Layout>
-      </NextUIProvider>
+      <RemixThemesProvider
+        defaultTheme="system"
+        attribute="class"
+        value={{
+          light: lightTheme.className,
+          dark: darkTheme.className,
+        }}
+      >
+        <NextUIProvider>
+          <Layout>
+            <Outlet />
+          </Layout>
+        </NextUIProvider>
+      </RemixThemesProvider>
     </Document>
   );
 };
@@ -85,7 +102,6 @@ const App = () => {
 // https://remix.run/docs/en/v1/api/conventions#catchboundary
 export const CatchBoundary = () => {
   const caught = useCatch();
-  const darkMode = useDarkMode(false);
 
   let message;
   switch (caught.status) {
@@ -102,23 +118,32 @@ export const CatchBoundary = () => {
 
   return (
     <Document title={`${caught.status} ${caught.statusText}`}>
-      <NextUIProvider theme={darkMode.value ? darkTheme : lightTheme}>
-        <Layout>
-          <Text h1 color="warning" css={{ textAlign: 'center' }}>
-            {caught.status} {caught.statusText} {message}
-          </Text>
-          <Image
-            autoResize
-            width={480}
-            src={pageNotFound}
-            alt="404"
-            objectFit="cover"
-            css={{
-              marginTop: '20px',
-            }}
-          />
-        </Layout>
-      </NextUIProvider>
+      <RemixThemesProvider
+        defaultTheme="system"
+        attribute="class"
+        value={{
+          light: lightTheme.className,
+          dark: darkTheme.className,
+        }}
+      >
+        <NextUIProvider>
+          <Layout>
+            <Text h1 color="warning" css={{ textAlign: 'center' }}>
+              {caught.status} {caught.statusText} {message}
+            </Text>
+            <Image
+              autoResize
+              width={480}
+              src={pageNotFound}
+              alt="404"
+              objectFit="cover"
+              css={{
+                marginTop: '20px',
+              }}
+            />
+          </Layout>
+        </NextUIProvider>
+      </RemixThemesProvider>
     </Document>
   );
 };
@@ -127,16 +152,24 @@ export const CatchBoundary = () => {
 // https://remix.run/docs/en/v1/api/conventions#errorboundary
 export const ErrorBoundary = ({ error }: { error: Error }) => {
   console.error(error);
-  const darkMode = useDarkMode(false);
   return (
     <Document title="Error!">
-      <NextUIProvider theme={darkMode.value ? darkTheme : lightTheme}>
-        <Layout>
-          <Text h1 color="error" css={{ textAlign: 'center' }}>
-            [ErrorBoundary]: There was an error: {error.message}
-          </Text>
-        </Layout>
-      </NextUIProvider>
+      <RemixThemesProvider
+        defaultTheme="system"
+        attribute="class"
+        value={{
+          light: lightTheme.className,
+          dark: darkTheme.className,
+        }}
+      >
+        <NextUIProvider>
+          <Layout>
+            <Text h1 color="error" css={{ textAlign: 'center' }}>
+              [ErrorBoundary]: There was an error: {error.message}
+            </Text>
+          </Layout>
+        </NextUIProvider>
+      </RemixThemesProvider>
     </Document>
   );
 };
