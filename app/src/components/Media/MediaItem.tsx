@@ -24,7 +24,7 @@ const BannerItem = ({ item }: { item: IMedia }) => {
             }}
           >
             <Text
-              size={30}
+              size={28}
               weight="bold"
               transform="uppercase"
               css={{
@@ -43,7 +43,7 @@ const BannerItem = ({ item }: { item: IMedia }) => {
               {title}
             </Text>
             <Text
-              size={14}
+              size={12}
               weight="bold"
               css={{
                 margin: '5vh 0 0 0',
@@ -59,7 +59,7 @@ const BannerItem = ({ item }: { item: IMedia }) => {
               {overview}
             </Text>
             <Row>
-              <Col span={4}>
+              <Col span={6}>
                 <Button
                   auto
                   shadow
@@ -71,7 +71,7 @@ const BannerItem = ({ item }: { item: IMedia }) => {
                 >
                   <Link to={`/${mediaType === 'movie' ? 'movies/' : 'tv-shows/'}${id}`}>
                     <Text
-                      size={16}
+                      size={12}
                       weight="bold"
                       transform="uppercase"
                       css={{
@@ -100,7 +100,7 @@ const BannerItem = ({ item }: { item: IMedia }) => {
                   }}
                 >
                   <Text
-                    size={16}
+                    size={12}
                     weight="bold"
                     transform="uppercase"
                     css={{
