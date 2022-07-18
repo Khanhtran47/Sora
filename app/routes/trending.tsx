@@ -1,9 +1,9 @@
 import { DataFunctionArgs, json, LoaderFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { useState } from 'react';
-import { Container, Pagination, Spacer, Radio } from '@nextui-org/react';
+import { Container, Pagination } from '@nextui-org/react';
 
-import { getTrending } from '~/models/tmdb.server';
+import { getTrending } from '~/services/tmdb.server';
 import MediaList from '~/src/components/Media/MediaList';
 
 type LoaderData = {

@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { NavLink } from '@remix-run/react';
+import { NavLink, Link } from '@remix-run/react';
 import { Avatar, Button, Text, Grid, Dropdown, Switch, useTheme, styled } from '@nextui-org/react';
 import { useTheme as useRemixTheme } from 'next-themes';
+import type { User } from '@supabase/supabase-js';
 
 /* Components */
 
@@ -16,6 +17,7 @@ interface IHeaderProps {
   open: boolean;
   handleDrawerOpen: () => void;
   handleDrawerClose: () => void;
+  user?: User;
 }
 
 const pages = [
@@ -42,7 +44,7 @@ const AppBar = styled(Grid.Container, {
 const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   const { setTheme } = useRemixTheme();
   const { isDark } = useTheme();
-  const { open, handleDrawerOpen, handleDrawerClose } = props;
+  const { open, handleDrawerOpen, handleDrawerClose, user } = props;
   return (
     <AppBar
       justify="space-between"
@@ -165,42 +167,52 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
             },
           }}
         />
-        <Dropdown placement="bottom-left">
-          <Dropdown.Trigger>
-            <Avatar
-              size="md"
-              alt="Klee Cute"
-              src={kleeCute}
-              color="primary"
-              bordered
-              css={{ cursor: 'pointer' }}
-            />
-          </Dropdown.Trigger>
-          <Dropdown.Menu color="secondary" aria-label="Avatar Actions">
-            <Dropdown.Item key="profile" css={{ height: '$18' }}>
-              <Text b color="inherit" css={{ d: 'flex' }}>
-                Signed in as
-              </Text>
-              <Text b color="inherit" css={{ d: 'flex' }}>
-                klee@example.com
-              </Text>
-            </Dropdown.Item>
-            <Dropdown.Item key="settings" withDivider>
-              My Settings
-            </Dropdown.Item>
-            <Dropdown.Item key="analytics" withDivider>
-              Analytics
-            </Dropdown.Item>
-            <Dropdown.Item key="system">System</Dropdown.Item>
-            <Dropdown.Item key="configurations">Configurations</Dropdown.Item>
-            <Dropdown.Item key="help_and_feedback" withDivider>
-              Help & Feedback
-            </Dropdown.Item>
-            <Dropdown.Item key="logout" color="error" withDivider>
-              Log Out
-            </Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
+        {user ? (
+          <Dropdown placement="bottom-left">
+            <Dropdown.Trigger>
+              <Avatar
+                size="md"
+                alt="Klee Cute"
+                src={kleeCute}
+                color="primary"
+                bordered
+                css={{ cursor: 'pointer' }}
+              />
+            </Dropdown.Trigger>
+            <Dropdown.Menu color="secondary" aria-label="Avatar Actions">
+              <Dropdown.Item key="profile" css={{ height: '$18' }}>
+                <Text b color="inherit" css={{ d: 'flex' }}>
+                  Signed in as
+                </Text>
+                <Text b color="inherit" css={{ d: 'flex' }}>
+                  {user?.email ?? 'klee@example.com'}
+                </Text>
+              </Dropdown.Item>
+              <Dropdown.Item key="settings" withDivider>
+                My Settings
+              </Dropdown.Item>
+              <Dropdown.Item key="analytics" withDivider>
+                Analytics
+              </Dropdown.Item>
+              <Dropdown.Item key="system">System</Dropdown.Item>
+              <Dropdown.Item key="configurations">Configurations</Dropdown.Item>
+              <Dropdown.Item key="help_and_feedback" withDivider>
+                Help & Feedback
+              </Dropdown.Item>
+              <Dropdown.Item key="logout" color="error" withDivider>
+                <Link to="/sign-out">
+                  <Text color="error">Log Out</Text>
+                </Link>
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        ) : (
+          <Button bordered color="gradient" auto>
+            <Link to="/sign-in">
+              <Text>Sign In</Text>
+            </Link>
+          </Button>
+        )}
       </Grid>
     </AppBar>
   );

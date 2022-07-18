@@ -1,6 +1,6 @@
 import { DataFunctionArgs } from '@remix-run/node';
-import { getTrending } from '~/models/tmdb.server';
-import { MediaType, TimeWindowType } from '~/models/tmdb.types';
+import { getTrending } from '~/services/tmdb.server';
+import { MediaType, TimeWindowType } from '~/services/tmdb.types';
 
 // endpoint: /api/trending?page=
 export async function loader({ request }: DataFunctionArgs) {
