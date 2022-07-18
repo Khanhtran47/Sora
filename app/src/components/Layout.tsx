@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { Container } from '@nextui-org/react';
 import { useLocation } from '@remix-run/react';
+import type { User } from '@supabase/supabase-js';
 
 /* Components */
 import Header from './Header';
@@ -9,7 +10,12 @@ import LeftDrawer from './LeftDrawer';
 import Copyright from './Copyright';
 import BottomNav from './BottomNav';
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
+interface ILayout {
+  children: React.ReactNode;
+  user?: User;
+}
+
+const Layout = ({ children, user }: ILayout) => {
   const location = useLocation();
   const [open, setOpen] = React.useState(false);
 
@@ -33,6 +39,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         open={open}
         handleDrawerOpen={handleDrawerOpen}
         handleDrawerClose={handleDrawerClose}
+        user={user ?? undefined}
       />
       <LeftDrawer open={open} />
       <Container

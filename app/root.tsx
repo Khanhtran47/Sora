@@ -1,5 +1,6 @@
 import * as React from 'react';
-import type { LinksFunction, MetaFunction } from '@remix-run/node';
+import type { LinksFunction, LoaderFunction, MetaFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import {
   Links,
   LiveReload,
@@ -8,17 +9,26 @@ import {
   Scripts,
   ScrollRestoration,
   useCatch,
+  useLoaderData,
 } from '@remix-run/react';
 import { NextUIProvider, Text, Image, globalCss, createTheme } from '@nextui-org/react';
 import { ThemeProvider as RemixThemesProvider } from 'next-themes';
 import swiperStyles from 'swiper/swiper.min.css';
+import type { User } from '@supabase/supabase-js';
+
 import Layout from '~/src/components/Layout';
 import styles from '~/styles/app.css';
+import { getUser } from './services/auth.server';
+import { getSession } from './services/sessions.server';
 import pageNotFound from './src/assets/images/404.gif';
 
 interface DocumentProps {
   children: React.ReactNode;
   title?: string;
+}
+
+interface LoaderDataType {
+  user?: User;
 }
 
 const globalStyles = globalCss({
@@ -73,10 +83,25 @@ const Document = ({ children, title }: DocumentProps) => (
   </html>
 );
 
+export const loader: LoaderFunction = async ({ request }) => {
+  const session = await getSession(request.headers.get('Cookie'));
+
+  if (session.has('access_token')) {
+    const { user, error } = await getUser(session.get('access_token'));
+
+    if (user && !error) {
+      return json<LoaderDataType>({ user });
+    }
+  }
+
+  return null;
+};
+
 // https://remix.run/api/conventions#default-export
 // https://remix.run/api/conventions#route-filenames
 const App = () => {
   globalStyles();
+  const loaderData = useLoaderData<LoaderDataType>();
 
   return (
     <Document>
@@ -89,7 +114,7 @@ const App = () => {
         }}
       >
         <NextUIProvider>
-          <Layout>
+          <Layout user={loaderData?.user ?? undefined}>
             <Outlet />
           </Layout>
         </NextUIProvider>

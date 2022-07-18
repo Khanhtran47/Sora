@@ -1,13 +1,15 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react/jsx-filename-extension */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/self-closing-comp */
 const NewReleaseIcon = ({
   fill = 'currentColor',
-  filled,
-  size,
-  height,
-  width,
-  label,
+  filled = false,
+  size = 0,
+  height = 0,
+  width = 0,
+  label = '',
   ...props
 }) => {
   if (filled) {

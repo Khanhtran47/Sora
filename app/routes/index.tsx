@@ -2,7 +2,7 @@ import * as React from 'react';
 import { MetaFunction, LoaderFunction, json, DataFunctionArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 
-import { getTrending } from '~/models/tmdb.server';
+import { getTrending } from '~/services/tmdb.server';
 import MediaList from '~/src/components/Media/MediaList';
 
 // https://remix.run/api/conventions#meta
