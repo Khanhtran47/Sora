@@ -1,7 +1,17 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react/jsx-filename-extension */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/self-closing-comp */
-const TopRatedIcon = ({ fill = 'currentColor', filled, size, height, width, label, ...props }) => {
+const TopRatedIcon = ({
+  fill = 'currentColor',
+  filled = false,
+  size = 0,
+  height = 0,
+  width = 0,
+  label = '',
+  ...props
+}) => {
   if (filled) {
     return (
       <svg width={size || width || 24} height={size || height || 24} viewBox="0 0 24 24" {...props}>

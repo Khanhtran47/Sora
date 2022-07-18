@@ -1,7 +1,17 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react/jsx-filename-extension */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/self-closing-comp */
-const HistoryIcon = ({ fill = 'currentColor', filled, size, height, width, label, ...props }) => (
+const HistoryIcon = ({
+  fill = 'currentColor',
+  filled = false,
+  size = 0,
+  height = 0,
+  width = 0,
+  label = '',
+  ...props
+}) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size || width || 24}
