@@ -43,6 +43,7 @@ const Layout = ({ children, user }: ILayout) => {
       />
       <LeftDrawer open={open} />
       <Container
+        as="main"
         fluid
         responsive
         css={{

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { MetaFunction, LoaderFunction, json, DataFunctionArgs } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import { useLoaderData, useLocation } from '@remix-run/react';
+import { motion } from 'framer-motion';
 
 import { getTrending } from '~/services/tmdb.server';
 import MediaList from '~/src/components/Media/MediaList';
@@ -30,11 +31,19 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
 // https://remix.run/guides/routing#index-routes
 const Index = () => {
   const { todayTrending } = useLoaderData();
+  const location = useLocation();
   const [trending] = React.useState(todayTrending.items);
 
   return (
-    // Home page
-    <MediaList listType="slider-banner" items={trending} />
+    <motion.main
+      key={location.key}
+      initial={{ x: '-10%', opacity: 0 }}
+      animate={{ x: '0', opacity: 1 }}
+      exit={{ y: '-10%', opacity: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <MediaList listType="slider-banner" items={trending} />
+    </motion.main>
   );
 };
 

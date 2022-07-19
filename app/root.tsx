@@ -5,16 +5,21 @@ import {
   Links,
   LiveReload,
   Meta,
-  Outlet,
   Scripts,
   ScrollRestoration,
   useCatch,
   useLoaderData,
+  useOutlet,
+  useFetchers,
+  useTransition,
 } from '@remix-run/react';
 import { NextUIProvider, Text, Image, globalCss, createTheme } from '@nextui-org/react';
 import { ThemeProvider as RemixThemesProvider } from 'next-themes';
 import swiperStyles from 'swiper/swiper.min.css';
 import type { User } from '@supabase/supabase-js';
+import { AnimatePresence } from 'framer-motion';
+import NProgress from 'nprogress';
+import nProgressStyles from 'nprogress/nprogress.css';
 
 import Layout from '~/src/components/Layout';
 import styles from '~/styles/app.css';
@@ -59,6 +64,10 @@ export const links: LinksFunction = () => [
     rel: 'stylesheet',
     href: swiperStyles,
   },
+  {
+    rel: 'stylesheet',
+    href: nProgressStyles,
+  },
 ];
 
 export const meta: MetaFunction = () => ({
@@ -101,7 +110,32 @@ export const loader: LoaderFunction = async ({ request }) => {
 // https://remix.run/api/conventions#route-filenames
 const App = () => {
   globalStyles();
+  const outlet = useOutlet();
   const loaderData = useLoaderData<LoaderDataType>();
+  const transition = useTransition();
+
+  const fetchers = useFetchers();
+
+  /**
+   * This gets the state of every fetcher active on the app and combine it with
+   * the state of the global transition (Link and Form), then use them to
+   * determine if the app is idle or if it's loading.
+   * Here we consider both loading and submitting as loading.
+   */
+  const state = React.useMemo<'idle' | 'loading'>(() => {
+    const states = [transition.state, ...fetchers.map((fetcher) => fetcher.state)];
+    if (states.every((item) => item === 'idle')) return 'idle';
+    return 'loading';
+  }, [transition.state, fetchers]);
+
+  React.useEffect(() => {
+    // and when it's something else it means it's either submitting a form or
+    // waiting for the loaders of the next location so we start it
+    if (state === 'loading') NProgress.start();
+    // when the state is idle then we can to complete the progress bar
+    if (state === 'idle') NProgress.done();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [transition.state]);
 
   return (
     <Document>
@@ -115,7 +149,9 @@ const App = () => {
       >
         <NextUIProvider>
           <Layout user={loaderData?.user ?? undefined}>
-            <Outlet />
+            <AnimatePresence exitBeforeEnter initial={false}>
+              {outlet}
+            </AnimatePresence>
           </Layout>
         </NextUIProvider>
       </RemixThemesProvider>
@@ -153,19 +189,21 @@ export const CatchBoundary = () => {
       >
         <NextUIProvider>
           <Layout>
-            <Text h1 color="warning" css={{ textAlign: 'center' }}>
-              {caught.status} {caught.statusText} {message}
-            </Text>
-            <Image
-              autoResize
-              width={480}
-              src={pageNotFound}
-              alt="404"
-              objectFit="cover"
-              css={{
-                marginTop: '20px',
-              }}
-            />
+            <>
+              <Text h1 color="warning" css={{ textAlign: 'center' }}>
+                {caught.status} {caught.statusText} {message}
+              </Text>
+              <Image
+                autoResize
+                width={480}
+                src={pageNotFound}
+                alt="404"
+                objectFit="cover"
+                css={{
+                  marginTop: '20px',
+                }}
+              />
+            </>
           </Layout>
         </NextUIProvider>
       </RemixThemesProvider>

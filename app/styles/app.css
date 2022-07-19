@@ -480,15 +480,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   position: absolute;
 }
 
-.inset-x-0 {
-  left: 0px;
-  right: 0px;
-}
-
-.bottom-0 {
-  bottom: 0px;
-}
-
 .block {
   display: block;
 }
@@ -535,6 +526,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   border-radius: 0.25rem;
 }
 
+.border-t {
+  border-top-width: 1px;
+}
+
 .border-b {
   border-bottom-width: 1px;
 }
@@ -543,13 +538,14 @@ Ensure the default browser behavior of the `hidden` attribute.
   border-right-width: 1px;
 }
 
-.border-t {
-  border-top-width: 1px;
+.border-t-slate-700 {
+  --tw-border-opacity: 1;
+  border-top-color: rgb(51 65 85 / var(--tw-border-opacity));
 }
 
-.border-b-slate-400 {
+.border-t-slate-300 {
   --tw-border-opacity: 1;
-  border-bottom-color: rgb(148 163 184 / var(--tw-border-opacity));
+  border-top-color: rgb(203 213 225 / var(--tw-border-opacity));
 }
 
 .border-b-slate-700 {
@@ -572,16 +568,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   border-right-color: rgb(203 213 225 / var(--tw-border-opacity));
 }
 
-.border-t-slate-700 {
-  --tw-border-opacity: 1;
-  border-top-color: rgb(51 65 85 / var(--tw-border-opacity));
-}
-
-.border-t-slate-300 {
-  --tw-border-opacity: 1;
-  border-top-color: rgb(203 213 225 / var(--tw-border-opacity));
-}
-
 .bg-black\/30 {
   background-color: rgb(0 0 0 / 0.3);
 }
@@ -590,28 +576,13 @@ Ensure the default browser behavior of the `hidden` attribute.
   background-color: rgb(255 255 255 / 0.3);
 }
 
-.bg-blue-100 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(219 234 254 / var(--tw-bg-opacity));
-}
-
 .px-0 {
   padding-left: 0px;
   padding-right: 0px;
 }
 
-.text-sm {
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-}
-
 .uppercase {
   text-transform: uppercase;
-}
-
-.text-blue-900 {
-  --tw-text-opacity: 1;
-  color: rgb(30 58 138 / var(--tw-text-opacity));
 }
 
 .shadow {
@@ -634,10 +605,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   transition-duration: 150ms;
 }
 
-.ease-in {
-  transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
-}
-
 .ease-out {
   transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+}
+
+.ease-in {
+  transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
 }
