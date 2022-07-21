@@ -4,7 +4,7 @@ import { useState } from 'react';
 import SwiperCore, { Autoplay } from 'swiper/core';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
-import { IMedia } from '~/services/tmdb.types';
+import { IMedia } from '~/services/tmdb/tmdb.types';
 import MediaItem from './MediaItem';
 
 /**
