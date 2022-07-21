@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { Container, Pagination } from '@nextui-org/react';
 
-import { getTrending } from '~/services/tmdb.server';
+import { getTrending } from '~/services/tmdb/tmdb.server';
 import MediaList from '~/src/components/Media/MediaList';
 
 type LoaderData = {

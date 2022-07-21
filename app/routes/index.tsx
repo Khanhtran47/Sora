@@ -3,7 +3,7 @@ import { MetaFunction, LoaderFunction, json, DataFunctionArgs } from '@remix-run
 import { useLoaderData, useLocation } from '@remix-run/react';
 import { motion } from 'framer-motion';
 
-import { getTrending } from '~/services/tmdb.server';
+import { getTrending } from '~/services/tmdb/tmdb.server';
 import MediaList from '~/src/components/Media/MediaList';
 
 // https://remix.run/api/conventions#meta

@@ -1,6 +1,6 @@
 import { Link } from '@remix-run/react';
 import { Card, Col, Text, Row, Button, useTheme } from '@nextui-org/react';
-import { IMedia } from '~/services/tmdb.types';
+import { IMedia } from '~/services/tmdb/tmdb.types';
 
 interface IMediaItem {
   type: 'banner' | 'card';
