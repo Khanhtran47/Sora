@@ -9,7 +9,7 @@ const Copyright = () => (
     direction="column"
     alignItems="center"
     css={{
-      padding: '60px 0 30px 0',
+      padding: '60px 0 30px 88px',
     }}
   >
     <Avatar alt="Klee Cute" src={KleeCute} css={{ size: '$20' }} />

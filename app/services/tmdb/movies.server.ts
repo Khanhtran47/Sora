@@ -23,14 +23,20 @@ export const getListMovies = async (type: ListMovieType, page?: number): Promise
   return result;
 };
 
-export const getMovieDetail = async (id: number): Promise<IMovieDetail | null> => {
-  const fetched = await fetcher<IMovieDetail>(TMDB.movieDetailUrl(id));
-  if (fetched.error) {
-    console.error(fetched.error);
-  }
+export const getMovieDetail = async (id: number): Promise<IMovieDetail | undefined> => {
+  try {
+    const fetched = await fetcher<IMovieDetail>(TMDB.movieDetailUrl(id));
+    if (!fetched) {
+      throw new Error('Movie Detail Unavailable');
+    }
+    if (fetched.error) {
+      console.error(fetched.error);
+    }
 
-  if (fetched.data) {
-    return fetched.data;
+    if (fetched.data) {
+      return fetched.data;
+    }
+  } catch (error) {
+    console.error(error);
   }
-  return null;
 };
