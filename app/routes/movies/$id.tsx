@@ -27,10 +27,6 @@ export const loader: LoaderFunction = async ({ params }) => {
 
 const MovieDetail = () => {
   const { detail, videos, credits, similar } = useLoaderData<LoaderData>();
-  console.log(detail);
-  console.log(videos);
-  console.log(credits);
-  console.log(similar);
   return (
     <>
       <MediaDetail type="movie" item={detail} />
@@ -46,6 +42,7 @@ const MovieDetail = () => {
       >
         <Tabs
           id="controlled-tabs"
+          // for
           // selectedTabClassName="bg-white"
         >
           <TabList>
@@ -79,5 +76,7 @@ const MovieDetail = () => {
     </>
   );
 };
+
+// TODO: add CatchBoundary and ErrorBoundary
 
 export default MovieDetail;

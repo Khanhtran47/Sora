@@ -1,21 +1,20 @@
 import { Link } from '@remix-run/react';
 import { Card, Col, Text, Row, Button, Progress, useTheme } from '@nextui-org/react';
-import { IMovieDetail } from '~/services/tmdb/tmdb.types';
-import TMDB from '~/utils/mediaUrl';
+import { IMovieDetail, ITvShowDetail } from '~/services/tmdb/tmdb.types';
+import TMDB from '~/utils/media';
 
 interface IMediaDetail {
   type: 'movie' | 'tv';
-  item: IMovieDetail | undefined;
+  item: IMovieDetail | ITvShowDetail | undefined;
 }
 
 const MediaDetail = (props: IMediaDetail) => {
   const { type, item } = props;
 
-  const { title, id, tagline, runtime } = item || {};
+  const { title, id, tagline, runtime, genres } = item || {};
   const posterPath = TMDB?.posterUrl(item?.poster_path || '', 'w500');
   const backdropPath = TMDB?.backdropUrl(item?.backdrop_path || '', 'original');
   const releaseYear = new Date(item?.release_date).getFullYear();
-  console.log(releaseYear);
   return (
     <Card
       variant="flat"
@@ -111,24 +110,12 @@ const MediaDetail = (props: IMediaDetail) => {
                 {tagline}
               </Text>
             )}
-            <Text
-              size={12}
+            <Row
+              align="center"
               css={{
                 margin: '20px 0 0 0',
-                '@xs': {
-                  fontSize: '14px',
-                },
-                '@sm': {
-                  fontSize: '16px',
-                },
-                '@md': {
-                  fontSize: '18px',
-                },
               }}
             >
-              {runtime && `${Math.floor(runtime / 60)}h ${runtime % 60}m`}
-            </Text>
-            <Row align="center">
               <Col span={1}>
                 <Text
                   size={12}
@@ -148,9 +135,51 @@ const MediaDetail = (props: IMediaDetail) => {
                   User Score
                 </Text>
               </Col>
-              <Col span={6} offset={1}>
-                {/* TODO: add tooltip for showing vote_average */}
-                <Progress value={item?.vote_average * 10} shadow color="primary" status="primary" />
+              <Col span={7} css={{ marginLeft: '60px' }}>
+                <Progress
+                  value={item?.vote_average}
+                  shadow
+                  max={10}
+                  color="primary"
+                  status="primary"
+                />
+              </Col>
+            </Row>
+            <Row
+              align="center"
+              css={{
+                margin: '20px 0 0 0',
+              }}
+            >
+              <Col span={4}>
+                <Text
+                  size={12}
+                  css={{
+                    '@xs': {
+                      fontSize: '14px',
+                    },
+                    '@sm': {
+                      fontSize: '16px',
+                    },
+                    '@md': {
+                      fontSize: '18px',
+                    },
+                  }}
+                >
+                  Duration: {runtime && `${Math.floor(runtime / 60)}h ${runtime % 60}m`}
+                </Text>
+              </Col>
+              <Col span={5}>
+                <Row>
+                  {genres &&
+                    genres?.map((genre) => (
+                      <Col key={genre?.id} css={{ marginRight: '10px' }}>
+                        <Button color="primary" auto ghost rounded shadow>
+                          {genre?.name}
+                        </Button>
+                      </Col>
+                    ))}
+                </Row>
               </Col>
             </Row>
             <Row>
@@ -161,10 +190,13 @@ const MediaDetail = (props: IMediaDetail) => {
                   rounded
                   color="gradient"
                   css={{
-                    marginTop: '5vh',
+                    marginTop: '10vh',
                   }}
                 >
-                  <Link to={`/${type === 'movie' ? 'movies/' : 'tv-shows/'}${id}`}>
+                  <Link
+                    prefetch="intent"
+                    to={`/${type === 'movie' ? 'movies' : 'tv-shows'}/watch/${id}`}
+                  >
                     <Text
                       size={12}
                       weight="bold"
@@ -191,7 +223,7 @@ const MediaDetail = (props: IMediaDetail) => {
                   bordered
                   color="gradient"
                   css={{
-                    marginTop: '5vh',
+                    marginTop: '10vh',
                   }}
                 >
                   <Text

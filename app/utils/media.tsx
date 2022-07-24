@@ -4,6 +4,7 @@ export type LogoSize = 'w45' | 'w92' | 'w154' | 'w185' | 'w300' | 'w500' | 'orig
 export type ProfileSize = 'w45' | 'w185' | 'h632' | 'original';
 export type StillSize = 'w92' | 'w185' | 'w300' | 'original';
 
+/* TMDB is a class that has two static methods, posterUrl and backdropUrl, that return a string. */
 export default class TMDB {
   static readonly media_base_url = 'https://image.tmdb.org/t/p/';
 

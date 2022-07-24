@@ -17,7 +17,6 @@ interface ILayout {
 
 const Layout = ({ children, user }: ILayout) => {
   const location = useLocation();
-  console.log(location);
   const [open, setOpen] = React.useState(false);
 
   const handleDrawerOpen = () => {
@@ -51,6 +50,8 @@ const Layout = ({ children, user }: ILayout) => {
           width: '100%',
           zIndex: 0,
           margin: 0,
+          minHeight: '100vh',
+          height: 'fit-content',
           ...(location.pathname === '/' || location.pathname.split('/')[2]?.match(/^\d+$/)
             ? {
                 paddingTop: '2px',

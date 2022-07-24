@@ -23,16 +23,20 @@ export const getListTvShows = async (type: ListTvShowType, page?: number): Promi
   return result;
 };
 
-export const getTvShowDetail = async (id: number): Promise<ITvShowDetail | null> => {
-  const fetched = await fetcher<ITvShowDetail>(TMDB.tvShowDetailUrl(id));
+export const getTvShowDetail = async (id: number): Promise<ITvShowDetail | undefined> => {
+  try {
+    const fetched = await fetcher<ITvShowDetail>(TMDB.tvShowDetailUrl(id));
+    if (!fetched) {
+      throw new Error('Tv Detail Unavailable');
+    }
+    if (fetched.error) {
+      console.error(fetched.error);
+    }
 
-  if (fetched.error) {
-    console.error(fetched.error);
+    if (fetched.data) {
+      return fetched.data;
+    }
+  } catch (error) {
+    console.error(error);
   }
-
-  if (fetched.data) {
-    return fetched.data;
-  }
-
-  return null;
 };
