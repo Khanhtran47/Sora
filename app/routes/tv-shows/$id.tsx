@@ -1,7 +1,11 @@
 import { LoaderFunction, json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
+import { Container } from '@nextui-org/react';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { getTvShowDetail } from '~/services/tmdb/tv.server';
 import { getCredits, getSimilar, getVideos } from '~/services/tmdb/tmdb.server';
+
+import MediaDetail from '~/src/components/Media/MediaDetail';
 
 type LoaderData = {
   detail: Awaited<ReturnType<typeof getTvShowDetail>>;
@@ -23,12 +27,54 @@ export const loader: LoaderFunction = async ({ params }) => {
 
 const TvShowDetail = () => {
   const { detail, videos, credits, similar } = useLoaderData<LoaderData>();
-  console.log(detail);
-  console.log(videos);
-  console.log(credits);
-  console.log(similar);
+  // console.log(detail);
   return (
-    <p>Hello, there, this is a tv show detail page. Things are logged on console. {detail?.name}</p>
+    <>
+      <MediaDetail type="tv" item={detail} />
+      <Container
+        as="div"
+        fluid
+        responsive
+        css={{
+          margin: 0,
+          paddingRight: 0,
+          paddingLeft: '88px',
+        }}
+      >
+        <Tabs
+          id="controlled-tabs"
+          // for
+          // selectedTabClassName="bg-white"
+        >
+          <TabList>
+            <Tab>Overview</Tab>
+            <Tab>Cast</Tab>
+            <Tab>Crew</Tab>
+            <Tab>Videos</Tab>
+            <Tab>Photos</Tab>
+          </TabList>
+
+          <TabPanel>
+            <p>
+              Hello, there, this is a movie detail page. Things are logged on console.{' '}
+              {detail?.title}
+            </p>
+          </TabPanel>
+          <TabPanel>
+            <h2>Any content 2</h2>
+          </TabPanel>
+          <TabPanel>
+            <h2>Any content 3</h2>
+          </TabPanel>
+          <TabPanel>
+            <h2>Any content 4</h2>
+          </TabPanel>
+          <TabPanel>
+            <h2>Any content 4</h2>
+          </TabPanel>
+        </Tabs>
+      </Container>
+    </>
   );
 };
 

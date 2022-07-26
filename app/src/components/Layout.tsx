@@ -50,8 +50,18 @@ const Layout = ({ children, user }: ILayout) => {
           width: '100%',
           zIndex: 0,
           margin: 0,
-          ...(location.pathname !== '/'
+          minHeight: '100vh',
+          height: 'fit-content',
+          ...(location.pathname === '/' || location.pathname.split('/')[2]?.match(/^\d+$/)
             ? {
+                paddingTop: '2px',
+                paddingLeft: 0,
+                paddingRight: 0,
+                '@xsMax': {
+                  paddingBottom: '65px',
+                },
+              }
+            : {
                 paddingTop: '94px',
                 paddingLeft: '88px',
                 paddingRight: 0,
@@ -59,20 +69,12 @@ const Layout = ({ children, user }: ILayout) => {
                   paddingLeft: 0,
                   paddingBottom: '65px',
                 },
-              }
-            : {
-                paddingTop: '2px',
-                paddingLeft: 0,
-                paddingRight: 0,
-                '@xsMax': {
-                  paddingBottom: '65px',
-                },
               }),
         }}
       >
         {children}
-        <Copyright />
       </Container>
+      <Copyright />
       <BottomNav />
       {/* TODO add a search button (fixed position) to the right drawer for searching */}
     </Container>

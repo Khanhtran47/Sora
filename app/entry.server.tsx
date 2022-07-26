@@ -12,7 +12,7 @@ export default function handleRequest(
   const styles = CssBaseline.flush();
   const html = renderToString(<RemixServer context={remixContext} url={request.url} />).replace(
     /<\/head>/,
-    `<style id="stitches">${styles.props.dangerouslySetInnerHTML.__html}</style></head>`,
+    `<style id="stitches" suppressHydrationWarning>${styles.props.dangerouslySetInnerHTML.__html}</style></head>`,
   );
 
   responseHeaders.set('Content-Type', 'text/html');

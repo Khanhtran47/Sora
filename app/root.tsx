@@ -20,6 +20,7 @@ import type { User } from '@supabase/supabase-js';
 import { AnimatePresence } from 'framer-motion';
 import NProgress from 'nprogress';
 import nProgressStyles from 'nprogress/nprogress.css';
+import reactTabsStyles from 'react-tabs/style/react-tabs.css';
 
 import Layout from '~/src/components/Layout';
 import styles from '~/styles/app.css';
@@ -67,6 +68,10 @@ export const links: LinksFunction = () => [
   {
     rel: 'stylesheet',
     href: nProgressStyles,
+  },
+  {
+    rel: 'stylesheet',
+    href: reactTabsStyles,
   },
 ];
 
