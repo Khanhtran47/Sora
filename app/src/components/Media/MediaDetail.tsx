@@ -202,12 +202,12 @@ const MediaDetail = (props: IMediaDetail) => {
                   rounded
                   color="gradient"
                   css={{
-                    marginTop: '2vh',
+                    marginTop: '8vh',
                     '@xs': {
                       marginTop: '4vh',
                     },
                     '@sm': {
-                      marginTop: '8vh',
+                      marginTop: '2vh',
                     },
                   }}
                 >
