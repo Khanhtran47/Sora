@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { LoaderFunction, json } from '@remix-run/node';
+import { MetaFunction, LoaderFunction, json } from '@remix-run/node';
 import { useLoaderData, useLocation } from '@remix-run/react';
 import { Container, Row, Radio, Col } from '@nextui-org/react';
 import { getTvShowDetail } from '~/services/tmdb/tv.server';
@@ -8,6 +8,11 @@ import Player from '~/utils/player';
 type LoaderData = {
   detail: Awaited<ReturnType<typeof getTvShowDetail>>;
 };
+
+export const meta: MetaFunction = () => ({
+  'Content-Security-Policy': 'upgrade-insecure-requests',
+  title: 'My Amazing App',
+});
 
 export const loader: LoaderFunction = async ({ params }) => {
   const { id } = params;
@@ -51,14 +56,21 @@ const TvWatch = () => {
           <Radio value="3">Player 3</Radio>
         </Radio.Group>
       </Row>
-      <Row>
+      <Row css={{ height: '100vh' }}>
         <iframe
           id="iframe"
           src={source}
-          width="100%"
-          height="600px"
+          style={{
+            top: 0,
+            left: 0,
+            width: '70%',
+            height: '70%',
+          }}
           frameBorder="0"
           title="movie-player"
+          allowFullScreen
+          scrolling="no"
+          sandbox
         />
       </Row>
     </Container>

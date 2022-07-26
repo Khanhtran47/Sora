@@ -1,5 +1,5 @@
 import { IMediaList, ListMovieType, IMovieDetail } from './tmdb.types';
-import { fetcher, fetcherPlayer, postFetchDataHandler, TMDB } from './utils.server';
+import { fetcher, postFetchDataHandler, TMDB } from './utils.server';
 
 /**
  * It fetches a list of movies from the TMDB API, and returns a list of movies

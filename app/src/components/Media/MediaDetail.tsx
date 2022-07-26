@@ -1,5 +1,5 @@
 import { Link } from '@remix-run/react';
-import { Card, Col, Text, Row, Button, Progress, useTheme } from '@nextui-org/react';
+import { Card, Col, Text, Row, Button, Progress } from '@nextui-org/react';
 import { IMovieDetail, ITvShowDetail } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
 
@@ -19,15 +19,27 @@ const MediaDetail = (props: IMediaDetail) => {
     <Card
       variant="flat"
       css={{
-        w: '100vw',
-        h: '50vh',
+        width: '100vw',
+        height: '100vh',
         borderWidth: 0,
+        '@xs': {
+          height: '50vh',
+        },
       }}
     >
       <Card.Header css={{ position: 'absolute', zIndex: 1 }}>
         <Row
           css={{
-            padding: '0 12vw',
+            padding: 0,
+            '@xs': {
+              padding: '0 3vw',
+            },
+            '@sm': {
+              padding: '0 6vw',
+            },
+            '@md': {
+              padding: '0 12vw',
+            },
           }}
         >
           <Col
@@ -46,24 +58,11 @@ const MediaDetail = (props: IMediaDetail) => {
               css={{
                 marginTop: '8vh',
                 borderRadius: '24px',
-                '@mdMax': {
+                '@xsMax': {
                   display: 'none',
                 },
               }}
             />
-            {/* <Card.Image
-              src={posterPath}
-              alt={title}
-              objectFit="cover"
-              width="70%"
-              css={{
-                marginTop: '20vh',
-                borderRadius: '24px',
-                '@md': {
-                  display: 'none',
-                },
-              }}
-            /> */}
           </Col>
           <Col
             span={8}
@@ -71,6 +70,19 @@ const MediaDetail = (props: IMediaDetail) => {
               marginTop: '8vh',
             }}
           >
+            <Card.Image
+              src={posterPath}
+              alt={title}
+              objectFit="cover"
+              width="70%"
+              css={{
+                marginTop: '8vh',
+                borderRadius: '24px',
+                '@xs': {
+                  display: 'none',
+                },
+              }}
+            />
             <Text
               size={18}
               weight="bold"
@@ -190,7 +202,13 @@ const MediaDetail = (props: IMediaDetail) => {
                   rounded
                   color="gradient"
                   css={{
-                    marginTop: '10vh',
+                    marginTop: '2vh',
+                    '@xs': {
+                      marginTop: '4vh',
+                    },
+                    '@sm': {
+                      marginTop: '8vh',
+                    },
                   }}
                 >
                   <Link
@@ -223,7 +241,13 @@ const MediaDetail = (props: IMediaDetail) => {
                   bordered
                   color="gradient"
                   css={{
-                    marginTop: '10vh',
+                    marginTop: '8vh',
+                    '@xs': {
+                      marginTop: '4vh',
+                    },
+                    '@sm': {
+                      marginTop: '2vh',
+                    },
                   }}
                 >
                   <Text
