@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { MetaFunction, LoaderFunction, json } from '@remix-run/node';
-import { useLoaderData, useLocation } from '@remix-run/react';
+import { useLoaderData, useParams } from '@remix-run/react';
 import { Container, Row, Radio } from '@nextui-org/react';
 
-import { getTvShowDetail } from '~/services/tmdb/tmdb.server';
+import { getTvShowIMDBId } from '~/services/tmdb/tmdb.server';
 import Player from '~/utils/player';
 
 type LoaderData = {
-  detail: Awaited<ReturnType<typeof getTvShowDetail>>;
+  imdbId: Awaited<ReturnType<typeof getTvShowIMDBId>>;
 };
 
 export const meta: MetaFunction = () => ({
@@ -17,26 +17,24 @@ export const meta: MetaFunction = () => ({
 
 export const loader: LoaderFunction = async ({ params }) => {
   const { id } = params;
-  const mid = Number(id);
+  const tid = Number(id);
   return json<LoaderData>({
-    detail: await getTvShowDetail(mid),
+    imdbId: await getTvShowIMDBId(tid),
   });
 };
 
 const TvWatch = () => {
-  const { detail } = useLoaderData<LoaderData>();
-  const location = useLocation();
-  const id = location.pathname.split('/')[3];
+  const { imdbId } = useLoaderData<LoaderData>();
+  const { id } = useParams();
   const [player, setPlayer] = React.useState<string>('1');
   const [source, setSource] = React.useState<string>(Player.tvPlayerUrl(Number(id), 1));
-  // console.log(detail);
-  // console.log(source);
+
   React.useEffect(
     () =>
       player === '2'
-        ? setSource(Player.tvPlayerUrl(detail.imdb_id, Number(player))) // ! Don't have imdb id for tv show
+        ? setSource(Player.tvPlayerUrl(imdbId, Number(player))) // ! Don't have imdb id for tv show
         : setSource(Player.tvPlayerUrl(Number(id), Number(player))),
-    [player, detail.imdb_id, id],
+    [player, imdbId, id],
   );
   return (
     <Container

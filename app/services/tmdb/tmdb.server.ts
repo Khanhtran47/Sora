@@ -105,3 +105,15 @@ export const getSimilar = async (type: 'movie' | 'tv', id: number): Promise<IMed
   const url = TMDB.similarUrl(type, id);
   return getListFromTMDB(url);
 };
+
+export const getTvShowIMDBId = async (id: number): Promise<number | undefined> => {
+  try {
+    const fetched = await fetcher<{ imdb_id: number | undefined }>(TMDB.tvExternalIds(id));
+
+    if (!fetched?.imdb_id) throw new Error('This TV show does not have IMDB ID');
+
+    return fetched.imdb_id;
+  } catch (error) {
+    console.log(error);
+  }
+};

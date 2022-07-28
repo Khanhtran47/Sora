@@ -82,6 +82,9 @@ export class TMDB {
 
   static similarUrl = (type: 'movie' | 'tv', id: number): string =>
     `${this.api_base_url}${type}/${id}/similar?api_key=${this.key}`;
+
+  static tvExternalIds = (id: number): string =>
+    `${this.api_base_url}tv/${id}/external_ids?api_key=${this.key}`;
 }
 
 export const fetcher = async <T = any>(url: string): Promise<T | undefined> => {
