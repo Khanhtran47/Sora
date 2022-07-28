@@ -71,6 +71,7 @@ const TvWatch = () => {
           title="movie-player"
           allowFullScreen
           scrolling="no"
+          // @ts-expect-error: this is expected
           sandbox
         />
       </Row>

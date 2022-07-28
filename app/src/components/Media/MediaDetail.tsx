@@ -11,10 +11,15 @@ interface IMediaDetail {
 const MediaDetail = (props: IMediaDetail) => {
   const { type, item } = props;
 
-  const { title, id, tagline, runtime, genres } = item || {};
+  const { id, tagline, genres } = item || {};
+  // @ts-expect-error: Diff between IMovieDetail and ITvShowDetail
+  const title = item?.title || item?.name || '';
+  // @ts-expect-error: Diff between IMovieDetail and ITvShowDetail
+  const runtime = item?.runtime || item?.episode_run_time;
   const posterPath = TMDB?.posterUrl(item?.poster_path || '', 'w500');
   const backdropPath = TMDB?.backdropUrl(item?.backdrop_path || '', 'original');
-  const releaseYear = new Date(item?.release_date).getFullYear();
+  // @ts-expect-error: Diff between IMovieDetail and ITvShowDetail
+  const releaseYear = new Date(item?.release_date || item?.first_air_date).getFullYear();
   return (
     <Card
       variant="flat"
