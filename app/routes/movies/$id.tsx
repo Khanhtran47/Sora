@@ -2,9 +2,8 @@ import { LoaderFunction, json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import { getMovieDetail } from '~/services/tmdb/movies.server';
-import { getCredits, getSimilar, getVideos } from '~/services/tmdb/tmdb.server';
 
+import { getCredits, getSimilar, getVideos, getMovieDetail } from '~/services/tmdb/tmdb.server';
 import MediaDetail from '~/src/components/Media/MediaDetail';
 
 type LoaderData = {
@@ -26,6 +25,7 @@ export const loader: LoaderFunction = async ({ params }) => {
 };
 
 const MovieDetail = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   const { detail, videos, credits, similar } = useLoaderData<LoaderData>();
   return (
     <>

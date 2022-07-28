@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { MetaFunction, LoaderFunction, json } from '@remix-run/node';
 import { useLoaderData, useLocation } from '@remix-run/react';
-import { Container, Row, Radio, Col } from '@nextui-org/react';
-import { getTvShowDetail } from '~/services/tmdb/tv.server';
+import { Container, Row, Radio } from '@nextui-org/react';
+
+import { getTvShowDetail } from '~/services/tmdb/tmdb.server';
 import Player from '~/utils/player';
 
 type LoaderData = {
@@ -30,11 +31,13 @@ const TvWatch = () => {
   const [source, setSource] = React.useState<string>(Player.tvPlayerUrl(Number(id), 1));
   // console.log(detail);
   // console.log(source);
-  React.useEffect(() => {
-    player === '2'
-      ? setSource(Player.tvPlayerUrl(detail.imdb_id, Number(player))) // ! Don't have imdb id for tv show
-      : setSource(Player.tvPlayerUrl(Number(id), Number(player)));
-  }, [player]);
+  React.useEffect(
+    () =>
+      player === '2'
+        ? setSource(Player.tvPlayerUrl(detail.imdb_id, Number(player))) // ! Don't have imdb id for tv show
+        : setSource(Player.tvPlayerUrl(Number(id), Number(player))),
+    [player, detail.imdb_id, id],
+  );
   return (
     <Container
       fluid

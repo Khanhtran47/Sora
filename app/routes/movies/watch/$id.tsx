@@ -2,7 +2,8 @@ import * as React from 'react';
 import { MetaFunction, LoaderFunction, json } from '@remix-run/node';
 import { useLoaderData, useLocation } from '@remix-run/react';
 import { Container, Row, Radio } from '@nextui-org/react';
-import { getMovieDetail } from '~/services/tmdb/movies.server';
+
+import { getMovieDetail } from '~/services/tmdb/tmdb.server';
 import Player from '~/utils/player';
 
 type LoaderData = {
@@ -33,11 +34,13 @@ const MovieWatch = () => {
   const [source, setSource] = React.useState<string>(Player.moviePlayerUrl(Number(id), 1));
   // console.log(detail);
   // console.log(source);
-  React.useEffect(() => {
-    player === '2'
-      ? setSource(Player.moviePlayerUrl(detail.imdb_id, Number(player)))
-      : setSource(Player.moviePlayerUrl(Number(id), Number(player)));
-  }, [player]);
+  React.useEffect(
+    () =>
+      player === '2'
+        ? setSource(Player.moviePlayerUrl(Number(detail.imdb_id), Number(player)))
+        : setSource(Player.moviePlayerUrl(Number(id), Number(player))),
+    [player, detail.imdb_id, id],
+  );
   return (
     <Container
       fluid
