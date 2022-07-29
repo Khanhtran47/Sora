@@ -1,10 +1,13 @@
+/* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
 import { MetaFunction, LoaderFunction, json } from '@remix-run/node';
-import { useLoaderData, useParams } from '@remix-run/react';
+import { useCatch, useLoaderData, useParams } from '@remix-run/react';
 import { Container, Row, Radio } from '@nextui-org/react';
 
 import { getTvShowIMDBId } from '~/services/tmdb/tmdb.server';
 import Player from '~/utils/player';
+import CatchBoundaryView from '~/src/components/CatchBoundaryView';
+import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 
 type LoaderData = {
   imdbId: Awaited<ReturnType<typeof getTvShowIMDBId>>;
@@ -18,8 +21,15 @@ export const meta: MetaFunction = () => ({
 export const loader: LoaderFunction = async ({ params }) => {
   const { id } = params;
   const tid = Number(id);
+
+  if (!tid) throw new Response('Not Found', { status: 404 });
+
+  const imdbId = await getTvShowIMDBId(tid);
+
+  if (!imdbId) throw new Response('Not Found', { status: 404 });
+
   return json<LoaderData>({
-    imdbId: await getTvShowIMDBId(tid),
+    imdbId,
   });
 };
 
@@ -80,3 +90,15 @@ const TvWatch = () => {
 };
 
 export default TvWatch;
+
+export const CatchBoundary = () => {
+  const caught = useCatch();
+
+  return <CatchBoundaryView caught={caught} />;
+};
+
+export const ErrorBoundary = ({ error }: { error: Error }) => {
+  const isProd = process.env.NODE_ENV === 'production';
+
+  return <ErrorBoundaryView error={error} isProd={isProd} />;
+};

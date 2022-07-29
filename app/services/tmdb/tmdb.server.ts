@@ -22,7 +22,7 @@ const getListFromTMDB = async (url: string, type?: string): Promise<IMediaList> 
       items: [...postFetchDataHandler(fetched, type)],
     } as IMediaList;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return { page: 0, totalPages: 0, items: [] };
   }
 };
@@ -85,7 +85,7 @@ export const getVideos = async (type: 'movie' | 'tv', id: number): Promise<IVide
     const fetched = await fetcher<IVideos>(TMDB.videoUrl(type, id));
     return fetched;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
@@ -97,7 +97,7 @@ export const getCredits = async (
     const fetched = await fetcher<ICredit>(TMDB.creditUrl(type, id));
     return fetched;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
@@ -114,6 +114,6 @@ export const getTvShowIMDBId = async (id: number): Promise<number | undefined> =
 
     return fetched.imdb_id;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };

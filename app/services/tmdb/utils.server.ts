@@ -87,16 +87,12 @@ export class TMDB {
     `${this.api_base_url}tv/${id}/external_ids?api_key=${this.key}`;
 }
 
-export const fetcher = async <T = any>(url: string): Promise<T | undefined> => {
-  try {
-    const res = await fetch(url);
-    // throw error here
-    if (!res.ok) throw new Error(JSON.stringify(await res.json()));
+export const fetcher = async <T = any>(url: string): Promise<T> => {
+  const res = await fetch(url);
+  // throw error here
+  if (!res.ok) throw new Error(JSON.stringify(await res.json()));
 
-    return await res.json();
-  } catch (error) {
-    console.log(error);
-  }
+  return res.json();
 };
 
 export const postFetchDataHandler = (data: any, mediaType?: string): IMedia[] => {

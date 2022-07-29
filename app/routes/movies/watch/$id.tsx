@@ -1,10 +1,13 @@
+/* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
 import { MetaFunction, LoaderFunction, json } from '@remix-run/node';
-import { useLoaderData, useLocation } from '@remix-run/react';
+import { useCatch, useLoaderData, useLocation } from '@remix-run/react';
 import { Container, Row, Radio } from '@nextui-org/react';
 
 import { getMovieDetail } from '~/services/tmdb/tmdb.server';
 import Player from '~/utils/player';
+import CatchBoundaryView from '~/src/components/CatchBoundaryView';
+import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 
 type LoaderData = {
   detail: Awaited<ReturnType<typeof getMovieDetail>>;
@@ -21,8 +24,15 @@ export const meta: MetaFunction = () => ({
 export const loader: LoaderFunction = async ({ params }) => {
   const { id } = params;
   const mid = Number(id);
+
+  if (!mid) throw new Response('Not Found', { status: 404 });
+
+  const detail = await getMovieDetail(mid);
+
+  if (!detail) throw new Response('Not Found', { status: 404 });
+
   return json<LoaderData>({
-    detail: await getMovieDetail(mid),
+    detail,
   });
 };
 
@@ -85,3 +95,15 @@ const MovieWatch = () => {
 };
 
 export default MovieWatch;
+
+export const CatchBoundary = () => {
+  const caught = useCatch();
+
+  return <CatchBoundaryView caught={caught} />;
+};
+
+export const ErrorBoundary = ({ error }: { error: Error }) => {
+  const isProd = process.env.NODE_ENV === 'production';
+
+  return <ErrorBoundaryView error={error} isProd={isProd} />;
+};
