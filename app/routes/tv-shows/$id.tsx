@@ -1,33 +1,42 @@
+/* eslint-disable @typescript-eslint/no-throw-literal */
 import { LoaderFunction, json } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import { useCatch, useLoaderData } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
+// @ts-expect-error: this is expected
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import { getTvShowDetail } from '~/services/tmdb/tv.server';
-import { getCredits, getSimilar, getVideos } from '~/services/tmdb/tmdb.server';
 
+import { getTvShowDetail } from '~/services/tmdb/tmdb.server';
 import MediaDetail from '~/src/components/Media/MediaDetail';
+import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 
 type LoaderData = {
   detail: Awaited<ReturnType<typeof getTvShowDetail>>;
-  videos: Awaited<ReturnType<typeof getVideos>>;
-  credits: Awaited<ReturnType<typeof getCredits>>;
-  similar: Awaited<ReturnType<typeof getSimilar>>;
+  // videos: Awaited<ReturnType<typeof getVideos>>;
+  // credits: Awaited<ReturnType<typeof getCredits>>;
+  // similar: Awaited<ReturnType<typeof getSimilar>>;
 };
 
 export const loader: LoaderFunction = async ({ params }) => {
   const { id } = params;
   const tid = Number(id);
+
+  if (!tid) throw new Response('Not Found', { status: 404 });
+
+  const detail = await getTvShowDetail(tid);
+
+  if (!tid) throw new Response('Not Found', { status: 404 });
+
   return json<LoaderData>({
-    detail: await getTvShowDetail(tid),
-    videos: await getVideos('tv', tid),
-    credits: await getCredits('tv', tid),
-    similar: await getSimilar('tv', tid),
+    detail,
+    // videos: await getVideos('tv', tid),
+    // credits: await getCredits('tv', tid),
+    // similar: await getSimilar('tv', tid),
   });
 };
 
 const TvShowDetail = () => {
-  const { detail, videos, credits, similar } = useLoaderData<LoaderData>();
-  // console.log(detail);
+  const { detail } = useLoaderData<LoaderData>();
+
   return (
     <>
       <MediaDetail type="tv" item={detail} />
@@ -57,7 +66,7 @@ const TvShowDetail = () => {
           <TabPanel>
             <p>
               Hello, there, this is a movie detail page. Things are logged on console.{' '}
-              {detail?.title}
+              {detail?.name}
             </p>
           </TabPanel>
           <TabPanel>
@@ -76,6 +85,12 @@ const TvShowDetail = () => {
       </Container>
     </>
   );
+};
+
+export const CatchBoundary = () => {
+  const caught = useCatch();
+
+  return <CatchBoundaryView caught={caught} />;
 };
 
 export default TvShowDetail;

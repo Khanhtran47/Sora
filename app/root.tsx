@@ -13,7 +13,7 @@ import {
   useFetchers,
   useTransition,
 } from '@remix-run/react';
-import { NextUIProvider, Text, Image, globalCss, createTheme } from '@nextui-org/react';
+import { NextUIProvider, Text, Image, globalCss, createTheme, Link } from '@nextui-org/react';
 import { ThemeProvider as RemixThemesProvider } from 'next-themes';
 import swiperStyles from 'swiper/swiper.min.css';
 import type { User } from '@supabase/supabase-js';
@@ -193,23 +193,31 @@ export const CatchBoundary = () => {
         }}
       >
         <NextUIProvider>
-          <Layout>
-            <>
-              <Text h1 color="warning" css={{ textAlign: 'center' }}>
-                {caught.status} {caught.statusText} {message}
-              </Text>
-              <Image
-                autoResize
-                width={480}
-                src={pageNotFound}
-                alt="404"
-                objectFit="cover"
-                css={{
-                  marginTop: '20px',
-                }}
-              />
-            </>
-          </Layout>
+          <>
+            <Text h1 color="warning" css={{ textAlign: 'center' }}>
+              {caught.status} {caught.statusText} {message}
+            </Text>
+            <Image
+              autoResize
+              width={480}
+              src={pageNotFound}
+              alt="404"
+              objectFit="cover"
+              css={{
+                marginTop: '20px',
+              }}
+            />
+            <Text
+              h1
+              size={20}
+              css={{
+                textAlign: 'center',
+              }}
+              weight="bold"
+            >
+              <Link href="/">Go Back</Link>
+            </Text>
+          </>
         </NextUIProvider>
       </RemixThemesProvider>
     </Document>
@@ -220,6 +228,7 @@ export const CatchBoundary = () => {
 // https://remix.run/docs/en/v1/api/conventions#errorboundary
 export const ErrorBoundary = ({ error }: { error: Error }) => {
   console.error(error);
+  const isProd = process.env.NODE_ENV === 'production';
   return (
     <Document title="Error!">
       <RemixThemesProvider
@@ -231,11 +240,21 @@ export const ErrorBoundary = ({ error }: { error: Error }) => {
         }}
       >
         <NextUIProvider>
-          <Layout>
-            <Text h1 color="error" css={{ textAlign: 'center' }}>
-              [ErrorBoundary]: There was an error: {error.message}
-            </Text>
-          </Layout>
+          <Text h1 color="error" css={{ textAlign: 'center' }}>
+            {isProd
+              ? 'Some thing went wrong'
+              : `[ErrorBoundary]: There was an error: ${error.message}`}
+          </Text>
+          <Text
+            h1
+            size={20}
+            css={{
+              textAlign: 'center',
+            }}
+            weight="bold"
+          >
+            <Link href="/">Go Back</Link>
+          </Text>
         </NextUIProvider>
       </RemixThemesProvider>
     </Document>

@@ -4,8 +4,8 @@ import { json, LoaderFunction } from '@remix-run/node';
 import { Container, Pagination } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 
-import { getListMovies } from '~/services/tmdb/movies.server';
 import MediaList from '~/src/components/Media/MediaList';
+import { getListMovies } from '~/services/tmdb/tmdb.server';
 
 type LoaderData = {
   movies: Awaited<ReturnType<typeof getListMovies>>;

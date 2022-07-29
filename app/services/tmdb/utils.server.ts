@@ -10,24 +10,19 @@ import {
   TimeWindowType,
 } from './tmdb.types';
 
-interface IFetcherReturnedData<T> {
-  data?: T;
-  error?: { code: number; message: string };
-}
-
 export class TMDB {
   static readonly api_base_url = 'https://api.themoviedb.org/3/';
 
   static readonly media_base_url = 'https://image.tmdb.org/t/p/';
 
-  private static key = () => process.env.TMDB_API_KEY;
+  static readonly key = process.env.TMDB_API_KEY;
 
   static mediaListUrl = (
     mediaType: 'tv' | 'movie',
     listType: MediaListType,
     page?: number,
   ): string =>
-    `${this.api_base_url}${mediaType}/${listType}?api_key=${this.key()}${
+    `${this.api_base_url}${mediaType}/${listType}?api_key=${this.key}${
       page ? `&page=${page}` : ''
     }`;
 
@@ -36,7 +31,7 @@ export class TMDB {
     timeWindow: TimeWindowType,
     page?: number,
   ): string => {
-    let url = `${this.api_base_url}trending/${mediaType}/${timeWindow}?api_key=${this.key()}`;
+    let url = `${this.api_base_url}trending/${mediaType}/${timeWindow}?api_key=${this.key}`;
     if (page) {
       url += `&page=${page}`;
     }
@@ -58,7 +53,7 @@ export class TMDB {
   };
 
   static listMoviesUrl = (type: ListMovieType, page?: number): string => {
-    let url = `${this.api_base_url}movie/${type}?api_key=${this.key()}`;
+    let url = `${this.api_base_url}movie/${type}?api_key=${this.key}`;
     if (page) {
       url += `&page=${page}`;
     }
@@ -66,10 +61,10 @@ export class TMDB {
   };
 
   static movieDetailUrl = (id: number): string =>
-    `${this.api_base_url}movie/${id}?api_key=${this.key()}`;
+    `${this.api_base_url}movie/${id}?api_key=${this.key}`;
 
   static listTvShowsUrl = (type: ListTvShowType, page?: number): string => {
-    let url = `${this.api_base_url}tv/${type}?api_key=${this.key()}`;
+    let url = `${this.api_base_url}tv/${type}?api_key=${this.key}`;
     if (page) {
       url += `&page=${page}`;
     }
@@ -77,32 +72,27 @@ export class TMDB {
   };
 
   static tvShowDetailUrl = (id: number): string =>
-    `${this.api_base_url}tv/${id}?api_key=${this.key()}`;
+    `${this.api_base_url}tv/${id}?api_key=${this.key}`;
 
   static videoUrl = (type: 'movie' | 'tv', id: number): string =>
-    `${this.api_base_url}${type}/${id}/videos?api_key=${this.key()}`;
+    `${this.api_base_url}${type}/${id}/videos?api_key=${this.key}`;
 
   static creditUrl = (type: 'movie' | 'tv', id: number): string =>
-    `${this.api_base_url}${type}/${id}/credits?api_key=${this.key()}`;
+    `${this.api_base_url}${type}/${id}/credits?api_key=${this.key}`;
 
   static similarUrl = (type: 'movie' | 'tv', id: number): string =>
-    `${this.api_base_url}${type}/${id}/similar?api_key=${this.key()}`;
+    `${this.api_base_url}${type}/${id}/similar?api_key=${this.key}`;
+
+  static tvExternalIds = (id: number): string =>
+    `${this.api_base_url}tv/${id}/external_ids?api_key=${this.key}`;
 }
 
-export const fetcher = async <T = any>(url: string): Promise<IFetcherReturnedData<T>> => {
+export const fetcher = async <T = any>(url: string): Promise<T> => {
   const res = await fetch(url);
-  if (res.ok) {
-    return {
-      data: await res.json(),
-    };
-  }
+  // throw error here
+  if (!res.ok) throw new Error(JSON.stringify(await res.json()));
 
-  return {
-    error: {
-      code: res.status,
-      message: (await res.json())?.status_message || 'Some thing went wrong',
-    },
-  };
+  return res.json();
 };
 
 export const postFetchDataHandler = (data: any, mediaType?: string): IMedia[] => {
