@@ -24,6 +24,13 @@ export default class TMDB {
   };
 }
 
+/**
+ * It takes a color in hex format and an amount, and returns a new color in hex format that is the
+ * original color with the amount added to each of its red, green, and blue components
+ * @param {string} color - The color you want to change.
+ * @param {number} amount - The amount to change the color by.
+ * @returns A function that takes two arguments, color and amount.
+ */
 export const changeColor = (color: string, amount: number) => {
   // #FFF not supportet rather use #FFFFFF
   const clamp = (val: number) => Math.min(Math.max(val, 0), 0xff);

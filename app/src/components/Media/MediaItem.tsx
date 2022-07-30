@@ -185,7 +185,6 @@ const CardItemHover = ({ item }: { item: IMedia }) => {
     crossOrigin: 'anonymous',
     quality: 1000,
   });
-  console.log(data);
   const colorDarkenLighten = isDark ? changeColor(data, 100) : changeColor(data, -80);
   return (
     <Grid.Container
@@ -230,7 +229,6 @@ const CardItem = ({ item }: { item: IMedia }) => {
     crossOrigin: 'anonymous',
     quality: 1000,
   });
-  console.log(data);
   const colorDarkenLighten = isDark ? changeColor(data, 100) : changeColor(data, -80);
 
   return (
