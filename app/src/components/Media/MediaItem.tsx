@@ -197,7 +197,7 @@ const CardItem = ({ item }: { item: IMedia }) => {
           height: '80px',
           alignItems: 'center',
         }}
-        className={isDark ? 'bg-black/30' : 'bg-white/30'}
+        className={isDark ? 'bg-black/70' : 'bg-white/70'}
       >
         <Text size={18} b transform="uppercase">
           {title}

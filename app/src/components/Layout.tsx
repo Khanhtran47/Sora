@@ -41,7 +41,7 @@ const Layout = ({ children, user }: ILayout) => {
         handleDrawerClose={handleDrawerClose}
         user={user ?? undefined}
       />
-      <LeftDrawer open={open} />
+      <LeftDrawer open={open} handleDrawerClose={handleDrawerClose} />
       <Container
         as="main"
         fluid
