@@ -2,7 +2,9 @@ import * as React from 'react';
 import { Link } from '@remix-run/react';
 import { Grid, Card, Col, Text, Row, Button, Tooltip, useTheme } from '@nextui-org/react';
 import { IMedia } from '~/services/tmdb/tmdb.types';
-import Color, { useColor } from 'color-thief-react';
+import { useColor } from 'color-thief-react';
+
+import { changeColor } from '~/utils/media';
 
 interface IMediaItem {
   type: 'banner' | 'card';
@@ -176,9 +178,15 @@ const BannerItem = ({ item }: { item: IMedia }) => {
   );
 };
 
-const CardItemHover = ({ item }: { item: IMedia }, { color }) => {
-  const { title, overview, releaseDate, voteAverage, mediaType } = item;
-  console.log(color);
+const CardItemHover = ({ item }: { item: IMedia }) => {
+  const { isDark } = useTheme();
+  const { title, overview, releaseDate, voteAverage, mediaType, posterPath } = item;
+  const { data, loading, error } = useColor(posterPath, 'hex', {
+    crossOrigin: 'anonymous',
+    quality: 1000,
+  });
+  console.log(data);
+  const colorDarkenLighten = isDark ? changeColor(data, 100) : changeColor(data, -80);
   return (
     <Grid.Container
       css={{
@@ -189,7 +197,7 @@ const CardItemHover = ({ item }: { item: IMedia }, { color }) => {
       }}
     >
       <Row justify="center" align="center">
-        <Text size={18} b color={color}>
+        <Text size={18} b color={colorDarkenLighten}>
           {title}
         </Text>
       </Row>
@@ -218,67 +226,64 @@ const CardItem = ({ item }: { item: IMedia }) => {
   const [style, setStyle] = React.useState<React.CSSProperties>({ display: 'none' });
   const { isDark } = useTheme();
   const { title, posterPath } = item;
-  // const { data, loading, error } = useColor(posterPath, 'hex', {
-  //   crossOrigin: 'anonymous',
-  //   quality: 20,
-  // });
-  // console.log(data);
+  const { data, loading, error } = useColor(posterPath, 'hex', {
+    crossOrigin: 'anonymous',
+    quality: 1000,
+  });
+  console.log(data);
+  const colorDarkenLighten = isDark ? changeColor(data, 100) : changeColor(data, -80);
 
   return (
-    <Color src={posterPath} format="hex" crossOrigin="anonymous" quality="1000">
-      {({ data: color }) => (
-        <Tooltip
+    <Tooltip
+      css={{
+        width: 'fit-content',
+      }}
+      placement="bottom"
+      content={<CardItemHover item={item} />}
+      rounded
+      shadow
+      className="!w-fit"
+    >
+      <Card
+        as="div"
+        variant="flat"
+        css={{ borderWidth: 0 }}
+        onMouseEnter={() => {
+          setStyle({ display: 'block' });
+        }}
+        onMouseLeave={() => {
+          setStyle({ display: 'none' });
+        }}
+      >
+        <Card.Image
+          src={posterPath}
+          objectFit="cover"
+          width="100%"
+          height={340}
+          alt="Card image background"
+        />
+        <Card.Footer
+          isBlurred
           css={{
-            width: 'fit-content',
+            position: 'absolute',
+            bgBlur: isDark ? 'rgb(0 0 0 / 0.7)' : 'rgb(255 255 255 / 0.7)',
+            bottom: 0,
+            zIndex: 1,
+            height: '80px',
+            alignItems: 'center',
+            '@sm': {
+              height: '100px',
+              ...style,
+            },
           }}
-          placement="bottom"
-          content={<CardItemHover item={item} color={color} />}
-          rounded
-          shadow
-          className="!w-fit"
+          className={isDark ? 'bg-black/30' : 'bg-white/30'}
         >
-          <Card
-            as="div"
-            variant="flat"
-            css={{ borderWidth: 0 }}
-            onMouseEnter={() => {
-              setStyle({ display: 'block' });
-            }}
-            onMouseLeave={() => {
-              setStyle({ display: 'none' });
-            }}
-          >
-            <Card.Image
-              src={posterPath}
-              objectFit="cover"
-              width="100%"
-              height={340}
-              alt="Card image background"
-            />
-            <Card.Footer
-              isBlurred
-              css={{
-                position: 'absolute',
-                bgBlur: isDark ? 'rgb(0 0 0 / 0.7)' : 'rgb(255 255 255 / 0.7)',
-                bottom: 0,
-                zIndex: 1,
-                height: '80px',
-                alignItems: 'center',
-                '@sm': {
-                  height: '100px',
-                  ...style,
-                },
-              }}
-              className={isDark ? 'bg-black/30' : 'bg-white/30'}
-            >
-              <Text size={18} b transform="uppercase">
-                {title} {color}
-              </Text>
-            </Card.Footer>
-          </Card>
-        </Tooltip>
-      )}
-    </Color>
+          <Text size={18} b transform="uppercase" color={colorDarkenLighten}>
+            {title}
+          </Text>
+        </Card.Footer>
+      </Card>
+    </Tooltip>
   );
 };
 
