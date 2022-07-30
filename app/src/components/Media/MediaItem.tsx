@@ -176,8 +176,9 @@ const BannerItem = ({ item }: { item: IMedia }) => {
   );
 };
 
-const CardItemHover = ({ item }: { item: IMedia }) => {
+const CardItemHover = ({ item }: { item: IMedia }, { color }) => {
   const { title, overview, releaseDate, voteAverage, mediaType } = item;
+  console.log(color);
   return (
     <Grid.Container
       css={{
@@ -188,7 +189,7 @@ const CardItemHover = ({ item }: { item: IMedia }) => {
       }}
     >
       <Row justify="center" align="center">
-        <Text size={18} b>
+        <Text size={18} b color={color}>
           {title}
         </Text>
       </Row>
@@ -217,11 +218,11 @@ const CardItem = ({ item }: { item: IMedia }) => {
   const [style, setStyle] = React.useState<React.CSSProperties>({ display: 'none' });
   const { isDark } = useTheme();
   const { title, posterPath } = item;
-  const { data, loading, error } = useColor(posterPath, 'hex', {
-    crossOrigin: 'anonymous',
-    quality: 20,
-  });
-  console.log(data);
+  // const { data, loading, error } = useColor(posterPath, 'hex', {
+  //   crossOrigin: 'anonymous',
+  //   quality: 20,
+  // });
+  // console.log(data);
 
   return (
     <Color src={posterPath} format="hex" crossOrigin="anonymous" quality="1000">
@@ -231,7 +232,7 @@ const CardItem = ({ item }: { item: IMedia }) => {
             width: 'fit-content',
           }}
           placement="bottom"
-          content={<CardItemHover item={item} />}
+          content={<CardItemHover item={item} color={color} />}
           rounded
           shadow
           className="!w-fit"
