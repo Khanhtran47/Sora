@@ -252,6 +252,7 @@ const CardItem = ({ item }: { item: IMedia }) => {
         onMouseLeave={() => {
           setStyle({ display: 'none' });
         }}
+        className={isDark ? 'bg-black/70' : 'bg-white/70'}
       >
         <Card.Image
           src={posterPath}

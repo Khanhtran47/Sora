@@ -1,6 +1,16 @@
 import * as React from 'react';
 import { NavLink, Link } from '@remix-run/react';
-import { Avatar, Button, Text, Grid, Dropdown, Switch, useTheme, styled } from '@nextui-org/react';
+import {
+  Avatar,
+  Button,
+  Link as NextLink,
+  Text,
+  Grid,
+  Dropdown,
+  Switch,
+  useTheme,
+  styled,
+} from '@nextui-org/react';
 import { useTheme as useRemixTheme } from 'next-themes';
 import type { User } from '@supabase/supabase-js';
 
@@ -43,7 +53,8 @@ const AppBar = styled(Grid.Container, {
 
 const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   const { setTheme } = useRemixTheme();
-  const { isDark } = useTheme();
+  const { isDark, theme } = useTheme();
+  console.log(theme);
   const { open, handleDrawerOpen, handleDrawerClose, user } = props;
   return (
     <AppBar
@@ -51,7 +62,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       alignItems="center"
       color="inherit"
       className={`flex justify-between backdrop-blur-md border-b ${
-        isDark ? 'bg-black/30 border-b-slate-700' : ' border-b-slate-300 bg-white/30'
+        isDark ? 'bg-black/70 border-b-slate-700' : ' border-b-slate-300 bg-white/70'
       }`}
       gap={2}
       wrap="nowrap"
@@ -128,10 +139,10 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       </Grid>
 
       {/* link page */}
-      <Grid sm={6}>
+      <Grid sm={6} alignItems="center">
         {pages.map((page) => (
-          <Button light auto key={page.pageName}>
-            <NavLink to={`/${page.pageLink}`}>
+          <NavLink to={`/${page.pageLink}`} key={page.pageName} end style={{ marginRight: '10px' }}>
+            {({ isActive }) => (
               <Text
                 h1
                 size={20}
@@ -143,10 +154,20 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
                   },
                 }}
               >
-                {page.pageName}
+                <NextLink
+                  block
+                  color="primary"
+                  css={{
+                    ...(isActive && {
+                      background: `${theme?.colors.primaryLightActive.value}`,
+                    }),
+                  }}
+                >
+                  {page.pageName}
+                </NextLink>
               </Text>
-            </NavLink>
-          </Button>
+            )}
+          </NavLink>
         ))}
       </Grid>
 

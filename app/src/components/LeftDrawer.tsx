@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { NavLink } from '@remix-run/react';
-import { Button, Switch, Text, Grid, Container, useTheme, styled } from '@nextui-org/react';
+import { Spacer, Link, Switch, Text, Grid, Container, useTheme, styled } from '@nextui-org/react';
 import { useTheme as useRemixTheme } from 'next-themes';
 
 /* icons */
@@ -16,6 +16,7 @@ const drawerWidth = 240;
 
 interface ILeftDrawerProps {
   open: boolean;
+  handleDrawerClose: () => void;
 }
 
 const openedMixin = () => ({
@@ -53,9 +54,11 @@ const Drawer = styled(Container, {
 });
 
 const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
+  const wrapperRef = React.useRef<HTMLDivElement>(null);
   const { setTheme } = useRemixTheme();
-  const { isDark } = useTheme();
-  const { open } = props;
+  const { isDark, theme } = useTheme();
+  const { open, handleDrawerClose } = props;
+
   const iconItem = (index: number) => {
     let icon;
     switch (index) {
@@ -78,6 +81,7 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
     }
     return icon;
   };
+
   const leftDrawerLink = [
     {
       pageName: 'Trending',
@@ -100,6 +104,26 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
       pageLink: 'watch-history',
     },
   ];
+
+  /**
+   * If the drawer is open and the user clicks outside of the drawer, close the drawer.
+   * @param {any} event - any - this is the event that is triggered when the user clicks outside of the
+   * drawer.
+   */
+  const handleClickOutside = (event: any) => {
+    if (open && wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+      handleDrawerClose();
+    }
+  };
+
+  /* Adding an event listener to the document for handling click outside drawer */
+  React.useEffect(() => {
+    document.addEventListener('click', handleClickOutside, true);
+    return () => {
+      document.removeEventListener('click', handleClickOutside, true);
+    };
+  });
+
   return (
     <Drawer
       css={{
@@ -114,38 +138,67 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
         marginTop: '66px',
       }}
       className={`backdrop-blur-md px-0 border-r ${
-        isDark ? 'bg-black/30 border-r-slate-700' : 'bg-white/30 border-r-slate-300'
+        isDark ? 'bg-black/70 border-r-slate-700' : 'bg-white/70 border-r-slate-300'
       }`}
+      as="nav"
+      ref={wrapperRef}
     >
       <Grid.Container>
         {leftDrawerLink.map((page, index: number) => (
-          <Grid
-            key={page.pageName}
-            className={`border-b ${isDark ? 'border-b-slate-700' : 'border-b-slate-300'} w-full`}
-          >
-            <Button
-              light
-              auto
-              css={{
+          <Grid key={page.pageName} css={{ marginTop: '10px' }} xs={12}>
+            <NavLink
+              to={`/${page.pageLink}`}
+              className="flex flex-row"
+              style={{
                 display: 'block',
                 minHeight: 65,
+                minWidth: 65,
                 justifyContent: open ? 'initial' : 'center',
+                alignItems: 'center',
               }}
             >
-              <NavLink to={`/${page.pageLink}`} className="flex flex-row">
-                {iconItem(index)}
+              {({ isActive }) => (
                 <Text
                   h4
                   size={18}
                   css={{
-                    marginLeft: '1.5rem',
-                    opacity: open ? 1 : 0,
+                    display: 'flex',
+                    minHeight: 65,
+                    minWidth: 65,
+                    ...(open && {
+                      width: drawerWidth,
+                    }),
                   }}
                 >
-                  {page.pageName}
+                  <Link
+                    block
+                    color="primary"
+                    onClick={handleDrawerClose}
+                    css={{
+                      ...(isActive && {
+                        background: `${theme?.colors.primaryLightActive.value}`,
+                      }),
+                      minHeight: 65,
+                      minWidth: 65,
+                      alignItems: 'center',
+                      justifyContent: 'flex-start',
+                      ...(open && {
+                        width: drawerWidth,
+                      }),
+                      paddingLeft: 20,
+                    }}
+                  >
+                    {iconItem(index)}
+                    {open && (
+                      <>
+                        <Spacer />
+                        {page.pageName}
+                      </>
+                    )}
+                  </Link>
                 </Text>
-              </NavLink>
-            </Button>
+              )}
+            </NavLink>
           </Grid>
         ))}
       </Grid.Container>
@@ -159,7 +212,7 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
         iconOff={<SunIcon filled />}
         css={{
           marginLeft: '90px',
-          marginTop: '42vh',
+          marginTop: '35vh',
           '@xs': {
             display: 'none',
           },

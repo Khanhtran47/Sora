@@ -1,5 +1,5 @@
 import { NavLink } from '@remix-run/react';
-import { Button, Text, Container, useTheme } from '@nextui-org/react';
+import { Link, Text, Container, useTheme } from '@nextui-org/react';
 
 const pages = [
   {
@@ -17,7 +17,7 @@ const pages = [
 ];
 
 const BottomNav = () => {
-  const { isDark } = useTheme();
+  const { isDark, theme } = useTheme();
 
   return (
     <Container
@@ -27,13 +27,15 @@ const BottomNav = () => {
       alignItems="center"
       wrap="nowrap"
       className={`backdrop-blur-md border-t ${
-        isDark ? 'bg-black/30 border-t-slate-700' : ' border-t-slate-300 bg-white/30'
+        isDark ? 'bg-black/70 border-t-slate-700' : ' border-t-slate-300 bg-white/70'
       }`}
       css={{
+        width: '100vw',
         position: 'fixed',
         bottom: 0,
         height: 65,
         padding: 0,
+        margin: 0,
         zIndex: 999,
         '@xs': {
           display: 'none',
@@ -41,19 +43,29 @@ const BottomNav = () => {
       }}
     >
       {pages.map((page) => (
-        <Button light auto key={page.pageName}>
-          <NavLink to={`/${page.pageLink}`}>
+        <NavLink to={`/${page.pageLink}`} key={page.pageName}>
+          {({ isActive }) => (
             <Text
               h1
-              size={14}
+              size={20}
               css={{
                 textTransform: 'uppercase',
               }}
             >
-              {page.pageName}
+              <Link
+                block
+                color="primary"
+                css={{
+                  ...(isActive && {
+                    background: `${theme?.colors.primaryLightActive.value}`,
+                  }),
+                }}
+              >
+                {page.pageName}
+              </Link>
             </Text>
-          </NavLink>
-        </Button>
+          )}
+        </NavLink>
       ))}
     </Container>
   );
