@@ -21,6 +21,7 @@
     "@remix-run/vercel": "^1.6.5",
     "@supabase/supabase-js": "^1.35.4",
     "autoprefixer": "^10.4.7",
+    "color-thief-react": "^2.1.0",
     "concurrently": "^7.2.1",
     "eslint-import-resolver-typescript": "^2.7.1",
     "framer-motion": "^6.5.1",
