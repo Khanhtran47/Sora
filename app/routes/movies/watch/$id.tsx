@@ -42,8 +42,8 @@ const MovieWatch = () => {
   const id = location.pathname.split('/')[3];
   const [player, setPlayer] = React.useState<string>('1');
   const [source, setSource] = React.useState<string>(Player.moviePlayerUrl(Number(id), 1));
-  // console.log(detail);
-  // console.log(source);
+  console.log(detail);
+  console.log(source);
   React.useEffect(
     () =>
       player === '2'
@@ -56,7 +56,6 @@ const MovieWatch = () => {
       fluid
       css={{
         margin: 0,
-        padding: 0,
       }}
     >
       <Row>
@@ -79,8 +78,8 @@ const MovieWatch = () => {
           style={{
             top: 0,
             left: 0,
-            width: '70%',
-            height: '70%',
+            width: '100%',
+            height: '100%',
           }}
           frameBorder="0"
           title="movie-player"

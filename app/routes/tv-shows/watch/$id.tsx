@@ -74,8 +74,8 @@ const TvWatch = () => {
           style={{
             top: 0,
             left: 0,
-            width: '70%',
-            height: '70%',
+            width: '100%',
+            height: '100%',
           }}
           frameBorder="0"
           title="movie-player"

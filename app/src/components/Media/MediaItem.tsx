@@ -1,6 +1,10 @@
+import * as React from 'react';
 import { Link } from '@remix-run/react';
-import { Card, Col, Text, Row, Button, useTheme } from '@nextui-org/react';
+import { Grid, Card, Col, Text, Row, Button, Tooltip, useTheme } from '@nextui-org/react';
 import { IMedia } from '~/services/tmdb/tmdb.types';
+import { useColor } from 'color-thief-react';
+
+import { changeColor } from '~/utils/media';
 
 interface IMediaItem {
   type: 'banner' | 'card';
@@ -174,36 +178,111 @@ const BannerItem = ({ item }: { item: IMedia }) => {
   );
 };
 
+const CardItemHover = ({ item }: { item: IMedia }) => {
+  const { isDark } = useTheme();
+  const { title, overview, releaseDate, voteAverage, mediaType, posterPath } = item;
+  const { data, loading, error } = useColor(posterPath, 'hex', {
+    crossOrigin: 'anonymous',
+    quality: 1000,
+  });
+  const colorDarkenLighten = isDark ? changeColor(data, 100) : changeColor(data, -80);
+  return (
+    <Grid.Container
+      css={{
+        width: 'inherit',
+        padding: '0.75rem',
+        minWidth: '100px',
+        maxWidth: '350px',
+      }}
+    >
+      <Row justify="center" align="center">
+        <Text size={18} b color={colorDarkenLighten}>
+          {title}
+        </Text>
+      </Row>
+      {overview && (
+        <Row>
+          <Text>{`${overview?.substring(0, 100)}...`}</Text>
+        </Row>
+      )}
+      <Grid.Container justify="space-between" alignContent="center">
+        {releaseDate && (
+          <Grid>
+            <Text>{`${mediaType === 'movie' ? 'Movie' : 'TV-Shows'} • ${releaseDate}`}</Text>
+          </Grid>
+        )}
+        {voteAverage && (
+          <Grid>
+            <Text>{`Vote Average: ${voteAverage}`}</Text>
+          </Grid>
+        )}
+      </Grid.Container>
+    </Grid.Container>
+  );
+};
+
 const CardItem = ({ item }: { item: IMedia }) => {
+  const [style, setStyle] = React.useState<React.CSSProperties>({ display: 'none' });
   const { isDark } = useTheme();
   const { title, posterPath } = item;
+  const { data, loading, error } = useColor(posterPath, 'hex', {
+    crossOrigin: 'anonymous',
+    quality: 1000,
+  });
+  const colorDarkenLighten = isDark ? changeColor(data, 100) : changeColor(data, -80);
 
   return (
-    <Card variant="flat" css={{ borderWidth: 0 }}>
-      <Card.Image
-        src={posterPath}
-        objectFit="cover"
-        width="100%"
-        height={340}
-        alt="Card image background"
-      />
-      <Card.Footer
-        isBlurred
-        css={{
-          position: 'absolute',
-          bgBlur: isDark ? 'rgb(0 0 0 / 0.3)' : 'rgb(255 255 255 / 0.3)',
-          bottom: 0,
-          zIndex: 1,
-          height: '80px',
-          alignItems: 'center',
+    <Tooltip
+      css={{
+        width: 'fit-content',
+      }}
+      placement="bottom"
+      content={<CardItemHover item={item} />}
+      rounded
+      shadow
+      className="!w-fit"
+    >
+      <Card
+        as="div"
+        variant="flat"
+        css={{ borderWidth: 0 }}
+        onMouseEnter={() => {
+          setStyle({ display: 'block' });
+        }}
+        onMouseLeave={() => {
+          setStyle({ display: 'none' });
         }}
         className={isDark ? 'bg-black/70' : 'bg-white/70'}
       >
-        <Text size={18} b transform="uppercase">
-          {title}
-        </Text>
-      </Card.Footer>
-    </Card>
+        <Card.Image
+          src={posterPath}
+          objectFit="cover"
+          width="100%"
+          height={340}
+          alt="Card image background"
+        />
+        <Card.Footer
+          isBlurred
+          css={{
+            position: 'absolute',
+            bgBlur: isDark ? 'rgb(0 0 0 / 0.7)' : 'rgb(255 255 255 / 0.7)',
+            bottom: 0,
+            zIndex: 1,
+            height: '80px',
+            alignItems: 'center',
+            '@sm': {
+              height: '100px',
+              ...style,
+            },
+          }}
+          className={isDark ? 'bg-black/30' : 'bg-white/30'}
+        >
+          <Text size={18} b transform="uppercase" color={colorDarkenLighten}>
+            {title}
+          </Text>
+        </Card.Footer>
+      </Card>
+    </Tooltip>
   );
 };
 

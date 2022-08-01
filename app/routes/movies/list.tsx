@@ -29,6 +29,7 @@ const ListMovies = () => {
   const { movies } = useLoaderData<LoaderData>();
   const navigate = useNavigate();
   const location = useLocation();
+  // console.log(movies);
 
   const paginationChangeHandler = (page: number) => navigate(`/movies/list?page=${page}`);
 
