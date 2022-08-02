@@ -182,10 +182,14 @@ const BannerItem = ({ item }: { item: IMedia }) => {
 const CardItemHover = ({ item }: { item: IMedia }) => {
   const { isDark } = useTheme();
   const { title, overview, releaseDate, voteAverage, mediaType, posterPath } = item;
-  const { data, loading, error } = useColor(posterPath, 'hex', { crossOrigin: 'anonymous' });
+  const { data, loading, error } = useColor(
+    `https://cors-anywhere.herokuapp.com/${posterPath}`,
+    'hex',
+    { crossOrigin: 'anonymous' },
+  );
   const colorDarkenLighten = isDark
     ? tinycolor(data).brighten(70).saturate(70).toString()
-    : tinycolor(data).brighten(30).saturate(70).toString();
+    : tinycolor(data).brighten(10).saturate(70).toString();
   return (
     <Grid.Container
       css={{
@@ -225,10 +229,14 @@ const CardItem = ({ item }: { item: IMedia }) => {
   const [style, setStyle] = React.useState<React.CSSProperties>({ display: 'none' });
   const { isDark } = useTheme();
   const { title, posterPath } = item;
-  const { data, loading, error } = useColor(posterPath, 'hex', { crossOrigin: 'anonymous' });
+  const { data, loading, error } = useColor(
+    `https://cors-anywhere.herokuapp.com/${posterPath}`,
+    'hex',
+    { crossOrigin: 'anonymous' },
+  );
   const colorDarkenLighten = isDark
     ? tinycolor(data).brighten(70).saturate(70).toString()
-    : tinycolor(data).brighten(30).saturate(70).toString();
+    : tinycolor(data).brighten(10).saturate(70).toString();
 
   return (
     <Tooltip
@@ -264,7 +272,7 @@ const CardItem = ({ item }: { item: IMedia }) => {
           isBlurred
           css={{
             position: 'absolute',
-            bgBlur: isDark ? 'rgb(0 0 0 / 0.7)' : 'rgb(255 255 255 / 0.7)',
+            bgBlur: isDark ? 'rgb(0 0 0 / 0.8)' : 'rgb(255 255 255 / 0.8)',
             bottom: 0,
             zIndex: 1,
             height: '80px',
