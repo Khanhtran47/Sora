@@ -225,11 +225,8 @@ const CardItem = ({ item }: { item: IMedia }) => {
   const [style, setStyle] = React.useState<React.CSSProperties>({ display: 'none' });
   const { isDark } = useTheme();
   const { title, posterPath } = item;
-  const { data, loading, error } = useColor(posterPath, 'hex', {
-    crossOrigin: 'anonymous',
-    quality: 1000,
-  });
-  const colorDarkenLighten = isDark ? changeColor(data, 100) : changeColor(data, -80);
+  const { data, loading, error } = useColor(posterPath, 'hex', { crossOrigin: 'anonymous' });
+  const colorDarkenLighten = data && (isDark ? changeColor(data, 100) : changeColor(data, -80));
 
   return (
     <Tooltip
