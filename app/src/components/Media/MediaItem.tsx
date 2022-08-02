@@ -3,6 +3,7 @@ import { Link } from '@remix-run/react';
 import { Grid, Card, Col, Text, Row, Button, Tooltip, useTheme } from '@nextui-org/react';
 import { IMedia } from '~/services/tmdb/tmdb.types';
 import { useColor } from 'color-thief-react';
+import tinycolor from 'tinycolor2';
 
 import { changeColor } from '~/utils/media';
 
@@ -182,7 +183,9 @@ const CardItemHover = ({ item }: { item: IMedia }) => {
   const { isDark } = useTheme();
   const { title, overview, releaseDate, voteAverage, mediaType, posterPath } = item;
   const { data, loading, error } = useColor(posterPath, 'hex', { crossOrigin: 'anonymous' });
-  const colorDarkenLighten = isDark ? changeColor(data, 100) : changeColor(data, -80);
+  const colorDarkenLighten = isDark
+    ? tinycolor(data).brighten(70).saturate(70).toString()
+    : tinycolor(data).brighten(30).saturate(70).toString();
   return (
     <Grid.Container
       css={{
@@ -223,7 +226,9 @@ const CardItem = ({ item }: { item: IMedia }) => {
   const { isDark } = useTheme();
   const { title, posterPath } = item;
   const { data, loading, error } = useColor(posterPath, 'hex', { crossOrigin: 'anonymous' });
-  const colorDarkenLighten = data && (isDark ? changeColor(data, 100) : changeColor(data, -80));
+  const colorDarkenLighten = isDark
+    ? tinycolor(data).brighten(70).saturate(70).toString()
+    : tinycolor(data).brighten(30).saturate(70).toString();
 
   return (
     <Tooltip
