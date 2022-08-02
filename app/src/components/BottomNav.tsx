@@ -1,5 +1,5 @@
 import { NavLink } from '@remix-run/react';
-import { Link, Text, Container, useTheme } from '@nextui-org/react';
+import { Text, Container, useTheme } from '@nextui-org/react';
 
 const pages = [
   {
@@ -52,8 +52,7 @@ const BottomNav = () => {
                 textTransform: 'uppercase',
               }}
             >
-              <Link
-                block
+              <Text
                 color="primary"
                 css={{
                   ...(isActive && {
@@ -62,7 +61,7 @@ const BottomNav = () => {
                 }}
               >
                 {page.pageName}
-              </Link>
+              </Text>
             </Text>
           )}
         </NavLink>

@@ -1,16 +1,6 @@
 import * as React from 'react';
 import { NavLink, Link } from '@remix-run/react';
-import {
-  Avatar,
-  Button,
-  Link as NextLink,
-  Text,
-  Grid,
-  Dropdown,
-  Switch,
-  useTheme,
-  styled,
-} from '@nextui-org/react';
+import { Avatar, Button, Text, Grid, Dropdown, Switch, useTheme, styled } from '@nextui-org/react';
 import { useTheme as useRemixTheme } from 'next-themes';
 import type { User } from '@supabase/supabase-js';
 
@@ -54,7 +44,7 @@ const AppBar = styled(Grid.Container, {
 const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   const { setTheme } = useRemixTheme();
   const { isDark, theme } = useTheme();
-  console.log(theme);
+  // console.log(theme);
   const { open, handleDrawerOpen, handleDrawerClose, user } = props;
   return (
     <AppBar
@@ -154,8 +144,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
                   },
                 }}
               >
-                <NextLink
-                  block
+                <Text
                   color="primary"
                   css={{
                     ...(isActive && {
@@ -164,7 +153,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
                   }}
                 >
                   {page.pageName}
-                </NextLink>
+                </Text>
               </Text>
             )}
           </NavLink>
