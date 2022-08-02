@@ -181,10 +181,7 @@ const BannerItem = ({ item }: { item: IMedia }) => {
 const CardItemHover = ({ item }: { item: IMedia }) => {
   const { isDark } = useTheme();
   const { title, overview, releaseDate, voteAverage, mediaType, posterPath } = item;
-  const { data, loading, error } = useColor(posterPath, 'hex', {
-    crossOrigin: 'anonymous',
-    quality: 1000,
-  });
+  const { data, loading, error } = useColor(posterPath, 'hex', { crossOrigin: 'anonymous' });
   const colorDarkenLighten = isDark ? changeColor(data, 100) : changeColor(data, -80);
   return (
     <Grid.Container
