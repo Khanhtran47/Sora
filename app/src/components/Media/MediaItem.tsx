@@ -183,13 +183,20 @@ const CardItemHover = ({ item }: { item: IMedia }) => {
   const { isDark } = useTheme();
   const { title, overview, releaseDate, voteAverage, mediaType, posterPath } = item;
   const { data, loading, error } = useColor(
-    `https://cors-anywhere.herokuapp.com/${posterPath}`,
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(posterPath)}`,
     'hex',
     { crossOrigin: 'anonymous' },
   );
-  const colorDarkenLighten = isDark
-    ? tinycolor(data).brighten(70).saturate(70).toString()
-    : tinycolor(data).brighten(10).saturate(70).toString();
+  let colorDarkenLighten = '';
+  if (isDark) {
+    colorDarkenLighten = !tinycolor(data).isLight()
+      ? tinycolor(data).brighten(70).saturate(70).toString()
+      : tinycolor(data).saturate(70).toString();
+  } else {
+    colorDarkenLighten = !tinycolor(data).isDark()
+      ? tinycolor(data).darken().saturate(100).toString()
+      : tinycolor(data).saturate(70).toString();
+  }
   return (
     <Grid.Container
       css={{
@@ -230,13 +237,20 @@ const CardItem = ({ item }: { item: IMedia }) => {
   const { isDark } = useTheme();
   const { title, posterPath } = item;
   const { data, loading, error } = useColor(
-    `https://cors-anywhere.herokuapp.com/${posterPath}`,
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(posterPath)}`,
     'hex',
     { crossOrigin: 'anonymous' },
   );
-  const colorDarkenLighten = isDark
-    ? tinycolor(data).brighten(70).saturate(70).toString()
-    : tinycolor(data).brighten(10).saturate(70).toString();
+  let colorDarkenLighten = '';
+  if (isDark) {
+    colorDarkenLighten = !tinycolor(data).isLight()
+      ? tinycolor(data).brighten(70).saturate(70).toString()
+      : tinycolor(data).saturate(70).toString();
+  } else {
+    colorDarkenLighten = !tinycolor(data).isDark()
+      ? tinycolor(data).darken().saturate(100).toString()
+      : tinycolor(data).saturate(70).toString();
+  }
 
   return (
     <Tooltip
