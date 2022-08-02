@@ -3,6 +3,7 @@ import { Link } from '@remix-run/react';
 import { Grid, Card, Col, Text, Row, Button, Tooltip, useTheme } from '@nextui-org/react';
 import { IMedia } from '~/services/tmdb/tmdb.types';
 import { useColor } from 'color-thief-react';
+import tinycolor from 'tinycolor2';
 
 import { changeColor } from '~/utils/media';
 
@@ -181,11 +182,21 @@ const BannerItem = ({ item }: { item: IMedia }) => {
 const CardItemHover = ({ item }: { item: IMedia }) => {
   const { isDark } = useTheme();
   const { title, overview, releaseDate, voteAverage, mediaType, posterPath } = item;
-  const { data, loading, error } = useColor(posterPath, 'hex', {
-    crossOrigin: 'anonymous',
-    quality: 1000,
-  });
-  const colorDarkenLighten = isDark ? changeColor(data, 100) : changeColor(data, -80);
+  const { data, loading, error } = useColor(
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(posterPath)}`,
+    'hex',
+    { crossOrigin: 'anonymous' },
+  );
+  let colorDarkenLighten = '';
+  if (isDark) {
+    colorDarkenLighten = !tinycolor(data).isLight()
+      ? tinycolor(data).brighten(70).saturate(70).toString()
+      : tinycolor(data).saturate(70).toString();
+  } else {
+    colorDarkenLighten = !tinycolor(data).isDark()
+      ? tinycolor(data).darken().saturate(100).toString()
+      : tinycolor(data).saturate(70).toString();
+  }
   return (
     <Grid.Container
       css={{
@@ -225,11 +236,21 @@ const CardItem = ({ item }: { item: IMedia }) => {
   const [style, setStyle] = React.useState<React.CSSProperties>({ display: 'none' });
   const { isDark } = useTheme();
   const { title, posterPath } = item;
-  const { data, loading, error } = useColor(posterPath, 'hex', {
-    crossOrigin: 'anonymous',
-    quality: 1000,
-  });
-  const colorDarkenLighten = isDark ? changeColor(data, 100) : changeColor(data, -80);
+  const { data, loading, error } = useColor(
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(posterPath)}`,
+    'hex',
+    { crossOrigin: 'anonymous' },
+  );
+  let colorDarkenLighten = '';
+  if (isDark) {
+    colorDarkenLighten = !tinycolor(data).isLight()
+      ? tinycolor(data).brighten(70).saturate(70).toString()
+      : tinycolor(data).saturate(70).toString();
+  } else {
+    colorDarkenLighten = !tinycolor(data).isDark()
+      ? tinycolor(data).darken().saturate(100).toString()
+      : tinycolor(data).saturate(70).toString();
+  }
 
   return (
     <Tooltip
@@ -265,7 +286,7 @@ const CardItem = ({ item }: { item: IMedia }) => {
           isBlurred
           css={{
             position: 'absolute',
-            bgBlur: isDark ? 'rgb(0 0 0 / 0.7)' : 'rgb(255 255 255 / 0.7)',
+            bgBlur: isDark ? 'rgb(0 0 0 / 0.8)' : 'rgb(255 255 255 / 0.8)',
             bottom: 0,
             zIndex: 1,
             height: '80px',
