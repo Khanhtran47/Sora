@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { NavLink } from '@remix-run/react';
-import { Spacer, Link, Switch, Text, Grid, Container, useTheme, styled } from '@nextui-org/react';
+import { Spacer, Switch, Text, Grid, Container, useTheme, styled } from '@nextui-org/react';
 import { useTheme as useRemixTheme } from 'next-themes';
 
 /* icons */
@@ -170,9 +170,7 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                     }),
                   }}
                 >
-                  <Link
-                    as="div"
-                    block
+                  <Text
                     color="primary"
                     onClick={handleDrawerClose}
                     css={{
@@ -196,7 +194,7 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                         {page.pageName}
                       </>
                     )}
-                  </Link>
+                  </Text>
                 </Text>
               )}
             </NavLink>
