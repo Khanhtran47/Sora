@@ -34,7 +34,7 @@ const ListTvShows = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const paginationChangeHandler = (page: number) => navigate(`/tv-shows/list?page=${page}`);
+  const paginationChangeHandler = (page: number) => navigate(`/tv-shows/discover?page=${page}`);
 
   return (
     <motion.div

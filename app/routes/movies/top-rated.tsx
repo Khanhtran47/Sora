@@ -30,7 +30,7 @@ const ListMovies = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const paginationChangeHandler = (page: number) => navigate(`/movies/list?page=${page}`);
+  const paginationChangeHandler = (page: number) => navigate(`/movies/top-rated?page=${page}`);
 
   return (
     <motion.div
