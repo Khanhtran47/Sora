@@ -1,57 +1,117 @@
 import * as React from 'react';
-import { Container, Text, Grid, Spacer, Dropdown, Radio } from '@nextui-org/react';
+import { Row, Text, Grid, Button, Dropdown } from '@nextui-org/react';
 import { IGenre } from '~/services/tmdb/tmdb.types';
 
 interface IFilterProps {
   genres: IGenre[];
   onChange: (value: string) => void;
+  listType: string;
 }
 
 const Filter = (props: IFilterProps) => {
-  const { onChange, genres } = props;
-  console.log(genres);
+  const { onChange, genres, listType } = props;
 
-  const [selected, setSelected] = React.useState(new Set(['All']));
+  const [genre, setGenre] = React.useState(new Set(['All']));
+  const [sort, setSort] = React.useState(new Set(['Popularity']));
 
-  const selectedValue = React.useMemo(
-    () => Array.from(selected).join(', ').replaceAll('_', ' '),
-    [selected],
+  const selectedGenre = React.useMemo(
+    () => Array.from(genre).join(', ').replaceAll('_', ' '),
+    [genre],
   );
+
+  const selectedSort = React.useMemo(
+    () => Array.from(sort).join(', ').replaceAll('_', ' '),
+    [sort],
+  );
+  const sortItems = [
+    { key: 'populariy', name: 'Popularity' },
+    { key: 'release_date', name: 'Release Date' },
+    { key: 'original_title', name: 'Name' },
+    { key: 'vote_average', name: 'Vote Average' },
+  ];
   return (
-    <Container fluid>
-      {genres && (
-        <>
+    <Grid.Container
+      gap={2}
+      justify="flex-end"
+      alignItems="center"
+      css={{
+        padding: '10px 50px',
+      }}
+    >
+      <Grid>
+        <Row justify="center">
+          <Text small size={16}>
+            Genre
+          </Text>
+        </Row>
+        <Row css={{ margin: '6px' }}>
+          {genres && (
+            <Dropdown>
+              <Dropdown.Button css={{ tt: 'capitalize' }}>{selectedGenre}</Dropdown.Button>
+              <Dropdown.Menu
+                aria-label="Multiple selection actions"
+                disallowEmptySelection
+                selectionMode="multiple"
+                selectedKeys={genre}
+                onSelectionChange={setGenre}
+              >
+                {genres?.map((genreItem) => (
+                  <Dropdown.Item key={genreItem.name}>{genreItem.name}</Dropdown.Item>
+                ))}
+              </Dropdown.Menu>
+            </Dropdown>
+          )}
+        </Row>
+      </Grid>
+      <Grid>
+        <Row justify="center">
+          <Text small size={16}>
+            Sort By
+          </Text>
+        </Row>
+        <Row css={{ margin: '6px' }}>
           <Dropdown>
-            <Dropdown.Button css={{ tt: 'capitalize' }}>{selectedValue}</Dropdown.Button>
+            <Dropdown.Button css={{ tt: 'capitalize' }}>{selectedSort}</Dropdown.Button>
             <Dropdown.Menu
-              aria-label="Multiple selection actions"
+              aria-label="Single selection actions"
               disallowEmptySelection
-              selectionMode="multiple"
-              selectedKeys={selected}
-              onSelectionChange={setSelected}
+              selectionMode="single"
+              selectedKeys={sort}
+              onSelectionChange={setSort}
             >
-              {genres?.map((genre) => (
-                <Dropdown.Item key={genre.name}>{genre.name}</Dropdown.Item>
+              {sortItems?.map((item) => (
+                <Dropdown.Item key={item.name}>{item.name}</Dropdown.Item>
               ))}
             </Dropdown.Menu>
           </Dropdown>
-          <Spacer />
-        </>
-      )}
-      <Radio.Group
-        orientation="horizontal"
-        label="List type"
-        defaultValue="grid"
-        onChange={onChange}
-      >
-        <Radio value="grid" color="secondary" size="sm">
-          Grid
-        </Radio>
-        <Radio value="table" color="success" size="sm">
-          Table
-        </Radio>
-      </Radio.Group>
-    </Container>
+        </Row>
+      </Grid>
+      <Grid>
+        <Row justify="center">
+          <Text small size={16}>
+            List type
+          </Text>
+        </Row>
+        <Row>
+          <Button.Group>
+            <Button
+              type="button"
+              onClick={() => onChange('grid')}
+              {...(listType === 'grid' ? {} : { ghost: true })}
+            >
+              Grid
+            </Button>
+            <Button
+              type="button"
+              onClick={() => onChange('table')}
+              {...(listType === 'table' ? {} : { ghost: true })}
+            >
+              Table
+            </Button>
+          </Button.Group>
+        </Row>
+      </Grid>
+    </Grid.Container>
   );
 };
 
