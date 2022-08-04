@@ -4,7 +4,7 @@ import { json, LoaderFunction } from '@remix-run/node';
 import { Container, Pagination } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 
-import MediaList from '~/src/components/media/MediaList';
+import MediaList from '~/src/components/Media/MediaList';
 import { getListMovies, getListGenre } from '~/services/tmdb/tmdb.server';
 
 type LoaderData = {

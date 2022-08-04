@@ -5,7 +5,7 @@ import { Container, Pagination } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 
 import { getListTvShows, getListGenre } from '~/services/tmdb/tmdb.server';
-import MediaList from '~/src/components/media/MediaList';
+import MediaList from '~/src/components/Media/MediaList';
 
 type LoaderData = {
   shows: Awaited<ReturnType<typeof getListTvShows>>;

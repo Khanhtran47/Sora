@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { Container, Pagination } from '@nextui-org/react';
 
 import { getTrending } from '~/services/tmdb/tmdb.server';
-import MediaList from '~/src/components/media/MediaList';
+import MediaList from '~/src/components/Media/MediaList';
 
 type LoaderData = {
   todayTrending: Awaited<ReturnType<typeof getTrending>>;
