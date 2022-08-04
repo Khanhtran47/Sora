@@ -1,4 +1,4 @@
-import { Grid, Table, Text, Radio, Spacer, Container } from '@nextui-org/react';
+import { Grid, Table, Text } from '@nextui-org/react';
 import { Link } from '@remix-run/react';
 import { useState } from 'react';
 import SwiperCore, { Autoplay } from 'swiper/core';
@@ -20,7 +20,7 @@ interface IMediaListProps {
   listName?: string;
   items: IMedia[];
   showFilter?: boolean;
-  genres?: IGenre[];
+  genres?: IGenre[] | undefined;
 }
 
 const MediaListGrid = ({ items }: { items: IMedia[] }) => (
@@ -119,7 +119,7 @@ const MediaList = (props: IMediaListProps) => {
         </Text>
       )}
       {/* TODO: better and prettier way to swap list type */}
-      {showFilter && <Filter onChange={setDisplayType} genres={genres} />}
+      {showFilter && <Filter onChange={setDisplayType} genres={genres} listType={displayType} />}
       {list}
     </>
   );

@@ -3,7 +3,7 @@ import { Row, Text, Grid, Button, Dropdown } from '@nextui-org/react';
 import { IGenre } from '~/services/tmdb/tmdb.types';
 
 interface IFilterProps {
-  genres: IGenre[];
+  genres: IGenre[] | undefined;
   onChange: (value: string) => void;
   listType: string;
 }
