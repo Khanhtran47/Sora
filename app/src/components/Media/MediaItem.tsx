@@ -5,8 +5,6 @@ import { IMedia } from '~/services/tmdb/tmdb.types';
 import { useColor } from 'color-thief-react';
 import tinycolor from 'tinycolor2';
 
-import { changeColor } from '~/utils/media';
-
 interface IMediaItem {
   type: 'banner' | 'card';
   item: IMedia;
@@ -182,6 +180,7 @@ const BannerItem = ({ item }: { item: IMedia }) => {
 const CardItemHover = ({ item }: { item: IMedia }) => {
   const { isDark } = useTheme();
   const { title, overview, releaseDate, voteAverage, mediaType, posterPath } = item;
+  // TODO: add spinner on loading color
   const { data, loading, error } = useColor(
     `https://api.allorigins.win/raw?url=${encodeURIComponent(posterPath)}`,
     'hex',
@@ -235,6 +234,7 @@ const CardItemHover = ({ item }: { item: IMedia }) => {
 const CardItem = ({ item }: { item: IMedia }) => {
   const [style, setStyle] = React.useState<React.CSSProperties>({ display: 'none' });
   const { isDark } = useTheme();
+  // TODO: add spinner on loading color
   const { title, posterPath } = item;
   const { data, loading, error } = useColor(
     `https://api.allorigins.win/raw?url=${encodeURIComponent(posterPath)}`,
@@ -254,9 +254,6 @@ const CardItem = ({ item }: { item: IMedia }) => {
 
   return (
     <Tooltip
-      css={{
-        width: 'fit-content',
-      }}
       placement="bottom"
       content={<CardItemHover item={item} />}
       rounded
