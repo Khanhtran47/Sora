@@ -18,14 +18,14 @@ export default class Player {
     }
   };
 
-  static tvPlayerUrl = (id: number, player: number): string => {
+  static tvPlayerUrl = (id: number, player: number, season: number, episode?: number): string => {
     switch (player) {
       case 1:
-        return `${this.player1_base_url}tv?id=${id}&s=1&e=1`;
+        return `${this.player1_base_url}tv?id=${id}&s=${season}&e=${episode}`;
       case 2:
-        return `${this.player2_base_url}tv-imdb.php?id=${id}&s=1`;
+        return `${this.player2_base_url}tv-imdb.php?id=${id}&s=${season}`;
       case 3:
-        return `http://series.${this.player3_base_url}type=series&tmdb=${id}&season=1&episode=1`;
+        return `http://series.${this.player3_base_url}type=series&tmdb=${id}&season=${season}&episode=${episode}`;
       default:
         return `${this.player1_base_url}tv?id=${id}&s=1&e=1`;
     }
