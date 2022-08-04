@@ -6,7 +6,7 @@ import { Container } from '@nextui-org/react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
 import { getTvShowDetail } from '~/services/tmdb/tmdb.server';
-import MediaDetail from '~/src/components/Media/MediaDetail';
+import MediaDetail from '~/src/components/media/MediaDetail';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 
 type LoaderData = {

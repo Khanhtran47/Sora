@@ -4,32 +4,35 @@ import { json, LoaderFunction } from '@remix-run/node';
 import { Container, Pagination } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 
-import { getListTvShows } from '~/services/tmdb/tmdb.server';
-import MediaList from '~/src/components/Media/MediaList';
+import { getListTvShows, getListGenre } from '~/services/tmdb/tmdb.server';
+import MediaList from '~/src/components/media/MediaList';
 
 type LoaderData = {
   shows: Awaited<ReturnType<typeof getListTvShows>>;
+  genres: Awaited<ReturnType<typeof getListGenre>>;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
   const page = Number(url.searchParams.get('page'));
+  const genres = await getListGenre('tv');
 
   if (!page || page < 1 || page > 1000) {
     return json<LoaderData>({
       shows: await getListTvShows('on_the_air'),
+      genres,
     });
   }
   return json<LoaderData>({
     shows: await getListTvShows('on_the_air', page),
+    genres,
   });
 };
 
 const ListTvShows = () => {
-  const { shows } = useLoaderData<LoaderData>();
+  const { shows, genres } = useLoaderData<LoaderData>();
   const navigate = useNavigate();
   const location = useLocation();
-  console.log(shows);
 
   const paginationChangeHandler = (page: number) => navigate(`/tv-shows/list?page=${page}`);
 
@@ -48,6 +51,7 @@ const ListTvShows = () => {
             items={shows.items}
             listName="On the air - Tv shows"
             showFilter
+            genres={genres}
           />
         )}
         <Pagination

@@ -8,6 +8,8 @@ import {
   ListTvShowType,
   MediaType,
   TimeWindowType,
+  IListGenre,
+  IGenre,
 } from './tmdb.types';
 import { fetcher, postFetchDataHandler, TMDB } from './utils.server';
 
@@ -27,6 +29,8 @@ const getListFromTMDB = async (url: string, type?: string): Promise<IMediaList> 
   }
 };
 
+/* ===========================================Trending Field========================================== */
+
 // get a list of trending items
 export const getTrending = async (
   mediaType: MediaType,
@@ -36,6 +40,10 @@ export const getTrending = async (
   const url = TMDB.trendingUrl(mediaType, timeWindow, page);
   return getListFromTMDB(url);
 };
+
+/* ======================================End of Trending Field======================================== */
+
+/* ===========================================Movie Field============================================= */
 
 /**
  * It fetches a list of movies from the TMDB API, and returns a list of movies
@@ -49,11 +57,6 @@ export const getTrending = async (
 export const getListMovies = async (type: ListMovieType, page?: number): Promise<IMediaList> => {
   const url = TMDB.listMoviesUrl(type, page);
   return getListFromTMDB(url, 'movie');
-};
-
-export const getListTvShows = async (type: ListTvShowType, page?: number): Promise<IMediaList> => {
-  const url = TMDB.listTvShowsUrl(type, page);
-  return getListFromTMDB(url, 'tv');
 };
 
 /**
@@ -71,6 +74,23 @@ export const getMovieDetail = async (id: number): Promise<IMovieDetail | undefin
   }
 };
 
+/* =====================================End of Movie Field============================================ */
+
+/* ========================================Tv Show Field============================================== */
+
+/**
+ * It takes a type and a page number, and returns a promise that resolves to an object that contains a
+ * list of tv shows
+ * @param {ListTvShowType} type - ListTvShowType = 'airing_today' | 'on_the_air' | 'popular' |
+ * 'top_rated';
+ * @param {number} [page] - number
+ * @returns A promise that resolves to an object of type IMediaList.
+ */
+export const getListTvShows = async (type: ListTvShowType, page?: number): Promise<IMediaList> => {
+  const url = TMDB.listTvShowsUrl(type, page);
+  return getListFromTMDB(url, 'tv');
+};
+
 export const getTvShowDetail = async (id: number): Promise<ITvShowDetail | undefined> => {
   try {
     const fetched = await fetcher<ITvShowDetail>(TMDB.tvShowDetailUrl(id));
@@ -80,6 +100,33 @@ export const getTvShowDetail = async (id: number): Promise<ITvShowDetail | undef
   }
 };
 
+/**
+ * It fetches the IMDB ID of a TV show from TMDB, and if it doesn't exist, it throws an error
+ * @param {number} id - number - The TV show ID from TMDB
+ * @returns A Promise that resolves to a number or undefined.
+ */
+export const getTvShowIMDBId = async (id: number): Promise<number | undefined> => {
+  try {
+    const fetched = await fetcher<{ imdb_id: number | undefined }>(TMDB.tvExternalIds(id));
+
+    if (!fetched?.imdb_id) throw new Error('This TV show does not have IMDB ID');
+
+    return fetched.imdb_id;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+/* ======================================End of Tv Show Field========================================= */
+
+/* =============================================UTILS================================================= */
+
+/**
+ * It fetches a video from the TMDB API and returns the response
+ * @param {'movie' | 'tv'} type - 'movie' | 'tv'
+ * @param {number} id - number - the id of the movie or tv show
+ * @returns The return type is a Promise of IVideos or undefined.
+ */
 export const getVideos = async (type: 'movie' | 'tv', id: number): Promise<IVideos | undefined> => {
   try {
     const fetched = await fetcher<IVideos>(TMDB.videoUrl(type, id));
@@ -89,6 +136,12 @@ export const getVideos = async (type: 'movie' | 'tv', id: number): Promise<IVide
   }
 };
 
+/**
+ * It fetches a credit object from the TMDB API, and returns it if it exists
+ * @param {'movie' | 'tv'} type - 'movie' | 'tv'
+ * @param {number} id - number,
+ * @returns Promise&lt;ICredit | undefined&gt;
+ */
 export const getCredits = async (
   type: 'movie' | 'tv',
   id: number,
@@ -101,18 +154,22 @@ export const getCredits = async (
   }
 };
 
+/**
+ * It takes a type and an id, and returns a promise that resolves to a list of media
+ * @param {'movie' | 'tv'} type - 'movie' | 'tv'
+ * @param {number} id - The id of the movie or tv show
+ * @returns A promise that resolves to an IMediaList object.
+ */
 export const getSimilar = async (type: 'movie' | 'tv', id: number): Promise<IMediaList> => {
   const url = TMDB.similarUrl(type, id);
   return getListFromTMDB(url);
 };
 
-export const getTvShowIMDBId = async (id: number): Promise<number | undefined> => {
+export const getListGenre = async (type: 'movie' | 'tv'): Promise<IGenre[] | undefined> => {
+  const url = TMDB.listGenre(type);
   try {
-    const fetched = await fetcher<{ imdb_id: number | undefined }>(TMDB.tvExternalIds(id));
-
-    if (!fetched?.imdb_id) throw new Error('This TV show does not have IMDB ID');
-
-    return fetched.imdb_id;
+    const fetched = await fetcher<IListGenre>(url);
+    return fetched.genres;
   } catch (error) {
     console.error(error);
   }

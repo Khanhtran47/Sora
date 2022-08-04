@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { Container, Pagination } from '@nextui-org/react';
 
 import { getTrending } from '~/services/tmdb/tmdb.server';
-import MediaList from '~/src/components/Media/MediaList';
+import MediaList from '~/src/components/media/MediaList';
 
 type LoaderData = {
   todayTrending: Awaited<ReturnType<typeof getTrending>>;
@@ -66,7 +66,7 @@ const Trending = () => {
       </Radio.Group>
       <Spacer /> */}
         {todayTrending?.items.length > 0 && (
-          <MediaList listType="grid" items={todayTrending.items} listName={listName} showFilter />
+          <MediaList listType="grid" items={todayTrending.items} listName={listName} />
         )}
         <Pagination
           total={todayTrending.totalPages}
