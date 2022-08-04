@@ -6,8 +6,10 @@ import {
   Link as NextLink,
   Text,
   Grid,
+  Row,
   Dropdown,
   Switch,
+  Tooltip,
   useTheme,
   styled,
 } from '@nextui-org/react';
@@ -33,11 +35,21 @@ interface IHeaderProps {
 const pages = [
   {
     pageName: 'Movies',
-    pageLink: 'movies/list',
+    pageLink: 'movies/discover',
+    pageDropdown: [
+      { pageName: 'Popular', pageLink: 'movies/popular' },
+      { pageName: 'Top Rated', pageLink: 'movies/top-rated' },
+      { pageName: 'Upcoming', pageLink: 'movies/upcoming' },
+    ],
   },
   {
     pageName: 'TV Shows',
-    pageLink: 'tv-shows/list',
+    pageLink: 'tv-shows/discover',
+    pageDropdown: [
+      { pageName: 'Popular', pageLink: 'tv-shows/popular' },
+      { pageName: 'Top Rated', pageLink: 'tv-shows/top-rated' },
+      { pageName: 'On TV', pageLink: 'tv-shows/on-tv' },
+    ],
   },
   {
     pageName: 'Animes',
@@ -51,11 +63,63 @@ const AppBar = styled(Grid.Container, {
   position: 'fixed',
 });
 
+const DropdownPage = ({
+  pagesDropdown,
+}: {
+  pagesDropdown: {
+    pageName: string;
+    pageLink: string;
+  }[];
+}) => {
+  const { theme } = useTheme();
+  return (
+    <Grid.Container
+      css={{
+        width: 'inherit',
+        padding: '0.75rem',
+        maxWidth: '200px',
+      }}
+    >
+      {pagesDropdown.map((page) => (
+        <Row key={page.pageName}>
+          <NavLink to={`/${page.pageLink}`} end style={{ marginRight: '10px' }}>
+            {({ isActive }) => (
+              <Text
+                h1
+                size={20}
+                css={{
+                  textTransform: 'uppercase',
+                  display: 'none',
+                  '@sm': {
+                    display: 'flex',
+                  },
+                }}
+              >
+                <NextLink
+                  block
+                  color="primary"
+                  css={{
+                    ...(isActive && {
+                      background: `${theme?.colors.primaryLightActive.value}`,
+                    }),
+                  }}
+                >
+                  {page.pageName}
+                </NextLink>
+              </Text>
+            )}
+          </NavLink>
+        </Row>
+      ))}
+    </Grid.Container>
+  );
+};
+
 const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   const { setTheme } = useRemixTheme();
   const { isDark, theme } = useTheme();
-  console.log(theme);
   const { open, handleDrawerOpen, handleDrawerClose, user } = props;
+
   return (
     <AppBar
       justify="space-between"
@@ -141,33 +205,39 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       {/* link page */}
       <Grid sm={6} alignItems="center">
         {pages.map((page) => (
-          <NavLink to={`/${page.pageLink}`} key={page.pageName} end style={{ marginRight: '10px' }}>
-            {({ isActive }) => (
-              <Text
-                h1
-                size={20}
-                css={{
-                  textTransform: 'uppercase',
-                  display: 'none',
-                  '@sm': {
-                    display: 'flex',
-                  },
-                }}
-              >
-                <NextLink
-                  block
-                  color="primary"
+          <Tooltip
+            key={page.pageName}
+            placement="bottom"
+            content={<DropdownPage pagesDropdown={page?.pageDropdown || []} />}
+          >
+            <NavLink to={`/${page.pageLink}`} end style={{ marginRight: '10px' }}>
+              {({ isActive }) => (
+                <Text
+                  h1
+                  size={20}
                   css={{
-                    ...(isActive && {
-                      background: `${theme?.colors.primaryLightActive.value}`,
-                    }),
+                    textTransform: 'uppercase',
+                    display: 'none',
+                    '@sm': {
+                      display: 'flex',
+                    },
                   }}
                 >
-                  {page.pageName}
-                </NextLink>
-              </Text>
-            )}
-          </NavLink>
+                  <NextLink
+                    block
+                    color="primary"
+                    css={{
+                      ...(isActive && {
+                        background: `${theme?.colors.primaryLightActive.value}`,
+                      }),
+                    }}
+                  >
+                    {page.pageName}
+                  </NextLink>
+                </Text>
+              )}
+            </NavLink>
+          </Tooltip>
         ))}
       </Grid>
 

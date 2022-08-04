@@ -5,32 +5,28 @@ import { Container, Pagination } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 
 import MediaList from '~/src/components/Media/MediaList';
-import { getListMovies, getListGenre } from '~/services/tmdb/tmdb.server';
+import { getListMovies } from '~/services/tmdb/tmdb.server';
 
 type LoaderData = {
   movies: Awaited<ReturnType<typeof getListMovies>>;
-  genres: Awaited<ReturnType<typeof getListGenre>>;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
   const page = Number(url.searchParams.get('page'));
-  const genres = await getListGenre('movie');
 
   if (!page || page < 1 || page > 1000) {
     return json<LoaderData>({
-      movies: await getListMovies('popular'),
-      genres,
+      movies: await getListMovies('top_rated'),
     });
   }
   return json<LoaderData>({
-    movies: await getListMovies('popular', page),
-    genres,
+    movies: await getListMovies('top_rated', page),
   });
 };
 
 const ListMovies = () => {
-  const { movies, genres } = useLoaderData<LoaderData>();
+  const { movies } = useLoaderData<LoaderData>();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -46,13 +42,7 @@ const ListMovies = () => {
     >
       <Container fluid display="flex" justify="center" direction="column" alignItems="center">
         {movies?.items.length > 0 && (
-          <MediaList
-            listType="grid"
-            items={movies.items}
-            listName="Popular Movies"
-            showFilter
-            genres={genres}
-          />
+          <MediaList listType="grid" items={movies.items} listName="Top Rated Movies" />
         )}
         <Pagination
           total={movies.totalPages}

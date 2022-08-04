@@ -42,8 +42,6 @@ const MovieWatch = () => {
   const id = location.pathname.split('/')[3];
   const [player, setPlayer] = React.useState<string>('1');
   const [source, setSource] = React.useState<string>(Player.moviePlayerUrl(Number(id), 1));
-  console.log(detail);
-  console.log(source);
   React.useEffect(
     () =>
       player === '2'
