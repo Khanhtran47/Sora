@@ -17,11 +17,11 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   if (!page || page < 1 || page > 1000) {
     return json<LoaderData>({
-      movies: await getListMovies('popular'),
+      movies: await getListMovies('upcoming'),
     });
   }
   return json<LoaderData>({
-    movies: await getListMovies('popular', page),
+    movies: await getListMovies('upcoming', page),
   });
 };
 
@@ -29,9 +29,8 @@ const ListMovies = () => {
   const { movies } = useLoaderData<LoaderData>();
   const navigate = useNavigate();
   const location = useLocation();
-  // console.log(movies);
 
-  const paginationChangeHandler = (page: number) => navigate(`/movies/list?page=${page}`);
+  const paginationChangeHandler = (page: number) => navigate(`/movies/upcoming?page=${page}`);
 
   return (
     <motion.div
@@ -43,7 +42,7 @@ const ListMovies = () => {
     >
       <Container fluid display="flex" justify="center" direction="column" alignItems="center">
         {movies?.items.length > 0 && (
-          <MediaList listType="grid" items={movies.items} listName="Popular Movies" showFilter />
+          <MediaList listType="grid" items={movies.items} listName="Upcoming Movies" />
         )}
         <Pagination
           total={movies.totalPages}

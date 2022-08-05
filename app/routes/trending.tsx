@@ -66,7 +66,7 @@ const Trending = () => {
       </Radio.Group>
       <Spacer /> */}
         {todayTrending?.items.length > 0 && (
-          <MediaList listType="grid" items={todayTrending.items} listName={listName} showFilter />
+          <MediaList listType="grid" items={todayTrending.items} listName={listName} />
         )}
         <Pagination
           total={todayTrending.totalPages}

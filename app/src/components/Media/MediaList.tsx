@@ -1,11 +1,12 @@
-import { Grid, Table, Text, Radio, Spacer, Container } from '@nextui-org/react';
+import { Grid, Table, Text } from '@nextui-org/react';
 import { Link } from '@remix-run/react';
 import { useState } from 'react';
 import SwiperCore, { Autoplay } from 'swiper/core';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
-import { IMedia } from '~/services/tmdb/tmdb.types';
+import { IMedia, IGenre } from '~/services/tmdb/tmdb.types';
 import MediaItem from './MediaItem';
+import Filter from '../filter/Filter';
 
 /**
  * MediaList type:
@@ -19,6 +20,7 @@ interface IMediaListProps {
   listName?: string;
   items: IMedia[];
   showFilter?: boolean;
+  genres?: IGenre[] | undefined;
 }
 
 const MediaListGrid = ({ items }: { items: IMedia[] }) => (
@@ -88,7 +90,7 @@ const MediaListBanner = ({ items }: { items: IMedia[] }) => {
 // const MediaListCard = ({ items }: { items: IMedia[] }) => ();
 
 const MediaList = (props: IMediaListProps) => {
-  const { listType, listName, items, showFilter } = props;
+  const { listType, listName, items, showFilter, genres } = props;
   const [displayType, setDisplayType] = useState<string>(listType as string);
 
   let list;
@@ -117,24 +119,7 @@ const MediaList = (props: IMediaListProps) => {
         </Text>
       )}
       {/* TODO: better and prettier way to swap list type */}
-      {showFilter && (
-        <Container fluid>
-          <Radio.Group
-            orientation="horizontal"
-            label="List type"
-            defaultValue="grid"
-            onChange={setDisplayType}
-          >
-            <Radio value="grid" color="secondary" size="sm">
-              Grid
-            </Radio>
-            <Radio value="table" color="success" size="sm">
-              Table
-            </Radio>
-          </Radio.Group>
-          <Spacer />
-        </Container>
-      )}
+      {showFilter && <Filter onChange={setDisplayType} genres={genres} listType={displayType} />}
       {list}
     </>
   );
