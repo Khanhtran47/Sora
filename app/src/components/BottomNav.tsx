@@ -4,11 +4,11 @@ import { Link, Text, Container, useTheme } from '@nextui-org/react';
 const pages = [
   {
     pageName: 'Movies',
-    pageLink: 'movies/list',
+    pageLink: 'movies/discover',
   },
   {
     pageName: 'TV Shows',
-    pageLink: 'tv-shows/list',
+    pageLink: 'tv-shows/discover',
   },
   {
     pageName: 'Animes',
