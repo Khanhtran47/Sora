@@ -67,7 +67,6 @@ const BannerItem = ({ item }: { item: IMedia }) => {
                   auto
                   shadow
                   rounded
-                  color="gradient"
                   css={{
                     marginTop: '5vh',
                   }}
@@ -97,7 +96,6 @@ const BannerItem = ({ item }: { item: IMedia }) => {
                   shadow
                   rounded
                   bordered
-                  color="gradient"
                   css={{
                     marginTop: '5vh',
                   }}
@@ -181,11 +179,13 @@ const CardItemHover = ({ item }: { item: IMedia }) => {
   const { isDark } = useTheme();
   const { title, overview, releaseDate, voteAverage, mediaType, posterPath } = item;
   // TODO: add spinner on loading color
-  const { data, loading, error } = useColor(
-    `https://api.allorigins.win/raw?url=${encodeURIComponent(posterPath)}`,
-    'hex',
-    { crossOrigin: 'anonymous' },
-  );
+  const {
+    data,
+    // loading,
+    // error,
+  } = useColor(`https://api.allorigins.win/raw?url=${encodeURIComponent(posterPath)}`, 'hex', {
+    crossOrigin: 'anonymous',
+  });
   let colorDarkenLighten = '';
   if (isDark) {
     colorDarkenLighten = !tinycolor(data).isLight()
@@ -236,11 +236,13 @@ const CardItem = ({ item }: { item: IMedia }) => {
   const { isDark } = useTheme();
   // TODO: add spinner on loading color
   const { title, posterPath } = item;
-  const { data, loading, error } = useColor(
-    `https://api.allorigins.win/raw?url=${encodeURIComponent(posterPath)}`,
-    'hex',
-    { crossOrigin: 'anonymous' },
-  );
+  const {
+    data,
+    // loading,
+    // error,
+  } = useColor(`https://api.allorigins.win/raw?url=${encodeURIComponent(posterPath)}`, 'hex', {
+    crossOrigin: 'anonymous',
+  });
   let colorDarkenLighten = '';
   if (isDark) {
     colorDarkenLighten = !tinycolor(data).isLight()

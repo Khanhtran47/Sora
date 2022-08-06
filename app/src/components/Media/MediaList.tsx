@@ -75,9 +75,9 @@ const MediaListBanner = ({ items }: { items: IMedia[] }) => {
   return (
     <Grid.Container gap={1} justify="flex-start" css={{ margin: 0, padding: 0, width: '100%' }}>
       {items?.length > 0 && (
-        <Swiper grabCursor spaceBetween={0} slidesPerView={1} autoplay={{ delay: 4500 }}>
+        <Swiper grabCursor spaceBetween={0} slidesPerView={1} autoplay={{ delay: 10000 }}>
           {items.slice(0, 10).map((item, i) => (
-            <SwiperSlide key={i} className="w-fit">
+            <SwiperSlide key={i}>
               <MediaItem key={item.id} type="banner" item={item} />
             </SwiperSlide>
           ))}

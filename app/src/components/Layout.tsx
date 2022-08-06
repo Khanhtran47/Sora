@@ -29,8 +29,8 @@ const Layout = ({ children, user }: ILayout) => {
 
   return (
     <Container
-      fluid
       css={{
+        maxWidth: '100vw',
         margin: 0,
         padding: 0,
       }}
@@ -44,13 +44,12 @@ const Layout = ({ children, user }: ILayout) => {
       <LeftDrawer open={open} handleDrawerClose={handleDrawerClose} />
       <Container
         as="main"
-        fluid
-        responsive
         css={{
           width: '100%',
           zIndex: 0,
           margin: 0,
           minHeight: '100vh',
+          maxWidth: '100vw',
           height: 'fit-content',
           ...(location.pathname === '/' || location.pathname.split('/')[2]?.match(/^\d+$/)
             ? {

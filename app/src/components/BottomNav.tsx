@@ -11,7 +11,7 @@ const pages = [
     pageLink: 'tv-shows/discover',
   },
   {
-    pageName: 'Animes',
+    pageName: 'People',
     pageLink: 'animes/list',
   },
 ];
