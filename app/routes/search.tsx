@@ -3,7 +3,7 @@ import { NavLink, Outlet } from '@remix-run/react';
 import { Link as NextLink, Text, useTheme, Grid, Spacer } from '@nextui-org/react';
 
 const searchPage = [
-  { pageName: 'Search Movies', pageLink: 'movies' },
+  { pageName: 'Search Movies', pageLink: 'movie' },
   { pageName: 'Search Tv shows', pageLink: 'tv' },
   // { pageName: 'Search People', pageLink: 'people' },
 ];

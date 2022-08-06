@@ -131,18 +131,18 @@ export const getSearchMovies = async (
   year?: number,
 ): Promise<IMediaList> => {
   const url = TMDB.searchMovies(keyword, language, page, include_adult, region, year, undefined);
-  return getListFromTMDB(url);
+  return getListFromTMDB(url, 'movie');
 };
 
 export const getSearchTvShows = async (
   keyword: string,
-  language?: string,
   page?: number,
+  language?: string,
   include_adult?: boolean,
   first_air_date_year?: number,
 ): Promise<IMediaList> => {
   const url = TMDB.searchTv(keyword, language, page, include_adult, first_air_date_year);
-  return getListFromTMDB(url);
+  return getListFromTMDB(url, 'tv');
 };
 
 /* =======================================End of Search Field========================================= */

@@ -60,7 +60,7 @@ const pages = [
 ];
 
 const searchDropdown = [
-  { pageName: 'Search Movies', pageLink: 'search/movies' },
+  { pageName: 'Search Movies', pageLink: 'search/movie' },
   { pageName: 'Search Tv', pageLink: 'search/tv' },
   // { pageName: 'Search People', pageLink: 'search/people' },
 ];
