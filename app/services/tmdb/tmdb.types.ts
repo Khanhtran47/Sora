@@ -78,6 +78,15 @@ export interface IMovieDetail {
   vote_count: number;
 }
 
+export interface IGenre {
+  id: number;
+  name: string;
+}
+
+export interface IListGenre {
+  genres: IGenre[];
+}
+
 export interface ICredit {
   id: number;
   cast: {

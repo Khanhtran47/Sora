@@ -17,11 +17,11 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   if (!page || page < 1 || page > 1000) {
     return json<LoaderData>({
-      shows: await getListTvShows('on_the_air'),
+      shows: await getListTvShows('top_rated'),
     });
   }
   return json<LoaderData>({
-    shows: await getListTvShows('on_the_air', page),
+    shows: await getListTvShows('top_rated', page),
   });
 };
 
@@ -29,9 +29,8 @@ const ListTvShows = () => {
   const { shows } = useLoaderData<LoaderData>();
   const navigate = useNavigate();
   const location = useLocation();
-  console.log(shows);
 
-  const paginationChangeHandler = (page: number) => navigate(`/tv-shows/list?page=${page}`);
+  const paginationChangeHandler = (page: number) => navigate(`/tv-shows/top-rated?page=${page}`);
 
   return (
     <motion.div
@@ -43,12 +42,7 @@ const ListTvShows = () => {
     >
       <Container fluid display="flex" justify="center" direction="column" alignItems="center">
         {shows?.items.length > 0 && (
-          <MediaList
-            listType="grid"
-            items={shows.items}
-            listName="On the air - Tv shows"
-            showFilter
-          />
+          <MediaList listType="grid" items={shows.items} listName="Top rated - Tv shows" />
         )}
         <Pagination
           total={shows.totalPages}

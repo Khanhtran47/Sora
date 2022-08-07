@@ -1,15 +1,20 @@
+/* eslint-disable no-unused-expressions */
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+/* eslint-disable @typescript-eslint/indent */
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
 import { MetaFunction, LoaderFunction, json } from '@remix-run/node';
 import { useCatch, useLoaderData, useParams } from '@remix-run/react';
-import { Container, Row, Radio } from '@nextui-org/react';
+import { Container, Row, Radio, Dropdown, Spacer } from '@nextui-org/react';
 
-import { getTvShowIMDBId } from '~/services/tmdb/tmdb.server';
+import { getTvShowDetail, getTvShowIMDBId } from '~/services/tmdb/tmdb.server';
 import Player from '~/utils/player';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 
 type LoaderData = {
+  detail: Awaited<ReturnType<typeof getTvShowDetail>>;
   imdbId: Awaited<ReturnType<typeof getTvShowIMDBId>>;
 };
 
@@ -23,37 +28,58 @@ export const loader: LoaderFunction = async ({ params }) => {
   const tid = Number(id);
 
   if (!tid) throw new Response('Not Found', { status: 404 });
-
+  const detail = await getTvShowDetail(tid);
   const imdbId = await getTvShowIMDBId(tid);
 
   if (!imdbId) throw new Response('Not Found', { status: 404 });
 
   return json<LoaderData>({
+    detail,
     imdbId,
   });
 };
 
 const TvWatch = () => {
-  const { imdbId } = useLoaderData<LoaderData>();
+  const { detail, imdbId } = useLoaderData<LoaderData>();
+  console.log(detail);
   const { id } = useParams();
   const [player, setPlayer] = React.useState<string>('1');
-  const [source, setSource] = React.useState<string>(Player.tvPlayerUrl(Number(id), 1));
+  const [source, setSource] = React.useState<string>(Player.tvPlayerUrl(Number(id), 1, 1, 1));
+  const [season, setSeason] = React.useState(new Set([detail?.seasons[1].name]));
+  const [listEpisode, setListEpisode] = React.useState<number[]>([]);
+  const [episode, setEpisode] = React.useState(new Set(['1']));
 
-  React.useEffect(
-    () =>
-      player === '2'
-        ? setSource(Player.tvPlayerUrl(imdbId, Number(player))) // ! Don't have imdb id for tv show
-        : setSource(Player.tvPlayerUrl(Number(id), Number(player))),
-    [player, imdbId, id],
+  const selectedSeason = React.useMemo(
+    () => Array.from(season).join(', ').replaceAll('_', ' '),
+    [season],
   );
+  const selectedEpisode = React.useMemo(
+    () => Array.from(episode).join(', ').replaceAll('_', ' '),
+    [episode],
+  );
+
+  React.useEffect(() => {
+    const seasonInfo = detail?.seasons.find((s) => s.name === season.values().next().value);
+    setListEpisode(Array.from({ length: seasonInfo?.episode_count || 0 }, (_, i) => i + 1));
+  }, [season]);
+
+  console.log(season.values().next().value);
+
+  React.useEffect(() => {
+    const seasonInfo = detail?.seasons.find((s) => s.name === season.values().next().value);
+    player === '2'
+      ? setSource(Player.tvPlayerUrl(imdbId, Number(player), seasonInfo?.season_number || 1))
+      : setSource(
+          Player.tvPlayerUrl(
+            Number(id),
+            Number(player),
+            seasonInfo?.season_number || 1,
+            Number(episode.values().next().value),
+          ),
+        );
+  }, [player, imdbId, id, season, episode]);
   return (
-    <Container
-      fluid
-      css={{
-        margin: 0,
-        padding: 0,
-      }}
-    >
+    <Container fluid>
       <Row>
         <Radio.Group
           label="Choose Player"
@@ -67,6 +93,7 @@ const TvWatch = () => {
           <Radio value="3">Player 3</Radio>
         </Radio.Group>
       </Row>
+      <Spacer y={1} />
       <Row css={{ height: '100vh' }}>
         <iframe
           id="iframe"
@@ -80,10 +107,41 @@ const TvWatch = () => {
           frameBorder="0"
           title="movie-player"
           allowFullScreen
-          scrolling="no"
           // @ts-expect-error: this is expected
           sandbox
         />
+      </Row>
+      <Spacer y={1} />
+      <Row>
+        <Dropdown>
+          <Dropdown.Button css={{ tt: 'capitalize' }}>{selectedSeason}</Dropdown.Button>
+          <Dropdown.Menu
+            aria-label="Single selection actions"
+            disallowEmptySelection
+            selectionMode="single"
+            selectedKeys={season}
+            onSelectionChange={setSeason}
+          >
+            {detail?.seasons.map((item) => (
+              <Dropdown.Item key={item.name}>{item.name}</Dropdown.Item>
+            ))}
+          </Dropdown.Menu>
+        </Dropdown>
+        <Spacer x={1} />
+        <Dropdown>
+          <Dropdown.Button css={{ tt: 'capitalize' }}>{selectedEpisode}</Dropdown.Button>
+          <Dropdown.Menu
+            aria-label="Single selection actions"
+            disallowEmptySelection
+            selectionMode="single"
+            selectedKeys={episode}
+            onSelectionChange={setEpisode}
+          >
+            {listEpisode.map((item) => (
+              <Dropdown.Item key={item.toString()}>{item}</Dropdown.Item>
+            ))}
+          </Dropdown.Menu>
+        </Dropdown>
       </Row>
     </Container>
   );
