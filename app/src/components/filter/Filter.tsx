@@ -10,7 +10,7 @@ interface IFilterProps {
 }
 
 const sortMovieItems = [
-  { key: 'populariy', name: 'Popularity' },
+  { key: 'popularity', name: 'Popularity' },
   { key: 'release_date', name: 'Release Date' },
   { key: 'original_title', name: 'Name' },
   { key: 'vote_average', name: 'Vote Average' },
@@ -31,7 +31,7 @@ const Filter = (props: IFilterProps) => {
   const preGenres = urlObject.searchParams.get('with_genres');
   const preSort = urlObject.searchParams.get('sort_by');
 
-  const preGenresSet = !preGenres ? new Set(['All']) : new Set(preGenres.split(','));
+  const preGenresSet = !preGenres ? new Set(['All']) : new Set(['All', ...preGenres.split(',')]);
 
   const preSortSet = !preSort ? new Set(['popularity']) : new Set([preSort.split('.')[0]]);
 
