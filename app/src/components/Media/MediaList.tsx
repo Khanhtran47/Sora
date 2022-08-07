@@ -4,7 +4,7 @@ import { useState } from 'react';
 import SwiperCore, { Autoplay } from 'swiper/core';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
-import { IMedia, IGenre } from '~/services/tmdb/tmdb.types';
+import { IMedia } from '~/services/tmdb/tmdb.types';
 import MediaItem from './MediaItem';
 import Filter from '../filter/Filter';
 
@@ -20,7 +20,8 @@ interface IMediaListProps {
   listName?: string;
   items: IMedia[];
   showFilter?: boolean;
-  genres?: IGenre[] | undefined;
+  genres?: { [id: string]: string };
+  mediaType?: 'movie' | 'tv';
 }
 
 const MediaListGrid = ({ items }: { items: IMedia[] }) => (
@@ -90,7 +91,7 @@ const MediaListBanner = ({ items }: { items: IMedia[] }) => {
 // const MediaListCard = ({ items }: { items: IMedia[] }) => ();
 
 const MediaList = (props: IMediaListProps) => {
-  const { listType, listName, items, showFilter, genres } = props;
+  const { listType, listName, items, showFilter, genres, mediaType } = props;
   const [displayType, setDisplayType] = useState<string>(listType as string);
 
   let list;
@@ -119,7 +120,14 @@ const MediaList = (props: IMediaListProps) => {
         </Text>
       )}
       {/* TODO: better and prettier way to swap list type */}
-      {showFilter && <Filter onChange={setDisplayType} genres={genres} listType={displayType} />}
+      {showFilter && mediaType && genres && (
+        <Filter
+          onChange={setDisplayType}
+          genres={genres}
+          listType={displayType}
+          mediaType={mediaType}
+        />
+      )}
       {list}
     </>
   );

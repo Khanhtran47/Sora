@@ -9,7 +9,6 @@ import {
   MediaType,
   TimeWindowType,
   IListGenre,
-  IGenre,
 } from './tmdb.types';
 import { fetcher, postFetchDataHandler, TMDB } from './utils.server';
 
@@ -193,12 +192,30 @@ export const getSimilar = async (type: 'movie' | 'tv', id: number): Promise<IMed
   return getListFromTMDB(url);
 };
 
-export const getListGenre = async (type: 'movie' | 'tv'): Promise<IGenre[] | undefined> => {
+export const getListGenre = async (type: 'movie' | 'tv'): Promise<{ [id: string]: string }> => {
   const url = TMDB.listGenre(type);
   try {
     const fetched = await fetcher<IListGenre>(url);
-    return fetched.genres;
+    const result: { [key: string]: string } = {};
+
+    for (let i = 0; i < fetched.genres.length; i += 1) {
+      const genre = fetched.genres[i];
+      result[genre.id] = genre.name;
+    }
+    return result;
   } catch (error) {
     console.error(error);
+    return {};
   }
+};
+
+export const getListDiscover = async (
+  type: 'movie' | 'tv',
+  with_genres?: string,
+  sort_by?: string,
+  page?: number,
+): Promise<IMediaList> => {
+  const url = TMDB.discoverUrl(type, with_genres, sort_by, page);
+
+  return getListFromTMDB(url, type);
 };

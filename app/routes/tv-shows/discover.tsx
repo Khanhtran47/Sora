@@ -4,38 +4,50 @@ import { json, LoaderFunction } from '@remix-run/node';
 import { Container, Pagination } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 
-import { getListTvShows, getListGenre } from '~/services/tmdb/tmdb.server';
+import { getListTvShows, getListGenre, getListDiscover } from '~/services/tmdb/tmdb.server';
 import MediaList from '~/src/components/Media/MediaList';
 
 type LoaderData = {
   shows: Awaited<ReturnType<typeof getListTvShows>>;
   genres: Awaited<ReturnType<typeof getListGenre>>;
+  withGenres?: string;
+  sortBy?: string;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
-  const page = Number(url.searchParams.get('page'));
+  let page = Number(url.searchParams.get('page')) || undefined;
   const genres = await getListGenre('tv');
+  if (page && page < 1) page = 1;
 
-  if (!page || page < 1 || page > 1000) {
-    return json<LoaderData>({
-      shows: await getListTvShows('on_the_air'),
-      genres,
-    });
-  }
+  const withGenres = url.searchParams.get('with_genres') || undefined;
+  let sortBy = url.searchParams.get('sort_by') || undefined;
+  if (sortBy && !sortBy.includes('.')) sortBy += sortBy === 'original_title' ? '.asc' : '.desc';
+
   return json<LoaderData>({
-    shows: await getListTvShows('on_the_air', page),
+    shows:
+      sortBy || genres
+        ? await getListDiscover('tv', withGenres, sortBy, page)
+        : await getListTvShows('on_the_air', page),
     genres,
+    withGenres,
+    sortBy,
   });
 };
 
 const ListTvShows = () => {
-  const { shows, genres } = useLoaderData<LoaderData>();
+  const { shows, genres, withGenres, sortBy } = useLoaderData<LoaderData>();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const paginationChangeHandler = (page: number) => navigate(`/tv-shows/discover?page=${page}`);
+  const paginationChangeHandler = (page: number) => {
+    let url = `?page=${page}`;
 
+    if (withGenres) url += `&with_genres=${withGenres}`;
+    if (sortBy) url += `&sort_by=${sortBy}`;
+
+    navigate(url);
+  };
   return (
     <motion.div
       key={location.key}
@@ -52,6 +64,7 @@ const ListTvShows = () => {
             listName="Discover Tv shows"
             showFilter
             genres={genres}
+            mediaType="tv"
           />
         )}
         <Pagination

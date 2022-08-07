@@ -1,34 +1,89 @@
 import * as React from 'react';
 import { Row, Text, Grid, Button, Dropdown } from '@nextui-org/react';
-import { IGenre } from '~/services/tmdb/tmdb.types';
+import { Link, useLocation } from '@remix-run/react';
 
 interface IFilterProps {
-  genres: IGenre[] | undefined;
+  genres: { [id: string]: string };
   onChange: (value: string) => void;
   listType: string;
+  mediaType: 'movie' | 'tv';
 }
 
-const Filter = (props: IFilterProps) => {
-  const { onChange, genres, listType } = props;
+const sortMovieItems = [
+  { key: 'popularity', name: 'Popularity' },
+  { key: 'release_date', name: 'Release Date' },
+  { key: 'original_title', name: 'Name' },
+  { key: 'vote_average', name: 'Vote Average' },
+];
 
-  const [genre, setGenre] = React.useState(new Set(['All']));
-  const [sort, setSort] = React.useState(new Set(['Popularity']));
+const sortTvItems = [
+  { key: 'popularity', name: 'Popularity' },
+  { key: 'first_air_date', name: 'First air date' },
+  { key: 'vote_average', name: 'Vote Average' },
+];
+
+const Filter = (props: IFilterProps) => {
+  const { onChange, genres, listType, mediaType } = props;
+  const sortItems = mediaType === 'movie' ? sortMovieItems : sortTvItems;
+
+  const location = useLocation();
+  const urlObject = new URL(`http://abc${location.search}`);
+  const preGenres = urlObject.searchParams.get('with_genres');
+  const preSort = urlObject.searchParams.get('sort_by');
+
+  const preGenresSet = !preGenres ? new Set(['All']) : new Set(['All', ...preGenres.split(',')]);
+
+  const preSortSet = !preSort ? new Set(['popularity']) : new Set([preSort.split('.')[0]]);
+
+  const [genre, setGenre] = React.useState(preGenresSet);
+  const [sort, setSort] = React.useState(preSortSet);
+  const [query, setQuery] = React.useState('');
 
   const selectedGenre = React.useMemo(
-    () => Array.from(genre).join(', ').replaceAll('_', ' '),
-    [genre],
+    () =>
+      Array.from(genre)
+        .slice(1)
+        .map((key) => genres[key])
+        .join(', ')
+        .replaceAll('_', ' ') || 'All',
+    [genre, genres],
   );
 
   const selectedSort = React.useMemo(
     () => Array.from(sort).join(', ').replaceAll('_', ' '),
     [sort],
   );
-  const sortItems = [
-    { key: 'populariy', name: 'Popularity' },
-    { key: 'release_date', name: 'Release Date' },
-    { key: 'original_title', name: 'Name' },
-    { key: 'vote_average', name: 'Vote Average' },
-  ];
+
+  const setQueryHandler = (_genre = genre, _sort = sort) => {
+    let newQuery = '';
+    if (_genre.size === 0) {
+      newQuery = `?sort_by=${Array.from(_sort)[0]}`;
+    } else {
+      newQuery = `?with_genres=${Array.from(_genre).slice(1).join(',')}&sort_by=${
+        Array.from(_sort)[0]
+      }`;
+    }
+
+    if (mediaType === 'tv' && Array.from(_sort)[0] === 'original_title') newQuery += '.asc';
+    else newQuery += '.desc';
+
+    setQuery(newQuery);
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const selectGenreHandler = (keys: any) => {
+    setGenre(keys);
+    setQueryHandler(keys);
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const selectSortByHandler = (keys: any) => {
+    setSort(keys);
+    setQueryHandler(undefined, keys);
+  };
+
+  React.useEffect(() => setQueryHandler());
+
   return (
     <Grid.Container
       gap={2}
@@ -53,10 +108,10 @@ const Filter = (props: IFilterProps) => {
                 disallowEmptySelection
                 selectionMode="multiple"
                 selectedKeys={genre}
-                onSelectionChange={setGenre}
+                onSelectionChange={selectGenreHandler}
               >
-                {genres?.map((genreItem) => (
-                  <Dropdown.Item key={genreItem.name}>{genreItem.name}</Dropdown.Item>
+                {Object.keys(genres).map((id) => (
+                  <Dropdown.Item key={id}>{genres[id]}</Dropdown.Item>
                 ))}
               </Dropdown.Menu>
             </Dropdown>
@@ -77,13 +132,25 @@ const Filter = (props: IFilterProps) => {
               disallowEmptySelection
               selectionMode="single"
               selectedKeys={sort}
-              onSelectionChange={setSort}
+              onSelectionChange={selectSortByHandler}
             >
               {sortItems?.map((item) => (
-                <Dropdown.Item key={item.name}>{item.name}</Dropdown.Item>
+                <Dropdown.Item key={item.key}>{item.name}</Dropdown.Item>
               ))}
             </Dropdown.Menu>
           </Dropdown>
+        </Row>
+      </Grid>
+      <Grid>
+        <Row justify="center">
+          <Text small size={16}>
+            Discover
+          </Text>
+        </Row>
+        <Row css={{ margin: '6px' }}>
+          <Link to={query}>
+            <Button auto>Let's Go</Button>
+          </Link>
         </Row>
       </Grid>
       <Grid>

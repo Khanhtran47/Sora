@@ -241,6 +241,22 @@ export class TMDB {
     }
     return url;
   };
+
+  static discoverUrl = (
+    type: 'movie' | 'tv',
+    with_genres?: string,
+    sort_by?: string,
+    page?: number,
+  ) => {
+    let url = `${this.API_BASE_URL}discover/${type}?api_key=${this.key}`;
+
+    if (with_genres) url += `&with_genres=${with_genres}`;
+    if (sort_by) url += `&sort_by=${sort_by}`;
+    if (page) url += `&page=${page}`;
+    url += '&vote_count.gte=300';
+
+    return url;
+  };
 }
 
 export const fetcher = async <T = any>(url: string): Promise<T> => {
