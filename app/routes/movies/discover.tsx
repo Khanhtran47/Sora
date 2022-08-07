@@ -5,36 +5,49 @@ import { Container, Pagination } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 
 import MediaList from '~/src/components/Media/MediaList';
-import { getListMovies, getListGenre } from '~/services/tmdb/tmdb.server';
+import { getListMovies, getListGenre, getListDiscover } from '~/services/tmdb/tmdb.server';
 
 type LoaderData = {
   movies: Awaited<ReturnType<typeof getListMovies>>;
   genres: Awaited<ReturnType<typeof getListGenre>>;
+  withGenres?: string;
+  sortBy?: string;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
-  const page = Number(url.searchParams.get('page'));
+  let page = Number(url.searchParams.get('page')) || undefined;
+  if (page && page < 1) page = 1;
   const genres = await getListGenre('movie');
 
-  if (!page || page < 1 || page > 1000) {
-    return json<LoaderData>({
-      movies: await getListMovies('popular'),
-      genres,
-    });
-  }
+  const withGenres = url.searchParams.get('with_genres') || undefined;
+  let sortBy = url.searchParams.get('sort_by') || undefined;
+  if (sortBy && !sortBy.includes('.')) sortBy += '.desc';
+
   return json<LoaderData>({
-    movies: await getListMovies('popular', page),
+    movies:
+      sortBy || genres
+        ? await getListDiscover('movie', withGenres, sortBy, page)
+        : await getListMovies('popular', page),
     genres,
+    withGenres,
+    sortBy,
   });
 };
 
 const ListMovies = () => {
-  const { movies, genres } = useLoaderData<LoaderData>();
+  const { movies, genres, withGenres, sortBy } = useLoaderData<LoaderData>();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const paginationChangeHandler = (page: number) => navigate(`/movies/discover?page=${page}`);
+  const paginationChangeHandler = (page: number) => {
+    let url = `?page=${page}`;
+
+    if (withGenres) url += `&with_genres=${withGenres}`;
+    if (sortBy) url += `&sort_by=${sortBy}`;
+
+    navigate(url);
+  };
 
   return (
     <motion.div
@@ -52,6 +65,7 @@ const ListMovies = () => {
             listName="Discover Movies"
             showFilter
             genres={genres}
+            mediaType="movie"
           />
         )}
         <Pagination
