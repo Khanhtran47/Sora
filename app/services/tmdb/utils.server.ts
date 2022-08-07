@@ -253,6 +253,7 @@ export class TMDB {
     if (with_genres) url += `&with_genres=${with_genres}`;
     if (sort_by) url += `&sort_by=${sort_by}`;
     if (page) url += `&page=${page}`;
+    url += '&vote_count.gte=300';
 
     return url;
   };
