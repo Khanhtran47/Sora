@@ -29,7 +29,7 @@ const SearchRoute = () => {
   const navigate = useNavigate();
   const { value, bindings } = useInput('');
 
-  const paginationChangeHandler = (page: number) => navigate(`/trending?page=${page}`);
+  const paginationChangeHandler = (page: number) => navigate(`/search/tv?page=${page}`);
   const onClickSearch = () => navigate(`/search/tv/${value}`);
   return (
     <>

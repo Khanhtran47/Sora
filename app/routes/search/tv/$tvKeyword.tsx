@@ -11,7 +11,7 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request, params }: DataFunctionArgs) => {
-  const keyword = params?.movieKeyword || '';
+  const keyword = params?.tvKeyword || '';
   const url = new URL(request.url);
   const page = Number(url.searchParams.get('page'));
   if (!page || page < 1 || page > 1000) {
