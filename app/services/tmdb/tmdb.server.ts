@@ -14,7 +14,7 @@ import {
 import { fetcher, postFetchDataHandler, TMDB } from './utils.server';
 
 // reusable function
-const getListFromTMDB = async (url: string, type?: string): Promise<IMediaList> => {
+const getListFromTMDB = async (url: string, type?: 'movie' | 'tv'): Promise<IMediaList> => {
   try {
     const fetched = await fetcher(url);
 
@@ -22,10 +22,11 @@ const getListFromTMDB = async (url: string, type?: string): Promise<IMediaList> 
       page: fetched.page,
       totalPages: fetched.total_pages,
       items: [...postFetchDataHandler(fetched, type)],
+      totalResults: fetched.total_results,
     } as IMediaList;
   } catch (error) {
     console.error(error);
-    return { page: 0, totalPages: 0, items: [] };
+    return { page: 0, totalPages: 0, items: [], totalResults: 0 };
   }
 };
 
@@ -118,6 +119,33 @@ export const getTvShowIMDBId = async (id: number): Promise<number | undefined> =
 };
 
 /* ======================================End of Tv Show Field========================================= */
+
+/* ==========================================Search Field============================================= */
+
+export const getSearchMovies = async (
+  keyword: string,
+  page?: number,
+  language?: string,
+  include_adult?: boolean,
+  region?: string,
+  year?: number,
+): Promise<IMediaList> => {
+  const url = TMDB.searchMovies(keyword, language, page, include_adult, region, year, undefined);
+  return getListFromTMDB(url, 'movie');
+};
+
+export const getSearchTvShows = async (
+  keyword: string,
+  page?: number,
+  language?: string,
+  include_adult?: boolean,
+  first_air_date_year?: number,
+): Promise<IMediaList> => {
+  const url = TMDB.searchTv(keyword, language, page, include_adult, first_air_date_year);
+  return getListFromTMDB(url, 'tv');
+};
+
+/* =======================================End of Search Field========================================= */
 
 /* =============================================UTILS================================================= */
 

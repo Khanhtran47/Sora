@@ -1,6 +1,16 @@
 import * as React from 'react';
 import { NavLink } from '@remix-run/react';
-import { Spacer, Link, Switch, Text, Grid, Container, useTheme, styled } from '@nextui-org/react';
+import {
+  Spacer,
+  Link,
+  Switch,
+  Text,
+  Grid,
+  Container,
+  Row,
+  useTheme,
+  styled,
+} from '@nextui-org/react';
 import { useTheme as useRemixTheme } from 'next-themes';
 
 /* icons */
@@ -59,20 +69,20 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
   const { isDark, theme } = useTheme();
   const { open, handleDrawerClose } = props;
 
-  const iconItem = (index: number) => {
+  const iconItem = (index: number, filled: boolean) => {
     let icon;
     switch (index) {
       case 0:
-        icon = <TrendingIcon />;
+        icon = <TrendingIcon filled={filled} />;
         break;
       case 1:
-        icon = <RecommendIcon />;
+        icon = <RecommendIcon filled={filled} />;
         break;
       case 2:
-        icon = <NewReleaseIcon />;
+        icon = <NewReleaseIcon filled={filled} />;
         break;
       case 3:
-        icon = <TopRatedIcon />;
+        icon = <TopRatedIcon filled={filled} />;
         break;
       case 4:
         icon = <HistoryIcon />;
@@ -143,81 +153,85 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
       as="nav"
       ref={wrapperRef}
     >
-      <Grid.Container>
-        {leftDrawerLink.map((page, index: number) => (
-          <Grid key={page.pageName} css={{ marginTop: '10px' }} xs={12}>
-            <NavLink
-              to={`/${page.pageLink}`}
-              className="flex flex-row"
-              style={{
-                display: 'block',
-                minHeight: 65,
-                minWidth: 65,
-                justifyContent: open ? 'initial' : 'center',
-                alignItems: 'center',
-              }}
-            >
-              {({ isActive }) => (
-                <Text
-                  h4
-                  size={18}
-                  css={{
-                    display: 'flex',
-                    minHeight: 65,
-                    minWidth: 65,
-                    ...(open && {
-                      width: drawerWidth,
-                    }),
-                  }}
-                >
-                  <Link
-                    block
-                    color="primary"
-                    onClick={handleDrawerClose}
+      <Row>
+        <Grid.Container>
+          {leftDrawerLink.map((page, index: number) => (
+            <Grid key={page.pageName} css={{ marginTop: '10px' }} xs={12}>
+              <NavLink
+                to={`/${page.pageLink}`}
+                className="flex flex-row"
+                style={{
+                  display: 'block',
+                  minHeight: 65,
+                  minWidth: 65,
+                  justifyContent: open ? 'initial' : 'center',
+                  alignItems: 'center',
+                }}
+              >
+                {({ isActive }) => (
+                  <Text
+                    h4
+                    size={18}
                     css={{
-                      ...(isActive && {
-                        background: `${theme?.colors.primaryLightActive.value}`,
-                      }),
+                      display: 'flex',
                       minHeight: 65,
                       minWidth: 65,
-                      alignItems: 'center',
-                      justifyContent: 'flex-start',
                       ...(open && {
                         width: drawerWidth,
                       }),
-                      paddingLeft: 20,
                     }}
                   >
-                    {iconItem(index)}
-                    {open && (
-                      <>
-                        <Spacer />
-                        {page.pageName}
-                      </>
-                    )}
-                  </Link>
-                </Text>
-              )}
-            </NavLink>
-          </Grid>
-        ))}
-      </Grid.Container>
-      <Switch
-        checked={isDark}
-        size="lg"
-        onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}
-        shadow
-        color="primary"
-        iconOn={<MoonIcon filled />}
-        iconOff={<SunIcon filled />}
-        css={{
-          marginLeft: '90px',
-          marginTop: '35vh',
-          '@xs': {
-            display: 'none',
-          },
-        }}
-      />
+                    <Link
+                      block
+                      color="primary"
+                      onClick={handleDrawerClose}
+                      css={{
+                        ...(isActive && {
+                          background: `${theme?.colors.primaryLightActive.value}`,
+                        }),
+                        minHeight: 65,
+                        minWidth: 65,
+                        alignItems: 'center',
+                        justifyContent: 'flex-start',
+                        ...(open && {
+                          width: drawerWidth,
+                        }),
+                        paddingLeft: 20,
+                      }}
+                    >
+                      {isActive ? iconItem(index, true) : iconItem(index, false)}
+                      {open && (
+                        <>
+                          <Spacer />
+                          {page.pageName}
+                        </>
+                      )}
+                    </Link>
+                  </Text>
+                )}
+              </NavLink>
+            </Grid>
+          ))}
+        </Grid.Container>
+      </Row>
+      <Row>
+        <Switch
+          checked={isDark}
+          size="lg"
+          onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}
+          shadow
+          color="primary"
+          iconOn={<MoonIcon filled />}
+          iconOff={<SunIcon filled />}
+          css={{
+            marginLeft: '90px',
+            marginTop: '35vh',
+            '@xs': {
+              display: 'none',
+            },
+          }}
+        />
+      </Row>
     </Drawer>
   );
 };

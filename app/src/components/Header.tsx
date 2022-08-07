@@ -12,6 +12,7 @@ import {
   Tooltip,
   useTheme,
   styled,
+  Spacer,
 } from '@nextui-org/react';
 import { useTheme as useRemixTheme } from 'next-themes';
 import type { User } from '@supabase/supabase-js';
@@ -24,6 +25,7 @@ import SunIcon from '../assets/icons/SunIcon.js';
 import MoonIcon from '../assets/icons/MoonIcon.js';
 import MenuIcon from '../assets/icons/MenuIcon.js';
 import ArrowLeftIcon from '../assets/icons/ArrowLeftIcon.js';
+import SearchIcon from '../assets/icons/SearchIcon.js';
 
 interface IHeaderProps {
   open: boolean;
@@ -52,9 +54,15 @@ const pages = [
     ],
   },
   {
-    pageName: 'Animes',
+    pageName: 'People',
     pageLink: 'animes/list',
   },
+];
+
+const searchDropdown = [
+  { pageName: 'Search Movies', pageLink: 'search/movie' },
+  { pageName: 'Search Tv', pageLink: 'search/tv' },
+  // { pageName: 'Search People', pageLink: 'search/people' },
 ];
 
 const AppBar = styled(Grid.Container, {
@@ -82,11 +90,11 @@ const DropdownPage = ({
     >
       {pagesDropdown.map((page) => (
         <Row key={page.pageName}>
-          <NavLink to={`/${page.pageLink}`} end style={{ marginRight: '10px' }}>
+          <NavLink to={`/${page.pageLink}`} end>
             {({ isActive }) => (
               <Text
                 h1
-                size={20}
+                size={18}
                 css={{
                   textTransform: 'uppercase',
                   display: 'none',
@@ -137,8 +145,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
     >
       {/* button and logo */}
       <Grid
-        xs={8}
-        sm={3}
+        xs={3}
         alignItems="center"
         css={{
           '@xsMax': {
@@ -242,22 +249,39 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       </Grid>
 
       {/* Avatar */}
-      <Grid xs={3} sm={3} justify="flex-end" alignItems="center" alignContent="center">
+      <Grid xs={6} sm={3} justify="flex-end" alignItems="center">
+        <Tooltip placement="bottom" content={<DropdownPage pagesDropdown={searchDropdown || []} />}>
+          <NavLink to="/search" end style={{ marginTop: '3px' }}>
+            {({ isActive }) => (
+              <NextLink
+                block
+                color="primary"
+                css={{
+                  ...(isActive && {
+                    background: `${theme?.colors.primaryLightActive.value}`,
+                  }),
+                }}
+              >
+                <SearchIcon fill="currentColor" filled />
+              </NextLink>
+            )}
+          </NavLink>
+        </Tooltip>
+        <Spacer y={1} />
         <Switch
           checked={isDark}
-          size="lg"
+          size="md"
           onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}
-          shadow
-          color="primary"
           iconOn={<MoonIcon filled />}
           iconOff={<SunIcon filled />}
           css={{
-            marginRight: '30px',
+            padding: 0,
             '@xsMax': {
               display: 'none',
             },
           }}
         />
+        <Spacer y={1} />
         {user ? (
           <Dropdown placement="bottom-left">
             <Dropdown.Trigger>
@@ -298,11 +322,33 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
             </Dropdown.Menu>
           </Dropdown>
         ) : (
-          <Button bordered color="gradient" auto>
-            <Link to="/sign-in">
-              <Text>Sign In</Text>
-            </Link>
-          </Button>
+          <NavLink to="/sign-in" end>
+            {({ isActive }) => (
+              <Text
+                h1
+                size={20}
+                css={{
+                  textTransform: 'uppercase',
+                  display: 'none',
+                  '@sm': {
+                    display: 'flex',
+                  },
+                }}
+              >
+                <NextLink
+                  block
+                  color="primary"
+                  css={{
+                    ...(isActive && {
+                      background: `${theme?.colors.primaryLightActive.value}`,
+                    }),
+                  }}
+                >
+                  SIGN IN
+                </NextLink>
+              </Text>
+            )}
+          </NavLink>
         )}
       </Grid>
     </AppBar>

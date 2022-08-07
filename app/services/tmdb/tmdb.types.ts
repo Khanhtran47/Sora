@@ -7,9 +7,9 @@ export type StillSize = 'w92' | 'w185' | 'w300' | 'original';
 
 export type MediaType = 'all' | 'movie' | 'tv' | 'person';
 export type TimeWindowType = 'day' | 'week';
-export type MediaListType = 'latest' | 'popular' | 'top_rated';
 export type ListMovieType = 'upcoming' | 'top_rated' | 'popular';
 export type ListTvShowType = 'on_the_air' | 'popular' | 'top_rated';
+export type ListPersonType = 'popular' | 'latest';
 
 /**
  * Media here means a tv show or a movie
@@ -28,12 +28,18 @@ export interface IMedia {
   title: string; // title - name - original_title - original_name
   voteAverage: number;
   voteCount: number;
+  genreIds: number[];
+  adult?: boolean;
+  video?: boolean;
+  originalCountry?: string;
+  originalTitle: string;
 }
 
 export interface IMediaList {
   items: IMedia[];
   page: number;
   totalPages: number;
+  totalResults: number;
 }
 
 export interface IMovieDetail {

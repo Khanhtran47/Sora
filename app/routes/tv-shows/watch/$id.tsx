@@ -41,11 +41,10 @@ export const loader: LoaderFunction = async ({ params }) => {
 
 const TvWatch = () => {
   const { detail, imdbId } = useLoaderData<LoaderData>();
-  console.log(detail);
   const { id } = useParams();
   const [player, setPlayer] = React.useState<string>('1');
   const [source, setSource] = React.useState<string>(Player.tvPlayerUrl(Number(id), 1, 1, 1));
-  const [season, setSeason] = React.useState(new Set([detail?.seasons[1].name]));
+  const [season, setSeason] = React.useState(new Set([detail?.seasons[1]?.name]));
   const [listEpisode, setListEpisode] = React.useState<number[]>([]);
   const [episode, setEpisode] = React.useState(new Set(['1']));
 
@@ -59,14 +58,12 @@ const TvWatch = () => {
   );
 
   React.useEffect(() => {
-    const seasonInfo = detail?.seasons.find((s) => s.name === season.values().next().value);
+    const seasonInfo = detail?.seasons.find((s) => s?.name === season.values().next().value);
     setListEpisode(Array.from({ length: seasonInfo?.episode_count || 0 }, (_, i) => i + 1));
   }, [season]);
 
-  console.log(season.values().next().value);
-
   React.useEffect(() => {
-    const seasonInfo = detail?.seasons.find((s) => s.name === season.values().next().value);
+    const seasonInfo = detail?.seasons.find((s) => s?.name === season.values().next().value);
     player === '2'
       ? setSource(Player.tvPlayerUrl(imdbId, Number(player), seasonInfo?.season_number || 1))
       : setSource(
@@ -123,7 +120,7 @@ const TvWatch = () => {
             onSelectionChange={setSeason}
           >
             {detail?.seasons.map((item) => (
-              <Dropdown.Item key={item.name}>{item.name}</Dropdown.Item>
+              <Dropdown.Item key={item?.name}>{item?.name}</Dropdown.Item>
             ))}
           </Dropdown.Menu>
         </Dropdown>
