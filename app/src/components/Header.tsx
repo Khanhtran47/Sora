@@ -96,6 +96,7 @@ const DropdownPage = ({
                 }}
               >
                 <NextLink
+                  as="div"
                   block
                   color="primary"
                   css={{
