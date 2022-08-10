@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link } from '@remix-run/react';
-import { Grid, Card, Col, Text, Row, Button, Tooltip, useTheme } from '@nextui-org/react';
+import { Grid, Card, Col, Text, Row, Button, Tooltip, Loading, useTheme } from '@nextui-org/react';
 import { IMedia } from '~/services/tmdb/tmdb.types';
 import { useColor } from 'color-thief-react';
 import tinycolor from 'tinycolor2';
@@ -11,7 +11,25 @@ interface IMediaItem {
 }
 
 const BannerItem = ({ item }: { item: IMedia }) => {
+  const { isDark } = useTheme();
   const { backdropPath, overview, posterPath, title, id, mediaType } = item;
+  const {
+    data,
+    loading,
+    // error,
+  } = useColor(`https://api.allorigins.win/raw?url=${encodeURIComponent(posterPath)}`, 'hex', {
+    crossOrigin: 'anonymous',
+  });
+  let colorDarkenLighten = '';
+  if (isDark) {
+    colorDarkenLighten = !tinycolor(data).isLight()
+      ? tinycolor(data).brighten(70).saturate(70).toString()
+      : tinycolor(data).saturate(70).toString();
+  } else {
+    colorDarkenLighten = !tinycolor(data).isDark()
+      ? tinycolor(data).darken().saturate(100).toString()
+      : tinycolor(data).saturate(70).toString();
+  }
   return (
     <Card variant="flat" css={{ w: '100vw', h: '100vh', borderWidth: 0 }}>
       <Card.Header css={{ position: 'absolute', zIndex: 1 }}>
@@ -26,98 +44,105 @@ const BannerItem = ({ item }: { item: IMedia }) => {
               },
             }}
           >
-            <Text
-              size={28}
-              weight="bold"
-              transform="uppercase"
-              css={{
-                margin: 0,
-                '@xs': {
-                  fontSize: '40px',
-                },
-                '@sm': {
-                  fontSize: '50px',
-                },
-                '@md': {
-                  fontSize: '68px',
-                },
-              }}
-            >
-              {title}
-            </Text>
-            <Text
-              size={12}
-              weight="bold"
-              css={{
-                margin: '5vh 0 0 0',
-                textAlign: 'justify',
-                '@xs': {
-                  fontSize: '16px',
-                },
-                '@sm': {
-                  fontSize: '18px',
-                },
-              }}
-            >
-              {overview}
-            </Text>
-            <Row>
-              <Col span={6}>
-                <Button
-                  auto
-                  shadow
-                  rounded
+            {loading ? (
+              <Loading type="default" size="xl" />
+            ) : (
+              <>
+                <Text
+                  size={28}
+                  weight="bold"
+                  transform="uppercase"
+                  color={colorDarkenLighten}
                   css={{
-                    marginTop: '5vh',
+                    margin: 0,
+                    '@xs': {
+                      fontSize: '40px',
+                    },
+                    '@sm': {
+                      fontSize: '50px',
+                    },
+                    '@md': {
+                      fontSize: '68px',
+                    },
                   }}
                 >
-                  <Link to={`/${mediaType === 'movie' ? 'movies/' : 'tv-shows/'}${id}`}>
-                    <Text
-                      size={12}
-                      weight="bold"
-                      transform="uppercase"
+                  {title}
+                </Text>
+                <Text
+                  size={12}
+                  weight="bold"
+                  css={{
+                    margin: '5vh 0 0 0',
+                    textAlign: 'justify',
+                    '@xs': {
+                      fontSize: '16px',
+                    },
+                    '@sm': {
+                      fontSize: '18px',
+                    },
+                  }}
+                >
+                  {overview}
+                </Text>
+                <Row>
+                  <Col span={6}>
+                    <Button
+                      auto
+                      shadow
+                      rounded
                       css={{
-                        '@xs': {
-                          fontSize: '18px',
-                        },
-                        '@sm': {
-                          fontSize: '20px',
-                        },
+                        marginTop: '5vh',
                       }}
                     >
-                      Watch now
-                    </Text>
-                  </Link>
-                </Button>
-              </Col>
-              <Col span={6}>
-                <Button
-                  auto
-                  shadow
-                  rounded
-                  bordered
-                  css={{
-                    marginTop: '5vh',
-                  }}
-                >
-                  <Text
-                    size={12}
-                    weight="bold"
-                    transform="uppercase"
-                    css={{
-                      '@xs': {
-                        fontSize: '18px',
-                      },
-                      '@sm': {
-                        fontSize: '20px',
-                      },
-                    }}
-                  >
-                    Watch trailer
-                  </Text>
-                </Button>
-              </Col>
-            </Row>
+                      <Link to={`/${mediaType === 'movie' ? 'movies/' : 'tv-shows/'}${id}`}>
+                        <Text
+                          size={12}
+                          weight="bold"
+                          transform="uppercase"
+                          css={{
+                            '@xs': {
+                              fontSize: '18px',
+                            },
+                            '@sm': {
+                              fontSize: '20px',
+                            },
+                          }}
+                        >
+                          Watch now
+                        </Text>
+                      </Link>
+                    </Button>
+                  </Col>
+                  <Col span={6}>
+                    <Button
+                      auto
+                      shadow
+                      rounded
+                      bordered
+                      css={{
+                        marginTop: '5vh',
+                      }}
+                    >
+                      <Text
+                        size={12}
+                        weight="bold"
+                        transform="uppercase"
+                        css={{
+                          '@xs': {
+                            fontSize: '18px',
+                          },
+                          '@sm': {
+                            fontSize: '20px',
+                          },
+                        }}
+                      >
+                        Watch trailer
+                      </Text>
+                    </Button>
+                  </Col>
+                </Row>
+              </>
+            )}
           </Col>
           <Col
             css={{
@@ -158,6 +183,17 @@ const BannerItem = ({ item }: { item: IMedia }) => {
       <Card.Body css={{ p: 0 }}>
         <Card.Image
           src={backdropPath}
+          containerCss={{
+            '&::after': {
+              content: '',
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              width: '100%',
+              height: '100px',
+              backgroundImage: 'linear-gradient(0deg, rgb(1, 2, 5), rgba(0, 0, 0, 0))',
+            },
+          }}
           css={{
             minHeight: '100vh',
             minWidth: '100vw',
@@ -181,7 +217,7 @@ const CardItemHover = ({ item }: { item: IMedia }) => {
   // TODO: add spinner on loading color
   const {
     data,
-    // loading,
+    loading,
     // error,
   } = useColor(`https://api.allorigins.win/raw?url=${encodeURIComponent(posterPath)}`, 'hex', {
     crossOrigin: 'anonymous',
@@ -205,28 +241,34 @@ const CardItemHover = ({ item }: { item: IMedia }) => {
         maxWidth: '350px',
       }}
     >
-      <Row justify="center" align="center">
-        <Text size={18} b color={colorDarkenLighten}>
-          {title}
-        </Text>
-      </Row>
-      {overview && (
-        <Row>
-          <Text>{`${overview?.substring(0, 100)}...`}</Text>
-        </Row>
+      {loading ? (
+        <Loading type="points-opacity" />
+      ) : (
+        <>
+          <Row justify="center" align="center">
+            <Text size={18} b color={colorDarkenLighten}>
+              {title}
+            </Text>
+          </Row>
+          {overview && (
+            <Row>
+              <Text>{`${overview?.substring(0, 100)}...`}</Text>
+            </Row>
+          )}
+          <Grid.Container justify="space-between" alignContent="center">
+            {releaseDate && (
+              <Grid>
+                <Text>{`${mediaType === 'movie' ? 'Movie' : 'TV-Shows'} • ${releaseDate}`}</Text>
+              </Grid>
+            )}
+            {voteAverage && (
+              <Grid>
+                <Text>{`Vote Average: ${voteAverage}`}</Text>
+              </Grid>
+            )}
+          </Grid.Container>
+        </>
       )}
-      <Grid.Container justify="space-between" alignContent="center">
-        {releaseDate && (
-          <Grid>
-            <Text>{`${mediaType === 'movie' ? 'Movie' : 'TV-Shows'} • ${releaseDate}`}</Text>
-          </Grid>
-        )}
-        {voteAverage && (
-          <Grid>
-            <Text>{`Vote Average: ${voteAverage}`}</Text>
-          </Grid>
-        )}
-      </Grid.Container>
     </Grid.Container>
   );
 };
@@ -238,7 +280,7 @@ const CardItem = ({ item }: { item: IMedia }) => {
   const { title, posterPath } = item;
   const {
     data,
-    // loading,
+    loading,
     // error,
   } = useColor(`https://api.allorigins.win/raw?url=${encodeURIComponent(posterPath)}`, 'hex', {
     crossOrigin: 'anonymous',
@@ -280,6 +322,8 @@ const CardItem = ({ item }: { item: IMedia }) => {
           width="100%"
           height={340}
           alt="Card image background"
+          showSkeleton
+          maxDelay={10000}
         />
         <Card.Footer
           isBlurred
@@ -297,9 +341,13 @@ const CardItem = ({ item }: { item: IMedia }) => {
           }}
           className={isDark ? 'bg-black/30' : 'bg-white/30'}
         >
-          <Text size={18} b transform="uppercase" color={colorDarkenLighten}>
-            {title}
-          </Text>
+          {loading ? (
+            <Loading type="points-opacity" />
+          ) : (
+            <Text size={18} b transform="uppercase" color={colorDarkenLighten}>
+              {title}
+            </Text>
+          )}
         </Card.Footer>
       </Card>
     </Tooltip>
