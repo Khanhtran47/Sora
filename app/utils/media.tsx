@@ -20,6 +20,13 @@ export default class TMDB {
     if (size) {
       return `${this.media_base_url}${size}/${path}`;
     }
-    return `${this.media_base_url}${size}/${path}`;
+    return `${this.media_base_url}original/${path}`;
+  };
+
+  static profileUrl = (path: string, size?: ProfileSize): string => {
+    if (size) {
+      return `${this.media_base_url}${size}/${path}`;
+    }
+    return `${this.media_base_url}original/${path}`;
   };
 }

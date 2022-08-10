@@ -55,14 +55,15 @@ const pages = [
   },
   {
     pageName: 'People',
-    pageLink: 'animes/list',
+    pageLink: 'people/popular',
+    pageDescription: 'Popular People',
   },
 ];
 
 const searchDropdown = [
   { pageName: 'Search Movies', pageLink: 'search/movie' },
   { pageName: 'Search Tv', pageLink: 'search/tv' },
-  // { pageName: 'Search People', pageLink: 'search/people' },
+  { pageName: 'Search People', pageLink: 'search/people' },
 ];
 
 const AppBar = styled(Grid.Container, {
@@ -215,7 +216,10 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
           <Tooltip
             key={page.pageName}
             placement="bottom"
-            content={<DropdownPage pagesDropdown={page?.pageDropdown || []} />}
+            {...(page?.pageDropdown && {
+              content: <DropdownPage pagesDropdown={page?.pageDropdown || []} />,
+            })}
+            {...(page?.pageDescription && { content: page?.pageDescription })}
           >
             <NavLink to={`/${page.pageLink}`} end style={{ marginRight: '10px' }}>
               {({ isActive }) => (

@@ -5,7 +5,7 @@ import { Link as NextLink, Text, useTheme, Grid, Spacer } from '@nextui-org/reac
 const searchPage = [
   { pageName: 'Search Movies', pageLink: 'movie' },
   { pageName: 'Search Tv shows', pageLink: 'tv' },
-  // { pageName: 'Search People', pageLink: 'people' },
+  { pageName: 'Search People', pageLink: 'people' },
 ];
 
 const SearchPage = () => {

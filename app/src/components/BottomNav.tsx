@@ -12,7 +12,7 @@ const pages = [
   },
   {
     pageName: 'People',
-    pageLink: 'animes/list',
+    pageLink: 'people/popular',
   },
 ];
 
