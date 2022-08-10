@@ -9,6 +9,8 @@ import {
   MediaType,
   TimeWindowType,
   IListGenre,
+  IListPeople,
+  ListPersonType,
 } from './tmdb.types';
 import { fetcher, postFetchDataHandler, TMDB } from './utils.server';
 
@@ -119,6 +121,24 @@ export const getTvShowIMDBId = async (id: number): Promise<number | undefined> =
 
 /* ======================================End of Tv Show Field========================================= */
 
+/* ==========================================People Field============================================= */
+export const getListPeople = async (
+  type: ListPersonType,
+  language?: string,
+  page?: number,
+): Promise<IListPeople | undefined> => {
+  try {
+    const fetched = await fetcher<IListPeople>(TMDB.listPerson(type, language, page));
+    if (!fetched?.results) throw new Error('Dont have result');
+
+    return fetched;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+/* ======================================End of People Field========================================== */
+
 /* ==========================================Search Field============================================= */
 
 export const getSearchMovies = async (
@@ -142,6 +162,25 @@ export const getSearchTvShows = async (
 ): Promise<IMediaList> => {
   const url = TMDB.searchTv(keyword, language, page, include_adult, first_air_date_year);
   return getListFromTMDB(url, 'tv');
+};
+
+export const getSearchPerson = async (
+  keyword: string,
+  page?: number,
+  include_adult?: boolean,
+  language?: string,
+  region?: string,
+): Promise<IListPeople | undefined> => {
+  try {
+    const fetched = await fetcher<IListPeople>(
+      TMDB.searchPerson(keyword, page, include_adult, language, region),
+    );
+    if (!fetched?.results) throw new Error('Dont have result');
+
+    return fetched;
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 /* =======================================End of Search Field========================================= */

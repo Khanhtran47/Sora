@@ -3,10 +3,10 @@ import { Row, Text, Grid, Button, Dropdown } from '@nextui-org/react';
 import { Link, useLocation } from '@remix-run/react';
 
 interface IFilterProps {
-  genres: { [id: string]: string };
+  genres?: { [id: string]: string };
   onChange: (value: string) => void;
   listType: string;
-  mediaType: 'movie' | 'tv';
+  mediaType?: 'movie' | 'tv';
 }
 
 const sortMovieItems = [
@@ -43,7 +43,7 @@ const Filter = (props: IFilterProps) => {
     () =>
       Array.from(genre)
         .slice(1)
-        .map((key) => genres[key])
+        .map((key) => genres && genres[key])
         .join(', ')
         .replaceAll('_', ' ') || 'All',
     [genre, genres],

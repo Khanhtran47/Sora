@@ -1,6 +1,6 @@
 const TopRated = () => (
   <div>
-    <p>Top rated stuff here, tv show or movie ones ?</p>
+    <p>ㄟ(≧◇≦)ㄏ</p>
   </div>
 );
 
