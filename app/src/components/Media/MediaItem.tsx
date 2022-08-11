@@ -1,6 +1,17 @@
 import * as React from 'react';
 import { Link } from '@remix-run/react';
-import { Grid, Card, Col, Text, Row, Button, Tooltip, Loading, useTheme } from '@nextui-org/react';
+import {
+  Grid,
+  Card,
+  Col,
+  Text,
+  Row,
+  Button,
+  Tooltip,
+  Spacer,
+  Loading,
+  useTheme,
+} from '@nextui-org/react';
 import { IMedia } from '~/services/tmdb/tmdb.types';
 import { useColor } from 'color-thief-react';
 import tinycolor from 'tinycolor2';
@@ -85,44 +96,15 @@ const BannerItem = ({ item }: { item: IMedia }) => {
                   {overview}
                 </Text>
                 <Row>
-                  <Col span={6}>
-                    <Button
-                      auto
-                      shadow
-                      rounded
-                      css={{
-                        marginTop: '5vh',
-                      }}
-                    >
-                      <Link to={`/${mediaType === 'movie' ? 'movies/' : 'tv-shows/'}${id}`}>
-                        <Text
-                          size={12}
-                          weight="bold"
-                          transform="uppercase"
-                          css={{
-                            '@xs': {
-                              fontSize: '18px',
-                            },
-                            '@sm': {
-                              fontSize: '20px',
-                            },
-                          }}
-                        >
-                          Watch now
-                        </Text>
-                      </Link>
-                    </Button>
-                  </Col>
-                  <Col span={6}>
-                    <Button
-                      auto
-                      shadow
-                      rounded
-                      bordered
-                      css={{
-                        marginTop: '5vh',
-                      }}
-                    >
+                  <Button
+                    auto
+                    shadow
+                    rounded
+                    css={{
+                      marginTop: '5vh',
+                    }}
+                  >
+                    <Link to={`/${mediaType === 'movie' ? 'movies/' : 'tv-shows/'}${id}`}>
                       <Text
                         size={12}
                         weight="bold"
@@ -136,10 +118,36 @@ const BannerItem = ({ item }: { item: IMedia }) => {
                           },
                         }}
                       >
-                        Watch trailer
+                        Watch now
                       </Text>
-                    </Button>
-                  </Col>
+                    </Link>
+                  </Button>
+                  <Spacer y={1} />
+                  <Button
+                    auto
+                    shadow
+                    rounded
+                    bordered
+                    css={{
+                      marginTop: '5vh',
+                    }}
+                  >
+                    <Text
+                      size={12}
+                      weight="bold"
+                      transform="uppercase"
+                      css={{
+                        '@xs': {
+                          fontSize: '18px',
+                        },
+                        '@sm': {
+                          fontSize: '20px',
+                        },
+                      }}
+                    >
+                      Watch trailer
+                    </Text>
+                  </Button>
                 </Row>
               </>
             )}
@@ -157,7 +165,7 @@ const BannerItem = ({ item }: { item: IMedia }) => {
               objectFit="cover"
               width="40%"
               css={{
-                marginTop: '7vh',
+                marginTop: '10vh',
                 borderRadius: '24px',
                 '@mdMax': {
                   display: 'none',
@@ -170,7 +178,7 @@ const BannerItem = ({ item }: { item: IMedia }) => {
               objectFit="cover"
               width="50%"
               css={{
-                marginTop: '7vh',
+                marginTop: '10vh',
                 borderRadius: '24px',
                 '@md': {
                   display: 'none',
@@ -195,10 +203,8 @@ const BannerItem = ({ item }: { item: IMedia }) => {
             },
           }}
           css={{
-            minHeight: '60vh',
-            minWidth: '100%',
             width: '100%',
-            height: '70vh',
+            height: 'auto',
             top: 0,
             left: 0,
             objectFit: 'cover',
