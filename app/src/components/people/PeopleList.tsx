@@ -5,6 +5,9 @@ import { useState } from 'react';
 // import { Swiper, SwiperSlide } from 'swiper/react';
 
 import { IPeople } from '~/services/tmdb/tmdb.types';
+
+import useMediaQuery from '~/hooks/useMediaQuery';
+
 import PeopleItem from './PeopleItem';
 import Filter from '../filter/Filter';
 
@@ -24,28 +27,32 @@ interface IPeopleListProps {
   mediaType?: 'movie' | 'tv';
 }
 
-const PeopleListGrid = ({ items }: { items: IPeople[] }) => (
-  <Grid.Container gap={3} justify="flex-start" alignItems="center">
-    {items?.length > 0 &&
-      items.map((item) => {
-        const href = `/people/${item.id}`;
-        return (
-          <Grid xs={6} sm={4} md={3} lg={2} key={item.id}>
-            <Link to={href}>
-              <PeopleItem key={item.id} item={item} />
-            </Link>
-          </Grid>
-        );
-      })}
-  </Grid.Container>
-);
+const PeopleListGrid = ({ items }: { items: IPeople[] }) => {
+  const isXs = useMediaQuery(650);
+  const gap = isXs ? 1 : 3;
+  return (
+    <Grid.Container gap={gap} justify="flex-start" alignItems="center">
+      {items?.length > 0 &&
+        items.map((item) => {
+          const href = `/people/${item.id}`;
+          return (
+            <Grid xs={6} sm={4} md={3} lg={2} key={item.id}>
+              <Link to={href}>
+                <PeopleItem key={item.id} item={item} />
+              </Link>
+            </Grid>
+          );
+        })}
+    </Grid.Container>
+  );
+};
 
 const PeopleListTable = ({ items }: { items: IPeople[] }) => (
   <Table
     bordered
     striped
     color="secondary"
-    aria-label="Example pagination  table"
+    aria-label="Example pagination table"
     css={{
       height: 'auto',
       minWidth: '100%',

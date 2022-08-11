@@ -30,7 +30,6 @@ const BottomNav = () => {
         isDark ? 'bg-black/70 border-t-slate-700' : ' border-t-slate-300 bg-white/70'
       }`}
       css={{
-        width: '100vw',
         position: 'fixed',
         bottom: 0,
         height: 65,

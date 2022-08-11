@@ -5,6 +5,7 @@ import { Input, Grid, Container, Button, Pagination, useInput } from '@nextui-or
 
 import { getSearchTvShows } from '~/services/tmdb/tmdb.server';
 import MediaList from '~/src/components/Media/MediaList';
+import useMediaQuery from '~/hooks/useMediaQuery';
 
 type LoaderData = {
   searchResults: Awaited<ReturnType<typeof getSearchTvShows>>;
@@ -30,6 +31,7 @@ const SearchRoute = () => {
   const { tvKeyword } = useParams();
   const { value, bindings } = useInput(tvKeyword || '');
   const [listName] = React.useState('Search Results');
+  const isXs = useMediaQuery(650);
 
   const paginationChangeHandler = (page: number) =>
     navigate(`/search/tv/${tvKeyword}?page=${page}`);
@@ -54,7 +56,19 @@ const SearchRoute = () => {
           </Button>
         </Grid>
       </Grid.Container>
-      <Container fluid display="flex" justify="center" direction="column" alignItems="center">
+      <Container
+        fluid
+        display="flex"
+        justify="center"
+        direction="column"
+        alignItems="center"
+        css={{
+          '@xsMax': {
+            paddingLeft: 'calc(var(--nextui-space-sm))',
+            paddingRight: 'calc(var(--nextui-space-sm))',
+          },
+        }}
+      >
         {searchResults?.items.length > 0 && (
           <MediaList listType="grid" items={searchResults.items} listName={listName} />
         )}
@@ -64,6 +78,7 @@ const SearchRoute = () => {
           shadow
           onChange={paginationChangeHandler}
           css={{ marginTop: '30px' }}
+          {...(isXs && { size: 'xs' })}
         />
       </Container>
     </>

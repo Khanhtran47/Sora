@@ -31,12 +31,12 @@ const BannerItem = ({ item }: { item: IMedia }) => {
       : tinycolor(data).saturate(70).toString();
   }
   return (
-    <Card variant="flat" css={{ w: '100vw', h: '100vh', borderWidth: 0 }}>
+    <Card variant="flat" css={{ w: '100%', h: '70vh', borderWidth: 0 }}>
       <Card.Header css={{ position: 'absolute', zIndex: 1 }}>
         <Row>
           <Col
             css={{
-              marginTop: '20vh',
+              marginTop: '10vh',
               marginLeft: '5vw',
               marginRight: '5vw',
               '@sm': {
@@ -155,9 +155,9 @@ const BannerItem = ({ item }: { item: IMedia }) => {
               src={posterPath}
               alt={title}
               objectFit="cover"
-              width="50%"
+              width="40%"
               css={{
-                marginTop: '20vh',
+                marginTop: '7vh',
                 borderRadius: '24px',
                 '@mdMax': {
                   display: 'none',
@@ -168,9 +168,9 @@ const BannerItem = ({ item }: { item: IMedia }) => {
               src={posterPath}
               alt={title}
               objectFit="cover"
-              width="70%"
+              width="50%"
               css={{
-                marginTop: '20vh',
+                marginTop: '7vh',
                 borderRadius: '24px',
                 '@md': {
                   display: 'none',
@@ -195,10 +195,10 @@ const BannerItem = ({ item }: { item: IMedia }) => {
             },
           }}
           css={{
-            minHeight: '100vh',
-            minWidth: '100vw',
-            width: '100vw',
-            height: '100vh',
+            minHeight: '60vh',
+            minWidth: '100%',
+            width: '100%',
+            height: '70vh',
             top: 0,
             left: 0,
             objectFit: 'cover',
@@ -344,7 +344,20 @@ const CardItem = ({ item }: { item: IMedia }) => {
           {loading ? (
             <Loading type="points-opacity" />
           ) : (
-            <Text size={18} b transform="uppercase" color={colorDarkenLighten}>
+            <Text
+              size={14}
+              b
+              transform="uppercase"
+              color={colorDarkenLighten}
+              css={{
+                '@xs': {
+                  fontSize: '16px',
+                },
+                '@sm': {
+                  fontSize: '18px',
+                },
+              }}
+            >
               {title}
             </Text>
           )}

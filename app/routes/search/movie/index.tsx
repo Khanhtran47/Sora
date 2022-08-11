@@ -5,6 +5,7 @@ import { Input, Grid, Container, Button, Pagination, useInput } from '@nextui-or
 
 import { getTrending } from '~/services/tmdb/tmdb.server';
 import MediaList from '~/src/components/Media/MediaList';
+import useMediaQuery from '~/hooks/useMediaQuery';
 
 type LoaderData = {
   todayTrending: Awaited<ReturnType<typeof getTrending>>;
@@ -28,6 +29,7 @@ const SearchRoute = () => {
   const { todayTrending } = useLoaderData<LoaderData>() || {};
   const navigate = useNavigate();
   const { value, bindings } = useInput('');
+  const isXs = useMediaQuery(650);
 
   const paginationChangeHandler = (page: number) => navigate(`/search/movie?page=${page}`);
   const onClickSearch = () => navigate(`/search/movie/${value}`);
@@ -51,7 +53,19 @@ const SearchRoute = () => {
           </Button>
         </Grid>
       </Grid.Container>
-      <Container fluid display="flex" justify="center" direction="column" alignItems="center">
+      <Container
+        fluid
+        display="flex"
+        justify="center"
+        direction="column"
+        alignItems="center"
+        css={{
+          '@xsMax': {
+            paddingLeft: 'calc(var(--nextui-space-sm))',
+            paddingRight: 'calc(var(--nextui-space-sm))',
+          },
+        }}
+      >
         {todayTrending?.items.length > 0 && (
           <MediaList listType="grid" items={todayTrending.items} listName="Today Trending" />
         )}
@@ -61,6 +75,7 @@ const SearchRoute = () => {
           shadow
           onChange={paginationChangeHandler}
           css={{ marginTop: '30px' }}
+          {...(isXs && { size: 'xs' })}
         />
       </Container>
     </>

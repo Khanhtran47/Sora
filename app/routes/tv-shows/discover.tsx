@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 
 import { getListTvShows, getListGenre, getListDiscover } from '~/services/tmdb/tmdb.server';
 import MediaList from '~/src/components/Media/MediaList';
+import useMediaQuery from '~/hooks/useMediaQuery';
 
 type LoaderData = {
   shows: Awaited<ReturnType<typeof getListTvShows>>;
@@ -39,6 +40,7 @@ const ListTvShows = () => {
   const { shows, genres, withGenres, sortBy } = useLoaderData<LoaderData>();
   const navigate = useNavigate();
   const location = useLocation();
+  const isXs = useMediaQuery(650);
 
   const paginationChangeHandler = (page: number) => {
     let url = `?page=${page}`;
@@ -56,7 +58,19 @@ const ListTvShows = () => {
       exit={{ y: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <Container fluid display="flex" justify="center" direction="column" alignItems="center">
+      <Container
+        fluid
+        display="flex"
+        justify="center"
+        direction="column"
+        alignItems="center"
+        css={{
+          '@xsMax': {
+            paddingLeft: 'calc(var(--nextui-space-sm))',
+            paddingRight: 'calc(var(--nextui-space-sm))',
+          },
+        }}
+      >
         {shows?.items.length > 0 && (
           <MediaList
             listType="grid"
@@ -73,6 +87,7 @@ const ListTvShows = () => {
           shadow
           onChange={paginationChangeHandler}
           css={{ marginTop: '30px' }}
+          {...(isXs && { size: 'xs' })}
         />
       </Container>
     </motion.div>
