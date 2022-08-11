@@ -58,7 +58,7 @@ const Drawer = styled(Container, {
   whiteSpace: 'nowrap',
   boxSizing: 'border-box',
   margin: 0,
-  height: 'calc(100vh - 66px)',
+  height: 'calc(100% - 80px)',
   position: 'fixed',
   zIndex: 990,
 });
@@ -145,7 +145,7 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
         }),
         paddingLeft: 0,
         paddingRight: 0,
-        marginTop: '66px',
+        marginTop: '80px',
       }}
       className={`backdrop-blur-md px-0 border-r ${
         isDark ? 'bg-black/70 border-r-slate-700' : 'bg-white/70 border-r-slate-300'

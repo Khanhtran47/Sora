@@ -140,8 +140,10 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       gap={2}
       wrap="nowrap"
       css={{
+        width: '100%',
         height: 80,
-        paddingBottom: 0,
+        padding: 0,
+        margin: 0,
       }}
     >
       {/* button and logo */}
@@ -330,12 +332,11 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
             {({ isActive }) => (
               <Text
                 h1
-                size={20}
+                size={14}
                 css={{
                   textTransform: 'uppercase',
-                  display: 'none',
                   '@sm': {
-                    display: 'flex',
+                    fontSize: '20px',
                   },
                 }}
               >

@@ -138,7 +138,20 @@ const CardItem = ({ item }: { item: IPeople }) => {
           }}
           className={isDark ? 'bg-black/30' : 'bg-white/30'}
         >
-          <Text size={18} b transform="uppercase" color={colorDarkenLighten}>
+          <Text
+            size={14}
+            b
+            transform="uppercase"
+            color={colorDarkenLighten}
+            css={{
+              '@xs': {
+                fontSize: '16px',
+              },
+              '@sm': {
+                fontSize: '18px',
+              },
+            }}
+          >
             {name}
           </Text>
         </Card.Footer>

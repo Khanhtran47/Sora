@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 
 import MediaList from '~/src/components/Media/MediaList';
 import { getListMovies } from '~/services/tmdb/tmdb.server';
+import useMediaQuery from '~/hooks/useMediaQuery';
 
 type LoaderData = {
   movies: Awaited<ReturnType<typeof getListMovies>>;
@@ -29,6 +30,7 @@ const ListMovies = () => {
   const { movies } = useLoaderData<LoaderData>();
   const navigate = useNavigate();
   const location = useLocation();
+  const isXs = useMediaQuery(650);
 
   const paginationChangeHandler = (page: number) => navigate(`/movies/popular?page=${page}`);
 
@@ -40,7 +42,19 @@ const ListMovies = () => {
       exit={{ y: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <Container fluid display="flex" justify="center" direction="column" alignItems="center">
+      <Container
+        fluid
+        display="flex"
+        justify="center"
+        direction="column"
+        alignItems="center"
+        css={{
+          '@xsMax': {
+            paddingLeft: 'calc(var(--nextui-space-sm))',
+            paddingRight: 'calc(var(--nextui-space-sm))',
+          },
+        }}
+      >
         {movies?.items.length > 0 && (
           <MediaList listType="grid" items={movies.items} listName="Popular Movies" />
         )}
@@ -50,6 +64,7 @@ const ListMovies = () => {
           shadow
           onChange={paginationChangeHandler}
           css={{ marginTop: '30px' }}
+          {...(isXs && { size: 'xs' })}
         />
       </Container>
     </motion.div>

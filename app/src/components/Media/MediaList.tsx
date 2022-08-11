@@ -5,6 +5,9 @@ import SwiperCore, { Autoplay } from 'swiper/core';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 import { IMedia } from '~/services/tmdb/tmdb.types';
+
+import useMediaQuery from '~/hooks/useMediaQuery';
+
 import MediaItem from './MediaItem';
 import Filter from '../filter/Filter';
 
@@ -24,28 +27,32 @@ interface IMediaListProps {
   mediaType?: 'movie' | 'tv';
 }
 
-const MediaListGrid = ({ items }: { items: IMedia[] }) => (
-  <Grid.Container gap={3} justify="flex-start" alignItems="center">
-    {items?.length > 0 &&
-      items.map((item) => {
-        const href = (item.mediaType === 'movie' ? '/movies/' : '/tv-shows/') + item.id;
-        return (
-          <Grid xs={6} sm={4} md={3} lg={2} key={item.id}>
-            <Link to={href}>
-              <MediaItem key={item.id} type="card" item={item} />
-            </Link>
-          </Grid>
-        );
-      })}
-  </Grid.Container>
-);
+const MediaListGrid = ({ items }: { items: IMedia[] }) => {
+  const isXs = useMediaQuery(650);
+  const gap = isXs ? 1 : 3;
+  return (
+    <Grid.Container gap={gap} justify="flex-start" alignItems="center">
+      {items?.length > 0 &&
+        items.map((item) => {
+          const href = (item.mediaType === 'movie' ? '/movies/' : '/tv-shows/') + item.id;
+          return (
+            <Grid xs={6} sm={4} md={3} lg={2} key={item.id}>
+              <Link to={href}>
+                <MediaItem key={item.id} type="card" item={item} />
+              </Link>
+            </Grid>
+          );
+        })}
+    </Grid.Container>
+  );
+};
 
 const MediaListTable = ({ items }: { items: IMedia[] }) => (
   <Table
     bordered
     striped
     color="secondary"
-    aria-label="Example pagination  table"
+    aria-label="Example pagination table"
     css={{
       height: 'auto',
       minWidth: '100%',

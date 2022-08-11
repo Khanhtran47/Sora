@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 
 import PeopleList from '~/src/components/people/PeopleList';
 import { getListPeople } from '~/services/tmdb/tmdb.server';
+import useMediaQuery from '~/hooks/useMediaQuery';
 
 type LoaderData = {
   people: Awaited<ReturnType<typeof getListPeople>>;
@@ -29,6 +30,7 @@ const ListPeoplePopular = () => {
   const { people } = useLoaderData<LoaderData>();
   const navigate = useNavigate();
   const location = useLocation();
+  const isXs = useMediaQuery(650);
 
   const paginationChangeHandler = (page: number) => navigate(`/people/popular?page=${page}`);
 
@@ -40,7 +42,17 @@ const ListPeoplePopular = () => {
       exit={{ y: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <Container fluid display="flex" justify="center" direction="column" alignItems="center">
+      <Container
+        fluid
+        display="flex"
+        justify="center"
+        css={{
+          '@xsMax': {
+            paddingLeft: 'calc(var(--nextui-space-sm))',
+            paddingRight: 'calc(var(--nextui-space-sm))',
+          },
+        }}
+      >
         {people?.results.length > 0 && (
           <PeopleList listType="grid" items={people.results} listName="Popular People" />
         )}
@@ -50,6 +62,7 @@ const ListPeoplePopular = () => {
           shadow
           onChange={paginationChangeHandler}
           css={{ marginTop: '30px' }}
+          {...(isXs && { size: 'xs' })}
         />
       </Container>
     </motion.div>

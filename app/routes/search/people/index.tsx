@@ -5,6 +5,7 @@ import { Input, Grid, Container, Button, Pagination, useInput } from '@nextui-or
 
 import { getListPeople } from '~/services/tmdb/tmdb.server';
 import PeopleList from '~/src/components/people/PeopleList';
+import useMediaQuery from '~/hooks/useMediaQuery';
 
 type LoaderData = {
   people: Awaited<ReturnType<typeof getListPeople>>;
@@ -28,6 +29,7 @@ const SearchRoute = () => {
   const { people } = useLoaderData<LoaderData>() || {};
   const navigate = useNavigate();
   const { value, bindings } = useInput('');
+  const isXs = useMediaQuery(650);
 
   const paginationChangeHandler = (page: number) => navigate(`/people/popular?page=${page}`);
   const onClickSearch = () => navigate(`/search/people/${value}`);
@@ -51,7 +53,19 @@ const SearchRoute = () => {
           </Button>
         </Grid>
       </Grid.Container>
-      <Container fluid display="flex" justify="center" direction="column" alignItems="center">
+      <Container
+        fluid
+        display="flex"
+        justify="center"
+        direction="column"
+        alignItems="center"
+        css={{
+          '@xsMax': {
+            paddingLeft: 'calc(var(--nextui-space-sm))',
+            paddingRight: 'calc(var(--nextui-space-sm))',
+          },
+        }}
+      >
         {people?.results.length > 0 && (
           <PeopleList listType="grid" items={people.results} listName="Popular People" />
         )}
@@ -61,6 +75,7 @@ const SearchRoute = () => {
           shadow
           onChange={paginationChangeHandler}
           css={{ marginTop: '30px' }}
+          {...(isXs && { size: 'xs' })}
         />
       </Container>
     </>
