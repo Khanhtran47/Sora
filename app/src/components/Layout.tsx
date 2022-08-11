@@ -29,7 +29,7 @@ const Layout = ({ children, user }: ILayout) => {
 
   return (
     <Container
-      fluid
+      className="!max-w-full"
       css={{
         margin: 0,
         padding: 0,
@@ -43,7 +43,7 @@ const Layout = ({ children, user }: ILayout) => {
       />
       <LeftDrawer open={open} handleDrawerClose={handleDrawerClose} />
       <Container
-        fluid
+        className="!max-w-full"
         as="main"
         css={{
           zIndex: 0,

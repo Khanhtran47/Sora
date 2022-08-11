@@ -206,6 +206,7 @@ const BannerItem = ({ item }: { item: IMedia }) => {
           }}
           css={{
             width: '100%',
+            minHeight: '70vh',
             height: 'auto',
             top: 0,
             left: 0,
