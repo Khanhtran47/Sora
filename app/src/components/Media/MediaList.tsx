@@ -1,4 +1,4 @@
-import { Grid, Table, Text, Container } from '@nextui-org/react';
+import { Grid, Table, Text } from '@nextui-org/react';
 import { Link } from '@remix-run/react';
 import { useState } from 'react';
 import SwiperCore, { Autoplay } from 'swiper/core';

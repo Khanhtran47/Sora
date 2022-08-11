@@ -199,7 +199,9 @@ const BannerItem = ({ item }: { item: IMedia }) => {
               left: 0,
               width: '100%',
               height: '100px',
-              backgroundImage: 'linear-gradient(0deg, rgb(1, 2, 5), rgba(0, 0, 0, 0))',
+              backgroundImage: isDark
+                ? 'linear-gradient(0deg, rgb(0,0,0), rgba(0, 0, 0, 0))'
+                : 'linear-gradient(0deg, rgb(255,255,255), rgba(255,255,255, 0))',
             },
           }}
           css={{
