@@ -1,4 +1,4 @@
-import { Grid, Table, Text } from '@nextui-org/react';
+import { Grid, Table, Text, Button } from '@nextui-org/react';
 import { Link } from '@remix-run/react';
 import { useState } from 'react';
 import SwiperCore, { Autoplay } from 'swiper/core';
@@ -25,11 +25,13 @@ interface IMediaListProps {
   showFilter?: boolean;
   genres?: { [id: string]: string };
   mediaType?: 'movie' | 'tv';
+  showMoreList?: boolean;
+  onClickViewMore?: () => void;
 }
 
 const MediaListGrid = ({ items }: { items: IMedia[] }) => {
   const isXs = useMediaQuery(650);
-  const gap = isXs ? 1 : 3;
+  const gap = isXs ? 1 : 2;
   return (
     <Grid.Container gap={gap} justify="flex-start" alignItems="center">
       {items?.length > 0 &&
@@ -95,10 +97,56 @@ const MediaListBanner = ({ items }: { items: IMedia[] }) => {
   );
 };
 
-// const MediaListCard = ({ items }: { items: IMedia[] }) => ();
+const MediaListCard = ({ items }: { items: IMedia[] }) => {
+  const isXs = useMediaQuery(650);
+  const isSm = useMediaQuery(960);
+  const isMd = useMediaQuery(1280);
+  const isLg = useMediaQuery(1400);
+  const gap = isXs ? 1 : 2;
+  let slidesPerView = 0;
+  if (isXs) {
+    slidesPerView = 2.25;
+  } else if (isSm) {
+    slidesPerView = 3.75;
+  } else if (isMd) {
+    slidesPerView = 5.25;
+  } else if (isLg) {
+    slidesPerView = 6.75;
+  } else {
+    slidesPerView = 8.25;
+  }
+
+  return (
+    <Grid.Container gap={gap} justify="flex-start" alignItems="center">
+      {items?.length > 0 && (
+        <Swiper grabCursor spaceBetween={10} slidesPerView={slidesPerView}>
+          {items.map((item, i) => {
+            const href = (item.mediaType === 'movie' ? '/movies/' : '/tv-shows/') + item.id;
+            return (
+              <SwiperSlide key={i}>
+                <Link to={href}>
+                  <MediaItem key={item.id} type="card" item={item} />
+                </Link>
+              </SwiperSlide>
+            );
+          })}
+        </Swiper>
+      )}
+    </Grid.Container>
+  );
+};
 
 const MediaList = (props: IMediaListProps) => {
-  const { listType, listName, items, showFilter, genres, mediaType } = props;
+  const {
+    listType,
+    listName,
+    items,
+    showFilter,
+    genres,
+    mediaType,
+    showMoreList,
+    onClickViewMore,
+  } = props;
   const [displayType, setDisplayType] = useState<string>(listType as string);
 
   let list;
@@ -113,20 +161,33 @@ const MediaList = (props: IMediaListProps) => {
     case 'slider-banner':
       list = <MediaListBanner items={items} />;
       break;
-    // case 'sliderCard':
-    //   list = <MediaListCard items={items} />;
-    //   break;
+    case 'slider-card':
+      list = <MediaListCard items={items} />;
+      break;
     default:
   }
 
   return (
     <>
       {listName && (
-        <Text h1 size="2rem">
+        <Text h1 size="2rem" css={{ margin: '0 0 20px 0' }}>
           {listName}
         </Text>
       )}
-      {/* TODO: better and prettier way to swap list type */}
+      {showMoreList && (
+        <Button
+          auto
+          rounded
+          ghost
+          onClick={onClickViewMore}
+          css={{
+            maxWidth: '$8',
+            marginBottom: '$12', // space[2]
+          }}
+        >
+          View more
+        </Button>
+      )}
       {showFilter && mediaType && genres && (
         <Filter
           onChange={setDisplayType}

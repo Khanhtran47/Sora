@@ -58,6 +58,39 @@ const darkTheme = createTheme({
 // for tailwindcss
 export const links: LinksFunction = () => [
   {
+    rel: 'preload',
+    as: 'font',
+    href: '/fonts/Matter-Medium.woff2',
+    type: 'font/woff2',
+    crossOrigin: 'anonymous',
+  },
+  {
+    rel: 'preload',
+    as: 'font',
+    href: '/fonts/Matter-Regular.woff2',
+    type: 'font/woff2',
+    crossOrigin: 'anonymous',
+  },
+  {
+    rel: 'apple-touch-icon',
+    sizes: '180x180',
+    href: '/favicons/apple-touch-icon.png',
+  },
+  {
+    rel: 'icon',
+    type: 'image/png',
+    sizes: '32x32',
+    href: '/favicons/favicon-32x32.png',
+  },
+  {
+    rel: 'icon',
+    type: 'image/png',
+    sizes: '16x16',
+    href: '/favicons/favicon-16x16.png',
+  },
+  { rel: 'manifest', href: '/site.webmanifest' },
+  { rel: 'icon', href: '/favicon.ico' },
+  {
     rel: 'stylesheet',
     href: styles,
   },

@@ -62,7 +62,6 @@ const BannerItem = ({ item }: { item: IMedia }) => {
                 <Text
                   size={28}
                   weight="bold"
-                  transform="uppercase"
                   color={colorDarkenLighten}
                   css={{
                     margin: 0,
@@ -283,7 +282,7 @@ const CardItemHover = ({ item }: { item: IMedia }) => {
 };
 
 const CardItem = ({ item }: { item: IMedia }) => {
-  const [style, setStyle] = React.useState<React.CSSProperties>({ display: 'none' });
+  const [style, setStyle] = React.useState<React.CSSProperties>({ display: 'block' });
   const { isDark } = useTheme();
   // TODO: add spinner on loading color
   const { title, posterPath } = item;
@@ -318,10 +317,10 @@ const CardItem = ({ item }: { item: IMedia }) => {
         variant="flat"
         css={{ borderWidth: 0 }}
         onMouseEnter={() => {
-          setStyle({ display: 'block' });
+          setStyle({ display: 'none' });
         }}
         onMouseLeave={() => {
-          setStyle({ display: 'none' });
+          setStyle({ display: 'block' });
         }}
         className={isDark ? 'bg-black/70' : 'bg-white/70'}
       >
@@ -356,7 +355,6 @@ const CardItem = ({ item }: { item: IMedia }) => {
             <Text
               size={14}
               b
-              transform="uppercase"
               color={colorDarkenLighten}
               css={{
                 '@xs': {

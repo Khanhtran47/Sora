@@ -1,6 +1,6 @@
 import * as React from 'react';
 // import { Link } from '@remix-run/react';
-import { Grid, Card, Text, Row, Tooltip, useTheme } from '@nextui-org/react';
+import { Grid, Card, Text, Row, Tooltip, Loading, useTheme } from '@nextui-org/react';
 import { IPeople } from '~/services/tmdb/tmdb.types';
 import { useColor } from 'color-thief-react';
 import tinycolor from 'tinycolor2';
@@ -21,7 +21,7 @@ const CardItemHover = ({ item }: { item: IPeople }) => {
   // TODO: add spinner on loading color
   const {
     data,
-    // loading,
+    loading,
     // error,
   } = useColor(`https://api.allorigins.win/raw?url=${encodeURIComponent(profilePath)}`, 'hex', {
     crossOrigin: 'anonymous',
@@ -45,12 +45,16 @@ const CardItemHover = ({ item }: { item: IPeople }) => {
         maxWidth: '350px',
       }}
     >
-      <Row justify="center" align="center">
-        <Text size={18} b color={colorDarkenLighten}>
-          {name}
-        </Text>
-      </Row>
-      {/* {overview && (
+      {loading ? (
+        <Loading type="points-opacity" />
+      ) : (
+        <>
+          <Row justify="center" align="center">
+            <Text size={18} b color={colorDarkenLighten}>
+              {name}
+            </Text>
+          </Row>
+          {/* {overview && (
         <Row>
           <Text>{`${overview?.substring(0, 100)}...`}</Text>
         </Row>
@@ -67,19 +71,21 @@ const CardItemHover = ({ item }: { item: IPeople }) => {
           </Grid>
         )}
       </Grid.Container> */}
+        </>
+      )}
     </Grid.Container>
   );
 };
 
 const CardItem = ({ item }: { item: IPeople }) => {
-  const [style, setStyle] = React.useState<React.CSSProperties>({ display: 'none' });
+  const [style, setStyle] = React.useState<React.CSSProperties>({ display: 'block' });
   const { isDark } = useTheme();
   // TODO: add spinner on loading color
   const { name } = item;
   const profilePath = TMDB?.profileUrl(item?.profile_path || '', 'w185');
   const {
     data,
-    // loading,
+    loading,
     // error,
   } = useColor(`https://api.allorigins.win/raw?url=${encodeURIComponent(profilePath)}`, 'hex', {
     crossOrigin: 'anonymous',
@@ -108,10 +114,10 @@ const CardItem = ({ item }: { item: IPeople }) => {
         variant="flat"
         css={{ borderWidth: 0 }}
         onMouseEnter={() => {
-          setStyle({ display: 'block' });
+          setStyle({ display: 'none' });
         }}
         onMouseLeave={() => {
-          setStyle({ display: 'none' });
+          setStyle({ display: 'block' });
         }}
         className={isDark ? 'bg-black/70' : 'bg-white/70'}
       >
@@ -138,22 +144,26 @@ const CardItem = ({ item }: { item: IPeople }) => {
           }}
           className={isDark ? 'bg-black/30' : 'bg-white/30'}
         >
-          <Text
-            size={14}
-            b
-            transform="uppercase"
-            color={colorDarkenLighten}
-            css={{
-              '@xs': {
-                fontSize: '16px',
-              },
-              '@sm': {
-                fontSize: '18px',
-              },
-            }}
-          >
-            {name}
-          </Text>
+          {loading ? (
+            <Loading type="points-opacity" />
+          ) : (
+            <Text
+              size={14}
+              b
+              transform="uppercase"
+              color={colorDarkenLighten}
+              css={{
+                '@xs': {
+                  fontSize: '16px',
+                },
+                '@sm': {
+                  fontSize: '18px',
+                },
+              }}
+            >
+              {name}
+            </Text>
+          )}
         </Card.Footer>
       </Card>
     </Tooltip>
