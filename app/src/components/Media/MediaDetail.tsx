@@ -1,7 +1,9 @@
 import { Link } from '@remix-run/react';
 import { Card, Col, Text, Row, Button, Progress } from '@nextui-org/react';
+
 import { IMovieDetail, ITvShowDetail } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
+import useMediaQuery from '~/hooks/useMediaQuery';
 
 interface IMediaDetail {
   type: 'movie' | 'tv';
@@ -10,16 +12,18 @@ interface IMediaDetail {
 
 const MediaDetail = (props: IMediaDetail) => {
   const { type, item } = props;
+  console.log('🚀 ~ file: MediaDetail.tsx ~ line 15 ~ MediaDetail ~ item', item);
 
   const { id, tagline, genres } = item || {};
-  // @ts-expect-error: Diff between IMovieDetail and ITvShowDetail
-  const title = item?.title || item?.name || '';
-  // @ts-expect-error: Diff between IMovieDetail and ITvShowDetail
-  const runtime = item?.runtime || item?.episode_run_time;
+  const title = (item as IMovieDetail)?.title || (item as ITvShowDetail)?.name || '';
+  const runtime =
+    Number((item as IMovieDetail)?.runtime) || Number((item as ITvShowDetail)?.episode_run_time);
   const posterPath = TMDB?.posterUrl(item?.poster_path || '', 'w500');
   const backdropPath = TMDB?.backdropUrl(item?.backdrop_path || '', 'original');
-  // @ts-expect-error: Diff between IMovieDetail and ITvShowDetail
-  const releaseYear = new Date(item?.release_date || item?.first_air_date).getFullYear();
+  const releaseYear = new Date(
+    (item as IMovieDetail)?.release_date || (item as ITvShowDetail)?.first_air_date || '',
+  ).getFullYear();
+
   return (
     <Card
       variant="flat"
@@ -27,13 +31,16 @@ const MediaDetail = (props: IMediaDetail) => {
         width: '100vw',
         height: '100vh',
         borderWidth: 0,
-        '@xs': {
-          height: '50vh',
+        '@sm': {
+          height: '60vh',
         },
       }}
     >
       <Card.Header css={{ position: 'absolute', zIndex: 1 }}>
         <Row
+          fluid
+          justify="center"
+          align="center"
           css={{
             padding: 0,
             '@xs': {
@@ -63,7 +70,7 @@ const MediaDetail = (props: IMediaDetail) => {
               css={{
                 marginTop: '8vh',
                 borderRadius: '24px',
-                '@xsMax': {
+                '@smMax': {
                   display: 'none',
                 },
               }}
@@ -79,11 +86,11 @@ const MediaDetail = (props: IMediaDetail) => {
               src={posterPath}
               alt={title}
               objectFit="cover"
-              width="70%"
+              width="50%"
               css={{
                 marginTop: '8vh',
                 borderRadius: '24px',
-                '@xs': {
+                '@sm': {
                   display: 'none',
                 },
               }}
@@ -128,6 +135,7 @@ const MediaDetail = (props: IMediaDetail) => {
               </Text>
             )}
             <Row
+              fluid
               align="center"
               css={{
                 margin: '20px 0 0 0',
@@ -163,12 +171,14 @@ const MediaDetail = (props: IMediaDetail) => {
               </Col>
             </Row>
             <Row
+              fluid
               align="center"
+              wrap="wrap"
               css={{
                 margin: '20px 0 0 0',
               }}
             >
-              <Col span={4}>
+              <Col>
                 <Text
                   size={12}
                   css={{
@@ -186,8 +196,8 @@ const MediaDetail = (props: IMediaDetail) => {
                   Duration: {runtime && `${Math.floor(runtime / 60)}h ${runtime % 60}m`}
                 </Text>
               </Col>
-              <Col span={5}>
-                <Row>
+              <Col>
+                <Row fluid>
                   {genres &&
                     genres?.map((genre) => (
                       <Col key={genre?.id} css={{ marginRight: '10px' }}>

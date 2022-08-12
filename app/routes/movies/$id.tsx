@@ -2,7 +2,6 @@
 import { LoaderFunction, json } from '@remix-run/node';
 import { useCatch, useLoaderData } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
-// @ts-expect-error: this is expected
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
 import { getMovieDetail } from '~/services/tmdb/tmdb.server';
