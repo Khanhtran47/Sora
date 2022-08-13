@@ -21,20 +21,26 @@ import { AnimatePresence } from 'framer-motion';
 import NProgress from 'nprogress';
 import nProgressStyles from 'nprogress/nprogress.css';
 import reactTabsStyles from 'react-tabs/style/react-tabs.css';
+import { useChangeLanguage } from 'remix-i18next';
+import { useTranslation } from 'react-i18next';
 
 import Layout from '~/src/components/Layout';
 import styles from '~/styles/app.css';
 import { getUser } from './services/auth.server';
 import { getSession } from './services/sessions.server';
 import pageNotFound from './src/assets/images/404.gif';
+import i18next from './i18n/i18next.server';
 
 interface DocumentProps {
   children: React.ReactNode;
   title?: string;
+  lang?: string;
+  dir?: 'ltr' | 'rtl';
 }
 
 interface LoaderDataType {
   user?: User;
+  locale: string;
 }
 
 const globalStyles = globalCss({
@@ -114,8 +120,8 @@ export const meta: MetaFunction = () => ({
   viewport: 'width=device-width,initial-scale=1',
 });
 
-const Document = ({ children, title }: DocumentProps) => (
-  <html lang="en">
+const Document = ({ children, title, lang, dir }: DocumentProps) => (
+  <html lang={lang} dir={dir}>
     <head>
       {title ? <title>{title}</title> : null}
       <Meta />
@@ -131,17 +137,18 @@ const Document = ({ children, title }: DocumentProps) => (
 );
 
 export const loader: LoaderFunction = async ({ request }) => {
+  const locale = await i18next.getLocale(request);
   const session = await getSession(request.headers.get('Cookie'));
 
   if (session.has('access_token')) {
     const { user, error } = await getUser(session.get('access_token'));
 
     if (user && !error) {
-      return json<LoaderDataType>({ user });
+      return json<LoaderDataType>({ user, locale });
     }
   }
 
-  return null;
+  return json<LoaderDataType>({ locale });
 };
 
 // https://remix.run/api/conventions#default-export
@@ -149,8 +156,11 @@ export const loader: LoaderFunction = async ({ request }) => {
 const App = () => {
   globalStyles();
   const outlet = useOutlet();
-  const loaderData = useLoaderData<LoaderDataType>();
+  const { user, locale } = useLoaderData<LoaderDataType>();
   const transition = useTransition();
+
+  const { i18n } = useTranslation();
+  useChangeLanguage(locale);
 
   const fetchers = useFetchers();
 
@@ -176,7 +186,7 @@ const App = () => {
   }, [transition.state]);
 
   return (
-    <Document>
+    <Document lang={locale} dir={i18n.dir()}>
       <RemixThemesProvider
         defaultTheme="system"
         attribute="class"
@@ -186,7 +196,7 @@ const App = () => {
         }}
       >
         <NextUIProvider>
-          <Layout user={loaderData?.user ?? undefined}>
+          <Layout user={user}>
             <AnimatePresence exitBeforeEnter initial={false}>
               {outlet}
             </AnimatePresence>

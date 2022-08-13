@@ -16,6 +16,7 @@ import {
 } from '@nextui-org/react';
 import { useTheme as useRemixTheme } from 'next-themes';
 import type { User } from '@supabase/supabase-js';
+import { useTranslation } from 'react-i18next';
 
 /* Components */
 
@@ -34,36 +35,40 @@ interface IHeaderProps {
   user?: User;
 }
 
+export const handle = {
+  i18n: 'header',
+};
+
 const pages = [
   {
-    pageName: 'Movies',
+    pageName: 'movies',
     pageLink: 'movies/discover',
     pageDropdown: [
-      { pageName: 'Popular', pageLink: 'movies/popular' },
-      { pageName: 'Top Rated', pageLink: 'movies/top-rated' },
-      { pageName: 'Upcoming', pageLink: 'movies/upcoming' },
+      { pageName: 'popular', pageLink: 'movies/popular' },
+      { pageName: 'topRated', pageLink: 'movies/top-rated' },
+      { pageName: 'upcoming', pageLink: 'movies/upcoming' },
     ],
   },
   {
-    pageName: 'TV Shows',
+    pageName: 'tv',
     pageLink: 'tv-shows/discover',
     pageDropdown: [
-      { pageName: 'Popular', pageLink: 'tv-shows/popular' },
-      { pageName: 'Top Rated', pageLink: 'tv-shows/top-rated' },
-      { pageName: 'On TV', pageLink: 'tv-shows/on-tv' },
+      { pageName: 'popular', pageLink: 'tv-shows/popular' },
+      { pageName: 'topRated', pageLink: 'tv-shows/top-rated' },
+      { pageName: 'onTv', pageLink: 'tv-shows/on-tv' },
     ],
   },
   {
-    pageName: 'People',
+    pageName: 'people',
     pageLink: 'people/popular',
-    pageDescription: 'Popular People',
+    pageDescription: 'description',
   },
 ];
 
 const searchDropdown = [
-  { pageName: 'Search Movies', pageLink: 'search/movie' },
-  { pageName: 'Search Tv', pageLink: 'search/tv' },
-  { pageName: 'Search People', pageLink: 'search/people' },
+  { pageName: 'searchMovie', pageLink: 'search/movie' },
+  { pageName: 'searchTv', pageLink: 'search/tv' },
+  { pageName: 'searchPeople', pageLink: 'search/people' },
 ];
 
 const AppBar = styled(Grid.Container, {
@@ -81,6 +86,8 @@ const DropdownPage = ({
   }[];
 }) => {
   const { theme } = useTheme();
+  const { t } = useTranslation('header');
+
   return (
     <Grid.Container
       css={{
@@ -113,7 +120,7 @@ const DropdownPage = ({
                     }),
                   }}
                 >
-                  {page.pageName}
+                  {t(page.pageName)}
                 </NextLink>
               </Text>
             )}
@@ -125,6 +132,7 @@ const DropdownPage = ({
 };
 
 const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
+  const { t } = useTranslation('header');
   const { setTheme } = useRemixTheme();
   const { isDark, theme } = useTheme();
   const { open, handleDrawerOpen, handleDrawerClose, user } = props;
@@ -221,7 +229,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
             {...(page?.pageDropdown && {
               content: <DropdownPage pagesDropdown={page?.pageDropdown || []} />,
             })}
-            {...(page?.pageDescription && { content: page?.pageDescription })}
+            {...(page?.pageDescription && { content: t(page?.pageDescription) })}
           >
             <NavLink to={`/${page.pageLink}`} end style={{ marginRight: '10px' }}>
               {({ isActive }) => (
@@ -245,7 +253,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
                       }),
                     }}
                   >
-                    {page.pageName}
+                    {t(page.pageName)}
                   </NextLink>
                 </Text>
               )}
@@ -303,26 +311,26 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
             <Dropdown.Menu color="secondary" aria-label="Avatar Actions">
               <Dropdown.Item key="profile" css={{ height: '$18' }}>
                 <Text b color="inherit" css={{ d: 'flex' }}>
-                  Signed in as
+                  {t('signedInAs')}
                 </Text>
                 <Text b color="inherit" css={{ d: 'flex' }}>
                   {user?.email ?? 'klee@example.com'}
                 </Text>
               </Dropdown.Item>
               <Dropdown.Item key="settings" withDivider>
-                My Settings
+                {t('settings')}
               </Dropdown.Item>
               <Dropdown.Item key="analytics" withDivider>
-                Analytics
+                {t('analytics')}
               </Dropdown.Item>
-              <Dropdown.Item key="system">System</Dropdown.Item>
-              <Dropdown.Item key="configurations">Configurations</Dropdown.Item>
+              <Dropdown.Item key="system">{t('system')}</Dropdown.Item>
+              <Dropdown.Item key="configurations">{t('configs')}</Dropdown.Item>
               <Dropdown.Item key="help_and_feedback" withDivider>
-                Help & Feedback
+                {t('help&feedback')}
               </Dropdown.Item>
               <Dropdown.Item key="logout" color="error" withDivider>
                 <Link to="/sign-out">
-                  <Text color="error">Log Out</Text>
+                  <Text color="error">{t('logout')}</Text>
                 </Link>
               </Dropdown.Item>
             </Dropdown.Menu>
@@ -349,7 +357,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
                     }),
                   }}
                 >
-                  SIGN IN
+                  {t('sign-in')}
                 </NextLink>
               </Text>
             )}

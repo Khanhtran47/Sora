@@ -1,5 +1,7 @@
 import { Link } from '@remix-run/react';
 import { Card, Col, Text, Row, Button, Progress } from '@nextui-org/react';
+import { useTranslation } from 'react-i18next';
+
 import { IMovieDetail, ITvShowDetail } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
 
@@ -9,6 +11,7 @@ interface IMediaDetail {
 }
 
 const MediaDetail = (props: IMediaDetail) => {
+  const { t } = useTranslation();
   const { type, item } = props;
 
   const { id, tagline, genres } = item || {};
@@ -149,7 +152,7 @@ const MediaDetail = (props: IMediaDetail) => {
                     },
                   }}
                 >
-                  User Score
+                  {t('userScore')}
                 </Text>
               </Col>
               <Col span={7} css={{ marginLeft: '60px' }}>
@@ -183,7 +186,7 @@ const MediaDetail = (props: IMediaDetail) => {
                     },
                   }}
                 >
-                  Duration: {runtime && `${Math.floor(runtime / 60)}h ${runtime % 60}m`}
+                  {t('duration')}: {runtime && `${Math.floor(runtime / 60)}h ${runtime % 60}m`}
                 </Text>
               </Col>
               <Col span={5}>
@@ -233,7 +236,7 @@ const MediaDetail = (props: IMediaDetail) => {
                         },
                       }}
                     >
-                      Watch now
+                      {t('watchNow')}
                     </Text>
                   </Link>
                 </Button>
@@ -268,7 +271,7 @@ const MediaDetail = (props: IMediaDetail) => {
                       },
                     }}
                   >
-                    Watch trailer
+                    {t('watchTrailer')}
                   </Text>
                 </Button>
               </Col>
