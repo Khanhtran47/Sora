@@ -1,15 +1,18 @@
 import * as React from 'react';
 import { NavLink, Outlet } from '@remix-run/react';
 import { Link as NextLink, Text, useTheme, Grid, Spacer } from '@nextui-org/react';
+import { useTranslation } from 'react-i18next';
 
 const searchPage = [
-  { pageName: 'Search Movies', pageLink: 'movie' },
-  { pageName: 'Search Tv shows', pageLink: 'tv' },
-  { pageName: 'Search People', pageLink: 'people' },
+  { pageName: 'searchMovies', pageLink: 'movie' },
+  { pageName: 'searchTv', pageLink: 'tv' },
+  { pageName: 'searchPeople', pageLink: 'people' },
 ];
 
 const SearchPage = () => {
   const { theme } = useTheme();
+  const { t } = useTranslation();
+
   return (
     <>
       <Grid.Container
@@ -48,7 +51,7 @@ const SearchPage = () => {
                         }),
                       }}
                     >
-                      {page.pageName}
+                      {t(page.pageName)}
                     </NextLink>
                   </Text>
                 )}

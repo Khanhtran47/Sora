@@ -1,8 +1,8 @@
 import { DataFunctionArgs, json, LoaderFunction } from '@remix-run/node';
 import { useLoaderData, useNavigate, useLocation } from '@remix-run/react';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
 import { Container, Pagination } from '@nextui-org/react';
+import { useTranslation } from 'react-i18next';
 
 import { getTrending } from '~/services/tmdb/tmdb.server';
 
@@ -31,17 +31,12 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
   });
 };
 
-// How this page load data:
-// First load (mount): using useLoaderData (server loaded)
-// After: client side
-// TODO: choose the best strategy to load data (better for SEO, for user ex)
-// and choose a way to swap today trending and this week trending, or both ?
 const Trending = () => {
   const { todayTrending } = useLoaderData<LoaderData>() || {};
   const navigate = useNavigate();
   const location = useLocation();
-  const [listName] = useState('Today Trending');
   const isXs = useMediaQuery(650);
+  const { t } = useTranslation();
 
   const paginationChangeHandler = (page: number) => navigate(`/trending?page=${page}`);
 
@@ -66,23 +61,8 @@ const Trending = () => {
           },
         }}
       >
-        {/* TODO: better and prettier way to swap trending type */}
-        {/* <Radio.Group
-        orientation="horizontal"
-        label="Time Windows"
-        defaultValue="today"
-        // onChange={radioChangeHandler}
-      >
-        <Radio value="today" color="secondary" size="sm">
-          Today Trending
-        </Radio>
-        <Radio value="week" color="success" size="sm">
-          This Week Trending
-        </Radio>
-      </Radio.Group>
-      <Spacer /> */}
         {todayTrending?.items.length > 0 && (
-          <MediaList listType="grid" items={todayTrending.items} listName={listName} />
+          <MediaList listType="grid" items={todayTrending.items} listName={t('todayTrending')} />
         )}
         <Pagination
           total={todayTrending.totalPages}

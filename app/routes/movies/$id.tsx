@@ -2,13 +2,13 @@
 import { LoaderFunction, json } from '@remix-run/node';
 import { useCatch, useLoaderData } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
-// @ts-expect-error: this is expected
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
 import { getMovieDetail } from '~/services/tmdb/tmdb.server';
 import MediaDetail from '~/src/components/Media/MediaDetail';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
+import i18next from '~/i18n/i18next.server';
 
 type LoaderData = {
   detail: Awaited<ReturnType<typeof getMovieDetail>>;
@@ -17,13 +17,14 @@ type LoaderData = {
   // similar: Awaited<ReturnType<typeof getSimilar>>;
 };
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader: LoaderFunction = async ({ request, params }) => {
+  const locale = await i18next.getLocale(request);
   const { id } = params;
   const mid = Number(id);
 
   if (!mid) throw new Response('Not Found', { status: 404 });
 
-  const detail = await getMovieDetail(mid);
+  const detail = await getMovieDetail(mid, locale);
 
   if (!detail) throw new Response('Not Found', { status: 404 });
 
@@ -37,6 +38,7 @@ export const loader: LoaderFunction = async ({ params }) => {
 
 const MovieDetail = () => {
   const { detail } = useLoaderData<LoaderData>();
+
   return (
     <>
       <MediaDetail type="movie" item={detail} />

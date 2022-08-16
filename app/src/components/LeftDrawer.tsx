@@ -12,6 +12,7 @@ import {
   styled,
 } from '@nextui-org/react';
 import { useTheme as useRemixTheme } from 'next-themes';
+import { useTranslation } from 'react-i18next';
 
 /* icons */
 import TrendingIcon from '../assets/icons/TrendingIcon.js';
@@ -28,6 +29,10 @@ interface ILeftDrawerProps {
   open: boolean;
   handleDrawerClose: () => void;
 }
+
+export const handle = {
+  i18n: 'left-drawer',
+};
 
 const openedMixin = () => ({
   width: drawerWidth,
@@ -64,6 +69,7 @@ const Drawer = styled(Container, {
 });
 
 const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
+  const { t } = useTranslation('left-drawer');
   const wrapperRef = React.useRef<HTMLDivElement>(null);
   const { setTheme } = useRemixTheme();
   const { isDark, theme } = useTheme();
@@ -94,23 +100,23 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
 
   const leftDrawerLink = [
     {
-      pageName: 'Trending',
+      pageName: 'trending',
       pageLink: 'trending',
     },
     {
-      pageName: 'Recommendations',
+      pageName: 'recommendations',
       pageLink: 'recommendations',
     },
     {
-      pageName: 'New Releases',
+      pageName: 'newReleases',
       pageLink: 'new-releases',
     },
     {
-      pageName: 'IMDB Top',
+      pageName: 'imdbTop',
       pageLink: 'imdb-top',
     },
     {
-      pageName: 'Watch History',
+      pageName: 'history',
       pageLink: 'watch-history',
     },
   ];
@@ -203,7 +209,7 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                       {open && (
                         <>
                           <Spacer />
-                          {page.pageName}
+                          {t(page.pageName)}
                         </>
                       )}
                     </Link>

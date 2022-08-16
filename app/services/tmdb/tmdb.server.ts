@@ -37,9 +37,10 @@ const getListFromTMDB = async (url: string, type?: 'movie' | 'tv'): Promise<IMed
 export const getTrending = async (
   mediaType: MediaType,
   timeWindow: TimeWindowType,
+  language?: string,
   page?: number,
 ): Promise<IMediaList> => {
-  const url = TMDB.trendingUrl(mediaType, timeWindow, page);
+  const url = TMDB.trendingUrl(mediaType, timeWindow, language, page);
   return getListFromTMDB(url);
 };
 
@@ -56,8 +57,12 @@ export const getTrending = async (
  * totalPages: number
  * items: IMovie[]
  */
-export const getListMovies = async (type: ListMovieType, page?: number): Promise<IMediaList> => {
-  const url = TMDB.listMoviesUrl(type, page);
+export const getListMovies = async (
+  type: ListMovieType,
+  language?: string,
+  page?: number,
+): Promise<IMediaList> => {
+  const url = TMDB.listMoviesUrl(type, page, language);
   return getListFromTMDB(url, 'movie');
 };
 
@@ -67,9 +72,12 @@ export const getListMovies = async (type: ListMovieType, page?: number): Promise
  * @param {number} id - number - The id of the movie you want to get the details for
  * @returns A Promise that resolves to an IMovieDetail or undefined.
  */
-export const getMovieDetail = async (id: number): Promise<IMovieDetail | undefined> => {
+export const getMovieDetail = async (
+  id: number,
+  language?: string,
+): Promise<IMovieDetail | undefined> => {
   try {
-    const fetched = await fetcher<IMovieDetail>(TMDB.movieDetailUrl(id));
+    const fetched = await fetcher<IMovieDetail>(TMDB.movieDetailUrl(id, language));
     return fetched;
   } catch (error) {
     console.error(error);
@@ -88,14 +96,21 @@ export const getMovieDetail = async (id: number): Promise<IMovieDetail | undefin
  * @param {number} [page] - number
  * @returns A promise that resolves to an object of type IMediaList.
  */
-export const getListTvShows = async (type: ListTvShowType, page?: number): Promise<IMediaList> => {
-  const url = TMDB.listTvShowsUrl(type, page);
+export const getListTvShows = async (
+  type: ListTvShowType,
+  language?: string,
+  page?: number,
+): Promise<IMediaList> => {
+  const url = TMDB.listTvShowsUrl(type, page, language);
   return getListFromTMDB(url, 'tv');
 };
 
-export const getTvShowDetail = async (id: number): Promise<ITvShowDetail | undefined> => {
+export const getTvShowDetail = async (
+  id: number,
+  language?: string,
+): Promise<ITvShowDetail | undefined> => {
   try {
-    const fetched = await fetcher<ITvShowDetail>(TMDB.tvShowDetailUrl(id));
+    const fetched = await fetcher<ITvShowDetail>(TMDB.tvShowDetailUrl(id, language));
     return fetched;
   } catch (error) {
     console.error(error);
@@ -231,8 +246,11 @@ export const getSimilar = async (type: 'movie' | 'tv', id: number): Promise<IMed
   return getListFromTMDB(url);
 };
 
-export const getListGenre = async (type: 'movie' | 'tv'): Promise<{ [id: string]: string }> => {
-  const url = TMDB.listGenre(type);
+export const getListGenre = async (
+  type: 'movie' | 'tv',
+  language?: string,
+): Promise<{ [id: string]: string }> => {
+  const url = TMDB.listGenre(type, language);
   try {
     const fetched = await fetcher<IListGenre>(url);
     const result: { [key: string]: string } = {};
@@ -252,9 +270,10 @@ export const getListDiscover = async (
   type: 'movie' | 'tv',
   with_genres?: string,
   sort_by?: string,
+  language?: string,
   page?: number,
 ): Promise<IMediaList> => {
-  const url = TMDB.discoverUrl(type, with_genres, sort_by, page);
+  const url = TMDB.discoverUrl(type, with_genres, sort_by, language, page);
 
   return getListFromTMDB(url, type);
 };

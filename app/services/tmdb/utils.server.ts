@@ -21,12 +21,14 @@ export class TMDB {
   static trendingUrl = (
     mediaType: MediaType,
     timeWindow: TimeWindowType,
+    language?: string,
     page?: number,
   ): string => {
     let url = `${this.API_BASE_URL}trending/${mediaType}/${timeWindow}?api_key=${this.key}`;
-    if (page) {
-      url += `&page=${page}`;
-    }
+
+    if (language) url += `&language=${language}`;
+    if (page) url += `&page=${page}`;
+
     return url;
   };
 
@@ -63,13 +65,8 @@ export class TMDB {
     return url;
   };
 
-  static movieDetailUrl = (id: number, language?: string): string => {
-    let url = `${this.API_BASE_URL}movie/${id}?api_key=${this.key}`;
-    if (language) {
-      url += `&language=${language}`;
-    }
-    return url;
-  };
+  static movieDetailUrl = (id: number, language?: string): string =>
+    `${this.API_BASE_URL}movie/${id}?api_key=${this.key}&language=${language}`;
 
   static listTvShowsUrl = (type: ListTvShowType, page?: number, language?: string): string => {
     let url = `${this.API_BASE_URL}tv/${type}?api_key=${this.key}`;
@@ -246,12 +243,14 @@ export class TMDB {
     type: 'movie' | 'tv',
     with_genres?: string,
     sort_by?: string,
+    language?: string,
     page?: number,
   ) => {
     let url = `${this.API_BASE_URL}discover/${type}?api_key=${this.key}`;
 
     if (with_genres) url += `&with_genres=${with_genres}`;
     if (sort_by) url += `&sort_by=${sort_by}`;
+    if (language) url += `&language=${language}`;
     if (page) url += `&page=${page}`;
     url += '&vote_count.gte=300';
 
@@ -261,6 +260,7 @@ export class TMDB {
 
 export const fetcher = async <T = any>(url: string): Promise<T> => {
   const res = await fetch(url);
+
   // throw error here
   if (!res.ok) throw new Error(JSON.stringify(await res.json()));
 

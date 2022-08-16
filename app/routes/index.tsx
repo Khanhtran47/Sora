@@ -3,7 +3,9 @@ import { MetaFunction, LoaderFunction, json, DataFunctionArgs } from '@remix-run
 import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
+import i18next from '~/i18n/i18next.server';
 import {
   getTrending,
   getListMovies,
@@ -19,6 +21,10 @@ export const meta: MetaFunction = () => ({
   description: '（づ￣3￣）づ╭❤️～',
 });
 
+export const handle = {
+  i18n: 'home',
+};
+
 type LoaderData = {
   todayTrending: Awaited<ReturnType<typeof getTrending>>;
   movies: Awaited<ReturnType<typeof getListMovies>>;
@@ -27,31 +33,28 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
+  const locale = await i18next.getLocale(request);
+
   const url = new URL(request.url);
-  const page = Number(url.searchParams.get('page'));
-  if (!page || page < 1 || page > 1000) {
-    return json<LoaderData>({
-      todayTrending: await getTrending('all', 'day'),
-      movies: await getListMovies('popular'),
-      shows: await getListTvShows('popular'),
-      people: await getListPeople('popular'),
-    });
-  }
+  let page = Number(url.searchParams.get('page'));
+  if (page && (page < 1 || page > 1000)) page = 1;
 
   return json<LoaderData>({
-    todayTrending: await getTrending('all', 'day', page),
-    movies: await getListMovies('popular', page),
-    shows: await getListTvShows('popular', page),
-    people: await getListPeople('popular', undefined, page),
+    todayTrending: await getTrending('all', 'day', locale, page),
+    movies: await getListMovies('popular', locale, page),
+    shows: await getListTvShows('popular', locale, page),
+    people: await getListPeople('popular', locale, page),
   });
 };
 
 // https://remix.run/guides/routing#index-routes
 const Index = () => {
   const { movies, shows, people, todayTrending } = useLoaderData();
+
   const location = useLocation();
   const navigate = useNavigate();
   const [trending] = React.useState(todayTrending.items);
+  const { t } = useTranslation('home');
 
   const onClickViewMore = (type: 'movies' | 'tv-shows' | 'people') => {
     navigate(`/${type}/popular`);
@@ -84,7 +87,7 @@ const Index = () => {
           <MediaList
             listType="slider-card"
             items={movies.items}
-            listName="Popular Movies"
+            listName={t('popularMovies')}
             showMoreList
             onClickViewMore={() => onClickViewMore('movies')}
           />
@@ -108,7 +111,7 @@ const Index = () => {
           <MediaList
             listType="slider-card"
             items={shows.items}
-            listName="Popular Tv shows"
+            listName={t('popularTv')}
             showMoreList
             onClickViewMore={() => onClickViewMore('tv-shows')}
           />
@@ -132,7 +135,7 @@ const Index = () => {
           <PeopleList
             listType="slider-card"
             items={people.results}
-            listName="Popular People"
+            listName={t('popularPeople')}
             showMoreList
             onClickViewMore={() => onClickViewMore('people')}
           />

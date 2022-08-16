@@ -2,26 +2,25 @@ import * as React from 'react';
 import { DataFunctionArgs, json, LoaderFunction } from '@remix-run/node';
 import { useLoaderData, useNavigate } from '@remix-run/react';
 import { Input, Grid, Container, Button, Pagination, useInput } from '@nextui-org/react';
+import { useTranslation } from 'react-i18next';
 
 import { getTrending } from '~/services/tmdb/tmdb.server';
 import MediaList from '~/src/components/Media/MediaList';
 import useMediaQuery from '~/hooks/useMediaQuery';
+import i18next from '~/i18n/i18next.server';
 
 type LoaderData = {
   todayTrending: Awaited<ReturnType<typeof getTrending>>;
 };
 
 export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
+  const locale = await i18next.getLocale(request);
   const url = new URL(request.url);
-  const page = Number(url.searchParams.get('page'));
-  if (!page || page < 1 || page > 1000) {
-    return json<LoaderData>({
-      todayTrending: await getTrending('all', 'day'),
-    });
-  }
+  let page = Number(url.searchParams.get('page')) || undefined;
+  if (page && (page < 1 || page > 1000)) page = 1;
 
   return json<LoaderData>({
-    todayTrending: await getTrending('all', 'day', page),
+    todayTrending: await getTrending('all', 'day', locale, page),
   });
 };
 
@@ -30,6 +29,7 @@ const SearchRoute = () => {
   const navigate = useNavigate();
   const { value, bindings } = useInput('');
   const isXs = useMediaQuery(650);
+  const { t } = useTranslation();
 
   const paginationChangeHandler = (page: number) => navigate(`/search/tv?page=${page}`);
   const onClickSearch = () => navigate(`/search/tv/${value}`);
@@ -39,17 +39,17 @@ const SearchRoute = () => {
         <Grid>
           <Input
             {...bindings}
-            labelPlaceholder="Search"
+            labelPlaceholder={t('searchPlaceHolder')}
             clearable
             bordered
             color="primary"
             fullWidth
-            helperText="Input tv name and search"
+            helperText={t('searchHelper')}
           />
         </Grid>
         <Grid>
           <Button auto onClick={onClickSearch}>
-            Search
+            {t('search')}
           </Button>
         </Grid>
       </Grid.Container>
@@ -67,7 +67,7 @@ const SearchRoute = () => {
         }}
       >
         {todayTrending?.items.length > 0 && (
-          <MediaList listType="grid" items={todayTrending.items} listName="Today Trending" />
+          <MediaList listType="grid" items={todayTrending.items} listName={t('todayTrending')} />
         )}
         <Pagination
           total={todayTrending.totalPages}
