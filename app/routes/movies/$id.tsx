@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { LoaderFunction, json } from '@remix-run/node';
-import { useCatch, useLoaderData } from '@remix-run/react';
+import { useCatch, useLoaderData, Outlet } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
 import { getMovieDetail } from '~/services/tmdb/tmdb.server';
 import MediaDetail from '~/src/components/Media/MediaDetail';
@@ -12,9 +11,6 @@ import i18next from '~/i18n/i18next.server';
 
 type LoaderData = {
   detail: Awaited<ReturnType<typeof getMovieDetail>>;
-  // videos: Awaited<ReturnType<typeof getVideos>>;
-  // credits: Awaited<ReturnType<typeof getCredits>>;
-  // similar: Awaited<ReturnType<typeof getSimilar>>;
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -28,12 +24,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   if (!detail) throw new Response('Not Found', { status: 404 });
 
-  return json<LoaderData>({
-    detail,
-    // videos: await getVideos('movie', mid),
-    // credits: await getCredits('movie', mid),
-    // similar: await getSimilar('movie', mid),
-  });
+  return json<LoaderData>({ detail });
 };
 
 const MovieDetail = () => {
@@ -48,42 +39,10 @@ const MovieDetail = () => {
         responsive
         css={{
           margin: 0,
-          paddingRight: 0,
-          paddingLeft: '88px',
+          padding: 0,
         }}
       >
-        <Tabs
-          id="controlled-tabs"
-          // for
-          // selectedTabClassName="bg-white"
-        >
-          <TabList>
-            <Tab>Overview</Tab>
-            <Tab>Cast</Tab>
-            <Tab>Crew</Tab>
-            <Tab>Videos</Tab>
-            <Tab>Photos</Tab>
-          </TabList>
-
-          <TabPanel>
-            <p>
-              Hello, there, this is a movie detail page. Things are logged on console.{' '}
-              {detail?.title}
-            </p>
-          </TabPanel>
-          <TabPanel>
-            <h2>Any content 2</h2>
-          </TabPanel>
-          <TabPanel>
-            <h2>Any content 3</h2>
-          </TabPanel>
-          <TabPanel>
-            <h2>Any content 4</h2>
-          </TabPanel>
-          <TabPanel>
-            <h2>Any content 4</h2>
-          </TabPanel>
-        </Tabs>
+        <Outlet />
       </Container>
     </>
   );

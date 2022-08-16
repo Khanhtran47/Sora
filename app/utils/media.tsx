@@ -29,4 +29,11 @@ export default class TMDB {
     }
     return `${this.media_base_url}original/${path}`;
   };
+
+  static logoUrl = (path: string, size?: LogoSize): string => {
+    if (size) {
+      return `${this.media_base_url}${size}/${path}`;
+    }
+    return `${this.media_base_url}original/${path}`;
+  };
 }
