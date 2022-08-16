@@ -2,7 +2,6 @@
 import { LoaderFunction, json } from '@remix-run/node';
 import { useCatch, useLoaderData } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
 import { getMovieDetail } from '~/services/tmdb/tmdb.server';
 import MediaDetail from '~/src/components/Media/MediaDetail';
@@ -49,38 +48,7 @@ const MovieDetail = () => {
           paddingLeft: '88px',
         }}
       >
-        <Tabs
-          id="controlled-tabs"
-          // for
-          // selectedTabClassName="bg-white"
-        >
-          <TabList>
-            <Tab>Overview</Tab>
-            <Tab>Cast</Tab>
-            <Tab>Crew</Tab>
-            <Tab>Videos</Tab>
-            <Tab>Photos</Tab>
-          </TabList>
-
-          <TabPanel>
-            <p>
-              Hello, there, this is a movie detail page. Things are logged on console.{' '}
-              {detail?.title}
-            </p>
-          </TabPanel>
-          <TabPanel>
-            <h2>Any content 2</h2>
-          </TabPanel>
-          <TabPanel>
-            <h2>Any content 3</h2>
-          </TabPanel>
-          <TabPanel>
-            <h2>Any content 4</h2>
-          </TabPanel>
-          <TabPanel>
-            <h2>Any content 4</h2>
-          </TabPanel>
-        </Tabs>
+        Content
       </Container>
     </>
   );

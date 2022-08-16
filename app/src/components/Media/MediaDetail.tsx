@@ -1,5 +1,15 @@
-import { Link } from '@remix-run/react';
-import { Card, Col, Text, Row, Button, Progress } from '@nextui-org/react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, NavLink } from '@remix-run/react';
+import {
+  Link as NextLink,
+  Card,
+  Col,
+  Text,
+  Row,
+  Button,
+  Spacer,
+  useTheme,
+} from '@nextui-org/react';
 
 import { IMovieDetail, ITvShowDetail } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
@@ -10,11 +20,31 @@ interface IMediaDetail {
   item: IMovieDetail | ITvShowDetail | undefined;
 }
 
+const detailTab = [
+  { pageName: 'Overview', pageLink: '' },
+  { pageName: 'Cast', pageLink: '/cast' },
+  { pageName: 'Crew', pageLink: '/crew' },
+  { pageName: 'Videos', pageLink: '/videos' },
+  { pageName: 'Photos', pageLink: '/photos' },
+];
+
 const MediaDetail = (props: IMediaDetail) => {
   const { type, item } = props;
   console.log('🚀 ~ file: MediaDetail.tsx ~ line 15 ~ MediaDetail ~ item', item);
+  const { theme } = useTheme();
+  const [height, setHeight] = useState(0);
+  const ref = useRef(null);
 
-  const { id, tagline, genres } = item || {};
+  useEffect(() => {
+    ref?.current && setHeight(ref.current.clientHeight);
+    console.log('updated', ref?.current?.clientHeight);
+  }, [ref?.current?.clientHeight]);
+  const isXs = useMediaQuery(425, 'max');
+  const isSm = useMediaQuery(650, 'max');
+  const isMd = useMediaQuery(960, 'max');
+  const isMdLand = useMediaQuery(960, 'max', 'landscape');
+
+  const { id, tagline, genres, status } = item || {};
   const title = (item as IMovieDetail)?.title || (item as ITvShowDetail)?.name || '';
   const runtime =
     Number((item as IMovieDetail)?.runtime) || Number((item as ITvShowDetail)?.episode_run_time);
@@ -23,24 +53,31 @@ const MediaDetail = (props: IMediaDetail) => {
   const releaseYear = new Date(
     (item as IMovieDetail)?.release_date || (item as ITvShowDetail)?.first_air_date || '',
   ).getFullYear();
+  const releaseDate = new Date(
+    (item as IMovieDetail)?.release_date || (item as ITvShowDetail)?.first_air_date || '',
+  ).toLocaleDateString('fr-FR');
+  console.log('🚀 ~ file: MediaDetail.tsx ~ line 29 ~ MediaDetail ~ releaseDate', releaseDate);
 
   return (
     <Card
       variant="flat"
       css={{
+        display: 'flex',
+        flexFlow: 'column',
         width: '100vw',
-        height: '100vh',
+        height: `${height}px`,
+        // height: '100vh',
         borderWidth: 0,
-        '@sm': {
-          height: '60vh',
-        },
+        // '@xs': {
+        //   height: '60vh',
+        // },
       }}
     >
-      <Card.Header css={{ position: 'absolute', zIndex: 1 }}>
+      <Card.Header ref={ref} css={{ position: 'absolute', zIndex: 1, flexGrow: 1 }}>
         <Row
           fluid
+          align="stretch"
           justify="center"
-          align="center"
           css={{
             padding: 0,
             '@xs': {
@@ -54,70 +91,150 @@ const MediaDetail = (props: IMediaDetail) => {
             },
           }}
         >
+          {!isSm && (
+            <Col span={4}>
+              <Card.Image
+                src={posterPath}
+                alt={title}
+                objectFit="cover"
+                width="50%"
+                css={{
+                  marginTop: '10vh',
+                  borderRadius: '24px',
+                }}
+              />
+              {status === 'Released' && !isSm && (
+                <Row align="center" justify="center">
+                  <Button
+                    auto
+                    shadow
+                    rounded
+                    color="gradient"
+                    css={{
+                      width: '50%',
+                      margin: '0.5rem 0 0.5rem 0',
+                      '@xs': {
+                        marginTop: '4vh',
+                      },
+                      '@sm': {
+                        marginTop: '2vh',
+                      },
+                    }}
+                  >
+                    <Link
+                      prefetch="intent"
+                      to={`/${type === 'movie' ? 'movies' : 'tv-shows'}/watch/${id}`}
+                    >
+                      <Text
+                        size={12}
+                        weight="bold"
+                        transform="uppercase"
+                        css={{
+                          '@xs': {
+                            fontSize: '18px',
+                          },
+                          '@sm': {
+                            fontSize: '20px',
+                          },
+                        }}
+                      >
+                        Watch now
+                      </Text>
+                    </Link>
+                  </Button>
+                </Row>
+              )}
+            </Col>
+          )}
           <Col
-            span={4}
+            span={isSm ? 12 : 8}
             css={{
-              '@smMax': {
-                display: 'none',
-              },
+              marginTop: `${isMd ? '8vh' : '10vh'}`,
+              display: 'flex',
+              flexFlow: 'column',
+              justifyContent: 'flex-start',
             }}
           >
-            <Card.Image
-              src={posterPath}
-              alt={title}
-              objectFit="cover"
-              width="50%"
-              css={{
-                marginTop: '8vh',
-                borderRadius: '24px',
-                '@smMax': {
-                  display: 'none',
-                },
-              }}
-            />
-          </Col>
-          <Col
-            span={8}
-            css={{
-              marginTop: '8vh',
-            }}
-          >
-            <Card.Image
-              src={posterPath}
-              alt={title}
-              objectFit="cover"
-              width="50%"
-              css={{
-                marginTop: '8vh',
-                borderRadius: '24px',
-                '@sm': {
-                  display: 'none',
-                },
-              }}
-            />
-            <Text
-              size={18}
-              weight="bold"
-              transform="uppercase"
-              css={{
-                margin: 0,
-                '@xs': {
-                  fontSize: '24px',
-                },
-                '@sm': {
-                  fontSize: '30px',
-                },
-                '@md': {
-                  fontSize: '36px',
-                },
-              }}
-            >
-              {`${title} (${releaseYear})`}
-            </Text>
-            {tagline && (
+            {status === 'Released' && isSm && (
+              <>
+                <Row>
+                  <Card.Image
+                    src={posterPath}
+                    alt={title}
+                    objectFit="cover"
+                    width={isXs ? '70%' : '40%'}
+                    css={{
+                      marginTop: '2rem',
+                      borderRadius: '24px',
+                    }}
+                  />
+                </Row>
+                <Row>
+                  <Button
+                    auto
+                    shadow
+                    rounded
+                    color="gradient"
+                    size="xs"
+                    css={{
+                      width: '100%',
+                      margin: '0.5rem 0 0.5rem 0',
+                      '@xs': {
+                        marginTop: '4vh',
+                      },
+                      '@sm': {
+                        marginTop: '2vh',
+                      },
+                    }}
+                  >
+                    <Link
+                      prefetch="intent"
+                      to={`/${type === 'movie' ? 'movies' : 'tv-shows'}/watch/${id}`}
+                    >
+                      <Text
+                        size={12}
+                        weight="bold"
+                        transform="uppercase"
+                        css={{
+                          '@xs': {
+                            fontSize: '18px',
+                          },
+                          '@sm': {
+                            fontSize: '20px',
+                          },
+                        }}
+                      >
+                        Watch now
+                      </Text>
+                    </Link>
+                  </Button>
+                </Row>
+              </>
+            )}
+            <Row>
+              <Text
+                size={18}
+                weight="bold"
+                transform="uppercase"
+                css={{
+                  margin: 0,
+                  '@xs': {
+                    fontSize: '24px',
+                  },
+                  '@sm': {
+                    fontSize: '30px',
+                  },
+                  '@md': {
+                    fontSize: '36px',
+                  },
+                }}
+              >
+                {`${title} (${releaseYear})`}
+              </Text>
+            </Row>
+            <Row>
               <Text
                 size={12}
-                i
                 css={{
                   margin: 0,
                   '@xs': {
@@ -131,157 +248,115 @@ const MediaDetail = (props: IMediaDetail) => {
                   },
                 }}
               >
-                {tagline}
+                {releaseDate} • {item?.vote_average} •{' '}
+                {runtime && `${Math.floor(runtime / 60)}h ${runtime % 60}m`}
               </Text>
+            </Row>
+            {tagline && (
+              <Row>
+                <Text
+                  size={12}
+                  i
+                  css={{
+                    margin: '10px 0 0 0',
+                    '@xs': {
+                      fontSize: '14px',
+                    },
+                    '@sm': {
+                      fontSize: '16px',
+                    },
+                    '@md': {
+                      fontSize: '18px',
+                    },
+                  }}
+                >
+                  {tagline}
+                </Text>
+              </Row>
             )}
             <Row
               fluid
               align="center"
+              wrap="wrap"
+              justify="space-between"
               css={{
-                margin: '20px 0 0 0',
+                width: `${isMd ? '100%' : '60%'}`,
+                margin: '1.25rem 0 1.25rem 0',
               }}
             >
-              <Col span={1}>
-                <Text
-                  size={12}
-                  css={{
-                    margin: 0,
-                    '@xs': {
-                      fontSize: '14px',
-                    },
-                    '@sm': {
-                      fontSize: '16px',
-                    },
-                    '@md': {
-                      fontSize: '18px',
-                    },
-                  }}
-                >
-                  User Score
-                </Text>
-              </Col>
-              <Col span={7} css={{ marginLeft: '60px' }}>
-                <Progress
-                  value={item?.vote_average}
-                  shadow
-                  max={10}
-                  color="primary"
-                  status="primary"
-                />
-              </Col>
+              {genres &&
+                genres?.map((genre) => (
+                  <Button
+                    color="primary"
+                    auto
+                    ghost
+                    rounded
+                    shadow
+                    key={genre?.id}
+                    size={isSm ? 'xs' : 'md'}
+                    css={{ marginBottom: '0.125rem' }}
+                  >
+                    {genre?.name}
+                  </Button>
+                ))}
             </Row>
             <Row
               fluid
+              className="border-b"
               align="center"
-              wrap="wrap"
+              justify="flex-start"
               css={{
-                margin: '20px 0 0 0',
+                p: 0,
+                gap: '$lg',
+                overflowX: 'auto',
+                flexFlow: 'row nowrap',
+                width: `${isMd ? '100%' : '60%'}`,
+                margin: 'auto 0 0 0',
+                borderColor: `${theme?.colors.primaryLightActive.value}`,
               }}
             >
-              <Col>
-                <Text
-                  size={12}
+              {detailTab?.map((page, index) => (
+                <Col
+                  key={`row-item-${index}`}
                   css={{
-                    '@xs': {
-                      fontSize: '14px',
-                    },
-                    '@sm': {
-                      fontSize: '16px',
-                    },
-                    '@md': {
-                      fontSize: '18px',
-                    },
+                    dflex: 'center',
                   }}
                 >
-                  Duration: {runtime && `${Math.floor(runtime / 60)}h ${runtime % 60}m`}
-                </Text>
-              </Col>
-              <Col>
-                <Row fluid>
-                  {genres &&
-                    genres?.map((genre) => (
-                      <Col key={genre?.id} css={{ marginRight: '10px' }}>
-                        <Button color="primary" auto ghost rounded shadow>
-                          {genre?.name}
-                        </Button>
-                      </Col>
-                    ))}
-                </Row>
-              </Col>
-            </Row>
-            <Row>
-              <Col span={6}>
-                <Button
-                  auto
-                  shadow
-                  rounded
-                  color="gradient"
-                  css={{
-                    marginTop: '8vh',
-                    '@xs': {
-                      marginTop: '4vh',
-                    },
-                    '@sm': {
-                      marginTop: '2vh',
-                    },
-                  }}
-                >
-                  <Link
-                    prefetch="intent"
-                    to={`/${type === 'movie' ? 'movies' : 'tv-shows'}/watch/${id}`}
+                  <NavLink
+                    to={`/movies/${id}${page.pageLink}`}
+                    end
+                    className={({ isActive }) => `${isActive ? 'border-b-2 border-solid' : ''}`}
+                    style={({ isActive }) =>
+                      isActive ? { borderColor: `${theme?.colors.primary.value}` } : {}
+                    }
                   >
-                    <Text
-                      size={12}
-                      weight="bold"
-                      transform="uppercase"
-                      css={{
-                        '@xs': {
-                          fontSize: '18px',
-                        },
-                        '@sm': {
-                          fontSize: '20px',
-                        },
-                      }}
-                    >
-                      Watch now
-                    </Text>
-                  </Link>
-                </Button>
-              </Col>
-              <Col span={6}>
-                <Button
-                  auto
-                  shadow
-                  rounded
-                  bordered
-                  color="gradient"
-                  css={{
-                    marginTop: '8vh',
-                    '@xs': {
-                      marginTop: '4vh',
-                    },
-                    '@sm': {
-                      marginTop: '2vh',
-                    },
-                  }}
-                >
-                  <Text
-                    size={12}
-                    weight="bold"
-                    transform="uppercase"
-                    css={{
-                      '@xs': {
-                        fontSize: '18px',
-                      },
-                      '@sm': {
-                        fontSize: '20px',
-                      },
-                    }}
-                  >
-                    Watch trailer
-                  </Text>
-                </Button>
-              </Col>
+                    {({ isActive }) => (
+                      <Text
+                        h1
+                        size={20}
+                        css={{
+                          textTransform: 'uppercase',
+                        }}
+                      >
+                        <NextLink
+                          block
+                          color="primary"
+                          css={{
+                            height: '45px',
+                            borderRadius: '14px 14px 0 0',
+                            alignItems: 'center',
+                            ...(isActive && {
+                              background: `${theme?.colors.primaryLightActive.value}`,
+                            }),
+                          }}
+                        >
+                          {page.pageName}
+                        </NextLink>
+                      </Text>
+                    )}
+                  </NavLink>
+                </Col>
+              ))}
             </Row>
           </Col>
         </Row>
