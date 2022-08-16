@@ -1,17 +1,15 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { LoaderFunction, json } from '@remix-run/node';
-import { useCatch, useLoaderData } from '@remix-run/react';
+import { useCatch, useLoaderData, Outlet } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
 
 import { getTvShowDetail } from '~/services/tmdb/tmdb.server';
 import MediaDetail from '~/src/components/Media/MediaDetail';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
+import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 
 type LoaderData = {
   detail: Awaited<ReturnType<typeof getTvShowDetail>>;
-  // videos: Awaited<ReturnType<typeof getVideos>>;
-  // credits: Awaited<ReturnType<typeof getCredits>>;
-  // similar: Awaited<ReturnType<typeof getSimilar>>;
 };
 
 export const loader: LoaderFunction = async ({ params }) => {
@@ -24,12 +22,7 @@ export const loader: LoaderFunction = async ({ params }) => {
 
   if (!tid) throw new Response('Not Found', { status: 404 });
 
-  return json<LoaderData>({
-    detail,
-    // videos: await getVideos('tv', tid),
-    // credits: await getCredits('tv', tid),
-    // similar: await getSimilar('tv', tid),
-  });
+  return json<LoaderData>({ detail });
 };
 
 const TvShowDetail = () => {
@@ -44,11 +37,10 @@ const TvShowDetail = () => {
         responsive
         css={{
           margin: 0,
-          paddingRight: 0,
-          paddingLeft: '88px',
+          padding: 0,
         }}
       >
-        Content
+        <Outlet />
       </Container>
     </>
   );
@@ -58,6 +50,12 @@ export const CatchBoundary = () => {
   const caught = useCatch();
 
   return <CatchBoundaryView caught={caught} />;
+};
+
+export const ErrorBoundary = ({ error }: { error: Error }) => {
+  const isProd = process.env.NODE_ENV === 'production';
+
+  return <ErrorBoundaryView error={error} isProd={isProd} />;
 };
 
 export default TvShowDetail;

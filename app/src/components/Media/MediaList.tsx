@@ -27,6 +27,7 @@ interface IMediaListProps {
   mediaType?: 'movie' | 'tv';
   showMoreList?: boolean;
   onClickViewMore?: () => void;
+  cardType?: 'media' | 'similar';
 }
 
 const MediaListGrid = ({ items }: { items: IMedia[] }) => {
@@ -88,7 +89,7 @@ const MediaListBanner = ({ items }: { items: IMedia[] }) => {
         <Swiper grabCursor spaceBetween={0} slidesPerView={1} autoplay={{ delay: 10000 }}>
           {items.slice(0, 10).map((item, i) => (
             <SwiperSlide key={i}>
-              <MediaItem key={item.id} type="banner" item={item} />
+              <MediaItem type="banner" item={item} />
             </SwiperSlide>
           ))}
         </Swiper>
@@ -97,23 +98,41 @@ const MediaListBanner = ({ items }: { items: IMedia[] }) => {
   );
 };
 
-const MediaListCard = ({ items }: { items: IMedia[] }) => {
+const MediaListCard = ({ items, type }: { items: IMedia[]; type?: 'media' | 'similar' }) => {
   const isXs = useMediaQuery(650);
   const isSm = useMediaQuery(960);
   const isMd = useMediaQuery(1280);
   const isLg = useMediaQuery(1400);
   const gap = isXs ? 1 : 2;
   let slidesPerView = 0;
-  if (isXs) {
-    slidesPerView = 2.25;
-  } else if (isSm) {
-    slidesPerView = 3.75;
-  } else if (isMd) {
-    slidesPerView = 5.25;
-  } else if (isLg) {
-    slidesPerView = 6.75;
-  } else {
-    slidesPerView = 8.25;
+  switch (type) {
+    case 'media':
+      if (isXs) {
+        slidesPerView = 2.25;
+      } else if (isSm) {
+        slidesPerView = 3.75;
+      } else if (isMd) {
+        slidesPerView = 5.25;
+      } else if (isLg) {
+        slidesPerView = 6.75;
+      } else {
+        slidesPerView = 8.25;
+      }
+      break;
+    case 'similar':
+      if (isXs) {
+        slidesPerView = 2.25;
+      } else if (isSm) {
+        slidesPerView = 3.25;
+      } else if (isMd) {
+        slidesPerView = 4.25;
+      } else if (isLg) {
+        slidesPerView = 5.75;
+      } else {
+        slidesPerView = 6.25;
+      }
+      break;
+    default:
   }
 
   return (
@@ -146,6 +165,7 @@ const MediaList = (props: IMediaListProps) => {
     mediaType,
     showMoreList,
     onClickViewMore,
+    cardType,
   } = props;
   const [displayType, setDisplayType] = useState<string>(listType as string);
 
@@ -162,7 +182,7 @@ const MediaList = (props: IMediaListProps) => {
       list = <MediaListBanner items={items} />;
       break;
     case 'slider-card':
-      list = <MediaListCard items={items} />;
+      list = <MediaListCard items={items} type={cardType || 'media'} />;
       break;
     default:
   }

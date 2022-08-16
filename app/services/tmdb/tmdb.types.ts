@@ -17,26 +17,26 @@ export type ListPersonType = 'popular' | 'latest';
  * this could be extended in the future to create more specific interface
  */
 export interface IMedia {
-  backdropPath: string;
-  id: number;
+  backdropPath?: string;
+  id?: number;
   mediaType: 'movie' | 'tv';
-  originalLanguage: string;
-  overview: string;
-  popularity: number;
-  posterPath: string;
-  releaseDate: string; // release_date - first-air-date
-  title: string; // title - name - original_title - original_name
-  voteAverage: number;
-  voteCount: number;
-  genreIds: number[];
+  originalLanguage?: string;
+  overview?: string;
+  popularity?: number;
+  posterPath?: string;
+  releaseDate?: string; // release_date - first-air-date
+  title?: string; // title - name - original_title - original_name
+  voteAverage?: number;
+  voteCount?: number;
+  genreIds?: number[];
   adult?: boolean;
   video?: boolean;
   originalCountry?: string;
-  originalTitle: string;
+  originalTitle?: string;
 }
 
 export interface IMediaList {
-  items: IMedia[];
+  items?: IMedia[];
   page: number;
   totalPages: number;
   totalResults: number;
@@ -73,6 +73,7 @@ export interface IMovieDetail {
   revenue?: number;
   runtime?: number | null;
   spoken_languages?: {
+    english_name?: string;
     iso_639_1?: string;
     name?: string;
   }[];
@@ -96,31 +97,31 @@ export interface IListGenre {
 export interface ICredit {
   id: number;
   cast: {
-    adult: boolean;
-    gender: number | null;
-    id: number;
-    known_for_department: string;
-    name: string;
-    original_name: string;
-    popularity: number;
-    profile_path: string | null;
-    cast_id: number;
-    character: string;
-    credit_id: string;
-    order: number;
+    adult?: boolean;
+    gender?: number | null;
+    id?: number;
+    known_for_department?: string;
+    name?: string;
+    original_name?: string;
+    popularity?: number;
+    profile_path?: string | null;
+    cast_id?: number;
+    character?: string;
+    credit_id?: string;
+    order?: number;
   }[];
   crew: {
-    adult: boolean;
-    gender: number | null;
-    id: number;
-    known_for_department: string;
-    name: string;
-    original_name: string;
-    popularity: string;
-    profile_path: string;
-    credit_id: string;
-    department: string;
-    job: string;
+    adult?: boolean;
+    gender?: number | null;
+    id?: number;
+    known_for_department?: string;
+    name?: string;
+    original_name?: string;
+    popularity?: string;
+    profile_path?: string | null;
+    credit_id?: string;
+    department?: string;
+    job?: string;
   }[];
 }
 
@@ -220,12 +221,18 @@ export interface ITvShowDetail {
 }
 
 export interface IPeople {
-  adult: boolean;
-  id: number;
-  known_for: KnownFor[];
-  name: string;
-  popularity: number;
-  profile_path: string;
+  adult?: boolean;
+  id?: number;
+  known_for?: KnownFor[];
+  name?: string;
+  popularity?: number;
+  profile_path?: string | null;
+  gender?: number | null;
+  known_for_department?: string;
+  character?: string;
+  credit_id?: string;
+  order?: number;
+  original_name?: string;
 }
 
 export interface KnownFor {
