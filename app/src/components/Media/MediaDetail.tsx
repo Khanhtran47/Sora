@@ -14,6 +14,8 @@ import {
   useTheme,
 } from '@nextui-org/react';
 
+import { useTranslation } from 'react-i18next';
+
 import { IMovieDetail, ITvShowDetail } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
 import useMediaQuery from '~/hooks/useMediaQuery';
@@ -33,6 +35,7 @@ const detailTab = [
 ];
 
 const MediaDetail = (props: IMediaDetail) => {
+  const { t } = useTranslation();
   const { type, item } = props;
   const { theme } = useTheme();
   const [height, setHeight] = useState(0);
@@ -271,7 +274,7 @@ const MediaDetail = (props: IMediaDetail) => {
                     },
                   }}
                 >
-                  {tagline}
+                  {t('userScore')}
                 </Text>
               </Row>
             )}

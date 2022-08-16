@@ -3,10 +3,12 @@ import { useLoaderData, useNavigate, useLocation } from '@remix-run/react';
 import { json, LoaderFunction } from '@remix-run/node';
 import { Container, Pagination } from '@nextui-org/react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 import { getListTvShows, getListGenre, getListDiscover } from '~/services/tmdb/tmdb.server';
 import MediaList from '~/src/components/Media/MediaList';
 import useMediaQuery from '~/hooks/useMediaQuery';
+import i18next from '~/i18n/i18next.server';
 
 type LoaderData = {
   shows: Awaited<ReturnType<typeof getListTvShows>>;
@@ -16,10 +18,11 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
+  const locale = await i18next.getLocale(request);
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page')) || undefined;
-  const genres = await getListGenre('tv');
-  if (page && page < 1) page = 1;
+  const genres = await getListGenre('tv', locale);
+  if (page && (page < 1 || page > 1000)) page = 1;
 
   const withGenres = url.searchParams.get('with_genres') || undefined;
   let sortBy = url.searchParams.get('sort_by') || undefined;
@@ -28,8 +31,8 @@ export const loader: LoaderFunction = async ({ request }) => {
   return json<LoaderData>({
     shows:
       sortBy || genres
-        ? await getListDiscover('tv', withGenres, sortBy, page)
-        : await getListTvShows('on_the_air', page),
+        ? await getListDiscover('tv', withGenres, sortBy, locale, page)
+        : await getListTvShows('on_the_air', locale, page),
     genres,
     withGenres,
     sortBy,
@@ -41,6 +44,7 @@ const ListTvShows = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const isXs = useMediaQuery(650);
+  const { t } = useTranslation();
 
   const paginationChangeHandler = (page: number) => {
     let url = `?page=${page}`;
@@ -75,7 +79,7 @@ const ListTvShows = () => {
           <MediaList
             listType="grid"
             items={shows.items}
-            listName="Discover Tv shows"
+            listName={t('discoverTv')}
             showFilter
             genres={genres}
             mediaType="tv"

@@ -7,18 +7,20 @@ import { getTvShowDetail } from '~/services/tmdb/tmdb.server';
 import MediaDetail from '~/src/components/Media/MediaDetail';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
+import i18next from '~/i18n/i18next.server';
 
 type LoaderData = {
   detail: Awaited<ReturnType<typeof getTvShowDetail>>;
 };
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader: LoaderFunction = async ({ request, params }) => {
+  const locale = await i18next.getLocale(request);
   const { id } = params;
   const tid = Number(id);
 
   if (!tid) throw new Response('Not Found', { status: 404 });
 
-  const detail = await getTvShowDetail(tid);
+  const detail = await getTvShowDetail(tid, locale);
 
   if (!tid) throw new Response('Not Found', { status: 404 });
 

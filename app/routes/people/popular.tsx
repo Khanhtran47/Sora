@@ -3,26 +3,25 @@ import { useLoaderData, useNavigate, useLocation } from '@remix-run/react';
 import { json, LoaderFunction } from '@remix-run/node';
 import { Container, Pagination } from '@nextui-org/react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 import PeopleList from '~/src/components/people/PeopleList';
 import { getListPeople } from '~/services/tmdb/tmdb.server';
 import useMediaQuery from '~/hooks/useMediaQuery';
+import i18next from '~/i18n/i18next.server';
 
 type LoaderData = {
   people: Awaited<ReturnType<typeof getListPeople>>;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
+  const locale = await i18next.getLocale(request);
   const url = new URL(request.url);
-  const page = Number(url.searchParams.get('page'));
+  let page = Number(url.searchParams.get('page')) || undefined;
+  if (page && (page < 1 || page > 1000)) page = 1;
 
-  if (!page || page < 1 || page > 1000) {
-    return json<LoaderData>({
-      people: await getListPeople('popular'),
-    });
-  }
   return json<LoaderData>({
-    people: await getListPeople('popular', undefined, page),
+    people: await getListPeople('popular', locale, page),
   });
 };
 
@@ -31,6 +30,7 @@ const ListPeoplePopular = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const isXs = useMediaQuery(650);
+  const { t } = useTranslation();
 
   const paginationChangeHandler = (page: number) => navigate(`/people/popular?page=${page}`);
 
@@ -54,7 +54,7 @@ const ListPeoplePopular = () => {
         }}
       >
         {people?.results.length > 0 && (
-          <PeopleList listType="grid" items={people.results} listName="Popular People" />
+          <PeopleList listType="grid" items={people.results} listName={t('popularPeople')} />
         )}
         <Pagination
           total={people.total_pages}

@@ -15,6 +15,7 @@ import {
 import { IMedia } from '~/services/tmdb/tmdb.types';
 import { useColor } from 'color-thief-react';
 import tinycolor from 'tinycolor2';
+import { useTranslation } from 'react-i18next';
 
 interface IMediaItem {
   type: 'banner' | 'card';
@@ -23,6 +24,8 @@ interface IMediaItem {
 
 const BannerItem = ({ item }: { item: IMedia }) => {
   const { isDark } = useTheme();
+  const { t } = useTranslation();
+
   const { backdropPath, overview, posterPath, title, id, mediaType } = item;
   const {
     data,
@@ -117,7 +120,7 @@ const BannerItem = ({ item }: { item: IMedia }) => {
                           },
                         }}
                       >
-                        Watch now
+                        {t('watchNow')}
                       </Text>
                     </Link>
                   </Button>
@@ -144,7 +147,7 @@ const BannerItem = ({ item }: { item: IMedia }) => {
                         },
                       }}
                     >
-                      Watch trailer
+                      {t('watchTrailer')}
                     </Text>
                   </Button>
                 </Row>

@@ -3,26 +3,25 @@ import { useLoaderData, useNavigate, useLocation } from '@remix-run/react';
 import { json, LoaderFunction } from '@remix-run/node';
 import { Container, Pagination } from '@nextui-org/react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 import { getListTvShows } from '~/services/tmdb/tmdb.server';
 import MediaList from '~/src/components/Media/MediaList';
 import useMediaQuery from '~/hooks/useMediaQuery';
+import i18next from '~/i18n/i18next.server';
 
 type LoaderData = {
   shows: Awaited<ReturnType<typeof getListTvShows>>;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
+  const locale = await i18next.getLocale(request);
   const url = new URL(request.url);
-  const page = Number(url.searchParams.get('page'));
+  let page = Number(url.searchParams.get('page')) || undefined;
+  if (page && (page < 1 || page > 1000)) page = 1;
 
-  if (!page || page < 1 || page > 1000) {
-    return json<LoaderData>({
-      shows: await getListTvShows('top_rated'),
-    });
-  }
   return json<LoaderData>({
-    shows: await getListTvShows('top_rated', page),
+    shows: await getListTvShows('top_rated', locale, page),
   });
 };
 
@@ -31,6 +30,7 @@ const ListTvShows = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const isXs = useMediaQuery(650);
+  const { t } = useTranslation();
 
   const paginationChangeHandler = (page: number) => navigate(`/tv-shows/top-rated?page=${page}`);
 
@@ -56,7 +56,7 @@ const ListTvShows = () => {
         }}
       >
         {shows?.items.length > 0 && (
-          <MediaList listType="grid" items={shows.items} listName="Top rated - Tv shows" />
+          <MediaList listType="grid" items={shows.items} listName={t('topRatedTv')} />
         )}
         <Pagination
           total={shows.totalPages}

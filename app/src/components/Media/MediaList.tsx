@@ -3,6 +3,7 @@ import { Link } from '@remix-run/react';
 import { useState } from 'react';
 import SwiperCore, { Autoplay } from 'swiper/core';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { useTranslation } from 'react-i18next';
 
 import { IMedia } from '~/services/tmdb/tmdb.types';
 
@@ -168,6 +169,7 @@ const MediaList = (props: IMediaListProps) => {
     cardType,
   } = props;
   const [displayType, setDisplayType] = useState<string>(listType as string);
+  const { t } = useTranslation();
 
   let list;
 
@@ -205,7 +207,7 @@ const MediaList = (props: IMediaListProps) => {
             marginBottom: '$12', // space[2]
           }}
         >
-          View more
+          {t('viewMore')}
         </Button>
       )}
       {showFilter && mediaType && genres && (
