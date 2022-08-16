@@ -105,45 +105,21 @@ const MediaListCard = ({ items, type }: { items: IMedia[]; type?: 'media' | 'sim
   const isMd = useMediaQuery(1280);
   const isLg = useMediaQuery(1400);
   const gap = isXs ? 1 : 2;
-  let slidesPerView = 0;
-  switch (type) {
-    case 'media':
-      if (isXs) {
-        slidesPerView = 2.25;
-      } else if (isSm) {
-        slidesPerView = 3.75;
-      } else if (isMd) {
-        slidesPerView = 5.25;
-      } else if (isLg) {
-        slidesPerView = 6.75;
-      } else {
-        slidesPerView = 8.25;
-      }
-      break;
-    case 'similar':
-      if (isXs) {
-        slidesPerView = 2.25;
-      } else if (isSm) {
-        slidesPerView = 3.25;
-      } else if (isMd) {
-        slidesPerView = 4.25;
-      } else if (isLg) {
-        slidesPerView = 5.75;
-      } else {
-        slidesPerView = 6.25;
-      }
-      break;
-    default:
-  }
+  const mediaWidth = {
+    width: `${isXs ? '40%' : isSm ? '30%' : isMd ? '20%' : isLg ? '15%' : '12%'}`,
+  };
+  const similarWidth = {
+    width: `${isXs ? '55%' : isSm ? '45%' : isMd ? '35%' : isLg ? '25%' : '20%'}`,
+  };
 
   return (
     <Grid.Container gap={gap} justify="flex-start" alignItems="center">
       {items?.length > 0 && (
-        <Swiper grabCursor spaceBetween={10} slidesPerView={slidesPerView}>
+        <Swiper grabCursor spaceBetween={10} slidesPerView="auto">
           {items.map((item, i) => {
             const href = (item.mediaType === 'movie' ? '/movies/' : '/tv-shows/') + item.id;
             return (
-              <SwiperSlide key={i}>
+              <SwiperSlide key={i} style={type === 'media' ? mediaWidth : similarWidth}>
                 <Link to={href}>
                   <MediaItem key={item.id} type="card" item={item} />
                 </Link>

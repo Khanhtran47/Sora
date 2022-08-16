@@ -83,45 +83,21 @@ const PeopleListCard = ({ items, type }: { items: IPeople[]; type?: 'people' | '
   const isMd = useMediaQuery(1280);
   const isLg = useMediaQuery(1400);
   const gap = isXs ? 1 : 2;
-  let slidesPerView = 0;
-  switch (type) {
-    case 'people':
-      if (isXs) {
-        slidesPerView = 2.25;
-      } else if (isSm) {
-        slidesPerView = 3.75;
-      } else if (isMd) {
-        slidesPerView = 5.25;
-      } else if (isLg) {
-        slidesPerView = 6.75;
-      } else {
-        slidesPerView = 8.25;
-      }
-      break;
-    case 'cast':
-      if (isXs) {
-        slidesPerView = 2.25;
-      } else if (isSm) {
-        slidesPerView = 3.25;
-      } else if (isMd) {
-        slidesPerView = 4.25;
-      } else if (isLg) {
-        slidesPerView = 5.75;
-      } else {
-        slidesPerView = 6.25;
-      }
-      break;
-    default:
-  }
+  const castWidth = {
+    width: `${isXs ? '55%' : isSm ? '45%' : isMd ? '35%' : isLg ? '25%' : '20%'}`,
+  };
+  const peopleWidth = {
+    width: `${isXs ? '40%' : isSm ? '30%' : isMd ? '20%' : isLg ? '15%' : '12%'}`,
+  };
 
   return (
     <Grid.Container gap={gap} justify="flex-start" alignItems="center">
       {items?.length > 0 && (
-        <Swiper grabCursor spaceBetween={10} slidesPerView={slidesPerView}>
+        <Swiper grabCursor spaceBetween={10} slidesPerView="auto">
           {items.map((item, i) => {
             const href = `/people/${item.id}`;
             return (
-              <SwiperSlide key={i}>
+              <SwiperSlide key={i} style={type === 'people' ? peopleWidth : castWidth}>
                 <Link to={href}>
                   <PeopleItem item={item} />
                 </Link>
