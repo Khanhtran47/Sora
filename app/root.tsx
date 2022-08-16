@@ -30,6 +30,7 @@ import { getUser } from './services/auth.server';
 import { getSession } from './services/sessions.server';
 import pageNotFound from './src/assets/images/404.gif';
 import i18next from './i18n/i18next.server';
+import i18nCookie from './services/cookie.server';
 
 interface DocumentProps {
   children: React.ReactNode;
@@ -148,7 +149,12 @@ export const loader: LoaderFunction = async ({ request }) => {
     }
   }
 
-  return json<LoaderDataType>({ locale });
+  return json<LoaderDataType>(
+    { locale },
+    {
+      headers: { 'Set-Cookie': await i18nCookie.serialize(locale) },
+    },
+  );
 };
 
 // https://remix.run/api/conventions#default-export

@@ -17,5 +17,8 @@
   "system": "System",
   "configs": "Configurations",
   "help&feedback": "Help & Feedback",
-  "logout": "Log Out"
+  "logout": "Log Out",
+  "en": "English",
+  "fr": "French",
+  "vi": "Vietnamese"
 }

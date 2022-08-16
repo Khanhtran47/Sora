@@ -17,5 +17,8 @@
   "system": "Système",
   "configs": "Configurations",
   "help&feedback": "Aide et Commentaires",
-  "logout": "Déconnexion"
+  "logout": "Déconnexion",
+  "en": "Anglais",
+  "fr": "Français",
+  "vi": "Vietnamien"
 }

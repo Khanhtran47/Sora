@@ -27,6 +27,7 @@ import MoonIcon from '../assets/icons/MoonIcon.js';
 import MenuIcon from '../assets/icons/MenuIcon.js';
 import ArrowLeftIcon from '../assets/icons/ArrowLeftIcon.js';
 import SearchIcon from '../assets/icons/SearchIcon.js';
+import GlobalIcon from '../assets/icons/GlobalIcon.js';
 
 interface IHeaderProps {
   open: boolean;
@@ -70,6 +71,8 @@ const searchDropdown = [
   { pageName: 'searchTv', pageLink: 'search/tv' },
   { pageName: 'searchPeople', pageLink: 'search/people' },
 ];
+
+const languages = ['en', 'fr', 'vi'];
 
 const AppBar = styled(Grid.Container, {
   // TODO: add transition on opening/closing drawer
@@ -264,6 +267,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
 
       {/* Avatar */}
       <Grid xs={6} sm={3} justify="flex-end" alignItems="center">
+        {/* Search */}
         <Tooltip placement="bottom" content={<DropdownPage pagesDropdown={searchDropdown || []} />}>
           <NavLink to="/search" end style={{ marginTop: '3px' }}>
             {({ isActive }) => (
@@ -282,6 +286,25 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
           </NavLink>
         </Tooltip>
         <Spacer y={1} />
+
+        {/* Language selector */}
+        <Dropdown placement="bottom-left">
+          <Dropdown.Trigger>
+            <Avatar squared icon={<GlobalIcon fill="currentColor" />} />
+          </Dropdown.Trigger>
+          <Dropdown.Menu color="primary" aria-label="Languages">
+            {languages.map((lng) => (
+              <Dropdown.Item key={lng}>
+                <Link key={lng} to={`/?lng=${lng}`}>
+                  {t(lng)}
+                </Link>
+              </Dropdown.Item>
+            ))}
+          </Dropdown.Menu>
+        </Dropdown>
+        <Spacer y={1} />
+
+        {/* Dark/Light mode switcher */}
         <Switch
           checked={isDark}
           size="md"
