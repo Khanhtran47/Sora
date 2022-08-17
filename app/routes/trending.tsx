@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 import { getTrending } from '~/services/tmdb/tmdb.server';
 
-import MediaList from '~/src/components/Media/MediaList';
+import MediaList from '~/src/components/Media/List';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
 

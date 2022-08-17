@@ -3,7 +3,7 @@ import { LoaderFunction, json } from '@remix-run/node';
 import { useLoaderData, useNavigate } from '@remix-run/react';
 import { Text, Row, Col, Spacer, Divider } from '@nextui-org/react';
 import { getMovieDetail, getSimilar, getVideos, getCredits } from '~/services/tmdb/tmdb.server';
-import MediaList from '~/src/components/Media/MediaList';
+import MediaList from '~/src/components/Media/List';
 import PeopleList from '~/src/components/people/PeopleList';
 import useMediaQuery from '~/hooks/useMediaQuery';
 

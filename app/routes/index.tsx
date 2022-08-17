@@ -12,7 +12,7 @@ import {
   getListTvShows,
   getListPeople,
 } from '~/services/tmdb/tmdb.server';
-import MediaList from '~/src/components/Media/MediaList';
+import MediaList from '~/src/components/Media/List';
 import PeopleList from '~/src/components/people/PeopleList';
 
 // https://remix.run/api/conventions#meta
