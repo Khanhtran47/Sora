@@ -54,8 +54,8 @@ const MediaDetail = (props: IMediaDetail) => {
   const title = (item as IMovieDetail)?.title || (item as ITvShowDetail)?.name || '';
   const runtime =
     Number((item as IMovieDetail)?.runtime) || Number((item as ITvShowDetail)?.episode_run_time);
-  const posterPath = TMDB?.posterUrl(item?.poster_path || '', 'w500');
-  const backdropPath = TMDB?.backdropUrl(item?.backdrop_path || '', 'original');
+  const posterPath = TMDB?.posterUrl(item?.poster_path || '', 'w342');
+  const backdropPath = TMDB?.backdropUrl(item?.backdrop_path || '', 'w780');
   const releaseYear = new Date(
     (item as IMovieDetail)?.release_date || (item as ITvShowDetail)?.first_air_date || '',
   ).getFullYear();
@@ -105,6 +105,7 @@ const MediaDetail = (props: IMediaDetail) => {
                   marginTop: '10vh',
                   borderRadius: '24px',
                 }}
+                loading="lazy"
               />
               {(status === 'Released' || status === 'Ended' || status === 'Returning Series') &&
                 !isSm && (
@@ -171,6 +172,7 @@ const MediaDetail = (props: IMediaDetail) => {
                       marginTop: '2rem',
                       borderRadius: '24px',
                     }}
+                    loading="lazy"
                   />
                 </Row>
                 <Row>
@@ -383,6 +385,7 @@ const MediaDetail = (props: IMediaDetail) => {
             opacity: 0.3,
           }}
           alt="Card example background"
+          loading="lazy"
         />
       </Card.Body>
     </Card>

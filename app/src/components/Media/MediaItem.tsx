@@ -12,10 +12,11 @@ import {
   Loading,
   useTheme,
 } from '@nextui-org/react';
-import { IMedia } from '~/services/tmdb/tmdb.types';
 import { useColor } from 'color-thief-react';
 import tinycolor from 'tinycolor2';
 import { useTranslation } from 'react-i18next';
+
+import { IMedia } from '~/services/tmdb/tmdb.types';
 
 interface IMediaItem {
   type: 'banner' | 'card';
@@ -31,9 +32,13 @@ const BannerItem = ({ item }: { item: IMedia }) => {
     data,
     loading,
     // error,
-  } = useColor(`https://api.allorigins.win/raw?url=${encodeURIComponent(posterPath)}`, 'hex', {
-    crossOrigin: 'anonymous',
-  });
+  } = useColor(
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(posterPath || '')}`,
+    'hex',
+    {
+      crossOrigin: 'anonymous',
+    },
+  );
   let colorDarkenLighten = '';
   if (isDark) {
     colorDarkenLighten = !tinycolor(data).isLight()
@@ -162,7 +167,7 @@ const BannerItem = ({ item }: { item: IMedia }) => {
             }}
           >
             <Card.Image
-              src={posterPath}
+              src={posterPath || ''}
               alt={title}
               objectFit="cover"
               width="40%"
@@ -173,9 +178,10 @@ const BannerItem = ({ item }: { item: IMedia }) => {
                   display: 'none',
                 },
               }}
+              loading="lazy"
             />
             <Card.Image
-              src={posterPath}
+              src={posterPath || ''}
               alt={title}
               objectFit="cover"
               width="50%"
@@ -186,14 +192,16 @@ const BannerItem = ({ item }: { item: IMedia }) => {
                   display: 'none',
                 },
               }}
+              loading="lazy"
             />
           </Col>
         </Row>
       </Card.Header>
       <Card.Body css={{ p: 0 }}>
         <Card.Image
-          src={backdropPath}
+          src={backdropPath || ''}
           containerCss={{
+            margin: 0,
             '&::after': {
               content: '',
               position: 'absolute',
@@ -216,6 +224,7 @@ const BannerItem = ({ item }: { item: IMedia }) => {
             opacity: 0.3,
           }}
           alt="Card example background"
+          loading="lazy"
         />
       </Card.Body>
     </Card>
@@ -230,9 +239,13 @@ const CardItemHover = ({ item }: { item: IMedia }) => {
     data,
     loading,
     // error,
-  } = useColor(`https://api.allorigins.win/raw?url=${encodeURIComponent(posterPath)}`, 'hex', {
-    crossOrigin: 'anonymous',
-  });
+  } = useColor(
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(posterPath || '')}`,
+    'hex',
+    {
+      crossOrigin: 'anonymous',
+    },
+  );
   let colorDarkenLighten = '';
   if (isDark) {
     colorDarkenLighten = !tinycolor(data).isLight()
@@ -293,9 +306,13 @@ const CardItem = ({ item }: { item: IMedia }) => {
     data,
     loading,
     // error,
-  } = useColor(`https://api.allorigins.win/raw?url=${encodeURIComponent(posterPath)}`, 'hex', {
-    crossOrigin: 'anonymous',
-  });
+  } = useColor(
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(posterPath || '')}`,
+    'hex',
+    {
+      crossOrigin: 'anonymous',
+    },
+  );
   let colorDarkenLighten = '';
   if (isDark) {
     colorDarkenLighten = !tinycolor(data).isLight()
@@ -328,13 +345,14 @@ const CardItem = ({ item }: { item: IMedia }) => {
         className={isDark ? 'bg-black/70' : 'bg-white/70'}
       >
         <Card.Image
-          src={posterPath}
+          src={posterPath || ''}
           objectFit="cover"
           width="100%"
           height={340}
           alt="Card image background"
           showSkeleton
           maxDelay={10000}
+          loading="lazy"
         />
         <Card.Footer
           isBlurred
