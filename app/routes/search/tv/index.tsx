@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DataFunctionArgs, json, LoaderFunction } from '@remix-run/node';
-import { useLoaderData, useNavigate } from '@remix-run/react';
+import { useLoaderData, useNavigate, Form } from '@remix-run/react';
 import { Input, Grid, Container, Button, Pagination, useInput } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 
@@ -32,27 +32,32 @@ const SearchRoute = () => {
   const { t } = useTranslation();
 
   const paginationChangeHandler = (page: number) => navigate(`/search/tv?page=${page}`);
-  const onClickSearch = () => navigate(`/search/tv/${value}`);
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    navigate(`/search/tv/${value}`);
+  };
   return (
     <>
-      <Grid.Container gap={1} css={{ padding: '30px 10px' }}>
-        <Grid>
-          <Input
-            {...bindings}
-            labelPlaceholder={t('searchPlaceHolder')}
-            clearable
-            bordered
-            color="primary"
-            fullWidth
-            helperText={t('searchHelper')}
-          />
-        </Grid>
-        <Grid>
-          <Button auto onClick={onClickSearch}>
-            {t('search')}
-          </Button>
-        </Grid>
-      </Grid.Container>
+      <Form onSubmit={onSubmit}>
+        <Grid.Container gap={1} css={{ padding: '30px 10px' }}>
+          <Grid>
+            <Input
+              {...bindings}
+              labelPlaceholder={t('searchPlaceHolder')}
+              clearable
+              bordered
+              color="primary"
+              fullWidth
+              helperText={t('searchHelper')}
+            />
+          </Grid>
+          <Grid>
+            <Button auto type="submit">
+              {t('search')}
+            </Button>
+          </Grid>
+        </Grid.Container>
+      </Form>
       <Container
         fluid
         display="flex"

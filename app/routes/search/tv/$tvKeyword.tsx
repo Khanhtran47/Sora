@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { DataFunctionArgs, json, LoaderFunction } from '@remix-run/node';
-import { useLoaderData, useNavigate, useParams } from '@remix-run/react';
+import { Form, useLoaderData, useNavigate, useParams } from '@remix-run/react';
 import { Input, Grid, Container, Button, Pagination, useInput } from '@nextui-org/react';
 
 import { getSearchTvShows } from '~/services/tmdb/tmdb.server';
 import MediaList from '~/src/components/Media/MediaList';
 import useMediaQuery from '~/hooks/useMediaQuery';
+import { useTranslation } from 'react-i18next';
 
 type LoaderData = {
   searchResults: Awaited<ReturnType<typeof getSearchTvShows>>;
@@ -30,32 +31,39 @@ const SearchRoute = () => {
   const navigate = useNavigate();
   const { tvKeyword } = useParams();
   const { value, bindings } = useInput(tvKeyword || '');
-  const [listName] = React.useState('Search Results');
+  const { t } = useTranslation();
+  const [listName] = React.useState(t('searchResults'));
   const isXs = useMediaQuery(650);
 
   const paginationChangeHandler = (page: number) =>
     navigate(`/search/tv/${tvKeyword}?page=${page}`);
-  const onClickSearch = () => navigate(`/search/tv/${value}`);
+
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    navigate(`/search/tv/${value}`);
+  };
   return (
     <>
-      <Grid.Container gap={1} css={{ padding: '30px 10px' }}>
-        <Grid>
-          <Input
-            {...bindings}
-            clearable
-            bordered
-            initialValue={tvKeyword}
-            color="primary"
-            fullWidth
-            helperText="Input tv name and search"
-          />
-        </Grid>
-        <Grid>
-          <Button auto onClick={onClickSearch}>
-            Search
-          </Button>
-        </Grid>
-      </Grid.Container>
+      <Form onSubmit={onSubmit}>
+        <Grid.Container gap={1} css={{ padding: '30px 10px' }}>
+          <Grid>
+            <Input
+              {...bindings}
+              clearable
+              bordered
+              initialValue={tvKeyword}
+              color="primary"
+              fullWidth
+              helperText={t('searchHelper')}
+            />
+          </Grid>
+          <Grid>
+            <Button auto type="submit">
+              {t('search')}
+            </Button>
+          </Grid>
+        </Grid.Container>
+      </Form>
       <Container
         fluid
         display="flex"

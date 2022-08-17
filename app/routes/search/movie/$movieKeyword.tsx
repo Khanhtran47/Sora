@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DataFunctionArgs, json, LoaderFunction } from '@remix-run/node';
-import { useLoaderData, useNavigate, useParams } from '@remix-run/react';
+import { useLoaderData, useNavigate, useParams, Form } from '@remix-run/react';
 import { Input, Grid, Container, Button, Pagination, useInput } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 
@@ -36,27 +36,34 @@ const SearchRoute = () => {
 
   const paginationChangeHandler = (page: number) =>
     navigate(`/search/movie/${movieKeyword}?page=${page}`);
-  const onClickSearch = () => navigate(`/search/movie/${value}`);
+
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    navigate(`/search/movie/${value}`);
+  };
+
   return (
     <>
-      <Grid.Container gap={1} css={{ padding: '30px 10px' }}>
-        <Grid>
-          <Input
-            {...bindings}
-            clearable
-            bordered
-            initialValue={movieKeyword}
-            color="primary"
-            fullWidth
-            helperText={t('searchHelper')}
-          />
-        </Grid>
-        <Grid>
-          <Button auto onClick={onClickSearch}>
-            {t('search')}
-          </Button>
-        </Grid>
-      </Grid.Container>
+      <Form onSubmit={onSubmit}>
+        <Grid.Container gap={1} css={{ padding: '30px 10px' }}>
+          <Grid>
+            <Input
+              {...bindings}
+              clearable
+              bordered
+              initialValue={movieKeyword}
+              color="primary"
+              fullWidth
+              helperText={t('searchHelper')}
+            />
+          </Grid>
+          <Grid>
+            <Button auto type="submit">
+              {t('search')}
+            </Button>
+          </Grid>
+        </Grid.Container>
+      </Form>
       <Container
         fluid
         display="flex"
