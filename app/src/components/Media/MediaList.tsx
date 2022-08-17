@@ -2,11 +2,7 @@
 import { Grid, Table, Text, Button } from '@nextui-org/react';
 import { Link } from '@remix-run/react';
 import { useState } from 'react';
-import SwiperCore, {
-  Autoplay,
-  Pagination,
-  // Navigation
-} from 'swiper/core';
+import SwiperCore, { Autoplay, Pagination, Navigation } from 'swiper/core';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { useTranslation } from 'react-i18next';
 
@@ -88,11 +84,7 @@ const MediaListTable = ({ items }: { items: IMedia[] }) => (
 );
 
 const MediaListBanner = ({ items }: { items: IMedia[] }) => {
-  SwiperCore.use([
-    Autoplay,
-    Pagination,
-    // Navigation
-  ]);
+  SwiperCore.use([Autoplay, Pagination, Navigation]);
   return (
     <Grid.Container
       gap={1}
@@ -112,8 +104,12 @@ const MediaListBanner = ({ items }: { items: IMedia[] }) => {
           spaceBetween={0}
           slidesPerView={1}
           autoplay={{ delay: 10000 }}
-          pagination
-          // navigation
+          pagination={{
+            type: 'bullets',
+            clickable: true,
+            bulletClass: 'swiper-pagination-bullet !bg-gray-500',
+          }}
+          navigation
         >
           {items.slice(0, 10).map((item, i) => (
             <SwiperSlide key={i}>
