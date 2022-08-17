@@ -43,7 +43,6 @@ const Filter = (props: IFilterProps) => {
   );
 
   const selectedSort = React.useMemo(() => t(Array.from(sort)[0]), [sort, t]);
-  console.log(t(Array.from(sort)[0]));
 
   const setQueryHandler = (_genre = genre, _sort = sort) => {
     let newQuery = '';
