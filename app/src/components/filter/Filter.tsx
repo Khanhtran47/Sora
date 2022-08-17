@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react';
 import { Row, Text, Grid, Button, Dropdown } from '@nextui-org/react';
-import { Link, useLocation } from '@remix-run/react';
+import { useLocation, useNavigate } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 
 interface IFilterProps {
@@ -19,6 +20,7 @@ const Filter = (props: IFilterProps) => {
   const sortItems = mediaType === 'movie' ? sortMovieItems : sortTvItems;
 
   const location = useLocation();
+  const navigate = useNavigate();
   const { t } = useTranslation();
 
   const urlObject = new URL(`http://abc${location.search}`);
@@ -44,35 +46,26 @@ const Filter = (props: IFilterProps) => {
 
   const selectedSort = React.useMemo(() => t(Array.from(sort)[0]), [sort, t]);
 
-  const setQueryHandler = (_genre = genre, _sort = sort) => {
-    let newQuery = '';
-    if (_genre.size <= 1) {
-      newQuery = `?sort_by=${Array.from(_sort)[0]}`;
-    } else {
-      newQuery = `?with_genres=${Array.from(_genre).slice(1).join(',')}&sort_by=${
-        Array.from(_sort)[0]
-      }`;
-    }
+  const setQueryHandler = React.useCallback(
+    (_genre = genre, _sort = sort) => {
+      let newQuery = '';
+      if (_genre.size <= 1) {
+        newQuery = `?sort_by=${Array.from(_sort)[0]}`;
+      } else {
+        newQuery = `?with_genres=${Array.from(_genre).slice(1).join(',')}&sort_by=${
+          Array.from(_sort)[0]
+        }`;
+      }
 
-    if (mediaType === 'tv' && Array.from(_sort)[0] === 'original_title') newQuery += '.asc';
-    else newQuery += '.desc';
+      if (mediaType === 'tv' && Array.from(_sort)[0] === 'original_title') newQuery += '.asc';
+      else newQuery += '.desc';
 
-    setQuery(newQuery);
-  };
+      setQuery(newQuery);
+    },
+    [genre, sort, mediaType],
+  );
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const selectGenreHandler = (keys: any) => {
-    setGenre(keys);
-    setQueryHandler(keys);
-  };
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const selectSortByHandler = (keys: any) => {
-    setSort(keys);
-    setQueryHandler(undefined, keys);
-  };
-
-  React.useEffect(() => setQueryHandler());
+  React.useEffect(() => setQueryHandler(genre, sort), [genre, sort, setQueryHandler]);
 
   return (
     <Grid.Container
@@ -98,7 +91,7 @@ const Filter = (props: IFilterProps) => {
                 disallowEmptySelection
                 selectionMode="multiple"
                 selectedKeys={genre}
-                onSelectionChange={selectGenreHandler}
+                onSelectionChange={(key: any) => setGenre(key)}
               >
                 {Object.keys(genres).map((id) => (
                   <Dropdown.Item key={id}>{genres[id]}</Dropdown.Item>
@@ -122,7 +115,7 @@ const Filter = (props: IFilterProps) => {
               disallowEmptySelection
               selectionMode="single"
               selectedKeys={sort}
-              onSelectionChange={selectSortByHandler}
+              onSelectionChange={(keys: any) => setSort(keys)}
             >
               {sortItems.map((item) => (
                 <Dropdown.Item key={item}>{t(item)}</Dropdown.Item>
@@ -138,9 +131,9 @@ const Filter = (props: IFilterProps) => {
           </Text>
         </Row>
         <Row css={{ margin: '6px' }}>
-          <Link to={query}>
-            <Button auto>{t('letsGo')}</Button>
-          </Link>
+          <Button auto onClick={() => navigate(query)}>
+            {t('letsGo')}
+          </Button>
         </Row>
       </Grid>
       <Grid>
