@@ -100,9 +100,11 @@ const BannerItem = ({ item }: { item: IMedia }) => {
                     },
                   }}
                 >
-                  {overview}
+                  {overview && overview.length > 400
+                    ? `${overview?.substring(0, 400)}...`
+                    : overview}
                 </Text>
-                <Row>
+                <Row wrap="wrap">
                   <Button
                     auto
                     shadow

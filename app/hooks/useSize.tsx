@@ -12,6 +12,11 @@ export interface IUseSize {
   left: number;
 }
 
+/**
+ * It returns an object with the width and height of the element that is passed to it
+ * @param ref - The ref of the element you want to observe.
+ * @returns The size of the element.
+ */
 export default function useSize(ref) {
   const [size, setSize] = useState({});
 
