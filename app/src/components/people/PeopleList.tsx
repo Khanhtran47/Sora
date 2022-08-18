@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import { Grid, Table, Text, Button } from '@nextui-org/react';
 import { Link } from '@remix-run/react';
 import { useState } from 'react';

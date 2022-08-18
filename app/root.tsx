@@ -16,6 +16,8 @@ import {
 import { NextUIProvider, Text, Image, globalCss, createTheme, Link } from '@nextui-org/react';
 import { ThemeProvider as RemixThemesProvider } from 'next-themes';
 import swiperStyles from 'swiper/swiper.min.css';
+import swiperPaginationStyles from 'swiper/components/pagination/pagination.min.css';
+import swiperNavigationStyles from 'swiper/components/navigation/navigation.min.css';
 import type { User } from '@supabase/supabase-js';
 import { AnimatePresence } from 'framer-motion';
 import NProgress from 'nprogress';
@@ -108,6 +110,14 @@ export const links: LinksFunction = () => [
   {
     rel: 'stylesheet',
     href: swiperStyles,
+  },
+  {
+    rel: 'stylesheet',
+    href: swiperPaginationStyles,
+  },
+  {
+    rel: 'stylesheet',
+    href: swiperNavigationStyles,
   },
   {
     rel: 'stylesheet',

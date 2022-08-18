@@ -95,7 +95,7 @@ const Overview = () => {
             >
               <strong>Status</strong>
               <br />
-              {detail.status}
+              {detail?.status}
             </Text>
           </Row>
           <Spacer y={1} />
@@ -122,7 +122,7 @@ const Overview = () => {
                 detail.networks.map((network, index) => (
                   <Image
                     key={`network-item-${index}`}
-                    src={TMDB.logoUrl(network?.logo_path || '', 'w185')}
+                    src={TMDB.logoUrl(network?.logo_path || '', 'w154')}
                     alt="Network Image"
                     objectFit="cover"
                   />
@@ -149,7 +149,7 @@ const Overview = () => {
             >
               <strong>Type</strong>
               <br />
-              {detail.type}
+              {detail?.type}
             </Text>
           </Row>
           <Spacer y={1} />
@@ -172,7 +172,7 @@ const Overview = () => {
             >
               <strong>Original Language</strong>
               <br />
-              {detail.original_language}
+              {detail?.original_language}
             </Text>
           </Row>
           <Spacer y={1} />
@@ -196,7 +196,7 @@ const Overview = () => {
               },
             }}
           >
-            {detail.overview}
+            {detail?.overview}
           </Text>
         </Row>
         <Spacer y={1} />
@@ -284,7 +284,7 @@ const Overview = () => {
         <Spacer y={1} />
         <Divider x={1} />
         <Spacer y={1} />
-        {credits?.cast.length > 0 && (
+        {credits?.cast && credits?.cast.length > 0 && (
           <PeopleList
             listType="slider-card"
             items={credits?.cast.slice(0, 9)}
@@ -310,7 +310,7 @@ const Overview = () => {
             listName="Similar Tv-Shows"
             showMoreList
             onClickViewMore={() => onClickViewMore('similar')}
-            cardType="similar"
+            cardType="similar-tv"
           />
         )}
         <Spacer y={1} />

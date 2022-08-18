@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { Link, NavLink } from '@remix-run/react';
 import {
   Link as NextLink,
@@ -19,6 +19,7 @@ import { useTranslation } from 'react-i18next';
 import { IMovieDetail, ITvShowDetail } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
 import useMediaQuery from '~/hooks/useMediaQuery';
+import useSize, { IUseSize } from '~/hooks/useSize';
 
 interface IMediaDetail {
   type: 'movie' | 'tv';
@@ -38,12 +39,9 @@ const MediaDetail = (props: IMediaDetail) => {
   const { t } = useTranslation();
   const { type, item } = props;
   const { theme } = useTheme();
-  const [height, setHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
+  const size: IUseSize = useSize(ref);
 
-  useEffect(() => {
-    ref?.current && setHeight(ref.current.clientHeight);
-  }, [ref?.current?.clientHeight]);
   const isXs = useMediaQuery(425, 'max');
   const isSm = useMediaQuery(650, 'max');
   const isMd = useMediaQuery(960, 'max');
@@ -54,8 +52,8 @@ const MediaDetail = (props: IMediaDetail) => {
   const title = (item as IMovieDetail)?.title || (item as ITvShowDetail)?.name || '';
   const runtime =
     Number((item as IMovieDetail)?.runtime) || Number((item as ITvShowDetail)?.episode_run_time);
-  const posterPath = TMDB?.posterUrl(item?.poster_path || '', 'w500');
-  const backdropPath = TMDB?.backdropUrl(item?.backdrop_path || '', 'original');
+  const posterPath = TMDB?.posterUrl(item?.poster_path || '', 'w342');
+  const backdropPath = TMDB?.backdropUrl(item?.backdrop_path || '', 'w780');
   const releaseYear = new Date(
     (item as IMovieDetail)?.release_date || (item as ITvShowDetail)?.first_air_date || '',
   ).getFullYear();
@@ -72,7 +70,7 @@ const MediaDetail = (props: IMediaDetail) => {
         display: 'flex',
         flexFlow: 'column',
         width: '100vw',
-        height: `${height}px`,
+        height: `calc(${JSON.stringify(size?.height)}px + 1rem)`,
         borderWidth: 0,
       }}
     >
@@ -105,6 +103,7 @@ const MediaDetail = (props: IMediaDetail) => {
                   marginTop: '10vh',
                   borderRadius: '24px',
                 }}
+                loading="lazy"
               />
               {(status === 'Released' || status === 'Ended' || status === 'Returning Series') &&
                 !isSm && (
@@ -171,6 +170,7 @@ const MediaDetail = (props: IMediaDetail) => {
                       marginTop: '2rem',
                       borderRadius: '24px',
                     }}
+                    loading="lazy"
                   />
                 </Row>
                 <Row>
@@ -383,6 +383,7 @@ const MediaDetail = (props: IMediaDetail) => {
             opacity: 0.3,
           }}
           alt="Card example background"
+          loading="lazy"
         />
       </Card.Body>
     </Card>
