@@ -310,7 +310,7 @@ const Overview = () => {
             listName="Similar Tv-Shows"
             showMoreList
             onClickViewMore={() => onClickViewMore('similar')}
-            cardType="similar"
+            cardType="similar-tv"
           />
         )}
         <Spacer y={1} />

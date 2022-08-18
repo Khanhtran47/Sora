@@ -29,7 +29,7 @@ interface IMediaListProps {
   mediaType?: 'movie' | 'tv';
   showMoreList?: boolean;
   onClickViewMore?: () => void;
-  cardType?: 'media' | 'similar';
+  cardType?: 'media' | 'similar-movie' | 'similar-tv';
 }
 
 const MediaListGrid = ({ items }: { items: IMedia[] }) => {
@@ -122,7 +122,13 @@ const MediaListBanner = ({ items }: { items: IMedia[] }) => {
   );
 };
 
-const MediaListCard = ({ items, type }: { items: IMedia[]; type?: 'media' | 'similar' }) => {
+const MediaListCard = ({
+  items,
+  type,
+}: {
+  items: IMedia[];
+  type?: 'media' | 'similar-tv' | 'similar-movie';
+}) => {
   const isXs = useMediaQuery(650);
   const isSm = useMediaQuery(960);
   const isMd = useMediaQuery(1280);
@@ -140,7 +146,9 @@ const MediaListCard = ({ items, type }: { items: IMedia[]; type?: 'media' | 'sim
       {items?.length > 0 && (
         <Swiper grabCursor spaceBetween={10} slidesPerView="auto">
           {items.map((item, i) => {
-            const href = (item.mediaType === 'movie' ? '/movies/' : '/tv-shows/') + item.id;
+            const href =
+              (item.mediaType === 'movie' || type === 'similar-movie' ? '/movies/' : '/tv-shows/') +
+              item.id;
             return (
               <SwiperSlide key={i} style={type === 'media' ? mediaWidth : similarWidth}>
                 <Link to={href}>

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { Link, NavLink } from '@remix-run/react';
 import {
   Link as NextLink,
@@ -19,6 +19,7 @@ import { useTranslation } from 'react-i18next';
 import { IMovieDetail, ITvShowDetail } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
 import useMediaQuery from '~/hooks/useMediaQuery';
+import useSize, { IUseSize } from '~/hooks/useSize';
 
 interface IMediaDetail {
   type: 'movie' | 'tv';
@@ -38,12 +39,9 @@ const MediaDetail = (props: IMediaDetail) => {
   const { t } = useTranslation();
   const { type, item } = props;
   const { theme } = useTheme();
-  const [height, setHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
+  const size: IUseSize = useSize(ref);
 
-  useEffect(() => {
-    ref?.current && setHeight(ref.current.clientHeight);
-  }, [ref?.current?.clientHeight]);
   const isXs = useMediaQuery(425, 'max');
   const isSm = useMediaQuery(650, 'max');
   const isMd = useMediaQuery(960, 'max');
@@ -72,7 +70,7 @@ const MediaDetail = (props: IMediaDetail) => {
         display: 'flex',
         flexFlow: 'column',
         width: '100vw',
-        height: `${height}px`,
+        height: `calc(${JSON.stringify(size?.height)}px + 1rem)`,
         borderWidth: 0,
       }}
     >
