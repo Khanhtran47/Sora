@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { LoaderFunction, json } from '@remix-run/node';
-import { useCatch, useLoaderData, Outlet } from '@remix-run/react';
+import { useCatch, useLoaderData, Outlet, Link } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
 
 import { getMovieDetail } from '~/services/tmdb/tmdb.server';
@@ -15,8 +15,8 @@ type LoaderData = {
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const locale = await i18next.getLocale(request);
-  const { id } = params;
-  const mid = Number(id);
+  const { movieId } = params;
+  const mid = Number(movieId);
 
   if (!mid) throw new Response('Not Found', { status: 404 });
 
@@ -25,6 +25,10 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   if (!detail) throw new Response('Not Found', { status: 404 });
 
   return json<LoaderData>({ detail });
+};
+
+export const handle = {
+  breadcrumb: (match) => <Link to={`/movies/${match.params.movieId}`}>{match.params.movieId}</Link>,
 };
 
 const MovieDetail = () => {

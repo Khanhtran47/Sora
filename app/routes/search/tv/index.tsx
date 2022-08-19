@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DataFunctionArgs, json, LoaderFunction } from '@remix-run/node';
-import { useLoaderData, useNavigate, Form } from '@remix-run/react';
+import { useLoaderData, useNavigate, Form, Link } from '@remix-run/react';
 import { Input, Grid, Container, Button, Pagination, useInput } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 
@@ -22,6 +22,10 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
   return json<LoaderData>({
     todayTrending: await getTrending('all', 'day', locale, page),
   });
+};
+
+export const handle = {
+  breadcrumb: () => <Link to="/search/tv">Search Tv</Link>,
 };
 
 const SearchRoute = () => {

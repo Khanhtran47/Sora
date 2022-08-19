@@ -12,6 +12,8 @@ import {
   useOutlet,
   useFetchers,
   useTransition,
+  useMatches,
+  RouteMatch,
 } from '@remix-run/react';
 import { NextUIProvider, Text, Image, globalCss, createTheme, Link } from '@nextui-org/react';
 import { ThemeProvider as RemixThemesProvider } from 'next-themes';
@@ -25,7 +27,7 @@ import nProgressStyles from 'nprogress/nprogress.css';
 import { useChangeLanguage } from 'remix-i18next';
 import { useTranslation } from 'react-i18next';
 
-import Layout from '~/src/components/Layout';
+import Layout from '~/src/components/layout/Layout';
 import styles from '~/styles/app.css';
 import { getUser } from './services/auth.server';
 import { getSession } from './services/sessions.server';
@@ -172,13 +174,14 @@ export const loader: LoaderFunction = async ({ request }) => {
 const App = () => {
   globalStyles();
   const outlet = useOutlet();
-  const { user, locale } = useLoaderData<LoaderDataType>();
+  const fetchers = useFetchers();
   const transition = useTransition();
+  const matches: RouteMatch[] = useMatches();
+  console.log('🚀 ~ file: root.tsx ~ line 180 ~ App ~ matches', matches);
+  const { user, locale } = useLoaderData<LoaderDataType>();
 
   const { i18n } = useTranslation();
   useChangeLanguage(locale);
-
-  const fetchers = useFetchers();
 
   /**
    * This gets the state of every fetcher active on the app and combine it with
@@ -212,7 +215,7 @@ const App = () => {
         }}
       >
         <NextUIProvider>
-          <Layout user={user}>
+          <Layout user={user} matches={matches}>
             <AnimatePresence exitBeforeEnter initial={false}>
               {outlet}
             </AnimatePresence>

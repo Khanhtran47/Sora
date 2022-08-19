@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { MetaFunction, LoaderFunction, json, DataFunctionArgs } from '@remix-run/node';
-import { useLoaderData, useLocation, useNavigate, useFetcher } from '@remix-run/react';
+import { useLoaderData, useLocation, useNavigate, useFetcher, Link } from '@remix-run/react';
 import { Container, Modal } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -24,6 +24,7 @@ export const meta: MetaFunction = () => ({
 });
 
 export const handle = {
+  breadcrumb: () => <Link to="/">Home</Link>,
   i18n: 'home',
 };
 

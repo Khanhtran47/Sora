@@ -1,21 +1,23 @@
 /* eslint-disable @typescript-eslint/indent */
 import * as React from 'react';
 import { Container } from '@nextui-org/react';
-import { useLocation } from '@remix-run/react';
+import { useLocation, RouteMatch } from '@remix-run/react';
 import type { User } from '@supabase/supabase-js';
 
 /* Components */
 import Header from './Header';
 import LeftDrawer from './LeftDrawer';
-import Copyright from './Copyright';
+import Copyright from '../Copyright';
 import BottomNav from './BottomNav';
+import BreadCrumb from './BreadCrumb';
 
 interface ILayout {
   children: React.ReactNode;
   user?: User;
+  matches: RouteMatch[];
 }
 
-const Layout = ({ children, user }: ILayout) => {
+const Layout = ({ children, user, matches }: ILayout) => {
   const location = useLocation();
   const [open, setOpen] = React.useState(false);
 
@@ -42,6 +44,7 @@ const Layout = ({ children, user }: ILayout) => {
         user={user ?? undefined}
       />
       <LeftDrawer open={open} handleDrawerClose={handleDrawerClose} />
+      <BreadCrumb matches={matches} />
       <Container
         className="!max-w-full"
         as="main"
@@ -74,7 +77,6 @@ const Layout = ({ children, user }: ILayout) => {
       </Container>
       <Copyright />
       <BottomNav />
-      {/* TODO add a search button (fixed position) to the right drawer for searching */}
     </Container>
   );
 };

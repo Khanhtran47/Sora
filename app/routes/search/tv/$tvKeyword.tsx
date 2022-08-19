@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DataFunctionArgs, json, LoaderFunction } from '@remix-run/node';
-import { Form, useLoaderData, useNavigate, useParams } from '@remix-run/react';
+import { Form, useLoaderData, useNavigate, useParams, Link } from '@remix-run/react';
 import { Input, Grid, Container, Button, Pagination, useInput } from '@nextui-org/react';
 
 import { getSearchTvShows } from '~/services/tmdb/tmdb.server';
@@ -24,6 +24,12 @@ export const loader: LoaderFunction = async ({ request, params }: DataFunctionAr
   return json<LoaderData>({
     searchResults: await getSearchTvShows(keyword, page),
   });
+};
+
+export const handle = {
+  breadcrumb: (match) => (
+    <Link to={`/search/tv/${match.params.tvKeyword}`}>{match.params.tvKeyword}</Link>
+  ),
 };
 
 const SearchRoute = () => {

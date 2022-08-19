@@ -21,13 +21,13 @@ import { useTranslation } from 'react-i18next';
 /* Components */
 
 /* Assets */
-import kleeCute from '../assets/images/klee.jpg';
-import SunIcon from '../assets/icons/SunIcon.js';
-import MoonIcon from '../assets/icons/MoonIcon.js';
-import MenuIcon from '../assets/icons/MenuIcon.js';
-import ArrowLeftIcon from '../assets/icons/ArrowLeftIcon.js';
-import SearchIcon from '../assets/icons/SearchIcon.js';
-import GlobalIcon from '../assets/icons/GlobalIcon.js';
+import kleeCute from '../../assets/images/klee.jpg';
+import SunIcon from '../../assets/icons/SunIcon.js';
+import MoonIcon from '../../assets/icons/MoonIcon.js';
+import MenuIcon from '../../assets/icons/MenuIcon.js';
+import ArrowLeftIcon from '../../assets/icons/ArrowLeftIcon.js';
+import SearchIcon from '../../assets/icons/SearchIcon.js';
+import GlobalIcon from '../../assets/icons/GlobalIcon.js';
 
 interface IHeaderProps {
   open: boolean;
@@ -43,7 +43,7 @@ export const handle = {
 const pages = [
   {
     pageName: 'movies',
-    pageLink: 'movies/discover',
+    pageLink: 'movies',
     pageDropdown: [
       { pageName: 'popular', pageLink: 'movies/popular' },
       { pageName: 'topRated', pageLink: 'movies/top-rated' },
@@ -52,7 +52,7 @@ const pages = [
   },
   {
     pageName: 'tv',
-    pageLink: 'tv-shows/discover',
+    pageLink: 'tv-shows',
     pageDropdown: [
       { pageName: 'popular', pageLink: 'tv-shows/popular' },
       { pageName: 'topRated', pageLink: 'tv-shows/top-rated' },
@@ -61,7 +61,7 @@ const pages = [
   },
   {
     pageName: 'people',
-    pageLink: 'people/popular',
+    pageLink: 'people',
     pageDescription: 'description',
   },
 ];
@@ -75,7 +75,6 @@ const searchDropdown = [
 const languages = ['en', 'fr', 'vi'];
 
 const AppBar = styled(Grid.Container, {
-  // TODO: add transition on opening/closing drawer
   zIndex: 999,
   position: 'fixed',
 });
@@ -152,7 +151,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       wrap="nowrap"
       css={{
         width: '100%',
-        height: 80,
+        height: 64,
         padding: 0,
         margin: 0,
       }}

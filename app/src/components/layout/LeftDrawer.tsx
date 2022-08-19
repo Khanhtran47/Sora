@@ -15,13 +15,13 @@ import { useTheme as useRemixTheme } from 'next-themes';
 import { useTranslation } from 'react-i18next';
 
 /* icons */
-import TrendingIcon from '../assets/icons/TrendingIcon.js';
-import RecommendIcon from '../assets/icons/RecommendIcon.js';
-import NewReleaseIcon from '../assets/icons/NewReleaseIcon.js';
-import TopRatedIcon from '../assets/icons/TopRatedIcon.js';
-import HistoryIcon from '../assets/icons/HistoryIcon.js';
-import SunIcon from '../assets/icons/SunIcon.js';
-import MoonIcon from '../assets/icons/MoonIcon.js';
+import TrendingIcon from '../../assets/icons/TrendingIcon.js';
+import RecommendIcon from '../../assets/icons/RecommendIcon.js';
+import NewReleaseIcon from '../../assets/icons/NewReleaseIcon.js';
+import TopRatedIcon from '../../assets/icons/TopRatedIcon.js';
+import HistoryIcon from '../../assets/icons/HistoryIcon.js';
+import SunIcon from '../../assets/icons/SunIcon.js';
+import MoonIcon from '../../assets/icons/MoonIcon.js';
 
 const drawerWidth = 240;
 
@@ -63,7 +63,7 @@ const Drawer = styled(Container, {
   whiteSpace: 'nowrap',
   boxSizing: 'border-box',
   margin: 0,
-  height: 'calc(100% - 80px)',
+  height: 'calc(100% - 64px)',
   position: 'fixed',
   zIndex: 990,
 });
@@ -151,7 +151,7 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
         }),
         paddingLeft: 0,
         paddingRight: 0,
-        marginTop: '80px',
+        marginTop: '64px',
       }}
       className={`backdrop-blur-md px-0 border-r ${
         isDark ? 'bg-black/70 border-r-slate-700' : 'bg-white/70 border-r-slate-300'

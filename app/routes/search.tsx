@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { NavLink, Outlet } from '@remix-run/react';
+import { NavLink, Outlet, Link } from '@remix-run/react';
 import { Link as NextLink, Text, useTheme, Grid, Spacer } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 
@@ -8,6 +8,10 @@ const searchPage = [
   { pageName: 'searchTv', pageLink: 'tv' },
   { pageName: 'searchPeople', pageLink: 'people' },
 ];
+
+export const handle = {
+  breadcrumb: () => <Link to="/search">Search</Link>,
+};
 
 const SearchPage = () => {
   const { theme } = useTheme();

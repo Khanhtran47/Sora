@@ -4,15 +4,15 @@ import { Link, Text, Container, useTheme } from '@nextui-org/react';
 const pages = [
   {
     pageName: 'Movies',
-    pageLink: 'movies/discover',
+    pageLink: 'movies',
   },
   {
     pageName: 'TV Shows',
-    pageLink: 'tv-shows/discover',
+    pageLink: 'tv-shows',
   },
   {
     pageName: 'People',
-    pageLink: 'people/popular',
+    pageLink: 'people',
   },
 ];
 

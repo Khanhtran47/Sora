@@ -5,7 +5,7 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
 import { MetaFunction, LoaderFunction, json } from '@remix-run/node';
-import { useCatch, useLoaderData, useParams } from '@remix-run/react';
+import { useCatch, useLoaderData, useParams, Link } from '@remix-run/react';
 import { Container, Row, Radio, Dropdown, Spacer } from '@nextui-org/react';
 
 import { getTvShowDetail, getTvShowIMDBId } from '~/services/tmdb/tmdb.server';
@@ -24,8 +24,8 @@ export const meta: MetaFunction = () => ({
 });
 
 export const loader: LoaderFunction = async ({ params }) => {
-  const { id } = params;
-  const tid = Number(id);
+  const { watchTvId } = params;
+  const tid = Number(watchTvId);
 
   if (!tid) throw new Response('Not Found', { status: 404 });
   const detail = await getTvShowDetail(tid);
@@ -39,11 +39,19 @@ export const loader: LoaderFunction = async ({ params }) => {
   });
 };
 
+export const handle = {
+  breadcrumb: (match) => (
+    <Link to={`/movies/watch/${match.params.watchTvId}`}>{match.params.watchTvId}</Link>
+  ),
+};
+
 const TvWatch = () => {
   const { detail, imdbId } = useLoaderData<LoaderData>();
-  const { id } = useParams();
+  const { watchTvId } = useParams();
   const [player, setPlayer] = React.useState<string>('1');
-  const [source, setSource] = React.useState<string>(Player.tvPlayerUrl(Number(id), 1, 1, 1));
+  const [source, setSource] = React.useState<string>(
+    Player.tvPlayerUrl(Number(watchTvId), 1, 1, 1),
+  );
   const [season, setSeason] = React.useState(new Set([detail?.seasons[1]?.name]));
   const [listEpisode, setListEpisode] = React.useState<number[]>([]);
   const [episode, setEpisode] = React.useState(new Set(['1']));
@@ -68,13 +76,13 @@ const TvWatch = () => {
       ? setSource(Player.tvPlayerUrl(imdbId, Number(player), seasonInfo?.season_number || 1))
       : setSource(
           Player.tvPlayerUrl(
-            Number(id),
+            Number(watchTvId),
             Number(player),
             seasonInfo?.season_number || 1,
             Number(episode.values().next().value),
           ),
         );
-  }, [player, imdbId, id, season, episode]);
+  }, [player, imdbId, watchTvId, season, episode]);
   return (
     <Container fluid>
       <Row>
