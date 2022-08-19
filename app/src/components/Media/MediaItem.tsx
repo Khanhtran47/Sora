@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-expressions */
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import * as React from 'react';
 import { Link } from '@remix-run/react';
 import {
@@ -21,9 +23,16 @@ import { IMedia } from '~/services/tmdb/tmdb.types';
 interface IMediaItem {
   type: 'banner' | 'card';
   item: IMedia;
+  handlerWatchTrailer?: (id: number, type: 'movie' | 'tv') => void;
 }
 
-const BannerItem = ({ item }: { item: IMedia }) => {
+const BannerItem = ({
+  item,
+  handler,
+}: {
+  item: IMedia;
+  handler?: (id: number, type: 'movie' | 'tv') => void;
+}) => {
   const { isDark } = useTheme();
   const { t } = useTranslation();
 
@@ -139,6 +148,9 @@ const BannerItem = ({ item }: { item: IMedia }) => {
                     bordered
                     css={{
                       marginTop: '5vh',
+                    }}
+                    onClick={() => {
+                      handler && handler(Number(id), mediaType);
                     }}
                   >
                     <Text
@@ -398,10 +410,10 @@ const CardItem = ({ item }: { item: IMedia }) => {
 };
 
 const MediaItem = (props: IMediaItem) => {
-  const { type, item } = props;
+  const { type, item, handlerWatchTrailer } = props;
 
   if (type === 'banner') {
-    return <BannerItem item={item} />;
+    return <BannerItem item={item} handler={handlerWatchTrailer} />;
   }
   return <CardItem item={item} />;
 };

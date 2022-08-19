@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { MetaFunction, LoaderFunction, json, DataFunctionArgs } from '@remix-run/node';
-import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
-import { Container } from '@nextui-org/react';
+import { useLoaderData, useLocation, useNavigate, useFetcher } from '@remix-run/react';
+import { Container, Modal } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import YouTube, { YouTubeProps } from 'react-youtube';
 
 import i18next from '~/i18n/i18next.server';
 import {
@@ -12,6 +13,7 @@ import {
   getListTvShows,
   getListPeople,
 } from '~/services/tmdb/tmdb.server';
+import useWindowSize from '~/hooks/useWindowSize';
 import MediaList from '~/src/components/Media/MediaList';
 import PeopleList from '~/src/components/people/PeopleList';
 
@@ -23,6 +25,19 @@ export const meta: MetaFunction = () => ({
 
 export const handle = {
   i18n: 'home',
+};
+
+type Trailer = {
+  iso_639_1?: string;
+  iso_3166_1?: string;
+  name?: string;
+  key?: string;
+  site?: string;
+  size?: number;
+  type?: string;
+  official?: boolean;
+  published_at?: string;
+  id?: string;
 };
 
 type LoaderData = {
@@ -50,6 +65,42 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
 // https://remix.run/guides/routing#index-routes
 const Index = () => {
   const { movies, shows, people, todayTrending } = useLoaderData();
+  const fetcher = useFetcher();
+  const { width } = useWindowSize();
+  const [visible, setVisible] = React.useState(false);
+  const [trailer, setTrailer] = React.useState<Trailer>({});
+  const onPlayerReady: YouTubeProps['onReady'] = (event) => {
+    // access to player in all event handlers via event.target
+    event.target.pauseVideo();
+  };
+
+  const opts: YouTubeProps['opts'] = {
+    height: `${width && width < 720 ? width / 1.5 : 480}`,
+    width: `${width && width < 720 ? width : 720}`,
+    playerVars: {
+      // https://developers.google.com/youtube/player_parameters
+      autoplay: 1,
+      modestbranding: 1,
+      controls: 1,
+      mute: 1,
+    },
+  };
+
+  const Handler = (id: number, type: 'movie' | 'tv') => {
+    setVisible(true);
+    fetcher.load(`/${type === 'movie' ? 'movies' : 'tv-shows'}/${id}/videos`);
+  };
+  const closeHandler = () => {
+    setVisible(false);
+    setTrailer({});
+  };
+  React.useEffect(() => {
+    if (fetcher.data && fetcher.data.videos) {
+      const { results } = fetcher.data.videos;
+      const officialTrailer = results.find((result: Trailer) => result.name === 'Official Trailer');
+      setTrailer(officialTrailer);
+    }
+  }, [fetcher.data]);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -68,7 +119,7 @@ const Index = () => {
       exit={{ y: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <MediaList listType="slider-banner" items={trending} />
+      <MediaList listType="slider-banner" items={trending} handlerWatchTrailer={Handler} />
       <Container
         fluid
         display="flex"
@@ -141,6 +192,24 @@ const Index = () => {
           />
         )}
       </Container>
+
+      <Modal
+        closeButton
+        blur
+        aria-labelledby="modal-title"
+        open={visible}
+        onClose={closeHandler}
+        className="!max-w-fit"
+        noPadding
+        autoMargin={false}
+        width={width && width < 720 ? `${width}px` : '720px'}
+      >
+        <Modal.Body>
+          {trailer && trailer.key && (
+            <YouTube videoId={trailer.key} opts={opts} onReady={onPlayerReady} />
+          )}
+        </Modal.Body>
+      </Modal>
     </motion.main>
   );
 };

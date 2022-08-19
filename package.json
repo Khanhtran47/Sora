@@ -35,8 +35,10 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-i18next": "^11.18.4",
+    "react-youtube": "^9.0.3",
     "remix": "1.6.5",
     "remix-i18next": "^4.1.1",
+    "remix-utils": "^3.3.0",
     "swiper": "6.8.4",
     "tailwindcss": "^3.0.24",
     "tinycolor2": "^1.4.2"
