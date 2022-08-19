@@ -30,6 +30,7 @@ interface IMediaListProps {
   showMoreList?: boolean;
   onClickViewMore?: () => void;
   cardType?: 'media' | 'similar-movie' | 'similar-tv';
+  handlerWatchTrailer?: (id: number, type: 'movie' | 'tv') => void;
 }
 
 const MediaListGrid = ({ items }: { items: IMedia[] }) => {
@@ -83,7 +84,13 @@ const MediaListTable = ({ items }: { items: IMedia[] }) => (
   </Table>
 );
 
-const MediaListBanner = ({ items }: { items: IMedia[] }) => {
+const MediaListBanner = ({
+  items,
+  handlerWatchTrailer,
+}: {
+  items: IMedia[];
+  handlerWatchTrailer?: (id: number, type: 'movie' | 'tv') => void;
+}) => {
   SwiperCore.use([Autoplay, Pagination, Navigation]);
   return (
     <Grid.Container
@@ -103,7 +110,7 @@ const MediaListBanner = ({ items }: { items: IMedia[] }) => {
           grabCursor
           spaceBetween={0}
           slidesPerView={1}
-          autoplay={{ delay: 10000 }}
+          autoplay={{ delay: 18000 }}
           pagination={{
             type: 'bullets',
             clickable: true,
@@ -113,7 +120,7 @@ const MediaListBanner = ({ items }: { items: IMedia[] }) => {
         >
           {items.slice(0, 10).map((item, i) => (
             <SwiperSlide key={i}>
-              <MediaItem type="banner" item={item} />
+              <MediaItem type="banner" item={item} handlerWatchTrailer={handlerWatchTrailer} />
             </SwiperSlide>
           ))}
         </Swiper>
@@ -174,6 +181,7 @@ const MediaList = (props: IMediaListProps) => {
     showMoreList,
     onClickViewMore,
     cardType,
+    handlerWatchTrailer,
   } = props;
   const [displayType, setDisplayType] = useState<string>(listType as string);
   const { t } = useTranslation();
@@ -188,7 +196,7 @@ const MediaList = (props: IMediaListProps) => {
       list = <MediaListTable items={items} />;
       break;
     case 'slider-banner':
-      list = <MediaListBanner items={items} />;
+      list = <MediaListBanner items={items} handlerWatchTrailer={handlerWatchTrailer} />;
       break;
     case 'slider-card':
       list = <MediaListCard items={items} type={cardType || 'media'} />;
