@@ -3,7 +3,7 @@ import { LoaderFunction, json } from '@remix-run/node';
 import { useLoaderData, useNavigate } from '@remix-run/react';
 import { Text, Row, Col, Spacer, Divider, Image } from '@nextui-org/react';
 import { getTvShowDetail, getSimilar, getVideos, getCredits } from '~/services/tmdb/tmdb.server';
-import MediaList from '~/src/components/Media/MediaList';
+import MediaList from '~/src/components/media/MediaList';
 import PeopleList from '~/src/components/people/PeopleList';
 import TMDB from '~/utils/media';
 import useMediaQuery from '~/hooks/useMediaQuery';
@@ -62,7 +62,7 @@ const Overview = () => {
       justify="center"
       css={{
         marginTop: '0.75rem',
-        padding: 0,
+        padding: '0 0.75rem',
         '@xs': {
           padding: '0 3vw',
         },
@@ -76,7 +76,7 @@ const Overview = () => {
     >
       {!isSm && (
         <Col span={4}>
-          <Row justify="center">
+          <Row justify="center" fluid>
             <Text
               size={12}
               css={{
@@ -282,7 +282,7 @@ const Overview = () => {
           )}
         </Row>
         <Spacer y={1} />
-        <Divider x={1} />
+        <Divider x={1} css={{ m: 0 }} />
         <Spacer y={1} />
         {credits?.cast && credits?.cast.length > 0 && (
           <PeopleList
@@ -295,12 +295,12 @@ const Overview = () => {
           />
         )}
         <Spacer y={1} />
-        <Divider x={1} />
+        <Divider x={1} css={{ m: 0 }} />
         <Spacer y={1} />
         {/*
           TODO: Videos
           <Spacer y={1} />
-          <Divider x={1} />
+          <Divider x={1}  css={{ m: 0 }} />
           <Spacer y={1} />
         */}
         {similar.items && similar.items.length > 0 && (
@@ -314,7 +314,7 @@ const Overview = () => {
           />
         )}
         <Spacer y={1} />
-        <Divider x={1} />
+        <Divider x={1} css={{ m: 0 }} />
         <Spacer y={1} />
       </Col>
     </Row>

@@ -7,7 +7,7 @@ import type { User } from '@supabase/supabase-js';
 /* Components */
 import Header from './Header';
 import LeftDrawer from './LeftDrawer';
-import Copyright from '../Copyright';
+import Copyright from './Copyright';
 import BottomNav from './BottomNav';
 import BreadCrumb from './BreadCrumb';
 
@@ -55,7 +55,7 @@ const Layout = ({ children, user, matches }: ILayout) => {
           height: 'fit-content',
           ...(location.pathname === '/' || location.pathname.split('/')[2]?.match(/^\d+$/)
             ? {
-                paddingTop: '2px',
+                paddingTop: '8px',
                 paddingLeft: 0,
                 paddingRight: 0,
                 '@xsMax': {
@@ -63,7 +63,7 @@ const Layout = ({ children, user, matches }: ILayout) => {
                 },
               }
             : {
-                paddingTop: '94px',
+                paddingTop: '100px',
                 paddingLeft: '88px',
                 paddingRight: 0,
                 '@xsMax': {

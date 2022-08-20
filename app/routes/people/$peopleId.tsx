@@ -1,8 +1,8 @@
-import { useParams, Link } from '@remix-run/react';
+import { useParams, Link, RouteMatch } from '@remix-run/react';
 import { Container, Text } from '@nextui-org/react';
 
 export const handle = {
-  breadcrumb: (match) => (
+  breadcrumb: (match: RouteMatch) => (
     <Link to={`/people/${match.params.peopleId}`}>${match.params.peopleId}</Link>
   ),
 };

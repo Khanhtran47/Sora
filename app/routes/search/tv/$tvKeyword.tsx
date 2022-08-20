@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { DataFunctionArgs, json, LoaderFunction } from '@remix-run/node';
-import { Form, useLoaderData, useNavigate, useParams, Link } from '@remix-run/react';
+import { Form, useLoaderData, useNavigate, useParams, Link, RouteMatch } from '@remix-run/react';
 import { Input, Grid, Container, Button, Pagination, useInput } from '@nextui-org/react';
 
 import { getSearchTvShows } from '~/services/tmdb/tmdb.server';
-import MediaList from '~/src/components/Media/MediaList';
+import MediaList from '~/src/components/media/MediaList';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 
@@ -27,7 +27,7 @@ export const loader: LoaderFunction = async ({ request, params }: DataFunctionAr
 };
 
 export const handle = {
-  breadcrumb: (match) => (
+  breadcrumb: (match: RouteMatch) => (
     <Link to={`/search/tv/${match.params.tvKeyword}`}>{match.params.tvKeyword}</Link>
   ),
 };
@@ -51,7 +51,7 @@ const SearchRoute = () => {
   return (
     <>
       <Form onSubmit={onSubmit}>
-        <Grid.Container gap={1} css={{ padding: '30px 10px' }}>
+        <Grid.Container gap={1} css={{ m: 0, padding: '30px 10px', width: '100%' }}>
           <Grid>
             <Input
               {...bindings}

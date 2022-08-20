@@ -9,8 +9,8 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ params }) => {
-  const { id } = params;
-  const mid = Number(id);
+  const { movieId } = params;
+  const mid = Number(movieId);
 
   if (!mid) throw new Response('Not Found', { status: 404 });
   const videos = await getVideos('movie', mid);

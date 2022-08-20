@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { LoaderFunction, json } from '@remix-run/node';
-import { useCatch, useLoaderData, Outlet, Link } from '@remix-run/react';
+import { useCatch, useLoaderData, Outlet, Link, RouteMatch } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
 
 import { getMovieDetail } from '~/services/tmdb/tmdb.server';
-import MediaDetail from '~/src/components/Media/MediaDetail';
+import MediaDetail from '~/src/components/media/MediaDetail';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 import i18next from '~/i18n/i18next.server';
@@ -28,7 +28,9 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export const handle = {
-  breadcrumb: (match) => <Link to={`/movies/${match.params.movieId}`}>{match.params.movieId}</Link>,
+  breadcrumb: (match: RouteMatch) => (
+    <Link to={`/movies/${match.params.movieId}`}>{match.params.movieId}</Link>
+  ),
 };
 
 const MovieDetail = () => {

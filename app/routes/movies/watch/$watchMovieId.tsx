@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
 import { MetaFunction, LoaderFunction, json } from '@remix-run/node';
-import { useCatch, useLoaderData, useLocation, Link } from '@remix-run/react';
+import { useCatch, useLoaderData, useLocation, Link, RouteMatch } from '@remix-run/react';
 import { Container, Row, Radio } from '@nextui-org/react';
 
 import { getMovieDetail } from '~/services/tmdb/tmdb.server';
@@ -37,7 +37,7 @@ export const loader: LoaderFunction = async ({ params }) => {
 };
 
 export const handle = {
-  breadcrumb: (match) => (
+  breadcrumb: (match: RouteMatch) => (
     <Link to={`/movies/watch/${match.params.watchTvId}`}>{match.params.watchTvId}</Link>
   ),
 };

@@ -5,7 +5,7 @@ import { Input, Grid, Container, Button, Pagination, useInput } from '@nextui-or
 import { useTranslation } from 'react-i18next';
 
 import { getTrending } from '~/services/tmdb/tmdb.server';
-import MediaList from '~/src/components/Media/MediaList';
+import MediaList from '~/src/components/media/MediaList';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import i18next from '~/i18n/i18next.server';
 
@@ -45,7 +45,7 @@ const SearchRoute = () => {
   return (
     <>
       <Form onSubmit={onSubmit}>
-        <Grid.Container gap={1} css={{ padding: '30px 10px' }}>
+        <Grid.Container gap={1} css={{ m: 0, padding: '30px 10px', width: '100%' }}>
           <Grid>
             <Input
               {...bindings}
