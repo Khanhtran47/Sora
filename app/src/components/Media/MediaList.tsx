@@ -207,7 +207,7 @@ const MediaList = (props: IMediaListProps) => {
   return (
     <>
       {listName && (
-        <Text h1 size="2rem" css={{ margin: '0 0 20px 0' }}>
+        <Text h1 size="2rem" css={{ margin: '20px 0 20px 0' }}>
           {listName}
         </Text>
       )}
