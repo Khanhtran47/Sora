@@ -14,7 +14,7 @@ import {
   getListPeople,
 } from '~/services/tmdb/tmdb.server';
 import useWindowSize from '~/hooks/useWindowSize';
-import MediaList from '~/src/components/media/MediaList';
+import MediaList from '~/src/components/Media/MediaList';
 import PeopleList from '~/src/components/people/PeopleList';
 
 // https://remix.run/api/conventions#meta

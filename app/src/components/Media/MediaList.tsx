@@ -11,7 +11,7 @@ import { IMedia } from '~/services/tmdb/tmdb.types';
 import useMediaQuery from '~/hooks/useMediaQuery';
 
 import MediaItem from './MediaItem';
-import Filter from '../filter/Filter';
+import Filter from '../elements/filter/Filter';
 
 /**
  * MediaList type:
