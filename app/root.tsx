@@ -2,6 +2,7 @@ import * as React from 'react';
 import type { LinksFunction, LoaderFunction, MetaFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import {
+  Link,
   Links,
   LiveReload,
   Meta,
@@ -12,8 +13,17 @@ import {
   useOutlet,
   useFetchers,
   useTransition,
+  useMatches,
+  RouteMatch,
 } from '@remix-run/react';
-import { NextUIProvider, Text, Image, globalCss, createTheme, Link } from '@nextui-org/react';
+import {
+  NextUIProvider,
+  Text,
+  Image,
+  globalCss,
+  createTheme,
+  Link as NextLink,
+} from '@nextui-org/react';
 import { ThemeProvider as RemixThemesProvider } from 'next-themes';
 import swiperStyles from 'swiper/swiper.min.css';
 import swiperPaginationStyles from 'swiper/components/pagination/pagination.min.css';
@@ -25,7 +35,7 @@ import nProgressStyles from 'nprogress/nprogress.css';
 import { useChangeLanguage } from 'remix-i18next';
 import { useTranslation } from 'react-i18next';
 
-import Layout from '~/src/components/Layout';
+import Layout from '~/src/components/layouts/Layout';
 import styles from '~/styles/app.css';
 import { getUser } from './services/auth.server';
 import { getSession } from './services/sessions.server';
@@ -167,18 +177,22 @@ export const loader: LoaderFunction = async ({ request }) => {
   );
 };
 
+export const handle = {
+  breadcrumb: () => <Link to="/">Home</Link>,
+};
+
 // https://remix.run/api/conventions#default-export
 // https://remix.run/api/conventions#route-filenames
 const App = () => {
   globalStyles();
   const outlet = useOutlet();
-  const { user, locale } = useLoaderData<LoaderDataType>();
+  const fetchers = useFetchers();
   const transition = useTransition();
+  const matches: RouteMatch[] = useMatches();
+  const { user, locale } = useLoaderData<LoaderDataType>();
 
   const { i18n } = useTranslation();
   useChangeLanguage(locale);
-
-  const fetchers = useFetchers();
 
   /**
    * This gets the state of every fetcher active on the app and combine it with
@@ -212,7 +226,7 @@ const App = () => {
         }}
       >
         <NextUIProvider>
-          <Layout user={user}>
+          <Layout user={user} matches={matches}>
             <AnimatePresence exitBeforeEnter initial={false}>
               {outlet}
             </AnimatePresence>
@@ -274,7 +288,7 @@ export const CatchBoundary = () => {
               }}
               weight="bold"
             >
-              <Link href="/">Go Back</Link>
+              <NextLink href="/">Go Back</NextLink>
             </Text>
           </>
         </NextUIProvider>
@@ -312,7 +326,7 @@ export const ErrorBoundary = ({ error }: { error: Error }) => {
             }}
             weight="bold"
           >
-            <Link href="/">Go Back</Link>
+            <NextLink href="/">Go Back</NextLink>
           </Text>
         </NextUIProvider>
       </RemixThemesProvider>

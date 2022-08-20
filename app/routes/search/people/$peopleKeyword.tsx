@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DataFunctionArgs, json, LoaderFunction } from '@remix-run/node';
-import { useLoaderData, useNavigate, useParams, Form } from '@remix-run/react';
+import { useLoaderData, useNavigate, useParams, Form, Link, RouteMatch } from '@remix-run/react';
 import { Input, Grid, Container, Button, Pagination, useInput } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 
@@ -25,6 +25,12 @@ export const loader: LoaderFunction = async ({ request, params }: DataFunctionAr
   });
 };
 
+export const handle = {
+  breadcrumb: (match: RouteMatch) => (
+    <Link to={`/search/people/${match.params.peopleKeyword}`}>{match.params.peopleKeyword}</Link>
+  ),
+};
+
 const SearchRoute = () => {
   const { searchResults } = useLoaderData<LoaderData>() || {};
   const navigate = useNavigate();
@@ -45,7 +51,7 @@ const SearchRoute = () => {
   return (
     <>
       <Form onSubmit={onSubmit}>
-        <Grid.Container gap={1} css={{ padding: '30px 10px' }}>
+        <Grid.Container gap={1} css={{ m: 0, padding: '30px 10px', width: '100%' }}>
           <Grid>
             <Input
               {...bindings}

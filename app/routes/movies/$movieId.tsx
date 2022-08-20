@@ -1,38 +1,44 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { LoaderFunction, json } from '@remix-run/node';
-import { useCatch, useLoaderData, Outlet } from '@remix-run/react';
+import { useCatch, useLoaderData, Outlet, Link, RouteMatch } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
 
-import { getTvShowDetail } from '~/services/tmdb/tmdb.server';
+import { getMovieDetail } from '~/services/tmdb/tmdb.server';
 import MediaDetail from '~/src/components/Media/MediaDetail';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 import i18next from '~/i18n/i18next.server';
 
 type LoaderData = {
-  detail: Awaited<ReturnType<typeof getTvShowDetail>>;
+  detail: Awaited<ReturnType<typeof getMovieDetail>>;
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const locale = await i18next.getLocale(request);
-  const { id } = params;
-  const tid = Number(id);
+  const { movieId } = params;
+  const mid = Number(movieId);
 
-  if (!tid) throw new Response('Not Found', { status: 404 });
+  if (!mid) throw new Response('Not Found', { status: 404 });
 
-  const detail = await getTvShowDetail(tid, locale);
+  const detail = await getMovieDetail(mid, locale);
 
-  if (!tid) throw new Response('Not Found', { status: 404 });
+  if (!detail) throw new Response('Not Found', { status: 404 });
 
   return json<LoaderData>({ detail });
 };
 
-const TvShowDetail = () => {
+export const handle = {
+  breadcrumb: (match: RouteMatch) => (
+    <Link to={`/movies/${match.params.movieId}`}>{match.params.movieId}</Link>
+  ),
+};
+
+const MovieDetail = () => {
   const { detail } = useLoaderData<LoaderData>();
 
   return (
     <>
-      <MediaDetail type="tv" item={detail} />
+      <MediaDetail type="movie" item={detail} />
       <Container
         as="div"
         fluid
@@ -60,4 +66,4 @@ export const ErrorBoundary = ({ error }: { error: Error }) => {
   return <ErrorBoundaryView error={error} isProd={isProd} />;
 };
 
-export default TvShowDetail;
+export default MovieDetail;

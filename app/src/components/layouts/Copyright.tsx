@@ -1,5 +1,5 @@
 import { Text, Link, Container, Avatar } from '@nextui-org/react';
-import KleeCute from '../assets/images/klee-avatar.jpg';
+import KleeCute from '../../assets/images/klee-avatar.jpg';
 
 const Copyright = () => (
   <Container

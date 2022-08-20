@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useLoaderData, useNavigate, useLocation } from '@remix-run/react';
+import { useLoaderData, useNavigate, useLocation, Link } from '@remix-run/react';
 import { json, LoaderFunction } from '@remix-run/node';
 import { Container, Pagination } from '@nextui-org/react';
 import { motion } from 'framer-motion';
@@ -23,6 +23,10 @@ export const loader: LoaderFunction = async ({ request }) => {
   return json<LoaderData>({
     shows: await getListTvShows('top_rated', locale, page),
   });
+};
+
+export const handle = {
+  breadcrumb: () => <Link to="/tv-shows/top-rated">Top Rated Tv</Link>,
 };
 
 const ListTvShows = () => {

@@ -11,7 +11,7 @@ import { IMedia } from '~/services/tmdb/tmdb.types';
 import useMediaQuery from '~/hooks/useMediaQuery';
 
 import MediaItem from './MediaItem';
-import Filter from '../filter/Filter';
+import Filter from '../elements/filter/Filter';
 
 /**
  * MediaList type:
@@ -207,7 +207,7 @@ const MediaList = (props: IMediaListProps) => {
   return (
     <>
       {listName && (
-        <Text h1 size="2rem" css={{ margin: '0 0 20px 0' }}>
+        <Text h1 size="2rem" css={{ margin: '20px 0 20px 0' }}>
           {listName}
         </Text>
       )}

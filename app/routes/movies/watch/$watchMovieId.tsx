@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
 import { MetaFunction, LoaderFunction, json } from '@remix-run/node';
-import { useCatch, useLoaderData, useLocation } from '@remix-run/react';
+import { useCatch, useLoaderData, useLocation, Link, RouteMatch } from '@remix-run/react';
 import { Container, Row, Radio } from '@nextui-org/react';
 
 import { getMovieDetail } from '~/services/tmdb/tmdb.server';
@@ -22,8 +22,8 @@ export const meta: MetaFunction = () => ({
 });
 
 export const loader: LoaderFunction = async ({ params }) => {
-  const { id } = params;
-  const mid = Number(id);
+  const { watchMovieId } = params;
+  const mid = Number(watchMovieId);
 
   if (!mid) throw new Response('Not Found', { status: 404 });
 
@@ -36,6 +36,12 @@ export const loader: LoaderFunction = async ({ params }) => {
   });
 };
 
+export const handle = {
+  breadcrumb: (match: RouteMatch) => (
+    <Link to={`/movies/watch/${match.params.watchTvId}`}>{match.params.watchTvId}</Link>
+  ),
+};
+
 const MovieWatch = () => {
   const { detail } = useLoaderData<LoaderData>();
   const location = useLocation();
@@ -45,9 +51,9 @@ const MovieWatch = () => {
   React.useEffect(
     () =>
       player === '2'
-        ? setSource(Player.moviePlayerUrl(Number(detail.imdb_id), Number(player)))
+        ? setSource(Player.moviePlayerUrl(Number(detail?.imdb_id), Number(player)))
         : setSource(Player.moviePlayerUrl(Number(id), Number(player))),
-    [player, detail.imdb_id, id],
+    [player, detail?.imdb_id, id],
   );
   return (
     <Container

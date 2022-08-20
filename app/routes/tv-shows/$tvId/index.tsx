@@ -2,34 +2,33 @@
 import { LoaderFunction, json } from '@remix-run/node';
 import { useLoaderData, useNavigate } from '@remix-run/react';
 import { Text, Row, Col, Spacer, Divider, Image } from '@nextui-org/react';
-import { getTvShowDetail, getSimilar, getVideos, getCredits } from '~/services/tmdb/tmdb.server';
+import { useRouteData } from 'remix-utils';
+import { getSimilar, getVideos, getCredits } from '~/services/tmdb/tmdb.server';
+import { ITvShowDetail } from '~/services/tmdb/tmdb.types';
 import MediaList from '~/src/components/Media/MediaList';
 import PeopleList from '~/src/components/people/PeopleList';
 import TMDB from '~/utils/media';
 import useMediaQuery from '~/hooks/useMediaQuery';
 
 type LoaderData = {
-  detail: Awaited<ReturnType<typeof getTvShowDetail>>;
   videos: Awaited<ReturnType<typeof getVideos>>;
   credits: Awaited<ReturnType<typeof getCredits>>;
   similar: Awaited<ReturnType<typeof getSimilar>>;
 };
 
 export const loader: LoaderFunction = async ({ params }) => {
-  const { id } = params;
-  const tid = Number(id);
+  const { tvId } = params;
+  const tid = Number(tvId);
 
   if (!tid) throw new Response('Not Found', { status: 404 });
 
-  const detail = await getTvShowDetail(tid);
   const similar = await getSimilar('tv', tid);
   const videos = await getVideos('tv', tid);
   const credits = await getCredits('tv', tid);
 
-  if (!detail || !similar || !videos || !credits) throw new Response('Not Found', { status: 404 });
+  if (!similar || !videos || !credits) throw new Response('Not Found', { status: 404 });
 
   return json<LoaderData>({
-    detail,
     videos,
     credits,
     similar,
@@ -38,11 +37,12 @@ export const loader: LoaderFunction = async ({ params }) => {
 
 const Overview = () => {
   const {
-    detail,
     similar,
     credits,
     // videos,
   } = useLoaderData<LoaderData>();
+  const tvData: { detail: ITvShowDetail } | undefined = useRouteData('routes/tv-shows/$tvId');
+  const detail = tvData && tvData.detail;
   const navigate = useNavigate();
 
   // const isXs = useMediaQuery(425, 'max');
@@ -62,7 +62,7 @@ const Overview = () => {
       justify="center"
       css={{
         marginTop: '0.75rem',
-        padding: 0,
+        padding: '0 0.75rem',
         '@xs': {
           padding: '0 3vw',
         },
@@ -76,7 +76,7 @@ const Overview = () => {
     >
       {!isSm && (
         <Col span={4}>
-          <Row justify="center">
+          <Row justify="center" fluid>
             <Text
               size={12}
               css={{
@@ -282,7 +282,7 @@ const Overview = () => {
           )}
         </Row>
         <Spacer y={1} />
-        <Divider x={1} />
+        <Divider x={1} css={{ m: 0 }} />
         <Spacer y={1} />
         {credits?.cast && credits?.cast.length > 0 && (
           <PeopleList
@@ -295,12 +295,12 @@ const Overview = () => {
           />
         )}
         <Spacer y={1} />
-        <Divider x={1} />
+        <Divider x={1} css={{ m: 0 }} />
         <Spacer y={1} />
         {/*
           TODO: Videos
           <Spacer y={1} />
-          <Divider x={1} />
+          <Divider x={1}  css={{ m: 0 }} />
           <Spacer y={1} />
         */}
         {similar.items && similar.items.length > 0 && (
@@ -314,7 +314,7 @@ const Overview = () => {
           />
         )}
         <Spacer y={1} />
-        <Divider x={1} />
+        <Divider x={1} css={{ m: 0 }} />
         <Spacer y={1} />
       </Col>
     </Row>

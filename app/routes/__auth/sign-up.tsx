@@ -1,5 +1,5 @@
 import { ActionFunction, LoaderFunction, json, redirect } from '@remix-run/node';
-import { useActionData } from '@remix-run/react';
+import { useActionData, Link } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
 
 import { getSession, commitSession } from '~/services/sessions.server';
@@ -54,6 +54,10 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
 
   return null;
+};
+
+export const handle = {
+  breadcrumb: () => <Link to="/sign-up">Sign Up</Link>,
 };
 
 const SignUpPage = () => {

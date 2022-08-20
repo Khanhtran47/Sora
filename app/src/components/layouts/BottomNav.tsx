@@ -12,7 +12,7 @@ const pages = [
   },
   {
     pageName: 'People',
-    pageLink: 'people/popular',
+    pageLink: 'people',
   },
 ];
 

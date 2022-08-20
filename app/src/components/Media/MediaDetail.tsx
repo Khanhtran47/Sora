@@ -2,17 +2,8 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import React, { useRef } from 'react';
-import { Link, NavLink } from '@remix-run/react';
-import {
-  Link as NextLink,
-  Card,
-  Col,
-  Text,
-  Row,
-  Button,
-  Spacer,
-  useTheme,
-} from '@nextui-org/react';
+import { Link } from '@remix-run/react';
+import { Card, Col, Text, Row, Button, Spacer } from '@nextui-org/react';
 
 import { useTranslation } from 'react-i18next';
 
@@ -20,6 +11,7 @@ import { IMovieDetail, ITvShowDetail } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import useSize, { IUseSize } from '~/hooks/useSize';
+import Tab from '~/src/components/elements/Tab';
 
 interface IMediaDetail {
   type: 'movie' | 'tv';
@@ -38,7 +30,6 @@ const detailTab = [
 const MediaDetail = (props: IMediaDetail) => {
   const { t } = useTranslation();
   const { type, item } = props;
-  const { theme } = useTheme();
   const ref = useRef<HTMLDivElement>(null);
   const size: IUseSize = useSize(ref);
 
@@ -158,63 +149,64 @@ const MediaDetail = (props: IMediaDetail) => {
               justifyContent: 'flex-start',
             }}
           >
-            {status === 'Released' && isSm && (
-              <>
-                <Row>
-                  <Card.Image
-                    src={posterPath}
-                    alt={title}
-                    objectFit="cover"
-                    width={isXs ? '70%' : '40%'}
-                    css={{
-                      marginTop: '2rem',
-                      borderRadius: '24px',
-                    }}
-                    loading="lazy"
-                  />
-                </Row>
-                <Row>
-                  <Button
-                    auto
-                    shadow
-                    rounded
-                    color="gradient"
-                    size="xs"
-                    css={{
-                      width: '100%',
-                      margin: '0.5rem 0 0.5rem 0',
-                      '@xs': {
-                        marginTop: '4vh',
-                      },
-                      '@sm': {
-                        marginTop: '2vh',
-                      },
-                    }}
-                  >
-                    <Link
-                      prefetch="intent"
-                      to={`/${type === 'movie' ? 'movies' : 'tv-shows'}/watch/${id}`}
+            {(status === 'Released' || status === 'Ended' || status === 'Returning Series') &&
+              isSm && (
+                <>
+                  <Row>
+                    <Card.Image
+                      src={posterPath}
+                      alt={title}
+                      objectFit="cover"
+                      width={isXs ? '70%' : '40%'}
+                      css={{
+                        marginTop: '2rem',
+                        borderRadius: '24px',
+                      }}
+                      loading="lazy"
+                    />
+                  </Row>
+                  <Row>
+                    <Button
+                      auto
+                      shadow
+                      rounded
+                      color="gradient"
+                      size="xs"
+                      css={{
+                        width: '100%',
+                        margin: '0.5rem 0 0.5rem 0',
+                        '@xs': {
+                          marginTop: '4vh',
+                        },
+                        '@sm': {
+                          marginTop: '2vh',
+                        },
+                      }}
                     >
-                      <Text
-                        size={12}
-                        weight="bold"
-                        transform="uppercase"
-                        css={{
-                          '@xs': {
-                            fontSize: '18px',
-                          },
-                          '@sm': {
-                            fontSize: '20px',
-                          },
-                        }}
+                      <Link
+                        prefetch="intent"
+                        to={`/${type === 'movie' ? 'movies' : 'tv-shows'}/watch/${id}`}
                       >
-                        Watch now
-                      </Text>
-                    </Link>
-                  </Button>
-                </Row>
-              </>
-            )}
+                        <Text
+                          size={12}
+                          weight="bold"
+                          transform="uppercase"
+                          css={{
+                            '@xs': {
+                              fontSize: '18px',
+                            },
+                            '@sm': {
+                              fontSize: '20px',
+                            },
+                          }}
+                        >
+                          Watch now
+                        </Text>
+                      </Link>
+                    </Button>
+                  </Row>
+                </>
+              )}
             <Row>
               <Text
                 size={18}
@@ -307,65 +299,7 @@ const MediaDetail = (props: IMediaDetail) => {
                   </>
                 ))}
             </Row>
-            <Row
-              fluid
-              className="border-b"
-              align="center"
-              justify="flex-start"
-              css={{
-                p: 0,
-                gap: '$lg',
-                overflowX: 'auto',
-                flexFlow: 'row nowrap',
-                width: `${isMd ? '100%' : '70%'}`,
-                margin: 'auto 0 0 0',
-                borderColor: `${theme?.colors.primaryLightActive.value}`,
-              }}
-            >
-              {/* TODO: create tab component for reusing in other places */}
-              {detailTab?.map((page, index) => (
-                <Col
-                  key={`row-item-${index}`}
-                  css={{
-                    dflex: 'center',
-                  }}
-                >
-                  <NavLink
-                    to={`/${type === 'movie' ? 'movies' : 'tv-shows'}/${id}${page.pageLink}`}
-                    end
-                    className={({ isActive }) => `${isActive ? 'border-b-2 border-solid' : ''}`}
-                    style={({ isActive }) =>
-                      isActive ? { borderColor: `${theme?.colors.primary.value}` } : {}
-                    }
-                  >
-                    {({ isActive }) => (
-                      <Text
-                        h1
-                        size={20}
-                        css={{
-                          textTransform: 'uppercase',
-                        }}
-                      >
-                        <NextLink
-                          block
-                          color="primary"
-                          css={{
-                            height: '45px',
-                            borderRadius: '14px 14px 0 0',
-                            alignItems: 'center',
-                            ...(isActive && {
-                              background: `${theme?.colors.primaryLightActive.value}`,
-                            }),
-                          }}
-                        >
-                          {page.pageName}
-                        </NextLink>
-                      </Text>
-                    )}
-                  </NavLink>
-                </Col>
-              ))}
-            </Row>
+            <Tab pages={detailTab} linkTo={`/${type === 'movie' ? 'movies' : 'tv-shows'}/${id}`} />
           </Col>
         </Row>
       </Card.Header>

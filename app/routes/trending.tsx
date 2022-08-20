@@ -1,5 +1,5 @@
 import { DataFunctionArgs, json, LoaderFunction } from '@remix-run/node';
-import { useLoaderData, useNavigate, useLocation } from '@remix-run/react';
+import { useLoaderData, useNavigate, useLocation, Link } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import { Container, Pagination } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
@@ -29,6 +29,10 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
     todayTrending: await getTrending('all', 'day', locale, page),
     // weekTrending: await getTrending('all', 'week', page),
   });
+};
+
+export const handle = {
+  breadcrumb: () => <Link to="/trending">Today Trending</Link>,
 };
 
 const Trending = () => {
