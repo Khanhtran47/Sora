@@ -4,7 +4,7 @@ import { useLoaderData, useNavigate } from '@remix-run/react';
 import { Text, Row, Col, Spacer, Divider, Image } from '@nextui-org/react';
 import { useRouteData } from 'remix-utils';
 import { getSimilar, getVideos, getCredits, getRecommendation } from '~/services/tmdb/tmdb.server';
-import { ITvShowDetail } from '~/services/tmdb/tmdb.types';
+import { ITvShowDetail, ICast } from '~/services/tmdb/tmdb.types';
 import MediaList from '~/src/components/Media/MediaList';
 import PeopleList from '~/src/components/people/PeopleList';
 import TMDB from '~/utils/media';
@@ -12,9 +12,9 @@ import useMediaQuery from '~/hooks/useMediaQuery';
 
 type LoaderData = {
   videos: Awaited<ReturnType<typeof getVideos>>;
-  credits: Awaited<ReturnType<typeof getCredits>>;
   similar: Awaited<ReturnType<typeof getSimilar>>;
   recommendations: Awaited<ReturnType<typeof getRecommendation>>;
+  topBilledCast: ICast[];
 };
 
 export const loader: LoaderFunction = async ({ params }) => {
@@ -33,18 +33,18 @@ export const loader: LoaderFunction = async ({ params }) => {
 
   return json<LoaderData>({
     videos,
-    credits,
     similar,
     recommendations,
+    topBilledCast: credits && credits.cast && credits.cast.slice(0, 9),
   });
 };
 
 const Overview = () => {
   const {
     similar,
-    credits,
     // videos,
     recommendations,
+    topBilledCast,
   } = useLoaderData<LoaderData>();
   const tvData: { detail: ITvShowDetail } | undefined = useRouteData('routes/tv-shows/$tvId');
   const detail = tvData && tvData.detail;
@@ -289,11 +289,11 @@ const Overview = () => {
         <Spacer y={1} />
         <Divider x={1} css={{ m: 0 }} />
         <Spacer y={1} />
-        {credits?.cast && credits?.cast.length > 0 && (
+        {topBilledCast && topBilledCast.length > 0 && (
           <>
             <PeopleList
               listType="slider-card"
-              items={credits?.cast.slice(0, 9)}
+              items={topBilledCast}
               listName="Top Billed Cast"
               showMoreList
               onClickViewMore={() => onClickViewMore('cast')}

@@ -19,7 +19,7 @@ interface IMediaDetail {
 }
 
 const detailTab = [
-  { pageName: 'Overview', pageLink: '' },
+  { pageName: 'Overview', pageLink: '/' },
   { pageName: 'Cast', pageLink: '/cast' },
   { pageName: 'Crew', pageLink: '/crew' },
   { pageName: 'Videos', pageLink: '/videos' },
