@@ -24,6 +24,7 @@ const detailTab = [
   { pageName: 'Crew', pageLink: '/crew' },
   { pageName: 'Videos', pageLink: '/videos' },
   { pageName: 'Photos', pageLink: '/photos' },
+  { pageName: 'Recommendations', pageLink: '/recommendations' },
   { pageName: 'Similar', pageLink: '/similar' },
 ];
 

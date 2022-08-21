@@ -59,7 +59,7 @@ const ListMovies = () => {
           },
         }}
       >
-        {movies?.items.length > 0 && (
+        {movies && movies.items && movies.items.length > 0 && (
           <MediaList listType="grid" items={movies.items} listName={t('topRatedMovies')} />
         )}
         <Pagination

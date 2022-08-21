@@ -119,6 +119,22 @@ export class TMDB {
     return url;
   };
 
+  static recommendationUrl = (
+    type: 'movie' | 'tv',
+    id: number,
+    page?: number,
+    language?: string,
+  ): string => {
+    let url = `${this.API_BASE_URL}${type}/${id}/recommendations?api_key=${this.key}`;
+    if (page) {
+      url += `&page=${page}`;
+    }
+    if (language) {
+      url += `&language=${language}`;
+    }
+    return url;
+  };
+
   static tvExternalIds = (id: number, language?: string): string => {
     let url = `${this.API_BASE_URL}tv/${id}/external_ids?api_key=${this.key}`;
     if (language) {
