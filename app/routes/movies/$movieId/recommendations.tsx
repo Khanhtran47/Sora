@@ -35,7 +35,7 @@ export const handle = {
   ),
 };
 
-const SimilarPage = () => {
+const RecommendationsPage = () => {
   const { movieId } = useParams();
   const { recommendations } = useLoaderData<LoaderData>();
   const navigate = useNavigate();
@@ -77,4 +77,4 @@ const SimilarPage = () => {
   );
 };
 
-export default SimilarPage;
+export default RecommendationsPage;

@@ -21,7 +21,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   let page = Number(url.searchParams.get('page')) || undefined;
   if (page && (page < 1 || page > 1000)) page = 1;
 
-  const recommendations = await getRecommendation('movie', mid, page, locale);
+  const recommendations = await getRecommendation('tv', mid, page, locale);
   if (!recommendations) throw new Response('Not Found', { status: 404 });
 
   return json<LoaderData>({
@@ -31,13 +31,17 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
-    <Link to={`/movies/${match.params.movieId}/recommendations`}>Recommendations</Link>
+    <Link to={`/tv-shows/${match.params.tvId}/recommendations`}>Recommendations</Link>
   ),
 };
 
-const SimilarPage = () => {
+const RecommendationsPage = () => {
   const { tvId } = useParams();
   const { recommendations } = useLoaderData<LoaderData>();
+  console.log(
+    '🚀 ~ file: recommendations.tsx ~ line 41 ~ SimilarPage ~ recommendations',
+    recommendations,
+  );
   const navigate = useNavigate();
   const isXs = useMediaQuery(650);
   const paginationChangeHandler = (page: number) =>
@@ -77,4 +81,4 @@ const SimilarPage = () => {
   );
 };
 
-export default SimilarPage;
+export default RecommendationsPage;
