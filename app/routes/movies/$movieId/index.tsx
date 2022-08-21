@@ -3,16 +3,18 @@ import { LoaderFunction, json } from '@remix-run/node';
 import { useLoaderData, useNavigate } from '@remix-run/react';
 import { Text, Row, Col, Spacer, Divider } from '@nextui-org/react';
 import { useRouteData } from 'remix-utils';
-import { getSimilar, getVideos, getCredits } from '~/services/tmdb/tmdb.server';
-import { IMovieDetail } from '~/services/tmdb/tmdb.types';
+import { getSimilar, getVideos, getCredits, getRecommendation } from '~/services/tmdb/tmdb.server';
+import { IMovieDetail, ICast, ICrew } from '~/services/tmdb/tmdb.types';
 import MediaList from '~/src/components/Media/MediaList';
 import PeopleList from '~/src/components/people/PeopleList';
 import useMediaQuery from '~/hooks/useMediaQuery';
 
 type LoaderData = {
   videos: Awaited<ReturnType<typeof getVideos>>;
-  credits: Awaited<ReturnType<typeof getCredits>>;
   similar: Awaited<ReturnType<typeof getSimilar>>;
+  recommendations: Awaited<ReturnType<typeof getRecommendation>>;
+  topBilledCast: ICast[];
+  directors: ICrew[];
 };
 
 export const loader: LoaderFunction = async ({ params }) => {
@@ -24,21 +26,27 @@ export const loader: LoaderFunction = async ({ params }) => {
   const similar = await getSimilar('movie', mid);
   const videos = await getVideos('movie', mid);
   const credits = await getCredits('movie', mid);
+  const recommendations = await getRecommendation('movie', mid);
 
-  if (!similar || !videos || !credits) throw new Response('Not Found', { status: 404 });
+  if (!similar || !videos || !credits || !recommendations)
+    throw new Response('Not Found', { status: 404 });
 
   return json<LoaderData>({
     videos,
-    credits,
     similar,
+    recommendations,
+    topBilledCast: credits && credits.cast && credits.cast.slice(0, 9),
+    directors: credits && credits.crew && credits.crew.filter(({ job }) => job === 'Director'),
   });
 };
 
 const Overview = () => {
   const {
     similar,
-    credits,
     // videos,
+    recommendations,
+    topBilledCast,
+    directors,
   } = useLoaderData<LoaderData>();
   const movieData: { detail: IMovieDetail } | undefined = useRouteData('routes/movies/$movieId');
   const detail = movieData && movieData.detail;
@@ -48,9 +56,7 @@ const Overview = () => {
   const isSm = useMediaQuery(650, 'max');
   // const isMd = useMediaQuery(960, 'max');
   // const isMdLand = useMediaQuery(960, 'max', 'landscape');
-
-  const directors = credits?.crew.filter(({ job }) => job === 'Director');
-  const onClickViewMore = (type: 'cast' | 'similar') => {
+  const onClickViewMore = (type: 'cast' | 'similar' | 'recommendations') => {
     navigate(`/movies/${detail?.id}/${type}`);
   };
   return (
@@ -271,38 +277,59 @@ const Overview = () => {
         <Spacer y={1} />
         <Divider x={1} css={{ m: 0 }} />
         <Spacer y={1} />
-        {credits?.cast && credits.cast.length > 0 && (
-          <PeopleList
-            listType="slider-card"
-            items={credits?.cast.slice(0, 9)}
-            listName="Top Billed Cast"
-            showMoreList
-            onClickViewMore={() => onClickViewMore('cast')}
-            cardType="cast"
-          />
+        {topBilledCast && topBilledCast.length > 0 && (
+          <>
+            <PeopleList
+              listType="slider-card"
+              items={topBilledCast}
+              listName="Top Billed Cast"
+              showMoreList
+              onClickViewMore={() => onClickViewMore('cast')}
+              cardType="cast"
+            />
+            <Spacer y={1} />
+            <Divider x={1} css={{ m: 0 }} />
+            <Spacer y={1} />
+          </>
         )}
-        <Spacer y={1} />
-        <Divider x={1} css={{ m: 0 }} />
-        <Spacer y={1} />
+
         {/*
           TODO: Videos
           <Spacer y={1} />
           <Divider x={1}  css={{ m: 0 }} />
           <Spacer y={1} />
         */}
-        {similar.items && similar.items.length > 0 && (
-          <MediaList
-            listType="slider-card"
-            items={similar.items}
-            listName="Similar Movies"
-            showMoreList
-            onClickViewMore={() => onClickViewMore('similar')}
-            cardType="similar-movie"
-          />
+        {recommendations && recommendations.items && recommendations.items.length > 0 && (
+          <>
+            <MediaList
+              listType="slider-card"
+              items={recommendations.items}
+              listName="Recommendations"
+              showMoreList
+              onClickViewMore={() => onClickViewMore('recommendations')}
+              cardType="similar-movie"
+            />
+            <Spacer y={1} />
+            <Divider x={1} css={{ m: 0 }} />
+            <Spacer y={1} />
+          </>
         )}
-        <Spacer y={1} />
-        <Divider x={1} css={{ m: 0 }} />
-        <Spacer y={1} />
+
+        {similar && similar.items && similar.items.length > 0 && (
+          <>
+            <MediaList
+              listType="slider-card"
+              items={similar.items}
+              listName="Similar Movies"
+              showMoreList
+              onClickViewMore={() => onClickViewMore('similar')}
+              cardType="similar-movie"
+            />
+            <Spacer y={1} />
+            <Divider x={1} css={{ m: 0 }} />
+            <Spacer y={1} />
+          </>
+        )}
       </Col>
     </Row>
   );

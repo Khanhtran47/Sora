@@ -241,8 +241,23 @@ export const getCredits = async (
  * @param {number} id - The id of the movie or tv show
  * @returns A promise that resolves to an IMediaList object.
  */
-export const getSimilar = async (type: 'movie' | 'tv', id: number): Promise<IMediaList> => {
-  const url = TMDB.similarUrl(type, id);
+export const getSimilar = async (
+  type: 'movie' | 'tv',
+  id: number,
+  page?: number,
+  language?: string,
+): Promise<IMediaList> => {
+  const url = TMDB.similarUrl(type, id, page, language);
+  return getListFromTMDB(url);
+};
+
+export const getRecommendation = async (
+  type: 'movie' | 'tv',
+  id: number,
+  page?: number,
+  language?: string,
+): Promise<IMediaList> => {
+  const url = TMDB.recommendationUrl(type, id, page, language);
   return getListFromTMDB(url);
 };
 

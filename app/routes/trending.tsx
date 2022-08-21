@@ -65,7 +65,7 @@ const Trending = () => {
           },
         }}
       >
-        {todayTrending?.items.length > 0 && (
+        {todayTrending && todayTrending.items && todayTrending.items.length > 0 && (
           <MediaList listType="grid" items={todayTrending.items} listName={t('todayTrending')} />
         )}
         <Pagination

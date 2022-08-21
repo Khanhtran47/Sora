@@ -57,17 +57,19 @@ const ListPeoplePopular = () => {
           },
         }}
       >
-        {people?.results.length > 0 && (
-          <PeopleList listType="grid" items={people.results} listName={t('popularPeople')} />
+        {people && people.results && people.results.length > 0 && (
+          <>
+            <PeopleList listType="grid" items={people.results} listName={t('popularPeople')} />
+            <Pagination
+              total={people.total_pages}
+              initialPage={people.page}
+              shadow
+              onChange={paginationChangeHandler}
+              css={{ marginTop: '30px' }}
+              {...(isXs && { size: 'xs' })}
+            />
+          </>
         )}
-        <Pagination
-          total={people.total_pages}
-          initialPage={people.page}
-          shadow
-          onChange={paginationChangeHandler}
-          css={{ marginTop: '30px' }}
-          {...(isXs && { size: 'xs' })}
-        />
       </Container>
     </motion.div>
   );

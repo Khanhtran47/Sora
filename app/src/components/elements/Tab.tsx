@@ -17,7 +17,6 @@ const Tab = (props: ITabProps) => {
   const isMd = useMediaQuery(960);
   return (
     <Row
-      fluid
       className="border-b"
       align="center"
       justify="flex-start"
@@ -26,7 +25,7 @@ const Tab = (props: ITabProps) => {
         gap: '$lg',
         overflowX: 'auto',
         flexFlow: 'row nowrap',
-        width: `${isMd ? '100%' : '70%'}`,
+        width: '100%',
         margin: 'auto 0 0 0',
         borderColor: `${theme?.colors.primaryLightActive.value}`,
       }}
@@ -35,7 +34,10 @@ const Tab = (props: ITabProps) => {
         <Col
           key={`row-item-${index}`}
           css={{
+            flexGrow: '1',
+            flexShrink: '0',
             dflex: 'center',
+            width: 'max-content',
           }}
         >
           <NavLink
@@ -47,10 +49,16 @@ const Tab = (props: ITabProps) => {
           >
             {({ isActive }) => (
               <Text
-                h1
-                size={20}
+                size={16}
+                weight="bold"
+                transform="uppercase"
                 css={{
-                  textTransform: 'uppercase',
+                  '@xs': {
+                    fontSize: '18px',
+                  },
+                  '@sm': {
+                    fontSize: '20px',
+                  },
                 }}
               >
                 <NextLink

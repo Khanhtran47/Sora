@@ -2,13 +2,13 @@
 import { LoaderFunction, json } from '@remix-run/node';
 import { useLoaderData, useNavigate, Link, RouteMatch, useParams } from '@remix-run/react';
 import { Row, Pagination } from '@nextui-org/react';
-import { getSimilar } from '~/services/tmdb/tmdb.server';
+import { getRecommendation } from '~/services/tmdb/tmdb.server';
 import MediaList from '~/src/components/Media/MediaList';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import i18next from '~/i18n/i18next.server';
 
 type LoaderData = {
-  similar: Awaited<ReturnType<typeof getSimilar>>;
+  recommendations: Awaited<ReturnType<typeof getRecommendation>>;
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -21,27 +21,27 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   let page = Number(url.searchParams.get('page')) || undefined;
   if (page && (page < 1 || page > 1000)) page = 1;
 
-  const similar = await getSimilar('tv', mid, page, locale);
-  if (!similar) throw new Response('Not Found', { status: 404 });
+  const recommendations = await getRecommendation('tv', mid, page, locale);
+  if (!recommendations) throw new Response('Not Found', { status: 404 });
 
   return json<LoaderData>({
-    similar,
+    recommendations,
   });
 };
 
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
-    <Link to={`/tv-shows/${match.params.movieId}/similar`}>Similar Tv Shows</Link>
+    <Link to={`/tv-shows/${match.params.tvId}/recommendations`}>Recommendations</Link>
   ),
 };
 
-const SimilarPage = () => {
+const RecommendationsPage = () => {
   const { tvId } = useParams();
-  const { similar } = useLoaderData<LoaderData>();
+  const { recommendations } = useLoaderData<LoaderData>();
   const navigate = useNavigate();
   const isXs = useMediaQuery(650);
   const paginationChangeHandler = (page: number) =>
-    navigate(`/tv-shows/${tvId}/similar?page=${page}`);
+    navigate(`/tv-shows/${tvId}/recommendations?page=${page}`);
 
   return (
     <Row
@@ -60,12 +60,12 @@ const SimilarPage = () => {
         },
       }}
     >
-      {similar && similar.items && similar.items.length > 0 && (
+      {recommendations && recommendations.items && recommendations.items.length > 0 && (
         <>
-          <MediaList listType="grid" items={similar.items} listName="Similar Tv Shows" />
+          <MediaList listType="grid" items={recommendations.items} listName="Recommendations" />
           <Pagination
-            total={similar.totalPages}
-            initialPage={similar.page}
+            total={recommendations.totalPages}
+            initialPage={recommendations.page}
             shadow
             onChange={paginationChangeHandler}
             css={{ marginTop: '30px' }}
@@ -77,4 +77,4 @@ const SimilarPage = () => {
   );
 };
 
-export default SimilarPage;
+export default RecommendationsPage;
