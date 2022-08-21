@@ -38,10 +38,6 @@ export const handle = {
 const RecommendationsPage = () => {
   const { tvId } = useParams();
   const { recommendations } = useLoaderData<LoaderData>();
-  console.log(
-    '🚀 ~ file: recommendations.tsx ~ line 41 ~ SimilarPage ~ recommendations',
-    recommendations,
-  );
   const navigate = useNavigate();
   const isXs = useMediaQuery(650);
   const paginationChangeHandler = (page: number) =>
