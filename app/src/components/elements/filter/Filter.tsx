@@ -84,7 +84,7 @@ const Filter = (props: IFilterProps) => {
         </Row>
         <Row css={{ margin: '6px' }}>
           {genres && (
-            <Dropdown>
+            <Dropdown trigger="longPress">
               <Dropdown.Button css={{ tt: 'capitalize' }}>{selectedGenre}</Dropdown.Button>
               <Dropdown.Menu
                 aria-label="Multiple selection actions"
@@ -108,7 +108,7 @@ const Filter = (props: IFilterProps) => {
           </Text>
         </Row>
         <Row css={{ margin: '6px' }}>
-          <Dropdown>
+          <Dropdown trigger="longPress">
             <Dropdown.Button css={{ tt: 'capitalize' }}>{selectedSort}</Dropdown.Button>
             <Dropdown.Menu
               aria-label="Single selection actions"

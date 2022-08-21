@@ -151,7 +151,7 @@ const MediaListCard = ({
   return (
     <Grid.Container gap={gap} justify="flex-start" alignItems="center">
       {items?.length > 0 && (
-        <Swiper grabCursor spaceBetween={10} slidesPerView="auto">
+        <Swiper grabCursor spaceBetween={10} slidesPerView="auto" preloadImages={false}>
           {items.map((item, i) => {
             const href =
               (item.mediaType === 'movie' || type === 'similar-movie' ? '/movies/' : '/tv-shows/') +

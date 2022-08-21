@@ -287,7 +287,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
         <Spacer y={1} />
 
         {/* Language selector */}
-        <Dropdown placement="bottom-left">
+        <Dropdown placement="bottom-left" trigger="longPress">
           <Dropdown.Trigger>
             <Avatar squared icon={<GlobalIcon fill="currentColor" />} />
           </Dropdown.Trigger>
@@ -319,7 +319,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
         />
         <Spacer y={1} />
         {user ? (
-          <Dropdown placement="bottom-left">
+          <Dropdown placement="bottom-left" trigger="longPress">
             <Dropdown.Trigger>
               <Avatar
                 size="md"
