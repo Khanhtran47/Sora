@@ -36,6 +36,8 @@ import menuNavBlack from '../../assets/lotties/lottieflow-menu-nav-11-6-000000-e
 import menuNavWhite from '../../assets/lotties/lottieflow-menu-nav-11-6-FFFFFF-easey.json';
 import arrowLeftBlack from '../../assets/lotties/lottieflow-arrow-08-1-000000-easey.json';
 import arrowLeftWhite from '../../assets/lotties/lottieflow-arrow-08-1-FFFFFF-easey.json';
+import arrowLeft from '../../assets/lotties/lottieflow-arrow-08-1-0072F5-easey.json';
+import dropdown from '../../assets/lotties/lottieflow-dropdown-03-0072F5-easey.json';
 
 interface IHeaderProps {
   open: boolean;
@@ -301,7 +303,7 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                   css={{ w: 260, h: 50 }}
                   icon={
                     <Player
-                      src={isDark ? arrowLeftWhite : arrowLeftBlack}
+                      src={arrowLeft}
                       hover
                       autoplay={false}
                       speed={0.75}
@@ -349,7 +351,7 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                   css={{ w: 260, h: 50 }}
                   icon={
                     <Player
-                      src={isDark ? arrowLeftWhite : arrowLeftBlack}
+                      src={arrowLeft}
                       hover
                       autoplay={false}
                       speed={0.75}
@@ -399,9 +401,9 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
 
   React.useEffect(() => {
     if (isDropdownOpen) {
-      lottie?.playSegments([0, 80], true);
+      lottie?.playSegments([0, 50], true);
     } else {
-      lottie?.playSegments([80, 156], true);
+      lottie?.playSegments([50, 96], true);
     }
   }, [isDropdownOpen]);
 
@@ -557,7 +559,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
                 lottieRef={(instance) => {
                   setLottie(instance);
                 }}
-                src={isDark ? menuNavWhite : menuNavBlack}
+                src={dropdown}
                 autoplay={false}
                 keepLastFrame
                 speed={2.7}
