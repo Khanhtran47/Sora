@@ -70,6 +70,7 @@ const IconNavLink = ({
     <NavigationLink to={linkTo} style={style}>
       {({ isActive }) => (
         <NextLink
+          as="div"
           block
           color="primary"
           css={{
