@@ -1,7 +1,7 @@
 import { Row, Col, Text, Link as NextLink, useTheme } from '@nextui-org/react';
 import { NavLink } from '@remix-run/react';
 
-import useMediaQuery from '~/hooks/useMediaQuery';
+// import useMediaQuery from '~/hooks/useMediaQuery';
 
 interface ITabProps {
   pages: {
@@ -14,7 +14,7 @@ interface ITabProps {
 const Tab = (props: ITabProps) => {
   const { pages, linkTo } = props;
   const { theme } = useTheme();
-  const isMd = useMediaQuery(960);
+  // const isMd = useMediaQuery(960);
   return (
     <Row
       className="border-b"

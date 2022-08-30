@@ -1,10 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import * as React from 'react';
-import { NavLink, Link, useNavigate } from '@remix-run/react';
+import { Link, useNavigate } from '@remix-run/react';
 import {
   Avatar,
   Button,
-  Link as NextLink,
   Text,
   Grid,
   Row,
@@ -22,7 +21,10 @@ import { Player } from '@lottiefiles/react-lottie-player';
 import type { AnimationItem } from 'lottie-web';
 import { useTranslation } from 'react-i18next';
 
+import useMediaQuery from '~/hooks/useMediaQuery';
+
 /* Components */
+import NavLink from '../elements/NavLink';
 
 /* Assets */
 import kleeCute from '../../assets/images/klee.jpg';
@@ -32,10 +34,10 @@ import MenuIcon from '../../assets/icons/MenuIcon.js';
 import ArrowLeftIcon from '../../assets/icons/ArrowLeftIcon.js';
 import SearchIcon from '../../assets/icons/SearchIcon.js';
 import GlobalIcon from '../../assets/icons/GlobalIcon.js';
-import menuNavBlack from '../../assets/lotties/lottieflow-menu-nav-11-6-000000-easey.json';
-import menuNavWhite from '../../assets/lotties/lottieflow-menu-nav-11-6-FFFFFF-easey.json';
-import arrowLeftBlack from '../../assets/lotties/lottieflow-arrow-08-1-000000-easey.json';
-import arrowLeftWhite from '../../assets/lotties/lottieflow-arrow-08-1-FFFFFF-easey.json';
+// import menuNavBlack from '../../assets/lotties/lottieflow-menu-nav-11-6-000000-easey.json';
+// import menuNavWhite from '../../assets/lotties/lottieflow-menu-nav-11-6-FFFFFF-easey.json';
+// import arrowLeftBlack from '../../assets/lotties/lottieflow-arrow-08-1-000000-easey.json';
+// import arrowLeftWhite from '../../assets/lotties/lottieflow-arrow-08-1-FFFFFF-easey.json';
 import arrowLeft from '../../assets/lotties/lottieflow-arrow-08-1-0072F5-easey.json';
 import dropdown from '../../assets/lotties/lottieflow-dropdown-03-0072F5-easey.json';
 
@@ -112,7 +114,6 @@ const DropdownPage = ({
     pageLink: string;
   }[];
 }) => {
-  const { theme } = useTheme();
   const { t } = useTranslation('header');
 
   return (
@@ -125,33 +126,7 @@ const DropdownPage = ({
     >
       {pagesDropdown.map((page) => (
         <Row key={page.pageName}>
-          <NavLink to={`/${page.pageLink}`} end>
-            {({ isActive }) => (
-              <Text
-                h1
-                size={18}
-                css={{
-                  textTransform: 'uppercase',
-                  display: 'none',
-                  '@sm': {
-                    display: 'flex',
-                  },
-                }}
-              >
-                <NextLink
-                  block
-                  color="primary"
-                  css={{
-                    ...(isActive && {
-                      background: `${theme?.colors.primaryLightActive.value}`,
-                    }),
-                  }}
-                >
-                  {t(page.pageName)}
-                </NextLink>
-              </Text>
-            )}
-          </NavLink>
+          <NavLink linkTo={`/${page.pageLink}`} linkName={t(page.pageName)} />
         </Row>
       ))}
     </Grid.Container>
@@ -220,7 +195,7 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                   {user?.email ?? 'klee@example.com'}
                 </Text>
               ) : (
-                <NavLink to="/sign-in">
+                <Link to="/sign-in">
                   <Text
                     color="inherit"
                     h3
@@ -234,7 +209,7 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                   >
                     Sign In
                   </Text>
-                </NavLink>
+                </Link>
               )}
             </Button>
             <Divider x={1} css={{ width: 260, margin: '10px 40px 0 0' }} />
@@ -277,7 +252,7 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
               </Button>
             ) : (
               <Button flat color="primary" size="md" css={{ w: 260, h: 50 }}>
-                <NavLink to="/sign-up">Sign Up</NavLink>
+                <Link to="/sign-up">Sign Up</Link>
               </Button>
             )}
           </Grid>
@@ -394,10 +369,12 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
 
 const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   const { t } = useTranslation('header');
-  const { isDark, theme } = useTheme();
+  const { isDark } = useTheme();
   const { open, handleDrawerOpen, handleDrawerClose, user } = props;
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
   const [lottie, setLottie] = React.useState<AnimationItem>();
+  const isSm = useMediaQuery(650);
+  console.log('🚀 ~ file: Header.tsx ~ line 378 ~ isMinSm', isSm);
 
   React.useEffect(() => {
     if (isDropdownOpen) {
@@ -446,112 +423,49 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
         >
           {open ? <ArrowLeftIcon /> : <MenuIcon />}
         </Button>
-        <NavLink to="/">
-          <Text
-            h6
-            size={36}
-            css={{
-              textGradient: '45deg, $blue600 -20%, $pink600 50%',
-              mr: 2,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              textDecoration: 'none',
-              display: 'none',
-              '@sm': {
-                display: 'flex',
-              },
-            }}
-            weight="bold"
-          >
-            LOGO
-          </Text>
-        </NavLink>
-        <NavLink to="/">
-          <Text
-            h5
-            size={30}
-            css={{
-              textGradient: '45deg, $blue600 -20%, $pink600 50%',
-              mr: 2,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              textDecoration: 'none',
-              display: 'flex',
-              '@sm': {
-                display: 'none',
-              },
-            }}
-            weight="bold"
-          >
-            LOGO
-          </Text>
-        </NavLink>
+        <NavLink linkTo="/" isLogo />
       </Grid>
 
       {/* link page */}
-      <Grid sm={6} alignItems="center">
-        {pages.map((page) => (
-          <Tooltip
-            key={page.pageName}
-            placement="bottom"
-            {...(page?.pageDropdown && {
-              content: <DropdownPage pagesDropdown={page?.pageDropdown || []} />,
-            })}
-            {...(page?.pageDescription && { content: t(page?.pageDescription) })}
-          >
-            <NavLink to={`/${page.pageLink}`} end style={{ marginRight: '10px' }}>
-              {({ isActive }) => (
-                <Text
-                  h1
-                  size={20}
-                  css={{
-                    textTransform: 'uppercase',
-                    display: 'none',
-                    '@sm': {
-                      display: 'flex',
-                    },
-                  }}
-                >
-                  <NextLink
-                    block
-                    color="primary"
-                    css={{
-                      ...(isActive && {
-                        background: `${theme?.colors.primaryLightActive.value}`,
-                      }),
-                    }}
-                  >
-                    {t(page.pageName)}
-                  </NextLink>
-                </Text>
-              )}
-            </NavLink>
-          </Tooltip>
-        ))}
+      <Grid
+        sm={6}
+        alignItems="center"
+        direction="row"
+        justify="center"
+        css={{
+          display: 'flex',
+        }}
+      >
+        {!isSm &&
+          pages.map((page) => (
+            <Tooltip
+              key={page.pageName}
+              placement="bottom"
+              {...(page?.pageDropdown && {
+                content: <DropdownPage pagesDropdown={page?.pageDropdown || []} />,
+              })}
+              {...(page?.pageDescription && { content: t(page?.pageDescription) })}
+            >
+              <NavLink
+                linkTo={`/${page.pageLink}`}
+                linkName={t(page.pageName)}
+                style={{ marginRight: '10px' }}
+              />
+            </Tooltip>
+          ))}
       </Grid>
 
-      {/* Avatar */}
       <Grid xs={6} sm={3} justify="flex-end" alignItems="center">
         {/* Search */}
         <Tooltip placement="bottom" content={<DropdownPage pagesDropdown={searchDropdown || []} />}>
-          <NavLink to="/search" end style={{ marginTop: '3px' }}>
-            {({ isActive }) => (
-              <NextLink
-                block
-                color="primary"
-                css={{
-                  ...(isActive && {
-                    background: `${theme?.colors.primaryLightActive.value}`,
-                  }),
-                }}
-              >
-                <SearchIcon fill="currentColor" filled />
-              </NextLink>
-            )}
-          </NavLink>
+          <NavLink
+            linkTo="/search"
+            isIcon
+            style={{ marginTop: '3px' }}
+            icon={<SearchIcon fill="currentColor" filled />}
+          />
         </Tooltip>
+        {/* Dropdown setting */}
         <Popover placement="bottom-right" isOpen={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
           <Popover.Trigger>
             <Button auto light>

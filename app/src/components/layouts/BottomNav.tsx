@@ -1,5 +1,6 @@
-import { NavLink } from '@remix-run/react';
-import { Link, Text, Container, useTheme } from '@nextui-org/react';
+import { Container, useTheme } from '@nextui-org/react';
+
+import NavLink from '../elements/NavLink';
 
 const pages = [
   {
@@ -17,7 +18,7 @@ const pages = [
 ];
 
 const BottomNav = () => {
-  const { isDark, theme } = useTheme();
+  const { isDark } = useTheme();
 
   return (
     <Container
@@ -42,29 +43,7 @@ const BottomNav = () => {
       }}
     >
       {pages.map((page) => (
-        <NavLink to={`/${page.pageLink}`} key={page.pageName}>
-          {({ isActive }) => (
-            <Text
-              h1
-              size={20}
-              css={{
-                textTransform: 'uppercase',
-              }}
-            >
-              <Link
-                block
-                color="primary"
-                css={{
-                  ...(isActive && {
-                    background: `${theme?.colors.primaryLightActive.value}`,
-                  }),
-                }}
-              >
-                {page.pageName}
-              </Link>
-            </Text>
-          )}
-        </NavLink>
+        <NavLink linkTo={`/${page.pageLink}`} linkName={page.pageName} key={page.pageName} />
       ))}
     </Container>
   );
