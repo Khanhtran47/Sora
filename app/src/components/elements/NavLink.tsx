@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import React from 'react';
 import { NavLink as NavigationLink } from '@remix-run/react';
-import { Text, Link as NextLink, useTheme } from '@nextui-org/react';
+import { Text, useTheme } from '@nextui-org/react';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
 
