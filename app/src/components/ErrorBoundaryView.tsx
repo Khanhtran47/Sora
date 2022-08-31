@@ -12,7 +12,7 @@ const ErrorBoundary = ({ error, isProd }: IErrorBoundary) => (
     <Text h1 color="warning" css={{ textAlign: 'center' }}>
       Some thing went wrong
     </Text>
-    <Text h6 color="warning" css={{ textAlign: 'center' }}>
+    <Text h4 color="warning" css={{ textAlign: 'center' }}>
       {isProd ? 'We are already working on fixing-it' : error.message}
     </Text>
     <Image

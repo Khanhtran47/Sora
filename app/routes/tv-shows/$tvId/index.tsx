@@ -83,6 +83,7 @@ const Overview = () => {
         <Col span={4}>
           <Row justify="center" fluid>
             <Text
+              h4
               size={12}
               css={{
                 width: '50%',
@@ -106,6 +107,7 @@ const Overview = () => {
           <Spacer y={1} />
           <Row justify="center">
             <Text
+              h4
               size={12}
               css={{
                 width: '50%',
@@ -137,6 +139,7 @@ const Overview = () => {
           <Spacer y={1} />
           <Row justify="center">
             <Text
+              h4
               size={12}
               css={{
                 width: '50%',
@@ -160,6 +163,7 @@ const Overview = () => {
           <Spacer y={1} />
           <Row justify="center">
             <Text
+              h4
               size={12}
               css={{
                 width: '50%',
@@ -186,6 +190,7 @@ const Overview = () => {
       <Col span={isSm ? 12 : 8}>
         <Row>
           <Text
+            h4
             size={12}
             css={{
               textAlign: 'justify',
@@ -210,6 +215,7 @@ const Overview = () => {
           {/* {directors && directors.length > 0 && (
             <>
               <Text
+                h4
                 size={12}
                 css={{
                   margin: 0,
@@ -236,6 +242,7 @@ const Overview = () => {
           {detail?.production_countries && detail.production_countries.length > 0 && (
             <>
               <Text
+                h4
                 size={12}
                 css={{
                   margin: 0,
@@ -262,6 +269,7 @@ const Overview = () => {
           {detail?.spoken_languages && detail.spoken_languages.length > 0 && (
             <>
               <Text
+                h4
                 size={12}
                 css={{
                   margin: 0,

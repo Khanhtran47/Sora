@@ -1,24 +1,30 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import * as React from 'react';
-import { NavLink, Link } from '@remix-run/react';
+import { Link, useNavigate } from '@remix-run/react';
 import {
   Avatar,
   Button,
-  Link as NextLink,
   Text,
   Grid,
   Row,
-  Dropdown,
   Switch,
   Tooltip,
+  Popover,
   useTheme,
   styled,
-  Spacer,
+  Divider,
 } from '@nextui-org/react';
 import { useTheme as useRemixTheme } from 'next-themes';
+import { motion } from 'framer-motion';
 import type { User } from '@supabase/supabase-js';
+import { Player } from '@lottiefiles/react-lottie-player';
+import type { AnimationItem } from 'lottie-web';
 import { useTranslation } from 'react-i18next';
 
+import useMediaQuery from '~/hooks/useMediaQuery';
+
 /* Components */
+import NavLink from '../elements/NavLink';
 
 /* Assets */
 import kleeCute from '../../assets/images/klee.jpg';
@@ -28,6 +34,12 @@ import MenuIcon from '../../assets/icons/MenuIcon.js';
 import ArrowLeftIcon from '../../assets/icons/ArrowLeftIcon.js';
 import SearchIcon from '../../assets/icons/SearchIcon.js';
 import GlobalIcon from '../../assets/icons/GlobalIcon.js';
+// import menuNavBlack from '../../assets/lotties/lottieflow-menu-nav-11-6-000000-easey.json';
+// import menuNavWhite from '../../assets/lotties/lottieflow-menu-nav-11-6-FFFFFF-easey.json';
+// import arrowLeftBlack from '../../assets/lotties/lottieflow-arrow-08-1-000000-easey.json';
+// import arrowLeftWhite from '../../assets/lotties/lottieflow-arrow-08-1-FFFFFF-easey.json';
+import arrowLeft from '../../assets/lotties/lottieflow-arrow-08-1-0072F5-easey.json';
+import dropdown from '../../assets/lotties/lottieflow-dropdown-03-0072F5-easey.json';
 
 interface IHeaderProps {
   open: boolean;
@@ -72,6 +84,21 @@ const searchDropdown = [
   { pageName: 'searchPeople', pageLink: 'search/people' },
 ];
 
+const slideHorizontalAnimation = {
+  left: {
+    x: 0,
+    transition: {
+      duration: 0.3,
+    },
+  },
+  right: {
+    x: -290,
+    transition: {
+      duration: 0.3,
+    },
+  },
+};
+
 const languages = ['en', 'fr', 'vi'];
 
 const AppBar = styled(Grid.Container, {
@@ -87,7 +114,6 @@ const DropdownPage = ({
     pageLink: string;
   }[];
 }) => {
-  const { theme } = useTheme();
   const { t } = useTranslation('header');
 
   return (
@@ -100,44 +126,268 @@ const DropdownPage = ({
     >
       {pagesDropdown.map((page) => (
         <Row key={page.pageName}>
-          <NavLink to={`/${page.pageLink}`} end>
-            {({ isActive }) => (
-              <Text
-                h1
-                size={18}
-                css={{
-                  textTransform: 'uppercase',
-                  display: 'none',
-                  '@sm': {
-                    display: 'flex',
-                  },
-                }}
-              >
-                <NextLink
-                  block
-                  color="primary"
-                  css={{
-                    ...(isActive && {
-                      background: `${theme?.colors.primaryLightActive.value}`,
-                    }),
-                  }}
-                >
-                  {t(page.pageName)}
-                </NextLink>
-              </Text>
-            )}
-          </NavLink>
+          <NavLink linkTo={`/${page.pageLink}`} linkName={t(page.pageName)} />
         </Row>
       ))}
     </Grid.Container>
   );
 };
 
+const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
+  const { isDark } = useTheme();
+  const { setTheme } = useRemixTheme();
+  const navigate = useNavigate();
+  const [isLeftMenu, setIsLeftMenu] = React.useState(true);
+  const [isLanguageTab, setIsLanguageTab] = React.useState(false);
+  const [isDisplayTab, setIsDisplayTab] = React.useState(false);
+  const { t } = useTranslation('header');
+  return (
+    <motion.div
+      className="dropdown"
+      initial="left"
+      animate={isLeftMenu ? 'left' : 'right'}
+      variants={slideHorizontalAnimation}
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        height: '100%',
+        position: 'relative',
+        transition: 'height 0.3s',
+        width: '590px',
+        transform: `${isLeftMenu ? 'none' : ' translateZ(0px) translateX(-290px)'}`,
+      }}
+    >
+      <motion.div>
+        <Grid.Container
+          css={{
+            flexDirection: 'column',
+          }}
+        >
+          <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
+            <Button
+              light
+              color="primary"
+              size="md"
+              css={{ w: 260, h: 50 }}
+              icon={
+                <Avatar
+                  size="md"
+                  alt="Klee Cute"
+                  src={kleeCute}
+                  color="primary"
+                  bordered
+                  css={{ cursor: 'pointer' }}
+                />
+              }
+            >
+              {user ? (
+                <Text
+                  color="inherit"
+                  h3
+                  size={14}
+                  css={{
+                    marginLeft: '3.5rem',
+                    '@sm': {
+                      fontSize: '16px',
+                    },
+                  }}
+                >
+                  {user?.email ?? 'klee@example.com'}
+                </Text>
+              ) : (
+                <Link to="/sign-in">
+                  <Text
+                    color="inherit"
+                    h3
+                    size={14}
+                    css={{
+                      textTransform: 'uppercase',
+                      '@sm': {
+                        fontSize: '20px',
+                      },
+                    }}
+                  >
+                    Sign In
+                  </Text>
+                </Link>
+              )}
+            </Button>
+            <Divider x={1} css={{ width: 260, margin: '10px 40px 0 0' }} />
+          </Grid>
+          <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
+            <Button
+              flat
+              color="primary"
+              size="md"
+              onClick={() => {
+                setIsLanguageTab(true);
+                setIsLeftMenu(false);
+              }}
+              css={{ w: 260, h: 50 }}
+              icon={<GlobalIcon />}
+            >
+              Language
+            </Button>
+          </Grid>
+          <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
+            <Button
+              flat
+              color="primary"
+              size="md"
+              onClick={() => {
+                setIsDisplayTab(true);
+                setIsLeftMenu(false);
+              }}
+              css={{ w: 260, h: 50 }}
+            >
+              Display
+            </Button>
+          </Grid>
+          <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
+            {user ? (
+              <Button flat color="error" size="md" css={{ w: 260, h: 50 }}>
+                <Link to="/sign-out">
+                  <Text h4 color="error">
+                    Log out
+                  </Text>
+                </Link>
+              </Button>
+            ) : (
+              <Button flat color="primary" size="md" css={{ w: 260, h: 50 }}>
+                <Link to="/sign-up">Sign Up</Link>
+              </Button>
+            )}
+          </Grid>
+        </Grid.Container>
+      </motion.div>
+      <motion.div>
+        <Grid.Container
+          css={{
+            flexDirection: 'column',
+          }}
+        >
+          {isLanguageTab && (
+            <>
+              <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
+                <Button
+                  light
+                  color="primary"
+                  size="md"
+                  onClick={() => {
+                    setIsLanguageTab(false);
+                    setIsLeftMenu(true);
+                  }}
+                  css={{ w: 260, h: 50 }}
+                  icon={
+                    <Player
+                      src={arrowLeft}
+                      hover
+                      autoplay={false}
+                      speed={0.75}
+                      className="w-8 h-8"
+                      loop
+                    />
+                  }
+                >
+                  Language
+                </Button>
+                <Divider x={1} css={{ width: 260, margin: '10px 40px 0 0' }} />
+              </Grid>
+              {languages.map((lng) => (
+                <Grid
+                  key={lng}
+                  css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}
+                >
+                  <Button
+                    flat
+                    color="primary"
+                    size="md"
+                    onClick={() => {
+                      setIsLanguageTab(false);
+                      setIsLeftMenu(true);
+                      navigate(`/?lng=${lng}`);
+                    }}
+                    css={{ w: 260, h: 50 }}
+                  >
+                    {t(lng)}
+                  </Button>
+                </Grid>
+              ))}
+            </>
+          )}
+          {isDisplayTab && (
+            <>
+              <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
+                <Button
+                  light
+                  color="primary"
+                  size="md"
+                  onClick={() => {
+                    setIsDisplayTab(false);
+                    setIsLeftMenu(true);
+                  }}
+                  css={{ w: 260, h: 50 }}
+                  icon={
+                    <Player
+                      src={arrowLeft}
+                      hover
+                      autoplay={false}
+                      speed={0.75}
+                      className="w-8 h-8"
+                      loop
+                    />
+                  }
+                >
+                  Display
+                </Button>
+                <Divider x={1} css={{ width: 260, margin: '10px 40px 0 0' }} />
+              </Grid>
+              <Grid
+                direction="row"
+                justify="space-around"
+                alignItems="center"
+                css={{
+                  display: 'flex',
+                  width: 280,
+                  minHeight: 65,
+                }}
+              >
+                <Text h5>Light mode</Text>
+                <Switch
+                  checked={isDark}
+                  size="md"
+                  onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}
+                  iconOn={<MoonIcon filled />}
+                  iconOff={<SunIcon filled />}
+                  css={{ padding: 0 }}
+                />
+                <Text h5>Dark mode</Text>
+              </Grid>
+            </>
+          )}
+        </Grid.Container>
+      </motion.div>
+    </motion.div>
+  );
+};
+
 const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   const { t } = useTranslation('header');
-  const { setTheme } = useRemixTheme();
-  const { isDark, theme } = useTheme();
+  const { isDark } = useTheme();
   const { open, handleDrawerOpen, handleDrawerClose, user } = props;
+  const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
+  const [lottie, setLottie] = React.useState<AnimationItem>();
+  const isSm = useMediaQuery(650);
+  console.log('🚀 ~ file: Header.tsx ~ line 378 ~ isMinSm', isSm);
+
+  React.useEffect(() => {
+    if (isDropdownOpen) {
+      lottie?.playSegments([0, 50], true);
+    } else {
+      lottie?.playSegments([50, 96], true);
+    }
+  }, [isDropdownOpen]);
 
   return (
     <AppBar
@@ -178,213 +428,78 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
         >
           {open ? <ArrowLeftIcon /> : <MenuIcon />}
         </Button>
-        <NavLink to="/">
-          <Text
-            h6
-            size={36}
-            css={{
-              textGradient: '45deg, $blue600 -20%, $pink600 50%',
-              mr: 2,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              textDecoration: 'none',
-              display: 'none',
-              '@sm': {
-                display: 'flex',
-              },
-            }}
-            weight="bold"
-          >
-            LOGO
-          </Text>
-        </NavLink>
-        <NavLink to="/">
-          <Text
-            h5
-            size={30}
-            css={{
-              textGradient: '45deg, $blue600 -20%, $pink600 50%',
-              mr: 2,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              textDecoration: 'none',
-              display: 'flex',
-              '@sm': {
-                display: 'none',
-              },
-            }}
-            weight="bold"
-          >
-            LOGO
-          </Text>
-        </NavLink>
+        <NavLink linkTo="/" isLogo />
       </Grid>
 
       {/* link page */}
-      <Grid sm={6} alignItems="center">
-        {pages.map((page) => (
-          <Tooltip
-            key={page.pageName}
-            placement="bottom"
-            {...(page?.pageDropdown && {
-              content: <DropdownPage pagesDropdown={page?.pageDropdown || []} />,
-            })}
-            {...(page?.pageDescription && { content: t(page?.pageDescription) })}
-          >
-            <NavLink to={`/${page.pageLink}`} end style={{ marginRight: '10px' }}>
-              {({ isActive }) => (
-                <Text
-                  h1
-                  size={20}
-                  css={{
-                    textTransform: 'uppercase',
-                    display: 'none',
-                    '@sm': {
-                      display: 'flex',
-                    },
-                  }}
-                >
-                  <NextLink
-                    block
-                    color="primary"
-                    css={{
-                      ...(isActive && {
-                        background: `${theme?.colors.primaryLightActive.value}`,
-                      }),
-                    }}
-                  >
-                    {t(page.pageName)}
-                  </NextLink>
-                </Text>
-              )}
-            </NavLink>
-          </Tooltip>
-        ))}
+      <Grid
+        sm={6}
+        alignItems="center"
+        direction="row"
+        justify="center"
+        css={{
+          display: 'flex',
+        }}
+      >
+        {!isSm &&
+          pages.map((page) => (
+            <Tooltip
+              key={page.pageName}
+              placement="bottom"
+              {...(page?.pageDropdown && {
+                content: <DropdownPage pagesDropdown={page?.pageDropdown || []} />,
+              })}
+              {...(page?.pageDescription && { content: t(page?.pageDescription) })}
+            >
+              <NavLink
+                linkTo={`/${page.pageLink}`}
+                linkName={t(page.pageName)}
+                style={{ marginRight: '10px' }}
+              />
+            </Tooltip>
+          ))}
       </Grid>
 
-      {/* Avatar */}
       <Grid xs={6} sm={3} justify="flex-end" alignItems="center">
         {/* Search */}
         <Tooltip placement="bottom" content={<DropdownPage pagesDropdown={searchDropdown || []} />}>
-          <NavLink to="/search" end style={{ marginTop: '3px' }}>
-            {({ isActive }) => (
-              <NextLink
-                block
-                color="primary"
-                css={{
-                  ...(isActive && {
-                    background: `${theme?.colors.primaryLightActive.value}`,
-                  }),
-                }}
-              >
-                <SearchIcon fill="currentColor" filled />
-              </NextLink>
-            )}
-          </NavLink>
+          <NavLink
+            linkTo="/search"
+            isIcon
+            style={{ marginTop: '3px' }}
+            icon={<SearchIcon fill="currentColor" filled />}
+          />
         </Tooltip>
-        <Spacer y={1} />
-
-        {/* Language selector */}
-        <Dropdown placement="bottom-left">
-          <Dropdown.Trigger>
-            <Avatar squared icon={<GlobalIcon fill="currentColor" />} />
-          </Dropdown.Trigger>
-          <Dropdown.Menu color="primary" aria-label="Languages">
-            {languages.map((lng) => (
-              <Dropdown.Item key={lng}>
-                <Link key={lng} to={`/?lng=${lng}`}>
-                  {t(lng)}
-                </Link>
-              </Dropdown.Item>
-            ))}
-          </Dropdown.Menu>
-        </Dropdown>
-        <Spacer y={1} />
-
-        {/* Dark/Light mode switcher */}
-        <Switch
-          checked={isDark}
-          size="md"
-          onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}
-          iconOn={<MoonIcon filled />}
-          iconOff={<SunIcon filled />}
-          css={{
-            padding: 0,
-            '@xsMax': {
-              display: 'none',
-            },
-          }}
-        />
-        <Spacer y={1} />
-        {user ? (
-          <Dropdown placement="bottom-left">
-            <Dropdown.Trigger>
-              <Avatar
-                size="md"
-                alt="Klee Cute"
-                src={kleeCute}
-                color="primary"
-                bordered
-                css={{ cursor: 'pointer' }}
-              />
-            </Dropdown.Trigger>
-            <Dropdown.Menu color="secondary" aria-label="Avatar Actions">
-              <Dropdown.Item key="profile" css={{ height: '$18' }}>
-                <Text b color="inherit" css={{ d: 'flex' }}>
-                  {t('signedInAs')}
-                </Text>
-                <Text b color="inherit" css={{ d: 'flex' }}>
-                  {user?.email ?? 'klee@example.com'}
-                </Text>
-              </Dropdown.Item>
-              <Dropdown.Item key="settings" withDivider>
-                {t('settings')}
-              </Dropdown.Item>
-              <Dropdown.Item key="analytics" withDivider>
-                {t('analytics')}
-              </Dropdown.Item>
-              <Dropdown.Item key="system">{t('system')}</Dropdown.Item>
-              <Dropdown.Item key="configurations">{t('configs')}</Dropdown.Item>
-              <Dropdown.Item key="help_and_feedback" withDivider>
-                {t('help&feedback')}
-              </Dropdown.Item>
-              <Dropdown.Item key="logout" color="error" withDivider>
-                <Link to="/sign-out">
-                  <Text color="error">{t('logout')}</Text>
-                </Link>
-              </Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-        ) : (
-          <NavLink to="/sign-in" end>
-            {({ isActive }) => (
-              <Text
-                h1
-                size={14}
-                css={{
-                  textTransform: 'uppercase',
-                  '@sm': {
-                    fontSize: '20px',
-                  },
+        {/* Dropdown setting */}
+        <Popover placement="bottom-right" isOpen={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
+          <Popover.Trigger>
+            <Button auto light>
+              <Player
+                lottieRef={(instance) => {
+                  setLottie(instance);
                 }}
-              >
-                <NextLink
-                  block
-                  color="primary"
-                  css={{
-                    ...(isActive && {
-                      background: `${theme?.colors.primaryLightActive.value}`,
-                    }),
-                  }}
-                >
-                  {t('sign-in')}
-                </NextLink>
-              </Text>
-            )}
-          </NavLink>
-        )}
+                src={dropdown}
+                autoplay={false}
+                keepLastFrame
+                speed={2.7}
+                className="w-8 h-8"
+              />
+            </Button>
+          </Popover.Trigger>
+          <Popover.Content
+            css={{
+              display: 'block',
+              opacity: 1,
+              transform: 'none',
+              overflow: 'hidden',
+              transition: 'height 0.5s',
+              width: 280,
+              zIndex: 999,
+            }}
+          >
+            <MultiLevelDropdown user={user} />
+          </Popover.Content>
+        </Popover>
       </Grid>
     </AppBar>
   );

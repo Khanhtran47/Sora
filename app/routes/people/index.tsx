@@ -36,7 +36,7 @@ const ListPeoplePopular = () => {
   const isXs = useMediaQuery(650);
   const { t } = useTranslation();
 
-  const paginationChangeHandler = (page: number) => navigate(`/people/popular?page=${page}`);
+  const paginationChangeHandler = (page: number) => navigate(`/people?page=${page}`);
 
   return (
     <motion.div

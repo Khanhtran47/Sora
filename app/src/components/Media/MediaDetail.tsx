@@ -5,7 +5,7 @@ import React, { useRef } from 'react';
 import { Link } from '@remix-run/react';
 import { Card, Col, Text, Row, Button, Spacer } from '@nextui-org/react';
 
-import { useTranslation } from 'react-i18next';
+// import { useTranslation } from 'react-i18next';
 
 import { IMovieDetail, ITvShowDetail } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
@@ -29,7 +29,7 @@ const detailTab = [
 ];
 
 const MediaDetail = (props: IMediaDetail) => {
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
   const { type, item } = props;
   const ref = useRef<HTMLDivElement>(null);
   const size: IUseSize = useSize(ref);
@@ -121,6 +121,7 @@ const MediaDetail = (props: IMediaDetail) => {
                         to={`/${type === 'movie' ? 'movies' : 'tv-shows'}/watch/${id}`}
                       >
                         <Text
+                          h4
                           size={12}
                           weight="bold"
                           transform="uppercase"
@@ -189,6 +190,7 @@ const MediaDetail = (props: IMediaDetail) => {
                         to={`/${type === 'movie' ? 'movies' : 'tv-shows'}/watch/${id}`}
                       >
                         <Text
+                          h4
                           size={12}
                           weight="bold"
                           transform="uppercase"
@@ -210,6 +212,7 @@ const MediaDetail = (props: IMediaDetail) => {
               )}
             <Row>
               <Text
+                h1
                 size={18}
                 weight="bold"
                 transform="uppercase"
@@ -231,6 +234,7 @@ const MediaDetail = (props: IMediaDetail) => {
             </Row>
             <Row>
               <Text
+                h3
                 size={12}
                 css={{
                   margin: 0,
@@ -252,9 +256,10 @@ const MediaDetail = (props: IMediaDetail) => {
             {tagline && (
               <Row>
                 <Text
+                  h3
                   size={12}
-                  i
                   css={{
+                    fontStyle: 'italic',
                     margin: '10px 0 0 0',
                     '@xs': {
                       fontSize: '14px',
@@ -267,7 +272,7 @@ const MediaDetail = (props: IMediaDetail) => {
                     },
                   }}
                 >
-                  {t('userScore')}
+                  {tagline}
                 </Text>
               </Row>
             )}

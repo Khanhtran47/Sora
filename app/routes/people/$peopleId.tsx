@@ -3,7 +3,7 @@ import { Container, Text } from '@nextui-org/react';
 
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
-    <Link to={`/people/${match.params.peopleId}`}>${match.params.peopleId}</Link>
+    <Link to={`/people/${match.params.peopleId}`}>{match.params.peopleId}</Link>
   ),
 };
 
@@ -17,7 +17,7 @@ const PeopleDetail = () => {
         paddingLeft: '88px',
       }}
     >
-      <Text>
+      <Text h4 b>
         Hello, there, this is a people detail page, <b>id : {peopleId}</b>
       </Text>
     </Container>
