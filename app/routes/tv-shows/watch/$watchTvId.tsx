@@ -118,7 +118,7 @@ const TvWatch = () => {
       </Row>
       <Spacer y={1} />
       <Row>
-        <Dropdown trigger="longPress">
+        <Dropdown>
           <Dropdown.Button css={{ tt: 'capitalize' }}>{selectedSeason}</Dropdown.Button>
           <Dropdown.Menu
             aria-label="Single selection actions"
@@ -133,7 +133,7 @@ const TvWatch = () => {
           </Dropdown.Menu>
         </Dropdown>
         <Spacer x={1} />
-        <Dropdown trigger="longPress">
+        <Dropdown>
           <Dropdown.Button css={{ tt: 'capitalize' }}>{selectedEpisode}</Dropdown.Button>
           <Dropdown.Menu
             aria-label="Single selection actions"
