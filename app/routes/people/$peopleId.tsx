@@ -17,7 +17,7 @@ const PeopleDetail = () => {
         paddingLeft: '88px',
       }}
     >
-      <Text>
+      <Text h4 b>
         Hello, there, this is a people detail page, <b>id : {peopleId}</b>
       </Text>
     </Container>

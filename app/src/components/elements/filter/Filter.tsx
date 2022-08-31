@@ -78,7 +78,7 @@ const Filter = (props: IFilterProps) => {
     >
       <Grid>
         <Row justify="center">
-          <Text small size={16}>
+          <Text h4 small size={16}>
             {t('genre')}
           </Text>
         </Row>
@@ -103,7 +103,7 @@ const Filter = (props: IFilterProps) => {
       </Grid>
       <Grid>
         <Row justify="center">
-          <Text small size={16}>
+          <Text h4 small size={16}>
             {t('sortBy')}
           </Text>
         </Row>
@@ -126,7 +126,7 @@ const Filter = (props: IFilterProps) => {
       </Grid>
       <Grid>
         <Row justify="center">
-          <Text small size={16}>
+          <Text h4 small size={16}>
             {t('discover')}
           </Text>
         </Row>
@@ -138,7 +138,7 @@ const Filter = (props: IFilterProps) => {
       </Grid>
       <Grid>
         <Row justify="center">
-          <Text small size={16}>
+          <Text h4 small size={16}>
             {t('listType')}
           </Text>
         </Row>

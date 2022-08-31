@@ -49,6 +49,7 @@ const Tab = (props: ITabProps) => {
           >
             {({ isActive }) => (
               <Text
+                h4
                 size={16}
                 weight="bold"
                 transform="uppercase"

@@ -140,6 +140,7 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
   const [isLeftMenu, setIsLeftMenu] = React.useState(true);
   const [isLanguageTab, setIsLanguageTab] = React.useState(false);
   const [isDisplayTab, setIsDisplayTab] = React.useState(false);
+  const { t } = useTranslation('header');
   return (
     <motion.div
       className="dropdown"
@@ -247,7 +248,9 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
             {user ? (
               <Button flat color="error" size="md" css={{ w: 260, h: 50 }}>
                 <Link to="/sign-out">
-                  <Text color="error">Log out</Text>
+                  <Text h4 color="error">
+                    Log out
+                  </Text>
                 </Link>
               </Button>
             ) : (
@@ -289,6 +292,7 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                 >
                   Language
                 </Button>
+                <Divider x={1} css={{ width: 260, margin: '10px 40px 0 0' }} />
               </Grid>
               {languages.map((lng) => (
                 <Grid
@@ -306,7 +310,7 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                     }}
                     css={{ w: 260, h: 50 }}
                   >
-                    {lng}
+                    {t(lng)}
                   </Button>
                 </Grid>
               ))}
@@ -337,6 +341,7 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                 >
                   Display
                 </Button>
+                <Divider x={1} css={{ width: 260, margin: '10px 40px 0 0' }} />
               </Grid>
               <Grid
                 direction="row"
@@ -348,7 +353,7 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                   minHeight: 65,
                 }}
               >
-                <Text>Light mode</Text>
+                <Text h5>Light mode</Text>
                 <Switch
                   checked={isDark}
                   size="md"
@@ -357,7 +362,7 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                   iconOff={<SunIcon filled />}
                   css={{ padding: 0 }}
                 />
-                <Text>Dark mode</Text>
+                <Text h5>Dark mode</Text>
               </Grid>
             </>
           )}

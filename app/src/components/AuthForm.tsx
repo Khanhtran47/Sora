@@ -75,22 +75,32 @@ const AuthForm = ({ type, error }: IAuthForm) => {
               />
             </>
           )}
-          {error && <Text color="error">{error}</Text>}
+          {error && (
+            <Text h4 color="error">
+              {error}
+            </Text>
+          )}
           <Spacer />
           <Row justify="space-between">
             {type === 'sign-in' ? (
               <>
                 <Link to="/sign-up">
-                  <Text color="primary">{t('signUp')}</Text>
+                  <Text h4 color="primary">
+                    {t('signUp')}
+                  </Text>
                 </Link>
                 <Checkbox>
-                  <Text size={14}>{t('rememberMe')}</Text>
+                  <Text h4 size={14}>
+                    {t('rememberMe')}
+                  </Text>
                 </Checkbox>
-                {/* <Text size={14}>Forgot password?</Text> */}
+                {/* <Text h4 size={14}>Forgot password?</Text> */}
               </>
             ) : (
               <Link to="/sign-in">
-                <Text color="primary">{t('signIn')}</Text>
+                <Text h4 color="primary">
+                  {t('signIn')}
+                </Text>
               </Link>
             )}
           </Row>
