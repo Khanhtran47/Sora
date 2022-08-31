@@ -31,25 +31,25 @@ const TextNavLink = ({
         <Text
           h2
           size={18}
+          color="primary"
           css={{
             textTransform: 'uppercase',
+            padding: '0.25rem 0.5rem',
+            borderRadius: '14px',
+            transition: 'opacity 0.25s ease 0s, background 0.25s ease 0s',
             '@sm': {
               fontSize: '20px',
             },
+            '&:hover': {
+              opacity: '0.8',
+              backgroundColor: `${theme?.colors.primaryLightHover.value}`,
+            },
+            ...(isActive && {
+              background: `${theme?.colors.primaryLightActive.value}`,
+            }),
           }}
         >
-          <NextLink
-            as="div"
-            block
-            color="primary"
-            css={{
-              ...(isActive && {
-                background: `${theme?.colors.primaryLightActive.value}`,
-              }),
-            }}
-          >
-            {linkName}
-          </NextLink>
+          {linkName}
         </Text>
       )}
     </NavigationLink>
@@ -69,18 +69,28 @@ const IconNavLink = ({
   return (
     <NavigationLink to={linkTo} style={style}>
       {({ isActive }) => (
-        <NextLink
+        <Text
           as="div"
-          block
           color="primary"
           css={{
+            textTransform: 'uppercase',
+            padding: '0.25rem 0.5rem',
+            borderRadius: '14px',
+            transition: 'opacity 0.25s ease 0s, background 0.25s ease 0s',
+            '@sm': {
+              fontSize: '20px',
+            },
+            '&:hover': {
+              opacity: '0.8',
+              backgroundColor: `${theme?.colors.primaryLightHover.value}`,
+            },
             ...(isActive && {
               background: `${theme?.colors.primaryLightActive.value}`,
             }),
           }}
         >
           {icon}
-        </NextLink>
+        </Text>
       )}
     </NavigationLink>
   );

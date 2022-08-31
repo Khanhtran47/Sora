@@ -1,4 +1,4 @@
-import { Row, Col, Text, Link as NextLink, useTheme } from '@nextui-org/react';
+import { Row, Col, Text, useTheme } from '@nextui-org/react';
 import { NavLink } from '@remix-run/react';
 
 // import useMediaQuery from '~/hooks/useMediaQuery';
@@ -44,7 +44,9 @@ const Tab = (props: ITabProps) => {
             to={`${linkTo}${page.pageLink}`}
             className={({ isActive }) => `${isActive ? 'border-b-2 border-solid' : ''}`}
             style={({ isActive }) =>
-              isActive ? { borderColor: `${theme?.colors.primary.value}` } : {}
+              isActive
+                ? { borderColor: `${theme?.colors.primary.value}`, height: '50px' }
+                : { height: '50px' }
             }
           >
             {({ isActive }) => (
@@ -53,7 +55,20 @@ const Tab = (props: ITabProps) => {
                 size={16}
                 weight="bold"
                 transform="uppercase"
+                color="primary"
                 css={{
+                  height: '40px',
+                  padding: '0.25rem 0.5rem',
+                  borderRadius: '14px',
+                  alignItems: 'center',
+                  transition: 'opacity 0.25s ease 0s, background 0.25s ease 0s',
+                  ...(isActive && {
+                    background: `${theme?.colors.primaryLightActive.value}`,
+                  }),
+                  '&:hover': {
+                    opacity: '0.8',
+                    backgroundColor: `${theme?.colors.primaryLightHover.value}`,
+                  },
                   '@xs': {
                     fontSize: '18px',
                   },
@@ -62,20 +77,7 @@ const Tab = (props: ITabProps) => {
                   },
                 }}
               >
-                <NextLink
-                  block
-                  color="primary"
-                  css={{
-                    height: '45px',
-                    borderRadius: '14px 14px 0 0',
-                    alignItems: 'center',
-                    ...(isActive && {
-                      background: `${theme?.colors.primaryLightActive.value}`,
-                    }),
-                  }}
-                >
-                  {page.pageName}
-                </NextLink>
+                {page.pageName}
               </Text>
             )}
           </NavLink>
