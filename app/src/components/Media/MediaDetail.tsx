@@ -118,7 +118,7 @@ const MediaDetail = (props: IMediaDetail) => {
                     >
                       <Link
                         prefetch="intent"
-                        to={`/${type === 'movie' ? 'movies' : 'tv-shows'}/watch/${id}`}
+                        to={`/${type === 'movie' ? 'movies' : 'tv-shows'}/${id}/watch`}
                       >
                         <Text
                           h4
@@ -126,6 +126,7 @@ const MediaDetail = (props: IMediaDetail) => {
                           weight="bold"
                           transform="uppercase"
                           css={{
+                            margin: 0,
                             '@xs': {
                               fontSize: '18px',
                             },
@@ -187,7 +188,7 @@ const MediaDetail = (props: IMediaDetail) => {
                     >
                       <Link
                         prefetch="intent"
-                        to={`/${type === 'movie' ? 'movies' : 'tv-shows'}/watch/${id}`}
+                        to={`/${type === 'movie' ? 'movies' : 'tv-shows'}/${id}/watch`}
                       >
                         <Text
                           h4
@@ -195,6 +196,7 @@ const MediaDetail = (props: IMediaDetail) => {
                           weight="bold"
                           transform="uppercase"
                           css={{
+                            margin: 0,
                             '@xs': {
                               fontSize: '18px',
                             },

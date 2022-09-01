@@ -59,7 +59,7 @@ const BannerItem = ({
       : tinycolor(data).saturate(70).toString();
   }
   return (
-    <Card variant="flat" css={{ w: '100%', h: '70vh', borderWidth: 0 }}>
+    <Card variant="flat" css={{ w: '100%', h: '70vh', borderWidth: 0 }} role="figure">
       <Card.Header css={{ position: 'absolute', zIndex: 1 }}>
         <Row>
           <Col
@@ -176,6 +176,7 @@ const BannerItem = ({
             <Card.Image
               src={posterPath || ''}
               alt={title}
+              title={title}
               objectFit="cover"
               width="40%"
               css={{
@@ -190,6 +191,7 @@ const BannerItem = ({
             <Card.Image
               src={posterPath || ''}
               alt={title}
+              title={title}
               objectFit="cover"
               width="50%"
               css={{
@@ -230,7 +232,8 @@ const BannerItem = ({
             objectFit: 'cover',
             opacity: 0.3,
           }}
-          alt="Card example background"
+          alt={title}
+          title={title}
           loading="lazy"
         />
       </Card.Body>
@@ -343,16 +346,18 @@ const CardItem = ({ item }: { item: IMedia }) => {
         //   setStyle({ display: 'block' });
         // }}
         className={isDark ? 'bg-black/70' : 'bg-white/70'}
+        role="figure"
       >
         <Card.Image
           src={posterPath || ''}
           objectFit="cover"
           width="100%"
           height="auto"
-          alt="Card image background"
+          alt={title}
           showSkeleton
           maxDelay={10000}
           loading="lazy"
+          title={title}
         />
         {/* <Card.Footer
         isBlurred

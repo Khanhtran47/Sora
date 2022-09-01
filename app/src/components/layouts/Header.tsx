@@ -419,6 +419,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
           onClick={open ? handleDrawerClose : handleDrawerOpen}
           light
           auto
+          aria-label="menu"
           css={{
             paddingRight: 8,
             paddingLeft: 8,
@@ -472,7 +473,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
         {/* Dropdown setting */}
         <Popover placement="bottom-right" isOpen={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
           <Popover.Trigger>
-            <Button auto light>
+            <Button auto light aria-label="dropdown">
               <Player
                 lottieRef={(instance) => {
                   setLottie(instance);

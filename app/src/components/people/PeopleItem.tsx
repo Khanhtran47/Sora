@@ -130,6 +130,8 @@ const CardItem = ({ item }: { item: IPeople }) => {
         color="customColor"
         bordered
         zoomed
+        alt={name}
+        title={name}
       />
       <Spacer y={1} />
       <Tooltip
