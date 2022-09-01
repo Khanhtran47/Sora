@@ -99,7 +99,14 @@ const PeopleListCard = ({ items, type }: { items: IPeople[]; type?: 'people' | '
             const href = `/people/${item.id}`;
             return (
               <SwiperSlide key={i} style={type === 'people' ? peopleWidth : castWidth}>
-                <Link to={href}>
+                <Link
+                  to={href}
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                  }}
+                >
                   <PeopleItem item={item} />
                 </Link>
               </SwiperSlide>

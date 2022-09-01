@@ -379,7 +379,6 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
   const [lottie, setLottie] = React.useState<AnimationItem>();
   const isSm = useMediaQuery(650);
-  console.log('🚀 ~ file: Header.tsx ~ line 378 ~ isMinSm', isSm);
 
   React.useEffect(() => {
     if (isDropdownOpen) {

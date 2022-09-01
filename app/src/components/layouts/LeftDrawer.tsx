@@ -179,6 +179,7 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                     h4
                     size={18}
                     css={{
+                      margin: 0,
                       display: 'flex',
                       minHeight: 65,
                       minWidth: 65,
