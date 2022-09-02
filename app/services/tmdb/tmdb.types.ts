@@ -266,3 +266,31 @@ export interface IListPeople {
   total_pages: number;
   total_results: number;
 }
+
+export interface IPeopleDetail {
+  birthday?: string | null;
+  known_for_department?: string;
+  deathday?: null | string;
+  id?: number;
+  name?: string;
+  also_known_as?: string[];
+  gender?: number;
+  biography?: string;
+  popularity?: number;
+  place_of_birth?: string | null;
+  profile_path?: string | null;
+  adult?: boolean;
+  imdb_id?: string;
+  homepage?: undefined | string;
+}
+
+export interface IPeopleExternalIds {
+  imdb_id?: string | null;
+  facebook_id?: null | string;
+  freebase_mid?: string | null;
+  freebase_id?: null | string;
+  tvrage_id?: number | null;
+  twitter_id?: null | string;
+  id?: number;
+  instagram_id?: string | null;
+}

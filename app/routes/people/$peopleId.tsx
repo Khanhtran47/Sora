@@ -1,5 +1,44 @@
-import { useParams, Link, RouteMatch } from '@remix-run/react';
-import { Container, Text } from '@nextui-org/react';
+/* eslint-disable @typescript-eslint/no-throw-literal */
+import { LoaderFunction, json } from '@remix-run/node';
+import { useCatch, useLoaderData, Outlet, Link, RouteMatch } from '@remix-run/react';
+import { Container, Row, Col, useTheme } from '@nextui-org/react';
+
+import { getPeopleDetail, getPeopleExternalIds } from '~/services/tmdb/tmdb.server';
+import i18next from '~/i18n/i18next.server';
+import useMediaQuery from '~/hooks/useMediaQuery';
+import PeopleDetail from '~/src/components/people/PeopleDetail';
+import Tab from '~/src/components/elements/Tab';
+import CatchBoundaryView from '~/src/components/CatchBoundaryView';
+import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
+
+type LoaderData = {
+  detail: Awaited<ReturnType<typeof getPeopleDetail>>;
+  externalIds: {
+    facebookId: null | string;
+    instagramId: string | null;
+    twitterId: null | string;
+  };
+};
+
+export const loader: LoaderFunction = async ({ request, params }) => {
+  const locale = await i18next.getLocale(request);
+  const { peopleId } = params;
+  const pid = Number(peopleId);
+  if (!pid) throw new Response('Not Found', { status: 404 });
+
+  const detail = await getPeopleDetail(pid, locale);
+  const externalIds = await getPeopleExternalIds(pid, locale);
+  if (!detail || !externalIds) throw new Response('Not Found', { status: 404 });
+
+  return json<LoaderData>({
+    detail,
+    externalIds: {
+      facebookId: externalIds.facebook_id || null,
+      instagramId: externalIds.instagram_id || null,
+      twitterId: externalIds.twitter_id || null,
+    },
+  });
+};
 
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
@@ -7,21 +46,75 @@ export const handle = {
   ),
 };
 
-const PeopleDetail = () => {
-  const { peopleId } = useParams();
+const detailTab = [
+  { pageName: 'Overview', pageLink: '/overview' },
+  { pageName: 'Credits', pageLink: '/credits' },
+  { pageName: 'Media', pageLink: '/media' },
+];
+
+const PeopleDetailPage = () => {
+  const { detail, externalIds } = useLoaderData<LoaderData>();
+  console.log('🚀 ~ file: $peopleId.tsx ~ line 46 ~ PeopleDetailPage ~ externalIds', externalIds);
+  console.log('🚀 ~ file: $peopleId.tsx ~ line 35 ~ PeopleDetail ~ detail', detail);
+  const { theme } = useTheme();
+  console.log('🚀 ~ file: $peopleId.tsx ~ line 46 ~ PeopleDetailPage ~ theme', theme);
+  const isSm = useMediaQuery(650, 'max');
   return (
     <Container
+      as="div"
+      fluid
+      responsive
       css={{
         margin: 0,
         paddingTop: '92px',
         paddingLeft: '88px',
+        '@smMax': {
+          paddingLeft: 0,
+          paddingBottom: '65px',
+        },
       }}
     >
-      <Text h4 b>
-        Hello, there, this is a people detail page, <b>id : {peopleId}</b>
-      </Text>
+      <Tab pages={detailTab} linkTo={`/people/${detail?.id}`} />
+      <Row
+        fluid
+        align="stretch"
+        justify="center"
+        wrap="wrap"
+        css={{
+          marginTop: '0.75rem',
+          padding: '0 0.75rem',
+          '@xs': {
+            padding: '0 3vw',
+          },
+          '@sm': {
+            padding: '0 6vw',
+          },
+          '@md': {
+            padding: '0 12vw',
+          },
+        }}
+      >
+        <Col span={isSm ? 12 : 4}>
+          <PeopleDetail detail={detail} externalIds={externalIds} />
+        </Col>
+        <Col span={isSm ? 12 : 8}>
+          <Outlet />
+        </Col>
+      </Row>
     </Container>
   );
 };
 
-export default PeopleDetail;
+export const CatchBoundary = () => {
+  const caught = useCatch();
+
+  return <CatchBoundaryView caught={caught} />;
+};
+
+export const ErrorBoundary = ({ error }: { error: Error }) => {
+  const isProd = process.env.NODE_ENV === 'production';
+
+  return <ErrorBoundaryView error={error} isProd={isProd} />;
+};
+
+export default PeopleDetailPage;

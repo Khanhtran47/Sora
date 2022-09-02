@@ -16,9 +16,8 @@ const Copyright = () => (
     }}
   >
     <Avatar alt="Klee Cute" src={KleeCute} css={{ size: '$20' }} />
-    <Text h5>
-      {'© '}
-      <Link href="https://remix-watchmovie.vercel.app/">Remix Movie</Link>{' '}
+    <Text h5 css={{ marginTop: '1rem' }}>
+      <Link href="https://remix-watchmovie.vercel.app/">© Remix Movie</Link>{' '}
     </Text>
   </Container>
 );
