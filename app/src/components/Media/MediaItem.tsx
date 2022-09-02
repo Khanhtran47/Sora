@@ -39,7 +39,7 @@ const BannerItem = ({
   const { backdropPath, overview, posterPath, title, id, mediaType } = item;
   const {
     data,
-    loading,
+    // loading,
     // error,
   } = useColor(
     `https://api.allorigins.win/raw?url=${encodeURIComponent(posterPath || '')}`,
@@ -59,7 +59,7 @@ const BannerItem = ({
       : tinycolor(data).saturate(70).toString();
   }
   return (
-    <Card variant="flat" css={{ w: '100%', h: '70vh', borderWidth: 0 }}>
+    <Card variant="flat" css={{ w: '100%', h: '70vh', borderWidth: 0 }} role="figure">
       <Card.Header css={{ position: 'absolute', zIndex: 1 }}>
         <Row>
           <Col
@@ -72,106 +72,99 @@ const BannerItem = ({
               },
             }}
           >
-            {loading ? (
-              <Loading type="default" size="xl" />
-            ) : (
-              <>
-                <Text
-                  size={28}
-                  weight="bold"
-                  color={colorDarkenLighten}
-                  css={{
-                    margin: 0,
-                    '@xs': {
-                      fontSize: '40px',
-                    },
-                    '@sm': {
-                      fontSize: '50px',
-                    },
-                    '@md': {
-                      fontSize: '68px',
-                    },
-                  }}
-                >
-                  {title}
-                </Text>
+            <Text
+              size={28}
+              weight="bold"
+              color={colorDarkenLighten || undefined}
+              css={{
+                transition: 'color 0.25s ease 0s',
+                margin: 0,
+                '@xs': {
+                  fontSize: '40px',
+                },
+                '@sm': {
+                  fontSize: '50px',
+                },
+                '@md': {
+                  fontSize: '68px',
+                },
+              }}
+            >
+              {title}
+            </Text>
+            <Text
+              size={12}
+              weight="bold"
+              css={{
+                margin: '5vh 0 0 0',
+                textAlign: 'justify',
+                '@xs': {
+                  fontSize: '16px',
+                },
+                '@sm': {
+                  fontSize: '18px',
+                },
+              }}
+            >
+              {overview && overview.length > 400 ? `${overview?.substring(0, 400)}...` : overview}
+            </Text>
+            <Row wrap="wrap">
+              <Button
+                auto
+                shadow
+                rounded
+                css={{
+                  marginTop: '5vh',
+                }}
+              >
+                <Link to={`/${mediaType === 'movie' ? 'movies/' : 'tv-shows/'}${id}`}>
+                  <Text
+                    size={12}
+                    weight="bold"
+                    transform="uppercase"
+                    css={{
+                      '@xs': {
+                        fontSize: '18px',
+                      },
+                      '@sm': {
+                        fontSize: '20px',
+                      },
+                    }}
+                  >
+                    {t('watchNow')}
+                  </Text>
+                </Link>
+              </Button>
+              <Spacer y={1} />
+              <Button
+                auto
+                shadow
+                rounded
+                bordered
+                css={{
+                  marginTop: '5vh',
+                }}
+                onClick={() => {
+                  handler && handler(Number(id), mediaType);
+                }}
+              >
                 <Text
                   size={12}
                   weight="bold"
+                  transform="uppercase"
                   css={{
-                    margin: '5vh 0 0 0',
-                    textAlign: 'justify',
                     '@xs': {
-                      fontSize: '16px',
+                      fontSize: '18px',
                     },
                     '@sm': {
-                      fontSize: '18px',
+                      fontSize: '20px',
                     },
                   }}
                 >
-                  {overview && overview.length > 400
-                    ? `${overview?.substring(0, 400)}...`
-                    : overview}
+                  {t('watchTrailer')}
                 </Text>
-                <Row wrap="wrap">
-                  <Button
-                    auto
-                    shadow
-                    rounded
-                    css={{
-                      marginTop: '5vh',
-                    }}
-                  >
-                    <Link to={`/${mediaType === 'movie' ? 'movies/' : 'tv-shows/'}${id}`}>
-                      <Text
-                        size={12}
-                        weight="bold"
-                        transform="uppercase"
-                        css={{
-                          '@xs': {
-                            fontSize: '18px',
-                          },
-                          '@sm': {
-                            fontSize: '20px',
-                          },
-                        }}
-                      >
-                        {t('watchNow')}
-                      </Text>
-                    </Link>
-                  </Button>
-                  <Spacer y={1} />
-                  <Button
-                    auto
-                    shadow
-                    rounded
-                    bordered
-                    css={{
-                      marginTop: '5vh',
-                    }}
-                    onClick={() => {
-                      handler && handler(Number(id), mediaType);
-                    }}
-                  >
-                    <Text
-                      size={12}
-                      weight="bold"
-                      transform="uppercase"
-                      css={{
-                        '@xs': {
-                          fontSize: '18px',
-                        },
-                        '@sm': {
-                          fontSize: '20px',
-                        },
-                      }}
-                    >
-                      {t('watchTrailer')}
-                    </Text>
-                  </Button>
-                </Row>
-              </>
-            )}
+              </Button>
+            </Row>
           </Col>
           <Col
             css={{
@@ -183,6 +176,7 @@ const BannerItem = ({
             <Card.Image
               src={posterPath || ''}
               alt={title}
+              title={title}
               objectFit="cover"
               width="40%"
               css={{
@@ -197,6 +191,7 @@ const BannerItem = ({
             <Card.Image
               src={posterPath || ''}
               alt={title}
+              title={title}
               objectFit="cover"
               width="50%"
               css={{
@@ -237,7 +232,8 @@ const BannerItem = ({
             objectFit: 'cover',
             opacity: 0.3,
           }}
-          alt="Card example background"
+          alt={title}
+          title={title}
           loading="lazy"
         />
       </Card.Body>
@@ -312,13 +308,12 @@ const CardItemHover = ({ item }: { item: IMedia }) => {
 };
 
 const CardItem = ({ item }: { item: IMedia }) => {
-  const [style, setStyle] = React.useState<React.CSSProperties>({ display: 'block' });
+  // const [style, setStyle] = React.useState<React.CSSProperties>({ display: 'block' });
   const { isDark } = useTheme();
-  // TODO: add spinner on loading color
   const { title, posterPath } = item;
   const {
     data,
-    loading,
+    // loading,
     // error,
   } = useColor(
     `https://api.allorigins.win/raw?url=${encodeURIComponent(posterPath || '')}`,
@@ -339,73 +334,79 @@ const CardItem = ({ item }: { item: IMedia }) => {
   }
 
   return (
-    <Tooltip
-      placement="bottom"
-      content={<CardItemHover item={item} />}
-      rounded
-      shadow
-      className="!w-fit"
-    >
+    <>
       <Card
         as="div"
         variant="flat"
         css={{ borderWidth: 0 }}
-        onMouseEnter={() => {
-          setStyle({ display: 'none' });
-        }}
-        onMouseLeave={() => {
-          setStyle({ display: 'block' });
-        }}
+        // onMouseEnter={() => {
+        //   setStyle({ display: 'none' });
+        // }}
+        // onMouseLeave={() => {
+        //   setStyle({ display: 'block' });
+        // }}
         className={isDark ? 'bg-black/70' : 'bg-white/70'}
+        role="figure"
       >
         <Card.Image
           src={posterPath || ''}
           objectFit="cover"
           width="100%"
-          height={340}
-          alt="Card image background"
+          height="auto"
+          alt={title}
           showSkeleton
           maxDelay={10000}
           loading="lazy"
+          title={title}
         />
-        <Card.Footer
-          isBlurred
+        {/* <Card.Footer
+        isBlurred
+        css={{
+          position: 'absolute',
+          bgBlur: isDark ? 'rgb(0 0 0 / 0.8)' : 'rgb(255 255 255 / 0.8)',
+          bottom: 0,
+          zIndex: 1,
+          height: '80px',
+          alignItems: 'center',
+          '@sm': {
+            height: '100px',
+            ...style,
+          },
+        }}
+        className={isDark ? 'bg-black/30' : 'bg-white/30'}
+      >
+
+      </Card.Footer> */}
+      </Card>
+      <Spacer y={0.25} />
+      <Tooltip
+        placement="bottom"
+        content={<CardItemHover item={item} />}
+        rounded
+        shadow
+        className="!w-fit"
+      >
+        <Text
+          size={14}
+          b
           css={{
-            position: 'absolute',
-            bgBlur: isDark ? 'rgb(0 0 0 / 0.8)' : 'rgb(255 255 255 / 0.8)',
-            bottom: 0,
-            zIndex: 1,
-            height: '80px',
-            alignItems: 'center',
+            padding: '0 0.25rem',
+            '@xs': {
+              fontSize: '16px',
+            },
             '@sm': {
-              height: '100px',
-              ...style,
+              fontSize: '18px',
+            },
+            '&:hover': {
+              color: colorDarkenLighten,
             },
           }}
-          className={isDark ? 'bg-black/30' : 'bg-white/30'}
         >
-          {loading ? (
-            <Loading type="points-opacity" />
-          ) : (
-            <Text
-              size={14}
-              b
-              color={colorDarkenLighten}
-              css={{
-                '@xs': {
-                  fontSize: '16px',
-                },
-                '@sm': {
-                  fontSize: '18px',
-                },
-              }}
-            >
-              {title}
-            </Text>
-          )}
-        </Card.Footer>
-      </Card>
-    </Tooltip>
+          {title}
+        </Text>
+      </Tooltip>
+      <Spacer y={1} />
+    </>
   );
 };
 

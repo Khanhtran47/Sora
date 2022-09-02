@@ -13,6 +13,7 @@ import {
   getListTvShows,
   getListPeople,
 } from '~/services/tmdb/tmdb.server';
+import { IMedia, IPeople } from '~/services/tmdb/tmdb.types';
 import useWindowSize from '~/hooks/useWindowSize';
 import MediaList from '~/src/components/Media/MediaList';
 import PeopleList from '~/src/components/people/PeopleList';
@@ -41,10 +42,10 @@ type Trailer = {
 };
 
 type LoaderData = {
-  todayTrending: Awaited<ReturnType<typeof getTrending>>;
-  movies: Awaited<ReturnType<typeof getListMovies>>;
-  shows: Awaited<ReturnType<typeof getListTvShows>>;
-  people: Awaited<ReturnType<typeof getListPeople>>;
+  todayTrending: IMedia[] | undefined;
+  movies: IMedia[] | undefined;
+  shows: IMedia[] | undefined;
+  people: IPeople[] | undefined;
 };
 
 export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
@@ -53,12 +54,16 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page'));
   if (page && (page < 1 || page > 1000)) page = 1;
+  const todayTrending = await getTrending('all', 'day', locale, page);
+  const movies = await getListMovies('popular', locale, page);
+  const shows = await getListTvShows('popular', locale, page);
+  const people = await getListPeople('popular', locale, page);
 
   return json<LoaderData>({
-    todayTrending: await getTrending('all', 'day', locale, page),
-    movies: await getListMovies('popular', locale, page),
-    shows: await getListTvShows('popular', locale, page),
-    people: await getListPeople('popular', locale, page),
+    todayTrending: todayTrending && todayTrending.items && todayTrending.items.slice(0, 10),
+    movies: movies && movies.items && movies.items.slice(0, 15),
+    shows: shows && shows.items && shows.items.slice(0, 15),
+    people: people && people.results && people.results.slice(0, 15),
   });
 };
 
@@ -104,11 +109,12 @@ const Index = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
-  const [trending] = React.useState(todayTrending.items);
+  const [trending] = React.useState(todayTrending);
   const { t } = useTranslation('home');
 
   const onClickViewMore = (type: 'movies' | 'tv-shows' | 'people') => {
-    navigate(`/${type}/popular`);
+    if (type === 'people') navigate(`/${type}`);
+    else navigate(`/${type}/popular`);
   };
 
   return (
@@ -134,10 +140,10 @@ const Index = () => {
           },
         }}
       >
-        {movies?.items.length > 0 && (
+        {movies.length > 0 && (
           <MediaList
             listType="slider-card"
-            items={movies.items}
+            items={movies}
             listName={t('popularMovies')}
             showMoreList
             onClickViewMore={() => onClickViewMore('movies')}
@@ -158,10 +164,10 @@ const Index = () => {
           },
         }}
       >
-        {shows?.items.length > 0 && (
+        {shows.length > 0 && (
           <MediaList
             listType="slider-card"
-            items={shows.items}
+            items={shows}
             listName={t('popularTv')}
             showMoreList
             onClickViewMore={() => onClickViewMore('tv-shows')}
@@ -182,10 +188,10 @@ const Index = () => {
           },
         }}
       >
-        {people?.results.length > 0 && (
+        {people.length > 0 && (
           <PeopleList
             listType="slider-card"
-            items={people.results}
+            items={people}
             listName={t('popularPeople')}
             showMoreList
             onClickViewMore={() => onClickViewMore('people')}

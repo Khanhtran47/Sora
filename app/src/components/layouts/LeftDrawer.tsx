@@ -1,16 +1,6 @@
 import * as React from 'react';
 import { NavLink } from '@remix-run/react';
-import {
-  Spacer,
-  Link,
-  Switch,
-  Text,
-  Grid,
-  Container,
-  Row,
-  useTheme,
-  styled,
-} from '@nextui-org/react';
+import { Spacer, Switch, Text, Grid, Container, Row, useTheme, styled } from '@nextui-org/react';
 import { useTheme as useRemixTheme } from 'next-themes';
 import { useTranslation } from 'react-i18next';
 
@@ -166,6 +156,7 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
               <NavLink
                 to={`/${page.pageLink}`}
                 className="flex flex-row"
+                onClick={handleDrawerClose}
                 style={{
                   display: 'block',
                   minHeight: 65,
@@ -178,41 +169,39 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                   <Text
                     h4
                     size={18}
+                    color="primary"
                     css={{
+                      margin: 0,
                       display: 'flex',
                       minHeight: 65,
                       minWidth: 65,
+                      alignItems: 'center',
+                      justifyContent: 'flex-start',
+                      borderRadius: '14px',
+                      transition: 'opacity 0.25s ease 0s, background 0.25s ease 0s',
+                      '@sm': {
+                        fontSize: '20px',
+                      },
+                      '&:hover': {
+                        opacity: '0.8',
+                        backgroundColor: `${theme?.colors.primaryLightHover.value}`,
+                      },
                       ...(open && {
                         width: drawerWidth,
                       }),
+                      ...(isActive && {
+                        background: `${theme?.colors.primaryLightActive.value}`,
+                      }),
+                      paddingLeft: 20,
                     }}
                   >
-                    <Link
-                      block
-                      color="primary"
-                      onClick={handleDrawerClose}
-                      css={{
-                        ...(isActive && {
-                          background: `${theme?.colors.primaryLightActive.value}`,
-                        }),
-                        minHeight: 65,
-                        minWidth: 65,
-                        alignItems: 'center',
-                        justifyContent: 'flex-start',
-                        ...(open && {
-                          width: drawerWidth,
-                        }),
-                        paddingLeft: 20,
-                      }}
-                    >
-                      {isActive ? iconItem(index, true) : iconItem(index, false)}
-                      {open && (
-                        <>
-                          <Spacer />
-                          {t(page.pageName)}
-                        </>
-                      )}
-                    </Link>
+                    {isActive ? iconItem(index, true) : iconItem(index, false)}
+                    {open && (
+                      <>
+                        <Spacer />
+                        {t(page.pageName)}
+                      </>
+                    )}
                   </Text>
                 )}
               </NavLink>

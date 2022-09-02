@@ -37,7 +37,7 @@ const MediaListGrid = ({ items }: { items: IMedia[] }) => {
   const isXs = useMediaQuery(650);
   const gap = isXs ? 1 : 2;
   return (
-    <Grid.Container gap={gap} justify="flex-start" alignItems="center">
+    <Grid.Container gap={gap} justify="flex-start" alignItems="stretch">
       {items?.length > 0 &&
         items.map((item) => {
           const href = (item.mediaType === 'movie' ? '/movies/' : '/tv-shows/') + item.id;

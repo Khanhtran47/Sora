@@ -379,7 +379,6 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
   const [lottie, setLottie] = React.useState<AnimationItem>();
   const isSm = useMediaQuery(650);
-  console.log('🚀 ~ file: Header.tsx ~ line 378 ~ isMinSm', isSm);
 
   React.useEffect(() => {
     if (isDropdownOpen) {
@@ -420,6 +419,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
           onClick={open ? handleDrawerClose : handleDrawerOpen}
           light
           auto
+          aria-label="menu"
           css={{
             paddingRight: 8,
             paddingLeft: 8,
@@ -473,7 +473,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
         {/* Dropdown setting */}
         <Popover placement="bottom-right" isOpen={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
           <Popover.Trigger>
-            <Button auto light>
+            <Button auto light aria-label="dropdown">
               <Player
                 lottieRef={(instance) => {
                   setLottie(instance);

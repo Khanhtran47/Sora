@@ -1,20 +1,20 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
 import { MetaFunction, LoaderFunction, json } from '@remix-run/node';
-import { useCatch, useLoaderData, useLocation, Link, RouteMatch } from '@remix-run/react';
-import { Container, Row, Radio } from '@nextui-org/react';
+import { useCatch, useLoaderData, Link, RouteMatch } from '@remix-run/react';
+import { Container, Row, Radio, Spacer } from '@nextui-org/react';
 
 import { getMovieDetail } from '~/services/tmdb/tmdb.server';
 import Player from '~/utils/player';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
+import useWindowSize from '~/hooks/useWindowSize';
 
 type LoaderData = {
   detail: Awaited<ReturnType<typeof getMovieDetail>>;
 };
 
 export const meta: MetaFunction = () => ({
-  title: 'My Amazing App',
   refresh: {
     httpEquiv: 'Content-Security-Policy',
     content: 'upgrade-insecure-requests',
@@ -22,8 +22,8 @@ export const meta: MetaFunction = () => ({
 });
 
 export const loader: LoaderFunction = async ({ params }) => {
-  const { watchMovieId } = params;
-  const mid = Number(watchMovieId);
+  const { movieId } = params;
+  const mid = Number(movieId);
 
   if (!mid) throw new Response('Not Found', { status: 404 });
 
@@ -38,16 +38,22 @@ export const loader: LoaderFunction = async ({ params }) => {
 
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
-    <Link to={`/movies/watch/${match.params.watchTvId}`}>{match.params.watchTvId}</Link>
+    <>
+      <Link to={`/movies/${match.params.movieId}`}>{match.params.movieId}</Link>
+      <Spacer x={0.5} />
+      <span> ❱ </span>
+      <Spacer x={0.5} />
+      <Link to={`/movies/${match.params.movieId}/watch`}>Watch</Link>
+    </>
   ),
 };
 
 const MovieWatch = () => {
   const { detail } = useLoaderData<LoaderData>();
-  const location = useLocation();
-  const id = location.pathname.split('/')[3];
+  const id = detail && detail.id;
   const [player, setPlayer] = React.useState<string>('1');
   const [source, setSource] = React.useState<string>(Player.moviePlayerUrl(Number(id), 1));
+  const { width } = useWindowSize();
   React.useEffect(
     () =>
       player === '2'
@@ -59,9 +65,34 @@ const MovieWatch = () => {
     <Container
       fluid
       css={{
-        margin: 0,
+        paddingTop: '100px',
+        paddingLeft: '88px',
+        paddingRight: 0,
+        '@mdMax': {
+          paddingLeft: '1rem',
+          paddingBottom: '65px',
+        },
       }}
     >
+      <Row>
+        <iframe
+          id="iframe"
+          src={source}
+          style={{
+            top: 0,
+            left: 0,
+            width: `${width && width < 960 ? `${width - 32}px` : `${width && width - 100}px`}`,
+            height: `${width && width < 960 ? `${(width - 16) / 1.5}px` : '577px'}`,
+          }}
+          frameBorder="0"
+          title="movie-player"
+          allowFullScreen
+          scrolling="no"
+          // @ts-expect-error: this is expected
+          sandbox
+        />
+      </Row>
+      <Spacer y={1} />
       <Row>
         <Radio.Group
           label="Choose Player"
@@ -74,24 +105,6 @@ const MovieWatch = () => {
           <Radio value="2">Player 2</Radio>
           <Radio value="3">Player 3</Radio>
         </Radio.Group>
-      </Row>
-      <Row css={{ height: '100vh' }}>
-        <iframe
-          id="iframe"
-          src={source}
-          style={{
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-          }}
-          frameBorder="0"
-          title="movie-player"
-          allowFullScreen
-          scrolling="no"
-          // @ts-expect-error: this is expected
-          sandbox
-        />
       </Row>
     </Container>
   );

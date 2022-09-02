@@ -37,7 +37,14 @@ const PeopleListGrid = ({ items }: { items: IPeople[] }) => {
           const href = `/people/${item.id}`;
           return (
             <Grid xs={6} sm={4} md={3} lg={2} key={item.id}>
-              <Link to={href}>
+              <Link
+                to={href}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                }}
+              >
                 <PeopleItem key={item.id} item={item} />
               </Link>
             </Grid>
@@ -99,7 +106,14 @@ const PeopleListCard = ({ items, type }: { items: IPeople[]; type?: 'people' | '
             const href = `/people/${item.id}`;
             return (
               <SwiperSlide key={i} style={type === 'people' ? peopleWidth : castWidth}>
-                <Link to={href}>
+                <Link
+                  to={href}
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                  }}
+                >
                   <PeopleItem item={item} />
                 </Link>
               </SwiperSlide>

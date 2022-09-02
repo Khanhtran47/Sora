@@ -1,6 +1,15 @@
 import * as React from 'react';
-// import { Link } from '@remix-run/react';
-import { Grid, Card, Text, Row, Tooltip, Loading, useTheme } from '@nextui-org/react';
+import {
+  Grid,
+  Text,
+  Row,
+  Tooltip,
+  Loading,
+  Spacer,
+  Avatar,
+  styled,
+  useTheme,
+} from '@nextui-org/react';
 import { IPeople } from '~/services/tmdb/tmdb.types';
 import { useColor } from 'color-thief-react';
 import tinycolor from 'tinycolor2';
@@ -18,7 +27,6 @@ const CardItemHover = ({ item }: { item: IPeople }) => {
     // known_for: knownFor,
   } = item;
   const profilePath = TMDB?.profileUrl(item?.profile_path || '', 'w185');
-  // TODO: add spinner on loading color
   const {
     data,
     loading,
@@ -78,14 +86,13 @@ const CardItemHover = ({ item }: { item: IPeople }) => {
 };
 
 const CardItem = ({ item }: { item: IPeople }) => {
-  const [style, setStyle] = React.useState<React.CSSProperties>({ display: 'block' });
+  // const [style, setStyle] = React.useState<React.CSSProperties>({ display: 'block' });
   const { isDark } = useTheme();
-  // TODO: add spinner on loading color
   const { name } = item;
   const profilePath = TMDB?.profileUrl(item?.profile_path || '', 'w185');
   const {
     data,
-    loading,
+    // loading,
     // error,
   } = useColor(`https://api.allorigins.win/raw?url=${encodeURIComponent(profilePath)}`, 'hex', {
     crossOrigin: 'anonymous',
@@ -100,73 +107,61 @@ const CardItem = ({ item }: { item: IPeople }) => {
       ? tinycolor(data).darken().saturate(100).toString()
       : tinycolor(data).saturate(70).toString();
   }
+  const CustomAvatar = styled(Avatar, {
+    variants: {
+      color: {
+        customColor: {
+          '.nextui-avatar-bg': {
+            bg: colorDarkenLighten,
+          },
+        },
+      },
+    },
+  });
 
   return (
-    <Tooltip
-      placement="bottom"
-      content={<CardItemHover item={item} />}
-      rounded
-      shadow
-      className="!w-fit"
-    >
-      <Card
-        as="div"
-        variant="flat"
-        css={{ borderWidth: 0 }}
-        onMouseEnter={() => {
-          setStyle({ display: 'none' });
+    <>
+      <CustomAvatar
+        css={{
+          size: '$40',
+          cursor: 'pointer',
         }}
-        onMouseLeave={() => {
-          setStyle({ display: 'block' });
-        }}
-        className={isDark ? 'bg-black/70' : 'bg-white/70'}
+        src={profilePath}
+        color="customColor"
+        bordered
+        zoomed
+        alt={name}
+        title={name}
+      />
+      <Spacer y={1} />
+      <Tooltip
+        placement="bottom"
+        content={<CardItemHover item={item} />}
+        rounded
+        shadow
+        className="!w-fit"
       >
-        <Card.Image
-          src={profilePath}
-          objectFit="cover"
-          width="100%"
-          height={340}
-          alt="Card image background"
-        />
-        <Card.Footer
-          isBlurred
+        <Text
+          size={14}
+          b
           css={{
-            position: 'absolute',
-            bgBlur: isDark ? 'rgb(0 0 0 / 0.8)' : 'rgb(255 255 255 / 0.8)',
-            bottom: 0,
-            zIndex: 1,
-            height: '80px',
-            alignItems: 'center',
+            width: '100%',
+            padding: '0 0.25rem',
+            '@xs': {
+              fontSize: '16px',
+            },
             '@sm': {
-              height: '100px',
-              ...style,
+              fontSize: '18px',
+            },
+            '&:hover': {
+              color: colorDarkenLighten,
             },
           }}
-          className={isDark ? 'bg-black/30' : 'bg-white/30'}
         >
-          {loading ? (
-            <Loading type="points-opacity" />
-          ) : (
-            <Text
-              size={14}
-              b
-              transform="uppercase"
-              color={colorDarkenLighten}
-              css={{
-                '@xs': {
-                  fontSize: '16px',
-                },
-                '@sm': {
-                  fontSize: '18px',
-                },
-              }}
-            >
-              {name}
-            </Text>
-          )}
-        </Card.Footer>
-      </Card>
-    </Tooltip>
+          {name}
+        </Text>
+      </Tooltip>
+    </>
   );
 };
 
