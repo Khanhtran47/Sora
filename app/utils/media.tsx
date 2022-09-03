@@ -42,7 +42,6 @@ export default class TMDB {
   };
 
   static postFetchDataHandler = (data: any): IMedia[] => {
-    console.log('🚀 ~ file: media.tsx ~ line 45 ~ TMDB ~ data', data);
     const result: IMedia[] = [];
 
     const transform = (item: any, mediaType?: 'movie' | 'tv'): IMedia => ({

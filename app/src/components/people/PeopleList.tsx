@@ -20,7 +20,7 @@ import PeopleItem from './PeopleItem';
  */
 interface IPeopleListProps {
   listType?: 'table' | 'slider-card' | 'slider-banner' | 'grid';
-  listName?: () => never | string;
+  listName?: string | (() => never);
   items: IPeople[];
   showMoreList?: boolean;
   onClickViewMore?: () => void;

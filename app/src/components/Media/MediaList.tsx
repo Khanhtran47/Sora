@@ -22,7 +22,7 @@ import Filter from '../elements/filter/Filter';
  */
 interface IMediaListProps {
   listType?: 'table' | 'slider-card' | 'slider-banner' | 'grid';
-  listName?: () => never | string;
+  listName?: string | (() => never);
   items: IMedia[];
   showFilter?: boolean;
   genres?: { [id: string]: string };
