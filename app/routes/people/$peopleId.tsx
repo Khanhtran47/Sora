@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { LoaderFunction, json } from '@remix-run/node';
 import { useCatch, useLoaderData, Outlet, Link, RouteMatch } from '@remix-run/react';
-import { Container, Row, Col, useTheme } from '@nextui-org/react';
+import { Container, Row, Col, Spacer } from '@nextui-org/react';
 
 import { getPeopleDetail, getPeopleExternalIds } from '~/services/tmdb/tmdb.server';
 import i18next from '~/i18n/i18next.server';
@@ -42,7 +42,13 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
-    <Link to={`/people/${match.params.peopleId}`}>{match.params.peopleId}</Link>
+    <>
+      <Link to="/people">Popular People</Link>
+      <Spacer x={0.5} />
+      <span> ❱ </span>
+      <Spacer x={0.5} />
+      <Link to={`/people/${match.params.peopleId}`}>{match.params.peopleId}</Link>
+    </>
   ),
 };
 
@@ -54,10 +60,6 @@ const detailTab = [
 
 const PeopleDetailPage = () => {
   const { detail, externalIds } = useLoaderData<LoaderData>();
-  console.log('🚀 ~ file: $peopleId.tsx ~ line 46 ~ PeopleDetailPage ~ externalIds', externalIds);
-  console.log('🚀 ~ file: $peopleId.tsx ~ line 35 ~ PeopleDetail ~ detail', detail);
-  const { theme } = useTheme();
-  console.log('🚀 ~ file: $peopleId.tsx ~ line 46 ~ PeopleDetailPage ~ theme', theme);
   const isSm = useMediaQuery(650, 'max');
   return (
     <Container
@@ -96,6 +98,7 @@ const PeopleDetailPage = () => {
       >
         <Col span={isSm ? 12 : 4}>
           <PeopleDetail detail={detail} externalIds={externalIds} />
+          <Spacer y={1} />
         </Col>
         <Col span={isSm ? 12 : 8}>
           <Outlet />

@@ -83,12 +83,12 @@ const SearchRoute = () => {
           },
         }}
       >
-        {searchResults?.results.length > 0 && (
+        {searchResults && searchResults.results?.length > 0 && (
           <PeopleList listType="grid" items={searchResults.results} listName={listName} />
         )}
         <Pagination
-          total={searchResults.total_pages}
-          initialPage={searchResults.page}
+          total={searchResults?.total_pages}
+          initialPage={searchResults?.page}
           shadow
           onChange={paginationChangeHandler}
           css={{ marginTop: '30px' }}

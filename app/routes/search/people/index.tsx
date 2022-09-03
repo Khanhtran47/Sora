@@ -77,12 +77,12 @@ const SearchRoute = () => {
           },
         }}
       >
-        {people?.results.length > 0 && (
+        {people && people.results?.length > 0 && (
           <PeopleList listType="grid" items={people.results} listName={t('popularPeople')} />
         )}
         <Pagination
-          total={people.total_pages}
-          initialPage={people.page}
+          total={people?.total_pages}
+          initialPage={people?.page}
           shadow
           onChange={paginationChangeHandler}
           css={{ marginTop: '30px' }}

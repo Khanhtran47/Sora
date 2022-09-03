@@ -147,7 +147,7 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
                   <Spacer x={1} />
                 </>
               )}
-              {externalIds.twitterId && (
+              {detail.homepage && (
                 <>
                   <NextLink href={detail?.homepage} target="_blank" rel="noopener noreferrer">
                     <Player
@@ -166,14 +166,23 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
             <Spacer y={1} />
           </>
         )}
-      <Row justify="center" fluid>
+      <Row
+        fluid
+        css={{
+          justifyContent: 'flex-start',
+          '@xs': {
+            justifyContent: 'center',
+          },
+        }}
+      >
         <Text
           h4
           size={14}
           css={{
-            width: '70%',
+            wdith: '100%',
             margin: 0,
             '@xs': {
+              width: '70%',
               fontSize: '16px',
             },
             '@sm': {
@@ -189,14 +198,15 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
       </Row>
       <Spacer y={1} />
       <Row
-        justify="center"
         align="center"
         fluid
         css={{
+          justifyContent: 'flex-start',
           flexWrap: 'wrap',
           flexDirection: 'row',
           '@xs': {
             flexDirection: 'column',
+            justifyContent: 'center',
           },
         }}
       >
