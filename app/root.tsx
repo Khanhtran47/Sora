@@ -34,6 +34,7 @@ import NProgress from 'nprogress';
 import nProgressStyles from 'nprogress/nprogress.css';
 import { useChangeLanguage } from 'remix-i18next';
 import { useTranslation } from 'react-i18next';
+import photoSwipeStyles from 'photoswipe/dist/photoswipe.css';
 
 import Layout from '~/src/components/layouts/Layout';
 import styles from '~/styles/app.css';
@@ -132,6 +133,10 @@ export const links: LinksFunction = () => [
   {
     rel: 'stylesheet',
     href: nProgressStyles,
+  },
+  {
+    rel: 'stylesheet',
+    href: photoSwipeStyles,
   },
 ];
 

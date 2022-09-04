@@ -103,6 +103,14 @@ export class TMDB {
     return url;
   };
 
+  static imagesUrl = (type: 'movie' | 'tv', id: number, language?: string): string => {
+    let url = `${this.API_BASE_URL}${type}/${id}/images?api_key=${this.key}`;
+    if (language) {
+      url += `&language=${language}`;
+    }
+    return url;
+  };
+
   static similarUrl = (
     type: 'movie' | 'tv',
     id: number,
@@ -257,6 +265,14 @@ export class TMDB {
 
   static peopleExternalIds = (person_id: number, language?: string): string => {
     let url = `${this.API_BASE_URL}person/${person_id}/external_ids?api_key=${this.key}`;
+    if (language) {
+      url += `&language=${language}`;
+    }
+    return url;
+  };
+
+  static peopleImages = (person_id: number, language?: string): string => {
+    let url = `${this.API_BASE_URL}person/${person_id}/images?api_key=${this.key}`;
     if (language) {
       url += `&language=${language}`;
     }

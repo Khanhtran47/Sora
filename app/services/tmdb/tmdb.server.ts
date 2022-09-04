@@ -13,6 +13,8 @@ import {
   IPeopleDetail,
   ListPersonType,
   IPeopleExternalIds,
+  IPeopleImages,
+  IDetailImages,
 } from './tmdb.types';
 import { fetcher, postFetchDataHandler, TMDB } from './utils.server';
 
@@ -180,6 +182,19 @@ export const getPeopleExternalIds = async (
   }
 };
 
+export const getPeopleImages = async (
+  person_id: number,
+  language?: string,
+): Promise<IPeopleImages | undefined> => {
+  try {
+    const fetched = await fetcher<IPeopleImages>(TMDB.peopleImages(person_id, language));
+    if (!fetched) throw new Error('Dont have result');
+    return fetched;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 /* ======================================End of People Field========================================== */
 
 /* ==========================================Search Field============================================= */
@@ -257,6 +272,19 @@ export const getCredits = async (
 ): Promise<ICredit | undefined> => {
   try {
     const fetched = await fetcher<ICredit>(TMDB.creditUrl(type, id));
+    return fetched;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getImages = async (
+  type: 'movie' | 'tv',
+  id: number,
+  language?: string,
+): Promise<IDetailImages | undefined> => {
+  try {
+    const fetched = await fetcher<IDetailImages>(TMDB.imagesUrl(type, id, language));
     return fetched;
   } catch (error) {
     console.error(error);

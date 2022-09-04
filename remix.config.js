@@ -7,4 +7,5 @@ module.exports = {
   publicPath: '/build/',
   serverBuildDirectory: 'api/_build',
   ignoredRouteFiles: ['.*'],
+  serverDependenciesToBundle: ['react-photoswipe-gallery', 'photoswipe'],
 };

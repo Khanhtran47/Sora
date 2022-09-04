@@ -27,7 +27,7 @@ interface IPeopleDetailProps {
 const PeopleDetail = (props: IPeopleDetailProps) => {
   const { detail, externalIds } = props;
   const { isDark } = useTheme();
-  const profilePath = TMDB?.profileUrl(detail?.profile_path || '', 'w185');
+  const profilePath = TMDB?.profileUrl(detail?.profile_path || '', 'h632');
   const isSm = useMediaQuery(650, 'max');
   let gender = '';
   switch (detail?.gender) {
