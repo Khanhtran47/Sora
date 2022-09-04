@@ -128,8 +128,8 @@ const MediaPage = () => {
             <Item
               key={index}
               cropped
-              original={TMDB.profileUrl(image.file_path, 'original')}
-              thumbnail={TMDB.profileUrl(image.file_path, 'w185')}
+              original={TMDB.profileUrl(image?.file_path, 'original')}
+              thumbnail={TMDB.profileUrl(image?.file_path, 'w185')}
               alt={`Photo of ${peopleData?.detail?.name} image size ${image.width}x${image.height}`}
               caption={`Photo of ${peopleData?.detail?.name} image size ${image.width}x${image.height}`}
               width={image.width}
@@ -138,7 +138,7 @@ const MediaPage = () => {
               {({ ref, open }) => (
                 <Image
                   style={smallItemStyles}
-                  src={TMDB.profileUrl(image.file_path, 'w185')}
+                  src={TMDB.profileUrl(image?.file_path, 'w185')}
                   ref={ref as React.MutableRefObject<HTMLImageElement>}
                   onClick={open}
                   alt={`Photo of ${peopleData?.detail?.name} image size ${image.width}x${image.height}`}

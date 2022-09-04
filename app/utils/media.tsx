@@ -13,28 +13,28 @@ export type StillSize = 'w92' | 'w185' | 'w300' | 'original';
 export default class TMDB {
   static readonly media_base_url = 'https://image.tmdb.org/t/p/';
 
-  static posterUrl = (path: string, size?: PosterSize): string => {
+  static posterUrl = (path: string | undefined, size?: PosterSize): string => {
     if (size) {
       return `${this.media_base_url}${size}/${path}`;
     }
     return `${this.media_base_url}original/${path}`;
   };
 
-  static backdropUrl = (path: string, size?: BackdropSize): string => {
+  static backdropUrl = (path: string | undefined, size?: BackdropSize): string => {
     if (size) {
       return `${this.media_base_url}${size}/${path}`;
     }
     return `${this.media_base_url}original/${path}`;
   };
 
-  static profileUrl = (path: string, size?: ProfileSize): string => {
+  static profileUrl = (path: string | undefined, size?: ProfileSize): string => {
     if (size) {
       return `${this.media_base_url}${size}/${path}`;
     }
     return `${this.media_base_url}original/${path}`;
   };
 
-  static logoUrl = (path: string, size?: LogoSize): string => {
+  static logoUrl = (path: string | undefined, size?: LogoSize): string => {
     if (size) {
       return `${this.media_base_url}${size}/${path}`;
     }

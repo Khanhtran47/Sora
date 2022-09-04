@@ -14,6 +14,7 @@ import {
   ListPersonType,
   IPeopleExternalIds,
   IPeopleImages,
+  IDetailImages,
 } from './tmdb.types';
 import { fetcher, postFetchDataHandler, TMDB } from './utils.server';
 
@@ -271,6 +272,19 @@ export const getCredits = async (
 ): Promise<ICredit | undefined> => {
   try {
     const fetched = await fetcher<ICredit>(TMDB.creditUrl(type, id));
+    return fetched;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getImages = async (
+  type: 'movie' | 'tv',
+  id: number,
+  language?: string,
+): Promise<IDetailImages | undefined> => {
+  try {
+    const fetched = await fetcher<IDetailImages>(TMDB.imagesUrl(type, id, language));
     return fetched;
   } catch (error) {
     console.error(error);
