@@ -273,3 +273,18 @@ export interface IPeopleExternalIds {
   id?: number;
   instagram_id?: string | null;
 }
+
+export interface IPeopleImages {
+  id: number;
+  profiles: Profile[];
+}
+
+export interface Profile {
+  aspect_ratio: number;
+  file_path: string;
+  height: number;
+  iso_639_1: null;
+  vote_average: number;
+  vote_count: number;
+  width: number;
+}

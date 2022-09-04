@@ -13,6 +13,7 @@ import {
   IPeopleDetail,
   ListPersonType,
   IPeopleExternalIds,
+  IPeopleImages,
 } from './tmdb.types';
 import { fetcher, postFetchDataHandler, TMDB } from './utils.server';
 
@@ -173,6 +174,19 @@ export const getPeopleExternalIds = async (
 ): Promise<IPeopleExternalIds | undefined> => {
   try {
     const fetched = await fetcher<IPeopleExternalIds>(TMDB.peopleExternalIds(person_id, language));
+    if (!fetched) throw new Error('Dont have result');
+    return fetched;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getPeopleImages = async (
+  person_id: number,
+  language?: string,
+): Promise<IPeopleImages | undefined> => {
+  try {
+    const fetched = await fetcher<IPeopleImages>(TMDB.peopleImages(person_id, language));
     if (!fetched) throw new Error('Dont have result');
     return fetched;
   } catch (error) {
