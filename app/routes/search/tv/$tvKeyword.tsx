@@ -83,7 +83,7 @@ const SearchRoute = () => {
           },
         }}
       >
-        {searchResults?.items.length > 0 && (
+        {searchResults && searchResults.items && searchResults?.items.length > 0 && (
           <MediaList listType="grid" items={searchResults.items} listName={listName} />
         )}
         <Pagination

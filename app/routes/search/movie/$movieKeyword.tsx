@@ -83,12 +83,12 @@ const SearchRoute = () => {
           },
         }}
       >
-        {searchResults?.items.length > 0 && (
-          <MediaList listType="grid" items={searchResults.items} listName={listName} />
+        {searchResults && searchResults.items && searchResults.items.length > 0 && (
+          <MediaList listType="grid" items={searchResults?.items} listName={listName} />
         )}
         <Pagination
-          total={searchResults.totalPages}
-          initialPage={searchResults.page}
+          total={searchResults?.totalPages}
+          initialPage={searchResults?.page}
           shadow
           onChange={paginationChangeHandler}
           css={{ marginTop: '30px' }}

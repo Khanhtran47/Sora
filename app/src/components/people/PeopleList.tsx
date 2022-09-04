@@ -20,7 +20,7 @@ import PeopleItem from './PeopleItem';
  */
 interface IPeopleListProps {
   listType?: 'table' | 'slider-card' | 'slider-banner' | 'grid';
-  listName?: string;
+  listName?: string | (() => never);
   items: IPeople[];
   showMoreList?: boolean;
   onClickViewMore?: () => void;
@@ -31,10 +31,10 @@ const PeopleListGrid = ({ items }: { items: IPeople[] }) => {
   const isXs = useMediaQuery(650);
   const gap = isXs ? 1 : 3;
   return (
-    <Grid.Container gap={gap} justify="flex-start" alignItems="center">
+    <Grid.Container gap={gap} justify="flex-start" alignItems="stretch">
       {items?.length > 0 &&
         items.map((item) => {
-          const href = `/people/${item.id}`;
+          const href = `/people/${item.id}/overview`;
           return (
             <Grid xs={6} sm={4} md={3} lg={2} key={item.id}>
               <Link
@@ -71,7 +71,7 @@ const PeopleListTable = ({ items }: { items: IPeople[] }) => (
     </Table.Header>
     <Table.Body>
       {items.map((item) => {
-        const href = `/people/${item.id}`;
+        const href = `/people/${item.id}/overview`;
         return (
           <Table.Row key={item.id}>
             <Table.Cell>
@@ -103,7 +103,7 @@ const PeopleListCard = ({ items, type }: { items: IPeople[]; type?: 'people' | '
       {items?.length > 0 && (
         <Swiper grabCursor spaceBetween={10} slidesPerView="auto">
           {items.map((item, i) => {
-            const href = `/people/${item.id}`;
+            const href = `/people/${item.id}/overview`;
             return (
               <SwiperSlide key={i} style={type === 'people' ? peopleWidth : castWidth}>
                 <Link

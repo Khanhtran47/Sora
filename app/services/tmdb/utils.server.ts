@@ -255,6 +255,14 @@ export class TMDB {
     return url;
   };
 
+  static peopleExternalIds = (person_id: number, language?: string): string => {
+    let url = `${this.API_BASE_URL}person/${person_id}/external_ids?api_key=${this.key}`;
+    if (language) {
+      url += `&language=${language}`;
+    }
+    return url;
+  };
+
   static discoverUrl = (
     type: 'movie' | 'tv',
     with_genres?: string,

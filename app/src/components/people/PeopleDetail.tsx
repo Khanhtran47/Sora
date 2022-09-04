@@ -1,299 +1,353 @@
-import { Link } from '@remix-run/react';
-import { Card, Col, Text, Row, Button, Progress } from '@nextui-org/react';
-import { IMovieDetail, ITvShowDetail } from '~/services/tmdb/tmdb.types';
+/* eslint-disable @typescript-eslint/indent */
+// import { Link } from '@remix-run/react';
+import { Text, Row, Image, Link as NextLink, useTheme, Spacer } from '@nextui-org/react';
+import { Player } from '@lottiefiles/react-lottie-player';
+import { IPeopleDetail } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
+import useMediaQuery from '~/hooks/useMediaQuery';
 
-interface IMediaDetail {
-  type: 'movie' | 'tv';
-  item: IMovieDetail | ITvShowDetail | undefined;
+import FacebookBlack from '../../assets/lotties/lottieflow-social-networks-15-4-000000-easey.json';
+import FacebookWhite from '../../assets/lotties/lottieflow-social-networks-15-4-FFFFFF-easey.json';
+import TwitterBlack from '../../assets/lotties/lottieflow-social-networks-15-10-000000-easey.json';
+import TwitterWhite from '../../assets/lotties/lottieflow-social-networks-15-10-FFFFFF-easey.json';
+import InstagramBlack from '../../assets/lotties/lottieflow-social-networks-15-5-000000-easey.json';
+import InstagramWhite from '../../assets/lotties/lottieflow-social-networks-15-5-FFFFFF-easey.json';
+import ExternalLinkBlack from '../../assets/lotties/external-link-black.json';
+import ExternalLinkWhite from '../../assets/lotties/external-link-white.json';
+
+interface IPeopleDetailProps {
+  detail: IPeopleDetail | undefined;
+  externalIds: {
+    facebookId: null | string;
+    instagramId: string | null;
+    twitterId: null | string;
+  };
 }
 
-const MediaDetail = (props: IMediaDetail) => {
-  const { type, item } = props;
-
-  const { id, tagline, genres } = item || {};
-  // @ts-expect-error: Diff between IMovieDetail and ITvShowDetail
-  const title = item?.title || item?.name || '';
-  // @ts-expect-error: Diff between IMovieDetail and ITvShowDetail
-  const runtime = item?.runtime || item?.episode_run_time;
-  const posterPath = TMDB?.posterUrl(item?.poster_path || '', 'w185');
-  const backdropPath = TMDB?.backdropUrl(item?.backdrop_path || '', 'w780');
-  // @ts-expect-error: Diff between IMovieDetail and ITvShowDetail
-  const releaseYear = new Date(item?.release_date || item?.first_air_date).getFullYear();
+const PeopleDetail = (props: IPeopleDetailProps) => {
+  const { detail, externalIds } = props;
+  const { isDark } = useTheme();
+  const profilePath = TMDB?.profileUrl(detail?.profile_path || '', 'w185');
+  const isSm = useMediaQuery(650, 'max');
+  let gender = '';
+  switch (detail?.gender) {
+    case 0:
+      gender = 'Not specified';
+      break;
+    case 1:
+      gender = 'Female';
+      break;
+    case 2:
+      gender = 'Male';
+      break;
+    case 3:
+      gender = 'Non-Binary';
+      break;
+    default:
+  }
   return (
-    <Card
-      variant="flat"
-      css={{
-        width: '100vw',
-        height: '100vh',
-        borderWidth: 0,
-        '@xs': {
-          height: '50vh',
-        },
-      }}
-    >
-      <Card.Header css={{ position: 'absolute', zIndex: 1 }}>
-        <Row
+    <>
+      <Image
+        src={profilePath || ''}
+        objectFit="cover"
+        width={isSm ? '50%' : '70%'}
+        height="auto"
+        alt={detail?.name}
+        showSkeleton
+        maxDelay={10000}
+        loading="lazy"
+        title={detail?.name}
+        containerCss={{
+          borderRadius: '0.75rem',
+        }}
+      />
+      <Spacer y={1} />
+      <Text
+        h3
+        size={16}
+        css={{
+          margin: 0,
+          textAlign: 'center',
+          '@xs': {
+            fontSize: '18px',
+          },
+          '@sm': {
+            fontSize: '20px',
+          },
+          '@md': {
+            fontSize: '24px',
+          },
+        }}
+      >
+        <strong>{detail?.name}</strong>
+      </Text>
+      <Spacer y={1} />
+      {externalIds &&
+        detail &&
+        (externalIds.facebookId ||
+          externalIds.instagramId ||
+          externalIds.twitterId ||
+          detail.homepage) && (
+          <>
+            <Row justify="center" fluid gap={1}>
+              {externalIds.facebookId && (
+                <>
+                  <NextLink
+                    href={`https://facebook.com/${externalIds.facebookId}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Player
+                      src={isDark ? FacebookWhite : FacebookBlack}
+                      hover
+                      autoplay={false}
+                      speed={0.75}
+                      className="w-7 h-7"
+                      loop
+                    />
+                  </NextLink>
+                  <Spacer x={1} />
+                </>
+              )}
+              {externalIds.instagramId && (
+                <>
+                  <NextLink
+                    href={`https://instagram.com/${externalIds.instagramId}/`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Player
+                      src={isDark ? InstagramWhite : InstagramBlack}
+                      hover
+                      autoplay={false}
+                      speed={0.75}
+                      className="w-7 h-7"
+                      loop
+                    />
+                  </NextLink>
+                  <Spacer x={1} />
+                </>
+              )}
+              {externalIds.twitterId && (
+                <>
+                  <NextLink
+                    href={`https://twitter.com/${externalIds.twitterId}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Player
+                      src={isDark ? TwitterWhite : TwitterBlack}
+                      hover
+                      autoplay={false}
+                      speed={0.75}
+                      className="w-7 h-7"
+                      loop
+                    />
+                  </NextLink>
+                  <Spacer x={1} />
+                </>
+              )}
+              {detail.homepage && (
+                <>
+                  <NextLink href={detail?.homepage} target="_blank" rel="noopener noreferrer">
+                    <Player
+                      src={isDark ? ExternalLinkWhite : ExternalLinkBlack}
+                      hover
+                      autoplay={false}
+                      speed={0.75}
+                      className="w-7 h-7"
+                      loop
+                    />
+                  </NextLink>
+                  <Spacer x={1} />
+                </>
+              )}
+            </Row>
+            <Spacer y={1} />
+          </>
+        )}
+      <Row
+        fluid
+        css={{
+          justifyContent: 'flex-start',
+          '@xs': {
+            justifyContent: 'center',
+          },
+        }}
+      >
+        <Text
+          h4
+          size={14}
           css={{
-            padding: 0,
+            wdith: '100%',
+            margin: 0,
             '@xs': {
-              padding: '0 3vw',
+              width: '70%',
+              fontSize: '16px',
             },
             '@sm': {
-              padding: '0 6vw',
+              fontSize: '18px',
             },
             '@md': {
-              padding: '0 12vw',
+              fontSize: '20px',
             },
           }}
         >
-          <Col
-            span={4}
-            css={{
-              '@smMax': {
-                display: 'none',
-              },
-            }}
-          >
-            <Card.Image
-              src={posterPath}
-              alt={title}
-              objectFit="cover"
-              width="50%"
-              css={{
-                marginTop: '8vh',
-                borderRadius: '24px',
-                '@xsMax': {
-                  display: 'none',
-                },
-              }}
-            />
-          </Col>
-          <Col
-            span={8}
-            css={{
-              marginTop: '8vh',
-            }}
-          >
-            <Card.Image
-              src={posterPath}
-              alt={title}
-              objectFit="cover"
-              width="70%"
-              css={{
-                marginTop: '8vh',
-                borderRadius: '24px',
-                '@xs': {
-                  display: 'none',
-                },
-              }}
-            />
+          <strong>Personal Info</strong>
+        </Text>
+      </Row>
+      <Spacer y={1} />
+      <Row
+        align="center"
+        fluid
+        css={{
+          justifyContent: 'flex-start',
+          flexWrap: 'wrap',
+          flexDirection: 'row',
+          '@xs': {
+            flexDirection: 'column',
+            justifyContent: 'center',
+          },
+        }}
+      >
+        <Text
+          h4
+          size={12}
+          css={{
+            marginBottom: '0.5rem',
+            '@xs': {
+              margin: 0,
+              width: '70%',
+              fontSize: '14px',
+            },
+            '@sm': {
+              margin: 0,
+              fontSize: '16px',
+            },
+            '@md': {
+              margin: 0,
+              fontSize: '18px',
+            },
+          }}
+        >
+          <strong>Known For</strong>
+          <br />
+          {detail?.known_for_department}
+        </Text>
+        <Spacer y={1} />
+        {/* TODO: Known Credits */}
+        <Text
+          h4
+          size={12}
+          css={{
+            marginBottom: '0.5rem',
+            '@xs': {
+              margin: 0,
+              width: '70%',
+              fontSize: '14px',
+            },
+            '@sm': {
+              margin: 0,
+              fontSize: '16px',
+            },
+            '@md': {
+              margin: 0,
+              fontSize: '18px',
+            },
+          }}
+        >
+          <strong>Gender</strong>
+          <br />
+          {gender}
+        </Text>
+        <Spacer y={1} />
+        <Text
+          h4
+          size={12}
+          css={{
+            marginBottom: '0.5rem',
+            '@xs': {
+              margin: 0,
+              width: '70%',
+              fontSize: '14px',
+            },
+            '@sm': {
+              margin: 0,
+              fontSize: '16px',
+            },
+            '@md': {
+              margin: 0,
+              fontSize: '18px',
+            },
+          }}
+        >
+          <strong>Birthday</strong>
+          <br />
+          {detail?.birthday}
+        </Text>
+        <Spacer y={1} />
+        <Text
+          h4
+          size={12}
+          css={{
+            marginBottom: '0.5rem',
+            '@xs': {
+              margin: 0,
+              width: '70%',
+              fontSize: '14px',
+            },
+            '@sm': {
+              margin: 0,
+              fontSize: '16px',
+            },
+            '@md': {
+              margin: 0,
+              fontSize: '18px',
+            },
+          }}
+        >
+          <strong>Place of Birth</strong>
+          <br />
+          {detail?.place_of_birth}
+        </Text>
+        <Spacer y={1} />
+        {!isSm && (
+          <>
             <Text
-              size={18}
-              weight="bold"
-              transform="uppercase"
+              h4
+              size={12}
               css={{
-                margin: 0,
+                marginBottom: '0.5rem',
                 '@xs': {
-                  fontSize: '24px',
+                  margin: 0,
+                  width: '70%',
+                  fontSize: '14px',
                 },
                 '@sm': {
-                  fontSize: '30px',
+                  margin: 0,
+                  fontSize: '16px',
                 },
                 '@md': {
-                  fontSize: '36px',
+                  margin: 0,
+                  fontSize: '18px',
                 },
               }}
             >
-              {`${title} (${releaseYear})`}
+              <strong>Also Known As</strong>
+              <br />
+              {detail?.also_known_as?.map((name) => (
+                <>
+                  <span key={name}>{name}</span>
+                  <br />
+                </>
+              ))}
             </Text>
-            {tagline && (
-              <Text
-                size={12}
-                i
-                css={{
-                  margin: 0,
-                  '@xs': {
-                    fontSize: '14px',
-                  },
-                  '@sm': {
-                    fontSize: '16px',
-                  },
-                  '@md': {
-                    fontSize: '18px',
-                  },
-                }}
-              >
-                {tagline}
-              </Text>
-            )}
-            <Row
-              align="center"
-              css={{
-                margin: '20px 0 0 0',
-              }}
-            >
-              <Col span={1}>
-                <Text
-                  size={12}
-                  css={{
-                    margin: 0,
-                    '@xs': {
-                      fontSize: '14px',
-                    },
-                    '@sm': {
-                      fontSize: '16px',
-                    },
-                    '@md': {
-                      fontSize: '18px',
-                    },
-                  }}
-                >
-                  User Score
-                </Text>
-              </Col>
-              <Col span={7} css={{ marginLeft: '60px' }}>
-                <Progress
-                  value={item?.vote_average}
-                  shadow
-                  max={10}
-                  color="primary"
-                  status="primary"
-                />
-              </Col>
-            </Row>
-            <Row
-              align="center"
-              css={{
-                margin: '20px 0 0 0',
-              }}
-            >
-              <Col span={4}>
-                <Text
-                  size={12}
-                  css={{
-                    '@xs': {
-                      fontSize: '14px',
-                    },
-                    '@sm': {
-                      fontSize: '16px',
-                    },
-                    '@md': {
-                      fontSize: '18px',
-                    },
-                  }}
-                >
-                  Duration: {runtime && `${Math.floor(runtime / 60)}h ${runtime % 60}m`}
-                </Text>
-              </Col>
-              <Col span={5}>
-                <Row>
-                  {genres &&
-                    genres?.map((genre) => (
-                      <Col key={genre?.id} css={{ marginRight: '10px' }}>
-                        <Button color="primary" auto ghost rounded shadow>
-                          {genre?.name}
-                        </Button>
-                      </Col>
-                    ))}
-                </Row>
-              </Col>
-            </Row>
-            <Row>
-              <Col span={6}>
-                <Button
-                  auto
-                  shadow
-                  rounded
-                  color="gradient"
-                  css={{
-                    marginTop: '8vh',
-                    '@xs': {
-                      marginTop: '4vh',
-                    },
-                    '@sm': {
-                      marginTop: '2vh',
-                    },
-                  }}
-                >
-                  <Link
-                    prefetch="intent"
-                    to={`/${type === 'movie' ? 'movies' : 'tv-shows'}/watch/${id}`}
-                  >
-                    <Text
-                      size={12}
-                      weight="bold"
-                      transform="uppercase"
-                      css={{
-                        '@xs': {
-                          fontSize: '18px',
-                        },
-                        '@sm': {
-                          fontSize: '20px',
-                        },
-                      }}
-                    >
-                      Watch now
-                    </Text>
-                  </Link>
-                </Button>
-              </Col>
-              <Col span={6}>
-                <Button
-                  auto
-                  shadow
-                  rounded
-                  bordered
-                  color="gradient"
-                  css={{
-                    marginTop: '8vh',
-                    '@xs': {
-                      marginTop: '4vh',
-                    },
-                    '@sm': {
-                      marginTop: '2vh',
-                    },
-                  }}
-                >
-                  <Text
-                    size={12}
-                    weight="bold"
-                    transform="uppercase"
-                    css={{
-                      '@xs': {
-                        fontSize: '18px',
-                      },
-                      '@sm': {
-                        fontSize: '20px',
-                      },
-                    }}
-                  >
-                    Watch trailer
-                  </Text>
-                </Button>
-              </Col>
-            </Row>
-          </Col>
-        </Row>
-      </Card.Header>
-      <Card.Body css={{ p: 0 }}>
-        <Card.Image
-          src={backdropPath}
-          css={{
-            minHeight: '100vh',
-            minWidth: '100vw',
-            width: '100vw',
-            height: '100vh',
-            top: 0,
-            left: 0,
-            objectFit: 'cover',
-            opacity: 0.3,
-          }}
-          alt="Card example background"
-        />
-      </Card.Body>
-    </Card>
+            <Spacer y={1} />
+          </>
+        )}
+      </Row>
+    </>
   );
 };
 
-export default MediaDetail;
+export default PeopleDetail;

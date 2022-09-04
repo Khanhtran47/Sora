@@ -22,7 +22,7 @@ import Filter from '../elements/filter/Filter';
  */
 interface IMediaListProps {
   listType?: 'table' | 'slider-card' | 'slider-banner' | 'grid';
-  listName?: string;
+  listName?: string | (() => never);
   items: IMedia[];
   showFilter?: boolean;
   genres?: { [id: string]: string };
@@ -151,7 +151,7 @@ const MediaListCard = ({
   return (
     <Grid.Container gap={gap} justify="flex-start" alignItems="center">
       {items?.length > 0 && (
-        <Swiper grabCursor spaceBetween={10} slidesPerView="auto" preloadImages={false}>
+        <Swiper grabCursor spaceBetween={10} slidesPerView="auto">
           {items.map((item, i) => {
             const href =
               (item.mediaType === 'movie' || type === 'similar-movie' ? '/movies/' : '/tv-shows/') +

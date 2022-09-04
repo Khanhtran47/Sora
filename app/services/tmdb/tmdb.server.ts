@@ -10,7 +10,9 @@ import {
   TimeWindowType,
   IListGenre,
   IListPeople,
+  IPeopleDetail,
   ListPersonType,
+  IPeopleExternalIds,
 } from './tmdb.types';
 import { fetcher, postFetchDataHandler, TMDB } from './utils.server';
 
@@ -146,6 +148,32 @@ export const getListPeople = async (
     const fetched = await fetcher<IListPeople>(TMDB.listPerson(type, language, page));
     if (!fetched?.results) throw new Error('Dont have result');
 
+    return fetched;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getPeopleDetail = async (
+  person_id: number,
+  language?: string,
+): Promise<IPeopleDetail | undefined> => {
+  try {
+    const fetched = await fetcher<IPeopleDetail>(TMDB.personDetail(person_id, language));
+    if (!fetched) throw new Error('Dont have result');
+    return fetched;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getPeopleExternalIds = async (
+  person_id: number,
+  language?: string,
+): Promise<IPeopleExternalIds | undefined> => {
+  try {
+    const fetched = await fetcher<IPeopleExternalIds>(TMDB.peopleExternalIds(person_id, language));
+    if (!fetched) throw new Error('Dont have result');
     return fetched;
   } catch (error) {
     console.error(error);

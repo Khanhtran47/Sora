@@ -66,11 +66,11 @@ const Trending = () => {
         }}
       >
         {todayTrending && todayTrending.items && todayTrending.items.length > 0 && (
-          <MediaList listType="grid" items={todayTrending.items} listName={t('todayTrending')} />
+          <MediaList listType="grid" items={todayTrending?.items} listName={t('todayTrending')} />
         )}
         <Pagination
-          total={todayTrending.totalPages}
-          initialPage={todayTrending.page}
+          total={todayTrending?.totalPages}
+          initialPage={todayTrending?.page}
           shadow
           onChange={paginationChangeHandler}
           css={{ marginTop: '30px' }}
