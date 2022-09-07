@@ -18,3 +18,6 @@ const MediaItem = (props: IMediaItem) => {
 };
 
 export default MediaItem;
+export { default as BannerItem } from './BannerItem';
+export { default as CartItem } from './CardItem';
+export { default as RowItem } from './RowItem';
