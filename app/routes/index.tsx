@@ -15,7 +15,7 @@ import {
 } from '~/services/tmdb/tmdb.server';
 import { IMedia, IPeople } from '~/services/tmdb/tmdb.types';
 import useWindowSize from '~/hooks/useWindowSize';
-import MediaList from '~/src/components/Media/MediaList';
+import MediaList from '~/src/components/media/MediaList';
 import PeopleList from '~/src/components/people/PeopleList';
 
 // https://remix.run/api/conventions#meta
