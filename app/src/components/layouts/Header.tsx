@@ -24,22 +24,22 @@ import { useTranslation } from 'react-i18next';
 import useMediaQuery from '~/hooks/useMediaQuery';
 
 /* Components */
-import NavLink from '../elements/NavLink';
+import NavLink from '~/src/components/elements/NavLink';
 
 /* Assets */
-import kleeCute from '../../assets/images/klee.jpg';
-import SunIcon from '../../assets/icons/SunIcon.js';
-import MoonIcon from '../../assets/icons/MoonIcon.js';
-import MenuIcon from '../../assets/icons/MenuIcon.js';
-import ArrowLeftIcon from '../../assets/icons/ArrowLeftIcon.js';
-import SearchIcon from '../../assets/icons/SearchIcon.js';
-import GlobalIcon from '../../assets/icons/GlobalIcon.js';
-// import menuNavBlack from '../../assets/lotties/lottieflow-menu-nav-11-6-000000-easey.json';
-// import menuNavWhite from '../../assets/lotties/lottieflow-menu-nav-11-6-FFFFFF-easey.json';
-// import arrowLeftBlack from '../../assets/lotties/lottieflow-arrow-08-1-000000-easey.json';
-// import arrowLeftWhite from '../../assets/lotties/lottieflow-arrow-08-1-FFFFFF-easey.json';
-import arrowLeft from '../../assets/lotties/lottieflow-arrow-08-1-0072F5-easey.json';
-import dropdown from '../../assets/lotties/lottieflow-dropdown-03-0072F5-easey.json';
+import kleeCute from '~/src/assets/images/klee.jpg';
+import SunIcon from '~/src/assets/icons/SunIcon.js';
+import MoonIcon from '~/src/assets/icons/MoonIcon.js';
+import MenuIcon from '~/src/assets/icons/MenuIcon.js';
+import ArrowLeftIcon from '~/src/assets/icons/ArrowLeftIcon.js';
+import SearchIcon from '~/src/assets/icons/SearchIcon.js';
+import GlobalIcon from '~/src/assets/icons/GlobalIcon.js';
+// import menuNavBlack from '~/src/assets/lotties/lottieflow-menu-nav-11-6-000000-easey.json';
+// import menuNavWhite from '~/src/assets/lotties/lottieflow-menu-nav-11-6-FFFFFF-easey.json';
+// import arrowLeftBlack from '~/src/assets/lotties/lottieflow-arrow-08-1-000000-easey.json';
+// import arrowLeftWhite from '~/src/assets/lotties/lottieflow-arrow-08-1-FFFFFF-easey.json';
+import arrowLeft from '~/src/assets/lotties/lottieflow-arrow-08-1-0072F5-easey.json';
+import dropdown from '~/src/assets/lotties/lottieflow-dropdown-03-0072F5-easey.json';
 
 interface IHeaderProps {
   open: boolean;

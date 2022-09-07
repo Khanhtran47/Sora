@@ -6,14 +6,14 @@ import { IPeopleDetail } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
 import useMediaQuery from '~/hooks/useMediaQuery';
 
-import FacebookBlack from '../../assets/lotties/lottieflow-social-networks-15-4-000000-easey.json';
-import FacebookWhite from '../../assets/lotties/lottieflow-social-networks-15-4-FFFFFF-easey.json';
-import TwitterBlack from '../../assets/lotties/lottieflow-social-networks-15-10-000000-easey.json';
-import TwitterWhite from '../../assets/lotties/lottieflow-social-networks-15-10-FFFFFF-easey.json';
-import InstagramBlack from '../../assets/lotties/lottieflow-social-networks-15-5-000000-easey.json';
-import InstagramWhite from '../../assets/lotties/lottieflow-social-networks-15-5-FFFFFF-easey.json';
-import ExternalLinkBlack from '../../assets/lotties/external-link-black.json';
-import ExternalLinkWhite from '../../assets/lotties/external-link-white.json';
+import FacebookBlack from '~/src/assets/lotties/lottieflow-social-networks-15-4-000000-easey.json';
+import FacebookWhite from '~/src/assets/lotties/lottieflow-social-networks-15-4-FFFFFF-easey.json';
+import TwitterBlack from '~/src/assets/lotties/lottieflow-social-networks-15-10-000000-easey.json';
+import TwitterWhite from '~/src/assets/lotties/lottieflow-social-networks-15-10-FFFFFF-easey.json';
+import InstagramBlack from '~/src/assets/lotties/lottieflow-social-networks-15-5-000000-easey.json';
+import InstagramWhite from '~/src/assets/lotties/lottieflow-social-networks-15-5-FFFFFF-easey.json';
+import ExternalLinkBlack from '~/src/assets/lotties/external-link-black.json';
+import ExternalLinkWhite from '~/src/assets/lotties/external-link-white.json';
 
 interface IPeopleDetailProps {
   detail: IPeopleDetail | undefined;

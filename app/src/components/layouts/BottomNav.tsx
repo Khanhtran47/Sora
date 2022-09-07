@@ -1,6 +1,6 @@
 import { Container, useTheme } from '@nextui-org/react';
 
-import NavLink from '../elements/NavLink';
+import NavLink from '~/src/components/elements/NavLink';
 
 const pages = [
   {

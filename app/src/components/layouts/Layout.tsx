@@ -5,11 +5,11 @@ import { useLocation, RouteMatch } from '@remix-run/react';
 import type { User } from '@supabase/supabase-js';
 
 /* Components */
-import Header from './Header';
-import LeftDrawer from './LeftDrawer';
-import Copyright from './Copyright';
-import BottomNav from './BottomNav';
-import BreadCrumb from './BreadCrumb';
+import Header from '~/src/components/layouts/Header';
+import LeftDrawer from '~/src/components/layouts/LeftDrawer';
+import Copyright from '~/src/components/layouts/Copyright';
+import BottomNav from '~/src/components/layouts/BottomNav';
+import BreadCrumb from '~/src/components/layouts/BreadCrumb';
 
 interface ILayout {
   children: React.ReactNode;

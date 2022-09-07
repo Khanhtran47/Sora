@@ -5,13 +5,13 @@ import { useTheme as useRemixTheme } from 'next-themes';
 import { useTranslation } from 'react-i18next';
 
 /* icons */
-import TrendingIcon from '../../assets/icons/TrendingIcon.js';
-import RecommendIcon from '../../assets/icons/RecommendIcon.js';
-import NewReleaseIcon from '../../assets/icons/NewReleaseIcon.js';
-import TopRatedIcon from '../../assets/icons/TopRatedIcon.js';
-import HistoryIcon from '../../assets/icons/HistoryIcon.js';
-import SunIcon from '../../assets/icons/SunIcon.js';
-import MoonIcon from '../../assets/icons/MoonIcon.js';
+import TrendingIcon from '~/src/assets/icons/TrendingIcon.js';
+import RecommendIcon from '~/src/assets/icons/RecommendIcon.js';
+import NewReleaseIcon from '~/src/assets/icons/NewReleaseIcon.js';
+import TopRatedIcon from '~/src/assets/icons/TopRatedIcon.js';
+import HistoryIcon from '~/src/assets/icons/HistoryIcon.js';
+import SunIcon from '~/src/assets/icons/SunIcon.js';
+import MoonIcon from '~/src/assets/icons/MoonIcon.js';
 
 const drawerWidth = 240;
 

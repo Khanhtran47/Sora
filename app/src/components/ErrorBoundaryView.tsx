@@ -1,6 +1,6 @@
 import { Text, Image } from '@nextui-org/react';
 
-import errorGif from '../assets/images/404.gif';
+import errorGif from '~/src/assets/images/404.gif';
 
 interface IErrorBoundary {
   error: Error;

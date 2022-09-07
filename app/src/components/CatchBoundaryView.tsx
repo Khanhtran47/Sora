@@ -1,7 +1,7 @@
 import { Text, Image } from '@nextui-org/react';
 import { ThrownResponse } from '@remix-run/react';
 
-import pageNotFound from '../assets/images/404.gif';
+import pageNotFound from '~/src/assets/images/404.gif';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const CatchBoundaryView = ({ caught }: { caught: ThrownResponse<number, any> }) => {

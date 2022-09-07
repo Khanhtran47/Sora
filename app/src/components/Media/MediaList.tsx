@@ -10,8 +10,8 @@ import { IMedia } from '~/services/tmdb/tmdb.types';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
 
-import MediaItem from './MediaItem';
-import Filter from '../elements/filter/Filter';
+import MediaItem from '~/src/components/Media/MediaItem';
+import Filter from '~/src/components/elements/filter/Filter';
 
 /**
  * MediaList type:

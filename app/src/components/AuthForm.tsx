@@ -2,8 +2,8 @@ import { Form, Link } from '@remix-run/react';
 import { Card, Button, Text, Input, Row, Checkbox, Spacer } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 
-import Mail from '../assets/icons/Mail.js';
-import Password from '../assets/icons/Password.js';
+import Mail from '~/src/assets/icons/Mail.js';
+import Password from '~/src/assets/icons/Password.js';
 
 interface IAuthForm {
   type: 'sign-in' | 'sign-up';

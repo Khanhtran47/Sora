@@ -9,7 +9,7 @@ import { IPeople } from '~/services/tmdb/tmdb.types';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
 
-import PeopleItem from './PeopleItem';
+import PeopleItem from '~/src/components/people/PeopleItem';
 
 /**
  * PeopleList type:

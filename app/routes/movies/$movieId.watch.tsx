@@ -5,6 +5,7 @@ import { useCatch, useLoaderData, Link, RouteMatch } from '@remix-run/react';
 import { Container, Row, Radio, Spacer } from '@nextui-org/react';
 
 import { getMovieDetail } from '~/services/tmdb/tmdb.server';
+import { getSearchMedia, getLoklokMovieDetail } from '~/services/loklok/loklok.server';
 import Player from '~/utils/player';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
@@ -12,6 +13,8 @@ import useWindowSize from '~/hooks/useWindowSize';
 
 type LoaderData = {
   detail: Awaited<ReturnType<typeof getMovieDetail>>;
+  search: Awaited<ReturnType<typeof getSearchMedia>>;
+  movieDetail: Awaited<ReturnType<typeof getLoklokMovieDetail>>;
 };
 
 export const meta: MetaFunction = () => ({
@@ -24,15 +27,21 @@ export const meta: MetaFunction = () => ({
 export const loader: LoaderFunction = async ({ params }) => {
   const { movieId } = params;
   const mid = Number(movieId);
-
   if (!mid) throw new Response('Not Found', { status: 404 });
-
+  // const [detail] = await Promise.all([getMovieDetail(mid)]);
+  // const search = detail?.original_language === 'en' && (await getSearchMedia(detail?.title || ''));
   const detail = await getMovieDetail(mid);
+  const [search] = await Promise.all([
+    detail?.original_language === 'en' && getSearchMedia(detail?.title || ''),
+  ]);
+  const movieDetail = await getLoklokMovieDetail(5841);
 
-  if (!detail) throw new Response('Not Found', { status: 404 });
+  if (!detail || !search) throw new Response('Not Found', { status: 404 });
 
   return json<LoaderData>({
     detail,
+    search,
+    movieDetail,
   });
 };
 
@@ -49,7 +58,9 @@ export const handle = {
 };
 
 const MovieWatch = () => {
-  const { detail } = useLoaderData<LoaderData>();
+  const { detail, search, movieDetail } = useLoaderData<LoaderData>();
+  console.log('🚀 ~ file: $movieId.watch.tsx ~ line 62 ~ MovieWatch ~ movieDetail', movieDetail);
+  console.log('🚀 ~ file: $movieId.watch.tsx ~ line 57 ~ MovieWatch ~ search', search);
   const id = detail && detail.id;
   const [player, setPlayer] = React.useState<string>('1');
   const [source, setSource] = React.useState<string>(Player.moviePlayerUrl(Number(id), 1));
@@ -74,7 +85,7 @@ const MovieWatch = () => {
         },
       }}
     >
-      <Row>
+      {/* <Row>
         <iframe
           id="iframe"
           src={source}
@@ -91,7 +102,7 @@ const MovieWatch = () => {
           // @ts-expect-error: this is expected
           sandbox
         />
-      </Row>
+      </Row> */}
       <Spacer y={1} />
       <Row>
         <Radio.Group
