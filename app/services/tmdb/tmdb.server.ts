@@ -15,6 +15,7 @@ import {
   IPeopleExternalIds,
   IPeopleImages,
   IDetailImages,
+  IMovieTranslations,
 } from './tmdb.types';
 import { fetcher, postFetchDataHandler, TMDB } from './utils.server';
 
@@ -82,6 +83,18 @@ export const getMovieDetail = async (
 ): Promise<IMovieDetail | undefined> => {
   try {
     const fetched = await fetcher<IMovieDetail>(TMDB.movieDetailUrl(id, language));
+    return fetched;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getMovieTranslations = async (
+  type: 'movie' | 'tv',
+  id: number,
+): Promise<IMovieTranslations | undefined> => {
+  try {
+    const fetched = await fetcher<IMovieTranslations>(TMDB.translationsUrl(type, id));
     return fetched;
   } catch (error) {
     console.error(error);
