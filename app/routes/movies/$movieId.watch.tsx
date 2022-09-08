@@ -4,10 +4,8 @@ import { MetaFunction, LoaderFunction, json } from '@remix-run/node';
 import { useCatch, useLoaderData, Link, RouteMatch } from '@remix-run/react';
 import { Container, Row, Radio, Spacer } from '@nextui-org/react';
 
-import i18next from '~/i18n/i18next.server';
-import { getMovieDetail, getMovieTranslations } from '~/services/tmdb/tmdb.server';
+import { getMovieDetail } from '~/services/tmdb/tmdb.server';
 import { getSearchMedia, getLoklokMovieDetail } from '~/services/loklok/loklok.server';
-import { Result } from '~/services/loklok/loklok.types';
 import Player from '~/utils/player';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
@@ -26,33 +24,17 @@ export const meta: MetaFunction = () => ({
   },
 });
 
-export const loader: LoaderFunction = async ({ request, params }) => {
-  const locale = await i18next.getLocale(request);
+export const loader: LoaderFunction = async ({ params }) => {
   const { movieId } = params;
   const mid = Number(movieId);
   if (!mid) throw new Response('Not Found', { status: 404 });
+  // const [detail] = await Promise.all([getMovieDetail(mid)]);
+  // const search = detail?.original_language === 'en' && (await getSearchMedia(detail?.title || ''));
   const detail = await getMovieDetail(mid);
-  let search;
-  let movieDetail;
-  if ((detail && detail.original_language === 'en') || locale === 'en') {
-    search = await getSearchMedia(detail?.title || '');
-    const findMovie: Result | undefined = search?.find((item) => item.name === detail?.title);
-    if (findMovie && findMovie.id) {
-      movieDetail = await getLoklokMovieDetail(Number(findMovie.id));
-    }
-  } else {
-    const translations = await getMovieTranslations('movie', mid);
-    const findTranslation = translations?.translations.find((item) => item.iso_639_1 === 'en');
-    if (findTranslation) {
-      search = await getSearchMedia(findTranslation.data?.title || '');
-      const findMovie: Result | undefined = search?.find(
-        (item) => item.name === findTranslation.data?.title,
-      );
-      if (findMovie && findMovie.id) {
-        movieDetail = await getLoklokMovieDetail(Number(findMovie.id));
-      }
-    }
-  }
+  const [search] = await Promise.all([
+    detail?.original_language === 'en' && getSearchMedia(detail?.title || ''),
+  ]);
+  const movieDetail = await getLoklokMovieDetail(5841);
 
   if (!detail || !search) throw new Response('Not Found', { status: 404 });
 
