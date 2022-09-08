@@ -28,7 +28,6 @@ interface IMediaListProps {
 
 const MediaList = (props: IMediaListProps) => {
   const {
-    listType,
     listName,
     items,
     showFilter,
@@ -39,8 +38,21 @@ const MediaList = (props: IMediaListProps) => {
     cardType,
     handlerWatchTrailer,
   } = props;
+  let { listType } = props;
+
+  if (!listType && typeof window !== 'undefined') {
+    listType =
+      (localStorage.getItem('listType') as 'table' | 'slider-card' | 'slider-banner' | 'grid') ??
+      'grid';
+  }
+
   const [displayType, setDisplayType] = useState<string>(listType as string);
   const { t } = useTranslation();
+
+  const filterChangeHandler = (value: string) => {
+    setDisplayType(value);
+    localStorage.setItem('listType', value);
+  };
 
   let list;
 
@@ -83,7 +95,7 @@ const MediaList = (props: IMediaListProps) => {
       )}
       {showFilter && mediaType && genres && (
         <Filter
-          onChange={setDisplayType}
+          onChange={filterChangeHandler}
           genres={genres}
           listType={displayType}
           mediaType={mediaType}
