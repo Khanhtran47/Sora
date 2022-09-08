@@ -4,7 +4,7 @@ import { Form, useLoaderData, useNavigate, useParams, Link, RouteMatch } from '@
 import { Input, Grid, Container, Button, Pagination, useInput } from '@nextui-org/react';
 
 import { getSearchTvShows } from '~/services/tmdb/tmdb.server';
-import MediaList from '~/src/components/Media/MediaList';
+import MediaList from '~/src/components/media/MediaList';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 

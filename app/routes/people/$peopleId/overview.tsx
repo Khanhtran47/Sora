@@ -9,7 +9,7 @@ import { useRouteData } from 'remix-utils';
 
 import { IPeopleDetail, IMedia, IPeople } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
-import MediaList from '~/src/components/Media/MediaList';
+import MediaList from '~/src/components/media/MediaList';
 
 const OverviewPage = () => {
   const peopleData:
