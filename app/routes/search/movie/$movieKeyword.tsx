@@ -5,7 +5,7 @@ import { Input, Grid, Container, Button, Pagination, useInput } from '@nextui-or
 import { useTranslation } from 'react-i18next';
 
 import { getSearchMovies } from '~/services/tmdb/tmdb.server';
-import MediaList from '~/src/components/Media/MediaList';
+import MediaList from '~/src/components/media/MediaList';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import i18next from '~/i18n/i18next.server';
 
