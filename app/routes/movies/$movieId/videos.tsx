@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { LoaderFunction, json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import { Text } from '@nextui-org/react';
+import { Text, Row } from '@nextui-org/react';
 import { getVideos } from '~/services/tmdb/tmdb.server';
 
 type LoaderData = {
@@ -25,10 +25,29 @@ const VideosPage = () => {
   console.log('🚀 ~ file: videos.tsx ~ line 25 ~ VideosPage ~ videos', videos);
 
   return (
-    <Text b h4 css={{ paddingLeft: '88px' }}>
-      {' '}
-      In development
-    </Text>
+    <Row
+      fluid
+      align="stretch"
+      justify="center"
+      css={{
+        marginTop: '0.75rem',
+        padding: '0 0.75rem',
+        '@xs': {
+          padding: '0 3vw',
+        },
+        '@sm': {
+          padding: '0 6vw',
+        },
+        '@md': {
+          padding: '0 12vw',
+        },
+      }}
+    >
+      <Text b h4 css={{ paddingLeft: '88px' }}>
+        {' '}
+        In development
+      </Text>
+    </Row>
   );
 };
 

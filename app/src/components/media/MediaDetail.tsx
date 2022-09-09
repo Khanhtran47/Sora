@@ -16,6 +16,7 @@ import Tab from '~/src/components/elements/Tab';
 interface IMediaDetail {
   type: 'movie' | 'tv';
   item: IMovieDetail | ITvShowDetail | undefined;
+  handler?: (id: number) => void;
 }
 
 const detailTab = [
@@ -30,7 +31,7 @@ const detailTab = [
 
 const MediaDetail = (props: IMediaDetail) => {
   // const { t } = useTranslation();
-  const { type, item } = props;
+  const { type, item, handler } = props;
   const ref = useRef<HTMLDivElement>(null);
   const size: IUseSize = useSize(ref);
 
@@ -278,6 +279,30 @@ const MediaDetail = (props: IMediaDetail) => {
                 </Text>
               </Row>
             )}
+            <Spacer y={1} />
+            <Row>
+              <Button auto shadow rounded bordered onClick={() => handler && handler(Number(id))}>
+                <Text
+                  h3
+                  transform="uppercase"
+                  size={12}
+                  css={{
+                    margin: 0,
+                    '@xs': {
+                      fontSize: '14px',
+                    },
+                    '@sm': {
+                      fontSize: '16px',
+                    },
+                    '@md': {
+                      fontSize: '18px',
+                    },
+                  }}
+                >
+                  Watch Trailer
+                </Text>
+              </Button>
+            </Row>
             <Row
               fluid
               align="center"
