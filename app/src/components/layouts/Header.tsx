@@ -22,6 +22,7 @@ import type { AnimationItem } from 'lottie-web';
 import { useTranslation } from 'react-i18next';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
+import useScrollDirection from '~/hooks/useScrollDirection';
 
 /* Components */
 import NavLink from '../elements/NavLink';
@@ -379,6 +380,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
   const [lottie, setLottie] = React.useState<AnimationItem>();
   const isSm = useMediaQuery(650);
+  const scrollDirection = useScrollDirection();
 
   React.useEffect(() => {
     if (isDropdownOpen) {
@@ -393,13 +395,14 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       justify="space-between"
       alignItems="center"
       color="inherit"
-      className={`flex justify-between backdrop-blur-md border-b ${
+      className={`flex justify-between backdrop-blur-md border-b transition-all duration-500 ${
         isDark ? 'bg-black/70 border-b-slate-700' : ' border-b-slate-300 bg-white/70'
       }`}
       gap={2}
       wrap="nowrap"
       css={{
         width: '100%',
+        top: isSm && scrollDirection === 'down' ? -64 : 0,
         height: 64,
         padding: 0,
         margin: 0,
