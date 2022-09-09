@@ -53,7 +53,7 @@ const Drawer = styled(Container, {
   whiteSpace: 'nowrap',
   boxSizing: 'border-box',
   margin: 0,
-  height: 'calc(100% - 64px)',
+  height: '100%',
   position: 'fixed',
   zIndex: 990,
 });
@@ -141,7 +141,6 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
         }),
         paddingLeft: 0,
         paddingRight: 0,
-        marginTop: '64px',
       }}
       className={`backdrop-blur-md px-0 border-r ${
         isDark ? 'bg-black/70 border-r-slate-700' : 'bg-white/70 border-r-slate-300'
@@ -149,7 +148,11 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
       as="nav"
       ref={wrapperRef}
     >
-      <Row>
+      <Row
+        css={{
+          marginTop: 64,
+        }}
+      >
         <Grid.Container>
           {leftDrawerLink.map((page, index: number) => (
             <Grid key={page.pageName} css={{ marginTop: '10px' }} xs={12}>
