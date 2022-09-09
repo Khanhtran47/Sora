@@ -25,24 +25,28 @@ import {
   Link as NextLink,
 } from '@nextui-org/react';
 import { ThemeProvider as RemixThemesProvider } from 'next-themes';
-import swiperStyles from 'swiper/swiper.min.css';
-import swiperPaginationStyles from 'swiper/components/pagination/pagination.min.css';
-import swiperNavigationStyles from 'swiper/components/navigation/navigation.min.css';
 import type { User } from '@supabase/supabase-js';
 import { AnimatePresence } from 'framer-motion';
 import NProgress from 'nprogress';
-import nProgressStyles from 'nprogress/nprogress.css';
 import { useChangeLanguage } from 'remix-i18next';
 import { useTranslation } from 'react-i18next';
+
+import styles from '~/styles/app.css';
+import swiperStyles from 'swiper/swiper.min.css';
+import swiperPaginationStyles from 'swiper/components/pagination/pagination.min.css';
+import swiperNavigationStyles from 'swiper/components/navigation/navigation.min.css';
 import photoSwipeStyles from 'photoswipe/dist/photoswipe.css';
+import nProgressStyles from 'nprogress/nprogress.css';
+import vimeDefaultStyles from '@vime/core/themes/default.css';
+import vimeLightStyles from '@vime/core/themes/light.css';
+import tubyStyles from 'react-tuby/css/main.css';
 
 import Layout from '~/src/components/layouts/Layout';
-import styles from '~/styles/app.css';
-import { getUser } from './services/auth.server';
-import { getSession } from './services/sessions.server';
-import pageNotFound from './src/assets/images/404.gif';
-import i18next from './i18n/i18next.server';
-import i18nCookie from './services/cookie.server';
+import { getUser } from '~/services/auth.server';
+import { getSession } from '~/services/sessions.server';
+import pageNotFound from '~/src/assets/images/404.gif';
+import i18next from '~/i18n/i18next.server';
+import i18nCookie from '~/services/cookie.server';
 
 interface DocumentProps {
   children: React.ReactNode;
@@ -137,6 +141,18 @@ export const links: LinksFunction = () => [
   {
     rel: 'stylesheet',
     href: photoSwipeStyles,
+  },
+  {
+    rel: 'stylesheet',
+    href: vimeDefaultStyles,
+  },
+  {
+    rel: 'stylesheet',
+    href: vimeLightStyles,
+  },
+  {
+    rel: 'stylesheet',
+    href: tubyStyles,
   },
 ];
 

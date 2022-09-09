@@ -1,5 +1,5 @@
 export default class Loklok {
-  static readonly API_BASE_URL = 'https://filmhot.live/_next/data/q1Mm4aIFcpfdCi0ElfSr6/';
+  static readonly API_BASE_URL = 'https://filmhot.live/_next/data/B_rPEDQ5nkbN70BO7BgbH/';
 
   static searchMediaUrl = (keyword: string): string =>
     `${Loklok.API_BASE_URL}search.json?q=${keyword}`;
