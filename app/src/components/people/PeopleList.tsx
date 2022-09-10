@@ -1,13 +1,16 @@
 /* eslint-disable no-nested-ternary */
-import { Grid, Table, Text, Button } from '@nextui-org/react';
+import { Grid, Table, Text, Button, Row } from '@nextui-org/react';
 import { Link } from '@remix-run/react';
 import { useState } from 'react';
 // import SwiperCore, { Autoplay } from 'swiper/core';
 import { Swiper, SwiperSlide } from 'swiper/react';
+// import { Player } from '@lottiefiles/react-lottie-player';
 
 import { IPeople } from '~/services/tmdb/tmdb.types';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
+
+// import arrowRight from '~/src/assets/lotties/lottieflow-arrow-08-2-0072F5-easey.json';
 
 import PeopleItem from './PeopleItem';
 
@@ -146,24 +149,48 @@ const PeopleList = (props: IPeopleListProps) => {
 
   return (
     <>
-      {listName && (
-        <Text h1 size="2rem" css={{ margin: '0 0 20px 0' }}>
-          {listName}
-        </Text>
-      )}
-      {showMoreList && (
-        <Button
-          auto
-          rounded
-          ghost
-          onClick={onClickViewMore}
-          css={{
-            maxWidth: '$8',
-            marginBottom: '$12', // space[2]
-          }}
+      {(listName || showMoreList) && (
+        <Row
+          fluid
+          justify="space-between"
+          wrap="nowrap"
+          align="center"
+          css={{ margin: '20px 0 20px 0' }}
         >
-          View more
-        </Button>
+          {listName && (
+            <Text
+              h1
+              size={20}
+              css={{
+                margin: 0,
+                '@xs': {
+                  fontSize: '24px',
+                },
+                '@sm': {
+                  fontSize: '28px',
+                },
+                '@md': {
+                  fontSize: '32px',
+                },
+              }}
+            >
+              {listName}
+            </Text>
+          )}
+          {showMoreList && (
+            <Button
+              auto
+              rounded
+              ghost
+              onClick={onClickViewMore}
+              css={{
+                maxWidth: '$8',
+              }}
+            >
+              View more
+            </Button>
+          )}
+        </Row>
       )}
       {list}
     </>

@@ -1,17 +1,16 @@
 import * as React from 'react';
 import { NavLink } from '@remix-run/react';
-import { Spacer, Switch, Text, Grid, Container, Row, useTheme, styled } from '@nextui-org/react';
-import { useTheme as useRemixTheme } from 'next-themes';
+import { Spacer, Text, Grid, Container, Row, useTheme, styled } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
+import { Player } from '@lottiefiles/react-lottie-player';
 
 /* icons */
+import genre from '~/src/assets/lotties/45-category-outline-edited.json';
 import TrendingIcon from '../../assets/icons/TrendingIcon.js';
 import RecommendIcon from '../../assets/icons/RecommendIcon.js';
 import NewReleaseIcon from '../../assets/icons/NewReleaseIcon.js';
 import TopRatedIcon from '../../assets/icons/TopRatedIcon.js';
 import HistoryIcon from '../../assets/icons/HistoryIcon.js';
-import SunIcon from '../../assets/icons/SunIcon.js';
-import MoonIcon from '../../assets/icons/MoonIcon.js';
 
 const drawerWidth = 240;
 
@@ -61,7 +60,6 @@ const Drawer = styled(Container, {
 const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
   const { t } = useTranslation('left-drawer');
   const wrapperRef = React.useRef<HTMLDivElement>(null);
-  const { setTheme } = useRemixTheme();
   const { isDark, theme } = useTheme();
   const { open, handleDrawerClose } = props;
 
@@ -72,15 +70,18 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
         icon = <TrendingIcon filled={filled} />;
         break;
       case 1:
-        icon = <RecommendIcon filled={filled} />;
+        icon = <Player src={genre} hover autoplay={false} speed={0.75} className="w-6 h-6" loop />;
         break;
       case 2:
-        icon = <NewReleaseIcon filled={filled} />;
+        icon = <RecommendIcon filled={filled} />;
         break;
       case 3:
-        icon = <TopRatedIcon filled={filled} />;
+        icon = <NewReleaseIcon filled={filled} />;
         break;
       case 4:
+        icon = <TopRatedIcon filled={filled} />;
+        break;
+      case 5:
         icon = <HistoryIcon />;
         break;
       default:
@@ -92,6 +93,10 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
     {
       pageName: 'trending',
       pageLink: 'trending',
+    },
+    {
+      pageName: 'genres',
+      pageLink: 'genres',
     },
     {
       pageName: 'recommendations',
@@ -116,6 +121,7 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
    * @param {any} event - any - this is the event that is triggered when the user clicks outside of the
    * drawer.
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleClickOutside = (event: any) => {
     if (open && wrapperRef.current && !wrapperRef.current.contains(event.target)) {
       handleDrawerClose();
@@ -211,24 +217,6 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
             </Grid>
           ))}
         </Grid.Container>
-      </Row>
-      <Row>
-        <Switch
-          checked={isDark}
-          size="lg"
-          onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}
-          shadow
-          color="primary"
-          iconOn={<MoonIcon filled />}
-          iconOff={<SunIcon filled />}
-          css={{
-            marginLeft: '90px',
-            marginTop: '35vh',
-            '@xs': {
-              display: 'none',
-            },
-          }}
-        />
       </Row>
     </Drawer>
   );

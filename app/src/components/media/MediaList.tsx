@@ -1,4 +1,4 @@
-import { Text, Button } from '@nextui-org/react';
+import { Text, Button, Row } from '@nextui-org/react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -74,24 +74,48 @@ const MediaList = (props: IMediaListProps) => {
 
   return (
     <>
-      {listName && (
-        <Text h1 size="2rem" css={{ margin: '20px 0 20px 0' }}>
-          {listName}
-        </Text>
-      )}
-      {showMoreList && (
-        <Button
-          auto
-          rounded
-          ghost
-          onClick={onClickViewMore}
-          css={{
-            maxWidth: '$8',
-            marginBottom: '$12', // space[2]
-          }}
+      {(listName || showMoreList) && (
+        <Row
+          fluid
+          justify="space-between"
+          wrap="nowrap"
+          align="center"
+          css={{ margin: '20px 0 20px 0' }}
         >
-          {t('viewMore')}
-        </Button>
+          {listName && (
+            <Text
+              h1
+              size={20}
+              css={{
+                margin: 0,
+                '@xs': {
+                  fontSize: '24px',
+                },
+                '@sm': {
+                  fontSize: '28px',
+                },
+                '@md': {
+                  fontSize: '32px',
+                },
+              }}
+            >
+              {listName}
+            </Text>
+          )}
+          {showMoreList && (
+            <Button
+              auto
+              rounded
+              ghost
+              onClick={onClickViewMore}
+              css={{
+                maxWidth: '$8',
+              }}
+            >
+              {t('viewMore')}
+            </Button>
+          )}
+        </Row>
       )}
       {showFilter && mediaType && genres && (
         <Filter
