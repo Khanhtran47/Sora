@@ -1,5 +1,8 @@
 import { Container, useTheme } from '@nextui-org/react';
 
+import useMediaQuery from '~/hooks/useMediaQuery';
+import useScrollDirection from '~/hooks/useScrollDirection';
+
 import NavLink from '../elements/NavLink';
 
 const pages = [
@@ -19,6 +22,8 @@ const pages = [
 
 const BottomNav = () => {
   const { isDark } = useTheme();
+  const scrollDirection = useScrollDirection();
+  const isSm = useMediaQuery(650, 'max');
 
   return (
     <Container
@@ -27,13 +32,13 @@ const BottomNav = () => {
       justify="space-between"
       alignItems="center"
       wrap="nowrap"
-      className={`backdrop-blur-md border-t ${
+      className={`backdrop-blur-md border-t transition-all duration-500 ${
         isDark ? 'bg-black/70 border-t-slate-700' : ' border-t-slate-300 bg-white/70'
       }`}
       css={{
         position: 'fixed',
-        bottom: 0,
-        height: 65,
+        bottom: isSm && scrollDirection === 'down' ? -64 : 0,
+        height: 64,
         padding: 0,
         margin: 0,
         zIndex: 999,
