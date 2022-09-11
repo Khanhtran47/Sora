@@ -79,26 +79,44 @@ const darkTheme = createTheme({
   theme: {},
 });
 
+const greenTheme = createTheme({
+  type: 'dark',
+  theme: {
+    colors: {
+      // brand colors
+      primaryLight: '$green200',
+      primaryLightHover: '$green300',
+      primaryLightActive: '$green400',
+      primaryLightContrast: '$green600',
+      primary: '#4ADE7B',
+      primaryBorder: '$green500',
+      primaryBorderHover: '$green600',
+      primarySolidHover: '$green700',
+      primarySolidContrast: '$white',
+      primaryShadow: '$green500',
+    },
+  },
+  className: 'green-theme',
+});
+
 // for tailwindcss
 export const links: LinksFunction = () => [
-  {
-    rel: 'preload',
-    as: 'font',
-    href: '/fonts/Matter-Medium.woff2',
-    type: 'font/woff2',
-    crossOrigin: 'anonymous',
-  },
-  {
-    rel: 'preload',
-    as: 'font',
-    href: '/fonts/Matter-Regular.woff2',
-    type: 'font/woff2',
-    crossOrigin: 'anonymous',
-  },
   {
     rel: 'apple-touch-icon',
     sizes: '180x180',
     href: '/favicons/apple-touch-icon.png',
+  },
+  {
+    rel: 'icon',
+    type: 'image/png',
+    sizes: '512x512',
+    href: '/favicons/android-chrome-512x512.png',
+  },
+  {
+    rel: 'icon',
+    type: 'image/png',
+    sizes: '192x192',
+    href: '/favicons/android-chrome-192x192.png',
   },
   {
     rel: 'icon',
@@ -220,14 +238,26 @@ const App = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transition.state]);
 
+  React.useEffect(() => {
+    const theme = localStorage.getItem('theme');
+    const d = document.documentElement;
+    if (theme === 'green') {
+      d.style.colorScheme = 'dark';
+    }
+  }, []);
+
   return (
     <Document lang={locale} dir={i18n.dir()}>
       <RemixThemesProvider
         defaultTheme="system"
         attribute="class"
+        enableColorScheme
+        enableSystem
+        themes={['light', 'dark', 'green']}
         value={{
           light: lightTheme.className,
           dark: darkTheme.className,
+          green: greenTheme.className,
         }}
       >
         <NextUIProvider>

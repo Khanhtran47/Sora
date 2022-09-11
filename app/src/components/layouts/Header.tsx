@@ -365,6 +365,20 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                 />
                 <Text h5>Dark mode</Text>
               </Grid>
+              <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
+                <Button
+                  flat
+                  color="primary"
+                  size="md"
+                  onClick={() => {
+                    setTheme('dark');
+                    setTheme('green');
+                  }}
+                  css={{ w: 260, h: 50 }}
+                >
+                  Green Theme
+                </Button>
+              </Grid>
             </>
           )}
         </Grid.Container>
