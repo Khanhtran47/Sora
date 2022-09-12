@@ -175,7 +175,7 @@ const MediaDetail = (props: IMediaDetail) => {
                       shadow
                       rounded
                       color="gradient"
-                      size="xs"
+                      size="sm"
                       css={{
                         width: '100%',
                         margin: '0.5rem 0 0.5rem 0',
@@ -281,7 +281,13 @@ const MediaDetail = (props: IMediaDetail) => {
             )}
             <Spacer y={1} />
             <Row>
-              <Button auto shadow rounded bordered onClick={() => handler && handler(Number(id))}>
+              <Button
+                auto
+                shadow
+                rounded
+                size={isSm ? 'sm' : 'md'}
+                onClick={() => handler && handler(Number(id))}
+              >
                 <Text
                   h3
                   transform="uppercase"
@@ -323,7 +329,7 @@ const MediaDetail = (props: IMediaDetail) => {
                       rounded
                       shadow
                       key={genre?.id}
-                      size={isSm ? 'xs' : 'md'}
+                      size={isSm ? 'sm' : 'md'}
                       css={{ marginBottom: '0.125rem' }}
                     >
                       {genre?.name}
