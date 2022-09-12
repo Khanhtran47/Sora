@@ -57,7 +57,8 @@ const CardItem = ({ item }: { item: IMedia }) => {
     <>
       <Card
         as="div"
-        variant="flat"
+        isHoverable
+        isPressable
         css={{ borderWidth: 0 }}
         // onMouseEnter={() => {
         //   setStyle({ display: 'none' });
