@@ -1,5 +1,5 @@
 export default class Youtube {
-  static readonly API_BASE_URL = '​https://www.googleapis.com/youtube/v3/';
+  static readonly API_BASE_URL = 'https://www.googleapis.com/youtube/v3/';
 
   static readonly key = process.env.YOUTUBE_API_KEY;
 

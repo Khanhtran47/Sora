@@ -1,10 +1,14 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+/* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
 import { LoaderFunction, json } from '@remix-run/node';
 import { useLoaderData, useFetcher } from '@remix-run/react';
-import { Text, Row, Col, Button } from '@nextui-org/react';
+import { Text, Row, Col, Button, Grid, Card } from '@nextui-org/react';
 import { getVideos } from '~/services/tmdb/tmdb.server';
+import { Item } from '~/services/youtube/youtube.types';
 import useMediaQuery from '~/hooks/useMediaQuery';
+import WatchTrailerModal, { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
 
 type LoaderData = {
   videos: Awaited<ReturnType<typeof getVideos>>;
@@ -24,10 +28,17 @@ export const loader: LoaderFunction = async ({ params }) => {
 
 const VideosPage = () => {
   const { videos } = useLoaderData<LoaderData>();
-  console.log('🚀 ~ file: videos.tsx ~ line 25 ~ VideosPage ~ videos', videos);
   const fetcher = useFetcher();
   const isSm = useMediaQuery(650, 'max');
   const [activeType, setActiveType] = React.useState<number>(0);
+  const [activeTypeVideos, setActiveTypeVideos] = React.useState<Item[] | []>([]);
+  const [visible, setVisible] = React.useState(false);
+  const [trailer, setTrailer] = React.useState<Trailer>({});
+
+  const closeHandler = () => {
+    setVisible(false);
+    setTrailer({});
+  };
   const typeVideo = [
     {
       activeType: 0,
@@ -59,15 +70,14 @@ const VideosPage = () => {
       let activeVideo = [];
       const activeTypeVideo = typeVideo.find((item) => item.activeType === activeType);
       activeVideo = videos.results?.filter((video) => video.type === activeTypeVideo?.activeVideo);
-      console.log('🚀 ~ file: videos.tsx ~ line 61 ~ React.useEffect ~ activeVideo', activeVideo);
       const keyVideo = activeVideo.map((item) => item.key).join(',');
-      fetcher.load(`/api/youtube-video?id=${keyVideo}`);
+      keyVideo ? fetcher.load(`/api/youtube-video?id=${keyVideo}`) : setActiveTypeVideos([]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeType, videos]);
   React.useEffect(() => {
-    if (fetcher.data) {
-      console.log('🚀 ~ file: videos.tsx ~ line 70 ~ React.useEffect ~ fetcher.data', fetcher.data);
+    if (fetcher.data && fetcher.data.youtubeVideo) {
+      setActiveTypeVideos(fetcher.data.youtubeVideo);
     }
   }, [fetcher.data]);
 
@@ -88,60 +98,93 @@ const VideosPage = () => {
         '@md': {
           padding: '0 12vw',
         },
+        flexDirection: isSm ? 'column' : 'row',
       }}
     >
-      <Col span={4} offset={0.125} css={{ display: 'flex', justifyContent: 'center' }}>
-        <Button.Group vertical css={{ width: '50%' }}>
-          <Button
-            type="button"
-            onClick={() => setActiveType(0)}
-            {...(activeType === 0 ? {} : { ghost: true })}
-          >
-            Trailers
-          </Button>
-          <Button
-            type="button"
-            onClick={() => setActiveType(1)}
-            {...(activeType === 1 ? {} : { ghost: true })}
-          >
-            Teasers
-          </Button>
-          <Button
-            type="button"
-            onClick={() => setActiveType(2)}
-            {...(activeType === 2 ? {} : { ghost: true })}
-          >
-            Clips
-          </Button>
-          <Button
-            type="button"
-            onClick={() => setActiveType(3)}
-            {...(activeType === 3 ? {} : { ghost: true })}
-          >
-            Behind the Scenes
-          </Button>
-          <Button
-            type="button"
-            onClick={() => setActiveType(4)}
-            {...(activeType === 4 ? {} : { ghost: true })}
-          >
-            Bloopers
-          </Button>
-          <Button
-            type="button"
-            onClick={() => setActiveType(5)}
-            {...(activeType === 5 ? {} : { ghost: true })}
-          >
-            Featurettes
-          </Button>
+      <Col
+        span={isSm ? 12 : 4}
+        offset={isSm ? 0 : 0.125}
+        css={{ display: 'flex', justifyContent: isSm ? 'flex-start' : 'center' }}
+      >
+        <Button.Group
+          {...(isSm ? { vertical: false } : { vertical: true })}
+          css={{
+            '@xsMax': {
+              width: '100%',
+              overflowX: 'auto',
+              flexFlow: 'row nowrap',
+            },
+          }}
+        >
+          {typeVideo.map((item, index) => (
+            <Button
+              key={`button-item-${item.activeVideo}`}
+              type="button"
+              onClick={() => setActiveType(index)}
+              {...(activeType === item.activeType ? {} : { ghost: true })}
+              css={{
+                '@xsMax': {
+                  flexGrow: '1',
+                  flexShrink: '0',
+                  dflex: 'center',
+                },
+              }}
+            >
+              {item.activeVideo}
+            </Button>
+          ))}
         </Button.Group>
       </Col>
       <Col span={isSm ? 12 : 8}>
-        <Text b h4>
-          {' '}
-          In development
-        </Text>
+        <Grid.Container gap={1} justify="flex-start">
+          {activeTypeVideos &&
+            activeTypeVideos.map((video) => (
+              <Grid xs={12} sm={6} key={video.id}>
+                <Card
+                  as="div"
+                  isPressable
+                  isHoverable
+                  role="figure"
+                  css={{ borderWidth: 0 }}
+                  onPress={() => {
+                    const videoPlay = videos?.results?.find((item) => item.key === video.id);
+                    if (videoPlay) {
+                      setVisible(true);
+                      setTrailer(videoPlay);
+                    }
+                  }}
+                >
+                  <Card.Body css={{ p: 0 }}>
+                    <Card.Image
+                      src={video?.snippet?.thumbnails?.medium?.url}
+                      objectFit="cover"
+                      width="100%"
+                      height="auto"
+                      alt={video?.snippet?.title}
+                      showSkeleton
+                      maxDelay={10000}
+                      loading="lazy"
+                      title={video?.snippet?.title}
+                    />
+                  </Card.Body>
+                  <Card.Footer
+                    css={{
+                      justifyItems: 'flex-start',
+                      flexDirection: 'column',
+                      alignItems: 'flex-start',
+                    }}
+                  >
+                    <Text b>{video?.snippet?.title}</Text>
+                    <Text css={{ color: '$accents7', fontWeight: '$semibold', fontSize: '$sm' }}>
+                      {video?.snippet?.channelTitle}
+                    </Text>
+                  </Card.Footer>
+                </Card>
+              </Grid>
+            ))}
+        </Grid.Container>
       </Col>
+      <WatchTrailerModal trailer={trailer} visible={visible} closeHandler={closeHandler} />
     </Row>
   );
 };

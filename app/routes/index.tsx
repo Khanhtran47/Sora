@@ -71,7 +71,7 @@ const Index = () => {
   React.useEffect(() => {
     if (fetcher.data && fetcher.data.videos) {
       const { results } = fetcher.data.videos;
-      const officialTrailer = results.find((result: Trailer) => result.name === 'Official Trailer');
+      const officialTrailer = results.find((result: Trailer) => result.type === 'Trailer');
       setTrailer(officialTrailer);
     }
   }, [fetcher.data]);
