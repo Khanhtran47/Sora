@@ -35,6 +35,7 @@ import nProgressStyles from 'nprogress/nprogress.css';
 import { useChangeLanguage } from 'remix-i18next';
 import { useTranslation } from 'react-i18next';
 import photoSwipeStyles from 'photoswipe/dist/photoswipe.css';
+import remixImageStyles from 'remix-image/remix-image.css';
 
 import Layout from '~/src/components/layouts/Layout';
 import styles from '~/styles/app.css';
@@ -82,20 +83,6 @@ const darkTheme = createTheme({
 // for tailwindcss
 export const links: LinksFunction = () => [
   {
-    rel: 'preload',
-    as: 'font',
-    href: '/fonts/Matter-Medium.woff2',
-    type: 'font/woff2',
-    crossOrigin: 'anonymous',
-  },
-  {
-    rel: 'preload',
-    as: 'font',
-    href: '/fonts/Matter-Regular.woff2',
-    type: 'font/woff2',
-    crossOrigin: 'anonymous',
-  },
-  {
     rel: 'apple-touch-icon',
     sizes: '180x180',
     href: '/favicons/apple-touch-icon.png',
@@ -137,6 +124,10 @@ export const links: LinksFunction = () => [
   {
     rel: 'stylesheet',
     href: photoSwipeStyles,
+  },
+  {
+    rel: 'stylesheet',
+    href: remixImageStyles,
   },
 ];
 

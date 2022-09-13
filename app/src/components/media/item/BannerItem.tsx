@@ -1,8 +1,12 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Button, Card, Col, Row, Spacer, Text } from '@nextui-org/react';
 import { Link } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
+import Image, { MimeType } from 'remix-image';
+import { useInView } from 'react-intersection-observer';
 
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
+import useMediaQuery from '~/hooks/useMediaQuery';
 import { IMedia } from '~/services/tmdb/tmdb.types';
 
 type BannerItemProps = {
@@ -12,12 +16,16 @@ type BannerItemProps = {
 
 const BannerItem = ({ item, handler }: BannerItemProps) => {
   const { t } = useTranslation();
-
   const { backdropPath, overview, posterPath, title, id, mediaType } = item;
   const { isDark, colorDarkenLighten } = useColorDarkenLighten(posterPath);
+  const { ref, inView } = useInView({
+    threshold: 0,
+  });
+  const isSm = useMediaQuery(650, 'max');
+  const isMd = useMediaQuery(960, 'max');
 
   return (
-    <Card variant="flat" css={{ w: '100%', h: '70vh', borderWidth: 0 }} role="figure">
+    <Card variant="flat" css={{ w: '100%', h: '70vh', borderWidth: 0 }} role="figure" ref={ref}>
       <Card.Header css={{ position: 'absolute', zIndex: 1 }}>
         <Row>
           <Col
@@ -44,7 +52,7 @@ const BannerItem = ({ item, handler }: BannerItemProps) => {
                   fontSize: '50px',
                 },
                 '@md': {
-                  fontSize: '68px',
+                  fontSize: '60px',
                 },
               }}
             >
@@ -122,48 +130,51 @@ const BannerItem = ({ item, handler }: BannerItemProps) => {
               </Button>
             </Row>
           </Col>
-          <Col
-            css={{
-              '@smMax': {
-                display: 'none',
-              },
-            }}
-          >
-            <Card.Image
-              src={posterPath || ''}
-              alt={title}
-              title={title}
-              objectFit="cover"
-              width="40%"
-              css={{
-                marginTop: '10vh',
-                borderRadius: '24px',
-                '@mdMax': {
-                  display: 'none',
-                },
-              }}
-              loading="lazy"
-            />
-            <Card.Image
-              src={posterPath || ''}
-              alt={title}
-              title={title}
-              objectFit="cover"
-              width="50%"
-              css={{
-                marginTop: '10vh',
-                borderRadius: '24px',
-                '@md': {
-                  display: 'none',
-                },
-              }}
-              loading="lazy"
-            />
-          </Col>
+          {!isSm && inView && (
+            <Col>
+              <Card.Image
+                // @ts-ignore
+                as={Image}
+                src={posterPath || ''}
+                alt={title}
+                title={title}
+                objectFit="cover"
+                width={isMd ? '60%' : '40%'}
+                css={{
+                  minWidth: 'auto !important',
+                  marginTop: '10vh',
+                  borderRadius: '24px',
+                }}
+                showSkeleton
+                loaderUrl="/api/image"
+                placeholder="blur"
+                responsive={[
+                  {
+                    size: {
+                      width: 225,
+                      height: 338,
+                    },
+                    maxWidth: 860,
+                  },
+                  {
+                    size: {
+                      width: 318,
+                      height: 477,
+                    },
+                  },
+                ]}
+                options={{
+                  contentType: MimeType.WEBP,
+                }}
+              />
+            </Col>
+          )}
         </Row>
       </Card.Header>
       <Card.Body css={{ p: 0 }}>
         <Card.Image
+          // @ts-ignore
+          as={Image}
           src={backdropPath || ''}
           containerCss={{
             margin: 0,
@@ -181,7 +192,7 @@ const BannerItem = ({ item, handler }: BannerItemProps) => {
           }}
           css={{
             width: '100%',
-            minHeight: '70vh',
+            minHeight: '70vh !important',
             height: 'auto',
             top: 0,
             left: 0,
@@ -190,7 +201,48 @@ const BannerItem = ({ item, handler }: BannerItemProps) => {
           }}
           alt={title}
           title={title}
-          loading="lazy"
+          showSkeleton
+          loaderUrl="/api/image"
+          placeholder="blur"
+          responsive={[
+            {
+              size: {
+                width: 375,
+                height: 605,
+              },
+              maxWidth: 375,
+            },
+            {
+              size: {
+                width: 650,
+                height: 605,
+              },
+              maxWidth: 650,
+            },
+            {
+              size: {
+                width: 960,
+                height: 605,
+              },
+              maxWidth: 960,
+            },
+            {
+              size: {
+                width: 1280,
+                height: 720,
+              },
+              maxWidth: 1280,
+            },
+            {
+              size: {
+                width: 1400,
+                height: 787,
+              },
+            },
+          ]}
+          options={{
+            contentType: MimeType.WEBP,
+          }}
         />
       </Card.Body>
     </Card>
