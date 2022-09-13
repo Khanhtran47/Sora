@@ -4,11 +4,11 @@ import { NavLink } from '@remix-run/react';
 // import useMediaQuery from '~/hooks/useMediaQuery';
 
 interface ITabProps {
-  pages: {
+  pages?: {
     pageName: string;
     pageLink: string;
   }[];
-  linkTo: string;
+  linkTo?: string;
 }
 
 const Tab = (props: ITabProps) => {
