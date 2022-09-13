@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import * as React from 'react';
-import { Link, useNavigate } from '@remix-run/react';
+import { Link, useLocation, useNavigate } from '@remix-run/react';
 import {
   Avatar,
   Button,
@@ -145,6 +145,9 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
   const [isLanguageTab, setIsLanguageTab] = React.useState(false);
   const [isDisplayTab, setIsDisplayTab] = React.useState(false);
   const { t } = useTranslation('header');
+
+  const location = useLocation();
+
   return (
     <motion.div
       className="dropdown"
@@ -310,7 +313,7 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                     onClick={() => {
                       setIsLanguageTab(false);
                       setIsLeftMenu(true);
-                      navigate(`/?lng=${lng}`);
+                      navigate(`${location.pathname}?lng=${lng}`);
                     }}
                     css={{ w: 260, h: 50 }}
                   >
