@@ -3,6 +3,7 @@ import { Card, Grid, Loading, Row, Spacer, Text, Tooltip } from '@nextui-org/rea
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { IMedia } from '~/services/tmdb/tmdb.types';
 import Image, { MimeType } from 'remix-image';
+import { useInView } from 'react-intersection-observer';
 
 const CardItemHover = ({ item }: { item: IMedia }) => {
   const { title, overview, releaseDate, voteAverage, mediaType, posterPath } = item;
@@ -53,6 +54,10 @@ const CardItemHover = ({ item }: { item: IMedia }) => {
 const CardItem = ({ item }: { item: IMedia }) => {
   const { title, posterPath } = item;
   const { isDark, colorDarkenLighten } = useColorDarkenLighten(posterPath);
+  const { ref, inView } = useInView({
+    rootMargin: '500px 0px 500px 0px',
+    threshold: [0, 0.25, 0.5, 0.75, 1],
+  });
 
   return (
     <>
@@ -63,64 +68,67 @@ const CardItem = ({ item }: { item: IMedia }) => {
         css={{ borderWidth: 0 }}
         className={isDark ? 'bg-black/70' : 'bg-white/70'}
         role="figure"
+        ref={ref}
       >
-        <Card.Body css={{ p: 0 }}>
-          <Card.Image
-            // @ts-ignore
-            as={Image}
-            src={posterPath || ''}
-            objectFit="cover"
-            width="100%"
-            height="auto"
-            alt={title}
-            title={title}
-            css={{
-              minWidth: 'auto !important',
-            }}
-            showSkeleton
-            loaderUrl="/api/image"
-            placeholder="blur"
-            options={{
-              contentType: MimeType.WEBP,
-            }}
-            responsive={[
-              {
-                size: {
-                  width: 164,
-                  height: 245,
+        {inView && (
+          <Card.Body css={{ p: 0 }}>
+            <Card.Image
+              // @ts-ignore
+              as={Image}
+              src={posterPath || ''}
+              objectFit="cover"
+              width="100%"
+              height="auto"
+              alt={title}
+              title={title}
+              css={{
+                minWidth: 'auto !important',
+              }}
+              showSkeleton
+              loaderUrl="/api/image"
+              placeholder="blur"
+              options={{
+                contentType: MimeType.WEBP,
+              }}
+              responsive={[
+                {
+                  size: {
+                    width: 164,
+                    height: 245,
+                  },
+                  maxWidth: 375,
                 },
-                maxWidth: 375,
-              },
-              {
-                size: {
-                  width: 301,
-                  height: 452,
+                {
+                  size: {
+                    width: 301,
+                    height: 452,
+                  },
+                  maxWidth: 650,
                 },
-                maxWidth: 650,
-              },
-              {
-                size: {
-                  width: 342,
-                  height: 513,
+                {
+                  size: {
+                    width: 342,
+                    height: 513,
+                  },
+                  maxWidth: 1279,
                 },
-                maxWidth: 1279,
-              },
-              {
-                size: {
-                  width: 292,
-                  height: 438,
+                {
+                  size: {
+                    width: 292,
+                    height: 438,
+                  },
+                  maxWidth: 1399,
                 },
-                maxWidth: 1399,
-              },
-              {
-                size: {
-                  width: 270,
-                  height: 460,
+                {
+                  size: {
+                    width: 270,
+                    height: 460,
+                  },
                 },
-              },
-            ]}
-          />
-        </Card.Body>
+              ]}
+            />
+          </Card.Body>
+        )}
         <Card.Footer
           css={{
             justifyItems: 'flex-start',

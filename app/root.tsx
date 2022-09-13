@@ -83,20 +83,6 @@ const darkTheme = createTheme({
 // for tailwindcss
 export const links: LinksFunction = () => [
   {
-    rel: 'preload',
-    as: 'font',
-    href: '/fonts/Matter-Medium.woff2',
-    type: 'font/woff2',
-    crossOrigin: 'anonymous',
-  },
-  {
-    rel: 'preload',
-    as: 'font',
-    href: '/fonts/Matter-Regular.woff2',
-    type: 'font/woff2',
-    crossOrigin: 'anonymous',
-  },
-  {
     rel: 'apple-touch-icon',
     sizes: '180x180',
     href: '/favicons/apple-touch-icon.png',

@@ -3,6 +3,7 @@ import { Button, Card, Col, Row, Spacer, Text } from '@nextui-org/react';
 import { Link } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 import Image, { MimeType } from 'remix-image';
+import { useInView } from 'react-intersection-observer';
 
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import useMediaQuery from '~/hooks/useMediaQuery';
@@ -15,14 +16,16 @@ type BannerItemProps = {
 
 const BannerItem = ({ item, handler }: BannerItemProps) => {
   const { t } = useTranslation();
-
   const { backdropPath, overview, posterPath, title, id, mediaType } = item;
   const { isDark, colorDarkenLighten } = useColorDarkenLighten(posterPath);
+  const { ref, inView } = useInView({
+    threshold: 0,
+  });
   const isSm = useMediaQuery(650, 'max');
   const isMd = useMediaQuery(960, 'max');
 
   return (
-    <Card variant="flat" css={{ w: '100%', h: '70vh', borderWidth: 0 }} role="figure">
+    <Card variant="flat" css={{ w: '100%', h: '70vh', borderWidth: 0 }} role="figure" ref={ref}>
       <Card.Header css={{ position: 'absolute', zIndex: 1 }}>
         <Row>
           <Col
@@ -127,7 +130,7 @@ const BannerItem = ({ item, handler }: BannerItemProps) => {
               </Button>
             </Row>
           </Col>
-          {!isSm && (
+          {!isSm && inView && (
             <Col>
               <Card.Image
                 // @ts-ignore
