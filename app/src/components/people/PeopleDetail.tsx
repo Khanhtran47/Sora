@@ -1,7 +1,16 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/indent */
 // import { Link } from '@remix-run/react';
-import { Text, Row, Image, Link as NextLink, useTheme, Spacer } from '@nextui-org/react';
+import {
+  Text,
+  Row,
+  Image as NextImage,
+  Link as NextLink,
+  useTheme,
+  Spacer,
+} from '@nextui-org/react';
 import { Player } from '@lottiefiles/react-lottie-player';
+import Image, { MimeType } from 'remix-image';
 import { IPeopleDetail } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
 import useMediaQuery from '~/hooks/useMediaQuery';
@@ -47,7 +56,9 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
   }
   return (
     <>
-      <Image
+      <NextImage
+        // @ts-ignore
+        as={Image}
         src={profilePath || ''}
         objectFit="cover"
         width={isSm ? '50%' : '70%'}
@@ -57,8 +68,59 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
         maxDelay={10000}
         loading="lazy"
         title={detail?.name}
+        css={{
+          minWidth: 'auto !important',
+        }}
         containerCss={{
           borderRadius: '0.75rem',
+        }}
+        loaderUrl="/api/image"
+        placeholder="blur"
+        responsive={[
+          {
+            size: {
+              width: 164,
+              height: 245,
+            },
+            maxWidth: 375,
+          },
+          {
+            size: {
+              width: 294,
+              height: 440,
+            },
+            maxWidth: 650,
+          },
+          {
+            size: {
+              width: 192,
+              height: 287,
+            },
+            maxWidth: 960,
+          },
+          {
+            size: {
+              width: 201,
+              height: 301,
+            },
+            maxWidth: 1280,
+          },
+          {
+            size: {
+              width: 222,
+              height: 333,
+            },
+            maxWidth: 1400,
+          },
+          {
+            size: {
+              width: 310,
+              height: 465,
+            },
+          },
+        ]}
+        options={{
+          contentType: MimeType.WEBP,
         }}
       />
       <Spacer y={1} />

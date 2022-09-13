@@ -28,7 +28,6 @@ export const loader: LoaderFunction = async ({ params }) => {
 
 const VideosPage = () => {
   const { videos } = useLoaderData<LoaderData>();
-  console.log('🚀 ~ file: videos.tsx ~ line 31 ~ VideosPage ~ videos', videos);
   const fetcher = useFetcher();
   const isSm = useMediaQuery(650, 'max');
   const [activeType, setActiveType] = React.useState<number>(0);
