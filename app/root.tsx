@@ -35,6 +35,7 @@ import nProgressStyles from 'nprogress/nprogress.css';
 import { useChangeLanguage } from 'remix-i18next';
 import { useTranslation } from 'react-i18next';
 import photoSwipeStyles from 'photoswipe/dist/photoswipe.css';
+import remixImageStyles from 'remix-image/remix-image.css';
 
 import Layout from '~/src/components/layouts/Layout';
 import styles from '~/styles/app.css';
@@ -137,6 +138,10 @@ export const links: LinksFunction = () => [
   {
     rel: 'stylesheet',
     href: photoSwipeStyles,
+  },
+  {
+    rel: 'stylesheet',
+    href: remixImageStyles,
   },
 ];
 

@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import React, { useRef } from 'react';
 import { Link } from '@remix-run/react';
 import { Card, Col, Text, Row, Button, Spacer } from '@nextui-org/react';
+import Image, { MimeType } from 'remix-image';
 
 // import { useTranslation } from 'react-i18next';
 
@@ -88,15 +90,52 @@ const MediaDetail = (props: IMediaDetail) => {
           {!isSm && (
             <Col span={4}>
               <Card.Image
+                // @ts-ignore
+                as={Image}
                 src={posterPath}
                 alt={title}
                 objectFit="cover"
                 width="50%"
                 css={{
+                  minWidth: 'auto !important',
                   marginTop: '10vh',
                   borderRadius: '24px',
                 }}
-                loading="lazy"
+                showSkeleton
+                loaderUrl="/api/image"
+                placeholder="blur"
+                responsive={[
+                  {
+                    size: {
+                      width: 137,
+                      height: 205,
+                    },
+                    maxWidth: 960,
+                  },
+                  {
+                    size: {
+                      width: 158,
+                      height: 237,
+                    },
+                    maxWidth: 1280,
+                  },
+                  {
+                    size: {
+                      width: 173,
+                      height: 260,
+                    },
+                    maxWidth: 1400,
+                  },
+                  {
+                    size: {
+                      width: 239,
+                      height: 359,
+                    },
+                  },
+                ]}
+                options={{
+                  contentType: MimeType.WEBP,
+                }}
               />
               {(status === 'Released' || status === 'Ended' || status === 'Returning Series') &&
                 !isSm && (
@@ -158,15 +197,38 @@ const MediaDetail = (props: IMediaDetail) => {
                 <>
                   <Row>
                     <Card.Image
+                      // @ts-ignore
+                      as={Image}
                       src={posterPath}
                       alt={title}
                       objectFit="cover"
                       width={isXs ? '70%' : '40%'}
                       css={{
+                        minWidth: 'auto !important',
                         marginTop: '2rem',
                         borderRadius: '24px',
                       }}
-                      loading="lazy"
+                      showSkeleton
+                      loaderUrl="/api/image"
+                      placeholder="blur"
+                      options={{
+                        contentType: MimeType.WEBP,
+                      }}
+                      responsive={[
+                        {
+                          size: {
+                            width: 246,
+                            height: 369,
+                          },
+                          maxWidth: 375,
+                        },
+                        {
+                          size: {
+                            width: 235,
+                            height: 352,
+                          },
+                        },
+                      ]}
                     />
                   </Row>
                   <Row>
@@ -344,10 +406,12 @@ const MediaDetail = (props: IMediaDetail) => {
       </Card.Header>
       <Card.Body css={{ p: 0 }}>
         <Card.Image
+          // @ts-ignore
+          as={Image}
           src={backdropPath}
           css={{
-            minHeight: '100vh',
-            minWidth: '100vw',
+            minHeight: '100vh !important',
+            minWidth: '100vw !important',
             width: '100vw',
             height: '100vh',
             top: 0,
@@ -355,8 +419,50 @@ const MediaDetail = (props: IMediaDetail) => {
             objectFit: 'cover',
             opacity: 0.3,
           }}
-          alt="Card example background"
-          loading="lazy"
+          title={title}
+          alt={title}
+          showSkeleton
+          loaderUrl="/api/image"
+          placeholder="blur"
+          responsive={[
+            {
+              size: {
+                width: 375,
+                height: 605,
+              },
+              maxWidth: 375,
+            },
+            {
+              size: {
+                width: 650,
+                height: 605,
+              },
+              maxWidth: 650,
+            },
+            {
+              size: {
+                width: 960,
+                height: 605,
+              },
+              maxWidth: 960,
+            },
+            {
+              size: {
+                width: 1280,
+                height: 720,
+              },
+              maxWidth: 1280,
+            },
+            {
+              size: {
+                width: 1400,
+                height: 787,
+              },
+            },
+          ]}
+          options={{
+            contentType: MimeType.WEBP,
+          }}
         />
       </Card.Body>
     </Card>
