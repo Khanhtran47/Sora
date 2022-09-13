@@ -1,13 +1,15 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
+import * as React from 'react';
 import { LoaderFunction, json } from '@remix-run/node';
-import { useCatch, useLoaderData, Outlet, Link, RouteMatch } from '@remix-run/react';
+import { useCatch, useLoaderData, Outlet, Link, RouteMatch, useFetcher } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
 
 import { getMovieDetail } from '~/services/tmdb/tmdb.server';
+import i18next from '~/i18n/i18next.server';
 import MediaDetail from '~/src/components/media/MediaDetail';
+import WatchTrailerModal, { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
-import i18next from '~/i18n/i18next.server';
 
 type LoaderData = {
   detail: Awaited<ReturnType<typeof getMovieDetail>>;
@@ -35,10 +37,28 @@ export const handle = {
 
 const MovieDetail = () => {
   const { detail } = useLoaderData<LoaderData>();
+  const fetcher = useFetcher();
+  const [visible, setVisible] = React.useState(false);
+  const [trailer, setTrailer] = React.useState<Trailer>({});
+  const Handler = (id: number) => {
+    setVisible(true);
+    fetcher.load(`/movies/${id}/videos`);
+  };
+  const closeHandler = () => {
+    setVisible(false);
+    setTrailer({});
+  };
+  React.useEffect(() => {
+    if (fetcher.data && fetcher.data.videos) {
+      const { results } = fetcher.data.videos;
+      const officialTrailer = results.find((result: Trailer) => result.type === 'Trailer');
+      setTrailer(officialTrailer);
+    }
+  }, [fetcher.data]);
 
   return (
     <>
-      <MediaDetail type="movie" item={detail} />
+      <MediaDetail type="movie" item={detail} handler={Handler} />
       <Container
         as="div"
         fluid
@@ -50,6 +70,7 @@ const MovieDetail = () => {
       >
         <Outlet />
       </Container>
+      <WatchTrailerModal trailer={trailer} visible={visible} closeHandler={closeHandler} />
     </>
   );
 };
