@@ -133,6 +133,8 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
   return (
     <Drawer
       css={{
+        backgroundColor: '$backgroundAlpha',
+        borderRightColor: '$border',
         ...(open && {
           ...openedMixin(),
         }),
@@ -142,9 +144,7 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
         paddingLeft: 0,
         paddingRight: 0,
       }}
-      className={`backdrop-blur-md px-0 border-r ${
-        isDark ? 'bg-black/70 border-r-slate-700' : 'bg-white/70 border-r-slate-300'
-      }`}
+      className="backdrop-blur-md px-0 border-r"
       as="nav"
       ref={wrapperRef}
     >

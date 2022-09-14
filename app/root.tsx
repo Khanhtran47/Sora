@@ -72,12 +72,20 @@ const globalStyles = globalCss({
 
 const lightTheme = createTheme({
   type: 'light',
-  theme: {},
+  theme: {
+    colors: {
+      backgroundTransparent: 'rgba(255, 255, 255, 0)',
+    },
+  },
 });
 
 const darkTheme = createTheme({
   type: 'dark',
-  theme: {},
+  theme: {
+    colors: {
+      backgroundTransparent: 'rgba(0, 0, 0, 0)',
+    },
+  },
 });
 
 const greenTheme = createTheme({
@@ -95,6 +103,8 @@ const greenTheme = createTheme({
       primarySolidHover: '$green700',
       primarySolidContrast: '$white',
       primaryShadow: '$green500',
+
+      backgroundTransparent: 'rgba(255, 255, 255, 0)',
     },
   },
   className: 'green-theme',

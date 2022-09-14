@@ -392,7 +392,6 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
 
 const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   const { t } = useTranslation('header');
-  const { isDark } = useTheme();
   const { open, handleDrawerOpen, handleDrawerClose, user } = props;
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
   const [lottie, setLottie] = React.useState<AnimationItem>();
@@ -412,12 +411,12 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       justify="space-between"
       alignItems="center"
       color="inherit"
-      className={`flex justify-between backdrop-blur-md border-b transition-all duration-500 ${
-        isDark ? 'bg-black/70 border-b-slate-700' : ' border-b-slate-300 bg-white/70'
-      }`}
+      className="flex justify-between backdrop-blur-md border-b transition-all duration-500"
       gap={2}
       wrap="nowrap"
       css={{
+        backgroundColor: '$backgroundAlpha',
+        borderBottomColor: '$border',
         width: '100%',
         top: isSm && scrollDirection === 'down' ? -64 : 0,
         height: 64,
