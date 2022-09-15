@@ -55,8 +55,9 @@ const CardItem = ({ item }: { item: IMedia }) => {
   const { title, posterPath } = item;
   const { isDark, colorDarkenLighten } = useColorDarkenLighten(posterPath);
   const { ref, inView } = useInView({
-    rootMargin: '500px 0px 500px 0px',
+    rootMargin: '500px 200px',
     threshold: [0, 0.25, 0.5, 0.75, 1],
+    triggerOnce: true,
   });
 
   return (

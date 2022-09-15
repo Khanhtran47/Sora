@@ -368,6 +368,114 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                 />
                 <Text h5>Dark mode</Text>
               </Grid>
+              <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
+                <Button
+                  flat
+                  size="md"
+                  onClick={() => {
+                    setTheme('light');
+                    setTheme('bumblebee');
+                  }}
+                  css={{
+                    w: 260,
+                    h: 50,
+                    color: '#C08921 !important',
+                    backgroundColor: '#FBEAAB !important',
+                  }}
+                >
+                  Bumblebee Theme
+                </Button>
+              </Grid>
+              <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
+                <Button
+                  flat
+                  size="md"
+                  onClick={() => {
+                    setTheme('dark');
+                    setTheme('synthwave');
+                  }}
+                  css={{
+                    w: 260,
+                    h: 50,
+                    color: '#D427A5 !important',
+                    backgroundColor: '#FEAEC9 !important',
+                  }}
+                >
+                  Synthwave Theme
+                </Button>
+              </Grid>
+              <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
+                <Button
+                  flat
+                  size="md"
+                  onClick={() => {
+                    setTheme('light');
+                    setTheme('retro');
+                  }}
+                  css={{
+                    w: 260,
+                    h: 50,
+                    color: '#CD6C70 !important',
+                    backgroundColor: '#FDE2D7 !important',
+                  }}
+                >
+                  Retro Theme
+                </Button>
+              </Grid>
+              <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
+                <Button
+                  flat
+                  size="md"
+                  onClick={() => {
+                    setTheme('dark');
+                    setTheme('dracula');
+                  }}
+                  css={{
+                    w: 260,
+                    h: 50,
+                    color: '#DB58B0 !important',
+                    backgroundColor: '#FFC9D8 !important',
+                  }}
+                >
+                  Dracula Theme
+                </Button>
+              </Grid>
+              <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
+                <Button
+                  flat
+                  size="md"
+                  onClick={() => {
+                    setTheme('light');
+                    setTheme('autumn');
+                  }}
+                  css={{
+                    w: 260,
+                    h: 50,
+                    color: '#78022C !important',
+                    backgroundColor: '#F39694 !important',
+                  }}
+                >
+                  Autumn Theme
+                </Button>
+              </Grid>
+              <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
+                <Button
+                  flat
+                  size="md"
+                  onClick={() => {
+                    setTheme('dark');
+                    setTheme('night');
+                  }}
+                  css={{
+                    w: 260,
+                    h: 50,
+                    color: '#2894D5 !important',
+                    backgroundColor: '#AFF5FE !important',
+                  }}
+                >
+                  Night Theme
+                </Button>
+              </Grid>
             </>
           )}
         </Grid.Container>
@@ -378,7 +486,6 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
 
 const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   const { t } = useTranslation('header');
-  const { isDark } = useTheme();
   const { open, handleDrawerOpen, handleDrawerClose, user } = props;
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
   const [lottie, setLottie] = React.useState<AnimationItem>();
@@ -398,12 +505,12 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       justify="space-between"
       alignItems="center"
       color="inherit"
-      className={`flex justify-between backdrop-blur-md border-b transition-all duration-500 ${
-        isDark ? 'bg-black/70 border-b-slate-700' : ' border-b-slate-300 bg-white/70'
-      }`}
+      className="flex justify-between backdrop-blur-md border-b transition-all duration-500"
       gap={2}
       wrap="nowrap"
       css={{
+        backgroundColor: '$backgroundAlpha',
+        borderBottomColor: '$border',
         width: '100%',
         top: isSm && scrollDirection === 'down' ? -64 : 0,
         height: 64,

@@ -17,8 +17,9 @@ type BannerItemProps = {
 const BannerItem = ({ item, handler }: BannerItemProps) => {
   const { t } = useTranslation();
   const { backdropPath, overview, posterPath, title, id, mediaType } = item;
-  const { isDark, colorDarkenLighten } = useColorDarkenLighten(posterPath);
+  const { colorDarkenLighten } = useColorDarkenLighten(posterPath);
   const { ref, inView } = useInView({
+    triggerOnce: true,
     threshold: 0,
   });
   const isSm = useMediaQuery(650, 'max');
@@ -185,9 +186,7 @@ const BannerItem = ({ item, handler }: BannerItemProps) => {
               left: 0,
               width: '100%',
               height: '100px',
-              backgroundImage: isDark
-                ? 'linear-gradient(0deg, rgb(0,0,0), rgba(0, 0, 0, 0))'
-                : 'linear-gradient(0deg, rgb(255,255,255), rgba(255,255,255, 0))',
+              backgroundImage: 'linear-gradient(0deg, $background, $backgroundTransparent)',
             },
           }}
           css={{

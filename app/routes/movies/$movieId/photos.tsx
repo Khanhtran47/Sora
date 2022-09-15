@@ -134,11 +134,7 @@ const PhotosPage = () => {
           }}
         >
           {images?.backdrops?.map((image, index) => (
-            <InView
-              key={index}
-              rootMargin="500px 0px 500px 0px"
-              threshold={[0, 0.25, 0.5, 0.75, 1]}
-            >
+            <InView key={index} rootMargin="500px 200px" threshold={[0, 0.25, 0.5, 0.75, 1]}>
               {({ inView, ref: InViewRef }) => (
                 <div ref={InViewRef}>
                   {inView && (
@@ -211,11 +207,7 @@ const PhotosPage = () => {
           }}
         >
           {images?.posters?.map((image, index) => (
-            <InView
-              key={index}
-              rootMargin="500px 0px 500px 0px"
-              threshold={[0, 0.25, 0.5, 0.75, 1]}
-            >
+            <InView key={index} rootMargin="500px 200px" threshold={[0, 0.25, 0.5, 0.75, 1]}>
               {({ inView, ref: InViewRef }) => (
                 <div ref={InViewRef}>
                   {inView && (

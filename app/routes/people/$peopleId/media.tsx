@@ -133,6 +133,7 @@ const MediaPage = () => {
               key={index}
               rootMargin="500px 0px 500px 0px"
               threshold={[0, 0.25, 0.5, 0.75, 1]}
+              triggerOnce
             >
               {({ inView, ref: InViewRef }) => (
                 <div ref={InViewRef}>
