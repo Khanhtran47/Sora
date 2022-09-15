@@ -1,4 +1,4 @@
-import { Row, Col, Text, useTheme } from '@nextui-org/react';
+import { Row, Col, Text } from '@nextui-org/react';
 import { NavLink } from '@remix-run/react';
 
 // import useMediaQuery from '~/hooks/useMediaQuery';
@@ -13,7 +13,6 @@ interface ITabProps {
 
 const Tab = (props: ITabProps) => {
   const { pages, linkTo } = props;
-  const { theme } = useTheme();
   // const isMd = useMediaQuery(960);
   return (
     <Row
@@ -27,7 +26,7 @@ const Tab = (props: ITabProps) => {
         flexFlow: 'row nowrap',
         width: '100%',
         margin: 'auto 0 0 0',
-        borderColor: `${theme?.colors.primaryLightActive.value}`,
+        borderColor: '$primaryLightActive',
       }}
     >
       {pages?.map((page, index) => (
@@ -45,7 +44,7 @@ const Tab = (props: ITabProps) => {
             className={({ isActive }) => `${isActive ? 'border-b-2 border-solid' : ''}`}
             style={({ isActive }) =>
               isActive
-                ? { borderColor: `${theme?.colors.primary.value}`, height: '50px' }
+                ? { borderColor: 'var(--nextui-colors-primary)', height: '50px' }
                 : { height: '50px' }
             }
           >
@@ -63,11 +62,11 @@ const Tab = (props: ITabProps) => {
                   alignItems: 'center',
                   transition: 'opacity 0.25s ease 0s, background 0.25s ease 0s',
                   ...(isActive && {
-                    background: `${theme?.colors.primaryLightActive.value}`,
+                    background: '$primaryLightActive',
                   }),
                   '&:hover': {
                     opacity: '0.8',
-                    backgroundColor: `${theme?.colors.primaryLightHover.value}`,
+                    backgroundColor: '$primaryLightHover',
                   },
                   '@xs': {
                     fontSize: '18px',

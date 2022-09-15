@@ -19,6 +19,7 @@ const BannerItem = ({ item, handler }: BannerItemProps) => {
   const { backdropPath, overview, posterPath, title, id, mediaType } = item;
   const { colorDarkenLighten } = useColorDarkenLighten(posterPath);
   const { ref, inView } = useInView({
+    triggerOnce: true,
     threshold: 0,
   });
   const isSm = useMediaQuery(650, 'max');

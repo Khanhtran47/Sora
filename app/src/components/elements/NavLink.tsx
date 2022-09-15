@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import React from 'react';
 import { NavLink as NavigationLink } from '@remix-run/react';
-import { Text, useTheme } from '@nextui-org/react';
+import { Text } from '@nextui-org/react';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
 
@@ -23,39 +23,36 @@ const TextNavLink = ({
   linkTo: string;
   linkName?: string;
   style?: React.CSSProperties;
-}) => {
-  const { theme } = useTheme();
-  return (
-    <NavigationLink to={linkTo} style={style}>
-      {({ isActive }) => (
-        <Text
-          h2
-          size={18}
-          color="primary"
-          css={{
-            textTransform: 'uppercase',
-            padding: '0.25rem 0.5rem',
-            borderRadius: '14px',
-            transition: 'opacity 0.25s ease 0s, background 0.25s ease 0s',
-            margin: 0,
-            '@sm': {
-              fontSize: '20px',
-            },
-            '&:hover': {
-              opacity: '0.8',
-              backgroundColor: `${theme?.colors.primaryLightHover.value}`,
-            },
-            ...(isActive && {
-              background: `${theme?.colors.primaryLightActive.value}`,
-            }),
-          }}
-        >
-          {linkName}
-        </Text>
-      )}
-    </NavigationLink>
-  );
-};
+}) => (
+  <NavigationLink to={linkTo} style={style}>
+    {({ isActive }) => (
+      <Text
+        h2
+        size={18}
+        color="primary"
+        css={{
+          textTransform: 'uppercase',
+          padding: '0.25rem 0.5rem',
+          borderRadius: '14px',
+          transition: 'opacity 0.25s ease 0s, background 0.25s ease 0s',
+          margin: 0,
+          '@sm': {
+            fontSize: '20px',
+          },
+          '&:hover': {
+            opacity: '0.8',
+            backgroundColor: '$primaryLightHover',
+          },
+          ...(isActive && {
+            background: '$primaryLightActive',
+          }),
+        }}
+      >
+        {linkName}
+      </Text>
+    )}
+  </NavigationLink>
+);
 
 const IconNavLink = ({
   linkTo,
@@ -65,38 +62,35 @@ const IconNavLink = ({
   linkTo: string;
   icon: React.ReactNode;
   style?: React.CSSProperties;
-}) => {
-  const { theme } = useTheme();
-  return (
-    <NavigationLink to={linkTo} style={style}>
-      {({ isActive }) => (
-        <Text
-          as="div"
-          color="primary"
-          css={{
-            margin: 0,
-            textTransform: 'uppercase',
-            padding: '0.25rem 0.5rem',
-            borderRadius: '14px',
-            transition: 'opacity 0.25s ease 0s, background 0.25s ease 0s',
-            '@sm': {
-              fontSize: '20px',
-            },
-            '&:hover': {
-              opacity: '0.8',
-              backgroundColor: `${theme?.colors.primaryLightHover.value}`,
-            },
-            ...(isActive && {
-              background: `${theme?.colors.primaryLightActive.value}`,
-            }),
-          }}
-        >
-          {icon}
-        </Text>
-      )}
-    </NavigationLink>
-  );
-};
+}) => (
+  <NavigationLink to={linkTo} style={style}>
+    {({ isActive }) => (
+      <Text
+        as="div"
+        color="primary"
+        css={{
+          margin: 0,
+          textTransform: 'uppercase',
+          padding: '0.25rem 0.5rem',
+          borderRadius: '14px',
+          transition: 'opacity 0.25s ease 0s, background 0.25s ease 0s',
+          '@sm': {
+            fontSize: '20px',
+          },
+          '&:hover': {
+            opacity: '0.8',
+            backgroundColor: '$primaryLightHover',
+          },
+          ...(isActive && {
+            background: '$primaryLightActive',
+          }),
+        }}
+      >
+        {icon}
+      </Text>
+    )}
+  </NavigationLink>
+);
 
 const LogoNavLink = ({ linkTo }: { linkTo: string }) => {
   const isMd = useMediaQuery(960);

@@ -62,7 +62,7 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
   const { t } = useTranslation('left-drawer');
   const wrapperRef = React.useRef<HTMLDivElement>(null);
   const { setTheme } = useRemixTheme();
-  const { isDark, theme } = useTheme();
+  const { isDark } = useTheme();
   const { open, handleDrawerClose } = props;
 
   const iconItem = (index: number, filled: boolean) => {
@@ -187,13 +187,13 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                       },
                       '&:hover': {
                         opacity: '0.8',
-                        backgroundColor: `${theme?.colors.primaryLightHover.value}`,
+                        backgroundColor: '$primaryLightHover',
                       },
                       ...(open && {
                         width: drawerWidth,
                       }),
                       ...(isActive && {
-                        background: `${theme?.colors.primaryLightActive.value}`,
+                        background: '$primaryLightActive',
                       }),
                       paddingLeft: 20,
                     }}

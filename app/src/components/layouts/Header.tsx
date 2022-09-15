@@ -371,15 +371,109 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
               <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
                 <Button
                   flat
-                  color="primary"
+                  size="md"
+                  onClick={() => {
+                    setTheme('light');
+                    setTheme('bumblebee');
+                  }}
+                  css={{
+                    w: 260,
+                    h: 50,
+                    color: '#C08921 !important',
+                    backgroundColor: '#FBEAAB !important',
+                  }}
+                >
+                  Bumblebee Theme
+                </Button>
+              </Grid>
+              <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
+                <Button
+                  flat
                   size="md"
                   onClick={() => {
                     setTheme('dark');
-                    setTheme('green');
+                    setTheme('synthwave');
                   }}
-                  css={{ w: 260, h: 50 }}
+                  css={{
+                    w: 260,
+                    h: 50,
+                    color: '#D427A5 !important',
+                    backgroundColor: '#FEAEC9 !important',
+                  }}
                 >
-                  Green Theme
+                  Synthwave Theme
+                </Button>
+              </Grid>
+              <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
+                <Button
+                  flat
+                  size="md"
+                  onClick={() => {
+                    setTheme('light');
+                    setTheme('retro');
+                  }}
+                  css={{
+                    w: 260,
+                    h: 50,
+                    color: '#CD6C70 !important',
+                    backgroundColor: '#FDE2D7 !important',
+                  }}
+                >
+                  Retro Theme
+                </Button>
+              </Grid>
+              <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
+                <Button
+                  flat
+                  size="md"
+                  onClick={() => {
+                    setTheme('dark');
+                    setTheme('dracula');
+                  }}
+                  css={{
+                    w: 260,
+                    h: 50,
+                    color: '#DB58B0 !important',
+                    backgroundColor: '#FFC9D8 !important',
+                  }}
+                >
+                  Dracula Theme
+                </Button>
+              </Grid>
+              <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
+                <Button
+                  flat
+                  size="md"
+                  onClick={() => {
+                    setTheme('light');
+                    setTheme('autumn');
+                  }}
+                  css={{
+                    w: 260,
+                    h: 50,
+                    color: '#78022C !important',
+                    backgroundColor: '#F39694 !important',
+                  }}
+                >
+                  Autumn Theme
+                </Button>
+              </Grid>
+              <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
+                <Button
+                  flat
+                  size="md"
+                  onClick={() => {
+                    setTheme('dark');
+                    setTheme('night');
+                  }}
+                  css={{
+                    w: 260,
+                    h: 50,
+                    color: '#2894D5 !important',
+                    backgroundColor: '#AFF5FE !important',
+                  }}
+                >
+                  Night Theme
                 </Button>
               </Grid>
             </>
