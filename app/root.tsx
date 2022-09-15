@@ -477,7 +477,7 @@ const App = () => {
   React.useEffect(() => {
     const theme = localStorage.getItem('theme');
     const d = document.documentElement;
-    if (theme === 'green' || theme === 'pink') {
+    if (theme === 'synthwave' || theme === 'dracula' || theme === 'night') {
       d.style.colorScheme = 'dark';
     }
   }, []);
