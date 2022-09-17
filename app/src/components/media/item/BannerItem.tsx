@@ -3,7 +3,7 @@ import { Button, Card, Col, Row, Spacer, Text } from '@nextui-org/react';
 import { Link } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 import Image, { MimeType } from 'remix-image';
-import { useInView } from 'react-intersection-observer';
+// import { useInView } from 'react-intersection-observer';
 
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import useMediaQuery from '~/hooks/useMediaQuery';
@@ -18,15 +18,20 @@ const BannerItem = ({ item, handler }: BannerItemProps) => {
   const { t } = useTranslation();
   const { backdropPath, overview, posterPath, title, id, mediaType } = item;
   const { colorDarkenLighten } = useColorDarkenLighten(posterPath);
-  const { ref, inView } = useInView({
-    triggerOnce: true,
-    threshold: 0,
-  });
+  // const { ref, inView } = useInView({
+  //   triggerOnce: true,
+  //   threshold: 0,
+  // });
   const isSm = useMediaQuery(650, 'max');
   const isMd = useMediaQuery(960, 'max');
 
   return (
-    <Card variant="flat" css={{ w: '100%', h: '70vh', borderWidth: 0 }} role="figure" ref={ref}>
+    <Card
+      variant="flat"
+      css={{ w: '100%', h: '70vh', borderWidth: 0 }}
+      role="figure"
+      // ref={ref}
+    >
       <Card.Header css={{ position: 'absolute', zIndex: 1 }}>
         <Row>
           <Col
@@ -131,7 +136,8 @@ const BannerItem = ({ item, handler }: BannerItemProps) => {
               </Button>
             </Row>
           </Col>
-          {!isSm && inView && (
+          {!isSm && (
+            // && inView
             <Col>
               <Card.Image
                 // @ts-ignore
@@ -146,7 +152,6 @@ const BannerItem = ({ item, handler }: BannerItemProps) => {
                   marginTop: '10vh',
                   borderRadius: '24px',
                 }}
-                showSkeleton
                 loaderUrl="/api/image"
                 placeholder="blur"
                 responsive={[
@@ -200,7 +205,6 @@ const BannerItem = ({ item, handler }: BannerItemProps) => {
           }}
           alt={title}
           title={title}
-          showSkeleton
           loaderUrl="/api/image"
           placeholder="blur"
           responsive={[

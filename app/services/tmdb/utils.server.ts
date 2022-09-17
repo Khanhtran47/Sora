@@ -316,8 +316,10 @@ export const postFetchDataHandler = (data: any, mediaType?: 'movie' | 'tv'): IMe
           id: item.id,
           title: mediaType === 'movie' ? item.title : item.name,
           overview: item.overview,
-          posterPath: TMDB.posterUrl(item.poster_path, 'w342'),
-          backdropPath: TMDB.backdropUrl(item.backdrop_path, 'w780'),
+          posterPath: item.poster_path ? TMDB.posterUrl(item.poster_path, 'w342') : undefined,
+          backdropPath: item.backdrop_path
+            ? TMDB.backdropUrl(item.backdrop_path, 'w780')
+            : undefined,
           releaseDate: item.release_date || item.first_air_date,
           voteAverage: item.vote_average,
           voteCount: item.vote_count,
@@ -334,8 +336,10 @@ export const postFetchDataHandler = (data: any, mediaType?: 'movie' | 'tv'): IMe
           id: item.id,
           title: item.title || item.name,
           overview: item.overview,
-          posterPath: TMDB.posterUrl(item.poster_path, 'w342'),
-          backdropPath: TMDB.backdropUrl(item.backdrop_path, 'w780'),
+          posterPath: item.poster_path ? TMDB.posterUrl(item.poster_path, 'w342') : undefined,
+          backdropPath: item.backdrop_path
+            ? TMDB.backdropUrl(item.backdrop_path, 'w780')
+            : undefined,
           releaseDate: item.release_date || item.first_air_date,
           voteAverage: item.vote_average,
           voteCount: item.vote_count,

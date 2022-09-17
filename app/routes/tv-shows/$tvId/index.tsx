@@ -305,7 +305,6 @@ const Overview = () => {
               listName="Top Billed Cast"
               showMoreList
               onClickViewMore={() => onClickViewMore('cast')}
-              cardType="cast"
             />
             <Spacer y={1} />
             <Divider x={1} css={{ m: 0 }} />

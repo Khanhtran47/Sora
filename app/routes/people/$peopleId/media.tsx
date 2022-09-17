@@ -47,7 +47,6 @@ const MediaPage = () => {
         };
       }
     | undefined = useRouteData('routes/people/$peopleId');
-  console.log('🚀 ~ file: media.tsx ~ line 27 ~ MediaPage ~ images', images);
   const isLg = useMediaQuery(1280, 'max');
   const isXs = useMediaQuery(375, 'max');
   const smallItemStyles: React.CSSProperties = {
@@ -133,7 +132,6 @@ const MediaPage = () => {
               key={index}
               rootMargin="500px 0px 500px 0px"
               threshold={[0, 0.25, 0.5, 0.75, 1]}
-              triggerOnce
             >
               {({ inView, ref: InViewRef }) => (
                 <div ref={InViewRef}>

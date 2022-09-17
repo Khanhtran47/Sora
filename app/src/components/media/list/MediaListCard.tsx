@@ -14,17 +14,9 @@ const MediaListCard = ({
   items: IMedia[];
   type?: 'media' | 'similar-tv' | 'similar-movie';
 }) => {
-  const isXs = useMediaQuery(650);
-  const isSm = useMediaQuery(960);
-  const isMd = useMediaQuery(1280);
+  const isSm = useMediaQuery(650);
   const isLg = useMediaQuery(1400);
-  const gap = isXs ? 1 : 2;
-  const mediaWidth = {
-    width: `${isXs ? '40%' : isSm ? '30%' : isMd ? '20%' : isLg ? '15%' : '12%'}`,
-  };
-  const similarWidth = {
-    width: `${isXs ? '55%' : isSm ? '45%' : isMd ? '35%' : isLg ? '25%' : '20%'}`,
-  };
+  const gap = isSm ? 1 : 2;
 
   return (
     <Grid.Container gap={gap} justify="flex-start" alignItems="center">
@@ -35,7 +27,10 @@ const MediaListCard = ({
               (item.mediaType === 'movie' || type === 'similar-movie' ? '/movies/' : '/tv-shows/') +
               item.id;
             return (
-              <SwiperSlide key={i} style={type === 'media' ? mediaWidth : similarWidth}>
+              <SwiperSlide
+                key={i}
+                style={{ width: `${isSm ? '164px' : isLg ? '210px' : '240px'}` }}
+              >
                 <Link to={href}>
                   <MediaItem key={item.id} type="card" item={item} />
                 </Link>

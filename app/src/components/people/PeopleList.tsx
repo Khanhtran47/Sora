@@ -24,7 +24,6 @@ interface IPeopleListProps {
   items: IPeople[];
   showMoreList?: boolean;
   onClickViewMore?: () => void;
-  cardType?: 'people' | 'cast';
 }
 
 const PeopleListGrid = ({ items }: { items: IPeople[] }) => {
@@ -85,18 +84,9 @@ const PeopleListTable = ({ items }: { items: IPeople[] }) => (
   </Table>
 );
 
-const PeopleListCard = ({ items, type }: { items: IPeople[]; type?: 'people' | 'cast' }) => {
-  const isXs = useMediaQuery(650);
+const PeopleListCard = ({ items }: { items: IPeople[] }) => {
   const isSm = useMediaQuery(960);
-  const isMd = useMediaQuery(1280);
-  const isLg = useMediaQuery(1400);
-  const gap = isXs ? 1 : 2;
-  const castWidth = {
-    width: `${isXs ? '55%' : isSm ? '45%' : isMd ? '35%' : isLg ? '25%' : '20%'}`,
-  };
-  const peopleWidth = {
-    width: `${isXs ? '40%' : isSm ? '30%' : isMd ? '20%' : isLg ? '15%' : '12%'}`,
-  };
+  const gap = isSm ? 1 : 2;
 
   return (
     <Grid.Container gap={gap} justify="flex-start" alignItems="center">
@@ -105,7 +95,7 @@ const PeopleListCard = ({ items, type }: { items: IPeople[]; type?: 'people' | '
           {items.map((item, i) => {
             const href = `/people/${item.id}/overview`;
             return (
-              <SwiperSlide key={i} style={type === 'people' ? peopleWidth : castWidth}>
+              <SwiperSlide key={i} style={{ width: '160px' }}>
                 <Link
                   to={href}
                   style={{
@@ -126,7 +116,7 @@ const PeopleListCard = ({ items, type }: { items: IPeople[]; type?: 'people' | '
 };
 
 const PeopleList = (props: IPeopleListProps) => {
-  const { listType, listName, items, showMoreList, onClickViewMore, cardType } = props;
+  const { listType, listName, items, showMoreList, onClickViewMore } = props;
   const [displayType] = useState<string>(listType as string);
 
   let list;
@@ -139,7 +129,7 @@ const PeopleList = (props: IPeopleListProps) => {
       list = <PeopleListTable items={items} />;
       break;
     case 'slider-card':
-      list = <PeopleListCard items={items} type={cardType || 'people'} />;
+      list = <PeopleListCard items={items} />;
       break;
     default:
   }
