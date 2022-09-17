@@ -1,9 +1,13 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { Card, Grid, Loading, Row, Spacer, Text, Tooltip } from '@nextui-org/react';
-import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
-import { IMedia } from '~/services/tmdb/tmdb.types';
+import { Card, Grid, Loading, Row, Spacer, Text, Tooltip, Avatar } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
 import { useInView } from 'react-intersection-observer';
+import useMediaQuery from '~/hooks/useMediaQuery';
+import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
+import { IMedia } from '~/services/tmdb/tmdb.types';
+
+import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
 
 const CardItemHover = ({ item }: { item: IMedia }) => {
   const { title, overview, releaseDate, voteAverage, mediaType, posterPath } = item;
@@ -59,6 +63,8 @@ const CardItem = ({ item }: { item: IMedia }) => {
     threshold: [0, 0.25, 0.5, 0.75, 1],
     triggerOnce: true,
   });
+  const isSm = useMediaQuery(650, 'max');
+  const isLg = useMediaQuery(1400, 'max');
 
   return (
     <>
@@ -73,61 +79,60 @@ const CardItem = ({ item }: { item: IMedia }) => {
       >
         {inView && (
           <Card.Body css={{ p: 0 }}>
-            <Card.Image
-              // @ts-ignore
-              as={Image}
-              src={posterPath || ''}
-              objectFit="cover"
-              width="100%"
-              height="auto"
-              alt={title}
-              title={title}
-              css={{
-                minWidth: 'auto !important',
-              }}
-              showSkeleton
-              loaderUrl="/api/image"
-              placeholder="blur"
-              options={{
-                contentType: MimeType.WEBP,
-              }}
-              responsive={[
-                {
-                  size: {
-                    width: 164,
-                    height: 245,
+            {posterPath ? (
+              <Card.Image
+                // @ts-ignore
+                as={Image}
+                src={posterPath || ''}
+                objectFit="cover"
+                width="100%"
+                height="auto"
+                alt={title}
+                title={title}
+                css={{
+                  minWidth: `${isSm ? '164px' : isLg ? '210px' : '240px'} !important`,
+                  minHeight: `${isSm ? '245px' : isLg ? '357px' : '410px'} !important`,
+                }}
+                loaderUrl="/api/image"
+                placeholder="blur"
+                options={{
+                  contentType: MimeType.WEBP,
+                }}
+                responsive={[
+                  {
+                    size: {
+                      width: 164,
+                      height: 245,
+                    },
+                    maxWidth: 650,
                   },
-                  maxWidth: 375,
-                },
-                {
-                  size: {
-                    width: 301,
-                    height: 452,
+                  {
+                    size: {
+                      width: 210,
+                      height: 357,
+                    },
+                    maxWidth: 1280,
                   },
-                  maxWidth: 650,
-                },
-                {
-                  size: {
-                    width: 342,
-                    height: 513,
+                  {
+                    size: {
+                      width: 240,
+                      height: 410,
+                    },
                   },
-                  maxWidth: 1279,
-                },
-                {
-                  size: {
-                    width: 292,
-                    height: 438,
-                  },
-                  maxWidth: 1399,
-                },
-                {
-                  size: {
-                    width: 270,
-                    height: 460,
-                  },
-                },
-              ]}
-            />
+                ]}
+              />
+            ) : (
+              <Avatar
+                icon={<PhotoIcon width={48} height={48} />}
+                pointer
+                css={{
+                  minWidth: `${isSm ? '164px' : isLg ? '210px' : '240px'} !important`,
+                  minHeight: `${isSm ? '245px' : isLg ? '357px' : '410px'} !important`,
+                  size: '$20',
+                  borderRadius: '0 !important',
+                }}
+              />
+            )}
           </Card.Body>
         )}
         <Card.Footer
@@ -136,6 +141,7 @@ const CardItem = ({ item }: { item: IMedia }) => {
             flexDirection: 'column',
             alignItems: 'flex-start',
             minHeight: '4.875rem',
+            maxWidth: `${isSm ? '164px' : isLg ? '210px' : '240px'}`,
           }}
         >
           <Tooltip
@@ -149,6 +155,7 @@ const CardItem = ({ item }: { item: IMedia }) => {
               size={14}
               b
               css={{
+                minWidth: `${isSm ? '130px' : isLg ? '180px' : '210px'}`,
                 padding: '0 0.25rem',
                 '@xs': {
                   fontSize: '16px',
