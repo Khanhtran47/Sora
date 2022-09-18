@@ -1,9 +1,13 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/indent */
 import * as React from 'react';
 import { MetaFunction, LoaderFunction, json, DataFunctionArgs } from '@remix-run/node';
 import { useLoaderData, useLocation, useNavigate, useFetcher } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { useRouteData } from 'remix-utils';
+import type { User } from '@supabase/supabase-js';
 
 import i18next from '~/i18n/i18next.server';
 import {
@@ -56,6 +60,14 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
 // https://remix.run/guides/routing#index-routes
 const Index = () => {
   const { movies, shows, people, todayTrending } = useLoaderData();
+  const rootData:
+    | {
+        user?: User;
+        locale: string;
+        genresMovie: { [id: string]: string };
+        genresTv: { [id: string]: string };
+      }
+    | undefined = useRouteData('root');
   const fetcher = useFetcher();
   const [visible, setVisible] = React.useState(false);
   const [trailer, setTrailer] = React.useState<Trailer>({});
@@ -94,7 +106,13 @@ const Index = () => {
       exit={{ y: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <MediaList listType="slider-banner" items={trending} handlerWatchTrailer={Handler} />
+      <MediaList
+        listType="slider-banner"
+        items={trending}
+        handlerWatchTrailer={Handler}
+        genresMovie={rootData?.genresMovie}
+        genresTv={rootData?.genresTv}
+      />
       <Container
         fluid
         display="flex"
@@ -116,6 +134,9 @@ const Index = () => {
             listName={t('popularMovies')}
             showMoreList
             onClickViewMore={() => onClickViewMore('movies')}
+            navigationButtons
+            genresMovie={rootData?.genresMovie}
+            genresTv={rootData?.genresTv}
           />
         )}
       </Container>
@@ -140,6 +161,9 @@ const Index = () => {
             listName={t('popularTv')}
             showMoreList
             onClickViewMore={() => onClickViewMore('tv-shows')}
+            navigationButtons
+            genresMovie={rootData?.genresMovie}
+            genresTv={rootData?.genresTv}
           />
         )}
       </Container>
@@ -164,6 +188,7 @@ const Index = () => {
             listName={t('popularPeople')}
             showMoreList
             onClickViewMore={() => onClickViewMore('people')}
+            navigationButtons
           />
         )}
       </Container>

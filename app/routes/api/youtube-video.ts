@@ -9,7 +9,6 @@ type LoaderData = {
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
   const id = url.searchParams.get('id');
-  console.log('🚀 ~ file: youtube-video.ts ~ line 12 ~ constloader:LoaderFunction= ~ id', id);
   if (!id) throw new Response('No id', { status: 400 });
   const youtubeVideo = await getYoutubeVideo(id, true, true);
   if (!youtubeVideo) throw new Response('Not Found', { status: 404 });

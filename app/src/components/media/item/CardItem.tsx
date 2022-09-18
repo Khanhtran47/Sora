@@ -9,7 +9,15 @@ import { IMedia } from '~/services/tmdb/tmdb.types';
 
 import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
 
-const CardItemHover = ({ item }: { item: IMedia }) => {
+const CardItemHover = ({
+  item,
+  genresMovie,
+  genresTv,
+}: {
+  item: IMedia;
+  genresMovie?: { [id: string]: string };
+  genresTv?: { [id: string]: string };
+}) => {
   const { title, overview, releaseDate, voteAverage, mediaType, posterPath } = item;
   const { loading, colorDarkenLighten } = useColorDarkenLighten(posterPath);
   // TODO: add spinner on loading color
@@ -17,10 +25,10 @@ const CardItemHover = ({ item }: { item: IMedia }) => {
   return (
     <Grid.Container
       css={{
-        width: 'inherit',
         padding: '0.75rem',
-        minWidth: '100px',
-        maxWidth: '350px',
+        minWidth: '350px',
+        maxWidth: '400px',
+        width: 'inherit',
       }}
     >
       {loading ? (
@@ -32,6 +40,26 @@ const CardItemHover = ({ item }: { item: IMedia }) => {
               {title}
             </Text>
           </Row>
+          {overview && (
+            <Row>
+              {item?.genreIds?.slice(0, 3).map((genreId) => {
+                if (mediaType === 'movie') {
+                  return (
+                    <>
+                      {genresMovie?.[genreId]}
+                      <Spacer x={0.5} />
+                    </>
+                  );
+                }
+                return (
+                  <>
+                    {genresTv?.[genreId]}
+                    <Spacer x={0.5} />
+                  </>
+                );
+              })}
+            </Row>
+          )}
           {overview && (
             <Row>
               <Text>{`${overview?.substring(0, 100)}...`}</Text>
@@ -55,7 +83,15 @@ const CardItemHover = ({ item }: { item: IMedia }) => {
   );
 };
 
-const CardItem = ({ item }: { item: IMedia }) => {
+const CardItem = ({
+  item,
+  genresMovie,
+  genresTv,
+}: {
+  item: IMedia;
+  genresMovie?: { [id: string]: string };
+  genresTv?: { [id: string]: string };
+}) => {
   const { title, posterPath } = item;
   const { isDark, colorDarkenLighten } = useColorDarkenLighten(posterPath);
   const { ref, inView } = useInView({
@@ -135,21 +171,21 @@ const CardItem = ({ item }: { item: IMedia }) => {
             )}
           </Card.Body>
         )}
-        <Card.Footer
-          css={{
-            justifyItems: 'flex-start',
-            flexDirection: 'column',
-            alignItems: 'flex-start',
-            minHeight: '4.875rem',
-            maxWidth: `${isSm ? '164px' : isLg ? '210px' : '240px'}`,
-          }}
+        <Tooltip
+          placement="bottom"
+          content={<CardItemHover item={item} genresMovie={genresMovie} genresTv={genresTv} />}
+          rounded
+          shadow
+          className="!w-fit"
         >
-          <Tooltip
-            placement="bottom"
-            content={<CardItemHover item={item} />}
-            rounded
-            shadow
-            className="!w-fit"
+          <Card.Footer
+            css={{
+              justifyItems: 'flex-start',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              minHeight: '4.875rem',
+              maxWidth: `${isSm ? '164px' : isLg ? '210px' : '240px'}`,
+            }}
           >
             <Text
               size={14}
@@ -170,8 +206,8 @@ const CardItem = ({ item }: { item: IMedia }) => {
             >
               {title}
             </Text>
-          </Tooltip>
-        </Card.Footer>
+          </Card.Footer>
+        </Tooltip>
       </Card>
 
       <Spacer y={1} />

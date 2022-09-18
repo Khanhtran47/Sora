@@ -3,7 +3,6 @@ import { Button, Card, Col, Row, Spacer, Text } from '@nextui-org/react';
 import { Link } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 import Image, { MimeType } from 'remix-image';
-// import { useInView } from 'react-intersection-observer';
 
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import useMediaQuery from '~/hooks/useMediaQuery';
@@ -12,26 +11,19 @@ import { IMedia } from '~/services/tmdb/tmdb.types';
 type BannerItemProps = {
   item: IMedia;
   handler?: (id: number, type: 'movie' | 'tv') => void;
+  genresMovie?: { [id: string]: string };
+  genresTv?: { [id: string]: string };
 };
 
-const BannerItem = ({ item, handler }: BannerItemProps) => {
+const BannerItem = ({ item, handler, genresMovie, genresTv }: BannerItemProps) => {
   const { t } = useTranslation();
   const { backdropPath, overview, posterPath, title, id, mediaType } = item;
   const { colorDarkenLighten } = useColorDarkenLighten(posterPath);
-  // const { ref, inView } = useInView({
-  //   triggerOnce: true,
-  //   threshold: 0,
-  // });
   const isSm = useMediaQuery(650, 'max');
   const isMd = useMediaQuery(960, 'max');
 
   return (
-    <Card
-      variant="flat"
-      css={{ w: '100%', h: '70vh', borderWidth: 0 }}
-      role="figure"
-      // ref={ref}
-    >
+    <Card variant="flat" css={{ w: '100%', h: '672px', borderWidth: 0 }} role="figure">
       <Card.Header css={{ position: 'absolute', zIndex: 1 }}>
         <Row>
           <Col
@@ -51,24 +43,78 @@ const BannerItem = ({ item, handler }: BannerItemProps) => {
               css={{
                 transition: 'color 0.25s ease 0s',
                 margin: 0,
+                lineHeight: 'var(--nextui-lineHeights-base)',
                 '@xs': {
-                  fontSize: '40px',
+                  fontSize: '38px',
                 },
                 '@sm': {
-                  fontSize: '50px',
+                  fontSize: '48px',
                 },
                 '@md': {
-                  fontSize: '60px',
+                  fontSize: '58px',
                 },
               }}
             >
               {title}
             </Text>
+            <Row css={{ marginTop: '1.25rem' }} align="center">
+              <Text
+                weight="bold"
+                size="$xs"
+                css={{
+                  backgroundColor: '#3ec2c2',
+                  borderRadius: '$xs',
+                  padding: '0 0.25rem 0 0.25rem',
+                  marginRight: '0.5rem',
+                }}
+              >
+                TMDb
+              </Text>
+              <Text size="$sm" weight="bold">
+                {item?.voteAverage?.toFixed(1)}
+              </Text>
+              <Spacer x={1.5} />
+              <Text
+                h3
+                size={12}
+                css={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  margin: 0,
+                  '@xs': {
+                    fontSize: '14px',
+                  },
+                  '@sm': {
+                    fontSize: '16px',
+                  },
+                  '@md': {
+                    fontSize: '18px',
+                  },
+                }}
+              >
+                {item?.genreIds?.slice(0, 2).map((genreId) => {
+                  if (mediaType === 'movie') {
+                    return (
+                      <>
+                        {genresMovie?.[genreId]}
+                        <Spacer x={0.5} />
+                      </>
+                    );
+                  }
+                  return (
+                    <>
+                      {genresTv?.[genreId]}
+                      <Spacer x={0.5} />
+                    </>
+                  );
+                })}
+              </Text>
+            </Row>
             <Text
               size={12}
               weight="bold"
               css={{
-                margin: '5vh 0 0 0',
+                margin: '1.25rem 0 0 0',
                 textAlign: 'justify',
                 '@xs': {
                   fontSize: '16px',
@@ -86,7 +132,7 @@ const BannerItem = ({ item, handler }: BannerItemProps) => {
                 shadow
                 rounded
                 css={{
-                  marginTop: '5vh',
+                  marginTop: '1.25rem',
                 }}
               >
                 <Link to={`/${mediaType === 'movie' ? 'movies/' : 'tv-shows/'}${id}`}>
@@ -113,10 +159,10 @@ const BannerItem = ({ item, handler }: BannerItemProps) => {
                 shadow
                 rounded
                 bordered
-                css={{
-                  marginTop: '5vh',
-                }}
                 onClick={() => handler && handler(Number(id), mediaType)}
+                css={{
+                  marginTop: '1.25rem',
+                }}
               >
                 <Text
                   size={12}
@@ -196,7 +242,7 @@ const BannerItem = ({ item, handler }: BannerItemProps) => {
           }}
           css={{
             width: '100%',
-            minHeight: '70vh !important',
+            minHeight: '672px !important',
             height: 'auto',
             top: 0,
             left: 0,
