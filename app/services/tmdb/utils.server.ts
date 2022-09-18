@@ -279,6 +279,18 @@ export class TMDB {
     return url;
   };
 
+  static peopleCredits = (
+    person_id: number,
+    type: 'movie' | 'tv' | 'combined' = 'combined',
+    language?: string,
+  ): string => {
+    let url = `${this.API_BASE_URL}person/${person_id}/${type}_credits?api_key=${this.key}`;
+    if (language) {
+      url += `&language=${language}`;
+    }
+    return url;
+  };
+
   static discoverUrl = (
     type: 'movie' | 'tv',
     with_genres?: string,
@@ -352,6 +364,8 @@ export const postFetchDataHandler = (data: any, mediaType?: 'movie' | 'tv'): IMe
 
   if (Array.isArray(data?.results)) {
     data?.results.forEach((item: any) => result.push(transform(item)));
+  } else if (Array.isArray(data)) {
+    data.forEach((item: any) => result.push(transform(item)));
   } else {
     result.push(transform(data));
   }

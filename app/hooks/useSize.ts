@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useState, useEffect } from 'react';
+import { useState, useEffect, RefObject } from 'react';
 
 export interface IUseSize {
   x: number;
@@ -17,7 +17,7 @@ export interface IUseSize {
  * @param ref - The ref of the element you want to observe.
  * @returns The size of the element.
  */
-export default function useSize(ref) {
+export default function useSize(ref: RefObject<HTMLElement>) {
   const [size, setSize] = useState({});
 
   useEffect(() => {

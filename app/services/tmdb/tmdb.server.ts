@@ -15,6 +15,7 @@ import {
   IPeopleExternalIds,
   IPeopleImages,
   IDetailImages,
+  IPeopleCredits,
 } from './tmdb.types';
 import { fetcher, postFetchDataHandler, TMDB } from './utils.server';
 
@@ -190,6 +191,22 @@ export const getPeopleImages = async (
     const fetched = await fetcher<IPeopleImages>(TMDB.peopleImages(person_id, language));
     if (!fetched) throw new Error('Dont have result');
     return fetched;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getPeopleCredits = async (
+  id: number,
+  type?: 'movie' | 'tv' | 'combined',
+  language?: string,
+): Promise<IPeopleCredits | undefined> => {
+  try {
+    const fetched = await fetcher(TMDB.peopleCredits(id, type, language));
+    return {
+      cast: fetched?.cast ? postFetchDataHandler(fetched.cast) : [],
+      id: fetched?.id ?? undefined,
+    };
   } catch (error) {
     console.error(error);
   }
