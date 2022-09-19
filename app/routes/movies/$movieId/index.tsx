@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { LoaderFunction, json } from '@remix-run/node';
 import { useLoaderData, useNavigate } from '@remix-run/react';
 import { Text, Row, Col, Spacer, Divider } from '@nextui-org/react';
+import type { User } from '@supabase/supabase-js';
 import { useRouteData } from 'remix-utils';
 import { getSimilar, getVideos, getCredits, getRecommendation } from '~/services/tmdb/tmdb.server';
 import { IMovieDetail, ICast, ICrew } from '~/services/tmdb/tmdb.types';
@@ -49,6 +51,14 @@ const Overview = () => {
     directors,
   } = useLoaderData<LoaderData>();
   const movieData: { detail: IMovieDetail } | undefined = useRouteData('routes/movies/$movieId');
+  const rootData:
+    | {
+        user?: User;
+        locale: string;
+        genresMovie: { [id: string]: string };
+        genresTv: { [id: string]: string };
+      }
+    | undefined = useRouteData('root');
   const detail = movieData && movieData.detail;
   const navigate = useNavigate();
 
@@ -293,19 +303,13 @@ const Overview = () => {
               listName="Top Billed Cast"
               showMoreList
               onClickViewMore={() => onClickViewMore('cast')}
+              navigationButtons
             />
             <Spacer y={1} />
             <Divider x={1} css={{ m: 0 }} />
             <Spacer y={1} />
           </>
         )}
-
-        {/*
-          TODO: Videos
-          <Spacer y={1} />
-          <Divider x={1}  css={{ m: 0 }} />
-          <Spacer y={1} />
-        */}
         {recommendations && recommendations.items && recommendations.items.length > 0 && (
           <>
             <MediaList
@@ -315,6 +319,9 @@ const Overview = () => {
               showMoreList
               onClickViewMore={() => onClickViewMore('recommendations')}
               cardType="similar-movie"
+              navigationButtons
+              genresMovie={rootData?.genresMovie}
+              genresTv={rootData?.genresTv}
             />
             <Spacer y={1} />
             <Divider x={1} css={{ m: 0 }} />
@@ -331,6 +338,9 @@ const Overview = () => {
               showMoreList
               onClickViewMore={() => onClickViewMore('similar')}
               cardType="similar-movie"
+              navigationButtons
+              genresMovie={rootData?.genresMovie}
+              genresTv={rootData?.genresTv}
             />
             <Spacer y={1} />
             <Divider x={1} css={{ m: 0 }} />

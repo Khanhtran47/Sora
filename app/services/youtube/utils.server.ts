@@ -11,7 +11,6 @@ export default class Youtube {
     if (snippet) {
       url += '&part=snippet';
     }
-    console.log('🚀 ~ file: utils.server.ts ~ line 16 ~ Youtube ~ url', url);
     return new URL(url);
   };
 }

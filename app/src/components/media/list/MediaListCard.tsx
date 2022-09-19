@@ -1,6 +1,8 @@
 /* eslint-disable no-nested-ternary */
+import * as React from 'react';
 import { Grid } from '@nextui-org/react';
 import { Link } from '@remix-run/react';
+import { Navigation } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
@@ -10,9 +12,18 @@ import MediaItem from '../item';
 const MediaListCard = ({
   items,
   type,
+  navigation,
+  genresMovie,
+  genresTv,
 }: {
   items: IMedia[];
   type?: 'media' | 'similar-tv' | 'similar-movie';
+  navigation?: {
+    nextEl?: string | HTMLElement | null;
+    prevEl?: string | HTMLElement | null;
+  };
+  genresMovie?: { [id: string]: string };
+  genresTv?: { [id: string]: string };
 }) => {
   const isSm = useMediaQuery(650);
   const isLg = useMediaQuery(1400);
@@ -21,7 +32,13 @@ const MediaListCard = ({
   return (
     <Grid.Container gap={gap} justify="flex-start" alignItems="center">
       {items?.length > 0 && (
-        <Swiper grabCursor spaceBetween={10} slidesPerView="auto">
+        <Swiper
+          modules={[Navigation]}
+          grabCursor
+          spaceBetween={10}
+          slidesPerView="auto"
+          navigation={navigation}
+        >
           {items.map((item, i) => {
             const href =
               (item.mediaType === 'movie' || type === 'similar-movie' ? '/movies/' : '/tv-shows/') +
@@ -32,7 +49,13 @@ const MediaListCard = ({
                 style={{ width: `${isSm ? '164px' : isLg ? '210px' : '240px'}` }}
               >
                 <Link to={href}>
-                  <MediaItem key={item.id} type="card" item={item} />
+                  <MediaItem
+                    key={item.id}
+                    type="card"
+                    item={item}
+                    genresMovie={genresMovie}
+                    genresTv={genresTv}
+                  />
                 </Link>
               </SwiperSlide>
             );

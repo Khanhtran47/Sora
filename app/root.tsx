@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import * as React from 'react';
 import type { LinksFunction, LoaderFunction, MetaFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
@@ -25,9 +26,12 @@ import {
   Link as NextLink,
 } from '@nextui-org/react';
 import { ThemeProvider as RemixThemesProvider } from 'next-themes';
-import swiperStyles from 'swiper/swiper.min.css';
-import swiperPaginationStyles from 'swiper/components/pagination/pagination.min.css';
-import swiperNavigationStyles from 'swiper/components/navigation/navigation.min.css';
+// @ts-ignore
+import swiperStyles from 'swiper/css';
+// @ts-ignore
+import swiperPaginationStyles from 'swiper/css/navigation';
+// @ts-ignore
+import swiperNavigationStyles from 'swiper/css/pagination';
 import type { User } from '@supabase/supabase-js';
 import { AnimatePresence } from 'framer-motion';
 import NProgress from 'nprogress';
@@ -37,6 +41,7 @@ import { useTranslation } from 'react-i18next';
 import photoSwipeStyles from 'photoswipe/dist/photoswipe.css';
 import remixImageStyles from 'remix-image/remix-image.css';
 
+import { getListGenre } from '~/services/tmdb/tmdb.server';
 import Layout from '~/src/components/layouts/Layout';
 import styles from '~/styles/app.css';
 import { getUser } from './services/auth.server';
@@ -55,6 +60,8 @@ interface DocumentProps {
 interface LoaderDataType {
   user?: User;
   locale: string;
+  genresMovie: Awaited<ReturnType<typeof getListGenre>>;
+  genresTv: Awaited<ReturnType<typeof getListGenre>>;
 }
 
 const globalStyles = globalCss({
@@ -419,17 +426,19 @@ const Document = ({ children, title, lang, dir }: DocumentProps) => (
 export const loader: LoaderFunction = async ({ request }) => {
   const locale = await i18next.getLocale(request);
   const session = await getSession(request.headers.get('Cookie'));
+  const genresMovie = await getListGenre('movie', locale);
+  const genresTv = await getListGenre('tv', locale);
 
   if (session.has('access_token')) {
     const { user, error } = await getUser(session.get('access_token'));
 
     if (user && !error) {
-      return json<LoaderDataType>({ user, locale });
+      return json<LoaderDataType>({ user, locale, genresMovie, genresTv });
     }
   }
 
   return json<LoaderDataType>(
-    { locale },
+    { locale, genresMovie, genresTv },
     {
       headers: { 'Set-Cookie': await i18nCookie.serialize(locale) },
     },

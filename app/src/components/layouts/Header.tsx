@@ -556,6 +556,8 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       >
         {!isSm &&
           pages.map((page) => (
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             <Tooltip
               key={page.pageName}
               placement="bottom"

@@ -1,21 +1,21 @@
 /* eslint-disable no-nested-ternary */
-import { Grid, Table, Text, Button } from '@nextui-org/react';
+import * as React from 'react';
+import { Grid, Text, Button, Row } from '@nextui-org/react';
 import { Link } from '@remix-run/react';
 import { useState } from 'react';
-// import SwiperCore, { Autoplay } from 'swiper/core';
+import { Navigation } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 import { IPeople } from '~/services/tmdb/tmdb.types';
-
+import ChevronRightIcon from '~/src/assets/icons/ChevronRightIcon.js';
+import ChevronLeftIcon from '~/src/assets/icons/ChevronLeftIcon.js';
 import useMediaQuery from '~/hooks/useMediaQuery';
 
 import PeopleItem from './PeopleItem';
 
 /**
  * PeopleList type:
- * table
  * slider of cards
- * slider of banners
  * grid of cards
  */
 interface IPeopleListProps {
@@ -24,6 +24,7 @@ interface IPeopleListProps {
   items: IPeople[];
   showMoreList?: boolean;
   onClickViewMore?: () => void;
+  navigationButtons?: boolean;
 }
 
 const PeopleListGrid = ({ items }: { items: IPeople[] }) => {
@@ -53,45 +54,29 @@ const PeopleListGrid = ({ items }: { items: IPeople[] }) => {
   );
 };
 
-const PeopleListTable = ({ items }: { items: IPeople[] }) => (
-  <Table
-    bordered
-    striped
-    color="secondary"
-    aria-label="Example pagination table"
-    css={{
-      height: 'auto',
-      minWidth: '100%',
-    }}
-  >
-    <Table.Header>
-      <Table.Column>Name</Table.Column>
-      <Table.Column>Popularity</Table.Column>
-    </Table.Header>
-    <Table.Body>
-      {items.map((item) => {
-        const href = `/people/${item.id}/overview`;
-        return (
-          <Table.Row key={item.id}>
-            <Table.Cell>
-              <Link to={href}>{item.name}</Link>
-            </Table.Cell>
-            <Table.Cell>{item.popularity}</Table.Cell>
-          </Table.Row>
-        );
-      })}
-    </Table.Body>
-  </Table>
-);
-
-const PeopleListCard = ({ items }: { items: IPeople[] }) => {
+const PeopleListCard = ({
+  items,
+  navigation,
+}: {
+  items: IPeople[];
+  navigation?: {
+    nextEl?: string | HTMLElement | null;
+    prevEl?: string | HTMLElement | null;
+  };
+}) => {
   const isSm = useMediaQuery(960);
   const gap = isSm ? 1 : 2;
 
   return (
     <Grid.Container gap={gap} justify="flex-start" alignItems="center">
       {items?.length > 0 && (
-        <Swiper grabCursor spaceBetween={10} slidesPerView="auto">
+        <Swiper
+          modules={[Navigation]}
+          grabCursor
+          spaceBetween={10}
+          slidesPerView="auto"
+          navigation={navigation}
+        >
           {items.map((item, i) => {
             const href = `/people/${item.id}/overview`;
             return (
@@ -116,8 +101,11 @@ const PeopleListCard = ({ items }: { items: IPeople[] }) => {
 };
 
 const PeopleList = (props: IPeopleListProps) => {
-  const { listType, listName, items, showMoreList, onClickViewMore } = props;
+  const { listType, listName, items, showMoreList, onClickViewMore, navigationButtons } = props;
   const [displayType] = useState<string>(listType as string);
+
+  const [prevEl, setPrevEl] = React.useState<HTMLElement | null>(null);
+  const [nextEl, setNextEl] = React.useState<HTMLElement | null>(null);
 
   let list;
 
@@ -125,11 +113,8 @@ const PeopleList = (props: IPeopleListProps) => {
     case 'grid':
       list = <PeopleListGrid items={items} />;
       break;
-    case 'table':
-      list = <PeopleListTable items={items} />;
-      break;
     case 'slider-card':
-      list = <PeopleListCard items={items} />;
+      list = <PeopleListCard items={items} navigation={{ nextEl, prevEl }} />;
       break;
     default:
   }
@@ -142,18 +127,51 @@ const PeopleList = (props: IPeopleListProps) => {
         </Text>
       )}
       {showMoreList && (
-        <Button
-          auto
-          rounded
-          ghost
-          onClick={onClickViewMore}
-          css={{
-            maxWidth: '$8',
-            marginBottom: '$12', // space[2]
-          }}
-        >
-          View more
-        </Button>
+        <Row fluid justify="space-between" wrap="nowrap" align="center">
+          <Button
+            auto
+            rounded
+            ghost
+            onClick={onClickViewMore}
+            css={{
+              maxWidth: '$8',
+              marginBottom: '$12', // space[2]
+            }}
+          >
+            View more
+          </Button>
+          {navigationButtons && (
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                marginBottom: 'var(--nextui-space-12)',
+                color: 'var(--nextui-colors-primary)',
+              }}
+            >
+              <button
+                type="button"
+                ref={(node) => setPrevEl(node)}
+                style={{
+                  cursor: 'pointer',
+                }}
+                className="hover:opacity-80"
+              >
+                <ChevronLeftIcon width={48} height={48} />
+              </button>
+              <button
+                type="button"
+                ref={(node) => setNextEl(node)}
+                style={{
+                  cursor: 'pointer',
+                }}
+                className="hover:opacity-80"
+              >
+                <ChevronRightIcon width={48} height={48} />
+              </button>
+            </div>
+          )}
+        </Row>
       )}
       {list}
     </>

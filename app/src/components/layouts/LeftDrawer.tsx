@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { NavLink } from '@remix-run/react';
-import { Spacer, Switch, Text, Grid, Container, Row, useTheme, styled } from '@nextui-org/react';
-import { useTheme as useRemixTheme } from 'next-themes';
+import { Spacer, Text, Grid, Container, Row, styled } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 
 /* icons */
@@ -10,8 +9,6 @@ import RecommendIcon from '../../assets/icons/RecommendIcon.js';
 import NewReleaseIcon from '../../assets/icons/NewReleaseIcon.js';
 import TopRatedIcon from '../../assets/icons/TopRatedIcon.js';
 import HistoryIcon from '../../assets/icons/HistoryIcon.js';
-import SunIcon from '../../assets/icons/SunIcon.js';
-import MoonIcon from '../../assets/icons/MoonIcon.js';
 
 const drawerWidth = 240;
 
@@ -61,8 +58,6 @@ const Drawer = styled(Container, {
 const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
   const { t } = useTranslation('left-drawer');
   const wrapperRef = React.useRef<HTMLDivElement>(null);
-  const { setTheme } = useRemixTheme();
-  const { isDark } = useTheme();
   const { open, handleDrawerClose } = props;
 
   const iconItem = (index: number, filled: boolean) => {
@@ -211,24 +206,6 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
             </Grid>
           ))}
         </Grid.Container>
-      </Row>
-      <Row>
-        <Switch
-          checked={isDark}
-          size="lg"
-          onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}
-          shadow
-          color="primary"
-          iconOn={<MoonIcon filled />}
-          iconOff={<SunIcon filled />}
-          css={{
-            marginLeft: '90px',
-            marginTop: '35vh',
-            '@xs': {
-              display: 'none',
-            },
-          }}
-        />
       </Row>
     </Drawer>
   );
