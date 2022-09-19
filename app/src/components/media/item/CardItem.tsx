@@ -1,6 +1,16 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { Card, Grid, Loading, Row, Spacer, Text, Tooltip, Avatar } from '@nextui-org/react';
+import {
+  Card,
+  Grid,
+  Loading,
+  Row,
+  Spacer,
+  Text,
+  Tooltip,
+  Avatar,
+  Image as NextImage,
+} from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
 import { useInView } from 'react-intersection-observer';
 import useMediaQuery from '~/hooks/useMediaQuery';
@@ -18,7 +28,8 @@ const CardItemHover = ({
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
 }) => {
-  const { title, overview, releaseDate, voteAverage, mediaType, posterPath } = item;
+  console.log('🚀 ~ file: CardItem.tsx ~ line 21 ~ item', item);
+  const { title, overview, releaseDate, voteAverage, mediaType, posterPath, backdropPath } = item;
   const { loading, colorDarkenLighten } = useColorDarkenLighten(posterPath);
   // TODO: add spinner on loading color
 
@@ -35,7 +46,40 @@ const CardItemHover = ({
         <Loading type="points-opacity" />
       ) : (
         <>
+          {backdropPath && (
+            <NextImage
+              // @ts-ignore
+              as={Image}
+              src={backdropPath || ''}
+              objectFit="cover"
+              width="100%"
+              height="212px"
+              alt={title}
+              title={title}
+              containerCss={{
+                borderRadius: '0.5rem',
+              }}
+              css={{
+                minWidth: '240px !important',
+                minHeight: 'auto !important',
+              }}
+              loaderUrl="/api/image"
+              placeholder="blur"
+              options={{
+                contentType: MimeType.WEBP,
+              }}
+              responsive={[
+                {
+                  size: {
+                    width: 376,
+                    height: 212,
+                  },
+                },
+              ]}
+            />
+          )}
           <Row justify="center" align="center">
+            <Spacer y={0.5} />
             <Text size={18} b color={colorDarkenLighten}>
               {title}
             </Text>
@@ -73,7 +117,23 @@ const CardItemHover = ({
             )}
             {voteAverage && (
               <Grid>
-                <Text>{`Vote Average: ${voteAverage}`}</Text>
+                <Row>
+                  <Text
+                    weight="bold"
+                    size="$xs"
+                    css={{
+                      backgroundColor: '#3ec2c2',
+                      borderRadius: '$xs',
+                      padding: '0 0.25rem 0 0.25rem',
+                      marginRight: '0.5rem',
+                    }}
+                  >
+                    TMDb
+                  </Text>
+                  <Text size="$sm" weight="bold">
+                    {item?.voteAverage?.toFixed(1)}
+                  </Text>
+                </Row>
               </Grid>
             )}
           </Grid.Container>
