@@ -129,7 +129,8 @@ const MediaList = (props: IMediaListProps) => {
                 color: 'var(--nextui-colors-primary)',
               }}
             >
-              <div
+              <button
+                type="button"
                 ref={(node) => setPrevEl(node)}
                 style={{
                   cursor: 'pointer',
@@ -137,8 +138,9 @@ const MediaList = (props: IMediaListProps) => {
                 className="hover:opacity-80"
               >
                 <ChevronLeftIcon width={48} height={48} />
-              </div>
-              <div
+              </button>
+              <button
+                type="button"
                 ref={(node) => setNextEl(node)}
                 style={{
                   cursor: 'pointer',
@@ -146,7 +148,7 @@ const MediaList = (props: IMediaListProps) => {
                 className="hover:opacity-80"
               >
                 <ChevronRightIcon width={48} height={48} />
-              </div>
+              </button>
             </div>
           )}
         </Row>
