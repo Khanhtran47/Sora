@@ -23,7 +23,7 @@ const CustomNavigation = ({ slot }: { slot: 'container-end' }) => {
       <Button
         auto
         color="primary"
-        flat
+        light
         animated={false}
         icon={<ChevronLeftIcon width={48} height={48} fill="currentColor" />}
         onClick={() => swiper.slidePrev()}
@@ -32,13 +32,17 @@ const CustomNavigation = ({ slot }: { slot: 'container-end' }) => {
           bottom: '10px',
           right: '80px',
           height: '3rem',
+          zIndex: '90',
+          '&:hover': {
+            opacity: '0.8',
+          },
         }}
         disabled={slideProgress === 0}
       />
       <Button
         auto
         color="primary"
-        flat
+        light
         animated={false}
         icon={<ChevronRightIcon width={48} height={48} fill="currentColor" />}
         onClick={() => swiper.slideNext()}
@@ -47,6 +51,10 @@ const CustomNavigation = ({ slot }: { slot: 'container-end' }) => {
           bottom: '10px',
           right: '30px',
           height: '3rem',
+          zIndex: '90',
+          '&:hover': {
+            opacity: '0.8',
+          },
         }}
         disabled={slideProgress === 1}
       />

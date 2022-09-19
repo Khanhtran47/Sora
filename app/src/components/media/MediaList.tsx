@@ -126,7 +126,7 @@ const MediaList = (props: IMediaListProps) => {
                 display: 'flex',
                 flexDirection: 'row',
                 marginBottom: 'var(--nextui-space-12)',
-                color: 'var(--nextui-colors-primaryLightContrast)',
+                color: 'var(--nextui-colors-primary)',
               }}
             >
               <div
@@ -134,6 +134,7 @@ const MediaList = (props: IMediaListProps) => {
                 style={{
                   cursor: 'pointer',
                 }}
+                className="hover:opacity-80"
               >
                 <ChevronLeftIcon width={48} height={48} />
               </div>
@@ -142,6 +143,7 @@ const MediaList = (props: IMediaListProps) => {
                 style={{
                   cursor: 'pointer',
                 }}
+                className="hover:opacity-80"
               >
                 <ChevronRightIcon width={48} height={48} />
               </div>
