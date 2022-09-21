@@ -3,11 +3,13 @@ import * as React from 'react';
 import { Grid, Button } from '@nextui-org/react';
 import { Autoplay, Pagination, Virtual } from 'swiper';
 import { Swiper, SwiperSlide, useSwiper } from 'swiper/react';
+import { Swiper as SwiperClass } from 'swiper/types';
 
 import { IMedia } from '~/services/tmdb/tmdb.types';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import ChevronRightIcon from '~/src/assets/icons/ChevronRightIcon.js';
 import ChevronLeftIcon from '~/src/assets/icons/ChevronLeftIcon.js';
+import { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
 import MediaItem from '../item';
 
 const CustomNavigation = ({ slot }: { slot: 'container-end' }) => {
@@ -65,13 +67,23 @@ const CustomNavigation = ({ slot }: { slot: 'container-end' }) => {
 const MediaListBanner = ({
   items,
   handlerWatchTrailer,
+  handleSlideChangeTransitionEnd,
+  handleSlideChangeTransitionStart,
+  handleTouchMove,
   genresMovie,
   genresTv,
+  showTrailer,
+  trailer,
 }: {
   items: IMedia[];
   handlerWatchTrailer?: (id: number, type: 'movie' | 'tv') => void;
+  handleSlideChangeTransitionEnd?: (swiper: SwiperClass) => void;
+  handleSlideChangeTransitionStart?: (swiper: SwiperClass) => void;
+  handleTouchMove?: (swiper: SwiperClass, e: any) => void;
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
+  showTrailer?: boolean;
+  trailer?: Trailer;
 }) => {
   const isSm = useMediaQuery(650, 'max');
   return (
@@ -103,6 +115,13 @@ const MediaListBanner = ({
           }}
           autoplay={{ delay: 10000 }}
           virtual
+          onSlideChangeTransitionEnd={(swiper) =>
+            handleSlideChangeTransitionEnd && handleSlideChangeTransitionEnd(swiper)
+          }
+          onSlideChangeTransitionStart={(swiper) =>
+            handleSlideChangeTransitionStart && handleSlideChangeTransitionStart(swiper)
+          }
+          onTouchMove={(swiper, e) => handleTouchMove && handleTouchMove(swiper, e)}
         >
           {items.slice(0, 10).map((item, index) => (
             <SwiperSlide key={index} virtualIndex={index}>
@@ -112,6 +131,8 @@ const MediaListBanner = ({
                 handlerWatchTrailer={handlerWatchTrailer}
                 genresMovie={genresMovie}
                 genresTv={genresTv}
+                showTrailer={showTrailer}
+                trailer={trailer}
               />
             </SwiperSlide>
           ))}

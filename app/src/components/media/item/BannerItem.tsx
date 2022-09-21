@@ -3,24 +3,52 @@ import { Button, Card, Col, Row, Spacer, Text } from '@nextui-org/react';
 import { Link } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 import Image, { MimeType } from 'remix-image';
+import { motion, AnimatePresence } from 'framer-motion';
+import YouTube, { YouTubeProps } from 'react-youtube';
 
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import { IMedia } from '~/services/tmdb/tmdb.types';
+import { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
 
 type BannerItemProps = {
   item: IMedia;
   handler?: (id: number, type: 'movie' | 'tv') => void;
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
+  showTrailer?: boolean;
+  trailer?: Trailer;
 };
 
-const BannerItem = ({ item, handler, genresMovie, genresTv }: BannerItemProps) => {
+const BannerItem = ({
+  item,
+  handler,
+  genresMovie,
+  genresTv,
+  showTrailer,
+  trailer,
+}: BannerItemProps) => {
   const { t } = useTranslation();
   const { backdropPath, overview, posterPath, title, id, mediaType } = item;
   const { colorDarkenLighten } = useColorDarkenLighten(posterPath);
   const isSm = useMediaQuery(650, 'max');
   const isMd = useMediaQuery(960, 'max');
+  // const onPlayerReady: YouTubeProps['onReady'] = (event) => {
+  //   // access to player in all event handlers via event.target
+  //   event.target.playVideo();
+  // };
+  const opts: YouTubeProps['opts'] = {
+    height: '100%',
+    width: '100%',
+    playerVars: {
+      // https://developers.google.com/youtube/player_parameters
+      autoplay: 1,
+      modestbranding: 1,
+      controls: 0,
+      mute: 0,
+      disablekb: 1,
+    },
+  };
 
   return (
     <Card variant="flat" css={{ w: '100%', h: '672px', borderWidth: 0 }} role="figure">
@@ -183,7 +211,6 @@ const BannerItem = ({ item, handler, genresMovie, genresTv }: BannerItemProps) =
             </Row>
           </Col>
           {!isSm && (
-            // && inView
             <Col>
               <Card.Image
                 // @ts-ignore
@@ -198,6 +225,7 @@ const BannerItem = ({ item, handler, genresMovie, genresTv }: BannerItemProps) =
                   marginTop: '10vh',
                   borderRadius: '24px',
                 }}
+                loading="eager"
                 loaderUrl="/api/image"
                 placeholder="blur"
                 responsive={[
@@ -223,76 +251,118 @@ const BannerItem = ({ item, handler, genresMovie, genresTv }: BannerItemProps) =
           )}
         </Row>
       </Card.Header>
-      <Card.Body css={{ p: 0 }}>
-        <Card.Image
-          // @ts-ignore
-          as={Image}
-          src={backdropPath || ''}
-          containerCss={{
-            margin: 0,
-            '&::after': {
-              content: '',
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-              width: '100%',
-              height: '100px',
-              backgroundImage: 'linear-gradient(0deg, $background, $backgroundTransparent)',
-            },
-          }}
-          css={{
-            width: '100%',
-            minHeight: '672px !important',
-            height: 'auto',
-            top: 0,
+      <Card.Body
+        css={{
+          p: 0,
+          overflow: 'hidden',
+          margin: 0,
+          '&::after': {
+            content: '',
+            position: 'absolute',
+            bottom: 0,
             left: 0,
-            objectFit: 'cover',
-            opacity: 0.3,
-          }}
-          alt={title}
-          title={title}
-          loaderUrl="/api/image"
-          placeholder="blur"
-          responsive={[
-            {
-              size: {
-                width: 375,
-                height: 605,
-              },
-              maxWidth: 375,
-            },
-            {
-              size: {
-                width: 650,
-                height: 605,
-              },
-              maxWidth: 650,
-            },
-            {
-              size: {
-                width: 960,
-                height: 605,
-              },
-              maxWidth: 960,
-            },
-            {
-              size: {
-                width: 1280,
-                height: 720,
-              },
-              maxWidth: 1280,
-            },
-            {
-              size: {
-                width: 1400,
-                height: 787,
-              },
-            },
-          ]}
-          options={{
-            contentType: MimeType.WEBP,
-          }}
-        />
+            width: '100%',
+            height: '100px',
+            backgroundImage: 'linear-gradient(0deg, $background, $backgroundTransparent)',
+          },
+        }}
+      >
+        <AnimatePresence>
+          {!showTrailer ? (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              style={{ overflow: 'hidden' }}
+            >
+              <Card.Image
+                // @ts-ignore
+                as={Image}
+                src={backdropPath || ''}
+                loading="eager"
+                css={{
+                  width: '100%',
+                  minHeight: '672px !important',
+                  height: 'auto',
+                  top: 0,
+                  left: 0,
+                  objectFit: 'cover',
+                  opacity: 0.3,
+                }}
+                alt={title}
+                title={title}
+                loaderUrl="/api/image"
+                placeholder="blur"
+                responsive={[
+                  {
+                    size: {
+                      width: 375,
+                      height: 605,
+                    },
+                    maxWidth: 375,
+                  },
+                  {
+                    size: {
+                      width: 650,
+                      height: 605,
+                    },
+                    maxWidth: 650,
+                  },
+                  {
+                    size: {
+                      width: 960,
+                      height: 605,
+                    },
+                    maxWidth: 960,
+                  },
+                  {
+                    size: {
+                      width: 1280,
+                      height: 720,
+                    },
+                    maxWidth: 1280,
+                  },
+                  {
+                    size: {
+                      width: 1400,
+                      height: 787,
+                    },
+                  },
+                ]}
+                options={{
+                  contentType: MimeType.WEBP,
+                }}
+              />
+            </motion.div>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.3 }}
+              exit={{ opacity: 0 }}
+              style={{
+                position: 'relative',
+                paddingBottom: '56.25%',
+                overflow: 'hidden',
+                pointerEvents: 'none',
+              }}
+            >
+              {trailer && trailer.key && (
+                <YouTube
+                  videoId={trailer.key}
+                  opts={opts}
+                  // onReady={onPlayerReady}
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                  }}
+                />
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </Card.Body>
     </Card>
   );

@@ -1,4 +1,5 @@
 import { IMedia } from '~/services/tmdb/tmdb.types';
+import { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
 import BannerItem from './BannerItem';
 import CardItem from './CardItem';
 
@@ -8,10 +9,12 @@ interface IMediaItem {
   handlerWatchTrailer?: (id: number, type: 'movie' | 'tv') => void;
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
+  showTrailer?: boolean;
+  trailer?: Trailer;
 }
 
 const MediaItem = (props: IMediaItem) => {
-  const { type, item, handlerWatchTrailer, genresMovie, genresTv } = props;
+  const { type, item, handlerWatchTrailer, genresMovie, genresTv, showTrailer, trailer } = props;
 
   if (type === 'banner') {
     return (
@@ -20,6 +23,8 @@ const MediaItem = (props: IMediaItem) => {
         handler={handlerWatchTrailer}
         genresMovie={genresMovie}
         genresTv={genresTv}
+        showTrailer={showTrailer}
+        trailer={trailer}
       />
     );
   }

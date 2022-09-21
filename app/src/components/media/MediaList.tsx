@@ -2,10 +2,12 @@ import * as React from 'react';
 import { Text, Button, Row } from '@nextui-org/react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Swiper as SwiperClass } from 'swiper/types';
 
 import { IMedia } from '~/services/tmdb/tmdb.types';
 import ChevronRightIcon from '~/src/assets/icons/ChevronRightIcon.js';
 import ChevronLeftIcon from '~/src/assets/icons/ChevronLeftIcon.js';
+import { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
 import { MediaListTable, MediaListCard, MediaListBanner, MediaListGrid } from './list';
 import Filter from '../elements/filter/Filter';
 
@@ -30,6 +32,11 @@ interface IMediaListProps {
   cardType?: 'media' | 'similar-movie' | 'similar-tv';
   handlerWatchTrailer?: (id: number, type: 'movie' | 'tv') => void;
   navigationButtons?: boolean;
+  handleSlideChangeTransitionEnd?: (swiper: SwiperClass) => void;
+  handleSlideChangeTransitionStart?: (swiper: SwiperClass) => void;
+  handleTouchMove?: (swiper: SwiperClass, e: any) => void;
+  showTrailer?: boolean;
+  trailer?: Trailer;
 }
 
 const MediaList = (props: IMediaListProps) => {
@@ -46,6 +53,11 @@ const MediaList = (props: IMediaListProps) => {
     cardType,
     handlerWatchTrailer,
     navigationButtons,
+    handleSlideChangeTransitionEnd,
+    handleSlideChangeTransitionStart,
+    handleTouchMove,
+    showTrailer,
+    trailer,
   } = props;
   let { listType } = props;
 
@@ -80,8 +92,13 @@ const MediaList = (props: IMediaListProps) => {
         <MediaListBanner
           items={items}
           handlerWatchTrailer={handlerWatchTrailer}
+          handleSlideChangeTransitionEnd={handleSlideChangeTransitionEnd}
+          handleSlideChangeTransitionStart={handleSlideChangeTransitionStart}
+          handleTouchMove={handleTouchMove}
           genresMovie={genresMovie}
           genresTv={genresTv}
+          showTrailer={showTrailer}
+          trailer={trailer}
         />
       );
       break;

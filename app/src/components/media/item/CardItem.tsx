@@ -232,7 +232,7 @@ const CardItem = ({
           </Card.Body>
         )}
         <Tooltip
-          placement="bottom"
+          placement="top"
           content={<CardItemHover item={item} genresMovie={genresMovie} genresTv={genresTv} />}
           rounded
           shadow
