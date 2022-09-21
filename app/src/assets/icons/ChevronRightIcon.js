@@ -20,6 +20,7 @@ const ChevronRightIcon = ({
     viewBox="0 0 24 24"
     {...props}
   >
+    {' '}
     <path
       fill={fill}
       fillRule="evenodd"
