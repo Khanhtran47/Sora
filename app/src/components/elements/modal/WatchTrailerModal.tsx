@@ -27,7 +27,7 @@ const WatchTrailerModal = ({ trailer, visible, closeHandler }: WatchTrailerModal
   const { width } = useWindowSize();
   const onPlayerReady: YouTubeProps['onReady'] = (event) => {
     // access to player in all event handlers via event.target
-    event.target.pauseVideo();
+    event.target.playVideo();
   };
   const opts: YouTubeProps['opts'] = {
     height: `${width && width < 720 ? width / 1.5 : 480}`,
@@ -37,7 +37,6 @@ const WatchTrailerModal = ({ trailer, visible, closeHandler }: WatchTrailerModal
       autoplay: 1,
       modestbranding: 1,
       controls: 1,
-      mute: 0,
     },
   };
 

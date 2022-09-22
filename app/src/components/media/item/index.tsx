@@ -9,12 +9,22 @@ interface IMediaItem {
   handlerWatchTrailer?: (id: number, type: 'movie' | 'tv') => void;
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
+  setShowTrailer?: React.Dispatch<React.SetStateAction<boolean>>;
   showTrailer?: boolean;
   trailer?: Trailer;
 }
 
 const MediaItem = (props: IMediaItem) => {
-  const { type, item, handlerWatchTrailer, genresMovie, genresTv, showTrailer, trailer } = props;
+  const {
+    type,
+    item,
+    handlerWatchTrailer,
+    genresMovie,
+    genresTv,
+    setShowTrailer,
+    showTrailer,
+    trailer,
+  } = props;
 
   if (type === 'banner') {
     return (
@@ -23,6 +33,7 @@ const MediaItem = (props: IMediaItem) => {
         handler={handlerWatchTrailer}
         genresMovie={genresMovie}
         genresTv={genresTv}
+        setShowTrailer={setShowTrailer}
         showTrailer={showTrailer}
         trailer={trailer}
       />

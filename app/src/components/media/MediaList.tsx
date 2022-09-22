@@ -35,6 +35,7 @@ interface IMediaListProps {
   handleSlideChangeTransitionEnd?: (swiper: SwiperClass) => void;
   handleSlideChangeTransitionStart?: (swiper: SwiperClass) => void;
   handleTouchMove?: (swiper: SwiperClass, e: any) => void;
+  setShowTrailer?: React.Dispatch<React.SetStateAction<boolean>>;
   showTrailer?: boolean;
   trailer?: Trailer;
 }
@@ -56,6 +57,7 @@ const MediaList = (props: IMediaListProps) => {
     handleSlideChangeTransitionEnd,
     handleSlideChangeTransitionStart,
     handleTouchMove,
+    setShowTrailer,
     showTrailer,
     trailer,
   } = props;
@@ -97,6 +99,7 @@ const MediaList = (props: IMediaListProps) => {
           handleTouchMove={handleTouchMove}
           genresMovie={genresMovie}
           genresTv={genresTv}
+          setShowTrailer={setShowTrailer}
           showTrailer={showTrailer}
           trailer={trailer}
         />

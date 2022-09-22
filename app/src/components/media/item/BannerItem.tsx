@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { Button, Card, Col, Row, Spacer, Text } from '@nextui-org/react';
+import * as React from 'react';
+import { Button, Card, Col, Row, Spacer, Text, Loading } from '@nextui-org/react';
 import { Link } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 import Image, { MimeType } from 'remix-image';
 import { motion, AnimatePresence } from 'framer-motion';
-import YouTube, { YouTubeProps } from 'react-youtube';
+import YouTube from 'react-youtube'; // { YouTubeProps }
+import { ClientOnly } from 'remix-utils';
 
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import useMediaQuery from '~/hooks/useMediaQuery';
@@ -17,6 +19,7 @@ type BannerItemProps = {
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
   showTrailer?: boolean;
+  setShowTrailer?: React.Dispatch<React.SetStateAction<boolean>>;
   trailer?: Trailer;
 };
 
@@ -26,29 +29,15 @@ const BannerItem = ({
   genresMovie,
   genresTv,
   showTrailer,
+  setShowTrailer,
   trailer,
 }: BannerItemProps) => {
   const { t } = useTranslation();
   const { backdropPath, overview, posterPath, title, id, mediaType } = item;
+  // const [player, setPlayer] = React.useState<ReturnType<YouTube['getInternalPlayer']>>();
   const { colorDarkenLighten } = useColorDarkenLighten(posterPath);
   const isSm = useMediaQuery(650, 'max');
   const isMd = useMediaQuery(960, 'max');
-  // const onPlayerReady: YouTubeProps['onReady'] = (event) => {
-  //   // access to player in all event handlers via event.target
-  //   event.target.playVideo();
-  // };
-  const opts: YouTubeProps['opts'] = {
-    height: '100%',
-    width: '100%',
-    playerVars: {
-      // https://developers.google.com/youtube/player_parameters
-      autoplay: 1,
-      modestbranding: 1,
-      controls: 0,
-      mute: 0,
-      disablekb: 1,
-    },
-  };
 
   return (
     <Card variant="flat" css={{ w: '100%', h: '672px', borderWidth: 0 }} role="figure">
@@ -268,7 +257,7 @@ const BannerItem = ({
         }}
       >
         <AnimatePresence>
-          {!showTrailer ? (
+          {!showTrailer && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -334,23 +323,56 @@ const BannerItem = ({
                 }}
               />
             </motion.div>
-          ) : (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.3 }}
-              exit={{ opacity: 0 }}
-              style={{
-                position: 'relative',
-                paddingBottom: '56.25%',
-                overflow: 'hidden',
-                pointerEvents: 'none',
-              }}
-            >
-              {trailer && trailer.key && (
+          )}
+        </AnimatePresence>
+        <ClientOnly fallback={<Loading type="default" />}>
+          {() => {
+            if (trailer?.key)
+              return (
                 <YouTube
                   videoId={trailer.key}
-                  opts={opts}
-                  // onReady={onPlayerReady}
+                  opts={{
+                    height: '100%',
+                    width: '100%',
+                    playerVars: {
+                      // https://developers.google.com/youtube/player_parameters
+                      autoplay: 1,
+                      modestbranding: 1,
+                      controls: 0,
+                      disablekb: 1,
+                      showinfo: 0,
+                      branding: 0,
+                      rel: 0,
+                      autohide: 0,
+                      iv_load_policy: 3,
+                      cc_load_policy: 0,
+                      playsinline: 1,
+                    },
+                  }}
+                  onReady={({ target }) => {
+                    // setPlayer(target);
+                    target.mute();
+                  }}
+                  onPlay={() => {
+                    if (setShowTrailer) {
+                      setShowTrailer(true);
+                    }
+                  }}
+                  onPause={() => {
+                    if (setShowTrailer) {
+                      setShowTrailer(false);
+                    }
+                  }}
+                  onEnd={() => {
+                    if (setShowTrailer) {
+                      setShowTrailer(false);
+                    }
+                  }}
+                  onError={() => {
+                    if (setShowTrailer) {
+                      setShowTrailer(false);
+                    }
+                  }}
                   style={{
                     position: 'absolute',
                     top: 0,
@@ -358,11 +380,16 @@ const BannerItem = ({
                     width: '100%',
                     height: '100%',
                   }}
+                  className={
+                    showTrailer
+                      ? 'relative !w-full overflow-hidden aspect-w-16 aspect-h-9 !h-[300%] !-top-[100%] opacity-30'
+                      : 'hidden'
+                  }
+                  loading="eager"
                 />
-              )}
-            </motion.div>
-          )}
-        </AnimatePresence>
+              );
+          }}
+        </ClientOnly>
       </Card.Body>
     </Card>
   );

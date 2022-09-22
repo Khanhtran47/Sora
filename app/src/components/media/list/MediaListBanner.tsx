@@ -1,7 +1,7 @@
 /* eslint-disable arrow-body-style */
 import * as React from 'react';
 import { Grid, Button } from '@nextui-org/react';
-import { Autoplay, Pagination, Virtual } from 'swiper';
+import { Pagination, Virtual } from 'swiper';
 import { Swiper, SwiperSlide, useSwiper } from 'swiper/react';
 import { Swiper as SwiperClass } from 'swiper/types';
 
@@ -72,6 +72,7 @@ const MediaListBanner = ({
   handleTouchMove,
   genresMovie,
   genresTv,
+  setShowTrailer,
   showTrailer,
   trailer,
 }: {
@@ -82,6 +83,7 @@ const MediaListBanner = ({
   handleTouchMove?: (swiper: SwiperClass, e: any) => void;
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
+  setShowTrailer?: React.Dispatch<React.SetStateAction<boolean>>;
   showTrailer?: boolean;
   trailer?: Trailer;
 }) => {
@@ -101,7 +103,7 @@ const MediaListBanner = ({
     >
       {items?.length > 0 && (
         <Swiper
-          modules={[Autoplay, Pagination, Virtual]}
+          modules={[Pagination, Virtual]}
           grabCursor
           spaceBetween={0}
           slidesPerView={1}
@@ -113,7 +115,6 @@ const MediaListBanner = ({
               return `<span class="${className}">${index + 1}</span>`;
             },
           }}
-          autoplay={{ delay: 10000 }}
           virtual
           onSlideChangeTransitionEnd={(swiper) =>
             handleSlideChangeTransitionEnd && handleSlideChangeTransitionEnd(swiper)
@@ -131,6 +132,7 @@ const MediaListBanner = ({
                 handlerWatchTrailer={handlerWatchTrailer}
                 genresMovie={genresMovie}
                 genresTv={genresTv}
+                setShowTrailer={setShowTrailer}
                 showTrailer={showTrailer}
                 trailer={trailer}
               />

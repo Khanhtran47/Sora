@@ -74,7 +74,7 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
 
 // https://remix.run/guides/routing#index-routes
 const Index = () => {
-  const { movies, shows, people, todayTrending, video } = useLoaderData();
+  const { movies, shows, people, todayTrending } = useLoaderData();
   const rootData:
     | {
         user?: User;
@@ -85,23 +85,24 @@ const Index = () => {
     | undefined = useRouteData('root');
   const fetcher = useFetcher();
   const [visible, setVisible] = React.useState(false);
-  const [trailerBanner, setTrailerBanner] = React.useState<Trailer>(video || {});
+  const [trailerBanner, setTrailerBanner] = React.useState<Trailer>({});
+
+  React.useEffect(() => {
+    fetcher.load(
+      `/${todayTrending[0].mediaType === 'movie' ? 'movies' : 'tv-shows'}/${
+        todayTrending[0].id
+      }/videos`,
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [todayTrending]);
 
   React.useEffect(() => {
     if (fetcher.data && fetcher.data.videos) {
       const { results } = fetcher.data.videos;
       const officialTrailer = results.find((result: Trailer) => result.type === 'Trailer');
       setTrailerBanner(officialTrailer);
-      setVisible(true);
     }
   }, [fetcher.data]);
-
-  React.useEffect(() => {
-    if (video) {
-      setTimeout(() => setVisible(true), 5000);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -115,9 +116,6 @@ const Index = () => {
 
   const handleSlideChangeTransitionEnd = (swiper: SwiperClass) => {
     const { activeIndex } = swiper;
-    console.log(activeIndex);
-    console.log('slideChange');
-    console.log(todayTrending[activeIndex]);
     fetcher.load(
       `/${todayTrending[activeIndex].mediaType === 'movie' ? 'movies' : 'tv-shows'}/${
         todayTrending[activeIndex].id
@@ -127,7 +125,7 @@ const Index = () => {
 
   const handleSlideChangeTransitionStart = () => {
     setVisible(false);
-    console.log('slide start change');
+    setTrailerBanner({});
   };
 
   return (
@@ -145,7 +143,11 @@ const Index = () => {
         genresTv={rootData?.genresTv}
         handleSlideChangeTransitionEnd={handleSlideChangeTransitionEnd}
         handleSlideChangeTransitionStart={handleSlideChangeTransitionStart}
-        handleTouchMove={() => setVisible(false)}
+        handleTouchMove={() => {
+          setVisible(false);
+          setTrailerBanner({});
+        }}
+        setShowTrailer={setVisible}
         showTrailer={visible}
         trailer={trailerBanner}
       />
