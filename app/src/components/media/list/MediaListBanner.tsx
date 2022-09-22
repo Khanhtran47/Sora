@@ -80,7 +80,7 @@ const MediaListBanner = ({
   handlerWatchTrailer?: (id: number, type: 'movie' | 'tv') => void;
   handleSlideChangeTransitionEnd?: (swiper: SwiperClass) => void;
   handleSlideChangeTransitionStart?: (swiper: SwiperClass) => void;
-  handleTouchMove?: (swiper: SwiperClass, e: any) => void;
+  handleTouchMove?: (swiper: SwiperClass, e: MouseEvent | TouchEvent | PointerEvent) => void;
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
   setShowTrailer?: React.Dispatch<React.SetStateAction<boolean>>;

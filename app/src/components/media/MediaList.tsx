@@ -34,7 +34,7 @@ interface IMediaListProps {
   navigationButtons?: boolean;
   handleSlideChangeTransitionEnd?: (swiper: SwiperClass) => void;
   handleSlideChangeTransitionStart?: (swiper: SwiperClass) => void;
-  handleTouchMove?: (swiper: SwiperClass, e: any) => void;
+  handleTouchMove?: (swiper: SwiperClass, e: MouseEvent | TouchEvent | PointerEvent) => void;
   setShowTrailer?: React.Dispatch<React.SetStateAction<boolean>>;
   showTrailer?: boolean;
   trailer?: Trailer;
