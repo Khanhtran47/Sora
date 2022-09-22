@@ -8,6 +8,7 @@ import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useRouteData } from 'remix-utils';
 import type { User } from '@supabase/supabase-js';
+import { Swiper as SwiperClass } from 'swiper/types';
 
 import i18next from '~/i18n/i18next.server';
 import {
@@ -15,11 +16,12 @@ import {
   getListMovies,
   getListTvShows,
   getListPeople,
+  getVideos,
 } from '~/services/tmdb/tmdb.server';
 import { IMedia, IPeople } from '~/services/tmdb/tmdb.types';
 import MediaList from '~/src/components/media/MediaList';
 import PeopleList from '~/src/components/people/PeopleList';
-import WatchTrailerModal, { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
+import { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
 
 // https://remix.run/api/conventions#meta
 export const meta: MetaFunction = () => ({
@@ -36,6 +38,7 @@ type LoaderData = {
   movies: IMedia[] | undefined;
   shows: IMedia[] | undefined;
   people: IPeople[] | undefined;
+  video: Trailer | undefined;
 };
 
 export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
@@ -45,15 +48,27 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
   let page = Number(url.searchParams.get('page'));
   if (page && (page < 1 || page > 1000)) page = 1;
   const todayTrending = await getTrending('all', 'day', locale, page);
-  const movies = await getListMovies('popular', locale, page);
-  const shows = await getListTvShows('popular', locale, page);
-  const people = await getListPeople('popular', locale, page);
+
+  const [movies, shows, people, videos] = await Promise.all([
+    getListMovies('popular', locale, page),
+    getListTvShows('popular', locale, page),
+    getListPeople('popular', locale, page),
+    getVideos(
+      `${
+        todayTrending && todayTrending.items && todayTrending.items[0].mediaType === 'movie'
+          ? 'movie'
+          : 'tv'
+      }`,
+      (todayTrending && todayTrending.items && todayTrending.items[0].id) || 0,
+    ),
+  ]);
 
   return json<LoaderData>({
     todayTrending: todayTrending && todayTrending.items && todayTrending.items.slice(0, 10),
     movies: movies && movies.items && movies.items.slice(0, 15),
     shows: shows && shows.items && shows.items.slice(0, 15),
     people: people && people.results && people.results.slice(0, 15),
+    video: videos && videos.results.find((result: Trailer) => result.type === 'Trailer'),
   });
 };
 
@@ -70,21 +85,22 @@ const Index = () => {
     | undefined = useRouteData('root');
   const fetcher = useFetcher();
   const [visible, setVisible] = React.useState(false);
-  const [trailer, setTrailer] = React.useState<Trailer>({});
+  const [trailerBanner, setTrailerBanner] = React.useState<Trailer>({});
 
-  const Handler = (id: number, type: 'movie' | 'tv') => {
-    setVisible(true);
-    fetcher.load(`/${type === 'movie' ? 'movies' : 'tv-shows'}/${id}/videos`);
-  };
-  const closeHandler = () => {
-    setVisible(false);
-    setTrailer({});
-  };
+  React.useEffect(() => {
+    fetcher.load(
+      `/${todayTrending[0].mediaType === 'movie' ? 'movies' : 'tv-shows'}/${
+        todayTrending[0].id
+      }/videos`,
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [todayTrending]);
+
   React.useEffect(() => {
     if (fetcher.data && fetcher.data.videos) {
       const { results } = fetcher.data.videos;
       const officialTrailer = results.find((result: Trailer) => result.type === 'Trailer');
-      setTrailer(officialTrailer);
+      setTrailerBanner(officialTrailer);
     }
   }, [fetcher.data]);
 
@@ -98,6 +114,20 @@ const Index = () => {
     else navigate(`/${type}/popular`);
   };
 
+  const handleSlideChangeTransitionEnd = (swiper: SwiperClass) => {
+    const { activeIndex } = swiper;
+    fetcher.load(
+      `/${todayTrending[activeIndex].mediaType === 'movie' ? 'movies' : 'tv-shows'}/${
+        todayTrending[activeIndex].id
+      }/videos`,
+    );
+  };
+
+  const handleSlideChangeTransitionStart = () => {
+    setVisible(false);
+    setTrailerBanner({});
+  };
+
   return (
     <motion.main
       key={location.key}
@@ -109,9 +139,17 @@ const Index = () => {
       <MediaList
         listType="slider-banner"
         items={trending}
-        handlerWatchTrailer={Handler}
         genresMovie={rootData?.genresMovie}
         genresTv={rootData?.genresTv}
+        handleSlideChangeTransitionEnd={handleSlideChangeTransitionEnd}
+        handleSlideChangeTransitionStart={handleSlideChangeTransitionStart}
+        handleTouchMove={() => {
+          setVisible(false);
+          setTrailerBanner({});
+        }}
+        setShowTrailer={setVisible}
+        showTrailer={visible}
+        trailer={trailerBanner}
       />
       <Container
         fluid
@@ -192,8 +230,6 @@ const Index = () => {
           />
         )}
       </Container>
-
-      <WatchTrailerModal trailer={trailer} visible={visible} closeHandler={closeHandler} />
     </motion.main>
   );
 };
