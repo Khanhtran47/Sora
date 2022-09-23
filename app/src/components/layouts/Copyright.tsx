@@ -1,4 +1,6 @@
-import { Text, Link, Container, Avatar } from '@nextui-org/react';
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import { Text, Link, Container, Image as NextImage } from '@nextui-org/react';
+import Image, { MimeType } from 'remix-image';
 import KleeCute from '../../assets/images/klee-avatar.jpg';
 
 const Copyright = () => (
@@ -15,10 +17,36 @@ const Copyright = () => (
       },
     }}
   >
-    <Avatar alt="Klee Cute" src={KleeCute} css={{ size: '$20' }} />
-    <Text h5 css={{ marginTop: '1rem' }}>
-      <Link href="https://remix-watchmovie.vercel.app/">© Remix Movie</Link>{' '}
-    </Text>
+    <NextImage
+      // @ts-ignore
+      as={Image}
+      alt="Klee Cute"
+      title="Klee Cute"
+      src={KleeCute}
+      width="76px"
+      height="76px"
+      css={{
+        borderRadius: '50%',
+      }}
+      loaderUrl="/api/image"
+      placeholder="blur"
+      responsive={[
+        {
+          size: {
+            width: 76,
+            height: 76,
+          },
+        },
+      ]}
+      options={{
+        contentType: MimeType.WEBP,
+      }}
+    />
+    <Link href="https://remix-watchmovie.vercel.app/">
+      <Text h5 css={{ marginTop: '1rem' }}>
+        © Remix Movie
+      </Text>
+    </Link>{' '}
   </Container>
 );
 

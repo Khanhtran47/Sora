@@ -1,147 +1,19 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import {
-  Card,
-  Grid,
-  Loading,
-  Row,
-  Spacer,
-  Text,
-  Tooltip,
-  Avatar,
-  Image as NextImage,
-} from '@nextui-org/react';
+import * as React from 'react';
+import { Card, Loading, Spacer, Text, Tooltip, Avatar } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
 import { useInView } from 'react-intersection-observer';
+import { ClientOnly } from 'remix-utils';
+import { motion } from 'framer-motion';
+
 import useMediaQuery from '~/hooks/useMediaQuery';
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { IMedia } from '~/services/tmdb/tmdb.types';
 
 import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
 
-const CardItemHover = ({
-  item,
-  genresMovie,
-  genresTv,
-}: {
-  item: IMedia;
-  genresMovie?: { [id: string]: string };
-  genresTv?: { [id: string]: string };
-}) => {
-  console.log('🚀 ~ file: CardItem.tsx ~ line 21 ~ item', item);
-  const { title, overview, releaseDate, voteAverage, mediaType, posterPath, backdropPath } = item;
-  const { loading, colorDarkenLighten } = useColorDarkenLighten(posterPath);
-  // TODO: add spinner on loading color
-
-  return (
-    <Grid.Container
-      css={{
-        padding: '0.75rem',
-        minWidth: '350px',
-        maxWidth: '400px',
-        width: 'inherit',
-      }}
-    >
-      {loading ? (
-        <Loading type="points-opacity" />
-      ) : (
-        <>
-          {backdropPath && (
-            <NextImage
-              // @ts-ignore
-              as={Image}
-              src={backdropPath || ''}
-              objectFit="cover"
-              width="100%"
-              height="212px"
-              alt={title}
-              title={title}
-              containerCss={{
-                borderRadius: '0.5rem',
-              }}
-              css={{
-                minWidth: '240px !important',
-                minHeight: 'auto !important',
-              }}
-              loaderUrl="/api/image"
-              placeholder="blur"
-              options={{
-                contentType: MimeType.WEBP,
-              }}
-              responsive={[
-                {
-                  size: {
-                    width: 376,
-                    height: 212,
-                  },
-                },
-              ]}
-            />
-          )}
-          <Row justify="center" align="center">
-            <Spacer y={0.5} />
-            <Text size={18} b color={colorDarkenLighten}>
-              {title}
-            </Text>
-          </Row>
-          {overview && (
-            <Row>
-              {item?.genreIds?.slice(0, 3).map((genreId) => {
-                if (mediaType === 'movie') {
-                  return (
-                    <>
-                      {genresMovie?.[genreId]}
-                      <Spacer x={0.5} />
-                    </>
-                  );
-                }
-                return (
-                  <>
-                    {genresTv?.[genreId]}
-                    <Spacer x={0.5} />
-                  </>
-                );
-              })}
-            </Row>
-          )}
-          {overview && (
-            <Row>
-              <Text>{`${overview?.substring(0, 100)}...`}</Text>
-            </Row>
-          )}
-          <Grid.Container justify="space-between" alignContent="center">
-            {releaseDate && (
-              <Grid>
-                <Text>{`${mediaType === 'movie' ? 'Movie' : 'TV-Shows'} • ${releaseDate}`}</Text>
-              </Grid>
-            )}
-            {voteAverage && (
-              <Grid>
-                <Row>
-                  <Text
-                    weight="bold"
-                    size="$xs"
-                    css={{
-                      backgroundColor: '#3ec2c2',
-                      borderRadius: '$xs',
-                      padding: '0 0.25rem 0 0.25rem',
-                      marginRight: '0.5rem',
-                    }}
-                  >
-                    TMDb
-                  </Text>
-                  <Text size="$sm" weight="bold">
-                    {item?.voteAverage?.toFixed(1)}
-                  </Text>
-                </Row>
-              </Grid>
-            )}
-          </Grid.Container>
-        </>
-      )}
-    </Grid.Container>
-  );
-};
+import CardItemHover from './CardItemHover';
 
 const CardItem = ({
   item,
@@ -168,7 +40,10 @@ const CardItem = ({
         as="div"
         isHoverable
         isPressable
-        css={{ borderWidth: 0 }}
+        css={{
+          borderWidth: 0,
+          filter: 'var(--nextui-dropShadows-md)',
+        }}
         className={isDark ? 'bg-black/70' : 'bg-white/70'}
         role="figure"
         ref={ref}
@@ -233,9 +108,22 @@ const CardItem = ({
         )}
         <Tooltip
           placement="top"
-          content={<CardItemHover item={item} genresMovie={genresMovie} genresTv={genresTv} />}
+          content={
+            <ClientOnly fallback={<Loading type="default" />}>
+              {() => (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.2, ease: [0, 0.71, 0.2, 1.01] }}
+                >
+                  <CardItemHover item={item} genresMovie={genresMovie} genresTv={genresTv} />
+                </motion.div>
+              )}
+            </ClientOnly>
+          }
           rounded
           shadow
+          hideArrow
           className="!w-fit"
         >
           <Card.Footer

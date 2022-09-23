@@ -39,6 +39,7 @@ const CustomNavigation = ({ slot }: { slot: 'container-end' }) => {
             opacity: '0.8',
           },
         }}
+        aria-label="Previous"
         disabled={slideProgress === 0}
       />
       <Button
@@ -58,6 +59,7 @@ const CustomNavigation = ({ slot }: { slot: 'container-end' }) => {
             opacity: '0.8',
           },
         }}
+        aria-label="Next"
         disabled={slideProgress === 1}
       />
     </div>

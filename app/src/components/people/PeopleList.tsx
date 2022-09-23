@@ -57,12 +57,14 @@ const PeopleListGrid = ({ items }: { items: IPeople[] }) => {
 const PeopleListCard = ({
   items,
   navigation,
+  setSlideProgress,
 }: {
   items: IPeople[];
   navigation?: {
     nextEl?: string | HTMLElement | null;
     prevEl?: string | HTMLElement | null;
   };
+  setSlideProgress?: React.Dispatch<React.SetStateAction<number>>;
 }) => {
   const isSm = useMediaQuery(960);
   const gap = isSm ? 1 : 2;
@@ -75,7 +77,14 @@ const PeopleListCard = ({
           grabCursor
           spaceBetween={10}
           slidesPerView="auto"
+          slidesPerGroup={1}
+          slidesPerGroupAuto
           navigation={navigation}
+          onSlideChange={(swiper) => {
+            if (setSlideProgress) {
+              setSlideProgress(swiper.progress);
+            }
+          }}
         >
           {items.map((item, i) => {
             const href = `/people/${item.id}/overview`;
@@ -106,6 +115,7 @@ const PeopleList = (props: IPeopleListProps) => {
 
   const [prevEl, setPrevEl] = React.useState<HTMLElement | null>(null);
   const [nextEl, setNextEl] = React.useState<HTMLElement | null>(null);
+  const [slideProgress, setSlideProgress] = React.useState<number>(0);
 
   let list;
 
@@ -114,7 +124,13 @@ const PeopleList = (props: IPeopleListProps) => {
       list = <PeopleListGrid items={items} />;
       break;
     case 'slider-card':
-      list = <PeopleListCard items={items} navigation={{ nextEl, prevEl }} />;
+      list = (
+        <PeopleListCard
+          items={items}
+          navigation={{ nextEl, prevEl }}
+          setSlideProgress={setSlideProgress}
+        />
+      );
       break;
     default:
   }
@@ -146,16 +162,17 @@ const PeopleList = (props: IPeopleListProps) => {
                 display: 'flex',
                 flexDirection: 'row',
                 marginBottom: 'var(--nextui-space-12)',
-                color: 'var(--nextui-colors-primary)',
               }}
             >
               <button
                 type="button"
                 ref={(node) => setPrevEl(node)}
                 style={{
-                  cursor: 'pointer',
+                  color: 'var(--nextui-colors-primary)',
                 }}
-                className="hover:opacity-80"
+                className="cursor-pointer hover:opacity-80 disabled:cursor-default disabled:!text-[#787F85]"
+                aria-label="Previous"
+                disabled={slideProgress === 0}
               >
                 <ChevronLeftIcon width={48} height={48} />
               </button>
@@ -163,9 +180,11 @@ const PeopleList = (props: IPeopleListProps) => {
                 type="button"
                 ref={(node) => setNextEl(node)}
                 style={{
-                  cursor: 'pointer',
+                  color: 'var(--nextui-colors-primary)',
                 }}
-                className="hover:opacity-80"
+                className="cursor-pointer hover:opacity-80 disabled:cursor-default disabled:!text-[#787F85]"
+                aria-label="Next"
+                disabled={slideProgress === 1}
               >
                 <ChevronRightIcon width={48} height={48} />
               </button>

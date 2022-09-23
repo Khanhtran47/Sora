@@ -1,5 +1,4 @@
 /* eslint-disable no-nested-ternary */
-import * as React from 'react';
 import { Grid } from '@nextui-org/react';
 import { Link } from '@remix-run/react';
 import { Navigation } from 'swiper';
@@ -15,6 +14,7 @@ const MediaListCard = ({
   navigation,
   genresMovie,
   genresTv,
+  setSlideProgress,
 }: {
   items: IMedia[];
   type?: 'media' | 'similar-tv' | 'similar-movie';
@@ -24,6 +24,7 @@ const MediaListCard = ({
   };
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
+  setSlideProgress?: React.Dispatch<React.SetStateAction<number>>;
 }) => {
   const isSm = useMediaQuery(650);
   const isLg = useMediaQuery(1400);
@@ -37,7 +38,14 @@ const MediaListCard = ({
           grabCursor
           spaceBetween={10}
           slidesPerView="auto"
+          slidesPerGroup={1}
+          slidesPerGroupAuto
           navigation={navigation}
+          onSlideChange={(swiper) => {
+            if (setSlideProgress) {
+              setSlideProgress(swiper.progress);
+            }
+          }}
         >
           {items.map((item, i) => {
             const href =
