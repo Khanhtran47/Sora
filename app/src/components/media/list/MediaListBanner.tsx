@@ -68,7 +68,6 @@ const CustomNavigation = ({ slot }: { slot: 'container-end' }) => {
 
 const MediaListBanner = ({
   items,
-  handlerWatchTrailer,
   handleSlideChangeTransitionEnd,
   handleSlideChangeTransitionStart,
   handleTouchMove,
@@ -79,7 +78,6 @@ const MediaListBanner = ({
   trailer,
 }: {
   items: IMedia[];
-  handlerWatchTrailer?: (id: number, type: 'movie' | 'tv') => void;
   handleSlideChangeTransitionEnd?: (swiper: SwiperClass) => void;
   handleSlideChangeTransitionStart?: (swiper: SwiperClass) => void;
   handleTouchMove?: (swiper: SwiperClass, e: MouseEvent | TouchEvent | PointerEvent) => void;
@@ -131,7 +129,6 @@ const MediaListBanner = ({
               <MediaItem
                 type="banner"
                 item={item}
-                handlerWatchTrailer={handlerWatchTrailer}
                 genresMovie={genresMovie}
                 genresTv={genresTv}
                 setShowTrailer={setShowTrailer}

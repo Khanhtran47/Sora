@@ -15,7 +15,6 @@ import { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
 
 type BannerItemProps = {
   item: IMedia;
-  handler?: (id: number, type: 'movie' | 'tv') => void;
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
   showTrailer?: boolean;
@@ -25,7 +24,6 @@ type BannerItemProps = {
 
 const BannerItem = ({
   item,
-  handler,
   genresMovie,
   genresTv,
   showTrailer,
@@ -169,33 +167,6 @@ const BannerItem = ({
                     {t('watchNow')}
                   </Text>
                 </Link>
-              </Button>
-              <Spacer y={1} />
-              <Button
-                auto
-                shadow
-                rounded
-                bordered
-                onClick={() => handler && handler(Number(id), mediaType)}
-                css={{
-                  marginTop: '1.25rem',
-                }}
-              >
-                <Text
-                  size={12}
-                  weight="bold"
-                  transform="uppercase"
-                  css={{
-                    '@xs': {
-                      fontSize: '18px',
-                    },
-                    '@sm': {
-                      fontSize: '20px',
-                    },
-                  }}
-                >
-                  {t('watchTrailer')}
-                </Text>
               </Button>
             </Row>
           </Col>

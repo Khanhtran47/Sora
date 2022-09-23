@@ -30,7 +30,6 @@ interface IMediaListProps {
   showMoreList?: boolean;
   onClickViewMore?: () => void;
   cardType?: 'media' | 'similar-movie' | 'similar-tv';
-  handlerWatchTrailer?: (id: number, type: 'movie' | 'tv') => void;
   navigationButtons?: boolean;
   handleSlideChangeTransitionEnd?: (swiper: SwiperClass) => void;
   handleSlideChangeTransitionStart?: (swiper: SwiperClass) => void;
@@ -52,7 +51,6 @@ const MediaList = (props: IMediaListProps) => {
     showMoreList,
     onClickViewMore,
     cardType,
-    handlerWatchTrailer,
     navigationButtons,
     handleSlideChangeTransitionEnd,
     handleSlideChangeTransitionStart,
@@ -94,7 +92,6 @@ const MediaList = (props: IMediaListProps) => {
       list = (
         <MediaListBanner
           items={items}
-          handlerWatchTrailer={handlerWatchTrailer}
           handleSlideChangeTransitionEnd={handleSlideChangeTransitionEnd}
           handleSlideChangeTransitionStart={handleSlideChangeTransitionStart}
           handleTouchMove={handleTouchMove}
