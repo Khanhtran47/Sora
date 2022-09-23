@@ -24,7 +24,7 @@ const TextNavLink = ({
   linkName?: string;
   style?: React.CSSProperties;
 }) => (
-  <NavigationLink to={linkTo} style={style}>
+  <NavigationLink to={linkTo} style={style} aria-label={linkName}>
     {({ isActive }) => (
       <Text
         h2
@@ -63,7 +63,7 @@ const IconNavLink = ({
   icon: React.ReactNode;
   style?: React.CSSProperties;
 }) => (
-  <NavigationLink to={linkTo} style={style}>
+  <NavigationLink to={linkTo} style={style} aria-label="Icon Nav Link">
     {({ isActive }) => (
       <Text
         as="div"
@@ -95,7 +95,7 @@ const IconNavLink = ({
 const LogoNavLink = ({ linkTo }: { linkTo: string }) => {
   const isMd = useMediaQuery(960);
   return (
-    <NavigationLink to={linkTo}>
+    <NavigationLink to={linkTo} aria-label="Homepage">
       <Text
         h1
         size={isMd ? 30 : 36}

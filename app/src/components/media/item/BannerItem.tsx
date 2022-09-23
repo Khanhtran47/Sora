@@ -269,10 +269,10 @@ const BannerItem = ({
                 as={Image}
                 src={backdropPath || ''}
                 loading="eager"
+                width="100%"
+                height="auto"
                 css={{
-                  width: '100%',
                   minHeight: '672px !important',
-                  height: 'auto',
                   top: 0,
                   left: 0,
                   objectFit: 'cover',
@@ -385,7 +385,6 @@ const BannerItem = ({
                       ? 'relative !w-full overflow-hidden aspect-w-16 aspect-h-9 !h-[300%] !-top-[100%] opacity-30'
                       : 'hidden'
                   }
-                  loading="eager"
                 />
               );
           }}

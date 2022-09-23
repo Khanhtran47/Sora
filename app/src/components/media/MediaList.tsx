@@ -65,6 +65,7 @@ const MediaList = (props: IMediaListProps) => {
 
   const [prevEl, setPrevEl] = React.useState<HTMLElement | null>(null);
   const [nextEl, setNextEl] = React.useState<HTMLElement | null>(null);
+  const [slideProgress, setSlideProgress] = React.useState<number>(0);
 
   if (!listType && typeof window !== 'undefined') {
     listType =
@@ -113,6 +114,7 @@ const MediaList = (props: IMediaListProps) => {
           navigation={{ nextEl, prevEl }}
           genresMovie={genresMovie}
           genresTv={genresTv}
+          setSlideProgress={setSlideProgress}
         />
       );
       break;
@@ -146,16 +148,18 @@ const MediaList = (props: IMediaListProps) => {
                 display: 'flex',
                 flexDirection: 'row',
                 marginBottom: 'var(--nextui-space-12)',
-                color: 'var(--nextui-colors-primary)',
+                // color: 'var(--nextui-colors-primary)',
               }}
             >
               <button
                 type="button"
                 ref={(node) => setPrevEl(node)}
                 style={{
-                  cursor: 'pointer',
+                  color: 'var(--nextui-colors-primary)',
                 }}
-                className="hover:opacity-80"
+                className="cursor-pointer hover:opacity-80 disabled:cursor-default disabled:!text-[#787F85]"
+                aria-label="Previous"
+                disabled={slideProgress === 0}
               >
                 <ChevronLeftIcon width={48} height={48} />
               </button>
@@ -163,9 +167,11 @@ const MediaList = (props: IMediaListProps) => {
                 type="button"
                 ref={(node) => setNextEl(node)}
                 style={{
-                  cursor: 'pointer',
+                  color: 'var(--nextui-colors-primary)',
                 }}
-                className="hover:opacity-80"
+                className="cursor-pointer hover:opacity-80 disabled:cursor-default disabled:!text-[#787F85]"
+                aria-label="Next"
+                disabled={slideProgress === 1}
               >
                 <ChevronRightIcon width={48} height={48} />
               </button>

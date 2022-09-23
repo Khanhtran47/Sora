@@ -162,6 +162,7 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                   justifyContent: open ? 'initial' : 'center',
                   alignItems: 'center',
                 }}
+                aria-label={page.pageName}
               >
                 {({ isActive }) => (
                   <Text
