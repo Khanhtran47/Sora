@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import * as React from 'react';
-import { Grid, Loading, Row, Spacer, Text, Image as NextImage } from '@nextui-org/react';
+import { Grid, Loading, Row, Spacer, Text, Image as NextImage, Button } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
 import { motion, AnimatePresence } from 'framer-motion';
 import YouTube from 'react-youtube';
@@ -9,6 +9,9 @@ import { ClientOnly } from 'remix-utils';
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { IMedia } from '~/services/tmdb/tmdb.types';
 import { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
+
+import VolumeUp from '~/src/assets/icons/VolumeUpIcon.js';
+import VolumeOff from '~/src/assets/icons/VolumeOffIcon.js';
 
 const CardItemHover = ({
   item,
@@ -23,7 +26,25 @@ const CardItemHover = ({
 }) => {
   const { title, overview, releaseDate, voteAverage, mediaType, posterPath, backdropPath } = item;
   const { loading, colorDarkenLighten } = useColorDarkenLighten(posterPath);
+  const [player, setPlayer] = React.useState<ReturnType<YouTube['getInternalPlayer']>>();
   const [showTrailer, setShowTrailer] = React.useState<boolean>(false);
+  const [isMuted, setIsMuted] = React.useState<boolean>(true);
+
+  const mute = React.useCallback(() => {
+    if (!player) return;
+
+    player.mute();
+
+    setIsMuted(true);
+  }, [player]);
+
+  const unMute = React.useCallback(() => {
+    if (!player) return;
+
+    player.unMute();
+
+    setIsMuted(false);
+  }, [player]);
 
   return (
     <Grid.Container
@@ -101,7 +122,11 @@ const CardItemHover = ({
                         iv_load_policy: 3,
                         cc_load_policy: 0,
                         playsinline: 1,
+                        mute: 1,
                       },
+                    }}
+                    onReady={({ target }) => {
+                      setPlayer(target);
                     }}
                     onPlay={() => {
                       if (setShowTrailer) {
@@ -194,6 +219,33 @@ const CardItemHover = ({
               </Grid>
             )}
           </Grid.Container>
+          {showTrailer && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              <Button
+                auto
+                color="primary"
+                rounded
+                ghost
+                icon={
+                  isMuted ? <VolumeOff fill="currentColor" /> : <VolumeUp fill="currentColor" />
+                }
+                css={{
+                  width: '42px',
+                  height: '42px',
+                  cursor: 'pointer',
+                  position: 'absolute',
+                  top: '25px',
+                  right: '20px',
+                  zIndex: '90',
+                  '&:hover': {
+                    opacity: '0.8',
+                  },
+                }}
+                aria-label="Toggle Mute"
+                onClick={isMuted ? unMute : mute}
+              />
+            </motion.div>
+          )}
         </>
       )}
     </Grid.Container>
