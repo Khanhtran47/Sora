@@ -16,7 +16,6 @@ import {
   getListMovies,
   getListTvShows,
   getListPeople,
-  getVideos,
 } from '~/services/tmdb/tmdb.server';
 import { IMedia, IPeople } from '~/services/tmdb/tmdb.types';
 import MediaList from '~/src/components/media/MediaList';
@@ -38,7 +37,6 @@ type LoaderData = {
   movies: IMedia[] | undefined;
   shows: IMedia[] | undefined;
   people: IPeople[] | undefined;
-  video: Trailer | undefined;
 };
 
 export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
@@ -47,28 +45,19 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page'));
   if (page && (page < 1 || page > 1000)) page = 1;
-  const todayTrending = await getTrending('all', 'day', locale, page);
 
-  const [movies, shows, people, videos] = await Promise.all([
+  const [todayTrending, movies, shows, people] = await Promise.all([
+    getTrending('all', 'day', locale, page),
     getListMovies('popular', locale, page),
     getListTvShows('popular', locale, page),
     getListPeople('popular', locale, page),
-    getVideos(
-      `${
-        todayTrending && todayTrending.items && todayTrending.items[0].mediaType === 'movie'
-          ? 'movie'
-          : 'tv'
-      }`,
-      (todayTrending && todayTrending.items && todayTrending.items[0].id) || 0,
-    ),
   ]);
 
   return json<LoaderData>({
-    todayTrending: todayTrending && todayTrending.items && todayTrending.items.slice(0, 10),
-    movies: movies && movies.items && movies.items.slice(0, 15),
-    shows: shows && shows.items && shows.items.slice(0, 15),
-    people: people && people.results && people.results.slice(0, 15),
-    video: videos && videos.results.find((result: Trailer) => result.type === 'Trailer'),
+    todayTrending: todayTrending && todayTrending.items,
+    movies: movies && movies.items && movies.items.slice(0, 16),
+    shows: shows && shows.items && shows.items.slice(0, 16),
+    people: people && people.results && people.results.slice(0, 16),
   });
 };
 
@@ -138,7 +127,7 @@ const Index = () => {
     >
       <MediaList
         listType="slider-banner"
-        items={trending}
+        items={trending.slice(0, 10)}
         genresMovie={rootData?.genresMovie}
         genresTv={rootData?.genresTv}
         handleSlideChangeTransitionEnd={handleSlideChangeTransitionEnd}
