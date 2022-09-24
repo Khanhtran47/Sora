@@ -13,6 +13,8 @@ import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import { IMedia } from '~/services/tmdb/tmdb.types';
 import { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
+import VolumeUp from '~/src/assets/icons/VolumeUpIcon.js';
+import VolumeOff from '~/src/assets/icons/VolumeOffIcon.js';
 
 type BannerItemProps = {
   item: IMedia;
@@ -25,7 +27,8 @@ const BannerItem = ({ item, genresMovie, genresTv, active }: BannerItemProps) =>
   const { t } = useTranslation();
   const fetcher = useFetcher();
   const { backdropPath, overview, posterPath, title, id, mediaType } = item;
-  // const [player, setPlayer] = React.useState<ReturnType<YouTube['getInternalPlayer']>>();
+  const [player, setPlayer] = React.useState<ReturnType<YouTube['getInternalPlayer']>>();
+  const [isMuted, setIsMuted] = React.useState<boolean>(true);
   const [showTrailer, setShowTrailer] = React.useState<boolean>(false);
   const [trailerBanner, setTrailerBanner] = React.useState<Trailer>({});
   const { colorDarkenLighten } = useColorDarkenLighten(posterPath);
@@ -47,6 +50,22 @@ const BannerItem = ({ item, genresMovie, genresTv, active }: BannerItemProps) =>
       setTrailerBanner(officialTrailer);
     }
   }, [fetcher.data]);
+
+  const mute = React.useCallback(() => {
+    if (!player) return;
+
+    player.mute();
+
+    setIsMuted(true);
+  }, [player]);
+
+  const unMute = React.useCallback(() => {
+    if (!player) return;
+
+    player.unMute();
+
+    setIsMuted(false);
+  }, [player]);
 
   return (
     <Card variant="flat" css={{ w: '100%', h: '672px', borderWidth: 0 }} role="figure">
@@ -329,31 +348,23 @@ const BannerItem = ({ item, genresMovie, genresTv, active }: BannerItemProps) =>
                       iv_load_policy: 3,
                       cc_load_policy: 0,
                       playsinline: 1,
+                      mute: 1,
                     },
                   }}
-                  // onReady={({ target }) => {
-                  // setPlayer(target);
-                  // target.mute();
-                  // }}
+                  onReady={({ target }) => {
+                    setPlayer(target);
+                  }}
                   onPlay={() => {
-                    if (setShowTrailer) {
-                      setShowTrailer(true);
-                    }
+                    setShowTrailer(true);
                   }}
                   onPause={() => {
-                    if (setShowTrailer) {
-                      setShowTrailer(false);
-                    }
+                    setShowTrailer(false);
                   }}
                   onEnd={() => {
-                    if (setShowTrailer) {
-                      setShowTrailer(false);
-                    }
+                    setShowTrailer(false);
                   }}
                   onError={() => {
-                    if (setShowTrailer) {
-                      setShowTrailer(false);
-                    }
+                    setShowTrailer(false);
                   }}
                   style={{
                     position: 'absolute',
@@ -372,6 +383,29 @@ const BannerItem = ({ item, genresMovie, genresTv, active }: BannerItemProps) =>
           }}
         </ClientOnly>
       </Card.Body>
+      {!isSm && showTrailer && (
+        <Button
+          auto
+          color="primary"
+          rounded
+          ghost
+          icon={isMuted ? <VolumeOff fill="currentColor" /> : <VolumeUp fill="currentColor" />}
+          css={{
+            width: '42px',
+            height: '42px',
+            cursor: 'pointer',
+            position: 'absolute',
+            bottom: '80px',
+            right: '35px',
+            zIndex: '90',
+            '&:hover': {
+              opacity: '0.8',
+            },
+          }}
+          aria-label="Toggle Mute"
+          onClick={isMuted ? unMute : mute}
+        />
+      )}
     </Card>
   );
 };
