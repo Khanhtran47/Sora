@@ -1,20 +1,50 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { Grid, Loading, Row, Spacer, Text, Image as NextImage } from '@nextui-org/react';
+import * as React from 'react';
+import { Grid, Loading, Row, Spacer, Text, Image as NextImage, Button } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
+import { motion, AnimatePresence } from 'framer-motion';
+import YouTube from 'react-youtube';
+import { ClientOnly } from 'remix-utils';
+
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { IMedia } from '~/services/tmdb/tmdb.types';
+import { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
+
+import VolumeUp from '~/src/assets/icons/VolumeUpIcon.js';
+import VolumeOff from '~/src/assets/icons/VolumeOffIcon.js';
 
 const CardItemHover = ({
   item,
   genresMovie,
   genresTv,
+  trailer,
 }: {
   item: IMedia;
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
+  trailer?: Trailer;
 }) => {
   const { title, overview, releaseDate, voteAverage, mediaType, posterPath, backdropPath } = item;
   const { loading, colorDarkenLighten } = useColorDarkenLighten(posterPath);
+  const [player, setPlayer] = React.useState<ReturnType<YouTube['getInternalPlayer']>>();
+  const [showTrailer, setShowTrailer] = React.useState<boolean>(false);
+  const [isMuted, setIsMuted] = React.useState<boolean>(true);
+
+  const mute = React.useCallback(() => {
+    if (!player) return;
+
+    player.mute();
+
+    setIsMuted(true);
+  }, [player]);
+
+  const unMute = React.useCallback(() => {
+    if (!player) return;
+
+    player.unMute();
+
+    setIsMuted(false);
+  }, [player]);
 
   return (
     <Grid.Container
@@ -29,38 +59,107 @@ const CardItemHover = ({
         <Loading type="points-opacity" />
       ) : (
         <>
-          {backdropPath && (
-            <NextImage
-              // @ts-ignore
-              as={Image}
-              src={backdropPath || ''}
-              objectFit="cover"
-              width="100%"
-              height="212px"
-              alt={title}
-              title={title}
-              containerCss={{
-                borderRadius: '0.5rem',
-              }}
-              css={{
-                minWidth: '240px !important',
-                minHeight: 'auto !important',
-              }}
-              loaderUrl="/api/image"
-              placeholder="blur"
-              options={{
-                contentType: MimeType.WEBP,
-              }}
-              responsive={[
-                {
-                  size: {
-                    width: 376,
-                    height: 212,
-                  },
-                },
-              ]}
-            />
-          )}
+          <AnimatePresence>
+            {backdropPath && !showTrailer && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                style={{ overflow: 'hidden' }}
+              >
+                <NextImage
+                  // @ts-ignore
+                  as={Image}
+                  src={backdropPath || ''}
+                  objectFit="cover"
+                  width="100%"
+                  height="218px"
+                  alt={title}
+                  title={title}
+                  containerCss={{
+                    borderRadius: '0.5rem',
+                  }}
+                  css={{
+                    minWidth: '388px !important',
+                    minHeight: 'auto !important',
+                  }}
+                  loaderUrl="/api/image"
+                  placeholder="blur"
+                  options={{
+                    contentType: MimeType.WEBP,
+                  }}
+                  responsive={[
+                    {
+                      size: {
+                        width: 388,
+                        height: 218,
+                      },
+                    },
+                  ]}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <ClientOnly fallback={<Loading type="default" />}>
+            {() => {
+              if (trailer?.key)
+                return (
+                  <YouTube
+                    videoId={trailer.key}
+                    opts={{
+                      width: '388px',
+                      height: '218.25px',
+                      playerVars: {
+                        // https://developers.google.com/youtube/player_parameters
+                        autoplay: 1,
+                        modestbranding: 1,
+                        controls: 0,
+                        disablekb: 1,
+                        showinfo: 0,
+                        branding: 0,
+                        rel: 0,
+                        autohide: 0,
+                        iv_load_policy: 3,
+                        cc_load_policy: 0,
+                        playsinline: 1,
+                        mute: 1,
+                      },
+                    }}
+                    onReady={({ target }) => {
+                      setPlayer(target);
+                    }}
+                    onPlay={() => {
+                      if (setShowTrailer) {
+                        setShowTrailer(true);
+                      }
+                    }}
+                    onPause={() => {
+                      if (setShowTrailer) {
+                        setShowTrailer(false);
+                      }
+                    }}
+                    onEnd={() => {
+                      if (setShowTrailer) {
+                        setShowTrailer(false);
+                      }
+                    }}
+                    onError={() => {
+                      if (setShowTrailer) {
+                        setShowTrailer(false);
+                      }
+                    }}
+                    style={{
+                      width: '388px',
+                      height: '218.25px',
+                      pointerEvents: 'none',
+                    }}
+                    className={
+                      showTrailer ? 'aspect-w-16 aspect-h-9 rounded-lg overflow-hidden' : 'hidden'
+                    }
+                  />
+                );
+            }}
+          </ClientOnly>
           <Row justify="center" align="center">
             <Spacer y={0.5} />
             <Text size={18} b color={colorDarkenLighten}>
@@ -120,6 +219,33 @@ const CardItemHover = ({
               </Grid>
             )}
           </Grid.Container>
+          {showTrailer && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              <Button
+                auto
+                color="primary"
+                rounded
+                ghost
+                icon={
+                  isMuted ? <VolumeOff fill="currentColor" /> : <VolumeUp fill="currentColor" />
+                }
+                css={{
+                  width: '42px',
+                  height: '42px',
+                  cursor: 'pointer',
+                  position: 'absolute',
+                  top: '25px',
+                  right: '20px',
+                  zIndex: '90',
+                  '&:hover': {
+                    opacity: '0.8',
+                  },
+                }}
+                aria-label="Toggle Mute"
+                onClick={isMuted ? unMute : mute}
+              />
+            </motion.div>
+          )}
         </>
       )}
     </Grid.Container>

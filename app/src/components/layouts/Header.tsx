@@ -13,6 +13,7 @@ import {
   useTheme,
   styled,
   Divider,
+  Spacer,
 } from '@nextui-org/react';
 import { useTheme as useRemixTheme } from 'next-themes';
 import { motion } from 'framer-motion';
@@ -120,15 +121,17 @@ const DropdownPage = ({
   return (
     <Grid.Container
       css={{
-        width: 'inherit',
         padding: '0.75rem',
-        maxWidth: '200px',
+        width: '200px',
       }}
     >
       {pagesDropdown.map((page) => (
-        <Row key={page.pageName}>
-          <NavLink linkTo={`/${page.pageLink}`} linkName={t(page.pageName)} />
-        </Row>
+        <>
+          <Row key={page.pageName}>
+            <NavLink linkTo={`/${page.pageLink}`} linkName={t(page.pageName)} />
+          </Row>
+          <Spacer y={0.5} />
+        </>
       ))}
     </Grid.Container>
   );

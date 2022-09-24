@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import * as React from 'react';
 import { Card, Loading, Spacer, Text, Tooltip, Avatar } from '@nextui-org/react';
+import { useFetcher } from '@remix-run/react';
 import Image, { MimeType } from 'remix-image';
 import { useInView } from 'react-intersection-observer';
 import { ClientOnly } from 'remix-utils';
@@ -10,7 +11,7 @@ import { motion } from 'framer-motion';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { IMedia } from '~/services/tmdb/tmdb.types';
-
+import { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
 import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
 
 import CardItemHover from './CardItemHover';
@@ -33,6 +34,16 @@ const CardItem = ({
   });
   const isSm = useMediaQuery(650, 'max');
   const isLg = useMediaQuery(1400, 'max');
+  const fetcher = useFetcher();
+  const [trailerCard, setTrailerCard] = React.useState<Trailer>({});
+
+  React.useEffect(() => {
+    if (fetcher.data && fetcher.data.videos) {
+      const { results } = fetcher.data.videos;
+      const officialTrailer = results.find((result: Trailer) => result.type === 'Trailer');
+      setTrailerCard(officialTrailer);
+    }
+  }, [fetcher.data]);
 
   return (
     <>
@@ -116,7 +127,12 @@ const CardItem = ({
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.2, ease: [0, 0.71, 0.2, 1.01] }}
                 >
-                  <CardItemHover item={item} genresMovie={genresMovie} genresTv={genresTv} />
+                  <CardItemHover
+                    item={item}
+                    genresMovie={genresMovie}
+                    genresTv={genresTv}
+                    trailer={trailerCard}
+                  />
                 </motion.div>
               )}
             </ClientOnly>
@@ -125,6 +141,13 @@ const CardItem = ({
           shadow
           hideArrow
           className="!w-fit"
+          onVisibleChange={(visible) => {
+            if (visible) {
+              fetcher.load(
+                `/${item.mediaType === 'movie' ? 'movies' : 'tv-shows'}/${item.id}/videos`,
+              );
+            }
+          }}
         >
           <Card.Footer
             css={{

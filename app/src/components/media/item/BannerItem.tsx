@@ -1,44 +1,130 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import * as React from 'react';
 import { Button, Card, Col, Row, Spacer, Text, Loading } from '@nextui-org/react';
-import { Link } from '@remix-run/react';
+import { Link, useFetcher } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 import Image, { MimeType } from 'remix-image';
 import { motion, AnimatePresence } from 'framer-motion';
-import YouTube from 'react-youtube'; // { YouTubeProps }
+import YouTube from 'react-youtube';
 import { ClientOnly } from 'remix-utils';
+import { useInView } from 'react-intersection-observer';
 
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import { IMedia } from '~/services/tmdb/tmdb.types';
 import { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
+import VolumeUp from '~/src/assets/icons/VolumeUpIcon.js';
+import VolumeOff from '~/src/assets/icons/VolumeOffIcon.js';
 
 type BannerItemProps = {
   item: IMedia;
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
-  showTrailer?: boolean;
-  setShowTrailer?: React.Dispatch<React.SetStateAction<boolean>>;
-  trailer?: Trailer;
+  active?: boolean;
 };
 
-const BannerItem = ({
-  item,
-  genresMovie,
-  genresTv,
-  showTrailer,
-  setShowTrailer,
-  trailer,
-}: BannerItemProps) => {
+const BannerItem = ({ item, genresMovie, genresTv, active }: BannerItemProps) => {
   const { t } = useTranslation();
+  const fetcher = useFetcher();
   const { backdropPath, overview, posterPath, title, id, mediaType } = item;
-  // const [player, setPlayer] = React.useState<ReturnType<YouTube['getInternalPlayer']>>();
+  const [player, setPlayer] = React.useState<ReturnType<YouTube['getInternalPlayer']>>();
+  const [isMuted, setIsMuted] = React.useState<boolean>(true);
+  const [isPlayed, setIsPlayed] = React.useState<boolean>(true);
+  const [showTrailer, setShowTrailer] = React.useState<boolean>(false);
+  const [trailerBanner, setTrailerBanner] = React.useState<Trailer>({});
   const { colorDarkenLighten } = useColorDarkenLighten(posterPath);
   const isSm = useMediaQuery(650, 'max');
   const isMd = useMediaQuery(960, 'max');
+  const { ref, inView } = useInView({
+    threshold: 0,
+  });
+
+  React.useEffect(() => {
+    if (active === true) {
+      fetcher.load(`/${item.mediaType === 'movie' ? 'movies' : 'tv-shows'}/${item.id}/videos`);
+    } else {
+      setTrailerBanner({});
+    }
+  }, [active]);
+
+  React.useEffect(() => {
+    if (active === true && fetcher.data && fetcher.data.videos) {
+      const { results } = fetcher.data.videos;
+      const officialTrailer = results.find((result: Trailer) => result.type === 'Trailer');
+      setTrailerBanner(officialTrailer);
+    }
+  }, [fetcher.data]);
+
+  const mute = React.useCallback(() => {
+    if (!player) return;
+
+    player.mute();
+
+    setIsMuted(true);
+  }, [player]);
+
+  const unMute = React.useCallback(() => {
+    if (!player) return;
+
+    player.unMute();
+
+    setIsMuted(false);
+  }, [player]);
+
+  const play = React.useCallback(() => {
+    if (!player) return;
+
+    player.playVideo();
+
+    setIsPlayed(true);
+  }, [player]);
+
+  const pause = React.useCallback(() => {
+    if (!player) return;
+
+    player.pauseVideo();
+
+    setIsPlayed(false);
+  }, [player]);
+
+  const pauseVideoOnOutOfView = () => {
+    if (!player) return;
+    if (inView && !isPlayed) {
+      play();
+    } else if (!inView && isPlayed) {
+      pause();
+    }
+  };
+
+  React.useEffect(() => {
+    const watchScroll = () => {
+      window.addEventListener('scroll', pauseVideoOnOutOfView);
+    };
+    watchScroll();
+    return () => {
+      window.removeEventListener('scroll', pauseVideoOnOutOfView);
+    };
+  });
+
+  const handleVisibility = () => {
+    if (!document.hidden && inView && !isPlayed) {
+      play();
+    } else if (document.hidden && isPlayed) {
+      pause();
+    }
+  };
+
+  React.useEffect(() => {
+    document.addEventListener('visibilitychange', handleVisibility);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
+  }, [handleVisibility]);
 
   return (
-    <Card variant="flat" css={{ w: '100%', h: '672px', borderWidth: 0 }} role="figure">
+    <Card ref={ref} variant="flat" css={{ w: '100%', h: '672px', borderWidth: 0 }} role="figure">
       <Card.Header css={{ position: 'absolute', zIndex: 1 }}>
         <Row>
           <Col
@@ -298,10 +384,10 @@ const BannerItem = ({
         </AnimatePresence>
         <ClientOnly fallback={<Loading type="default" />}>
           {() => {
-            if (trailer?.key)
+            if (trailerBanner?.key)
               return (
                 <YouTube
-                  videoId={trailer.key}
+                  videoId={active ? trailerBanner.key : ''}
                   opts={{
                     height: '100%',
                     width: '100%',
@@ -318,31 +404,23 @@ const BannerItem = ({
                       iv_load_policy: 3,
                       cc_load_policy: 0,
                       playsinline: 1,
+                      mute: 1,
                     },
                   }}
                   onReady={({ target }) => {
-                    // setPlayer(target);
-                    target.mute();
+                    setPlayer(target);
                   }}
                   onPlay={() => {
-                    if (setShowTrailer) {
-                      setShowTrailer(true);
-                    }
+                    setShowTrailer(true);
                   }}
                   onPause={() => {
-                    if (setShowTrailer) {
-                      setShowTrailer(false);
-                    }
+                    setShowTrailer(false);
                   }}
                   onEnd={() => {
-                    if (setShowTrailer) {
-                      setShowTrailer(false);
-                    }
+                    setShowTrailer(false);
                   }}
                   onError={() => {
-                    if (setShowTrailer) {
-                      setShowTrailer(false);
-                    }
+                    setShowTrailer(false);
                   }}
                   style={{
                     position: 'absolute',
@@ -361,6 +439,31 @@ const BannerItem = ({
           }}
         </ClientOnly>
       </Card.Body>
+      {!isSm && showTrailer && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          <Button
+            auto
+            color="primary"
+            rounded
+            ghost
+            icon={isMuted ? <VolumeOff fill="currentColor" /> : <VolumeUp fill="currentColor" />}
+            css={{
+              width: '42px',
+              height: '42px',
+              cursor: 'pointer',
+              position: 'absolute',
+              bottom: '80px',
+              right: '35px',
+              zIndex: '90',
+              '&:hover': {
+                opacity: '0.8',
+              },
+            }}
+            aria-label="Toggle Mute"
+            onClick={isMuted ? unMute : mute}
+          />
+        </motion.div>
+      )}
     </Card>
   );
 };
