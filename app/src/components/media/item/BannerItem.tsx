@@ -108,7 +108,7 @@ const BannerItem = ({ item, genresMovie, genresTv, active }: BannerItemProps) =>
   });
 
   const handleVisibility = () => {
-    if (!document.hidden && !isPlayed) {
+    if (!document.hidden && inView && !isPlayed) {
       play();
     } else if (document.hidden && isPlayed) {
       pause();
