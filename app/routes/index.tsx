@@ -2,13 +2,12 @@
 /* eslint-disable @typescript-eslint/indent */
 import * as React from 'react';
 import { MetaFunction, LoaderFunction, json, DataFunctionArgs } from '@remix-run/node';
-import { useLoaderData, useLocation, useNavigate, useFetcher } from '@remix-run/react';
+import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useRouteData } from 'remix-utils';
 import type { User } from '@supabase/supabase-js';
-import { Swiper as SwiperClass } from 'swiper/types';
 
 import i18next from '~/i18n/i18next.server';
 import {
@@ -20,7 +19,6 @@ import {
 import { IMedia, IPeople } from '~/services/tmdb/tmdb.types';
 import MediaList from '~/src/components/media/MediaList';
 import PeopleList from '~/src/components/people/PeopleList';
-import { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
 
 // https://remix.run/api/conventions#meta
 export const meta: MetaFunction = () => ({
@@ -54,7 +52,7 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
   ]);
 
   return json<LoaderData>({
-    todayTrending: todayTrending && todayTrending.items,
+    todayTrending: todayTrending && todayTrending.items && todayTrending.items.slice(0, 10),
     movies: movies && movies.items && movies.items.slice(0, 16),
     shows: shows && shows.items && shows.items.slice(0, 16),
     people: people && people.results && people.results.slice(0, 16),
@@ -72,49 +70,13 @@ const Index = () => {
         genresTv: { [id: string]: string };
       }
     | undefined = useRouteData('root');
-  const fetcher = useFetcher();
-  const [visible, setVisible] = React.useState(false);
-  const [trailerBanner, setTrailerBanner] = React.useState<Trailer>({});
-
-  React.useEffect(() => {
-    fetcher.load(
-      `/${todayTrending[0].mediaType === 'movie' ? 'movies' : 'tv-shows'}/${
-        todayTrending[0].id
-      }/videos`,
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [todayTrending]);
-
-  React.useEffect(() => {
-    if (fetcher.data && fetcher.data.videos) {
-      const { results } = fetcher.data.videos;
-      const officialTrailer = results.find((result: Trailer) => result.type === 'Trailer');
-      setTrailerBanner(officialTrailer);
-    }
-  }, [fetcher.data]);
-
   const location = useLocation();
   const navigate = useNavigate();
-  const [trending] = React.useState(todayTrending);
   const { t } = useTranslation('home');
 
   const onClickViewMore = (type: 'movies' | 'tv-shows' | 'people') => {
     if (type === 'people') navigate(`/${type}`);
     else navigate(`/${type}/popular`);
-  };
-
-  const handleSlideChangeTransitionEnd = (swiper: SwiperClass) => {
-    const { activeIndex } = swiper;
-    fetcher.load(
-      `/${todayTrending[activeIndex].mediaType === 'movie' ? 'movies' : 'tv-shows'}/${
-        todayTrending[activeIndex].id
-      }/videos`,
-    );
-  };
-
-  const handleSlideChangeTransitionStart = () => {
-    setVisible(false);
-    setTrailerBanner({});
   };
 
   return (
@@ -127,18 +89,9 @@ const Index = () => {
     >
       <MediaList
         listType="slider-banner"
-        items={trending.slice(0, 10)}
+        items={todayTrending}
         genresMovie={rootData?.genresMovie}
         genresTv={rootData?.genresTv}
-        handleSlideChangeTransitionEnd={handleSlideChangeTransitionEnd}
-        handleSlideChangeTransitionStart={handleSlideChangeTransitionStart}
-        handleTouchMove={() => {
-          setVisible(false);
-          setTrailerBanner({});
-        }}
-        setShowTrailer={setVisible}
-        showTrailer={visible}
-        trailer={trailerBanner}
       />
       <Container
         fluid

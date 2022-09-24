@@ -59,7 +59,7 @@ const CardItemHover = ({
                     borderRadius: '0.5rem',
                   }}
                   css={{
-                    minWidth: '240px !important',
+                    minWidth: '388px !important',
                     minHeight: 'auto !important',
                   }}
                   loaderUrl="/api/image"
@@ -103,10 +103,6 @@ const CardItemHover = ({
                         playsinline: 1,
                       },
                     }}
-                    // onReady={({ target }) => {
-                    // setPlayer(target);
-                    //   target.mute();
-                    // }}
                     onPlay={() => {
                       if (setShowTrailer) {
                         setShowTrailer(true);

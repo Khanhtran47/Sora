@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import * as React from 'react';
 import { Button, Card, Col, Row, Spacer, Text, Loading } from '@nextui-org/react';
-import { Link } from '@remix-run/react';
+import { Link, useFetcher } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 import Image, { MimeType } from 'remix-image';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -17,25 +18,35 @@ type BannerItemProps = {
   item: IMedia;
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
-  showTrailer?: boolean;
-  setShowTrailer?: React.Dispatch<React.SetStateAction<boolean>>;
-  trailer?: Trailer;
+  active?: boolean;
 };
 
-const BannerItem = ({
-  item,
-  genresMovie,
-  genresTv,
-  showTrailer,
-  setShowTrailer,
-  trailer,
-}: BannerItemProps) => {
+const BannerItem = ({ item, genresMovie, genresTv, active }: BannerItemProps) => {
   const { t } = useTranslation();
+  const fetcher = useFetcher();
   const { backdropPath, overview, posterPath, title, id, mediaType } = item;
   // const [player, setPlayer] = React.useState<ReturnType<YouTube['getInternalPlayer']>>();
+  const [showTrailer, setShowTrailer] = React.useState<boolean>(false);
+  const [trailerBanner, setTrailerBanner] = React.useState<Trailer>({});
   const { colorDarkenLighten } = useColorDarkenLighten(posterPath);
   const isSm = useMediaQuery(650, 'max');
   const isMd = useMediaQuery(960, 'max');
+
+  React.useEffect(() => {
+    if (active === true) {
+      fetcher.load(`/${item.mediaType === 'movie' ? 'movies' : 'tv-shows'}/${item.id}/videos`);
+    } else {
+      setTrailerBanner({});
+    }
+  }, [active]);
+
+  React.useEffect(() => {
+    if (active === true && fetcher.data && fetcher.data.videos) {
+      const { results } = fetcher.data.videos;
+      const officialTrailer = results.find((result: Trailer) => result.type === 'Trailer');
+      setTrailerBanner(officialTrailer);
+    }
+  }, [fetcher.data]);
 
   return (
     <Card variant="flat" css={{ w: '100%', h: '672px', borderWidth: 0 }} role="figure">
@@ -298,10 +309,10 @@ const BannerItem = ({
         </AnimatePresence>
         <ClientOnly fallback={<Loading type="default" />}>
           {() => {
-            if (trailer?.key)
+            if (trailerBanner?.key)
               return (
                 <YouTube
-                  videoId={trailer.key}
+                  videoId={active ? trailerBanner.key : ''}
                   opts={{
                     height: '100%',
                     width: '100%',
@@ -320,10 +331,10 @@ const BannerItem = ({
                       playsinline: 1,
                     },
                   }}
-                  onReady={({ target }) => {
-                    // setPlayer(target);
-                    target.mute();
-                  }}
+                  // onReady={({ target }) => {
+                  // setPlayer(target);
+                  // target.mute();
+                  // }}
                   onPlay={() => {
                     if (setShowTrailer) {
                       setShowTrailer(true);
