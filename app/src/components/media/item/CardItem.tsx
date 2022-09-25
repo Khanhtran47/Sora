@@ -140,6 +140,7 @@ const CardItem = ({
           rounded
           shadow
           hideArrow
+          offset={0}
           className="!w-fit"
           onVisibleChange={(visible) => {
             if (visible) {
