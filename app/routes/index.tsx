@@ -1,10 +1,13 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/indent */
 import * as React from 'react';
 import { MetaFunction, LoaderFunction, json, DataFunctionArgs } from '@remix-run/node';
-import { useLoaderData, useLocation, useNavigate, useFetcher } from '@remix-run/react';
-import { Container, Modal } from '@nextui-org/react';
+import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
+import { Container } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import YouTube, { YouTubeProps } from 'react-youtube';
+import { useRouteData } from 'remix-utils';
+import type { User } from '@supabase/supabase-js';
 
 import i18next from '~/i18n/i18next.server';
 import {
@@ -14,7 +17,6 @@ import {
   getListPeople,
 } from '~/services/tmdb/tmdb.server';
 import { IMedia, IPeople } from '~/services/tmdb/tmdb.types';
-import useWindowSize from '~/hooks/useWindowSize';
 import MediaList from '~/src/components/media/MediaList';
 import PeopleList from '~/src/components/people/PeopleList';
 
@@ -26,19 +28,6 @@ export const meta: MetaFunction = () => ({
 
 export const handle = {
   i18n: 'home',
-};
-
-type Trailer = {
-  iso_639_1?: string;
-  iso_3166_1?: string;
-  name?: string;
-  key?: string;
-  site?: string;
-  size?: number;
-  type?: string;
-  official?: boolean;
-  published_at?: string;
-  id?: string;
 };
 
 type LoaderData = {
@@ -54,62 +43,35 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page'));
   if (page && (page < 1 || page > 1000)) page = 1;
-  const todayTrending = await getTrending('all', 'day', locale, page);
-  const movies = await getListMovies('popular', locale, page);
-  const shows = await getListTvShows('popular', locale, page);
-  const people = await getListPeople('popular', locale, page);
+
+  const [todayTrending, movies, shows, people] = await Promise.all([
+    getTrending('all', 'day', locale, page),
+    getListMovies('popular', locale, page),
+    getListTvShows('popular', locale, page),
+    getListPeople('popular', locale, page),
+  ]);
 
   return json<LoaderData>({
     todayTrending: todayTrending && todayTrending.items && todayTrending.items.slice(0, 10),
-    movies: movies && movies.items && movies.items.slice(0, 15),
-    shows: shows && shows.items && shows.items.slice(0, 15),
-    people: people && people.results && people.results.slice(0, 15),
+    movies: movies && movies.items && movies.items.slice(0, 16),
+    shows: shows && shows.items && shows.items.slice(0, 16),
+    people: people && people.results && people.results.slice(0, 16),
   });
 };
 
 // https://remix.run/guides/routing#index-routes
 const Index = () => {
   const { movies, shows, people, todayTrending } = useLoaderData();
-  const fetcher = useFetcher();
-  const { width } = useWindowSize();
-  const [visible, setVisible] = React.useState(false);
-  const [trailer, setTrailer] = React.useState<Trailer>({});
-  const onPlayerReady: YouTubeProps['onReady'] = (event) => {
-    // access to player in all event handlers via event.target
-    event.target.pauseVideo();
-  };
-
-  const opts: YouTubeProps['opts'] = {
-    height: `${width && width < 720 ? width / 1.5 : 480}`,
-    width: `${width && width < 720 ? width : 720}`,
-    playerVars: {
-      // https://developers.google.com/youtube/player_parameters
-      autoplay: 1,
-      modestbranding: 1,
-      controls: 1,
-      mute: 1,
-    },
-  };
-
-  const Handler = (id: number, type: 'movie' | 'tv') => {
-    setVisible(true);
-    fetcher.load(`/${type === 'movie' ? 'movies' : 'tv-shows'}/${id}/videos`);
-  };
-  const closeHandler = () => {
-    setVisible(false);
-    setTrailer({});
-  };
-  React.useEffect(() => {
-    if (fetcher.data && fetcher.data.videos) {
-      const { results } = fetcher.data.videos;
-      const officialTrailer = results.find((result: Trailer) => result.name === 'Official Trailer');
-      setTrailer(officialTrailer);
-    }
-  }, [fetcher.data]);
-
+  const rootData:
+    | {
+        user?: User;
+        locale: string;
+        genresMovie: { [id: string]: string };
+        genresTv: { [id: string]: string };
+      }
+    | undefined = useRouteData('root');
   const location = useLocation();
   const navigate = useNavigate();
-  const [trending] = React.useState(todayTrending);
   const { t } = useTranslation('home');
 
   const onClickViewMore = (type: 'movies' | 'tv-shows' | 'people') => {
@@ -125,7 +87,12 @@ const Index = () => {
       exit={{ y: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <MediaList listType="slider-banner" items={trending} handlerWatchTrailer={Handler} />
+      <MediaList
+        listType="slider-banner"
+        items={todayTrending}
+        genresMovie={rootData?.genresMovie}
+        genresTv={rootData?.genresTv}
+      />
       <Container
         fluid
         display="flex"
@@ -147,6 +114,9 @@ const Index = () => {
             listName={t('popularMovies')}
             showMoreList
             onClickViewMore={() => onClickViewMore('movies')}
+            navigationButtons
+            genresMovie={rootData?.genresMovie}
+            genresTv={rootData?.genresTv}
           />
         )}
       </Container>
@@ -171,6 +141,9 @@ const Index = () => {
             listName={t('popularTv')}
             showMoreList
             onClickViewMore={() => onClickViewMore('tv-shows')}
+            navigationButtons
+            genresMovie={rootData?.genresMovie}
+            genresTv={rootData?.genresTv}
           />
         )}
       </Container>
@@ -195,27 +168,10 @@ const Index = () => {
             listName={t('popularPeople')}
             showMoreList
             onClickViewMore={() => onClickViewMore('people')}
+            navigationButtons
           />
         )}
       </Container>
-
-      <Modal
-        closeButton
-        blur
-        aria-labelledby="modal-title"
-        open={visible}
-        onClose={closeHandler}
-        className="!max-w-fit"
-        noPadding
-        autoMargin={false}
-        width={width && width < 720 ? `${width}px` : '720px'}
-      >
-        <Modal.Body>
-          {trailer && trailer.key && (
-            <YouTube videoId={trailer.key} opts={opts} onReady={onPlayerReady} />
-          )}
-        </Modal.Body>
-      </Modal>
     </motion.main>
   );
 };

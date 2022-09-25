@@ -8,9 +8,12 @@ module.exports = {
   serverBuildDirectory: 'api/_build',
   ignoredRouteFiles: ['.*'],
   serverDependenciesToBundle: [
-    'react-photoswipe-gallery',
-    'photoswipe',
-    '@vime',
-    'react-hls-player',
+    /^@vime.*/,
+    /^react-hls-player.*/,
+    /^swiper.*/,
+    /^ssr-window.*/,
+    /^dom7.*/,
+    /^react-photoswipe-gallery.*/,
+    /^photoswipe.*/,
   ],
 };

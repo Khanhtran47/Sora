@@ -279,6 +279,18 @@ export class TMDB {
     return url;
   };
 
+  static peopleCredits = (
+    person_id: number,
+    type: 'movie' | 'tv' | 'combined' = 'combined',
+    language?: string,
+  ): string => {
+    let url = `${this.API_BASE_URL}person/${person_id}/${type}_credits?api_key=${this.key}`;
+    if (language) {
+      url += `&language=${language}`;
+    }
+    return url;
+  };
+
   static discoverUrl = (
     type: 'movie' | 'tv',
     with_genres?: string,
@@ -319,8 +331,10 @@ export const postFetchDataHandler = (data: any, mediaType?: 'movie' | 'tv'): IMe
           id: item.id,
           title: mediaType === 'movie' ? item.title : item.name,
           overview: item.overview,
-          posterPath: TMDB.posterUrl(item.poster_path, 'w342'),
-          backdropPath: TMDB.backdropUrl(item.backdrop_path, 'w780'),
+          posterPath: item.poster_path ? TMDB.posterUrl(item.poster_path, 'w342') : undefined,
+          backdropPath: item.backdrop_path
+            ? TMDB.backdropUrl(item.backdrop_path, 'w780')
+            : undefined,
           releaseDate: item.release_date || item.first_air_date,
           voteAverage: item.vote_average,
           voteCount: item.vote_count,
@@ -337,8 +351,10 @@ export const postFetchDataHandler = (data: any, mediaType?: 'movie' | 'tv'): IMe
           id: item.id,
           title: item.title || item.name,
           overview: item.overview,
-          posterPath: TMDB.posterUrl(item.poster_path, 'w342'),
-          backdropPath: TMDB.backdropUrl(item.backdrop_path, 'w780'),
+          posterPath: item.poster_path ? TMDB.posterUrl(item.poster_path, 'w342') : undefined,
+          backdropPath: item.backdrop_path
+            ? TMDB.backdropUrl(item.backdrop_path, 'w780')
+            : undefined,
           releaseDate: item.release_date || item.first_air_date,
           voteAverage: item.vote_average,
           voteCount: item.vote_count,
@@ -351,6 +367,8 @@ export const postFetchDataHandler = (data: any, mediaType?: 'movie' | 'tv'): IMe
 
   if (Array.isArray(data?.results)) {
     data?.results.forEach((item: any) => result.push(transform(item)));
+  } else if (Array.isArray(data)) {
+    data.forEach((item: any) => result.push(transform(item)));
   } else {
     result.push(transform(data));
   }

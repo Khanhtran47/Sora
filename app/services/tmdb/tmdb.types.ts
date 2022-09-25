@@ -279,6 +279,12 @@ export interface IPeopleImages {
   profiles?: Image[];
 }
 
+export interface IPeopleCredits {
+  cast: IMedia[];
+  // crew: {}[];
+  id?: number;
+}
+
 export interface IDetailImages {
   id?: number;
   backdrops?: Image[];

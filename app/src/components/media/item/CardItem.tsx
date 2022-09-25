@@ -1,130 +1,187 @@
-import { Card, Grid, Loading, Row, Spacer, Text, Tooltip } from '@nextui-org/react';
+/* eslint-disable no-nested-ternary */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import * as React from 'react';
+import { Card, Loading, Spacer, Text, Tooltip, Avatar } from '@nextui-org/react';
+import { useFetcher } from '@remix-run/react';
+import Image, { MimeType } from 'remix-image';
+import { useInView } from 'react-intersection-observer';
+import { ClientOnly } from 'remix-utils';
+import { motion } from 'framer-motion';
+
+import useMediaQuery from '~/hooks/useMediaQuery';
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { IMedia } from '~/services/tmdb/tmdb.types';
+import { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
+import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
 
-const CardItemHover = ({ item }: { item: IMedia }) => {
-  const { title, overview, releaseDate, voteAverage, mediaType, posterPath } = item;
-  const { loading, colorDarkenLighten } = useColorDarkenLighten(posterPath);
-  // TODO: add spinner on loading color
+import CardItemHover from './CardItemHover';
 
-  return (
-    <Grid.Container
-      css={{
-        width: 'inherit',
-        padding: '0.75rem',
-        minWidth: '100px',
-        maxWidth: '350px',
-      }}
-    >
-      {loading ? (
-        <Loading type="points-opacity" />
-      ) : (
-        <>
-          <Row justify="center" align="center">
-            <Text size={18} b color={colorDarkenLighten}>
-              {title}
-            </Text>
-          </Row>
-          {overview && (
-            <Row>
-              <Text>{`${overview?.substring(0, 100)}...`}</Text>
-            </Row>
-          )}
-          <Grid.Container justify="space-between" alignContent="center">
-            {releaseDate && (
-              <Grid>
-                <Text>{`${mediaType === 'movie' ? 'Movie' : 'TV-Shows'} • ${releaseDate}`}</Text>
-              </Grid>
-            )}
-            {voteAverage && (
-              <Grid>
-                <Text>{`Vote Average: ${voteAverage}`}</Text>
-              </Grid>
-            )}
-          </Grid.Container>
-        </>
-      )}
-    </Grid.Container>
-  );
-};
-
-const CardItem = ({ item }: { item: IMedia }) => {
-  // const [style, setStyle] = React.useState<React.CSSProperties>({ display: 'block' });
+const CardItem = ({
+  item,
+  genresMovie,
+  genresTv,
+}: {
+  item: IMedia;
+  genresMovie?: { [id: string]: string };
+  genresTv?: { [id: string]: string };
+}) => {
   const { title, posterPath } = item;
   const { isDark, colorDarkenLighten } = useColorDarkenLighten(posterPath);
+  const { ref, inView } = useInView({
+    rootMargin: '500px 200px',
+    threshold: [0, 0.25, 0.5, 0.75, 1],
+    triggerOnce: true,
+  });
+  const isSm = useMediaQuery(650, 'max');
+  const isLg = useMediaQuery(1400, 'max');
+  const fetcher = useFetcher();
+  const [trailerCard, setTrailerCard] = React.useState<Trailer>({});
+
+  React.useEffect(() => {
+    if (fetcher.data && fetcher.data.videos) {
+      const { results } = fetcher.data.videos;
+      const officialTrailer = results.find((result: Trailer) => result.type === 'Trailer');
+      setTrailerCard(officialTrailer);
+    }
+  }, [fetcher.data]);
 
   return (
     <>
       <Card
         as="div"
-        variant="flat"
-        css={{ borderWidth: 0 }}
-        // onMouseEnter={() => {
-        //   setStyle({ display: 'none' });
-        // }}
-        // onMouseLeave={() => {
-        //   setStyle({ display: 'block' });
-        // }}
+        isHoverable
+        isPressable
+        css={{
+          borderWidth: 0,
+          filter: 'var(--nextui-dropShadows-md)',
+        }}
         className={isDark ? 'bg-black/70' : 'bg-white/70'}
         role="figure"
+        ref={ref}
       >
-        <Card.Image
-          src={posterPath || ''}
-          objectFit="cover"
-          width="100%"
-          height="auto"
-          alt={title}
-          showSkeleton
-          maxDelay={10000}
-          loading="lazy"
-          title={title}
-        />
-        {/* <Card.Footer
-        isBlurred
-        css={{
-          position: 'absolute',
-          bgBlur: isDark ? 'rgb(0 0 0 / 0.8)' : 'rgb(255 255 255 / 0.8)',
-          bottom: 0,
-          zIndex: 1,
-          height: '80px',
-          alignItems: 'center',
-          '@sm': {
-            height: '100px',
-            ...style,
-          },
-        }}
-        className={isDark ? 'bg-black/30' : 'bg-white/30'}
-      >
-
-      </Card.Footer> */}
-      </Card>
-      <Spacer y={0.25} />
-      <Tooltip
-        placement="bottom"
-        content={<CardItemHover item={item} />}
-        rounded
-        shadow
-        className="!w-fit"
-      >
-        <Text
-          size={14}
-          b
-          css={{
-            padding: '0 0.25rem',
-            '@xs': {
-              fontSize: '16px',
-            },
-            '@sm': {
-              fontSize: '18px',
-            },
-            '&:hover': {
-              color: colorDarkenLighten,
-            },
+        {inView && (
+          <Card.Body css={{ p: 0 }}>
+            {posterPath ? (
+              <Card.Image
+                // @ts-ignore
+                as={Image}
+                src={posterPath || ''}
+                objectFit="cover"
+                width="100%"
+                height="auto"
+                alt={title}
+                title={title}
+                css={{
+                  minWidth: `${isSm ? '164px' : isLg ? '210px' : '240px'} !important`,
+                  minHeight: `${isSm ? '245px' : isLg ? '357px' : '410px'} !important`,
+                }}
+                loaderUrl="/api/image"
+                placeholder="blur"
+                options={{
+                  contentType: MimeType.WEBP,
+                }}
+                responsive={[
+                  {
+                    size: {
+                      width: 164,
+                      height: 245,
+                    },
+                    maxWidth: 650,
+                  },
+                  {
+                    size: {
+                      width: 210,
+                      height: 357,
+                    },
+                    maxWidth: 1280,
+                  },
+                  {
+                    size: {
+                      width: 240,
+                      height: 410,
+                    },
+                  },
+                ]}
+              />
+            ) : (
+              <Avatar
+                icon={<PhotoIcon width={48} height={48} />}
+                pointer
+                css={{
+                  minWidth: `${isSm ? '164px' : isLg ? '210px' : '240px'} !important`,
+                  minHeight: `${isSm ? '245px' : isLg ? '357px' : '410px'} !important`,
+                  size: '$20',
+                  borderRadius: '0 !important',
+                }}
+              />
+            )}
+          </Card.Body>
+        )}
+        <Tooltip
+          placement="top"
+          content={
+            <ClientOnly fallback={<Loading type="default" />}>
+              {() => (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.2, ease: [0, 0.71, 0.2, 1.01] }}
+                >
+                  <CardItemHover
+                    item={item}
+                    genresMovie={genresMovie}
+                    genresTv={genresTv}
+                    trailer={trailerCard}
+                  />
+                </motion.div>
+              )}
+            </ClientOnly>
+          }
+          rounded
+          shadow
+          hideArrow
+          offset={0}
+          className="!w-fit"
+          onVisibleChange={(visible) => {
+            if (visible) {
+              fetcher.load(
+                `/${item.mediaType === 'movie' ? 'movies' : 'tv-shows'}/${item.id}/videos`,
+              );
+            }
           }}
         >
-          {title}
-        </Text>
-      </Tooltip>
+          <Card.Footer
+            css={{
+              justifyItems: 'flex-start',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              minHeight: '4.875rem',
+              maxWidth: `${isSm ? '164px' : isLg ? '210px' : '240px'}`,
+            }}
+          >
+            <Text
+              size={14}
+              b
+              css={{
+                minWidth: `${isSm ? '130px' : isLg ? '180px' : '210px'}`,
+                padding: '0 0.25rem',
+                '@xs': {
+                  fontSize: '16px',
+                },
+                '@sm': {
+                  fontSize: '18px',
+                },
+                '&:hover': {
+                  color: colorDarkenLighten,
+                },
+              }}
+            >
+              {title}
+            </Text>
+          </Card.Footer>
+        </Tooltip>
+      </Card>
+
       <Spacer y={1} />
     </>
   );

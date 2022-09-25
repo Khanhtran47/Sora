@@ -5,16 +5,18 @@ import CardItem from './CardItem';
 interface IMediaItem {
   type: 'banner' | 'card';
   item: IMedia;
-  handlerWatchTrailer?: (id: number, type: 'movie' | 'tv') => void;
+  genresMovie?: { [id: string]: string };
+  genresTv?: { [id: string]: string };
+  active?: boolean;
 }
 
 const MediaItem = (props: IMediaItem) => {
-  const { type, item, handlerWatchTrailer } = props;
+  const { type, item, genresMovie, genresTv, active } = props;
 
   if (type === 'banner') {
-    return <BannerItem item={item} handler={handlerWatchTrailer} />;
+    return <BannerItem item={item} genresMovie={genresMovie} genresTv={genresTv} active={active} />;
   }
-  return <CardItem item={item} />;
+  return <CardItem item={item} genresMovie={genresMovie} genresTv={genresTv} />;
 };
 
 export default MediaItem;

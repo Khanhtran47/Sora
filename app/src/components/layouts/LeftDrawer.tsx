@@ -1,17 +1,14 @@
 import * as React from 'react';
 import { NavLink } from '@remix-run/react';
-import { Spacer, Switch, Text, Grid, Container, Row, useTheme, styled } from '@nextui-org/react';
-import { useTheme as useRemixTheme } from 'next-themes';
+import { Spacer, Text, Grid, Container, Row, styled } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 
 /* icons */
-import TrendingIcon from '~/src/assets/icons/TrendingIcon.js';
-import RecommendIcon from '~/src/assets/icons/RecommendIcon.js';
-import NewReleaseIcon from '~/src/assets/icons/NewReleaseIcon.js';
-import TopRatedIcon from '~/src/assets/icons/TopRatedIcon.js';
-import HistoryIcon from '~/src/assets/icons/HistoryIcon.js';
-import SunIcon from '~/src/assets/icons/SunIcon.js';
-import MoonIcon from '~/src/assets/icons/MoonIcon.js';
+import TrendingIcon from '../../assets/icons/TrendingIcon.js';
+import RecommendIcon from '../../assets/icons/RecommendIcon.js';
+import NewReleaseIcon from '../../assets/icons/NewReleaseIcon.js';
+import TopRatedIcon from '../../assets/icons/TopRatedIcon.js';
+import HistoryIcon from '../../assets/icons/HistoryIcon.js';
 
 const drawerWidth = 240;
 
@@ -53,7 +50,7 @@ const Drawer = styled(Container, {
   whiteSpace: 'nowrap',
   boxSizing: 'border-box',
   margin: 0,
-  height: 'calc(100% - 64px)',
+  height: '100%',
   position: 'fixed',
   zIndex: 990,
 });
@@ -61,8 +58,6 @@ const Drawer = styled(Container, {
 const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
   const { t } = useTranslation('left-drawer');
   const wrapperRef = React.useRef<HTMLDivElement>(null);
-  const { setTheme } = useRemixTheme();
-  const { isDark, theme } = useTheme();
   const { open, handleDrawerClose } = props;
 
   const iconItem = (index: number, filled: boolean) => {
@@ -133,6 +128,8 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
   return (
     <Drawer
       css={{
+        backgroundColor: '$backgroundAlpha',
+        borderRightColor: '$border',
         ...(open && {
           ...openedMixin(),
         }),
@@ -141,15 +138,16 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
         }),
         paddingLeft: 0,
         paddingRight: 0,
-        marginTop: '64px',
       }}
-      className={`backdrop-blur-md px-0 border-r ${
-        isDark ? 'bg-black/70 border-r-slate-700' : 'bg-white/70 border-r-slate-300'
-      }`}
+      className="backdrop-blur-md px-0 border-r"
       as="nav"
       ref={wrapperRef}
     >
-      <Row>
+      <Row
+        css={{
+          marginTop: 64,
+        }}
+      >
         <Grid.Container>
           {leftDrawerLink.map((page, index: number) => (
             <Grid key={page.pageName} css={{ marginTop: '10px' }} xs={12}>
@@ -164,6 +162,7 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                   justifyContent: open ? 'initial' : 'center',
                   alignItems: 'center',
                 }}
+                aria-label={page.pageName}
               >
                 {({ isActive }) => (
                   <Text
@@ -184,13 +183,13 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                       },
                       '&:hover': {
                         opacity: '0.8',
-                        backgroundColor: `${theme?.colors.primaryLightHover.value}`,
+                        backgroundColor: '$primaryLightHover',
                       },
                       ...(open && {
                         width: drawerWidth,
                       }),
                       ...(isActive && {
-                        background: `${theme?.colors.primaryLightActive.value}`,
+                        background: '$primaryLightActive',
                       }),
                       paddingLeft: 20,
                     }}
@@ -208,24 +207,6 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
             </Grid>
           ))}
         </Grid.Container>
-      </Row>
-      <Row>
-        <Switch
-          checked={isDark}
-          size="lg"
-          onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}
-          shadow
-          color="primary"
-          iconOn={<MoonIcon filled />}
-          iconOff={<SunIcon filled />}
-          css={{
-            marginLeft: '90px',
-            marginTop: '35vh',
-            '@xs': {
-              display: 'none',
-            },
-          }}
-        />
       </Row>
     </Drawer>
   );

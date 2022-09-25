@@ -5,15 +5,22 @@ import { IMedia } from '~/services/tmdb/tmdb.types';
 import MediaItem from '../item';
 
 const MediaListGrid = ({ items }: { items: IMedia[] }) => {
-  const isXs = useMediaQuery(650);
-  const gap = isXs ? 1 : 2;
+  const isXs = useMediaQuery(370);
   return (
-    <Grid.Container gap={gap} justify="flex-start" alignItems="stretch">
+    <Grid.Container gap={1} justify="flex-start" alignItems="stretch" wrap="wrap">
       {items?.length > 0 &&
         items.map((item) => {
           const href = (item.mediaType === 'movie' ? '/movies/' : '/tv-shows/') + item.id;
           return (
-            <Grid xs={6} sm={4} md={3} lg={2} key={item.id}>
+            <Grid
+              xs={isXs ? 12 : 6}
+              sm={4}
+              md={3}
+              lg={2.4}
+              xl={2}
+              key={item.id}
+              justify={isXs ? 'center' : 'flex-start'}
+            >
               <Link to={href}>
                 <MediaItem key={item.id} type="card" item={item} />
               </Link>

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import * as React from 'react';
-import { Link, useNavigate } from '@remix-run/react';
+import { Link, useLocation, useNavigate } from '@remix-run/react';
 import {
   Avatar,
   Button,
@@ -13,6 +13,7 @@ import {
   useTheme,
   styled,
   Divider,
+  Spacer,
 } from '@nextui-org/react';
 import { useTheme as useRemixTheme } from 'next-themes';
 import { motion } from 'framer-motion';
@@ -22,6 +23,7 @@ import type { AnimationItem } from 'lottie-web';
 import { useTranslation } from 'react-i18next';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
+import useScrollDirection from '~/hooks/useScrollDirection';
 
 /* Components */
 import NavLink from '~/src/components/elements/NavLink';
@@ -119,15 +121,17 @@ const DropdownPage = ({
   return (
     <Grid.Container
       css={{
-        width: 'inherit',
         padding: '0.75rem',
-        maxWidth: '200px',
+        width: '200px',
       }}
     >
       {pagesDropdown.map((page) => (
-        <Row key={page.pageName}>
-          <NavLink linkTo={`/${page.pageLink}`} linkName={t(page.pageName)} />
-        </Row>
+        <>
+          <Row key={page.pageName}>
+            <NavLink linkTo={`/${page.pageLink}`} linkName={t(page.pageName)} />
+          </Row>
+          <Spacer y={0.5} />
+        </>
       ))}
     </Grid.Container>
   );
@@ -141,6 +145,9 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
   const [isLanguageTab, setIsLanguageTab] = React.useState(false);
   const [isDisplayTab, setIsDisplayTab] = React.useState(false);
   const { t } = useTranslation('header');
+
+  const location = useLocation();
+
   return (
     <motion.div
       className="dropdown"
@@ -306,7 +313,7 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                     onClick={() => {
                       setIsLanguageTab(false);
                       setIsLeftMenu(true);
-                      navigate(`/?lng=${lng}`);
+                      navigate(`${location.pathname}?lng=${lng}`);
                     }}
                     css={{ w: 260, h: 50 }}
                   >
@@ -364,6 +371,114 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                 />
                 <Text h5>Dark mode</Text>
               </Grid>
+              <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
+                <Button
+                  flat
+                  size="md"
+                  onClick={() => {
+                    setTheme('light');
+                    setTheme('bumblebee');
+                  }}
+                  css={{
+                    w: 260,
+                    h: 50,
+                    color: '#C08921 !important',
+                    backgroundColor: '#FBEAAB !important',
+                  }}
+                >
+                  Bumblebee Theme
+                </Button>
+              </Grid>
+              <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
+                <Button
+                  flat
+                  size="md"
+                  onClick={() => {
+                    setTheme('dark');
+                    setTheme('synthwave');
+                  }}
+                  css={{
+                    w: 260,
+                    h: 50,
+                    color: '#D427A5 !important',
+                    backgroundColor: '#FEAEC9 !important',
+                  }}
+                >
+                  Synthwave Theme
+                </Button>
+              </Grid>
+              <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
+                <Button
+                  flat
+                  size="md"
+                  onClick={() => {
+                    setTheme('light');
+                    setTheme('retro');
+                  }}
+                  css={{
+                    w: 260,
+                    h: 50,
+                    color: '#CD6C70 !important',
+                    backgroundColor: '#FDE2D7 !important',
+                  }}
+                >
+                  Retro Theme
+                </Button>
+              </Grid>
+              <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
+                <Button
+                  flat
+                  size="md"
+                  onClick={() => {
+                    setTheme('dark');
+                    setTheme('dracula');
+                  }}
+                  css={{
+                    w: 260,
+                    h: 50,
+                    color: '#DB58B0 !important',
+                    backgroundColor: '#FFC9D8 !important',
+                  }}
+                >
+                  Dracula Theme
+                </Button>
+              </Grid>
+              <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
+                <Button
+                  flat
+                  size="md"
+                  onClick={() => {
+                    setTheme('light');
+                    setTheme('autumn');
+                  }}
+                  css={{
+                    w: 260,
+                    h: 50,
+                    color: '#78022C !important',
+                    backgroundColor: '#F39694 !important',
+                  }}
+                >
+                  Autumn Theme
+                </Button>
+              </Grid>
+              <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
+                <Button
+                  flat
+                  size="md"
+                  onClick={() => {
+                    setTheme('dark');
+                    setTheme('night');
+                  }}
+                  css={{
+                    w: 260,
+                    h: 50,
+                    color: '#2894D5 !important',
+                    backgroundColor: '#AFF5FE !important',
+                  }}
+                >
+                  Night Theme
+                </Button>
+              </Grid>
             </>
           )}
         </Grid.Container>
@@ -374,11 +489,11 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
 
 const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   const { t } = useTranslation('header');
-  const { isDark } = useTheme();
   const { open, handleDrawerOpen, handleDrawerClose, user } = props;
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
   const [lottie, setLottie] = React.useState<AnimationItem>();
   const isSm = useMediaQuery(650);
+  const scrollDirection = useScrollDirection();
 
   React.useEffect(() => {
     if (isDropdownOpen) {
@@ -393,13 +508,14 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       justify="space-between"
       alignItems="center"
       color="inherit"
-      className={`flex justify-between backdrop-blur-md border-b ${
-        isDark ? 'bg-black/70 border-b-slate-700' : ' border-b-slate-300 bg-white/70'
-      }`}
+      className="flex justify-between backdrop-blur-md border-b transition-all duration-500"
       gap={2}
       wrap="nowrap"
       css={{
+        backgroundColor: '$backgroundAlpha',
+        borderBottomColor: '$border',
         width: '100%',
+        top: isSm && scrollDirection === 'down' ? -64 : 0,
         height: 64,
         padding: 0,
         margin: 0,
@@ -443,6 +559,8 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       >
         {!isSm &&
           pages.map((page) => (
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             <Tooltip
               key={page.pageName}
               placement="bottom"

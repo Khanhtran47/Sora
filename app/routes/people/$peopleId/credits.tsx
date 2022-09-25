@@ -1,10 +1,29 @@
-import { Text } from '@nextui-org/react';
+/* eslint-disable @typescript-eslint/no-throw-literal */
+import { LoaderFunction, json } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
+import i18next from '~/i18n/i18next.server';
+import { getPeopleCredits } from '~/services/tmdb/tmdb.server';
+import { MediaListTable } from '~/src/components/media/list';
 
-const CreditsPage = () => (
-  <Text b h4>
-    {' '}
-    In development
-  </Text>
-);
+type LoaderData = {
+  credits: Awaited<ReturnType<typeof getPeopleCredits>>;
+};
+
+export const loader: LoaderFunction = async ({ request, params }) => {
+  const locale = await i18next.getLocale(request);
+  const { peopleId } = params;
+  const pid = Number(peopleId);
+  if (!pid) throw new Response('Not Found', { status: 404 });
+
+  return json<LoaderData>({
+    credits: await getPeopleCredits(pid, undefined, locale),
+  });
+};
+
+const CreditsPage = () => {
+  const { credits } = useLoaderData<LoaderData>();
+
+  return <MediaListTable items={credits?.cast ?? []} simplified sorted />;
+};
 
 export default CreditsPage;

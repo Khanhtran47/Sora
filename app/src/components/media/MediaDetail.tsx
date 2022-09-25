@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import React, { useRef } from 'react';
 import { Link } from '@remix-run/react';
-import { Card, Col, Text, Row, Button, Spacer } from '@nextui-org/react';
+import { Card, Col, Text, Row, Button, Spacer, Avatar } from '@nextui-org/react';
+import Image, { MimeType } from 'remix-image';
 
 // import { useTranslation } from 'react-i18next';
 
@@ -13,9 +15,13 @@ import useMediaQuery from '~/hooks/useMediaQuery';
 import useSize, { IUseSize } from '~/hooks/useSize';
 import Tab from '~/src/components/elements/Tab';
 
+import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
+import BackgroundDefault from '~/src/assets/images/background-default.jpg';
+
 interface IMediaDetail {
   type: 'movie' | 'tv';
   item: IMovieDetail | ITvShowDetail | undefined;
+  handler?: (id: number) => void;
 }
 
 const detailTab = [
@@ -30,7 +36,7 @@ const detailTab = [
 
 const MediaDetail = (props: IMediaDetail) => {
   // const { t } = useTranslation();
-  const { type, item } = props;
+  const { type, item, handler } = props;
   const ref = useRef<HTMLDivElement>(null);
   const size: IUseSize = useSize(ref);
 
@@ -44,8 +50,12 @@ const MediaDetail = (props: IMediaDetail) => {
   const title = (item as IMovieDetail)?.title || (item as ITvShowDetail)?.name || '';
   const runtime =
     Number((item as IMovieDetail)?.runtime) || Number((item as ITvShowDetail)?.episode_run_time);
-  const posterPath = TMDB?.posterUrl(item?.poster_path || '', 'w342');
-  const backdropPath = TMDB?.backdropUrl(item?.backdrop_path || '', 'w780');
+  const posterPath = item?.poster_path
+    ? TMDB?.posterUrl(item?.poster_path || '', 'w342')
+    : undefined;
+  const backdropPath = item?.backdrop_path
+    ? TMDB?.backdropUrl(item?.backdrop_path || '', 'w780')
+    : undefined;
   const releaseYear = new Date(
     (item as IMovieDetail)?.release_date || (item as ITvShowDetail)?.first_air_date || '',
   ).getFullYear();
@@ -86,17 +96,69 @@ const MediaDetail = (props: IMediaDetail) => {
         >
           {!isSm && (
             <Col span={4}>
-              <Card.Image
-                src={posterPath}
-                alt={title}
-                objectFit="cover"
-                width="50%"
-                css={{
-                  marginTop: '10vh',
-                  borderRadius: '24px',
-                }}
-                loading="lazy"
-              />
+              {posterPath ? (
+                <Card.Image
+                  // @ts-ignore
+                  as={Image}
+                  src={posterPath}
+                  alt={title}
+                  objectFit="cover"
+                  width="50%"
+                  css={{
+                    minWidth: 'auto !important',
+                    marginTop: '10vh',
+                    borderRadius: '24px',
+                  }}
+                  loaderUrl="/api/image"
+                  placeholder="blur"
+                  responsive={[
+                    {
+                      size: {
+                        width: 137,
+                        height: 205,
+                      },
+                      maxWidth: 960,
+                    },
+                    {
+                      size: {
+                        width: 158,
+                        height: 237,
+                      },
+                      maxWidth: 1280,
+                    },
+                    {
+                      size: {
+                        width: 173,
+                        height: 260,
+                      },
+                      maxWidth: 1400,
+                    },
+                    {
+                      size: {
+                        width: 239,
+                        height: 359,
+                      },
+                    },
+                  ]}
+                  options={{
+                    contentType: MimeType.WEBP,
+                  }}
+                />
+              ) : (
+                <Row align="center" justify="center">
+                  <Avatar
+                    icon={<PhotoIcon width={48} height={48} />}
+                    css={{
+                      width: '50% !important',
+                      size: '$20',
+                      minWidth: 'auto !important',
+                      minHeight: '205px !important',
+                      marginTop: '10vh',
+                      borderRadius: '24px !important',
+                    }}
+                  />
+                </Row>
+              )}
               {(status === 'Released' || status === 'Ended' || status === 'Returning Series') &&
                 !isSm && (
                   <Row align="center" justify="center">
@@ -155,26 +217,64 @@ const MediaDetail = (props: IMediaDetail) => {
             {(status === 'Released' || status === 'Ended' || status === 'Returning Series') &&
               isSm && (
                 <>
-                  <Row>
-                    <Card.Image
-                      src={posterPath}
-                      alt={title}
-                      objectFit="cover"
-                      width={isXs ? '70%' : '40%'}
-                      css={{
-                        marginTop: '2rem',
-                        borderRadius: '24px',
-                      }}
-                      loading="lazy"
-                    />
-                  </Row>
+                  {posterPath ? (
+                    <Row>
+                      <Card.Image
+                        // @ts-ignore
+                        as={Image}
+                        src={posterPath}
+                        alt={title}
+                        objectFit="cover"
+                        width={isXs ? '70%' : '40%'}
+                        css={{
+                          minWidth: 'auto !important',
+                          marginTop: '2rem',
+                          borderRadius: '24px',
+                        }}
+                        loaderUrl="/api/image"
+                        placeholder="blur"
+                        options={{
+                          contentType: MimeType.WEBP,
+                        }}
+                        responsive={[
+                          {
+                            size: {
+                              width: 246,
+                              height: 369,
+                            },
+                            maxWidth: 375,
+                          },
+                          {
+                            size: {
+                              width: 235,
+                              height: 352,
+                            },
+                          },
+                        ]}
+                      />
+                    </Row>
+                  ) : (
+                    <Row align="center" justify="center">
+                      <Avatar
+                        icon={<PhotoIcon width={48} height={48} />}
+                        css={{
+                          width: `${isXs ? '70%' : '40%'} !important`,
+                          size: '$20',
+                          minWidth: 'auto !important',
+                          minHeight: '205px !important',
+                          marginTop: '2rem',
+                          borderRadius: '24px !important',
+                        }}
+                      />
+                    </Row>
+                  )}
                   <Row>
                     <Button
                       auto
                       shadow
                       rounded
                       color="gradient"
-                      size="xs"
+                      size="sm"
                       css={{
                         width: '100%',
                         margin: '0.5rem 0 0.5rem 0',
@@ -278,6 +378,36 @@ const MediaDetail = (props: IMediaDetail) => {
                 </Text>
               </Row>
             )}
+            <Spacer y={1} />
+            <Row>
+              <Button
+                auto
+                shadow
+                rounded
+                size={isSm ? 'sm' : 'md'}
+                onClick={() => handler && handler(Number(id))}
+              >
+                <Text
+                  h3
+                  transform="uppercase"
+                  size={12}
+                  css={{
+                    margin: 0,
+                    '@xs': {
+                      fontSize: '14px',
+                    },
+                    '@sm': {
+                      fontSize: '16px',
+                    },
+                    '@md': {
+                      fontSize: '18px',
+                    },
+                  }}
+                >
+                  Watch Trailer
+                </Text>
+              </Button>
+            </Row>
             <Row
               fluid
               align="center"
@@ -298,7 +428,7 @@ const MediaDetail = (props: IMediaDetail) => {
                       rounded
                       shadow
                       key={genre?.id}
-                      size={isSm ? 'xs' : 'md'}
+                      size={isSm ? 'sm' : 'md'}
                       css={{ marginBottom: '0.125rem' }}
                     >
                       {genre?.name}
@@ -313,10 +443,12 @@ const MediaDetail = (props: IMediaDetail) => {
       </Card.Header>
       <Card.Body css={{ p: 0 }}>
         <Card.Image
-          src={backdropPath}
+          // @ts-ignore
+          as={Image}
+          src={backdropPath || BackgroundDefault}
           css={{
-            minHeight: '100vh',
-            minWidth: '100vw',
+            minHeight: '100vh !important',
+            minWidth: '100vw !important',
             width: '100vw',
             height: '100vh',
             top: 0,
@@ -324,8 +456,49 @@ const MediaDetail = (props: IMediaDetail) => {
             objectFit: 'cover',
             opacity: 0.3,
           }}
-          alt="Card example background"
-          loading="lazy"
+          title={title}
+          alt={title}
+          loaderUrl="/api/image"
+          placeholder="blur"
+          responsive={[
+            {
+              size: {
+                width: 375,
+                height: 605,
+              },
+              maxWidth: 375,
+            },
+            {
+              size: {
+                width: 650,
+                height: 605,
+              },
+              maxWidth: 650,
+            },
+            {
+              size: {
+                width: 960,
+                height: 605,
+              },
+              maxWidth: 960,
+            },
+            {
+              size: {
+                width: 1280,
+                height: 720,
+              },
+              maxWidth: 1280,
+            },
+            {
+              size: {
+                width: 1400,
+                height: 787,
+              },
+            },
+          ]}
+          options={{
+            contentType: MimeType.WEBP,
+          }}
         />
       </Card.Body>
     </Card>
