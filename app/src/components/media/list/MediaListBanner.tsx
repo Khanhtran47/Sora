@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent */
 /* eslint-disable arrow-body-style */
 import * as React from 'react';
 import { Grid, Button } from '@nextui-org/react';
@@ -91,16 +92,20 @@ const MediaListBanner = ({
         <Swiper
           modules={[Pagination, Virtual]}
           grabCursor
-          spaceBetween={0}
-          slidesPerView={1}
-          pagination={{
-            type: 'bullets',
-            clickable: true,
-            bulletClass: 'swiper-pagination-bullet !bg-gray-500 !w-7 !h-7 !mt-2',
-            renderBullet: (index, className) => {
-              return `<span class="${className}">${index + 1}</span>`;
-            },
-          }}
+          spaceBetween={isSm ? 10 : 0}
+          slidesPerView={isSm ? 1.075 : 1}
+          pagination={
+            isSm
+              ? false
+              : {
+                  type: 'bullets',
+                  clickable: true,
+                  bulletClass: 'swiper-pagination-bullet !bg-gray-500 !w-7 !h-7 !mt-2',
+                  renderBullet: (index, className) => {
+                    return `<span class="${className}">${index + 1}</span>`;
+                  },
+                }
+          }
           virtual
         >
           {items.map((item, index) => (
