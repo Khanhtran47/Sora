@@ -20,13 +20,11 @@ type LoaderData = {
 export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page'));
-  let perPage = Number(url.searchParams.get('perPage'));
   if (!page || page < 1 || page > 1000) page = 1;
-  if (!perPage || perPage < 1 || perPage > 100) perPage = 20;
 
   const [trendingAnime, popularAnime] = await Promise.all([
-    getAnimeTrending(page, perPage),
-    getAnimePopular(page, perPage),
+    getAnimeTrending(page, 10),
+    getAnimePopular(page, 20),
   ]);
 
   return json<LoaderData>({
