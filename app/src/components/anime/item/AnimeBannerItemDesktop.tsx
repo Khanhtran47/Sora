@@ -132,7 +132,7 @@ const AnimeBannerItemDesktop = ({ item, active }: { item: IAnimeResult; active?:
                 },
               }}
             >
-              {title?.userPreferred || title?.english || title?.romaji}
+              {title?.userPreferred || title?.english || title?.romaji || title?.native}
             </Text>
             <Row css={{ marginTop: '1.25rem' }} align="center">
               <Text
@@ -227,8 +227,8 @@ const AnimeBannerItemDesktop = ({ item, active }: { item: IAnimeResult; active?:
                 // @ts-ignore
                 as={Image}
                 src={image || ''}
-                alt={title?.userPreferred || title?.english || title?.romaji}
-                title={title?.userPreferred || title?.english || title?.romaji}
+                alt={title?.userPreferred || title?.english || title?.romaji || title?.native}
+                title={title?.userPreferred || title?.english || title?.romaji || title?.native}
                 objectFit="cover"
                 width={isMd ? '60%' : '40%'}
                 css={{
@@ -300,8 +300,8 @@ const AnimeBannerItemDesktop = ({ item, active }: { item: IAnimeResult; active?:
                   objectFit: 'cover',
                   opacity: 0.3,
                 }}
-                alt={title?.userPreferred || title?.english || title?.romaji}
-                title={title?.userPreferred || title?.english || title?.romaji}
+                alt={title?.userPreferred || title?.english || title?.romaji || title?.native}
+                title={title?.userPreferred || title?.english || title?.romaji || title?.native}
                 loaderUrl="/api/image"
                 placeholder="blur"
                 responsive={[

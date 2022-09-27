@@ -1,13 +1,13 @@
-// import * as React from 'react';
-// import { Text, Button, Row } from '@nextui-org/react';
+import * as React from 'react';
+import { Text, Button, Row } from '@nextui-org/react';
 import { useState } from 'react';
-// import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 import { IAnimeResult } from '~/services/consumet/anilist/anilist.types';
-// import ChevronRightIcon from '~/src/assets/icons/ChevronRightIcon.js';
-// import ChevronLeftIcon from '~/src/assets/icons/ChevronLeftIcon.js';
+import ChevronRightIcon from '~/src/assets/icons/ChevronRightIcon.js';
+import ChevronLeftIcon from '~/src/assets/icons/ChevronLeftIcon.js';
 import {
-  // AnimeListCard,
+  AnimeListCard,
   AnimeListBanner,
   // AnimeListGrid
 } from './list';
@@ -22,28 +22,28 @@ import {
  */
 interface IAnimeListProps {
   listType?: 'table' | 'slider-card' | 'slider-banner' | 'grid';
-  // listName?: string | (() => never);
+  listName?: string | (() => never);
   items: IAnimeResult[];
   // showFilter?: boolean;
-  // showMoreList?: boolean;
-  // onClickViewMore?: () => void;
-  // navigationButtons?: boolean;
+  showMoreList?: boolean;
+  onClickViewMore?: () => void;
+  navigationButtons?: boolean;
 }
 
 const AnimeList = (props: IAnimeListProps) => {
   const {
-    // listName,
+    listName,
     items,
     // showFilter,
-    // showMoreList,
-    // onClickViewMore,
-    // navigationButtons,
+    showMoreList,
+    onClickViewMore,
+    navigationButtons,
   } = props;
   let { listType } = props;
 
-  // const [prevEl, setPrevEl] = React.useState<HTMLElement | null>(null);
-  // const [nextEl, setNextEl] = React.useState<HTMLElement | null>(null);
-  // const [slideProgress, setSlideProgress] = React.useState<number>(0);
+  const [prevEl, setPrevEl] = React.useState<HTMLElement | null>(null);
+  const [nextEl, setNextEl] = React.useState<HTMLElement | null>(null);
+  const [slideProgress, setSlideProgress] = React.useState<number>(0);
 
   if (!listType && typeof window !== 'undefined') {
     listType =
@@ -55,7 +55,7 @@ const AnimeList = (props: IAnimeListProps) => {
     displayType,
     // setDisplayType
   ] = useState<string>(listType as string);
-  // const { t } = useTranslation();
+  const { t } = useTranslation();
 
   // const filterChangeHandler = (value: string) => {
   //   setDisplayType(value);
@@ -71,26 +71,26 @@ const AnimeList = (props: IAnimeListProps) => {
     case 'slider-banner':
       list = <AnimeListBanner items={items} />;
       break;
-    // case 'slider-card':
-    //   list = (
-    //     <AnimeListCard
-    //       items={items}
-    //       navigation={{ nextEl, prevEl }}
-    //       setSlideProgress={setSlideProgress}
-    //     />
-    //   );
-    //   break;
+    case 'slider-card':
+      list = (
+        <AnimeListCard
+          items={items}
+          navigation={{ nextEl, prevEl }}
+          setSlideProgress={setSlideProgress}
+        />
+      );
+      break;
     default:
   }
 
   return (
     <>
-      {/* {listName && (
+      {listName && (
         <Text h1 size="2rem" css={{ margin: '20px 0 20px 0' }}>
           {listName}
         </Text>
-      )} */}
-      {/* {showMoreList && (
+      )}
+      {showMoreList && (
         <Row fluid justify="space-between" wrap="nowrap" align="center">
           <Button
             auto
@@ -140,7 +140,7 @@ const AnimeList = (props: IAnimeListProps) => {
             </div>
           )}
         </Row>
-      )} */}
+      )}
       {/* {showFilter && mediaType && genres && (
         <Filter
           onChange={filterChangeHandler}

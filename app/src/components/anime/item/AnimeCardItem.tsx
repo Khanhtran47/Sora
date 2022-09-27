@@ -1,8 +1,6 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import * as React from 'react';
 import { Card, Loading, Spacer, Text, Tooltip, Avatar } from '@nextui-org/react';
-import { useFetcher } from '@remix-run/react';
 import Image, { MimeType } from 'remix-image';
 import { useInView } from 'react-intersection-observer';
 import { ClientOnly } from 'remix-utils';
@@ -10,23 +8,14 @@ import { motion } from 'framer-motion';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
-import { IMedia } from '~/services/tmdb/tmdb.types';
-import { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
+import { IAnimeResult } from '~/services/consumet/anilist/anilist.types';
 import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
 
 import CardItemHover from './AnimeCardItemHover';
 
-const CardItem = ({
-  item,
-  genresMovie,
-  genresTv,
-}: {
-  item: IMedia;
-  genresMovie?: { [id: string]: string };
-  genresTv?: { [id: string]: string };
-}) => {
-  const { title, posterPath } = item;
-  const { isDark, colorDarkenLighten } = useColorDarkenLighten(posterPath);
+const AnimeCardItem = ({ item }: { item: IAnimeResult }) => {
+  const { title, image } = item;
+  const { isDark, colorDarkenLighten } = useColorDarkenLighten(image);
   const { ref, inView } = useInView({
     rootMargin: '500px 200px',
     threshold: [0, 0.25, 0.5, 0.75, 1],
@@ -34,16 +23,6 @@ const CardItem = ({
   });
   const isSm = useMediaQuery(650, 'max');
   const isLg = useMediaQuery(1400, 'max');
-  const fetcher = useFetcher();
-  const [trailerCard, setTrailerCard] = React.useState<Trailer>({});
-
-  React.useEffect(() => {
-    if (fetcher.data && fetcher.data.videos) {
-      const { results } = fetcher.data.videos;
-      const officialTrailer = results.find((result: Trailer) => result.type === 'Trailer');
-      setTrailerCard(officialTrailer);
-    }
-  }, [fetcher.data]);
 
   return (
     <>
@@ -61,16 +40,16 @@ const CardItem = ({
       >
         {inView && (
           <Card.Body css={{ p: 0 }}>
-            {posterPath ? (
+            {image ? (
               <Card.Image
                 // @ts-ignore
                 as={Image}
-                src={posterPath || ''}
+                src={image || ''}
                 objectFit="cover"
                 width="100%"
                 height="auto"
-                alt={title}
-                title={title}
+                alt={title?.userPreferred || title?.english || title?.romaji || title?.native}
+                title={title?.userPreferred || title?.english || title?.romaji || title?.native}
                 css={{
                   minWidth: `${isSm ? '164px' : isLg ? '210px' : '240px'} !important`,
                   minHeight: `${isSm ? '245px' : isLg ? '357px' : '410px'} !important`,
@@ -127,12 +106,7 @@ const CardItem = ({
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.2, ease: [0, 0.71, 0.2, 1.01] }}
                 >
-                  <CardItemHover
-                    item={item}
-                    genresMovie={genresMovie}
-                    genresTv={genresTv}
-                    trailer={trailerCard}
-                  />
+                  <CardItemHover item={item} />
                 </motion.div>
               )}
             </ClientOnly>
@@ -142,13 +116,6 @@ const CardItem = ({
           hideArrow
           offset={0}
           className="!w-fit"
-          onVisibleChange={(visible) => {
-            if (visible) {
-              fetcher.load(
-                `/${item.mediaType === 'movie' ? 'movies' : 'tv-shows'}/${item.id}/videos`,
-              );
-            }
-          }}
         >
           <Card.Footer
             css={{
@@ -176,7 +143,7 @@ const CardItem = ({
                 },
               }}
             >
-              {title}
+              {title?.userPreferred || title?.english || title?.romaji || title?.native}
             </Text>
           </Card.Footer>
         </Tooltip>
@@ -187,4 +154,4 @@ const CardItem = ({
   );
 };
 
-export default CardItem;
+export default AnimeCardItem;
