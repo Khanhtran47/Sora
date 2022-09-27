@@ -142,6 +142,7 @@ const BannerItemDesktop = ({
             <Text
               size={28}
               weight="bold"
+              className="!line-clamp-2"
               color={colorDarkenLighten || undefined}
               css={{
                 transition: 'color 0.25s ease 0s',
@@ -216,6 +217,7 @@ const BannerItemDesktop = ({
             <Text
               size={12}
               weight="bold"
+              className="!line-clamp-5"
               css={{
                 margin: '1.25rem 0 0 0',
                 textAlign: 'justify',
@@ -227,7 +229,7 @@ const BannerItemDesktop = ({
                 },
               }}
             >
-              {overview && overview.length > 400 ? `${overview?.substring(0, 400)}...` : overview}
+              {overview}
             </Text>
             <Row wrap="wrap">
               <Button

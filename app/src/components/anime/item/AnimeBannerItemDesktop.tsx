@@ -30,8 +30,6 @@ const AnimeBannerItemDesktop = ({ item, active }: { item: IAnimeResult; active?:
   const { ref, inView } = useInView({
     threshold: 0,
   });
-  const animeDescription =
-    description && description.length > 400 ? `${description?.substring(0, 400)}...` : description;
 
   const mute = React.useCallback(() => {
     if (!player) return;
@@ -117,6 +115,7 @@ const AnimeBannerItemDesktop = ({ item, active }: { item: IAnimeResult; active?:
               size={28}
               weight="bold"
               color={colorDarkenLighten || undefined}
+              className="!line-clamp-2"
               css={{
                 transition: 'color 0.25s ease 0s',
                 margin: 0,
@@ -145,10 +144,10 @@ const AnimeBannerItemDesktop = ({ item, active }: { item: IAnimeResult; active?:
                   marginRight: '0.5rem',
                 }}
               >
-                TMDb
+                Anilist
               </Text>
               <Text size="$sm" weight="bold">
-                {rating?.toFixed(1)}
+                {rating}%
               </Text>
               <Spacer x={1.5} />
               <Text
@@ -180,6 +179,7 @@ const AnimeBannerItemDesktop = ({ item, active }: { item: IAnimeResult; active?:
             <Text
               size={12}
               weight="bold"
+              className="!line-clamp-5"
               css={{
                 margin: '1.25rem 0 0 0',
                 textAlign: 'justify',
@@ -190,7 +190,7 @@ const AnimeBannerItemDesktop = ({ item, active }: { item: IAnimeResult; active?:
                   fontSize: '18px',
                 },
               }}
-              dangerouslySetInnerHTML={{ __html: animeDescription || '' }}
+              dangerouslySetInnerHTML={{ __html: description || '' }}
             />
             <Row wrap="wrap">
               <Button

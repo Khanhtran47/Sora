@@ -19,8 +19,6 @@ const CardItemHover = ({ item }: { item: IAnimeResult }) => {
   const [showTrailer, setShowTrailer] = React.useState<boolean>(false);
   const [isMuted, setIsMuted] = React.useState<boolean>(true);
 
-  const animeDescription = description && `${description?.substring(0, 100)}...`;
-
   const mute = React.useCallback(() => {
     if (!player) return;
 
@@ -167,15 +165,15 @@ const CardItemHover = ({ item }: { item: IAnimeResult }) => {
               ))}
             </Row>
           )}
-          {animeDescription && (
+          {description && (
             <Row>
-              <Text dangerouslySetInnerHTML={{ __html: animeDescription || '' }} />
+              <Text className="!line-clamp-2" dangerouslySetInnerHTML={{ __html: description }} />
             </Row>
           )}
           <Grid.Container justify="space-between" alignContent="center">
             {releaseDate && (
               <Grid>
-                <Text>{`${type === 'movie' ? 'Movie' : 'TV-Shows'} • ${releaseDate}`}</Text>
+                <Text>{`${type} • ${releaseDate}`}</Text>
               </Grid>
             )}
             {rating && (
@@ -191,10 +189,10 @@ const CardItemHover = ({ item }: { item: IAnimeResult }) => {
                       marginRight: '0.5rem',
                     }}
                   >
-                    TMDb
+                    Anilist
                   </Text>
                   <Text size="$sm" weight="bold">
-                    {rating?.toFixed(1)}
+                    {rating}%
                   </Text>
                 </Row>
               </Grid>

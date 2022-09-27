@@ -112,10 +112,10 @@ const AnimeBannerItemMobile = ({ item }: { item: IAnimeResult }) => {
                 marginRight: '0.5rem',
               }}
             >
-              TMDb
+              Anilist
             </Text>
             <Text size="$sm" weight="bold">
-              {rating?.toFixed(1)}
+              {rating}%
             </Text>
             <Spacer x={1.5} />
             <Text

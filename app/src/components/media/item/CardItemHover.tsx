@@ -188,7 +188,7 @@ const CardItemHover = ({
           )}
           {overview && (
             <Row>
-              <Text>{`${overview?.substring(0, 100)}...`}</Text>
+              <Text className="!line-clamp-2">{overview}</Text>
             </Row>
           )}
           <Grid.Container justify="space-between" alignContent="center">

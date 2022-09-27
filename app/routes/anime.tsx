@@ -22,7 +22,7 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
   let page = Number(url.searchParams.get('page'));
   let perPage = Number(url.searchParams.get('perPage'));
   if (!page || page < 1 || page > 1000) page = 1;
-  if (!perPage || perPage < 1 || perPage > 100) perPage = 10;
+  if (!perPage || perPage < 1 || perPage > 100) perPage = 20;
 
   const [trendingAnime, popularAnime] = await Promise.all([
     getAnimeTrending(page, perPage),
@@ -37,6 +37,8 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
 
 const AnimePage = () => {
   const { trending, popular } = useLoaderData<LoaderData>() || {};
+  console.log('🚀 ~ file: anime.tsx ~ line 40 ~ AnimePage ~ popular', popular);
+  console.log('🚀 ~ file: anime.tsx ~ line 40 ~ AnimePage ~ trending', trending);
   const location = useLocation();
 
   return (
