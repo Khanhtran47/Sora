@@ -1,6 +1,4 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/indent */
-import * as React from 'react';
 import { MetaFunction, LoaderFunction, json, DataFunctionArgs } from '@remix-run/node';
 import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 import { Container } from '@nextui-org/react';

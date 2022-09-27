@@ -10,7 +10,7 @@ const BreadCrumb = (props: IBreadCrumbProps) => {
   const { matches } = props;
   const isXs = useMediaQuery(425, 'max');
   const location = useLocation();
-  if (location.pathname === '/') return null;
+  if (location.pathname === '/' || location.pathname === '/anime') return null;
   return (
     <Grid.Container
       justify="flex-start"

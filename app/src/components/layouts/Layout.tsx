@@ -53,7 +53,9 @@ const Layout = ({ children, user, matches }: ILayout) => {
           margin: 0,
           minHeight: '100vh',
           height: 'fit-content',
-          ...(location.pathname === '/' || location.pathname.split('/')[2]?.match(/^\d+$/)
+          ...(location.pathname === '/' ||
+          location.pathname === '/anime' ||
+          location.pathname.split('/')[2]?.match(/^\d+$/)
             ? {
                 paddingTop: '8px',
                 paddingLeft: 0,

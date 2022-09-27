@@ -74,8 +74,8 @@ const pages = [
     ],
   },
   {
-    pageName: 'people',
-    pageLink: 'people',
+    pageName: 'Anime',
+    pageLink: 'anime',
     pageDescription: 'description',
   },
 ];

@@ -1,0 +1,56 @@
+import { LoaderFunction, json, DataFunctionArgs } from '@remix-run/node';
+import { useLoaderData, useLocation, Link } from '@remix-run/react';
+import { Container } from '@nextui-org/react';
+import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
+
+import { getAnimeTrending, getAnimePopular } from '~/services/consumet/anilist/anilist.server';
+import AnimeList from '~/src/components/anime/AnimeList';
+
+export const handle = {
+  i18n: 'anime',
+  breadcrumb: () => <Link to="/anime">Anime</Link>,
+};
+
+type LoaderData = {
+  trending: Awaited<ReturnType<typeof getAnimeTrending>>;
+  popular: Awaited<ReturnType<typeof getAnimePopular>>;
+};
+
+export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
+  const url = new URL(request.url);
+  let page = Number(url.searchParams.get('page'));
+  let perPage = Number(url.searchParams.get('perPage'));
+  if (!page || page < 1 || page > 1000) page = 1;
+  if (!perPage || perPage < 1 || perPage > 100) perPage = 10;
+
+  const [trendingAnime, popularAnime] = await Promise.all([
+    getAnimeTrending(page, perPage),
+    getAnimePopular(page, perPage),
+  ]);
+
+  return json<LoaderData>({
+    trending: trendingAnime,
+    popular: popularAnime,
+  });
+};
+
+const AnimePage = () => {
+  const { trending } = useLoaderData<LoaderData>() || {};
+  console.log('🚀 ~ file: anime.tsx ~ line 40 ~ AnimePage ~ trending', trending);
+  const location = useLocation();
+
+  return (
+    <motion.main
+      key={location.key}
+      initial={{ x: '-10%', opacity: 0 }}
+      animate={{ x: '0', opacity: 1 }}
+      exit={{ y: '-10%', opacity: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      {trending && <AnimeList listType="slider-banner" items={trending?.results} />}
+    </motion.main>
+  );
+};
+
+export default AnimePage;
