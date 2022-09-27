@@ -37,8 +37,6 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
 
 const AnimePage = () => {
   const { trending, popular } = useLoaderData<LoaderData>() || {};
-  console.log('🚀 ~ file: anime.tsx ~ line 40 ~ AnimePage ~ popular', popular);
-  console.log('🚀 ~ file: anime.tsx ~ line 40 ~ AnimePage ~ trending', trending);
   const location = useLocation();
 
   return (
