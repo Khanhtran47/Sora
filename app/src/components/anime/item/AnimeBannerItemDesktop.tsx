@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import * as React from 'react';
 import { Button, Card, Col, Row, Spacer, Text, Loading } from '@nextui-org/react';
-import { Link, useFetcher } from '@remix-run/react';
+// import { Link } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 import Image, { MimeType } from 'remix-image';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -12,52 +12,24 @@ import { useInView } from 'react-intersection-observer';
 
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import useMediaQuery from '~/hooks/useMediaQuery';
-import { IMedia } from '~/services/tmdb/tmdb.types';
-import { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
+import { IAnimeResult } from '~/services/consumet/anilist/anilist.types';
+// import { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
 import VolumeUp from '~/src/assets/icons/VolumeUpIcon.js';
 import VolumeOff from '~/src/assets/icons/VolumeOffIcon.js';
 
-const BannerItemDesktop = ({
-  item,
-  genresMovie,
-  genresTv,
-  active,
-}: {
-  item: IMedia;
-  genresMovie?: { [id: string]: string };
-  genresTv?: { [id: string]: string };
-  active?: boolean;
-}) => {
+const AnimeBannerItemDesktop = ({ item, active }: { item: IAnimeResult; active?: boolean }) => {
   const { t } = useTranslation();
-  const fetcher = useFetcher();
-  const { backdropPath, overview, posterPath, title, id, mediaType } = item;
+  const { cover, description, image, title, trailer, rating, genres } = item;
   const [player, setPlayer] = React.useState<ReturnType<YouTube['getInternalPlayer']>>();
   const [isMuted, setIsMuted] = React.useState<boolean>(true);
   const [isPlayed, setIsPlayed] = React.useState<boolean>(true);
   const [showTrailer, setShowTrailer] = React.useState<boolean>(false);
-  const [trailerBanner, setTrailerBanner] = React.useState<Trailer>({});
-  const { colorDarkenLighten } = useColorDarkenLighten(posterPath);
+  const { colorDarkenLighten } = useColorDarkenLighten(image);
   const isSm = useMediaQuery(650, 'max');
   const isMd = useMediaQuery(960, 'max');
   const { ref, inView } = useInView({
     threshold: 0,
   });
-
-  React.useEffect(() => {
-    if (active === true) {
-      fetcher.load(`/${item.mediaType === 'movie' ? 'movies' : 'tv-shows'}/${item.id}/videos`);
-    } else {
-      setTrailerBanner({});
-    }
-  }, [active]);
-
-  React.useEffect(() => {
-    if (active === true && fetcher.data && fetcher.data.videos) {
-      const { results } = fetcher.data.videos;
-      const officialTrailer = results.find((result: Trailer) => result.type === 'Trailer');
-      setTrailerBanner(officialTrailer);
-    }
-  }, [fetcher.data]);
 
   const mute = React.useCallback(() => {
     if (!player) return;
@@ -142,8 +114,8 @@ const BannerItemDesktop = ({
             <Text
               size={28}
               weight="bold"
-              className="!line-clamp-2"
               color={colorDarkenLighten || undefined}
+              className="!line-clamp-2"
               css={{
                 transition: 'color 0.25s ease 0s',
                 margin: 0,
@@ -159,7 +131,7 @@ const BannerItemDesktop = ({
                 },
               }}
             >
-              {title}
+              {title?.userPreferred || title?.english || title?.romaji || title?.native}
             </Text>
             <Row css={{ marginTop: '1.25rem' }} align="center">
               <Text
@@ -172,10 +144,10 @@ const BannerItemDesktop = ({
                   marginRight: '0.5rem',
                 }}
               >
-                TMDb
+                Anilist
               </Text>
               <Text size="$sm" weight="bold">
-                {item?.voteAverage?.toFixed(1)}
+                {rating}%
               </Text>
               <Spacer x={1.5} />
               <Text
@@ -196,22 +168,12 @@ const BannerItemDesktop = ({
                   },
                 }}
               >
-                {item?.genreIds?.slice(0, 2).map((genreId) => {
-                  if (mediaType === 'movie') {
-                    return (
-                      <>
-                        {genresMovie?.[genreId]}
-                        <Spacer x={0.5} />
-                      </>
-                    );
-                  }
-                  return (
-                    <>
-                      {genresTv?.[genreId]}
-                      <Spacer x={0.5} />
-                    </>
-                  );
-                })}
+                {genres?.slice(0, 2).map((genre) => (
+                  <>
+                    {genre}
+                    <Spacer x={0.5} />
+                  </>
+                ))}
               </Text>
             </Row>
             <Text
@@ -228,9 +190,8 @@ const BannerItemDesktop = ({
                   fontSize: '18px',
                 },
               }}
-            >
-              {overview}
-            </Text>
+              dangerouslySetInnerHTML={{ __html: description || '' }}
+            />
             <Row wrap="wrap">
               <Button
                 auto
@@ -240,23 +201,23 @@ const BannerItemDesktop = ({
                   marginTop: '1.25rem',
                 }}
               >
-                <Link to={`/${mediaType === 'movie' ? 'movies/' : 'tv-shows/'}${id}`}>
-                  <Text
-                    size={12}
-                    weight="bold"
-                    transform="uppercase"
-                    css={{
-                      '@xs': {
-                        fontSize: '18px',
-                      },
-                      '@sm': {
-                        fontSize: '20px',
-                      },
-                    }}
-                  >
-                    {t('watchNow')}
-                  </Text>
-                </Link>
+                {/* <Link to={}> */}
+                <Text
+                  size={12}
+                  weight="bold"
+                  transform="uppercase"
+                  css={{
+                    '@xs': {
+                      fontSize: '18px',
+                    },
+                    '@sm': {
+                      fontSize: '20px',
+                    },
+                  }}
+                >
+                  {t('watchNow')}
+                </Text>
+                {/* </Link> */}
               </Button>
             </Row>
           </Col>
@@ -265,9 +226,9 @@ const BannerItemDesktop = ({
               <Card.Image
                 // @ts-ignore
                 as={Image}
-                src={posterPath || ''}
-                alt={title}
-                title={title}
+                src={image || ''}
+                alt={title?.userPreferred || title?.english || title?.romaji || title?.native}
+                title={title?.userPreferred || title?.english || title?.romaji || title?.native}
                 objectFit="cover"
                 width={isMd ? '60%' : '40%'}
                 css={{
@@ -328,7 +289,7 @@ const BannerItemDesktop = ({
               <Card.Image
                 // @ts-ignore
                 as={Image}
-                src={backdropPath || ''}
+                src={cover || ''}
                 loading="eager"
                 width="100%"
                 height="auto"
@@ -339,8 +300,8 @@ const BannerItemDesktop = ({
                   objectFit: 'cover',
                   opacity: 0.3,
                 }}
-                alt={title}
-                title={title}
+                alt={title?.userPreferred || title?.english || title?.romaji || title?.native}
+                title={title?.userPreferred || title?.english || title?.romaji || title?.native}
                 loaderUrl="/api/image"
                 placeholder="blur"
                 responsive={[
@@ -388,10 +349,10 @@ const BannerItemDesktop = ({
         </AnimatePresence>
         <ClientOnly fallback={<Loading type="default" />}>
           {() => {
-            if (trailerBanner?.key && !isSm)
+            if (trailer?.id && trailer?.site === 'youtube' && !isSm)
               return (
                 <YouTube
-                  videoId={active ? trailerBanner.key : ''}
+                  videoId={active ? trailer?.id : ''}
                   opts={{
                     height: '100%',
                     width: '100%',
@@ -472,4 +433,4 @@ const BannerItemDesktop = ({
   );
 };
 
-export default BannerItemDesktop;
+export default AnimeBannerItemDesktop;

@@ -7,25 +7,14 @@ import YouTube from 'react-youtube';
 import { ClientOnly } from 'remix-utils';
 
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
-import { IMedia } from '~/services/tmdb/tmdb.types';
-import { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
+import { IAnimeResult } from '~/services/consumet/anilist/anilist.types';
 
 import VolumeUp from '~/src/assets/icons/VolumeUpIcon.js';
 import VolumeOff from '~/src/assets/icons/VolumeOffIcon.js';
 
-const CardItemHover = ({
-  item,
-  genresMovie,
-  genresTv,
-  trailer,
-}: {
-  item: IMedia;
-  genresMovie?: { [id: string]: string };
-  genresTv?: { [id: string]: string };
-  trailer?: Trailer;
-}) => {
-  const { title, overview, releaseDate, voteAverage, mediaType, posterPath, backdropPath } = item;
-  const { loading, colorDarkenLighten } = useColorDarkenLighten(posterPath);
+const CardItemHover = ({ item }: { item: IAnimeResult }) => {
+  const { title, description, releaseDate, rating, image, cover, genres, type, trailer } = item;
+  const { loading, colorDarkenLighten } = useColorDarkenLighten(image);
   const [player, setPlayer] = React.useState<ReturnType<YouTube['getInternalPlayer']>>();
   const [showTrailer, setShowTrailer] = React.useState<boolean>(false);
   const [isMuted, setIsMuted] = React.useState<boolean>(true);
@@ -60,7 +49,7 @@ const CardItemHover = ({
       ) : (
         <>
           <AnimatePresence>
-            {backdropPath && !showTrailer && (
+            {cover && !showTrailer && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -70,12 +59,12 @@ const CardItemHover = ({
                 <NextImage
                   // @ts-ignore
                   as={Image}
-                  src={backdropPath || ''}
+                  src={cover || ''}
                   objectFit="cover"
                   width="100%"
                   height="218px"
-                  alt={title}
-                  title={title}
+                  alt={title?.userPreferred || title?.english || title?.romaji || title?.native}
+                  title={title?.userPreferred || title?.english || title?.romaji || title?.native}
                   containerCss={{
                     borderRadius: '0.5rem',
                   }}
@@ -102,10 +91,10 @@ const CardItemHover = ({
           </AnimatePresence>
           <ClientOnly fallback={<Loading type="default" />}>
             {() => {
-              if (trailer?.key)
+              if (trailer?.id && trailer?.site === 'youtube')
                 return (
                   <YouTube
-                    videoId={trailer.key}
+                    videoId={trailer.id}
                     opts={{
                       width: '388px',
                       height: '218.25px',
@@ -163,41 +152,31 @@ const CardItemHover = ({
           <Row justify="center" align="center">
             <Spacer y={0.5} />
             <Text size={18} b color={colorDarkenLighten}>
-              {title}
+              {title?.userPreferred || title?.english || title?.romaji || title?.native}
             </Text>
           </Row>
-          {overview && (
+          {genres && (
             <Row>
-              {item?.genreIds?.slice(0, 3).map((genreId) => {
-                if (mediaType === 'movie') {
-                  return (
-                    <>
-                      {genresMovie?.[genreId]}
-                      <Spacer x={0.5} />
-                    </>
-                  );
-                }
-                return (
-                  <>
-                    {genresTv?.[genreId]}
-                    <Spacer x={0.5} />
-                  </>
-                );
-              })}
+              {genres?.slice(0, 2).map((genre) => (
+                <>
+                  {genre}
+                  <Spacer x={0.5} />
+                </>
+              ))}
             </Row>
           )}
-          {overview && (
+          {description && (
             <Row>
-              <Text className="!line-clamp-2">{overview}</Text>
+              <Text className="!line-clamp-2" dangerouslySetInnerHTML={{ __html: description }} />
             </Row>
           )}
           <Grid.Container justify="space-between" alignContent="center">
             {releaseDate && (
               <Grid>
-                <Text>{`${mediaType === 'movie' ? 'Movie' : 'TV-Shows'} • ${releaseDate}`}</Text>
+                <Text>{`${type} • ${releaseDate}`}</Text>
               </Grid>
             )}
-            {voteAverage && (
+            {rating && (
               <Grid>
                 <Row>
                   <Text
@@ -210,10 +189,10 @@ const CardItemHover = ({
                       marginRight: '0.5rem',
                     }}
                   >
-                    TMDb
+                    Anilist
                   </Text>
                   <Text size="$sm" weight="bold">
-                    {item?.voteAverage?.toFixed(1)}
+                    {rating}%
                   </Text>
                 </Row>
               </Grid>

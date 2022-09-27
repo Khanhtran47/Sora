@@ -34,6 +34,8 @@ export default async function handleRequest(
       ns, // The namespaces the routes about to render wants to use
       backend: {
         loadPath: resolve('./public/locales/{{lng}}/{{ns}}.json'),
+        // Disable cache for translation files in development
+        requestOptions: { cache: process.env.NODE_ENV === 'production' ? 'default' : 'no-cache' },
       },
     });
 

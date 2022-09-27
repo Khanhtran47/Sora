@@ -9,6 +9,7 @@ import RecommendIcon from '../../assets/icons/RecommendIcon.js';
 import NewReleaseIcon from '../../assets/icons/NewReleaseIcon.js';
 import TopRatedIcon from '../../assets/icons/TopRatedIcon.js';
 import HistoryIcon from '../../assets/icons/HistoryIcon.js';
+import TwoUsers from '../../assets/icons/TwoUsersIcon.js';
 
 const drawerWidth = 240;
 
@@ -67,15 +68,18 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
         icon = <TrendingIcon filled={filled} />;
         break;
       case 1:
-        icon = <RecommendIcon filled={filled} />;
+        icon = <TwoUsers filled={filled} />;
         break;
       case 2:
-        icon = <NewReleaseIcon filled={filled} />;
+        icon = <RecommendIcon filled={filled} />;
         break;
       case 3:
-        icon = <TopRatedIcon filled={filled} />;
+        icon = <NewReleaseIcon filled={filled} />;
         break;
       case 4:
+        icon = <TopRatedIcon filled={filled} />;
+        break;
+      case 5:
         icon = <HistoryIcon />;
         break;
       default:
@@ -87,6 +91,10 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
     {
       pageName: 'trending',
       pageLink: 'trending',
+    },
+    {
+      pageName: 'people',
+      pageLink: 'people',
     },
     {
       pageName: 'recommendations',
