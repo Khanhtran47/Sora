@@ -26,7 +26,7 @@ const CardItem = ({
   genresTv?: { [id: string]: string };
 }) => {
   const { title, posterPath } = item;
-  const { isDark, colorDarkenLighten } = useColorDarkenLighten(posterPath);
+  const { colorDarkenLighten } = useColorDarkenLighten(posterPath);
   const { ref, inView } = useInView({
     rootMargin: '500px 200px',
     threshold: [0, 0.25, 0.5, 0.75, 1],
@@ -52,10 +52,11 @@ const CardItem = ({
         isHoverable
         isPressable
         css={{
+          minWidth: `${isSm ? '164px' : isLg ? '210px' : '240px'} !important`,
+          minHeight: `${isSm ? '323px' : isLg ? '435px' : '488px'} !important`,
           borderWidth: 0,
           filter: 'var(--nextui-dropShadows-md)',
         }}
-        className={isDark ? 'bg-black/70' : 'bg-white/70'}
         role="figure"
         ref={ref}
       >

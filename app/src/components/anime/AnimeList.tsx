@@ -6,11 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { IAnimeResult } from '~/services/consumet/anilist/anilist.types';
 import ChevronRightIcon from '~/src/assets/icons/ChevronRightIcon.js';
 import ChevronLeftIcon from '~/src/assets/icons/ChevronLeftIcon.js';
-import {
-  AnimeListCard,
-  AnimeListBanner,
-  // AnimeListGrid
-} from './list';
+import { AnimeListCard, AnimeListBanner, AnimeListGrid } from './list';
 // import Filter from '../elements/filter/Filter';
 
 /**
@@ -28,6 +24,8 @@ interface IAnimeListProps {
   showMoreList?: boolean;
   onClickViewMore?: () => void;
   navigationButtons?: boolean;
+  hasNextPage?: boolean;
+  routeName?: string;
 }
 
 const AnimeList = (props: IAnimeListProps) => {
@@ -38,6 +36,8 @@ const AnimeList = (props: IAnimeListProps) => {
     showMoreList,
     onClickViewMore,
     navigationButtons,
+    hasNextPage,
+    routeName,
   } = props;
   let { listType } = props;
 
@@ -65,9 +65,9 @@ const AnimeList = (props: IAnimeListProps) => {
   let list;
 
   switch (displayType) {
-    // case 'grid':
-    //   list = <AnimeListGrid items={items} />;
-    //   break;
+    case 'grid':
+      list = <AnimeListGrid items={items} hasNextPage={hasNextPage} routeName={routeName} />;
+      break;
     case 'slider-banner':
       list = <AnimeListBanner items={items} />;
       break;
@@ -99,7 +99,7 @@ const AnimeList = (props: IAnimeListProps) => {
             onClick={onClickViewMore}
             css={{
               maxWidth: '$8',
-              marginBottom: '$12', // space[2]
+              marginBottom: '$12',
             }}
           >
             {t('viewMore')}
@@ -110,7 +110,6 @@ const AnimeList = (props: IAnimeListProps) => {
                 display: 'flex',
                 flexDirection: 'row',
                 marginBottom: 'var(--nextui-space-12)',
-                // color: 'var(--nextui-colors-primary)',
               }}
             >
               <button
