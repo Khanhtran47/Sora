@@ -35,17 +35,6 @@ const AnimeListGrid = ({
   const bottomRef = React.useRef<HTMLDivElement>(null);
   const { height } = useSize(parentRef);
 
-  // Set the height of the parent container whenever items are loaded
-  // const parentRef = React.useCallback(
-  //   (node) => {
-  //     if (node !== null) {
-  //       setHeight(node.getBoundingClientRect().height);
-  //     }
-  //   },
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  //   [listItems.length],
-  // );
-
   React.useEffect(() => {
     const scrollListener = () => {
       setClientHeight(window.innerHeight);
