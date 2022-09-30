@@ -17,9 +17,8 @@ const AnimeCardItem = ({ item }: { item: IAnimeResult }) => {
   const { title, image } = item;
   const { isDark, colorDarkenLighten } = useColorDarkenLighten(image);
   const { ref, inView } = useInView({
-    rootMargin: '500px 200px',
+    rootMargin: '1000px 500px',
     threshold: [0, 0.25, 0.5, 0.75, 1],
-    triggerOnce: true,
   });
   const isSm = useMediaQuery(650, 'max');
   const isLg = useMediaQuery(1400, 'max');
