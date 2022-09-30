@@ -7,7 +7,7 @@ import AnimeList from '~/src/components/anime/AnimeList';
 import { getAnimePopular } from '~/services/consumet/anilist/anilist.server';
 
 type LoaderData = {
-  popularAnime: Awaited<ReturnType<typeof getAnimePopular>>;
+  items: Awaited<ReturnType<typeof getAnimePopular>>;
 };
 
 export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
@@ -16,7 +16,7 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
   if (!page && (page < 1 || page > 1000)) page = 1;
 
   return json<LoaderData>({
-    popularAnime: await getAnimePopular(page, 20),
+    items: await getAnimePopular(page, 20),
   });
 };
 
@@ -25,8 +25,7 @@ export const handle = {
 };
 
 const PopularAnime = () => {
-  const { popularAnime } = useLoaderData<LoaderData>();
-  console.log('🚀 ~ file: popular.tsx ~ line 29 ~ PopularAnime ~ popularAnime', popularAnime);
+  const { items } = useLoaderData<LoaderData>();
   const location = useLocation();
 
   return (
@@ -50,8 +49,14 @@ const PopularAnime = () => {
           },
         }}
       >
-        {popularAnime && popularAnime.results && popularAnime.results.length > 0 && (
-          <AnimeList listType="grid" items={popularAnime.results} listName="Popular Anime" />
+        {items && items.results && items.results.length > 0 && (
+          <AnimeList
+            listType="grid"
+            items={items.results}
+            hasNextPage={items.hasNextPage || false}
+            listName="Popular Anime"
+            routeName="/anime/popular"
+          />
         )}
       </Container>
     </motion.div>

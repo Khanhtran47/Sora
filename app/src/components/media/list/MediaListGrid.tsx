@@ -26,7 +26,7 @@ const MediaListGrid = ({ items }: { items: IMedia[] }) => {
               <motion.div
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.1 * index }}
+                transition={{ duration: 0.05 * index }}
               >
                 <Link to={href}>
                   <MediaItem key={item.id} type="card" item={item} />

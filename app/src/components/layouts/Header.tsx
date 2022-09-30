@@ -76,7 +76,11 @@ const pages = [
   {
     pageName: 'Anime',
     pageLink: 'anime',
-    pageDescription: 'description',
+    pageDropdown: [
+      // { pageName: 'Discover Anime', pageLink: 'anime/discover' },
+      { pageName: 'Popular Anime', pageLink: 'anime/popular' },
+      { pageName: 'Trending Anime', pageLink: 'anime/trending' },
+    ],
   },
 ];
 
@@ -559,15 +563,10 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       >
         {!isSm &&
           pages.map((page) => (
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
             <Tooltip
               key={page.pageName}
               placement="bottom"
-              {...(page?.pageDropdown && {
-                content: <DropdownPage pagesDropdown={page?.pageDropdown || []} />,
-              })}
-              {...(page?.pageDescription && { content: t(page?.pageDescription) })}
+              content={<DropdownPage pagesDropdown={page?.pageDropdown || []} />}
             >
               <NavLink
                 linkTo={`/${page.pageLink}`}

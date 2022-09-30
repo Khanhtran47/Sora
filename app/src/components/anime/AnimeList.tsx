@@ -24,6 +24,8 @@ interface IAnimeListProps {
   showMoreList?: boolean;
   onClickViewMore?: () => void;
   navigationButtons?: boolean;
+  hasNextPage?: boolean;
+  routeName?: string;
 }
 
 const AnimeList = (props: IAnimeListProps) => {
@@ -34,6 +36,8 @@ const AnimeList = (props: IAnimeListProps) => {
     showMoreList,
     onClickViewMore,
     navigationButtons,
+    hasNextPage,
+    routeName,
   } = props;
   let { listType } = props;
 
@@ -62,7 +66,7 @@ const AnimeList = (props: IAnimeListProps) => {
 
   switch (displayType) {
     case 'grid':
-      list = <AnimeListGrid items={items} />;
+      list = <AnimeListGrid items={items} hasNextPage={hasNextPage} routeName={routeName} />;
       break;
     case 'slider-banner':
       list = <AnimeListBanner items={items} />;
