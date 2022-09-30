@@ -15,7 +15,7 @@ import CardItemHover from './AnimeCardItemHover';
 
 const AnimeCardItem = ({ item }: { item: IAnimeResult }) => {
   const { title, image } = item;
-  const { isDark, colorDarkenLighten } = useColorDarkenLighten(image);
+  const { colorDarkenLighten } = useColorDarkenLighten(image);
   const { ref, inView } = useInView({
     rootMargin: '1000px 500px',
     threshold: [0, 0.25, 0.5, 0.75, 1],
@@ -35,7 +35,6 @@ const AnimeCardItem = ({ item }: { item: IAnimeResult }) => {
           borderWidth: 0,
           filter: 'var(--nextui-dropShadows-md)',
         }}
-        className={isDark ? 'bg-black/70' : 'bg-white/70'}
         role="figure"
         ref={ref}
       >
