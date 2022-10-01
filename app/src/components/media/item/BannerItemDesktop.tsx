@@ -11,6 +11,7 @@ import { ClientOnly } from 'remix-utils';
 import { useInView } from 'react-intersection-observer';
 
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
+import useLocalStorage from '~/hooks/useLocalStorage';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import { IMedia } from '~/services/tmdb/tmdb.types';
 import { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
@@ -32,7 +33,6 @@ const BannerItemDesktop = ({
   const fetcher = useFetcher();
   const { backdropPath, overview, posterPath, title, id, mediaType } = item;
   const [player, setPlayer] = React.useState<ReturnType<YouTube['getInternalPlayer']>>();
-  const [isMuted, setIsMuted] = React.useState<boolean>(true);
   const [isPlayed, setIsPlayed] = React.useState<boolean>(true);
   const [showTrailer, setShowTrailer] = React.useState<boolean>(false);
   const [trailerBanner, setTrailerBanner] = React.useState<Trailer>({});
@@ -43,13 +43,22 @@ const BannerItemDesktop = ({
     threshold: 0,
   });
 
+  const [isMuted, setIsMuted] = useLocalStorage('muteTrailer', true);
+  const [isPlayTrailer] = useLocalStorage('playTrailer', false);
+
   React.useEffect(() => {
-    if (active === true) {
+    if (active === true && isPlayTrailer === true) {
       fetcher.load(`/${item.mediaType === 'movie' ? 'movies' : 'tv-shows'}/${item.id}/videos`);
     } else {
       setTrailerBanner({});
     }
-  }, [active]);
+  }, [active, isPlayTrailer]);
+
+  React.useEffect(() => {
+    if (!isPlayTrailer === true) {
+      setShowTrailer(false);
+    }
+  }, [isPlayTrailer]);
 
   React.useEffect(() => {
     if (active === true && fetcher.data && fetcher.data.videos) {
@@ -388,7 +397,7 @@ const BannerItemDesktop = ({
         </AnimatePresence>
         <ClientOnly fallback={<Loading type="default" />}>
           {() => {
-            if (trailerBanner?.key && !isSm)
+            if (trailerBanner?.key && !isSm && isPlayTrailer)
               return (
                 <YouTube
                   videoId={active ? trailerBanner.key : ''}
@@ -413,6 +422,7 @@ const BannerItemDesktop = ({
                   }}
                   onReady={({ target }) => {
                     setPlayer(target);
+                    if (!isMuted) target.unMute();
                   }}
                   onPlay={() => {
                     setShowTrailer(true);
@@ -452,12 +462,12 @@ const BannerItemDesktop = ({
             ghost
             icon={isMuted ? <VolumeOff fill="currentColor" /> : <VolumeUp fill="currentColor" />}
             css={{
-              width: '42px',
-              height: '42px',
+              width: '44px',
+              height: '44px',
               cursor: 'pointer',
               position: 'absolute',
               bottom: '80px',
-              right: '35px',
+              right: '85px',
               zIndex: '90',
               '&:hover': {
                 opacity: '0.8',
