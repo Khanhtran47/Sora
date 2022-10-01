@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { DataFunctionArgs, json, LoaderFunction } from '@remix-run/node';
-import { Form, useLoaderData, useNavigate, Link } from '@remix-run/react';
-import { Input, Grid, Container, Button, Pagination, useInput } from '@nextui-org/react';
+import { useLoaderData, useNavigate, Link } from '@remix-run/react';
+import { Container, Pagination } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 
 import { getTrending } from '~/services/tmdb/tmdb.server';
 import MediaList from '~/src/components/media/MediaList';
+import SearchForm from '~/src/components/elements/SearchForm';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import i18next from '~/i18n/i18next.server';
 
@@ -31,39 +32,23 @@ export const handle = {
 const SearchRoute = () => {
   const { todayTrending } = useLoaderData<LoaderData>() || {};
   const navigate = useNavigate();
-  const { value, bindings } = useInput('');
   const isXs = useMediaQuery(650);
   const { t } = useTranslation();
 
   const paginationChangeHandler = (page: number) => navigate(`/search/movie?page=${page}`);
 
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const onSubmit = (value: string) => {
     navigate(`/search/movie/${value}`);
   };
 
   return (
     <>
-      <Form onSubmit={onSubmit}>
-        <Grid.Container gap={1} css={{ m: 0, padding: '30px 10px', width: '100%' }}>
-          <Grid>
-            <Input
-              {...bindings}
-              labelPlaceholder={t('searchPlaceHolder')}
-              clearable
-              bordered
-              color="primary"
-              fullWidth
-              helperText={t('searchHelper')}
-            />
-          </Grid>
-          <Grid>
-            <Button auto type="submit">
-              {t('search')}
-            </Button>
-          </Grid>
-        </Grid.Container>
-      </Form>
+      <SearchForm
+        onSubmit={onSubmit}
+        textOnButton={t('search.action')}
+        textHelper={t('search.helper.movie')}
+        textPlaceHolder={t('search.placeHolder.movie')}
+      />
       <Container
         fluid
         display="flex"

@@ -1,5 +1,6 @@
 import { Row, Col, Text } from '@nextui-org/react';
 import { NavLink } from '@remix-run/react';
+import { useTranslation } from 'react-i18next';
 
 // import useMediaQuery from '~/hooks/useMediaQuery';
 
@@ -13,6 +14,7 @@ interface ITabProps {
 
 const Tab = (props: ITabProps) => {
   const { pages, linkTo } = props;
+  const { t } = useTranslation();
   // const isMd = useMediaQuery(960);
   return (
     <Row
@@ -76,7 +78,7 @@ const Tab = (props: ITabProps) => {
                   },
                 }}
               >
-                {page.pageName}
+                {t(page.pageName)}
               </Text>
             )}
           </NavLink>

@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { DataFunctionArgs, json, LoaderFunction } from '@remix-run/node';
-import { useLoaderData, useNavigate, useParams, Form, Link, RouteMatch } from '@remix-run/react';
-import { Input, Grid, Container, Button, Pagination, useInput } from '@nextui-org/react';
+import { useLoaderData, useNavigate, useParams, Link, RouteMatch } from '@remix-run/react';
+import { Container, Pagination } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 
 import { getSearchPerson } from '~/services/tmdb/tmdb.server';
 import PeopleList from '~/src/components/people/PeopleList';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import i18next from '~/i18n/i18next.server';
+import SearchForm from '~/src/components/elements/SearchForm';
 
 type LoaderData = {
   searchResults: Awaited<ReturnType<typeof getSearchPerson>>;
@@ -35,7 +36,6 @@ const SearchRoute = () => {
   const { searchResults } = useLoaderData<LoaderData>() || {};
   const navigate = useNavigate();
   const { peopleKeyword } = useParams();
-  const { value, bindings } = useInput(peopleKeyword || '');
   const isXs = useMediaQuery(650);
   const { t } = useTranslation();
   const [listName] = React.useState(t('searchResults'));
@@ -43,33 +43,18 @@ const SearchRoute = () => {
   const paginationChangeHandler = (page: number) =>
     navigate(`/search/people/${peopleKeyword}?page=${page}`);
 
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const onSubmit = (value: string) => {
     navigate(`/search/people/${value}`);
   };
 
   return (
     <>
-      <Form onSubmit={onSubmit}>
-        <Grid.Container gap={1} css={{ m: 0, padding: '30px 10px', width: '100%' }}>
-          <Grid>
-            <Input
-              {...bindings}
-              clearable
-              bordered
-              initialValue={peopleKeyword}
-              color="primary"
-              fullWidth
-              helperText={t('searchHelper')}
-            />
-          </Grid>
-          <Grid>
-            <Button auto type="submit">
-              {t('search')}
-            </Button>
-          </Grid>
-        </Grid.Container>
-      </Form>
+      <SearchForm
+        onSubmit={onSubmit}
+        textOnButton={t('search.action')}
+        textHelper={t('search.helper.people')}
+        textPlaceHolder={t('search.placeHolder.people')}
+      />
       <Container
         fluid
         display="flex"

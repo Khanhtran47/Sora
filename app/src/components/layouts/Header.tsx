@@ -85,9 +85,10 @@ const pages = [
 ];
 
 const searchDropdown = [
-  { pageName: 'searchMovie', pageLink: 'search/movie' },
-  { pageName: 'searchTv', pageLink: 'search/tv' },
-  { pageName: 'searchPeople', pageLink: 'search/people' },
+  { pageName: 'search.title.movie', pageLink: 'search/movie' },
+  { pageName: 'search.title.tv', pageLink: 'search/tv' },
+  { pageName: 'search.title.people', pageLink: 'search/people' },
+  { pageName: 'search.title.anime', pageLink: 'search/anime' },
 ];
 
 const slideHorizontalAnimation = {
@@ -120,7 +121,7 @@ const DropdownPage = ({
     pageLink: string;
   }[];
 }) => {
-  const { t } = useTranslation('header');
+  const { t } = useTranslation();
 
   return (
     <Grid.Container

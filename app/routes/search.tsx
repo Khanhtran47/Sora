@@ -4,9 +4,10 @@ import { Container } from '@nextui-org/react';
 import Tab from '~/src/components/elements/Tab';
 
 const searchPage = [
-  { pageName: 'searchMovies', pageLink: 'movie' },
-  { pageName: 'searchTv', pageLink: 'tv' },
-  { pageName: 'searchPeople', pageLink: 'people' },
+  { pageName: 'search.title.movie', pageLink: 'movie' },
+  { pageName: 'search.title.tv', pageLink: 'tv' },
+  { pageName: 'search.title.people', pageLink: 'people' },
+  { pageName: 'search.title.anime', pageLink: 'anime' },
 ];
 
 export const handle = {

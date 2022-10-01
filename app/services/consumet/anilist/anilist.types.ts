@@ -1,6 +1,6 @@
 export interface IAnimeSearch {
   currentPage: number;
-  hasNextPage: number;
+  hasNextPage: boolean;
   results: IAnimeResult[];
 }
 
