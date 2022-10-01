@@ -9,6 +9,7 @@ import { ClientOnly } from 'remix-utils';
 import { motion } from 'framer-motion';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
+import useLocalStorage from '~/hooks/useLocalStorage';
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { IMedia } from '~/services/tmdb/tmdb.types';
 import { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
@@ -36,6 +37,7 @@ const CardItem = ({
   const isLg = useMediaQuery(1400, 'max');
   const fetcher = useFetcher();
   const [trailerCard, setTrailerCard] = React.useState<Trailer>({});
+  const [, setIsCardPlaying] = useLocalStorage('cardPlaying', false);
 
   React.useEffect(() => {
     if (fetcher.data && fetcher.data.videos) {
@@ -148,6 +150,8 @@ const CardItem = ({
               fetcher.load(
                 `/${item.mediaType === 'movie' ? 'movies' : 'tv-shows'}/${item.id}/videos`,
               );
+            } else {
+              setIsCardPlaying(false);
             }
           }}
         >

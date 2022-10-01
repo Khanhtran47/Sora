@@ -33,7 +33,7 @@ const BannerItemDesktop = ({
   const fetcher = useFetcher();
   const { backdropPath, overview, posterPath, title, id, mediaType } = item;
   const [player, setPlayer] = React.useState<ReturnType<YouTube['getInternalPlayer']>>();
-  const [isPlayed, setIsPlayed] = React.useState<boolean>(true);
+  const [isPlayed, setIsPlayed] = React.useState<boolean>(false);
   const [showTrailer, setShowTrailer] = React.useState<boolean>(false);
   const [trailerBanner, setTrailerBanner] = React.useState<Trailer>({});
   const { colorDarkenLighten } = useColorDarkenLighten(posterPath);
@@ -45,6 +45,7 @@ const BannerItemDesktop = ({
 
   const [isMuted, setIsMuted] = useLocalStorage('muteTrailer', true);
   const [isPlayTrailer] = useLocalStorage('playTrailer', false);
+  const [isCardPlaying] = useLocalStorage('cardPlaying', false);
 
   React.useEffect(() => {
     if (active === true && isPlayTrailer === true) {
@@ -134,6 +135,26 @@ const BannerItemDesktop = ({
       document.removeEventListener('visibilitychange', handleVisibility);
     };
   }, [handleVisibility]);
+
+  const pauseVideoOnCardPlaying = () => {
+    if (!player) return;
+    if (isCardPlaying && isPlayed) {
+      pause();
+    } else if (!isCardPlaying && !isPlayed) {
+      play();
+    }
+  };
+
+  React.useEffect(() => {
+    const watchCardPlaying = () => {
+      window.addEventListener('storage', pauseVideoOnCardPlaying);
+    };
+    watchCardPlaying();
+    return () => {
+      window.removeEventListener('storage', pauseVideoOnCardPlaying);
+    };
+  });
+
   return (
     <Card ref={ref} variant="flat" css={{ w: '100%', h: '672px', borderWidth: 0 }} role="figure">
       <Card.Header css={{ position: 'absolute', zIndex: 1 }}>
@@ -425,6 +446,7 @@ const BannerItemDesktop = ({
                     if (!isMuted) target.unMute();
                   }}
                   onPlay={() => {
+                    setIsPlayed(true);
                     setShowTrailer(true);
                   }}
                   onPause={() => {
