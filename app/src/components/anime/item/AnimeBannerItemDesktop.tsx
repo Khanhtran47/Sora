@@ -11,9 +11,9 @@ import { ClientOnly } from 'remix-utils';
 import { useInView } from 'react-intersection-observer';
 
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
+import useLocalStorage from '~/hooks/useLocalStorage';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import { IAnimeResult } from '~/services/consumet/anilist/anilist.types';
-// import { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
 import VolumeUp from '~/src/assets/icons/VolumeUpIcon.js';
 import VolumeOff from '~/src/assets/icons/VolumeOffIcon.js';
 
@@ -21,7 +21,6 @@ const AnimeBannerItemDesktop = ({ item, active }: { item: IAnimeResult; active?:
   const { t } = useTranslation();
   const { cover, description, image, title, trailer, rating, genres } = item;
   const [player, setPlayer] = React.useState<ReturnType<YouTube['getInternalPlayer']>>();
-  const [isMuted, setIsMuted] = React.useState<boolean>(true);
   const [isPlayed, setIsPlayed] = React.useState<boolean>(true);
   const [showTrailer, setShowTrailer] = React.useState<boolean>(false);
   const { colorDarkenLighten } = useColorDarkenLighten(image);
@@ -30,6 +29,15 @@ const AnimeBannerItemDesktop = ({ item, active }: { item: IAnimeResult; active?:
   const { ref, inView } = useInView({
     threshold: 0,
   });
+
+  const [isMuted, setIsMuted] = useLocalStorage('muteTrailer', true);
+  const [isPlayTrailer] = useLocalStorage('playTrailer', false);
+
+  React.useEffect(() => {
+    if (!isPlayTrailer === true) {
+      setShowTrailer(false);
+    }
+  }, [isPlayTrailer]);
 
   const mute = React.useCallback(() => {
     if (!player) return;
@@ -134,22 +142,26 @@ const AnimeBannerItemDesktop = ({ item, active }: { item: IAnimeResult; active?:
               {title?.userPreferred || title?.english || title?.romaji || title?.native}
             </Text>
             <Row css={{ marginTop: '1.25rem' }} align="center">
-              <Text
-                weight="bold"
-                size="$xs"
-                css={{
-                  backgroundColor: '#3ec2c2',
-                  borderRadius: '$xs',
-                  padding: '0 0.25rem 0 0.25rem',
-                  marginRight: '0.5rem',
-                }}
-              >
-                Anilist
-              </Text>
-              <Text size="$sm" weight="bold">
-                {rating}%
-              </Text>
-              <Spacer x={1.5} />
+              {rating && (
+                <>
+                  <Text
+                    weight="bold"
+                    size="$xs"
+                    css={{
+                      backgroundColor: '#3ec2c2',
+                      borderRadius: '$xs',
+                      padding: '0 0.25rem 0 0.25rem',
+                      marginRight: '0.5rem',
+                    }}
+                  >
+                    Anilist
+                  </Text>
+                  <Text size="$sm" weight="bold">
+                    {rating}%
+                  </Text>
+                  <Spacer x={1.5} />
+                </>
+              )}
               <Text
                 h3
                 size={12}
@@ -349,7 +361,7 @@ const AnimeBannerItemDesktop = ({ item, active }: { item: IAnimeResult; active?:
         </AnimatePresence>
         <ClientOnly fallback={<Loading type="default" />}>
           {() => {
-            if (trailer?.id && trailer?.site === 'youtube' && !isSm)
+            if (trailer?.id && trailer?.site === 'youtube' && isPlayTrailer && !isSm)
               return (
                 <YouTube
                   videoId={active ? trailer?.id : ''}
@@ -374,6 +386,7 @@ const AnimeBannerItemDesktop = ({ item, active }: { item: IAnimeResult; active?:
                   }}
                   onReady={({ target }) => {
                     setPlayer(target);
+                    if (!isMuted) target.unMute();
                   }}
                   onPlay={() => {
                     setShowTrailer(true);
@@ -418,7 +431,7 @@ const AnimeBannerItemDesktop = ({ item, active }: { item: IAnimeResult; active?:
               cursor: 'pointer',
               position: 'absolute',
               bottom: '80px',
-              right: '35px',
+              right: '85px',
               zIndex: '90',
               '&:hover': {
                 opacity: '0.8',

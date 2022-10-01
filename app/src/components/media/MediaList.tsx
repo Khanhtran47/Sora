@@ -108,7 +108,7 @@ const MediaList = (props: IMediaListProps) => {
             onClick={onClickViewMore}
             css={{
               maxWidth: '$8',
-              marginBottom: '$12', // space[2]
+              marginBottom: '$12',
             }}
           >
             {t('viewMore')}
@@ -119,7 +119,6 @@ const MediaList = (props: IMediaListProps) => {
                 display: 'flex',
                 flexDirection: 'row',
                 marginBottom: 'var(--nextui-space-12)',
-                // color: 'var(--nextui-colors-primary)',
               }}
             >
               <Button
