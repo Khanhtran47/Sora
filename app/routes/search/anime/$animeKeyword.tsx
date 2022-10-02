@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DataFunctionArgs, json, LoaderFunction } from '@remix-run/node';
-import { useLoaderData, useNavigate, Link, RouteMatch } from '@remix-run/react';
+import { useLoaderData, useNavigate, Link, RouteMatch, useLocation } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 
@@ -33,6 +33,7 @@ const SearchRoute = () => {
   const { searchResults } = useLoaderData<LoaderData>();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const location = useLocation();
 
   const onSubmit = (value: string) => {
     navigate(`/search/anime/${value}`);
@@ -42,8 +43,8 @@ const SearchRoute = () => {
       <SearchForm
         onSubmit={onSubmit}
         textOnButton={t('search.action')}
-        textHelper={t('search.helper.tv')}
-        textPlaceHolder={t('search.placeHolder.tv')}
+        textHelper={t('search.helper.anime')}
+        textPlaceHolder={t('search.placeHolder.anime')}
       />
       <Container
         fluid
@@ -63,8 +64,8 @@ const SearchRoute = () => {
             listType="grid"
             items={searchResults.results}
             hasNextPage={searchResults.hasNextPage || false}
-            listName="Trending Anime"
-            routeName="/anime/trending"
+            listName="Search Results"
+            routeName={location.pathname}
           />
         )}
       </Container>

@@ -39,7 +39,7 @@ const SearchRoute = () => {
       <SearchForm
         onSubmit={onSubmit}
         textOnButton={t('search.action')}
-        textHelper={t('search.helper.tv')}
+        textHelper={t('search.helper.anime')}
         textPlaceHolder={t('search.placeHolder.anime')}
       />
       <Container

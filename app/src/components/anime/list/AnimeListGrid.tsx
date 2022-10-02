@@ -36,6 +36,13 @@ const AnimeListGrid = ({
   const { height } = useSize(parentRef);
 
   React.useEffect(() => {
+    setListItems(items);
+    setPage(2);
+    setShouldFetch(false);
+    setShowLoadMore(true);
+  }, [items]);
+
+  React.useEffect(() => {
     const scrollListener = () => {
       setClientHeight(window.innerHeight);
       setScrollPosition(window.scrollY);
@@ -72,14 +79,24 @@ const AnimeListGrid = ({
       return;
     }
 
-    // Items contain data, merge them and allow the possiblity of another fetch
-    if (fetcher.data && fetcher.data.items) {
-      setListItems((prevItems) => [...prevItems, ...fetcher.data.items.results]);
-      if (fetcher.data.items.hasNextPage === true) {
-        setPage(page + 1);
-        setShouldFetch(true);
-      } else {
-        setShouldFetch(false);
+    // Items contain data, merge them and allow the possibility of another fetch
+    if (fetcher.data) {
+      if (fetcher.data.items) {
+        setListItems((prevItems) => [...prevItems, ...fetcher.data.items.results]);
+        if (fetcher.data.items.hasNextPage === true) {
+          setPage(page + 1);
+          setShouldFetch(true);
+        } else {
+          setShouldFetch(false);
+        }
+      } else if (fetcher.data.searchResults) {
+        setListItems((prevItems) => [...prevItems, ...fetcher.data.searchResults.results]);
+        if (fetcher.data.searchResults.hasNextPage === true) {
+          setPage(page + 1);
+          setShouldFetch(true);
+        } else {
+          setShouldFetch(false);
+        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
