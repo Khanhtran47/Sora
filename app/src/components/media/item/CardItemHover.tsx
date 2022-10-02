@@ -32,6 +32,7 @@ const CardItemHover = ({
   const [showTrailer, setShowTrailer] = React.useState<boolean>(false);
   const [isMuted, setIsMuted] = useLocalStorage('muteTrailer', true);
   const [, setIsCardPlaying] = useLocalStorage('cardPlaying', false);
+  const [isPlayTrailer] = useLocalStorage('playTrailer', false);
 
   const mute = React.useCallback(() => {
     if (!player) return;
@@ -48,6 +49,12 @@ const CardItemHover = ({
 
     setIsMuted(false);
   }, [player]);
+
+  React.useEffect(() => {
+    if (!isPlayTrailer === true) {
+      setShowTrailer(false);
+    }
+  }, [isPlayTrailer]);
 
   return (
     <Grid.Container
@@ -105,7 +112,7 @@ const CardItemHover = ({
           </AnimatePresence>
           <ClientOnly fallback={<Loading type="default" />}>
             {() => {
-              if (trailer?.key)
+              if (trailer?.key && isPlayTrailer)
                 return (
                   <YouTube
                     videoId={trailer.key}

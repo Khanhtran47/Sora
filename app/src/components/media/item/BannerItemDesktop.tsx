@@ -137,23 +137,18 @@ const BannerItemDesktop = ({
   }, [handleVisibility]);
 
   const pauseVideoOnCardPlaying = () => {
-    if (!player) return;
-    if (isCardPlaying && isPlayed) {
-      pause();
-    } else if (!isCardPlaying && !isPlayed) {
-      play();
+    if (player) {
+      if (isCardPlaying && isPlayed) {
+        pause();
+      } else if (!isCardPlaying && !isPlayed) {
+        play();
+      }
     }
   };
 
   React.useEffect(() => {
-    const watchCardPlaying = () => {
-      window.addEventListener('storage', pauseVideoOnCardPlaying);
-    };
-    watchCardPlaying();
-    return () => {
-      window.removeEventListener('storage', pauseVideoOnCardPlaying);
-    };
-  });
+    pauseVideoOnCardPlaying();
+  }, [isCardPlaying]);
 
   return (
     <Card ref={ref} variant="flat" css={{ w: '100%', h: '672px', borderWidth: 0 }} role="figure">

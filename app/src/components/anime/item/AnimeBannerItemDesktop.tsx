@@ -118,7 +118,6 @@ const AnimeBannerItemDesktop = ({ item, active }: { item: IAnimeResult; active?:
   };
 
   React.useEffect(() => {
-    console.log('changed');
     pauseVideoOnCardPlaying();
   }, [isCardPlaying]);
 
