@@ -7,6 +7,7 @@ import { ClientOnly } from 'remix-utils';
 import { motion } from 'framer-motion';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
+import useLocalStorage from '~/hooks/useLocalStorage';
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { IAnimeResult } from '~/services/consumet/anilist/anilist.types';
 import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
@@ -22,6 +23,7 @@ const AnimeCardItem = ({ item }: { item: IAnimeResult }) => {
   });
   const isSm = useMediaQuery(650, 'max');
   const isLg = useMediaQuery(1400, 'max');
+  const [, setIsCardPlaying] = useLocalStorage('cardPlaying', false);
 
   return (
     <>
@@ -116,6 +118,9 @@ const AnimeCardItem = ({ item }: { item: IAnimeResult }) => {
               hideArrow
               offset={0}
               className="!w-fit"
+              onVisibleChange={(visible) => {
+                if (!visible) setIsCardPlaying(false);
+              }}
             >
               <Card.Footer
                 css={{

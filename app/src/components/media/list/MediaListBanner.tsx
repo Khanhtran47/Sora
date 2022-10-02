@@ -7,6 +7,9 @@ import { Swiper, SwiperSlide, useSwiper } from 'swiper/react';
 
 import { IMedia } from '~/services/tmdb/tmdb.types';
 import useMediaQuery from '~/hooks/useMediaQuery';
+import useLocalStorage from '~/hooks/useLocalStorage';
+import PlayIcon from '~/src/assets/icons/PlayIcon.js';
+import StopIcon from '~/src/assets/icons/StopIcon.js';
 import ChevronRightIcon from '~/src/assets/icons/ChevronRightIcon.js';
 import ChevronLeftIcon from '~/src/assets/icons/ChevronLeftIcon.js';
 import MediaItem from '../item';
@@ -14,6 +17,7 @@ import MediaItem from '../item';
 const CustomNavigation = ({ slot }: { slot: 'container-end' }) => {
   const swiper = useSwiper();
   const [slideProgress, setSlideProgress] = React.useState<number>(0);
+  const [isPlayTrailer, setIsPlayTrailer] = useLocalStorage('playTrailer', false);
 
   swiper.on('slideChange', (e) => {
     setSlideProgress(e.progress);
@@ -24,15 +28,40 @@ const CustomNavigation = ({ slot }: { slot: 'container-end' }) => {
       <Button
         auto
         color="primary"
-        light
-        animated={false}
-        icon={<ChevronLeftIcon width={48} height={48} fill="currentColor" />}
+        rounded
+        ghost
+        icon={
+          isPlayTrailer ? <StopIcon fill="currentColor" /> : <PlayIcon fill="currentColor" filled />
+        }
+        onClick={() => setIsPlayTrailer(!isPlayTrailer)}
+        css={{
+          width: '44px',
+          height: '44px',
+          cursor: 'pointer',
+          position: 'absolute',
+          bottom: '80px',
+          right: '35px',
+          zIndex: '90',
+          '&:hover': {
+            opacity: '0.8',
+          },
+        }}
+        aria-label="Play Trailer"
+      />
+      <Button
+        auto
+        color="primary"
+        rounded
+        ghost
+        icon={<ChevronLeftIcon fill="currentColor" />}
         onClick={() => swiper.slidePrev()}
         css={{
+          width: '44px',
+          height: '44px',
+          cursor: 'pointer',
           position: 'absolute',
           bottom: '10px',
-          right: '80px',
-          height: '3rem',
+          right: '85px',
           zIndex: '90',
           '&:hover': {
             opacity: '0.8',
@@ -44,15 +73,17 @@ const CustomNavigation = ({ slot }: { slot: 'container-end' }) => {
       <Button
         auto
         color="primary"
-        light
-        animated={false}
-        icon={<ChevronRightIcon width={48} height={48} fill="currentColor" />}
+        rounded
+        ghost
+        icon={<ChevronRightIcon fill="currentColor" />}
         onClick={() => swiper.slideNext()}
         css={{
+          width: '44px',
+          height: '44px',
+          cursor: 'pointer',
           position: 'absolute',
           bottom: '10px',
-          right: '30px',
-          height: '3rem',
+          right: '35px',
           zIndex: '90',
           '&:hover': {
             opacity: '0.8',

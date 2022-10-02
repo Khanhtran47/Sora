@@ -1,32 +1,94 @@
-/* eslint-disable react/no-unknown-property */
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react/jsx-filename-extension */
-/* eslint-disable react/prop-types */
-/* eslint-disable react/self-closing-comp */
-const ChevronLeftIcon = ({
+import PropTypes from 'prop-types';
+
+import Svg from '../../components/styles/svg';
+
+const Bold = ({ color }) => (
+  <g transform="translate(7 6)">
+    <path
+      d="M.369,4.869c.057-.058.27-.306.469-.51A21.69,21.69,0,0,1,6.633.335,4.617,4.617,0,0,1,7.812,0a1.933,1.933,0,0,1,.9.218,1.874,1.874,0,0,1,.795.9,9.84,9.84,0,0,1,.256,1.064A23.979,23.979,0,0,1,10,5.992a27.724,27.724,0,0,1-.213,3.689,8.495,8.495,0,0,1-.341,1.327A1.785,1.785,0,0,1,7.868,12H7.812a4.879,4.879,0,0,1-1.321-.409A21.69,21.69,0,0,1,.823,7.625a5.66,5.66,0,0,1-.482-.554A1.783,1.783,0,0,1,0,6.007,1.875,1.875,0,0,1,.369,4.869"
+      transform="translate(0)"
+      fill={color}
+    />
+  </g>
+);
+
+const Light = ({ color, strokeWidth }) => (
+  <g transform="translate(15.5 5) rotate(90)">
+    <path
+      d="M14,0,7,7,0,0"
+      fill="none"
+      stroke={color}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeMiterlimit="10"
+      strokeWidth={strokeWidth}
+    />
+  </g>
+);
+
+const ChevronLeft = ({
   fill = 'currentColor',
   filled = false,
   size = 0,
   height = 0,
   width = 0,
-  label = '',
   ...props
-}) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={size || width || 24}
-    height={size || height || 24}
-    viewBox="0 0 24 24"
-    {...props}
-  >
-    <path
-      fill={fill}
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M2 12C2 6.48 6.49 2 12 2L12.2798 2.00384C17.6706 2.15216 22 6.57356 22 12C22 17.51 17.52 22 12 22C6.49 22 2 17.51 2 12ZM13.98 16C14.27 15.7 14.27 15.23 13.97 14.94L11.02 12L13.97 9.06C14.27 8.77 14.27 8.29 13.98 8C13.68 7.7 13.21 7.7 12.92 8L9.43 11.47C9.29 11.61 9.21 11.8 9.21 12C9.21 12.2 9.29 12.39 9.43 12.53L12.92 16C13.06 16.15 13.25 16.22 13.44 16.22C13.64 16.22 13.83 16.15 13.98 16Z"
-    ></path>
-  </svg>
-);
+}) => {
+  switch (filled) {
+    case false:
+      return (
+        <Svg
+          className=""
+          width={size || width || 24}
+          height={size || height || 24}
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+          css={{
+            display: 'inline',
+          }}
+          {...props}
+        >
+          <Light color={fill} strokeWidth={1.5} />
+        </Svg>
+      );
+    default:
+      return (
+        <Svg
+          className=""
+          width={size || width || 24}
+          height={size || height || 24}
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+          css={{
+            display: 'inline',
+          }}
+          {...props}
+        >
+          <Bold color={fill} />;
+        </Svg>
+      );
+  }
+};
 
-export default ChevronLeftIcon;
+ChevronLeft.displayName = 'IconlyPlay';
+
+Bold.propTypes = {
+  color: PropTypes.string,
+};
+
+Light.propTypes = {
+  color: PropTypes.string,
+  strokeWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+};
+
+ChevronLeft.propTypes = {
+  fill: PropTypes.string,
+  filled: PropTypes.bool,
+  size: PropTypes.number,
+  width: PropTypes.number,
+  height: PropTypes.number,
+  strokeWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+};
+
+export default ChevronLeft;

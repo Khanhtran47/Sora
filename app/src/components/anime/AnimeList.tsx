@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, Button, Row } from '@nextui-org/react';
+import { Text, Button, Row, Spacer } from '@nextui-org/react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -112,30 +112,47 @@ const AnimeList = (props: IAnimeListProps) => {
                 marginBottom: 'var(--nextui-space-12)',
               }}
             >
-              <button
-                type="button"
+              <Button
+                auto
+                color="primary"
+                rounded
+                ghost
                 ref={(node) => setPrevEl(node)}
-                style={{
-                  color: 'var(--nextui-colors-primary)',
+                css={{
+                  width: '44px',
+                  height: '44px',
+                  padding: 0,
+                  cursor: 'pointer',
+                  '&:hover': {
+                    opacity: '0.8',
+                  },
                 }}
-                className="cursor-pointer hover:opacity-80 disabled:cursor-default disabled:!text-[#787F85]"
                 aria-label="Previous"
                 disabled={slideProgress === 0}
               >
-                <ChevronLeftIcon width={48} height={48} />
-              </button>
-              <button
-                type="button"
+                <ChevronLeftIcon />
+              </Button>
+              <Spacer x={0.25} />
+              <Button
+                auto
+                color="primary"
+                rounded
+                ghost
                 ref={(node) => setNextEl(node)}
-                style={{
-                  color: 'var(--nextui-colors-primary)',
+                css={{
+                  width: '44px',
+                  height: '44px',
+                  padding: 0,
+                  cursor: 'pointer',
+                  '&:hover': {
+                    opacity: '0.8',
+                  },
                 }}
-                className="cursor-pointer hover:opacity-80 disabled:cursor-default disabled:!text-[#787F85]"
                 aria-label="Next"
                 disabled={slideProgress === 1}
               >
-                <ChevronRightIcon width={48} height={48} />
-              </button>
+                <ChevronRightIcon />
+              </Button>
             </div>
           )}
         </Row>

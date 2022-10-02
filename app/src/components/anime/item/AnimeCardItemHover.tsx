@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import * as React from 'react';
 import { Grid, Loading, Row, Spacer, Text, Image as NextImage, Button } from '@nextui-org/react';
@@ -7,6 +8,7 @@ import YouTube from 'react-youtube';
 import { ClientOnly } from 'remix-utils';
 
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
+import useLocalStorage from '~/hooks/useLocalStorage';
 import { IAnimeResult } from '~/services/consumet/anilist/anilist.types';
 
 import VolumeUp from '~/src/assets/icons/VolumeUpIcon.js';
@@ -17,7 +19,9 @@ const CardItemHover = ({ item }: { item: IAnimeResult }) => {
   const { loading, colorDarkenLighten } = useColorDarkenLighten(image);
   const [player, setPlayer] = React.useState<ReturnType<YouTube['getInternalPlayer']>>();
   const [showTrailer, setShowTrailer] = React.useState<boolean>(false);
-  const [isMuted, setIsMuted] = React.useState<boolean>(true);
+  const [isMuted, setIsMuted] = useLocalStorage('muteTrailer', true);
+  const [, setIsCardPlaying] = useLocalStorage('cardPlaying', false);
+  const [isPlayTrailer] = useLocalStorage('playTrailer', false);
 
   const mute = React.useCallback(() => {
     if (!player) return;
@@ -34,6 +38,12 @@ const CardItemHover = ({ item }: { item: IAnimeResult }) => {
 
     setIsMuted(false);
   }, [player]);
+
+  React.useEffect(() => {
+    if (!isPlayTrailer === true) {
+      setShowTrailer(false);
+    }
+  }, [isPlayTrailer]);
 
   return (
     <Grid.Container
@@ -91,7 +101,7 @@ const CardItemHover = ({ item }: { item: IAnimeResult }) => {
           </AnimatePresence>
           <ClientOnly fallback={<Loading type="default" />}>
             {() => {
-              if (trailer?.id && trailer?.site === 'youtube')
+              if (trailer?.id && trailer?.site === 'youtube' && isPlayTrailer)
                 return (
                   <YouTube
                     videoId={trailer.id}
@@ -116,6 +126,8 @@ const CardItemHover = ({ item }: { item: IAnimeResult }) => {
                     }}
                     onReady={({ target }) => {
                       setPlayer(target);
+                      setIsCardPlaying(true);
+                      if (!isMuted) target.unMute();
                     }}
                     onPlay={() => {
                       if (setShowTrailer) {

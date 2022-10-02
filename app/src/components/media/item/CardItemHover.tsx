@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import * as React from 'react';
 import { Grid, Loading, Row, Spacer, Text, Image as NextImage, Button } from '@nextui-org/react';
@@ -7,6 +8,7 @@ import YouTube from 'react-youtube';
 import { ClientOnly } from 'remix-utils';
 
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
+import useLocalStorage from '~/hooks/useLocalStorage';
 import { IMedia } from '~/services/tmdb/tmdb.types';
 import { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
 
@@ -28,7 +30,9 @@ const CardItemHover = ({
   const { loading, colorDarkenLighten } = useColorDarkenLighten(posterPath);
   const [player, setPlayer] = React.useState<ReturnType<YouTube['getInternalPlayer']>>();
   const [showTrailer, setShowTrailer] = React.useState<boolean>(false);
-  const [isMuted, setIsMuted] = React.useState<boolean>(true);
+  const [isMuted, setIsMuted] = useLocalStorage('muteTrailer', true);
+  const [, setIsCardPlaying] = useLocalStorage('cardPlaying', false);
+  const [isPlayTrailer] = useLocalStorage('playTrailer', false);
 
   const mute = React.useCallback(() => {
     if (!player) return;
@@ -45,6 +49,12 @@ const CardItemHover = ({
 
     setIsMuted(false);
   }, [player]);
+
+  React.useEffect(() => {
+    if (!isPlayTrailer === true) {
+      setShowTrailer(false);
+    }
+  }, [isPlayTrailer]);
 
   return (
     <Grid.Container
@@ -102,7 +112,7 @@ const CardItemHover = ({
           </AnimatePresence>
           <ClientOnly fallback={<Loading type="default" />}>
             {() => {
-              if (trailer?.key)
+              if (trailer?.key && isPlayTrailer)
                 return (
                   <YouTube
                     videoId={trailer.key}
@@ -127,6 +137,8 @@ const CardItemHover = ({
                     }}
                     onReady={({ target }) => {
                       setPlayer(target);
+                      setIsCardPlaying(true);
+                      if (!isMuted) target.unMute();
                     }}
                     onPlay={() => {
                       if (setShowTrailer) {

@@ -1,6 +1,5 @@
 export default class Anilist {
-  // replace by 'https://api.consumet.org/meta/anilist/' when heroku remove dynos
-  static readonly API_BASE_URL = 'https://consumet-api.herokuapp.com/meta/anilist/';
+  static readonly API_BASE_URL = 'https://api.consumet.org/meta/anilist/';
 
   static animeSearchUrl = (query: string, page?: number, perPage?: number): string => {
     let url = `${Anilist.API_BASE_URL}${query}`;
