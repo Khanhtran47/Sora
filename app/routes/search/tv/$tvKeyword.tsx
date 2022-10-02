@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { DataFunctionArgs, json, LoaderFunction } from '@remix-run/node';
-import { Form, useLoaderData, useNavigate, useParams, Link, RouteMatch } from '@remix-run/react';
-import { Input, Grid, Container, Button, Pagination, useInput } from '@nextui-org/react';
+import { useLoaderData, useNavigate, useParams, Link, RouteMatch } from '@remix-run/react';
+import { Container, Pagination } from '@nextui-org/react';
 
 import { getSearchTvShows } from '~/services/tmdb/tmdb.server';
 import MediaList from '~/src/components/media/MediaList';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import { useTranslation } from 'react-i18next';
+import SearchForm from '~/src/components/elements/SearchForm';
 
 type LoaderData = {
   searchResults: Awaited<ReturnType<typeof getSearchTvShows>>;
@@ -36,7 +37,6 @@ const SearchRoute = () => {
   const { searchResults } = useLoaderData<LoaderData>() || {};
   const navigate = useNavigate();
   const { tvKeyword } = useParams();
-  const { value, bindings } = useInput(tvKeyword || '');
   const { t } = useTranslation();
   const [listName] = React.useState(t('searchResults'));
   const isXs = useMediaQuery(650);
@@ -44,32 +44,18 @@ const SearchRoute = () => {
   const paginationChangeHandler = (page: number) =>
     navigate(`/search/tv/${tvKeyword}?page=${page}`);
 
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const onSubmit = (value: string) => {
     navigate(`/search/tv/${value}`);
   };
+
   return (
     <>
-      <Form onSubmit={onSubmit}>
-        <Grid.Container gap={1} css={{ m: 0, padding: '30px 10px', width: '100%' }}>
-          <Grid>
-            <Input
-              {...bindings}
-              clearable
-              bordered
-              initialValue={tvKeyword}
-              color="primary"
-              fullWidth
-              helperText={t('searchHelper')}
-            />
-          </Grid>
-          <Grid>
-            <Button auto type="submit">
-              {t('search')}
-            </Button>
-          </Grid>
-        </Grid.Container>
-      </Form>
+      <SearchForm
+        onSubmit={onSubmit}
+        textOnButton={t('search.action')}
+        textHelper={t('search.helper.tv')}
+        textPlaceHolder={t('search.placeHolder.anime')}
+      />
       <Container
         fluid
         display="flex"
