@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-filename-extension */
 import PropTypes from 'prop-types';
+
 import Svg from '../../components/styles/svg';
 
 const Bold = ({ color }) => (
