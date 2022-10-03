@@ -1,9 +1,11 @@
-import * as React from 'react';
+/* eslint-disable @typescript-eslint/indent */
 import { useLoaderData, useNavigate, useLocation, Link } from '@remix-run/react';
 import { json, LoaderFunction } from '@remix-run/node';
 import { Container, Pagination } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { useRouteData } from 'remix-utils';
+import type { User } from '@supabase/supabase-js';
 
 import MediaList from '~/src/components/media/MediaList';
 import { getListMovies } from '~/services/tmdb/tmdb.server';
@@ -31,6 +33,14 @@ export const handle = {
 
 const ListMovies = () => {
   const { movies } = useLoaderData<LoaderData>();
+  const rootData:
+    | {
+        user?: User;
+        locale: string;
+        genresMovie: { [id: string]: string };
+        genresTv: { [id: string]: string };
+      }
+    | undefined = useRouteData('root');
   const navigate = useNavigate();
   const location = useLocation();
   const isXs = useMediaQuery(650);
@@ -60,7 +70,13 @@ const ListMovies = () => {
         }}
       >
         {movies && movies.items && movies.items.length > 0 && (
-          <MediaList listType="grid" items={movies.items} listName={t('popularMovies')} />
+          <MediaList
+            listType="grid"
+            items={movies.items}
+            listName={t('popularMovies')}
+            genresMovie={rootData?.genresMovie}
+            genresTv={rootData?.genresTv}
+          />
         )}
         <Pagination
           total={movies.totalPages}

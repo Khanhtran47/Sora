@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { DataFunctionArgs, json, LoaderFunction } from '@remix-run/node';
 import { useLoaderData, useNavigate, Link, RouteMatch, useLocation } from '@remix-run/react';
 import { Container } from '@nextui-org/react';

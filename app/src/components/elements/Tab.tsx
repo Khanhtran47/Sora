@@ -1,6 +1,8 @@
-import { Row, Col, Text } from '@nextui-org/react';
+import { Row, Col } from '@nextui-org/react';
 import { NavLink } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
+
+import { H5 } from '~/src/components/styles/Text.styles';
 
 // import useMediaQuery from '~/hooks/useMediaQuery';
 
@@ -51,9 +53,8 @@ const Tab = (props: ITabProps) => {
             }
           >
             {({ isActive }) => (
-              <Text
-                h4
-                size={16}
+              <H5
+                h5
                 weight="bold"
                 transform="uppercase"
                 color="primary"
@@ -70,16 +71,10 @@ const Tab = (props: ITabProps) => {
                     opacity: '0.8',
                     backgroundColor: '$primaryLightHover',
                   },
-                  '@xs': {
-                    fontSize: '18px',
-                  },
-                  '@sm': {
-                    fontSize: '20px',
-                  },
                 }}
               >
                 {t(page.pageName)}
-              </Text>
+              </H5>
             )}
           </NavLink>
         </Col>

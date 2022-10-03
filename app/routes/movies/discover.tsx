@@ -1,9 +1,11 @@
-import * as React from 'react';
+/* eslint-disable @typescript-eslint/indent */
 import { useLoaderData, useNavigate, useLocation, Link } from '@remix-run/react';
 import { json, LoaderFunction } from '@remix-run/node';
 import { Container, Pagination } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { useRouteData } from 'remix-utils';
+import type { User } from '@supabase/supabase-js';
 
 import MediaList from '~/src/components/media/MediaList';
 import { getListMovies, getListGenre, getListDiscover } from '~/services/tmdb/tmdb.server';
@@ -12,7 +14,6 @@ import i18next from '~/i18n/i18next.server';
 
 type LoaderData = {
   movies: Awaited<ReturnType<typeof getListMovies>>;
-  genres: Awaited<ReturnType<typeof getListGenre>>;
   withGenres?: string;
   sortBy?: string;
 };
@@ -33,7 +34,6 @@ export const loader: LoaderFunction = async ({ request }) => {
       sortBy || genres
         ? await getListDiscover('movie', withGenres, sortBy, locale, page)
         : await getListMovies('popular', locale, page),
-    genres,
     withGenres,
     sortBy,
   });
@@ -44,7 +44,15 @@ export const handle = {
 };
 
 const ListMovies = () => {
-  const { movies, genres, withGenres, sortBy } = useLoaderData<LoaderData>();
+  const { movies, withGenres, sortBy } = useLoaderData<LoaderData>();
+  const rootData:
+    | {
+        user?: User;
+        locale: string;
+        genresMovie: { [id: string]: string };
+        genresTv: { [id: string]: string };
+      }
+    | undefined = useRouteData('root');
   const navigate = useNavigate();
   const location = useLocation();
   const isXs = useMediaQuery(650);
@@ -85,7 +93,8 @@ const ListMovies = () => {
             items={movies.items}
             listName={t('discoverMovies')}
             showFilter
-            genres={genres}
+            genresMovie={rootData?.genresMovie}
+            genresTv={rootData?.genresTv}
             mediaType="movie"
           />
         )}

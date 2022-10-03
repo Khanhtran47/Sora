@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { Text, Link, Container, Image as NextImage } from '@nextui-org/react';
+import { Link, Container, Image as NextImage } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
-import KleeCute from '../../assets/images/klee-avatar.jpg';
+import { H5 } from '~/src/components/styles/Text.styles';
+import KleeCute from '~/src/assets/images/klee-avatar.jpg';
 
 const Copyright = () => (
   <Container
@@ -43,9 +44,9 @@ const Copyright = () => (
       }}
     />
     <Link href="https://remix-watchmovie.vercel.app/">
-      <Text h5 css={{ marginTop: '1rem' }}>
+      <H5 h5 css={{ marginTop: '1rem' }}>
         © Remix Movie
-      </Text>
+      </H5>
     </Link>{' '}
   </Container>
 );

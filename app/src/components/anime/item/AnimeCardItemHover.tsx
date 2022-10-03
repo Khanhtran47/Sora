@@ -1,7 +1,8 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import * as React from 'react';
-import { Grid, Loading, Row, Spacer, Text, Image as NextImage, Button } from '@nextui-org/react';
+import { Container, Loading, Row, Spacer, Image as NextImage, Button } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
 import { motion, AnimatePresence } from 'framer-motion';
 import YouTube from 'react-youtube';
@@ -10,13 +11,16 @@ import { ClientOnly } from 'remix-utils';
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import useLocalStorage from '~/hooks/useLocalStorage';
 import { IAnimeResult } from '~/services/consumet/anilist/anilist.types';
+import Flex from '~/src/components/styles/Flex.styles';
+import { H4, H5, H6 } from '~/src/components/styles/Text.styles';
 
+import AnilistStatIcon from '~/src/assets/icons/AnilistStatIcon.js';
 import VolumeUp from '~/src/assets/icons/VolumeUpIcon.js';
 import VolumeOff from '~/src/assets/icons/VolumeOffIcon.js';
 
 const CardItemHover = ({ item }: { item: IAnimeResult }) => {
   const { title, description, releaseDate, rating, image, cover, genres, type, trailer } = item;
-  const { loading, colorDarkenLighten } = useColorDarkenLighten(image);
+  const { loading, colorDarkenLighten, colorBackground } = useColorDarkenLighten(image);
   const [player, setPlayer] = React.useState<ReturnType<YouTube['getInternalPlayer']>>();
   const [showTrailer, setShowTrailer] = React.useState<boolean>(false);
   const [isMuted, setIsMuted] = useLocalStorage('muteTrailer', true);
@@ -46,7 +50,7 @@ const CardItemHover = ({ item }: { item: IAnimeResult }) => {
   }, [isPlayTrailer]);
 
   return (
-    <Grid.Container
+    <Container
       css={{
         padding: '0.75rem 0.375rem',
         minWidth: '350px',
@@ -161,55 +165,59 @@ const CardItemHover = ({ item }: { item: IAnimeResult }) => {
                 );
             }}
           </ClientOnly>
+          <Spacer y={0.5} />
           <Row justify="center" align="center">
-            <Spacer y={0.5} />
-            <Text size={18} b color={colorDarkenLighten}>
+            <H4 h4 weight="bold" color={colorDarkenLighten}>
               {title?.userPreferred || title?.english || title?.romaji || title?.native}
-            </Text>
+            </H4>
           </Row>
+          <Spacer y={0.5} />
           {genres && (
-            <Row>
-              {genres?.slice(0, 2).map((genre) => (
-                <>
-                  {genre}
-                  <Spacer x={0.5} />
-                </>
-              ))}
-            </Row>
+            <>
+              <Flex direction="row">
+                {genres?.slice(0, 2).map((genre, index) => (
+                  <>
+                    <H5
+                      key={index}
+                      h5
+                      color={colorDarkenLighten}
+                      css={{
+                        backgroundColor: colorBackground,
+                        borderRadius: '$md',
+                        padding: '0 0.5rem 0 0.5rem',
+                      }}
+                    >
+                      {genre}
+                    </H5>
+                    <Spacer x={0.5} />
+                  </>
+                ))}
+              </Flex>
+              <Spacer y={0.5} />
+            </>
           )}
           {description && (
-            <Row>
-              <Text className="!line-clamp-2" dangerouslySetInnerHTML={{ __html: description }} />
-            </Row>
+            <>
+              <H6 h6 className="!line-clamp-2" dangerouslySetInnerHTML={{ __html: description }} />
+              <Spacer y={0.5} />
+            </>
           )}
-          <Grid.Container justify="space-between" alignContent="center">
-            {releaseDate && (
-              <Grid>
-                <Text>{`${type} • ${releaseDate}`}</Text>
-              </Grid>
-            )}
+          <Row justify="space-between" align="center">
+            {releaseDate && <H5 h5>{`${type} • ${releaseDate}`}</H5>}
             {rating && (
-              <Grid>
-                <Row>
-                  <Text
-                    weight="bold"
-                    size="$xs"
-                    css={{
-                      backgroundColor: '#3ec2c2',
-                      borderRadius: '$xs',
-                      padding: '0 0.25rem 0 0.25rem',
-                      marginRight: '0.5rem',
-                    }}
-                  >
-                    Anilist
-                  </Text>
-                  <Text size="$sm" weight="bold">
-                    {rating}%
-                  </Text>
-                </Row>
-              </Grid>
+              <Flex direction="row" justify="center" align="center">
+                {Number(rating) > 75 ? (
+                  <AnilistStatIcon stat="good" />
+                ) : Number(rating) > 60 ? (
+                  <AnilistStatIcon stat="average" />
+                ) : (
+                  <AnilistStatIcon stat="bad" />
+                )}
+                <Spacer x={0.25} />
+                <H5 weight="bold">{rating}%</H5>
+              </Flex>
             )}
-          </Grid.Container>
+          </Row>
           {showTrailer && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
               <Button
@@ -239,7 +247,7 @@ const CardItemHover = ({ item }: { item: IAnimeResult }) => {
           )}
         </>
       )}
-    </Grid.Container>
+    </Container>
   );
 };
 

@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import { Grid } from '@nextui-org/react';
-// import { Link } from '@remix-run/react';
+import { Link } from '@remix-run/react';
 import { Navigation } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
@@ -43,9 +43,9 @@ const AnimeListCard = ({
         >
           {items.map((item, i) => (
             <SwiperSlide key={i} style={{ width: `${isSm ? '164px' : isLg ? '210px' : '240px'}` }}>
-              {/* <Link to={href}> */}
-              <AnimeItem key={item.id} item={item} type="card" />
-              {/* </Link> */}
+              <Link to={`/anime/${item.id}`}>
+                <AnimeItem key={item.id} item={item} type="card" />
+              </Link>
             </SwiperSlide>
           ))}
         </Swiper>

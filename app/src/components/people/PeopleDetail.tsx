@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/indent */
 // import { Link } from '@remix-run/react';
 import {
-  Text,
   Row,
   Image as NextImage,
   Link as NextLink,
@@ -15,6 +14,8 @@ import Image, { MimeType } from 'remix-image';
 import { IPeopleDetail } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
 import useMediaQuery from '~/hooks/useMediaQuery';
+
+import { H3, H4, H5, H6 } from '~/src/components/styles/Text.styles';
 
 import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
 import FacebookBlack from '../../assets/lotties/lottieflow-social-networks-15-4-000000-easey.json';
@@ -142,26 +143,10 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
           />
         </Row>
       )}
-      <Spacer y={1} />
-      <Text
-        h3
-        size={16}
-        css={{
-          margin: 0,
-          textAlign: 'center',
-          '@xs': {
-            fontSize: '18px',
-          },
-          '@sm': {
-            fontSize: '20px',
-          },
-          '@md': {
-            fontSize: '24px',
-          },
-        }}
-      >
+      <Spacer y={1} />{' '}
+      <H3 h3 css={{ textAlign: 'center' }}>
         <strong>{detail?.name}</strong>
-      </Text>
+      </H3>
       <Spacer y={1} />
       {externalIds &&
         detail &&
@@ -256,26 +241,17 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
           },
         }}
       >
-        <Text
+        <H4
           h4
-          size={14}
           css={{
             wdith: '100%',
-            margin: 0,
             '@xs': {
               width: '70%',
-              fontSize: '16px',
-            },
-            '@sm': {
-              fontSize: '18px',
-            },
-            '@md': {
-              fontSize: '20px',
             },
           }}
         >
           <strong>Personal Info</strong>
-        </Text>
+        </H4>
       </Row>
       <Spacer y={1} />
       <Row
@@ -291,138 +267,132 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
           },
         }}
       >
-        <Text
-          h4
-          size={12}
+        <H5
+          h5
           css={{
-            marginBottom: '0.5rem',
+            marginBottom: '0.5rem !important',
             '@xs': {
               margin: 0,
               width: '70%',
-              fontSize: '14px',
-            },
-            '@sm': {
-              margin: 0,
-              fontSize: '16px',
-            },
-            '@md': {
-              margin: 0,
-              fontSize: '18px',
             },
           }}
         >
           <strong>Known For</strong>
           <br />
-          {detail?.known_for_department}
-        </Text>
-        <Spacer y={1} />
-        {/* TODO: Known Credits */}
-        <Text
-          h4
-          size={12}
+        </H5>
+        <H6
+          h6
           css={{
-            marginBottom: '0.5rem',
+            '@xs': {
+              width: '70%',
+            },
+          }}
+        >
+          {detail?.known_for_department}
+        </H6>
+        <Spacer y={1} />
+        <H5
+          h5
+          css={{
+            marginBottom: '0.5rem !important',
             '@xs': {
               margin: 0,
               width: '70%',
-              fontSize: '14px',
-            },
-            '@sm': {
-              margin: 0,
-              fontSize: '16px',
-            },
-            '@md': {
-              margin: 0,
-              fontSize: '18px',
             },
           }}
         >
           <strong>Gender</strong>
           <br />
-          {gender}
-        </Text>
-        <Spacer y={1} />
-        <Text
-          h4
-          size={12}
+        </H5>
+        <H6
+          h6
           css={{
-            marginBottom: '0.5rem',
+            '@xs': {
+              width: '70%',
+            },
+          }}
+        >
+          {gender}
+        </H6>
+        <Spacer y={1} />
+        <H5
+          h5
+          css={{
+            marginBottom: '0.5rem !important',
             '@xs': {
               margin: 0,
               width: '70%',
-              fontSize: '14px',
-            },
-            '@sm': {
-              margin: 0,
-              fontSize: '16px',
-            },
-            '@md': {
-              margin: 0,
-              fontSize: '18px',
             },
           }}
         >
           <strong>Birthday</strong>
           <br />
-          {detail?.birthday}
-        </Text>
-        <Spacer y={1} />
-        <Text
-          h4
-          size={12}
+        </H5>
+        <H6
+          h6
           css={{
-            marginBottom: '0.5rem',
+            '@xs': {
+              width: '70%',
+            },
+          }}
+        >
+          {detail?.birthday}
+        </H6>
+        <Spacer y={1} />
+        <H5
+          h5
+          css={{
+            marginBottom: '0.5rem !important',
             '@xs': {
               margin: 0,
               width: '70%',
-              fontSize: '14px',
-            },
-            '@sm': {
-              margin: 0,
-              fontSize: '16px',
-            },
-            '@md': {
-              margin: 0,
-              fontSize: '18px',
             },
           }}
         >
           <strong>Place of Birth</strong>
           <br />
+        </H5>
+        <H6
+          h6
+          css={{
+            '@xs': {
+              width: '70%',
+            },
+          }}
+        >
           {detail?.place_of_birth}
-        </Text>
+        </H6>
         <Spacer y={1} />
         {!isSm && (
           <>
-            <Text
-              h4
-              size={12}
+            <H5
+              h5
               css={{
-                marginBottom: '0.5rem',
+                marginBottom: '0.5rem !important',
                 '@xs': {
                   margin: 0,
                   width: '70%',
-                  fontSize: '14px',
-                },
-                '@sm': {
-                  margin: 0,
-                  fontSize: '16px',
-                },
-                '@md': {
-                  margin: 0,
-                  fontSize: '18px',
                 },
               }}
             >
               <strong>Also Known As</strong>
               <br />
+            </H5>
+            <H6
+              h6
+              css={{
+                '@xs': {
+                  width: '70%',
+                },
+              }}
+            >
               {detail?.also_known_as?.map((name) => (
                 <>
                   <span key={name}>{name}</span>
                   <br />
                 </>
               ))}
-            </Text>
+            </H6>
             <Spacer y={1} />
           </>
         )}

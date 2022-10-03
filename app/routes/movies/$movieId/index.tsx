@@ -2,13 +2,14 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { LoaderFunction, json } from '@remix-run/node';
 import { useLoaderData, useNavigate } from '@remix-run/react';
-import { Text, Row, Col, Spacer, Divider } from '@nextui-org/react';
+import { Row, Col, Spacer, Divider } from '@nextui-org/react';
 import type { User } from '@supabase/supabase-js';
 import { useRouteData } from 'remix-utils';
 import { getSimilar, getVideos, getCredits, getRecommendation } from '~/services/tmdb/tmdb.server';
 import { IMovieDetail, ICast, ICrew } from '~/services/tmdb/tmdb.types';
 import MediaList from '~/src/components/media/MediaList';
 import PeopleList from '~/src/components/people/PeopleList';
+import { H6 } from '~/src/components/styles/Text.styles';
 import useMediaQuery from '~/hooks/useMediaQuery';
 
 type LoaderData = {
@@ -91,203 +92,78 @@ const Overview = () => {
       {!isSm && (
         <Col span={4}>
           <Row justify="center" fluid>
-            <Text
-              h4
-              size={12}
-              css={{
-                width: '50%',
-                margin: 0,
-                '@xs': {
-                  fontSize: '14px',
-                },
-                '@sm': {
-                  fontSize: '16px',
-                },
-                '@md': {
-                  fontSize: '18px',
-                },
-              }}
-            >
+            <H6 h6 css={{ width: '50%' }}>
               <strong>Status</strong>
               <br />
               {detail?.status}
-            </Text>
+            </H6>
           </Row>
           <Spacer y={1} />
           <Row justify="center">
-            <Text
-              h4
-              size={12}
-              css={{
-                width: '50%',
-                margin: 0,
-                '@xs': {
-                  fontSize: '14px',
-                },
-                '@sm': {
-                  fontSize: '16px',
-                },
-                '@md': {
-                  fontSize: '18px',
-                },
-              }}
-            >
+            <H6 h6 css={{ width: '50%' }}>
               <strong>Original Language</strong>
               <br />
               {detail?.original_language}
-            </Text>
+            </H6>
           </Row>
           <Spacer y={1} />
           <Row justify="center">
-            <Text
-              h4
-              size={12}
-              css={{
-                width: '50%',
-                margin: 0,
-                '@xs': {
-                  fontSize: '14px',
-                },
-                '@sm': {
-                  fontSize: '16px',
-                },
-                '@md': {
-                  fontSize: '18px',
-                },
-              }}
-            >
+            <H6 h6 css={{ width: '50%' }}>
               <strong>Budget</strong>
               <br />${detail?.budget}
-            </Text>
+            </H6>
           </Row>
           <Spacer y={1} />
           <Row justify="center">
-            <Text
-              h4
-              size={12}
-              css={{
-                width: '50%',
-                margin: 0,
-                '@xs': {
-                  fontSize: '14px',
-                },
-                '@sm': {
-                  fontSize: '16px',
-                },
-                '@md': {
-                  fontSize: '18px',
-                },
-              }}
-            >
+            <H6 h6 css={{ width: '50%' }}>
               <strong>Revenue</strong>
               <br />${detail?.revenue}
-            </Text>
+            </H6>
           </Row>
         </Col>
       )}
       <Col span={isSm ? 12 : 8}>
         <Row>
-          <Text
-            h4
-            size={12}
-            css={{
-              textAlign: 'justify',
-              margin: 0,
-              '@xs': {
-                fontSize: '14px',
-              },
-              '@sm': {
-                fontSize: '16px',
-              },
-              '@md': {
-                fontSize: '18px',
-              },
-            }}
-          >
+          <H6 h6 css={{ textAlign: 'justify' }}>
             {detail?.overview}
-          </Text>
+          </H6>
         </Row>
         <Spacer y={1} />
 
         <Row>
           {directors && directors.length > 0 && (
             <>
-              <Text
-                h4
-                size={12}
-                css={{
-                  margin: 0,
-                  '@xs': {
-                    fontSize: '14px',
-                  },
-                  '@sm': {
-                    fontSize: '16px',
-                  },
-                  '@md': {
-                    fontSize: '18px',
-                  },
-                }}
-              >
+              <H6 h6>
                 <strong>Director</strong>
                 <br />
                 {directors.map((director, index) => (
                   <p key={`director-item-${index}`}>{director.name}</p>
                 ))}
-              </Text>
+              </H6>
               <Spacer x={2} />
             </>
           )}
           {detail?.production_countries && detail.production_countries.length > 0 && (
             <>
-              <Text
-                h4
-                size={12}
-                css={{
-                  margin: 0,
-                  '@xs': {
-                    fontSize: '14px',
-                  },
-                  '@sm': {
-                    fontSize: '16px',
-                  },
-                  '@md': {
-                    fontSize: '18px',
-                  },
-                }}
-              >
+              <H6 h6>
                 <strong>Production Countries</strong>
                 <br />
                 {detail?.production_countries.map((country, index) => (
                   <p key={`country-item-${index}`}>{country.name}</p>
                 ))}
-              </Text>
+              </H6>
               <Spacer x={2} />
             </>
           )}
           {detail?.spoken_languages && detail.spoken_languages.length > 0 && (
             <>
-              <Text
-                h4
-                size={12}
-                css={{
-                  margin: 0,
-                  '@xs': {
-                    fontSize: '14px',
-                  },
-                  '@sm': {
-                    fontSize: '16px',
-                  },
-                  '@md': {
-                    fontSize: '18px',
-                  },
-                }}
-              >
+              <H6 h6>
                 <strong>Spoken Languages</strong>
                 <br />
                 {detail?.spoken_languages.map((language, index) => (
                   <p key={`language-item-${index}`}>{language.english_name}</p>
                 ))}
-              </Text>
+              </H6>
               <Spacer x={2} />
             </>
           )}

@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import * as React from 'react';
-import { Grid, Loading, Row, Spacer, Text, Image as NextImage, Button } from '@nextui-org/react';
+import { Container, Loading, Row, Spacer, Image as NextImage, Button } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
 import { motion, AnimatePresence } from 'framer-motion';
 import YouTube from 'react-youtube';
@@ -11,6 +11,8 @@ import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import useLocalStorage from '~/hooks/useLocalStorage';
 import { IMedia } from '~/services/tmdb/tmdb.types';
 import { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
+import Flex from '~/src/components/styles/Flex.styles';
+import { H4, H5, H6 } from '~/src/components/styles/Text.styles';
 
 import VolumeUp from '~/src/assets/icons/VolumeUpIcon.js';
 import VolumeOff from '~/src/assets/icons/VolumeOffIcon.js';
@@ -26,8 +28,17 @@ const CardItemHover = ({
   genresTv?: { [id: string]: string };
   trailer?: Trailer;
 }) => {
-  const { title, overview, releaseDate, voteAverage, mediaType, posterPath, backdropPath } = item;
-  const { loading, colorDarkenLighten } = useColorDarkenLighten(posterPath);
+  const {
+    title,
+    overview,
+    releaseDate,
+    voteAverage,
+    mediaType,
+    posterPath,
+    backdropPath,
+    genreIds,
+  } = item;
+  const { loading, colorDarkenLighten, colorBackground } = useColorDarkenLighten(posterPath);
   const [player, setPlayer] = React.useState<ReturnType<YouTube['getInternalPlayer']>>();
   const [showTrailer, setShowTrailer] = React.useState<boolean>(false);
   const [isMuted, setIsMuted] = useLocalStorage('muteTrailer', true);
@@ -57,7 +68,7 @@ const CardItemHover = ({
   }, [isPlayTrailer]);
 
   return (
-    <Grid.Container
+    <Container
       css={{
         padding: '0.75rem 0.375rem',
         minWidth: '350px',
@@ -172,65 +183,87 @@ const CardItemHover = ({
                 );
             }}
           </ClientOnly>
+          <Spacer y={0.5} />
           <Row justify="center" align="center">
-            <Spacer y={0.5} />
-            <Text size={18} b color={colorDarkenLighten}>
+            <H4 h4 weight="bold" color={colorDarkenLighten}>
               {title}
-            </Text>
+            </H4>
           </Row>
-          {overview && (
-            <Row>
-              {item?.genreIds?.slice(0, 3).map((genreId) => {
-                if (mediaType === 'movie') {
+          <Spacer y={0.5} />
+          {genreIds && (
+            <>
+              <Flex direction="row">
+                {item?.genreIds?.slice(0, 3).map((genreId) => {
+                  if (mediaType === 'movie') {
+                    return (
+                      <>
+                        <H5
+                          key={genreId}
+                          h5
+                          color={colorDarkenLighten}
+                          css={{
+                            backgroundColor: colorBackground,
+                            borderRadius: '$md',
+                            padding: '0 0.5rem 0 0.5rem',
+                          }}
+                        >
+                          {genresMovie?.[genreId]}
+                        </H5>
+                        <Spacer x={0.25} />
+                      </>
+                    );
+                  }
                   return (
                     <>
-                      {genresMovie?.[genreId]}
-                      <Spacer x={0.5} />
+                      <H5
+                        key={genreId}
+                        h5
+                        color={colorDarkenLighten}
+                        css={{
+                          backgroundColor: colorBackground,
+                          borderRadius: '$md',
+                          padding: '0 0.25rem 0 0.25rem',
+                        }}
+                      >
+                        {genresTv?.[genreId]}
+                      </H5>
+                      <Spacer x={0.25} />
                     </>
                   );
-                }
-                return (
-                  <>
-                    {genresTv?.[genreId]}
-                    <Spacer x={0.5} />
-                  </>
-                );
-              })}
-            </Row>
+                })}
+              </Flex>
+              <Spacer y={0.5} />
+            </>
           )}
           {overview && (
-            <Row>
-              <Text className="!line-clamp-2">{overview}</Text>
-            </Row>
+            <>
+              <H6 h6 className="!line-clamp-2">
+                {overview}
+              </H6>
+              <Spacer y={0.5} />
+            </>
           )}
-          <Grid.Container justify="space-between" alignContent="center">
+          <Row justify="space-between" align="center">
             {releaseDate && (
-              <Grid>
-                <Text>{`${mediaType === 'movie' ? 'Movie' : 'TV-Shows'} • ${releaseDate}`}</Text>
-              </Grid>
+              <H5 h5>{`${mediaType === 'movie' ? 'Movie' : 'TV-Show'} • ${releaseDate}`}</H5>
             )}
             {voteAverage && (
-              <Grid>
-                <Row>
-                  <Text
-                    weight="bold"
-                    size="$xs"
-                    css={{
-                      backgroundColor: '#3ec2c2',
-                      borderRadius: '$xs',
-                      padding: '0 0.25rem 0 0.25rem',
-                      marginRight: '0.5rem',
-                    }}
-                  >
-                    TMDb
-                  </Text>
-                  <Text size="$sm" weight="bold">
-                    {item?.voteAverage?.toFixed(1)}
-                  </Text>
-                </Row>
-              </Grid>
+              <Flex direction="row">
+                <H5
+                  h5
+                  css={{
+                    backgroundColor: '#3ec2c2',
+                    borderRadius: '$xs',
+                    padding: '0 0.25rem 0 0.25rem',
+                    marginRight: '0.5rem',
+                  }}
+                >
+                  TMDb
+                </H5>
+                <H5 h5>{item?.voteAverage?.toFixed(1)}</H5>
+              </Flex>
             )}
-          </Grid.Container>
+          </Row>
           {showTrailer && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
               <Button
@@ -260,7 +293,7 @@ const CardItemHover = ({
           )}
         </>
       )}
-    </Grid.Container>
+    </Container>
   );
 };
 

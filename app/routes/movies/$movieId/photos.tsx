@@ -5,7 +5,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
-import { Text, Image as NextImage, Row, Spacer } from '@nextui-org/react';
+import { Image as NextImage, Row, Spacer } from '@nextui-org/react';
 import { LoaderFunction, json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { Gallery, Item, GalleryProps } from 'react-photoswipe-gallery';
@@ -18,6 +18,7 @@ import { getImages } from '~/services/tmdb/tmdb.server';
 import { IMovieDetail } from '~/services/tmdb/tmdb.types';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import TMDB from '~/utils/media';
+import { H6 } from '~/src/components/styles/Text.styles';
 
 type LoaderData = {
   images: Awaited<ReturnType<typeof getImages>>;
@@ -104,25 +105,11 @@ const PhotosPage = () => {
         },
       }}
     >
+      <Spacer y={1} />
       <Row justify="center" fluid>
-        <Text
-          h4
-          size={14}
-          css={{
-            margin: 0,
-            '@xs': {
-              fontSize: '16px',
-            },
-            '@sm': {
-              fontSize: '18px',
-            },
-            '@md': {
-              fontSize: '20px',
-            },
-          }}
-        >
+        <H6 h6>
           <strong>Backdrops</strong>
-        </Text>
+        </H6>
       </Row>
       <Spacer y={0.5} />
       <Gallery withCaption withDownloadButton uiElements={uiElements}>
@@ -178,24 +165,9 @@ const PhotosPage = () => {
       </Gallery>
       <Spacer y={1} />
       <Row justify="center" fluid>
-        <Text
-          h4
-          size={14}
-          css={{
-            margin: 0,
-            '@xs': {
-              fontSize: '16px',
-            },
-            '@sm': {
-              fontSize: '18px',
-            },
-            '@md': {
-              fontSize: '20px',
-            },
-          }}
-        >
+        <H6 h6>
           <strong>Posters</strong>
-        </Text>
+        </H6>
       </Row>
       <Spacer y={0.5} />
       <Gallery withCaption withDownloadButton uiElements={uiElements}>

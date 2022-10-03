@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import * as React from 'react';
-import { Grid, Text, Button, Row, Spacer } from '@nextui-org/react';
+import { Grid, Button, Row, Spacer } from '@nextui-org/react';
 import { Link } from '@remix-run/react';
 import { useState } from 'react';
 import { Navigation } from 'swiper';
@@ -10,6 +10,7 @@ import { IPeople } from '~/services/tmdb/tmdb.types';
 import ChevronRightIcon from '~/src/assets/icons/ChevronRightIcon.js';
 import ChevronLeftIcon from '~/src/assets/icons/ChevronLeftIcon.js';
 import useMediaQuery from '~/hooks/useMediaQuery';
+import { H2 } from '~/src/components/styles/Text.styles';
 
 import PeopleItem from './PeopleItem';
 
@@ -138,9 +139,9 @@ const PeopleList = (props: IPeopleListProps) => {
   return (
     <>
       {listName && (
-        <Text h1 size="2rem" css={{ margin: '0 0 20px 0' }}>
+        <H2 h2 css={{ margin: '0 0 20px 0' }}>
           {listName}
-        </Text>
+        </H2>
       )}
       {showMoreList && (
         <Row fluid justify="space-between" wrap="nowrap" align="center">

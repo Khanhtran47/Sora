@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/indent */
 import * as React from 'react';
 import { DataFunctionArgs, json, LoaderFunction } from '@remix-run/node';
 import { useLoaderData, useNavigate, useParams, Link, RouteMatch } from '@remix-run/react';
 import { Container, Pagination } from '@nextui-org/react';
+import { useRouteData } from 'remix-utils';
+import type { User } from '@supabase/supabase-js';
 
 import { getSearchTvShows } from '~/services/tmdb/tmdb.server';
 import MediaList from '~/src/components/media/MediaList';
@@ -35,6 +38,14 @@ export const handle = {
 
 const SearchRoute = () => {
   const { searchResults } = useLoaderData<LoaderData>() || {};
+  const rootData:
+    | {
+        user?: User;
+        locale: string;
+        genresMovie: { [id: string]: string };
+        genresTv: { [id: string]: string };
+      }
+    | undefined = useRouteData('root');
   const navigate = useNavigate();
   const { tvKeyword } = useParams();
   const { t } = useTranslation();
@@ -70,7 +81,13 @@ const SearchRoute = () => {
         }}
       >
         {searchResults && searchResults.items && searchResults?.items.length > 0 && (
-          <MediaList listType="grid" items={searchResults.items} listName={listName} />
+          <MediaList
+            listType="grid"
+            items={searchResults.items}
+            listName={listName}
+            genresMovie={rootData?.genresMovie}
+            genresTv={rootData?.genresTv}
+          />
         )}
         <Pagination
           total={searchResults.totalPages}

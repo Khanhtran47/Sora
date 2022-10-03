@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { Card, Text, Row, Col, Spacer } from '@nextui-org/react';
+import { Card, Row, Col, Spacer } from '@nextui-org/react';
 import { Link } from '@remix-run/react';
 import Image, { MimeType } from 'remix-image';
 
-import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { IMedia } from '~/services/tmdb/tmdb.types';
+import { H2, H5 } from '~/src/components/styles/Text.styles';
 
 const BannerItemMobile = ({
   item,
@@ -16,7 +16,6 @@ const BannerItemMobile = ({
   genresTv?: { [id: string]: string };
 }) => {
   const { backdropPath, title, mediaType, id } = item;
-  const { colorDarkenLighten } = useColorDarkenLighten(backdropPath);
 
   return (
     <Link to={`/${mediaType === 'movie' ? 'movies/' : 'tv-shows/'}${id}`}>
@@ -31,7 +30,6 @@ const BannerItemMobile = ({
           paddingBottom: '56.25%',
           aspectRatio: '16 / 9',
         }}
-        className={colorDarkenLighten}
         role="figure"
       >
         <Card.Image
@@ -85,34 +83,23 @@ const BannerItemMobile = ({
               },
             }}
           >
-            <Text
-              size={28}
+            <H2
+              h2
               weight="bold"
-              color={colorDarkenLighten || undefined}
               css={{
-                transition: 'color 0.25s ease 0s',
                 margin: 0,
                 lineHeight: 'var(--nextui-lineHeights-base)',
                 textOverflow: 'ellipsis',
                 overflow: 'hidden',
                 whiteSpace: 'nowrap',
-                '@xs': {
-                  fontSize: '38px',
-                },
-                '@sm': {
-                  fontSize: '48px',
-                },
-                '@md': {
-                  fontSize: '58px',
-                },
               }}
             >
               {title}
-            </Text>
+            </H2>
             <Row css={{ marginTop: '1.25rem' }} align="center">
-              <Text
+              <H5
+                h5
                 weight="bold"
-                size="$xs"
                 css={{
                   backgroundColor: '#3ec2c2',
                   borderRadius: '$xs',
@@ -121,14 +108,13 @@ const BannerItemMobile = ({
                 }}
               >
                 TMDb
-              </Text>
-              <Text size="$sm" weight="bold">
+              </H5>
+              <H5 h5 weight="bold">
                 {item?.voteAverage?.toFixed(1)}
-              </Text>
+              </H5>
               <Spacer x={1.5} />
-              <Text
-                h3
-                size="$xs"
+              <H5
+                h5
                 css={{
                   display: 'flex',
                   flexDirection: 'row',
@@ -154,7 +140,7 @@ const BannerItemMobile = ({
                     </>
                   );
                 })}
-              </Text>
+              </H5>
             </Row>
           </Col>
         </Card.Footer>

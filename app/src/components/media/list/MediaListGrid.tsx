@@ -6,7 +6,15 @@ import useMediaQuery from '~/hooks/useMediaQuery';
 import { IMedia } from '~/services/tmdb/tmdb.types';
 import MediaItem from '../item';
 
-const MediaListGrid = ({ items }: { items: IMedia[] }) => {
+const MediaListGrid = ({
+  items,
+  genresMovie,
+  genresTv,
+}: {
+  items: IMedia[];
+  genresMovie?: { [id: string]: string };
+  genresTv?: { [id: string]: string };
+}) => {
   const isXs = useMediaQuery(370);
   return (
     <Grid.Container gap={1} justify="flex-start" alignItems="stretch" wrap="wrap">
@@ -29,7 +37,13 @@ const MediaListGrid = ({ items }: { items: IMedia[] }) => {
                 transition={{ duration: 0.05 * index }}
               >
                 <Link to={href}>
-                  <MediaItem key={item.id} type="card" item={item} />
+                  <MediaItem
+                    key={item.id}
+                    type="card"
+                    item={item}
+                    genresMovie={genresMovie}
+                    genresTv={genresTv}
+                  />
                 </Link>
               </motion.div>
             </Grid>

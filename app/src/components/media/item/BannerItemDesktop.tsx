@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import * as React from 'react';
-import { Button, Card, Col, Row, Spacer, Text, Loading } from '@nextui-org/react';
+import { Button, Card, Col, Row, Spacer, Loading } from '@nextui-org/react';
 import { Link, useFetcher } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 import Image, { MimeType } from 'remix-image';
@@ -10,11 +10,11 @@ import YouTube from 'react-youtube';
 import { ClientOnly } from 'remix-utils';
 import { useInView } from 'react-intersection-observer';
 
-import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import useLocalStorage from '~/hooks/useLocalStorage';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import { IMedia } from '~/services/tmdb/tmdb.types';
 import { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
+import { H1, H5, H6 } from '~/src/components/styles/Text.styles';
 import VolumeUp from '~/src/assets/icons/VolumeUpIcon.js';
 import VolumeOff from '~/src/assets/icons/VolumeOffIcon.js';
 
@@ -36,7 +36,6 @@ const BannerItemDesktop = ({
   const [isPlayed, setIsPlayed] = React.useState<boolean>(false);
   const [showTrailer, setShowTrailer] = React.useState<boolean>(false);
   const [trailerBanner, setTrailerBanner] = React.useState<Trailer>({});
-  const { colorDarkenLighten } = useColorDarkenLighten(posterPath);
   const isSm = useMediaQuery(650, 'max');
   const isMd = useMediaQuery(960, 'max');
   const { ref, inView } = useInView({
@@ -164,32 +163,18 @@ const BannerItemDesktop = ({
               },
             }}
           >
-            <Text
-              size={28}
+            <H1
+              h1
               weight="bold"
               className="!line-clamp-2"
-              color={colorDarkenLighten || undefined}
-              css={{
-                transition: 'color 0.25s ease 0s',
-                margin: 0,
-                lineHeight: 'var(--nextui-lineHeights-base)',
-                '@xs': {
-                  fontSize: '38px',
-                },
-                '@sm': {
-                  fontSize: '48px',
-                },
-                '@md': {
-                  fontSize: '58px',
-                },
-              }}
+              css={{ lineHeight: 'var(--nextui-lineHeights-base)' }}
             >
               {title}
-            </Text>
+            </H1>
             <Row css={{ marginTop: '1.25rem' }} align="center">
-              <Text
+              <H5
+                h5
                 weight="bold"
-                size="$xs"
                 css={{
                   backgroundColor: '#3ec2c2',
                   borderRadius: '$xs',
@@ -198,27 +183,16 @@ const BannerItemDesktop = ({
                 }}
               >
                 TMDb
-              </Text>
-              <Text size="$sm" weight="bold">
+              </H5>
+              <H5 h5 weight="bold">
                 {item?.voteAverage?.toFixed(1)}
-              </Text>
+              </H5>
               <Spacer x={1.5} />
-              <Text
-                h3
-                size={12}
+              <H5
+                h5
                 css={{
                   display: 'flex',
                   flexDirection: 'row',
-                  margin: 0,
-                  '@xs': {
-                    fontSize: '14px',
-                  },
-                  '@sm': {
-                    fontSize: '16px',
-                  },
-                  '@md': {
-                    fontSize: '18px',
-                  },
                 }}
               >
                 {item?.genreIds?.slice(0, 2).map((genreId) => {
@@ -237,25 +211,18 @@ const BannerItemDesktop = ({
                     </>
                   );
                 })}
-              </Text>
+              </H5>
             </Row>
-            <Text
-              size={12}
-              weight="bold"
-              className="!line-clamp-5"
+            <H6
+              h6
+              className="!line-clamp-7"
               css={{
                 margin: '1.25rem 0 0 0',
                 textAlign: 'justify',
-                '@xs': {
-                  fontSize: '16px',
-                },
-                '@sm': {
-                  fontSize: '18px',
-                },
               }}
             >
               {overview}
-            </Text>
+            </H6>
             <Row wrap="wrap">
               <Button
                 auto
@@ -266,21 +233,9 @@ const BannerItemDesktop = ({
                 }}
               >
                 <Link to={`/${mediaType === 'movie' ? 'movies/' : 'tv-shows/'}${id}`}>
-                  <Text
-                    size={12}
-                    weight="bold"
-                    transform="uppercase"
-                    css={{
-                      '@xs': {
-                        fontSize: '18px',
-                      },
-                      '@sm': {
-                        fontSize: '20px',
-                      },
-                    }}
-                  >
+                  <H6 h6 weight="bold" transform="uppercase">
                     {t('watchNow')}
-                  </Text>
+                  </H6>
                 </Link>
               </Button>
             </Row>
