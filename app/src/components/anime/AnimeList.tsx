@@ -27,6 +27,7 @@ interface IAnimeListProps {
   navigationButtons?: boolean;
   hasNextPage?: boolean;
   routeName?: string;
+  virtual?: boolean;
 }
 
 const AnimeList = (props: IAnimeListProps) => {
@@ -39,6 +40,7 @@ const AnimeList = (props: IAnimeListProps) => {
     navigationButtons,
     hasNextPage,
     routeName,
+    virtual,
   } = props;
   let { listType } = props;
 
@@ -78,6 +80,7 @@ const AnimeList = (props: IAnimeListProps) => {
           items={items}
           navigation={{ nextEl, prevEl }}
           setSlideProgress={setSlideProgress}
+          virtual={virtual}
         />
       );
       break;

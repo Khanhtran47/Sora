@@ -12,7 +12,7 @@ const AnimeBannerItemMobile = ({ item }: { item: IAnimeResult }) => {
   const { id, cover, title, rating, genres } = item;
 
   return (
-    <Link to={`/anime/${id}`}>
+    <Link to={`/anime/${id}/overview`}>
       <Card
         as="div"
         isPressable

@@ -80,6 +80,7 @@ export interface IAnimeInfo {
   synonyms?: string[];
   title?: Title;
   totalEpisodes?: number;
+  trailer?: ITrailer;
   type?: string;
 }
 
@@ -104,7 +105,7 @@ export interface IAnimeResult {
   status?: string;
   title?: Title;
   totalEpisodes?: number | null;
-  trailer?: Trailer;
+  trailer?: ITrailer;
   type?: Type;
 }
 
@@ -115,7 +116,7 @@ export interface Title {
   userPreferred?: string;
 }
 
-export interface Trailer {
+export interface ITrailer {
   id?: string;
   site?: string;
   thumbnail?: string;

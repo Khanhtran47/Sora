@@ -56,6 +56,7 @@ const PopularAnime = () => {
             hasNextPage={items.hasNextPage || false}
             listName="Popular Anime"
             routeName="/anime/popular"
+            virtual
           />
         )}
       </Container>

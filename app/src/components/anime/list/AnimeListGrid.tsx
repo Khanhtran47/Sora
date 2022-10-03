@@ -128,7 +128,7 @@ const AnimeListGrid = ({
               animate={{ opacity: 1 }}
               transition={{ x: { type: 'spring', stiffness: 100 }, duration: 0.1 }}
             >
-              <Link to={`/anime/${item.id}`}>
+              <Link to={`/anime/${item.id}/overview`}>
                 <AnimeItem key={item.id} type="card" item={item} />
               </Link>
             </motion.div>

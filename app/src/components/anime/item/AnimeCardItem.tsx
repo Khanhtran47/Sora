@@ -14,11 +14,12 @@ import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
 
 import CardItemHover from './AnimeCardItemHover';
 
-const AnimeCardItem = ({ item }: { item: IAnimeResult }) => {
+const AnimeCardItem = ({ item, virtual = false }: { item: IAnimeResult; virtual?: boolean }) => {
   const { title, image } = item;
   const { ref, inView } = useInView({
     rootMargin: '1000px 500px',
     threshold: [0, 0.25, 0.5, 0.75, 1],
+    triggerOnce: !virtual,
   });
   const isSm = useMediaQuery(650, 'max');
   const isLg = useMediaQuery(1400, 'max');

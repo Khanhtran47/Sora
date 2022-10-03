@@ -270,7 +270,7 @@ const MediaDetail = (props: IMediaDetail) => {
                       size="sm"
                       css={{
                         width: '100%',
-                        minHeight: '32px',
+                        minHeight: '36px',
                         margin: '0.5rem 0 0.5rem 0',
                         '@xs': {
                           marginTop: '4vh',
@@ -293,13 +293,13 @@ const MediaDetail = (props: IMediaDetail) => {
                 </>
               )}
             <Row>
-              <H2 h2 weight="bold" transform="uppercase">
+              <H2 h2 weight="bold">
                 {`${title} (${releaseYear})`}
               </H2>
             </Row>
             <Row>
               <H5 h5>
-                {releaseDate} • {item?.vote_average} •{' '}
+                {releaseDate} • {item?.vote_average?.toFixed(1)} •{' '}
                 {runtime && `${Math.floor(runtime / 60)}h ${runtime % 60}m`}
               </H5>
             </Row>

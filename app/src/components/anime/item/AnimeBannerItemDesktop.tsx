@@ -185,7 +185,7 @@ const AnimeBannerItemDesktop = ({ item, active }: { item: IAnimeResult; active?:
                   marginTop: '1.25rem',
                 }}
               >
-                <Link to={`/anime/${id}`}>
+                <Link to={`/anime/${id}/overview`}>
                   <H6 h6 weight="bold" transform="uppercase">
                     {t('watchNow')}
                   </H6>

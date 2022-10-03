@@ -1,20 +1,12 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
-// import * as React from 'react';
+import * as React from 'react';
 import { LoaderFunction, json } from '@remix-run/node';
-import {
-  useCatch,
-  useLoaderData,
-  // Outlet,
-  Link,
-  RouteMatch,
-  // useFetcher,
-} from '@remix-run/react';
-// import { Container } from '@nextui-org/react';
+import { useCatch, useLoaderData, Outlet, Link, RouteMatch } from '@remix-run/react';
+import { Container } from '@nextui-org/react';
 
 import { getAnimeInfo } from '~/services/consumet/anilist/anilist.server';
-// import i18next from '~/i18n/i18next.server';
-// import MediaDetail from '~/src/components/media/MediaDetail';
-// import WatchTrailerModal, { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
+import AnimeDetail from '~/src/components/anime/AnimeDetail';
+import WatchTrailerModal from '~/src/components/elements/modal/WatchTrailerModal';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 
@@ -43,43 +35,32 @@ export const handle = {
 
 const MovieDetail = () => {
   const { detail } = useLoaderData<LoaderData>();
-  console.log('🚀 ~ file: $animeId.tsx ~ line 39 ~ MovieDetail ~ detail', detail);
-  // const fetcher = useFetcher();
-  // const [visible, setVisible] = React.useState(false);
-  // const [trailer, setTrailer] = React.useState<Trailer>({});
-  // const Handler = (id: number) => {
-  //   setVisible(true);
-  //   fetcher.load(`/movies/${id}/videos`);
-  // };
-  // const closeHandler = () => {
-  //   setVisible(false);
-  //   setTrailer({});
-  // };
-  // React.useEffect(() => {
-  //   if (fetcher.data && fetcher.data.videos) {
-  //     const { results } = fetcher.data.videos;
-  //     const officialTrailer = results.find((result: Trailer) => result.type === 'Trailer');
-  //     setTrailer(officialTrailer);
-  //   }
-  // }, [fetcher.data]);
+  const [visible, setVisible] = React.useState(false);
+  const Handler = () => {
+    setVisible(true);
+  };
+  const closeHandler = () => {
+    setVisible(false);
+  };
 
   return (
-    <h1>test</h1>
-    // <>
-    //   <MediaDetail type="movie" item={detail} handler={Handler} />
-    //   <Container
-    //     as="div"
-    //     fluid
-    //     responsive
-    //     css={{
-    //       margin: 0,
-    //       padding: 0,
-    //     }}
-    //   >
-    //     <Outlet />
-    //   </Container>
-    //   <WatchTrailerModal trailer={trailer} visible={visible} closeHandler={closeHandler} />
-    // </>
+    <>
+      <AnimeDetail item={detail} handler={Handler} />
+      <Container
+        as="div"
+        fluid
+        responsive
+        css={{
+          margin: 0,
+          padding: 0,
+        }}
+      >
+        <Outlet />
+      </Container>
+      {detail && detail.trailer && (
+        <WatchTrailerModal trailer={detail.trailer} visible={visible} closeHandler={closeHandler} />
+      )}
+    </>
   );
 };
 

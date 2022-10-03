@@ -61,6 +61,7 @@ const SearchRoute = () => {
             hasNextPage={items.hasNextPage || false}
             listName="Trending Anime"
             routeName="/anime/trending"
+            virtual
           />
         )}
       </Container>

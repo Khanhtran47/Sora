@@ -65,6 +65,7 @@ const SearchRoute = () => {
             hasNextPage={searchResults.hasNextPage || false}
             listName="Search Results"
             routeName={location.pathname}
+            virtual
           />
         )}
       </Container>
