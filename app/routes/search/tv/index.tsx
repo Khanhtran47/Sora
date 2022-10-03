@@ -1,8 +1,10 @@
-import * as React from 'react';
+/* eslint-disable @typescript-eslint/indent */
 import { DataFunctionArgs, json, LoaderFunction } from '@remix-run/node';
 import { useLoaderData, useNavigate, Link } from '@remix-run/react';
 import { Container, Pagination } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
+import { useRouteData } from 'remix-utils';
+import type { User } from '@supabase/supabase-js';
 
 import { getTrending } from '~/services/tmdb/tmdb.server';
 import MediaList from '~/src/components/media/MediaList';
@@ -31,6 +33,14 @@ export const handle = {
 
 const SearchRoute = () => {
   const { todayTrending } = useLoaderData<LoaderData>() || {};
+  const rootData:
+    | {
+        user?: User;
+        locale: string;
+        genresMovie: { [id: string]: string };
+        genresTv: { [id: string]: string };
+      }
+    | undefined = useRouteData('root');
   const navigate = useNavigate();
   const isXs = useMediaQuery(650);
   const { t } = useTranslation();
@@ -67,6 +77,8 @@ const SearchRoute = () => {
             listType="grid"
             items={todayTrending && todayTrending.items}
             listName={t('todayTrending')}
+            genresMovie={rootData?.genresMovie}
+            genresTv={rootData?.genresTv}
           />
         )}
         <Pagination

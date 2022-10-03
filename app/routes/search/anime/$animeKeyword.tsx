@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { DataFunctionArgs, json, LoaderFunction } from '@remix-run/node';
 import { useLoaderData, useNavigate, Link, RouteMatch, useLocation } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
@@ -66,6 +65,7 @@ const SearchRoute = () => {
             hasNextPage={searchResults.hasNextPage || false}
             listName="Search Results"
             routeName={location.pathname}
+            virtual
           />
         )}
       </Container>

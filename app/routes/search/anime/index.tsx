@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { DataFunctionArgs, json, LoaderFunction } from '@remix-run/node';
 import { useLoaderData, useNavigate, Link } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
@@ -62,6 +61,7 @@ const SearchRoute = () => {
             hasNextPage={items.hasNextPage || false}
             listName="Trending Anime"
             routeName="/anime/trending"
+            virtual
           />
         )}
       </Container>

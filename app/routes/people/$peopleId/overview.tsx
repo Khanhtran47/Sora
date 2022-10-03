@@ -3,13 +3,15 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable @typescript-eslint/indent */
 import * as React from 'react';
-import { Text, Row, Spacer } from '@nextui-org/react';
+import { Row, Spacer } from '@nextui-org/react';
 import { useFetcher } from '@remix-run/react';
 import { useRouteData } from 'remix-utils';
+import type { User } from '@supabase/supabase-js';
 
 import { IPeopleDetail, IMedia, IPeople } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
 import MediaList from '~/src/components/media/MediaList';
+import { H6 } from '~/src/components/styles/Text.styles';
 
 const OverviewPage = () => {
   const peopleData:
@@ -22,6 +24,14 @@ const OverviewPage = () => {
         };
       }
     | undefined = useRouteData('routes/people/$peopleId');
+  const rootData:
+    | {
+        user?: User;
+        locale: string;
+        genresMovie: { [id: string]: string };
+        genresTv: { [id: string]: string };
+      }
+    | undefined = useRouteData('root');
   const fetcher = useFetcher();
   const [knownFor, setKnownFor] = React.useState<IMedia[]>();
   React.useEffect(() => {
@@ -39,29 +49,12 @@ const OverviewPage = () => {
       {peopleData?.detail?.biography && (
         <>
           <Row justify="flex-start" fluid>
-            <Text
-              h4
-              size={14}
-              css={{
-                whiteSpace: 'pre-line',
-                textAlign: 'justify',
-                margin: 0,
-                '@xs': {
-                  fontSize: '16px',
-                },
-                '@sm': {
-                  fontSize: '18px',
-                },
-                '@md': {
-                  fontSize: '20px',
-                },
-              }}
-            >
+            <H6 h6 css={{ whiteSpace: 'pre-line', textAlign: 'justify' }}>
               <strong>Biography</strong>
               <br />
               {/* TODO: add a read more button */}
               {peopleData?.detail?.biography}
-            </Text>
+            </H6>
           </Row>
           <Spacer y={1} />
         </>
@@ -70,27 +63,17 @@ const OverviewPage = () => {
       {knownFor && (
         <>
           <Row justify="flex-start" fluid>
-            <Text
-              h4
-              size={14}
-              css={{
-                margin: 0,
-                '@xs': {
-                  fontSize: '16px',
-                },
-                '@sm': {
-                  fontSize: '18px',
-                },
-                '@md': {
-                  fontSize: '20px',
-                },
-              }}
-            >
+            <H6 h6>
               <strong>Known For</strong>
-            </Text>
+            </H6>
           </Row>
           <Spacer y={0.5} />
-          <MediaList listType="slider-card" items={knownFor} />
+          <MediaList
+            listType="slider-card"
+            items={knownFor}
+            genresMovie={rootData?.genresMovie}
+            genresTv={rootData?.genresTv}
+          />
         </>
       )}
     </>

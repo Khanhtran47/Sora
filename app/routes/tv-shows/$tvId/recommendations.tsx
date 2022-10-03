@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { LoaderFunction, json } from '@remix-run/node';
 import { useLoaderData, useNavigate, Link, RouteMatch, useParams } from '@remix-run/react';
 import { Row, Pagination } from '@nextui-org/react';
+import { useRouteData } from 'remix-utils';
+import type { User } from '@supabase/supabase-js';
 import { getRecommendation } from '~/services/tmdb/tmdb.server';
 import MediaList from '~/src/components/media/MediaList';
 import useMediaQuery from '~/hooks/useMediaQuery';
@@ -38,6 +41,14 @@ export const handle = {
 const RecommendationsPage = () => {
   const { tvId } = useParams();
   const { recommendations } = useLoaderData<LoaderData>();
+  const rootData:
+    | {
+        user?: User;
+        locale: string;
+        genresMovie: { [id: string]: string };
+        genresTv: { [id: string]: string };
+      }
+    | undefined = useRouteData('root');
   const navigate = useNavigate();
   const isXs = useMediaQuery(650);
   const paginationChangeHandler = (page: number) =>
@@ -62,7 +73,13 @@ const RecommendationsPage = () => {
     >
       {recommendations && recommendations.items && recommendations.items.length > 0 && (
         <>
-          <MediaList listType="grid" items={recommendations.items} listName="Recommendations" />
+          <MediaList
+            listType="grid"
+            items={recommendations.items}
+            listName="Recommendations"
+            genresMovie={rootData?.genresMovie}
+            genresTv={rootData?.genresTv}
+          />
           <Pagination
             total={recommendations.totalPages}
             initialPage={recommendations.page}

@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import React, { useRef } from 'react';
 import { Link } from '@remix-run/react';
-import { Card, Col, Text, Row, Button, Spacer, Avatar } from '@nextui-org/react';
+import { Card, Col, Row, Button, Spacer, Avatar } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
 
 // import { useTranslation } from 'react-i18next';
@@ -14,6 +14,7 @@ import TMDB from '~/utils/media';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import useSize, { IUseSize } from '~/hooks/useSize';
 import Tab from '~/src/components/elements/Tab';
+import { H2, H5 } from '~/src/components/styles/Text.styles';
 
 import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
 import BackgroundDefault from '~/src/assets/images/background-default.jpg';
@@ -182,23 +183,9 @@ const MediaDetail = (props: IMediaDetail) => {
                         prefetch="intent"
                         to={`/${type === 'movie' ? 'movies' : 'tv-shows'}/${id}/watch`}
                       >
-                        <Text
-                          h4
-                          size={12}
-                          weight="bold"
-                          transform="uppercase"
-                          css={{
-                            margin: 0,
-                            '@xs': {
-                              fontSize: '18px',
-                            },
-                            '@sm': {
-                              fontSize: '20px',
-                            },
-                          }}
-                        >
+                        <H5 h5 weight="bold" transform="uppercase">
                           Watch now
-                        </Text>
+                        </H5>
                       </Link>
                     </Button>
                   </Row>
@@ -218,55 +205,61 @@ const MediaDetail = (props: IMediaDetail) => {
               isSm && (
                 <>
                   {posterPath ? (
-                    <Row>
-                      <Card.Image
-                        // @ts-ignore
-                        as={Image}
-                        src={posterPath}
-                        alt={title}
-                        objectFit="cover"
-                        width={isXs ? '70%' : '40%'}
-                        css={{
-                          minWidth: 'auto !important',
-                          marginTop: '2rem',
-                          borderRadius: '24px',
-                        }}
-                        loaderUrl="/api/image"
-                        placeholder="blur"
-                        options={{
-                          contentType: MimeType.WEBP,
-                        }}
-                        responsive={[
-                          {
-                            size: {
-                              width: 246,
-                              height: 369,
+                    <>
+                      <Row>
+                        <Card.Image
+                          // @ts-ignore
+                          as={Image}
+                          src={posterPath}
+                          alt={title}
+                          objectFit="cover"
+                          width={isXs ? '70%' : '40%'}
+                          css={{
+                            minWidth: 'auto !important',
+                            marginTop: '2rem',
+                            borderRadius: '24px',
+                          }}
+                          loaderUrl="/api/image"
+                          placeholder="blur"
+                          options={{
+                            contentType: MimeType.WEBP,
+                          }}
+                          responsive={[
+                            {
+                              size: {
+                                width: 246,
+                                height: 369,
+                              },
+                              maxWidth: 375,
                             },
-                            maxWidth: 375,
-                          },
-                          {
-                            size: {
-                              width: 235,
-                              height: 352,
+                            {
+                              size: {
+                                width: 235,
+                                height: 352,
+                              },
                             },
-                          },
-                        ]}
-                      />
-                    </Row>
+                          ]}
+                        />
+                      </Row>
+                      <Spacer y={1} />
+                    </>
                   ) : (
-                    <Row align="center" justify="center">
-                      <Avatar
-                        icon={<PhotoIcon width={48} height={48} />}
-                        css={{
-                          width: `${isXs ? '70%' : '40%'} !important`,
-                          size: '$20',
-                          minWidth: 'auto !important',
-                          minHeight: '205px !important',
-                          marginTop: '2rem',
-                          borderRadius: '24px !important',
-                        }}
-                      />
-                    </Row>
+                    <>
+                      <Row align="center" justify="center">
+                        <Avatar
+                          icon={<PhotoIcon width={48} height={48} />}
+                          css={{
+                            width: `${isXs ? '70%' : '40%'} !important`,
+                            size: '$20',
+                            minWidth: 'auto !important',
+                            minHeight: '205px !important',
+                            marginTop: '2rem',
+                            borderRadius: '24px !important',
+                          }}
+                        />
+                      </Row>
+                      <Spacer y={1} />
+                    </>
                   )}
                   <Row>
                     <Button
@@ -277,6 +270,7 @@ const MediaDetail = (props: IMediaDetail) => {
                       size="sm"
                       css={{
                         width: '100%',
+                        minHeight: '36px',
                         margin: '0.5rem 0 0.5rem 0',
                         '@xs': {
                           marginTop: '4vh',
@@ -290,92 +284,30 @@ const MediaDetail = (props: IMediaDetail) => {
                         prefetch="intent"
                         to={`/${type === 'movie' ? 'movies' : 'tv-shows'}/${id}/watch`}
                       >
-                        <Text
-                          h4
-                          size={12}
-                          weight="bold"
-                          transform="uppercase"
-                          css={{
-                            margin: 0,
-                            '@xs': {
-                              fontSize: '18px',
-                            },
-                            '@sm': {
-                              fontSize: '20px',
-                            },
-                          }}
-                        >
+                        <H5 h5 weight="bold" transform="uppercase">
                           Watch now
-                        </Text>
+                        </H5>
                       </Link>
                     </Button>
                   </Row>
                 </>
               )}
             <Row>
-              <Text
-                h1
-                size={18}
-                weight="bold"
-                transform="uppercase"
-                css={{
-                  margin: 0,
-                  '@xs': {
-                    fontSize: '24px',
-                  },
-                  '@sm': {
-                    fontSize: '30px',
-                  },
-                  '@md': {
-                    fontSize: '36px',
-                  },
-                }}
-              >
+              <H2 h2 weight="bold">
                 {`${title} (${releaseYear})`}
-              </Text>
+              </H2>
             </Row>
             <Row>
-              <Text
-                h3
-                size={12}
-                css={{
-                  margin: 0,
-                  '@xs': {
-                    fontSize: '14px',
-                  },
-                  '@sm': {
-                    fontSize: '16px',
-                  },
-                  '@md': {
-                    fontSize: '18px',
-                  },
-                }}
-              >
-                {releaseDate} • {item?.vote_average} •{' '}
+              <H5 h5>
+                {releaseDate} • {item?.vote_average?.toFixed(1)} •{' '}
                 {runtime && `${Math.floor(runtime / 60)}h ${runtime % 60}m`}
-              </Text>
+              </H5>
             </Row>
             {tagline && (
               <Row>
-                <Text
-                  h3
-                  size={12}
-                  css={{
-                    fontStyle: 'italic',
-                    margin: '10px 0 0 0',
-                    '@xs': {
-                      fontSize: '14px',
-                    },
-                    '@sm': {
-                      fontSize: '16px',
-                    },
-                    '@md': {
-                      fontSize: '18px',
-                    },
-                  }}
-                >
+                <H5 h5 css={{ fontStyle: 'italic', marginTop: '10px' }}>
                   {tagline}
-                </Text>
+                </H5>
               </Row>
             )}
             <Spacer y={1} />
@@ -387,25 +319,9 @@ const MediaDetail = (props: IMediaDetail) => {
                 size={isSm ? 'sm' : 'md'}
                 onClick={() => handler && handler(Number(id))}
               >
-                <Text
-                  h3
-                  transform="uppercase"
-                  size={12}
-                  css={{
-                    margin: 0,
-                    '@xs': {
-                      fontSize: '14px',
-                    },
-                    '@sm': {
-                      fontSize: '16px',
-                    },
-                    '@md': {
-                      fontSize: '18px',
-                    },
-                  }}
-                >
+                <H5 h5 transform="uppercase">
                   Watch Trailer
-                </Text>
+                </H5>
               </Button>
             </Row>
             <Row

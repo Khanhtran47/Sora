@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react';
-import { Row, Text, Grid, Button, Dropdown } from '@nextui-org/react';
+import { Row, Grid, Button, Dropdown } from '@nextui-org/react';
 import { useLocation, useNavigate } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
+
+import { H6 } from '~/src/components/styles/Text.styles';
 
 interface IFilterProps {
   genres?: { [id: string]: string };
@@ -78,9 +80,7 @@ const Filter = (props: IFilterProps) => {
     >
       <Grid>
         <Row justify="center">
-          <Text h4 small size={16}>
-            {t('genre')}
-          </Text>
+          <H6 h6> {t('genre')} </H6>
         </Row>
         <Row css={{ margin: '6px' }}>
           {genres && (
@@ -103,9 +103,7 @@ const Filter = (props: IFilterProps) => {
       </Grid>
       <Grid>
         <Row justify="center">
-          <Text h4 small size={16}>
-            {t('sortBy')}
-          </Text>
+          <H6 h6> {t('sortBy')} </H6>
         </Row>
         <Row css={{ margin: '6px' }}>
           <Dropdown>
@@ -126,9 +124,7 @@ const Filter = (props: IFilterProps) => {
       </Grid>
       <Grid>
         <Row justify="center">
-          <Text h4 small size={16}>
-            {t('discover')}
-          </Text>
+          <H6 h6> {t('discover')} </H6>
         </Row>
         <Row css={{ margin: '6px' }}>
           <Button auto onClick={() => navigate(query)}>
@@ -138,9 +134,7 @@ const Filter = (props: IFilterProps) => {
       </Grid>
       <Grid>
         <Row justify="center">
-          <Text h4 small size={16}>
-            {t('listType')}
-          </Text>
+          <H6 h6> {t('listType')} </H6>
         </Row>
         <Row>
           <Button.Group>

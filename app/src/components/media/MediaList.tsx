@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { Text, Button, Row, Spacer } from '@nextui-org/react';
+import { Button, Row, Spacer } from '@nextui-org/react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { IMedia } from '~/services/tmdb/tmdb.types';
 import ChevronRightIcon from '~/src/assets/icons/ChevronRightIcon.js';
 import ChevronLeftIcon from '~/src/assets/icons/ChevronLeftIcon.js';
+import { H2 } from '~/src/components/styles/Text.styles';
 import { MediaListTable, MediaListCard, MediaListBanner, MediaListGrid } from './list';
 import Filter from '../elements/filter/Filter';
 
@@ -69,7 +70,7 @@ const MediaList = (props: IMediaListProps) => {
 
   switch (displayType) {
     case 'grid':
-      list = <MediaListGrid items={items} />;
+      list = <MediaListGrid items={items} genresMovie={genresMovie} genresTv={genresTv} />;
       break;
     case 'table':
       list = <MediaListTable items={items} />;
@@ -95,9 +96,9 @@ const MediaList = (props: IMediaListProps) => {
   return (
     <>
       {listName && (
-        <Text h1 size="2rem" css={{ margin: '20px 0 20px 0' }}>
+        <H2 h2 css={{ margin: '20px 0 20px 0' }}>
           {listName}
-        </Text>
+        </H2>
       )}
       {showMoreList && (
         <Row fluid justify="space-between" wrap="nowrap" align="center">

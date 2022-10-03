@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-filename-extension */
 import PropTypes from 'prop-types';
 
-import Svg from '../../components/styles/svg';
+import Svg from '../../components/styles/Svg.styles';
 
 const Bold = ({ color }) => (
   <g transform="translate(7 6)">

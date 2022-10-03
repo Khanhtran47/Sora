@@ -1,5 +1,5 @@
 import { RouteMatch, useLocation } from '@remix-run/react';
-import { Grid, Spacer } from '@nextui-org/react';
+import { Grid, Spacer, Text } from '@nextui-org/react';
 import useMediaQuery from '~/hooks/useMediaQuery';
 
 interface IBreadCrumbProps {
@@ -15,7 +15,6 @@ const BreadCrumb = (props: IBreadCrumbProps) => {
     <Grid.Container
       justify="flex-start"
       alignItems="center"
-      color="inherit"
       gap={2}
       wrap="nowrap"
       css={{
@@ -32,7 +31,7 @@ const BreadCrumb = (props: IBreadCrumbProps) => {
         .filter((match) => match.handle && match.handle.breadcrumb)
         // render breadcrumbs!
         .map((match, index) => (
-          <span key={index} style={{ display: 'flex', flexDirection: 'row' }}>
+          <Text color="primary" span key={index} style={{ display: 'flex', flexDirection: 'row' }}>
             {index ? (
               <>
                 <Spacer x={0.5} />
@@ -41,7 +40,7 @@ const BreadCrumb = (props: IBreadCrumbProps) => {
               </>
             ) : null}
             {match?.handle?.breadcrumb(match)}
-          </span>
+          </Text>
         ))}
     </Grid.Container>
   );

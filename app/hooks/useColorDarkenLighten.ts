@@ -18,15 +18,22 @@ export default function useColorDarkenLighten(imageUrl?: string) {
     },
   );
   let colorDarkenLighten = '';
+  let colorBackground = '';
   if (isDark) {
     colorDarkenLighten = !tinycolor(data).isLight()
       ? tinycolor(data).brighten(70).saturate(70).toString()
       : tinycolor(data).saturate(70).toString();
+    colorBackground = !tinycolor(data).isLight()
+      ? tinycolor(data).saturate(70).spin(180).toString()
+      : tinycolor(data).darken(70).saturate(70).spin(180).toString();
   } else {
     colorDarkenLighten = !tinycolor(data).isDark()
       ? tinycolor(data).darken().saturate(100).toString()
       : tinycolor(data).saturate(70).toString();
+    colorBackground = !tinycolor(data).isDark()
+      ? tinycolor(data).saturate(70).spin(180).toString()
+      : tinycolor(data).brighten(70).saturate(70).spin(180).toString();
   }
 
-  return { isDark, loading, error, colorDarkenLighten };
+  return { isDark, loading, error, colorDarkenLighten, colorBackground };
 }

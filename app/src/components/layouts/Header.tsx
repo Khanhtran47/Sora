@@ -4,7 +4,6 @@ import { Link, useLocation, useNavigate } from '@remix-run/react';
 import {
   Avatar,
   Button,
-  Text,
   Grid,
   Row,
   Switch,
@@ -26,6 +25,7 @@ import useMediaQuery from '~/hooks/useMediaQuery';
 import useScrollDirection from '~/hooks/useScrollDirection';
 
 /* Components */
+import { H5, H6 } from '~/src/components/styles/Text.styles';
 import NavLink from '../elements/NavLink';
 
 /* Assets */
@@ -194,34 +194,14 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
               }
             >
               {user ? (
-                <Text
-                  color="inherit"
-                  h3
-                  size={14}
-                  css={{
-                    marginLeft: '3.5rem',
-                    '@sm': {
-                      fontSize: '16px',
-                    },
-                  }}
-                >
+                <H6 h6 weight="bold" color="inherit" css={{ marginLeft: '3.5rem !important' }}>
                   {user?.email ?? 'klee@example.com'}
-                </Text>
+                </H6>
               ) : (
                 <Link to="/sign-in">
-                  <Text
-                    color="inherit"
-                    h3
-                    size={14}
-                    css={{
-                      textTransform: 'uppercase',
-                      '@sm': {
-                        fontSize: '20px',
-                      },
-                    }}
-                  >
+                  <H6 h6 weight="bold" color="inherit" css={{ textTransform: 'uppercase' }}>
                     Sign In
-                  </Text>
+                  </H6>
                 </Link>
               )}
             </Button>
@@ -239,7 +219,9 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
               css={{ w: 260, h: 50 }}
               icon={<GlobalIcon />}
             >
-              Language
+              <H6 h6 color="primary">
+                Language
+              </H6>
             </Button>
           </Grid>
           <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
@@ -253,16 +235,18 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
               }}
               css={{ w: 260, h: 50 }}
             >
-              Display
+              <H6 h6 color="primary">
+                Display
+              </H6>
             </Button>
           </Grid>
           <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
             {user ? (
               <Button flat color="error" size="md" css={{ w: 260, h: 50 }}>
                 <Link to="/sign-out">
-                  <Text h4 color="error">
+                  <H5 h5 color="error">
                     Log out
-                  </Text>
+                  </H5>
                 </Link>
               </Button>
             ) : (
@@ -302,7 +286,9 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                     />
                   }
                 >
-                  Language
+                  <H6 h6 color="primary">
+                    Language
+                  </H6>
                 </Button>
                 <Divider x={1} css={{ width: 260, margin: '10px 40px 0 0' }} />
               </Grid>
@@ -322,7 +308,9 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                     }}
                     css={{ w: 260, h: 50 }}
                   >
-                    {t(lng)}
+                    <H6 h6 color="primary">
+                      {t(lng)}
+                    </H6>
                   </Button>
                 </Grid>
               ))}
@@ -351,7 +339,9 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                     />
                   }
                 >
-                  Display
+                  <H6 h6 color="primary">
+                    Display
+                  </H6>
                 </Button>
                 <Divider x={1} css={{ width: 260, margin: '10px 40px 0 0' }} />
               </Grid>
@@ -365,7 +355,7 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                   minHeight: 65,
                 }}
               >
-                <Text h5>Light mode</Text>
+                <H6 h6>Light mode</H6>
                 <Switch
                   checked={isDark}
                   size="md"
@@ -374,7 +364,7 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                   iconOff={<SunIcon filled />}
                   css={{ padding: 0 }}
                 />
-                <Text h5>Dark mode</Text>
+                <H6 h6>Dark mode</H6>
               </Grid>
               <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
                 <Button

@@ -1,9 +1,6 @@
 import * as React from 'react';
 import { Grid, Button } from '@nextui-org/react';
-import {
-  useFetcher,
-  // Link
-} from '@remix-run/react';
+import { useFetcher, Link } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import NProgress from 'nprogress';
 
@@ -131,9 +128,9 @@ const AnimeListGrid = ({
               animate={{ opacity: 1 }}
               transition={{ x: { type: 'spring', stiffness: 100 }, duration: 0.1 }}
             >
-              {/* <Link to={href}> */}
-              <AnimeItem key={item.id} type="card" item={item} />
-              {/* </Link> */}
+              <Link to={`/anime/${item.id}/overview`}>
+                <AnimeItem key={item.id} type="card" item={item} />
+              </Link>
             </motion.div>
           </Grid>
         ))}

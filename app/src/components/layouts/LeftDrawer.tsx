@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { NavLink } from '@remix-run/react';
-import { Spacer, Text, Grid, Container, Row, styled } from '@nextui-org/react';
+import { Spacer, Grid, Container, Row, styled } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
+
+import { H5 } from '~/src/components/styles/Text.styles';
 
 /* icons */
 import TrendingIcon from '../../assets/icons/TrendingIcon.js';
@@ -173,9 +175,8 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                 aria-label={page.pageName}
               >
                 {({ isActive }) => (
-                  <Text
-                    h4
-                    size={18}
+                  <H5
+                    h5
                     color="primary"
                     css={{
                       margin: 0,
@@ -186,9 +187,6 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                       justifyContent: 'flex-start',
                       borderRadius: '14px',
                       transition: 'opacity 0.25s ease 0s, background 0.25s ease 0s',
-                      '@sm': {
-                        fontSize: '20px',
-                      },
                       '&:hover': {
                         opacity: '0.8',
                         backgroundColor: '$primaryLightHover',
@@ -209,7 +207,7 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                         {t(page.pageName)}
                       </>
                     )}
-                  </Text>
+                  </H5>
                 )}
               </NavLink>
             </Grid>

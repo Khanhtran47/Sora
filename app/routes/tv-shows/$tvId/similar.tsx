@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { LoaderFunction, json } from '@remix-run/node';
 import { useLoaderData, useNavigate, Link, RouteMatch, useParams } from '@remix-run/react';
 import { Row, Pagination } from '@nextui-org/react';
+import { useRouteData } from 'remix-utils';
+import type { User } from '@supabase/supabase-js';
 import { getSimilar } from '~/services/tmdb/tmdb.server';
 import MediaList from '~/src/components/media/MediaList';
 import useMediaQuery from '~/hooks/useMediaQuery';
@@ -38,6 +41,14 @@ export const handle = {
 const SimilarPage = () => {
   const { tvId } = useParams();
   const { similar } = useLoaderData<LoaderData>();
+  const rootData:
+    | {
+        user?: User;
+        locale: string;
+        genresMovie: { [id: string]: string };
+        genresTv: { [id: string]: string };
+      }
+    | undefined = useRouteData('root');
   const navigate = useNavigate();
   const isXs = useMediaQuery(650);
   const paginationChangeHandler = (page: number) =>
@@ -62,7 +73,13 @@ const SimilarPage = () => {
     >
       {similar && similar.items && similar.items.length > 0 && (
         <>
-          <MediaList listType="grid" items={similar.items} listName="Similar Tv Shows" />
+          <MediaList
+            listType="grid"
+            items={similar.items}
+            listName="Similar Tv Shows"
+            genresMovie={rootData?.genresMovie}
+            genresTv={rootData?.genresTv}
+          />
           <Pagination
             total={similar.totalPages}
             initialPage={similar.page}

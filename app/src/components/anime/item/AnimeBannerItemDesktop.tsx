@@ -1,8 +1,9 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import * as React from 'react';
-import { Button, Card, Col, Row, Spacer, Text, Loading } from '@nextui-org/react';
-// import { Link } from '@remix-run/react';
+import { Button, Card, Col, Row, Spacer, Loading } from '@nextui-org/react';
+import { Link } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 import Image, { MimeType } from 'remix-image';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -10,20 +11,20 @@ import YouTube from 'react-youtube';
 import { ClientOnly } from 'remix-utils';
 import { useInView } from 'react-intersection-observer';
 
-import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import useLocalStorage from '~/hooks/useLocalStorage';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import { IAnimeResult } from '~/services/consumet/anilist/anilist.types';
 import VolumeUp from '~/src/assets/icons/VolumeUpIcon.js';
 import VolumeOff from '~/src/assets/icons/VolumeOffIcon.js';
+import AnilistStatIcon from '~/src/assets/icons/AnilistStatIcon.js';
+import { H1, H5, H6 } from '~/src/components/styles/Text.styles';
 
 const AnimeBannerItemDesktop = ({ item, active }: { item: IAnimeResult; active?: boolean }) => {
   const { t } = useTranslation();
-  const { cover, description, image, title, trailer, rating, genres } = item;
+  const { id, cover, description, image, title, trailer, rating, genres } = item;
   const [player, setPlayer] = React.useState<ReturnType<YouTube['getInternalPlayer']>>();
   const [isPlayed, setIsPlayed] = React.useState<boolean>(false);
   const [showTrailer, setShowTrailer] = React.useState<boolean>(false);
-  const { colorDarkenLighten } = useColorDarkenLighten(image);
   const isSm = useMediaQuery(650, 'max');
   const isMd = useMediaQuery(960, 'max');
   const { ref, inView } = useInView({
@@ -135,89 +136,44 @@ const AnimeBannerItemDesktop = ({ item, active }: { item: IAnimeResult; active?:
               },
             }}
           >
-            <Text
-              size={28}
+            <H1
+              h1
               weight="bold"
-              color={colorDarkenLighten || undefined}
               className="!line-clamp-2"
               css={{
-                transition: 'color 0.25s ease 0s',
-                margin: 0,
                 lineHeight: 'var(--nextui-lineHeights-base)',
-                '@xs': {
-                  fontSize: '38px',
-                },
-                '@sm': {
-                  fontSize: '48px',
-                },
-                '@md': {
-                  fontSize: '58px',
-                },
               }}
             >
               {title?.userPreferred || title?.english || title?.romaji || title?.native}
-            </Text>
+            </H1>
             <Row css={{ marginTop: '1.25rem' }} align="center">
               {rating && (
                 <>
-                  <Text
-                    weight="bold"
-                    size="$xs"
-                    css={{
-                      backgroundColor: '#3ec2c2',
-                      borderRadius: '$xs',
-                      padding: '0 0.25rem 0 0.25rem',
-                      marginRight: '0.5rem',
-                    }}
-                  >
-                    Anilist
-                  </Text>
-                  <Text size="$sm" weight="bold">
-                    {rating}%
-                  </Text>
+                  {Number(rating) > 75 ? (
+                    <AnilistStatIcon stat="good" />
+                  ) : Number(rating) > 60 ? (
+                    <AnilistStatIcon stat="average" />
+                  ) : (
+                    <AnilistStatIcon stat="bad" />
+                  )}
+                  <Spacer x={0.25} />
+                  <H5 weight="bold">{rating}%</H5>
                   <Spacer x={1.5} />
                 </>
               )}
-              <Text
-                h3
-                size={12}
-                css={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  margin: 0,
-                  '@xs': {
-                    fontSize: '14px',
-                  },
-                  '@sm': {
-                    fontSize: '16px',
-                  },
-                  '@md': {
-                    fontSize: '18px',
-                  },
-                }}
-              >
+              <H5 h5 weight="bold" css={{ display: 'flex', flexDirection: 'row' }}>
                 {genres?.slice(0, 2).map((genre) => (
                   <>
                     {genre}
                     <Spacer x={0.5} />
                   </>
                 ))}
-              </Text>
+              </H5>
             </Row>
-            <Text
-              size={12}
-              weight="bold"
-              className="!line-clamp-5"
-              css={{
-                margin: '1.25rem 0 0 0',
-                textAlign: 'justify',
-                '@xs': {
-                  fontSize: '16px',
-                },
-                '@sm': {
-                  fontSize: '18px',
-                },
-              }}
+            <H6
+              h6
+              className="!line-clamp-6"
+              css={{ margin: '1.25rem 0 0 0', textAlign: 'justify' }}
               dangerouslySetInnerHTML={{ __html: description || '' }}
             />
             <Row wrap="wrap">
@@ -229,23 +185,11 @@ const AnimeBannerItemDesktop = ({ item, active }: { item: IAnimeResult; active?:
                   marginTop: '1.25rem',
                 }}
               >
-                {/* <Link to={}> */}
-                <Text
-                  size={12}
-                  weight="bold"
-                  transform="uppercase"
-                  css={{
-                    '@xs': {
-                      fontSize: '18px',
-                    },
-                    '@sm': {
-                      fontSize: '20px',
-                    },
-                  }}
-                >
-                  {t('watchNow')}
-                </Text>
-                {/* </Link> */}
+                <Link to={`/anime/${id}/overview`}>
+                  <H6 h6 weight="bold" transform="uppercase">
+                    {t('watchNow')}
+                  </H6>
+                </Link>
               </Button>
             </Row>
           </Col>

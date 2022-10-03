@@ -2,9 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import React from 'react';
 import { NavLink as NavigationLink } from '@remix-run/react';
-import { Text } from '@nextui-org/react';
-
-import useMediaQuery from '~/hooks/useMediaQuery';
+import { H2, H5 } from '~/src/components/styles/Text.styles';
 
 export interface INavLinkProps {
   linkTo: string;
@@ -26,9 +24,9 @@ const TextNavLink = ({
 }) => (
   <NavigationLink to={linkTo} style={style} aria-label={linkName}>
     {({ isActive }) => (
-      <Text
-        h2
-        size={18}
+      <H5
+        h5
+        weight="bold"
         color="primary"
         css={{
           textTransform: 'uppercase',
@@ -36,9 +34,6 @@ const TextNavLink = ({
           borderRadius: '14px',
           transition: 'opacity 0.25s ease 0s, background 0.25s ease 0s',
           margin: 0,
-          '@sm': {
-            fontSize: '20px',
-          },
           '&:hover': {
             opacity: '0.8',
             backgroundColor: '$primaryLightHover',
@@ -49,7 +44,7 @@ const TextNavLink = ({
         }}
       >
         {linkName}
-      </Text>
+      </H5>
     )}
   </NavigationLink>
 );
@@ -65,7 +60,8 @@ const IconNavLink = ({
 }) => (
   <NavigationLink to={linkTo} style={style} aria-label="Icon Nav Link">
     {({ isActive }) => (
-      <Text
+      <H5
+        h5
         as="div"
         color="primary"
         css={{
@@ -74,9 +70,6 @@ const IconNavLink = ({
           padding: '0.25rem 0.5rem',
           borderRadius: '14px',
           transition: 'opacity 0.25s ease 0s, background 0.25s ease 0s',
-          '@sm': {
-            fontSize: '20px',
-          },
           '&:hover': {
             opacity: '0.8',
             backgroundColor: '$primaryLightHover',
@@ -87,34 +80,29 @@ const IconNavLink = ({
         }}
       >
         {icon}
-      </Text>
+      </H5>
     )}
   </NavigationLink>
 );
 
-const LogoNavLink = ({ linkTo }: { linkTo: string }) => {
-  const isMd = useMediaQuery(960);
-  return (
-    <NavigationLink to={linkTo} aria-label="Homepage">
-      <Text
-        h1
-        size={isMd ? 30 : 36}
-        css={{
-          margin: 0,
-          textGradient: '45deg, $blue600 -20%, $pink600 50%',
-          mr: 2,
-          fontFamily: 'monospace',
-          fontWeight: 700,
-          letterSpacing: '.3rem',
-          textDecoration: 'none',
-        }}
-        weight="bold"
-      >
-        LOGO
-      </Text>
-    </NavigationLink>
-  );
-};
+const LogoNavLink = ({ linkTo }: { linkTo: string }) => (
+  <NavigationLink to={linkTo} aria-label="Homepage">
+    <H2
+      h2
+      css={{
+        margin: 0,
+        textGradient: '45deg, $blue600 -20%, $pink600 50%',
+        mr: 2,
+        fontFamily: 'monospace',
+        letterSpacing: '.3rem',
+        textDecoration: 'none',
+      }}
+      weight="bold"
+    >
+      LOGO
+    </H2>
+  </NavigationLink>
+);
 
 const NavLink: React.FC<INavLinkProps> = (props: INavLinkProps) => {
   const { linkTo, linkName, style, isIcon = false, icon, isLogo = false } = props;

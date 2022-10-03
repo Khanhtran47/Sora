@@ -1,147 +1,133 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { Card, Text, Row, Col, Spacer } from '@nextui-org/react';
-// import { Link } from '@remix-run/react';
+import { Card, Row, Col, Spacer } from '@nextui-org/react';
+import { Link } from '@remix-run/react';
 import Image, { MimeType } from 'remix-image';
 
-import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { IAnimeResult } from '~/services/consumet/anilist/anilist.types';
+import { H2, H5 } from '~/src/components/styles/Text.styles';
+import AnilistStatIcon from '~/src/assets/icons/AnilistStatIcon.js';
 
 const AnimeBannerItemMobile = ({ item }: { item: IAnimeResult }) => {
-  const { cover, title, rating, genres } = item;
-  const { colorDarkenLighten } = useColorDarkenLighten(cover);
+  const { id, cover, title, rating, genres } = item;
 
   return (
-    // <Link to={}>
-    <Card
-      as="div"
-      isPressable
-      css={{
-        marginTop: '4rem',
-        w: '100%',
-        position: 'relative',
-        borderWidth: 0,
-        paddingBottom: '56.25%',
-        aspectRatio: '16 / 9',
-      }}
-      className={colorDarkenLighten}
-      role="figure"
-    >
-      <Card.Image
-        // @ts-ignore
-        as={Image}
-        src={cover || ''}
-        loading="eager"
-        width="100%"
-        height="100%"
+    <Link to={`/anime/${id}/overview`}>
+      <Card
+        as="div"
+        isPressable
         css={{
-          opacity: 0.3,
-          height: 'auto',
-          maxHeight: '605px !important',
-          minHeight: 'auto !important',
-          minWidth: 'auto !important',
+          marginTop: '4rem',
+          w: '100%',
+          position: 'relative',
+          borderWidth: 0,
+          paddingBottom: '56.25%',
+          aspectRatio: '16 / 9',
         }}
-        containerCss={{
-          overflow: 'visible',
-        }}
-        objectFit="cover"
-        alt={title?.userPreferred || title?.english || title?.romaji || title?.native}
-        title={title?.userPreferred || title?.english || title?.romaji || title?.native}
-        loaderUrl="/api/image"
-        placeholder="blur"
-        responsive={[
-          {
-            size: {
-              width: 375,
-              height: 605,
-            },
-            maxWidth: 375,
-          },
-          {
-            size: {
-              width: 650,
-              height: 605,
-            },
-          },
-        ]}
-        options={{
-          contentType: MimeType.WEBP,
-        }}
-      />
-      <Card.Footer css={{ position: 'absolute', zIndex: 1, bottom: 0 }}>
-        <Col
+        role="figure"
+      >
+        <Card.Image
+          // @ts-ignore
+          as={Image}
+          src={cover || ''}
+          loading="eager"
+          width="100%"
+          height="100%"
           css={{
-            marginLeft: '5vw',
-            marginRight: '5vw',
-            '@sm': {
-              marginLeft: '10vw',
-            },
+            opacity: 0.3,
+            height: 'auto',
+            maxHeight: '605px !important',
+            minHeight: 'auto !important',
+            minWidth: 'auto !important',
           }}
-        >
-          <Text
-            size={28}
-            weight="bold"
-            color={colorDarkenLighten || undefined}
+          containerCss={{
+            overflow: 'visible',
+          }}
+          objectFit="cover"
+          alt={title?.userPreferred || title?.english || title?.romaji || title?.native}
+          title={title?.userPreferred || title?.english || title?.romaji || title?.native}
+          loaderUrl="/api/image"
+          placeholder="blur"
+          responsive={[
+            {
+              size: {
+                width: 375,
+                height: 605,
+              },
+              maxWidth: 375,
+            },
+            {
+              size: {
+                width: 650,
+                height: 605,
+              },
+            },
+          ]}
+          options={{
+            contentType: MimeType.WEBP,
+          }}
+        />
+        <Card.Footer css={{ position: 'absolute', zIndex: 1, bottom: 0 }}>
+          <Col
             css={{
-              transition: 'color 0.25s ease 0s',
-              margin: 0,
-              lineHeight: 'var(--nextui-lineHeights-base)',
-              textOverflow: 'ellipsis',
-              overflow: 'hidden',
-              whiteSpace: 'nowrap',
-              '@xs': {
-                fontSize: '38px',
-              },
+              marginLeft: '5vw',
+              marginRight: '5vw',
               '@sm': {
-                fontSize: '48px',
-              },
-              '@md': {
-                fontSize: '58px',
+                marginLeft: '10vw',
               },
             }}
           >
-            {title?.userPreferred || title?.english || title?.romaji || title?.native}
-          </Text>
-          <Row css={{ marginTop: '1.25rem' }} align="center">
-            <Text
+            <H2
+              h2
               weight="bold"
-              size="$xs"
               css={{
-                backgroundColor: '#3ec2c2',
-                borderRadius: '$xs',
-                padding: '0 0.25rem 0 0.25rem',
-                marginRight: '0.5rem',
-              }}
-            >
-              Anilist
-            </Text>
-            <Text size="$sm" weight="bold">
-              {rating}%
-            </Text>
-            <Spacer x={1.5} />
-            <Text
-              h3
-              size="$xs"
-              css={{
-                display: 'flex',
-                flexDirection: 'row',
                 margin: 0,
+                lineHeight: 'var(--nextui-lineHeights-base)',
                 textOverflow: 'ellipsis',
                 overflow: 'hidden',
                 whiteSpace: 'nowrap',
               }}
             >
-              {genres?.slice(0, 2).map((genre) => (
+              {title?.userPreferred || title?.english || title?.romaji || title?.native}
+            </H2>
+            <Row css={{ marginTop: '1.25rem' }} align="center">
+              {rating && (
                 <>
-                  {genre}
-                  <Spacer x={0.5} />
+                  {Number(rating) > 75 ? (
+                    <AnilistStatIcon stat="good" />
+                  ) : Number(rating) > 60 ? (
+                    <AnilistStatIcon stat="average" />
+                  ) : (
+                    <AnilistStatIcon stat="bad" />
+                  )}
+                  <Spacer x={0.25} />
+                  <H5 weight="bold">{rating}%</H5>
+                  <Spacer x={1.5} />
                 </>
-              ))}
-            </Text>
-          </Row>
-        </Col>
-      </Card.Footer>
-    </Card>
-    // </Link>
+              )}
+              <H5
+                h5
+                css={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  margin: 0,
+                  textOverflow: 'ellipsis',
+                  overflow: 'hidden',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {genres?.slice(0, 2).map((genre) => (
+                  <>
+                    {genre}
+                    <Spacer x={0.5} />
+                  </>
+                ))}
+              </H5>
+            </Row>
+          </Col>
+        </Card.Footer>
+      </Card>
+    </Link>
   );
 };
 

@@ -1,7 +1,7 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import * as React from 'react';
-import { Card, Loading, Spacer, Text, Tooltip, Avatar } from '@nextui-org/react';
+import { Card, Loading, Spacer, Tooltip, Avatar } from '@nextui-org/react';
 import { useFetcher } from '@remix-run/react';
 import Image, { MimeType } from 'remix-image';
 import { useInView } from 'react-intersection-observer';
@@ -10,9 +10,9 @@ import { motion } from 'framer-motion';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
 import useLocalStorage from '~/hooks/useLocalStorage';
-import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { IMedia } from '~/services/tmdb/tmdb.types';
 import { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
+import { H5 } from '~/src/components/styles/Text.styles';
 import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
 
 import CardItemHover from './CardItemHover';
@@ -27,7 +27,6 @@ const CardItem = ({
   genresTv?: { [id: string]: string };
 }) => {
   const { title, posterPath } = item;
-  const { colorDarkenLighten } = useColorDarkenLighten(posterPath);
   const { ref, inView } = useInView({
     rootMargin: '500px 200px',
     threshold: [0, 0.25, 0.5, 0.75, 1],
@@ -164,29 +163,19 @@ const CardItem = ({
               maxWidth: `${isSm ? '164px' : isLg ? '210px' : '240px'}`,
             }}
           >
-            <Text
-              size={14}
-              b
+            <H5
+              h5
+              weight="bold"
               css={{
                 minWidth: `${isSm ? '130px' : isLg ? '180px' : '210px'}`,
                 padding: '0 0.25rem',
-                '@xs': {
-                  fontSize: '16px',
-                },
-                '@sm': {
-                  fontSize: '18px',
-                },
-                '&:hover': {
-                  color: colorDarkenLighten,
-                },
               }}
             >
               {title}
-            </Text>
+            </H5>
           </Card.Footer>
         </Tooltip>
       </Card>
-
       <Spacer y={1} />
     </>
   );

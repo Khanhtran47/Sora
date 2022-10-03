@@ -3,6 +3,7 @@ import YouTube, { YouTubeProps } from 'react-youtube';
 import { ClientOnly } from 'remix-utils';
 
 import useWindowSize from '~/hooks/useWindowSize';
+import { ITrailer } from '~/services/consumet/anilist/anilist.types';
 
 export type Trailer = {
   iso_639_1?: string;
@@ -18,7 +19,7 @@ export type Trailer = {
 };
 
 type WatchTrailerModalProps = {
-  trailer: Trailer;
+  trailer: Trailer | ITrailer;
   visible: boolean;
   closeHandler: () => void;
 };
@@ -55,8 +56,12 @@ const WatchTrailerModal = ({ trailer, visible, closeHandler }: WatchTrailerModal
           width={width && width < 720 ? `${width}px` : '720px'}
         >
           <Modal.Body>
-            {trailer && trailer.key && (
-              <YouTube videoId={trailer.key} opts={opts} onReady={onPlayerReady} />
+            {trailer && (
+              <YouTube
+                videoId={(trailer as Trailer).key || (trailer as ITrailer).id}
+                opts={opts}
+                onReady={onPlayerReady}
+              />
             )}
           </Modal.Body>
         </Modal>

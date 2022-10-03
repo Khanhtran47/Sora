@@ -4,17 +4,18 @@ import PropTypes from 'prop-types';
 import Svg from '../../components/styles/Svg.styles';
 
 const Bold = ({ color }) => (
-  <g transform="translate(7 6)">
+  <g transform="translate(2.5 2)">
     <path
-      d="M9.631,7.131c-.057.058-.27.306-.469.51a21.69,21.69,0,0,1-5.8,4.024A4.617,4.617,0,0,1,2.188,12a1.933,1.933,0,0,1-.9-.218,1.874,1.874,0,0,1-.795-.9A9.84,9.84,0,0,1,.242,9.814,23.979,23.979,0,0,1,0,6.008,27.724,27.724,0,0,1,.213,2.319,8.495,8.495,0,0,1,.554.992,1.785,1.785,0,0,1,2.132,0h.057A4.879,4.879,0,0,1,3.509.409,21.69,21.69,0,0,1,9.177,4.375a5.66,5.66,0,0,1,.482.554A1.783,1.783,0,0,1,10,5.993a1.875,1.875,0,0,1-.369,1.138"
+      d="M6.635,18.773V15.716A1.419,1.419,0,0,1,8.058,14.3h2.874a1.429,1.429,0,0,1,1.007.414,1.408,1.408,0,0,1,.417,1v3.058a1.213,1.213,0,0,0,.356.867,1.231,1.231,0,0,0,.871.36h1.961a3.46,3.46,0,0,0,2.443-1A3.41,3.41,0,0,0,19,16.578V7.867a2.473,2.473,0,0,0-.9-1.9L11.434.676A3.1,3.1,0,0,0,7.485.747L.967,5.965A2.474,2.474,0,0,0,0,7.867v8.7A3.444,3.444,0,0,0,3.456,20H5.372a1.231,1.231,0,0,0,1.236-1.218Z"
       fill={color}
     />
   </g>
 );
+
 const Light = ({ color, strokeWidth }) => (
-  <g transform="translate(8.5 19) rotate(-90)">
+  <g transform="translate(2.5 2)">
     <path
-      d="M14,0,7,7,0,0"
+      d="M6.657,18.771V15.7a1.426,1.426,0,0,1,1.424-1.419h2.886A1.426,1.426,0,0,1,12.4,15.7h0v3.076A1.225,1.225,0,0,0,13.6,20h1.924A3.456,3.456,0,0,0,19,16.562h0V7.838a2.439,2.439,0,0,0-.962-1.9L11.458.685a3.18,3.18,0,0,0-3.944,0L.962,5.943A2.42,2.42,0,0,0,0,7.847v8.714A3.456,3.456,0,0,0,3.473,20H5.4a1.235,1.235,0,0,0,1.241-1.229h0"
       fill="none"
       stroke={color}
       strokeLinecap="round"
@@ -25,7 +26,7 @@ const Light = ({ color, strokeWidth }) => (
   </g>
 );
 
-const ChevronRight = ({
+const Home = ({
   fill = 'currentColor',
   filled = false,
   size = 0,
@@ -69,7 +70,7 @@ const ChevronRight = ({
   }
 };
 
-ChevronRight.displayName = 'IconlyPlay';
+Home.displayName = 'IconlyPlay';
 
 Bold.propTypes = {
   color: PropTypes.string,
@@ -80,7 +81,7 @@ Light.propTypes = {
   strokeWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
-ChevronRight.propTypes = {
+Home.propTypes = {
   fill: PropTypes.string,
   filled: PropTypes.bool,
   size: PropTypes.number,
@@ -89,4 +90,4 @@ ChevronRight.propTypes = {
   strokeWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
-export default ChevronRight;
+export default Home;

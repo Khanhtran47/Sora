@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { Text, Button, Row, Spacer } from '@nextui-org/react';
+import { Button, Row, Spacer } from '@nextui-org/react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { IAnimeResult } from '~/services/consumet/anilist/anilist.types';
+import { H2 } from '~/src/components/styles/Text.styles';
 import ChevronRightIcon from '~/src/assets/icons/ChevronRightIcon.js';
 import ChevronLeftIcon from '~/src/assets/icons/ChevronLeftIcon.js';
 import { AnimeListCard, AnimeListBanner, AnimeListGrid } from './list';
@@ -26,6 +27,7 @@ interface IAnimeListProps {
   navigationButtons?: boolean;
   hasNextPage?: boolean;
   routeName?: string;
+  virtual?: boolean;
 }
 
 const AnimeList = (props: IAnimeListProps) => {
@@ -38,6 +40,7 @@ const AnimeList = (props: IAnimeListProps) => {
     navigationButtons,
     hasNextPage,
     routeName,
+    virtual,
   } = props;
   let { listType } = props;
 
@@ -77,6 +80,7 @@ const AnimeList = (props: IAnimeListProps) => {
           items={items}
           navigation={{ nextEl, prevEl }}
           setSlideProgress={setSlideProgress}
+          virtual={virtual}
         />
       );
       break;
@@ -86,9 +90,9 @@ const AnimeList = (props: IAnimeListProps) => {
   return (
     <>
       {listName && (
-        <Text h1 size="2rem" css={{ margin: '20px 0 20px 0' }}>
+        <H2 h2 css={{ margin: '20px 0 20px 0' }}>
           {listName}
-        </Text>
+        </H2>
       )}
       {showMoreList && (
         <Row fluid justify="space-between" wrap="nowrap" align="center">

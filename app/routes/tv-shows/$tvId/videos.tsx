@@ -4,11 +4,12 @@
 import * as React from 'react';
 import { LoaderFunction, json } from '@remix-run/node';
 import { useLoaderData, useFetcher } from '@remix-run/react';
-import { Text, Row, Col, Button, Grid, Card } from '@nextui-org/react';
+import { Row, Col, Button, Grid, Card } from '@nextui-org/react';
 import { getVideos } from '~/services/tmdb/tmdb.server';
 import { Item } from '~/services/youtube/youtube.types';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import WatchTrailerModal, { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
+import { H5, H6 } from '~/src/components/styles/Text.styles';
 
 type LoaderData = {
   videos: Awaited<ReturnType<typeof getVideos>>;
@@ -178,10 +179,12 @@ const VideosPage = () => {
                       alignItems: 'flex-start',
                     }}
                   >
-                    <Text b>{video?.snippet?.title}</Text>
-                    <Text css={{ color: '$accents7', fontWeight: '$semibold', fontSize: '$sm' }}>
+                    <H5 h5 weight="bold">
+                      {video?.snippet?.title}
+                    </H5>
+                    <H6 h6 css={{ color: '$accents7', fontWeight: '$semibold', fontSize: '$sm' }}>
                       {video?.snippet?.channelTitle}
-                    </Text>
+                    </H6>
                   </Card.Footer>
                 </Card>
               </Grid>

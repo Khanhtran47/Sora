@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { Card, Loading, Spacer, Text, Tooltip, Avatar } from '@nextui-org/react';
+import { Card, Loading, Spacer, Tooltip, Avatar } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
 import { useInView } from 'react-intersection-observer';
 import { ClientOnly } from 'remix-utils';
@@ -8,18 +8,18 @@ import { motion } from 'framer-motion';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
 import useLocalStorage from '~/hooks/useLocalStorage';
-import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { IAnimeResult } from '~/services/consumet/anilist/anilist.types';
+import { H5 } from '~/src/components/styles/Text.styles';
 import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
 
 import CardItemHover from './AnimeCardItemHover';
 
-const AnimeCardItem = ({ item }: { item: IAnimeResult }) => {
+const AnimeCardItem = ({ item, virtual = false }: { item: IAnimeResult; virtual?: boolean }) => {
   const { title, image } = item;
-  const { colorDarkenLighten } = useColorDarkenLighten(image);
   const { ref, inView } = useInView({
     rootMargin: '1000px 500px',
     threshold: [0, 0.25, 0.5, 0.75, 1],
+    triggerOnce: !virtual,
   });
   const isSm = useMediaQuery(650, 'max');
   const isLg = useMediaQuery(1400, 'max');
@@ -131,25 +131,16 @@ const AnimeCardItem = ({ item }: { item: IAnimeResult }) => {
                   maxWidth: `${isSm ? '164px' : isLg ? '210px' : '240px'}`,
                 }}
               >
-                <Text
-                  size={14}
-                  b
+                <H5
+                  h5
+                  weight="bold"
                   css={{
                     minWidth: `${isSm ? '130px' : isLg ? '180px' : '210px'}`,
                     padding: '0 0.25rem',
-                    '@xs': {
-                      fontSize: '16px',
-                    },
-                    '@sm': {
-                      fontSize: '18px',
-                    },
-                    '&:hover': {
-                      color: colorDarkenLighten,
-                    },
                   }}
                 >
                   {title?.userPreferred || title?.english || title?.romaji || title?.native}
-                </Text>
+                </H5>
               </Card.Footer>
             </Tooltip>
           </>

@@ -6,15 +6,16 @@ interface IAnimeItem {
   type: 'banner' | 'card';
   item: IAnimeResult;
   active?: boolean;
+  virtual?: boolean;
 }
 
 const AnimeItem = (props: IAnimeItem) => {
-  const { type, item, active } = props;
+  const { type, item, active, virtual } = props;
 
   if (type === 'banner') {
     return <AnimeBannerItem item={item} active={active} />;
   }
-  return <AnimeCardItem item={item} />;
+  return <AnimeCardItem item={item} virtual={virtual} />;
 };
 
 export default AnimeItem;
