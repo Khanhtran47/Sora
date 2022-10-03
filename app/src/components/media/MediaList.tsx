@@ -22,7 +22,6 @@ interface IMediaListProps {
   listName?: string | (() => never);
   items: IMedia[];
   showFilter?: boolean;
-  genres?: { [id: string]: string };
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
   mediaType?: 'movie' | 'tv';
@@ -37,7 +36,6 @@ const MediaList = (props: IMediaListProps) => {
     listName,
     items,
     showFilter,
-    genres,
     genresMovie,
     genresTv,
     mediaType,
@@ -167,10 +165,10 @@ const MediaList = (props: IMediaListProps) => {
           )}
         </Row>
       )}
-      {showFilter && mediaType && genres && (
+      {showFilter && mediaType && (
         <Filter
           onChange={filterChangeHandler}
-          genres={genres}
+          genres={mediaType === 'movie' ? genresMovie : genresTv}
           listType={displayType}
           mediaType={mediaType}
         />
