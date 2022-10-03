@@ -13,10 +13,12 @@ const AnimeListGrid = ({
   items,
   hasNextPage,
   routeName,
+  virtual,
 }: {
   items: IAnimeResult[];
   hasNextPage?: boolean;
   routeName?: string;
+  virtual?: boolean;
 }) => {
   const isXs = useMediaQuery(370);
   const fetcher = useFetcher();
@@ -129,7 +131,7 @@ const AnimeListGrid = ({
               transition={{ x: { type: 'spring', stiffness: 100 }, duration: 0.1 }}
             >
               <Link to={`/anime/${item.id}/overview`}>
-                <AnimeItem key={item.id} type="card" item={item} />
+                <AnimeItem key={item.id} type="card" item={item} virtual={virtual} />
               </Link>
             </motion.div>
           </Grid>

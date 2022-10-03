@@ -69,7 +69,14 @@ const AnimeList = (props: IAnimeListProps) => {
 
   switch (displayType) {
     case 'grid':
-      list = <AnimeListGrid items={items} hasNextPage={hasNextPage} routeName={routeName} />;
+      list = (
+        <AnimeListGrid
+          items={items}
+          hasNextPage={hasNextPage}
+          routeName={routeName}
+          virtual={virtual}
+        />
+      );
       break;
     case 'slider-banner':
       list = <AnimeListBanner items={items} />;
