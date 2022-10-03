@@ -11,7 +11,6 @@ import useMediaQuery from '~/hooks/useMediaQuery';
 const Overview = () => {
   const animeData: { detail: IAnimeInfo } | undefined = useRouteData('routes/anime/$animeId');
   const detail = animeData && animeData.detail;
-  console.log('🚀 ~ file: overview.tsx ~ line 17 ~ Overview ~ detail', detail);
   const isSm = useMediaQuery(650, 'max');
   return (
     <Row
