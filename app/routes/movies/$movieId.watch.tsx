@@ -3,10 +3,12 @@
 import * as React from 'react';
 import { MetaFunction, LoaderFunction, json } from '@remix-run/node';
 import { useCatch, useLoaderData, Link, RouteMatch } from '@remix-run/react';
-import { Container, Row, Spacer, Loading } from '@nextui-org/react';
+import { Container, Spacer, Loading } from '@nextui-org/react';
 import { ClientOnly } from 'remix-utils';
+import { isDesktop } from 'react-device-detect';
 
 import ArtPlayer from '~/src/components/elements/player/ArtPlayer';
+import AspectRatio from '~/src/components/elements/aspect-ratio/AspectRatio';
 import i18next from '~/i18n/i18next.server';
 import { getMovieDetail, getMovieTranslations } from '~/services/tmdb/tmdb.server';
 import {
@@ -19,9 +21,10 @@ import {
   IMovieSource,
   IMovieSubtitle,
 } from '~/services/consumet/flixhq/flixhq.types';
+import TMDB from '~/utils/media';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
-// import useWindowSize from '~/hooks/useWindowSize';
+import useMediaQuery from '~/hooks/useMediaQuery';
 
 export const meta: MetaFunction = () => ({
   refresh: {
@@ -104,6 +107,7 @@ const MovieWatch = () => {
   console.log('🚀 ~ file: $movieId.watch.tsx ~ line 153 ~ MovieWatch ~ sources', sources);
   console.log('🚀 ~ file: $movieId.watch.tsx ~ line 153 ~ MovieWatch ~ data', data);
   console.log('🚀 ~ file: $movieId.watch.tsx ~ line 153 ~ MovieWatch ~ detail', detail);
+  const isSm = useMediaQuery(960, 'max');
   const subtitleSelector = subtitles?.map(({ lang, url }: { lang: string; url: string }) => ({
     html: lang.toString(),
     url: url.toString(),
@@ -122,7 +126,7 @@ const MovieWatch = () => {
       css={{
         paddingTop: '100px',
         paddingLeft: '88px',
-        paddingRight: 0,
+        paddingRight: '23px',
         '@mdMax': {
           paddingLeft: '1rem',
           paddingBottom: '65px',
@@ -131,10 +135,10 @@ const MovieWatch = () => {
     >
       <ClientOnly fallback={<Loading type="default" />}>
         {() => (
-          <Row>
+          <AspectRatio.Root ratio={16 / 9}>
             <ArtPlayer
               option={{
-                title: 'test-player',
+                title: data?.title,
                 url:
                   sources?.find(
                     (item: { quality: number | string; url: string }) => item.quality === 'auto',
@@ -147,44 +151,27 @@ const MovieWatch = () => {
                   type: 'vtt',
                   encoding: 'utf-8',
                   style: {
-                    fontSize: '40px',
+                    fontSize: isDesktop ? '40px' : '20px',
                   },
                 },
+                poster: TMDB.backdropUrl(detail?.backdrop_path || '', isSm ? 'w780' : 'w1280'),
                 isLive: false,
-                muted: false,
-                autoplay: false,
-                pip: true,
-                autoSize: true,
                 autoMini: true,
-                screenshot: true,
-                setting: true,
-                loop: true,
-                flip: true,
-                playbackRate: true,
-                aspectRatio: true,
-                fullscreen: true,
-                fullscreenWeb: true,
-                subtitleOffset: true,
-                miniProgressBar: true,
-                mutex: true,
                 backdrop: true,
                 playsInline: true,
                 autoPlayback: true,
-                airplay: true,
-                theme: 'var(--nextui-colors-primary)',
               }}
               qualitySelector={qualitySelector || []}
               subtitleSelector={subtitleSelector || []}
               style={{
                 width: '100%',
-                height: '600px',
-                margin: '60px auto 0',
+                height: '100%',
               }}
               getInstance={(art) => {
                 console.log(art);
               }}
             />
-          </Row>
+          </AspectRatio.Root>
         )}
       </ClientOnly>
     </Container>
