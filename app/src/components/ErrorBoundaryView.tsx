@@ -9,7 +9,7 @@ interface IErrorBoundary {
 
 const ErrorBoundary = ({ error, isProd }: IErrorBoundary) => (
   <>
-    <Text h1 color="warning" css={{ textAlign: 'center' }}>
+    <Text h1 color="warning" css={{ textAlign: 'center', pt: '88px' }}>
       Some thing went wrong
     </Text>
     <Text h4 color="warning" css={{ textAlign: 'center' }}>

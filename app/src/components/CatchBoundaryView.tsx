@@ -20,7 +20,7 @@ const CatchBoundaryView = ({ caught }: { caught: ThrownResponse<number, any> }) 
 
   return (
     <>
-      <Text h1 color="warning" css={{ textAlign: 'center' }}>
+      <Text h1 color="warning" css={{ textAlign: 'center', pt: '88px' }}>
         {caught.status} {caught.statusText} {message}
       </Text>
       <Image

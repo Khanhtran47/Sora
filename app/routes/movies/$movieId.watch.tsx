@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { MetaFunction, LoaderFunction, json } from '@remix-run/node';
 import { useCatch, useLoaderData, Link, RouteMatch } from '@remix-run/react';
-import { Container, Spacer, Loading } from '@nextui-org/react';
+import { Container, Spacer, Loading, Radio } from '@nextui-org/react';
 import { ClientOnly } from 'remix-utils';
 import { isDesktop } from 'react-device-detect';
 
@@ -22,6 +22,7 @@ import {
   IMovieSubtitle,
 } from '~/services/consumet/flixhq/flixhq.types';
 import TMDB from '~/utils/media';
+import Player from '~/utils/player';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 import useMediaQuery from '~/hooks/useMediaQuery';
@@ -78,7 +79,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       }
     }
   }
-  if (!detail || !search) throw new Response('Not Found', { status: 404 });
+  if (!detail) throw new Response('Not Found', { status: 404 });
 
   return json<DataLoader>({
     detail,
@@ -101,13 +102,18 @@ export const handle = {
 };
 
 const MovieWatch = () => {
-  // const { detail, movieDetail } = useLoaderData<LoaderData>();
   const { detail, data, sources, subtitles } = useLoaderData<DataLoader>();
-  console.log('🚀 ~ file: $movieId.watch.tsx ~ line 153 ~ MovieWatch ~ subtitles', subtitles);
-  console.log('🚀 ~ file: $movieId.watch.tsx ~ line 153 ~ MovieWatch ~ sources', sources);
-  console.log('🚀 ~ file: $movieId.watch.tsx ~ line 153 ~ MovieWatch ~ data', data);
-  console.log('🚀 ~ file: $movieId.watch.tsx ~ line 153 ~ MovieWatch ~ detail', detail);
   const isSm = useMediaQuery(960, 'max');
+  const id = detail && detail.id;
+  const [player, setPlayer] = React.useState<string>('1');
+  const [source, setSource] = React.useState<string>(Player.moviePlayerUrl(Number(id), 1));
+  React.useEffect(
+    () =>
+      player === '2'
+        ? setSource(Player.moviePlayerUrl(Number(detail?.imdb_id), Number(player)))
+        : setSource(Player.moviePlayerUrl(Number(id), Number(player))),
+    [player, detail?.imdb_id, id],
+  );
   const subtitleSelector = subtitles?.map(({ lang, url }: { lang: string; url: string }) => ({
     html: lang.toString(),
     url: url.toString(),
@@ -135,43 +141,82 @@ const MovieWatch = () => {
     >
       <ClientOnly fallback={<Loading type="default" />}>
         {() => (
-          <AspectRatio.Root ratio={16 / 9}>
-            <ArtPlayer
-              option={{
-                title: data?.title,
-                url:
-                  sources?.find(
-                    (item: { quality: number | string; url: string }) => item.quality === 'auto',
-                  )?.url || '',
-                subtitle: {
-                  url:
-                    subtitles?.find(
-                      (item: { lang: string; url: string }) => item.lang === 'English',
-                    )?.url || '',
-                  type: 'vtt',
-                  encoding: 'utf-8',
-                  style: {
-                    fontSize: isDesktop ? '40px' : '20px',
-                  },
-                },
-                poster: TMDB.backdropUrl(detail?.backdrop_path || '', isSm ? 'w780' : 'w1280'),
-                isLive: false,
-                autoMini: true,
-                backdrop: true,
-                playsInline: true,
-                autoPlayback: true,
-              }}
-              qualitySelector={qualitySelector || []}
-              subtitleSelector={subtitleSelector || []}
-              style={{
-                width: '100%',
-                height: '100%',
-              }}
-              getInstance={(art) => {
-                console.log(art);
-              }}
-            />
-          </AspectRatio.Root>
+          <>
+            <AspectRatio.Root ratio={16 / 9}>
+              {sources ? (
+                <ArtPlayer
+                  option={{
+                    title: data?.title,
+                    url:
+                      sources?.find(
+                        (item: { quality: number | string; url: string }) =>
+                          item.quality === 'auto',
+                      )?.url || '',
+                    subtitle: {
+                      url:
+                        subtitles?.find(
+                          (item: { lang: string; url: string }) => item.lang === 'English',
+                        )?.url || '',
+                      type: 'vtt',
+                      encoding: 'utf-8',
+                      style: {
+                        fontSize: isDesktop ? '40px' : '20px',
+                      },
+                    },
+                    poster: TMDB.backdropUrl(detail?.backdrop_path || '', isSm ? 'w780' : 'w1280'),
+                    isLive: false,
+                    autoMini: true,
+                    backdrop: true,
+                    playsInline: true,
+                    autoPlayback: true,
+                  }}
+                  qualitySelector={qualitySelector || []}
+                  subtitleSelector={subtitleSelector || []}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                  }}
+                  getInstance={(art) => {
+                    console.log(art);
+                  }}
+                />
+              ) : (
+                <iframe
+                  id="iframe"
+                  src={source}
+                  style={{
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                  }}
+                  frameBorder="0"
+                  title="movie-player"
+                  allowFullScreen
+                  scrolling="no"
+                  // @ts-expect-error: this is expected
+                  sandbox
+                />
+              )}
+            </AspectRatio.Root>
+
+            {!sources && (
+              <>
+                <Spacer y={1} />
+                <Radio.Group
+                  label="Choose Player"
+                  defaultValue="1"
+                  orientation="horizontal"
+                  value={player}
+                  onChange={setPlayer}
+                >
+                  <Radio value="1">Player 1</Radio>
+                  <Radio value="2">Player 2</Radio>
+                  <Radio value="3">Player 3</Radio>
+                </Radio.Group>
+              </>
+            )}
+          </>
         )}
       </ClientOnly>
     </Container>
