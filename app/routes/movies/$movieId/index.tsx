@@ -6,7 +6,7 @@ import { Row, Col, Spacer, Divider } from '@nextui-org/react';
 import type { User } from '@supabase/supabase-js';
 import { useRouteData } from 'remix-utils';
 import { getSimilar, getVideos, getCredits, getRecommendation } from '~/services/tmdb/tmdb.server';
-import { IMovieDetail, IPeople, IPeople } from '~/services/tmdb/tmdb.types';
+import { IMovieDetail, IPeople } from '~/services/tmdb/tmdb.types';
 import MediaList from '~/src/components/media/MediaList';
 import PeopleList from '~/src/components/people/PeopleList';
 import { H6 } from '~/src/components/styles/Text.styles';
