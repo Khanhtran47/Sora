@@ -156,11 +156,13 @@ const Document = ({ children, title, lang, dir }: DocumentProps) => (
 export const loader: LoaderFunction = async ({ request }) => {
   const locale = await i18next.getLocale(request);
   const session = await getSession(request.headers.get('Cookie'));
-  const genresMovie = await getListGenre('movie', locale);
-  const genresTv = await getListGenre('tv', locale);
 
   if (session.has('access_token')) {
-    const { user, error } = await getUser(session.get('access_token'));
+    const [{ user, error }, genresMovie, genresTv] = await Promise.all([
+      getUser(session.get('access_token')),
+      getListGenre('movie', locale),
+      getListGenre('tv', locale),
+    ]);
 
     if (user && !error) {
       return json<LoaderDataType>({ user, locale, genresMovie, genresTv });
@@ -168,7 +170,11 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
 
   return json<LoaderDataType>(
-    { locale, genresMovie, genresTv },
+    {
+      locale,
+      genresMovie: await getListGenre('movie', locale),
+      genresTv: await getListGenre('tv', locale),
+    },
     {
       headers: { 'Set-Cookie': await i18nCookie.serialize(locale) },
     },

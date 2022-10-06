@@ -31,8 +31,8 @@ export const loader: LoaderFunction = async ({ params }) => {
   const tid = Number(tvId);
 
   if (!tid) throw new Response('Not Found', { status: 404 });
-  const detail = await getTvShowDetail(tid);
-  const imdbId = await getTvShowIMDBId(tid);
+
+  const [detail, imdbId] = await Promise.all([getTvShowDetail(tid), getTvShowIMDBId(tid)]);
 
   if (!imdbId || !detail) throw new Response('Not Found', { status: 404 });
 
