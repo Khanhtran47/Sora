@@ -25,7 +25,7 @@ const Player = ({
   useEffect(() => {
     const art = new Artplayer({
       ...option,
-      autoSize: false,
+      autoSize: isDesktop,
       loop: true,
       mutex: true,
       setting: true,
