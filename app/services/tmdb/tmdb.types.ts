@@ -277,3 +277,24 @@ export interface Image {
   vote_count?: number;
   width?: number;
 }
+
+export interface IMovieTranslations {
+  id: number;
+  translations: ITranslation[];
+}
+
+export interface ITranslation {
+  data: IDataTranslation;
+  english_name: string;
+  iso_3166_1: string;
+  iso_639_1: string;
+  name: string;
+}
+
+export interface IDataTranslation {
+  homepage: string;
+  overview: string;
+  runtime: number;
+  tagline: string;
+  title: string;
+}

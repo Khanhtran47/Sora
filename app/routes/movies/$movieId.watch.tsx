@@ -1,18 +1,31 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
 import { MetaFunction, LoaderFunction, json } from '@remix-run/node';
 import { useCatch, useLoaderData, Link, RouteMatch } from '@remix-run/react';
-import { Container, Row, Radio, Spacer } from '@nextui-org/react';
+import { Container, Spacer, Loading, Radio } from '@nextui-org/react';
+import { ClientOnly } from 'remix-utils';
+import { isDesktop } from 'react-device-detect';
 
-import { getMovieDetail } from '~/services/tmdb/tmdb.server';
+import ArtPlayer from '~/src/components/elements/player/ArtPlayer';
+import AspectRatio from '~/src/components/elements/aspect-ratio/AspectRatio';
+import i18next from '~/i18n/i18next.server';
+import { getMovieDetail, getMovieTranslations } from '~/services/tmdb/tmdb.server';
+import {
+  getMovieSearch,
+  getMovieInfo,
+  getMovieEpisodeStreamLink,
+} from '~/services/consumet/flixhq/flixhq.server';
+import {
+  IMovieResult,
+  IMovieSource,
+  IMovieSubtitle,
+} from '~/services/consumet/flixhq/flixhq.types';
+import TMDB from '~/utils/media';
 import Player from '~/utils/player';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
-import useWindowSize from '~/hooks/useWindowSize';
-
-type LoaderData = {
-  detail: Awaited<ReturnType<typeof getMovieDetail>>;
-};
+import useMediaQuery from '~/hooks/useMediaQuery';
 
 export const meta: MetaFunction = () => ({
   refresh: {
@@ -21,18 +34,58 @@ export const meta: MetaFunction = () => ({
   },
 });
 
-export const loader: LoaderFunction = async ({ params }) => {
+type DataLoader = {
+  detail: Awaited<ReturnType<typeof getMovieDetail>>;
+  data?: Awaited<ReturnType<typeof getMovieInfo>>;
+  sources?: IMovieSource[] | undefined;
+  subtitles?: IMovieSubtitle[] | undefined;
+};
+
+export const loader: LoaderFunction = async ({ request, params }) => {
+  const locale = await i18next.getLocale(request);
   const { movieId } = params;
   const mid = Number(movieId);
-
   if (!mid) throw new Response('Not Found', { status: 404 });
-
   const detail = await getMovieDetail(mid);
-
+  let search;
+  let movieDetail;
+  let movieStreamLink;
+  if ((detail && detail.original_language === 'en') || locale === 'en') {
+    search = await getMovieSearch(detail?.title || '');
+    const findMovie: IMovieResult | undefined = search?.results.find(
+      (item) => item.title === detail?.title,
+    );
+    if (findMovie && findMovie.id) {
+      movieDetail = await getMovieInfo(findMovie.id);
+      movieStreamLink = await getMovieEpisodeStreamLink(
+        movieDetail?.episodes[0].id || '',
+        movieDetail?.id || '',
+      );
+    }
+  } else {
+    const translations = await getMovieTranslations('movie', mid);
+    const findTranslation = translations?.translations.find((item) => item.iso_639_1 === 'en');
+    if (findTranslation) {
+      search = await getMovieSearch(findTranslation.data?.title || '');
+      const findMovie: IMovieResult | undefined = search?.results.find(
+        (item) => item.title === findTranslation.data?.title,
+      );
+      if (findMovie && findMovie.id) {
+        movieDetail = await getMovieInfo(findMovie.id);
+        movieStreamLink = await getMovieEpisodeStreamLink(
+          movieDetail?.episodes[0].id || '',
+          movieDetail?.id || '',
+        );
+      }
+    }
+  }
   if (!detail) throw new Response('Not Found', { status: 404 });
 
-  return json<LoaderData>({
+  return json<DataLoader>({
     detail,
+    data: movieDetail,
+    sources: movieStreamLink?.sources,
+    subtitles: movieStreamLink?.subtitles,
   });
 };
 
@@ -49,11 +102,11 @@ export const handle = {
 };
 
 const MovieWatch = () => {
-  const { detail } = useLoaderData<LoaderData>();
+  const { detail, data, sources, subtitles } = useLoaderData<DataLoader>();
+  const isSm = useMediaQuery(960, 'max');
   const id = detail && detail.id;
   const [player, setPlayer] = React.useState<string>('1');
   const [source, setSource] = React.useState<string>(Player.moviePlayerUrl(Number(id), 1));
-  const { width } = useWindowSize();
   React.useEffect(
     () =>
       player === '2'
@@ -61,51 +114,111 @@ const MovieWatch = () => {
         : setSource(Player.moviePlayerUrl(Number(id), Number(player))),
     [player, detail?.imdb_id, id],
   );
+  const subtitleSelector = subtitles?.map(({ lang, url }: { lang: string; url: string }) => ({
+    html: lang.toString(),
+    url: url.toString(),
+    ...(lang === 'English' && { default: true }),
+  }));
+  const qualitySelector = sources?.map(
+    ({ quality, url, isM3U8 }: { quality: number | string; url: string; isM3U8: boolean }) => ({
+      html: `${quality.toString()}P`,
+      url: isM3U8 ? url.toString() : '',
+      ...(quality === 'auto' && { default: true }),
+    }),
+  );
   return (
     <Container
       fluid
       css={{
         paddingTop: '100px',
         paddingLeft: '88px',
-        paddingRight: 0,
+        paddingRight: '23px',
         '@mdMax': {
           paddingLeft: '1rem',
           paddingBottom: '65px',
         },
       }}
     >
-      <Row>
-        <iframe
-          id="iframe"
-          src={source}
-          style={{
-            top: 0,
-            left: 0,
-            width: `${width && width < 960 ? `${width - 32}px` : `${width && width - 100}px`}`,
-            height: `${width && width < 960 ? `${(width - 16) / 1.5}px` : '577px'}`,
-          }}
-          frameBorder="0"
-          title="movie-player"
-          allowFullScreen
-          scrolling="no"
-          // @ts-expect-error: this is expected
-          sandbox
-        />
-      </Row>
-      <Spacer y={1} />
-      <Row>
-        <Radio.Group
-          label="Choose Player"
-          defaultValue="1"
-          orientation="horizontal"
-          value={player}
-          onChange={setPlayer}
-        >
-          <Radio value="1">Player 1</Radio>
-          <Radio value="2">Player 2</Radio>
-          <Radio value="3">Player 3</Radio>
-        </Radio.Group>
-      </Row>
+      <ClientOnly fallback={<Loading type="default" />}>
+        {() => (
+          <>
+            <AspectRatio.Root ratio={7 / 3}>
+              {sources ? (
+                <ArtPlayer
+                  option={{
+                    title: data?.title,
+                    url:
+                      sources?.find(
+                        (item: { quality: number | string; url: string }) =>
+                          item.quality === 'auto',
+                      )?.url || '',
+                    subtitle: {
+                      url:
+                        subtitles?.find(
+                          (item: { lang: string; url: string }) => item.lang === 'English',
+                        )?.url || '',
+                      type: 'vtt',
+                      encoding: 'utf-8',
+                      style: {
+                        fontSize: isDesktop ? '40px' : '20px',
+                      },
+                    },
+                    poster: TMDB.backdropUrl(detail?.backdrop_path || '', isSm ? 'w780' : 'w1280'),
+                    isLive: false,
+                    autoMini: true,
+                    backdrop: true,
+                    playsInline: true,
+                    autoPlayback: true,
+                  }}
+                  qualitySelector={qualitySelector || []}
+                  subtitleSelector={subtitleSelector || []}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                  }}
+                  getInstance={(art) => {
+                    console.log(art);
+                  }}
+                />
+              ) : (
+                <iframe
+                  id="iframe"
+                  src={source}
+                  style={{
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                  }}
+                  frameBorder="0"
+                  title="movie-player"
+                  allowFullScreen
+                  scrolling="no"
+                  // @ts-expect-error: this is expected
+                  sandbox
+                />
+              )}
+            </AspectRatio.Root>
+
+            {!sources && (
+              <>
+                <Spacer y={1} />
+                <Radio.Group
+                  label="Choose Player"
+                  defaultValue="1"
+                  orientation="horizontal"
+                  value={player}
+                  onChange={setPlayer}
+                >
+                  <Radio value="1">Player 1</Radio>
+                  <Radio value="2">Player 2</Radio>
+                  <Radio value="3">Player 3</Radio>
+                </Radio.Group>
+              </>
+            )}
+          </>
+        )}
+      </ClientOnly>
     </Container>
   );
 };

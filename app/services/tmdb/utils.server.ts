@@ -308,6 +308,9 @@ export class TMDB {
 
     return url;
   };
+
+  static translationsUrl = (type: 'movie' | 'tv', id: number) =>
+    `${this.API_BASE_URL}${type}/${id}/translations?api_key=${this.key}`;
 }
 
 export const fetcher = async <T = any>(url: string): Promise<T> => {
