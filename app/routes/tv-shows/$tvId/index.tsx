@@ -6,7 +6,7 @@ import { Row, Col, Spacer, Divider, Image } from '@nextui-org/react';
 import type { User } from '@supabase/supabase-js';
 import { useRouteData } from 'remix-utils';
 import { getSimilar, getVideos, getCredits, getRecommendation } from '~/services/tmdb/tmdb.server';
-import { ITvShowDetail, ICast } from '~/services/tmdb/tmdb.types';
+import { ITvShowDetail, IPeople } from '~/services/tmdb/tmdb.types';
 import MediaList from '~/src/components/media/MediaList';
 import PeopleList from '~/src/components/people/PeopleList';
 import TMDB from '~/utils/media';
@@ -17,7 +17,7 @@ type LoaderData = {
   videos: Awaited<ReturnType<typeof getVideos>>;
   similar: Awaited<ReturnType<typeof getSimilar>>;
   recommendations: Awaited<ReturnType<typeof getRecommendation>>;
-  topBilledCast: ICast[];
+  topBilledCast: IPeople[];
 };
 
 export const loader: LoaderFunction = async ({ params }) => {

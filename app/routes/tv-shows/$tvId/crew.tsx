@@ -3,11 +3,11 @@ import { LoaderFunction, json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { Row } from '@nextui-org/react';
 import { getCredits } from '~/services/tmdb/tmdb.server';
-import { ICrew } from '~/services/tmdb/tmdb.types';
+import { IPeople } from '~/services/tmdb/tmdb.types';
 import PeopleList from '~/src/components/people/PeopleList';
 
 type LoaderData = {
-  crew: ICrew[];
+  crew: IPeople[];
 };
 
 export const loader: LoaderFunction = async ({ params }) => {
