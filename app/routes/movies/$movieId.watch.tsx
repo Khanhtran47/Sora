@@ -142,7 +142,7 @@ const MovieWatch = () => {
       <ClientOnly fallback={<Loading type="default" />}>
         {() => (
           <>
-            <AspectRatio.Root ratio={16 / 9}>
+            <AspectRatio.Root ratio={7 / 3}>
               {sources ? (
                 <ArtPlayer
                   option={{
