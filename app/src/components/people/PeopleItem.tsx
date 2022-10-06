@@ -1,3 +1,4 @@
+/* eslint-disable no-unsafe-optional-chaining */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Spacer, Avatar, Card } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
@@ -5,7 +6,7 @@ import { useInView } from 'react-intersection-observer';
 
 import TMDB from '~/utils/media';
 import { IPeople } from '~/services/tmdb/tmdb.types';
-import { H5 } from '~/src/components/styles/Text.styles';
+import { H5, H6 } from '~/src/components/styles/Text.styles';
 import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
 
 interface IPeopleItem {
@@ -37,7 +38,7 @@ const CardItem = ({ item }: { item: IPeople }) => {
       >
         {inView && (
           <Card.Body css={{ p: 0 }}>
-            {profilePath ? (
+            {item?.profile_path ? (
               <Card.Image
                 // @ts-ignore
                 as={Image}
@@ -84,7 +85,7 @@ const CardItem = ({ item }: { item: IPeople }) => {
             justifyItems: 'flex-start',
             flexDirection: 'column',
             alignItems: 'flex-start',
-            minHeight: '4.875rem',
+            minHeight: '5.25rem',
             maxWidth: '160px',
           }}
         >
@@ -93,11 +94,30 @@ const CardItem = ({ item }: { item: IPeople }) => {
             weight="bold"
             css={{
               minWidth: '130px',
-              padding: '0 0.25rem',
             }}
           >
             {name}
           </H5>
+          {item?.known_for && (
+            <H6 h6 className="!line-clamp-2" css={{ color: '$accents7', fontWeight: '$semibold' }}>
+              {item?.known_for?.map((movie, index) => (
+                <>
+                  {movie?.title || movie?.originalTitle || movie?.name || movie?.originalName}
+                  {item?.known_for?.length && (index < item?.known_for?.length - 1 ? ', ' : '')}
+                </>
+              ))}
+            </H6>
+          )}
+          {item?.character && (
+            <H6 h6 css={{ color: '$accents7', fontWeight: '$semibold' }}>
+              {item.character}
+            </H6>
+          )}
+          {item?.job && (
+            <H6 h6 css={{ color: '$accents7', fontWeight: '$semibold' }}>
+              {item.job}
+            </H6>
+          )}
         </Card.Footer>
       </Card>
       <Spacer y={1} />

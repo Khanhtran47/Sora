@@ -33,6 +33,9 @@ export interface IMedia {
   video?: boolean;
   originalCountry?: string;
   originalTitle?: string;
+  firstAirDate?: string;
+  name?: string;
+  originalName?: string;
 }
 
 export interface IMediaList {
@@ -94,39 +97,10 @@ export interface IListGenre {
   genres: IGenre[];
 }
 
-export interface ICast {
-  adult?: boolean;
-  gender?: number | null;
-  id?: number;
-  known_for_department?: string;
-  name?: string;
-  original_name?: string;
-  popularity?: number;
-  profile_path?: string | null;
-  cast_id?: number;
-  character?: string;
-  credit_id?: string;
-  order?: number;
-}
-
-export interface ICrew {
-  adult?: boolean;
-  gender?: number | null;
-  id?: number;
-  known_for_department?: string;
-  name?: string;
-  original_name?: string;
-  popularity?: string;
-  profile_path?: string | null;
-  credit_id?: string;
-  department?: string;
-  job?: string;
-}
-
 export interface ICredit {
   id: number;
-  cast: ICast[];
-  crew: ICrew[];
+  cast: IPeople[];
+  crew: IPeople[];
 }
 
 export interface IVideos {
@@ -236,7 +210,10 @@ export interface IPeople {
   character?: string;
   credit_id?: string;
   order?: number;
+  cast_id?: number;
   original_name?: string;
+  department?: string;
+  job?: string;
 }
 
 export interface IListPeople {
