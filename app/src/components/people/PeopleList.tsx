@@ -26,9 +26,10 @@ interface IPeopleListProps {
   showMoreList?: boolean;
   onClickViewMore?: () => void;
   navigationButtons?: boolean;
+  virtual?: boolean;
 }
 
-const PeopleListGrid = ({ items }: { items: IPeople[] }) => {
+const PeopleListGrid = ({ items, virtual }: { items: IPeople[]; virtual?: boolean }) => {
   const isXs = useMediaQuery(650);
   const gap = isXs ? 1 : 3;
   return (
@@ -46,7 +47,7 @@ const PeopleListGrid = ({ items }: { items: IPeople[] }) => {
                   alignItems: 'center',
                 }}
               >
-                <PeopleItem key={item.id} item={item} />
+                <PeopleItem key={item.id} item={item} virtual={virtual} />
               </Link>
             </Grid>
           );
@@ -111,7 +112,8 @@ const PeopleListCard = ({
 };
 
 const PeopleList = (props: IPeopleListProps) => {
-  const { listType, listName, items, showMoreList, onClickViewMore, navigationButtons } = props;
+  const { listType, listName, items, showMoreList, onClickViewMore, navigationButtons, virtual } =
+    props;
   const [displayType] = useState<string>(listType as string);
 
   const [prevEl, setPrevEl] = React.useState<HTMLElement | null>(null);
@@ -122,7 +124,7 @@ const PeopleList = (props: IPeopleListProps) => {
 
   switch (displayType) {
     case 'grid':
-      list = <PeopleListGrid items={items} />;
+      list = <PeopleListGrid items={items} virtual={virtual} />;
       break;
     case 'slider-card':
       list = (

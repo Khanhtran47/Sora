@@ -11,14 +11,14 @@ import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
 
 interface IPeopleItem {
   item: IPeople;
+  virtual?: boolean;
 }
-const CardItem = ({ item }: { item: IPeople }) => {
+const CardItem = ({ item, virtual }: { item: IPeople; virtual?: boolean }) => {
   const { name } = item;
   const profilePath = TMDB?.profileUrl(item?.profile_path || '', 'w185');
   const { ref, inView } = useInView({
-    rootMargin: '500px 200px',
-    threshold: [0, 0.25, 0.5, 0.75, 1],
-    triggerOnce: true,
+    rootMargin: '1000px 500px',
+    triggerOnce: !virtual,
   });
 
   return (
@@ -36,89 +36,95 @@ const CardItem = ({ item }: { item: IPeople }) => {
         role="figure"
         ref={ref}
       >
-        {inView && (
-          <Card.Body css={{ p: 0 }}>
-            {item?.profile_path ? (
-              <Card.Image
-                // @ts-ignore
-                as={Image}
-                src={profilePath || ''}
-                objectFit="cover"
-                width="100%"
-                height="auto"
-                alt={name}
-                title={name}
-                css={{
-                  minWidth: '160px !important',
-                  minHeight: '240px !important',
-                }}
-                loaderUrl="/api/image"
-                placeholder="blur"
-                options={{
-                  contentType: MimeType.WEBP,
-                }}
-                responsive={[
-                  {
-                    size: {
-                      width: 160,
-                      height: 240,
+        {inView ? (
+          <>
+            <Card.Body css={{ p: 0 }}>
+              {item?.profile_path ? (
+                <Card.Image
+                  // @ts-ignore
+                  as={Image}
+                  src={profilePath || ''}
+                  objectFit="cover"
+                  width="100%"
+                  height="auto"
+                  alt={name}
+                  title={name}
+                  css={{
+                    minWidth: '160px !important',
+                    minHeight: '240px !important',
+                  }}
+                  loaderUrl="/api/image"
+                  placeholder="blur"
+                  options={{
+                    contentType: MimeType.WEBP,
+                  }}
+                  responsive={[
+                    {
+                      size: {
+                        width: 160,
+                        height: 240,
+                      },
                     },
-                  },
-                ]}
-              />
-            ) : (
-              <Avatar
-                icon={<PhotoIcon width={48} height={48} />}
-                pointer
+                  ]}
+                />
+              ) : (
+                <Avatar
+                  icon={<PhotoIcon width={48} height={48} />}
+                  pointer
+                  css={{
+                    minWidth: '160px !important',
+                    minHeight: '240px !important',
+                    size: '$20',
+                    borderRadius: '0 !important',
+                  }}
+                />
+              )}
+            </Card.Body>
+            <Card.Footer
+              css={{
+                justifyItems: 'flex-start',
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                minHeight: '5.25rem',
+                maxWidth: '160px',
+              }}
+            >
+              <H5
+                h5
+                weight="bold"
                 css={{
-                  minWidth: '160px !important',
-                  minHeight: '240px !important',
-                  size: '$20',
-                  borderRadius: '0 !important',
+                  minWidth: '130px',
                 }}
-              />
-            )}
-          </Card.Body>
-        )}
-        <Card.Footer
-          css={{
-            justifyItems: 'flex-start',
-            flexDirection: 'column',
-            alignItems: 'flex-start',
-            minHeight: '5.25rem',
-            maxWidth: '160px',
-          }}
-        >
-          <H5
-            h5
-            weight="bold"
-            css={{
-              minWidth: '130px',
-            }}
-          >
-            {name}
-          </H5>
-          {item?.known_for && (
-            <H6 h6 className="!line-clamp-2" css={{ color: '$accents7', fontWeight: '$semibold' }}>
-              {item?.known_for?.map((movie, index) => (
-                <>
-                  {movie?.title || movie?.originalTitle || movie?.name || movie?.originalName}
-                  {item?.known_for?.length && (index < item?.known_for?.length - 1 ? ', ' : '')}
-                </>
-              ))}
-            </H6>
-          )}
-          {item?.character && (
-            <H6 h6 css={{ color: '$accents7', fontWeight: '$semibold' }}>
-              {item.character}
-            </H6>
-          )}
-          {item?.job && (
-            <H6 h6 css={{ color: '$accents7', fontWeight: '$semibold' }}>
-              {item.job}
-            </H6>
-          )}
-        </Card.Footer>
+              >
+                {name}
+              </H5>
+              {item?.known_for && (
+                <H6
+                  h6
+                  className="!line-clamp-2"
+                  css={{ color: '$accents7', fontWeight: '$semibold' }}
+                >
+                  {item?.known_for?.map((movie, index) => (
+                    <>
+                      {movie?.title || movie?.originalTitle || movie?.name || movie?.originalName}
+                      {item?.known_for?.length && (index < item?.known_for?.length - 1 ? ', ' : '')}
+                    </>
+                  ))}
+                </H6>
+              )}
+              {item?.character && (
+                <H6 h6 css={{ color: '$accents7', fontWeight: '$semibold' }}>
+                  {item.character}
+                </H6>
+              )}
+              {item?.job && (
+                <H6 h6 css={{ color: '$accents7', fontWeight: '$semibold' }}>
+                  {item.job}
+                </H6>
+              )}
+            </Card.Footer>
+          </>
+        ) : null}
       </Card>
       <Spacer y={1} />
     </>
@@ -126,8 +132,8 @@ const CardItem = ({ item }: { item: IPeople }) => {
 };
 
 const PeopleItem = (props: IPeopleItem) => {
-  const { item } = props;
-  return <CardItem item={item} />;
+  const { item, virtual } = props;
+  return <CardItem item={item} virtual={virtual} />;
 };
 
 export default PeopleItem;
