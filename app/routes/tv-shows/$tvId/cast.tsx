@@ -42,7 +42,9 @@ const CastPage = () => {
         },
       }}
     >
-      {cast && cast.length > 0 && <PeopleList listType="grid" items={cast} listName="Cast" />}
+      {cast && cast.length > 0 && (
+        <PeopleList listType="grid" items={cast} listName="Cast" virtual />
+      )}
     </Row>
   );
 };

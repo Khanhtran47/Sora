@@ -47,7 +47,7 @@ const CastPage = () => {
         This list has a lot of items, so i limit it to 24 items until we install react virtual
       */}
       {cast && cast.length > 0 && (
-        <PeopleList listType="grid" items={cast.slice(0, 24)} listName="Cast" />
+        <PeopleList listType="grid" items={cast.slice(0, 24)} listName="Cast" virtual />
       )}
     </Row>
   );

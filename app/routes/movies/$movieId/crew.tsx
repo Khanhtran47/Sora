@@ -24,6 +24,7 @@ export const loader: LoaderFunction = async ({ params }) => {
 
 const CrewPage = () => {
   const { crew } = useLoaderData<LoaderData>();
+  console.log('🚀 ~ file: crew.tsx ~ line 27 ~ CrewPage ~ crew', crew);
 
   return (
     <Row
@@ -47,7 +48,7 @@ const CrewPage = () => {
         This list has a lot of items, so i limit it to 24 items until we install react virtual
       */}
       {crew && crew.length > 0 && (
-        <PeopleList listType="grid" items={crew.slice(0, 24)} listName="Crew" />
+        <PeopleList listType="grid" items={crew} listName="Crew" virtual />
       )}
     </Row>
   );
