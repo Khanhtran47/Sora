@@ -8,7 +8,7 @@ export const StyledScrollArea = styled(ScrollAreaPrimitive.Root, {
   height: 225,
   borderRadius: 4,
   overflow: 'hidden',
-  boxShadow: '$shadow-sm',
+  boxShadow: '$sm',
 });
 
 export const StyledViewport = styled(ScrollAreaPrimitive.Viewport, {

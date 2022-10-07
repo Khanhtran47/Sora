@@ -21,7 +21,7 @@ const Player = ({
   getInstance: (art: Artplayer) => void;
   style?: React.CSSProperties | undefined;
 }) => {
-  const artRef = useRef<HTMLElement | string>();
+  const artRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const art = new Artplayer({
       ...option,
@@ -75,8 +75,25 @@ const Player = ({
                 art.seek = art.currentTime + 10;
               },
             },
+            {
+              position: 'right',
+              html: 'Search Subtitles',
+              tooltip: 'Search Subtitles',
+              click: () => {
+                console.info('You clicked on the custom control');
+              },
+            },
           ]
-        : [],
+        : [
+            {
+              position: 'right',
+              html: 'Search Subtitles',
+              tooltip: 'Search Subtitles',
+              click: () => {
+                console.info('You clicked on the custom control');
+              },
+            },
+          ],
       customType: {
         m3u8: (video: HTMLMediaElement, url: string) => {
           if (Hls.isSupported()) {
@@ -140,11 +157,7 @@ const Player = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   // eslint-disable-next-line react/self-closing-comp
-  return React.createElement('div', {
-    ref: artRef,
-    style,
-    ...rest,
-  });
+  return <div ref={artRef} style={style} {...rest} />;
 };
 
 const ArtPlayer = styled(Player, {
