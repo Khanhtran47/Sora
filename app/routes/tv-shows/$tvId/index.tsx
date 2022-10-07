@@ -26,10 +26,12 @@ export const loader: LoaderFunction = async ({ params }) => {
 
   if (!tid) throw new Response('Not Found', { status: 404 });
 
-  const similar = await getSimilar('tv', tid);
-  const videos = await getVideos('tv', tid);
-  const credits = await getCredits('tv', tid);
-  const recommendations = await getRecommendation('tv', tid);
+  const [similar, videos, credits, recommendations] = await Promise.all([
+    getSimilar('tv', tid),
+    getVideos('tv', tid),
+    getCredits('tv', tid),
+    getRecommendation('tv', tid),
+  ]);
 
   if (!similar || !videos || !credits || !recommendations)
     throw new Response('Not Found', { status: 404 });
