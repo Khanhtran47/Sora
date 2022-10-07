@@ -24,7 +24,6 @@ export const loader: LoaderFunction = async ({ params }) => {
 
 const CrewPage = () => {
   const { crew } = useLoaderData<LoaderData>();
-  console.log('🚀 ~ file: crew.tsx ~ line 27 ~ CrewPage ~ crew', crew);
 
   return (
     <Row
