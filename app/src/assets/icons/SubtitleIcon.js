@@ -26,11 +26,12 @@ const Subtitle = ({ filled = false, size = 0, height = 0, width = 0, ...props })
           height={size || height || 24}
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
-css =
-    {
-      { display: 'inline', }
-    } {...props} > <Light /><
-    /Svg>
+          css={{ display: 'inline' }}
+          {...props}
+        >
+          {' '}
+          <Light />
+        </Svg>
       );
     default:
       return (
@@ -41,11 +42,12 @@ css =
           viewBox="0 0 24 24"
           xmlns="http:/ /
         www.w3.org / 2000 / svg "
-css = {
-  { display: 'inline', }
-} {...props} > <Bold />;
-    <
-    /Svg>
+          css={{ display: 'inline' }}
+          {...props}
+        >
+          {' '}
+          <Bold />;
+        </Svg>
       );
   }
 };
