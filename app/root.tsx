@@ -45,7 +45,7 @@ import {
   nightTheme,
   draculaTheme,
 } from '~/styles/nextui.config';
-import { getListGenre } from '~/services/tmdb/tmdb.server';
+import { getListGenre, getListLanguages } from '~/services/tmdb/tmdb.server';
 import Layout from '~/src/components/layouts/Layout';
 import styles from '~/styles/app.css';
 import Home from '~/src/assets/icons/HomeIcon.js';
@@ -67,6 +67,7 @@ interface LoaderDataType {
   locale: string;
   genresMovie: Awaited<ReturnType<typeof getListGenre>>;
   genresTv: Awaited<ReturnType<typeof getListGenre>>;
+  languages: Awaited<ReturnType<typeof getListLanguages>>;
 }
 
 export const links: LinksFunction = () => [
@@ -158,14 +159,15 @@ export const loader: LoaderFunction = async ({ request }) => {
   const session = await getSession(request.headers.get('Cookie'));
 
   if (session.has('access_token')) {
-    const [{ user, error }, genresMovie, genresTv] = await Promise.all([
+    const [{ user, error }, genresMovie, genresTv, languages] = await Promise.all([
       getUser(session.get('access_token')),
       getListGenre('movie', locale),
       getListGenre('tv', locale),
+      getListLanguages(),
     ]);
 
     if (user && !error) {
-      return json<LoaderDataType>({ user, locale, genresMovie, genresTv });
+      return json<LoaderDataType>({ user, locale, genresMovie, genresTv, languages });
     }
   }
 
@@ -174,6 +176,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       locale,
       genresMovie: await getListGenre('movie', locale),
       genresTv: await getListGenre('tv', locale),
+      languages: await getListLanguages(),
     },
     {
       headers: { 'Set-Cookie': await i18nCookie.serialize(locale) },

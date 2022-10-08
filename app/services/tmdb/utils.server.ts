@@ -311,6 +311,8 @@ export class TMDB {
 
   static translationsUrl = (type: 'movie' | 'tv', id: number) =>
     `${this.API_BASE_URL}${type}/${id}/translations?api_key=${this.key}`;
+
+  static languagesUrl = () => `${this.API_BASE_URL}configuration/languages?api_key=${this.key}`;
 }
 
 export const fetcher = async <T = any>(url: string): Promise<T> => {

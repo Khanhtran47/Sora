@@ -157,7 +157,6 @@ const MovieWatch = () => {
                         subtitles?.find(
                           (item: { lang: string; url: string }) => item.lang === 'English',
                         )?.url || '',
-                      type: 'vtt',
                       encoding: 'utf-8',
                       style: {
                         fontSize: isDesktop ? '40px' : '20px',
@@ -175,6 +174,10 @@ const MovieWatch = () => {
                   style={{
                     width: '100%',
                     height: '100%',
+                  }}
+                  subtitleOptions={{
+                    tmdb_id: detail?.id,
+                    type: 'movie',
                   }}
                   getInstance={(art) => {
                     console.log(art);

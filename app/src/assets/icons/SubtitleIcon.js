@@ -16,7 +16,7 @@ const Light = () => (
   </g>
 );
 
-const ChevronLeft = ({ filled = false, size = 0, height = 0, width = 0, ...props }) => {
+const Subtitle = ({ filled = false, size = 0, height = 0, width = 0, ...props }) => {
   switch (filled) {
     case false:
       return (

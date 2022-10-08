@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { useEffect, useRef } from 'react';
+import * as React from 'react';
 import { styled } from '@nextui-org/react';
 import Artplayer from 'artplayer';
 import Hls from 'hls.js';
 import { isMobile, isTablet, isDesktop } from 'react-device-detect';
+
+import SearchSubtitles from '../modal/SearchSubtitle';
 
 const Player = ({
   option,
@@ -12,6 +14,7 @@ const Player = ({
   subtitleSelector,
   getInstance,
   style,
+  subtitleOptions,
   ...rest
 }: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -20,9 +23,26 @@ const Player = ({
   subtitleSelector: { html: string; url: string; default?: boolean }[];
   getInstance: (art: Artplayer) => void;
   style?: React.CSSProperties | undefined;
+  subtitleOptions?: {
+    imdb_id?: number;
+    tmdb_id?: number;
+    parent_feature_id?: number;
+    parent_imdb_id?: number;
+    parent_tmdb_id?: number;
+    episode_number?: number;
+    season_number?: number;
+    type?: 'movie' | 'episode' | 'all';
+  };
 }) => {
-  const artRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
+  const [visible, setVisible] = React.useState(false);
+  const [subtitles, setSubtitles] = React.useState<
+    { html: string; url: string; default?: boolean }[]
+  >(subtitleSelector || []);
+  const artRef = React.useRef<HTMLDivElement>(null);
+  const closeHandler = () => {
+    setVisible(false);
+  };
+  React.useEffect(() => {
     const art = new Artplayer({
       ...option,
       autoSize: isDesktop,
@@ -80,7 +100,8 @@ const Player = ({
               html: 'Search Subtitles',
               tooltip: 'Search Subtitles',
               click: () => {
-                console.info('You clicked on the custom control');
+                setVisible(true);
+                art.pause();
               },
             },
           ]
@@ -90,7 +111,8 @@ const Player = ({
               html: 'Search Subtitles',
               tooltip: 'Search Subtitles',
               click: () => {
-                console.info('You clicked on the custom control');
+                setVisible(true);
+                art.pause();
               },
             },
           ],
@@ -113,7 +135,6 @@ const Player = ({
           width: 200,
           html: 'Subtitle',
           tooltip: 'English',
-          // icon: '<SubtitleIcon width={22} height={22} />',
           selector: [
             {
               html: 'Display',
@@ -125,7 +146,7 @@ const Player = ({
                 return !item.switch;
               },
             },
-            ...subtitleSelector,
+            ...subtitles,
           ],
           onSelect: (item) => {
             // @ts-ignore
@@ -155,9 +176,19 @@ const Player = ({
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [subtitles]);
   // eslint-disable-next-line react/self-closing-comp
-  return <div ref={artRef} style={style} {...rest} />;
+  return (
+    <>
+      <div ref={artRef} style={style} {...rest} />
+      <SearchSubtitles
+        visible={visible}
+        closeHandler={closeHandler}
+        setSubtitles={setSubtitles}
+        subtitleOptions={subtitleOptions}
+      />
+    </>
+  );
 };
 
 const ArtPlayer = styled(Player, {

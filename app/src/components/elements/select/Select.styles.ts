@@ -17,7 +17,7 @@ export const StyledTrigger = styled(SelectPrimitive.SelectTrigger, {
   boxShadow: '$sm',
   '&:hover': { backgroundColor: '$accents2' },
   '&:focus': { boxShadow: '$xs' },
-  '&[data-placeholder]': { color: '$primaryLightActive' },
+  '&[data-placeholder]': { color: '$primary' },
 });
 
 export const StyledIcon = styled(SelectPrimitive.SelectIcon, {
@@ -29,6 +29,7 @@ export const StyledContent = styled(SelectPrimitive.Content, {
   backgroundColor: '$backgroundContrast',
   borderRadius: 6,
   boxShadow: '$lg',
+  zIndex: 9999,
 });
 
 export const StyledViewport = styled(SelectPrimitive.Viewport, {
