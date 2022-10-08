@@ -47,7 +47,7 @@ const WatchTrailerModal = ({ trailer, visible, closeHandler }: WatchTrailerModal
         <Modal
           closeButton
           blur
-          aria-labelledby="modal-title"
+          aria-labelledby="Watch Trailer"
           open={visible}
           onClose={closeHandler}
           className="!max-w-fit"

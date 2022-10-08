@@ -17,6 +17,7 @@ import {
   IDetailImages,
   IPeopleCredits,
   IMovieTranslations,
+  ILanguage,
 } from './tmdb.types';
 import { fetcher, postFetchDataHandler, TMDB } from './utils.server';
 
@@ -36,6 +37,19 @@ const getListFromTMDB = async (url: string, type?: 'movie' | 'tv'): Promise<IMed
     return { page: 0, totalPages: 0, items: [], totalResults: 0 };
   }
 };
+
+/* ============================================Config Field=========================================== */
+
+export const getListLanguages = async (): Promise<ILanguage[] | undefined> => {
+  try {
+    const fetched = await fetcher<ILanguage[]>(TMDB.languagesUrl());
+    return fetched;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+/* =======================================End of Config Field========================================= */
 
 /* ===========================================Trending Field========================================== */
 

@@ -21,7 +21,7 @@ export const StyledSlider = styled(SliderPrimitive.Root, {
 });
 
 export const StyledTrack = styled(SliderPrimitive.Track, {
-  backgroundColor: '$gray900',
+  backgroundColor: '$accents9',
   position: 'relative',
   flexGrow: 1,
   borderRadius: '9999px',
@@ -32,7 +32,7 @@ export const StyledTrack = styled(SliderPrimitive.Track, {
 
 export const StyledRange = styled(SliderPrimitive.Range, {
   position: 'absolute',
-  backgroundColor: 'white',
+  backgroundColor: '$backgroundContrast',
   borderRadius: '9999px',
   height: '100%',
 });
@@ -42,9 +42,9 @@ export const StyledThumb = styled(SliderPrimitive.Thumb, {
   display: 'block',
   width: 20,
   height: 20,
-  backgroundColor: 'white',
-  boxShadow: '0 2px 10px $gray600',
+  backgroundColor: '$background',
+  boxShadow: '$sm',
   borderRadius: 10,
   '&:hover': { backgroundColor: '$primary' },
-  '&:focus': { boxShadow: '0 0 0 5px $gray700' },
+  '&:focus': { boxShadow: '$xs' },
 });
