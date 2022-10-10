@@ -31,13 +31,12 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
-    <Link to={`/tv-show/${match.params.tvId}`}>{match.params.tvId}</Link>
+    <Link to={`/tv-shows/${match.params.tvId}`}>{match.params.tvId}</Link>
   ),
 };
 
 const TvShowDetail = () => {
   const { detail } = useLoaderData<LoaderData>();
-  console.log('🚀 ~ file: $tvId.tsx ~ line 40 ~ TvShowDetail ~ detail', detail);
   const fetcher = useFetcher();
   const [visible, setVisible] = React.useState(false);
   const [trailer, setTrailer] = React.useState<Trailer>({});

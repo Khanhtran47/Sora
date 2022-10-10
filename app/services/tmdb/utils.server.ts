@@ -313,6 +313,30 @@ export class TMDB {
     `${this.API_BASE_URL}${type}/${id}/translations?api_key=${this.key}`;
 
   static languagesUrl = () => `${this.API_BASE_URL}configuration/languages?api_key=${this.key}`;
+
+  static tvSeasonDetailUrl = (tv_id: number, season_number: number, language?: string) => {
+    let url = `${this.API_BASE_URL}tv/${tv_id}/season/${season_number}?api_key=${this.key}`;
+    if (language) url += `&language=${language}`;
+    return url;
+  };
+
+  static tvSeasonCreditsUrl = (tv_id: number, season_number: number, language?: string) => {
+    let url = `${this.API_BASE_URL}tv/${tv_id}/season/${season_number}/credits?api_key=${this.key}`;
+    if (language) url += `&language=${language}`;
+    return url;
+  };
+
+  static tvSeasonImagesUrl = (tv_id: number, season_number: number, language?: string) => {
+    let url = `${this.API_BASE_URL}tv/${tv_id}/season/${season_number}/images?api_key=${this.key}`;
+    if (language) url += `&language=${language}`;
+    return url;
+  };
+
+  static tvSeasonVideosUrl = (tv_id: number, season_number: number, language?: string) => {
+    let url = `${this.API_BASE_URL}tv/${tv_id}/season/${season_number}/videos?api_key=${this.key}`;
+    if (language) url += `&language=${language}`;
+    return url;
+  };
 }
 
 export const fetcher = async <T = any>(url: string): Promise<T> => {

@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { LoaderFunction, json } from '@remix-run/node';
-import { useLoaderData, useNavigate } from '@remix-run/react';
+import { useLoaderData, useNavigate, Link } from '@remix-run/react';
 import { Row, Col, Spacer, Divider, Image as NextImage, Card, Avatar } from '@nextui-org/react';
 import type { User } from '@supabase/supabase-js';
 import { useRouteData } from 'remix-utils';
@@ -196,11 +196,10 @@ const Overview = () => {
               Seasons
             </H2>
             {detail.seasons
-              .filter((season) => season.name?.includes('Season'))
+              .filter((season) => !season.name?.includes('Specials'))
               .map((season) => (
-                <>
+                <Link key={season.id} to={`/tv-shows/${detail.id}/season/${season.season_number}/`}>
                   <Card
-                    key={season.id}
                     as="div"
                     isHoverable
                     isPressable
@@ -273,7 +272,7 @@ const Overview = () => {
                     </Card.Body>
                   </Card>
                   <Spacer y={1} />
-                </>
+                </Link>
               ))}
             <Spacer y={1} />
             <Divider x={1} css={{ m: 0 }} />

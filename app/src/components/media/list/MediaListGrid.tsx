@@ -20,7 +20,7 @@ const MediaListGrid = ({
     <Grid.Container gap={1} justify="flex-start" alignItems="stretch" wrap="wrap">
       {items?.length > 0 &&
         items.map((item, index) => {
-          const href = (item.mediaType === 'movie' ? '/movies/' : '/tv-shows/') + item.id;
+          const href = `${item.mediaType === 'movie' ? '/movies/' : '/tv-shows/'}${item.id}/`;
           return (
             <Grid
               xs={isXs ? 12 : 6}
