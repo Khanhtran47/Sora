@@ -181,7 +181,11 @@ const MediaDetail = (props: IMediaDetail) => {
                     >
                       <Link
                         prefetch="intent"
-                        to={`/${type === 'movie' ? 'movies' : 'tv-shows'}/${id}/watch`}
+                        to={`/${
+                          type === 'movie'
+                            ? `movies/${id}/watch`
+                            : `tv-shows/${id}/season/1/episode/1`
+                        }`}
                       >
                         <H5 h5 weight="bold" transform="uppercase">
                           Watch now
@@ -282,7 +286,11 @@ const MediaDetail = (props: IMediaDetail) => {
                     >
                       <Link
                         prefetch="intent"
-                        to={`/${type === 'movie' ? 'movies' : 'tv-shows'}/${id}/watch`}
+                        to={`/${
+                          type === 'movie'
+                            ? `movies/${id}/watch`
+                            : `tv-shows/${id}/season/1/episode/1`
+                        }`}
                       >
                         <H5 h5 weight="bold" transform="uppercase">
                           Watch now
