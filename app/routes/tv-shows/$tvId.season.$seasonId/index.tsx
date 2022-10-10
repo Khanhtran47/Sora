@@ -108,35 +108,40 @@ const Episodes = () => {
                     )}
                     <Flex direction="column" justify="start" css={{ p: '1rem' }}>
                       <H4 h4>
-                        Episode {episode?.episode_number}: {episode?.name}
+                        Episode{' '}
+                        {isSm
+                          ? `${episode?.episode_number}`
+                          : `${episode?.episode_number}: ${episode?.name}`}
                       </H4>
-                      <Spacer y={0.25} />
-                      <Row align="center">
-                        <H5
-                          h5
-                          weight="bold"
-                          css={{
-                            backgroundColor: '#3ec2c2',
-                            borderRadius: '$xs',
-                            padding: '0 0.25rem 0 0.25rem',
-                            marginRight: '0.5rem',
-                          }}
-                        >
-                          TMDb
-                        </H5>
-                        <H5 h5 weight="bold">
-                          {episode?.vote_average.toFixed(1)}
-                        </H5>
-                        <Spacer x={0.5} />
-                        <H5 h5>
-                          {episode.air_date} | {episode?.runtime} min
-                        </H5>
-                      </Row>
-                      <Spacer y={0.25} />
                       {!isSm && (
-                        <H6 h6 className="!line-clamp-1">
-                          {episode.overview}
-                        </H6>
+                        <>
+                          <Spacer y={0.25} />
+                          <Row align="center">
+                            <H5
+                              h5
+                              weight="bold"
+                              css={{
+                                backgroundColor: '#3ec2c2',
+                                borderRadius: '$xs',
+                                padding: '0 0.25rem 0 0.25rem',
+                                marginRight: '0.5rem',
+                              }}
+                            >
+                              TMDb
+                            </H5>
+                            <H5 h5 weight="bold">
+                              {episode?.vote_average.toFixed(1)}
+                            </H5>
+                            <Spacer x={0.5} />
+                            <H5 h5>
+                              {episode.air_date} | {episode?.runtime} min
+                            </H5>
+                          </Row>
+                          <Spacer y={0.25} />
+                          <H6 h6 className="!line-clamp-1">
+                            {episode.overview}
+                          </H6>
+                        </>
                       )}
                     </Flex>
                   </Card.Body>
