@@ -2,28 +2,31 @@
 import { LoaderFunction, json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { Row } from '@nextui-org/react';
-import { getCredits } from '~/services/tmdb/tmdb.server';
+
+import i18next from '~/i18n/i18next.server';
+import { getTvSeasonCredits } from '~/services/tmdb/tmdb.server';
 import { IPeople } from '~/services/tmdb/tmdb.types';
 import PeopleList from '~/src/components/people/PeopleList';
 
 type LoaderData = {
-  crew: IPeople[];
+  cast: IPeople[];
 };
 
-export const loader: LoaderFunction = async ({ params }) => {
-  const { tvId } = params;
-  const mid = Number(tvId);
+export const loader: LoaderFunction = async ({ request, params }) => {
+  const locale = await i18next.getLocale(request);
+  const { tvId, seasonId } = params;
+  const tid = Number(tvId);
 
-  if (!mid) throw new Response('Not found', { status: 404 });
-  const credits = await getCredits('tv', mid);
+  if (!tid) throw new Response('Not found', { status: 404 });
+  const credits = await getTvSeasonCredits(tid, Number(seasonId), locale);
 
   if (!credits) throw new Response('Not found', { status: 404 });
 
-  return json<LoaderData>({ crew: credits.crew });
+  return json<LoaderData>({ cast: credits.cast });
 };
 
-const CrewPage = () => {
-  const { crew } = useLoaderData<LoaderData>();
+const CastPage = () => {
+  const { cast } = useLoaderData<LoaderData>();
 
   return (
     <Row
@@ -42,11 +45,11 @@ const CrewPage = () => {
         },
       }}
     >
-      {crew && crew.length > 0 && (
-        <PeopleList listType="grid" items={crew} listName="Crew" virtual />
+      {cast && cast.length > 0 && (
+        <PeopleList listType="grid" items={cast} listName="Cast" virtual />
       )}
     </Row>
   );
 };
 
-export default CrewPage;
+export default CastPage;

@@ -1,20 +1,24 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { LoaderFunction, json } from '@remix-run/node';
-import { useLoaderData, useNavigate } from '@remix-run/react';
-import { Row, Col, Spacer, Divider, Image } from '@nextui-org/react';
+import { useLoaderData, useNavigate, Link } from '@remix-run/react';
+import { Row, Col, Spacer, Divider, Image as NextImage, Card, Avatar } from '@nextui-org/react';
 import type { User } from '@supabase/supabase-js';
 import { useRouteData } from 'remix-utils';
-import { getSimilar, getVideos, getCredits, getRecommendation } from '~/services/tmdb/tmdb.server';
+import Image, { MimeType } from 'remix-image';
+
+import { getSimilar, getCredits, getRecommendation } from '~/services/tmdb/tmdb.server';
 import { ITvShowDetail, IPeople } from '~/services/tmdb/tmdb.types';
 import MediaList from '~/src/components/media/MediaList';
 import PeopleList from '~/src/components/people/PeopleList';
 import TMDB from '~/utils/media';
 import useMediaQuery from '~/hooks/useMediaQuery';
-import { H6 } from '~/src/components/styles/Text.styles';
+import { H2, H4, H5, H6 } from '~/src/components/styles/Text.styles';
+import Flex from '~/src/components/styles/Flex.styles';
+import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
 
 type LoaderData = {
-  videos: Awaited<ReturnType<typeof getVideos>>;
   similar: Awaited<ReturnType<typeof getSimilar>>;
   recommendations: Awaited<ReturnType<typeof getRecommendation>>;
   topBilledCast: IPeople[];
@@ -26,18 +30,15 @@ export const loader: LoaderFunction = async ({ params }) => {
 
   if (!tid) throw new Response('Not Found', { status: 404 });
 
-  const [similar, videos, credits, recommendations] = await Promise.all([
+  const [similar, credits, recommendations] = await Promise.all([
     getSimilar('tv', tid),
-    getVideos('tv', tid),
     getCredits('tv', tid),
     getRecommendation('tv', tid),
   ]);
 
-  if (!similar || !videos || !credits || !recommendations)
-    throw new Response('Not Found', { status: 404 });
+  if (!similar || !credits || !recommendations) throw new Response('Not Found', { status: 404 });
 
   return json<LoaderData>({
-    videos,
     similar,
     recommendations,
     topBilledCast: credits && credits.cast && credits.cast.slice(0, 9),
@@ -45,12 +46,7 @@ export const loader: LoaderFunction = async ({ params }) => {
 };
 
 const Overview = () => {
-  const {
-    similar,
-    // videos,
-    recommendations,
-    topBilledCast,
-  } = useLoaderData<LoaderData>();
+  const { similar, recommendations, topBilledCast } = useLoaderData<LoaderData>();
   const tvData: { detail: ITvShowDetail } | undefined = useRouteData('routes/tv-shows/$tvId');
   const rootData:
     | {
@@ -63,13 +59,8 @@ const Overview = () => {
   const detail = tvData && tvData.detail;
   const navigate = useNavigate();
 
-  // const isXs = useMediaQuery(425, 'max');
   const isSm = useMediaQuery(650, 'max');
-  // const isMd = useMediaQuery(960, 'max');
   // const isMdLand = useMediaQuery(960, 'max', 'landscape');
-
-  // TODO: add creator instead of director for tv shows
-  // const directors = credits.crew.filter(({ job }) => job === 'Director');
   const onClickViewMore = (type: 'cast' | 'similar' | 'recommendations') => {
     navigate(`/tv-shows/${detail?.id}/${type}`);
   };
@@ -108,7 +99,7 @@ const Overview = () => {
               <br />
               {detail?.networks &&
                 detail.networks.map((network, index) => (
-                  <Image
+                  <NextImage
                     key={`network-item-${index}`}
                     src={TMDB.logoUrl(network?.logo_path || '', 'w154')}
                     alt="Network Image"
@@ -143,20 +134,19 @@ const Overview = () => {
           </H6>
         </Row>
         <Spacer y={1} />
-
         <Row>
-          {/* {directors && directors.length > 0 && (
+          {detail?.created_by && detail?.created_by.length > 0 && (
             <>
               <H6 h6>
-                <strong>Director</strong>
+                <strong>Creators</strong>
                 <br />
-                {directors.map((director, index) => (
-                  <p key={`director-item-${index}`}>{director.name}</p>
+                {detail.created_by.map((creator) => (
+                  <p key={`director-item-${creator.id}}`}>{creator.name}</p>
                 ))}
               </H6>
               <Spacer x={2} />
             </>
-          )} */}
+          )}
           {detail?.production_countries && detail.production_countries.length > 0 && (
             <>
               <H6 h6>
@@ -190,11 +180,100 @@ const Overview = () => {
             <PeopleList
               listType="slider-card"
               items={topBilledCast}
-              listName="Top Billed Cast"
+              listName="Top Cast"
               showMoreList
               onClickViewMore={() => onClickViewMore('cast')}
               navigationButtons
             />
+            <Spacer y={1} />
+            <Divider x={1} css={{ m: 0 }} />
+            <Spacer y={1} />
+          </>
+        )}
+        {detail?.seasons && detail?.seasons.length > 0 && (
+          <>
+            <H2 h2 css={{ margin: '20px 0 20px 0' }}>
+              Seasons
+            </H2>
+            {detail.seasons
+              .filter((season) => !season.name?.includes('Specials'))
+              .map((season) => (
+                <Link key={season.id} to={`/tv-shows/${detail.id}/season/${season.season_number}/`}>
+                  <Card
+                    as="div"
+                    isHoverable
+                    isPressable
+                    css={{
+                      maxHeight: '195px !important',
+                      borderWidth: 0,
+                      filter: 'var(--nextui-dropShadows-md)',
+                    }}
+                    role="figure"
+                  >
+                    <Card.Body
+                      css={{
+                        p: 0,
+                        flexFlow: 'row nowrap',
+                        justifyContent: 'flex-start',
+                      }}
+                    >
+                      {season.poster_path ? (
+                        <Card.Image
+                          // @ts-ignore
+                          as={Image}
+                          src={TMDB.posterUrl(season?.poster_path, 'w154')}
+                          objectFit="cover"
+                          width="130px"
+                          height="100%"
+                          alt={season.name}
+                          title={season.name}
+                          css={{
+                            minWidth: '130px !important',
+                            minHeight: '195px !important',
+                          }}
+                          loaderUrl="/api/image"
+                          placeholder="blur"
+                          options={{
+                            contentType: MimeType.WEBP,
+                          }}
+                          containerCss={{ margin: 0, minWidth: '130px' }}
+                          responsive={[
+                            {
+                              size: {
+                                width: 130,
+                                height: 195,
+                              },
+                            },
+                          ]}
+                        />
+                      ) : (
+                        <Avatar
+                          icon={<PhotoIcon width={48} height={48} />}
+                          pointer
+                          css={{
+                            minWidth: '130px !important',
+                            minHeight: '195px !important',
+                            size: '$20',
+                            borderRadius: '0 !important',
+                          }}
+                        />
+                      )}
+                      <Flex direction="column" justify="start" css={{ p: '1.25rem' }}>
+                        <H4 h4>{season.name}</H4>
+                        <H5 h5>
+                          {season.air_date} | {season.episode_count} episodes
+                        </H5>
+                        {!isSm && (
+                          <H6 h6 className="!line-clamp-3">
+                            {season.overview}
+                          </H6>
+                        )}
+                      </Flex>
+                    </Card.Body>
+                  </Card>
+                  <Spacer y={1} />
+                </Link>
+              ))}
             <Spacer y={1} />
             <Divider x={1} css={{ m: 0 }} />
             <Spacer y={1} />
@@ -218,7 +297,6 @@ const Overview = () => {
             <Spacer y={1} />
           </>
         )}
-
         {similar.items && similar.items.length > 0 && (
           <>
             <MediaList

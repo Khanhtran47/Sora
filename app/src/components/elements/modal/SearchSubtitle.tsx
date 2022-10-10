@@ -114,6 +114,24 @@ const SearchSubtitles = ({
     if (subtitleOptions && subtitleOptions.tmdb_id) {
       params.append('tmdb_id', `${subtitleOptions.tmdb_id}`);
     }
+    if (subtitleOptions && subtitleOptions.parent_feature_id) {
+      params.append('parent_feature_id', `${subtitleOptions.parent_feature_id}`);
+    }
+    if (subtitleOptions && subtitleOptions.parent_imdb_id) {
+      params.append('parent_imdb_id', `${subtitleOptions.parent_imdb_id}`);
+    }
+    if (subtitleOptions && subtitleOptions.parent_tmdb_id) {
+      params.append('parent_tmdb_id', `${subtitleOptions.parent_tmdb_id}`);
+    }
+    if (subtitleOptions && subtitleOptions.episode_number !== undefined) {
+      params.append('episode_number', `${subtitleOptions.episode_number}`);
+    }
+    if (subtitleOptions && subtitleOptions.season_number !== undefined) {
+      params.append('season_number', `${subtitleOptions.season_number}`);
+    }
+    if (subtitleOptions && subtitleOptions.type) {
+      params.append('type', subtitleOptions.type);
+    }
     if (page) {
       params.append('page', `${page}`);
     }
@@ -142,6 +160,24 @@ const SearchSubtitles = ({
     }
     if (subtitleOptions && subtitleOptions.tmdb_id) {
       params.append('tmdb_id', `${subtitleOptions.tmdb_id}`);
+    }
+    if (subtitleOptions && subtitleOptions.parent_feature_id) {
+      params.append('parent_feature_id', `${subtitleOptions.parent_feature_id}`);
+    }
+    if (subtitleOptions && subtitleOptions.parent_imdb_id) {
+      params.append('parent_imdb_id', `${subtitleOptions.parent_imdb_id}`);
+    }
+    if (subtitleOptions && subtitleOptions.parent_tmdb_id) {
+      params.append('parent_tmdb_id', `${subtitleOptions.parent_tmdb_id}`);
+    }
+    if (subtitleOptions && subtitleOptions.episode_number !== undefined) {
+      params.append('episode_number', `${subtitleOptions.episode_number}`);
+    }
+    if (subtitleOptions && subtitleOptions.season_number !== undefined) {
+      params.append('season_number', `${subtitleOptions.season_number}`);
+    }
+    if (subtitleOptions && subtitleOptions.type) {
+      params.append('type', subtitleOptions.type);
     }
     url += `?${params}`;
     fetcher.load(url);

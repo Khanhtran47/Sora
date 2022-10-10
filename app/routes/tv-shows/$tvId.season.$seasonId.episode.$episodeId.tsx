@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
 import { MetaFunction, LoaderFunction, json } from '@remix-run/node';
-import { useCatch, useLoaderData, Link, RouteMatch } from '@remix-run/react';
+import { useCatch, useLoaderData, Link, RouteMatch, useParams } from '@remix-run/react';
 import { Container, Spacer, Loading, Radio } from '@nextui-org/react';
 import { ClientOnly } from 'remix-utils';
 import { isDesktop } from 'react-device-detect';
@@ -10,7 +10,7 @@ import { isDesktop } from 'react-device-detect';
 import ArtPlayer from '~/src/components/elements/player/ArtPlayer';
 import AspectRatio from '~/src/components/elements/aspect-ratio/AspectRatio';
 import i18next from '~/i18n/i18next.server';
-import { getMovieDetail, getTranslations } from '~/services/tmdb/tmdb.server';
+import { getTvShowDetail, getTvShowIMDBId, getTranslations } from '~/services/tmdb/tmdb.server';
 import {
   getMovieSearch,
   getMovieInfo,
@@ -27,6 +27,14 @@ import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 import useMediaQuery from '~/hooks/useMediaQuery';
 
+type LoaderData = {
+  detail: Awaited<ReturnType<typeof getTvShowDetail>>;
+  imdbId: Awaited<ReturnType<typeof getTvShowIMDBId>>;
+  data?: Awaited<ReturnType<typeof getMovieInfo>>;
+  sources?: IMovieSource[] | undefined;
+  subtitles?: IMovieSubtitle[] | undefined;
+};
+
 export const meta: MetaFunction = () => ({
   refresh: {
     httpEquiv: 'Content-Security-Policy',
@@ -34,75 +42,92 @@ export const meta: MetaFunction = () => ({
   },
 });
 
-type DataLoader = {
-  detail: Awaited<ReturnType<typeof getMovieDetail>>;
-  data?: Awaited<ReturnType<typeof getMovieInfo>>;
-  sources?: IMovieSource[] | undefined;
-  subtitles?: IMovieSubtitle[] | undefined;
-};
-
 export const loader: LoaderFunction = async ({ request, params }) => {
   const locale = await i18next.getLocale(request);
-  const { movieId } = params;
-  const mid = Number(movieId);
-  if (!mid) throw new Response('Not Found', { status: 404 });
-  const detail = await getMovieDetail(mid);
+  const { tvId, seasonId, episodeId } = params;
+  const tid = Number(tvId);
+  if (!tid) throw new Response('Not Found', { status: 404 });
+  const [detail, imdbId] = await Promise.all([getTvShowDetail(tid), getTvShowIMDBId(tid)]);
   let search;
-  let movieDetail;
-  let movieStreamLink;
+  let tvDetail;
+  let tvEpisodeDetail;
+  let tvEpisodeStreamLink;
   if ((detail && detail.original_language === 'en') || locale === 'en') {
-    search = await getMovieSearch(detail?.title || '');
+    search = await getMovieSearch(detail?.name || '');
     const findMovie: IMovieResult | undefined = search?.results.find(
-      (item) => item.title === detail?.title,
+      (item) => item.title === detail?.name,
     );
     if (findMovie && findMovie.id) {
-      movieDetail = await getMovieInfo(findMovie.id);
-      movieStreamLink = await getMovieEpisodeStreamLink(
-        movieDetail?.episodes[0].id || '',
-        movieDetail?.id || '',
+      tvDetail = await getMovieInfo(findMovie.id);
+      tvEpisodeDetail = tvDetail?.episodes?.find(
+        (episode) => episode.season === Number(seasonId) && episode.number === Number(episodeId),
       );
-    }
-  } else {
-    const translations = await getTranslations('movie', mid);
-    const findTranslation = translations?.translations.find((item) => item.iso_639_1 === 'en');
-    if (findTranslation) {
-      search = await getMovieSearch(findTranslation.data?.title || '');
-      const findMovie: IMovieResult | undefined = search?.results.find(
-        (item) => item.title === findTranslation.data?.title,
-      );
-      if (findMovie && findMovie.id) {
-        movieDetail = await getMovieInfo(findMovie.id);
-        movieStreamLink = await getMovieEpisodeStreamLink(
-          movieDetail?.episodes[0].id || '',
-          movieDetail?.id || '',
+      if (tvEpisodeDetail) {
+        tvEpisodeStreamLink = await getMovieEpisodeStreamLink(
+          tvEpisodeDetail?.id || '',
+          tvDetail?.id || '',
         );
       }
     }
+  } else {
+    const translations = await getTranslations('tv', tid);
+    const findTranslation = translations?.translations.find((item) => item.iso_639_1 === 'en');
+    if (findTranslation) {
+      search = await getMovieSearch(detail?.name || '');
+      const findMovie: IMovieResult | undefined = search?.results.find(
+        (item) => item.title === detail?.name,
+      );
+      if (findMovie && findMovie.id) {
+        tvDetail = await getMovieInfo(findMovie.id);
+        tvEpisodeDetail = tvDetail?.episodes?.find(
+          (episode) => episode.season === Number(seasonId) && episode.number === Number(episodeId),
+        );
+        if (tvEpisodeDetail) {
+          tvEpisodeStreamLink = await getMovieEpisodeStreamLink(
+            tvEpisodeDetail?.id || '',
+            tvDetail?.id || '',
+          );
+        }
+      }
+    }
   }
-  if (!detail) throw new Response('Not Found', { status: 404 });
 
-  return json<DataLoader>({
+  if (!imdbId || !detail) throw new Response('Not Found', { status: 404 });
+
+  return json<LoaderData>({
     detail,
-    data: movieDetail,
-    sources: movieStreamLink?.sources,
-    subtitles: movieStreamLink?.subtitles,
+    imdbId,
+    data: tvDetail,
+    sources: tvEpisodeStreamLink?.sources,
+    subtitles: tvEpisodeStreamLink?.subtitles,
   });
 };
 
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
     <>
-      <Link to={`/movies/${match.params.movieId}`}>{match.params.movieId}</Link>
+      <Link to={`/tv-shows/${match.params.tvId}`}>{match.params.tvId}</Link>
       <Spacer x={0.5} />
       <span> ❱ </span>
       <Spacer x={0.5} />
-      <Link to={`/movies/${match.params.movieId}/watch`}>Watch</Link>
+      <Link to={`/tv-shows/${match.params.tvId}/season/${match.params.seasonId}/`}>
+        Season {match.params.seasonId}
+      </Link>
+      <Spacer x={0.5} />
+      <span> ❱ </span>
+      <Spacer x={0.5} />
+      <Link
+        to={`/tv-shows/${match.params.tvId}/season/${match.params.seasonId}/episode/${match.params.episodeId}`}
+      >
+        Episode {match.params.episodeId}
+      </Link>
     </>
   ),
 };
 
-const MovieWatch = () => {
-  const { detail, data, sources, subtitles } = useLoaderData<DataLoader>();
+const EpisodeWatch = () => {
+  const { detail, imdbId, data, sources, subtitles } = useLoaderData<LoaderData>();
+  const { seasonId, episodeId } = useParams();
   const isSm = useMediaQuery(960, 'max');
   const id = detail && detail.id;
   const [player, setPlayer] = React.useState<string>('1');
@@ -110,9 +135,16 @@ const MovieWatch = () => {
   React.useEffect(
     () =>
       player === '2'
-        ? setSource(Player.moviePlayerUrl(Number(detail?.imdb_id), Number(player)))
-        : setSource(Player.moviePlayerUrl(Number(id), Number(player))),
-    [player, detail?.imdb_id, id],
+        ? setSource(Player.tvPlayerUrl(Number(imdbId), Number(player), Number(episodeId) || 1))
+        : setSource(
+            Player.tvPlayerUrl(
+              Number(detail?.id),
+              Number(player),
+              Number(seasonId) || 1,
+              Number(episodeId),
+            ),
+          ),
+    [player, imdbId, seasonId, episodeId, detail?.id],
   );
   const subtitleSelector = subtitles?.map(({ lang, url }: { lang: string; url: string }) => ({
     html: lang.toString(),
@@ -133,7 +165,7 @@ const MovieWatch = () => {
         paddingTop: '100px',
         paddingLeft: '88px',
         paddingRight: '23px',
-        '@mdMax': {
+        '@smMax': {
           paddingLeft: '1rem',
           paddingBottom: '65px',
         },
@@ -176,8 +208,10 @@ const MovieWatch = () => {
                     height: '100%',
                   }}
                   subtitleOptions={{
-                    tmdb_id: detail?.id,
-                    type: 'movie',
+                    parent_tmdb_id: detail?.id,
+                    season_number: Number(seasonId),
+                    episode_number: Number(episodeId),
+                    type: 'episode',
                   }}
                   getInstance={(art) => {
                     console.log(art);
@@ -202,7 +236,6 @@ const MovieWatch = () => {
                 />
               )}
             </AspectRatio.Root>
-
             {!sources && (
               <>
                 <Spacer y={1} />
@@ -226,7 +259,7 @@ const MovieWatch = () => {
   );
 };
 
-export default MovieWatch;
+export default EpisodeWatch;
 
 export const CatchBoundary = () => {
   const caught = useCatch();

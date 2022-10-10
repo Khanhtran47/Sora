@@ -29,7 +29,7 @@
     "@remix-run/vercel": "^1.6.5",
     "@supabase/supabase-js": "^1.35.4",
     "@tailwindcss/line-clamp": "^0.4.2",
-    "artplayer": "^4.5.7",
+    "artplayer": "^4.5.8",
     "autoprefixer": "^10.4.7",
     "color-thief-react": "^2.1.0",
     "concurrently": "^7.2.1",

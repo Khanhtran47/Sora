@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { Link } from '@remix-run/react';
 import { Card, Col, Row, Button, Spacer, Avatar } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
@@ -181,7 +181,11 @@ const MediaDetail = (props: IMediaDetail) => {
                     >
                       <Link
                         prefetch="intent"
-                        to={`/${type === 'movie' ? 'movies' : 'tv-shows'}/${id}/watch`}
+                        to={`/${
+                          type === 'movie'
+                            ? `movies/${id}/watch`
+                            : `tv-shows/${id}/season/1/episode/1`
+                        }`}
                       >
                         <H5 h5 weight="bold" transform="uppercase">
                           Watch now
@@ -282,7 +286,11 @@ const MediaDetail = (props: IMediaDetail) => {
                     >
                       <Link
                         prefetch="intent"
-                        to={`/${type === 'movie' ? 'movies' : 'tv-shows'}/${id}/watch`}
+                        to={`/${
+                          type === 'movie'
+                            ? `movies/${id}/watch`
+                            : `tv-shows/${id}/season/1/episode/1`
+                        }`}
                       >
                         <H5 h5 weight="bold" transform="uppercase">
                           Watch now

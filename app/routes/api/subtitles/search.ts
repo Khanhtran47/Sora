@@ -9,6 +9,9 @@ type LoaderData = {
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
   const tmdb_id = url.searchParams.get('tmdb_id');
+  const parent_tmdb_id = url.searchParams.get('parent_tmdb_id');
+  const season_number = url.searchParams.get('season_number');
+  const episode_number = url.searchParams.get('episode_number');
   const query = url.searchParams.get('query');
   const language = url.searchParams.get('language');
   let page = Number(url.searchParams.get('page'));
@@ -16,13 +19,13 @@ export const loader: LoaderFunction = async ({ request }) => {
   const subtitlesSearch = await getSubtitlesSearch(
     undefined,
     undefined,
-    Number(tmdb_id),
+    tmdb_id ? Number(tmdb_id) : undefined,
     undefined,
     undefined,
-    undefined,
+    parent_tmdb_id ? Number(parent_tmdb_id) : undefined,
     query ? query : undefined,
     undefined,
-    undefined,
+    episode_number ? Number(episode_number) : undefined,
     undefined,
     undefined,
     language ? language : undefined,
@@ -32,7 +35,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     undefined,
     undefined,
     page,
-    undefined,
+    season_number ? Number(season_number) : undefined,
     undefined,
     undefined,
     undefined,

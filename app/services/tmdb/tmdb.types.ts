@@ -162,7 +162,7 @@ export interface ITvShowDetail {
   number_of_episodes?: number;
   number_of_seasons?: number;
   origin_country?: string[];
-  original_language?: string[];
+  original_language?: string;
   original_name?: string;
   overview?: string;
   popularity?: number;
@@ -303,4 +303,32 @@ export interface ILanguage {
   english_name: string;
   iso_639_1: string;
   name: string;
+}
+
+export interface ISeasonDetail {
+  _id: string;
+  air_date: Date;
+  episodes: IEpisode[];
+  id: number;
+  name: string;
+  overview: string;
+  poster_path: string;
+  season_number: number;
+}
+
+export interface IEpisode {
+  air_date: Date;
+  crew: IPeople[];
+  episode_number: number;
+  guest_stars: IPeople[];
+  id: number;
+  name: string;
+  overview: string;
+  production_code: string;
+  runtime: number;
+  season_number: number;
+  show_id: number;
+  still_path: string;
+  vote_average: number;
+  vote_count: number;
 }

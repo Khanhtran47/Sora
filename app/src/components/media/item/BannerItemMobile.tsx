@@ -18,7 +18,7 @@ const BannerItemMobile = ({
   const { backdropPath, title, mediaType, id } = item;
 
   return (
-    <Link to={`/${mediaType === 'movie' ? 'movies/' : 'tv-shows/'}${id}`}>
+    <Link to={`/${mediaType === 'movie' ? 'movies/' : 'tv-shows/'}${id}/`}>
       <Card
         as="div"
         isPressable

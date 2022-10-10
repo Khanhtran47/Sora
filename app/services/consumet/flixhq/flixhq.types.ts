@@ -40,6 +40,8 @@ export interface IMovieEpisode {
   id: string;
   title: string;
   url: string;
+  season?: number;
+  number?: number;
 }
 
 export interface IMovieEpisodeStreamLink {

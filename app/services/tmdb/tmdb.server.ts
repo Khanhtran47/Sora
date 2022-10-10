@@ -18,6 +18,7 @@ import {
   IPeopleCredits,
   IMovieTranslations,
   ILanguage,
+  ISeasonDetail,
 } from './tmdb.types';
 import { fetcher, postFetchDataHandler, TMDB } from './utils.server';
 
@@ -104,18 +105,6 @@ export const getMovieDetail = async (
   }
 };
 
-export const getMovieTranslations = async (
-  type: 'movie' | 'tv',
-  id: number,
-): Promise<IMovieTranslations | undefined> => {
-  try {
-    const fetched = await fetcher<IMovieTranslations>(TMDB.translationsUrl(type, id));
-    return fetched;
-  } catch (error) {
-    console.error(error);
-  }
-};
-
 /* =====================================End of Movie Field============================================ */
 
 /* ========================================Tv Show Field============================================== */
@@ -161,6 +150,64 @@ export const getTvShowIMDBId = async (id: number): Promise<number | undefined> =
     if (!fetched?.imdb_id) throw new Error('This TV show does not have IMDB ID');
 
     return fetched.imdb_id;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+// Season and episodes
+
+export const getTvSeasonDetail = async (
+  tv_id: number,
+  season_number: number,
+  language?: string,
+): Promise<ISeasonDetail | undefined> => {
+  try {
+    const fetched = await fetcher<ISeasonDetail>(
+      TMDB.tvSeasonDetailUrl(tv_id, season_number, language),
+    );
+    return fetched;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getTvSeasonCredits = async (
+  tv_id: number,
+  season_number: number,
+  language?: string,
+): Promise<ICredit | undefined> => {
+  try {
+    const fetched = await fetcher<ICredit>(TMDB.tvSeasonCreditsUrl(tv_id, season_number, language));
+    return fetched;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getTvSeasonVideos = async (
+  tv_id: number,
+  season_number: number,
+  language?: string,
+): Promise<IVideos | undefined> => {
+  try {
+    const fetched = await fetcher<IVideos>(TMDB.tvSeasonVideosUrl(tv_id, season_number, language));
+    return fetched;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getTvSeasonImages = async (
+  tv_id: number,
+  season_number: number,
+  language?: string,
+): Promise<IDetailImages | undefined> => {
+  try {
+    const fetched = await fetcher<IDetailImages>(
+      TMDB.tvSeasonImagesUrl(tv_id, season_number, language),
+    );
+    return fetched;
   } catch (error) {
     console.error(error);
   }
@@ -391,4 +438,16 @@ export const getListDiscover = async (
   const url = TMDB.discoverUrl(type, with_genres, sort_by, language, page);
 
   return getListFromTMDB(url, type);
+};
+
+export const getTranslations = async (
+  type: 'movie' | 'tv',
+  id: number,
+): Promise<IMovieTranslations | undefined> => {
+  try {
+    const fetched = await fetcher<IMovieTranslations>(TMDB.translationsUrl(type, id));
+    return fetched;
+  } catch (error) {
+    console.error(error);
+  }
 };

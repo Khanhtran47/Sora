@@ -27,7 +27,7 @@ export default class Player {
       case 3:
         return `http://series.${this.player3_base_url}type=series&tmdb=${id}&season=${season}&episode=${episode}`;
       default:
-        return `${this.player1_base_url}tv?id=${id}&s=1&e=1`;
+        return `${this.player1_base_url}tv?id=${id}&s=${season}&e=${episode}`;
     }
   };
 }

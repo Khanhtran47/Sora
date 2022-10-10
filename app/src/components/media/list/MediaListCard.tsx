@@ -48,9 +48,9 @@ const MediaListCard = ({
           }}
         >
           {items.map((item, i) => {
-            const href =
-              (item.mediaType === 'movie' || type === 'similar-movie' ? '/movies/' : '/tv-shows/') +
-              item.id;
+            const href = `${
+              item.mediaType === 'movie' || type === 'similar-movie' ? '/movies/' : '/tv-shows/'
+            }${item.id}/`;
             return (
               <SwiperSlide
                 key={i}

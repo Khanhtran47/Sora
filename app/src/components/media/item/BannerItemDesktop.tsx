@@ -232,7 +232,7 @@ const BannerItemDesktop = ({
                   marginTop: '1.25rem',
                 }}
               >
-                <Link to={`/${mediaType === 'movie' ? 'movies/' : 'tv-shows/'}${id}`}>
+                <Link to={`/${mediaType === 'movie' ? 'movies/' : 'tv-shows/'}${id}/`}>
                   <H6 h6 weight="bold" transform="uppercase">
                     {t('watchNow')}
                   </H6>
