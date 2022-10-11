@@ -23,11 +23,13 @@ export const loklokGetMovieInfo = async (id: string) => {
  * @param year release year
  * @returns object { data: some movie info, sources: media sources, subtitles}
  */
-export const loklokSearchMovieInfo = async (title: string, orgTitle: string, year?: number) => {
+export const loklokSearchMovieInfo = async (title: string, orgTitle: string, year: number) => {
   try {
     const res = await fetcher<{ data: LoklokSearchData }>(
       `${LOKLOK_URL}/search/one?title=${title}&orgTitle=${orgTitle}&year=${year}&season=`,
     );
+
+    if (!res || !res.data) return;
 
     const info = await fetcher<LoklokMediaInfo>(`${LOKLOK_URL}/movie/detail?id=${res.data.id}`);
 
@@ -67,11 +69,13 @@ export const loklokGetMovieSub = async (id: string) => {
  * @param year release year
  * @returns array of { url: string, lang: string}
  */
-export const loklokSearchMovieSub = async (title: string, orgTitle: string, year?: number) => {
+export const loklokSearchMovieSub = async (title: string, orgTitle: string, year: number) => {
   try {
     const res = await fetcher<{ data: LoklokSearchData }>(
       `${LOKLOK_URL}/search/one?title=${title}&orgTitle=${orgTitle}&year=${year}&season=`,
     );
+
+    if (!res || !res.data) return [];
 
     const info = await fetcher<LoklokMediaInfo>(`${LOKLOK_URL}/movie/detail?id=${res.data.id}`);
 
