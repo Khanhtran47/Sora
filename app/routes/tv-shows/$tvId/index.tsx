@@ -14,7 +14,7 @@ import MediaList from '~/src/components/media/MediaList';
 import PeopleList from '~/src/components/people/PeopleList';
 import TMDB from '~/utils/media';
 import useMediaQuery from '~/hooks/useMediaQuery';
-import { H2, H4, H5, H6 } from '~/src/components/styles/Text.styles';
+import { H3, H4, H5, H6 } from '~/src/components/styles/Text.styles';
 import Flex from '~/src/components/styles/Flex.styles';
 import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
 
@@ -192,9 +192,9 @@ const Overview = () => {
         )}
         {detail?.seasons && detail?.seasons.length > 0 && (
           <>
-            <H2 h2 css={{ margin: '20px 0 20px 0' }}>
+            <H3 h3 css={{ margin: '20px 0 20px 0' }}>
               Seasons
-            </H2>
+            </H3>
             {detail.seasons
               .filter((season) => !season.name?.includes('Specials'))
               .map((season) => (

@@ -6,7 +6,7 @@ import Image, { MimeType } from 'remix-image';
 import { ISeasonDetail } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
 import useMediaQuery from '~/hooks/useMediaQuery';
-import { H2, H4, H5, H6 } from '~/src/components/styles/Text.styles';
+import { H3, H4, H5, H6 } from '~/src/components/styles/Text.styles';
 import Flex from '~/src/components/styles/Flex.styles';
 import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
 
@@ -39,9 +39,9 @@ const Episodes = () => {
       <Col span={isSm ? 12 : 8}>
         {detail?.episodes && detail.episodes.length > 0 && (
           <>
-            <H2 h2 css={{ margin: '20px 0 20px 0' }}>
+            <H3 h3 css={{ margin: '20px 0 20px 0' }}>
               Episodes
-            </H2>
+            </H3>
             {detail.episodes.map((episode) => (
               <Link
                 key={episode.id}

@@ -29,7 +29,7 @@ export const loader: LoaderFunction = async ({ params }) => {
 
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
-    <Link to={`/anime/${match.params.animeId}`}>{match.params.animeId}</Link>
+    <Link to={`/anime/${match.params.animeId}/overview`}>{match.params.animeId}</Link>
   ),
 };
 
