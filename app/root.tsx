@@ -1,3 +1,4 @@
+/* eslint-disable react/no-danger */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import * as React from 'react';
 import type { LinksFunction, LoaderFunction, MetaFunction } from '@remix-run/node';
@@ -16,6 +17,7 @@ import {
   useTransition,
   useMatches,
   RouteMatch,
+  useLocation,
 } from '@remix-run/react';
 import { NextUIProvider, Text, Image, Link as NextLink } from '@nextui-org/react';
 import { ThemeProvider as RemixThemesProvider } from 'next-themes';
@@ -35,6 +37,7 @@ import photoSwipeStyles from 'photoswipe/dist/photoswipe.css';
 import remixImageStyles from 'remix-image/remix-image.css';
 import { MetronomeLinks } from '@metronome-sh/react';
 
+import * as gtag from '~/utils/gtags.client';
 import globalStyles from '~/styles/global.stitches';
 import {
   lightTheme,
@@ -61,6 +64,7 @@ interface DocumentProps {
   title?: string;
   lang?: string;
   dir?: 'ltr' | 'rtl';
+  gaTrackingId?: string;
 }
 
 interface LoaderDataType {
@@ -69,6 +73,7 @@ interface LoaderDataType {
   genresMovie: Awaited<ReturnType<typeof getListGenre>>;
   genresTv: Awaited<ReturnType<typeof getListGenre>>;
   languages: Awaited<ReturnType<typeof getListLanguages>>;
+  gaTrackingId: string | undefined;
 }
 
 export const links: LinksFunction = () => [
@@ -139,26 +144,55 @@ export const meta: MetaFunction = () => ({
   viewport: 'width=device-width,initial-scale=1',
 });
 
-const Document = ({ children, title, lang, dir }: DocumentProps) => (
-  <html lang={lang} dir={dir}>
-    <head>
-      {title ? <title>{title}</title> : null}
-      <Meta />
-      <Links />
-      <MetronomeLinks />
-    </head>
-    <body>
-      {children}
-      <ScrollRestoration />
-      <Scripts />
-      {process.env.NODE_ENV === 'development' && <LiveReload />}
-    </body>
-  </html>
-);
+const Document = ({ children, title, lang, dir, gaTrackingId }: DocumentProps) => {
+  const location = useLocation();
+  React.useEffect(() => {
+    if (gaTrackingId?.length) {
+      gtag.pageview(location.pathname, gaTrackingId);
+    }
+  }, [location, gaTrackingId]);
+  return (
+    <html lang={lang} dir={dir}>
+      <head>
+        {title ? <title>{title}</title> : null}
+        <Meta />
+        <Links />
+        <MetronomeLinks />
+      </head>
+      <body>
+        {process.env.NODE_ENV === 'development' || !gaTrackingId ? null : (
+          <>
+            <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaTrackingId}`} />
+            <script
+              async
+              id="gtag-init"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+
+                  gtag('config', '${gaTrackingId}', {
+                    page_path: window.location.pathname,
+                  });
+                `,
+              }}
+            />
+          </>
+        )}
+        {children}
+        <ScrollRestoration />
+        <Scripts />
+        {process.env.NODE_ENV === 'development' && <LiveReload />}
+      </body>
+    </html>
+  );
+};
 
 export const loader: LoaderFunction = async ({ request }) => {
   const locale = await i18next.getLocale(request);
   const session = await getSession(request.headers.get('Cookie'));
+  const gaTrackingId = process.env.GA_TRACKING_ID;
 
   if (session.has('access_token')) {
     const [{ user, error }, genresMovie, genresTv, languages] = await Promise.all([
@@ -169,7 +203,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     ]);
 
     if (user && !error) {
-      return json<LoaderDataType>({ user, locale, genresMovie, genresTv, languages });
+      return json<LoaderDataType>({ user, locale, genresMovie, genresTv, languages, gaTrackingId });
     }
   }
 
@@ -179,6 +213,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       genresMovie: await getListGenre('movie', locale),
       genresTv: await getListGenre('tv', locale),
       languages: await getListLanguages(),
+      gaTrackingId,
     },
     {
       headers: { 'Set-Cookie': await i18nCookie.serialize(locale) },
@@ -202,7 +237,7 @@ const App = () => {
   const fetchers = useFetchers();
   const transition = useTransition();
   const matches: RouteMatch[] = useMatches();
-  const { user, locale } = useLoaderData<LoaderDataType>();
+  const { user, locale, gaTrackingId } = useLoaderData<LoaderDataType>();
 
   const { i18n } = useTranslation();
   useChangeLanguage(locale);
@@ -237,7 +272,7 @@ const App = () => {
   }, []);
 
   return (
-    <Document lang={locale} dir={i18n.dir()}>
+    <Document lang={locale} dir={i18n.dir()} gaTrackingId={gaTrackingId}>
       <RemixThemesProvider
         defaultTheme="system"
         attribute="class"
