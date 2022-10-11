@@ -37,6 +37,7 @@ const detailTab = [
 const AnimeDetail = (props: IAnimeDetail) => {
   // const { t } = useTranslation();
   const { item, handler } = props;
+  console.log('🚀 ~ file: AnimeDetail.tsx ~ line 40 ~ AnimeDetail ~ item', item);
   const ref = React.useRef<HTMLDivElement>(null);
   const size: IUseSize = useSize(ref);
 
@@ -168,7 +169,11 @@ const AnimeDetail = (props: IAnimeDetail) => {
                   >
                     <Link
                       prefetch="intent"
-                      to={`/${type === 'movie' ? 'movies' : 'tv-shows'}/${id}/watch`}
+                      to={`/anime/${item?.id}/episode/${
+                        // eslint-disable-next-line no-unsafe-optional-chaining
+                        item?.episodes[item?.episodes?.length > 1 ? item?.episodes.length - 1 : 0]
+                          .id
+                      }`}
                     >
                       <H5 h5 weight="bold" transform="uppercase">
                         Watch now
@@ -273,7 +278,11 @@ const AnimeDetail = (props: IAnimeDetail) => {
                   >
                     <Link
                       prefetch="intent"
-                      to={`/${type === 'movie' ? 'movies' : 'tv-shows'}/${id}/watch`}
+                      to={`/anime/${item?.id}/episode/${
+                        // eslint-disable-next-line no-unsafe-optional-chaining
+                        item?.episodes[item?.episodes?.length > 1 ? item?.episodes.length - 1 : 0]
+                          .id
+                      }`}
                     >
                       <H5 h5 weight="bold" transform="uppercase">
                         Watch now
