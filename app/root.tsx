@@ -33,6 +33,7 @@ import { useChangeLanguage } from 'remix-i18next';
 import { useTranslation } from 'react-i18next';
 import photoSwipeStyles from 'photoswipe/dist/photoswipe.css';
 import remixImageStyles from 'remix-image/remix-image.css';
+import { MetronomeLinks } from '@metronome-sh/react';
 
 import globalStyles from '~/styles/global.stitches';
 import {
@@ -144,6 +145,7 @@ const Document = ({ children, title, lang, dir }: DocumentProps) => (
       {title ? <title>{title}</title> : null}
       <Meta />
       <Links />
+      <MetronomeLinks />
     </head>
     <body>
       {children}

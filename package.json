@@ -15,6 +15,8 @@
   },
   "dependencies": {
     "@lottiefiles/react-lottie-player": "^3.4.7",
+    "@metronome-sh/react": "^5.6.1",
+    "@metronome-sh/vercel": "^5.6.1",
     "@next-boost/hybrid-disk-cache": "^0.3.0",
     "@nextui-org/react": "^1.0.0-beta.10",
     "@radix-ui/react-aspect-ratio": "^1.0.0",
