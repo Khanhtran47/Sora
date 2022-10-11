@@ -1,4 +1,4 @@
-import type { LoklokMediaInfo, LoklokSearchData } from './loklok.type';
+import type { ILoklokMediaInfo, ILoklokSearchData } from './loklok.type';
 import { fetcher, LOKLOK_URL } from './utils.server';
 
 /**
@@ -8,7 +8,7 @@ import { fetcher, LOKLOK_URL } from './utils.server';
  */
 export const loklokGetMovieInfo = async (id: string) => {
   try {
-    const info = await fetcher<LoklokMediaInfo>(`${LOKLOK_URL}/movie/detail?id=${id}`);
+    const info = await fetcher<ILoklokMediaInfo>(`${LOKLOK_URL}/movie/detail?id=${id}`);
 
     if (info && info.data) return info;
   } catch (e) {
@@ -25,13 +25,13 @@ export const loklokGetMovieInfo = async (id: string) => {
  */
 export const loklokSearchMovieInfo = async (title: string, orgTitle: string, year: number) => {
   try {
-    const res = await fetcher<{ data: LoklokSearchData }>(
+    const res = await fetcher<{ data: ILoklokSearchData }>(
       `${LOKLOK_URL}/search/one?title=${title}&orgTitle=${orgTitle}&year=${year}&season=`,
     );
 
     if (!res || !res.data) return;
 
-    const info = await fetcher<LoklokMediaInfo>(`${LOKLOK_URL}/movie/detail?id=${res.data.id}`);
+    const info = await fetcher<ILoklokMediaInfo>(`${LOKLOK_URL}/movie/detail?id=${res.data.id}`);
 
     if (info && info.data) return info;
   } catch (e) {
@@ -46,7 +46,7 @@ export const loklokSearchMovieInfo = async (title: string, orgTitle: string, yea
  */
 export const loklokGetMovieSub = async (id: string) => {
   try {
-    const info = await fetcher<LoklokMediaInfo>(`${LOKLOK_URL}/movie/detail?id=${id}`);
+    const info = await fetcher<ILoklokMediaInfo>(`${LOKLOK_URL}/movie/detail?id=${id}`);
 
     if (info && info.data) {
       return info.subtitles.map((sub) => ({
@@ -71,13 +71,13 @@ export const loklokGetMovieSub = async (id: string) => {
  */
 export const loklokSearchMovieSub = async (title: string, orgTitle: string, year: number) => {
   try {
-    const res = await fetcher<{ data: LoklokSearchData }>(
+    const res = await fetcher<{ data: ILoklokSearchData }>(
       `${LOKLOK_URL}/search/one?title=${title}&orgTitle=${orgTitle}&year=${year}&season=`,
     );
 
     if (!res || !res.data) return [];
 
-    const info = await fetcher<LoklokMediaInfo>(`${LOKLOK_URL}/movie/detail?id=${res.data.id}`);
+    const info = await fetcher<ILoklokMediaInfo>(`${LOKLOK_URL}/movie/detail?id=${res.data.id}`);
 
     if (info && info.data) {
       return info.subtitles.map((sub) => ({

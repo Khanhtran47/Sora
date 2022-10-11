@@ -1,4 +1,4 @@
-import type { LoklokMediaInfo, LoklokSearchData } from './loklok.type';
+import type { ILoklokMediaInfo, ILoklokSearchData } from './loklok.type';
 import { fetcher, LOKLOK_URL } from './utils.server';
 
 /**
@@ -9,7 +9,7 @@ import { fetcher, LOKLOK_URL } from './utils.server';
  */
 export const loklokGetTvEpInfo = async (id: string, episodeIndex = 0) => {
   try {
-    const info = await fetcher<LoklokMediaInfo>(
+    const info = await fetcher<ILoklokMediaInfo>(
       `${LOKLOK_URL}/tv/detail?id=${id}&episodeId=${episodeIndex}`,
     );
 
@@ -36,13 +36,13 @@ export const loklokSearchTvEpInfo = async (
   episodeIndex = 0,
 ) => {
   try {
-    const res = await fetcher<{ data: LoklokSearchData }>(
+    const res = await fetcher<{ data: ILoklokSearchData }>(
       `${LOKLOK_URL}/search/one?title=${title}&orgTitle=${orgTitle}&year=${year}&season=${season}`,
     );
 
     if (!res || !res.data) return;
 
-    const info = await fetcher<LoklokMediaInfo>(
+    const info = await fetcher<ILoklokMediaInfo>(
       `${LOKLOK_URL}/tv/detail?id=${res.data.id}&episodeId=${episodeIndex}`,
     );
 
@@ -60,7 +60,7 @@ export const loklokSearchTvEpInfo = async (
  */
 export const loklokGetTvEpSub = async (id: string, episodeIndex = 0) => {
   try {
-    const info = await fetcher<LoklokMediaInfo>(
+    const info = await fetcher<ILoklokMediaInfo>(
       `${LOKLOK_URL}/tv/detail?id=${id}&episodeId=${episodeIndex}`,
     );
 
@@ -94,13 +94,13 @@ export const loklokSearchTvEpSub = async (
   episodeIndex = 0,
 ) => {
   try {
-    const res = await fetcher<{ data: LoklokSearchData }>(
+    const res = await fetcher<{ data: ILoklokSearchData }>(
       `${LOKLOK_URL}/search/one?title=${title}&orgTitle=${orgTitle}&year=${year}&season=${season}`,
     );
 
     if (!res || !res.data) return [];
 
-    const info = await fetcher<LoklokMediaInfo>(
+    const info = await fetcher<ILoklokMediaInfo>(
       `${LOKLOK_URL}/tv/detail?id=${res.data.id}&episodeId=${episodeIndex}`,
     );
 
