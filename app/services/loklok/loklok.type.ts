@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export interface Subtitle {
+export interface LoklokSubtitle {
   language: string;
   url: string;
   lang: string;
 }
 
-export interface MediaInfo {
+export interface LoklokMediaInfo {
   data: any;
   sources: any;
-  subtitles: Subtitle[];
+  subtitles: LoklokSubtitle[];
 }
 
-export interface SearchData {
+export interface LoklokSearchData {
   id: string;
   name: string;
   releaseTime: string;

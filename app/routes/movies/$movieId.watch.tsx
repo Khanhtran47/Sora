@@ -26,7 +26,7 @@ import Player from '~/utils/player';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 import useMediaQuery from '~/hooks/useMediaQuery';
-import { loklokSearchMovieSubtitles } from '~/services/loklok/loklok.server';
+import { loklokSearchMovieSub } from '~/services/loklok';
 
 export const meta: MetaFunction = () => ({
   refresh: {
@@ -65,8 +65,9 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       );
     }
 
-    loklokSubtitles = await loklokSearchMovieSubtitles(
-      [detail?.title ?? '', detail?.original_title ?? ''],
+    loklokSubtitles = await loklokSearchMovieSub(
+      detail?.title ?? '',
+      detail?.original_title ?? '',
       new Date(detail?.release_date ?? 1000).getFullYear(),
     );
   } else {
@@ -84,8 +85,9 @@ export const loader: LoaderFunction = async ({ request, params }) => {
           movieDetail?.id || '',
         );
       }
-      loklokSubtitles = await loklokSearchMovieSubtitles(
-        [findTranslation.data?.title ?? ''],
+      loklokSubtitles = await loklokSearchMovieSub(
+        findTranslation.data?.title ?? '',
+        '',
         new Date(detail?.release_date ?? 1000).getFullYear(),
       );
     }
