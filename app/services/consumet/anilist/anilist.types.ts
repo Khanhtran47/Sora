@@ -101,6 +101,7 @@ export interface IAnimeResult {
   malId?: number;
   popularity?: number;
   rating?: number | null;
+  relationType?: string;
   releaseDate?: number | null;
   status?: string;
   title?: Title;
@@ -181,5 +182,6 @@ export interface Headers {
 
 export interface Source {
   isM3U8: boolean;
+  quality: string;
   url: string;
 }

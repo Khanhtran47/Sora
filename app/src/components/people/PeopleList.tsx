@@ -10,7 +10,7 @@ import { IPeople } from '~/services/tmdb/tmdb.types';
 import ChevronRightIcon from '~/src/assets/icons/ChevronRightIcon.js';
 import ChevronLeftIcon from '~/src/assets/icons/ChevronLeftIcon.js';
 import useMediaQuery from '~/hooks/useMediaQuery';
-import { H2 } from '~/src/components/styles/Text.styles';
+import { H3 } from '~/src/components/styles/Text.styles';
 
 import PeopleItem from './PeopleItem';
 
@@ -141,9 +141,9 @@ const PeopleList = (props: IPeopleListProps) => {
   return (
     <>
       {listName && (
-        <H2 h2 css={{ margin: '0 0 20px 0' }}>
+        <H3 h3 css={{ margin: '0 0 20px 0' }}>
           {listName}
-        </H2>
+        </H3>
       )}
       {showMoreList && (
         <Row fluid justify="space-between" wrap="nowrap" align="center">

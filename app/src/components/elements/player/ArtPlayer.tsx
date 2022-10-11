@@ -20,7 +20,7 @@ const Player = ({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   option: any;
   qualitySelector: { html: string; url: string; default?: boolean }[];
-  subtitleSelector: { html: string; url: string; default?: boolean }[];
+  subtitleSelector?: { html: string; url: string; default?: boolean }[];
   getInstance: (art: Artplayer) => void;
   style?: React.CSSProperties | undefined;
   subtitleOptions?: {

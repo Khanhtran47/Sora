@@ -359,7 +359,22 @@ const AnimeDetail = (props: IAnimeDetail) => {
           </Col>
         </Row>
       </Card.Header>
-      <Card.Body css={{ p: 0 }}>
+      <Card.Body
+        css={{
+          p: 0,
+          overflow: 'hidden',
+          margin: 0,
+          '&::after': {
+            content: '',
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            width: '100%',
+            height: '100px',
+            backgroundImage: 'linear-gradient(0deg, $background, $backgroundTransparent)',
+          },
+        }}
+      >
         <Card.Image
           // @ts-ignore
           as={Image}
@@ -368,7 +383,7 @@ const AnimeDetail = (props: IAnimeDetail) => {
             minHeight: '100vh !important',
             minWidth: '100vw !important',
             width: '100vw',
-            height: '100vh',
+            height: `calc(${JSON.stringify(size?.height)}px + 1rem)`,
             top: 0,
             left: 0,
             objectFit: 'cover',
