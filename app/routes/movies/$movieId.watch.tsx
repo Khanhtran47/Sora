@@ -26,6 +26,7 @@ import Player from '~/utils/player';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 import useMediaQuery from '~/hooks/useMediaQuery';
+import { loklokSearchMovieSub } from '~/services/loklok';
 
 export const meta: MetaFunction = () => ({
   refresh: {
@@ -50,6 +51,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   let search;
   let movieDetail;
   let movieStreamLink;
+  let loklokSubtitles: IMovieSubtitle[] = [];
   if ((detail && detail.original_language === 'en') || locale === 'en') {
     search = await getMovieSearch(detail?.title || '');
     const findMovie: IMovieResult | undefined = search?.results.find(
@@ -62,6 +64,12 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         movieDetail?.id || '',
       );
     }
+
+    loklokSubtitles = await loklokSearchMovieSub(
+      detail?.title ?? '',
+      detail?.original_title ?? '',
+      new Date(detail?.release_date ?? 1000).getFullYear(),
+    );
   } else {
     const translations = await getTranslations('movie', mid);
     const findTranslation = translations?.translations.find((item) => item.iso_639_1 === 'en');
@@ -77,6 +85,11 @@ export const loader: LoaderFunction = async ({ request, params }) => {
           movieDetail?.id || '',
         );
       }
+      loklokSubtitles = await loklokSearchMovieSub(
+        findTranslation.data?.title ?? '',
+        '',
+        new Date(detail?.release_date ?? 1000).getFullYear(),
+      );
     }
   }
   if (!detail) throw new Response('Not Found', { status: 404 });
@@ -85,7 +98,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     detail,
     data: movieDetail,
     sources: movieStreamLink?.sources,
-    subtitles: movieStreamLink?.subtitles,
+    subtitles: [...(movieStreamLink?.subtitles ?? []), ...loklokSubtitles],
   });
 };
 
