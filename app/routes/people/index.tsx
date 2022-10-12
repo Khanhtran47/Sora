@@ -15,15 +15,13 @@ type LoaderData = {
 
 export const meta: MetaFunction = () => ({
   title: 'Discover most popular celebs on Sora',
-  description:
-    "Sora's advanced search allows you to run extremely powerful queries over all people and titles. Find exactly what you're looking for!",
+  description: 'Discover the most popular celebrities right now on Sora.',
   keywords:
     'popular celebrities, popular celebrity, top celebrities, top celebrity, people celebrity, celebrity people, best celebrity, best celebrities, famous celebrity, famous people, celebrity movies, movies by celebrity, celebrity tv shows, tv show celebrities, celebrity television shows, celebrity tv series',
   'og:url': 'https://sora-movie.vervel.app/people',
   'og:title': 'Discover most popular celebs on Sora',
   'og:image': 'https://static.alphacoders.com/thumbs_categories/20.jpg',
-  'og:description':
-    "Sora's advanced search allows you to run extremely powerful queries over all people and titles. Find exactly what you're looking for!",
+  'og:description': 'Discover the most popular celebrities right now on Sora.',
 });
 
 export const loader: LoaderFunction = async ({ request }) => {
