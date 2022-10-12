@@ -9,7 +9,10 @@ const fetcher = async <T = any>(
   body?: { file_id: number },
 ): Promise<T> => {
   const cached = lruCache.get<T>(url);
-  if (cached) return cached;
+  if (cached) {
+    console.info('\x1b[32m%s\x1b[0m', '[cached]', url);
+    return cached;
+  }
 
   const myHeaders = new Headers();
   myHeaders.append('Api-Key', `${process.env.OPEN_SUBTITLES_API_KEY}`);
@@ -21,6 +24,7 @@ const fetcher = async <T = any>(
     ...(body && { body: JSON.stringify(body) }),
   };
   const res = await fetch(url, init);
+  if (!res.ok) throw new Error(JSON.stringify(await res.json()));
   const data = await res.json();
 
   lruCache.set(url, data);

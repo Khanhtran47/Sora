@@ -11,6 +11,7 @@ const fetcher = async <T = any>(url: string): Promise<T> => {
   }
 
   const res = await fetch(url);
+  if (!res.ok) throw new Error(JSON.stringify(await res.json()));
   const data = await res.json();
 
   lruCache.set(url, data);
