@@ -142,7 +142,6 @@ export const meta: MetaFunction = () => ({
   charset: 'utf-8',
   title: 'Sora - Free Movies and Free Series',
   viewport: 'width=device-width,initial-scale=1',
-  'conten-type': 'text/html',
   description:
     'Watch Sora Online For Free! Sora is a multinational website for movies, series and anime fans. ',
   keywords:
