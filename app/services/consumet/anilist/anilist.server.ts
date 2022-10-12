@@ -1,3 +1,4 @@
+import { lruCache } from '~/services/lru-cache';
 import Anilist from './utils.server';
 import {
   IAnimeSearch,
@@ -11,8 +12,15 @@ import {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const fetcher = async <T = any>(url: string): Promise<T> => {
+  const cached = lruCache.get<T>(url);
+  if (cached) return cached;
+
   const res = await fetch(url);
-  return res.json();
+  const data = await res.json();
+
+  lruCache.set(url, data);
+
+  return data;
 };
 
 export const getAnimeSearch = async (

@@ -1,5 +1,6 @@
 import Opensubtitles from './utils.server';
 import { ISubtitlesSearch, ISubtitleDownload } from './open-subtitles.types';
+import { lruCache } from '../lru-cache';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const fetcher = async <T = any>(
@@ -7,6 +8,9 @@ const fetcher = async <T = any>(
   method: string,
   body?: { file_id: number },
 ): Promise<T> => {
+  const cached = lruCache.get<T>(url);
+  if (cached) return cached;
+
   const myHeaders = new Headers();
   myHeaders.append('Api-Key', `${process.env.OPEN_SUBTITLES_API_KEY}`);
   myHeaders.append('Content-Type', 'application/json');
@@ -17,7 +21,11 @@ const fetcher = async <T = any>(
     ...(body && { body: JSON.stringify(body) }),
   };
   const res = await fetch(url, init);
-  return res.json();
+  const data = await res.json();
+
+  lruCache.set(url, data);
+
+  return data;
 };
 
 export const getSubtitlesSearch = async (

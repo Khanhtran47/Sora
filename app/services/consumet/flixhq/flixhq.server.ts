@@ -1,10 +1,18 @@
+import { lruCache } from '~/services/lru-cache';
 import Flixhq from './utils.server';
 import { IMovieSearch, IMovieInfo, IMovieEpisodeStreamLink } from './flixhq.types';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const fetcher = async <T = any>(url: string): Promise<T> => {
+  const cached = lruCache.get<T>(url);
+  if (cached) return cached;
+
   const res = await fetch(url);
-  return res.json();
+  const data = await res.json();
+
+  lruCache.set(url, data);
+
+  return data;
 };
 
 export const getMovieSearch = async (
