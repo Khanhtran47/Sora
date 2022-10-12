@@ -5,7 +5,10 @@ import { IMovieSearch, IMovieInfo, IMovieEpisodeStreamLink } from './flixhq.type
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const fetcher = async <T = any>(url: string): Promise<T> => {
   const cached = lruCache.get<T>(url);
-  if (cached) return cached;
+  if (cached) {
+    console.info('\x1b[32m%s\x1b[0m', '[cached]', url);
+    return cached;
+  }
 
   const res = await fetch(url);
   const data = await res.json();

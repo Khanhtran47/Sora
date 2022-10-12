@@ -6,7 +6,10 @@ export const LOKLOK_URL = 'https://loklok.vercel.app/api';
 export const fetcher = async <T = any>(url: string): Promise<T> => {
   const cached = lruCache.get<T>(url);
 
-  if (cached) return cached;
+  if (cached) {
+    console.info('\x1b[32m%s\x1b[0m', '[cached]', url);
+    return cached;
+  }
 
   const res = await fetch(url);
 
