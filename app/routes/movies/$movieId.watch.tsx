@@ -28,12 +28,28 @@ import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import { loklokSearchMovieSub } from '~/services/loklok';
 
-export const meta: MetaFunction = () => ({
-  refresh: {
-    httpEquiv: 'Content-Security-Policy',
-    content: 'upgrade-insecure-requests',
-  },
-});
+export const meta: MetaFunction = ({ data, params }) => {
+  if (!data) {
+    return {
+      title: 'Missing Movie',
+      description: `There is no movie with the ID: ${params.movieId}`,
+    };
+  }
+  const { detail } = data;
+  return {
+    title: `Watch ${detail.title} HD online Free - Sora`,
+    description: `Watch ${detail.title} in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    keywords: `Watch ${detail.title}, Stream ${detail.title}, Watch ${detail.title} HD, Online ${detail.title}, Streaming ${detail.title}, English, Subtitle ${detail.title}, English Subtitle`,
+    'og:url': `https://sora-movie.vercel.app/movies/${params.movieId}/watch`,
+    'og:title': `Watch ${detail.title} HD online Free - Sora`,
+    'og:description': `Watch ${detail.title} in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    'og:image': TMDB.backdropUrl(detail?.backdrop_path || '', 'w780'),
+    refresh: {
+      httpEquiv: 'Content-Security-Policy',
+      content: 'upgrade-insecure-requests',
+    },
+  };
+};
 
 type DataLoader = {
   detail: Awaited<ReturnType<typeof getMovieDetail>>;

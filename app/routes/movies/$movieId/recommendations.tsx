@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { LoaderFunction, json } from '@remix-run/node';
+import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
 import { useLoaderData, useNavigate, Link, RouteMatch, useParams } from '@remix-run/react';
 import { Row, Pagination } from '@nextui-org/react';
 import { useRouteData } from 'remix-utils';
@@ -32,6 +32,10 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     recommendations,
   });
 };
+
+export const meta: MetaFunction = ({ params }) => ({
+  'og:url': `https://sora-movie.vercel.app/movies/${params.movieId}/recomendations`,
+});
 
 export const handle = {
   breadcrumb: (match: RouteMatch) => (

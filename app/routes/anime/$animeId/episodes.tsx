@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import { MetaFunction } from '@remix-run/node';
 import { Link } from '@remix-run/react';
 import { Row, Col, Spacer, Card, Avatar } from '@nextui-org/react';
 import { useRouteData } from 'remix-utils';
@@ -8,6 +9,10 @@ import useMediaQuery from '~/hooks/useMediaQuery';
 import { H3, H5, H6 } from '~/src/components/styles/Text.styles';
 import Flex from '~/src/components/styles/Flex.styles';
 import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
+
+export const meta: MetaFunction = ({ params }) => ({
+  'og:url': `https://sora-movie.vercel.app/anime/${params.animeId}/episodes`,
+});
 
 const EpisodesPage = () => {
   const animeData: { detail: IAnimeInfo } | undefined = useRouteData('routes/anime/$animeId');

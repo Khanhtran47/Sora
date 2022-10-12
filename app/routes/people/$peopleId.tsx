@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { LoaderFunction, json } from '@remix-run/node';
+import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
 import { useCatch, useLoaderData, Outlet, Link, RouteMatch } from '@remix-run/react';
 import { Container, Row, Col, Spacer } from '@nextui-org/react';
 
 import { getPeopleDetail, getPeopleExternalIds } from '~/services/tmdb/tmdb.server';
 import i18next from '~/i18n/i18next.server';
 import useMediaQuery from '~/hooks/useMediaQuery';
+import TMDB from '~/utils/media';
 import PeopleDetail from '~/src/components/people/PeopleDetail';
 import Tab from '~/src/components/elements/Tab';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
@@ -38,6 +39,25 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       twitterId: externalIds.twitter_id || null,
     },
   });
+};
+
+export const meta: MetaFunction = ({ data, params }) => {
+  if (!data) {
+    return {
+      title: 'Missing People',
+      description: `There is no people with the ID: ${params.peopleId}`,
+    };
+  }
+  const { detail } = data;
+  return {
+    title: `${detail?.name} | Sora - Watch The Best of Movies, TV Shows & Animes`,
+    description: `Watch ${detail?.name} movies and series in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    keywords: `watch ${detail?.name} free, watch ${detail?.name} movies, watch ${detail?.name} series, stream ${detail?.name} series, ${detail?.name} movies online free`,
+    'og:url': `https://sora-movie.vercel.app/people/${params.peopleId}`,
+    'og:title': `${detail?.name} | Sora - Watch The Best of Movies, TV Shows & Animes`,
+    'og:description': `Watch ${detail?.name} movies and series in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    'og:image': TMDB.profileUrl(detail?.profile_path, 'w185'),
+  };
 };
 
 export const handle = {

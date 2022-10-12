@@ -114,9 +114,7 @@ const MediaListBanner = ({
         margin: 0,
         padding: 0,
         width: '100%',
-        '&.swiper-button-prev': {
-          left: '80px',
-        },
+        minHeight: isSm ? '' : '672px !important',
       }}
     >
       {items?.length > 0 && (

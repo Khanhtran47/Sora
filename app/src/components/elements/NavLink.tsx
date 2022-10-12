@@ -99,7 +99,7 @@ const LogoNavLink = ({ linkTo }: { linkTo: string }) => (
       }}
       weight="bold"
     >
-      LOGO
+      SORA
     </H2>
   </NavigationLink>
 );

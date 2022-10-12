@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/indent */
 import * as React from 'react';
-import { DataFunctionArgs, json, LoaderFunction } from '@remix-run/node';
+import { DataFunctionArgs, json, LoaderFunction, MetaFunction } from '@remix-run/node';
 import { useLoaderData, useNavigate, useParams, Link, RouteMatch } from '@remix-run/react';
 import { Container, Pagination } from '@nextui-org/react';
 import { useRouteData } from 'remix-utils';
@@ -30,6 +30,19 @@ export const loader: LoaderFunction = async ({ request, params }: DataFunctionAr
   });
 };
 
+export const meta: MetaFunction = ({ data, params }) => {
+  const { searchResults } = data;
+  return {
+    title: `Search results for '${params.tvKeyword}' tv serie on Sora`,
+    description: `Watch ${params.tvKeyword} in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    keywords: `Watch ${params.tvKeyword}, Stream ${params.tvKeyword}, Watch ${params.tvKeyword} HD, Online ${params.tvKeyword}, Streaming ${params.tvKeyword}, English, Subtitle ${params.tvKeyword}, English Subtitle`,
+    'og:url': `https://sora-movie.vercel.app/search/tv/${params.tvKeyword}`,
+    'og:title': `Search results for '${params.tvKeyword}' tv serie on Sora`,
+    'og:description': `Watch ${params.tvKeyword} in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    'og:image': searchResults?.items[0].backdropPath || searchResults?.items[0].posterPath,
+  };
+};
+
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
     <Link to={`/search/tv/${match.params.tvKeyword}`}>{match.params.tvKeyword}</Link>
@@ -38,6 +51,7 @@ export const handle = {
 
 const SearchRoute = () => {
   const { searchResults } = useLoaderData<LoaderData>() || {};
+  console.log('🚀 ~ file: $tvKeyword.tsx ~ line 54 ~ SearchRoute ~ searchResults', searchResults);
   const rootData:
     | {
         user?: User;

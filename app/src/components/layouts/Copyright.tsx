@@ -2,7 +2,7 @@
 import { Link, Container, Image as NextImage } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
 import { H5 } from '~/src/components/styles/Text.styles';
-import KleeCute from '~/src/assets/images/klee-avatar.jpg';
+import LogoFooter from '~/src/assets/images/logo_footer.png';
 
 const Copyright = () => (
   <Container
@@ -23,7 +23,7 @@ const Copyright = () => (
       as={Image}
       alt="Klee Cute"
       title="Klee Cute"
-      src={KleeCute}
+      src={LogoFooter}
       width="76px"
       height="76px"
       css={{
@@ -43,7 +43,7 @@ const Copyright = () => (
         contentType: MimeType.WEBP,
       }}
     />
-    <Link href="https://remix-watchmovie.vercel.app/">
+    <Link href="https://sora-movie.vercel.app/">
       <H5 h5 css={{ marginTop: '1rem' }}>
         © Remix Movie
       </H5>

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
-import { LoaderFunction, json } from '@remix-run/node';
+import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
 import { useCatch, useLoaderData, Outlet, Link, RouteMatch, useParams } from '@remix-run/react';
 import { Container, Spacer, Card, Col, Row, Avatar } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
@@ -37,6 +37,25 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   return json<LoaderData>({ detail });
 };
 
+export const meta: MetaFunction = ({ data, params }) => {
+  if (!data) {
+    return {
+      title: 'Missing Season',
+      description: `This Tv show doesn't have season ${params.seasonId}`,
+    };
+  }
+  const { detail } = data;
+  return {
+    title: `Watch ${detail.name} HD online Free - Sora`,
+    description: `Watch ${detail.name} in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    keywords: `Watch ${detail.name}, Stream ${detail.name}, Watch ${detail.name} HD, Online ${detail.name}, Streaming ${detail.name}, English, Subtitle ${detail.name}, English Subtitle`,
+    'og:url': `https://sora-movie.vercel.app/tv-shows/${params.tvId}/season/${params.seasonId}`,
+    'og:title': `Watch ${detail.name} HD online Free - Sora`,
+    'og:description': `Watch ${detail.name} in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    'og:image': TMDB.posterUrl(detail?.poster_path || '', 'w185'),
+  };
+};
+
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
     <>
@@ -61,6 +80,7 @@ const detailTab = [
 
 const SeasonDetail = () => {
   const { detail } = useLoaderData<LoaderData>();
+  console.log('🚀 ~ file: $tvId.season.$seasonId.tsx ~ line 83 ~ SeasonDetail ~ detail', detail);
   const { tvId, seasonId } = useParams();
   const ref = React.useRef<HTMLDivElement>(null);
   const size: IUseSize = useSize(ref);

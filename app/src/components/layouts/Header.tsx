@@ -29,7 +29,7 @@ import { H5, H6 } from '~/src/components/styles/Text.styles';
 import NavLink from '../elements/NavLink';
 
 /* Assets */
-import kleeCute from '../../assets/images/klee.jpg';
+import kleeCute from '../../assets/images/avatar.png';
 import SunIcon from '../../assets/icons/SunIcon.js';
 import MoonIcon from '../../assets/icons/MoonIcon.js';
 import MenuIcon from '../../assets/icons/MenuIcon.js';

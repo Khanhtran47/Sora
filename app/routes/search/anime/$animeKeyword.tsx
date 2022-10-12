@@ -1,4 +1,4 @@
-import { DataFunctionArgs, json, LoaderFunction } from '@remix-run/node';
+import { DataFunctionArgs, json, LoaderFunction, MetaFunction } from '@remix-run/node';
 import { useLoaderData, useNavigate, Link, RouteMatch, useLocation } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
@@ -22,6 +22,19 @@ export const loader: LoaderFunction = async ({ request, params }: DataFunctionAr
   });
 };
 
+export const meta: MetaFunction = ({ data, params }) => {
+  const { searchResults } = data;
+  return {
+    title: `Search results for '${params.animeKeyword}' anime on Sora`,
+    description: `Watch ${params.animeKeyword} anime in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    keywords: `Watch ${params.animeKeyword}, Stream ${params.animeKeyword}, Watch ${params.animeKeyword} HD, Online ${params.animeKeyword}, Streaming ${params.animeKeyword}, English, Subtitle ${params.animeKeyword}, English Subtitle`,
+    'og:url': `https://sora-movie.vercel.app/search/anime/${params.animeKeyword}`,
+    'og:title': `Search results for '${params.animeKeyword}' anime on Sora`,
+    'og:description': `Watch ${params.animeKeyword} in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    'og:image': searchResults.results[0].cover || searchResults.results[0].image,
+  };
+};
+
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
     <Link to={`/search/anime/${match.params.animeKeyword}`}>{match.params.animeKeyword}</Link>
@@ -30,6 +43,10 @@ export const handle = {
 
 const SearchRoute = () => {
   const { searchResults } = useLoaderData<LoaderData>();
+  console.log(
+    '🚀 ~ file: $animeKeyword.tsx ~ line 33 ~ SearchRoute ~ searchResults',
+    searchResults,
+  );
   const navigate = useNavigate();
   const { t } = useTranslation();
   const location = useLocation();
