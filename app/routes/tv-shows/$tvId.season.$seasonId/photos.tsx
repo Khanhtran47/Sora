@@ -6,7 +6,7 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
 import { Image as NextImage, Row, Spacer } from '@nextui-org/react';
-import { LoaderFunction, json } from '@remix-run/node';
+import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { Gallery, Item, GalleryProps } from 'react-photoswipe-gallery';
 import { useRouteData } from 'remix-utils';
@@ -35,6 +35,10 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   return json<LoaderData>({ images });
 };
+
+export const meta: MetaFunction = ({ params }) => ({
+  'og:url': `https://sora-movie.vercel.app/tv-shows/${params.tvId}/season/${params.seasonId}/photos`,
+});
 
 const PhotosPage = () => {
   const { images } = useLoaderData<LoaderData>();

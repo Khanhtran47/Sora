@@ -6,7 +6,7 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
 import { Image as NextImage, Row, Spacer } from '@nextui-org/react';
-import { LoaderFunction, json } from '@remix-run/node';
+import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { Gallery, Item, GalleryProps } from 'react-photoswipe-gallery';
 import { useRouteData } from 'remix-utils';
@@ -23,6 +23,10 @@ import { H6 } from '~/src/components/styles/Text.styles';
 type LoaderData = {
   images: Awaited<ReturnType<typeof getImages>>;
 };
+
+export const meta: MetaFunction = ({ params }) => ({
+  'og:url': `https://sora-movie.vercel.app/movies/${params.movieId}/photos`,
+});
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const locale = await i18next.getLocale(request);

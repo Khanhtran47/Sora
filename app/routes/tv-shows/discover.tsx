@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/indent */
 import { useLoaderData, useNavigate, useLocation, Link } from '@remix-run/react';
-import { json, LoaderFunction } from '@remix-run/node';
+import { json, LoaderFunction, MetaFunction } from '@remix-run/node';
 import { Container, Pagination } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -17,6 +17,18 @@ type LoaderData = {
   withGenres?: string;
   sortBy?: string;
 };
+
+export const meta: MetaFunction = () => ({
+  title: 'Discover and Watch movies and tv shows free | Sora',
+  description:
+    'Official Sora website to watch movies online HD for free, Watch TV show & TV series and Download all movies and series FREE',
+  keywords:
+    'watch free movies, free movies to watch online, watch movies online free, free movies streaming, free movies full, free movies download, watch movies hd, movies to watch',
+  'og:url': 'https://sora-movie.vervel.app/tv-shows/discover',
+  'og:title': 'Discover and Watch movies and tv shows free | Sora',
+  'og:description':
+    'Official Sora website to watch movies online HD for free, Watch TV show & TV series and Download all movies and series FREE',
+});
 
 export const loader: LoaderFunction = async ({ request }) => {
   const locale = await i18next.getLocale(request);

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/indent */
-import { MetaFunction, LoaderFunction, json, DataFunctionArgs } from '@remix-run/node';
+import { LoaderFunction, json, DataFunctionArgs } from '@remix-run/node';
 import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
 import { motion } from 'framer-motion';
@@ -17,12 +17,6 @@ import {
 import { IMedia, IPeople } from '~/services/tmdb/tmdb.types';
 import MediaList from '~/src/components/media/MediaList';
 import PeopleList from '~/src/components/people/PeopleList';
-
-// https://remix.run/api/conventions#meta
-export const meta: MetaFunction = () => ({
-  title: 'Remix App',
-  description: '（づ￣3￣）づ╭❤️～',
-});
 
 export const handle = {
   i18n: 'home',
@@ -99,6 +93,7 @@ const Index = () => {
         css={{
           marginTop: '48px',
           paddingLeft: '88px',
+          minHeight: '564px',
           '@xsMax': {
             paddingLeft: 'calc(var(--nextui-space-sm))',
             paddingRight: 'calc(var(--nextui-space-sm))',
@@ -126,6 +121,7 @@ const Index = () => {
         css={{
           marginTop: '48px',
           paddingLeft: '88px',
+          minHeight: '564px',
           '@xsMax': {
             paddingLeft: 'calc(var(--nextui-space-sm))',
             paddingRight: 'calc(var(--nextui-space-sm))',
@@ -153,6 +149,7 @@ const Index = () => {
         css={{
           marginTop: '48px',
           paddingLeft: '88px',
+          minHeight: '525px',
           '@xsMax': {
             paddingLeft: 'calc(var(--nextui-space-sm))',
             paddingRight: 'calc(var(--nextui-space-sm))',

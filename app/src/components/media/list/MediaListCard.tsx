@@ -56,7 +56,7 @@ const MediaListCard = ({
                 key={i}
                 style={{ width: `${isSm ? '164px' : isLg ? '210px' : '240px'}` }}
               >
-                <Link to={href}>
+                <Link to={href} style={{ display: 'flex', padding: '0.5rem 0' }}>
                   <MediaItem
                     key={item.id}
                     type="card"

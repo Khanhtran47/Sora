@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable @typescript-eslint/indent */
 import * as React from 'react';
+import { MetaFunction } from '@remix-run/node';
 import { Row, Spacer } from '@nextui-org/react';
 import { useFetcher } from '@remix-run/react';
 import { useRouteData } from 'remix-utils';
@@ -12,6 +13,10 @@ import { IPeopleDetail, IMedia, IPeople } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
 import MediaList from '~/src/components/media/MediaList';
 import { H6 } from '~/src/components/styles/Text.styles';
+
+export const meta: MetaFunction = ({ params }) => ({
+  'og:url': `https://sora-movie.vercel.app/people/${params.peopleId}/overview`,
+});
 
 const OverviewPage = () => {
   const peopleData:

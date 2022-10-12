@@ -1,5 +1,5 @@
 import { useLoaderData, useNavigate, useLocation, Link } from '@remix-run/react';
-import { json, LoaderFunction } from '@remix-run/node';
+import { json, LoaderFunction, MetaFunction } from '@remix-run/node';
 import { Container, Pagination } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +12,17 @@ import i18next from '~/i18n/i18next.server';
 type LoaderData = {
   people: Awaited<ReturnType<typeof getListPeople>>;
 };
+
+export const meta: MetaFunction = () => ({
+  title: 'Discover most popular celebs on Sora',
+  description: 'Discover the most popular celebrities right now on Sora.',
+  keywords:
+    'popular celebrities, popular celebrity, top celebrities, top celebrity, people celebrity, celebrity people, best celebrity, best celebrities, famous celebrity, famous people, celebrity movies, movies by celebrity, celebrity tv shows, tv show celebrities, celebrity television shows, celebrity tv series',
+  'og:url': 'https://sora-movie.vervel.app/people',
+  'og:title': 'Discover most popular celebs on Sora',
+  'og:image': 'https://static.alphacoders.com/thumbs_categories/20.jpg',
+  'og:description': 'Discover the most popular celebrities right now on Sora.',
+});
 
 export const loader: LoaderFunction = async ({ request }) => {
   const locale = await i18next.getLocale(request);

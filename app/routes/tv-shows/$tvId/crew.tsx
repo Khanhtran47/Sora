@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { LoaderFunction, json } from '@remix-run/node';
+import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { Row } from '@nextui-org/react';
 import { getCredits } from '~/services/tmdb/tmdb.server';
@@ -21,6 +21,10 @@ export const loader: LoaderFunction = async ({ params }) => {
 
   return json<LoaderData>({ crew: credits.crew });
 };
+
+export const meta: MetaFunction = ({ params }) => ({
+  'og:url': `https://sora-movie.vercel.app/tv-shows/${params.tvId}/crew`,
+});
 
 const CrewPage = () => {
   const { crew } = useLoaderData<LoaderData>();

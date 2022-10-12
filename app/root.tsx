@@ -140,8 +140,21 @@ export const links: LinksFunction = () => [
 
 export const meta: MetaFunction = () => ({
   charset: 'utf-8',
-  title: 'Remix App',
+  title: 'Sora - Free Movies and Free Series',
   viewport: 'width=device-width,initial-scale=1',
+  description:
+    'Watch Sora Online For Free! Sora is a multinational website for movies, series and anime fans. ',
+  keywords:
+    'Watch movies online, watch series online, watch free movies, free movies to watch online, watch movies online free, free movies streaming, free movies full, free movies download, watch movies hd, movies to watch, watch movies, anime free to watch and download, free anime, watch anime online, watch anime, anime, watch anime online free',
+  'og:type': 'website',
+  'og:url': 'https://sora-movie.vervel.app',
+  'og:title': 'Sora - Free Movies and Free Series',
+  'og:image':
+    'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/5298bac0-b8bf-4c80-af67-725c1272dbb0/ddnbut6-17aefce2-bb77-4091-9c5d-6e0933f8e17a.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzUyOThiYWMwLWI4YmYtNGM4MC1hZjY3LTcyNWMxMjcyZGJiMFwvZGRuYnV0Ni0xN2FlZmNlMi1iYjc3LTQwOTEtOWM1ZC02ZTA5MzNmOGUxN2EuanBnIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.FOyQ7bWyeWdLg4fLDoeBhBjaxmNtQNV-MZA40AOk-4A',
+  'og:image:width': '650',
+  'og:image:height': '350',
+  'og:description':
+    'Watch Sora Online For Free! Sora is a multinational website for movies, series and anime fans - Very fast streaming - No Registration Required - Click NOW',
 });
 
 const Document = ({ children, title, lang, dir, gaTrackingId }: DocumentProps) => {

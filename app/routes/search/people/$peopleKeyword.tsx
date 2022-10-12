@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataFunctionArgs, json, LoaderFunction } from '@remix-run/node';
+import { DataFunctionArgs, json, LoaderFunction, MetaFunction } from '@remix-run/node';
 import { useLoaderData, useNavigate, useParams, Link, RouteMatch } from '@remix-run/react';
 import { Container, Pagination } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
@@ -26,6 +26,19 @@ export const loader: LoaderFunction = async ({ request, params }: DataFunctionAr
   });
 };
 
+export const meta: MetaFunction = ({ data, params }) => {
+  const { searchResults } = data;
+  return {
+    title: `Search results for '${params.peopleKeyword}' on Sora`,
+    description: `Watch ${params.peopleKeyword} movie, tv seris in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    keywords: `watch ${params.peopleKeyword} free, watch ${params.peopleKeyword} movies, watch ${params.peopleKeyword} series, stream ${params.peopleKeyword} series, ${params.peopleKeyword} movies online free`,
+    'og:url': `https://sora-movie.vercel.app/search/people/${params.peopleKeyword}`,
+    'og:title': `Search results for '${params.peopleKeyword}' on Sora`,
+    'og:description': `Watch ${params.peopleKeyword} in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    'og:image': searchResults?.items[0].backdropPath || searchResults?.items[0].posterPath,
+  };
+};
+
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
     <Link to={`/search/people/${match.params.peopleKeyword}`}>{match.params.peopleKeyword}</Link>
@@ -34,6 +47,10 @@ export const handle = {
 
 const SearchRoute = () => {
   const { searchResults } = useLoaderData<LoaderData>() || {};
+  console.log(
+    '🚀 ~ file: $peopleKeyword.tsx ~ line 50 ~ SearchRoute ~ searchResults',
+    searchResults,
+  );
   const navigate = useNavigate();
   const { peopleKeyword } = useParams();
   const isXs = useMediaQuery(650);

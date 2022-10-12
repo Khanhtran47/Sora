@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { LoaderFunction, json } from '@remix-run/node';
+import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import i18next from '~/i18n/i18next.server';
 import { getPeopleCredits } from '~/services/tmdb/tmdb.server';
@@ -19,6 +19,10 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     credits: await getPeopleCredits(pid, undefined, locale),
   });
 };
+
+export const meta: MetaFunction = ({ params }) => ({
+  'og:url': `https://sora-movie.vercel.app/people/${params.peopleId}/credits`,
+});
 
 const CreditsPage = () => {
   const { credits } = useLoaderData<LoaderData>();

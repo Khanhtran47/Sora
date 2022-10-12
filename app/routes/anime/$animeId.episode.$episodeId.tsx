@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { LoaderFunction, json } from '@remix-run/node';
+import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
 import { useCatch, useLoaderData, Link, RouteMatch, useParams } from '@remix-run/react';
 import { Container, Spacer, Loading } from '@nextui-org/react';
 import { ClientOnly } from 'remix-utils';
@@ -9,7 +9,7 @@ import { ClientOnly } from 'remix-utils';
 import ArtPlayer from '~/src/components/elements/player/ArtPlayer';
 import AspectRatio from '~/src/components/elements/aspect-ratio/AspectRatio';
 import { getAnimeEpisodeStream, getAnimeInfo } from '~/services/consumet/anilist/anilist.server';
-import { Source } from '~/services/consumet/anilist/anilist.types';
+import { Source, IEpisode } from '~/services/consumet/anilist/anilist.types';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 
@@ -30,6 +30,51 @@ export const loader: LoaderFunction = async ({ params }) => {
     { detail, sources: sources.sources },
     { headers: { 'Cache-Control': 'max-age=7200000' } },
   );
+};
+
+export const meta: MetaFunction = ({ data, params }) => {
+  if (!data) {
+    return {
+      title: 'Missing Episode',
+      description: `This anime doesn't has episode ${params.episodeId}`,
+    };
+  }
+  const { detail } = data;
+  const { title } = detail;
+  const episodeInfo = detail?.episodes?.find((e: IEpisode) => e.id === params.episodeId);
+  return {
+    title: `Watch ${
+      title?.userPreferred || title?.english || title?.romaji || title?.native
+    } episode ${episodeInfo.number} HD online Free - Sora`,
+    description: `Watch ${
+      title?.userPreferred || title?.english || title?.romaji || title?.native
+    } episode ${
+      episodeInfo.number
+    } in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    keywords: `Watch ${
+      title?.userPreferred || title?.english || title?.romaji || title?.native
+    } episode ${episodeInfo.number}, Stream ${
+      title?.userPreferred || title?.english || title?.romaji || title?.native
+    } episode ${episodeInfo.number}, Watch ${
+      title?.userPreferred || title?.english || title?.romaji || title?.native
+    } episode ${episodeInfo.number} HD, Online ${
+      title?.userPreferred || title?.english || title?.romaji || title?.native
+    } episode ${episodeInfo.number}, Streaming ${
+      title?.userPreferred || title?.english || title?.romaji || title?.native
+    } episode ${episodeInfo.number}, English, Subtitle ${
+      title?.userPreferred || title?.english || title?.romaji || title?.native
+    } episode ${episodeInfo.number}, English Subtitle`,
+    'og:url': `https://sora-movie.vercel.app/anime/${params.animeId}/episode/${params.episodeId}`,
+    'og:title': `Watch ${
+      title?.userPreferred || title?.english || title?.romaji || title?.native
+    } episode ${episodeInfo.number} HD online Free - Sora`,
+    'og:description': `Watch ${
+      title?.userPreferred || title?.english || title?.romaji || title?.native
+    } episode ${
+      episodeInfo.number
+    } in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    'og:image': episodeInfo?.image || detail.cover,
+  };
 };
 
 export const handle = {

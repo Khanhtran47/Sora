@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
-import { LoaderFunction, json } from '@remix-run/node';
+import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
 import { useCatch, useLoaderData, Outlet, Link, RouteMatch, useFetcher } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
 
 import { getMovieDetail } from '~/services/tmdb/tmdb.server';
 import i18next from '~/i18n/i18next.server';
 import MediaDetail from '~/src/components/media/MediaDetail';
+import TMDB from '~/utils/media';
 import WatchTrailerModal, { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
@@ -29,6 +30,25 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   return json<LoaderData>({ detail });
 };
 
+export const meta: MetaFunction = ({ data, params }) => {
+  if (!data) {
+    return {
+      title: 'Missing Movie',
+      description: `There is no movie with the ID: ${params.movieId}`,
+    };
+  }
+  const { detail } = data;
+  return {
+    title: `Watch ${detail.title} HD online Free - Sora`,
+    description: `Watch ${detail.title} in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    keywords: `Watch ${detail.title}, Stream ${detail.title}, Watch ${detail.title} HD, Online ${detail.title}, Streaming ${detail.title}, English, Subtitle ${detail.title}, English Subtitle`,
+    'og:url': `https://sora-movie.vercel.app/movies/${params.movieId}`,
+    'og:title': `Watch ${detail.title} HD online Free - Sora`,
+    'og:description': `Watch ${detail.title} in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    'og:image': TMDB.backdropUrl(detail?.backdrop_path || '', 'w780'),
+  };
+};
+
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
     <Link to={`/movies/${match.params.movieId}`}>{match.params.movieId}</Link>
@@ -37,6 +57,7 @@ export const handle = {
 
 const MovieDetail = () => {
   const { detail } = useLoaderData<LoaderData>();
+  console.log('🚀 ~ file: $movieId.tsx ~ line 59 ~ MovieDetail ~ detail', detail);
   const fetcher = useFetcher();
   const [visible, setVisible] = React.useState(false);
   const [trailer, setTrailer] = React.useState<Trailer>({});

@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
-import { LoaderFunction, json } from '@remix-run/node';
+import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
 import { useLoaderData, useFetcher } from '@remix-run/react';
 import { Row, Col, Button, Grid, Card } from '@nextui-org/react';
 import { getVideos } from '~/services/tmdb/tmdb.server';
@@ -26,6 +26,10 @@ export const loader: LoaderFunction = async ({ params }) => {
 
   return json<LoaderData>({ videos });
 };
+
+export const meta: MetaFunction = ({ params }) => ({
+  'og:url': `https://sora-movie.vercel.app/movies/${params.movieId}/videos`,
+});
 
 const VideosPage = () => {
   const { videos } = useLoaderData<LoaderData>();

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
-import { LoaderFunction, json } from '@remix-run/node';
+import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
 import { useCatch, useLoaderData, Outlet, Link, RouteMatch } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
 
@@ -25,6 +25,44 @@ export const loader: LoaderFunction = async ({ params }) => {
   if (!detail) throw new Response('Not Found', { status: 404 });
 
   return json<LoaderData>({ detail });
+};
+
+export const meta: MetaFunction = ({ data, params }) => {
+  if (!data) {
+    return {
+      title: 'Missing Anime',
+      description: `There is no anime with the ID: ${params.animeId}`,
+    };
+  }
+  const { detail } = data;
+  const { title } = detail;
+  return {
+    title: `Watch ${
+      title?.userPreferred || title?.english || title?.romaji || title?.native
+    } HD online Free - Sora`,
+    description: `Watch ${
+      title?.userPreferred || title?.english || title?.romaji || title?.native
+    } in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    keywords: `Watch ${
+      title?.userPreferred || title?.english || title?.romaji || title?.native
+    }, Stream ${title?.userPreferred || title?.english || title?.romaji || title?.native}, Watch ${
+      title?.userPreferred || title?.english || title?.romaji || title?.native
+    } HD, Online ${
+      title?.userPreferred || title?.english || title?.romaji || title?.native
+    }, Streaming ${
+      title?.userPreferred || title?.english || title?.romaji || title?.native
+    }, English, Subtitle ${
+      title?.userPreferred || title?.english || title?.romaji || title?.native
+    }, English Subtitle`,
+    'og:url': `https://sora-movie.vercel.app/anime/${params.animeId}`,
+    'og:title': `Watch ${
+      title?.userPreferred || title?.english || title?.romaji || title?.native
+    } HD online Free - Sora`,
+    'og:description': `Watch ${
+      title?.userPreferred || title?.english || title?.romaji || title?.native
+    } in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    'og:image': detail.cover,
+  };
 };
 
 export const handle = {
