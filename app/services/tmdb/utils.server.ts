@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { lruCache } from '../lru-cache';
 import {
   BackdropSize,
   IMedia,
@@ -340,12 +341,21 @@ export class TMDB {
 }
 
 export const fetcher = async <T = any>(url: string): Promise<T> => {
+  const cached = lruCache.get<T>(url);
+  if (cached) {
+    console.info('\x1b[32m%s\x1b[0m', '[cached]', url);
+    return cached;
+  }
+
   const res = await fetch(url);
 
   // throw error here
   if (!res.ok) throw new Error(JSON.stringify(await res.json()));
+  const data = await res.json();
 
-  return res.json();
+  lruCache.set(url, data);
+
+  return data;
 };
 
 export const postFetchDataHandler = (data: any, mediaType?: 'movie' | 'tv'): IMedia[] => {
