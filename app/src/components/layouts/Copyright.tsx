@@ -45,7 +45,7 @@ const Copyright = () => (
     />
     <Link href="https://sora-movie.vercel.app/">
       <H5 h5 css={{ marginTop: '1rem' }}>
-        © Remix Movie
+        © Sora
       </H5>
     </Link>{' '}
   </Container>
