@@ -349,6 +349,7 @@ const App = () => {
                   />
                   <h1
                     style={{
+                      fontSize: '48px !important',
                       margin: 0,
                       fontWeight: 600,
                       backgroundImage: 'linear-gradient(45deg, #0072F5 -20%, #FF4ECD 50%)',
