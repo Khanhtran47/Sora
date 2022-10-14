@@ -19,7 +19,7 @@ import {
   RouteMatch,
   useLocation,
 } from '@remix-run/react';
-import { NextUIProvider, Text, Image, Link as NextLink } from '@nextui-org/react';
+import { NextUIProvider, Text, Image as NextImage, Link as NextLink } from '@nextui-org/react';
 import { ThemeProvider as RemixThemesProvider } from 'next-themes';
 // @ts-ignore
 import swiperStyles from 'swiper/css';
@@ -28,7 +28,7 @@ import swiperPaginationStyles from 'swiper/css/navigation';
 // @ts-ignore
 import swiperNavigationStyles from 'swiper/css/pagination';
 import type { User } from '@supabase/supabase-js';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import NProgress from 'nprogress';
 import nProgressStyles from 'nprogress/nprogress.css';
 import { useChangeLanguage } from 'remix-i18next';
@@ -36,6 +36,7 @@ import { useTranslation } from 'react-i18next';
 import photoSwipeStyles from 'photoswipe/dist/photoswipe.css';
 import remixImageStyles from 'remix-image/remix-image.css';
 import { MetronomeLinks } from '@metronome-sh/react';
+import Image, { MimeType } from 'remix-image';
 
 import * as gtag from '~/utils/gtags.client';
 import globalStyles from '~/styles/global.stitches';
@@ -58,6 +59,7 @@ import { getSession } from './services/sessions.server';
 import pageNotFound from './src/assets/images/404.gif';
 import i18next from './i18n/i18next.server';
 import i18nCookie from './services/cookie.server';
+import logoLoading from './src/assets/images/logo_loading.png';
 
 interface DocumentProps {
   children: React.ReactNode;
@@ -254,6 +256,7 @@ const App = () => {
 
   const { i18n } = useTranslation();
   useChangeLanguage(locale);
+  const [isLoading, setIsLoading] = React.useState(true);
 
   /**
    * This gets the state of every fetcher active on the app and combine it with
@@ -284,6 +287,13 @@ const App = () => {
     }
   }, []);
 
+  React.useEffect(() => {
+    if (state === 'idle') setIsLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const size = 35;
+
   return (
     <Document lang={locale} dir={i18n.dir()} gaTrackingId={gaTrackingId}>
       <RemixThemesProvider
@@ -303,6 +313,63 @@ const App = () => {
           night: nightTheme.className,
         }}
       >
+        <AnimatePresence>
+          {isLoading && (
+            <div
+              className="w-full h-full fixed block top-0 left-0"
+              style={{ zIndex: '9999', backgroundColor: 'var(--nextui-colors-background)' }}
+            >
+              <motion.div
+                initial={{ opacity: 1 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="top-1/2 my-auto mx-auto block relative w-0 h-0"
+                style={{ marginTop: '-77px' }}
+              >
+                <div className="flex justify-center	items-center mb-5">
+                  <Image
+                    width="100px"
+                    height="100px"
+                    className="rounded-full mr-5"
+                    loaderUrl="/api/image"
+                    src={logoLoading}
+                    placeholder="blur"
+                    responsive={[
+                      {
+                        size: {
+                          width: 100,
+                          height: 100,
+                        },
+                      },
+                    ]}
+                    dprVariants={[1, 3]}
+                    options={{
+                      contentType: MimeType.WEBP,
+                    }}
+                  />
+                  <h1
+                    style={{
+                      fontSize: '48px !important',
+                      margin: 0,
+                      fontWeight: 600,
+                      backgroundImage: 'linear-gradient(45deg, #0072F5 -20%, #FF4ECD 50%)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      fontFamily: 'monospace',
+                      letterSpacing: '.3rem',
+                      textDecoration: 'none',
+                    }}
+                  >
+                    SORA
+                  </h1>
+                </div>
+                <div style={{ width: `${size}px`, height: `${size}px` }} className="animate-spin">
+                  <div className="h-full w-full border-4 border-t-purple-500 border-b-purple-700 rounded-[50%]" />
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
         <NextUIProvider>
           <Layout user={user} matches={matches}>
             <AnimatePresence exitBeforeEnter initial={false}>
@@ -348,7 +415,7 @@ export const CatchBoundary = () => {
             <Text h1 color="warning" css={{ textAlign: 'center' }}>
               {caught.status} {caught.statusText} {message}
             </Text>
-            <Image
+            <NextImage
               autoResize
               width={480}
               src={pageNotFound}
