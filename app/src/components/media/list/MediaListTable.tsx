@@ -5,7 +5,7 @@ import { IMedia } from '~/services/tmdb/tmdb.types';
 import { RowItem } from '../item';
 
 type IProps = {
-  items: IMedia[];
+  items?: IMedia[];
   simplified?: boolean;
   sorted?: boolean;
 };
@@ -15,7 +15,7 @@ const MediaListTable = (props: IProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const size: IUseSize = useSize(ref);
 
-  if (simplified && sorted) {
+  if (items && simplified && sorted) {
     items.sort((a, b) => {
       if (!a.releaseDate) return -1;
       if (!b.releaseDate) return 1;
@@ -70,9 +70,10 @@ const MediaListTable = (props: IProps) => {
 
   return (
     <div ref={ref} style={{ padding: '1rem 0.5rem' }}>
-      {items.map((item) => (
-        <RowItem key={item.id} item={item} containerWidth={size.width} simplified={simplified} />
-      ))}
+      {items &&
+        items.map((item) => (
+          <RowItem key={item.id} item={item} containerWidth={size.width} simplified={simplified} />
+        ))}
     </div>
   );
 };

@@ -43,10 +43,6 @@ export const handle = {
 
 const SearchRoute = () => {
   const { searchResults } = useLoaderData<LoaderData>();
-  console.log(
-    '🚀 ~ file: $animeKeyword.tsx ~ line 33 ~ SearchRoute ~ searchResults',
-    searchResults,
-  );
   const navigate = useNavigate();
   const { t } = useTranslation();
   const location = useLocation();

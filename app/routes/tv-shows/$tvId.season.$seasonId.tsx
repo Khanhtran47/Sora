@@ -80,7 +80,6 @@ const detailTab = [
 
 const SeasonDetail = () => {
   const { detail } = useLoaderData<LoaderData>();
-  console.log('🚀 ~ file: $tvId.season.$seasonId.tsx ~ line 83 ~ SeasonDetail ~ detail', detail);
   const { tvId, seasonId } = useParams();
   const ref = React.useRef<HTMLDivElement>(null);
   const size: IUseSize = useSize(ref);

@@ -4,7 +4,7 @@ import BannerItemMobile from './BannerItemMobile';
 import BannerItemDesktop from './BannerItemDesktop';
 
 type BannerItemProps = {
-  item: IMedia;
+  item?: IMedia;
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
   active?: boolean;

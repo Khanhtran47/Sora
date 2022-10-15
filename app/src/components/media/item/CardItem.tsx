@@ -19,18 +19,23 @@ import CardItemHover from './CardItemHover';
 
 const CardItem = ({
   item,
+  coverItem,
   genresMovie,
   genresTv,
+  isCoverCard,
+  virtual,
 }: {
-  item: IMedia;
+  item?: IMedia | undefined;
+  coverItem?: { id: number; name: string; backdropPath: string };
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
+  isCoverCard?: boolean;
+  virtual?: boolean;
 }) => {
-  const { title, posterPath } = item;
+  const { title, posterPath } = item || {};
   const { ref, inView } = useInView({
-    rootMargin: '500px 200px',
-    threshold: [0, 0.25, 0.5, 0.75, 1],
-    triggerOnce: true,
+    rootMargin: '3000px 1000px',
+    triggerOnce: !virtual,
   });
   const isSm = useMediaQuery(650, 'max');
   const isLg = useMediaQuery(1400, 'max');
@@ -45,6 +50,79 @@ const CardItem = ({
       setTrailerCard(officialTrailer);
     }
   }, [fetcher.data]);
+
+  if (isCoverCard) {
+    return (
+      <>
+        <Card
+          as="div"
+          isHoverable
+          isPressable
+          css={{
+            minWidth: `${isSm ? '280px' : '480px'} !important`,
+            minHeight: `${isSm ? '158px' : '270px'} !important`,
+            borderWidth: 0,
+            filter: 'var(--nextui-dropShadows-md)',
+          }}
+          role="figure"
+          ref={ref}
+        >
+          <Card.Body css={{ p: 0 }}>
+            <Card.Image
+              // @ts-ignore
+              as={Image}
+              src={coverItem?.backdropPath || ''}
+              objectFit="cover"
+              width="100%"
+              height="auto"
+              alt={title}
+              title={title}
+              css={{
+                minWidth: `${isSm ? '280px' : '480px'} !important`,
+                minHeight: `${isSm ? '158px' : '270px'} !important`,
+              }}
+              loaderUrl="/api/image"
+              placeholder="blur"
+              options={{
+                contentType: MimeType.WEBP,
+              }}
+              responsive={[
+                {
+                  size: {
+                    width: 280,
+                    height: 158,
+                  },
+                  maxWidth: 650,
+                },
+                {
+                  size: {
+                    width: 480,
+                    height: 270,
+                  },
+                },
+              ]}
+            />
+          </Card.Body>
+          <Card.Footer
+            className="backdrop-blur-md"
+            css={{
+              position: 'absolute',
+              backgroundColor: '$backgroundAlpha',
+              borderTop: '$borderWeights$light solid $border',
+              bottom: 0,
+              zIndex: 1,
+              justifyContent: 'center',
+            }}
+          >
+            <H5 h5 weight="bold">
+              {coverItem?.name}
+            </H5>
+          </Card.Footer>
+        </Card>
+        <Spacer y={1} />
+      </>
+    );
+  }
 
   return (
     <>
@@ -147,7 +225,7 @@ const CardItem = ({
           onVisibleChange={(visible) => {
             if (visible) {
               fetcher.load(
-                `/${item.mediaType === 'movie' ? 'movies' : 'tv-shows'}/${item.id}/videos`,
+                `/${item?.mediaType === 'movie' ? 'movies' : 'tv-shows'}/${item?.id}/videos`,
               );
             } else {
               setIsCardPlaying(false);

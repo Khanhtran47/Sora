@@ -57,7 +57,6 @@ export const handle = {
 
 const TvShowDetail = () => {
   const { detail } = useLoaderData<LoaderData>();
-  console.log('🚀 ~ file: $tvId.tsx ~ line 60 ~ TvShowDetail ~ detail', detail);
   const fetcher = useFetcher();
   const [visible, setVisible] = React.useState(false);
   const [trailer, setTrailer] = React.useState<Trailer>({});

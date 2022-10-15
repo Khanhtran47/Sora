@@ -19,6 +19,7 @@ import {
   IMovieTranslations,
   ILanguage,
   ISeasonDetail,
+  IList,
 } from './tmdb.types';
 import { fetcher, postFetchDataHandler, TMDB } from './utils.server';
 
@@ -447,6 +448,21 @@ export const getTranslations = async (
   try {
     const fetched = await fetcher<IMovieTranslations>(TMDB.translationsUrl(type, id));
     return fetched;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getListDetail = async (
+  listId: number,
+  language?: string,
+): Promise<IList | undefined> => {
+  try {
+    const fetched = await fetcher<IList>(TMDB.listUrl(listId, language));
+    return {
+      ...fetched,
+      items: [...postFetchDataHandler(fetched.items)],
+    };
   } catch (error) {
     console.error(error);
   }

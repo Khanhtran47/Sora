@@ -47,10 +47,6 @@ export const handle = {
 
 const SearchRoute = () => {
   const { searchResults } = useLoaderData<LoaderData>() || {};
-  console.log(
-    '🚀 ~ file: $peopleKeyword.tsx ~ line 50 ~ SearchRoute ~ searchResults',
-    searchResults,
-  );
   const navigate = useNavigate();
   const { peopleKeyword } = useParams();
   const isXs = useMediaQuery(650);

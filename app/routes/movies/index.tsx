@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { LoaderFunction, json, DataFunctionArgs } from '@remix-run/node';
 import { useLoaderData, useLocation, useNavigate, useFetcher } from '@remix-run/react';
-import { Container } from '@nextui-org/react';
+import { Container, Spacer } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 import { useRouteData } from 'remix-utils';
 import type { User } from '@supabase/supabase-js';
@@ -53,10 +53,6 @@ const MoviesIndexPage = () => {
   const listGenresMovie = Object.entries(rootData?.genresMovie || {}).map((entry) => ({
     [entry[0]]: entry[1],
   }));
-  console.log(
-    '🚀 ~ file: index.tsx ~ line 53 ~ listGenresMovie ~ listGenresMovie',
-    listGenresMovie,
-  );
 
   const [listItems, setListItems] = React.useState<IMedia[][] | undefined>([]);
   const [scrollPosition, setScrollPosition] = React.useState(0);
@@ -158,110 +154,74 @@ const MoviesIndexPage = () => {
         }}
       >
         {topRated && topRated.items.length > 0 && (
-          <MediaList
-            listType="slider-card"
-            items={topRated.items}
-            listName="Top Rated Movies"
-            showMoreList
-            onClickViewMore={() => navigate('/movies/top-rated')}
-            navigationButtons
-            genresMovie={rootData?.genresMovie}
-            genresTv={rootData?.genresTv}
-          />
+          <>
+            <MediaList
+              listType="slider-card"
+              items={topRated.items}
+              listName="Top Rated Movies"
+              showMoreList
+              onClickViewMore={() => navigate('/movies/top-rated')}
+              navigationButtons
+              genresMovie={rootData?.genresMovie}
+              genresTv={rootData?.genresTv}
+            />
+            <Spacer y={1.5} />
+          </>
         )}
-      </Container>
-      <Container
-        fluid
-        display="flex"
-        justify="flex-start"
-        direction="column"
-        css={{
-          marginTop: '48px',
-          paddingLeft: '88px',
-          minHeight: '564px',
-          '@xsMax': {
-            paddingLeft: 'calc(var(--nextui-space-sm))',
-            paddingRight: 'calc(var(--nextui-space-sm))',
-          },
-        }}
-      >
         {upcoming && upcoming.items.length > 0 && (
-          <MediaList
-            listType="slider-card"
-            items={upcoming.items}
-            listName="Upcoming Movies"
-            showMoreList
-            onClickViewMore={() => navigate('/movies/upcoming')}
-            navigationButtons
-            genresMovie={rootData?.genresMovie}
-            genresTv={rootData?.genresTv}
-          />
+          <>
+            <MediaList
+              listType="slider-card"
+              items={upcoming.items}
+              listName="Upcoming Movies"
+              showMoreList
+              onClickViewMore={() => navigate('/movies/upcoming')}
+              navigationButtons
+              genresMovie={rootData?.genresMovie}
+              genresTv={rootData?.genresTv}
+            />
+            <Spacer y={1.5} />
+          </>
+        )}
+        {listItems &&
+          listItems.length > 0 &&
+          listItems.map((items, index) => {
+            if (items && items.length > 0)
+              return (
+                <>
+                  <MediaList
+                    key={index}
+                    listType="slider-card"
+                    items={items}
+                    listName={Object.values(listGenresMovie[index])[0]}
+                    showMoreList
+                    onClickViewMore={() =>
+                      navigate(
+                        `/movies/discover?with_genres=${Object.keys(listGenresMovie[index])[0]}`,
+                      )
+                    }
+                    navigationButtons
+                    genresMovie={rootData?.genresMovie}
+                    genresTv={rootData?.genresTv}
+                  />
+                  <Spacer y={1.5} />
+                </>
+              );
+            return null;
+          })}
+        {fetcher.type === 'normalLoad' && (
+          <div className="animate-pulse">
+            <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-32 mb-2.5" />
+            <div className="mb-10 w-48 h-2 bg-gray-200 rounded-full dark:bg-gray-700" />
+            <div className="flex justify-start flex-row">
+              <SkeletonItem />
+              <SkeletonItem />
+              <SkeletonItem />
+            </div>
+            <span className="sr-only">Loading...</span>
+          </div>
         )}
       </Container>
-      {listItems &&
-        listItems.length > 0 &&
-        listItems.map((items, index) => (
-          <Container
-            key={index}
-            fluid
-            display="flex"
-            justify="flex-start"
-            direction="column"
-            css={{
-              marginTop: '48px',
-              paddingLeft: '88px',
-              minHeight: '564px',
-              '@xsMax': {
-                paddingLeft: 'calc(var(--nextui-space-sm))',
-                paddingRight: 'calc(var(--nextui-space-sm))',
-              },
-            }}
-          >
-            {items && items.length > 0 && (
-              <MediaList
-                listType="slider-card"
-                items={items}
-                listName={Object.values(listGenresMovie[index])[0]}
-                showMoreList
-                onClickViewMore={() =>
-                  navigate(`/movies/discover?with_genres=${Object.keys(listGenresMovie[index])[0]}`)
-                }
-                navigationButtons
-                genresMovie={rootData?.genresMovie}
-                genresTv={rootData?.genresTv}
-              />
-            )}
-          </Container>
-        ))}
-      {fetcher.type === 'normalLoad' && (
-        <Container
-          as="div"
-          role="status"
-          fluid
-          display="flex"
-          justify="flex-start"
-          direction="column"
-          css={{
-            marginTop: '48px',
-            paddingLeft: '88px',
-            minHeight: '564px',
-            '@xsMax': {
-              paddingLeft: 'calc(var(--nextui-space-sm))',
-              paddingRight: 'calc(var(--nextui-space-sm))',
-            },
-          }}
-          className="animate-pulse"
-        >
-          <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-32 mb-2.5" />
-          <div className="mb-10 w-48 h-2 bg-gray-200 rounded-full dark:bg-gray-700" />
-          <div className="flex justify-start flex-row">
-            <SkeletonItem />
-            <SkeletonItem />
-            <SkeletonItem />
-          </div>
-          <span className="sr-only">Loading...</span>
-        </Container>
-      )}
     </motion.main>
   );
 };

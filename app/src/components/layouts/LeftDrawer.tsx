@@ -7,11 +7,11 @@ import { H5 } from '~/src/components/styles/Text.styles';
 
 /* icons */
 import TrendingIcon from '../../assets/icons/TrendingIcon.js';
-import RecommendIcon from '../../assets/icons/RecommendIcon.js';
 import NewReleaseIcon from '../../assets/icons/NewReleaseIcon.js';
 import TopRatedIcon from '../../assets/icons/TopRatedIcon.js';
 import HistoryIcon from '../../assets/icons/HistoryIcon.js';
 import TwoUsers from '../../assets/icons/TwoUsersIcon.js';
+import CategoryIcon from '../../assets/icons/CategoryIcon.js';
 
 const drawerWidth = 240;
 
@@ -73,7 +73,7 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
         icon = <TwoUsers filled={filled} />;
         break;
       case 2:
-        icon = <RecommendIcon filled={filled} />;
+        icon = <CategoryIcon filled={filled} />;
         break;
       case 3:
         icon = <NewReleaseIcon filled={filled} />;
@@ -99,8 +99,8 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
       pageLink: 'people',
     },
     {
-      pageName: 'recommendations',
-      pageLink: 'recommendations',
+      pageName: 'Collections',
+      pageLink: 'collections',
     },
     {
       pageName: 'newReleases',
@@ -121,6 +121,7 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
    * @param {any} event - any - this is the event that is triggered when the user clicks outside of the
    * drawer.
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleClickOutside = (event: any) => {
     if (open && wrapperRef.current && !wrapperRef.current.contains(event.target)) {
       handleDrawerClose();

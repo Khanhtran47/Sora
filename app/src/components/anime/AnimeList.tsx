@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { Button, Row, Spacer } from '@nextui-org/react';
 import { useState } from 'react';
 // import { useTranslation } from 'react-i18next';
@@ -44,9 +43,9 @@ const AnimeList = (props: IAnimeListProps) => {
   } = props;
   let { listType } = props;
 
-  const [prevEl, setPrevEl] = React.useState<HTMLElement | null>(null);
-  const [nextEl, setNextEl] = React.useState<HTMLElement | null>(null);
-  const [slideProgress, setSlideProgress] = React.useState<number>(0);
+  const [prevEl, setPrevEl] = useState<HTMLElement | null>(null);
+  const [nextEl, setNextEl] = useState<HTMLElement | null>(null);
+  const [slideProgress, setSlideProgress] = useState<number>(0);
 
   if (!listType && typeof window !== 'undefined') {
     listType =

@@ -50,10 +50,6 @@ export const handle = {
 
 const SearchRoute = () => {
   const { searchResults } = useLoaderData<LoaderData>() || {};
-  console.log(
-    '🚀 ~ file: $movieKeyword.tsx ~ line 54 ~ SearchRoute ~ searchResults',
-    searchResults,
-  );
   const rootData:
     | {
         user?: User;

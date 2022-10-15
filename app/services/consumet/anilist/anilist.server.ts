@@ -8,6 +8,7 @@ import {
   IAnimeInfo,
   IAnimeAiringSchedule,
   IAnimeEpisodeStream,
+  IAnimeGenre,
 } from './anilist.types';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -117,6 +118,15 @@ export const getAnimePopular = async (
 ): Promise<IAnimeList | undefined> => {
   try {
     const fetched = await fetcher<IAnimeList>(Anilist.animePopularUrl(page, perPage));
+    return fetched;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getAnimeGenre = async (genres: string[]): Promise<IAnimeGenre | undefined> => {
+  try {
+    const fetched = await fetcher<IAnimeGenre>(Anilist.animeGenreUrl(genres));
     return fetched;
   } catch (error) {
     console.error(error);
