@@ -55,6 +55,8 @@ const Layout = ({ children, user, matches }: ILayout) => {
           height: 'fit-content',
           ...(location.pathname === '/' ||
           location.pathname === '/anime' ||
+          location.pathname === '/movies' ||
+          location.pathname === '/tv-shows' ||
           location.pathname.split('/')[2]?.match(/^\d+$/)
             ? {
                 paddingTop: '8px',

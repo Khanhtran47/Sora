@@ -57,8 +57,9 @@ export const handle = {
 const pages = [
   {
     pageName: 'movies',
-    pageLink: 'movies/discover',
+    pageLink: 'movies',
     pageDropdown: [
+      { pageName: 'Discover', pageLink: 'movies/discover' },
       { pageName: 'popular', pageLink: 'movies/popular' },
       { pageName: 'topRated', pageLink: 'movies/top-rated' },
       { pageName: 'upcoming', pageLink: 'movies/upcoming' },
@@ -66,8 +67,9 @@ const pages = [
   },
   {
     pageName: 'tv',
-    pageLink: 'tv-shows/discover',
+    pageLink: 'tv-shows',
     pageDropdown: [
+      { pageName: 'Discover', pageLink: 'tv-shows/discover' },
       { pageName: 'popular', pageLink: 'tv-shows/popular' },
       { pageName: 'topRated', pageLink: 'tv-shows/top-rated' },
       { pageName: 'onTv', pageLink: 'tv-shows/on-tv' },
@@ -77,7 +79,7 @@ const pages = [
     pageName: 'Anime',
     pageLink: 'anime',
     pageDropdown: [
-      // { pageName: 'Discover Anime', pageLink: 'anime/discover' },
+      // { pageName: 'Discover', pageLink: 'anime/discover' },
       { pageName: 'Popular Anime', pageLink: 'anime/popular' },
       { pageName: 'Trending Anime', pageLink: 'anime/trending' },
     ],

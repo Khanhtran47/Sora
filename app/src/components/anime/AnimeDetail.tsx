@@ -95,6 +95,7 @@ const AnimeDetail = (props: IAnimeDetail) => {
                   width="50%"
                   css={{
                     minWidth: 'auto !important',
+                    minHeight: '205px !important',
                     marginTop: '10vh',
                     borderRadius: '24px',
                   }}
@@ -211,6 +212,7 @@ const AnimeDetail = (props: IAnimeDetail) => {
                         width={isXs ? '70%' : '40%'}
                         css={{
                           minWidth: 'auto !important',
+                          minHeight: '205px !important',
                           marginTop: '2rem',
                           borderRadius: '24px',
                         }}

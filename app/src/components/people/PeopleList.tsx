@@ -92,14 +92,7 @@ const PeopleListCard = ({
             const href = `/people/${item.id}/overview`;
             return (
               <SwiperSlide key={i} style={{ width: '160px' }}>
-                <Link
-                  to={href}
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                  }}
-                >
+                <Link to={href} style={{ display: 'flex', padding: '0.5rem 0' }}>
                   <PeopleItem item={item} />
                 </Link>
               </SwiperSlide>
