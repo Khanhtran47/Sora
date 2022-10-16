@@ -45,7 +45,10 @@ const AnimeListCard = ({
         >
           {items.map((item, i) => (
             <SwiperSlide key={i} style={{ width: `${isSm ? '164px' : isLg ? '210px' : '240px'}` }}>
-              <Link to={`/anime/${item.id}/overview`}>
+              <Link
+                to={`/anime/${item.id}/overview`}
+                style={{ display: 'flex', padding: '0.5rem 0' }}
+              >
                 <AnimeItem key={item.id} item={item} type="card" virtual={virtual} />
               </Link>
             </SwiperSlide>

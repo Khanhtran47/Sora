@@ -20,7 +20,7 @@ import Filter from '../elements/filter/Filter';
 interface IMediaListProps {
   listType?: 'table' | 'slider-card' | 'slider-banner' | 'grid';
   listName?: string | (() => never);
-  items: IMedia[];
+  items?: IMedia[];
   showFilter?: boolean;
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
@@ -29,6 +29,9 @@ interface IMediaListProps {
   onClickViewMore?: () => void;
   cardType?: 'media' | 'similar-movie' | 'similar-tv';
   navigationButtons?: boolean;
+  isCoverCard?: boolean;
+  coverItem?: { id: number; name: string; backdropPath: string }[];
+  virtual?: boolean;
 }
 
 const MediaList = (props: IMediaListProps) => {
@@ -43,6 +46,9 @@ const MediaList = (props: IMediaListProps) => {
     onClickViewMore,
     cardType,
     navigationButtons,
+    isCoverCard,
+    coverItem,
+    virtual,
   } = props;
   let { listType } = props;
 
@@ -68,7 +74,16 @@ const MediaList = (props: IMediaListProps) => {
 
   switch (displayType) {
     case 'grid':
-      list = <MediaListGrid items={items} genresMovie={genresMovie} genresTv={genresTv} />;
+      list = (
+        <MediaListGrid
+          items={items}
+          genresMovie={genresMovie}
+          genresTv={genresTv}
+          isCoverCard={isCoverCard}
+          coverItem={coverItem}
+          virtual={virtual}
+        />
+      );
       break;
     case 'table':
       list = <MediaListTable items={items} />;
@@ -85,6 +100,9 @@ const MediaList = (props: IMediaListProps) => {
           genresMovie={genresMovie}
           genresTv={genresTv}
           setSlideProgress={setSlideProgress}
+          isCoverCard={isCoverCard}
+          coverItem={coverItem}
+          virtual={virtual}
         />
       );
       break;

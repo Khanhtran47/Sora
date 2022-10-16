@@ -24,14 +24,14 @@ const BannerItemDesktop = ({
   genresTv,
   active,
 }: {
-  item: IMedia;
+  item?: IMedia;
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
   active?: boolean;
 }) => {
   const { t } = useTranslation();
   const fetcher = useFetcher();
-  const { backdropPath, overview, posterPath, title, id, mediaType } = item;
+  const { backdropPath, overview, posterPath, title, id, mediaType } = item || {};
   const [player, setPlayer] = React.useState<ReturnType<YouTube['getInternalPlayer']>>();
   const [isPlayed, setIsPlayed] = React.useState<boolean>(false);
   const [showTrailer, setShowTrailer] = React.useState<boolean>(false);
@@ -48,7 +48,7 @@ const BannerItemDesktop = ({
 
   React.useEffect(() => {
     if (active === true && isPlayTrailer === true) {
-      fetcher.load(`/${item.mediaType === 'movie' ? 'movies' : 'tv-shows'}/${item.id}/videos`);
+      fetcher.load(`/${item?.mediaType === 'movie' ? 'movies' : 'tv-shows'}/${item?.id}/videos`);
     } else {
       setTrailerBanner({});
     }

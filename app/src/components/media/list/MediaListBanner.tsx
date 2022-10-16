@@ -101,7 +101,7 @@ const MediaListBanner = ({
   genresMovie,
   genresTv,
 }: {
-  items: IMedia[];
+  items?: IMedia[];
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
 }) => {
@@ -117,7 +117,7 @@ const MediaListBanner = ({
         minHeight: isSm ? '' : '672px !important',
       }}
     >
-      {items?.length > 0 && (
+      {items && items?.length > 0 && (
         <Swiper
           modules={[Pagination, Virtual]}
           grabCursor

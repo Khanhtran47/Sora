@@ -8,11 +8,11 @@ import NavLink from '../elements/NavLink';
 const pages = [
   {
     pageName: 'Movies',
-    pageLink: 'movies/discover',
+    pageLink: 'movies',
   },
   {
     pageName: 'TV Shows',
-    pageLink: 'tv-shows/discover',
+    pageLink: 'tv-shows',
   },
   {
     pageName: 'Anime',

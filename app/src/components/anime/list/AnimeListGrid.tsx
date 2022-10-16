@@ -70,7 +70,7 @@ const AnimeListGrid = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scrollPosition, clientHeight, height]);
 
-  // Merge photos, increment page, and allow fetching again
+  // Merge items, increment page, and allow fetching again
   React.useEffect(() => {
     // Discontinue API calls if the last page has been reached
     if (fetcher.data && fetcher.data.length === 0) {

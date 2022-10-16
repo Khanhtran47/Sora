@@ -11,11 +11,11 @@ const BannerItemMobile = ({
   genresMovie,
   genresTv,
 }: {
-  item: IMedia;
+  item?: IMedia;
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
 }) => {
-  const { backdropPath, title, mediaType, id } = item;
+  const { backdropPath, title, mediaType, id } = item || {};
 
   return (
     <Link to={`/${mediaType === 'movie' ? 'movies/' : 'tv-shows/'}${id}/`}>

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { Button, Row, Spacer } from '@nextui-org/react';
 import { useState } from 'react';
 // import { useTranslation } from 'react-i18next';
@@ -22,6 +21,8 @@ interface IAnimeListProps {
   listName?: string | (() => never);
   items: IAnimeResult[];
   // showFilter?: boolean;
+  showMoreList?: boolean;
+  onClickViewMore?: () => void;
   navigationButtons?: boolean;
   hasNextPage?: boolean;
   routeName?: string;
@@ -33,6 +34,8 @@ const AnimeList = (props: IAnimeListProps) => {
     listName,
     items,
     // showFilter,
+    showMoreList,
+    onClickViewMore,
     navigationButtons,
     hasNextPage,
     routeName,
@@ -40,9 +43,9 @@ const AnimeList = (props: IAnimeListProps) => {
   } = props;
   let { listType } = props;
 
-  const [prevEl, setPrevEl] = React.useState<HTMLElement | null>(null);
-  const [nextEl, setNextEl] = React.useState<HTMLElement | null>(null);
-  const [slideProgress, setSlideProgress] = React.useState<number>(0);
+  const [prevEl, setPrevEl] = useState<HTMLElement | null>(null);
+  const [nextEl, setNextEl] = useState<HTMLElement | null>(null);
+  const [slideProgress, setSlideProgress] = useState<number>(0);
 
   if (!listType && typeof window !== 'undefined') {
     listType =
@@ -97,57 +100,73 @@ const AnimeList = (props: IAnimeListProps) => {
           {listName}
         </H3>
       )}
-      {navigationButtons && (
-        <Row fluid justify="flex-end" wrap="nowrap" align="center">
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              marginBottom: 'var(--nextui-space-12)',
-            }}
-          >
+      {(showMoreList || navigationButtons) && (
+        <Row fluid justify="space-between" wrap="nowrap" align="center">
+          {showMoreList && (
             <Button
               auto
-              color="primary"
               rounded
               ghost
-              ref={(node) => setPrevEl(node)}
+              onClick={onClickViewMore}
               css={{
-                width: '44px',
-                height: '44px',
-                padding: 0,
-                cursor: 'pointer',
-                '&:hover': {
-                  opacity: '0.8',
-                },
+                maxWidth: '$8',
+                marginBottom: '$12',
               }}
-              aria-label="Previous"
-              disabled={slideProgress === 0}
             >
-              <ChevronLeftIcon />
+              View More
             </Button>
-            <Spacer x={0.25} />
-            <Button
-              auto
-              color="primary"
-              rounded
-              ghost
-              ref={(node) => setNextEl(node)}
-              css={{
-                width: '44px',
-                height: '44px',
-                padding: 0,
-                cursor: 'pointer',
-                '&:hover': {
-                  opacity: '0.8',
-                },
+          )}
+          {navigationButtons && (
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                marginBottom: 'var(--nextui-space-12)',
               }}
-              aria-label="Next"
-              disabled={slideProgress === 1}
             >
-              <ChevronRightIcon />
-            </Button>
-          </div>
+              <Button
+                auto
+                color="primary"
+                rounded
+                ghost
+                ref={(node) => setPrevEl(node)}
+                css={{
+                  width: '44px',
+                  height: '44px',
+                  padding: 0,
+                  cursor: 'pointer',
+                  '&:hover': {
+                    opacity: '0.8',
+                  },
+                }}
+                aria-label="Previous"
+                disabled={slideProgress === 0}
+              >
+                <ChevronLeftIcon />
+              </Button>
+              <Spacer x={0.25} />
+              <Button
+                auto
+                color="primary"
+                rounded
+                ghost
+                ref={(node) => setNextEl(node)}
+                css={{
+                  width: '44px',
+                  height: '44px',
+                  padding: 0,
+                  cursor: 'pointer',
+                  '&:hover': {
+                    opacity: '0.8',
+                  },
+                }}
+                aria-label="Next"
+                disabled={slideProgress === 1}
+              >
+                <ChevronRightIcon />
+              </Button>
+            </div>
+          )}
         </Row>
       )}
       {/* {showFilter && mediaType && genres && (

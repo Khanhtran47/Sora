@@ -30,13 +30,15 @@ export const handle = {
 
 const TvPage = () => {
   const location = useLocation();
-
+  if (location.pathname.split('/')[2]?.match(/^\d+$/) || location.pathname === '/tv-shows')
+    return (
+      <Container fluid css={{ m: 0, p: 0 }}>
+        <Outlet />
+      </Container>
+    );
   return (
     <Container fluid css={{ m: 0, p: 0 }}>
-      {!location.pathname.split('/')[2]?.match(/^\d+$/) && (
-        <Tab pages={tvPage} linkTo="/tv-shows" />
-      )}
-
+      <Tab pages={tvPage} linkTo="/tv-shows" />
       <Outlet />
     </Container>
   );

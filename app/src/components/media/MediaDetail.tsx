@@ -3,7 +3,7 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { useRef } from 'react';
-import { Link } from '@remix-run/react';
+import { Link, useNavigate } from '@remix-run/react';
 import { Card, Col, Row, Button, Spacer, Avatar } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
 
@@ -40,6 +40,7 @@ const MediaDetail = (props: IMediaDetail) => {
   const { type, item, handler } = props;
   const ref = useRef<HTMLDivElement>(null);
   const size: IUseSize = useSize(ref);
+  const navigate = useNavigate();
 
   const isXs = useMediaQuery(425, 'max');
   const isSm = useMediaQuery(650, 'max');
@@ -107,6 +108,7 @@ const MediaDetail = (props: IMediaDetail) => {
                   width="50%"
                   css={{
                     minWidth: 'auto !important',
+                    minHeight: '205px !important',
                     marginTop: '10vh',
                     borderRadius: '24px',
                   }}
@@ -222,6 +224,7 @@ const MediaDetail = (props: IMediaDetail) => {
                             minWidth: 'auto !important',
                             marginTop: '2rem',
                             borderRadius: '24px',
+                            minHeight: '205px !important',
                           }}
                           loaderUrl="/api/image"
                           placeholder="blur"
@@ -354,6 +357,13 @@ const MediaDetail = (props: IMediaDetail) => {
                       key={genre?.id}
                       size={isSm ? 'sm' : 'md'}
                       css={{ marginBottom: '0.125rem' }}
+                      onClick={() =>
+                        navigate(
+                          `/${type === 'movie' ? 'movies/' : 'tv-shows/'}discover?with_genres=${
+                            genre?.id
+                          }`,
+                        )
+                      }
                     >
                       {genre?.name}
                     </Button>

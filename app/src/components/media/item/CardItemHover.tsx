@@ -23,7 +23,7 @@ const CardItemHover = ({
   genresTv,
   trailer,
 }: {
-  item: IMedia;
+  item?: IMedia;
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
   trailer?: Trailer;
@@ -37,7 +37,7 @@ const CardItemHover = ({
     posterPath,
     backdropPath,
     genreIds,
-  } = item;
+  } = item || {};
   const { loading, colorDarkenLighten, colorBackground } = useColorDarkenLighten(posterPath);
   const [player, setPlayer] = React.useState<ReturnType<YouTube['getInternalPlayer']>>();
   const [showTrailer, setShowTrailer] = React.useState<boolean>(false);

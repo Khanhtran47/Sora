@@ -338,6 +338,12 @@ export class TMDB {
     if (language) url += `&language=${language}`;
     return url;
   };
+
+  static listUrl = (list_id: number, language?: string) => {
+    let url = `${this.API_BASE_URL}list/${list_id}?api_key=${this.key}`;
+    if (language) url += `&language=${language}`;
+    return url;
+  };
 }
 
 export const fetcher = async <T = any>(url: string): Promise<T> => {
