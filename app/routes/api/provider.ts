@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { LoaderFunction, json } from '@remix-run/node';
 import { getMovieSearch } from '~/services/consumet/flixhq/flixhq.server';
-import { loklokSearchMovie } from '~/services/loklok';
+import { loklokSearchMovie, loklokSearchTv } from '~/services/loklok';
+import { ILoklokSearchData } from '~/services/loklok/loklok.type';
 import { IMovieResult } from '~/services/consumet/flixhq/flixhq.types';
 
 type LoaderData = {
@@ -15,36 +16,71 @@ export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
   const type = url.searchParams.get('type');
   const title = url.searchParams.get('title');
+  console.log('🚀 ~ file: provider.ts ~ line 19 ~ constloader:LoaderFunction= ~ title', title);
   const orgTitle = url.searchParams.get('orgTitle');
   const year = url.searchParams.get('year');
+  const season = url.searchParams.get('season');
   if (!title) throw new Response('No title', { status: 400 });
-  // const search = await getMovieSearch(title);
-  const [search, loklokSearch] = await Promise.all([
-    getMovieSearch(title),
-    loklokSearchMovie(title, orgTitle || '', Number(year)),
-  ]);
-  let provider = [];
-  const findFlixhq: IMovieResult | undefined = search?.results.find(
-    (movie) =>
-      movie.title === title &&
-      movie?.releaseDate === year &&
-      type &&
-      movie.type.toLowerCase().includes(type),
-  );
-  if (findFlixhq && findFlixhq.id)
-    provider.push({
-      id: findFlixhq.id,
-      provider: 'Flixhq',
+  if (type === 'movie') {
+    const [search, loklokSearch] = await Promise.all([
+      getMovieSearch(title),
+      loklokSearchMovie(title, orgTitle || '', Number(year)),
+    ]);
+    let provider = [];
+    const findFlixhq: IMovieResult | undefined = search?.results.find((movie) => {
+      return (
+        movie.title.toLowerCase() === title.toLowerCase() &&
+        movie?.releaseDate === year &&
+        movie?.type === 'Movie'
+      );
     });
-  if (loklokSearch?.data.name === title)
-    provider.push({
-      id: loklokSearch.data.id,
-      provider: 'Loklok',
+    if (findFlixhq && findFlixhq.id)
+      provider.push({
+        id: findFlixhq.id,
+        provider: 'Flixhq',
+      });
+    if (loklokSearch?.data.name.toLowerCase() === title.toLowerCase())
+      provider.push({
+        id: loklokSearch.data.id,
+        provider: 'Loklok',
+      });
+    if (provider && provider.length > 0)
+      return json<LoaderData>({
+        provider,
+      });
+  }
+  if (type === 'tv') {
+    const [search, loklokSearch] = await Promise.all([
+      getMovieSearch(title),
+      loklokSearchTv(title),
+    ]);
+    let provider = [];
+    const findFlixhq: IMovieResult | undefined = search?.results.find((movie) => {
+      return movie.title.toLowerCase() === title.toLowerCase() && movie?.type === 'TV Series';
     });
-  if (provider && provider.length > 0)
-    return json<LoaderData>({
-      provider,
+    if (findFlixhq && findFlixhq.id)
+      provider.push({
+        id: findFlixhq.id,
+        provider: 'Flixhq',
+      });
+    const findLoklok = loklokSearch.find((movie: ILoklokSearchData) => {
+      return (
+        movie.name.toLowerCase() === title.toLowerCase() ||
+        movie.name.toLowerCase() === `${title} Season ${season}`.toLowerCase() ||
+        movie.name.toLowerCase() === `${title} Part ${season}`.toLowerCase() ||
+        (movie.name.toLowerCase().includes(title.toLowerCase()) && movie?.releaseTime === year)
+      );
     });
+    if (findLoklok && findLoklok.id)
+      provider.push({
+        id: findLoklok.id,
+        provider: 'Loklok',
+      });
+    if (provider && provider.length > 0)
+      return json<LoaderData>({
+        provider,
+      });
+  }
   return json<LoaderData>({
     provider: [{ provider: 'Embed' }],
   });

@@ -2,6 +2,20 @@ import type { ILoklokMediaInfo, ILoklokSearchData } from './loklok.type';
 import { fetcher, LOKLOK_URL } from './utils.server';
 
 /**
+ * It takes a string as an argument, and returns a promise that resolves to an array of objects
+ * @param {string} title - The title of the TV show you want to search for.
+ * @returns An array of objects.
+ */
+export const loklokSearchTv = async (title: string) => {
+  try {
+    const res = await fetcher(`${LOKLOK_URL}/search?name=${title}`);
+    if (res) return res;
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+/**
  * Get tv/anime episode info by id
  * @param id loklok id
  * @param episodeIndex 0, 1, 2, 3, ...

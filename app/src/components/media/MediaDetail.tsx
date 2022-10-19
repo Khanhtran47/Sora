@@ -41,6 +41,7 @@ const detailTab = [
 const MediaDetail = (props: IMediaDetail) => {
   // const { t } = useTranslation();
   const { type, item, handler, translations } = props;
+  console.log('🚀 ~ file: MediaDetail.tsx ~ line 44 ~ MediaDetail ~ item', item);
   const ref = useRef<HTMLDivElement>(null);
   const size: IUseSize = useSize(ref);
   const navigate = useNavigate();
@@ -458,6 +459,7 @@ const MediaDetail = (props: IMediaDetail) => {
         year={releaseYear}
         translations={translations}
         id={item?.id}
+        {...(type === 'tv' && { season: 1, episode: 1 })}
       />
     </>
   );

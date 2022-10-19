@@ -17,6 +17,8 @@ type SelectProviderModalProps = {
   origTitle: string;
   year: number;
   translations?: IMovieTranslations;
+  season?: number;
+  episode?: number;
 };
 
 const SelectProviderModal = ({
@@ -28,6 +30,8 @@ const SelectProviderModal = ({
   origTitle,
   year,
   translations,
+  season,
+  episode,
 }: SelectProviderModalProps) => {
   const fetcher = useFetcher();
   const navigate = useNavigate();
@@ -35,15 +39,26 @@ const SelectProviderModal = ({
   const { width } = useWindowSize();
   const findTranslation = translations?.translations.find((item) => item.iso_639_1 === 'en');
   const handleProvider = (item: { id: string | number; provider: string }) => {
-    navigate(`/movies/${id}/watch?provider=${item.provider}&id=${item.id}`);
+    if (type === 'movie') navigate(`/movies/${id}/watch?provider=${item.provider}&id=${item.id}`);
+    else if (type === 'tv')
+      navigate(
+        `/tv-shows/${id}/season/${season}/episode/${episode}?provider=${item.provider}&id=${item.id}`,
+      );
   };
   useEffect(() => {
     if (visible) {
-      fetcher.load(
-        `/api/provider?title=${
-          findTranslation ? findTranslation.data?.title : title
-        }&type=${type}&origTitle=${origTitle}&year=${year}`,
-      );
+      if (type === 'movie')
+        fetcher.load(
+          `/api/provider?title=${
+            findTranslation ? findTranslation.data?.title : title
+          }&type=${type}&origTitle=${origTitle}&year=${year}`,
+        );
+      else if (type === 'tv')
+        fetcher.load(
+          `/api/provider?title=${
+            findTranslation ? findTranslation.data?.name : title
+          }&type=${type}&origTitle=${origTitle}&year=${year}&season=${season}`,
+        );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);

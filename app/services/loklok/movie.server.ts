@@ -21,7 +21,7 @@ export const loklokGetMovieInfo = async (id: string) => {
  * @param title movie's title
  * @param orgTitle movie's another title
  * @param year release year
- * @returns object { data: some movie info, sources: media sources, subtitles}
+ * @returns array [{ movie info }]
  */
 export const loklokSearchMovie = async (title: string, orgTitle: string, year: number) => {
   try {
