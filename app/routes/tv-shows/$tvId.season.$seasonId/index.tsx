@@ -46,7 +46,6 @@ const Episodes = () => {
     'routes/tv-shows/$tvId.season.$seasonId',
   );
   const seasonDetail = seasonData && seasonData.detail;
-  console.log('🚀 ~ file: index.tsx ~ line 19 ~ Episodes ~ seasonData', seasonData);
   const isSm = useMediaQuery(650, 'max');
   const [visible, setVisible] = useState(false);
   const [episodeNumber, setEpisodeNumber] = useState<number>();

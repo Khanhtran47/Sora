@@ -181,7 +181,7 @@ export interface Headers {
 }
 
 export interface Source {
-  isM3U8: boolean;
+  isM3U8?: boolean;
   quality: string;
   url: string;
 }

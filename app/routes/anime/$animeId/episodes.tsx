@@ -1,13 +1,17 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import { useState } from 'react';
 import { MetaFunction } from '@remix-run/node';
-import { Link } from '@remix-run/react';
 import { Row, Col, Spacer, Card, Avatar } from '@nextui-org/react';
 import { useRouteData } from 'remix-utils';
 import Image, { MimeType } from 'remix-image';
+
 import { IAnimeInfo } from '~/services/consumet/anilist/anilist.types';
 import useMediaQuery from '~/hooks/useMediaQuery';
+
 import { H3, H5, H6 } from '~/src/components/styles/Text.styles';
 import Flex from '~/src/components/styles/Flex.styles';
+import SelectProviderModal from '~/src/components/elements/modal/SelectProviderModal';
+
 import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
 
 export const meta: MetaFunction = ({ params }) => ({
@@ -18,6 +22,12 @@ const EpisodesPage = () => {
   const animeData: { detail: IAnimeInfo } | undefined = useRouteData('routes/anime/$animeId');
   const detail = animeData && animeData.detail;
   const isSm = useMediaQuery(650, 'max');
+  const [visible, setVisible] = useState(false);
+  const [episodeId, setEpisodeEpisodeId] = useState<string>();
+  const [episodeNumber, setEpisodeNumber] = useState<number>();
+  const closeHandler = () => {
+    setVisible(false);
+  };
   return (
     <Row
       fluid
@@ -44,7 +54,7 @@ const EpisodesPage = () => {
               Episodes
             </H3>
             {detail.episodes.map((episode) => (
-              <Link key={episode.id} to={`/anime/${detail.id}/episode/${episode.id}`}>
+              <div key={episode.id}>
                 <Card
                   as="div"
                   isHoverable
@@ -55,6 +65,11 @@ const EpisodesPage = () => {
                     filter: 'var(--nextui-dropShadows-md)',
                   }}
                   role="figure"
+                  onPress={() => {
+                    setVisible(true);
+                    setEpisodeEpisodeId(episode.id);
+                    setEpisodeNumber(episode.number);
+                  }}
                 >
                   <Card.Body
                     css={{
@@ -121,11 +136,22 @@ const EpisodesPage = () => {
                   </Card.Body>
                 </Card>
                 <Spacer y={1} />
-              </Link>
+              </div>
             ))}
           </>
         )}
       </Col>
+      <SelectProviderModal
+        visible={visible}
+        closeHandler={closeHandler}
+        type="anime"
+        title={detail?.title?.english || ''}
+        origTitle={detail?.title?.native || ''}
+        year={Number(detail?.releaseDate)}
+        id={detail?.id}
+        episodeId={episodeId}
+        episode={episodeNumber}
+      />
     </Row>
   );
 };

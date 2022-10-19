@@ -7,7 +7,7 @@ import { IMovieResult } from '~/services/consumet/flixhq/flixhq.types';
 
 type LoaderData = {
   provider: {
-    id?: string | number;
+    id?: string | number | null;
     provider: string;
   }[];
 };
@@ -16,10 +16,10 @@ export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
   const type = url.searchParams.get('type');
   const title = url.searchParams.get('title');
-  console.log('🚀 ~ file: provider.ts ~ line 19 ~ constloader:LoaderFunction= ~ title', title);
   const orgTitle = url.searchParams.get('orgTitle');
   const year = url.searchParams.get('year');
   const season = url.searchParams.get('season');
+  const episodeId = url.searchParams.get('episodeId');
   if (!title) throw new Response('No title', { status: 400 });
   if (type === 'movie') {
     const [search, loklokSearch] = await Promise.all([
@@ -63,6 +63,36 @@ export const loader: LoaderFunction = async ({ request }) => {
         id: findFlixhq.id,
         provider: 'Flixhq',
       });
+    const findLoklok = loklokSearch.find((movie: ILoklokSearchData) => {
+      return (
+        movie.name.toLowerCase() === title.toLowerCase() ||
+        movie.name.toLowerCase() === `${title} Season ${season}`.toLowerCase() ||
+        movie.name.toLowerCase() === `${title} Part ${season}`.toLowerCase() ||
+        (movie.name.toLowerCase().includes(title.toLowerCase()) && movie?.releaseTime === year)
+      );
+    });
+    if (findLoklok && findLoklok.id)
+      provider.push({
+        id: findLoklok.id,
+        provider: 'Loklok',
+      });
+    if (provider && provider.length > 0)
+      return json<LoaderData>({
+        provider,
+      });
+  }
+  if (type === 'anime') {
+    const loklokSearch = await loklokSearchTv(title);
+    let provider = [
+      {
+        id: episodeId,
+        provider: 'Gogo',
+      },
+      {
+        id: episodeId,
+        provider: 'Zoro',
+      },
+    ];
     const findLoklok = loklokSearch.find((movie: ILoklokSearchData) => {
       return (
         movie.name.toLowerCase() === title.toLowerCase() ||

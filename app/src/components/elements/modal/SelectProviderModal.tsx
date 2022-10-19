@@ -19,6 +19,7 @@ type SelectProviderModalProps = {
   translations?: IMovieTranslations;
   season?: number;
   episode?: number;
+  episodeId?: string;
 };
 
 const SelectProviderModal = ({
@@ -32,6 +33,7 @@ const SelectProviderModal = ({
   translations,
   season,
   episode,
+  episodeId,
 }: SelectProviderModalProps) => {
   const fetcher = useFetcher();
   const navigate = useNavigate();
@@ -43,6 +45,10 @@ const SelectProviderModal = ({
     else if (type === 'tv')
       navigate(
         `/tv-shows/${id}/season/${season}/episode/${episode}?provider=${item.provider}&id=${item.id}`,
+      );
+    else if (type === 'anime')
+      navigate(
+        `/anime/${id}/episode/${episodeId}?provider=${item.provider}&id=${item.id}&episode=${episode}`,
       );
   };
   useEffect(() => {
@@ -58,6 +64,10 @@ const SelectProviderModal = ({
           `/api/provider?title=${
             findTranslation ? findTranslation.data?.name : title
           }&type=${type}&origTitle=${origTitle}&year=${year}&season=${season}`,
+        );
+      else if (type === 'anime')
+        fetcher.load(
+          `/api/provider?title=${title}&type=${type}&origTitle=${origTitle}&year=${year}&episodeId=${episodeId}`,
         );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

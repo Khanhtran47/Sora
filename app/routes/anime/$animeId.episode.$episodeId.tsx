@@ -1,35 +1,79 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
 import { useCatch, useLoaderData, Link, RouteMatch, useParams } from '@remix-run/react';
 import { Container, Spacer, Loading } from '@nextui-org/react';
 import { ClientOnly } from 'remix-utils';
-// import { isDesktop } from 'react-device-detect';
+import { isDesktop } from 'react-device-detect';
+
+import { getAnimeEpisodeStream, getAnimeInfo } from '~/services/consumet/anilist/anilist.server';
+import { IEpisode } from '~/services/consumet/anilist/anilist.types';
+import { loklokGetTvEpInfo } from '~/services/loklok';
+import { LOKLOK_URL } from '~/services/loklok/utils.server';
+import { IMovieSource, IMovieSubtitle } from '~/services/consumet/flixhq/flixhq.types';
 
 import ArtPlayer from '~/src/components/elements/player/ArtPlayer';
 import AspectRatio from '~/src/components/elements/aspect-ratio/AspectRatio';
-import { getAnimeEpisodeStream, getAnimeInfo } from '~/services/consumet/anilist/anilist.server';
-import { Source, IEpisode } from '~/services/consumet/anilist/anilist.types';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 
 type LoaderData = {
-  sources: Source[];
+  provider?: string;
+  sources: IMovieSource[] | undefined;
   detail: Awaited<ReturnType<typeof getAnimeInfo>>;
+  subtitles?: IMovieSubtitle[] | undefined;
 };
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader: LoaderFunction = async ({ request, params }) => {
+  const url = new URL(request.url);
+  const provider = url.searchParams.get('provider');
+  const idProvider = url.searchParams.get('id');
+  const episode = url.searchParams.get('episode');
   const { animeId, episodeId } = params;
   if (!animeId || !episodeId) throw new Response('Not Found', { status: 404 });
+  if (provider === 'Loklok') {
+    const detail = await getAnimeInfo(animeId);
+    if (!idProvider) throw new Response('Id Not Found', { status: 404 });
+    const tvDetail = await loklokGetTvEpInfo(idProvider, Number(episode) - 1);
+    return json<LoaderData>({
+      provider,
+      detail,
+      sources: tvDetail?.sources,
+      subtitles: tvDetail?.subtitles.map((sub) => ({
+        lang: `${sub.language} (${sub.lang})`,
+        url: `${LOKLOK_URL}/subtitle?url=${sub.url}`,
+      })),
+    });
+  }
+  if (provider === 'Gogo') {
+    const [detail, episodeDetail] = await Promise.all([
+      getAnimeInfo(animeId),
+      getAnimeEpisodeStream(episodeId, 'gogoanime'),
+    ]);
+    return json<LoaderData>({
+      provider,
+      detail,
+      sources: episodeDetail?.sources,
+    });
+  }
+  if (provider === 'Zoro') {
+    const [detail, episodeDetail] = await Promise.all([
+      getAnimeInfo(animeId),
+      getAnimeEpisodeStream(episodeId, 'zoro'),
+    ]);
+    return json<LoaderData>({
+      provider,
+      detail,
+      sources: episodeDetail?.sources,
+    });
+  }
   const [detail, sources] = await Promise.all([
     getAnimeInfo(animeId),
     getAnimeEpisodeStream(episodeId),
   ]);
   if (!detail || !sources) throw new Response('Not Found', { status: 404 });
-  return json<LoaderData>(
-    { detail, sources: sources.sources },
-    { headers: { 'Cache-Control': 'max-age=7200000' } },
-  );
+  return json<LoaderData>({ detail, sources: sources.sources });
 };
 
 export const meta: MetaFunction = ({ data, params }) => {
@@ -92,14 +136,22 @@ export const handle = {
 };
 
 const AnimeEpisodeWatch = () => {
-  const { detail, sources } = useLoaderData<LoaderData>();
+  const { provider, detail, sources, subtitles } = useLoaderData<LoaderData>();
   const { episodeId } = useParams();
 
+  const subtitleSelector = subtitles?.map(({ lang, url }: { lang: string; url: string }) => ({
+    html: lang.toString(),
+    url: url.toString(),
+    ...(provider === 'Loklok' && lang === 'en' && { default: true }),
+  }));
   const qualitySelector = sources?.map(
-    ({ quality, url, isM3U8 }: { quality: number | string; url: string; isM3U8: boolean }) => ({
-      html: `${quality.toString()}`,
-      url: isM3U8 ? url.toString() : '',
-      ...(quality === 'default' && { default: true }),
+    ({ quality, url }: { quality: number | string; url: string }) => ({
+      html: quality.toString(),
+      url: url.toString(),
+      ...(provider === 'Loklok' && Number(quality) === 720 && { default: true }),
+      ...((provider === 'Gogo' || provider === 'Zoro') &&
+        quality === 'default' && { default: true }),
+      ...(!provider && quality === 'default' && { default: true }),
     }),
   );
   return (
@@ -125,20 +177,34 @@ const AnimeEpisodeWatch = () => {
                     detail?.episodes.find((episode) => episode.id === episodeId)?.number
                   }`,
                   url:
-                    sources?.find(
-                      (item: { quality: number | string; url: string }) =>
-                        item.quality === 'default',
-                    )?.url || '',
-                  // subtitle: {
-                  //   url:
-                  //     subtitles?.find(
-                  //       (item: { lang: string; url: string }) => item.lang === 'English',
-                  //     )?.url || '',
-                  //   encoding: 'utf-8',
-                  //   style: {
-                  //     fontSize: isDesktop ? '40px' : '20px',
-                  //   },
-                  // },
+                    provider === 'Loklok'
+                      ? sources?.find(
+                          (item: { quality: number | string; url: string }) =>
+                            Number(item.quality) === 720,
+                        )?.url
+                      : provider === 'Gogo' || provider === 'Zoro'
+                      ? sources?.find(
+                          (item: { quality: number | string; url: string }) =>
+                            item.quality === 'default',
+                        )?.url
+                      : sources?.find(
+                          (item: { quality: number | string; url: string }) =>
+                            item.quality === 'default',
+                        )?.url || '',
+                  subtitle: {
+                    url:
+                      provider === 'Loklok'
+                        ? subtitles?.find((item: { lang: string; url: string }) =>
+                            item.lang.includes('English'),
+                          )?.url
+                        : subtitles?.find((item: { lang: string; url: string }) =>
+                            item.lang.includes('English'),
+                          )?.url || '',
+                    encoding: 'utf-8',
+                    style: {
+                      fontSize: isDesktop ? '40px' : '20px',
+                    },
+                  },
                   poster: detail?.cover,
                   isLive: false,
                   autoMini: true,
@@ -147,7 +213,7 @@ const AnimeEpisodeWatch = () => {
                   autoPlayback: true,
                 }}
                 qualitySelector={qualitySelector || []}
-                // subtitleSelector={subtitleSelector || []}
+                subtitleSelector={subtitleSelector || []}
                 style={{
                   width: '100%',
                   height: '100%',
