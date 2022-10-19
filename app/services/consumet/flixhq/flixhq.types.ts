@@ -55,7 +55,7 @@ export interface Headers {
 }
 
 export interface IMovieSource {
-  isM3U8: boolean;
+  isM3U8?: boolean;
   quality: string;
   url: string;
 }
