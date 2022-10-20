@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
@@ -21,6 +22,8 @@ import {
   IMovieSource,
   IMovieSubtitle,
 } from '~/services/consumet/flixhq/flixhq.types';
+import { loklokGetTvEpInfo } from '~/services/loklok';
+import { LOKLOK_URL } from '~/services/loklok/utils.server';
 import TMDB from '~/utils/media';
 import Player from '~/utils/player';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
@@ -28,6 +31,7 @@ import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 import useMediaQuery from '~/hooks/useMediaQuery';
 
 type LoaderData = {
+  provider?: string;
   detail: Awaited<ReturnType<typeof getTvShowDetail>>;
   imdbId: Awaited<ReturnType<typeof getTvShowIMDBId>>;
   data?: Awaited<ReturnType<typeof getMovieInfo>>;
@@ -59,11 +63,55 @@ export const meta: MetaFunction = ({ data, params }) => {
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
+  const url = new URL(request.url);
+  const provider = url.searchParams.get('provider');
+  const idProvider = url.searchParams.get('id');
   const locale = await i18next.getLocale(request);
   const { tvId, seasonId, episodeId } = params;
   const tid = Number(tvId);
   if (!tid) throw new Response('Not Found', { status: 404 });
   const [detail, imdbId] = await Promise.all([getTvShowDetail(tid), getTvShowIMDBId(tid)]);
+  if (provider === 'Loklok') {
+    if (!idProvider) throw new Response('Id Not Found', { status: 404 });
+    const tvDetail = await loklokGetTvEpInfo(idProvider, Number(episodeId));
+    return json<LoaderData>({
+      provider,
+      detail,
+      imdbId,
+      sources: tvDetail?.sources,
+      subtitles: tvDetail?.subtitles.map((sub) => ({
+        lang: `${sub.language} (${sub.lang})`,
+        url: `${LOKLOK_URL}/subtitle?url=${sub.url}`,
+      })),
+    });
+  }
+  if (provider === 'Flixhq') {
+    if (!idProvider) throw new Response('Id Not Found', { status: 404 });
+    const tvDetail = await getMovieInfo(idProvider);
+    const tvEpisodeDetail = tvDetail?.episodes?.find(
+      (episode) => episode.season === Number(seasonId) && episode.number === Number(episodeId),
+    );
+    if (tvEpisodeDetail) {
+      const tvEpisodeStreamLink = await getMovieEpisodeStreamLink(
+        tvEpisodeDetail?.id || '',
+        tvDetail?.id || '',
+      );
+      return json<LoaderData>({
+        provider,
+        detail,
+        imdbId,
+        data: tvDetail,
+        sources: tvEpisodeStreamLink?.sources,
+        subtitles: tvEpisodeStreamLink?.subtitles,
+      });
+    }
+  }
+  if (provider === 'Embed') {
+    return json<LoaderData>({
+      detail,
+      imdbId,
+    });
+  }
   let search;
   let tvDetail;
   let tvEpisodeDetail;
@@ -142,7 +190,7 @@ export const handle = {
 };
 
 const EpisodeWatch = () => {
-  const { detail, imdbId, data, sources, subtitles } = useLoaderData<LoaderData>();
+  const { provider, detail, imdbId, sources, subtitles } = useLoaderData<LoaderData>();
   const { seasonId, episodeId } = useParams();
   const isSm = useMediaQuery(960, 'max');
   const id = detail && detail.id;
@@ -165,13 +213,15 @@ const EpisodeWatch = () => {
   const subtitleSelector = subtitles?.map(({ lang, url }: { lang: string; url: string }) => ({
     html: lang.toString(),
     url: url.toString(),
-    ...(lang === 'English' && { default: true }),
+    ...(provider === 'Flixhq' && lang === 'English' && { default: true }),
+    ...(provider === 'Loklok' && lang === 'en' && { default: true }),
   }));
   const qualitySelector = sources?.map(
-    ({ quality, url, isM3U8 }: { quality: number | string; url: string; isM3U8: boolean }) => ({
-      html: `${quality.toString()}P`,
-      url: isM3U8 ? url.toString() : '',
-      ...(quality === 'auto' && { default: true }),
+    ({ quality, url }: { quality: number | string; url: string }) => ({
+      html: quality.toString(),
+      url: url.toString(),
+      ...(provider === 'Flixhq' && quality === 'auto' && { default: true }),
+      ...(provider === 'Loklok' && Number(quality) === 720 && { default: true }),
     }),
   );
   return (
@@ -194,17 +244,35 @@ const EpisodeWatch = () => {
               {sources ? (
                 <ArtPlayer
                   option={{
-                    title: data?.title,
+                    title: detail?.name,
                     url:
-                      sources?.find(
-                        (item: { quality: number | string; url: string }) =>
-                          item.quality === 'auto',
-                      )?.url || '',
+                      provider === 'Flixhq'
+                        ? sources?.find(
+                            (item: { quality: number | string; url: string }) =>
+                              item.quality === 'auto',
+                          )?.url
+                        : provider === 'Loklok'
+                        ? sources?.find(
+                            (item: { quality: number | string; url: string }) =>
+                              Number(item.quality) === 720,
+                          )?.url
+                        : sources?.find(
+                            (item: { quality: number | string; url: string }) =>
+                              item.quality === 'auto',
+                          )?.url || '',
                     subtitle: {
                       url:
-                        subtitles?.find(
-                          (item: { lang: string; url: string }) => item.lang === 'English',
-                        )?.url || '',
+                        provider === 'Flixhq'
+                          ? subtitles?.find((item: { lang: string; url: string }) =>
+                              item.lang.includes('English'),
+                            )?.url
+                          : provider === 'Loklok'
+                          ? subtitles?.find((item: { lang: string; url: string }) =>
+                              item.lang.includes('English'),
+                            )?.url
+                          : subtitles?.find((item: { lang: string; url: string }) =>
+                              item.lang.includes('English'),
+                            )?.url || '',
                       encoding: 'utf-8',
                       style: {
                         fontSize: isDesktop ? '40px' : '20px',

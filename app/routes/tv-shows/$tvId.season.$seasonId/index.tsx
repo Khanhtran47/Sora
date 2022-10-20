@@ -1,22 +1,57 @@
+/* eslint-disable @typescript-eslint/no-throw-literal */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { Link } from '@remix-run/react';
+import { useState } from 'react';
+import { LoaderFunction, json } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
 import { Row, Col, Spacer, Card, Avatar } from '@nextui-org/react';
 import { useRouteData } from 'remix-utils';
 import Image, { MimeType } from 'remix-image';
+
+import { getTvShowDetail, getTranslations } from '~/services/tmdb/tmdb.server';
 import { ISeasonDetail } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
 import useMediaQuery from '~/hooks/useMediaQuery';
+import i18next from '~/i18n/i18next.server';
+
 import { H3, H4, H5, H6 } from '~/src/components/styles/Text.styles';
 import Flex from '~/src/components/styles/Flex.styles';
+import SelectProviderModal from '~/src/components/elements/modal/SelectProviderModal';
+
 import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
 
+type LoaderData = {
+  detail: Awaited<ReturnType<typeof getTvShowDetail>>;
+  translations?: Awaited<ReturnType<typeof getTranslations>>;
+};
+
+export const loader: LoaderFunction = async ({ request, params }) => {
+  const locale = await i18next.getLocale(request);
+  const { tvId } = params;
+  const tid = Number(tvId);
+  if (!tid) throw new Response('Not Found', { status: 404 });
+
+  const detail = await getTvShowDetail(tid, locale);
+  if (!tid) throw new Response('Not Found', { status: 404 });
+  if ((detail && detail?.original_language !== 'en') || locale !== 'en') {
+    const translations = await getTranslations('tv', tid);
+    return json<LoaderData>({ detail, translations });
+  }
+
+  return json<LoaderData>({ detail });
+};
+
 const Episodes = () => {
+  const { detail, translations } = useLoaderData<LoaderData>();
   const seasonData: { detail: ISeasonDetail } | undefined = useRouteData(
     'routes/tv-shows/$tvId.season.$seasonId',
   );
-  const detail = seasonData && seasonData.detail;
-
+  const seasonDetail = seasonData && seasonData.detail;
   const isSm = useMediaQuery(650, 'max');
+  const [visible, setVisible] = useState(false);
+  const [episodeNumber, setEpisodeNumber] = useState<number>();
+  const closeHandler = () => {
+    setVisible(false);
+  };
   return (
     <Row
       fluid
@@ -37,16 +72,13 @@ const Episodes = () => {
       }}
     >
       <Col span={isSm ? 12 : 8}>
-        {detail?.episodes && detail.episodes.length > 0 && (
+        {seasonDetail?.episodes && seasonDetail.episodes.length > 0 && (
           <>
             <H3 h3 css={{ margin: '20px 0 20px 0' }}>
               Episodes
             </H3>
-            {detail.episodes.map((episode) => (
-              <Link
-                key={episode.id}
-                to={`/tv-shows/${episode.show_id}/season/${episode.season_number}/episode/${episode.episode_number}`}
-              >
+            {seasonDetail.episodes.map((episode) => (
+              <div key={episode.id}>
                 <Card
                   as="div"
                   isHoverable
@@ -57,6 +89,10 @@ const Episodes = () => {
                     filter: 'var(--nextui-dropShadows-md)',
                   }}
                   role="figure"
+                  onPress={() => {
+                    setVisible(true);
+                    setEpisodeNumber(episode.episode_number);
+                  }}
                 >
                   <Card.Body
                     css={{
@@ -147,11 +183,23 @@ const Episodes = () => {
                   </Card.Body>
                 </Card>
                 <Spacer y={1} />
-              </Link>
+              </div>
             ))}
           </>
         )}
       </Col>
+      <SelectProviderModal
+        visible={visible}
+        closeHandler={closeHandler}
+        type="tv"
+        title={detail?.name || ''}
+        origTitle={detail?.original_name || ''}
+        year={new Date(detail?.first_air_date || '').getFullYear()}
+        translations={translations}
+        id={detail?.id}
+        season={seasonDetail?.season_number}
+        episode={episodeNumber}
+      />
     </Row>
   );
 };

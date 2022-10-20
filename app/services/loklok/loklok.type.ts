@@ -1,3 +1,4 @@
+import { IMovieSource } from '../consumet/flixhq/flixhq.types';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface ILoklokSubtitle {
   language: string;
@@ -6,6 +7,7 @@ export interface ILoklokSubtitle {
 }
 
 export interface ILoklokSources {
+  isM3U8?: boolean;
   quality: number;
   url: string;
 }
@@ -103,7 +105,7 @@ export interface ILoklokInfoData {
 
 export interface ILoklokMediaInfo {
   data: ILoklokInfoData;
-  sources: ILoklokSources[];
+  sources: IMovieSource[];
   subtitles: ILoklokSubtitle[];
 }
 

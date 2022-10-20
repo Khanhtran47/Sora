@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/indent */
+/* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
@@ -21,12 +23,13 @@ import {
   IMovieSource,
   IMovieSubtitle,
 } from '~/services/consumet/flixhq/flixhq.types';
+import { loklokSearchMovieSub, loklokGetMovieInfo } from '~/services/loklok';
+import { LOKLOK_URL } from '~/services/loklok/utils.server';
 import TMDB from '~/utils/media';
 import Player from '~/utils/player';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 import useMediaQuery from '~/hooks/useMediaQuery';
-import { loklokSearchMovieSub } from '~/services/loklok';
 
 export const meta: MetaFunction = ({ data, params }) => {
   if (!data) {
@@ -52,6 +55,7 @@ export const meta: MetaFunction = ({ data, params }) => {
 };
 
 type DataLoader = {
+  provider?: string;
   detail: Awaited<ReturnType<typeof getMovieDetail>>;
   data?: Awaited<ReturnType<typeof getMovieInfo>>;
   sources?: IMovieSource[] | undefined;
@@ -59,11 +63,47 @@ type DataLoader = {
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
+  const url = new URL(request.url);
+  const provider = url.searchParams.get('provider');
+  const idProvider = url.searchParams.get('id');
   const locale = await i18next.getLocale(request);
   const { movieId } = params;
   const mid = Number(movieId);
   if (!mid) throw new Response('Not Found', { status: 404 });
   const detail = await getMovieDetail(mid);
+  if (provider === 'Loklok') {
+    if (!idProvider) throw new Response('Id Not Found', { status: 404 });
+    const movieDetail = await loklokGetMovieInfo(idProvider);
+    return json<DataLoader>({
+      provider,
+      detail,
+      sources: movieDetail?.sources,
+      subtitles: movieDetail?.subtitles.map((sub) => ({
+        lang: `${sub.language} (${sub.lang})`,
+        url: `${LOKLOK_URL}/subtitle?url=${sub.url}`,
+      })),
+    });
+  }
+  if (provider === 'Flixhq') {
+    if (!idProvider) throw new Response('Id Not Found', { status: 404 });
+    const movieDetail = await getMovieInfo(idProvider);
+    const movieStreamLink = await getMovieEpisodeStreamLink(
+      movieDetail?.episodes[0].id || '',
+      movieDetail?.id || '',
+    );
+    return json<DataLoader>({
+      provider,
+      detail,
+      data: movieDetail,
+      sources: movieStreamLink?.sources,
+      subtitles: movieStreamLink?.subtitles,
+    });
+  }
+  if (provider === 'Embed') {
+    return json<DataLoader>({
+      detail,
+    });
+  }
   let search;
   let movieDetail;
   let movieStreamLink;
@@ -131,7 +171,7 @@ export const handle = {
 };
 
 const MovieWatch = () => {
-  const { detail, data, sources, subtitles } = useLoaderData<DataLoader>();
+  const { provider, detail, sources, subtitles } = useLoaderData<DataLoader>();
   const isSm = useMediaQuery(960, 'max');
   const id = detail && detail.id;
   const [player, setPlayer] = React.useState<string>('1');
@@ -146,13 +186,15 @@ const MovieWatch = () => {
   const subtitleSelector = subtitles?.map(({ lang, url }: { lang: string; url: string }) => ({
     html: lang.toString(),
     url: url.toString(),
-    ...(lang === 'English' && { default: true }),
+    ...(provider === 'Flixhq' && lang === 'English' && { default: true }),
+    ...(provider === 'Loklok' && lang === 'en' && { default: true }),
   }));
   const qualitySelector = sources?.map(
-    ({ quality, url, isM3U8 }: { quality: number | string; url: string; isM3U8: boolean }) => ({
-      html: `${quality.toString()}P`,
-      url: isM3U8 ? url.toString() : '',
-      ...(quality === 'auto' && { default: true }),
+    ({ quality, url }: { quality: number | string; url: string }) => ({
+      html: quality.toString(),
+      url: url.toString(),
+      ...(provider === 'Flixhq' && quality === 'auto' && { default: true }),
+      ...(provider === 'Loklok' && Number(quality) === 720 && { default: true }),
     }),
   );
   return (
@@ -175,17 +217,35 @@ const MovieWatch = () => {
               {sources ? (
                 <ArtPlayer
                   option={{
-                    title: data?.title,
+                    title: detail?.title,
                     url:
-                      sources?.find(
-                        (item: { quality: number | string; url: string }) =>
-                          item.quality === 'auto',
-                      )?.url || '',
+                      provider === 'Flixhq'
+                        ? sources?.find(
+                            (item: { quality: number | string; url: string }) =>
+                              item.quality === 'auto',
+                          )?.url
+                        : provider === 'Loklok'
+                        ? sources?.find(
+                            (item: { quality: number | string; url: string }) =>
+                              Number(item.quality) === 720,
+                          )?.url
+                        : sources?.find(
+                            (item: { quality: number | string; url: string }) =>
+                              item.quality === 'auto',
+                          )?.url || '',
                     subtitle: {
                       url:
-                        subtitles?.find(
-                          (item: { lang: string; url: string }) => item.lang === 'English',
-                        )?.url || '',
+                        provider === 'Flixhq'
+                          ? subtitles?.find((item: { lang: string; url: string }) =>
+                              item.lang.includes('English'),
+                            )?.url
+                          : provider === 'Loklok'
+                          ? subtitles?.find((item: { lang: string; url: string }) =>
+                              item.lang.includes('English'),
+                            )?.url
+                          : subtitles?.find((item: { lang: string; url: string }) =>
+                              item.lang.includes('English'),
+                            )?.url || '',
                       encoding: 'utf-8',
                       style: {
                         fontSize: isDesktop ? '40px' : '20px',

@@ -296,7 +296,8 @@ export interface IDataTranslation {
   overview: string;
   runtime: number;
   tagline: string;
-  title: string;
+  title?: string;
+  name?: string;
 }
 
 export interface ILanguage {

@@ -9,13 +9,8 @@ export interface IMovieResult {
   image: string;
   releaseDate?: string;
   title: string;
-  type: IMovieType;
+  type: 'Movie' | 'TV Series';
   url: string;
-}
-
-export enum IMovieType {
-  Movie = 'Movie',
-  TVSeries = 'TV Series',
 }
 
 export interface IMovieInfo {
@@ -55,7 +50,7 @@ export interface Headers {
 }
 
 export interface IMovieSource {
-  isM3U8: boolean;
+  isM3U8?: boolean;
   quality: string;
   url: string;
 }
