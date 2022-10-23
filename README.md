@@ -75,19 +75,19 @@ To get a local copy up and running follow these simple example steps.
 1. Clone the repo
 
 ```bash
-  git clone https://github.com/Khanhtran47/remix-movie
+git clone https://github.com/Khanhtran47/remix-movie
 ```
 
 2. Install dependencies
 
 ```bash
-  yarn install
+yarn install
 ```
 
 3. Start the server
 
 ```bash
-  yarn dev
+yarn dev
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
