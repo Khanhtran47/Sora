@@ -81,7 +81,7 @@ To get a local copy up and running follow these simple example steps.
 2. Install dependencies
 
 ```bash
-yarn install
+  yarn install
 ```
 
 3. Start the server
