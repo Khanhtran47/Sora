@@ -1,9 +1,10 @@
 import LRU from 'lru-cache';
+import { env } from 'process';
 
 // https://www.npmjs.com/package/lru-cache
 
 // eslint-disable-next-line import/no-mutable-exports
-let lruCache: LRU<string, unknown>;
+let lruCache: LRU<string, unknown> | undefined;
 
 declare global {
   // eslint-disable-next-line vars-on-top, no-var
@@ -26,9 +27,9 @@ const options = {
   ttl: 1000 * 60 * 60 * 24, // one day
 };
 
-if (process.env.NODE_ENV === 'production') {
+if (env.NODE_ENV === 'production') {
   lruCache = new LRU(options);
-} else {
+} else if (env.LRU_CACHE !== 'OFF') {
   if (!global.cache) {
     global.cache = new LRU(options);
   }
