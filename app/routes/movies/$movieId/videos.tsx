@@ -22,8 +22,6 @@ export const loader: LoaderFunction = async ({ params }) => {
   if (!mid) throw new Response('Not Found', { status: 404 });
   const videos = await getVideos('movie', mid);
 
-  if (!videos) throw new Response('Not Found', { status: 404 });
-
   return json<LoaderData>({ videos });
 };
 
