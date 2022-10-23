@@ -172,7 +172,7 @@ const Document = ({ children, title, lang, dir, gaTrackingId }: DocumentProps) =
         {title ? <title>{title}</title> : null}
         <Meta />
         <Links />
-        <MetronomeLinks />
+        {process.env.NODE_ENV === 'production' ? <MetronomeLinks /> : null}
       </head>
       <body>
         {process.env.NODE_ENV === 'development' || !gaTrackingId ? null : (
