@@ -9,4 +9,4 @@ api/_build
 
 .env
 .vscode
-app/styles/app.css
+app/styles/*.css

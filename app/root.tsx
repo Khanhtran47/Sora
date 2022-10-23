@@ -53,7 +53,7 @@ import {
 import { getListGenre, getListLanguages } from '~/services/tmdb/tmdb.server';
 import Layout from '~/src/components/layouts/Layout';
 import Home from '~/src/assets/icons/HomeIcon.js';
-import styles from './styles/app.css';
+import styles from '~/styles/tailwind.css';
 import { getUser } from './services/auth.server';
 import { getSession } from './services/sessions.server';
 import pageNotFound from './src/assets/images/404.gif';
