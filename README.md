@@ -27,11 +27,7 @@
 <details>
   <summary>Table of Contents</summary>
   <ol>
-    <li>
-      <ul>
-        <li><a href="#tech-stack">Tech Stack</a></li>
-      </ul>
-    </li>
+    <li><a href="#tech-stack">Tech Stack</a></li>
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
