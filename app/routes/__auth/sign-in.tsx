@@ -46,7 +46,7 @@ export const action: ActionFunction = async ({ request }) => {
   authCookie.set('auth_token', {
     access_token: session.access_token,
     refresh_token: session.refresh_token,
-    expire_at: Date.now() + (session.expires_in - 10) * 1000,
+    expires_at: Date.now() + (session.expires_in - 10) * 1000,
   });
 
   return redirect(searchParams.get('ref') ?? request.referrer ?? '/', {
