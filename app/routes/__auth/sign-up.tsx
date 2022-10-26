@@ -35,7 +35,7 @@ export const action: ActionFunction = async ({ request }) => {
   }
 
   if (!session) {
-    return json<ActionData>({ error: 'Something went wrong. Please sign in again!' });
+    return redirect(`/sign-in?ref=${searchParams.get('ref') ?? '/'}&code=201-email`);
   }
 
   const authCookie = await getSessionFromCookie(request.headers.get('Cookie'));
@@ -77,7 +77,7 @@ const SignUpPage = () => {
 
   return (
     <Container fluid justify="center" display="flex">
-      <AuthForm type="sign-up" error={actionData?.error ?? null} />
+      <AuthForm type="sign-up" error={actionData?.error} />
     </Container>
   );
 };
