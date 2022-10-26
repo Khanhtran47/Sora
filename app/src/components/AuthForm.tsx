@@ -7,15 +7,17 @@ import Password from '../assets/icons/Password.js';
 
 interface IAuthForm {
   type: 'sign-in' | 'sign-up';
-  error: string | null;
+  error?: string | null;
+  code?: string | null;
 }
 
 export const handle = {
   i18n: 'auth',
 };
 
-const AuthForm = ({ type, error }: IAuthForm) => {
+const AuthForm = ({ type, error, code }: IAuthForm) => {
   const { t } = useTranslation('auth');
+  const hasMessage = code === '201-email';
 
   return (
     <Form method="post">
@@ -78,6 +80,11 @@ const AuthForm = ({ type, error }: IAuthForm) => {
           {error && (
             <Text h4 color="error">
               {error}
+            </Text>
+          )}
+          {!error && hasMessage && (
+            <Text h4 color="green">
+              {t(code)}
             </Text>
           )}
           <Spacer />
