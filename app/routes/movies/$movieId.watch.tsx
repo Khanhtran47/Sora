@@ -4,9 +4,16 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
 import { MetaFunction, LoaderFunction, json } from '@remix-run/node';
-import { useCatch, useLoaderData, Link, RouteMatch } from '@remix-run/react';
+import {
+  useCatch,
+  useLoaderData,
+  Link,
+  RouteMatch,
+  useFetcher,
+  useLocation,
+} from '@remix-run/react';
 import { Container, Spacer, Loading, Radio } from '@nextui-org/react';
-import { ClientOnly } from 'remix-utils';
+import { ClientOnly, useRouteData } from 'remix-utils';
 import { isDesktop } from 'react-device-detect';
 
 import ArtPlayer from '~/src/components/elements/player/ArtPlayer';
@@ -30,6 +37,8 @@ import Player from '~/utils/player';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 import useMediaQuery from '~/hooks/useMediaQuery';
+import { User } from '@supabase/supabase-js';
+import updateHistory from '~/utils/update-history';
 
 export const meta: MetaFunction = ({ data, params }) => {
   if (!data) {
@@ -176,6 +185,10 @@ const MovieWatch = () => {
   const id = detail && detail.id;
   const [player, setPlayer] = React.useState<string>('1');
   const [source, setSource] = React.useState<string>(Player.moviePlayerUrl(Number(id), 1));
+  const fetcher = useFetcher();
+  const location = useLocation();
+  const user = useRouteData<{ user: User }>('root')?.user;
+
   React.useEffect(
     () =>
       player === '2'
@@ -269,7 +282,16 @@ const MovieWatch = () => {
                     type: 'movie',
                   }}
                   getInstance={(art) => {
-                    console.log(art);
+                    if (user) {
+                      updateHistory(
+                        art,
+                        fetcher,
+                        user.id,
+                        location.pathname + location.search,
+                        detail?.title ?? detail?.original_title ?? '',
+                        detail?.overview ?? '',
+                      );
+                    }
                   }}
                 />
               ) : (

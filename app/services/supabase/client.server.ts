@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { env } from 'process';
+import type { Database } from './table.server';
 
 let supabaseUrl;
 let supabaseKey;
@@ -27,9 +28,6 @@ if (env.NODE_ENV === 'production') {
 }
 
 const options = {
-  db: {
-    schema: 'public',
-  },
   auth: {
     autoRefreshToken: true,
     persistSession: true,
@@ -42,6 +40,6 @@ const options = {
   },
 };
 
-const supabase = createClient(supabaseUrl, supabaseKey, options);
+const supabase = createClient<Database>(supabaseUrl, supabaseKey, options);
 
 export default supabase;
