@@ -207,8 +207,10 @@ export const loader: LoaderFunction = async ({ request }) => {
   const gaTrackingId = process.env.GA_TRACKING_ID;
   const { session, user } = await authSessionHandler(request.headers.get('Cookie'));
 
-  let newCookie = await i18nCookie.serialize(locale);
-  if (session) newCookie = `${newCookie}; ${await commitAuthCookie(session)}`;
+  const headers = new Headers({ 'Set-Cookie': await i18nCookie.serialize(locale) });
+  if (session) {
+    headers.append('Set-Cookie', await commitAuthCookie(session));
+  }
 
   return json<LoaderDataType>(
     {
@@ -219,11 +221,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       languages: await getListLanguages(),
       gaTrackingId,
     },
-    {
-      headers: {
-        'Set-Cookie': newCookie,
-      },
-    },
+    { headers },
   );
 };
 

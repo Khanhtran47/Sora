@@ -2,9 +2,17 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
-import { useCatch, useLoaderData, Link, RouteMatch, useParams } from '@remix-run/react';
+import {
+  useCatch,
+  useLoaderData,
+  Link,
+  RouteMatch,
+  useParams,
+  useLocation,
+  useFetcher,
+} from '@remix-run/react';
 import { Container, Spacer, Loading } from '@nextui-org/react';
-import { ClientOnly } from 'remix-utils';
+import { ClientOnly, useRouteData } from 'remix-utils';
 import { isDesktop } from 'react-device-detect';
 
 import { getAnimeEpisodeStream, getAnimeInfo } from '~/services/consumet/anilist/anilist.server';
@@ -17,6 +25,8 @@ import ArtPlayer from '~/src/components/elements/player/ArtPlayer';
 import AspectRatio from '~/src/components/elements/aspect-ratio/AspectRatio';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
+import { User } from '@supabase/supabase-js';
+import updateHistory from '~/utils/update-history';
 
 type LoaderData = {
   provider?: string;
@@ -139,6 +149,10 @@ const AnimeEpisodeWatch = () => {
   const { provider, detail, sources, subtitles } = useLoaderData<LoaderData>();
   const { episodeId } = useParams();
 
+  const fetcher = useFetcher();
+  const location = useLocation();
+  const user = useRouteData<{ user: User }>('root')?.user;
+
   const subtitleSelector = subtitles?.map(({ lang, url }: { lang: string; url: string }) => ({
     html: lang.toString(),
     url: url.toString(),
@@ -219,7 +233,18 @@ const AnimeEpisodeWatch = () => {
                   height: '100%',
                 }}
                 getInstance={(art) => {
-                  console.log(art);
+                  if (user) {
+                    updateHistory(
+                      art,
+                      fetcher,
+                      user.id,
+                      location.pathname + location.search,
+                      detail?.title?.userPreferred ?? detail?.title?.english ?? '',
+                      detail?.description ?? '',
+                      detail?.season,
+                      episodeId,
+                    );
+                  }
                 }}
               />
             )}

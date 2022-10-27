@@ -29,11 +29,7 @@ export async function authSessionHandler(cookie: string | null) {
 
     if (authToken.expires_at < Date.now()) {
       // get new session with refresh_token
-      const { data, error } = await supabase.auth.setSession({
-        access_token: authToken.access_token,
-        refresh_token: authToken.refresh_token,
-        expires_at: authToken.expires_at,
-      } as Session);
+      const { data, error } = await supabase.auth.setSession(authToken as Session);
 
       if (data.session) {
         // rotate all tokens
