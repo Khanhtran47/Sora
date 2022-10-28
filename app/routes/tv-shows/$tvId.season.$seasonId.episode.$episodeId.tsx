@@ -3,7 +3,15 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
 import { MetaFunction, LoaderFunction, json } from '@remix-run/node';
-import { useCatch, useLoaderData, Link, RouteMatch, useParams } from '@remix-run/react';
+import {
+  useCatch,
+  useLoaderData,
+  Link,
+  RouteMatch,
+  useParams,
+  useFetcher,
+  useLocation,
+} from '@remix-run/react';
 import { Container, Spacer, Loading, Radio } from '@nextui-org/react';
 import { ClientOnly } from 'remix-utils';
 import { isDesktop } from 'react-device-detect';
@@ -29,6 +37,9 @@ import Player from '~/utils/player';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 import useMediaQuery from '~/hooks/useMediaQuery';
+import { User } from '@supabase/supabase-js';
+import updateHistory from '~/utils/update-history';
+import { getUserFromCookie, insertHistory } from '~/services/supabase';
 
 type LoaderData = {
   provider?: string;
@@ -37,6 +48,7 @@ type LoaderData = {
   data?: Awaited<ReturnType<typeof getMovieInfo>>;
   sources?: IMovieSource[] | undefined;
   subtitles?: IMovieSubtitle[] | undefined;
+  user?: User;
 };
 
 export const meta: MetaFunction = ({ data, params }) => {
@@ -69,8 +81,31 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const locale = await i18next.getLocale(request);
   const { tvId, seasonId, episodeId } = params;
   const tid = Number(tvId);
+
   if (!tid) throw new Response('Not Found', { status: 404 });
-  const [detail, imdbId] = await Promise.all([getTvShowDetail(tid), getTvShowIMDBId(tid)]);
+
+  const [detail, imdbId, user] = await Promise.all([
+    getTvShowDetail(tid),
+    getTvShowIMDBId(tid),
+    getUserFromCookie(request.headers.get('Cookie') || ''),
+  ]);
+
+  if (user) {
+    insertHistory({
+      user_id: user.id,
+      media_type: 'movie',
+      duration: (detail?.episode_run_time?.[0] || 0) * 60,
+      watched: 0,
+      route: url.pathname + url.search,
+      media_id: (detail?.id || tid).toString(),
+      poster: TMDB.backdropUrl(detail?.backdrop_path || '', 'w300'),
+      title: detail?.name || detail?.original_name || undefined,
+      overview: detail?.overview || undefined,
+      season: seasonId,
+      episode: episodeId,
+    });
+  }
+
   if (provider === 'Loklok') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
     const tvDetail = await loklokGetTvEpInfo(idProvider, Number(episodeId));
@@ -83,6 +118,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         lang: `${sub.language} (${sub.lang})`,
         url: `${LOKLOK_URL}/subtitle?url=${sub.url}`,
       })),
+      user,
     });
   }
   if (provider === 'Flixhq') {
@@ -103,6 +139,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         data: tvDetail,
         sources: tvEpisodeStreamLink?.sources,
         subtitles: tvEpisodeStreamLink?.subtitles,
+        user,
       });
     }
   }
@@ -110,6 +147,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     return json<LoaderData>({
       detail,
       imdbId,
+      user,
     });
   }
   let search;
@@ -164,6 +202,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     data: tvDetail,
     sources: tvEpisodeStreamLink?.sources,
     subtitles: tvEpisodeStreamLink?.subtitles,
+    user,
   });
 };
 
@@ -190,12 +229,16 @@ export const handle = {
 };
 
 const EpisodeWatch = () => {
-  const { provider, detail, imdbId, sources, subtitles } = useLoaderData<LoaderData>();
+  const { provider, detail, imdbId, sources, subtitles, user } = useLoaderData<LoaderData>();
   const { seasonId, episodeId } = useParams();
   const isSm = useMediaQuery(960, 'max');
   const id = detail && detail.id;
   const [player, setPlayer] = React.useState<string>('1');
   const [source, setSource] = React.useState<string>(Player.moviePlayerUrl(Number(id), 1));
+
+  const fetcher = useFetcher();
+  const location = useLocation();
+
   React.useEffect(
     () =>
       player === '2'
@@ -298,7 +341,26 @@ const EpisodeWatch = () => {
                     type: 'episode',
                   }}
                   getInstance={(art) => {
-                    console.log(art);
+                    art.on('ready', () => {
+                      const t = new URL(`http://abc${location.search}`).searchParams.get('t');
+                      if (t) {
+                        art.currentTime = Number(t);
+                      }
+                    });
+
+                    if (user) {
+                      updateHistory(
+                        art,
+                        fetcher,
+                        user.id,
+                        location.pathname + location.search,
+                        'tv',
+                        detail?.name || detail?.name || '',
+                        detail?.overview || '',
+                        seasonId,
+                        episodeId,
+                      );
+                    }
                   }}
                 />
               ) : (

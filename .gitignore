@@ -10,3 +10,4 @@ api/_build
 .env
 .vscode
 app/styles/*.css
+yarn-error.log

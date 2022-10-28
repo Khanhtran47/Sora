@@ -41,7 +41,7 @@ const Layout = ({ children, user, matches }: ILayout) => {
         open={open}
         handleDrawerOpen={handleDrawerOpen}
         handleDrawerClose={handleDrawerClose}
-        user={user ?? undefined}
+        user={user}
       />
       <LeftDrawer open={open} handleDrawerClose={handleDrawerClose} />
       <BreadCrumb matches={matches} />

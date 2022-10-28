@@ -1,2 +1,3 @@
 public
 api/_build
+.env-example

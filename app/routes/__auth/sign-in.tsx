@@ -1,9 +1,8 @@
 import { ActionFunction, LoaderFunction, json, redirect } from '@remix-run/node';
-import { useActionData, Link } from '@remix-run/react';
+import { useActionData, Link, useLocation } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
 
-import { getSession, commitSession } from '~/services/sessions.server';
-import { signIn } from '~/services/auth.server';
+import { signInWithPassword, getSessionFromCookie, commitAuthCookie } from '~/services/supabase';
 import AuthForm from '~/src/components/AuthForm';
 
 type ActionData = {
@@ -11,6 +10,7 @@ type ActionData = {
 };
 
 export const action: ActionFunction = async ({ request }) => {
+  const { searchParams } = new URL(request.url);
   const data = await request.clone().formData();
 
   const email = data.get('email')?.toString();
@@ -24,32 +24,44 @@ export const action: ActionFunction = async ({ request }) => {
     return json<ActionData>({ error: 'Password is required!' });
   }
 
-  const { session: supaSession, error } = await signIn(email, password);
+  const {
+    data: { session },
+    error,
+  } = await signInWithPassword(email, password);
 
   if (error) {
     return json<ActionData>({ error: error.message });
   }
 
-  const curSession = await getSession(request.headers.get('Cookie'));
-
-  if (curSession.has('access_token')) {
-    return redirect('/');
+  if (!session) {
+    return json<ActionData>({ error: 'Something went wrong. Please sign in again!' });
   }
 
-  curSession.set('access_token', supaSession?.access_token);
+  const authCookie = await getSessionFromCookie(request.headers.get('Cookie'));
 
-  return redirect(request.referrer ?? '/', {
+  if (authCookie.has('auth_token')) {
+    return redirect(searchParams.get('ref') || request.referrer || '/');
+  }
+
+  authCookie.set('auth_token', {
+    access_token: session.access_token,
+    refresh_token: session.refresh_token,
+    expires_at: Date.now() + (session.expires_in - 10) * 1000,
+  });
+
+  return redirect(searchParams.get('ref') || request.referrer || '/', {
     headers: {
-      'Set-Cookie': await commitSession(curSession),
+      'Set-Cookie': await commitAuthCookie(authCookie),
     },
   });
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const session = await getSession(request.headers.get('Cookie'));
+  const session = await getSessionFromCookie(request.headers.get('Cookie'));
+  const { searchParams } = new URL(request.url);
 
-  if (session.has('access_token')) {
-    return redirect('/');
+  if (session.has('auth_token')) {
+    return redirect(searchParams.get('ref') || request.referrer || '/');
   }
 
   return null;
@@ -61,9 +73,12 @@ export const handle = {
 
 const SignInPage = () => {
   const actionData = useActionData<ActionData>();
+  const location = useLocation();
+  const { searchParams } = new URL(`http://${location.pathname}${location.search}`);
+  const code = searchParams.get('code');
   return (
     <Container fluid justify="center" display="flex">
-      <AuthForm type="sign-in" error={actionData?.error ?? null} />
+      <AuthForm type="sign-in" error={actionData?.error} code={code} />
     </Container>
   );
 };

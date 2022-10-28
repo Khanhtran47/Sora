@@ -27,7 +27,7 @@ export const meta: MetaFunction = ({ params }) => ({
 const CreditsPage = () => {
   const { credits } = useLoaderData<LoaderData>();
 
-  return <MediaListTable items={credits?.cast ?? []} simplified sorted />;
+  return <MediaListTable items={credits?.cast || []} simplified sorted />;
 };
 
 export default CreditsPage;

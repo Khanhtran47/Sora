@@ -54,11 +54,9 @@ import { getListGenre, getListLanguages } from '~/services/tmdb/tmdb.server';
 import Layout from '~/src/components/layouts/Layout';
 import Home from '~/src/assets/icons/HomeIcon.js';
 import styles from '~/styles/tailwind.css';
-import { getUser } from './services/auth.server';
-import { getSession } from './services/sessions.server';
+import { authSessionHandler, commitAuthCookie } from './services/supabase';
 import pageNotFound from './src/assets/images/404.gif';
-import i18next from './i18n/i18next.server';
-import i18nCookie from './services/cookie.server';
+import i18next, { i18nCookie } from './i18n/i18next.server';
 import logoLoading from './src/assets/images/logo_loading.png';
 
 interface DocumentProps {
@@ -206,33 +204,24 @@ const Document = ({ children, title, lang, dir, gaTrackingId }: DocumentProps) =
 
 export const loader: LoaderFunction = async ({ request }) => {
   const locale = await i18next.getLocale(request);
-  const session = await getSession(request.headers.get('Cookie'));
   const gaTrackingId = process.env.GA_TRACKING_ID;
+  const { session, user } = await authSessionHandler(request.headers.get('Cookie'));
 
-  if (session.has('access_token')) {
-    const [{ user, error }, genresMovie, genresTv, languages] = await Promise.all([
-      getUser(session.get('access_token')),
-      getListGenre('movie', locale),
-      getListGenre('tv', locale),
-      getListLanguages(),
-    ]);
-
-    if (user && !error) {
-      return json<LoaderDataType>({ user, locale, genresMovie, genresTv, languages, gaTrackingId });
-    }
+  const headers = new Headers({ 'Set-Cookie': await i18nCookie.serialize(locale) });
+  if (session) {
+    headers.append('Set-Cookie', await commitAuthCookie(session));
   }
 
   return json<LoaderDataType>(
     {
+      user: user || undefined,
       locale,
       genresMovie: await getListGenre('movie', locale),
       genresTv: await getListGenre('tv', locale),
       languages: await getListLanguages(),
       gaTrackingId,
     },
-    {
-      headers: { 'Set-Cookie': await i18nCookie.serialize(locale) },
-    },
+    { headers },
   );
 };
 
