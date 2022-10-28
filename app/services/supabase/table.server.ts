@@ -2,8 +2,8 @@ import supabase from './client.server';
 
 export interface IHistoryDTO {
   user_id: string;
-  media_type: string;
-  duration: number;
+  media_type: 'movie' | 'tv' | 'anime';
+  duration: number; // in seconds
   watched: number;
   route: string;
   media_id: string;
@@ -71,14 +71,14 @@ export async function insertHistory(_history: IHistoryDTO) {
   }
 }
 
-export async function getHistory(_userId: string, _page = 0) {
+export async function getHistory(_userId: string, _page = 1) {
   try {
     const { data, error } = await supabase
       .from('histories')
       .select()
       .eq('user_id', _userId)
       .order('updated_at', { ascending: false })
-      .range(_page * 20, (_page + 1) * 20);
+      .range((_page - 1) * 20, _page * 20 - 1);
 
     if (data) {
       // console.log(data);
@@ -90,5 +90,23 @@ export async function getHistory(_userId: string, _page = 0) {
   } catch (error) {
     console.error(error);
     return [];
+  }
+}
+
+export async function getCountHistory(_userId: string) {
+  try {
+    const { count, error } = await supabase
+      .from('histories')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', _userId);
+
+    if (count) {
+      return count;
+    }
+    console.error(error);
+    return 0;
+  } catch (error) {
+    console.error(error);
+    return 0;
   }
 }

@@ -13,11 +13,12 @@ export const action: ActionFunction = async ({ request }) => {
   const overview = data.get('overview')?.toString();
   const season = data.get('season')?.toString();
   const episode = data.get('episode')?.toString();
+  const media_type = data.get('media_type')?.toString() as 'movie' | 'tv' | 'anime';
 
   if (user_id && duration && route) {
     const { error } = await insertHistory({
       user_id: user_id,
-      media_type: route.split('/')[1],
+      media_type,
       duration: Math.round(duration),
       watched: Math.floor(watched),
       media_id: route.split('/')[2],

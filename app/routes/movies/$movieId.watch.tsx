@@ -13,7 +13,7 @@ import {
   useLocation,
 } from '@remix-run/react';
 import { Container, Spacer, Loading, Radio } from '@nextui-org/react';
-import { ClientOnly, useRouteData } from 'remix-utils';
+import { ClientOnly } from 'remix-utils';
 import { isDesktop } from 'react-device-detect';
 
 import ArtPlayer from '~/src/components/elements/player/ArtPlayer';
@@ -39,6 +39,7 @@ import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import { User } from '@supabase/supabase-js';
 import updateHistory from '~/utils/update-history';
+import { getUserFromCookie, insertHistory } from '~/services/supabase';
 
 export const meta: MetaFunction = ({ data, params }) => {
   if (!data) {
@@ -69,6 +70,7 @@ type DataLoader = {
   data?: Awaited<ReturnType<typeof getMovieInfo>>;
   sources?: IMovieSource[] | undefined;
   subtitles?: IMovieSubtitle[] | undefined;
+  user?: User;
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -79,7 +81,26 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const { movieId } = params;
   const mid = Number(movieId);
   if (!mid) throw new Response('Not Found', { status: 404 });
-  const detail = await getMovieDetail(mid);
+
+  const [detail, user] = await Promise.all([
+    getMovieDetail(mid),
+    getUserFromCookie(request.headers.get('Cookie') || ''),
+  ]);
+
+  if (user) {
+    insertHistory({
+      user_id: user.id,
+      media_type: 'movie',
+      duration: (detail?.runtime || 0) * 60,
+      watched: 0,
+      route: url.pathname + url.search,
+      media_id: (detail?.id || mid).toString(),
+      poster: TMDB.backdropUrl(detail?.backdrop_path || '', 'w300'),
+      title: detail?.title || detail?.original_title || undefined,
+      overview: detail?.overview || undefined,
+    });
+  }
+
   if (provider === 'Loklok') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
     const movieDetail = await loklokGetMovieInfo(idProvider);
@@ -91,6 +112,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         lang: `${sub.language} (${sub.lang})`,
         url: `${LOKLOK_URL}/subtitle?url=${sub.url}`,
       })),
+      user,
     });
   }
   if (provider === 'Flixhq') {
@@ -106,11 +128,13 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       data: movieDetail,
       sources: movieStreamLink?.sources,
       subtitles: movieStreamLink?.subtitles,
+      user,
     });
   }
   if (provider === 'Embed') {
     return json<DataLoader>({
       detail,
+      user,
     });
   }
   let search;
@@ -131,9 +155,9 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     }
 
     loklokSubtitles = await loklokSearchMovieSub(
-      detail?.title ?? '',
-      detail?.original_title ?? '',
-      new Date(detail?.release_date ?? 1000).getFullYear(),
+      detail?.title || '',
+      detail?.original_title || '',
+      new Date(detail?.release_date || 1000).getFullYear(),
     );
   } else {
     const translations = await getTranslations('movie', mid);
@@ -151,9 +175,9 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         );
       }
       loklokSubtitles = await loklokSearchMovieSub(
-        findTranslation.data?.title ?? '',
+        findTranslation.data?.title || '',
         '',
-        new Date(detail?.release_date ?? 1000).getFullYear(),
+        new Date(detail?.release_date || 1000).getFullYear(),
       );
     }
   }
@@ -163,7 +187,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     detail,
     data: movieDetail,
     sources: movieStreamLink?.sources,
-    subtitles: [...(movieStreamLink?.subtitles ?? []), ...loklokSubtitles],
+    subtitles: [...(movieStreamLink?.subtitles || []), ...loklokSubtitles],
+    user,
   });
 };
 
@@ -180,14 +205,13 @@ export const handle = {
 };
 
 const MovieWatch = () => {
-  const { provider, detail, sources, subtitles } = useLoaderData<DataLoader>();
+  const { provider, detail, sources, subtitles, user } = useLoaderData<DataLoader>();
   const isSm = useMediaQuery(960, 'max');
   const id = detail && detail.id;
   const [player, setPlayer] = React.useState<string>('1');
   const [source, setSource] = React.useState<string>(Player.moviePlayerUrl(Number(id), 1));
   const fetcher = useFetcher();
   const location = useLocation();
-  const user = useRouteData<{ user: User }>('root')?.user;
 
   React.useEffect(
     () =>
@@ -282,14 +306,22 @@ const MovieWatch = () => {
                     type: 'movie',
                   }}
                   getInstance={(art) => {
+                    art.on('ready', () => {
+                      const t = new URL(`http://abc${location.search}`).searchParams.get('t');
+                      if (t) {
+                        art.currentTime = Number(t);
+                      }
+                    });
+
                     if (user) {
                       updateHistory(
                         art,
                         fetcher,
                         user.id,
                         location.pathname + location.search,
-                        detail?.title ?? detail?.original_title ?? '',
-                        detail?.overview ?? '',
+                        'movie',
+                        detail?.title || detail?.original_title || '',
+                        detail?.overview || '',
                       );
                     }
                   }}

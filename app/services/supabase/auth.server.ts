@@ -19,7 +19,7 @@ export const getUserFromCookie = async (cookie: string) => {
   const authCookie = await getSessionFromCookie(cookie);
   if (authCookie.has('auth_token')) {
     const authToken = authCookie.get('auth_token');
-    const user = (await getUser(authToken.access_token)).data.user ?? undefined;
+    const user = (await getUser(authToken.access_token)).data.user || undefined;
 
     return user;
   }

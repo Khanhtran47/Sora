@@ -214,7 +214,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   return json<LoaderDataType>(
     {
-      user: user ?? undefined,
+      user: user || undefined,
       locale,
       genresMovie: await getListGenre('movie', locale),
       genresTv: await getListGenre('tv', locale),

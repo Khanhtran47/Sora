@@ -27,12 +27,14 @@ import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 import { User } from '@supabase/supabase-js';
 import updateHistory from '~/utils/update-history';
+import { getUserFromCookie, insertHistory } from '~/services/supabase';
 
 type LoaderData = {
   provider?: string;
   sources: IMovieSource[] | undefined;
   detail: Awaited<ReturnType<typeof getAnimeInfo>>;
   subtitles?: IMovieSubtitle[] | undefined;
+  user?: User;
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -42,10 +44,38 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const episode = url.searchParams.get('episode');
   const { animeId, episodeId } = params;
   if (!animeId || !episodeId) throw new Response('Not Found', { status: 404 });
+
+  const [detail, sources, user] = await Promise.all([
+    getAnimeInfo(animeId),
+    getAnimeEpisodeStream(episodeId),
+    getUserFromCookie(request.headers.get('Cookie') || ''),
+  ]);
+
+  if (user) {
+    insertHistory({
+      user_id: user.id,
+      media_type: 'anime',
+      duration: (detail?.duration || 0) * 60,
+      watched: 0,
+      route: url.pathname + url.search,
+      media_id: (detail?.id || animeId).toString(),
+      poster: detail?.cover,
+      title:
+        detail?.title?.userPreferred ||
+        detail?.title?.english ||
+        detail?.title?.native ||
+        detail?.title?.romaji ||
+        undefined,
+      overview: detail?.description,
+      season: detail?.season,
+      episode: episodeId,
+    });
+  }
+
   if (provider === 'Loklok') {
-    const detail = await getAnimeInfo(animeId);
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
     const tvDetail = await loklokGetTvEpInfo(idProvider, Number(episode) - 1);
+
     return json<LoaderData>({
       provider,
       detail,
@@ -54,36 +84,35 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         lang: `${sub.language} (${sub.lang})`,
         url: `${LOKLOK_URL}/subtitle?url=${sub.url}`,
       })),
+      user,
     });
   }
+
   if (provider === 'Gogo') {
-    const [detail, episodeDetail] = await Promise.all([
-      getAnimeInfo(animeId),
-      getAnimeEpisodeStream(episodeId, 'gogoanime'),
-    ]);
+    const episodeDetail = await getAnimeEpisodeStream(episodeId, 'gogoanime');
+
     return json<LoaderData>({
       provider,
       detail,
       sources: episodeDetail?.sources,
+      user,
     });
   }
+
   if (provider === 'Zoro') {
-    const [detail, episodeDetail] = await Promise.all([
-      getAnimeInfo(animeId),
-      getAnimeEpisodeStream(episodeId, 'zoro'),
-    ]);
+    const episodeDetail = await getAnimeEpisodeStream(episodeId, 'zoro');
+
     return json<LoaderData>({
       provider,
       detail,
       sources: episodeDetail?.sources,
+      user,
     });
   }
-  const [detail, sources] = await Promise.all([
-    getAnimeInfo(animeId),
-    getAnimeEpisodeStream(episodeId),
-  ]);
+
   if (!detail || !sources) throw new Response('Not Found', { status: 404 });
-  return json<LoaderData>({ detail, sources: sources.sources });
+
+  return json<LoaderData>({ detail, sources: sources.sources, user });
 };
 
 export const meta: MetaFunction = ({ data, params }) => {
@@ -233,14 +262,22 @@ const AnimeEpisodeWatch = () => {
                   height: '100%',
                 }}
                 getInstance={(art) => {
+                  art.on('ready', () => {
+                    const t = new URL(`http://abc${location.search}`).searchParams.get('t');
+                    if (t) {
+                      art.currentTime = Number(t);
+                    }
+                  });
+
                   if (user) {
                     updateHistory(
                       art,
                       fetcher,
                       user.id,
                       location.pathname + location.search,
-                      detail?.title?.userPreferred ?? detail?.title?.english ?? '',
-                      detail?.description ?? '',
+                      'anime',
+                      detail?.title?.userPreferred || detail?.title?.english || '',
+                      detail?.description || '',
                       detail?.season,
                       episodeId,
                     );

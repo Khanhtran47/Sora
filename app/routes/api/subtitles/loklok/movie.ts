@@ -9,8 +9,8 @@ type LoaderData = {
 
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
-  const title = url.searchParams.get('title') ?? '';
-  const orgTitle = url.searchParams.get('orgTitle') ?? '';
+  const title = url.searchParams.get('title') || '';
+  const orgTitle = url.searchParams.get('orgTitle') || '';
   const year = Number(url.searchParams.get('year'));
 
   const subtitles = await loklokSearchMovieSub(title, orgTitle, year);

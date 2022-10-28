@@ -40,7 +40,7 @@ export const action: ActionFunction = async ({ request }) => {
   const authCookie = await getSessionFromCookie(request.headers.get('Cookie'));
 
   if (authCookie.has('auth_token')) {
-    return redirect(searchParams.get('ref') ?? request.referrer ?? '/');
+    return redirect(searchParams.get('ref') || request.referrer || '/');
   }
 
   authCookie.set('auth_token', {
@@ -49,7 +49,7 @@ export const action: ActionFunction = async ({ request }) => {
     expires_at: Date.now() + (session.expires_in - 10) * 1000,
   });
 
-  return redirect(searchParams.get('ref') ?? request.referrer ?? '/', {
+  return redirect(searchParams.get('ref') || request.referrer || '/', {
     headers: {
       'Set-Cookie': await commitAuthCookie(authCookie),
     },
@@ -61,7 +61,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const { searchParams } = new URL(request.url);
 
   if (session.has('auth_token')) {
-    return redirect(searchParams.get('ref') ?? request.referrer ?? '/');
+    return redirect(searchParams.get('ref') || request.referrer || '/');
   }
 
   return null;

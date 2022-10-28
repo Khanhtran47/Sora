@@ -280,7 +280,7 @@ export const getPeopleCredits = async (
     const fetched = await fetcher(TMDB.peopleCredits(id, type, language));
     return {
       cast: fetched?.cast ? postFetchDataHandler(fetched.cast) : [],
-      id: fetched?.id ?? undefined,
+      id: fetched?.id || undefined,
     };
   } catch (error) {
     console.error(error);
