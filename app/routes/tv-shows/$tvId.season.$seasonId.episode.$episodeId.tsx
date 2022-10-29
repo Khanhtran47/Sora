@@ -108,7 +108,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   if (provider === 'Loklok') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
-    const tvDetail = await loklokGetTvEpInfo(idProvider, Number(episodeId));
+    const tvDetail = await loklokGetTvEpInfo(idProvider, Number(episodeId) - 1);
     return json<LoaderData>({
       provider,
       detail,
@@ -327,6 +327,18 @@ const EpisodeWatch = () => {
                     backdrop: true,
                     playsInline: true,
                     autoPlayback: true,
+                    layers: [
+                      {
+                        name: 'title',
+                        html: `<span>${detail?.name} - SS ${seasonId} - EP ${episodeId}</span>`,
+                        style: {
+                          position: 'absolute',
+                          top: '15px',
+                          left: '15px',
+                          fontSize: '1.125rem',
+                        },
+                      },
+                    ],
                   }}
                   qualitySelector={qualitySelector || []}
                   subtitleSelector={subtitleSelector || []}
@@ -361,6 +373,15 @@ const EpisodeWatch = () => {
                         episodeId,
                       );
                     }
+                    art.on('pause', () => {
+                      art.layers.title.style.display = 'block';
+                    });
+                    art.on('play', () => {
+                      art.layers.title.style.display = 'none';
+                    });
+                    art.on('hover', (state: boolean) => {
+                      art.layers.title.style.display = state || !art.playing ? 'block' : 'none';
+                    });
                   }}
                 />
               ) : (

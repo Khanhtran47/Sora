@@ -194,7 +194,7 @@ const Episodes = () => {
         type="tv"
         title={detail?.name || ''}
         origTitle={detail?.original_name || ''}
-        year={new Date(detail?.first_air_date || '').getFullYear()}
+        year={new Date(seasonDetail?.air_date || '').getFullYear()}
         translations={translations}
         id={detail?.id}
         season={seasonDetail?.season_number}

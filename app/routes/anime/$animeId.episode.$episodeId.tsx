@@ -254,6 +254,22 @@ const AnimeEpisodeWatch = () => {
                   backdrop: true,
                   playsInline: true,
                   autoPlayback: true,
+                  layers: [
+                    {
+                      name: 'title',
+                      html: `<span>${
+                        detail?.title?.userPreferred || detail?.title?.english || ''
+                      } - EP ${
+                        detail?.episodes.find((episode) => episode.id === episodeId)?.number
+                      }</span>`,
+                      style: {
+                        position: 'absolute',
+                        top: '15px',
+                        left: '15px',
+                        fontSize: '1.125rem',
+                      },
+                    },
+                  ],
                 }}
                 qualitySelector={qualitySelector || []}
                 subtitleSelector={subtitleSelector || []}
@@ -282,6 +298,15 @@ const AnimeEpisodeWatch = () => {
                       episodeId,
                     );
                   }
+                  art.on('pause', () => {
+                    art.layers.title.style.display = 'block';
+                  });
+                  art.on('play', () => {
+                    art.layers.title.style.display = 'none';
+                  });
+                  art.on('hover', (state: boolean) => {
+                    art.layers.title.style.display = state || !art.playing ? 'block' : 'none';
+                  });
                 }}
               />
             )}

@@ -39,7 +39,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     'og:url': `https://sora-movie.vercel.app/search/tv/${params.tvKeyword}`,
     'og:title': `Search results for '${params.tvKeyword}' tv serie on Sora`,
     'og:description': `Watch ${params.tvKeyword} in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
-    'og:image': searchResults?.items[0].backdropPath || searchResults?.items[0].posterPath,
+    'og:image': searchResults?.items[0]?.backdropPath || searchResults?.items[0]?.posterPath || '',
   };
 };
 

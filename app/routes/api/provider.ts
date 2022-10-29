@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { LoaderFunction, json } from '@remix-run/node';
 import { getMovieSearch } from '~/services/consumet/flixhq/flixhq.server';
-import { loklokSearchMovie, loklokSearchTv } from '~/services/loklok';
+import { loklokSearchMovie, loklokSearchTv, loklokSearchOneTv } from '~/services/loklok';
 import { ILoklokSearchData } from '~/services/loklok/loklok.type';
 import { IMovieResult } from '~/services/consumet/flixhq/flixhq.types';
 
@@ -52,7 +52,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   if (type === 'tv') {
     const [search, loklokSearch] = await Promise.all([
       getMovieSearch(title),
-      loklokSearchTv(title),
+      loklokSearchOneTv(title, orgTitle || '', Number(year), Number(season)),
     ]);
     let provider = [];
     const findFlixhq: IMovieResult | undefined = search?.results.find((movie) => {
@@ -63,17 +63,9 @@ export const loader: LoaderFunction = async ({ request }) => {
         id: findFlixhq.id,
         provider: 'Flixhq',
       });
-    const findLoklok = loklokSearch.find((movie: ILoklokSearchData) => {
-      return (
-        movie.name.toLowerCase() === title.toLowerCase() ||
-        movie.name.toLowerCase() === `${title} Season ${season}`.toLowerCase() ||
-        movie.name.toLowerCase() === `${title} Part ${season}`.toLowerCase() ||
-        (movie.name.toLowerCase().includes(title.toLowerCase()) && movie?.releaseTime === year)
-      );
-    });
-    if (findLoklok && findLoklok.id)
+    if (loklokSearch)
       provider.push({
-        id: findLoklok.id,
+        id: loklokSearch?.data?.id,
         provider: 'Loklok',
       });
     if (provider && provider.length > 0)
