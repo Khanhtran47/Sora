@@ -144,9 +144,9 @@ export const getTvShowDetail = async (
  * @param {number} id - number - The TV show ID from TMDB
  * @returns A Promise that resolves to a number or undefined.
  */
-export const getTvShowIMDBId = async (id: number): Promise<number | undefined> => {
+export const getTvShowIMDBId = async (id: number): Promise<string | undefined> => {
   try {
-    const fetched = await fetcher<{ imdb_id: number | undefined }>(TMDB.tvExternalIds(id));
+    const fetched = await fetcher<{ imdb_id: string | undefined }>(TMDB.tvExternalIds(id));
 
     if (!fetched?.imdb_id) throw new Error('This TV show does not have IMDB ID');
 
@@ -463,6 +463,19 @@ export const getListDetail = async (
       ...fetched,
       items: [...postFetchDataHandler(fetched.items)],
     };
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getImdbRating = async (
+  id: string,
+): Promise<{ count: number; star: number } | undefined> => {
+  try {
+    const fetched = await fetcher(TMDB.imdbDetailUrl(id));
+    if (fetched && fetched.rating) {
+      return fetched.rating;
+    }
   } catch (error) {
     console.error(error);
   }

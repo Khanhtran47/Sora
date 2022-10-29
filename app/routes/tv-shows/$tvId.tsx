@@ -4,7 +4,12 @@ import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
 import { useCatch, useLoaderData, Outlet, Link, RouteMatch, useFetcher } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
 
-import { getTvShowDetail, getTranslations } from '~/services/tmdb/tmdb.server';
+import {
+  getTvShowDetail,
+  getTranslations,
+  getTvShowIMDBId,
+  getImdbRating,
+} from '~/services/tmdb/tmdb.server';
 import i18next from '~/i18n/i18next.server';
 import TMDB from '~/utils/media';
 import MediaDetail from '~/src/components/media/MediaDetail';
@@ -15,6 +20,7 @@ import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 type LoaderData = {
   detail: Awaited<ReturnType<typeof getTvShowDetail>>;
   translations?: Awaited<ReturnType<typeof getTranslations>>;
+  imdbRating?: { count: number; star: number };
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -23,14 +29,18 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const tid = Number(tvId);
   if (!tid) throw new Response('Not Found', { status: 404 });
 
-  const detail = await getTvShowDetail(tid, locale);
-  if (!tid) throw new Response('Not Found', { status: 404 });
+  const [detail, imdbId] = await Promise.all([getTvShowDetail(tid, locale), getTvShowIMDBId(tid)]);
+  if (!detail) throw new Response('Not Found', { status: 404 });
   if ((detail && detail?.original_language !== 'en') || locale !== 'en') {
-    const translations = await getTranslations('tv', tid);
-    return json<LoaderData>({ detail, translations });
+    const [translations, imdbRating] = await Promise.all([
+      getTranslations('tv', tid),
+      imdbId ? getImdbRating(imdbId) : undefined,
+    ]);
+    return json<LoaderData>({ detail, translations, imdbRating });
   }
 
-  return json<LoaderData>({ detail });
+  const imdbRating = imdbId ? await getImdbRating(imdbId) : undefined;
+  return json<LoaderData>({ detail, imdbRating });
 };
 
 export const meta: MetaFunction = ({ data, params }) => {
@@ -59,7 +69,8 @@ export const handle = {
 };
 
 const TvShowDetail = () => {
-  const { detail, translations } = useLoaderData<LoaderData>();
+  const { detail, translations, imdbRating } = useLoaderData<LoaderData>();
+  console.log('🚀 ~ file: $tvId.tsx ~ line 75 ~ TvShowDetail ~ detail', detail);
   const fetcher = useFetcher();
   const [visible, setVisible] = React.useState(false);
   const [trailer, setTrailer] = React.useState<Trailer>({});
@@ -81,7 +92,13 @@ const TvShowDetail = () => {
 
   return (
     <>
-      <MediaDetail type="tv" item={detail} handler={Handler} translations={translations} />
+      <MediaDetail
+        type="tv"
+        item={detail}
+        handler={Handler}
+        translations={translations}
+        imdbRating={imdbRating}
+      />
       <Container
         as="div"
         fluid
