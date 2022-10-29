@@ -21,6 +21,7 @@ export const meta: MetaFunction = ({ params }) => ({
 const EpisodesPage = () => {
   const animeData: { detail: IAnimeInfo } | undefined = useRouteData('routes/anime/$animeId');
   const detail = animeData && animeData.detail;
+  console.log('🚀 ~ file: episodes.tsx ~ line 24 ~ EpisodesPage ~ detail', detail);
   const isSm = useMediaQuery(650, 'max');
   const [visible, setVisible] = useState(false);
   const [episodeId, setEpisodeEpisodeId] = useState<string>();

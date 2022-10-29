@@ -31,7 +31,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     'og:url': `https://sora-movie.vercel.app/search/anime/${params.animeKeyword}`,
     'og:title': `Search results for '${params.animeKeyword}' anime on Sora`,
     'og:description': `Watch ${params.animeKeyword} in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
-    'og:image': searchResults.results[0].cover || searchResults.results[0].image,
+    'og:image': searchResults?.results[0]?.cover || searchResults?.results[0]?.image || '',
   };
 };
 

@@ -294,6 +294,18 @@ const MovieWatch = () => {
                     backdrop: true,
                     playsInline: true,
                     autoPlayback: true,
+                    layers: [
+                      {
+                        name: 'title',
+                        html: `<span>${detail?.title}</span>`,
+                        style: {
+                          position: 'absolute',
+                          top: '15px',
+                          left: '15px',
+                          fontSize: '1.125rem',
+                        },
+                      },
+                    ],
                   }}
                   qualitySelector={qualitySelector || []}
                   subtitleSelector={subtitleSelector || []}
@@ -324,6 +336,15 @@ const MovieWatch = () => {
                         detail?.overview || '',
                       );
                     }
+                    art.on('pause', () => {
+                      art.layers.title.style.display = 'block';
+                    });
+                    art.on('play', () => {
+                      art.layers.title.style.display = 'none';
+                    });
+                    art.on('hover', (state: boolean) => {
+                      art.layers.title.style.display = state || !art.playing ? 'block' : 'none';
+                    });
                   }}
                 />
               ) : (
