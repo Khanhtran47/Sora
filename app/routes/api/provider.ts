@@ -54,10 +54,6 @@ export const loader: LoaderFunction = async ({ request }) => {
       getMovieSearch(title),
       loklokSearchOneTv(title, orgTitle || '', Number(year), Number(season)),
     ]);
-    console.log(
-      '🚀 ~ file: provider.ts ~ line 57 ~ constloader:LoaderFunction= ~ loklokSearch',
-      loklokSearch,
-    );
     let provider = [];
     const findFlixhq: IMovieResult | undefined = search?.results.find((movie) => {
       return movie.title.toLowerCase() === title.toLowerCase() && movie?.type === 'TV Series';
