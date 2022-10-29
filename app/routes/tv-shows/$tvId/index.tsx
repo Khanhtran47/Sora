@@ -104,6 +104,10 @@ const Overview = () => {
                     src={TMDB.logoUrl(network?.logo_path || '', 'w154')}
                     alt="Network Image"
                     objectFit="cover"
+                    containerCss={{
+                      padding: '$sm',
+                      backgroundColor: 'var(--nextui-colors-accents5)',
+                    }}
                   />
                 ))}
             </H6>

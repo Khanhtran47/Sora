@@ -15,6 +15,7 @@ import useMediaQuery from '~/hooks/useMediaQuery';
 import useSize, { IUseSize } from '~/hooks/useSize';
 
 import Tab from '~/src/components/elements/Tab';
+import Flex from '~/src/components/styles/Flex.styles';
 import { H2, H5 } from '~/src/components/styles/Text.styles';
 import SelectProviderModal from '~/src/components/elements/modal/SelectProviderModal';
 
@@ -26,6 +27,7 @@ interface IMediaDetail {
   item: IMovieDetail | ITvShowDetail | undefined;
   handler?: (id: number) => void;
   translations?: IMovieTranslations | undefined;
+  imdbRating: { count: number; star: number } | undefined;
 }
 
 const detailTab = [
@@ -40,7 +42,7 @@ const detailTab = [
 
 const MediaDetail = (props: IMediaDetail) => {
   // const { t } = useTranslation();
-  const { type, item, handler, translations } = props;
+  const { type, item, handler, translations, imdbRating } = props;
   const ref = useRef<HTMLDivElement>(null);
   const size: IUseSize = useSize(ref);
   const navigate = useNavigate();
@@ -61,7 +63,8 @@ const MediaDetail = (props: IMediaDetail) => {
   const orgTitle =
     (item as IMovieDetail)?.original_title || (item as ITvShowDetail)?.original_name || '';
   const runtime =
-    Number((item as IMovieDetail)?.runtime) || Number((item as ITvShowDetail)?.episode_run_time);
+    // @ts-ignore
+    Number((item as IMovieDetail)?.runtime) || Number((item as ITvShowDetail)?.episode_run_time[0]);
   const posterPath = item?.poster_path
     ? TMDB?.posterUrl(item?.poster_path || '', 'w342')
     : undefined;
@@ -305,10 +308,43 @@ const MediaDetail = (props: IMediaDetail) => {
               </Row>
               <Row>
                 <H5 h5>
-                  {releaseDate} • {item?.vote_average?.toFixed(1)} •{' '}
-                  {runtime && `${Math.floor(runtime / 60)}h ${runtime % 60}m`}
+                  {releaseDate}
+                  {runtime ? ` • ${Math.floor(runtime / 60)}h ${runtime % 60}m` : null}
                 </H5>
               </Row>
+              <Spacer y={0.5} />
+              <Flex direction="row">
+                <H5
+                  h5
+                  css={{
+                    backgroundColor: '#3ec2c2',
+                    borderRadius: '$xs',
+                    padding: '0 0.25rem 0 0.25rem',
+                    marginRight: '0.5rem',
+                  }}
+                >
+                  TMDb
+                </H5>
+                <H5 h5>{item?.vote_average?.toFixed(1)}</H5>
+                {imdbRating && (
+                  <>
+                    <Spacer x={1.25} />
+                    <H5
+                      h5
+                      css={{
+                        backgroundColor: '#ddb600',
+                        color: '#000',
+                        borderRadius: '$xs',
+                        padding: '0 0.25rem 0 0.25rem',
+                        marginRight: '0.5rem',
+                      }}
+                    >
+                      IMDb
+                    </H5>
+                    <H5 h5>{imdbRating?.star}</H5>
+                  </>
+                )}
+              </Flex>
               {tagline && (
                 <Row>
                   <H5 h5 css={{ fontStyle: 'italic', marginTop: '10px' }}>
@@ -336,7 +372,7 @@ const MediaDetail = (props: IMediaDetail) => {
                 wrap="wrap"
                 justify="flex-start"
                 css={{
-                  width: `${isMd ? '100%' : '60%'}`,
+                  width: '100%',
                   margin: '1.25rem 0 1.25rem 0',
                 }}
               >

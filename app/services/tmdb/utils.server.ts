@@ -15,6 +15,8 @@ import {
 export class TMDB {
   static readonly API_BASE_URL = 'https://api.themoviedb.org/3/';
 
+  static readonly IMDB_API_BASE_URl = 'https://imdb-api.tprojects.workers.dev/';
+
   static readonly MEDIA_BASE_URL = 'https://image.tmdb.org/t/p/';
 
   static readonly key = process.env.TMDB_API_KEY;
@@ -344,6 +346,8 @@ export class TMDB {
     if (language) url += `&language=${language}`;
     return url;
   };
+
+  static imdbDetailUrl = (id: string) => `${this.IMDB_API_BASE_URl}title/${id}`;
 }
 
 export const fetcher = async <T = any>(url: string): Promise<T> => {

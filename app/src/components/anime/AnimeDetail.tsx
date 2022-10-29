@@ -328,7 +328,7 @@ const AnimeDetail = (props: IAnimeDetail) => {
                 wrap="wrap"
                 justify="flex-start"
                 css={{
-                  width: `${isMd ? '100%' : '60%'}`,
+                  width: '100%',
                   margin: '1.25rem 0 1.25rem 0',
                 }}
               >

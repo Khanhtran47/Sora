@@ -4,7 +4,7 @@ import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
 import { useCatch, useLoaderData, Outlet, Link, RouteMatch, useFetcher } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
 
-import { getMovieDetail, getTranslations } from '~/services/tmdb/tmdb.server';
+import { getMovieDetail, getTranslations, getImdbRating } from '~/services/tmdb/tmdb.server';
 import i18next from '~/i18n/i18next.server';
 import MediaDetail from '~/src/components/media/MediaDetail';
 import TMDB from '~/utils/media';
@@ -15,6 +15,7 @@ import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 type LoaderData = {
   detail: Awaited<ReturnType<typeof getMovieDetail>>;
   translations?: Awaited<ReturnType<typeof getTranslations>>;
+  imdbRating?: { count: number; star: number };
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -26,10 +27,14 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const detail = await getMovieDetail(mid, locale);
   if (!detail) throw new Response('Not Found', { status: 404 });
   if ((detail && detail.original_language !== 'en') || locale !== 'en') {
-    const translations = await getTranslations('movie', mid);
-    return json<LoaderData>({ detail, translations });
+    const [translations, imdbRating] = await Promise.all([
+      getTranslations('movie', mid),
+      detail?.imdb_id ? getImdbRating(detail?.imdb_id) : undefined,
+    ]);
+    return json<LoaderData>({ detail, translations, imdbRating });
   }
-  return json<LoaderData>({ detail });
+  const imdbRating = detail?.imdb_id ? await getImdbRating(detail?.imdb_id) : undefined;
+  return json<LoaderData>({ detail, imdbRating });
 };
 
 export const meta: MetaFunction = ({ data, params }) => {
@@ -58,7 +63,7 @@ export const handle = {
 };
 
 const MovieDetail = () => {
-  const { detail, translations } = useLoaderData<LoaderData>();
+  const { detail, translations, imdbRating } = useLoaderData<LoaderData>();
   const fetcher = useFetcher();
   const [visible, setVisible] = React.useState(false);
   const [trailer, setTrailer] = React.useState<Trailer>({});
@@ -80,7 +85,13 @@ const MovieDetail = () => {
 
   return (
     <>
-      <MediaDetail type="movie" item={detail} handler={Handler} translations={translations} />
+      <MediaDetail
+        type="movie"
+        item={detail}
+        handler={Handler}
+        translations={translations}
+        imdbRating={imdbRating}
+      />
       <Container
         as="div"
         fluid
