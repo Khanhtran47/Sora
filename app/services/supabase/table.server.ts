@@ -33,14 +33,22 @@ export interface Database {
 
 export async function insertHistory(_history: IHistoryDTO) {
   try {
-    const { data: oldData } = await supabase
+    const query = supabase
       .from('histories')
       .select()
       .eq('user_id', _history.user_id)
       .eq('media_id', _history.media_id)
-      .eq('media_type', _history.media_type)
-      .eq('season', _history.season)
-      .eq('episode', _history.episode);
+      .eq('media_type', _history.media_type);
+
+    if (_history.season) {
+      query.eq('season', _history.season);
+    }
+
+    if (_history.episode) {
+      query.eq('episode', _history.episode);
+    }
+
+    const { data: oldData } = await query;
 
     if (oldData && oldData.length > 0) {
       const { error } = await supabase

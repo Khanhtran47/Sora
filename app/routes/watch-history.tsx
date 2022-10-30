@@ -52,11 +52,23 @@ const Item = ({ _history }: { _history: IHistory }) => (
         />
       </Card.Body>
       <Row justify="flex-start">
-        <Text h6 css={{ fontSize: '1.25rem', marginLeft: '1rem', marginBottom: '$0' }}>
-          {_history.title && _history.title?.length > 0 ? _history.title : 'No title'}
+        <Text
+          h6
+          css={{
+            fontSize: '1.1rem',
+            marginLeft: '0.5rem',
+            marginBottom: '$0',
+            maxWidth: '20rem',
+          }}
+        >
+          {_history.title && _history.title.length > 0 ? _history.title : 'No title'}
         </Text>
       </Row>
-      <Row justify="flex-end">
+      <Row justify="space-between">
+        <Text css={{ marginLeft: '1rem' }}>
+          {_history.season && `- SS ${_history.season} `}
+          {_history.episode && `- EP ${_history.episode.at(-1)} `}
+        </Text>
         <Text css={{ marginRight: '1rem' }}>
           {new Date(_history.updated_at?.toString()).toLocaleString()}
         </Text>
