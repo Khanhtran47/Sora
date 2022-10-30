@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { LoaderFunction, json } from '@remix-run/node';
 import { getMovieSearch } from '~/services/consumet/flixhq/flixhq.server';
-import { loklokSearchMovie, loklokSearchTv, loklokSearchOneTv } from '~/services/loklok';
-import { ILoklokSearchData } from '~/services/loklok/loklok.type';
+import { loklokSearchMovie, loklokSearchOneTv } from '~/services/loklok';
 import { IMovieResult } from '~/services/consumet/flixhq/flixhq.types';
 
 type LoaderData = {
