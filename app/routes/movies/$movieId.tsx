@@ -1,7 +1,15 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
 import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
-import { useCatch, useLoaderData, Outlet, Link, RouteMatch, useFetcher } from '@remix-run/react';
+import {
+  useCatch,
+  useLoaderData,
+  Outlet,
+  Link,
+  RouteMatch,
+  useFetcher,
+  useLocation,
+} from '@remix-run/react';
 import { Container } from '@nextui-org/react';
 
 import { getMovieDetail, getTranslations, getImdbRating } from '~/services/tmdb/tmdb.server';
@@ -65,6 +73,8 @@ export const handle = {
 const MovieDetail = () => {
   const { detail, translations, imdbRating } = useLoaderData<LoaderData>();
   const fetcher = useFetcher();
+  const { state } = useLocation();
+  const currentTime = state && (state as { currentTime: number }).currentTime;
   const [visible, setVisible] = React.useState(false);
   const [trailer, setTrailer] = React.useState<Trailer>({});
   const Handler = (id: number) => {
@@ -103,7 +113,12 @@ const MovieDetail = () => {
       >
         <Outlet />
       </Container>
-      <WatchTrailerModal trailer={trailer} visible={visible} closeHandler={closeHandler} />
+      <WatchTrailerModal
+        trailer={trailer}
+        visible={visible}
+        closeHandler={closeHandler}
+        currentTime={Number(currentTime)}
+      />
     </>
   );
 };

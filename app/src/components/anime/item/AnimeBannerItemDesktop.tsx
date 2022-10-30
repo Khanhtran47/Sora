@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import * as React from 'react';
 import { Button, Card, Col, Row, Spacer, Loading, Text } from '@nextui-org/react';
-import { Link } from '@remix-run/react';
+import { useNavigate } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 import Image, { MimeType } from 'remix-image';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -29,6 +29,7 @@ const variants = {
 const AnimeBannerItemDesktop = ({ item, active }: { item: IAnimeResult; active?: boolean }) => {
   const { t } = useTranslation();
   const { id, cover, description, image, title, trailer, rating, genres } = item;
+  const navigate = useNavigate();
   const [player, setPlayer] = React.useState<ReturnType<YouTube['getInternalPlayer']>>();
   const [isPlayed, setIsPlayed] = React.useState<boolean>(false);
   const [showTrailer, setShowTrailer] = React.useState<boolean>(false);
@@ -233,12 +234,15 @@ const AnimeBannerItemDesktop = ({ item, active }: { item: IAnimeResult; active?:
                   css={{
                     marginTop: '1.25rem',
                   }}
+                  onClick={() =>
+                    navigate(`/anime/${id}/overview`, {
+                      state: { currentTime: player ? player.playerInfo.currentTime : 0 },
+                    })
+                  }
                 >
-                  <Link to={`/anime/${id}/overview`}>
-                    <H6 h6 weight="bold" transform="uppercase">
-                      {t('watchNow')}
-                    </H6>
-                  </Link>
+                  <H6 h6 weight="bold" transform="uppercase">
+                    {t('watchNow')}
+                  </H6>
                 </Button>
               </Row>
             </Col>

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
 import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
-import { useCatch, useLoaderData, Outlet, Link, RouteMatch } from '@remix-run/react';
+import { useCatch, useLoaderData, Outlet, Link, RouteMatch, useLocation } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
 
 import { getAnimeInfo } from '~/services/consumet/anilist/anilist.server';
@@ -73,6 +73,8 @@ export const handle = {
 
 const MovieDetail = () => {
   const { detail } = useLoaderData<LoaderData>();
+  const { state } = useLocation();
+  const currentTime = state && (state as { currentTime: number | undefined }).currentTime;
   const [visible, setVisible] = React.useState(false);
   const Handler = () => {
     setVisible(true);
@@ -96,7 +98,12 @@ const MovieDetail = () => {
         <Outlet />
       </Container>
       {detail && detail.trailer && (
-        <WatchTrailerModal trailer={detail.trailer} visible={visible} closeHandler={closeHandler} />
+        <WatchTrailerModal
+          trailer={detail.trailer}
+          visible={visible}
+          closeHandler={closeHandler}
+          currentTime={Number(currentTime)}
+        />
       )}
     </>
   );

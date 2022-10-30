@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import * as React from 'react';
 import { Button, Card, Col, Row, Spacer, Loading, Text } from '@nextui-org/react';
-import { Link, useFetcher } from '@remix-run/react';
+import { useFetcher, useNavigate } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 import Image, { MimeType } from 'remix-image';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -39,6 +39,7 @@ const BannerItemDesktop = ({
 }) => {
   const { t } = useTranslation();
   const fetcher = useFetcher();
+  const navigate = useNavigate();
   const { backdropPath, overview, posterPath, title, id, mediaType } = item || {};
   const [player, setPlayer] = React.useState<ReturnType<YouTube['getInternalPlayer']>>();
   const [isPlayed, setIsPlayed] = React.useState<boolean>(false);
@@ -280,12 +281,15 @@ const BannerItemDesktop = ({
                   css={{
                     marginTop: '1.25rem',
                   }}
+                  onClick={() =>
+                    navigate(`/${mediaType === 'movie' ? 'movies/' : 'tv-shows/'}${id}/`, {
+                      state: { currentTime: player ? player.playerInfo.currentTime : 0 },
+                    })
+                  }
                 >
-                  <Link to={`/${mediaType === 'movie' ? 'movies/' : 'tv-shows/'}${id}/`}>
-                    <H6 h6 weight="bold" transform="uppercase">
-                      {t('watchNow')}
-                    </H6>
-                  </Link>
+                  <H6 h6 weight="bold" transform="uppercase">
+                    {t('watchNow')}
+                  </H6>
                 </Button>
               </Row>
             </Col>

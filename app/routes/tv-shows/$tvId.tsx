@@ -1,7 +1,15 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
 import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
-import { useCatch, useLoaderData, Outlet, Link, RouteMatch, useFetcher } from '@remix-run/react';
+import {
+  useCatch,
+  useLoaderData,
+  Outlet,
+  Link,
+  RouteMatch,
+  useFetcher,
+  useLocation,
+} from '@remix-run/react';
 import { Container } from '@nextui-org/react';
 
 import {
@@ -70,8 +78,9 @@ export const handle = {
 
 const TvShowDetail = () => {
   const { detail, translations, imdbRating } = useLoaderData<LoaderData>();
-  console.log('🚀 ~ file: $tvId.tsx ~ line 75 ~ TvShowDetail ~ detail', detail);
   const fetcher = useFetcher();
+  const { state } = useLocation();
+  const currentTime = state && (state as { currentTime: number | undefined }).currentTime;
   const [visible, setVisible] = React.useState(false);
   const [trailer, setTrailer] = React.useState<Trailer>({});
   const Handler = (id: number) => {
@@ -110,7 +119,12 @@ const TvShowDetail = () => {
       >
         <Outlet />
       </Container>
-      <WatchTrailerModal trailer={trailer} visible={visible} closeHandler={closeHandler} />
+      <WatchTrailerModal
+        trailer={trailer}
+        visible={visible}
+        closeHandler={closeHandler}
+        currentTime={Number(currentTime)}
+      />
     </>
   );
 };
