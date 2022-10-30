@@ -24,12 +24,12 @@ export const loklokSearchOneTv = async (
   title: string,
   orgTitle: string,
   year: number,
-  season = 1,
+  season?: number,
 ) => {
   try {
-    const res = await fetcher<{ data: ILoklokSearchData }>(
-      `${LOKLOK_URL}/search/one?title=${title}&orgTitle=${orgTitle}&year=${year}&season=${season}`,
-    );
+    let url = `${LOKLOK_URL}/search/one?title=${title}&orgTitle=${orgTitle}&year=${year}`;
+    if (season) url += `&season=${season}`;
+    const res = await fetcher<{ data: ILoklokSearchData }>(url);
     if (res) return res;
   } catch (e) {
     console.error(e);
