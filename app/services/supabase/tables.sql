@@ -21,4 +21,3 @@ CREATE TABLE histories (
         season varchar,
         episode varchar
 );
-
