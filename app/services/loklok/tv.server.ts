@@ -6,30 +6,16 @@ import { fetcher, LOKLOK_URL } from './utils.server';
  * @param {string} title - The title of the TV show you want to search for.
  * @returns An array of objects.
  */
-export const loklokSearchTv = async (title: string) => {
-  try {
-    const res = await fetcher(`${LOKLOK_URL}/search?name=${title}`);
-    if (res) return res;
-  } catch (e) {
-    console.error(e);
-  }
-};
-
-/**
- * It takes a string as an argument, and returns a promise that resolves to an array of objects
- * @param {string} title - The title of the TV show you want to search for.
- * @returns An array of objects.
- */
 export const loklokSearchOneTv = async (
   title: string,
   orgTitle: string,
   year: number,
-  season = 1,
+  season?: number,
 ) => {
   try {
-    const res = await fetcher<{ data: ILoklokSearchData }>(
-      `${LOKLOK_URL}/search/one?title=${title}&orgTitle=${orgTitle}&year=${year}&season=${season}`,
-    );
+    let url = `${LOKLOK_URL}/search/one?title=${title}&orgTitle=${orgTitle}&year=${year}`;
+    if (season) url += `&season=${season}`;
+    const res = await fetcher<{ data: ILoklokSearchData }>(url);
     if (res) return res;
   } catch (e) {
     console.error(e);

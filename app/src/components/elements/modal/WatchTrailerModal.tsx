@@ -22,14 +22,16 @@ type WatchTrailerModalProps = {
   trailer: Trailer | ITrailer;
   visible: boolean;
   closeHandler: () => void;
+  currentTime?: number;
 };
 
-const WatchTrailerModal = ({ trailer, visible, closeHandler }: WatchTrailerModalProps) => {
+const WatchTrailerModal = ({
+  trailer,
+  visible,
+  closeHandler,
+  currentTime,
+}: WatchTrailerModalProps) => {
   const { width } = useWindowSize();
-  const onPlayerReady: YouTubeProps['onReady'] = (event) => {
-    // access to player in all event handlers via event.target
-    event.target.playVideo();
-  };
   const opts: YouTubeProps['opts'] = {
     height: `${width && width < 720 ? width / 1.5 : 480}`,
     width: `${width && width < 720 ? width : 720}`,
@@ -38,6 +40,7 @@ const WatchTrailerModal = ({ trailer, visible, closeHandler }: WatchTrailerModal
       autoplay: 1,
       modestbranding: 1,
       controls: 1,
+      start: currentTime || 0,
     },
   };
 
@@ -60,7 +63,9 @@ const WatchTrailerModal = ({ trailer, visible, closeHandler }: WatchTrailerModal
               <YouTube
                 videoId={(trailer as Trailer).key || (trailer as ITrailer).id}
                 opts={opts}
-                onReady={onPlayerReady}
+                onReady={({ target }) => {
+                  target.playVideo();
+                }}
               />
             )}
           </Modal.Body>

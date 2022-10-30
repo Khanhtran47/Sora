@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/indent */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import * as React from 'react';
-import { Button, Card, Col, Row, Spacer, Loading } from '@nextui-org/react';
-import { Link } from '@remix-run/react';
+import { Button, Card, Col, Row, Spacer, Loading, Text } from '@nextui-org/react';
+import { useNavigate } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 import Image, { MimeType } from 'remix-image';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -17,11 +18,18 @@ import { IAnimeResult } from '~/services/consumet/anilist/anilist.types';
 import VolumeUp from '~/src/assets/icons/VolumeUpIcon.js';
 import VolumeOff from '~/src/assets/icons/VolumeOffIcon.js';
 import AnilistStatIcon from '~/src/assets/icons/AnilistStatIcon.js';
-import { H1, H5, H6 } from '~/src/components/styles/Text.styles';
+import { H5, H6 } from '~/src/components/styles/Text.styles';
+
+const variants = {
+  inView: { opacity: 1, y: 0 },
+  outView: { opacity: 0, y: -40 },
+  showTrailer: { opacity: 1, y: -120 },
+};
 
 const AnimeBannerItemDesktop = ({ item, active }: { item: IAnimeResult; active?: boolean }) => {
   const { t } = useTranslation();
   const { id, cover, description, image, title, trailer, rating, genres } = item;
+  const navigate = useNavigate();
   const [player, setPlayer] = React.useState<ReturnType<YouTube['getInternalPlayer']>>();
   const [isPlayed, setIsPlayed] = React.useState<boolean>(false);
   const [showTrailer, setShowTrailer] = React.useState<boolean>(false);
@@ -126,112 +134,169 @@ const AnimeBannerItemDesktop = ({ item, active }: { item: IAnimeResult; active?:
     <Card ref={ref} variant="flat" css={{ w: '100%', h: '672px', borderWidth: 0 }} role="figure">
       <Card.Header css={{ position: 'absolute', zIndex: 1 }}>
         <Row>
-          <Col
-            css={{
-              marginTop: '10vh',
-              marginLeft: '5vw',
-              marginRight: '5vw',
-              '@sm': {
-                marginLeft: '10vw',
-              },
-            }}
-          >
-            <H1
-              h1
-              weight="bold"
-              className="!line-clamp-2"
+          <AnimatePresence>
+            <Col
               css={{
-                lineHeight: 'var(--nextui-lineHeights-base)',
+                marginTop: '10vh',
+                marginLeft: '5vw',
+                marginRight: '5vw',
+                '@sm': {
+                  marginLeft: '10vw',
+                },
               }}
             >
-              {title?.userPreferred || title?.english || title?.romaji || title?.native}
-            </H1>
-            <Row css={{ marginTop: '1.25rem' }} align="center">
-              {rating && (
-                <>
-                  {Number(rating) > 75 ? (
-                    <AnilistStatIcon stat="good" />
-                  ) : Number(rating) > 60 ? (
-                    <AnilistStatIcon stat="average" />
-                  ) : (
-                    <AnilistStatIcon stat="bad" />
-                  )}
-                  <Spacer x={0.25} />
-                  <H5 weight="bold">{rating}%</H5>
-                  <Spacer x={1.5} />
-                </>
-              )}
-              <H5 h5 weight="bold" css={{ display: 'flex', flexDirection: 'row' }}>
-                {genres?.slice(0, 2).map((genre) => (
-                  <>
-                    {genre}
-                    <Spacer x={0.5} />
-                  </>
-                ))}
-              </H5>
-            </Row>
-            <H6
-              h6
-              className="!line-clamp-6"
-              css={{ margin: '1.25rem 0 0 0', textAlign: 'justify' }}
-              dangerouslySetInnerHTML={{ __html: description || '' }}
-            />
-            <Row wrap="wrap">
-              <Button
-                auto
-                shadow
-                rounded
+              <Text
+                as={motion.h1}
+                weight="bold"
+                className="!line-clamp-2"
                 css={{
-                  marginTop: '1.25rem',
+                  fontSize: '3.25rem !important',
+                  marginBottom: 0,
+                  fontWeight: 700,
+                  lineHeight: 'var(--nextui-lineHeights-base)',
                 }}
+                // @ts-ignore
+                animate={active ? 'inView' : 'outView'}
+                transition={{ duration: 0.5 }}
+                variants={variants}
               >
-                <Link to={`/anime/${id}/overview`}>
+                {title?.userPreferred || title?.english || title?.romaji || title?.native}
+              </Text>
+              <Row
+                // @ts-ignore
+                as={motion.div}
+                css={{ marginTop: '1.25rem' }}
+                align="center"
+                animate={
+                  active && !showTrailer ? 'inView' : active && showTrailer ? 'outView' : 'outView'
+                }
+                transition={{ duration: 0.5, delay: 0.25 }}
+                variants={variants}
+              >
+                {rating && (
+                  <>
+                    {Number(rating) > 75 ? (
+                      <AnilistStatIcon stat="good" />
+                    ) : Number(rating) > 60 ? (
+                      <AnilistStatIcon stat="average" />
+                    ) : (
+                      <AnilistStatIcon stat="bad" />
+                    )}
+                    <Spacer x={0.25} />
+                    <H5 weight="bold">{rating}%</H5>
+                    <Spacer x={1.5} />
+                  </>
+                )}
+                <H5 h5 weight="bold" css={{ display: 'flex', flexDirection: 'row' }}>
+                  {genres?.slice(0, 2).map((genre) => (
+                    <>
+                      {genre}
+                      <Spacer x={0.5} />
+                    </>
+                  ))}
+                </H5>
+              </Row>
+              <Text
+                as={motion.p}
+                className="!line-clamp-6"
+                css={{
+                  fontSize: '1rem !important',
+                  fontWeight: 400,
+                  margin: '1.25rem 0 0 0',
+                  textAlign: 'justify',
+                }}
+                // @ts-ignore
+                animate={
+                  active && !showTrailer ? 'inView' : active && showTrailer ? 'outView' : 'outView'
+                }
+                transition={{ duration: 0.5, delay: 0.5 }}
+                variants={variants}
+                dangerouslySetInnerHTML={{ __html: description || '' }}
+              />
+              <Row
+                // @ts-ignore
+                as={motion.div}
+                wrap="wrap"
+                animate={
+                  active && !showTrailer
+                    ? 'inView'
+                    : active && showTrailer
+                    ? 'showTrailer'
+                    : 'outView'
+                }
+                transition={{ duration: 0.5, delay: 0.75 }}
+                variants={variants}
+              >
+                <Button
+                  auto
+                  shadow
+                  rounded
+                  css={{
+                    marginTop: '1.25rem',
+                  }}
+                  onClick={() =>
+                    navigate(`/anime/${id}/overview`, {
+                      state: { currentTime: player ? player.playerInfo.currentTime : 0 },
+                    })
+                  }
+                >
                   <H6 h6 weight="bold" transform="uppercase">
                     {t('watchNow')}
                   </H6>
-                </Link>
-              </Button>
-            </Row>
-          </Col>
-          {!isSm && (
-            <Col>
-              <Card.Image
-                // @ts-ignore
-                as={Image}
-                src={image || ''}
-                alt={title?.userPreferred || title?.english || title?.romaji || title?.native}
-                title={title?.userPreferred || title?.english || title?.romaji || title?.native}
-                objectFit="cover"
-                width={isMd ? '60%' : '40%'}
-                css={{
-                  minWidth: 'auto !important',
-                  marginTop: '10vh',
-                  borderRadius: '24px',
-                }}
-                loading="eager"
-                loaderUrl="/api/image"
-                placeholder="blur"
-                responsive={[
-                  {
-                    size: {
-                      width: 225,
-                      height: 338,
-                    },
-                    maxWidth: 860,
-                  },
-                  {
-                    size: {
-                      width: 318,
-                      height: 477,
-                    },
-                  },
-                ]}
-                options={{
-                  contentType: MimeType.WEBP,
-                }}
-              />
+                </Button>
+              </Row>
             </Col>
-          )}
+            {!isSm && (
+              <Col
+                // @ts-ignore
+                as={motion.div}
+                animate={
+                  active && !showTrailer ? 'inView' : active && showTrailer ? 'outView' : 'outView'
+                }
+                transition={{ duration: 0.75 }}
+                variants={{
+                  inView: { opacity: 1, scale: 1, x: 0 },
+                  outView: { opacity: 0, scale: 0, x: 0 },
+                }}
+              >
+                <Card.Image
+                  // @ts-ignore
+                  as={Image}
+                  src={image || ''}
+                  alt={title?.userPreferred || title?.english || title?.romaji || title?.native}
+                  title={title?.userPreferred || title?.english || title?.romaji || title?.native}
+                  objectFit="cover"
+                  width={isMd ? '60%' : '40%'}
+                  css={{
+                    minWidth: 'auto !important',
+                    marginTop: '10vh',
+                    borderRadius: '24px',
+                  }}
+                  loading="eager"
+                  loaderUrl="/api/image"
+                  placeholder="blur"
+                  responsive={[
+                    {
+                      size: {
+                        width: 225,
+                        height: 338,
+                      },
+                      maxWidth: 860,
+                    },
+                    {
+                      size: {
+                        width: 318,
+                        height: 477,
+                      },
+                    },
+                  ]}
+                  options={{
+                    contentType: MimeType.WEBP,
+                  }}
+                />
+              </Col>
+            )}
+          </AnimatePresence>
         </Row>
       </Card.Header>
       <Card.Body
