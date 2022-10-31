@@ -6,7 +6,7 @@ import NProgress from 'nprogress';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
 import useSize from '~/hooks/useSize';
-import { IAnimeResult } from '~/services/consumet/anilist/anilist.types';
+import { IAnimeResult, IAnimeEpisode } from '~/services/consumet/anilist/anilist.types';
 import AnimeItem from '../item';
 
 const AnimeListGrid = ({
@@ -14,11 +14,15 @@ const AnimeListGrid = ({
   hasNextPage,
   routeName,
   virtual,
+  itemType,
+  provider,
 }: {
-  items: IAnimeResult[];
+  items: IAnimeResult[] | IAnimeEpisode[];
   hasNextPage?: boolean;
   routeName?: string;
   virtual?: boolean;
+  itemType?: 'banner' | 'card' | 'episode-card';
+  provider?: string;
 }) => {
   const isXs = useMediaQuery(370);
   const fetcher = useFetcher();
@@ -65,7 +69,7 @@ const AnimeListGrid = ({
     if (!shouldFetch || !height) return;
     if (clientHeight + scrollPosition + 100 < height) return;
 
-    fetcher.load(`${routeName}?page=${page}`);
+    fetcher.load(`${routeName}?page=${page}${provider ? `&provider=${provider}` : ''}}`);
     setShouldFetch(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scrollPosition, clientHeight, height]);
@@ -130,8 +134,14 @@ const AnimeListGrid = ({
               animate={{ opacity: 1 }}
               transition={{ x: { type: 'spring', stiffness: 100 }, duration: 0.1 }}
             >
-              <Link to={`/anime/${item.id}/overview`}>
-                <AnimeItem key={item.id} type="card" item={item} virtual={virtual} />
+              <Link
+                to={
+                  itemType && itemType === 'episode-card'
+                    ? `/anime/${item.id}/episodes`
+                    : `/anime/${item.id}/overview`
+                }
+              >
+                <AnimeItem key={item.id} type={itemType || 'card'} item={item} virtual={virtual} />
               </Link>
             </motion.div>
           </Grid>

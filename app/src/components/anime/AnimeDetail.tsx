@@ -38,7 +38,6 @@ const detailTab = [
 const AnimeDetail = (props: IAnimeDetail) => {
   // const { t } = useTranslation();
   const { item, handler } = props;
-  console.log('🚀 ~ file: AnimeDetail.tsx ~ line 41 ~ AnimeDetail ~ item', item);
   const ref = React.useRef<HTMLDivElement>(null);
   const size: IUseSize = useSize(ref);
 
