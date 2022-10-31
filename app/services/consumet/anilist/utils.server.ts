@@ -22,7 +22,7 @@ export default class Anilist {
       url += `?provider=${provider}`;
     }
     if (page) {
-      url += `?page=${page}`;
+      url += `&page=${page}`;
     }
     if (perPage) {
       url += `&perPage=${perPage}`;

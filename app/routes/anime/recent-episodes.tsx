@@ -26,12 +26,16 @@ export const meta: MetaFunction = () => ({
 export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page'));
+  console.log(
+    '🚀 ~ file: recent-episodes.tsx ~ line 29 ~ constloader:LoaderFunction= ~ page',
+    page,
+  );
   let provider = url.searchParams.get('provider');
   if (!page && (page < 1 || page > 1000)) page = 1;
   if (!provider) provider = 'gogoanime';
 
   return json<LoaderData>({
-    items: await getAnimeRecentEpisodes(provider, page),
+    items: await getAnimeRecentEpisodes(provider, page, 20),
     provider,
   });
 };
@@ -42,7 +46,6 @@ export const handle = {
 
 const RecentEpisodes = () => {
   const { items, provider } = useLoaderData<LoaderData>();
-  console.log('🚀 ~ file: recent-episodes.tsx ~ line 45 ~ RecentEpisodes ~ items', items);
   const location = useLocation();
 
   return (
