@@ -93,6 +93,8 @@ const AnimeList = (props: IAnimeListProps) => {
           navigation={{ nextEl, prevEl }}
           setSlideProgress={setSlideProgress}
           virtual={virtual}
+          itemType={itemType}
+          provider={provider}
         />
       );
       break;

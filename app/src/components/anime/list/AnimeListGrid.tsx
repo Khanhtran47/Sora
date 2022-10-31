@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent */
 import * as React from 'react';
 import { Grid, Button } from '@nextui-org/react';
 import { useFetcher, Link } from '@remix-run/react';
@@ -137,7 +138,9 @@ const AnimeListGrid = ({
               <Link
                 to={
                   itemType && itemType === 'episode-card'
-                    ? `/anime/${item.id}/episodes`
+                    ? `/anime/${item.id}/episode/${
+                        (item as IAnimeEpisode).episodeId
+                      }?provider=${provider}&episode=${(item as IAnimeEpisode).episodeNumber}`
                     : `/anime/${item.id}/overview`
                 }
               >
