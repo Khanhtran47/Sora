@@ -134,169 +134,167 @@ const AnimeBannerItemDesktop = ({ item, active }: { item: IAnimeResult; active?:
     <Card ref={ref} variant="flat" css={{ w: '100%', h: '672px', borderWidth: 0 }} role="figure">
       <Card.Header css={{ position: 'absolute', zIndex: 1 }}>
         <Row>
-          <AnimatePresence>
-            <Col
+          <Col
+            css={{
+              marginTop: '10vh',
+              marginLeft: '5vw',
+              marginRight: '5vw',
+              '@sm': {
+                marginLeft: '10vw',
+              },
+            }}
+          >
+            <Text
+              as={motion.h1}
+              weight="bold"
+              className="!line-clamp-2"
               css={{
-                marginTop: '10vh',
-                marginLeft: '5vw',
-                marginRight: '5vw',
-                '@sm': {
-                  marginLeft: '10vw',
-                },
+                fontSize: '3.25rem !important',
+                marginBottom: 0,
+                fontWeight: 700,
+                lineHeight: 'var(--nextui-lineHeights-base)',
+              }}
+              // @ts-ignore
+              animate={active ? 'inView' : 'outView'}
+              transition={{ duration: 0.5 }}
+              variants={variants}
+            >
+              {title?.userPreferred || title?.english || title?.romaji || title?.native}
+            </Text>
+            <Row
+              // @ts-ignore
+              as={motion.div}
+              css={{ marginTop: '1.25rem' }}
+              align="center"
+              animate={
+                active && !showTrailer ? 'inView' : active && showTrailer ? 'outView' : 'outView'
+              }
+              transition={{ duration: 0.5, delay: 0.25 }}
+              variants={variants}
+            >
+              {rating && (
+                <>
+                  {Number(rating) > 75 ? (
+                    <AnilistStatIcon stat="good" />
+                  ) : Number(rating) > 60 ? (
+                    <AnilistStatIcon stat="average" />
+                  ) : (
+                    <AnilistStatIcon stat="bad" />
+                  )}
+                  <Spacer x={0.25} />
+                  <H5 weight="bold">{rating}%</H5>
+                  <Spacer x={1.5} />
+                </>
+              )}
+              <H5 h5 weight="bold" css={{ display: 'flex', flexDirection: 'row' }}>
+                {genres?.slice(0, 2).map((genre) => (
+                  <>
+                    {genre}
+                    <Spacer x={0.5} />
+                  </>
+                ))}
+              </H5>
+            </Row>
+            <Text
+              as={motion.p}
+              className="!line-clamp-6"
+              css={{
+                fontSize: '1rem !important',
+                fontWeight: 400,
+                margin: '1.25rem 0 0 0',
+                textAlign: 'justify',
+              }}
+              // @ts-ignore
+              animate={
+                active && !showTrailer ? 'inView' : active && showTrailer ? 'outView' : 'outView'
+              }
+              transition={{ duration: 0.5, delay: 0.5 }}
+              variants={variants}
+              dangerouslySetInnerHTML={{ __html: description || '' }}
+            />
+            <Row
+              // @ts-ignore
+              as={motion.div}
+              wrap="wrap"
+              animate={
+                active && !showTrailer
+                  ? 'inView'
+                  : active && showTrailer
+                  ? 'showTrailer'
+                  : 'outView'
+              }
+              transition={{ duration: 0.5, delay: 0.75 }}
+              variants={variants}
+            >
+              <Button
+                auto
+                shadow
+                rounded
+                css={{
+                  marginTop: '1.25rem',
+                }}
+                onClick={() =>
+                  navigate(`/anime/${id}/overview`, {
+                    state: { currentTime: player ? player.playerInfo.currentTime : 0 },
+                  })
+                }
+              >
+                <H6 h6 weight="bold" transform="uppercase">
+                  {t('watchNow')}
+                </H6>
+              </Button>
+            </Row>
+          </Col>
+          {!isSm && (
+            <Col
+              // @ts-ignore
+              as={motion.div}
+              animate={
+                active && !showTrailer ? 'inView' : active && showTrailer ? 'outView' : 'outView'
+              }
+              transition={{ duration: 0.75 }}
+              variants={{
+                inView: { opacity: 1, scale: 1, x: 0 },
+                outView: { opacity: 0, scale: 0, x: 0 },
               }}
             >
-              <Text
-                as={motion.h1}
-                weight="bold"
-                className="!line-clamp-2"
+              <Card.Image
+                // @ts-ignore
+                as={Image}
+                src={image || ''}
+                alt={title?.userPreferred || title?.english || title?.romaji || title?.native}
+                title={title?.userPreferred || title?.english || title?.romaji || title?.native}
+                objectFit="cover"
+                width={isMd ? '60%' : '40%'}
                 css={{
-                  fontSize: '3.25rem !important',
-                  marginBottom: 0,
-                  fontWeight: 700,
-                  lineHeight: 'var(--nextui-lineHeights-base)',
+                  minWidth: 'auto !important',
+                  marginTop: '10vh',
+                  borderRadius: '24px',
                 }}
-                // @ts-ignore
-                animate={active ? 'inView' : 'outView'}
-                transition={{ duration: 0.5 }}
-                variants={variants}
-              >
-                {title?.userPreferred || title?.english || title?.romaji || title?.native}
-              </Text>
-              <Row
-                // @ts-ignore
-                as={motion.div}
-                css={{ marginTop: '1.25rem' }}
-                align="center"
-                animate={
-                  active && !showTrailer ? 'inView' : active && showTrailer ? 'outView' : 'outView'
-                }
-                transition={{ duration: 0.5, delay: 0.25 }}
-                variants={variants}
-              >
-                {rating && (
-                  <>
-                    {Number(rating) > 75 ? (
-                      <AnilistStatIcon stat="good" />
-                    ) : Number(rating) > 60 ? (
-                      <AnilistStatIcon stat="average" />
-                    ) : (
-                      <AnilistStatIcon stat="bad" />
-                    )}
-                    <Spacer x={0.25} />
-                    <H5 weight="bold">{rating}%</H5>
-                    <Spacer x={1.5} />
-                  </>
-                )}
-                <H5 h5 weight="bold" css={{ display: 'flex', flexDirection: 'row' }}>
-                  {genres?.slice(0, 2).map((genre) => (
-                    <>
-                      {genre}
-                      <Spacer x={0.5} />
-                    </>
-                  ))}
-                </H5>
-              </Row>
-              <Text
-                as={motion.p}
-                className="!line-clamp-6"
-                css={{
-                  fontSize: '1rem !important',
-                  fontWeight: 400,
-                  margin: '1.25rem 0 0 0',
-                  textAlign: 'justify',
+                loading="eager"
+                loaderUrl="/api/image"
+                placeholder="blur"
+                responsive={[
+                  {
+                    size: {
+                      width: 225,
+                      height: 338,
+                    },
+                    maxWidth: 860,
+                  },
+                  {
+                    size: {
+                      width: 318,
+                      height: 477,
+                    },
+                  },
+                ]}
+                options={{
+                  contentType: MimeType.WEBP,
                 }}
-                // @ts-ignore
-                animate={
-                  active && !showTrailer ? 'inView' : active && showTrailer ? 'outView' : 'outView'
-                }
-                transition={{ duration: 0.5, delay: 0.5 }}
-                variants={variants}
-                dangerouslySetInnerHTML={{ __html: description || '' }}
               />
-              <Row
-                // @ts-ignore
-                as={motion.div}
-                wrap="wrap"
-                animate={
-                  active && !showTrailer
-                    ? 'inView'
-                    : active && showTrailer
-                    ? 'showTrailer'
-                    : 'outView'
-                }
-                transition={{ duration: 0.5, delay: 0.75 }}
-                variants={variants}
-              >
-                <Button
-                  auto
-                  shadow
-                  rounded
-                  css={{
-                    marginTop: '1.25rem',
-                  }}
-                  onClick={() =>
-                    navigate(`/anime/${id}/overview`, {
-                      state: { currentTime: player ? player.playerInfo.currentTime : 0 },
-                    })
-                  }
-                >
-                  <H6 h6 weight="bold" transform="uppercase">
-                    {t('watchNow')}
-                  </H6>
-                </Button>
-              </Row>
             </Col>
-            {!isSm && (
-              <Col
-                // @ts-ignore
-                as={motion.div}
-                animate={
-                  active && !showTrailer ? 'inView' : active && showTrailer ? 'outView' : 'outView'
-                }
-                transition={{ duration: 0.75 }}
-                variants={{
-                  inView: { opacity: 1, scale: 1, x: 0 },
-                  outView: { opacity: 0, scale: 0, x: 0 },
-                }}
-              >
-                <Card.Image
-                  // @ts-ignore
-                  as={Image}
-                  src={image || ''}
-                  alt={title?.userPreferred || title?.english || title?.romaji || title?.native}
-                  title={title?.userPreferred || title?.english || title?.romaji || title?.native}
-                  objectFit="cover"
-                  width={isMd ? '60%' : '40%'}
-                  css={{
-                    minWidth: 'auto !important',
-                    marginTop: '10vh',
-                    borderRadius: '24px',
-                  }}
-                  loading="eager"
-                  loaderUrl="/api/image"
-                  placeholder="blur"
-                  responsive={[
-                    {
-                      size: {
-                        width: 225,
-                        height: 338,
-                      },
-                      maxWidth: 860,
-                    },
-                    {
-                      size: {
-                        width: 318,
-                        height: 477,
-                      },
-                    },
-                  ]}
-                  options={{
-                    contentType: MimeType.WEBP,
-                  }}
-                />
-              </Col>
-            )}
-          </AnimatePresence>
+          )}
         </Row>
       </Card.Header>
       <Card.Body

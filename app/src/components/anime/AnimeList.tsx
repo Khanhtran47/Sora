@@ -2,7 +2,7 @@ import { Button, Row, Spacer } from '@nextui-org/react';
 import { useState } from 'react';
 // import { useTranslation } from 'react-i18next';
 
-import { IAnimeResult } from '~/services/consumet/anilist/anilist.types';
+import { IAnimeResult, IAnimeEpisode } from '~/services/consumet/anilist/anilist.types';
 import { H3 } from '~/src/components/styles/Text.styles';
 import ChevronRightIcon from '~/src/assets/icons/ChevronRightIcon.js';
 import ChevronLeftIcon from '~/src/assets/icons/ChevronLeftIcon.js';
@@ -19,7 +19,7 @@ import { AnimeListCard, AnimeListBanner, AnimeListGrid } from './list';
 interface IAnimeListProps {
   listType?: 'table' | 'slider-card' | 'slider-banner' | 'grid';
   listName?: string | (() => never);
-  items: IAnimeResult[];
+  items: IAnimeResult[] | IAnimeEpisode[];
   // showFilter?: boolean;
   showMoreList?: boolean;
   onClickViewMore?: () => void;
@@ -27,6 +27,8 @@ interface IAnimeListProps {
   hasNextPage?: boolean;
   routeName?: string;
   virtual?: boolean;
+  itemType?: 'banner' | 'card' | 'episode-card';
+  provider?: string;
 }
 
 const AnimeList = (props: IAnimeListProps) => {
@@ -40,6 +42,8 @@ const AnimeList = (props: IAnimeListProps) => {
     hasNextPage,
     routeName,
     virtual,
+    itemType,
+    provider,
   } = props;
   let { listType } = props;
 
@@ -74,6 +78,8 @@ const AnimeList = (props: IAnimeListProps) => {
           hasNextPage={hasNextPage}
           routeName={routeName}
           virtual={virtual}
+          itemType={itemType}
+          provider={provider}
         />
       );
       break;
@@ -87,6 +93,8 @@ const AnimeList = (props: IAnimeListProps) => {
           navigation={{ nextEl, prevEl }}
           setSlideProgress={setSlideProgress}
           virtual={virtual}
+          itemType={itemType}
+          provider={provider}
         />
       );
       break;

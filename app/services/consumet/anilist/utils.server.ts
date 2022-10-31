@@ -13,7 +13,7 @@ export default class Anilist {
   };
 
   static animeRecentEpisodesUrl = (
-    provider?: 'gogoanime' | 'zoro',
+    provider?: string | undefined,
     page?: number,
     perPage?: number,
   ): string => {
@@ -22,7 +22,7 @@ export default class Anilist {
       url += `?provider=${provider}`;
     }
     if (page) {
-      url += `?page=${page}`;
+      url += `&page=${page}`;
     }
     if (perPage) {
       url += `&perPage=${perPage}`;

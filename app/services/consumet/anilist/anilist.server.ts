@@ -3,12 +3,12 @@ import Anilist from './utils.server';
 import {
   IAnimeSearch,
   IAnimeList,
-  IAnimeEpisode,
   IAnimeAdvancedSearch,
   IAnimeInfo,
   IAnimeAiringSchedule,
   IAnimeEpisodeStream,
   IAnimeGenre,
+  IRecentAnimeEpisodes,
 } from './anilist.types';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -44,12 +44,12 @@ export const getAnimeSearch = async (
 };
 
 export const getAnimeRecentEpisodes = async (
-  provider?: 'gogoanime' | 'zoro',
+  provider?: string | undefined,
   page?: number,
   perPage?: number,
-): Promise<IAnimeEpisode | undefined> => {
+): Promise<IRecentAnimeEpisodes | undefined> => {
   try {
-    const fetched = await fetcher<IAnimeEpisode>(
+    const fetched = await fetcher<IRecentAnimeEpisodes>(
       Anilist.animeRecentEpisodesUrl(provider, page, perPage),
     );
     return fetched;

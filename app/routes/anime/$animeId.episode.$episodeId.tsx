@@ -35,6 +35,7 @@ type LoaderData = {
   detail: Awaited<ReturnType<typeof getAnimeInfo>>;
   subtitles?: IMovieSubtitle[] | undefined;
   user?: User;
+  episodeInfo: IEpisode | undefined;
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -50,6 +51,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     getAnimeEpisodeStream(episodeId),
     getUserFromCookie(request.headers.get('Cookie') || ''),
   ]);
+
+  const episodeInfo = detail?.episodes?.find((e: IEpisode) => e.number === Number(episode));
 
   if (user) {
     insertHistory({
@@ -85,6 +88,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         url: `${LOKLOK_URL}/subtitle?url=${sub.url}`,
       })),
       user,
+      episodeInfo,
     });
   }
 
@@ -96,6 +100,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       detail,
       sources: episodeDetail?.sources,
       user,
+      episodeInfo,
     });
   }
 
@@ -107,12 +112,13 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       detail,
       sources: episodeDetail?.sources,
       user,
+      episodeInfo,
     });
   }
 
   if (!detail || !sources) throw new Response('Not Found', { status: 404 });
 
-  return json<LoaderData>({ detail, sources: sources.sources, user });
+  return json<LoaderData>({ detail, sources: sources.sources, user, episodeInfo });
 };
 
 export const meta: MetaFunction = ({ data, params }) => {
@@ -122,37 +128,36 @@ export const meta: MetaFunction = ({ data, params }) => {
       description: `This anime doesn't has episode ${params.episodeId}`,
     };
   }
-  const { detail } = data;
+  const { detail, episodeInfo } = data;
   const { title } = detail;
-  const episodeInfo = detail?.episodes?.find((e: IEpisode) => e.id === params.episodeId);
   return {
     title: `Watch ${
-      title?.userPreferred || title?.english || title?.romaji || title?.native
+      title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     } episode ${episodeInfo.number} HD online Free - Sora`,
     description: `Watch ${
-      title?.userPreferred || title?.english || title?.romaji || title?.native
+      title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     } episode ${
       episodeInfo.number
     } in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
     keywords: `Watch ${
-      title?.userPreferred || title?.english || title?.romaji || title?.native
+      title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     } episode ${episodeInfo.number}, Stream ${
-      title?.userPreferred || title?.english || title?.romaji || title?.native
+      title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     } episode ${episodeInfo.number}, Watch ${
-      title?.userPreferred || title?.english || title?.romaji || title?.native
+      title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     } episode ${episodeInfo.number} HD, Online ${
-      title?.userPreferred || title?.english || title?.romaji || title?.native
+      title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     } episode ${episodeInfo.number}, Streaming ${
-      title?.userPreferred || title?.english || title?.romaji || title?.native
+      title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     } episode ${episodeInfo.number}, English, Subtitle ${
-      title?.userPreferred || title?.english || title?.romaji || title?.native
+      title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     } episode ${episodeInfo.number}, English Subtitle`,
     'og:url': `https://sora-movie.vercel.app/anime/${params.animeId}/episode/${params.episodeId}`,
     'og:title': `Watch ${
-      title?.userPreferred || title?.english || title?.romaji || title?.native
+      title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     } episode ${episodeInfo.number} HD online Free - Sora`,
     'og:description': `Watch ${
-      title?.userPreferred || title?.english || title?.romaji || title?.native
+      title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     } episode ${
       episodeInfo.number
     } in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
@@ -175,7 +180,7 @@ export const handle = {
 };
 
 const AnimeEpisodeWatch = () => {
-  const { provider, detail, sources, subtitles } = useLoaderData<LoaderData>();
+  const { provider, detail, sources, subtitles, episodeInfo } = useLoaderData<LoaderData>();
   const { episodeId } = useParams();
 
   const fetcher = useFetcher();
@@ -259,9 +264,7 @@ const AnimeEpisodeWatch = () => {
                       name: 'title',
                       html: `<span>${
                         detail?.title?.userPreferred || detail?.title?.english || ''
-                      } - EP ${
-                        detail?.episodes.find((episode) => episode.id === episodeId)?.number
-                      }</span>`,
+                      } - EP ${episodeInfo?.number}</span>`,
                       style: {
                         position: 'absolute',
                         top: '15px',

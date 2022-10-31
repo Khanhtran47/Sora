@@ -80,6 +80,7 @@ const pages = [
     pageLink: 'anime',
     pageDropdown: [
       // { pageName: 'Discover', pageLink: 'anime/discover' },
+      { pageName: 'Recent Episodes', pageLink: 'anime/recent-episodes' },
       { pageName: 'Popular Anime', pageLink: 'anime/popular' },
       { pageName: 'Trending Anime', pageLink: 'anime/trending' },
     ],

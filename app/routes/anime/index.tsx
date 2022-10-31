@@ -4,7 +4,11 @@ import { Container } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 // import { useTranslation } from 'react-i18next';
 
-import { getAnimeTrending, getAnimePopular } from '~/services/consumet/anilist/anilist.server';
+import {
+  getAnimeTrending,
+  getAnimePopular,
+  getAnimeRecentEpisodes,
+} from '~/services/consumet/anilist/anilist.server';
 import AnimeList from '~/src/components/anime/AnimeList';
 
 export const handle = {
@@ -15,6 +19,7 @@ export const handle = {
 type LoaderData = {
   trending: Awaited<ReturnType<typeof getAnimeTrending>>;
   popular: Awaited<ReturnType<typeof getAnimePopular>>;
+  recentEpisodes: Awaited<ReturnType<typeof getAnimeRecentEpisodes>>;
 };
 
 export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
@@ -22,19 +27,21 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
   let page = Number(url.searchParams.get('page'));
   if (!page || page < 1 || page > 1000) page = 1;
 
-  const [trendingAnime, popularAnime] = await Promise.all([
+  const [trendingAnime, popularAnime, recentEpisodes] = await Promise.all([
     getAnimeTrending(page, 10),
     getAnimePopular(page, 20),
+    getAnimeRecentEpisodes('gogoanime', page, 20),
   ]);
 
   return json<LoaderData>({
     trending: trendingAnime,
     popular: popularAnime,
+    recentEpisodes,
   });
 };
 
 const AnimePage = () => {
-  const { trending, popular } = useLoaderData<LoaderData>() || {};
+  const { trending, popular, recentEpisodes } = useLoaderData<LoaderData>() || {};
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -71,6 +78,18 @@ const AnimePage = () => {
             showMoreList
             onClickViewMore={() => navigate('/anime/popular')}
             navigationButtons
+          />
+        )}
+        {recentEpisodes && recentEpisodes.results && recentEpisodes.results.length > 0 && (
+          <AnimeList
+            listType="slider-card"
+            items={recentEpisodes.results}
+            listName="Recent Episodes"
+            showMoreList
+            onClickViewMore={() => navigate('/anime/recent-episodes')}
+            navigationButtons
+            itemType="episode-card"
+            provider="gogoanime"
           />
         )}
       </Container>

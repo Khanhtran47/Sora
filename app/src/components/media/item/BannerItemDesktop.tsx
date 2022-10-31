@@ -162,188 +162,186 @@ const BannerItemDesktop = ({
     <Card ref={ref} variant="flat" css={{ w: '100%', h: '672px', borderWidth: 0 }} role="figure">
       <Card.Header css={{ position: 'absolute', zIndex: 1 }}>
         <Row>
-          <AnimatePresence>
-            <Col
+          <Col
+            css={{
+              marginTop: '10vh',
+              marginLeft: '5vw',
+              marginRight: '5vw',
+              '@sm': {
+                marginLeft: '10vw',
+              },
+            }}
+          >
+            <Text
+              as={motion.h1}
+              weight="bold"
+              className="!line-clamp-2"
               css={{
-                marginTop: '10vh',
-                marginLeft: '5vw',
-                marginRight: '5vw',
-                '@sm': {
-                  marginLeft: '10vw',
-                },
+                fontSize: '3.25rem !important',
+                marginBottom: 0,
+                fontWeight: 700,
+                lineHeight: 'var(--nextui-lineHeights-base)',
               }}
+              // @ts-ignore
+              animate={active ? 'inView' : 'outView'}
+              transition={{ duration: 0.5 }}
+              variants={variants}
             >
-              <Text
-                as={motion.h1}
+              {title}
+            </Text>
+            <Row
+              // @ts-ignore
+              as={motion.div}
+              css={{ marginTop: '1.25rem' }}
+              align="center"
+              animate={
+                active && !showTrailer ? 'inView' : active && showTrailer ? 'outView' : 'outView'
+              }
+              transition={{ duration: 0.5, delay: 0.25 }}
+              variants={variants}
+            >
+              <H5
+                h5
                 weight="bold"
-                className="!line-clamp-2"
                 css={{
-                  fontSize: '3.25rem !important',
-                  marginBottom: 0,
-                  fontWeight: 700,
-                  lineHeight: 'var(--nextui-lineHeights-base)',
+                  backgroundColor: '#3ec2c2',
+                  borderRadius: '$xs',
+                  padding: '0 0.25rem 0 0.25rem',
+                  marginRight: '0.5rem',
                 }}
-                // @ts-ignore
-                animate={active ? 'inView' : 'outView'}
-                transition={{ duration: 0.5 }}
-                variants={variants}
               >
-                {title}
-              </Text>
-              <Row
-                // @ts-ignore
-                as={motion.div}
-                css={{ marginTop: '1.25rem' }}
-                align="center"
-                animate={
-                  active && !showTrailer ? 'inView' : active && showTrailer ? 'outView' : 'outView'
-                }
-                transition={{ duration: 0.5, delay: 0.25 }}
-                variants={variants}
+                TMDb
+              </H5>
+              <H5 h5 weight="bold">
+                {item?.voteAverage?.toFixed(1)}
+              </H5>
+              <Spacer x={1.5} />
+              <H5
+                h5
+                css={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                }}
               >
-                <H5
-                  h5
-                  weight="bold"
-                  css={{
-                    backgroundColor: '#3ec2c2',
-                    borderRadius: '$xs',
-                    padding: '0 0.25rem 0 0.25rem',
-                    marginRight: '0.5rem',
-                  }}
-                >
-                  TMDb
-                </H5>
-                <H5 h5 weight="bold">
-                  {item?.voteAverage?.toFixed(1)}
-                </H5>
-                <Spacer x={1.5} />
-                <H5
-                  h5
-                  css={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                  }}
-                >
-                  {item?.genreIds?.slice(0, 2).map((genreId) => {
-                    if (mediaType === 'movie') {
-                      return (
-                        <>
-                          {genresMovie?.[genreId]}
-                          <Spacer x={0.5} />
-                        </>
-                      );
-                    }
+                {item?.genreIds?.slice(0, 2).map((genreId) => {
+                  if (mediaType === 'movie') {
                     return (
                       <>
-                        {genresTv?.[genreId]}
+                        {genresMovie?.[genreId]}
                         <Spacer x={0.5} />
                       </>
                     );
-                  })}
-                </H5>
-              </Row>
-              <Text
-                as={motion.p}
-                className="!line-clamp-7"
-                css={{
-                  fontSize: '1rem !important',
-                  fontWeight: 400,
-                  margin: '1.25rem 0 0 0',
-                  textAlign: 'justify',
-                }}
-                // @ts-ignore
-                animate={
-                  active && !showTrailer ? 'inView' : active && showTrailer ? 'outView' : 'outView'
-                }
-                transition={{ duration: 0.5, delay: 0.5 }}
-                variants={variants}
-              >
-                {overview}
-              </Text>
-              <Row
-                // @ts-ignore
-                as={motion.div}
-                wrap="wrap"
-                animate={
-                  active && !showTrailer
-                    ? 'inView'
-                    : active && showTrailer
-                    ? 'showTrailer'
-                    : 'outView'
-                }
-                transition={{ duration: 0.5, delay: 0.75 }}
-                variants={variants}
-              >
-                <Button
-                  auto
-                  shadow
-                  rounded
-                  css={{
-                    marginTop: '1.25rem',
-                  }}
-                  onClick={() =>
-                    navigate(`/${mediaType === 'movie' ? 'movies/' : 'tv-shows/'}${id}/`, {
-                      state: { currentTime: player ? player.playerInfo.currentTime : 0 },
-                    })
                   }
-                >
-                  <H6 h6 weight="bold" transform="uppercase">
-                    {t('watchNow')}
-                  </H6>
-                </Button>
-              </Row>
-            </Col>
-            {!isSm && (
-              <Col
-                // @ts-ignore
-                as={motion.div}
-                animate={
-                  active && !showTrailer ? 'inView' : active && showTrailer ? 'outView' : 'outView'
-                }
-                transition={{ duration: 0.75 }}
-                variants={{
-                  inView: { opacity: 1, scale: 1, x: 0 },
-                  outView: { opacity: 0, scale: 0, x: 0 },
+                  return (
+                    <>
+                      {genresTv?.[genreId]}
+                      <Spacer x={0.5} />
+                    </>
+                  );
+                })}
+              </H5>
+            </Row>
+            <Text
+              as={motion.p}
+              className="!line-clamp-7"
+              css={{
+                fontSize: '1rem !important',
+                fontWeight: 400,
+                margin: '1.25rem 0 0 0',
+                textAlign: 'justify',
+              }}
+              // @ts-ignore
+              animate={
+                active && !showTrailer ? 'inView' : active && showTrailer ? 'outView' : 'outView'
+              }
+              transition={{ duration: 0.5, delay: 0.5 }}
+              variants={variants}
+            >
+              {overview}
+            </Text>
+            <Row
+              // @ts-ignore
+              as={motion.div}
+              wrap="wrap"
+              animate={
+                active && !showTrailer
+                  ? 'inView'
+                  : active && showTrailer
+                  ? 'showTrailer'
+                  : 'outView'
+              }
+              transition={{ duration: 0.5, delay: 0.75 }}
+              variants={variants}
+            >
+              <Button
+                auto
+                shadow
+                rounded
+                css={{
+                  marginTop: '1.25rem',
                 }}
+                onClick={() =>
+                  navigate(`/${mediaType === 'movie' ? 'movies/' : 'tv-shows/'}${id}/`, {
+                    state: { currentTime: player ? player.playerInfo.currentTime : 0 },
+                  })
+                }
               >
-                <Card.Image
-                  // @ts-ignore
-                  as={Image}
-                  src={posterPath || ''}
-                  alt={title}
-                  title={title}
-                  objectFit="cover"
-                  width={isMd ? '60%' : '40%'}
-                  css={{
-                    minWidth: 'auto !important',
-                    marginTop: '10vh',
-                    borderRadius: '24px',
-                  }}
-                  loading="eager"
-                  loaderUrl="/api/image"
-                  placeholder="blur"
-                  responsive={[
-                    {
-                      size: {
-                        width: 225,
-                        height: 338,
-                      },
-                      maxWidth: 860,
+                <H6 h6 weight="bold" transform="uppercase">
+                  {t('watchNow')}
+                </H6>
+              </Button>
+            </Row>
+          </Col>
+          {!isSm && (
+            <Col
+              // @ts-ignore
+              as={motion.div}
+              animate={
+                active && !showTrailer ? 'inView' : active && showTrailer ? 'outView' : 'outView'
+              }
+              transition={{ duration: 0.75 }}
+              variants={{
+                inView: { opacity: 1, scale: 1, x: 0 },
+                outView: { opacity: 0, scale: 0, x: 0 },
+              }}
+            >
+              <Card.Image
+                // @ts-ignore
+                as={Image}
+                src={posterPath || ''}
+                alt={title}
+                title={title}
+                objectFit="cover"
+                width={isMd ? '60%' : '40%'}
+                css={{
+                  minWidth: 'auto !important',
+                  marginTop: '10vh',
+                  borderRadius: '24px',
+                }}
+                loading="eager"
+                loaderUrl="/api/image"
+                placeholder="blur"
+                responsive={[
+                  {
+                    size: {
+                      width: 225,
+                      height: 338,
                     },
-                    {
-                      size: {
-                        width: 318,
-                        height: 477,
-                      },
+                    maxWidth: 860,
+                  },
+                  {
+                    size: {
+                      width: 318,
+                      height: 477,
                     },
-                  ]}
-                  options={{
-                    contentType: MimeType.WEBP,
-                  }}
-                />
-              </Col>
-            )}
-          </AnimatePresence>
+                  },
+                ]}
+                options={{
+                  contentType: MimeType.WEBP,
+                }}
+              />
+            </Col>
+          )}
         </Row>
       </Card.Header>
       <Card.Body
