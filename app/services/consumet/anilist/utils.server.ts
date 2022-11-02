@@ -135,12 +135,31 @@ export default class Anilist {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static animeInfoUrl = (id: any, dub?: boolean, provider?: string): string => {
-    let url = `${Anilist.API_BASE_URL}info/${id}`;
+    let url = `${Anilist.API_BASE_URL}data/${id}`;
+    const params = new URLSearchParams();
     if (dub) {
-      url += `?dub=${dub}`;
+      params.append('dub', dub.toString());
     }
     if (provider) {
-      url += `&provider=${provider}`;
+      params.append('provider', provider);
+    }
+    if (params.toString()) {
+      url += `?${params.toString()}`;
+    }
+    return url;
+  };
+
+  static animeEpisodeUrl = (id: string, dub?: boolean, provider?: string): string => {
+    let url = `${Anilist.API_BASE_URL}episodes/${id}`;
+    const params = new URLSearchParams();
+    if (dub) {
+      params.append('dub', dub.toString());
+    }
+    if (provider) {
+      params.append('provider', provider);
+    }
+    if (params.toString()) {
+      url += `?${params.toString()}`;
     }
     return url;
   };

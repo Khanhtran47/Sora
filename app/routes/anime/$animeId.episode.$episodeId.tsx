@@ -15,7 +15,11 @@ import { Container, Spacer, Loading } from '@nextui-org/react';
 import { ClientOnly, useRouteData } from 'remix-utils';
 import { isDesktop } from 'react-device-detect';
 
-import { getAnimeEpisodeStream, getAnimeInfo } from '~/services/consumet/anilist/anilist.server';
+import {
+  getAnimeEpisodeStream,
+  getAnimeInfo,
+  getAnimeEpisodeInfo,
+} from '~/services/consumet/anilist/anilist.server';
 import { IEpisode } from '~/services/consumet/anilist/anilist.types';
 import { loklokGetTvEpInfo } from '~/services/loklok';
 import { LOKLOK_URL } from '~/services/loklok/utils.server';
@@ -46,13 +50,14 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const { animeId, episodeId } = params;
   if (!animeId || !episodeId) throw new Response('Not Found', { status: 404 });
 
-  const [detail, sources, user] = await Promise.all([
+  const [detail, episodes, sources, user] = await Promise.all([
     getAnimeInfo(animeId),
+    getAnimeEpisodeInfo(animeId),
     getAnimeEpisodeStream(episodeId),
     getUserFromCookie(request.headers.get('Cookie') || ''),
   ]);
 
-  const episodeInfo = detail?.episodes?.find((e: IEpisode) => e.number === Number(episode));
+  const episodeInfo = episodes?.find((e: IEpisode) => e.number === Number(episode));
 
   if (user) {
     insertHistory({
@@ -221,9 +226,7 @@ const AnimeEpisodeWatch = () => {
             {sources && (
               <ArtPlayer
                 option={{
-                  title: `${detail?.title?.userPreferred as string} Episode ${
-                    detail?.episodes.find((episode) => episode.id === episodeId)?.number
-                  }`,
+                  title: `${detail?.title?.userPreferred as string} Episode ${episodeInfo?.number}`,
                   url:
                     provider === 'Loklok'
                       ? sources?.find(
