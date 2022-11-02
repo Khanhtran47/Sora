@@ -14,6 +14,7 @@ import { IAnimeInfo } from '~/services/consumet/anilist/anilist.types';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import useLocalStorage from '~/hooks/useLocalStorage';
 import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
+import episodeType from '~/src/constants/episodeType';
 
 import { H3, H5, H6 } from '~/src/components/styles/Text.styles';
 import Flex from '~/src/components/styles/Flex.styles';
@@ -38,17 +39,6 @@ export const loader: LoaderFunction = async ({ params }) => {
 export const meta: MetaFunction = ({ params }) => ({
   'og:url': `https://sora-movie.vercel.app/anime/${params.animeId}/episodes`,
 });
-
-const typeEpisode = [
-  {
-    activeType: 0,
-    activeTypeName: 'Number',
-  },
-  {
-    activeType: 1,
-    activeTypeName: 'Image',
-  },
-];
 
 const EpisodesPage = () => {
   const { episodes } = useLoaderData<LoaderData>();
@@ -91,7 +81,7 @@ const EpisodesPage = () => {
                 Episodes
               </H3>
               <Button.Group>
-                {typeEpisode.map((type) => (
+                {episodeType.map((type) => (
                   <Button
                     key={`button-item-${type.activeType}`}
                     type="button"
