@@ -3,6 +3,7 @@ import { json, LoaderFunction, DataFunctionArgs, MetaFunction } from '@remix-run
 import { Container } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 
+import { getUserFromCookie } from '~/services/supabase';
 import AnimeList from '~/src/components/anime/AnimeList';
 import { getAnimeRecentEpisodes } from '~/services/consumet/anilist/anilist.server';
 
@@ -24,6 +25,8 @@ export const meta: MetaFunction = () => ({
 });
 
 export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
+  const user = await getUserFromCookie(request.headers.get('Cookie') || '');
+  if (!user) return new Response(null, { status: 500 });
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page'));
   let provider = url.searchParams.get('provider');

@@ -18,6 +18,7 @@ import {
   getTvShowIMDBId,
   getImdbRating,
 } from '~/services/tmdb/tmdb.server';
+import { getUserFromCookie } from '~/services/supabase';
 import i18next from '~/i18n/i18next.server';
 import TMDB from '~/utils/media';
 import MediaDetail from '~/src/components/media/MediaDetail';
@@ -36,6 +37,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const { tvId } = params;
   const tid = Number(tvId);
   if (!tid) throw new Response('Not Found', { status: 404 });
+  const user = await getUserFromCookie(request.headers.get('Cookie') || '');
+  if (!user) return new Response(null, { status: 500 });
 
   const [detail, imdbId] = await Promise.all([getTvShowDetail(tid, locale), getTvShowIMDBId(tid)]);
   if (!detail) throw new Response('Not Found', { status: 404 });
@@ -61,11 +64,11 @@ export const meta: MetaFunction = ({ data, params }) => {
   const { detail } = data;
   return {
     title: `Watch ${detail.name} HD online Free - Sora`,
-    description: `Watch ${detail.name} in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    description: `Watch ${detail.name} in full HD online with Subtitle`,
     keywords: `Watch ${detail.name}, Stream ${detail.name}, Watch ${detail.name} HD, Online ${detail.name}, Streaming ${detail.name}, English, Subtitle ${detail.name}, English Subtitle`,
     'og:url': `https://sora-movie.vercel.app/tv-shows/${params.tvId}`,
     'og:title': `Watch ${detail.name} HD online Free - Sora`,
-    'og:description': `Watch ${detail.name} in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    'og:description': `Watch ${detail.name} in full HD online with Subtitle`,
     'og:image': TMDB.backdropUrl(detail?.backdrop_path || '', 'w780'),
   };
 };

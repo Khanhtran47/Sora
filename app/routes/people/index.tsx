@@ -1,9 +1,10 @@
 import { useLoaderData, useNavigate, useLocation, Link } from '@remix-run/react';
-import { json, LoaderFunction, MetaFunction } from '@remix-run/node';
+import { LoaderFunction, json, MetaFunction, redirect } from '@remix-run/node';
 import { Container, Pagination } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
+import { getUserFromCookie } from '~/services/supabase';
 import PeopleList from '~/src/components/people/PeopleList';
 import { getListPeople } from '~/services/tmdb/tmdb.server';
 import useMediaQuery from '~/hooks/useMediaQuery';
@@ -29,6 +30,10 @@ export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page')) || undefined;
   if (page && (page < 1 || page > 1000)) page = 1;
+  const user = await getUserFromCookie(request.headers.get('Cookie') || '');
+  if (!user) {
+    return redirect('/sign-in');
+  }
 
   return json<LoaderData>({
     people: await getListPeople('popular', locale, page),

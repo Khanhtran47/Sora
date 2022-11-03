@@ -1,7 +1,8 @@
-import { MetaFunction } from '@remix-run/node';
+import { LoaderFunction, json, MetaFunction, redirect } from '@remix-run/node';
 import { NavLink, Outlet } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
 
+import { getUserFromCookie } from '~/services/supabase';
 import Tab from '~/src/components/elements/Tab';
 
 const searchPage = [
@@ -25,6 +26,14 @@ export const meta: MetaFunction = () => ({
   'og:description':
     "Sora's advanced search allows you to run extremely powerful queries over all people and titles. Find exactly what you're looking for!",
 });
+
+export const loader: LoaderFunction = async ({ request }) => {
+  const user = await getUserFromCookie(request.headers.get('Cookie') || '');
+  if (!user) {
+    return redirect('/sign-in');
+  }
+  return json({});
+};
 
 export const handle = {
   breadcrumb: () => <NavLink to="/search">Search</NavLink>,

@@ -2,6 +2,8 @@
 import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { Row } from '@nextui-org/react';
+
+import { getUserFromCookie } from '~/services/supabase';
 import { getCredits } from '~/services/tmdb/tmdb.server';
 import { IPeople } from '~/services/tmdb/tmdb.types';
 import PeopleList from '~/src/components/people/PeopleList';
@@ -10,7 +12,9 @@ type LoaderData = {
   cast: IPeople[];
 };
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader: LoaderFunction = async ({ request, params }) => {
+  const user = await getUserFromCookie(request.headers.get('Cookie') || '');
+  if (!user) return new Response(null, { status: 500 });
   const { movieId } = params;
   const mid = Number(movieId);
 

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/indent */
-import { DataFunctionArgs, json, LoaderFunction, MetaFunction } from '@remix-run/node';
+import { DataFunctionArgs, json, LoaderFunction, MetaFunction, redirect } from '@remix-run/node';
 import { useLoaderData, useNavigate, useLocation, Link } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import { Container, Pagination } from '@nextui-org/react';
@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useRouteData } from 'remix-utils';
 import type { User } from '@supabase/supabase-js';
 
+import { getUserFromCookie } from '~/services/supabase';
 import { getTrending } from '~/services/tmdb/tmdb.server';
 import MediaList from '~/src/components/media/MediaList';
 import useMediaQuery from '~/hooks/useMediaQuery';
@@ -33,6 +34,10 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
   const locale = await i18next.getLocale(request);
   const url = new URL(request.url);
   const page = Number(url.searchParams.get('page'));
+  const user = await getUserFromCookie(request.headers.get('Cookie') || '');
+  if (!user) {
+    return redirect('/sign-in');
+  }
   if (!page || page < 1 || page > 1000) {
     return json<LoaderData>({
       todayTrending: await getTrending('all', 'day', locale),

@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useRouteData } from 'remix-utils';
 import type { User } from '@supabase/supabase-js';
 
+import { getUserFromCookie } from '~/services/supabase';
 import { getSearchMovies } from '~/services/tmdb/tmdb.server';
 import MediaList from '~/src/components/media/MediaList';
 import useMediaQuery from '~/hooks/useMediaQuery';
@@ -23,6 +24,8 @@ export const loader: LoaderFunction = async ({ request, params }: DataFunctionAr
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page')) || undefined;
   if (page && (page < 1 || page > 1000)) page = 1;
+  const user = await getUserFromCookie(request.headers.get('Cookie') || '');
+  if (!user) return new Response(null, { status: 500 });
 
   return json<LoaderData>({
     searchResults: await getSearchMovies(keyword, page, locale),
@@ -33,11 +36,11 @@ export const meta: MetaFunction = ({ data, params }) => {
   const { searchResults } = data;
   return {
     title: `Search results for '${params.movieKeyword}' movie on Sora`,
-    description: `Watch ${params.movieKeyword} in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    description: `Watch ${params.movieKeyword} in full HD online with Subtitle`,
     keywords: `Watch ${params.movieKeyword}, Stream ${params.movieKeyword}, Watch ${params.movieKeyword} HD, Online ${params.movieKeyword}, Streaming ${params.movieKeyword}, English, Subtitle ${params.movieKeyword}, English Subtitle`,
     'og:url': `https://sora-movie.vercel.app/search/movie/${params.movieKeyword}`,
     'og:title': `Search results for '${params.movieKeyword}' movie on Sora`,
-    'og:description': `Watch ${params.movieKeyword} in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    'og:description': `Watch ${params.movieKeyword} in full HD online with Subtitle`,
     'og:image': searchResults?.items[0]?.backdropPath || searchResults?.items[0]?.posterPath || '',
   };
 };

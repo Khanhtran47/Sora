@@ -78,6 +78,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       season: detail?.season,
       episode: episodeId,
     });
+  } else {
+    return new Response(null, { status: 500 });
   }
 
   if (provider === 'Loklok') {
@@ -141,9 +143,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     } episode ${episodeInfo.number} HD online Free - Sora`,
     description: `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
-    } episode ${
-      episodeInfo.number
-    } in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    } episode ${episodeInfo.number} in full HD online with Subtitle`,
     keywords: `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     } episode ${episodeInfo.number}, Stream ${
@@ -163,9 +163,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     } episode ${episodeInfo.number} HD online Free - Sora`,
     'og:description': `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
-    } episode ${
-      episodeInfo.number
-    } in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    } episode ${episodeInfo.number} in full HD online with Subtitle`,
     'og:image': episodeInfo?.image || detail.cover,
   };
 };

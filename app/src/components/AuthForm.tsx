@@ -1,6 +1,7 @@
 import { Form, Link } from '@remix-run/react';
-import { Card, Button, Text, Input, Row, Checkbox, Spacer } from '@nextui-org/react';
+import { Card, Button, Input, Row, Checkbox, Spacer } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
+import { H2, H4, H5 } from '~/src/components/styles/Text.styles';
 
 import Mail from '../assets/icons/Mail.js';
 import Password from '../assets/icons/Password.js';
@@ -21,18 +22,16 @@ const AuthForm = ({ type, error, code }: IAuthForm) => {
 
   return (
     <Form method="post">
-      <Card isHoverable variant="bordered" css={{ mw: '100%', padding: '$5' }}>
+      <Card variant="bordered" css={{ mw: '100%', padding: '$5' }}>
         <Card.Header>
-          <Text
-            h1
-            size={30}
+          <H2
+            h2
             css={{
               textGradient: '45deg, $blue600 -20%, $pink600 50%',
             }}
-            weight="bold"
           >
             {t('welcome')}
-          </Text>
+          </H2>
         </Card.Header>
         <Card.Body css={{ py: '$10' }}>
           <Input
@@ -78,36 +77,34 @@ const AuthForm = ({ type, error, code }: IAuthForm) => {
             </>
           )}
           {error && (
-            <Text h4 color="error">
+            <H4 h4 color="error">
               {error}
-            </Text>
+            </H4>
           )}
           {!error && hasMessage && (
-            <Text h4 color="green">
+            <H4 h4 color="green">
               {t(code)}
-            </Text>
+            </H4>
           )}
           <Spacer />
-          <Row justify="space-between">
+          <Row justify="space-between" align="center">
             {type === 'sign-in' ? (
               <>
                 <Link to="/sign-up">
-                  <Text h4 color="primary">
+                  <H4 h4 color="primary">
                     {t('signUp')}
-                  </Text>
+                  </H4>
                 </Link>
                 <Checkbox>
-                  <Text h4 size={14}>
-                    {t('rememberMe')}
-                  </Text>
+                  <H5 h5>{t('rememberMe')}</H5>
                 </Checkbox>
-                {/* <Text h4 size={14}>Forgot password?</Text> */}
+                {/* <H4 h4 size={14}>Forgot password?</H4> */}
               </>
             ) : (
               <Link to="/sign-in">
-                <Text h4 color="primary">
+                <H4 h4 color="primary">
                   {t('signIn')}
-                </Text>
+                </H4>
               </Link>
             )}
           </Row>

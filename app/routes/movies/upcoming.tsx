@@ -7,10 +7,11 @@ import { useTranslation } from 'react-i18next';
 import { useRouteData } from 'remix-utils';
 import type { User } from '@supabase/supabase-js';
 
-import MediaList from '~/src/components/media/MediaList';
+import { getUserFromCookie } from '~/services/supabase';
 import { getListMovies } from '~/services/tmdb/tmdb.server';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import i18next from '~/i18n/i18next.server';
+import MediaList from '~/src/components/media/MediaList';
 
 type LoaderData = {
   movies: Awaited<ReturnType<typeof getListMovies>>;
@@ -29,6 +30,8 @@ export const meta: MetaFunction = () => ({
 });
 
 export const loader: LoaderFunction = async ({ request }) => {
+  const user = await getUserFromCookie(request.headers.get('Cookie') || '');
+  if (!user) return new Response(null, { status: 500 });
   const locale = await i18next.getLocale(request);
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page'));

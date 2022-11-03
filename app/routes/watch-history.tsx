@@ -1,5 +1,5 @@
 import { Link, useLoaderData, useNavigate } from '@remix-run/react';
-import { LoaderFunction, json } from '@remix-run/node';
+import { LoaderFunction, json, redirect } from '@remix-run/node';
 import { getCountHistory, getHistory, getUserFromCookie, IHistory } from '~/services/supabase';
 import { Card, Container, Grid, Pagination, Row, Text } from '@nextui-org/react';
 import { User } from '@supabase/supabase-js';
@@ -23,6 +23,9 @@ export const loader: LoaderFunction = async ({ request }) => {
   const { searchParams } = new URL(request.url);
   const page = Number(searchParams.get('page')) || 1;
   const user = await getUserFromCookie(request.headers.get('Cookie') || '');
+  if (!user) {
+    return redirect('/sign-in');
+  }
 
   return json<LoaderData>({
     histories: user ? await getHistory(user.id, page) : [],

@@ -9,6 +9,8 @@ import {
   getAnimePopular,
   getAnimeRecentEpisodes,
 } from '~/services/consumet/anilist/anilist.server';
+import { getUserFromCookie } from '~/services/supabase';
+
 import AnimeList from '~/src/components/anime/AnimeList';
 
 export const handle = {
@@ -23,6 +25,8 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
+  const user = await getUserFromCookie(request.headers.get('Cookie') || '');
+  if (!user) return new Response(null, { status: 500 });
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page'));
   if (!page || page < 1 || page > 1000) page = 1;

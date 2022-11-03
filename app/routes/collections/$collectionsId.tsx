@@ -6,6 +6,7 @@ import { Container, Spacer } from '@nextui-org/react';
 import { useRouteData } from 'remix-utils';
 import type { User } from '@supabase/supabase-js';
 
+import { getUserFromCookie } from '~/services/supabase';
 import { getListDetail } from '~/services/tmdb/tmdb.server';
 import MediaList from '~/src/components/media/MediaList';
 import i18next from '~/i18n/i18next.server';
@@ -27,6 +28,8 @@ export const meta: MetaFunction = () => ({
 });
 
 export const loader: LoaderFunction = async ({ request, params }: DataFunctionArgs) => {
+  const user = await getUserFromCookie(request.headers.get('Cookie') || '');
+  if (!user) return new Response(null, { status: 500 });
   const locale = await i18next.getLocale(request);
   const { collectionsId } = params;
   const cid = Number(collectionsId);

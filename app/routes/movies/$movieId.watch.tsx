@@ -51,11 +51,11 @@ export const meta: MetaFunction = ({ data, params }) => {
   const { detail } = data;
   return {
     title: `Watch ${detail.title} HD online Free - Sora`,
-    description: `Watch ${detail.title} in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    description: `Watch ${detail.title} in full HD online with Subtitle`,
     keywords: `Watch ${detail.title}, Stream ${detail.title}, Watch ${detail.title} HD, Online ${detail.title}, Streaming ${detail.title}, English, Subtitle ${detail.title}, English Subtitle`,
     'og:url': `https://sora-movie.vercel.app/movies/${params.movieId}/watch`,
     'og:title': `Watch ${detail.title} HD online Free - Sora`,
-    'og:description': `Watch ${detail.title} in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    'og:description': `Watch ${detail.title} in full HD online with Subtitle`,
     'og:image': TMDB.backdropUrl(detail?.backdrop_path || '', 'w780'),
     refresh: {
       httpEquiv: 'Content-Security-Policy',
@@ -99,6 +99,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       title: detail?.title || detail?.original_title || undefined,
       overview: detail?.overview || undefined,
     });
+  } else {
+    return new Response(null, { status: 500 });
   }
 
   if (provider === 'Loklok') {

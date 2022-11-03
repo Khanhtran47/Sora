@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/indent */
-import { MetaFunction } from '@remix-run/node';
+import { LoaderFunction, json, MetaFunction, redirect } from '@remix-run/node';
 import { useLocation, Link } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import { Container } from '@nextui-org/react';
+
+import { getUserFromCookie } from '~/services/supabase';
 import MediaList from '~/src/components/media/MediaList';
 import featuredList from '~/src/constants/featuredList';
 
@@ -17,6 +19,14 @@ export const meta: MetaFunction = () => ({
   'og:description':
     'Official Sora website to watch movies online HD for free, Watch TV show & TV series and Download all movies and series FREE',
 });
+
+export const loader: LoaderFunction = async ({ request }) => {
+  const user = await getUserFromCookie(request.headers.get('Cookie') || '');
+  if (!user) {
+    return redirect('/sign-in');
+  }
+  return json({});
+};
 
 export const handle = {
   breadcrumb: () => <Link to="/collections">Collections</Link>,

@@ -6,16 +6,19 @@ import { Row, Pagination } from '@nextui-org/react';
 import { useRouteData } from 'remix-utils';
 import type { User } from '@supabase/supabase-js';
 
+import { getUserFromCookie } from '~/services/supabase';
 import { getRecommendation } from '~/services/tmdb/tmdb.server';
-import MediaList from '~/src/components/media/MediaList';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import i18next from '~/i18n/i18next.server';
+import MediaList from '~/src/components/media/MediaList';
 
 type LoaderData = {
   recommendations: Awaited<ReturnType<typeof getRecommendation>>;
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
+  const user = await getUserFromCookie(request.headers.get('Cookie') || '');
+  if (!user) return new Response(null, { status: 500 });
   const { movieId } = params;
   const mid = Number(movieId);
   if (!mid) throw new Response('Not Found', { status: 404 });

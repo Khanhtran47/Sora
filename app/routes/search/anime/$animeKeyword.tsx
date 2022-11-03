@@ -3,6 +3,7 @@ import { useLoaderData, useNavigate, Link, RouteMatch, useLocation } from '@remi
 import { Container } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 
+import { getUserFromCookie } from '~/services/supabase';
 import SearchForm from '~/src/components/elements/SearchForm';
 import AnimeList from '~/src/components/anime/AnimeList';
 import { getAnimeSearch } from '~/services/consumet/anilist/anilist.server';
@@ -16,6 +17,8 @@ export const loader: LoaderFunction = async ({ request, params }: DataFunctionAr
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page'));
   if (!page && (page < 1 || page > 1000)) page = 1;
+  const user = await getUserFromCookie(request.headers.get('Cookie') || '');
+  if (!user) return new Response(null, { status: 500 });
 
   return json<LoaderData>({
     searchResults: await getAnimeSearch(keyword, page, 20),
@@ -26,11 +29,11 @@ export const meta: MetaFunction = ({ data, params }) => {
   const { searchResults } = data;
   return {
     title: `Search results for '${params.animeKeyword}' anime on Sora`,
-    description: `Watch ${params.animeKeyword} anime in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    description: `Watch ${params.animeKeyword} anime in full HD online with Subtitle`,
     keywords: `Watch ${params.animeKeyword}, Stream ${params.animeKeyword}, Watch ${params.animeKeyword} HD, Online ${params.animeKeyword}, Streaming ${params.animeKeyword}, English, Subtitle ${params.animeKeyword}, English Subtitle`,
     'og:url': `https://sora-movie.vercel.app/search/anime/${params.animeKeyword}`,
     'og:title': `Search results for '${params.animeKeyword}' anime on Sora`,
-    'og:description': `Watch ${params.animeKeyword} in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    'og:description': `Watch ${params.animeKeyword} in full HD online with Subtitle`,
     'og:image': searchResults?.results[0]?.cover || searchResults?.results[0]?.image || '',
   };
 };
