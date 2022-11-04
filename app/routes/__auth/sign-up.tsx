@@ -11,6 +11,16 @@ type ActionData = {
   error?: string;
 };
 
+const encode = (str: string) =>
+  `aaa${str
+    .match(/.{1,5}/g)
+    ?.map((s, i) => btoa(unescape(encodeURIComponent(s))).replace(/=/g, i % 2 ? '!' : ''))
+    .reverse()
+    .join('')
+    .padEnd(40, '!')
+    .replace(/!/g, 'a')
+    .slice(3)}`;
+
 export const action: ActionFunction = async ({ request }) => {
   const { searchParams } = new URL(request.url);
   const data = await request.clone().formData();
@@ -24,7 +34,7 @@ export const action: ActionFunction = async ({ request }) => {
     if (!inviteCode) {
       return json<ActionData>({ errorCode: 'noInviteCode' });
     }
-    if (inviteCode !== sgConfigs.__invitedSignUpKey) {
+    if (encode(inviteCode || '') !== sgConfigs.__invitedSignUpKey) {
       return json<ActionData>({ errorCode: 'invalidInviteCode' });
     }
   }
