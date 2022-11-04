@@ -45,6 +45,7 @@ export const handle = {
 const SimilarPage = () => {
   const { movieId } = useParams();
   const { similar } = useLoaderData<LoaderData>();
+  console.log('🚀 ~ file: similar.tsx ~ line 48 ~ SimilarPage ~ similar', similar);
   const rootData:
     | {
         user?: User;
@@ -79,6 +80,7 @@ const SimilarPage = () => {
         <>
           <MediaList
             listType="grid"
+            itemsType="movie"
             items={similar.items}
             listName="Similar Movies"
             genresMovie={rootData?.genresMovie}
