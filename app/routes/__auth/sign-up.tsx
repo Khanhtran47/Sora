@@ -2,24 +2,15 @@ import { ActionFunction, LoaderFunction, json, redirect } from '@remix-run/node'
 import { useActionData, Link } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
 
-import { getSessionFromCookie, commitAuthCookie, signUp } from '~/services/supabase';
 import AuthForm from '~/src/components/AuthForm';
+import { getSessionFromCookie, commitAuthCookie, signUp } from '~/services/supabase';
 import sgConfigs from '~/services/configs.server';
+import encode from '~/utils/encode';
 
 type ActionData = {
   errorCode?: string | null;
   error?: string;
 };
-
-const encode = (str: string) =>
-  `aaa${str
-    .match(/.{1,5}/g)
-    ?.map((s, i) => btoa(unescape(encodeURIComponent(s))).replace(/=/g, i % 2 ? '!' : ''))
-    .reverse()
-    .join('')
-    .padEnd(40, '!')
-    .replace(/!/g, 'a')
-    .slice(3)}`;
 
 export const action: ActionFunction = async ({ request }) => {
   const { searchParams } = new URL(request.url);
