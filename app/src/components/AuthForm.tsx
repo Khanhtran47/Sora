@@ -1,13 +1,16 @@
-import { Form, Link } from '@remix-run/react';
-import { Card, Button, Text, Input, Row, Checkbox, Spacer } from '@nextui-org/react';
+import { useMemo } from 'react';
+import { Form, Link, useLocation } from '@remix-run/react';
+import { Card, Button, Input, Row, Checkbox, Spacer, useInput } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 
+import { H2, H4, H5 } from '~/src/components/styles/Text.styles';
 import Mail from '../assets/icons/Mail.js';
 import Password from '../assets/icons/Password.js';
 
 interface IAuthForm {
   type: 'sign-in' | 'sign-up';
   error?: string | null;
+  errorCode?: string | null;
   code?: string | null;
 }
 
@@ -15,40 +18,67 @@ export const handle = {
   i18n: 'auth',
 };
 
-const AuthForm = ({ type, error, code }: IAuthForm) => {
+const AuthForm = ({ type, error, code, errorCode }: IAuthForm) => {
   const { t } = useTranslation('auth');
+  const location = useLocation();
+
   const hasMessage = code === '201-email';
+  const inviteCode = new URLSearchParams(location.search).get('code') ?? '';
+
+  const { value, reset, bindings } = useInput('');
+
+  const validateEmail = (text: string) => text.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i);
+
+  const helper: {
+    text: string;
+    color: 'error' | 'default' | 'primary' | 'secondary' | 'success' | 'warning' | undefined;
+  } = useMemo(() => {
+    if (!value)
+      return {
+        text: '',
+        color: undefined,
+      };
+    const isValid = validateEmail(value);
+    return {
+      text: isValid ? 'Correct email' : 'Enter a valid email',
+      color: isValid ? 'success' : 'error',
+    };
+  }, [value]);
 
   return (
     <Form method="post">
-      <Card isHoverable variant="bordered" css={{ mw: '100%', padding: '$5' }}>
+      <Card variant="bordered" css={{ mw: '100%', padding: '$5' }}>
         <Card.Header>
-          <Text
-            h1
-            size={30}
+          <H2
+            h2
             css={{
               textGradient: '45deg, $blue600 -20%, $pink600 50%',
             }}
-            weight="bold"
           >
             {t('welcome')}
-          </Text>
+          </H2>
         </Card.Header>
         <Card.Body css={{ py: '$10' }}>
           <Input
+            {...bindings}
+            clearable
+            shadow={false}
+            onClearClick={reset}
+            status={helper.color}
+            color={helper.color}
+            helperColor={helper.color}
+            helperText={helper.text}
             name="email"
             type="email"
-            clearable
             bordered
             fullWidth
-            color="primary"
             size="lg"
             placeholder={t('email')}
             aria-label="Email"
             contentLeft={<Mail fill="currentColor" />}
           />
-          <Spacer />
-          <Input
+          <Spacer y={1.5} />
+          <Input.Password
             name="password"
             type="password"
             clearable
@@ -62,8 +92,8 @@ const AuthForm = ({ type, error, code }: IAuthForm) => {
           />
           {type === 'sign-up' && (
             <>
-              <Spacer />
-              <Input
+              <Spacer y={1.5} />
+              <Input.Password
                 name="re-password"
                 type="password"
                 clearable
@@ -75,39 +105,45 @@ const AuthForm = ({ type, error, code }: IAuthForm) => {
                 aria-label="Confirm Password"
                 contentLeft={<Password fill="currentColor" />}
               />
+              <input type="hidden" name="invite-code" hidden value={inviteCode} />
             </>
           )}
           {error && (
-            <Text h4 color="error">
+            <H4 h4 color="error">
               {error}
-            </Text>
+            </H4>
+          )}
+          {errorCode && (
+            <H4 h4 color="error">
+              {t(errorCode)}
+            </H4>
           )}
           {!error && hasMessage && (
-            <Text h4 color="green">
+            <H4 h4 color="green">
               {t(code)}
-            </Text>
+            </H4>
           )}
           <Spacer />
-          <Row justify="space-between">
+          <Row justify="space-between" align="center">
             {type === 'sign-in' ? (
               <>
                 <Link to="/sign-up">
-                  <Text h4 color="primary">
+                  <H5 h5 weight="semibold" color="primary">
                     {t('signUp')}
-                  </Text>
+                  </H5>
                 </Link>
                 <Checkbox>
-                  <Text h4 size={14}>
+                  <H5 h5 size={14}>
                     {t('rememberMe')}
-                  </Text>
+                  </H5>
                 </Checkbox>
                 {/* <Text h4 size={14}>Forgot password?</Text> */}
               </>
             ) : (
               <Link to="/sign-in">
-                <Text h4 color="primary">
+                <H5 h5 weight="semibold" color="primary">
                   {t('signIn')}
-                </Text>
+                </H5>
               </Link>
             )}
           </Row>

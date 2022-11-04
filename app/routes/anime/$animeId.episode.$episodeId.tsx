@@ -285,7 +285,7 @@ const AnimeEpisodeWatch = () => {
                 }}
                 getInstance={(art) => {
                   art.on('ready', () => {
-                    const t = new URL(`http://abc${location.search}`).searchParams.get('t');
+                    const t = new URLSearchParams(location.search).get('t');
                     if (t) {
                       art.currentTime = Number(t);
                     }

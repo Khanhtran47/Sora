@@ -74,8 +74,7 @@ export const handle = {
 const SignInPage = () => {
   const actionData = useActionData<ActionData>();
   const location = useLocation();
-  const { searchParams } = new URL(`http://${location.pathname}${location.search}`);
-  const code = searchParams.get('code');
+  const code = new URLSearchParams(location.search).get('code');
   return (
     <Container fluid justify="center" display="flex">
       <AuthForm type="sign-in" error={actionData?.error} code={code} />

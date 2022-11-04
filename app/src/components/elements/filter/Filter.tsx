@@ -25,9 +25,9 @@ const Filter = (props: IFilterProps) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const urlObject = new URL(`http://abc${location.search}`);
-  const preGenres = urlObject.searchParams.get('with_genres');
-  const preSort = urlObject.searchParams.get('sort_by');
+  const searchParams = new URLSearchParams(location.search);
+  const preGenres = searchParams.get('with_genres');
+  const preSort = searchParams.get('sort_by');
 
   const preGenresSet = !preGenres ? new Set(['All']) : new Set(['All', ...preGenres.split(',')]);
   const preSortSet = !preSort ? new Set(['popularity']) : new Set([preSort.split('.')[0]]);
