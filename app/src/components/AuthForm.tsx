@@ -23,7 +23,7 @@ const AuthForm = ({ type, error, code, errorCode }: IAuthForm) => {
   const location = useLocation();
 
   const hasMessage = code === '201-email';
-  const inviteCode = new URL(`http://abc${location.search}`).searchParams.get('code') ?? '';
+  const inviteCode = new URLSearchParams(location.search).get('code') ?? '';
 
   const { value, reset, bindings } = useInput('');
 
