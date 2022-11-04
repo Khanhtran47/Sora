@@ -1,4 +1,4 @@
-import { Form, Link } from '@remix-run/react';
+import { Form, Link, useLocation } from '@remix-run/react';
 import { Card, Button, Text, Input, Row, Checkbox, Spacer } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 
@@ -8,6 +8,7 @@ import Password from '../assets/icons/Password.js';
 interface IAuthForm {
   type: 'sign-in' | 'sign-up';
   error?: string | null;
+  errorCode?: string | null;
   code?: string | null;
 }
 
@@ -15,9 +16,12 @@ export const handle = {
   i18n: 'auth',
 };
 
-const AuthForm = ({ type, error, code }: IAuthForm) => {
+const AuthForm = ({ type, error, code, errorCode }: IAuthForm) => {
   const { t } = useTranslation('auth');
+  const location = useLocation();
+
   const hasMessage = code === '201-email';
+  const inviteCode = new URL(`http://abc${location.search}`).searchParams.get('code') ?? '';
 
   return (
     <Form method="post">
@@ -75,11 +79,17 @@ const AuthForm = ({ type, error, code }: IAuthForm) => {
                 aria-label="Confirm Password"
                 contentLeft={<Password fill="currentColor" />}
               />
+              <input type="hidden" name="invite-code" hidden value={inviteCode} />
             </>
           )}
           {error && (
             <Text h4 color="error">
               {error}
+            </Text>
+          )}
+          {errorCode && (
+            <Text h4 color="error">
+              {t(errorCode)}
             </Text>
           )}
           {!error && hasMessage && (

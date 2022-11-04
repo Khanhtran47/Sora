@@ -4,9 +4,11 @@ import { Container } from '@nextui-org/react';
 
 import { getSessionFromCookie, commitAuthCookie, signUp } from '~/services/supabase';
 import AuthForm from '~/src/components/AuthForm';
+import sgConfigs from '~/services/configs.server';
 
 type ActionData = {
-  error: string | null;
+  errorCode?: string | null;
+  error?: string;
 };
 
 export const action: ActionFunction = async ({ request }) => {
@@ -16,13 +18,23 @@ export const action: ActionFunction = async ({ request }) => {
   const email = data.get('email')?.toString();
   const password = data.get('password')?.toString();
   const rePassword = data.get('re-password')?.toString();
+  const inviteCode = data.get('invite-code')?.toString();
+
+  if (sgConfigs.__invitedSignUpOnly) {
+    if (!inviteCode) {
+      return json<ActionData>({ errorCode: 'noInviteCode' });
+    }
+    if (inviteCode !== sgConfigs.__invitedSignUpKey) {
+      return json<ActionData>({ errorCode: 'invalidInviteCode' });
+    }
+  }
 
   if (!email || !/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/.test(email)) {
-    return json<ActionData>({ error: 'Please enter a valid email!' });
+    return json<ActionData>({ errorCode: 'invalidEmail' });
   }
 
   if (!password || !rePassword || password !== rePassword) {
-    return json<ActionData>({ error: 'Please enter your passwords correctly!' });
+    return json<ActionData>({ errorCode: 'unmatchedPassword' });
   }
 
   const {
@@ -77,7 +89,7 @@ const SignUpPage = () => {
 
   return (
     <Container fluid justify="center" display="flex">
-      <AuthForm type="sign-up" error={actionData?.error} />
+      <AuthForm type="sign-up" error={actionData?.error} errorCode={actionData?.errorCode} />
     </Container>
   );
 };
