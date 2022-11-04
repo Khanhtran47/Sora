@@ -1,5 +1,6 @@
 import LRU from 'lru-cache';
 import { env } from 'process';
+import sgConfigs from './configs.server';
 
 // https://www.npmjs.com/package/lru-cache
 
@@ -29,7 +30,7 @@ const options = {
 
 if (env.NODE_ENV === 'production') {
   lruCache = new LRU(options);
-} else if (env.LRU_CACHE !== 'OFF') {
+} else if (sgConfigs.__lruCache) {
   if (!global.cache) {
     global.cache = new LRU(options);
   }
