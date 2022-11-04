@@ -1,8 +1,7 @@
-import { LoaderFunction, json, MetaFunction, redirect } from '@remix-run/node';
+import { MetaFunction } from '@remix-run/node';
 import { NavLink, Outlet, useLocation } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
 
-import { getUserFromCookie } from '~/services/supabase';
 import Tab from '~/src/components/elements/Tab';
 
 export const meta: MetaFunction = () => ({
@@ -17,14 +16,6 @@ export const meta: MetaFunction = () => ({
   'og:description':
     'Watch latest Tv series online in HD Quality. Unlimited streaming series for free now',
 });
-
-export const loader: LoaderFunction = async ({ request }) => {
-  const user = await getUserFromCookie(request.headers.get('Cookie') || '');
-  if (!user) {
-    return redirect('/sign-in');
-  }
-  return json({});
-};
 
 const tvPage = [
   { pageName: 'Discover Tv Shows', pageLink: '/discover' },

@@ -5,7 +5,7 @@ import { Container, Spacer } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useRouteData } from 'remix-utils';
-import { getUserFromCookie } from '~/services/supabase';
+import { getUserFromCookie, verifyReqPayload } from '~/services/supabase';
 import type { User } from '@supabase/supabase-js';
 
 import i18next from '~/i18n/i18next.server';
@@ -36,11 +36,13 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
-  const locale = await i18next.getLocale(request);
-  const user = await getUserFromCookie(request.headers.get('Cookie') || '');
-  if (!user) {
-    return redirect('/sign-in');
-  }
+  const [locale, user, verified] = await Promise.all([
+    i18next.getLocale(request),
+    getUserFromCookie(request.headers.get('Cookie') || ''),
+    await verifyReqPayload(request),
+  ]);
+
+  if (!user || !verified) return redirect('/sign-out?ref=/sign-in');
 
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page'));

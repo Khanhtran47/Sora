@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataFunctionArgs, json, LoaderFunction, MetaFunction } from '@remix-run/node';
+import { DataFunctionArgs, json, LoaderFunction, MetaFunction, redirect } from '@remix-run/node';
 import { useLoaderData, useNavigate, useParams, Link, RouteMatch } from '@remix-run/react';
 import { Container, Pagination } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
@@ -9,20 +9,25 @@ import PeopleList from '~/src/components/people/PeopleList';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import i18next from '~/i18n/i18next.server';
 import SearchForm from '~/src/components/elements/SearchForm';
-import { getUserFromCookie } from '~/services/supabase';
+import { getUserFromCookie, verifyReqPayload } from '~/services/supabase';
 
 type LoaderData = {
   searchResults: Awaited<ReturnType<typeof getSearchPerson>>;
 };
 
 export const loader: LoaderFunction = async ({ request, params }: DataFunctionArgs) => {
-  const locale = await i18next.getLocale(request);
+  const [locale, user, verified] = await Promise.all([
+    i18next.getLocale(request),
+    getUserFromCookie(request.headers.get('Cookie') || ''),
+    await verifyReqPayload(request),
+  ]);
+
+  if (!user || !verified) return redirect('/sign-out?ref=/sign-in');
+
   const keyword = params?.peopleKeyword || '';
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page')) || undefined;
   if (page && (page < 1 || page > 1000)) page = 1;
-  const user = await getUserFromCookie(request.headers.get('Cookie') || '');
-  if (!user) return new Response(null, { status: 500 });
 
   return json<LoaderData>({
     searchResults: await getSearchPerson(keyword, page, undefined, locale),

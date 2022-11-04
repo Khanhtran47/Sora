@@ -1,8 +1,13 @@
 import { Link, useLoaderData, useNavigate } from '@remix-run/react';
 import { LoaderFunction, json, redirect } from '@remix-run/node';
-import { getCountHistory, getHistory, getUserFromCookie, IHistory } from '~/services/supabase';
+import {
+  getCountHistory,
+  getHistory,
+  getUserFromCookie,
+  IHistory,
+  verifyReqPayload,
+} from '~/services/supabase';
 import { Card, Container, Grid, Pagination, Row, Text } from '@nextui-org/react';
-import { User } from '@supabase/supabase-js';
 import Image, { MimeType } from 'remix-image';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
@@ -14,7 +19,6 @@ export const handle = {
 
 type LoaderData = {
   histories: IHistory[];
-  user?: User;
   page: number;
   totalPage: number;
 };
@@ -22,15 +26,17 @@ type LoaderData = {
 export const loader: LoaderFunction = async ({ request }) => {
   const { searchParams } = new URL(request.url);
   const page = Number(searchParams.get('page')) || 1;
-  const user = await getUserFromCookie(request.headers.get('Cookie') || '');
-  if (!user) {
-    return redirect('/sign-in');
-  }
+
+  const [user, verified] = await Promise.all([
+    getUserFromCookie(request.headers.get('Cookie') || ''),
+    await verifyReqPayload(request),
+  ]);
+
+  if (!user || !verified) return redirect('/sign-out?ref=/sign-in');
 
   return json<LoaderData>({
-    histories: user ? await getHistory(user.id, page) : [],
-    totalPage: user ? Math.ceil((await getCountHistory(user.id)) / 20) : 1,
-    user,
+    histories: await getHistory(user.id, page),
+    totalPage: Math.ceil((await getCountHistory(user.id)) / 20),
     page,
   });
 };
@@ -81,7 +87,7 @@ const Item = ({ _history }: { _history: IHistory }) => (
 );
 
 const History = () => {
-  const { histories, user, page, totalPage } = useLoaderData<LoaderData>();
+  const { histories, page, totalPage } = useLoaderData<LoaderData>();
   const isXs = useMediaQuery(650);
   const navigate = useNavigate();
 
@@ -91,21 +97,17 @@ const History = () => {
     <Container fluid css={{ margin: 0, padding: 0, textAlign: 'center' }}>
       <Text h2>Your watch history</Text>
       <Grid.Container gap={2}>
-        {user ? (
-          histories
-            .map((item) => {
-              const url = new URL(`http://abc${item.route}`);
-              if (item.watched !== 0) url.searchParams.append('t', item.watched.toString());
-              return { ...item, route: url.pathname + url.search };
-            })
-            .map((item) => (
-              <Link key={item.route} to={item.route}>
-                <Item _history={item as unknown as IHistory} />
-              </Link>
-            ))
-        ) : (
-          <Text h2>Sign In to view your watch history</Text>
-        )}
+        {histories
+          .map((item) => {
+            const url = new URL(`http://abc${item.route}`);
+            if (item.watched !== 0) url.searchParams.append('t', item.watched.toString());
+            return { ...item, route: url.pathname + url.search };
+          })
+          .map((item) => (
+            <Link key={item.route} to={item.route}>
+              <Item _history={item as unknown as IHistory} />
+            </Link>
+          ))}
       </Grid.Container>
       {totalPage > 1 && (
         <Pagination

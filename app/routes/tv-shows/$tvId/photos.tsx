@@ -6,29 +6,33 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
 import { Image as NextImage, Row, Spacer } from '@nextui-org/react';
-import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
+import { LoaderFunction, json, MetaFunction, redirect } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { Gallery, Item, GalleryProps } from 'react-photoswipe-gallery';
 import { useRouteData } from 'remix-utils';
 import Image, { MimeType } from 'remix-image';
 import { InView } from 'react-intersection-observer';
 
-import { getUserFromCookie } from '~/services/supabase';
 import i18next from '~/i18n/i18next.server';
 import { getImages } from '~/services/tmdb/tmdb.server';
 import { ITvShowDetail } from '~/services/tmdb/tmdb.types';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import TMDB from '~/utils/media';
 import { H6 } from '~/src/components/styles/Text.styles';
+import { getUserFromCookie, verifyReqPayload } from '~/services/supabase';
 
 type LoaderData = {
   images: Awaited<ReturnType<typeof getImages>>;
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const user = await getUserFromCookie(request.headers.get('Cookie') || '');
-  if (!user) return new Response(null, { status: 500 });
-  const locale = await i18next.getLocale(request);
+  const [locale, user, verified] = await Promise.all([
+    i18next.getLocale(request),
+    getUserFromCookie(request.headers.get('Cookie') || ''),
+    await verifyReqPayload(request),
+  ]);
+
+  if (!user || !verified) return redirect('/sign-out?ref=/sign-in');
   const { tvId } = params;
   const mid = Number(tvId);
   if (!mid) throw new Response('Not Found', { status: 404 });

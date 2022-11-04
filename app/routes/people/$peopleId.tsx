@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
+import { LoaderFunction, json, MetaFunction, redirect } from '@remix-run/node';
 import { useCatch, useLoaderData, Outlet, Link, RouteMatch } from '@remix-run/react';
 import { Container, Row, Col, Spacer } from '@nextui-org/react';
 
@@ -7,7 +7,7 @@ import { getPeopleDetail, getPeopleExternalIds } from '~/services/tmdb/tmdb.serv
 import i18next from '~/i18n/i18next.server';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import TMDB from '~/utils/media';
-import { getUserFromCookie } from '~/services/supabase';
+import { getUserFromCookie, verifyReqPayload } from '~/services/supabase';
 
 import PeopleDetail from '~/src/components/people/PeopleDetail';
 import Tab from '~/src/components/elements/Tab';
@@ -24,10 +24,15 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const locale = await i18next.getLocale(request);
+  const [locale, user, verified] = await Promise.all([
+    i18next.getLocale(request),
+    getUserFromCookie(request.headers.get('Cookie') || ''),
+    await verifyReqPayload(request),
+  ]);
+
+  if (!user || !verified) return redirect('/sign-out?ref=/sign-in');
+
   const { peopleId } = params;
-  const user = await getUserFromCookie(request.headers.get('Cookie') || '');
-  if (!user) return new Response(null, { status: 500 });
   const pid = Number(peopleId);
   if (!pid) throw new Response('Not Found', { status: 404 });
 

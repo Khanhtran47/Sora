@@ -1,7 +1,7 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
+import { LoaderFunction, json, MetaFunction, redirect } from '@remix-run/node';
 import {
   useCatch,
   useLoaderData,
@@ -12,7 +12,7 @@ import {
   useFetcher,
 } from '@remix-run/react';
 import { Container, Spacer, Loading } from '@nextui-org/react';
-import { ClientOnly, useRouteData } from 'remix-utils';
+import { ClientOnly } from 'remix-utils';
 import { isDesktop } from 'react-device-detect';
 
 import {
@@ -29,20 +29,26 @@ import ArtPlayer from '~/src/components/elements/player/ArtPlayer';
 import AspectRatio from '~/src/components/elements/aspect-ratio/AspectRatio';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
-import { User } from '@supabase/supabase-js';
 import updateHistory from '~/utils/update-history';
-import { getUserFromCookie, insertHistory } from '~/services/supabase';
+import { getUserFromCookie, insertHistory, verifyReqPayload } from '~/services/supabase';
 
 type LoaderData = {
   provider?: string;
   sources: IMovieSource[] | undefined;
   detail: Awaited<ReturnType<typeof getAnimeInfo>>;
   subtitles?: IMovieSubtitle[] | undefined;
-  user?: User;
+  userId: string;
   episodeInfo: IEpisode | undefined;
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
+  const [user, verified] = await Promise.all([
+    getUserFromCookie(request.headers.get('Cookie') || ''),
+    await verifyReqPayload(request),
+  ]);
+
+  if (!user || !verified) return redirect('/sign-out?ref=/sign-in');
+
   const url = new URL(request.url);
   const provider = url.searchParams.get('provider');
   const idProvider = url.searchParams.get('id');
@@ -50,37 +56,32 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const { animeId, episodeId } = params;
   if (!animeId || !episodeId) throw new Response('Not Found', { status: 404 });
 
-  const [detail, episodes, sources, user] = await Promise.all([
+  const [detail, episodes, sources] = await Promise.all([
     getAnimeInfo(animeId),
     getAnimeEpisodeInfo(animeId),
     getAnimeEpisodeStream(episodeId),
-    getUserFromCookie(request.headers.get('Cookie') || ''),
   ]);
 
   const episodeInfo = episodes?.find((e: IEpisode) => e.number === Number(episode));
 
-  if (user) {
-    insertHistory({
-      user_id: user.id,
-      media_type: 'anime',
-      duration: (detail?.duration || 0) * 60,
-      watched: 0,
-      route: url.pathname + url.search,
-      media_id: (detail?.id || animeId).toString(),
-      poster: detail?.cover,
-      title:
-        detail?.title?.userPreferred ||
-        detail?.title?.english ||
-        detail?.title?.native ||
-        detail?.title?.romaji ||
-        undefined,
-      overview: detail?.description,
-      season: detail?.season,
-      episode: episodeId,
-    });
-  } else {
-    return new Response(null, { status: 500 });
-  }
+  insertHistory({
+    user_id: user.id,
+    media_type: 'anime',
+    duration: (detail?.duration || 0) * 60,
+    watched: 0,
+    route: url.pathname + url.search,
+    media_id: (detail?.id || animeId).toString(),
+    poster: detail?.cover,
+    title:
+      detail?.title?.userPreferred ||
+      detail?.title?.english ||
+      detail?.title?.native ||
+      detail?.title?.romaji ||
+      undefined,
+    overview: detail?.description,
+    season: detail?.season,
+    episode: episodeId,
+  });
 
   if (provider === 'Loklok') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
@@ -94,7 +95,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         lang: `${sub.language} (${sub.lang})`,
         url: `${LOKLOK_URL}/subtitle?url=${sub.url}`,
       })),
-      user,
+      userId: user.id,
       episodeInfo,
     });
   }
@@ -106,7 +107,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       provider,
       detail,
       sources: episodeDetail?.sources,
-      user,
+      userId: user.id,
       episodeInfo,
     });
   }
@@ -118,14 +119,14 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       provider,
       detail,
       sources: episodeDetail?.sources,
-      user,
+      userId: user.id,
       episodeInfo,
     });
   }
 
   if (!detail || !sources) throw new Response('Not Found', { status: 404 });
 
-  return json<LoaderData>({ detail, sources: sources.sources, user, episodeInfo });
+  return json<LoaderData>({ detail, sources: sources.sources, userId: user.id, episodeInfo });
 };
 
 export const meta: MetaFunction = ({ data, params }) => {
@@ -183,12 +184,11 @@ export const handle = {
 };
 
 const AnimeEpisodeWatch = () => {
-  const { provider, detail, sources, subtitles, episodeInfo } = useLoaderData<LoaderData>();
+  const { provider, detail, sources, subtitles, episodeInfo, userId } = useLoaderData<LoaderData>();
   const { episodeId } = useParams();
 
   const fetcher = useFetcher();
   const location = useLocation();
-  const user = useRouteData<{ user: User }>('root')?.user;
 
   const subtitleSelector = subtitles?.map(({ lang, url }: { lang: string; url: string }) => ({
     html: lang.toString(),
@@ -289,19 +289,17 @@ const AnimeEpisodeWatch = () => {
                     }
                   });
 
-                  if (user) {
-                    updateHistory(
-                      art,
-                      fetcher,
-                      user.id,
-                      location.pathname + location.search,
-                      'anime',
-                      detail?.title?.userPreferred || detail?.title?.english || '',
-                      detail?.description || '',
-                      detail?.season,
-                      episodeId,
-                    );
-                  }
+                  updateHistory(
+                    art,
+                    fetcher,
+                    userId,
+                    location.pathname + location.search,
+                    'anime',
+                    detail?.title?.userPreferred || detail?.title?.english || '',
+                    detail?.description || '',
+                    detail?.season,
+                    episodeId,
+                  );
                   art.on('pause', () => {
                     art.layers.title.style.display = 'block';
                   });

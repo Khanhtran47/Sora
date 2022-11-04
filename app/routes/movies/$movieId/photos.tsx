@@ -6,14 +6,14 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
 import { Image as NextImage, Row, Spacer } from '@nextui-org/react';
-import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
+import { LoaderFunction, json, MetaFunction, redirect } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { Gallery, Item, GalleryProps } from 'react-photoswipe-gallery';
 import { useRouteData } from 'remix-utils';
 import Image, { MimeType } from 'remix-image';
 import { InView } from 'react-intersection-observer';
 
-import { getUserFromCookie } from '~/services/supabase';
+import { getUserFromCookie, verifyReqPayload } from '~/services/supabase';
 import i18next from '~/i18n/i18next.server';
 import { getImages } from '~/services/tmdb/tmdb.server';
 import { IMovieDetail } from '~/services/tmdb/tmdb.types';
@@ -30,9 +30,14 @@ export const meta: MetaFunction = ({ params }) => ({
 });
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const user = await getUserFromCookie(request.headers.get('Cookie') || '');
-  if (!user) return new Response(null, { status: 500 });
-  const locale = await i18next.getLocale(request);
+  const [locale, user, verified] = await Promise.all([
+    i18next.getLocale(request),
+    getUserFromCookie(request.headers.get('Cookie') || ''),
+    await verifyReqPayload(request),
+  ]);
+
+  if (!user || !verified) return redirect('/sign-out?ref=/sign-in');
+
   const { movieId } = params;
   const mid = Number(movieId);
   if (!mid) throw new Response('Not Found', { status: 404 });

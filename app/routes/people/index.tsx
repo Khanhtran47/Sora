@@ -4,7 +4,7 @@ import { Container, Pagination } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
-import { getUserFromCookie } from '~/services/supabase';
+import { getUserFromCookie, verifyReqPayload } from '~/services/supabase';
 import PeopleList from '~/src/components/people/PeopleList';
 import { getListPeople } from '~/services/tmdb/tmdb.server';
 import useMediaQuery from '~/hooks/useMediaQuery';
@@ -26,14 +26,17 @@ export const meta: MetaFunction = () => ({
 });
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const locale = await i18next.getLocale(request);
+  const [locale, user, verified] = await Promise.all([
+    i18next.getLocale(request),
+    getUserFromCookie(request.headers.get('Cookie') || ''),
+    await verifyReqPayload(request),
+  ]);
+
+  if (!user || !verified) return redirect('/sign-out?ref=/sign-in');
+
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page')) || undefined;
   if (page && (page < 1 || page > 1000)) page = 1;
-  const user = await getUserFromCookie(request.headers.get('Cookie') || '');
-  if (!user) {
-    return redirect('/sign-in');
-  }
 
   return json<LoaderData>({
     people: await getListPeople('popular', locale, page),

@@ -1,7 +1,14 @@
 import { LoaderFunction, ActionFunction, redirect } from '@remix-run/node';
-import { insertHistory } from '~/services/supabase';
+import { getUserFromCookie, insertHistory, verifyReqPayload } from '~/services/supabase';
 
 export const action: ActionFunction = async ({ request }) => {
+  const [user, verified] = await Promise.all([
+    getUserFromCookie(request.headers.get('Cookie') || ''),
+    await verifyReqPayload(request),
+  ]);
+
+  if (!user || !verified) return new Response(null, { status: 400 });
+
   const data = await request.clone().formData();
 
   const user_id = data.get('user_id')?.toString();

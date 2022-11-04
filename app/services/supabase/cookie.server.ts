@@ -53,3 +53,27 @@ export async function authSessionHandler(cookie: string | null) {
 
   return { session: null, user: null };
 }
+
+export async function requestPayload(req: Request) {
+  if (!process.env.REQ_ENCODE_ATTRS) {
+    console.error('Please make sure you have REQ_ENCODE_ATTRS in your .env');
+    process.exit();
+  }
+
+  const payloadAttrs = process.env.REQ_ENCODE_ATTRS.split('.');
+  return payloadAttrs.map((attr) => req.headers.get(attr)).join('');
+}
+
+export async function verifyReqPayload(req: Request) {
+  const payload = await requestPayload(req);
+  const session = await getSessionFromCookie(req.headers.get('Cookie'));
+
+  if (session.has('auth_token')) {
+    const authToken = session.get('auth_token');
+    if (authToken?.req_payload) {
+      return payload === authToken?.req_payload;
+    }
+  }
+
+  return false;
+}

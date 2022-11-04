@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
-import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
+import { LoaderFunction, json, MetaFunction, redirect } from '@remix-run/node';
 import {
   useCatch,
   useLoaderData,
@@ -18,7 +18,7 @@ import {
   getTvShowIMDBId,
   getImdbRating,
 } from '~/services/tmdb/tmdb.server';
-import { getUserFromCookie } from '~/services/supabase';
+import { getUserFromCookie, verifyReqPayload } from '~/services/supabase';
 import i18next from '~/i18n/i18next.server';
 import TMDB from '~/utils/media';
 import MediaDetail from '~/src/components/media/MediaDetail';
@@ -33,12 +33,17 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const locale = await i18next.getLocale(request);
+  const [locale, user, verified] = await Promise.all([
+    i18next.getLocale(request),
+    getUserFromCookie(request.headers.get('Cookie') || ''),
+    await verifyReqPayload(request),
+  ]);
+
+  if (!user || !verified) return redirect('/sign-out?ref=/sign-in');
+
   const { tvId } = params;
   const tid = Number(tvId);
   if (!tid) throw new Response('Not Found', { status: 404 });
-  const user = await getUserFromCookie(request.headers.get('Cookie') || '');
-  if (!user) return new Response(null, { status: 500 });
 
   const [detail, imdbId] = await Promise.all([getTvShowDetail(tid, locale), getTvShowIMDBId(tid)]);
   if (!detail) throw new Response('Not Found', { status: 404 });

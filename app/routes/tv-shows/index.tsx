@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/indent */
 import * as React from 'react';
-import { LoaderFunction, json, DataFunctionArgs } from '@remix-run/node';
+import { LoaderFunction, json, DataFunctionArgs, redirect } from '@remix-run/node';
 import { useLoaderData, useLocation, useNavigate, useFetcher } from '@remix-run/react';
 import { Container, Spacer } from '@nextui-org/react';
 import { motion } from 'framer-motion';
@@ -14,6 +14,7 @@ import { IMedia } from '~/services/tmdb/tmdb.types';
 import MediaList from '~/src/components/media/MediaList';
 import SkeletonItem from '~/src/components/elements/skeleton/Item';
 import useSize from '~/hooks/useSize';
+import { getUserFromCookie, verifyReqPayload } from '~/services/supabase';
 
 type LoaderData = {
   popular: Awaited<ReturnType<typeof getListTvShows>>;
@@ -22,7 +23,14 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
-  const locale = await i18next.getLocale(request);
+  const [locale, user, verified] = await Promise.all([
+    i18next.getLocale(request),
+    getUserFromCookie(request.headers.get('Cookie') || ''),
+    await verifyReqPayload(request),
+  ]);
+
+  if (!user || !verified) return redirect('/sign-out?ref=/sign-in');
+
   const page = 1;
   const [popular, topRated, onTheAir] = await Promise.all([
     getListTvShows('popular', locale, page),

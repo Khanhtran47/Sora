@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/indent */
 import * as React from 'react';
-import { DataFunctionArgs, json, LoaderFunction, MetaFunction } from '@remix-run/node';
+import { DataFunctionArgs, json, LoaderFunction, MetaFunction, redirect } from '@remix-run/node';
 import { useLoaderData, useNavigate, useParams, Link, RouteMatch } from '@remix-run/react';
 import { Container, Pagination } from '@nextui-org/react';
 import { useRouteData } from 'remix-utils';
@@ -11,16 +11,21 @@ import MediaList from '~/src/components/media/MediaList';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import SearchForm from '~/src/components/elements/SearchForm';
-import { getUserFromCookie } from '~/services/supabase';
+import { getUserFromCookie, verifyReqPayload } from '~/services/supabase';
 
 type LoaderData = {
   searchResults: Awaited<ReturnType<typeof getSearchTvShows>>;
 };
 
 export const loader: LoaderFunction = async ({ request, params }: DataFunctionArgs) => {
+  const [user, verified] = await Promise.all([
+    getUserFromCookie(request.headers.get('Cookie') || ''),
+    await verifyReqPayload(request),
+  ]);
+
+  if (!user || !verified) return redirect('/sign-out?ref=/sign-in');
+
   const keyword = params?.tvKeyword || '';
-  const user = await getUserFromCookie(request.headers.get('Cookie') || '');
-  if (!user) return new Response(null, { status: 500 });
   const url = new URL(request.url);
   const page = Number(url.searchParams.get('page'));
   if (!page || page < 1 || page > 1000) {

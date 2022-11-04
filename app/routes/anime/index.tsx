@@ -1,4 +1,4 @@
-import { LoaderFunction, json, DataFunctionArgs } from '@remix-run/node';
+import { LoaderFunction, json, DataFunctionArgs, redirect } from '@remix-run/node';
 import { useNavigate, useLoaderData, useLocation, Link } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
 import { motion } from 'framer-motion';
@@ -9,7 +9,7 @@ import {
   getAnimePopular,
   getAnimeRecentEpisodes,
 } from '~/services/consumet/anilist/anilist.server';
-import { getUserFromCookie } from '~/services/supabase';
+import { getUserFromCookie, verifyReqPayload } from '~/services/supabase';
 
 import AnimeList from '~/src/components/anime/AnimeList';
 
@@ -25,8 +25,13 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
-  const user = await getUserFromCookie(request.headers.get('Cookie') || '');
-  if (!user) return new Response(null, { status: 500 });
+  const [user, verified] = await Promise.all([
+    getUserFromCookie(request.headers.get('Cookie') || ''),
+    await verifyReqPayload(request),
+  ]);
+
+  if (!user || !verified) return redirect('/sign-out?ref=/sign-in');
+
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page'));
   if (!page || page < 1 || page > 1000) page = 1;

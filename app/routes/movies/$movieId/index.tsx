@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { LoaderFunction, json } from '@remix-run/node';
+import { LoaderFunction, json, redirect } from '@remix-run/node';
 import { useLoaderData, useNavigate } from '@remix-run/react';
 import { Row, Col, Spacer, Divider } from '@nextui-org/react';
 import type { User } from '@supabase/supabase-js';
@@ -11,6 +11,7 @@ import MediaList from '~/src/components/media/MediaList';
 import PeopleList from '~/src/components/people/PeopleList';
 import { H6 } from '~/src/components/styles/Text.styles';
 import useMediaQuery from '~/hooks/useMediaQuery';
+import { getUserFromCookie, verifyReqPayload } from '~/services/supabase';
 
 type LoaderData = {
   videos: Awaited<ReturnType<typeof getVideos>>;
@@ -20,7 +21,14 @@ type LoaderData = {
   directors: IPeople[];
 };
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader: LoaderFunction = async ({ request, params }) => {
+  const [user, verified] = await Promise.all([
+    getUserFromCookie(request.headers.get('Cookie') || ''),
+    await verifyReqPayload(request),
+  ]);
+
+  if (!user || !verified) return redirect('/sign-out?ref=/sign-in');
+
   const { movieId } = params;
   const mid = Number(movieId);
 
