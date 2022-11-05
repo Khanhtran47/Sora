@@ -13,6 +13,7 @@ import { useRouteData } from 'remix-utils';
 import Image, { MimeType } from 'remix-image';
 import { InView } from 'react-intersection-observer';
 
+import { authenticate } from '~/services/supabase';
 import i18next from '~/i18n/i18next.server';
 import { getImages } from '~/services/tmdb/tmdb.server';
 import { IMovieDetail } from '~/services/tmdb/tmdb.types';
@@ -25,11 +26,12 @@ type LoaderData = {
 };
 
 export const meta: MetaFunction = ({ params }) => ({
-  'og:url': `https://sora-movie.vercel.app/movies/${params.movieId}/photos`,
+  'og:url': `https://sora-movies.vercel.app/movies/${params.movieId}/photos`,
 });
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const locale = await i18next.getLocale(request);
+  const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
+
   const { movieId } = params;
   const mid = Number(movieId);
   if (!mid) throw new Response('Not Found', { status: 404 });

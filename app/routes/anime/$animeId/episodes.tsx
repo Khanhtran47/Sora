@@ -21,12 +21,15 @@ import Flex from '~/src/components/styles/Flex.styles';
 import SelectProviderModal from '~/src/components/elements/modal/SelectProviderModal';
 
 import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
+import { authenticate } from '~/services/supabase';
 
 type LoaderData = {
   episodes: Awaited<ReturnType<typeof getAnimeEpisodeInfo>>;
 };
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader: LoaderFunction = async ({ params, request }) => {
+  await authenticate(request);
+
   const { animeId } = params;
   const aid = Number(animeId);
   if (!aid) throw new Response('Not Found', { status: 404 });
@@ -37,7 +40,7 @@ export const loader: LoaderFunction = async ({ params }) => {
 };
 
 export const meta: MetaFunction = ({ params }) => ({
-  'og:url': `https://sora-movie.vercel.app/anime/${params.animeId}/episodes`,
+  'og:url': `https://sora-movies.vercel.app/anime/${params.animeId}/episodes`,
 });
 
 const EpisodesPage = () => {

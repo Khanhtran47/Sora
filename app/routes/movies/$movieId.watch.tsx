@@ -37,9 +37,8 @@ import Player from '~/utils/player';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 import useMediaQuery from '~/hooks/useMediaQuery';
-import { User } from '@supabase/supabase-js';
 import updateHistory from '~/utils/update-history';
-import { getUserFromCookie, insertHistory } from '~/services/supabase';
+import { authenticate, insertHistory } from '~/services/supabase';
 
 export const meta: MetaFunction = ({ data, params }) => {
   if (!data) {
@@ -51,11 +50,11 @@ export const meta: MetaFunction = ({ data, params }) => {
   const { detail } = data;
   return {
     title: `Watch ${detail.title} HD online Free - Sora`,
-    description: `Watch ${detail.title} in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    description: `Watch ${detail.title} in full HD online with Subtitle`,
     keywords: `Watch ${detail.title}, Stream ${detail.title}, Watch ${detail.title} HD, Online ${detail.title}, Streaming ${detail.title}, English, Subtitle ${detail.title}, English Subtitle`,
-    'og:url': `https://sora-movie.vercel.app/movies/${params.movieId}/watch`,
+    'og:url': `https://sora-movies.vercel.app/movies/${params.movieId}/watch`,
     'og:title': `Watch ${detail.title} HD online Free - Sora`,
-    'og:description': `Watch ${detail.title} in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    'og:description': `Watch ${detail.title} in full HD online with Subtitle`,
     'og:image': TMDB.backdropUrl(detail?.backdrop_path || '', 'w780'),
     refresh: {
       httpEquiv: 'Content-Security-Policy',
@@ -70,22 +69,20 @@ type DataLoader = {
   data?: Awaited<ReturnType<typeof getMovieInfo>>;
   sources?: IMovieSource[] | undefined;
   subtitles?: IMovieSubtitle[] | undefined;
-  user?: User;
+  userId?: string;
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
+  const [user, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
+
   const url = new URL(request.url);
   const provider = url.searchParams.get('provider');
   const idProvider = url.searchParams.get('id');
-  const locale = await i18next.getLocale(request);
   const { movieId } = params;
   const mid = Number(movieId);
   if (!mid) throw new Response('Not Found', { status: 404 });
 
-  const [detail, user] = await Promise.all([
-    getMovieDetail(mid),
-    getUserFromCookie(request.headers.get('Cookie') || ''),
-  ]);
+  const detail = await getMovieDetail(mid);
 
   if (user) {
     insertHistory({
@@ -112,7 +109,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         lang: `${sub.language} (${sub.lang})`,
         url: `${LOKLOK_URL}/subtitle?url=${sub.url}`,
       })),
-      user,
+      userId: user?.id,
     });
   }
   if (provider === 'Flixhq') {
@@ -128,13 +125,13 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       data: movieDetail,
       sources: movieStreamLink?.sources,
       subtitles: movieStreamLink?.subtitles,
-      user,
+      userId: user?.id,
     });
   }
   if (provider === 'Embed') {
     return json<DataLoader>({
       detail,
-      user,
+      userId: user?.id,
     });
   }
   let search;
@@ -188,7 +185,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     data: movieDetail,
     sources: movieStreamLink?.sources,
     subtitles: [...(movieStreamLink?.subtitles || []), ...loklokSubtitles],
-    user,
+    userId: user?.id,
   });
 };
 
@@ -205,7 +202,7 @@ export const handle = {
 };
 
 const MovieWatch = () => {
-  const { provider, detail, sources, subtitles, user } = useLoaderData<DataLoader>();
+  const { provider, detail, sources, subtitles, userId } = useLoaderData<DataLoader>();
   const isSm = useMediaQuery(960, 'max');
   const id = detail && detail.id;
   const [player, setPlayer] = React.useState<string>('1');
@@ -325,17 +322,18 @@ const MovieWatch = () => {
                       }
                     });
 
-                    if (user) {
+                    if (userId) {
                       updateHistory(
                         art,
                         fetcher,
-                        user.id,
+                        userId,
                         location.pathname + location.search,
                         'movie',
                         detail?.title || detail?.original_title || '',
                         detail?.overview || '',
                       );
                     }
+
                     art.on('pause', () => {
                       art.layers.title.style.display = 'block';
                     });

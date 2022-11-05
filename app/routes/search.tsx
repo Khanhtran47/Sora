@@ -18,7 +18,7 @@ export const meta: MetaFunction = () => ({
     "Sora's advanced search allows you to run extremely powerful queries over all people and titles. Find exactly what you're looking for!",
   keywords:
     'watch free movies, free movies to watch online, watch movies online free, free movies streaming, free movies full, free movies download, watch movies hd, movies to watch',
-  'og:url': 'https://sora-movie.vervel.app/search',
+  'og:url': 'https://sora-movies.vervel.app/search',
   'og:title':
     'Search Movies, Tv Series and Anime HD - Watch Movies, Tv Series and Anime HD Online on Sora',
   'og:image': 'https://static.alphacoders.com/thumbs_categories/20.jpg',

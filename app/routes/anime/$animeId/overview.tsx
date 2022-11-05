@@ -16,7 +16,7 @@ import Flex from '~/src/components/styles/Flex.styles';
 import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
 
 export const meta: MetaFunction = ({ params }) => ({
-  'og:url': `https://sora-movie.vercel.app/anime/${params.animeId}/overview`,
+  'og:url': `https://sora-movies.vercel.app/anime/${params.animeId}/overview`,
 });
 
 const Overview = () => {

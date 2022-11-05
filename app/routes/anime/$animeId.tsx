@@ -5,6 +5,8 @@ import { useCatch, useLoaderData, Outlet, Link, RouteMatch, useLocation } from '
 import { Container } from '@nextui-org/react';
 
 import { getAnimeInfo } from '~/services/consumet/anilist/anilist.server';
+import { authenticate } from '~/services/supabase';
+
 import AnimeDetail from '~/src/components/anime/AnimeDetail';
 import WatchTrailerModal from '~/src/components/elements/modal/WatchTrailerModal';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
@@ -14,7 +16,9 @@ type LoaderData = {
   detail: Awaited<ReturnType<typeof getAnimeInfo>>;
 };
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader: LoaderFunction = async ({ request, params }) => {
+  await authenticate(request);
+
   const { animeId } = params;
   const aid = Number(animeId);
 
@@ -42,7 +46,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     } HD online Free - Sora`,
     description: `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native
-    } in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    } in full HD online with Subtitle`,
     keywords: `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native
     }, Stream ${title?.userPreferred || title?.english || title?.romaji || title?.native}, Watch ${
@@ -54,13 +58,13 @@ export const meta: MetaFunction = ({ data, params }) => {
     }, English, Subtitle ${
       title?.userPreferred || title?.english || title?.romaji || title?.native
     }, English Subtitle`,
-    'og:url': `https://sora-movie.vercel.app/anime/${params.animeId}`,
+    'og:url': `https://sora-movies.vercel.app/anime/${params.animeId}`,
     'og:title': `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native
     } HD online Free - Sora`,
     'og:description': `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native
-    } in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    } in full HD online with Subtitle`,
     'og:image': detail.cover,
   };
 };

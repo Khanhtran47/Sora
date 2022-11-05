@@ -3,6 +3,7 @@ import { json, LoaderFunction, DataFunctionArgs, MetaFunction } from '@remix-run
 import { Container } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 
+import { authenticate } from '~/services/supabase';
 import AnimeList from '~/src/components/anime/AnimeList';
 import { getAnimeRecentEpisodes } from '~/services/consumet/anilist/anilist.server';
 
@@ -17,13 +18,15 @@ export const meta: MetaFunction = () => ({
     'Official Sora website to watch anime online HD for free, Watch TV show & TV series and Download all anime FREE',
   keywords:
     'watch free anime, free anime to watch online, watch anime online free, free anime streaming, free anime full, free anime download, watch anime hd, anime to watch',
-  'og:url': 'https://sora-movie.vervel.app/anime/recent-episodes',
+  'og:url': 'https://sora-movies.vervel.app/anime/recent-episodes',
   'og:title': 'Watch Recent Anime Episodes | Sora',
   'og:description':
     'Official Sora website to watch anime online HD for free, Watch TV show & TV series and Download all anime FREE',
 });
 
 export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
+  await authenticate(request);
+
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page'));
   let provider = url.searchParams.get('provider');

@@ -12,7 +12,7 @@ import {
   useFetcher,
 } from '@remix-run/react';
 import { Container, Spacer, Loading } from '@nextui-org/react';
-import { ClientOnly, useRouteData } from 'remix-utils';
+import { ClientOnly } from 'remix-utils';
 import { isDesktop } from 'react-device-detect';
 
 import {
@@ -29,20 +29,21 @@ import ArtPlayer from '~/src/components/elements/player/ArtPlayer';
 import AspectRatio from '~/src/components/elements/aspect-ratio/AspectRatio';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
-import { User } from '@supabase/supabase-js';
 import updateHistory from '~/utils/update-history';
-import { getUserFromCookie, insertHistory } from '~/services/supabase';
+import { authenticate, insertHistory } from '~/services/supabase';
 
 type LoaderData = {
   provider?: string;
   sources: IMovieSource[] | undefined;
   detail: Awaited<ReturnType<typeof getAnimeInfo>>;
   subtitles?: IMovieSubtitle[] | undefined;
-  user?: User;
+  userId?: string;
   episodeInfo: IEpisode | undefined;
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
+  const user = await authenticate(request);
+
   const url = new URL(request.url);
   const provider = url.searchParams.get('provider');
   const idProvider = url.searchParams.get('id');
@@ -50,11 +51,10 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const { animeId, episodeId } = params;
   if (!animeId || !episodeId) throw new Response('Not Found', { status: 404 });
 
-  const [detail, episodes, sources, user] = await Promise.all([
+  const [detail, episodes, sources] = await Promise.all([
     getAnimeInfo(animeId),
     getAnimeEpisodeInfo(animeId),
     getAnimeEpisodeStream(episodeId),
-    getUserFromCookie(request.headers.get('Cookie') || ''),
   ]);
 
   const episodeInfo = episodes?.find((e: IEpisode) => e.number === Number(episode));
@@ -92,7 +92,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         lang: `${sub.language} (${sub.lang})`,
         url: `${LOKLOK_URL}/subtitle?url=${sub.url}`,
       })),
-      user,
+      userId: user?.id,
       episodeInfo,
     });
   }
@@ -104,7 +104,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       provider,
       detail,
       sources: episodeDetail?.sources,
-      user,
+      userId: user?.id,
       episodeInfo,
     });
   }
@@ -116,14 +116,14 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       provider,
       detail,
       sources: episodeDetail?.sources,
-      user,
+      userId: user?.id,
       episodeInfo,
     });
   }
 
   if (!detail || !sources) throw new Response('Not Found', { status: 404 });
 
-  return json<LoaderData>({ detail, sources: sources.sources, user, episodeInfo });
+  return json<LoaderData>({ detail, sources: sources.sources, userId: user?.id, episodeInfo });
 };
 
 export const meta: MetaFunction = ({ data, params }) => {
@@ -141,9 +141,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     } episode ${episodeInfo.number} HD online Free - Sora`,
     description: `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
-    } episode ${
-      episodeInfo.number
-    } in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    } episode ${episodeInfo.number} in full HD online with Subtitle`,
     keywords: `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     } episode ${episodeInfo.number}, Stream ${
@@ -157,15 +155,13 @@ export const meta: MetaFunction = ({ data, params }) => {
     } episode ${episodeInfo.number}, English, Subtitle ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     } episode ${episodeInfo.number}, English Subtitle`,
-    'og:url': `https://sora-movie.vercel.app/anime/${params.animeId}/episode/${params.episodeId}`,
+    'og:url': `https://sora-movies.vercel.app/anime/${params.animeId}/episode/${params.episodeId}`,
     'og:title': `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     } episode ${episodeInfo.number} HD online Free - Sora`,
     'og:description': `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
-    } episode ${
-      episodeInfo.number
-    } in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    } episode ${episodeInfo.number} in full HD online with Subtitle`,
     'og:image': episodeInfo?.image || detail.cover,
   };
 };
@@ -185,12 +181,11 @@ export const handle = {
 };
 
 const AnimeEpisodeWatch = () => {
-  const { provider, detail, sources, subtitles, episodeInfo } = useLoaderData<LoaderData>();
+  const { provider, detail, sources, subtitles, episodeInfo, userId } = useLoaderData<LoaderData>();
   const { episodeId } = useParams();
 
   const fetcher = useFetcher();
   const location = useLocation();
-  const user = useRouteData<{ user: User }>('root')?.user;
 
   const subtitleSelector = subtitles?.map(({ lang, url }: { lang: string; url: string }) => ({
     html: lang.toString(),
@@ -291,11 +286,11 @@ const AnimeEpisodeWatch = () => {
                     }
                   });
 
-                  if (user) {
+                  if (userId) {
                     updateHistory(
                       art,
                       fetcher,
-                      user.id,
+                      userId,
                       location.pathname + location.search,
                       'anime',
                       detail?.title?.userPreferred || detail?.title?.english || '',
@@ -304,6 +299,7 @@ const AnimeEpisodeWatch = () => {
                       episodeId,
                     );
                   }
+
                   art.on('pause', () => {
                     art.layers.title.style.display = 'block';
                   });

@@ -54,7 +54,7 @@ import { getListGenre, getListLanguages } from '~/services/tmdb/tmdb.server';
 import Layout from '~/src/components/layouts/Layout';
 import Home from '~/src/assets/icons/HomeIcon.js';
 import styles from '~/styles/tailwind.css';
-import { authSessionHandler, commitAuthCookie } from './services/supabase';
+import { getUserFromCookie } from './services/supabase';
 import pageNotFound from './src/assets/images/404.gif';
 import i18next, { i18nCookie } from './i18n/i18next.server';
 import logoLoading from './src/assets/images/logo_loading.png';
@@ -147,7 +147,7 @@ export const meta: MetaFunction = () => ({
   keywords:
     'Sora, Sora movie, sora movies, Watch movies online, watch series online, watch free movies, free movies to watch online, watch movies online free, free movies streaming, free movies full, free movies download, watch movies hd, movies to watch, watch movies, anime free to watch and download, free anime, watch anime online, watch anime, anime, watch anime online free, watch anime free, watchsub',
   'og:type': 'website',
-  'og:url': 'https://sora-movie.vervel.app',
+  'og:url': 'https://sora-movies.vervel.app',
   'og:title': 'Sora - Free Movies and Free Series',
   'og:image':
     'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/5298bac0-b8bf-4c80-af67-725c1272dbb0/ddnbut6-17aefce2-bb77-4091-9c5d-6e0933f8e17a.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzUyOThiYWMwLWI4YmYtNGM4MC1hZjY3LTcyNWMxMjcyZGJiMFwvZGRuYnV0Ni0xN2FlZmNlMi1iYjc3LTQwOTEtOWM1ZC02ZTA5MzNmOGUxN2EuanBnIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.FOyQ7bWyeWdLg4fLDoeBhBjaxmNtQNV-MZA40AOk-4A',
@@ -205,12 +205,9 @@ const Document = ({ children, title, lang, dir, gaTrackingId }: DocumentProps) =
 export const loader: LoaderFunction = async ({ request }) => {
   const locale = await i18next.getLocale(request);
   const gaTrackingId = process.env.GA_TRACKING_ID;
-  const { session, user } = await authSessionHandler(request.headers.get('Cookie'));
+  const user = await getUserFromCookie(request.headers.get('Cookie') || '');
 
   const headers = new Headers({ 'Set-Cookie': await i18nCookie.serialize(locale) });
-  if (session) {
-    headers.append('Set-Cookie', await commitAuthCookie(session));
-  }
 
   return json<LoaderDataType>(
     {

@@ -4,6 +4,7 @@ import { useLoaderData } from '@remix-run/react';
 import { Row } from '@nextui-org/react';
 
 import i18next from '~/i18n/i18next.server';
+import { authenticate } from '~/services/supabase';
 import { getTvSeasonCredits } from '~/services/tmdb/tmdb.server';
 import { IPeople } from '~/services/tmdb/tmdb.types';
 import PeopleList from '~/src/components/people/PeopleList';
@@ -13,7 +14,8 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const locale = await i18next.getLocale(request);
+  const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
+
   const { tvId, seasonId } = params;
   const tid = Number(tvId);
 
@@ -26,7 +28,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export const meta: MetaFunction = ({ params }) => ({
-  'og:url': `https://sora-movie.vercel.app/tv-shows/${params.tvId}/season/${params.seasonId}/crew`,
+  'og:url': `https://sora-movies.vercel.app/tv-shows/${params.tvId}/season/${params.seasonId}/crew`,
 });
 
 const CrewPage = () => {

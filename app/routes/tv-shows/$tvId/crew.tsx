@@ -2,15 +2,19 @@
 import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { Row } from '@nextui-org/react';
+
 import { getCredits } from '~/services/tmdb/tmdb.server';
 import { IPeople } from '~/services/tmdb/tmdb.types';
 import PeopleList from '~/src/components/people/PeopleList';
+import { authenticate } from '~/services/supabase';
 
 type LoaderData = {
   crew: IPeople[];
 };
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader: LoaderFunction = async ({ request, params }) => {
+  await authenticate(request);
+
   const { tvId } = params;
   const mid = Number(tvId);
 
@@ -23,7 +27,7 @@ export const loader: LoaderFunction = async ({ params }) => {
 };
 
 export const meta: MetaFunction = ({ params }) => ({
-  'og:url': `https://sora-movie.vercel.app/tv-shows/${params.tvId}/crew`,
+  'og:url': `https://sora-movies.vercel.app/tv-shows/${params.tvId}/crew`,
 });
 
 const CrewPage = () => {

@@ -5,6 +5,7 @@ import { Container, Spacer } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useRouteData } from 'remix-utils';
+import { authenticate } from '~/services/supabase';
 import type { User } from '@supabase/supabase-js';
 
 import i18next from '~/i18n/i18next.server';
@@ -35,7 +36,7 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
-  const locale = await i18next.getLocale(request);
+  const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
 
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page'));

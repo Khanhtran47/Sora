@@ -2,6 +2,8 @@
 import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { Row } from '@nextui-org/react';
+
+import { authenticate } from '~/services/supabase';
 import { getCredits } from '~/services/tmdb/tmdb.server';
 import { IPeople } from '~/services/tmdb/tmdb.types';
 import PeopleList from '~/src/components/people/PeopleList';
@@ -10,7 +12,9 @@ type LoaderData = {
   cast: IPeople[];
 };
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader: LoaderFunction = async ({ request, params }) => {
+  await authenticate(request);
+
   const { movieId } = params;
   const mid = Number(movieId);
 
@@ -23,7 +27,7 @@ export const loader: LoaderFunction = async ({ params }) => {
 };
 
 export const meta: MetaFunction = ({ params }) => ({
-  'og:url': `https://sora-movie.vercel.app/movies/${params.movieId}/cast`,
+  'og:url': `https://sora-movies.vercel.app/movies/${params.movieId}/cast`,
 });
 
 const CastPage = () => {

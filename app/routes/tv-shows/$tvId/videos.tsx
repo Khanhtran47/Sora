@@ -5,6 +5,8 @@ import * as React from 'react';
 import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
 import { useLoaderData, useFetcher } from '@remix-run/react';
 import { Row, Col, Button, Grid, Card } from '@nextui-org/react';
+
+import { authenticate } from '~/services/supabase';
 import { getVideos } from '~/services/tmdb/tmdb.server';
 import { Item } from '~/services/youtube/youtube.types';
 import useMediaQuery from '~/hooks/useMediaQuery';
@@ -15,7 +17,9 @@ type LoaderData = {
   videos: Awaited<ReturnType<typeof getVideos>>;
 };
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader: LoaderFunction = async ({ request, params }) => {
+  await authenticate(request);
+
   const { tvId } = params;
   const tid = Number(tvId);
 
@@ -26,7 +30,7 @@ export const loader: LoaderFunction = async ({ params }) => {
 };
 
 export const meta: MetaFunction = ({ params }) => ({
-  'og:url': `https://sora-movie.vercel.app/tv-shows/${params.tvId}/videos`,
+  'og:url': `https://sora-movies.vercel.app/tv-shows/${params.tvId}/videos`,
 });
 
 const VideosPage = () => {

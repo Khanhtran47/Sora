@@ -11,6 +11,8 @@ import useSize, { IUseSize } from '~/hooks/useSize';
 import { getTvSeasonDetail } from '~/services/tmdb/tmdb.server';
 import i18next from '~/i18n/i18next.server';
 import TMDB from '~/utils/media';
+import { authenticate } from '~/services/supabase';
+
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 import Tab from '~/src/components/elements/Tab';
@@ -23,7 +25,8 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const locale = await i18next.getLocale(request);
+  const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
+
   const { tvId, seasonId } = params;
   const tid = Number(tvId);
   const sid = Number(seasonId);
@@ -47,11 +50,11 @@ export const meta: MetaFunction = ({ data, params }) => {
   const { detail } = data;
   return {
     title: `Watch ${detail.name} HD online Free - Sora`,
-    description: `Watch ${detail.name} in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    description: `Watch ${detail.name} in full HD online with Subtitle`,
     keywords: `Watch ${detail.name}, Stream ${detail.name}, Watch ${detail.name} HD, Online ${detail.name}, Streaming ${detail.name}, English, Subtitle ${detail.name}, English Subtitle`,
-    'og:url': `https://sora-movie.vercel.app/tv-shows/${params.tvId}/season/${params.seasonId}`,
+    'og:url': `https://sora-movies.vercel.app/tv-shows/${params.tvId}/season/${params.seasonId}`,
     'og:title': `Watch ${detail.name} HD online Free - Sora`,
-    'og:description': `Watch ${detail.name} in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    'og:description': `Watch ${detail.name} in full HD online with Subtitle`,
     'og:image': TMDB.posterUrl(detail?.poster_path || '', 'w185'),
   };
 };

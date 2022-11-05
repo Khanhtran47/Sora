@@ -11,6 +11,7 @@ import MediaList from '~/src/components/media/MediaList';
 import PeopleList from '~/src/components/people/PeopleList';
 import { H6 } from '~/src/components/styles/Text.styles';
 import useMediaQuery from '~/hooks/useMediaQuery';
+import { authenticate } from '~/services/supabase';
 
 type LoaderData = {
   videos: Awaited<ReturnType<typeof getVideos>>;
@@ -20,7 +21,9 @@ type LoaderData = {
   directors: IPeople[];
 };
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader: LoaderFunction = async ({ request, params }) => {
+  await authenticate(request);
+
   const { movieId } = params;
   const mid = Number(movieId);
 

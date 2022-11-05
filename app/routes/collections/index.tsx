@@ -3,6 +3,7 @@ import { MetaFunction } from '@remix-run/node';
 import { useLocation, Link } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import { Container } from '@nextui-org/react';
+
 import MediaList from '~/src/components/media/MediaList';
 import featuredList from '~/src/constants/featuredList';
 
@@ -12,7 +13,7 @@ export const meta: MetaFunction = () => ({
     'Official Sora website to watch movies online HD for free, Watch TV show & TV series and Download all movies and series FREE',
   keywords:
     'watch free movies, free movies to watch online, watch movies online free, free movies streaming, free movies full, free movies download, watch movies hd, movies to watch',
-  'og:url': 'https://sora-movie.vervel.app/collections',
+  'og:url': 'https://sora-movies.vervel.app/collections',
   'og:title': 'Movies and tv shows Collections | Sora',
   'og:description':
     'Official Sora website to watch movies online HD for free, Watch TV show & TV series and Download all movies and series FREE',

@@ -11,13 +11,15 @@ import MediaList from '~/src/components/media/MediaList';
 import SearchForm from '~/src/components/elements/SearchForm';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import i18next from '~/i18n/i18next.server';
+import { authenticate } from '~/services/supabase';
 
 type LoaderData = {
   todayTrending: Awaited<ReturnType<typeof getTrending>>;
 };
 
 export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
-  const locale = await i18next.getLocale(request);
+  const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
+
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page')) || undefined;
   if (page && (page < 1 || page > 1000)) page = 1;

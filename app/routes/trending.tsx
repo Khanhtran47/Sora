@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useRouteData } from 'remix-utils';
 import type { User } from '@supabase/supabase-js';
 
+import { authenticate } from '~/services/supabase';
 import { getTrending } from '~/services/tmdb/tmdb.server';
 import MediaList from '~/src/components/media/MediaList';
 import useMediaQuery from '~/hooks/useMediaQuery';
@@ -23,16 +24,18 @@ export const meta: MetaFunction = () => ({
     'Official Sora website to watch movies online HD for free, Watch TV show & TV series and Download all movies and series FREE',
   keywords:
     'watch free movies, free movies to watch online, watch movies online free, free movies streaming, free movies full, free movies download, watch movies hd, movies to watch',
-  'og:url': 'https://sora-movie.vervel.app/trending',
+  'og:url': 'https://sora-movies.vervel.app/trending',
   'og:title': 'Watch Top Trending movies and tv shows free | Sora',
   'og:description':
     'Official Sora website to watch movies online HD for free, Watch TV show & TV series and Download all movies and series FREE',
 });
 
 export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
-  const locale = await i18next.getLocale(request);
+  const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
+
   const url = new URL(request.url);
   const page = Number(url.searchParams.get('page'));
+
   if (!page || page < 1 || page > 1000) {
     return json<LoaderData>({
       todayTrending: await getTrending('all', 'day', locale),

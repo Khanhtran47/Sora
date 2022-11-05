@@ -5,16 +5,20 @@ import { useLoaderData, useNavigate, Link, RouteMatch, useParams } from '@remix-
 import { Row, Pagination } from '@nextui-org/react';
 import { useRouteData } from 'remix-utils';
 import type { User } from '@supabase/supabase-js';
+
 import { getRecommendation } from '~/services/tmdb/tmdb.server';
-import MediaList from '~/src/components/media/MediaList';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import i18next from '~/i18n/i18next.server';
+import MediaList from '~/src/components/media/MediaList';
+import { authenticate } from '~/services/supabase';
 
 type LoaderData = {
   recommendations: Awaited<ReturnType<typeof getRecommendation>>;
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
+  await authenticate(request);
+
   const { tvId } = params;
   const mid = Number(tvId);
   if (!mid) throw new Response('Not Found', { status: 404 });
@@ -39,7 +43,7 @@ export const handle = {
 };
 
 export const meta: MetaFunction = ({ params }) => ({
-  'og:url': `https://sora-movie.vercel.app/tv-shows/${params.tvId}/recommendations`,
+  'og:url': `https://sora-movies.vercel.app/tv-shows/${params.tvId}/recommendations`,
 });
 
 const RecommendationsPage = () => {

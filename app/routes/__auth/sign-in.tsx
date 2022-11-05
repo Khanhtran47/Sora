@@ -2,7 +2,12 @@ import { ActionFunction, LoaderFunction, json, redirect } from '@remix-run/node'
 import { useActionData, Link, useLocation } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
 
-import { signInWithPassword, getSessionFromCookie, commitAuthCookie } from '~/services/supabase';
+import {
+  signInWithPassword,
+  getSessionFromCookie,
+  commitAuthCookie,
+  requestPayload,
+} from '~/services/supabase';
 import AuthForm from '~/src/components/AuthForm';
 
 type ActionData = {
@@ -42,11 +47,13 @@ export const action: ActionFunction = async ({ request }) => {
   if (authCookie.has('auth_token')) {
     return redirect(searchParams.get('ref') || request.referrer || '/');
   }
+  const payload = await requestPayload(request);
 
   authCookie.set('auth_token', {
     access_token: session.access_token,
     refresh_token: session.refresh_token,
     expires_at: Date.now() + (session.expires_in - 10) * 1000,
+    req_payload: payload,
   });
 
   return redirect(searchParams.get('ref') || request.referrer || '/', {

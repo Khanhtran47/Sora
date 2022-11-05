@@ -6,15 +6,14 @@ import Tab from '~/src/components/elements/Tab';
 
 export const meta: MetaFunction = () => ({
   title: 'Free Movies HD - Watch Movies and Tv Series HD Online on Sora',
-  description:
-    'Watch latest movies online in HD Quality. Unlimited streaming movies for free now - No sign up - No Buffering - One Click Streaming',
+  description: 'Watch latest movies online in HD Quality. Unlimited streaming movies for free now',
   keywords:
     'watch free movies, free movies to watch online, watch movies online free, free movies streaming, free movies full, free movies download, watch movies hd, movies to watch, hd movies, stream movies, movies to stream, watch movies free',
-  'og:url': 'https://sora-movie.vervel.app/movies',
+  'og:url': 'https://sora-movies.vervel.app/movies',
   'og:title': 'Free Movies HD - Watch Movies and Tv Series HD Online on Sora',
   'og:image': 'https://static.alphacoders.com/thumbs_categories/20.jpg',
   'og:description':
-    'Watch latest movies online in HD Quality. Unlimited streaming movies for free now - No sign up - No Buffering - One Click Streaming',
+    'Watch latest movies online in HD Quality. Unlimited streaming movies for free now',
 });
 
 const moviePage = [

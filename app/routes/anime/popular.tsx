@@ -4,6 +4,7 @@ import { Container } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 
 import AnimeList from '~/src/components/anime/AnimeList';
+import { authenticate } from '~/services/supabase';
 import { getAnimePopular } from '~/services/consumet/anilist/anilist.server';
 
 type LoaderData = {
@@ -16,13 +17,15 @@ export const meta: MetaFunction = () => ({
     'Official Sora website to watch anime online HD for free, Watch TV show & TV series and Download all anime FREE',
   keywords:
     'watch free anime, free anime to watch online, watch anime online free, free anime streaming, free anime full, free anime download, watch anime hd, anime to watch',
-  'og:url': 'https://sora-movie.vervel.app/anime/popular',
+  'og:url': 'https://sora-movies.vervel.app/anime/popular',
   'og:title': 'Watch Popular anime free | Sora',
   'og:description':
     'Official Sora website to watch anime online HD for free, Watch TV show & TV series and Download all anime FREE',
 });
 
 export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
+  await authenticate(request);
+
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page'));
   if (!page && (page < 1 || page > 1000)) page = 1;

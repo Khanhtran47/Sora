@@ -7,6 +7,8 @@ import { getPeopleDetail, getPeopleExternalIds } from '~/services/tmdb/tmdb.serv
 import i18next from '~/i18n/i18next.server';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import TMDB from '~/utils/media';
+import { authenticate } from '~/services/supabase';
+
 import PeopleDetail from '~/src/components/people/PeopleDetail';
 import Tab from '~/src/components/elements/Tab';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
@@ -22,7 +24,8 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const locale = await i18next.getLocale(request);
+  const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
+
   const { peopleId } = params;
   const pid = Number(peopleId);
   if (!pid) throw new Response('Not Found', { status: 404 });
@@ -51,11 +54,11 @@ export const meta: MetaFunction = ({ data, params }) => {
   const { detail } = data;
   return {
     title: `${detail?.name} | Sora - Watch The Best of Movies, TV Shows & Animes`,
-    description: `Watch ${detail?.name} movies and series in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    description: `Watch ${detail?.name} movies and series in full HD online with Subtitle`,
     keywords: `watch ${detail?.name} free, watch ${detail?.name} movies, watch ${detail?.name} series, stream ${detail?.name} series, ${detail?.name} movies online free`,
-    'og:url': `https://sora-movie.vercel.app/people/${params.peopleId}`,
+    'og:url': `https://sora-movies.vercel.app/people/${params.peopleId}`,
     'og:title': `${detail?.name} | Sora - Watch The Best of Movies, TV Shows & Animes`,
-    'og:description': `Watch ${detail?.name} movies and series in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    'og:description': `Watch ${detail?.name} movies and series in full HD online with Subtitle`,
     'og:image': TMDB.profileUrl(detail?.profile_path, 'w185'),
   };
 };

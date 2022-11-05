@@ -6,12 +6,15 @@ import { useTranslation } from 'react-i18next';
 import SearchForm from '~/src/components/elements/SearchForm';
 import AnimeList from '~/src/components/anime/AnimeList';
 import { getAnimeTrending } from '~/services/consumet/anilist/anilist.server';
+import { authenticate } from '~/services/supabase';
 
 type LoaderData = {
   items: Awaited<ReturnType<typeof getAnimeTrending>>;
 };
 
 export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
+  await authenticate(request);
+
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page'));
   if (!page && (page < 1 || page > 1000)) page = 1;

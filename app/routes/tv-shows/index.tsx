@@ -14,6 +14,7 @@ import { IMedia } from '~/services/tmdb/tmdb.types';
 import MediaList from '~/src/components/media/MediaList';
 import SkeletonItem from '~/src/components/elements/skeleton/Item';
 import useSize from '~/hooks/useSize';
+import { authenticate } from '~/services/supabase';
 
 type LoaderData = {
   popular: Awaited<ReturnType<typeof getListTvShows>>;
@@ -22,7 +23,8 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
-  const locale = await i18next.getLocale(request);
+  const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
+
   const page = 1;
   const [popular, topRated, onTheAir] = await Promise.all([
     getListTvShows('popular', locale, page),

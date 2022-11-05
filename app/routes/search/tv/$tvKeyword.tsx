@@ -11,12 +11,15 @@ import MediaList from '~/src/components/media/MediaList';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import SearchForm from '~/src/components/elements/SearchForm';
+import { authenticate } from '~/services/supabase';
 
 type LoaderData = {
   searchResults: Awaited<ReturnType<typeof getSearchTvShows>>;
 };
 
 export const loader: LoaderFunction = async ({ request, params }: DataFunctionArgs) => {
+  await authenticate(request);
+
   const keyword = params?.tvKeyword || '';
   const url = new URL(request.url);
   const page = Number(url.searchParams.get('page'));
@@ -34,11 +37,11 @@ export const meta: MetaFunction = ({ data, params }) => {
   const { searchResults } = data;
   return {
     title: `Search results for '${params.tvKeyword}' tv serie on Sora`,
-    description: `Watch ${params.tvKeyword} in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    description: `Watch ${params.tvKeyword} in full HD online with Subtitle`,
     keywords: `Watch ${params.tvKeyword}, Stream ${params.tvKeyword}, Watch ${params.tvKeyword} HD, Online ${params.tvKeyword}, Streaming ${params.tvKeyword}, English, Subtitle ${params.tvKeyword}, English Subtitle`,
-    'og:url': `https://sora-movie.vercel.app/search/tv/${params.tvKeyword}`,
+    'og:url': `https://sora-movies.vercel.app/search/tv/${params.tvKeyword}`,
     'og:title': `Search results for '${params.tvKeyword}' tv serie on Sora`,
-    'og:description': `Watch ${params.tvKeyword} in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    'og:description': `Watch ${params.tvKeyword} in full HD online with Subtitle`,
     'og:image': searchResults?.items[0]?.backdropPath || searchResults?.items[0]?.posterPath || '',
   };
 };

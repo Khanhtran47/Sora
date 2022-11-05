@@ -19,13 +19,15 @@ import { ITvShowDetail } from '~/services/tmdb/tmdb.types';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import TMDB from '~/utils/media';
 import { H6 } from '~/src/components/styles/Text.styles';
+import { authenticate } from '~/services/supabase';
 
 type LoaderData = {
   images: Awaited<ReturnType<typeof getImages>>;
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const locale = await i18next.getLocale(request);
+  const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
+
   const { tvId } = params;
   const mid = Number(tvId);
   if (!mid) throw new Response('Not Found', { status: 404 });
@@ -37,7 +39,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export const meta: MetaFunction = ({ params }) => ({
-  'og:url': `https://sora-movie.vercel.app/tv-shows/${params.tvId}/photos`,
+  'og:url': `https://sora-movies.vercel.app/tv-shows/${params.tvId}/photos`,
 });
 
 const PhotosPage = () => {

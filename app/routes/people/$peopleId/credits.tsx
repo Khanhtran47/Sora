@@ -21,7 +21,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export const meta: MetaFunction = ({ params }) => ({
-  'og:url': `https://sora-movie.vercel.app/people/${params.peopleId}/credits`,
+  'og:url': `https://sora-movies.vercel.app/people/${params.peopleId}/credits`,
 });
 
 const CreditsPage = () => {

@@ -17,6 +17,7 @@ import useMediaQuery from '~/hooks/useMediaQuery';
 import { H3, H4, H5, H6 } from '~/src/components/styles/Text.styles';
 import Flex from '~/src/components/styles/Flex.styles';
 import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
+import { authenticate } from '~/services/supabase';
 
 type LoaderData = {
   similar: Awaited<ReturnType<typeof getSimilar>>;
@@ -24,7 +25,9 @@ type LoaderData = {
   topBilledCast: IPeople[];
 };
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader: LoaderFunction = async ({ request, params }) => {
+  await authenticate(request);
+
   const { tvId } = params;
   const tid = Number(tvId);
 

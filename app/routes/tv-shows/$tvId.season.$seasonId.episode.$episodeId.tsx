@@ -37,9 +37,8 @@ import Player from '~/utils/player';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 import useMediaQuery from '~/hooks/useMediaQuery';
-import { User } from '@supabase/supabase-js';
 import updateHistory from '~/utils/update-history';
-import { getUserFromCookie, insertHistory } from '~/services/supabase';
+import { authenticate, insertHistory } from '~/services/supabase';
 
 type LoaderData = {
   provider?: string;
@@ -48,7 +47,7 @@ type LoaderData = {
   data?: Awaited<ReturnType<typeof getMovieInfo>>;
   sources?: IMovieSource[] | undefined;
   subtitles?: IMovieSubtitle[] | undefined;
-  user?: User;
+  userId?: string;
 };
 
 export const meta: MetaFunction = ({ data, params }) => {
@@ -61,11 +60,11 @@ export const meta: MetaFunction = ({ data, params }) => {
   const { detail } = data;
   return {
     title: `Watch ${detail.name} season ${params.seasonId} episode ${params.episodeId} HD online Free - Sora`,
-    description: `Watch ${detail.name} season ${params.seasonId} episode ${params.episodeId} in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    description: `Watch ${detail.name} season ${params.seasonId} episode ${params.episodeId} in full HD online with Subtitle`,
     keywords: `Watch ${detail.name} season ${params.seasonId} episode ${params.episodeId}, Stream ${detail.name} season ${params.seasonId} episode ${params.episodeId}, Watch ${detail.name} season ${params.seasonId} episode ${params.episodeId} HD, Online ${detail.name} season ${params.seasonId} episode ${params.episodeId}, Streaming ${detail.name} season ${params.seasonId} episode ${params.episodeId}, English, Subtitle ${detail.name} season ${params.seasonId} episode ${params.episodeId}, English Subtitle`,
-    'og:url': `https://sora-movie.vercel.app/tv-shows/${params.tvId}/season/${params.seasonId}/episode/${params.episodeId}`,
+    'og:url': `https://sora-movies.vercel.app/tv-shows/${params.tvId}/season/${params.seasonId}/episode/${params.episodeId}`,
     'og:title': `Watch ${detail.name} season ${params.seasonId} episode ${params.episodeId} HD online Free - Sora`,
-    'og:description': `Watch ${detail.name} season ${params.seasonId} episode ${params.episodeId} in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    'og:description': `Watch ${detail.name} season ${params.seasonId} episode ${params.episodeId} in full HD online with Subtitle`,
     'og:image': TMDB.backdropUrl(detail?.backdrop_path || '', 'w780'),
     refresh: {
       httpEquiv: 'Content-Security-Policy',
@@ -75,20 +74,17 @@ export const meta: MetaFunction = ({ data, params }) => {
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
+  const [user, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
+
   const url = new URL(request.url);
   const provider = url.searchParams.get('provider');
   const idProvider = url.searchParams.get('id');
-  const locale = await i18next.getLocale(request);
   const { tvId, seasonId, episodeId } = params;
   const tid = Number(tvId);
 
   if (!tid) throw new Response('Not Found', { status: 404 });
 
-  const [detail, imdbId, user] = await Promise.all([
-    getTvShowDetail(tid),
-    getTvShowIMDBId(tid),
-    getUserFromCookie(request.headers.get('Cookie') || ''),
-  ]);
+  const [detail, imdbId] = await Promise.all([getTvShowDetail(tid), getTvShowIMDBId(tid)]);
 
   if (user) {
     insertHistory({
@@ -118,7 +114,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         lang: `${sub.language} (${sub.lang})`,
         url: `${LOKLOK_URL}/subtitle?url=${sub.url}`,
       })),
-      user,
+      userId: user?.id,
     });
   }
   if (provider === 'Flixhq') {
@@ -139,7 +135,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         data: tvDetail,
         sources: tvEpisodeStreamLink?.sources,
         subtitles: tvEpisodeStreamLink?.subtitles,
-        user,
+        userId: user?.id,
       });
     }
   }
@@ -147,7 +143,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     return json<LoaderData>({
       detail,
       imdbId,
-      user,
+      userId: user?.id,
     });
   }
   let search;
@@ -202,7 +198,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     data: tvDetail,
     sources: tvEpisodeStreamLink?.sources,
     subtitles: tvEpisodeStreamLink?.subtitles,
-    user,
+    userId: user?.id,
   });
 };
 
@@ -229,7 +225,7 @@ export const handle = {
 };
 
 const EpisodeWatch = () => {
-  const { provider, detail, imdbId, sources, subtitles, user } = useLoaderData<LoaderData>();
+  const { provider, detail, imdbId, sources, subtitles, userId } = useLoaderData<LoaderData>();
   const { seasonId, episodeId } = useParams();
   const isSm = useMediaQuery(960, 'max');
   const id = detail && detail.id;
@@ -360,11 +356,11 @@ const EpisodeWatch = () => {
                       }
                     });
 
-                    if (user) {
+                    if (userId) {
                       updateHistory(
                         art,
                         fetcher,
-                        user.id,
+                        userId,
                         location.pathname + location.search,
                         'tv',
                         detail?.name || detail?.name || '',
@@ -373,6 +369,7 @@ const EpisodeWatch = () => {
                         episodeId,
                       );
                     }
+
                     art.on('pause', () => {
                       art.layers.title.style.display = 'block';
                     });

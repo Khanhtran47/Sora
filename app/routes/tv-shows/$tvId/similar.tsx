@@ -5,21 +5,24 @@ import { useLoaderData, useNavigate, Link, RouteMatch, useParams } from '@remix-
 import { Row, Pagination } from '@nextui-org/react';
 import { useRouteData } from 'remix-utils';
 import type { User } from '@supabase/supabase-js';
+
+import { authenticate } from '~/services/supabase';
 import { getSimilar } from '~/services/tmdb/tmdb.server';
-import MediaList from '~/src/components/media/MediaList';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import i18next from '~/i18n/i18next.server';
+import MediaList from '~/src/components/media/MediaList';
 
 type LoaderData = {
   similar: Awaited<ReturnType<typeof getSimilar>>;
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
+  const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
+
   const { tvId } = params;
   const mid = Number(tvId);
   if (!mid) throw new Response('Not Found', { status: 404 });
 
-  const locale = await i18next.getLocale(request);
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page')) || undefined;
   if (page && (page < 1 || page > 1000)) page = 1;
@@ -33,7 +36,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export const meta: MetaFunction = ({ params }) => ({
-  'og:url': `https://sora-movie.vercel.app/tv-shows/${params.tvId}/similar`,
+  'og:url': `https://sora-movies.vercel.app/tv-shows/${params.tvId}/similar`,
 });
 
 export const handle = {

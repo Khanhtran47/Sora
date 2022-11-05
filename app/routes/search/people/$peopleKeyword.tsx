@@ -9,13 +9,15 @@ import PeopleList from '~/src/components/people/PeopleList';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import i18next from '~/i18n/i18next.server';
 import SearchForm from '~/src/components/elements/SearchForm';
+import { authenticate } from '~/services/supabase';
 
 type LoaderData = {
   searchResults: Awaited<ReturnType<typeof getSearchPerson>>;
 };
 
 export const loader: LoaderFunction = async ({ request, params }: DataFunctionArgs) => {
-  const locale = await i18next.getLocale(request);
+  const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
+
   const keyword = params?.peopleKeyword || '';
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page')) || undefined;
@@ -30,11 +32,11 @@ export const meta: MetaFunction = ({ data, params }) => {
   const { searchResults } = data;
   return {
     title: `Search results for '${params.peopleKeyword}' on Sora`,
-    description: `Watch ${params.peopleKeyword} movie, tv seris in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    description: `Watch ${params.peopleKeyword} movie, tv seris in full HD online with Subtitle`,
     keywords: `watch ${params.peopleKeyword} free, watch ${params.peopleKeyword} movies, watch ${params.peopleKeyword} series, stream ${params.peopleKeyword} series, ${params.peopleKeyword} movies online free`,
-    'og:url': `https://sora-movie.vercel.app/search/people/${params.peopleKeyword}`,
+    'og:url': `https://sora-movies.vercel.app/search/people/${params.peopleKeyword}`,
     'og:title': `Search results for '${params.peopleKeyword}' on Sora`,
-    'og:description': `Watch ${params.peopleKeyword} in full HD online with Subtitle - No sign up - No Buffering - One Click Streaming`,
+    'og:description': `Watch ${params.peopleKeyword} in full HD online with Subtitle`,
     'og:image': searchResults?.items[0]?.backdropPath || searchResults?.items[0]?.posterPath || '',
   };
 };

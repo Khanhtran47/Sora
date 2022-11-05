@@ -7,10 +7,11 @@ import { useTranslation } from 'react-i18next';
 import { useRouteData } from 'remix-utils';
 import type { User } from '@supabase/supabase-js';
 
+import { authenticate } from '~/services/supabase';
 import { getListTvShows } from '~/services/tmdb/tmdb.server';
-import MediaList from '~/src/components/media/MediaList';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import i18next from '~/i18n/i18next.server';
+import MediaList from '~/src/components/media/MediaList';
 
 type LoaderData = {
   shows: Awaited<ReturnType<typeof getListTvShows>>;
@@ -22,14 +23,15 @@ export const meta: MetaFunction = () => ({
     'Official Sora website to watch movies online HD for free, Watch TV show & TV series and Download all movies and series FREE',
   keywords:
     'watch free movies, free movies to watch online, watch movies online free, free movies streaming, free movies full, free movies download, watch movies hd, movies to watch',
-  'og:url': 'https://sora-movie.vervel.app/tv-shows/popular',
+  'og:url': 'https://sora-movies.vervel.app/tv-shows/popular',
   'og:title': 'Watch Popular movies and tv shows free | Sora',
   'og:description':
     'Official Sora website to watch movies online HD for free, Watch TV show & TV series and Download all movies and series FREE',
 });
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const locale = await i18next.getLocale(request);
+  const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
+
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page')) || undefined;
   if (page && (page < 1 || page > 1000)) page = 1;
