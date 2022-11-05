@@ -32,6 +32,7 @@ interface IMediaListProps {
   isCoverCard?: boolean;
   coverItem?: { id: number; name: string; backdropPath: string }[];
   virtual?: boolean;
+  itemsType?: 'movie' | 'tv';
 }
 
 const MediaList = (props: IMediaListProps) => {
@@ -49,6 +50,7 @@ const MediaList = (props: IMediaListProps) => {
     isCoverCard,
     coverItem,
     virtual,
+    itemsType,
   } = props;
   let { listType } = props;
 
@@ -82,6 +84,7 @@ const MediaList = (props: IMediaListProps) => {
           isCoverCard={isCoverCard}
           coverItem={coverItem}
           virtual={virtual}
+          itemsType={itemsType}
         />
       );
       break;
