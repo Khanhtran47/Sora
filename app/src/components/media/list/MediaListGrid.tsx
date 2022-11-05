@@ -13,6 +13,7 @@ const MediaListGrid = ({
   isCoverCard,
   coverItem,
   virtual,
+  itemsType,
 }: {
   items?: IMedia[];
   genresMovie?: { [id: string]: string };
@@ -20,6 +21,7 @@ const MediaListGrid = ({
   isCoverCard?: boolean;
   coverItem?: { id: number; name: string; backdropPath: string }[];
   virtual?: boolean;
+  itemsType?: 'movie' | 'tv';
 }) => {
   const isXs = useMediaQuery(370);
   if (isCoverCard) {
@@ -56,7 +58,8 @@ const MediaListGrid = ({
       {items &&
         items?.length > 0 &&
         items.map((item, index) => {
-          const href = `${item.mediaType === 'movie' ? '/movies/' : '/tv-shows/'}${item.id}/`;
+          const type = item?.mediaType || itemsType;
+          const href = `${type === 'movie' ? '/movies/' : '/tv-shows/'}${item.id}/`;
           return (
             <Grid
               xs={isXs ? 12 : 6}

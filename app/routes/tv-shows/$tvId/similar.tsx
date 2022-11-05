@@ -82,6 +82,7 @@ const SimilarPage = () => {
         <>
           <MediaList
             listType="grid"
+            itemsType="tv"
             items={similar.items}
             listName="Similar Tv Shows"
             genresMovie={rootData?.genresMovie}
