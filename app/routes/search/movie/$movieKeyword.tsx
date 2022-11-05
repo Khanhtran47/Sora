@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/indent */
 import * as React from 'react';
-import { DataFunctionArgs, json, LoaderFunction, MetaFunction, redirect } from '@remix-run/node';
+import { DataFunctionArgs, json, LoaderFunction, MetaFunction } from '@remix-run/node';
 import { useLoaderData, useNavigate, useParams, Link, RouteMatch } from '@remix-run/react';
 import { Container, Pagination } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { useRouteData } from 'remix-utils';
 import type { User } from '@supabase/supabase-js';
 
-import { getUserFromCookie, verifyReqPayload } from '~/services/supabase';
+import { authenticate } from '~/services/supabase';
 import { getSearchMovies } from '~/services/tmdb/tmdb.server';
 import MediaList from '~/src/components/media/MediaList';
 import useMediaQuery from '~/hooks/useMediaQuery';
@@ -19,13 +19,7 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request, params }: DataFunctionArgs) => {
-  const [locale, user, verified] = await Promise.all([
-    i18next.getLocale(request),
-    getUserFromCookie(request.headers.get('Cookie') || ''),
-    await verifyReqPayload(request),
-  ]);
-
-  if (!user || !verified) return redirect('/sign-out?ref=/sign-in');
+  const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
 
   const keyword = params?.movieKeyword || '';
   const url = new URL(request.url);

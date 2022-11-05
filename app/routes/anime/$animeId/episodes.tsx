@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useState } from 'react';
-import { LoaderFunction, json, MetaFunction, redirect } from '@remix-run/node';
+import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { Row, Col, Spacer, Card, Avatar, Button, Pagination } from '@nextui-org/react';
 import { useRouteData } from 'remix-utils';
@@ -21,19 +21,14 @@ import Flex from '~/src/components/styles/Flex.styles';
 import SelectProviderModal from '~/src/components/elements/modal/SelectProviderModal';
 
 import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
-import { getUserFromCookie, verifyReqPayload } from '~/services/supabase';
+import { authenticate } from '~/services/supabase';
 
 type LoaderData = {
   episodes: Awaited<ReturnType<typeof getAnimeEpisodeInfo>>;
 };
 
 export const loader: LoaderFunction = async ({ params, request }) => {
-  const [user, verified] = await Promise.all([
-    getUserFromCookie(request.headers.get('Cookie') || ''),
-    await verifyReqPayload(request),
-  ]);
-
-  if (!user || !verified) return redirect('/sign-out?ref=/sign-in');
+  await authenticate(request);
 
   const { animeId } = params;
   const aid = Number(animeId);

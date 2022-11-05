@@ -1,4 +1,4 @@
-import { DataFunctionArgs, json, LoaderFunction, redirect } from '@remix-run/node';
+import { DataFunctionArgs, json, LoaderFunction } from '@remix-run/node';
 import { useLoaderData, useNavigate, Link } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
@@ -6,19 +6,14 @@ import { useTranslation } from 'react-i18next';
 import SearchForm from '~/src/components/elements/SearchForm';
 import AnimeList from '~/src/components/anime/AnimeList';
 import { getAnimeTrending } from '~/services/consumet/anilist/anilist.server';
-import { getUserFromCookie, verifyReqPayload } from '~/services/supabase';
+import { authenticate } from '~/services/supabase';
 
 type LoaderData = {
   items: Awaited<ReturnType<typeof getAnimeTrending>>;
 };
 
 export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
-  const [user, verified] = await Promise.all([
-    getUserFromCookie(request.headers.get('Cookie') || ''),
-    await verifyReqPayload(request),
-  ]);
-
-  if (!user || !verified) return redirect('/sign-out?ref=/sign-in');
+  await authenticate(request);
 
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page'));

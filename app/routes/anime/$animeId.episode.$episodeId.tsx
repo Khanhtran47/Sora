@@ -1,7 +1,7 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { LoaderFunction, json, MetaFunction, redirect } from '@remix-run/node';
+import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
 import {
   useCatch,
   useLoaderData,
@@ -30,24 +30,19 @@ import AspectRatio from '~/src/components/elements/aspect-ratio/AspectRatio';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 import updateHistory from '~/utils/update-history';
-import { getUserFromCookie, insertHistory, verifyReqPayload } from '~/services/supabase';
+import { authenticate, insertHistory } from '~/services/supabase';
 
 type LoaderData = {
   provider?: string;
   sources: IMovieSource[] | undefined;
   detail: Awaited<ReturnType<typeof getAnimeInfo>>;
   subtitles?: IMovieSubtitle[] | undefined;
-  userId: string;
+  userId?: string;
   episodeInfo: IEpisode | undefined;
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const [user, verified] = await Promise.all([
-    getUserFromCookie(request.headers.get('Cookie') || ''),
-    await verifyReqPayload(request),
-  ]);
-
-  if (!user || !verified) return redirect('/sign-out?ref=/sign-in');
+  const user = await authenticate(request);
 
   const url = new URL(request.url);
   const provider = url.searchParams.get('provider');
@@ -64,24 +59,26 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   const episodeInfo = episodes?.find((e: IEpisode) => e.number === Number(episode));
 
-  insertHistory({
-    user_id: user.id,
-    media_type: 'anime',
-    duration: (detail?.duration || 0) * 60,
-    watched: 0,
-    route: url.pathname + url.search,
-    media_id: (detail?.id || animeId).toString(),
-    poster: detail?.cover,
-    title:
-      detail?.title?.userPreferred ||
-      detail?.title?.english ||
-      detail?.title?.native ||
-      detail?.title?.romaji ||
-      undefined,
-    overview: detail?.description,
-    season: detail?.season,
-    episode: episodeId,
-  });
+  if (user) {
+    insertHistory({
+      user_id: user.id,
+      media_type: 'anime',
+      duration: (detail?.duration || 0) * 60,
+      watched: 0,
+      route: url.pathname + url.search,
+      media_id: (detail?.id || animeId).toString(),
+      poster: detail?.cover,
+      title:
+        detail?.title?.userPreferred ||
+        detail?.title?.english ||
+        detail?.title?.native ||
+        detail?.title?.romaji ||
+        undefined,
+      overview: detail?.description,
+      season: detail?.season,
+      episode: episodeId,
+    });
+  }
 
   if (provider === 'Loklok') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
@@ -95,7 +92,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         lang: `${sub.language} (${sub.lang})`,
         url: `${LOKLOK_URL}/subtitle?url=${sub.url}`,
       })),
-      userId: user.id,
+      userId: user?.id,
       episodeInfo,
     });
   }
@@ -107,7 +104,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       provider,
       detail,
       sources: episodeDetail?.sources,
-      userId: user.id,
+      userId: user?.id,
       episodeInfo,
     });
   }
@@ -119,14 +116,14 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       provider,
       detail,
       sources: episodeDetail?.sources,
-      userId: user.id,
+      userId: user?.id,
       episodeInfo,
     });
   }
 
   if (!detail || !sources) throw new Response('Not Found', { status: 404 });
 
-  return json<LoaderData>({ detail, sources: sources.sources, userId: user.id, episodeInfo });
+  return json<LoaderData>({ detail, sources: sources.sources, userId: user?.id, episodeInfo });
 };
 
 export const meta: MetaFunction = ({ data, params }) => {
@@ -289,17 +286,20 @@ const AnimeEpisodeWatch = () => {
                     }
                   });
 
-                  updateHistory(
-                    art,
-                    fetcher,
-                    userId,
-                    location.pathname + location.search,
-                    'anime',
-                    detail?.title?.userPreferred || detail?.title?.english || '',
-                    detail?.description || '',
-                    detail?.season,
-                    episodeId,
-                  );
+                  if (userId) {
+                    updateHistory(
+                      art,
+                      fetcher,
+                      userId,
+                      location.pathname + location.search,
+                      'anime',
+                      detail?.title?.userPreferred || detail?.title?.english || '',
+                      detail?.description || '',
+                      detail?.season,
+                      episodeId,
+                    );
+                  }
+
                   art.on('pause', () => {
                     art.layers.title.style.display = 'block';
                   });

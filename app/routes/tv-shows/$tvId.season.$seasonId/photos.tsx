@@ -14,7 +14,7 @@ import Image, { MimeType } from 'remix-image';
 import { InView } from 'react-intersection-observer';
 
 import i18next from '~/i18n/i18next.server';
-import { getUserFromCookie } from '~/services/supabase';
+import { authenticate } from '~/services/supabase';
 import { getTvSeasonImages } from '~/services/tmdb/tmdb.server';
 import { ITvShowDetail } from '~/services/tmdb/tmdb.types';
 import useMediaQuery from '~/hooks/useMediaQuery';
@@ -26,9 +26,8 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const user = await getUserFromCookie(request.headers.get('Cookie') || '');
-  if (!user) return new Response(null, { status: 500 });
-  const locale = await i18next.getLocale(request);
+  const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
+
   const { tvId, seasonId } = params;
   const tid = Number(tvId);
   if (!tid) throw new Response('Not Found', { status: 404 });

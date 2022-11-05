@@ -1,12 +1,6 @@
 import { Link, useLoaderData, useNavigate } from '@remix-run/react';
-import { LoaderFunction, json, redirect } from '@remix-run/node';
-import {
-  getCountHistory,
-  getHistory,
-  getUserFromCookie,
-  IHistory,
-  verifyReqPayload,
-} from '~/services/supabase';
+import { LoaderFunction, json } from '@remix-run/node';
+import { authenticate, getCountHistory, getHistory, IHistory } from '~/services/supabase';
 import { Card, Container, Grid, Pagination, Row, Text } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
 
@@ -24,19 +18,14 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
+  const user = await authenticate(request);
+
   const { searchParams } = new URL(request.url);
   const page = Number(searchParams.get('page')) || 1;
 
-  const [user, verified] = await Promise.all([
-    getUserFromCookie(request.headers.get('Cookie') || ''),
-    await verifyReqPayload(request),
-  ]);
-
-  if (!user || !verified) return redirect('/sign-out?ref=/sign-in');
-
   return json<LoaderData>({
-    histories: await getHistory(user.id, page),
-    totalPage: Math.ceil((await getCountHistory(user.id)) / 20),
+    histories: user ? await getHistory(user.id, page) : [],
+    totalPage: user ? Math.ceil((await getCountHistory(user.id)) / 20) : 0,
     page,
   });
 };

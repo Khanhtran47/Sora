@@ -7,7 +7,7 @@ import { useLoaderData, useFetcher } from '@remix-run/react';
 import { Row, Col, Button, Grid, Card } from '@nextui-org/react';
 
 import i18next from '~/i18n/i18next.server';
-import { getUserFromCookie } from '~/services/supabase';
+import { authenticate } from '~/services/supabase';
 import { getTvSeasonVideos } from '~/services/tmdb/tmdb.server';
 import { Item } from '~/services/youtube/youtube.types';
 import useMediaQuery from '~/hooks/useMediaQuery';
@@ -19,9 +19,8 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const user = await getUserFromCookie(request.headers.get('Cookie') || '');
-  if (!user) return new Response(null, { status: 500 });
-  const locale = await i18next.getLocale(request);
+  const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
+
   const { tvId, seasonId } = params;
   const tid = Number(tvId);
 

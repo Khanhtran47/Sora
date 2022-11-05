@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
-import { LoaderFunction, json, MetaFunction, redirect } from '@remix-run/node';
+import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
 import {
   useCatch,
   useLoaderData,
@@ -15,7 +15,7 @@ import { Container } from '@nextui-org/react';
 import { getMovieDetail, getTranslations, getImdbRating } from '~/services/tmdb/tmdb.server';
 import i18next from '~/i18n/i18next.server';
 import TMDB from '~/utils/media';
-import { getUserFromCookie, verifyReqPayload } from '~/services/supabase';
+import { authenticate } from '~/services/supabase';
 
 import MediaDetail from '~/src/components/media/MediaDetail';
 import WatchTrailerModal, { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
@@ -29,13 +29,7 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const [locale, user, verified] = await Promise.all([
-    i18next.getLocale(request),
-    getUserFromCookie(request.headers.get('Cookie') || ''),
-    await verifyReqPayload(request),
-  ]);
-
-  if (!user || !verified) return redirect('/sign-out?ref=/sign-in');
+  const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
 
   const { movieId } = params;
   const mid = Number(movieId);

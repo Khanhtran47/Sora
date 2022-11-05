@@ -4,7 +4,7 @@ import { useLoaderData } from '@remix-run/react';
 import { Row } from '@nextui-org/react';
 
 import i18next from '~/i18n/i18next.server';
-import { getUserFromCookie } from '~/services/supabase';
+import { authenticate } from '~/services/supabase';
 import { getTvSeasonCredits } from '~/services/tmdb/tmdb.server';
 import { IPeople } from '~/services/tmdb/tmdb.types';
 import PeopleList from '~/src/components/people/PeopleList';
@@ -14,9 +14,8 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const user = await getUserFromCookie(request.headers.get('Cookie') || '');
-  if (!user) return new Response(null, { status: 500 });
-  const locale = await i18next.getLocale(request);
+  const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
+
   const { tvId, seasonId } = params;
   const tid = Number(tvId);
 

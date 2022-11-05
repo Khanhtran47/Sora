@@ -54,7 +54,7 @@ import { getListGenre, getListLanguages } from '~/services/tmdb/tmdb.server';
 import Layout from '~/src/components/layouts/Layout';
 import Home from '~/src/assets/icons/HomeIcon.js';
 import styles from '~/styles/tailwind.css';
-import { authSessionHandler, commitAuthCookie } from './services/supabase';
+import { getUserFromCookie } from './services/supabase';
 import pageNotFound from './src/assets/images/404.gif';
 import i18next, { i18nCookie } from './i18n/i18next.server';
 import logoLoading from './src/assets/images/logo_loading.png';
@@ -205,12 +205,9 @@ const Document = ({ children, title, lang, dir, gaTrackingId }: DocumentProps) =
 export const loader: LoaderFunction = async ({ request }) => {
   const locale = await i18next.getLocale(request);
   const gaTrackingId = process.env.GA_TRACKING_ID;
-  const { session, user } = await authSessionHandler(request.headers.get('Cookie'));
+  const user = await getUserFromCookie(request.headers.get('Cookie') || '');
 
   const headers = new Headers({ 'Set-Cookie': await i18nCookie.serialize(locale) });
-  if (session) {
-    headers.append('Set-Cookie', await commitAuthCookie(session));
-  }
 
   return json<LoaderDataType>(
     {

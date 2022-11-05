@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataFunctionArgs, json, LoaderFunction, MetaFunction, redirect } from '@remix-run/node';
+import { DataFunctionArgs, json, LoaderFunction, MetaFunction } from '@remix-run/node';
 import { useLoaderData, useNavigate, useParams, Link, RouteMatch } from '@remix-run/react';
 import { Container, Pagination } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
@@ -9,20 +9,14 @@ import PeopleList from '~/src/components/people/PeopleList';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import i18next from '~/i18n/i18next.server';
 import SearchForm from '~/src/components/elements/SearchForm';
-import { getUserFromCookie, verifyReqPayload } from '~/services/supabase';
+import { authenticate } from '~/services/supabase';
 
 type LoaderData = {
   searchResults: Awaited<ReturnType<typeof getSearchPerson>>;
 };
 
 export const loader: LoaderFunction = async ({ request, params }: DataFunctionArgs) => {
-  const [locale, user, verified] = await Promise.all([
-    i18next.getLocale(request),
-    getUserFromCookie(request.headers.get('Cookie') || ''),
-    await verifyReqPayload(request),
-  ]);
-
-  if (!user || !verified) return redirect('/sign-out?ref=/sign-in');
+  const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
 
   const keyword = params?.peopleKeyword || '';
   const url = new URL(request.url);

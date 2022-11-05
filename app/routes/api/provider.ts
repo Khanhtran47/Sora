@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { LoaderFunction, json, redirect } from '@remix-run/node';
-import { getUserFromCookie, verifyReqPayload } from '~/services/supabase';
+import { authenticate } from '~/services/supabase';
 import { getMovieSearch } from '~/services/consumet/flixhq/flixhq.server';
 import { loklokSearchMovie, loklokSearchOneTv } from '~/services/loklok';
 import { IMovieResult } from '~/services/consumet/flixhq/flixhq.types';
@@ -13,12 +13,7 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const [user, verified] = await Promise.all([
-    getUserFromCookie(request.headers.get('Cookie') || ''),
-    await verifyReqPayload(request),
-  ]);
-
-  if (!user || !verified) return redirect('/sign-out?ref=/sign-in');
+  await authenticate(request);
 
   const url = new URL(request.url);
   const type = url.searchParams.get('type');

@@ -1,13 +1,11 @@
 import { LoaderFunction, ActionFunction, redirect } from '@remix-run/node';
-import { getUserFromCookie, insertHistory, verifyReqPayload } from '~/services/supabase';
+import { authenticate, getUserFromCookie, insertHistory } from '~/services/supabase';
 
 export const action: ActionFunction = async ({ request }) => {
-  const [user, verified] = await Promise.all([
-    getUserFromCookie(request.headers.get('Cookie') || ''),
-    await verifyReqPayload(request),
-  ]);
+  let headers = new Headers();
+  const user = await authenticate(request);
 
-  if (!user || !verified) return new Response(null, { status: 400 });
+  if (!user) return new Response(null, { headers, status: 401 });
 
   const data = await request.clone().formData();
 
@@ -21,6 +19,8 @@ export const action: ActionFunction = async ({ request }) => {
   const season = data.get('season')?.toString();
   const episode = data.get('episode')?.toString();
   const media_type = data.get('media_type')?.toString() as 'movie' | 'tv' | 'anime';
+
+  if (user.id !== user_id) return new Response(null, { headers, status: 400 });
 
   if (user_id && duration && route) {
     const { error } = await insertHistory({

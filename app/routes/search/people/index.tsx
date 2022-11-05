@@ -1,4 +1,4 @@
-import { DataFunctionArgs, json, LoaderFunction, redirect } from '@remix-run/node';
+import { DataFunctionArgs, json, LoaderFunction } from '@remix-run/node';
 import { useLoaderData, useNavigate, Link } from '@remix-run/react';
 import { Container, Pagination } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
@@ -8,20 +8,14 @@ import PeopleList from '~/src/components/people/PeopleList';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import i18next from '~/i18n/i18next.server';
 import SearchForm from '~/src/components/elements/SearchForm';
-import { getUserFromCookie, verifyReqPayload } from '~/services/supabase';
+import { authenticate } from '~/services/supabase';
 
 type LoaderData = {
   people: Awaited<ReturnType<typeof getListPeople>>;
 };
 
 export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
-  const [locale, user, verified] = await Promise.all([
-    i18next.getLocale(request),
-    getUserFromCookie(request.headers.get('Cookie') || ''),
-    await verifyReqPayload(request),
-  ]);
-
-  if (!user || !verified) return redirect('/sign-out?ref=/sign-in');
+  const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
 
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page')) || undefined;

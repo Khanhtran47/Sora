@@ -1,9 +1,9 @@
-import { DataFunctionArgs, json, LoaderFunction, MetaFunction, redirect } from '@remix-run/node';
+import { DataFunctionArgs, json, LoaderFunction, MetaFunction } from '@remix-run/node';
 import { useLoaderData, useNavigate, Link, RouteMatch, useLocation } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 
-import { getUserFromCookie, verifyReqPayload } from '~/services/supabase';
+import { authenticate } from '~/services/supabase';
 import SearchForm from '~/src/components/elements/SearchForm';
 import AnimeList from '~/src/components/anime/AnimeList';
 import { getAnimeSearch } from '~/services/consumet/anilist/anilist.server';
@@ -13,12 +13,7 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request, params }: DataFunctionArgs) => {
-  const [user, verified] = await Promise.all([
-    getUserFromCookie(request.headers.get('Cookie') || ''),
-    await verifyReqPayload(request),
-  ]);
-
-  if (!user || !verified) return redirect('/sign-out?ref=/sign-in');
+  await authenticate(request);
 
   const keyword = params?.animeKeyword || '';
   const url = new URL(request.url);
