@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { LoaderFunction, json, redirect } from '@remix-run/node';
+
+import sgConfigs from '~/services/configs.server';
 import { authenticate } from '~/services/supabase';
 import { getMovieSearch } from '~/services/consumet/flixhq/flixhq.server';
 import { loklokSearchMovie, loklokSearchOneTv } from '~/services/loklok';
@@ -26,7 +28,9 @@ export const loader: LoaderFunction = async ({ request }) => {
   if (type === 'movie') {
     const [search, loklokSearch] = await Promise.all([
       getMovieSearch(title),
-      loklokSearchMovie(title, orgTitle || '', Number(year)),
+      sgConfigs.__loklokProvider
+        ? loklokSearchMovie(title, orgTitle || '', Number(year))
+        : undefined,
     ]);
     let provider = [];
     const findFlixhq: IMovieResult | undefined = search?.results.find((movie) => {
@@ -54,7 +58,9 @@ export const loader: LoaderFunction = async ({ request }) => {
   if (type === 'tv') {
     const [search, loklokSearch] = await Promise.all([
       getMovieSearch(title),
-      loklokSearchOneTv(title, orgTitle || '', Number(year), Number(season)),
+      sgConfigs.__loklokProvider
+        ? loklokSearchOneTv(title, orgTitle || '', Number(year), Number(season))
+        : undefined,
     ]);
     let provider = [];
     const findFlixhq: IMovieResult | undefined = search?.results.find((movie) => {
@@ -76,7 +82,9 @@ export const loader: LoaderFunction = async ({ request }) => {
       });
   }
   if (type === 'anime') {
-    const loklokSearch = await loklokSearchOneTv(title, orgTitle || '', Number(year));
+    const loklokSearch = sgConfigs.__loklokProvider
+      ? await loklokSearchOneTv(title, orgTitle || '', Number(year))
+      : undefined;
     let provider = [
       {
         id: episodeId,

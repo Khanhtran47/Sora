@@ -62,7 +62,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     title: `Watch ${detail.name} season ${params.seasonId} episode ${params.episodeId} HD online Free - Sora`,
     description: `Watch ${detail.name} season ${params.seasonId} episode ${params.episodeId} in full HD online with Subtitle`,
     keywords: `Watch ${detail.name} season ${params.seasonId} episode ${params.episodeId}, Stream ${detail.name} season ${params.seasonId} episode ${params.episodeId}, Watch ${detail.name} season ${params.seasonId} episode ${params.episodeId} HD, Online ${detail.name} season ${params.seasonId} episode ${params.episodeId}, Streaming ${detail.name} season ${params.seasonId} episode ${params.episodeId}, English, Subtitle ${detail.name} season ${params.seasonId} episode ${params.episodeId}, English Subtitle`,
-    'og:url': `https://sora-movie.vercel.app/tv-shows/${params.tvId}/season/${params.seasonId}/episode/${params.episodeId}`,
+    'og:url': `https://sora-movies.vercel.app/tv-shows/${params.tvId}/season/${params.seasonId}/episode/${params.episodeId}`,
     'og:title': `Watch ${detail.name} season ${params.seasonId} episode ${params.episodeId} HD online Free - Sora`,
     'og:description': `Watch ${detail.name} season ${params.seasonId} episode ${params.episodeId} in full HD online with Subtitle`,
     'og:image': TMDB.backdropUrl(detail?.backdrop_path || '', 'w780'),

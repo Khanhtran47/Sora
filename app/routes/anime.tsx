@@ -16,7 +16,7 @@ export const meta: MetaFunction = () => ({
   description: 'Watch latest anime online in HD Quality. Unlimited streaming anime for free now',
   keywords:
     'watch free anime, free anime to watch online, watch anime online free, free anime streaming, free anime full, free anime download, watch anime hd, anime to watch, hd anime, stream anime, anime to stream, watch anime free',
-  'og:url': 'https://sora-movie.vervel.app/anime',
+  'og:url': 'https://sora-movies.vervel.app/anime',
   'og:title': 'Free Anime HD - Watch Anime HD Online on Sora',
   'og:image':
     'https://www.magicalassam.com/wp-content/uploads/2022/03/Movies-Like-Silent-Voice-.jpg',

@@ -43,7 +43,7 @@ export const handle = {
 };
 
 export const meta: MetaFunction = ({ params }) => ({
-  'og:url': `https://sora-movie.vercel.app/tv-shows/${params.tvId}/recommendations`,
+  'og:url': `https://sora-movies.vercel.app/tv-shows/${params.tvId}/recommendations`,
 });
 
 const RecommendationsPage = () => {

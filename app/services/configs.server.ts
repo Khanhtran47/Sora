@@ -22,6 +22,11 @@ interface ISGConfigs {
    * this key should be changed once in a while
    */
   __invitedSignUpKey: string;
+  /**
+   * turn on/off loklok provider
+   * default false for development
+   */
+  __loklokProvider: boolean;
 }
 
 const sgConfigs: ISGConfigs = {
@@ -29,6 +34,7 @@ const sgConfigs: ISGConfigs = {
   __globalAuthRequired: !(env.GLOBAL_AUTH_REQUIRED === 'OFF'),
   __invitedSignUpOnly: !(env.INVITED_SIGNUP_ONLY === 'OFF'),
   __invitedSignUpKey: env.INVITED_SIGNUP_KEY || '',
+  __loklokProvider: env.LOKLOK_PROVIDER === 'ON',
 };
 
 if (sgConfigs.__invitedSignUpOnly && !sgConfigs.__invitedSignUpKey) {

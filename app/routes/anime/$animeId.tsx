@@ -58,7 +58,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     }, English, Subtitle ${
       title?.userPreferred || title?.english || title?.romaji || title?.native
     }, English Subtitle`,
-    'og:url': `https://sora-movie.vercel.app/anime/${params.animeId}`,
+    'og:url': `https://sora-movies.vercel.app/anime/${params.animeId}`,
     'og:title': `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native
     } HD online Free - Sora`,

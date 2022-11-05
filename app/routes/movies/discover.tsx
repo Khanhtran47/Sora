@@ -25,7 +25,7 @@ export const meta: MetaFunction = () => ({
     'Official Sora website to watch movies online HD for free, Watch TV show & TV series and Download all movies and series FREE',
   keywords:
     'watch free movies, free movies to watch online, watch movies online free, free movies streaming, free movies full, free movies download, watch movies hd, movies to watch',
-  'og:url': 'https://sora-movie.vervel.app/movies/discover',
+  'og:url': 'https://sora-movies.vervel.app/movies/discover',
   'og:title': 'Discover and watch movies and tv shows for free | Sora',
   'og:description':
     'Official Sora website to watch movies online HD for free, Watch TV show & TV series and Download all movies and series FREE',

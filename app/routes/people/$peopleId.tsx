@@ -56,7 +56,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     title: `${detail?.name} | Sora - Watch The Best of Movies, TV Shows & Animes`,
     description: `Watch ${detail?.name} movies and series in full HD online with Subtitle`,
     keywords: `watch ${detail?.name} free, watch ${detail?.name} movies, watch ${detail?.name} series, stream ${detail?.name} series, ${detail?.name} movies online free`,
-    'og:url': `https://sora-movie.vercel.app/people/${params.peopleId}`,
+    'og:url': `https://sora-movies.vercel.app/people/${params.peopleId}`,
     'og:title': `${detail?.name} | Sora - Watch The Best of Movies, TV Shows & Animes`,
     'og:description': `Watch ${detail?.name} movies and series in full HD online with Subtitle`,
     'og:image': TMDB.profileUrl(detail?.profile_path, 'w185'),

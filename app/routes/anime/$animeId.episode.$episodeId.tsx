@@ -155,7 +155,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     } episode ${episodeInfo.number}, English, Subtitle ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     } episode ${episodeInfo.number}, English Subtitle`,
-    'og:url': `https://sora-movie.vercel.app/anime/${params.animeId}/episode/${params.episodeId}`,
+    'og:url': `https://sora-movies.vercel.app/anime/${params.animeId}/episode/${params.episodeId}`,
     'og:title': `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     } episode ${episodeInfo.number} HD online Free - Sora`,
