@@ -70,7 +70,7 @@ const AnimeListGrid = ({
     if (!shouldFetch || !height) return;
     if (clientHeight + scrollPosition + 100 < height) return;
 
-    fetcher.load(`${routeName}?page=${page}${provider ? `&provider=${provider}` : ''}}`);
+    fetcher.load(`${routeName}?page=${page}${provider ? `&provider=${provider}` : ''}`);
     setShouldFetch(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scrollPosition, clientHeight, height]);
