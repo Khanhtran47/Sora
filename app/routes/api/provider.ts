@@ -143,24 +143,19 @@ export const loader: LoaderFunction = async ({ request }) => {
         provider: 'KissKh',
       });
 
-    let findBilibili: IBilibiliResult | undefined = bilibiliSearch?.results.find(
-      (anime) => anime.title.toLowerCase() === title.toLowerCase(),
-    );
+    let findBilibili: IBilibiliResult | undefined = bilibiliSearch?.results.find((anime) => {
+      if (anime.title.includes('×')) {
+        return (
+          anime.title.replace(/×/g, 'x').toLowerCase() === title.replace(/\s/g, '').toLowerCase()
+        );
+      }
+      return anime.title.toLowerCase() === title.toLowerCase();
+    });
     if (findBilibili && findBilibili.id) {
       provider.push({
         id: findBilibili.id.toString(),
         provider: 'Bilibili',
       });
-    } else {
-      findBilibili = bilibiliSearch?.results.find(
-        (anime) =>
-          anime.title.replace(/×/g, 'x').toLowerCase() === title.replace(/\s/g, '').toLowerCase(),
-      );
-      if (findBilibili && findBilibili.id)
-        provider.push({
-          id: findBilibili.id.toString(),
-          provider: 'Bilibili',
-        });
     }
 
     if (loklokSearch && loklokSearch?.data?.id)

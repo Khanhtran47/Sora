@@ -368,7 +368,7 @@ const MovieWatch = () => {
                               auto: 'Auto',
                             }),
                           ]
-                        : null,
+                        : [],
                   }}
                   qualitySelector={qualitySelector || []}
                   subtitleSelector={subtitleSelector || []}

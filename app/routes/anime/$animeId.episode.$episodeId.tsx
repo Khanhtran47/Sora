@@ -377,7 +377,7 @@ const AnimeEpisodeWatch = () => {
                               auto: 'Auto',
                             }),
                           ]
-                        : null,
+                        : [],
                   }}
                   qualitySelector={qualitySelector || []}
                   subtitleSelector={subtitleSelector || []}
