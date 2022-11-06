@@ -5,6 +5,8 @@ import sgConfigs from '~/services/configs.server';
 import { authenticate } from '~/services/supabase';
 import { getMovieSearch } from '~/services/consumet/flixhq/flixhq.server';
 import { loklokSearchMovie, loklokSearchOneTv } from '~/services/loklok';
+import { getBilibiliSearch } from '~/services/consumet/bilibili/bilibili.server';
+import { IBilibiliResult } from '~/services/consumet/bilibili/bilibili.types';
 import { IMovieResult } from '~/services/consumet/flixhq/flixhq.types';
 
 type LoaderData = {
@@ -82,9 +84,16 @@ export const loader: LoaderFunction = async ({ request }) => {
       });
   }
   if (type === 'anime') {
-    const loklokSearch = sgConfigs.__loklokProvider
-      ? await loklokSearchOneTv(title, orgTitle || '', Number(year))
-      : undefined;
+    const [bilibiliSearch, loklokSearch] = await Promise.all([
+      getBilibiliSearch(title),
+      sgConfigs.__loklokProvider
+        ? loklokSearchOneTv(title, orgTitle || '', Number(year))
+        : undefined,
+    ]);
+    console.log(
+      '🚀 ~ file: provider.ts ~ line 93 ~ constloader:LoaderFunction= ~ bilibiliSearch',
+      bilibiliSearch,
+    );
     let provider = [
       {
         id: episodeId,
@@ -95,6 +104,25 @@ export const loader: LoaderFunction = async ({ request }) => {
         provider: 'Zoro',
       },
     ];
+    let findBilibili: IBilibiliResult | undefined = bilibiliSearch?.results.find(
+      (anime) => anime.title.toLowerCase() === title.toLowerCase(),
+    );
+    if (findBilibili && findBilibili.id) {
+      provider.push({
+        id: findBilibili.id.toString(),
+        provider: 'Bilibili',
+      });
+    } else {
+      findBilibili = bilibiliSearch?.results.find(
+        (anime) =>
+          anime.title.replace(/×/g, 'x').toLowerCase() === title.replace(/\s/g, '').toLowerCase(),
+      );
+      if (findBilibili && findBilibili.id)
+        provider.push({
+          id: findBilibili.id.toString(),
+          provider: 'Bilibili',
+        });
+    }
     if (loklokSearch && loklokSearch?.data?.id)
       provider.push({
         id: loklokSearch?.data?.id,

@@ -15,6 +15,7 @@ import {
 import { Container, Spacer, Loading, Radio } from '@nextui-org/react';
 import { ClientOnly } from 'remix-utils';
 import { isDesktop } from 'react-device-detect';
+import Hls from 'hls.js';
 
 import ArtPlayer from '~/src/components/elements/player/ArtPlayer';
 import AspectRatio from '~/src/components/elements/aspect-ratio/AspectRatio';
@@ -259,6 +260,8 @@ const EpisodeWatch = () => {
     ({ quality, url }: { quality: number | string; url: string }) => ({
       html: quality.toString(),
       url: url.toString(),
+      isM3U8: true,
+      isDASH: false,
       ...(provider === 'Flixhq' && quality === 'auto' && { default: true }),
       ...(provider === 'Loklok' && Number(quality) === 720 && { default: true }),
     }),
@@ -278,7 +281,7 @@ const EpisodeWatch = () => {
     >
       <ClientOnly fallback={<Loading type="default" />}>
         {() => (
-          <>
+          <React.Suspense fallback={<Loading type="default" />}>
             <AspectRatio.Root ratio={7 / 3}>
               {sources ? (
                 <ArtPlayer
@@ -335,6 +338,20 @@ const EpisodeWatch = () => {
                         },
                       },
                     ],
+                    customType: {
+                      m3u8: (video: HTMLMediaElement, url: string) => {
+                        if (Hls.isSupported()) {
+                          const hls = new Hls();
+                          hls.loadSource(url);
+                          hls.attachMedia(video);
+                        } else {
+                          const canPlay = video.canPlayType('application/vnd.apple.mpegurl');
+                          if (canPlay === 'probably' || canPlay === 'maybe') {
+                            video.src = url;
+                          }
+                        }
+                      },
+                    },
                   }}
                   qualitySelector={qualitySelector || []}
                   subtitleSelector={subtitleSelector || []}
@@ -416,7 +433,7 @@ const EpisodeWatch = () => {
                 </Radio.Group>
               </>
             )}
-          </>
+          </React.Suspense>
         )}
       </ClientOnly>
     </Container>

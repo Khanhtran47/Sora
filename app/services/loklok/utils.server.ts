@@ -1,6 +1,7 @@
+import { env } from 'process';
 import { lruCache } from '../lru-cache';
 
-export const LOKLOK_URL = process.env.LOKLOK_API_URL;
+export const LOKLOK_URL = env.LOKLOK_API_URL;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const fetcher = async <T = any>(url: string): Promise<T> => {

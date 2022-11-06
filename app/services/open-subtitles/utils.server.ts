@@ -1,5 +1,7 @@
+import { env } from 'process';
+
 export default class Opensubtitles {
-  static readonly API_BASE_URL = 'https://api.opensubtitles.com/api/v1/';
+  static readonly API_BASE_URL = env.OPEN_SUBTITLES_API_URL;
 
   static subtitlesSearchUrl = (
     id?: number,

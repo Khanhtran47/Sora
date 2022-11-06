@@ -1,5 +1,7 @@
+import { env } from 'process';
+
 export default class Anilist {
-  static readonly API_BASE_URL = 'https://api.consumet.org/meta/anilist/';
+  static readonly API_BASE_URL = env.ANILIST_API_URL;
 
   static animeSearchUrl = (query: string, page?: number, perPage?: number): string => {
     let url = `${Anilist.API_BASE_URL}${query}`;

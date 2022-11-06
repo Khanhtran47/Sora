@@ -51,11 +51,13 @@ export interface Headers {
 
 export interface IMovieSource {
   isM3U8?: boolean;
+  isDASH?: boolean;
   quality: string;
   url: string;
 }
 
 export interface IMovieSubtitle {
+  id?: number;
   lang: string;
   url: string;
 }

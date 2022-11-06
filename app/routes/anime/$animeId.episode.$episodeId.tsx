@@ -1,6 +1,7 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
+import { Suspense } from 'react';
 import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
 import {
   useCatch,
@@ -20,6 +21,7 @@ import {
   getAnimeInfo,
   getAnimeEpisodeInfo,
 } from '~/services/consumet/anilist/anilist.server';
+import { getBilibiliEpisode, getBilibiliInfo } from '~/services/consumet/bilibili/bilibili.server';
 import { IEpisode } from '~/services/consumet/anilist/anilist.types';
 import { loklokGetTvEpInfo } from '~/services/loklok';
 import { LOKLOK_URL } from '~/services/loklok/utils.server';
@@ -121,6 +123,23 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     });
   }
 
+  if (provider === 'Bilibili') {
+    if (!idProvider) throw new Response('Id Not Found', { status: 404 });
+    const animeInfo = await getBilibiliInfo(Number(idProvider));
+    const episodeSearch = animeInfo?.episodes?.find((e) => e?.number === Number(episode));
+
+    const episodeDetail = await getBilibiliEpisode(Number(episodeSearch?.id));
+
+    return json<LoaderData>({
+      provider,
+      detail,
+      sources: episodeDetail?.sources,
+      subtitles: episodeDetail?.subtitles,
+      userId: user?.id,
+      episodeInfo,
+    });
+  }
+
   if (!detail || !sources) throw new Response('Not Found', { status: 404 });
 
   return json<LoaderData>({ detail, sources: sources.sources, userId: user?.id, episodeInfo });
@@ -192,16 +211,26 @@ const AnimeEpisodeWatch = () => {
     url: url.toString(),
     ...(provider === 'Loklok' && lang === 'en' && { default: true }),
   }));
-  const qualitySelector = sources?.map(
-    ({ quality, url }: { quality: number | string; url: string }) => ({
-      html: quality.toString(),
-      url: url.toString(),
-      ...(provider === 'Loklok' && Number(quality) === 720 && { default: true }),
-      ...((provider === 'Gogo' || provider === 'Zoro') &&
-        quality === 'default' && { default: true }),
-      ...(!provider && quality === 'default' && { default: true }),
-    }),
-  );
+  const qualitySelector =
+    provider === 'Loklok' || provider === 'Gogo' || provider === 'Zoro'
+      ? sources?.map(({ quality, url }: { quality: number | string; url: string }) => ({
+          html: quality.toString(),
+          url: url.toString(),
+          isM3U8: true,
+          isDASH: false,
+          ...(provider === 'Loklok' && Number(quality) === 720 && { default: true }),
+          ...((provider === 'Gogo' || provider === 'Zoro') &&
+            quality === 'default' && { default: true }),
+        }))
+      : provider === 'Bilibili'
+      ? undefined
+      : sources?.map(({ quality, url }: { quality: number | string; url: string }) => ({
+          html: quality.toString(),
+          url: url.toString(),
+          isM3U8: false,
+          isDASH: true,
+          ...(quality === 'default' && { default: true }),
+        }));
   return (
     <Container
       fluid
@@ -217,102 +246,136 @@ const AnimeEpisodeWatch = () => {
     >
       <ClientOnly fallback={<Loading type="default" />}>
         {() => (
-          <AspectRatio.Root ratio={7 / 3}>
-            {sources && (
-              <ArtPlayer
-                option={{
-                  title: `${detail?.title?.userPreferred as string} Episode ${episodeInfo?.number}`,
-                  url:
-                    provider === 'Loklok'
-                      ? sources?.find(
-                          (item: { quality: number | string; url: string }) =>
-                            Number(item.quality) === 720,
-                        )?.url
-                      : provider === 'Gogo' || provider === 'Zoro'
-                      ? sources?.find(
-                          (item: { quality: number | string; url: string }) =>
-                            item.quality === 'default',
-                        )?.url
-                      : sources?.find(
-                          (item: { quality: number | string; url: string }) =>
-                            item.quality === 'default',
-                        )?.url || '',
-                  subtitle: {
+          <Suspense fallback={<Loading type="default" />}>
+            <AspectRatio.Root ratio={7 / 3}>
+              {sources && (
+                <ArtPlayer
+                  option={{
+                    title: `${detail?.title?.userPreferred as string} Episode ${
+                      episodeInfo?.number
+                    }`,
                     url:
                       provider === 'Loklok'
-                        ? subtitles?.find((item: { lang: string; url: string }) =>
-                            item.lang.includes('English'),
+                        ? sources?.find(
+                            (item: { quality: number | string; url: string }) =>
+                              Number(item.quality) === 720,
                           )?.url
-                        : subtitles?.find((item: { lang: string; url: string }) =>
-                            item.lang.includes('English'),
+                        : provider === 'Gogo' || provider === 'Zoro'
+                        ? sources?.find(
+                            (item: { quality: number | string; url: string }) =>
+                              item.quality === 'default',
+                          )?.url
+                        : provider === 'Bilibili'
+                        ? sources[0]?.url
+                        : sources?.find(
+                            (item: { quality: number | string; url: string }) =>
+                              item.quality === 'default',
                           )?.url || '',
-                    encoding: 'utf-8',
-                    style: {
-                      fontSize: isDesktop ? '40px' : '20px',
-                    },
-                  },
-                  poster: detail?.cover,
-                  isLive: false,
-                  autoMini: true,
-                  backdrop: true,
-                  playsInline: true,
-                  autoPlayback: true,
-                  layers: [
-                    {
-                      name: 'title',
-                      html: `<span>${
-                        detail?.title?.userPreferred || detail?.title?.english || ''
-                      } - EP ${episodeInfo?.number}</span>`,
+                    subtitle: {
+                      url:
+                        provider === 'Loklok'
+                          ? subtitles?.find((item: { lang: string; url: string }) =>
+                              item.lang.includes('English'),
+                            )?.url
+                          : subtitles?.find((item: { lang: string; url: string }) =>
+                              item.lang.includes('English'),
+                            )?.url || '',
+                      encoding: 'utf-8',
                       style: {
-                        position: 'absolute',
-                        top: '15px',
-                        left: '15px',
-                        fontSize: '1.125rem',
+                        fontSize: isDesktop ? '40px' : '20px',
                       },
                     },
-                  ],
-                }}
-                qualitySelector={qualitySelector || []}
-                subtitleSelector={subtitleSelector || []}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                }}
-                getInstance={(art) => {
-                  art.on('ready', () => {
-                    const t = new URLSearchParams(location.search).get('t');
-                    if (t) {
-                      art.currentTime = Number(t);
-                    }
-                  });
-
-                  if (userId) {
-                    updateHistory(
+                    poster: detail?.cover,
+                    isLive: false,
+                    autoMini: true,
+                    backdrop: true,
+                    playsInline: true,
+                    autoPlayback: true,
+                    layers: [
+                      {
+                        name: 'title',
+                        html: `<span>${
+                          detail?.title?.userPreferred || detail?.title?.english || ''
+                        } - EP ${episodeInfo?.number}</span>`,
+                        style: {
+                          position: 'absolute',
+                          top: '15px',
+                          left: '15px',
+                          fontSize: '1.125rem',
+                        },
+                      },
+                    ],
+                    customType:
+                      provider === 'Loklok' || provider === 'Gogo' || provider === 'Zoro'
+                        ? {
+                            m3u8: async (video: HTMLMediaElement, url: string) => {
+                              const { default: Hls } = await import('hls.js');
+                              if (Hls.isSupported()) {
+                                const hls = new Hls();
+                                hls.loadSource(url);
+                                hls.attachMedia(video);
+                              } else {
+                                const canPlay = video.canPlayType('application/vnd.apple.mpegurl');
+                                if (canPlay === 'probably' || canPlay === 'maybe') {
+                                  video.src = url;
+                                }
+                              }
+                            },
+                          }
+                        : {
+                            mpd: async (video: HTMLMediaElement, url: string) => {
+                              const { default: dashjs } = await import('dashjs');
+                              const player = dashjs.MediaPlayer().create();
+                              player.initialize(video, url, true);
+                            },
+                          },
+                  }}
+                  qualitySelector={qualitySelector || []}
+                  subtitleSelector={subtitleSelector || []}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                  }}
+                  getInstance={(art) => {
+                    console.log(
+                      '🚀 ~ file: $animeId.episode.$episodeId.tsx ~ line 333 ~ AnimeEpisodeWatch ~ art',
                       art,
-                      fetcher,
-                      userId,
-                      location.pathname + location.search,
-                      'anime',
-                      detail?.title?.userPreferred || detail?.title?.english || '',
-                      detail?.description || '',
-                      detail?.season,
-                      episodeId,
                     );
-                  }
+                    art.on('ready', () => {
+                      const t = new URLSearchParams(location.search).get('t');
+                      if (t) {
+                        art.currentTime = Number(t);
+                      }
+                    });
 
-                  art.on('pause', () => {
-                    art.layers.title.style.display = 'block';
-                  });
-                  art.on('play', () => {
-                    art.layers.title.style.display = 'none';
-                  });
-                  art.on('hover', (state: boolean) => {
-                    art.layers.title.style.display = state || !art.playing ? 'block' : 'none';
-                  });
-                }}
-              />
-            )}
-          </AspectRatio.Root>
+                    if (userId) {
+                      updateHistory(
+                        art,
+                        fetcher,
+                        userId,
+                        location.pathname + location.search,
+                        'anime',
+                        detail?.title?.userPreferred || detail?.title?.english || '',
+                        detail?.description || '',
+                        detail?.season,
+                        episodeId,
+                      );
+                    }
+
+                    art.on('pause', () => {
+                      art.layers.title.style.display = 'block';
+                    });
+                    art.on('play', () => {
+                      art.layers.title.style.display = 'none';
+                    });
+                    art.on('hover', (state: boolean) => {
+                      art.layers.title.style.display = state || !art.playing ? 'block' : 'none';
+                    });
+                  }}
+                />
+              )}
+            </AspectRatio.Root>
+          </Suspense>
         )}
       </ClientOnly>
     </Container>
