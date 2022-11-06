@@ -16,6 +16,7 @@ import { Container, Spacer, Loading, Radio } from '@nextui-org/react';
 import { ClientOnly } from 'remix-utils';
 import { isDesktop } from 'react-device-detect';
 import Hls from 'hls.js';
+import artplayerPluginHlsQuality from 'artplayer-plugin-hls-quality';
 
 import ArtPlayer from '~/src/components/elements/player/ArtPlayer';
 import AspectRatio from '~/src/components/elements/aspect-ratio/AspectRatio';
@@ -31,6 +32,11 @@ import {
   IMovieSource,
   IMovieSubtitle,
 } from '~/services/consumet/flixhq/flixhq.types';
+import {
+  getKissKhInfo,
+  getKissKhEpisodeStream,
+  getKissKhEpisodeSubtitle,
+} from '~/services/kisskh/kisskh.server';
 import { loklokSearchMovieSub, loklokGetMovieInfo } from '~/services/loklok';
 import { LOKLOK_URL } from '~/services/loklok/utils.server';
 import TMDB from '~/utils/media';
@@ -113,6 +119,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       userId: user?.id,
     });
   }
+
   if (provider === 'Flixhq') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
     const movieDetail = await getMovieInfo(idProvider);
@@ -129,6 +136,30 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       userId: user?.id,
     });
   }
+
+  if (provider === 'KissKh') {
+    if (!idProvider) throw new Response('Id Not Found', { status: 404 });
+    const episodeDetail = await getKissKhInfo(Number(idProvider));
+    const [episodeStream, episodeSubtitle] = await Promise.all([
+      getKissKhEpisodeStream(Number(episodeDetail?.episodes[0]?.id)),
+      episodeDetail?.episodes[0] && episodeDetail?.episodes[0].sub > 0
+        ? getKissKhEpisodeSubtitle(Number(episodeDetail?.episodes[0]?.id))
+        : undefined,
+    ]);
+
+    return json<DataLoader>({
+      provider,
+      detail,
+      sources: [{ url: episodeStream?.Video || '', isM3U8: true, quality: 'auto' }],
+      subtitles: episodeSubtitle?.map((sub) => ({
+        lang: sub.label,
+        url: sub.src,
+        ...(sub.default && { default: true }),
+      })),
+      userId: user?.id,
+    });
+  }
+
   if (provider === 'Embed') {
     return json<DataLoader>({
       detail,
@@ -222,6 +253,7 @@ const MovieWatch = () => {
     html: lang.toString(),
     url: url.toString(),
     ...(provider === 'Flixhq' && lang === 'English' && { default: true }),
+    ...(provider === 'KissKh' && lang === 'English' && { default: true }),
     ...(provider === 'Loklok' && lang === 'en' && { default: true }),
   }));
   const qualitySelector = sources?.map(
@@ -266,6 +298,8 @@ const MovieWatch = () => {
                             (item: { quality: number | string; url: string }) =>
                               Number(item.quality) === 720,
                           )?.url
+                        : provider === 'KissKh'
+                        ? sources[0]?.url
                         : sources?.find(
                             (item: { quality: number | string; url: string }) =>
                               item.quality === 'auto',
@@ -275,11 +309,16 @@ const MovieWatch = () => {
                         provider === 'Flixhq'
                           ? subtitles?.find((item: { lang: string; url: string }) =>
                               item.lang.includes('English'),
-                            )?.url
+                            )?.url || ''
                           : provider === 'Loklok'
                           ? subtitles?.find((item: { lang: string; url: string }) =>
                               item.lang.includes('English'),
-                            )?.url
+                            )?.url || ''
+                          : provider === 'KissKh'
+                          ? subtitles?.find(
+                              (item: { lang: string; url: string; default?: boolean }) =>
+                                item.default,
+                            )?.url || ''
                           : subtitles?.find((item: { lang: string; url: string }) =>
                               item.lang.includes('English'),
                             )?.url || '',
@@ -320,6 +359,16 @@ const MovieWatch = () => {
                         }
                       },
                     },
+                    plugins:
+                      provider === 'KissKh'
+                        ? [
+                            artplayerPluginHlsQuality({
+                              setting: true,
+                              title: 'Quality',
+                              auto: 'Auto',
+                            }),
+                          ]
+                        : null,
                   }}
                   qualitySelector={qualitySelector || []}
                   subtitleSelector={subtitleSelector || []}

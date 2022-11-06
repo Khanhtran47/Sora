@@ -15,6 +15,7 @@ import {
 import { Container, Spacer, Loading } from '@nextui-org/react';
 import { ClientOnly } from 'remix-utils';
 import { isDesktop } from 'react-device-detect';
+import artplayerPluginHlsQuality from 'artplayer-plugin-hls-quality';
 
 import {
   getAnimeEpisodeStream,
@@ -22,6 +23,11 @@ import {
   getAnimeEpisodeInfo,
 } from '~/services/consumet/anilist/anilist.server';
 import { getBilibiliEpisode, getBilibiliInfo } from '~/services/consumet/bilibili/bilibili.server';
+import {
+  getKissKhInfo,
+  getKissKhEpisodeStream,
+  getKissKhEpisodeSubtitle,
+} from '~/services/kisskh/kisskh.server';
 import { IEpisode } from '~/services/consumet/anilist/anilist.types';
 import { loklokGetTvEpInfo } from '~/services/loklok';
 import { LOKLOK_URL } from '~/services/loklok/utils.server';
@@ -127,7 +133,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
     const animeInfo = await getBilibiliInfo(Number(idProvider));
     const episodeSearch = animeInfo?.episodes?.find((e) => e?.number === Number(episode));
-
     const episodeDetail = await getBilibiliEpisode(Number(episodeSearch?.id));
 
     return json<LoaderData>({
@@ -135,6 +140,31 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       detail,
       sources: episodeDetail?.sources,
       subtitles: episodeDetail?.subtitles,
+      userId: user?.id,
+      episodeInfo,
+    });
+  }
+
+  if (provider === 'KissKh') {
+    if (!idProvider) throw new Response('Id Not Found', { status: 404 });
+    const episodeDetail = await getKissKhInfo(Number(idProvider));
+    const episodeSearch = episodeDetail?.episodes?.find((e) => e?.number === Number(episode));
+    const [episodeStream, episodeSubtitle] = await Promise.all([
+      getKissKhEpisodeStream(Number(episodeSearch?.id)),
+      episodeSearch && episodeSearch.sub > 0
+        ? getKissKhEpisodeSubtitle(Number(episodeSearch?.id))
+        : undefined,
+    ]);
+
+    return json<LoaderData>({
+      provider,
+      detail,
+      sources: [{ url: episodeStream?.Video || '', isM3U8: true, quality: 'auto' }],
+      subtitles: episodeSubtitle?.map((sub) => ({
+        lang: sub.label,
+        url: sub.src,
+        ...(sub.default && { default: true }),
+      })),
       userId: user?.id,
       episodeInfo,
     });
@@ -210,6 +240,7 @@ const AnimeEpisodeWatch = () => {
     html: lang.toString(),
     url: url.toString(),
     ...(provider === 'Loklok' && lang === 'en' && { default: true }),
+    ...(provider === 'KissKh' && lang === 'English' && { default: true }),
   }));
   const qualitySelector =
     provider === 'Loklok' || provider === 'Gogo' || provider === 'Zoro'
@@ -259,13 +290,13 @@ const AnimeEpisodeWatch = () => {
                         ? sources?.find(
                             (item: { quality: number | string; url: string }) =>
                               Number(item.quality) === 720,
-                          )?.url
+                          )?.url || ''
                         : provider === 'Gogo' || provider === 'Zoro'
                         ? sources?.find(
                             (item: { quality: number | string; url: string }) =>
                               item.quality === 'default',
-                          )?.url
-                        : provider === 'Bilibili'
+                          )?.url || ''
+                        : provider === 'Bilibili' || provider === 'KissKh'
                         ? sources[0]?.url
                         : sources?.find(
                             (item: { quality: number | string; url: string }) =>
@@ -277,6 +308,11 @@ const AnimeEpisodeWatch = () => {
                           ? subtitles?.find((item: { lang: string; url: string }) =>
                               item.lang.includes('English'),
                             )?.url
+                          : provider === 'KissKh'
+                          ? subtitles?.find(
+                              (item: { lang: string; url: string; default?: boolean }) =>
+                                item.default,
+                            )?.url || ''
                           : subtitles?.find((item: { lang: string; url: string }) =>
                               item.lang.includes('English'),
                             )?.url || '',
@@ -306,7 +342,10 @@ const AnimeEpisodeWatch = () => {
                       },
                     ],
                     customType:
-                      provider === 'Loklok' || provider === 'Gogo' || provider === 'Zoro'
+                      provider === 'Loklok' ||
+                      provider === 'Gogo' ||
+                      provider === 'Zoro' ||
+                      provider === 'KissKh'
                         ? {
                             m3u8: async (video: HTMLMediaElement, url: string) => {
                               const { default: Hls } = await import('hls.js');
@@ -329,6 +368,16 @@ const AnimeEpisodeWatch = () => {
                               player.initialize(video, url, true);
                             },
                           },
+                    plugins:
+                      provider === 'KissKh'
+                        ? [
+                            artplayerPluginHlsQuality({
+                              setting: true,
+                              title: 'Quality',
+                              auto: 'Auto',
+                            }),
+                          ]
+                        : null,
                   }}
                   qualitySelector={qualitySelector || []}
                   subtitleSelector={subtitleSelector || []}
@@ -337,10 +386,6 @@ const AnimeEpisodeWatch = () => {
                     height: '100%',
                   }}
                   getInstance={(art) => {
-                    console.log(
-                      '🚀 ~ file: $animeId.episode.$episodeId.tsx ~ line 333 ~ AnimeEpisodeWatch ~ art',
-                      art,
-                    );
                     art.on('ready', () => {
                       const t = new URLSearchParams(location.search).get('t');
                       if (t) {

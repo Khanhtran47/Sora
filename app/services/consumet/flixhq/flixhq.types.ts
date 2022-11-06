@@ -58,6 +58,7 @@ export interface IMovieSource {
 
 export interface IMovieSubtitle {
   id?: number;
+  default?: boolean;
   lang: string;
   url: string;
 }

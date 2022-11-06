@@ -3368,6 +3368,11 @@ array.prototype.flatmap@^1.3.0:
     es-abstract "^1.19.2"
     es-shim-unscopables "^1.0.0"
 
+artplayer-plugin-hls-quality@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/artplayer-plugin-hls-quality/-/artplayer-plugin-hls-quality-1.0.0.tgz#69454709d528ae856deb7cbe0d7e6dbabdfb85ec"
+  integrity sha512-3bEh4MILauqQ0LtzKe3Jx50JjFACMvq5LcdoJzQnSTgY5rl7OrfD9u07/o1GbElyJrzHNI0mPX+KBl3BIT5ygw==
+
 artplayer@^4.5.9:
   version "4.5.10"
   resolved "https://registry.yarnpkg.com/artplayer/-/artplayer-4.5.10.tgz#8a9f538d4ea4fdeecdcb3dcf39faed7ddb75f702"

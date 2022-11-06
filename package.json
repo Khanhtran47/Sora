@@ -34,6 +34,7 @@
     "@supabase/supabase-js": "^2.0.4",
     "@tailwindcss/line-clamp": "^0.4.2",
     "artplayer": "^4.5.9",
+    "artplayer-plugin-hls-quality": "^1.0.0",
     "autoprefixer": "^10.4.12",
     "color-thief-react": "^2.1.0",
     "concurrently": "^7.2.1",
