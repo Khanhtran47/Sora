@@ -79,14 +79,31 @@ export async function insertHistory(_history: IHistoryDTO) {
   }
 }
 
-export async function getHistory(_userId: string, _page = 1) {
+export async function getHistory(
+  _userId: string,
+  types: string | null,
+  from: string | null,
+  to: string | null,
+  _page = 1,
+) {
   try {
-    const { data, error } = await supabase
-      .from('histories')
-      .select()
-      .eq('user_id', _userId)
-      .order('updated_at', { ascending: false })
-      .range((_page - 1) * 20, _page * 20 - 1);
+    const query = supabase.from('histories').select().eq('user_id', _userId);
+
+    if (types) {
+      query.in('media_type', types.split(','));
+    }
+    if (from) {
+      query.gte('updated_at', new Date(from).toISOString());
+    }
+    if (to) {
+      const date = new Date(to);
+      date.setDate(date.getDate() + 1);
+      query.lte('updated_at', date.toISOString());
+    }
+
+    query.order('updated_at', { ascending: false }).range((_page - 1) * 20, _page * 20 - 1);
+
+    const { data, error } = await query;
 
     if (data) {
       // console.log(data);
@@ -101,12 +118,30 @@ export async function getHistory(_userId: string, _page = 1) {
   }
 }
 
-export async function getCountHistory(_userId: string) {
+export async function getCountHistory(
+  _userId: string,
+  types: string | null,
+  from: string | null,
+  to: string | null,
+) {
   try {
-    const { count, error } = await supabase
+    const query = supabase
       .from('histories')
       .select('*', { count: 'exact', head: true })
       .eq('user_id', _userId);
+
+    if (types) {
+      query.in('media_type', types.split(','));
+    }
+    if (from) {
+      query.gte('updated_at', new Date(from).toISOString());
+    }
+    if (to) {
+      const date = new Date(to);
+      date.setDate(date.getDate() + 1);
+      query.lte('updated_at', date.toISOString());
+    }
+    const { count, error } = await query;
 
     if (count) {
       return count;
