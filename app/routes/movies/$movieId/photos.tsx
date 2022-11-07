@@ -26,7 +26,7 @@ type LoaderData = {
 };
 
 export const meta: MetaFunction = ({ params }) => ({
-  'og:url': `https://sora-movies.vercel.app/movies/${params.movieId}/photos`,
+  'og:url': `https://sora-anime.vercel.app/movies/${params.movieId}/photos`,
 });
 
 export const loader: LoaderFunction = async ({ request, params }) => {

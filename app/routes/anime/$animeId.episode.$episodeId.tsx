@@ -39,6 +39,7 @@ import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 import updateHistory from '~/utils/update-history';
 import { authenticate, insertHistory } from '~/services/supabase';
+import Hls from 'hls.js';
 
 type LoaderData = {
   provider?: string;
@@ -138,8 +139,13 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     return json<LoaderData>({
       provider,
       detail,
-      sources: episodeDetail?.sources,
-      subtitles: episodeDetail?.subtitles,
+      sources: [
+        {
+          url: episodeDetail?.sources[0]?.file || '',
+          isDASH: episodeDetail?.sources[0]?.type === 'dash',
+          quality: 'auto',
+        },
+      ],
       userId: user?.id,
       episodeInfo,
     });
@@ -204,7 +210,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     } episode ${episodeInfo.number}, English, Subtitle ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     } episode ${episodeInfo.number}, English Subtitle`,
-    'og:url': `https://sora-movies.vercel.app/anime/${params.animeId}/episode/${params.episodeId}`,
+    'og:url': `https://sora-anime.vercel.app/anime/${params.animeId}/episode/${params.episodeId}`,
     'og:title': `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     } episode ${episodeInfo.number} HD online Free - Sora`,
@@ -218,12 +224,20 @@ export const meta: MetaFunction = ({ data, params }) => {
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
     <>
-      <Link to={`/anime/${match.params.animeId}/overview`}>{match.params.animeId}</Link>
+      <Link
+        to={`/anime/${match.params.animeId}/overview`}
+        aria-label={match.data?.detail?.title?.english || match.data?.detail?.title?.romaji}
+      >
+        {match.data?.detail?.title?.english || match.data?.detail?.title?.romaji}
+      </Link>
       <Spacer x={0.5} />
       <span> ❱ </span>
       <Spacer x={0.5} />
-      <Link to={`/anime/${match.params.animeId}/episode/${match.params.episodeId}`}>
-        {match.params.episodeId}
+      <Link
+        to={`/anime/${match.params.animeId}/episode/${match.params.episodeId}`}
+        aria-label={match?.data?.episodeInfo?.title || match.params.episodeId}
+      >
+        {match?.data?.episodeInfo?.title || match.params.episodeId}
       </Link>
     </>
   ),
@@ -235,6 +249,7 @@ const AnimeEpisodeWatch = () => {
 
   const fetcher = useFetcher();
   const location = useLocation();
+  let hls: Hls | null = null;
 
   const subtitleSelector = subtitles?.map(({ lang, url }: { lang: string; url: string }) => ({
     html: lang.toString(),
@@ -282,9 +297,9 @@ const AnimeEpisodeWatch = () => {
               {sources && (
                 <ArtPlayer
                   option={{
-                    title: `${detail?.title?.userPreferred as string} Episode ${
-                      episodeInfo?.number
-                    }`,
+                    title: `${
+                      detail?.title?.userPreferred || detail?.title?.english || ''
+                    } Episode ${episodeInfo?.number}`,
                     url:
                       provider === 'Loklok'
                         ? sources?.find(
@@ -341,6 +356,13 @@ const AnimeEpisodeWatch = () => {
                         },
                       },
                     ],
+                    type:
+                      provider === 'Loklok' ||
+                      provider === 'Gogo' ||
+                      provider === 'Zoro' ||
+                      provider === 'KissKh'
+                        ? 'm3u8'
+                        : 'dash',
                     customType:
                       provider === 'Loklok' ||
                       provider === 'Gogo' ||
@@ -348,16 +370,15 @@ const AnimeEpisodeWatch = () => {
                       provider === 'KissKh'
                         ? {
                             m3u8: async (video: HTMLMediaElement, url: string) => {
-                              const { default: Hls } = await import('hls.js');
+                              if (hls) {
+                                hls.destroy();
+                              }
                               if (Hls.isSupported()) {
-                                const hls = new Hls();
+                                hls = new Hls();
                                 hls.loadSource(url);
                                 hls.attachMedia(video);
-                              } else {
-                                const canPlay = video.canPlayType('application/vnd.apple.mpegurl');
-                                if (canPlay === 'probably' || canPlay === 'maybe') {
-                                  video.src = url;
-                                }
+                              } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                                video.src = url;
                               }
                             },
                           }
@@ -415,6 +436,11 @@ const AnimeEpisodeWatch = () => {
                     });
                     art.on('hover', (state: boolean) => {
                       art.layers.title.style.display = state || !art.playing ? 'block' : 'none';
+                    });
+                    art.on('destroy', () => {
+                      if (hls) {
+                        hls.destroy();
+                      }
                     });
                   }}
                 />

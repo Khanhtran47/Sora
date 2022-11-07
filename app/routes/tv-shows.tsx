@@ -10,7 +10,7 @@ export const meta: MetaFunction = () => ({
     'Watch latest Tv series online in HD Quality. Unlimited streaming series for free now',
   keywords:
     'watch free movies, free movies to watch online, watch movies online free, free movies streaming, free movies full, free movies download, watch movies hd, movies to watch, hd movies, stream movies, movies to stream, watch movies free',
-  'og:url': 'https://sora-movies.vervel.app/tv-shows',
+  'og:url': 'https://sora-anime.vercel.app/tv-shows',
   'og:title': 'Free Series HD - Watch Series and Movies HD Online on Sora',
   'og:image': 'https://static.alphacoders.com/thumbs_categories/20.jpg',
   'og:description':
@@ -25,7 +25,11 @@ const tvPage = [
 ];
 
 export const handle = {
-  breadcrumb: () => <NavLink to="/tv-shows">Tv Shows</NavLink>,
+  breadcrumb: () => (
+    <NavLink to="/tv-shows" aria-label="Tv Series Page">
+      Tv Shows
+    </NavLink>
+  ),
 };
 
 const TvPage = () => {

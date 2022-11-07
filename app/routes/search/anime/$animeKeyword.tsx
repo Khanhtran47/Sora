@@ -31,7 +31,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     title: `Search results for '${params.animeKeyword}' anime on Sora`,
     description: `Watch ${params.animeKeyword} anime in full HD online with Subtitle`,
     keywords: `Watch ${params.animeKeyword}, Stream ${params.animeKeyword}, Watch ${params.animeKeyword} HD, Online ${params.animeKeyword}, Streaming ${params.animeKeyword}, English, Subtitle ${params.animeKeyword}, English Subtitle`,
-    'og:url': `https://sora-movies.vercel.app/search/anime/${params.animeKeyword}`,
+    'og:url': `https://sora-anime.vercel.app/search/anime/${params.animeKeyword}`,
     'og:title': `Search results for '${params.animeKeyword}' anime on Sora`,
     'og:description': `Watch ${params.animeKeyword} in full HD online with Subtitle`,
     'og:image': searchResults?.results[0]?.cover || searchResults?.results[0]?.image || '',
@@ -40,7 +40,9 @@ export const meta: MetaFunction = ({ data, params }) => {
 
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
-    <Link to={`/search/anime/${match.params.animeKeyword}`}>{match.params.animeKeyword}</Link>
+    <Link to={`/search/anime/${match.params.animeKeyword}`} aria-label={match.params.animeKeyword}>
+      {match.params.animeKeyword}
+    </Link>
   ),
 };
 

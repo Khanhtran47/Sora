@@ -47,7 +47,7 @@ const AuthForm = ({ type, error, code, errorCode }: IAuthForm) => {
 
   return (
     <Form method="post">
-      <Card variant="bordered" css={{ mw: '100%', padding: '$5' }}>
+      <Card variant="bordered" css={{ mw: '100%', padding: '$5' }} role="form">
         <Card.Header>
           <H2
             h2

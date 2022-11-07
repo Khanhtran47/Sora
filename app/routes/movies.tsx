@@ -9,7 +9,7 @@ export const meta: MetaFunction = () => ({
   description: 'Watch latest movies online in HD Quality. Unlimited streaming movies for free now',
   keywords:
     'watch free movies, free movies to watch online, watch movies online free, free movies streaming, free movies full, free movies download, watch movies hd, movies to watch, hd movies, stream movies, movies to stream, watch movies free',
-  'og:url': 'https://sora-movies.vervel.app/movies',
+  'og:url': 'https://sora-anime.vercel.app/movies',
   'og:title': 'Free Movies HD - Watch Movies and Tv Series HD Online on Sora',
   'og:image': 'https://static.alphacoders.com/thumbs_categories/20.jpg',
   'og:description':
@@ -24,7 +24,11 @@ const moviePage = [
 ];
 
 export const handle = {
-  breadcrumb: () => <NavLink to="/movies">Movies</NavLink>,
+  breadcrumb: () => (
+    <NavLink to="/movies" aria-label="Movies Page">
+      Movies
+    </NavLink>
+  ),
 };
 
 const MoviePage = () => {

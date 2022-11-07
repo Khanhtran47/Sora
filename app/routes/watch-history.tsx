@@ -8,7 +8,11 @@ import HistoryItem from '~/src/components/media/item/HistoryItem';
 import { useRef, useState } from 'react';
 
 export const handle = {
-  breadcrumb: () => <Link to="/watch-history">History</Link>,
+  breadcrumb: () => (
+    <Link to="/watch-history" aria-label="Watch History Page">
+      History
+    </Link>
+  ),
 };
 
 type LoaderData = {

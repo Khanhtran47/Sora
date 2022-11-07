@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { LoaderFunction, json, redirect } from '@remix-run/node';
+import { LoaderFunction, json } from '@remix-run/node';
 
 import sgConfigs from '~/services/configs.server';
 import { authenticate } from '~/services/supabase';
@@ -117,7 +117,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
   if (type === 'anime') {
     const [bilibiliSearch, loklokSearch, kisskhSearch] = await Promise.all([
-      getBilibiliSearch(title),
+      sgConfigs.__bilibiliProvider ? getBilibiliSearch(title) : undefined,
       sgConfigs.__loklokProvider
         ? loklokSearchOneTv(title, orgTitle || '', Number(year))
         : undefined,

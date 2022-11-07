@@ -15,7 +15,11 @@ import AnimeList from '~/src/components/anime/AnimeList';
 
 export const handle = {
   i18n: 'anime',
-  breadcrumb: () => <Link to="/anime">Anime</Link>,
+  breadcrumb: () => (
+    <Link to="/anime" aria-label="Anime">
+      Anime
+    </Link>
+  ),
 };
 
 type LoaderData = {

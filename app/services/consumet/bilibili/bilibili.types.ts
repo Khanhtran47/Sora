@@ -1,5 +1,4 @@
-import { IMovieSource, IMovieSubtitle } from '../flixhq/flixhq.types';
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface IBilibiliSearch {
   totalResults: number;
   results: IBilibiliResult[];
@@ -34,6 +33,27 @@ export interface Episode {
 }
 
 export interface IBilibiliEpisode {
-  sources: IMovieSource[];
-  subtitles: IMovieSubtitle[];
+  success: boolean;
+  sources: Source[];
+  fonts: any[];
+  thumbnail?: any;
+  subtitles: Subtitle[];
+}
+
+interface Subtitle {
+  file: string;
+  lang: string;
+  language: string;
+}
+
+interface Source {
+  file: string;
+  type: string;
+  proxy: Proxy;
+}
+
+interface Proxy {
+  redirectWithProxy: boolean;
+  followRedirect: boolean;
+  appendReqHeaders: any;
 }

@@ -56,7 +56,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     title: `${detail?.name} | Sora - Watch The Best of Movies, TV Shows & Animes`,
     description: `Watch ${detail?.name} movies and series in full HD online with Subtitle`,
     keywords: `watch ${detail?.name} free, watch ${detail?.name} movies, watch ${detail?.name} series, stream ${detail?.name} series, ${detail?.name} movies online free`,
-    'og:url': `https://sora-movies.vercel.app/people/${params.peopleId}`,
+    'og:url': `https://sora-anime.vercel.app/people/${params.peopleId}`,
     'og:title': `${detail?.name} | Sora - Watch The Best of Movies, TV Shows & Animes`,
     'og:description': `Watch ${detail?.name} movies and series in full HD online with Subtitle`,
     'og:image': TMDB.profileUrl(detail?.profile_path, 'w185'),
@@ -66,11 +66,18 @@ export const meta: MetaFunction = ({ data, params }) => {
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
     <>
-      <Link to="/people">Popular People</Link>
+      <Link to="/people" aria-label="Popular People">
+        Popular People
+      </Link>
       <Spacer x={0.5} />
       <span> ❱ </span>
       <Spacer x={0.5} />
-      <Link to={`/people/${match.params.peopleId}`}>{match.params.peopleId}</Link>
+      <Link
+        to={`/people/${match.params.peopleId}`}
+        aria-label={match.data?.detail?.name || match.params.peopleId}
+      >
+        {match.data?.detail?.name || match.params.peopleId}
+      </Link>
     </>
   ),
 };

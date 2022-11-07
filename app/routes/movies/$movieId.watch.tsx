@@ -59,7 +59,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     title: `Watch ${detail.title} HD online Free - Sora`,
     description: `Watch ${detail.title} in full HD online with Subtitle`,
     keywords: `Watch ${detail.title}, Stream ${detail.title}, Watch ${detail.title} HD, Online ${detail.title}, Streaming ${detail.title}, English, Subtitle ${detail.title}, English Subtitle`,
-    'og:url': `https://sora-movies.vercel.app/movies/${params.movieId}/watch`,
+    'og:url': `https://sora-anime.vercel.app/movies/${params.movieId}/watch`,
     'og:title': `Watch ${detail.title} HD online Free - Sora`,
     'og:description': `Watch ${detail.title} in full HD online with Subtitle`,
     'og:image': TMDB.backdropUrl(detail?.backdrop_path || '', 'w780'),
@@ -224,7 +224,12 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
     <>
-      <Link to={`/movies/${match.params.movieId}`}>{match.params.movieId}</Link>
+      <Link
+        to={`/movies/${match.params.movieId}`}
+        aria-label={match.data?.detail?.title || match.params.movieId}
+      >
+        {match.data?.detail?.title || match.params.movieId}
+      </Link>
       <Spacer x={0.5} />
       <span> ❱ </span>
       <Spacer x={0.5} />

@@ -69,7 +69,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     title: `Watch ${detail.name} season ${params.seasonId} episode ${params.episodeId} HD online Free - Sora`,
     description: `Watch ${detail.name} season ${params.seasonId} episode ${params.episodeId} in full HD online with Subtitle`,
     keywords: `Watch ${detail.name} season ${params.seasonId} episode ${params.episodeId}, Stream ${detail.name} season ${params.seasonId} episode ${params.episodeId}, Watch ${detail.name} season ${params.seasonId} episode ${params.episodeId} HD, Online ${detail.name} season ${params.seasonId} episode ${params.episodeId}, Streaming ${detail.name} season ${params.seasonId} episode ${params.episodeId}, English, Subtitle ${detail.name} season ${params.seasonId} episode ${params.episodeId}, English Subtitle`,
-    'og:url': `https://sora-movies.vercel.app/tv-shows/${params.tvId}/season/${params.seasonId}/episode/${params.episodeId}`,
+    'og:url': `https://sora-anime.vercel.app/tv-shows/${params.tvId}/season/${params.seasonId}/episode/${params.episodeId}`,
     'og:title': `Watch ${detail.name} season ${params.seasonId} episode ${params.episodeId} HD online Free - Sora`,
     'og:description': `Watch ${detail.name} season ${params.seasonId} episode ${params.episodeId} in full HD online with Subtitle`,
     'og:image': TMDB.backdropUrl(detail?.backdrop_path || '', 'w780'),
@@ -239,11 +239,21 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
     <>
-      <Link to={`/tv-shows/${match.params.tvId}`}>{match.params.tvId}</Link>
+      <Link
+        to={`/tv-shows/${match.params.tvId}`}
+        aria-label={
+          match.data?.detail?.name || match.data?.detail?.original_name || match.params.tvId
+        }
+      >
+        {match.data?.detail?.name || match.data?.detail?.original_name || match.params.tvId}
+      </Link>
       <Spacer x={0.5} />
       <span> ❱ </span>
       <Spacer x={0.5} />
-      <Link to={`/tv-shows/${match.params.tvId}/season/${match.params.seasonId}/`}>
+      <Link
+        to={`/tv-shows/${match.params.tvId}/season/${match.params.seasonId}/`}
+        aria-label={`Season ${match.params.seasonId}`}
+      >
         Season {match.params.seasonId}
       </Link>
       <Spacer x={0.5} />
@@ -251,6 +261,7 @@ export const handle = {
       <Spacer x={0.5} />
       <Link
         to={`/tv-shows/${match.params.tvId}/season/${match.params.seasonId}/episode/${match.params.episodeId}`}
+        aria-label={`Episode ${match.params.episodeId}`}
       >
         Episode {match.params.episodeId}
       </Link>

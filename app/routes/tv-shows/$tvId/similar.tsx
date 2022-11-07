@@ -36,12 +36,14 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export const meta: MetaFunction = ({ params }) => ({
-  'og:url': `https://sora-movies.vercel.app/tv-shows/${params.tvId}/similar`,
+  'og:url': `https://sora-anime.vercel.app/tv-shows/${params.tvId}/similar`,
 });
 
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
-    <Link to={`/tv-shows/${match.params.movieId}/similar`}>Similar Tv Shows</Link>
+    <Link to={`/tv-shows/${match.params.movieId}/similar`} aria-label="Similar Tv">
+      Similar Tv Shows
+    </Link>
   ),
 };
 

@@ -40,7 +40,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
 };
 
 export const meta: MetaFunction = ({ params }) => ({
-  'og:url': `https://sora-movies.vercel.app/anime/${params.animeId}/episodes`,
+  'og:url': `https://sora-anime.vercel.app/anime/${params.animeId}/episodes`,
 });
 
 const EpisodesPage = () => {

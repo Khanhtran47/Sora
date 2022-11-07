@@ -27,6 +27,11 @@ interface ISGConfigs {
    * default false for development
    */
   __loklokProvider: boolean;
+  /**
+   * turn on/off bilibli provider
+   * default false for development
+   */
+  __bilibiliProvider: boolean;
 }
 
 const sgConfigs: ISGConfigs = {
@@ -35,6 +40,7 @@ const sgConfigs: ISGConfigs = {
   __invitedSignUpOnly: !(env.INVITED_SIGNUP_ONLY === 'OFF'),
   __invitedSignUpKey: env.INVITED_SIGNUP_KEY || '',
   __loklokProvider: env.LOKLOK_PROVIDER === 'ON',
+  __bilibiliProvider: env.BILIBILI_PROVIDER === 'ON',
 };
 
 if (sgConfigs.__invitedSignUpOnly && !sgConfigs.__invitedSignUpKey) {

@@ -30,7 +30,11 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
 };
 
 export const handle = {
-  breadcrumb: () => <Link to="/search/tv">Search Tv</Link>,
+  breadcrumb: () => (
+    <Link to="/search/tv" aria-label="Search Tv">
+      Search Tv
+    </Link>
+  ),
 };
 
 const SearchRoute = () => {

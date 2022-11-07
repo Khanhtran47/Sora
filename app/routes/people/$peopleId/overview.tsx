@@ -15,7 +15,7 @@ import MediaList from '~/src/components/media/MediaList';
 import { H6 } from '~/src/components/styles/Text.styles';
 
 export const meta: MetaFunction = ({ params }) => ({
-  'og:url': `https://sora-movies.vercel.app/people/${params.peopleId}/overview`,
+  'og:url': `https://sora-anime.vercel.app/people/${params.peopleId}/overview`,
 });
 
 const OverviewPage = () => {
