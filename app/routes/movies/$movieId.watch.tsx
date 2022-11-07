@@ -15,6 +15,8 @@ import {
 import { Container, Spacer, Loading, Radio } from '@nextui-org/react';
 import { ClientOnly } from 'remix-utils';
 import { isDesktop } from 'react-device-detect';
+import Hls from 'hls.js';
+import artplayerPluginHlsQuality from 'artplayer-plugin-hls-quality';
 
 import ArtPlayer from '~/src/components/elements/player/ArtPlayer';
 import AspectRatio from '~/src/components/elements/aspect-ratio/AspectRatio';
@@ -30,6 +32,11 @@ import {
   IMovieSource,
   IMovieSubtitle,
 } from '~/services/consumet/flixhq/flixhq.types';
+import {
+  getKissKhInfo,
+  getKissKhEpisodeStream,
+  getKissKhEpisodeSubtitle,
+} from '~/services/kisskh/kisskh.server';
 import { loklokSearchMovieSub, loklokGetMovieInfo } from '~/services/loklok';
 import { LOKLOK_URL } from '~/services/loklok/utils.server';
 import TMDB from '~/utils/media';
@@ -52,7 +59,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     title: `Watch ${detail.title} HD online Free - Sora`,
     description: `Watch ${detail.title} in full HD online with Subtitle`,
     keywords: `Watch ${detail.title}, Stream ${detail.title}, Watch ${detail.title} HD, Online ${detail.title}, Streaming ${detail.title}, English, Subtitle ${detail.title}, English Subtitle`,
-    'og:url': `https://sora-movies.vercel.app/movies/${params.movieId}/watch`,
+    'og:url': `https://sora-anime.vercel.app/movies/${params.movieId}/watch`,
     'og:title': `Watch ${detail.title} HD online Free - Sora`,
     'og:description': `Watch ${detail.title} in full HD online with Subtitle`,
     'og:image': TMDB.backdropUrl(detail?.backdrop_path || '', 'w780'),
@@ -112,6 +119,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       userId: user?.id,
     });
   }
+
   if (provider === 'Flixhq') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
     const movieDetail = await getMovieInfo(idProvider);
@@ -128,6 +136,30 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       userId: user?.id,
     });
   }
+
+  if (provider === 'KissKh') {
+    if (!idProvider) throw new Response('Id Not Found', { status: 404 });
+    const episodeDetail = await getKissKhInfo(Number(idProvider));
+    const [episodeStream, episodeSubtitle] = await Promise.all([
+      getKissKhEpisodeStream(Number(episodeDetail?.episodes[0]?.id)),
+      episodeDetail?.episodes[0] && episodeDetail?.episodes[0].sub > 0
+        ? getKissKhEpisodeSubtitle(Number(episodeDetail?.episodes[0]?.id))
+        : undefined,
+    ]);
+
+    return json<DataLoader>({
+      provider,
+      detail,
+      sources: [{ url: episodeStream?.Video || '', isM3U8: true, quality: 'auto' }],
+      subtitles: episodeSubtitle?.map((sub) => ({
+        lang: sub.label,
+        url: sub.src,
+        ...(sub.default && { default: true }),
+      })),
+      userId: user?.id,
+    });
+  }
+
   if (provider === 'Embed') {
     return json<DataLoader>({
       detail,
@@ -192,7 +224,12 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
     <>
-      <Link to={`/movies/${match.params.movieId}`}>{match.params.movieId}</Link>
+      <Link
+        to={`/movies/${match.params.movieId}`}
+        aria-label={match.data?.detail?.title || match.params.movieId}
+      >
+        {match.data?.detail?.title || match.params.movieId}
+      </Link>
       <Spacer x={0.5} />
       <span> ❱ </span>
       <Spacer x={0.5} />
@@ -221,12 +258,15 @@ const MovieWatch = () => {
     html: lang.toString(),
     url: url.toString(),
     ...(provider === 'Flixhq' && lang === 'English' && { default: true }),
+    ...(provider === 'KissKh' && lang === 'English' && { default: true }),
     ...(provider === 'Loklok' && lang === 'en' && { default: true }),
   }));
   const qualitySelector = sources?.map(
     ({ quality, url }: { quality: number | string; url: string }) => ({
       html: quality.toString(),
       url: url.toString(),
+      isM3U8: true,
+      isDASH: false,
       ...(provider === 'Flixhq' && quality === 'auto' && { default: true }),
       ...(provider === 'Loklok' && Number(quality) === 720 && { default: true }),
     }),
@@ -246,7 +286,7 @@ const MovieWatch = () => {
     >
       <ClientOnly fallback={<Loading type="default" />}>
         {() => (
-          <>
+          <React.Suspense fallback={<Loading type="default" />}>
             <AspectRatio.Root ratio={7 / 3}>
               {sources ? (
                 <ArtPlayer
@@ -263,6 +303,8 @@ const MovieWatch = () => {
                             (item: { quality: number | string; url: string }) =>
                               Number(item.quality) === 720,
                           )?.url
+                        : provider === 'KissKh'
+                        ? sources[0]?.url
                         : sources?.find(
                             (item: { quality: number | string; url: string }) =>
                               item.quality === 'auto',
@@ -272,11 +314,16 @@ const MovieWatch = () => {
                         provider === 'Flixhq'
                           ? subtitles?.find((item: { lang: string; url: string }) =>
                               item.lang.includes('English'),
-                            )?.url
+                            )?.url || ''
                           : provider === 'Loklok'
                           ? subtitles?.find((item: { lang: string; url: string }) =>
                               item.lang.includes('English'),
-                            )?.url
+                            )?.url || ''
+                          : provider === 'KissKh'
+                          ? subtitles?.find(
+                              (item: { lang: string; url: string; default?: boolean }) =>
+                                item.default,
+                            )?.url || ''
                           : subtitles?.find((item: { lang: string; url: string }) =>
                               item.lang.includes('English'),
                             )?.url || '',
@@ -303,6 +350,30 @@ const MovieWatch = () => {
                         },
                       },
                     ],
+                    customType: {
+                      m3u8: (video: HTMLMediaElement, url: string) => {
+                        if (Hls.isSupported()) {
+                          const hls = new Hls();
+                          hls.loadSource(url);
+                          hls.attachMedia(video);
+                        } else {
+                          const canPlay = video.canPlayType('application/vnd.apple.mpegurl');
+                          if (canPlay === 'probably' || canPlay === 'maybe') {
+                            video.src = url;
+                          }
+                        }
+                      },
+                    },
+                    plugins:
+                      provider === 'KissKh'
+                        ? [
+                            artplayerPluginHlsQuality({
+                              setting: true,
+                              title: 'Quality',
+                              auto: 'Auto',
+                            }),
+                          ]
+                        : [],
                   }}
                   qualitySelector={qualitySelector || []}
                   subtitleSelector={subtitleSelector || []}
@@ -381,7 +452,7 @@ const MovieWatch = () => {
                 </Radio.Group>
               </>
             )}
-          </>
+          </React.Suspense>
         )}
       </ClientOnly>
     </Container>

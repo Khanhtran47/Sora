@@ -53,6 +53,7 @@ const SelectProviderModal = ({
   };
   useEffect(() => {
     if (visible) {
+      setProvider([]);
       if (type === 'movie')
         fetcher.load(
           `/api/provider?title=${

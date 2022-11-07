@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { Session } from '@supabase/supabase-js';
-import { redirect } from 'remix';
+import { redirect } from '@remix-run/node';
 import sgConfigs from '../configs.server';
 import supabase from './client.server';
 import { commitAuthCookie, getSessionFromCookie } from './cookie.server';

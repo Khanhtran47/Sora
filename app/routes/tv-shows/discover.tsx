@@ -25,7 +25,7 @@ export const meta: MetaFunction = () => ({
     'Official Sora website to watch movies online HD for free, Watch TV show & TV series and Download all movies and series FREE',
   keywords:
     'watch free movies, free movies to watch online, watch movies online free, free movies streaming, free movies full, free movies download, watch movies hd, movies to watch',
-  'og:url': 'https://sora-movies.vervel.app/tv-shows/discover',
+  'og:url': 'https://sora-anime.vercel.app/tv-shows/discover',
   'og:title': 'Discover and Watch movies and tv shows free | Sora',
   'og:description':
     'Official Sora website to watch movies online HD for free, Watch TV show & TV series and Download all movies and series FREE',
@@ -54,7 +54,11 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export const handle = {
-  breadcrumb: () => <Link to="/tv-shows?index">Discover Tv</Link>,
+  breadcrumb: () => (
+    <Link to="/tv-shows?index" aria-label="Discover tv">
+      Discover Tv
+    </Link>
+  ),
 };
 
 const ListTvShows = () => {

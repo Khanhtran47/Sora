@@ -3,7 +3,6 @@
 import * as React from 'react';
 import { styled } from '@nextui-org/react';
 import Artplayer from 'artplayer';
-import Hls from 'hls.js';
 import { isMobile, isTablet, isDesktop } from 'react-device-detect';
 
 import SearchSubtitles from '../modal/SearchSubtitle';
@@ -19,7 +18,13 @@ const Player = ({
 }: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   option: any;
-  qualitySelector: { html: string; url: string; default?: boolean }[];
+  qualitySelector?: {
+    html: string;
+    url: string;
+    default?: boolean;
+    isM3U8?: boolean;
+    isDASH?: boolean;
+  }[];
   subtitleSelector?: { html: string; url: string; default?: boolean }[];
   getInstance: (art: Artplayer) => void;
   style?: React.CSSProperties | undefined;
@@ -115,20 +120,6 @@ const Player = ({
               },
             },
           ],
-      customType: {
-        m3u8: (video: HTMLMediaElement, url: string) => {
-          if (Hls.isSupported()) {
-            const hls = new Hls();
-            hls.loadSource(url);
-            hls.attachMedia(video);
-          } else {
-            const canPlay = video.canPlayType('application/vnd.apple.mpegurl');
-            if (canPlay === 'probably' || canPlay === 'maybe') {
-              video.src = url;
-            }
-          }
-        },
-      },
       settings: [
         {
           width: 200,

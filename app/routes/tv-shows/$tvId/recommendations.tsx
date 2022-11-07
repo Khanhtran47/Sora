@@ -38,12 +38,14 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
-    <Link to={`/tv-shows/${match.params.tvId}/recommendations`}>Recommendations</Link>
+    <Link to={`/tv-shows/${match.params.tvId}/recommendations`} aria-label="Recommendations">
+      Recommendations
+    </Link>
   ),
 };
 
 export const meta: MetaFunction = ({ params }) => ({
-  'og:url': `https://sora-movies.vercel.app/tv-shows/${params.tvId}/recommendations`,
+  'og:url': `https://sora-anime.vercel.app/tv-shows/${params.tvId}/recommendations`,
 });
 
 const RecommendationsPage = () => {

@@ -18,7 +18,7 @@ export const meta: MetaFunction = () => ({
     'Official Sora website to watch anime online HD for free, Watch TV show & TV series and Download all anime FREE',
   keywords:
     'watch free anime, free anime to watch online, watch anime online free, free anime streaming, free anime full, free anime download, watch anime hd, anime to watch',
-  'og:url': 'https://sora-movies.vervel.app/anime/recent-episodes',
+  'og:url': 'https://sora-anime.vercel.app/anime/recent-episodes',
   'og:title': 'Watch Recent Anime Episodes | Sora',
   'og:description':
     'Official Sora website to watch anime online HD for free, Watch TV show & TV series and Download all anime FREE',
@@ -40,7 +40,11 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
 };
 
 export const handle = {
-  breadcrumb: () => <Link to="/anime/recent-episodes">Recent Episodes</Link>,
+  breadcrumb: () => (
+    <Link to="/anime/recent-episodes" aria-label="Recent Episodes">
+      Recent Episodes
+    </Link>
+  ),
 };
 
 const RecentEpisodes = () => {

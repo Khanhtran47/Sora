@@ -15,7 +15,7 @@
     <a href="https://github.com/Khanhtran47/remix-movie"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://sora-movies.vercel.app/">View Demo</a>
+    <a href="https://sora-anime.vercel.app/">View Demo</a>
     ·
     <a href="https://github.com/Khanhtran47/remix-movie/issues">Report Bug</a>
     ·

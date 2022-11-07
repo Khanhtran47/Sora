@@ -19,7 +19,7 @@ export const meta: MetaFunction = () => ({
   description: 'Discover the most popular celebrities right now on Sora.',
   keywords:
     'popular celebrities, popular celebrity, top celebrities, top celebrity, people celebrity, celebrity people, best celebrity, best celebrities, famous celebrity, famous people, celebrity movies, movies by celebrity, celebrity tv shows, tv show celebrities, celebrity television shows, celebrity tv series',
-  'og:url': 'https://sora-movies.vervel.app/people',
+  'og:url': 'https://sora-anime.vercel.app/people',
   'og:title': 'Discover most popular celebs on Sora',
   'og:image': 'https://static.alphacoders.com/thumbs_categories/20.jpg',
   'og:description': 'Discover the most popular celebrities right now on Sora.',
@@ -38,7 +38,11 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export const handle = {
-  breadcrumb: () => <Link to="/people?index">Popular People</Link>,
+  breadcrumb: () => (
+    <Link to="/people?index" aria-label="Popular People">
+      Popular People
+    </Link>
+  ),
 };
 
 const ListPeoplePopular = () => {

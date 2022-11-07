@@ -89,7 +89,11 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export const handle = {
-  breadcrumb: () => <Link to="/sign-up">Sign Up</Link>,
+  breadcrumb: () => (
+    <Link to="/sign-up" aria-label="Sign Up Page">
+      Sign Up
+    </Link>
+  ),
 };
 
 const SignUpPage = () => {

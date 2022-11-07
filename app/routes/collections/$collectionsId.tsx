@@ -21,7 +21,7 @@ export const meta: MetaFunction = () => ({
     'Official Sora website to watch movies online HD for free, Watch TV show & TV series and Download all movies and series FREE',
   keywords:
     'watch free movies, free movies to watch online, watch movies online free, free movies streaming, free movies full, free movies download, watch movies hd, movies to watch',
-  'og:url': 'https://sora-movies.vervel.app/trending',
+  'og:url': 'https://sora-anime.vercel.app/trending',
   'og:title': 'Watch Top Trending movies and tv shows free | Sora',
   'og:description':
     'Official Sora website to watch movies online HD for free, Watch TV show & TV series and Download all movies and series FREE',
@@ -41,11 +41,18 @@ export const loader: LoaderFunction = async ({ request, params }: DataFunctionAr
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
     <>
-      <Link to="/collections">Collections</Link>
+      <Link to="/collections" aria-label="Collections">
+        Collections
+      </Link>
       <Spacer x={0.5} />
       <span> ❱ </span>
       <Spacer x={0.5} />
-      <Link to={`/collections/${match.params.collectionsId}`}>{match.params.collectionsId}</Link>
+      <Link
+        to={`/collections/${match.params.collectionsId}`}
+        aria-label={match.data?.detail?.name || match.params.collectionsId}
+      >
+        {match.data?.detail?.name || match.params.collectionsId}
+      </Link>
     </>
   ),
 };

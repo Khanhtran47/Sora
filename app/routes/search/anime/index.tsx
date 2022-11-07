@@ -25,7 +25,11 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
 };
 
 export const handle = {
-  breadcrumb: () => <Link to="/search/anime">Search Anime</Link>,
+  breadcrumb: () => (
+    <Link to="/search/anime" aria-label="Search Anime">
+      Search Anime
+    </Link>
+  ),
 };
 
 const SearchRoute = () => {

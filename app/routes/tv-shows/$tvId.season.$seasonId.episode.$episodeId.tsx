@@ -15,6 +15,8 @@ import {
 import { Container, Spacer, Loading, Radio } from '@nextui-org/react';
 import { ClientOnly } from 'remix-utils';
 import { isDesktop } from 'react-device-detect';
+import Hls from 'hls.js';
+import artplayerPluginHlsQuality from 'artplayer-plugin-hls-quality';
 
 import ArtPlayer from '~/src/components/elements/player/ArtPlayer';
 import AspectRatio from '~/src/components/elements/aspect-ratio/AspectRatio';
@@ -30,6 +32,11 @@ import {
   IMovieSource,
   IMovieSubtitle,
 } from '~/services/consumet/flixhq/flixhq.types';
+import {
+  getKissKhInfo,
+  getKissKhEpisodeStream,
+  getKissKhEpisodeSubtitle,
+} from '~/services/kisskh/kisskh.server';
 import { loklokGetTvEpInfo } from '~/services/loklok';
 import { LOKLOK_URL } from '~/services/loklok/utils.server';
 import TMDB from '~/utils/media';
@@ -62,7 +69,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     title: `Watch ${detail.name} season ${params.seasonId} episode ${params.episodeId} HD online Free - Sora`,
     description: `Watch ${detail.name} season ${params.seasonId} episode ${params.episodeId} in full HD online with Subtitle`,
     keywords: `Watch ${detail.name} season ${params.seasonId} episode ${params.episodeId}, Stream ${detail.name} season ${params.seasonId} episode ${params.episodeId}, Watch ${detail.name} season ${params.seasonId} episode ${params.episodeId} HD, Online ${detail.name} season ${params.seasonId} episode ${params.episodeId}, Streaming ${detail.name} season ${params.seasonId} episode ${params.episodeId}, English, Subtitle ${detail.name} season ${params.seasonId} episode ${params.episodeId}, English Subtitle`,
-    'og:url': `https://sora-movies.vercel.app/tv-shows/${params.tvId}/season/${params.seasonId}/episode/${params.episodeId}`,
+    'og:url': `https://sora-anime.vercel.app/tv-shows/${params.tvId}/season/${params.seasonId}/episode/${params.episodeId}`,
     'og:title': `Watch ${detail.name} season ${params.seasonId} episode ${params.episodeId} HD online Free - Sora`,
     'og:description': `Watch ${detail.name} season ${params.seasonId} episode ${params.episodeId} in full HD online with Subtitle`,
     'og:image': TMDB.backdropUrl(detail?.backdrop_path || '', 'w780'),
@@ -117,6 +124,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       userId: user?.id,
     });
   }
+
   if (provider === 'Flixhq') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
     const tvDetail = await getMovieInfo(idProvider);
@@ -139,6 +147,32 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       });
     }
   }
+
+  if (provider === 'KissKh') {
+    if (!idProvider) throw new Response('Id Not Found', { status: 404 });
+    const episodeDetail = await getKissKhInfo(Number(idProvider));
+    const episodeSearch = episodeDetail?.episodes?.find((e) => e?.number === Number(episodeId));
+    const [episodeStream, episodeSubtitle] = await Promise.all([
+      getKissKhEpisodeStream(Number(episodeSearch?.id)),
+      episodeSearch && episodeSearch.sub > 0
+        ? getKissKhEpisodeSubtitle(Number(episodeSearch?.id))
+        : undefined,
+    ]);
+
+    return json<LoaderData>({
+      provider,
+      detail,
+      imdbId,
+      sources: [{ url: episodeStream?.Video || '', isM3U8: true, quality: 'auto' }],
+      subtitles: episodeSubtitle?.map((sub) => ({
+        lang: sub.label,
+        url: sub.src,
+        ...(sub.default && { default: true }),
+      })),
+      userId: user?.id,
+    });
+  }
+
   if (provider === 'Embed') {
     return json<LoaderData>({
       detail,
@@ -205,11 +239,21 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
     <>
-      <Link to={`/tv-shows/${match.params.tvId}`}>{match.params.tvId}</Link>
+      <Link
+        to={`/tv-shows/${match.params.tvId}`}
+        aria-label={
+          match.data?.detail?.name || match.data?.detail?.original_name || match.params.tvId
+        }
+      >
+        {match.data?.detail?.name || match.data?.detail?.original_name || match.params.tvId}
+      </Link>
       <Spacer x={0.5} />
       <span> ❱ </span>
       <Spacer x={0.5} />
-      <Link to={`/tv-shows/${match.params.tvId}/season/${match.params.seasonId}/`}>
+      <Link
+        to={`/tv-shows/${match.params.tvId}/season/${match.params.seasonId}/`}
+        aria-label={`Season ${match.params.seasonId}`}
+      >
         Season {match.params.seasonId}
       </Link>
       <Spacer x={0.5} />
@@ -217,6 +261,7 @@ export const handle = {
       <Spacer x={0.5} />
       <Link
         to={`/tv-shows/${match.params.tvId}/season/${match.params.seasonId}/episode/${match.params.episodeId}`}
+        aria-label={`Episode ${match.params.episodeId}`}
       >
         Episode {match.params.episodeId}
       </Link>
@@ -253,12 +298,15 @@ const EpisodeWatch = () => {
     html: lang.toString(),
     url: url.toString(),
     ...(provider === 'Flixhq' && lang === 'English' && { default: true }),
+    ...(provider === 'KissKh' && lang === 'English' && { default: true }),
     ...(provider === 'Loklok' && lang === 'en' && { default: true }),
   }));
   const qualitySelector = sources?.map(
     ({ quality, url }: { quality: number | string; url: string }) => ({
       html: quality.toString(),
       url: url.toString(),
+      isM3U8: true,
+      isDASH: false,
       ...(provider === 'Flixhq' && quality === 'auto' && { default: true }),
       ...(provider === 'Loklok' && Number(quality) === 720 && { default: true }),
     }),
@@ -278,7 +326,7 @@ const EpisodeWatch = () => {
     >
       <ClientOnly fallback={<Loading type="default" />}>
         {() => (
-          <>
+          <React.Suspense fallback={<Loading type="default" />}>
             <AspectRatio.Root ratio={7 / 3}>
               {sources ? (
                 <ArtPlayer
@@ -295,6 +343,8 @@ const EpisodeWatch = () => {
                             (item: { quality: number | string; url: string }) =>
                               Number(item.quality) === 720,
                           )?.url
+                        : provider === 'KissKh'
+                        ? sources[0]?.url
                         : sources?.find(
                             (item: { quality: number | string; url: string }) =>
                               item.quality === 'auto',
@@ -304,11 +354,16 @@ const EpisodeWatch = () => {
                         provider === 'Flixhq'
                           ? subtitles?.find((item: { lang: string; url: string }) =>
                               item.lang.includes('English'),
-                            )?.url
+                            )?.url || ''
                           : provider === 'Loklok'
                           ? subtitles?.find((item: { lang: string; url: string }) =>
                               item.lang.includes('English'),
-                            )?.url
+                            )?.url || ''
+                          : provider === 'KissKh'
+                          ? subtitles?.find(
+                              (item: { lang: string; url: string; default?: boolean }) =>
+                                item.default,
+                            )?.url || ''
                           : subtitles?.find((item: { lang: string; url: string }) =>
                               item.lang.includes('English'),
                             )?.url || '',
@@ -335,6 +390,30 @@ const EpisodeWatch = () => {
                         },
                       },
                     ],
+                    customType: {
+                      m3u8: (video: HTMLMediaElement, url: string) => {
+                        if (Hls.isSupported()) {
+                          const hls = new Hls();
+                          hls.loadSource(url);
+                          hls.attachMedia(video);
+                        } else {
+                          const canPlay = video.canPlayType('application/vnd.apple.mpegurl');
+                          if (canPlay === 'probably' || canPlay === 'maybe') {
+                            video.src = url;
+                          }
+                        }
+                      },
+                    },
+                    plugins:
+                      provider === 'KissKh'
+                        ? [
+                            artplayerPluginHlsQuality({
+                              setting: true,
+                              title: 'Quality',
+                              auto: 'Auto',
+                            }),
+                          ]
+                        : [],
                   }}
                   qualitySelector={qualitySelector || []}
                   subtitleSelector={subtitleSelector || []}
@@ -416,7 +495,7 @@ const EpisodeWatch = () => {
                 </Radio.Group>
               </>
             )}
-          </>
+          </React.Suspense>
         )}
       </ClientOnly>
     </Container>

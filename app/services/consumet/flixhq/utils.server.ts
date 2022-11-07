@@ -1,5 +1,7 @@
+import { env } from 'process';
+
 export default class Flixhq {
-  static readonly API_BASE_URL = 'https://api.consumet.org/movies/flixhq/';
+  static readonly API_BASE_URL = env.FLIXHQ_API_URL;
 
   static movieSearchUrl = (query: string, page?: number): string => {
     let url = `${Flixhq.API_BASE_URL}${query}`;

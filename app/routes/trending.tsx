@@ -24,7 +24,7 @@ export const meta: MetaFunction = () => ({
     'Official Sora website to watch movies online HD for free, Watch TV show & TV series and Download all movies and series FREE',
   keywords:
     'watch free movies, free movies to watch online, watch movies online free, free movies streaming, free movies full, free movies download, watch movies hd, movies to watch',
-  'og:url': 'https://sora-movies.vervel.app/trending',
+  'og:url': 'https://sora-anime.vercel.app/trending',
   'og:title': 'Watch Top Trending movies and tv shows free | Sora',
   'og:description':
     'Official Sora website to watch movies online HD for free, Watch TV show & TV series and Download all movies and series FREE',
@@ -50,7 +50,11 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
 };
 
 export const handle = {
-  breadcrumb: () => <Link to="/trending">Today Trending</Link>,
+  breadcrumb: () => (
+    <Link to="/trending" aria-label="Trending Page">
+      Today Trending
+    </Link>
+  ),
 };
 
 const Trending = () => {

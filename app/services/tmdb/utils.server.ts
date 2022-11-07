@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { env } from 'process';
 import { lruCache } from '../lru-cache';
 import {
   BackdropSize,
@@ -13,11 +14,11 @@ import {
 } from './tmdb.types';
 
 export class TMDB {
-  static readonly API_BASE_URL = 'https://api.themoviedb.org/3/';
+  static readonly API_BASE_URL = env.TMDB_API_URL;
 
-  static readonly IMDB_API_BASE_URl = 'https://imdb-api.tprojects.workers.dev/';
+  static readonly IMDB_API_BASE_URl = env.IMDB_API_URL;
 
-  static readonly MEDIA_BASE_URL = 'https://image.tmdb.org/t/p/';
+  static readonly MEDIA_BASE_URL = env.TMDB_MEDIA_URL;
 
   static readonly key = process.env.TMDB_API_KEY;
 
