@@ -24,12 +24,12 @@ const HistoryItem = ({ item }: IHistoryItem) => {
       <Link to={url.pathname + url.search}>
         <Grid.Container gap={2}>
           {/* left */}
-          <Grid xs={size.width <= 350 ? 12 : 6} css={{ padding: '$0' }} justify="flex-start">
+          <Grid xs={6} css={{ padding: '$0' }} justify="flex-start">
             <Col>
               <Image
                 showSkeleton
-                width="19.5rem"
-                height="11rem"
+                width="16rem"
+                height="9rem"
                 src={item.poster || notFound}
                 alt={item.title}
                 objectFit="cover"
@@ -39,7 +39,7 @@ const HistoryItem = ({ item }: IHistoryItem) => {
             </Col>
           </Grid>
           {/* right */}
-          <Grid xs={size.width <= 350 ? 12 : 6}>
+          <Grid xs={6}>
             <Grid.Container
               alignContent="flex-start"
               css={size.width > 350 ? { marginTop: '1rem' } : {}}

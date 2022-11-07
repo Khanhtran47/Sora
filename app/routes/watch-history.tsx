@@ -104,10 +104,16 @@ const History = () => {
               </Grid>
             </Grid.Container>
           </Grid>
-          <Grid xs={12}>
+          <Grid xs={12} css={isXs ? { paddingLeft: '$0', paddingRight: '$0' } : {}}>
             <Grid.Container gap={2}>
               {histories.map((item) => (
-                <Grid key={item.id} xs={12} sm={6} md={4}>
+                <Grid
+                  key={item.id}
+                  xs={12}
+                  sm={6}
+                  md={4}
+                  css={isXs ? { paddingLeft: '$0', paddingRight: '$0' } : {}}
+                >
                   <HistoryItem item={item as unknown as IHistory} />
                 </Grid>
               ))}
