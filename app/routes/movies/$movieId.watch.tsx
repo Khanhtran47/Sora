@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import * as React from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { MetaFunction, LoaderFunction, json } from '@remix-run/node';
 import {
   useCatch,
@@ -11,17 +12,34 @@ import {
   RouteMatch,
   useFetcher,
   useLocation,
+  useNavigate,
 } from '@remix-run/react';
-import { Container, Spacer, Loading, Radio } from '@nextui-org/react';
-import { ClientOnly } from 'remix-utils';
+import {
+  Container,
+  Spacer,
+  Loading,
+  Radio,
+  Divider,
+  Button,
+  Tooltip,
+  Row,
+  Col,
+  Card,
+  Avatar,
+} from '@nextui-org/react';
+import { ClientOnly, useRouteData } from 'remix-utils';
 import { isDesktop } from 'react-device-detect';
 import Hls from 'hls.js';
 import artplayerPluginHlsQuality from 'artplayer-plugin-hls-quality';
+import Image, { MimeType } from 'remix-image';
 
-import ArtPlayer from '~/src/components/elements/player/ArtPlayer';
-import AspectRatio from '~/src/components/elements/aspect-ratio/AspectRatio';
-import i18next from '~/i18n/i18next.server';
-import { getMovieDetail, getTranslations } from '~/services/tmdb/tmdb.server';
+import { authenticate, insertHistory } from '~/services/supabase';
+import {
+  getMovieDetail,
+  getRecommendation,
+  getTranslations,
+  getImdbRating,
+} from '~/services/tmdb/tmdb.server';
 import {
   getMovieSearch,
   getMovieInfo,
@@ -39,13 +57,22 @@ import {
 } from '~/services/kisskh/kisskh.server';
 import { loklokSearchMovieSub, loklokGetMovieInfo } from '~/services/loklok';
 import { LOKLOK_URL } from '~/services/loklok/utils.server';
+import i18next from '~/i18n/i18next.server';
 import TMDB from '~/utils/media';
 import Player from '~/utils/player';
+import updateHistory from '~/utils/update-history';
+import useMediaQuery from '~/hooks/useMediaQuery';
+
+import ArtPlayer from '~/src/components/elements/player/ArtPlayer';
+import AspectRatio from '~/src/components/elements/aspect-ratio/AspectRatio';
+import MediaList from '~/src/components/media/MediaList';
+import Flex from '~/src/components/styles/Flex.styles';
+import { H2, H5, H6 } from '~/src/components/styles/Text.styles';
+import WatchTrailerModal, { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
-import useMediaQuery from '~/hooks/useMediaQuery';
-import updateHistory from '~/utils/update-history';
-import { authenticate, insertHistory } from '~/services/supabase';
+
+import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
 
 export const meta: MetaFunction = ({ data, params }) => {
   if (!data) {
@@ -73,10 +100,12 @@ export const meta: MetaFunction = ({ data, params }) => {
 type DataLoader = {
   provider?: string;
   detail: Awaited<ReturnType<typeof getMovieDetail>>;
+  recommendations: Awaited<ReturnType<typeof getRecommendation>>;
   data?: Awaited<ReturnType<typeof getMovieInfo>>;
   sources?: IMovieSource[] | undefined;
   subtitles?: IMovieSubtitle[] | undefined;
   userId?: string;
+  imdbRating?: { count: number; star: number };
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -89,7 +118,11 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const mid = Number(movieId);
   if (!mid) throw new Response('Not Found', { status: 404 });
 
-  const detail = await getMovieDetail(mid);
+  // const detail = await getMovieDetail(mid);
+  const [detail, recommendations] = await Promise.all([
+    getMovieDetail(mid),
+    getRecommendation('movie', mid),
+  ]);
 
   if (user) {
     insertHistory({
@@ -107,10 +140,15 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   if (provider === 'Loklok') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
-    const movieDetail = await loklokGetMovieInfo(idProvider);
+    const [movieDetail, imdbRating] = await Promise.all([
+      loklokGetMovieInfo(idProvider),
+      detail?.imdb_id ? getImdbRating(detail?.imdb_id) : undefined,
+    ]);
     return json<DataLoader>({
       provider,
       detail,
+      recommendations,
+      imdbRating,
       sources: movieDetail?.sources,
       subtitles: movieDetail?.subtitles.map((sub) => ({
         lang: `${sub.language} (${sub.lang})`,
@@ -122,7 +160,10 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   if (provider === 'Flixhq') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
-    const movieDetail = await getMovieInfo(idProvider);
+    const [movieDetail, imdbRating] = await Promise.all([
+      getMovieInfo(idProvider),
+      detail?.imdb_id ? getImdbRating(detail?.imdb_id) : undefined,
+    ]);
     const movieStreamLink = await getMovieEpisodeStreamLink(
       movieDetail?.episodes[0].id || '',
       movieDetail?.id || '',
@@ -130,6 +171,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     return json<DataLoader>({
       provider,
       detail,
+      recommendations,
+      imdbRating,
       data: movieDetail,
       sources: movieStreamLink?.sources,
       subtitles: movieStreamLink?.subtitles,
@@ -139,7 +182,10 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   if (provider === 'KissKh') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
-    const episodeDetail = await getKissKhInfo(Number(idProvider));
+    const [episodeDetail, imdbRating] = await Promise.all([
+      getKissKhInfo(Number(idProvider)),
+      detail?.imdb_id ? getImdbRating(detail?.imdb_id) : undefined,
+    ]);
     const [episodeStream, episodeSubtitle] = await Promise.all([
       getKissKhEpisodeStream(Number(episodeDetail?.episodes[0]?.id)),
       episodeDetail?.episodes[0] && episodeDetail?.episodes[0].sub > 0
@@ -150,6 +196,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     return json<DataLoader>({
       provider,
       detail,
+      recommendations,
+      imdbRating,
       sources: [{ url: episodeStream?.Video || '', isM3U8: true, quality: 'auto' }],
       subtitles: episodeSubtitle?.map((sub) => ({
         lang: sub.label,
@@ -161,8 +209,11 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   }
 
   if (provider === 'Embed') {
+    const imdbRating = detail?.imdb_id ? await getImdbRating(detail?.imdb_id) : undefined;
     return json<DataLoader>({
       detail,
+      recommendations,
+      imdbRating,
       userId: user?.id,
     });
   }
@@ -170,8 +221,12 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   let movieDetail;
   let movieStreamLink;
   let loklokSubtitles: IMovieSubtitle[] = [];
+  let imdbRating;
   if ((detail && detail.original_language === 'en') || locale === 'en') {
-    search = await getMovieSearch(detail?.title || '');
+    [imdbRating, search] = await Promise.all([
+      detail?.imdb_id ? getImdbRating(detail?.imdb_id) : undefined,
+      getMovieSearch(detail?.title || ''),
+    ]);
     const findMovie: IMovieResult | undefined = search?.results.find(
       (item) => item.title === detail?.title,
     );
@@ -192,7 +247,10 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     const translations = await getTranslations('movie', mid);
     const findTranslation = translations?.translations.find((item) => item.iso_639_1 === 'en');
     if (findTranslation) {
-      search = await getMovieSearch(findTranslation.data?.title || '');
+      [imdbRating, search] = await Promise.all([
+        detail?.imdb_id ? getImdbRating(detail?.imdb_id) : undefined,
+        getMovieSearch(findTranslation.data?.title || ''),
+      ]);
       const findMovie: IMovieResult | undefined = search?.results.find(
         (item) => item.title === findTranslation.data?.title,
       );
@@ -214,6 +272,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   return json<DataLoader>({
     detail,
+    recommendations,
+    imdbRating,
     data: movieDetail,
     sources: movieStreamLink?.sources,
     subtitles: [...(movieStreamLink?.subtitles || []), ...loklokSubtitles],
@@ -239,15 +299,39 @@ export const handle = {
 };
 
 const MovieWatch = () => {
-  const { provider, detail, sources, subtitles, userId } = useLoaderData<DataLoader>();
+  const { provider, detail, recommendations, imdbRating, sources, subtitles, userId } =
+    useLoaderData<DataLoader>();
+  const rootData:
+    | {
+        locale: string;
+        genresMovie: { [id: string]: string };
+        genresTv: { [id: string]: string };
+      }
+    | undefined = useRouteData('root');
   const isSm = useMediaQuery(960, 'max');
   const id = detail && detail.id;
-  const [player, setPlayer] = React.useState<string>('1');
-  const [source, setSource] = React.useState<string>(Player.moviePlayerUrl(Number(id), 1));
+  const [player, setPlayer] = useState<string>('1');
+  const [source, setSource] = useState<string>(Player.moviePlayerUrl(Number(id), 1));
   const fetcher = useFetcher();
+  const navigate = useNavigate();
   const location = useLocation();
+  const [visible, setVisible] = useState(false);
+  const [trailer, setTrailer] = useState<Trailer>({});
+  const closeHandler = () => {
+    setVisible(false);
+    setTrailer({});
+  };
+  const releaseYear = new Date(detail?.release_date || '').getFullYear();
 
-  React.useEffect(
+  useEffect(() => {
+    if (fetcher.data && fetcher.data.videos) {
+      const { results } = fetcher.data.videos;
+      const officialTrailer = results.find((result: Trailer) => result.type === 'Trailer');
+      setTrailer(officialTrailer);
+    }
+  }, [fetcher.data]);
+
+  useEffect(
     () =>
       player === '2'
         ? setSource(Player.moviePlayerUrl(Number(detail?.imdb_id), Number(player)))
@@ -278,15 +362,14 @@ const MovieWatch = () => {
         paddingTop: '100px',
         paddingLeft: '88px',
         paddingRight: '23px',
-        '@mdMax': {
-          paddingLeft: '1rem',
-          paddingBottom: '65px',
+        '@smMax': {
+          padding: '100px 0 65px 0',
         },
       }}
     >
       <ClientOnly fallback={<Loading type="default" />}>
         {() => (
-          <React.Suspense fallback={<Loading type="default" />}>
+          <Suspense fallback={<Loading type="default" />}>
             <AspectRatio.Root ratio={7 / 3}>
               {sources ? (
                 <ArtPlayer
@@ -297,18 +380,18 @@ const MovieWatch = () => {
                         ? sources?.find(
                             (item: { quality: number | string; url: string }) =>
                               item.quality === 'auto',
-                          )?.url
+                          )?.url || sources[0]?.url
                         : provider === 'Loklok'
                         ? sources?.find(
                             (item: { quality: number | string; url: string }) =>
                               Number(item.quality) === 720,
-                          )?.url
+                          )?.url || sources[0]?.url
                         : provider === 'KissKh'
                         ? sources[0]?.url
                         : sources?.find(
                             (item: { quality: number | string; url: string }) =>
                               item.quality === 'auto',
-                          )?.url || '',
+                          )?.url || sources[0]?.url,
                     subtitle: {
                       url:
                         provider === 'Flixhq'
@@ -452,9 +535,219 @@ const MovieWatch = () => {
                 </Radio.Group>
               </>
             )}
-          </React.Suspense>
+            <Spacer y={1} />
+          </Suspense>
         )}
       </ClientOnly>
+      <Spacer y={1} />
+      <Container
+        fluid
+        alignItems="stretch"
+        justify="center"
+        css={{
+          marginTop: '0.75rem',
+          padding: '0 0.75rem',
+          '@xs': {
+            padding: '0 3vw',
+          },
+          '@sm': {
+            padding: '0 6vw',
+          },
+          '@md': {
+            padding: '0 12vw',
+          },
+        }}
+      >
+        <Flex justify="start" align="center" wrap="wrap">
+          <Tooltip content="In developpement">
+            <Button size="sm" color="primary" auto ghost css={{ marginBottom: '0.75rem' }}>
+              Toggle Light
+            </Button>
+          </Tooltip>
+          <Spacer x={0.5} />
+          <Button
+            size="sm"
+            color="primary"
+            auto
+            ghost
+            onClick={() => {
+              setVisible(true);
+              fetcher.load(`/movies/${id}/videos`);
+            }}
+            css={{ marginBottom: '0.75rem' }}
+          >
+            Watch Trailer
+          </Button>
+          <Spacer x={0.5} />
+          <Tooltip content="In developpement">
+            <Button size="sm" color="primary" auto ghost css={{ marginBottom: '0.75rem' }}>
+              Add to Watchlist
+            </Button>
+          </Tooltip>
+        </Flex>
+        <Spacer y={1} />
+        <Divider x={1} css={{ m: 0 }} />
+        <Spacer y={1} />
+        <Row>
+          {!isSm && (
+            <Col span={4}>
+              {detail?.poster_path ? (
+                <Card.Image
+                  // @ts-ignore
+                  as={Image}
+                  src={TMDB.posterUrl(detail?.poster_path, 'w342')}
+                  alt={detail?.title}
+                  objectFit="cover"
+                  width="50%"
+                  css={{
+                    minWidth: 'auto !important',
+                    minHeight: '205px !important',
+                    borderRadius: '24px',
+                  }}
+                  loaderUrl="/api/image"
+                  placeholder="blur"
+                  responsive={[
+                    {
+                      size: {
+                        width: 137,
+                        height: 205,
+                      },
+                      maxWidth: 960,
+                    },
+                    {
+                      size: {
+                        width: 158,
+                        height: 237,
+                      },
+                      maxWidth: 1280,
+                    },
+                    {
+                      size: {
+                        width: 173,
+                        height: 260,
+                      },
+                      maxWidth: 1400,
+                    },
+                    {
+                      size: {
+                        width: 239,
+                        height: 359,
+                      },
+                    },
+                  ]}
+                  options={{
+                    contentType: MimeType.WEBP,
+                  }}
+                />
+              ) : (
+                <Row align="center" justify="center">
+                  <Avatar
+                    icon={<PhotoIcon width={48} height={48} />}
+                    css={{
+                      width: '50% !important',
+                      size: '$20',
+                      minWidth: 'auto !important',
+                      minHeight: '205px !important',
+                      marginTop: '10vh',
+                      borderRadius: '24px !important',
+                    }}
+                  />
+                </Row>
+              )}
+            </Col>
+          )}
+          <Col span={isSm ? 12 : 8}>
+            <Row>
+              <H2 h2 weight="bold">
+                {`${detail?.title} (${releaseYear})`}
+              </H2>
+            </Row>
+            <Spacer y={0.5} />
+            <Flex direction="row">
+              <H5
+                h5
+                css={{
+                  backgroundColor: '#3ec2c2',
+                  borderRadius: '$xs',
+                  padding: '0 0.25rem 0 0.25rem',
+                  marginRight: '0.5rem',
+                }}
+              >
+                TMDb
+              </H5>
+              <H5 h5>{detail?.vote_average?.toFixed(1)}</H5>
+              {imdbRating && (
+                <>
+                  <Spacer x={1.25} />
+                  <H5
+                    h5
+                    css={{
+                      backgroundColor: '#ddb600',
+                      color: '#000',
+                      borderRadius: '$xs',
+                      padding: '0 0.25rem 0 0.25rem',
+                      marginRight: '0.5rem',
+                    }}
+                  >
+                    IMDb
+                  </H5>
+                  <H5 h5>{imdbRating?.star}</H5>
+                </>
+              )}
+            </Flex>
+            <Spacer y={1} />
+            <Row fluid align="center" wrap="wrap" justify="flex-start" css={{ width: '100%' }}>
+              {detail?.genres &&
+                detail?.genres?.map((genre) => (
+                  <>
+                    <Button
+                      color="primary"
+                      auto
+                      ghost
+                      rounded
+                      key={genre?.id}
+                      size={isSm ? 'sm' : 'md'}
+                      css={{ marginBottom: '0.125rem' }}
+                      onClick={() => navigate(`/movies/discover?with_genres=${genre?.id}`)}
+                    >
+                      {genre?.name}
+                    </Button>
+                    <Spacer x={1} />
+                  </>
+                ))}
+            </Row>
+            <Spacer y={1} />
+            <Row>
+              <H6 h6 css={{ textAlign: 'justify' }}>
+                {detail?.overview}
+              </H6>
+            </Row>
+            <Spacer y={1} />
+          </Col>
+        </Row>
+        <Spacer y={1} />
+        <Divider x={1} css={{ m: 0 }} />
+        <Spacer y={1} />
+        {recommendations && recommendations.items && recommendations.items.length > 0 && (
+          <>
+            <MediaList
+              listType="slider-card"
+              items={recommendations.items}
+              listName="You May Also Like"
+              showMoreList
+              onClickViewMore={() => navigate(`/movies/${detail?.id}/recommendations`)}
+              cardType="similar-movie"
+              navigationButtons
+              genresMovie={rootData?.genresMovie}
+              genresTv={rootData?.genresTv}
+            />
+            <Spacer y={1} />
+            <Divider x={1} css={{ m: 0 }} />
+            <Spacer y={1} />
+          </>
+        )}
+      </Container>
+      <WatchTrailerModal trailer={trailer} visible={visible} closeHandler={closeHandler} />
     </Container>
   );
 };

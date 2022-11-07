@@ -58,7 +58,7 @@ const Player = ({
       playbackRate: true,
       aspectRatio: true,
       fullscreen: true,
-      fullscreenWeb: isDesktop,
+      fullscreenWeb: false,
       airplay: true,
       pip: isDesktop,
       autoplay: false,

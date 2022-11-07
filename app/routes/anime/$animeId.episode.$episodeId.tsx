@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { Suspense } from 'react';
+import { useState, Suspense } from 'react';
 import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
 import {
   useCatch,
@@ -12,11 +13,26 @@ import {
   useLocation,
   useFetcher,
 } from '@remix-run/react';
-import { Container, Spacer, Loading } from '@nextui-org/react';
+import {
+  Container,
+  Spacer,
+  Loading,
+  Divider,
+  Button,
+  Tooltip,
+  Row,
+  Col,
+  Card,
+  Avatar,
+} from '@nextui-org/react';
 import { ClientOnly } from 'remix-utils';
 import { isDesktop } from 'react-device-detect';
 import artplayerPluginHlsQuality from 'artplayer-plugin-hls-quality';
+import Image, { MimeType } from 'remix-image';
+import Hls from 'hls.js';
+import tinycolor from 'tinycolor2';
 
+import { authenticate, insertHistory } from '~/services/supabase';
 import {
   getAnimeEpisodeStream,
   getAnimeInfo,
@@ -32,14 +48,20 @@ import { IEpisode } from '~/services/consumet/anilist/anilist.types';
 import { loklokGetTvEpInfo } from '~/services/loklok';
 import { LOKLOK_URL } from '~/services/loklok/utils.server';
 import { IMovieSource, IMovieSubtitle } from '~/services/consumet/flixhq/flixhq.types';
+import updateHistory from '~/utils/update-history';
+import useMediaQuery from '~/hooks/useMediaQuery';
 
 import ArtPlayer from '~/src/components/elements/player/ArtPlayer';
 import AspectRatio from '~/src/components/elements/aspect-ratio/AspectRatio';
+import AnimeList from '~/src/components/anime/AnimeList';
+import Flex from '~/src/components/styles/Flex.styles';
+import { H2, H5, H6 } from '~/src/components/styles/Text.styles';
+import WatchTrailerModal from '~/src/components/elements/modal/WatchTrailerModal';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
-import updateHistory from '~/utils/update-history';
-import { authenticate, insertHistory } from '~/services/supabase';
-import Hls from 'hls.js';
+
+import AnilistStatIcon from '~/src/assets/icons/AnilistStatIcon.js';
+import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
 
 type LoaderData = {
   provider?: string;
@@ -246,10 +268,18 @@ export const handle = {
 const AnimeEpisodeWatch = () => {
   const { provider, detail, sources, subtitles, episodeInfo, userId } = useLoaderData<LoaderData>();
   const { episodeId } = useParams();
-
   const fetcher = useFetcher();
   const location = useLocation();
+  const isSm = useMediaQuery(650, 'max');
   let hls: Hls | null = null;
+
+  const [visible, setVisible] = useState(false);
+  const closeHandler = () => {
+    setVisible(false);
+  };
+  const colorBackground = tinycolor(detail?.color).isDark()
+    ? tinycolor(detail?.color).brighten(40).saturate(70).spin(180).toString()
+    : tinycolor(detail?.color).darken(40).saturate(70).spin(180).toString();
 
   const subtitleSelector = subtitles?.map(({ lang, url }: { lang: string; url: string }) => ({
     html: lang.toString(),
@@ -285,8 +315,7 @@ const AnimeEpisodeWatch = () => {
         paddingLeft: '88px',
         paddingRight: '23px',
         '@smMax': {
-          paddingLeft: '1rem',
-          paddingBottom: '65px',
+          padding: '100px 0 65px 0',
         },
       }}
     >
@@ -305,18 +334,18 @@ const AnimeEpisodeWatch = () => {
                         ? sources?.find(
                             (item: { quality: number | string; url: string }) =>
                               Number(item.quality) === 720,
-                          )?.url || ''
+                          )?.url || sources[0]?.url
                         : provider === 'Gogo' || provider === 'Zoro'
                         ? sources?.find(
                             (item: { quality: number | string; url: string }) =>
                               item.quality === 'default',
-                          )?.url || ''
+                          )?.url || sources[0]?.url
                         : provider === 'Bilibili' || provider === 'KissKh'
                         ? sources[0]?.url
                         : sources?.find(
                             (item: { quality: number | string; url: string }) =>
                               item.quality === 'default',
-                          )?.url || '',
+                          )?.url || sources[0]?.url,
                     subtitle: {
                       url:
                         provider === 'Loklok'
@@ -449,6 +478,220 @@ const AnimeEpisodeWatch = () => {
           </Suspense>
         )}
       </ClientOnly>
+      <Spacer y={1} />
+      <Container
+        fluid
+        alignItems="stretch"
+        justify="center"
+        css={{
+          marginTop: '0.75rem',
+          padding: '0 0.75rem',
+          '@xs': {
+            padding: '0 3vw',
+          },
+          '@sm': {
+            padding: '0 6vw',
+          },
+          '@md': {
+            padding: '0 12vw',
+          },
+        }}
+      >
+        <Flex justify="start" align="center" wrap="wrap">
+          <Tooltip content="In developpement">
+            <Button size="sm" color="primary" auto ghost css={{ marginBottom: '0.75rem' }}>
+              Toggle Light
+            </Button>
+          </Tooltip>
+          <Spacer x={0.5} />
+          <Button
+            size="sm"
+            color="primary"
+            auto
+            ghost
+            onClick={() => {
+              setVisible(true);
+            }}
+            css={{ marginBottom: '0.75rem' }}
+          >
+            Watch Trailer
+          </Button>
+          <Spacer x={0.5} />
+          <Tooltip content="In developpement">
+            <Button size="sm" color="primary" auto ghost css={{ marginBottom: '0.75rem' }}>
+              Add to Watchlist
+            </Button>
+          </Tooltip>
+        </Flex>
+        <Spacer y={1} />
+        <Divider x={1} css={{ m: 0 }} />
+        <Spacer y={1} />
+        <Row>
+          {!isSm && (
+            <Col span={4}>
+              {detail?.image ? (
+                <Card.Image
+                  // @ts-ignore
+                  as={Image}
+                  src={detail?.image}
+                  title={
+                    detail?.title?.userPreferred ||
+                    detail?.title?.english ||
+                    detail?.title?.romaji ||
+                    detail?.title?.native
+                  }
+                  alt={
+                    detail?.title?.userPreferred ||
+                    detail?.title?.english ||
+                    detail?.title?.romaji ||
+                    detail?.title?.native
+                  }
+                  objectFit="cover"
+                  width="50%"
+                  css={{
+                    minWidth: 'auto !important',
+                    minHeight: '205px !important',
+                    marginTop: '10vh',
+                    borderRadius: '24px',
+                  }}
+                  loaderUrl="/api/image"
+                  placeholder="blur"
+                  responsive={[
+                    {
+                      size: {
+                        width: 137,
+                        height: 205,
+                      },
+                      maxWidth: 960,
+                    },
+                    {
+                      size: {
+                        width: 158,
+                        height: 237,
+                      },
+                      maxWidth: 1280,
+                    },
+                    {
+                      size: {
+                        width: 173,
+                        height: 260,
+                      },
+                      maxWidth: 1400,
+                    },
+                    {
+                      size: {
+                        width: 239,
+                        height: 359,
+                      },
+                    },
+                  ]}
+                  options={{
+                    contentType: MimeType.WEBP,
+                  }}
+                />
+              ) : (
+                <Row align="center" justify="center">
+                  <Avatar
+                    icon={<PhotoIcon width={48} height={48} />}
+                    css={{
+                      width: '50% !important',
+                      size: '$20',
+                      minWidth: 'auto !important',
+                      minHeight: '205px !important',
+                      marginTop: '10vh',
+                      borderRadius: '24px !important',
+                    }}
+                  />
+                </Row>
+              )}
+            </Col>
+          )}
+          <Col span={isSm ? 12 : 8}>
+            <Row>
+              <H2 h2 weight="bold">
+                {`${
+                  detail?.title?.userPreferred ||
+                  detail?.title?.english ||
+                  detail?.title?.romaji ||
+                  detail?.title?.native
+                }`}
+              </H2>
+            </Row>
+            <Spacer y={0.5} />
+            <Row justify="flex-start" align="center">
+              {detail?.rating && (
+                <Flex direction="row" justify="center" align="center">
+                  {Number(detail?.rating) > 75 ? (
+                    <AnilistStatIcon stat="good" />
+                  ) : Number(detail?.rating) > 60 ? (
+                    <AnilistStatIcon stat="average" />
+                  ) : (
+                    <AnilistStatIcon stat="bad" />
+                  )}
+                  <Spacer x={0.25} />
+                  <H5 weight="bold">{detail?.rating}%</H5>
+                </Flex>
+              )}
+              <Spacer x={0.5} />
+              {/* {releaseDate && <H5 h5>{`${type} • ${releaseDate}`}</H5>} */}
+            </Row>
+            <Spacer y={1} />
+            <Row fluid align="center" wrap="wrap" justify="flex-start" css={{ width: '100%' }}>
+              {detail?.genres &&
+                detail?.genres?.map((genre, index) => (
+                  <>
+                    <Button
+                      auto
+                      rounded
+                      key={index}
+                      size={isSm ? 'sm' : 'md'}
+                      css={{
+                        marginBottom: '0.125rem',
+                        background: detail?.color,
+                        color: colorBackground,
+                        '&:hover': {
+                          background: colorBackground,
+                          color: detail?.color,
+                        },
+                      }}
+                    >
+                      {genre}
+                    </Button>
+                    <Spacer x={1} />
+                  </>
+                ))}
+            </Row>
+            <Spacer y={1} />
+            <Row>
+              <H6
+                h6
+                css={{ textAlign: 'justify' }}
+                dangerouslySetInnerHTML={{ __html: detail?.description || '' }}
+              />
+            </Row>
+            <Spacer y={1} />
+          </Col>
+        </Row>
+        <Spacer y={1} />
+        <Divider x={1} css={{ m: 0 }} />
+        <Spacer y={1} />
+        {detail?.recommendations && detail?.recommendations.length > 0 && (
+          <>
+            <AnimeList
+              listType="slider-card"
+              items={detail?.recommendations}
+              listName="Recommendations"
+              navigationButtons
+            />
+            <Spacer y={1} />
+            <Divider x={1} css={{ m: 0 }} />
+            <Spacer y={1} />
+          </>
+        )}
+      </Container>
+      {detail && detail.trailer && (
+        <WatchTrailerModal trailer={detail.trailer} visible={visible} closeHandler={closeHandler} />
+      )}
     </Container>
   );
 };
