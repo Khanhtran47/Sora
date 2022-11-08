@@ -124,7 +124,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
         }}
       >
         <Flex justify="start" align="center" wrap="wrap">
-          <Tooltip content="In developpement">
+          <Tooltip content="In development">
             <Button size="sm" color="primary" auto ghost css={{ marginBottom: '0.75rem' }}>
               Toggle Light
             </Button>
@@ -145,7 +145,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
             Watch Trailer
           </Button>
           <Spacer x={0.5} />
-          <Tooltip content="In developpement">
+          <Tooltip content="In development">
             <Button size="sm" color="primary" auto ghost css={{ marginBottom: '0.75rem' }}>
               Add to Watchlist
             </Button>
