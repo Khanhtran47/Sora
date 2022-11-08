@@ -318,6 +318,8 @@ const App = () => {
                     height="100px"
                     className="rounded-full mr-5"
                     loaderUrl="/api/image"
+                    title="Logo Loading"
+                    alt="Logo Loading"
                     src={logoLoading}
                     placeholder="blur"
                     responsive={[

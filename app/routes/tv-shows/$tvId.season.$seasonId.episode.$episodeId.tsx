@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
@@ -12,26 +11,12 @@ import {
   useParams,
   useFetcher,
   useLocation,
-  useNavigate,
 } from '@remix-run/react';
-import {
-  Container,
-  Spacer,
-  Loading,
-  Radio,
-  Divider,
-  Button,
-  Tooltip,
-  Row,
-  Col,
-  Card,
-  Avatar,
-} from '@nextui-org/react';
+import { Container, Spacer, Loading, Radio } from '@nextui-org/react';
 import { ClientOnly, useRouteData } from 'remix-utils';
 import { isDesktop } from 'react-device-detect';
 import Hls from 'hls.js';
 import artplayerPluginHlsQuality from 'artplayer-plugin-hls-quality';
-import Image, { MimeType } from 'remix-image';
 
 import { authenticate, insertHistory } from '~/services/supabase';
 import {
@@ -66,14 +51,9 @@ import useMediaQuery from '~/hooks/useMediaQuery';
 
 import ArtPlayer from '~/src/components/elements/player/ArtPlayer';
 import AspectRatio from '~/src/components/elements/aspect-ratio/AspectRatio';
-import MediaList from '~/src/components/media/MediaList';
-import Flex from '~/src/components/styles/Flex.styles';
-import { H2, H5, H6 } from '~/src/components/styles/Text.styles';
-import WatchTrailerModal, { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
+import WatchDetail from '~/src/components/elements/shared/WatchDetail';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
-
-import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
 
 type LoaderData = {
   provider?: string;
@@ -342,29 +322,14 @@ const EpisodeWatch = () => {
       }
     | undefined = useRouteData('root');
   const { seasonId, episodeId } = useParams();
-  const isSm = useMediaQuery(960, 'max');
+  const isSm = useMediaQuery(650, 'max');
   const id = detail && detail.id;
   const [player, setPlayer] = useState<string>('1');
   const [source, setSource] = useState<string>(Player.moviePlayerUrl(Number(id), 1));
 
   const fetcher = useFetcher();
-  const navigate = useNavigate();
   const location = useLocation();
-  const [visible, setVisible] = useState(false);
-  const [trailer, setTrailer] = useState<Trailer>({});
-  const closeHandler = () => {
-    setVisible(false);
-    setTrailer({});
-  };
   const releaseYear = new Date(detail?.first_air_date || '').getFullYear();
-
-  useEffect(() => {
-    if (fetcher.data && fetcher.data.videos) {
-      const { results } = fetcher.data.videos;
-      const officialTrailer = results.find((result: Trailer) => result.type === 'Trailer');
-      setTrailer(officialTrailer);
-    }
-  }, [fetcher.data]);
 
   useEffect(
     () =>
@@ -584,214 +549,19 @@ const EpisodeWatch = () => {
         )}
       </ClientOnly>
       <Spacer y={1} />
-      <Container
-        fluid
-        alignItems="stretch"
-        justify="center"
-        css={{
-          marginTop: '0.75rem',
-          padding: '0 0.75rem',
-          '@xs': {
-            padding: '0 3vw',
-          },
-          '@sm': {
-            padding: '0 6vw',
-          },
-          '@md': {
-            padding: '0 12vw',
-          },
-        }}
-      >
-        <Flex justify="start" align="center" wrap="wrap">
-          <Tooltip content="In developpement">
-            <Button size="sm" color="primary" auto ghost css={{ marginBottom: '0.75rem' }}>
-              Toggle Light
-            </Button>
-          </Tooltip>
-          <Spacer x={0.5} />
-          <Button
-            size="sm"
-            color="primary"
-            auto
-            ghost
-            onClick={() => {
-              setVisible(true);
-              fetcher.load(`/movies/${id}/videos`);
-            }}
-            css={{ marginBottom: '0.75rem' }}
-          >
-            Watch Trailer
-          </Button>
-          <Spacer x={0.5} />
-          <Tooltip content="In developpement">
-            <Button size="sm" color="primary" auto ghost css={{ marginBottom: '0.75rem' }}>
-              Add to Watchlist
-            </Button>
-          </Tooltip>
-        </Flex>
-        <Spacer y={1} />
-        <Divider x={1} css={{ m: 0 }} />
-        <Spacer y={1} />
-        <Row>
-          {!isSm && (
-            <Col span={4}>
-              {detail?.poster_path ? (
-                <Card.Image
-                  // @ts-ignore
-                  as={Image}
-                  src={TMDB.posterUrl(detail?.poster_path, 'w342')}
-                  alt={detail?.name}
-                  objectFit="cover"
-                  width="50%"
-                  css={{
-                    minWidth: 'auto !important',
-                    minHeight: '205px !important',
-                    borderRadius: '24px',
-                  }}
-                  loaderUrl="/api/image"
-                  placeholder="blur"
-                  responsive={[
-                    {
-                      size: {
-                        width: 137,
-                        height: 205,
-                      },
-                      maxWidth: 960,
-                    },
-                    {
-                      size: {
-                        width: 158,
-                        height: 237,
-                      },
-                      maxWidth: 1280,
-                    },
-                    {
-                      size: {
-                        width: 173,
-                        height: 260,
-                      },
-                      maxWidth: 1400,
-                    },
-                    {
-                      size: {
-                        width: 239,
-                        height: 359,
-                      },
-                    },
-                  ]}
-                  options={{
-                    contentType: MimeType.WEBP,
-                  }}
-                />
-              ) : (
-                <Row align="center" justify="center">
-                  <Avatar
-                    icon={<PhotoIcon width={48} height={48} />}
-                    css={{
-                      width: '50% !important',
-                      size: '$20',
-                      minWidth: 'auto !important',
-                      minHeight: '205px !important',
-                      marginTop: '10vh',
-                      borderRadius: '24px !important',
-                    }}
-                  />
-                </Row>
-              )}
-            </Col>
-          )}
-          <Col span={isSm ? 12 : 8}>
-            <Row>
-              <H2 h2 weight="bold">
-                {`${detail?.name} (${releaseYear})`}
-              </H2>
-            </Row>
-            <Spacer y={0.5} />
-            <Flex direction="row">
-              <H5
-                h5
-                css={{
-                  backgroundColor: '#3ec2c2',
-                  borderRadius: '$xs',
-                  padding: '0 0.25rem 0 0.25rem',
-                  marginRight: '0.5rem',
-                }}
-              >
-                TMDb
-              </H5>
-              <H5 h5>{detail?.vote_average?.toFixed(1)}</H5>
-              {imdbRating && (
-                <>
-                  <Spacer x={1.25} />
-                  <H5
-                    h5
-                    css={{
-                      backgroundColor: '#ddb600',
-                      color: '#000',
-                      borderRadius: '$xs',
-                      padding: '0 0.25rem 0 0.25rem',
-                      marginRight: '0.5rem',
-                    }}
-                  >
-                    IMDb
-                  </H5>
-                  <H5 h5>{imdbRating?.star}</H5>
-                </>
-              )}
-            </Flex>
-            <Spacer y={1} />
-            <Row fluid align="center" wrap="wrap" justify="flex-start" css={{ width: '100%' }}>
-              {detail?.genres &&
-                detail?.genres?.map((genre) => (
-                  <>
-                    <Button
-                      color="primary"
-                      auto
-                      ghost
-                      rounded
-                      key={genre?.id}
-                      size={isSm ? 'sm' : 'md'}
-                      css={{ marginBottom: '0.125rem' }}
-                      onClick={() => navigate(`/tv-shows/discover?with_genres=${genre?.id}`)}
-                    >
-                      {genre?.name}
-                    </Button>
-                    <Spacer x={1} />
-                  </>
-                ))}
-            </Row>
-            <Spacer y={1} />
-            <Row>
-              <H6 h6 css={{ textAlign: 'justify' }}>
-                {detail?.overview}
-              </H6>
-            </Row>
-            <Spacer y={1} />
-          </Col>
-        </Row>
-        <Spacer y={1} />
-        <Divider x={1} css={{ m: 0 }} />
-        <Spacer y={1} />
-        {recommendations && recommendations.items && recommendations.items.length > 0 && (
-          <>
-            <MediaList
-              listType="slider-card"
-              items={recommendations.items}
-              listName="You May Also Like"
-              showMoreList
-              onClickViewMore={() => navigate(`/tv-shows/${detail?.id}/recommendations`)}
-              cardType="similar-tv"
-              navigationButtons
-              genresMovie={rootData?.genresMovie}
-              genresTv={rootData?.genresTv}
-            />
-            <Spacer y={1} />
-            <Divider x={1} css={{ m: 0 }} />
-            <Spacer y={1} />
-          </>
-        )}
-      </Container>
-      <WatchTrailerModal trailer={trailer} visible={visible} closeHandler={closeHandler} />
+      <WatchDetail
+        id={Number(id)}
+        type="tv"
+        title={`${detail?.name} (${releaseYear})`}
+        overview={detail?.overview || ''}
+        posterPath={detail?.poster_path ? TMDB.posterUrl(detail?.poster_path, 'w342') : undefined}
+        tmdbRating={detail?.vote_average}
+        imdbRating={imdbRating?.star}
+        genresMedia={detail?.genres}
+        genresMovie={rootData?.genresMovie}
+        genresTv={rootData?.genresTv}
+        recommendationsMovies={recommendations?.items}
+      />
     </Container>
   );
 };
