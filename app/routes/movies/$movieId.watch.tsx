@@ -337,6 +337,7 @@ const MovieWatch = () => {
             <AspectRatio.Root ratio={7 / 3}>
               {sources ? (
                 <ArtPlayer
+                  autoPlay={false}
                   option={{
                     title: detail?.title,
                     url:

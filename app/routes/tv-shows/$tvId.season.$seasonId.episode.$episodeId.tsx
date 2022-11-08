@@ -12,6 +12,7 @@ import {
   useParams,
   useFetcher,
   useLocation,
+  useNavigate,
 } from '@remix-run/react';
 import { Container, Spacer, Loading, Radio } from '@nextui-org/react';
 import { ClientOnly, useRouteData } from 'remix-utils';
@@ -50,6 +51,7 @@ import TMDB from '~/utils/media';
 import Player from '~/utils/player';
 import updateHistory from '~/utils/update-history';
 import useMediaQuery from '~/hooks/useMediaQuery';
+import useLocalStorage from '~/hooks/useLocalStorage';
 
 import ArtPlayer from '~/src/components/elements/player/ArtPlayer';
 import AspectRatio from '~/src/components/elements/aspect-ratio/AspectRatio';
@@ -59,6 +61,7 @@ import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 
 type LoaderData = {
   provider?: string;
+  idProvider?: number | string;
   detail: Awaited<ReturnType<typeof getTvShowDetail>>;
   imdbId: Awaited<ReturnType<typeof getTvShowIMDBId>>;
   recommendations: Awaited<ReturnType<typeof getRecommendation>>;
@@ -69,6 +72,7 @@ type LoaderData = {
   subtitles?: IMovieSubtitle[] | undefined;
   userId?: string;
   imdbRating?: { count: number; star: number };
+  hasNextEpisode?: boolean;
 };
 
 export const meta: MetaFunction = ({ data, params }) => {
@@ -94,6 +98,16 @@ export const meta: MetaFunction = ({ data, params }) => {
   };
 };
 
+const checkHasNextEpisode = (
+  currentEpisode: number,
+  totalEpisodes: number,
+  totalProviderEpisodes: number,
+) => {
+  if (totalEpisodes > currentEpisode) {
+    return totalProviderEpisodes > currentEpisode;
+  }
+};
+
 export const loader: LoaderFunction = async ({ request, params }) => {
   const [user, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
 
@@ -103,6 +117,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const { tvId, seasonId, episodeId } = params;
   const tid = Number(tvId);
   const sid = Number(seasonId);
+  const eid = Number(episodeId);
 
   if (!tid) throw new Response('Not Found', { status: 404 });
   if (!sid) throw new Response('Not Found', { status: 404 });
@@ -113,6 +128,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     getRecommendation('tv', tid),
     getTvSeasonDetail(tid, sid),
   ]);
+  const totalEpisodes = Number(seasonDetail?.episodes.length);
 
   if (user) {
     insertHistory({
@@ -138,6 +154,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         imdbId ? getImdbRating(imdbId) : undefined,
         getTranslations('tv', tid),
       ]);
+      const totalProviderEpisodes = Number(tvDetail?.data?.episodeCount);
+      const hasNextEpisode = checkHasNextEpisode(eid, totalEpisodes, totalProviderEpisodes);
       return json<LoaderData>({
         provider,
         detail,
@@ -146,6 +164,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         imdbRating,
         seasonDetail,
         translations,
+        hasNextEpisode,
         sources: tvDetail?.sources,
         subtitles: tvDetail?.subtitles.map((sub) => ({
           lang: `${sub.language} (${sub.lang})`,
@@ -159,6 +178,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       loklokGetTvEpInfo(idProvider, Number(episodeId) - 1),
       imdbId ? getImdbRating(imdbId) : undefined,
     ]);
+    const totalProviderEpisodes = Number(tvDetail?.data?.episodeCount);
+    const hasNextEpisode = checkHasNextEpisode(eid, totalEpisodes, totalProviderEpisodes);
     return json<LoaderData>({
       provider,
       detail,
@@ -166,6 +187,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       recommendations,
       imdbRating,
       seasonDetail,
+      hasNextEpisode,
       sources: tvDetail?.sources,
       subtitles: tvDetail?.subtitles.map((sub) => ({
         lang: `${sub.language} (${sub.lang})`,
@@ -183,6 +205,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         imdbId ? getImdbRating(imdbId) : undefined,
         getTranslations('tv', tid),
       ]);
+      const totalProviderEpisodes = Number(tvDetail?.episodes?.length);
+      const hasNextEpisode = checkHasNextEpisode(eid, totalEpisodes, totalProviderEpisodes);
       const tvEpisodeDetail = tvDetail?.episodes?.find(
         (episode) => episode.season === Number(seasonId) && episode.number === Number(episodeId),
       );
@@ -193,11 +217,13 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         );
         return json<LoaderData>({
           provider,
+          idProvider,
           detail,
           imdbId,
           recommendations,
           imdbRating,
           seasonDetail,
+          hasNextEpisode,
           translations,
           data: tvDetail,
           sources: tvEpisodeStreamLink?.sources,
@@ -210,6 +236,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       getMovieInfo(idProvider),
       imdbId ? getImdbRating(imdbId) : undefined,
     ]);
+    const totalProviderEpisodes = Number(tvDetail?.episodes?.length);
+    const hasNextEpisode = checkHasNextEpisode(eid, totalEpisodes, totalProviderEpisodes);
     const tvEpisodeDetail = tvDetail?.episodes?.find(
       (episode) => episode.season === Number(seasonId) && episode.number === Number(episodeId),
     );
@@ -220,11 +248,13 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       );
       return json<LoaderData>({
         provider,
+        idProvider,
         detail,
         imdbId,
         recommendations,
         imdbRating,
         seasonDetail,
+        hasNextEpisode,
         data: tvDetail,
         sources: tvEpisodeStreamLink?.sources,
         subtitles: tvEpisodeStreamLink?.subtitles,
@@ -241,6 +271,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         imdbId ? getImdbRating(imdbId) : undefined,
         getTranslations('tv', tid),
       ]);
+      const totalProviderEpisodes = Number(episodeDetail?.episodes?.length);
+      const hasNextEpisode = checkHasNextEpisode(eid, totalEpisodes, totalProviderEpisodes);
       const episodeSearch = episodeDetail?.episodes?.find((e) => e?.number === Number(episodeId));
       const [episodeStream, episodeSubtitle] = await Promise.all([
         getKissKhEpisodeStream(Number(episodeSearch?.id)),
@@ -251,11 +283,13 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
       return json<LoaderData>({
         provider,
+        idProvider,
         detail,
         imdbId,
         recommendations,
         imdbRating,
         seasonDetail,
+        hasNextEpisode,
         translations,
         sources: [{ url: episodeStream?.Video || '', isM3U8: true, quality: 'auto' }],
         subtitles: episodeSubtitle?.map((sub) => ({
@@ -271,6 +305,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       getKissKhInfo(Number(idProvider)),
       imdbId ? getImdbRating(imdbId) : undefined,
     ]);
+    const totalProviderEpisodes = Number(episodeDetail?.episodes?.length);
+    const hasNextEpisode = checkHasNextEpisode(eid, totalEpisodes, totalProviderEpisodes);
     const episodeSearch = episodeDetail?.episodes?.find((e) => e?.number === Number(episodeId));
     const [episodeStream, episodeSubtitle] = await Promise.all([
       getKissKhEpisodeStream(Number(episodeSearch?.id)),
@@ -281,11 +317,13 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
     return json<LoaderData>({
       provider,
+      idProvider,
       detail,
       imdbId,
       recommendations,
       imdbRating,
       seasonDetail,
+      hasNextEpisode,
       sources: [{ url: episodeStream?.Video || '', isM3U8: true, quality: 'auto' }],
       subtitles: episodeSubtitle?.map((sub) => ({
         lang: sub.label,
@@ -424,11 +462,13 @@ export const handle = {
 const EpisodeWatch = () => {
   const {
     provider,
+    idProvider,
     detail,
     imdbId,
     recommendations,
     imdbRating,
     seasonDetail,
+    hasNextEpisode,
     translations,
     sources,
     subtitles,
@@ -446,24 +486,12 @@ const EpisodeWatch = () => {
   const id = detail && detail.id;
   const [player, setPlayer] = useState<string>('1');
   const [source, setSource] = useState<string>(Player.moviePlayerUrl(Number(id), 1));
-
+  const [isVideoEnded, setIsVideoEnded] = useState<boolean>(false);
   const fetcher = useFetcher();
   const location = useLocation();
-
-  useEffect(
-    () =>
-      player === '2'
-        ? setSource(Player.tvPlayerUrl(Number(imdbId), Number(player), Number(episodeId) || 1))
-        : setSource(
-            Player.tvPlayerUrl(
-              Number(detail?.id),
-              Number(player),
-              Number(seasonId) || 1,
-              Number(episodeId),
-            ),
-          ),
-    [player, imdbId, seasonId, episodeId, detail?.id],
-  );
+  const navigate = useNavigate();
+  let hls: Hls | null = null;
+  const [playNextEpisode] = useLocalStorage('playNextEpisode', true);
   const subtitleSelector = subtitles?.map(({ lang, url }: { lang: string; url: string }) => ({
     html: lang.toString(),
     url: url.toString(),
@@ -481,6 +509,31 @@ const EpisodeWatch = () => {
       ...(provider === 'Loklok' && Number(quality) === 720 && { default: true }),
     }),
   );
+
+  useEffect(
+    () =>
+      player === '2'
+        ? setSource(Player.tvPlayerUrl(Number(imdbId), Number(player), Number(episodeId) || 1))
+        : setSource(
+            Player.tvPlayerUrl(
+              Number(detail?.id),
+              Number(player),
+              Number(seasonId) || 1,
+              Number(episodeId),
+            ),
+          ),
+    [player, imdbId, seasonId, episodeId, detail?.id],
+  );
+
+  useEffect(() => {
+    if (isVideoEnded && playNextEpisode && provider && idProvider && hasNextEpisode)
+      navigate(
+        `/tv-shows/${detail?.id}/season/${seasonId}/episode/${
+          Number(episodeId) + 1
+        }?provider=${provider}&id=${idProvider}`,
+      );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isVideoEnded]);
   return (
     <Container
       fluid
@@ -499,6 +552,16 @@ const EpisodeWatch = () => {
             <AspectRatio.Root ratio={7 / 3}>
               {sources ? (
                 <ArtPlayer
+                  autoPlay
+                  currentEpisode={Number(episodeId)}
+                  hasNextEpisode={hasNextEpisode}
+                  nextEpisodeUrl={
+                    hasNextEpisode
+                      ? `/tv-shows/${detail?.id}/season/${seasonId}/episode/${
+                          Number(episodeId) + 1
+                        }?provider=${provider}&id=${idProvider}`
+                      : undefined
+                  }
                   option={{
                     title: detail?.name,
                     url:
@@ -561,8 +624,11 @@ const EpisodeWatch = () => {
                     ],
                     customType: {
                       m3u8: (video: HTMLMediaElement, url: string) => {
+                        if (hls) {
+                          hls.destroy();
+                        }
                         if (Hls.isSupported()) {
-                          const hls = new Hls();
+                          hls = new Hls();
                           hls.loadSource(url);
                           hls.attachMedia(video);
                         } else {
@@ -598,6 +664,7 @@ const EpisodeWatch = () => {
                   }}
                   getInstance={(art) => {
                     art.on('ready', () => {
+                      setIsVideoEnded(false);
                       const t = new URLSearchParams(location.search).get('t');
                       if (t) {
                         art.currentTime = Number(t);
@@ -622,10 +689,20 @@ const EpisodeWatch = () => {
                       art.layers.title.style.display = 'block';
                     });
                     art.on('play', () => {
+                      setIsVideoEnded(false);
                       art.layers.title.style.display = 'none';
                     });
                     art.on('hover', (state: boolean) => {
                       art.layers.title.style.display = state || !art.playing ? 'block' : 'none';
+                    });
+                    art.on('video:ended', () => {
+                      setIsVideoEnded(true);
+                    });
+                    art.on('destroy', () => {
+                      setIsVideoEnded(false);
+                      if (hls) {
+                        hls.destroy();
+                      }
                     });
                   }}
                 />
