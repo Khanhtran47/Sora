@@ -30,7 +30,7 @@ import {
   getKissKhEpisodeStream,
   getKissKhEpisodeSubtitle,
 } from '~/services/kisskh/kisskh.server';
-import { IEpisode } from '~/services/consumet/anilist/anilist.types';
+import { IEpisodeInfo } from '~/services/consumet/anilist/anilist.types';
 import { loklokGetTvEpInfo } from '~/services/loklok';
 import { LOKLOK_URL } from '~/services/loklok/utils.server';
 import { IMovieSource, IMovieSubtitle } from '~/services/consumet/flixhq/flixhq.types';
@@ -46,9 +46,10 @@ type LoaderData = {
   provider?: string;
   sources: IMovieSource[] | undefined;
   detail: Awaited<ReturnType<typeof getAnimeInfo>>;
+  episodes: Awaited<ReturnType<typeof getAnimeEpisodeInfo>>;
   subtitles?: IMovieSubtitle[] | undefined;
   userId?: string;
-  episodeInfo: IEpisode | undefined;
+  episodeInfo: IEpisodeInfo | undefined;
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -67,7 +68,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     getAnimeEpisodeStream(episodeId),
   ]);
 
-  const episodeInfo = episodes?.find((e: IEpisode) => e.number === Number(episode));
+  const episodeInfo = episodes?.find((e: IEpisodeInfo) => e.number === Number(episode));
 
   if (user) {
     insertHistory({
@@ -97,6 +98,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     return json<LoaderData>({
       provider,
       detail,
+      episodes,
       sources: tvDetail?.sources,
       subtitles: tvDetail?.subtitles.map((sub) => ({
         lang: `${sub.language} (${sub.lang})`,
@@ -113,6 +115,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     return json<LoaderData>({
       provider,
       detail,
+      episodes,
       sources: episodeDetail?.sources,
       userId: user?.id,
       episodeInfo,
@@ -125,6 +128,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     return json<LoaderData>({
       provider,
       detail,
+      episodes,
       sources: episodeDetail?.sources,
       userId: user?.id,
       episodeInfo,
@@ -140,6 +144,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     return json<LoaderData>({
       provider,
       detail,
+      episodes,
       sources: [
         {
           url: episodeDetail?.sources[0]?.file || '',
@@ -166,6 +171,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     return json<LoaderData>({
       provider,
       detail,
+      episodes,
       sources: [{ url: episodeStream?.Video || '', isM3U8: true, quality: 'auto' }],
       subtitles: episodeSubtitle?.map((sub) => ({
         lang: sub.label,
@@ -179,7 +185,13 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   if (!detail || !sources) throw new Response('Not Found', { status: 404 });
 
-  return json<LoaderData>({ detail, sources: sources.sources, userId: user?.id, episodeInfo });
+  return json<LoaderData>({
+    detail,
+    episodes,
+    sources: sources.sources,
+    userId: user?.id,
+    episodeInfo,
+  });
 };
 
 export const meta: MetaFunction = ({ data, params }) => {
@@ -245,7 +257,8 @@ export const handle = {
 };
 
 const AnimeEpisodeWatch = () => {
-  const { provider, detail, sources, subtitles, episodeInfo, userId } = useLoaderData<LoaderData>();
+  const { provider, detail, episodes, sources, subtitles, episodeInfo, userId } =
+    useLoaderData<LoaderData>();
   const { episodeId } = useParams();
   const fetcher = useFetcher();
   const location = useLocation();
@@ -451,12 +464,11 @@ const AnimeEpisodeWatch = () => {
       <Spacer y={1} />
       <WatchDetail
         type="anime"
-        title={`${
-          detail?.title?.userPreferred ||
-          detail?.title?.english ||
-          detail?.title?.romaji ||
-          detail?.title?.native
-        } (${detail?.releaseDate})`}
+        id={detail?.id}
+        episodes={episodes}
+        title={detail?.title?.english || ''}
+        orgTitle={detail?.title?.native || ''}
+        year={Number(detail?.releaseDate)}
         overview={detail?.description || ''}
         posterPath={detail?.image}
         anilistRating={detail?.rating}

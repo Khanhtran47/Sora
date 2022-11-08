@@ -9,7 +9,7 @@ import {
   IAnimeEpisodeStream,
   IAnimeGenre,
   IRecentAnimeEpisodes,
-  IEpisode,
+  IEpisodeInfo,
 } from './anilist.types';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -172,9 +172,9 @@ export const getAnimeEpisodeInfo = async (
   id: any,
   dub?: boolean,
   provider?: string,
-): Promise<IEpisode[] | undefined> => {
+): Promise<IEpisodeInfo[] | undefined> => {
   try {
-    const fetched = await fetcher<IEpisode[]>(Anilist.animeEpisodeUrl(id, dub, provider));
+    const fetched = await fetcher<IEpisodeInfo[]>(Anilist.animeEpisodeUrl(id, dub, provider));
     return fetched;
   } catch (error) {
     console.log(error);

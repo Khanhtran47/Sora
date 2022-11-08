@@ -17,13 +17,14 @@ import {
 import Image, { MimeType } from 'remix-image';
 import tinycolor from 'tinycolor2';
 
-import { IMedia } from '~/services/tmdb/tmdb.types';
-import { IAnimeResult, ITrailer } from '~/services/consumet/anilist/anilist.types';
+import { IMedia, IEpisode, IMovieTranslations } from '~/services/tmdb/tmdb.types';
+import { IAnimeResult, ITrailer, IEpisodeInfo } from '~/services/consumet/anilist/anilist.types';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
 
 import MediaList from '~/src/components/media/MediaList';
 import AnimeList from '~/src/components/anime/AnimeList';
+import ListEpisodes from '~/src/components/elements/shared/ListEpisodes';
 import Flex from '~/src/components/styles/Flex.styles';
 import { H2, H5, H6 } from '~/src/components/styles/Text.styles';
 import WatchTrailerModal, { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
@@ -32,9 +33,10 @@ import AnilistStatIcon from '~/src/assets/icons/AnilistStatIcon.js';
 import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
 
 interface IWatchDetailProps {
-  id?: number;
+  id?: number | string | undefined;
   type: 'movie' | 'tv' | 'anime';
   title: string;
+  orgTitle?: string;
   overview?: string;
   posterPath?: string;
   tmdbRating?: number;
@@ -51,6 +53,10 @@ interface IWatchDetailProps {
   genresTv?: { [id: string]: string };
   color?: string;
   trailerAnime?: ITrailer;
+  episodes?: IEpisode[] | IEpisodeInfo[];
+  year?: number;
+  translations?: IMovieTranslations;
+  season?: number;
 }
 
 const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
@@ -58,6 +64,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
     id,
     type,
     title,
+    orgTitle,
     overview,
     posterPath,
     tmdbRating,
@@ -71,6 +78,10 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
     genresTv,
     color,
     trailerAnime,
+    episodes,
+    year,
+    translations,
+    season,
   } = props;
   const fetcher = useFetcher();
   const navigate = useNavigate();
@@ -143,6 +154,41 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
         <Spacer y={1} />
         <Divider x={1} css={{ m: 0 }} />
         <Spacer y={1} />
+        {type === 'anime' || type === 'tv' ? (
+          <>
+            <Row>
+              {type === 'anime' ? (
+                <Col span={12}>
+                  <ListEpisodes
+                    type="anime"
+                    id={id}
+                    episodes={episodes}
+                    title={title}
+                    orgTitle={orgTitle || ''}
+                    year={Number(year)}
+                  />
+                </Col>
+              ) : null}
+              {type === 'tv' ? (
+                <Col span={12}>
+                  <ListEpisodes
+                    type="tv"
+                    id={id}
+                    episodes={episodes}
+                    title={title}
+                    orgTitle={orgTitle || ''}
+                    year={Number(year)}
+                    translations={translations}
+                    season={season}
+                  />
+                </Col>
+              ) : null}
+            </Row>
+            <Spacer y={1} />
+            <Divider x={1} css={{ m: 0 }} />
+            <Spacer y={1} />
+          </>
+        ) : null}
         <Row>
           {!isSm && (
             <Col span={4}>

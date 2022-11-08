@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
@@ -25,6 +26,7 @@ import {
   getRecommendation,
   getTranslations,
   getImdbRating,
+  getTvSeasonDetail,
 } from '~/services/tmdb/tmdb.server';
 import {
   getMovieSearch,
@@ -60,6 +62,8 @@ type LoaderData = {
   detail: Awaited<ReturnType<typeof getTvShowDetail>>;
   imdbId: Awaited<ReturnType<typeof getTvShowIMDBId>>;
   recommendations: Awaited<ReturnType<typeof getRecommendation>>;
+  seasonDetail: Awaited<ReturnType<typeof getTvSeasonDetail>>;
+  translations?: Awaited<ReturnType<typeof getTranslations>>;
   data?: Awaited<ReturnType<typeof getMovieInfo>>;
   sources?: IMovieSource[] | undefined;
   subtitles?: IMovieSubtitle[] | undefined;
@@ -98,13 +102,16 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const idProvider = url.searchParams.get('id');
   const { tvId, seasonId, episodeId } = params;
   const tid = Number(tvId);
+  const sid = Number(seasonId);
 
   if (!tid) throw new Response('Not Found', { status: 404 });
+  if (!sid) throw new Response('Not Found', { status: 404 });
 
-  const [detail, imdbId, recommendations] = await Promise.all([
+  const [detail, imdbId, recommendations, seasonDetail] = await Promise.all([
     getTvShowDetail(tid),
     getTvShowIMDBId(tid),
     getRecommendation('tv', tid),
+    getTvSeasonDetail(tid, sid),
   ]);
 
   if (user) {
@@ -125,7 +132,29 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   if (provider === 'Loklok') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
-    // const tvDetail = await loklokGetTvEpInfo(idProvider, Number(episodeId) - 1);
+    if ((detail && detail?.original_language !== 'en') || locale !== 'en') {
+      const [tvDetail, imdbRating, translations] = await Promise.all([
+        loklokGetTvEpInfo(idProvider, Number(episodeId) - 1),
+        imdbId ? getImdbRating(imdbId) : undefined,
+        getTranslations('tv', tid),
+      ]);
+      return json<LoaderData>({
+        provider,
+        detail,
+        imdbId,
+        recommendations,
+        imdbRating,
+        seasonDetail,
+        translations,
+        sources: tvDetail?.sources,
+        subtitles: tvDetail?.subtitles.map((sub) => ({
+          lang: `${sub.language} (${sub.lang})`,
+          url: `${LOKLOK_URL}/subtitle?url=${sub.url}`,
+        })),
+        userId: user?.id,
+      });
+    }
+
     const [tvDetail, imdbRating] = await Promise.all([
       loklokGetTvEpInfo(idProvider, Number(episodeId) - 1),
       imdbId ? getImdbRating(imdbId) : undefined,
@@ -136,6 +165,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       imdbId,
       recommendations,
       imdbRating,
+      seasonDetail,
       sources: tvDetail?.sources,
       subtitles: tvDetail?.subtitles.map((sub) => ({
         lang: `${sub.language} (${sub.lang})`,
@@ -147,6 +177,35 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   if (provider === 'Flixhq') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
+    if ((detail && detail?.original_language !== 'en') || locale !== 'en') {
+      const [tvDetail, imdbRating, translations] = await Promise.all([
+        getMovieInfo(idProvider),
+        imdbId ? getImdbRating(imdbId) : undefined,
+        getTranslations('tv', tid),
+      ]);
+      const tvEpisodeDetail = tvDetail?.episodes?.find(
+        (episode) => episode.season === Number(seasonId) && episode.number === Number(episodeId),
+      );
+      if (tvEpisodeDetail) {
+        const tvEpisodeStreamLink = await getMovieEpisodeStreamLink(
+          tvEpisodeDetail?.id || '',
+          tvDetail?.id || '',
+        );
+        return json<LoaderData>({
+          provider,
+          detail,
+          imdbId,
+          recommendations,
+          imdbRating,
+          seasonDetail,
+          translations,
+          data: tvDetail,
+          sources: tvEpisodeStreamLink?.sources,
+          subtitles: tvEpisodeStreamLink?.subtitles,
+          userId: user?.id,
+        });
+      }
+    }
     const [tvDetail, imdbRating] = await Promise.all([
       getMovieInfo(idProvider),
       imdbId ? getImdbRating(imdbId) : undefined,
@@ -165,6 +224,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         imdbId,
         recommendations,
         imdbRating,
+        seasonDetail,
         data: tvDetail,
         sources: tvEpisodeStreamLink?.sources,
         subtitles: tvEpisodeStreamLink?.subtitles,
@@ -175,6 +235,38 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   if (provider === 'KissKh') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
+    if ((detail && detail?.original_language !== 'en') || locale !== 'en') {
+      const [episodeDetail, imdbRating, translations] = await Promise.all([
+        getKissKhInfo(Number(idProvider)),
+        imdbId ? getImdbRating(imdbId) : undefined,
+        getTranslations('tv', tid),
+      ]);
+      const episodeSearch = episodeDetail?.episodes?.find((e) => e?.number === Number(episodeId));
+      const [episodeStream, episodeSubtitle] = await Promise.all([
+        getKissKhEpisodeStream(Number(episodeSearch?.id)),
+        episodeSearch && episodeSearch.sub > 0
+          ? getKissKhEpisodeSubtitle(Number(episodeSearch?.id))
+          : undefined,
+      ]);
+
+      return json<LoaderData>({
+        provider,
+        detail,
+        imdbId,
+        recommendations,
+        imdbRating,
+        seasonDetail,
+        translations,
+        sources: [{ url: episodeStream?.Video || '', isM3U8: true, quality: 'auto' }],
+        subtitles: episodeSubtitle?.map((sub) => ({
+          lang: sub.label,
+          url: sub.src,
+          ...(sub.default && { default: true }),
+        })),
+        userId: user?.id,
+      });
+    }
+
     const [episodeDetail, imdbRating] = await Promise.all([
       getKissKhInfo(Number(idProvider)),
       imdbId ? getImdbRating(imdbId) : undefined,
@@ -193,6 +285,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       imdbId,
       recommendations,
       imdbRating,
+      seasonDetail,
       sources: [{ url: episodeStream?.Video || '', isM3U8: true, quality: 'auto' }],
       subtitles: episodeSubtitle?.map((sub) => ({
         lang: sub.label,
@@ -204,12 +297,28 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   }
 
   if (provider === 'Embed') {
+    if ((detail && detail?.original_language !== 'en') || locale !== 'en') {
+      const [imdbRating, translations] = await Promise.all([
+        imdbId ? getImdbRating(imdbId) : undefined,
+        getTranslations('tv', tid),
+      ]);
+      return json<LoaderData>({
+        detail,
+        imdbId,
+        recommendations,
+        imdbRating,
+        seasonDetail,
+        translations,
+        userId: user?.id,
+      });
+    }
     const imdbRating = imdbId ? await getImdbRating(imdbId) : undefined;
     return json<LoaderData>({
       detail,
       imdbId,
       recommendations,
       imdbRating,
+      seasonDetail,
       userId: user?.id,
     });
   }
@@ -271,6 +380,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     imdbId,
     recommendations,
     imdbRating,
+    seasonDetail,
     data: tvDetail,
     sources: tvEpisodeStreamLink?.sources,
     subtitles: tvEpisodeStreamLink?.subtitles,
@@ -312,8 +422,18 @@ export const handle = {
 };
 
 const EpisodeWatch = () => {
-  const { provider, detail, imdbId, recommendations, imdbRating, sources, subtitles, userId } =
-    useLoaderData<LoaderData>();
+  const {
+    provider,
+    detail,
+    imdbId,
+    recommendations,
+    imdbRating,
+    seasonDetail,
+    translations,
+    sources,
+    subtitles,
+    userId,
+  } = useLoaderData<LoaderData>();
   const rootData:
     | {
         locale: string;
@@ -329,7 +449,6 @@ const EpisodeWatch = () => {
 
   const fetcher = useFetcher();
   const location = useLocation();
-  const releaseYear = new Date(detail?.first_air_date || '').getFullYear();
 
   useEffect(
     () =>
@@ -552,7 +671,11 @@ const EpisodeWatch = () => {
       <WatchDetail
         id={Number(id)}
         type="tv"
-        title={`${detail?.name} (${releaseYear})`}
+        title={detail?.name || ''}
+        orgTitle={detail?.original_name || ''}
+        year={new Date(seasonDetail?.air_date || '').getFullYear()}
+        // @ts-ignore
+        episodes={seasonDetail?.episodes}
         overview={detail?.overview || ''}
         posterPath={detail?.poster_path ? TMDB.posterUrl(detail?.poster_path, 'w342') : undefined}
         tmdbRating={detail?.vote_average}
@@ -561,6 +684,8 @@ const EpisodeWatch = () => {
         genresMovie={rootData?.genresMovie}
         genresTv={rootData?.genresTv}
         recommendationsMovies={recommendations?.items}
+        season={seasonDetail?.season_number}
+        translations={translations}
       />
     </Container>
   );
