@@ -462,19 +462,17 @@ const AnimeEpisodeWatch = () => {
                         },
                       },
                     ],
-                    type:
-                      provider === 'Loklok' ||
-                      provider === 'Gogo' ||
-                      provider === 'Zoro' ||
-                      provider === 'KissKh'
-                        ? 'm3u8'
-                        : 'dash',
+                    type: provider === 'Bilibili' ? 'dash' : 'm3u8',
                     customType:
-                      provider === 'Loklok' ||
-                      provider === 'Gogo' ||
-                      provider === 'Zoro' ||
-                      provider === 'KissKh'
+                      provider === 'Bilibili'
                         ? {
+                            mpd: async (video: HTMLMediaElement, url: string) => {
+                              const { default: dashjs } = await import('dashjs');
+                              const player = dashjs.MediaPlayer().create();
+                              player.initialize(video, url, true);
+                            },
+                          }
+                        : {
                             m3u8: async (video: HTMLMediaElement, url: string) => {
                               if (hls) {
                                 hls.destroy();
@@ -489,13 +487,6 @@ const AnimeEpisodeWatch = () => {
                                   video.src = url;
                                 }
                               }
-                            },
-                          }
-                        : {
-                            mpd: async (video: HTMLMediaElement, url: string) => {
-                              const { default: dashjs } = await import('dashjs');
-                              const player = dashjs.MediaPlayer().create();
-                              player.initialize(video, url, true);
                             },
                           },
                     plugins:
