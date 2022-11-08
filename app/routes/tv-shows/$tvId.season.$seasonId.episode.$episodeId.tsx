@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import * as React from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { MetaFunction, LoaderFunction, json } from '@remix-run/node';
 import {
   useCatch,
@@ -11,17 +12,23 @@ import {
   useParams,
   useFetcher,
   useLocation,
+  useNavigate,
 } from '@remix-run/react';
 import { Container, Spacer, Loading, Radio } from '@nextui-org/react';
-import { ClientOnly } from 'remix-utils';
+import { ClientOnly, useRouteData } from 'remix-utils';
 import { isDesktop } from 'react-device-detect';
 import Hls from 'hls.js';
 import artplayerPluginHlsQuality from 'artplayer-plugin-hls-quality';
 
-import ArtPlayer from '~/src/components/elements/player/ArtPlayer';
-import AspectRatio from '~/src/components/elements/aspect-ratio/AspectRatio';
-import i18next from '~/i18n/i18next.server';
-import { getTvShowDetail, getTvShowIMDBId, getTranslations } from '~/services/tmdb/tmdb.server';
+import { authenticate, insertHistory } from '~/services/supabase';
+import {
+  getTvShowDetail,
+  getTvShowIMDBId,
+  getRecommendation,
+  getTranslations,
+  getImdbRating,
+  getTvSeasonDetail,
+} from '~/services/tmdb/tmdb.server';
 import {
   getMovieSearch,
   getMovieInfo,
@@ -38,23 +45,34 @@ import {
   getKissKhEpisodeSubtitle,
 } from '~/services/kisskh/kisskh.server';
 import { loklokGetTvEpInfo } from '~/services/loklok';
+import i18next from '~/i18n/i18next.server';
 import { LOKLOK_URL } from '~/services/loklok/utils.server';
 import TMDB from '~/utils/media';
 import Player from '~/utils/player';
+import updateHistory from '~/utils/update-history';
+import useMediaQuery from '~/hooks/useMediaQuery';
+import useLocalStorage from '~/hooks/useLocalStorage';
+
+import ArtPlayer from '~/src/components/elements/player/ArtPlayer';
+import AspectRatio from '~/src/components/elements/aspect-ratio/AspectRatio';
+import WatchDetail from '~/src/components/elements/shared/WatchDetail';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
-import useMediaQuery from '~/hooks/useMediaQuery';
-import updateHistory from '~/utils/update-history';
-import { authenticate, insertHistory } from '~/services/supabase';
 
 type LoaderData = {
   provider?: string;
+  idProvider?: number | string;
   detail: Awaited<ReturnType<typeof getTvShowDetail>>;
   imdbId: Awaited<ReturnType<typeof getTvShowIMDBId>>;
+  recommendations: Awaited<ReturnType<typeof getRecommendation>>;
+  seasonDetail: Awaited<ReturnType<typeof getTvSeasonDetail>>;
+  translations?: Awaited<ReturnType<typeof getTranslations>>;
   data?: Awaited<ReturnType<typeof getMovieInfo>>;
   sources?: IMovieSource[] | undefined;
   subtitles?: IMovieSubtitle[] | undefined;
   userId?: string;
+  imdbRating?: { count: number; star: number };
+  hasNextEpisode?: boolean;
 };
 
 export const meta: MetaFunction = ({ data, params }) => {
@@ -80,6 +98,16 @@ export const meta: MetaFunction = ({ data, params }) => {
   };
 };
 
+const checkHasNextEpisode = (
+  currentEpisode: number,
+  totalEpisodes: number,
+  totalProviderEpisodes: number,
+) => {
+  if (totalEpisodes > currentEpisode) {
+    return totalProviderEpisodes > currentEpisode;
+  }
+};
+
 export const loader: LoaderFunction = async ({ request, params }) => {
   const [user, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
 
@@ -88,10 +116,19 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const idProvider = url.searchParams.get('id');
   const { tvId, seasonId, episodeId } = params;
   const tid = Number(tvId);
+  const sid = Number(seasonId);
+  const eid = Number(episodeId);
 
   if (!tid) throw new Response('Not Found', { status: 404 });
+  if (!sid) throw new Response('Not Found', { status: 404 });
 
-  const [detail, imdbId] = await Promise.all([getTvShowDetail(tid), getTvShowIMDBId(tid)]);
+  const [detail, imdbId, recommendations, seasonDetail] = await Promise.all([
+    getTvShowDetail(tid),
+    getTvShowIMDBId(tid),
+    getRecommendation('tv', tid),
+    getTvSeasonDetail(tid, sid),
+  ]);
+  const totalEpisodes = Number(seasonDetail?.episodes.length);
 
   if (user) {
     insertHistory({
@@ -111,11 +148,46 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   if (provider === 'Loklok') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
-    const tvDetail = await loklokGetTvEpInfo(idProvider, Number(episodeId) - 1);
+    if ((detail && detail?.original_language !== 'en') || locale !== 'en') {
+      const [tvDetail, imdbRating, translations] = await Promise.all([
+        loklokGetTvEpInfo(idProvider, Number(episodeId) - 1),
+        imdbId ? getImdbRating(imdbId) : undefined,
+        getTranslations('tv', tid),
+      ]);
+      const totalProviderEpisodes = Number(tvDetail?.data?.episodeCount);
+      const hasNextEpisode = checkHasNextEpisode(eid, totalEpisodes, totalProviderEpisodes);
+      return json<LoaderData>({
+        provider,
+        detail,
+        imdbId,
+        recommendations,
+        imdbRating,
+        seasonDetail,
+        translations,
+        hasNextEpisode,
+        sources: tvDetail?.sources,
+        subtitles: tvDetail?.subtitles.map((sub) => ({
+          lang: `${sub.language} (${sub.lang})`,
+          url: `${LOKLOK_URL}/subtitle?url=${sub.url}`,
+        })),
+        userId: user?.id,
+      });
+    }
+
+    const [tvDetail, imdbRating] = await Promise.all([
+      loklokGetTvEpInfo(idProvider, Number(episodeId) - 1),
+      imdbId ? getImdbRating(imdbId) : undefined,
+    ]);
+    const totalProviderEpisodes = Number(tvDetail?.data?.episodeCount);
+    const hasNextEpisode = checkHasNextEpisode(eid, totalEpisodes, totalProviderEpisodes);
     return json<LoaderData>({
       provider,
       detail,
       imdbId,
+      recommendations,
+      imdbRating,
+      seasonDetail,
+      hasNextEpisode,
       sources: tvDetail?.sources,
       subtitles: tvDetail?.subtitles.map((sub) => ({
         lang: `${sub.language} (${sub.lang})`,
@@ -127,7 +199,45 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   if (provider === 'Flixhq') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
-    const tvDetail = await getMovieInfo(idProvider);
+    if ((detail && detail?.original_language !== 'en') || locale !== 'en') {
+      const [tvDetail, imdbRating, translations] = await Promise.all([
+        getMovieInfo(idProvider),
+        imdbId ? getImdbRating(imdbId) : undefined,
+        getTranslations('tv', tid),
+      ]);
+      const totalProviderEpisodes = Number(tvDetail?.episodes?.length);
+      const hasNextEpisode = checkHasNextEpisode(eid, totalEpisodes, totalProviderEpisodes);
+      const tvEpisodeDetail = tvDetail?.episodes?.find(
+        (episode) => episode.season === Number(seasonId) && episode.number === Number(episodeId),
+      );
+      if (tvEpisodeDetail) {
+        const tvEpisodeStreamLink = await getMovieEpisodeStreamLink(
+          tvEpisodeDetail?.id || '',
+          tvDetail?.id || '',
+        );
+        return json<LoaderData>({
+          provider,
+          idProvider,
+          detail,
+          imdbId,
+          recommendations,
+          imdbRating,
+          seasonDetail,
+          hasNextEpisode,
+          translations,
+          data: tvDetail,
+          sources: tvEpisodeStreamLink?.sources,
+          subtitles: tvEpisodeStreamLink?.subtitles,
+          userId: user?.id,
+        });
+      }
+    }
+    const [tvDetail, imdbRating] = await Promise.all([
+      getMovieInfo(idProvider),
+      imdbId ? getImdbRating(imdbId) : undefined,
+    ]);
+    const totalProviderEpisodes = Number(tvDetail?.episodes?.length);
+    const hasNextEpisode = checkHasNextEpisode(eid, totalEpisodes, totalProviderEpisodes);
     const tvEpisodeDetail = tvDetail?.episodes?.find(
       (episode) => episode.season === Number(seasonId) && episode.number === Number(episodeId),
     );
@@ -138,8 +248,13 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       );
       return json<LoaderData>({
         provider,
+        idProvider,
         detail,
         imdbId,
+        recommendations,
+        imdbRating,
+        seasonDetail,
+        hasNextEpisode,
         data: tvDetail,
         sources: tvEpisodeStreamLink?.sources,
         subtitles: tvEpisodeStreamLink?.subtitles,
@@ -150,7 +265,48 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   if (provider === 'KissKh') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
-    const episodeDetail = await getKissKhInfo(Number(idProvider));
+    if ((detail && detail?.original_language !== 'en') || locale !== 'en') {
+      const [episodeDetail, imdbRating, translations] = await Promise.all([
+        getKissKhInfo(Number(idProvider)),
+        imdbId ? getImdbRating(imdbId) : undefined,
+        getTranslations('tv', tid),
+      ]);
+      const totalProviderEpisodes = Number(episodeDetail?.episodes?.length);
+      const hasNextEpisode = checkHasNextEpisode(eid, totalEpisodes, totalProviderEpisodes);
+      const episodeSearch = episodeDetail?.episodes?.find((e) => e?.number === Number(episodeId));
+      const [episodeStream, episodeSubtitle] = await Promise.all([
+        getKissKhEpisodeStream(Number(episodeSearch?.id)),
+        episodeSearch && episodeSearch.sub > 0
+          ? getKissKhEpisodeSubtitle(Number(episodeSearch?.id))
+          : undefined,
+      ]);
+
+      return json<LoaderData>({
+        provider,
+        idProvider,
+        detail,
+        imdbId,
+        recommendations,
+        imdbRating,
+        seasonDetail,
+        hasNextEpisode,
+        translations,
+        sources: [{ url: episodeStream?.Video || '', isM3U8: true, quality: 'auto' }],
+        subtitles: episodeSubtitle?.map((sub) => ({
+          lang: sub.label,
+          url: sub.src,
+          ...(sub.default && { default: true }),
+        })),
+        userId: user?.id,
+      });
+    }
+
+    const [episodeDetail, imdbRating] = await Promise.all([
+      getKissKhInfo(Number(idProvider)),
+      imdbId ? getImdbRating(imdbId) : undefined,
+    ]);
+    const totalProviderEpisodes = Number(episodeDetail?.episodes?.length);
+    const hasNextEpisode = checkHasNextEpisode(eid, totalEpisodes, totalProviderEpisodes);
     const episodeSearch = episodeDetail?.episodes?.find((e) => e?.number === Number(episodeId));
     const [episodeStream, episodeSubtitle] = await Promise.all([
       getKissKhEpisodeStream(Number(episodeSearch?.id)),
@@ -161,8 +317,13 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
     return json<LoaderData>({
       provider,
+      idProvider,
       detail,
       imdbId,
+      recommendations,
+      imdbRating,
+      seasonDetail,
+      hasNextEpisode,
       sources: [{ url: episodeStream?.Video || '', isM3U8: true, quality: 'auto' }],
       subtitles: episodeSubtitle?.map((sub) => ({
         lang: sub.label,
@@ -174,9 +335,28 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   }
 
   if (provider === 'Embed') {
+    if ((detail && detail?.original_language !== 'en') || locale !== 'en') {
+      const [imdbRating, translations] = await Promise.all([
+        imdbId ? getImdbRating(imdbId) : undefined,
+        getTranslations('tv', tid),
+      ]);
+      return json<LoaderData>({
+        detail,
+        imdbId,
+        recommendations,
+        imdbRating,
+        seasonDetail,
+        translations,
+        userId: user?.id,
+      });
+    }
+    const imdbRating = imdbId ? await getImdbRating(imdbId) : undefined;
     return json<LoaderData>({
       detail,
       imdbId,
+      recommendations,
+      imdbRating,
+      seasonDetail,
       userId: user?.id,
     });
   }
@@ -184,8 +364,12 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   let tvDetail;
   let tvEpisodeDetail;
   let tvEpisodeStreamLink;
+  let imdbRating;
   if ((detail && detail.original_language === 'en') || locale === 'en') {
-    search = await getMovieSearch(detail?.name || '');
+    [search, imdbRating] = await Promise.all([
+      getMovieSearch(detail?.name || ''),
+      imdbId ? getImdbRating(imdbId) : undefined,
+    ]);
     const findMovie: IMovieResult | undefined = search?.results.find(
       (item) => item.title === detail?.name,
     );
@@ -205,7 +389,10 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     const translations = await getTranslations('tv', tid);
     const findTranslation = translations?.translations.find((item) => item.iso_639_1 === 'en');
     if (findTranslation) {
-      search = await getMovieSearch(detail?.name || '');
+      [search, imdbRating] = await Promise.all([
+        getMovieSearch(detail?.name || ''),
+        imdbId ? getImdbRating(imdbId) : undefined,
+      ]);
       const findMovie: IMovieResult | undefined = search?.results.find(
         (item) => item.title === detail?.name,
       );
@@ -229,6 +416,9 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   return json<LoaderData>({
     detail,
     imdbId,
+    recommendations,
+    imdbRating,
+    seasonDetail,
     data: tvDetail,
     sources: tvEpisodeStreamLink?.sources,
     subtitles: tvEpisodeStreamLink?.subtitles,
@@ -270,30 +460,38 @@ export const handle = {
 };
 
 const EpisodeWatch = () => {
-  const { provider, detail, imdbId, sources, subtitles, userId } = useLoaderData<LoaderData>();
+  const {
+    provider,
+    idProvider,
+    detail,
+    imdbId,
+    recommendations,
+    imdbRating,
+    seasonDetail,
+    hasNextEpisode,
+    translations,
+    sources,
+    subtitles,
+    userId,
+  } = useLoaderData<LoaderData>();
+  const rootData:
+    | {
+        locale: string;
+        genresMovie: { [id: string]: string };
+        genresTv: { [id: string]: string };
+      }
+    | undefined = useRouteData('root');
   const { seasonId, episodeId } = useParams();
-  const isSm = useMediaQuery(960, 'max');
+  const isSm = useMediaQuery(650, 'max');
   const id = detail && detail.id;
-  const [player, setPlayer] = React.useState<string>('1');
-  const [source, setSource] = React.useState<string>(Player.moviePlayerUrl(Number(id), 1));
-
+  const [player, setPlayer] = useState<string>('1');
+  const [source, setSource] = useState<string>(Player.moviePlayerUrl(Number(id), 1));
+  const [isVideoEnded, setIsVideoEnded] = useState<boolean>(false);
   const fetcher = useFetcher();
   const location = useLocation();
-
-  React.useEffect(
-    () =>
-      player === '2'
-        ? setSource(Player.tvPlayerUrl(Number(imdbId), Number(player), Number(episodeId) || 1))
-        : setSource(
-            Player.tvPlayerUrl(
-              Number(detail?.id),
-              Number(player),
-              Number(seasonId) || 1,
-              Number(episodeId),
-            ),
-          ),
-    [player, imdbId, seasonId, episodeId, detail?.id],
-  );
+  const navigate = useNavigate();
+  let hls: Hls | null = null;
+  const [playNextEpisode] = useLocalStorage('playNextEpisode', true);
   const subtitleSelector = subtitles?.map(({ lang, url }: { lang: string; url: string }) => ({
     html: lang.toString(),
     url: url.toString(),
@@ -311,6 +509,31 @@ const EpisodeWatch = () => {
       ...(provider === 'Loklok' && Number(quality) === 720 && { default: true }),
     }),
   );
+
+  useEffect(
+    () =>
+      player === '2'
+        ? setSource(Player.tvPlayerUrl(Number(imdbId), Number(player), Number(episodeId) || 1))
+        : setSource(
+            Player.tvPlayerUrl(
+              Number(detail?.id),
+              Number(player),
+              Number(seasonId) || 1,
+              Number(episodeId),
+            ),
+          ),
+    [player, imdbId, seasonId, episodeId, detail?.id],
+  );
+
+  useEffect(() => {
+    if (isVideoEnded && playNextEpisode && provider && idProvider && hasNextEpisode)
+      navigate(
+        `/tv-shows/${detail?.id}/season/${seasonId}/episode/${
+          Number(episodeId) + 1
+        }?provider=${provider}&id=${idProvider}`,
+      );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isVideoEnded]);
   return (
     <Container
       fluid
@@ -319,17 +542,26 @@ const EpisodeWatch = () => {
         paddingLeft: '88px',
         paddingRight: '23px',
         '@smMax': {
-          paddingLeft: '1rem',
-          paddingBottom: '65px',
+          padding: '100px 0 65px 0',
         },
       }}
     >
       <ClientOnly fallback={<Loading type="default" />}>
         {() => (
-          <React.Suspense fallback={<Loading type="default" />}>
+          <Suspense fallback={<Loading type="default" />}>
             <AspectRatio.Root ratio={7 / 3}>
               {sources ? (
                 <ArtPlayer
+                  autoPlay
+                  currentEpisode={Number(episodeId)}
+                  hasNextEpisode={hasNextEpisode}
+                  nextEpisodeUrl={
+                    hasNextEpisode
+                      ? `/tv-shows/${detail?.id}/season/${seasonId}/episode/${
+                          Number(episodeId) + 1
+                        }?provider=${provider}&id=${idProvider}`
+                      : undefined
+                  }
                   option={{
                     title: detail?.name,
                     url:
@@ -337,18 +569,18 @@ const EpisodeWatch = () => {
                         ? sources?.find(
                             (item: { quality: number | string; url: string }) =>
                               item.quality === 'auto',
-                          )?.url
+                          )?.url || sources[0]?.url
                         : provider === 'Loklok'
                         ? sources?.find(
                             (item: { quality: number | string; url: string }) =>
                               Number(item.quality) === 720,
-                          )?.url
+                          )?.url || sources[0]?.url
                         : provider === 'KissKh'
                         ? sources[0]?.url
                         : sources?.find(
                             (item: { quality: number | string; url: string }) =>
                               item.quality === 'auto',
-                          )?.url || '',
+                          )?.url || sources[0]?.url,
                     subtitle: {
                       url:
                         provider === 'Flixhq'
@@ -392,8 +624,11 @@ const EpisodeWatch = () => {
                     ],
                     customType: {
                       m3u8: (video: HTMLMediaElement, url: string) => {
+                        if (hls) {
+                          hls.destroy();
+                        }
                         if (Hls.isSupported()) {
-                          const hls = new Hls();
+                          hls = new Hls();
                           hls.loadSource(url);
                           hls.attachMedia(video);
                         } else {
@@ -429,6 +664,7 @@ const EpisodeWatch = () => {
                   }}
                   getInstance={(art) => {
                     art.on('ready', () => {
+                      setIsVideoEnded(false);
                       const t = new URLSearchParams(location.search).get('t');
                       if (t) {
                         art.currentTime = Number(t);
@@ -453,10 +689,20 @@ const EpisodeWatch = () => {
                       art.layers.title.style.display = 'block';
                     });
                     art.on('play', () => {
+                      setIsVideoEnded(false);
                       art.layers.title.style.display = 'none';
                     });
                     art.on('hover', (state: boolean) => {
                       art.layers.title.style.display = state || !art.playing ? 'block' : 'none';
+                    });
+                    art.on('video:ended', () => {
+                      setIsVideoEnded(true);
+                    });
+                    art.on('destroy', () => {
+                      setIsVideoEnded(false);
+                      if (hls) {
+                        hls.destroy();
+                      }
                     });
                   }}
                 />
@@ -495,9 +741,29 @@ const EpisodeWatch = () => {
                 </Radio.Group>
               </>
             )}
-          </React.Suspense>
+          </Suspense>
         )}
       </ClientOnly>
+      <Spacer y={1} />
+      <WatchDetail
+        id={Number(id)}
+        type="tv"
+        title={detail?.name || ''}
+        orgTitle={detail?.original_name || ''}
+        year={new Date(seasonDetail?.air_date || '').getFullYear()}
+        // @ts-ignore
+        episodes={seasonDetail?.episodes}
+        overview={detail?.overview || ''}
+        posterPath={detail?.poster_path ? TMDB.posterUrl(detail?.poster_path, 'w342') : undefined}
+        tmdbRating={detail?.vote_average}
+        imdbRating={imdbRating?.star}
+        genresMedia={detail?.genres}
+        genresMovie={rootData?.genresMovie}
+        genresTv={rootData?.genresTv}
+        recommendationsMovies={recommendations?.items}
+        season={seasonDetail?.season_number}
+        translations={translations}
+      />
     </Container>
   );
 };

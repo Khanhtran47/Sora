@@ -1,4 +1,4 @@
-const episodeType = [
+const episodeTypes = [
   {
     activeType: 0,
     activeTypeName: 'Number',
@@ -9,4 +9,4 @@ const episodeType = [
   },
 ];
 
-export default episodeType;
+export default episodeTypes;

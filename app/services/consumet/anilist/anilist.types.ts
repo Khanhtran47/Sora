@@ -59,7 +59,7 @@ export interface IAnimeInfo {
   description?: string;
   duration?: number;
   endDate?: IDate;
-  episodes: IEpisode[];
+  episodes: IEpisodeInfo[];
   genres?: string[];
   id?: string;
   image?: string;
@@ -161,7 +161,7 @@ export interface IDate {
   year: number;
 }
 
-export interface IEpisode {
+export interface IEpisodeInfo {
   description?: null;
   id?: string;
   image?: string;

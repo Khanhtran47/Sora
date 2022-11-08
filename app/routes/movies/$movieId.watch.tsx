@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable no-nested-ternary */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import * as React from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { MetaFunction, LoaderFunction, json } from '@remix-run/node';
 import {
   useCatch,
@@ -13,15 +12,18 @@ import {
   useLocation,
 } from '@remix-run/react';
 import { Container, Spacer, Loading, Radio } from '@nextui-org/react';
-import { ClientOnly } from 'remix-utils';
+import { ClientOnly, useRouteData } from 'remix-utils';
 import { isDesktop } from 'react-device-detect';
 import Hls from 'hls.js';
 import artplayerPluginHlsQuality from 'artplayer-plugin-hls-quality';
 
-import ArtPlayer from '~/src/components/elements/player/ArtPlayer';
-import AspectRatio from '~/src/components/elements/aspect-ratio/AspectRatio';
-import i18next from '~/i18n/i18next.server';
-import { getMovieDetail, getTranslations } from '~/services/tmdb/tmdb.server';
+import { authenticate, insertHistory } from '~/services/supabase';
+import {
+  getMovieDetail,
+  getRecommendation,
+  getTranslations,
+  getImdbRating,
+} from '~/services/tmdb/tmdb.server';
 import {
   getMovieSearch,
   getMovieInfo,
@@ -39,13 +41,17 @@ import {
 } from '~/services/kisskh/kisskh.server';
 import { loklokSearchMovieSub, loklokGetMovieInfo } from '~/services/loklok';
 import { LOKLOK_URL } from '~/services/loklok/utils.server';
+import i18next from '~/i18n/i18next.server';
 import TMDB from '~/utils/media';
 import Player from '~/utils/player';
+import updateHistory from '~/utils/update-history';
+import useMediaQuery from '~/hooks/useMediaQuery';
+
+import ArtPlayer from '~/src/components/elements/player/ArtPlayer';
+import AspectRatio from '~/src/components/elements/aspect-ratio/AspectRatio';
+import WatchDetail from '~/src/components/elements/shared/WatchDetail';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
-import useMediaQuery from '~/hooks/useMediaQuery';
-import updateHistory from '~/utils/update-history';
-import { authenticate, insertHistory } from '~/services/supabase';
 
 export const meta: MetaFunction = ({ data, params }) => {
   if (!data) {
@@ -73,10 +79,12 @@ export const meta: MetaFunction = ({ data, params }) => {
 type DataLoader = {
   provider?: string;
   detail: Awaited<ReturnType<typeof getMovieDetail>>;
+  recommendations: Awaited<ReturnType<typeof getRecommendation>>;
   data?: Awaited<ReturnType<typeof getMovieInfo>>;
   sources?: IMovieSource[] | undefined;
   subtitles?: IMovieSubtitle[] | undefined;
   userId?: string;
+  imdbRating?: { count: number; star: number };
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -89,7 +97,11 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const mid = Number(movieId);
   if (!mid) throw new Response('Not Found', { status: 404 });
 
-  const detail = await getMovieDetail(mid);
+  // const detail = await getMovieDetail(mid);
+  const [detail, recommendations] = await Promise.all([
+    getMovieDetail(mid),
+    getRecommendation('movie', mid),
+  ]);
 
   if (user) {
     insertHistory({
@@ -107,10 +119,15 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   if (provider === 'Loklok') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
-    const movieDetail = await loklokGetMovieInfo(idProvider);
+    const [movieDetail, imdbRating] = await Promise.all([
+      loklokGetMovieInfo(idProvider),
+      detail?.imdb_id ? getImdbRating(detail?.imdb_id) : undefined,
+    ]);
     return json<DataLoader>({
       provider,
       detail,
+      recommendations,
+      imdbRating,
       sources: movieDetail?.sources,
       subtitles: movieDetail?.subtitles.map((sub) => ({
         lang: `${sub.language} (${sub.lang})`,
@@ -122,7 +139,10 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   if (provider === 'Flixhq') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
-    const movieDetail = await getMovieInfo(idProvider);
+    const [movieDetail, imdbRating] = await Promise.all([
+      getMovieInfo(idProvider),
+      detail?.imdb_id ? getImdbRating(detail?.imdb_id) : undefined,
+    ]);
     const movieStreamLink = await getMovieEpisodeStreamLink(
       movieDetail?.episodes[0].id || '',
       movieDetail?.id || '',
@@ -130,6 +150,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     return json<DataLoader>({
       provider,
       detail,
+      recommendations,
+      imdbRating,
       data: movieDetail,
       sources: movieStreamLink?.sources,
       subtitles: movieStreamLink?.subtitles,
@@ -139,7 +161,10 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   if (provider === 'KissKh') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
-    const episodeDetail = await getKissKhInfo(Number(idProvider));
+    const [episodeDetail, imdbRating] = await Promise.all([
+      getKissKhInfo(Number(idProvider)),
+      detail?.imdb_id ? getImdbRating(detail?.imdb_id) : undefined,
+    ]);
     const [episodeStream, episodeSubtitle] = await Promise.all([
       getKissKhEpisodeStream(Number(episodeDetail?.episodes[0]?.id)),
       episodeDetail?.episodes[0] && episodeDetail?.episodes[0].sub > 0
@@ -150,6 +175,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     return json<DataLoader>({
       provider,
       detail,
+      recommendations,
+      imdbRating,
       sources: [{ url: episodeStream?.Video || '', isM3U8: true, quality: 'auto' }],
       subtitles: episodeSubtitle?.map((sub) => ({
         lang: sub.label,
@@ -161,8 +188,11 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   }
 
   if (provider === 'Embed') {
+    const imdbRating = detail?.imdb_id ? await getImdbRating(detail?.imdb_id) : undefined;
     return json<DataLoader>({
       detail,
+      recommendations,
+      imdbRating,
       userId: user?.id,
     });
   }
@@ -170,8 +200,12 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   let movieDetail;
   let movieStreamLink;
   let loklokSubtitles: IMovieSubtitle[] = [];
+  let imdbRating;
   if ((detail && detail.original_language === 'en') || locale === 'en') {
-    search = await getMovieSearch(detail?.title || '');
+    [imdbRating, search] = await Promise.all([
+      detail?.imdb_id ? getImdbRating(detail?.imdb_id) : undefined,
+      getMovieSearch(detail?.title || ''),
+    ]);
     const findMovie: IMovieResult | undefined = search?.results.find(
       (item) => item.title === detail?.title,
     );
@@ -192,7 +226,10 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     const translations = await getTranslations('movie', mid);
     const findTranslation = translations?.translations.find((item) => item.iso_639_1 === 'en');
     if (findTranslation) {
-      search = await getMovieSearch(findTranslation.data?.title || '');
+      [imdbRating, search] = await Promise.all([
+        detail?.imdb_id ? getImdbRating(detail?.imdb_id) : undefined,
+        getMovieSearch(findTranslation.data?.title || ''),
+      ]);
       const findMovie: IMovieResult | undefined = search?.results.find(
         (item) => item.title === findTranslation.data?.title,
       );
@@ -214,6 +251,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   return json<DataLoader>({
     detail,
+    recommendations,
+    imdbRating,
     data: movieDetail,
     sources: movieStreamLink?.sources,
     subtitles: [...(movieStreamLink?.subtitles || []), ...loklokSubtitles],
@@ -239,15 +278,24 @@ export const handle = {
 };
 
 const MovieWatch = () => {
-  const { provider, detail, sources, subtitles, userId } = useLoaderData<DataLoader>();
-  const isSm = useMediaQuery(960, 'max');
+  const { provider, detail, recommendations, imdbRating, sources, subtitles, userId } =
+    useLoaderData<DataLoader>();
+  const rootData:
+    | {
+        locale: string;
+        genresMovie: { [id: string]: string };
+        genresTv: { [id: string]: string };
+      }
+    | undefined = useRouteData('root');
+  const isSm = useMediaQuery(650, 'max');
   const id = detail && detail.id;
-  const [player, setPlayer] = React.useState<string>('1');
-  const [source, setSource] = React.useState<string>(Player.moviePlayerUrl(Number(id), 1));
+  const [player, setPlayer] = useState<string>('1');
+  const [source, setSource] = useState<string>(Player.moviePlayerUrl(Number(id), 1));
   const fetcher = useFetcher();
   const location = useLocation();
+  const releaseYear = new Date(detail?.release_date || '').getFullYear();
 
-  React.useEffect(
+  useEffect(
     () =>
       player === '2'
         ? setSource(Player.moviePlayerUrl(Number(detail?.imdb_id), Number(player)))
@@ -278,18 +326,18 @@ const MovieWatch = () => {
         paddingTop: '100px',
         paddingLeft: '88px',
         paddingRight: '23px',
-        '@mdMax': {
-          paddingLeft: '1rem',
-          paddingBottom: '65px',
+        '@smMax': {
+          padding: '100px 0 65px 0',
         },
       }}
     >
       <ClientOnly fallback={<Loading type="default" />}>
         {() => (
-          <React.Suspense fallback={<Loading type="default" />}>
+          <Suspense fallback={<Loading type="default" />}>
             <AspectRatio.Root ratio={7 / 3}>
               {sources ? (
                 <ArtPlayer
+                  autoPlay={false}
                   option={{
                     title: detail?.title,
                     url:
@@ -297,18 +345,18 @@ const MovieWatch = () => {
                         ? sources?.find(
                             (item: { quality: number | string; url: string }) =>
                               item.quality === 'auto',
-                          )?.url
+                          )?.url || sources[0]?.url
                         : provider === 'Loklok'
                         ? sources?.find(
                             (item: { quality: number | string; url: string }) =>
                               Number(item.quality) === 720,
-                          )?.url
+                          )?.url || sources[0]?.url
                         : provider === 'KissKh'
                         ? sources[0]?.url
                         : sources?.find(
                             (item: { quality: number | string; url: string }) =>
                               item.quality === 'auto',
-                          )?.url || '',
+                          )?.url || sources[0]?.url,
                     subtitle: {
                       url:
                         provider === 'Flixhq'
@@ -452,9 +500,23 @@ const MovieWatch = () => {
                 </Radio.Group>
               </>
             )}
-          </React.Suspense>
+            <Spacer y={1} />
+          </Suspense>
         )}
       </ClientOnly>
+      <WatchDetail
+        id={Number(id)}
+        type="movie"
+        title={`${detail?.title} (${releaseYear})`}
+        overview={detail?.overview || ''}
+        posterPath={detail?.poster_path ? TMDB.posterUrl(detail?.poster_path, 'w342') : undefined}
+        tmdbRating={detail?.vote_average}
+        imdbRating={imdbRating?.star}
+        genresMedia={detail?.genres}
+        genresMovie={rootData?.genresMovie}
+        genresTv={rootData?.genresTv}
+        recommendationsMovies={recommendations?.items}
+      />
     </Container>
   );
 };

@@ -2,22 +2,20 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import * as React from 'react';
 import { styled } from '@nextui-org/react';
+import { useNavigate } from '@remix-run/react';
 import Artplayer from 'artplayer';
 import { isMobile, isTablet, isDesktop } from 'react-device-detect';
 
+import useLocalStorage from '~/hooks/useLocalStorage';
 import SearchSubtitles from '../modal/SearchSubtitle';
 
-const Player = ({
-  option,
-  qualitySelector,
-  subtitleSelector,
-  getInstance,
-  style,
-  subtitleOptions,
-  ...rest
-}: {
+interface IPlayerProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   option: any;
+  autoPlay: boolean;
+  currentEpisode?: number;
+  hasNextEpisode?: boolean;
+  nextEpisodeUrl?: string;
   qualitySelector?: {
     html: string;
     url: string;
@@ -38,11 +36,28 @@ const Player = ({
     season_number?: number;
     type?: 'movie' | 'episode' | 'all';
   };
-}) => {
+}
+
+const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
+  const {
+    option,
+    autoPlay,
+    currentEpisode,
+    hasNextEpisode,
+    nextEpisodeUrl,
+    qualitySelector,
+    subtitleSelector,
+    getInstance,
+    style,
+    subtitleOptions,
+    ...rest
+  } = props;
+  const navigate = useNavigate();
   const [visible, setVisible] = React.useState(false);
   const [subtitles, setSubtitles] = React.useState<
     { html: string; url: string; default?: boolean }[]
   >(subtitleSelector || []);
+  const [playNextEpisode, setPlayNextEpisode] = useLocalStorage('playNextEpisode', true);
   const artRef = React.useRef<HTMLDivElement>(null);
   const closeHandler = () => {
     setVisible(false);
@@ -51,14 +66,14 @@ const Player = ({
     const art = new Artplayer({
       ...option,
       autoSize: isDesktop,
-      loop: true,
+      loop: !autoPlay,
       mutex: true,
       setting: true,
       flip: true,
       playbackRate: true,
       aspectRatio: true,
       fullscreen: true,
-      fullscreenWeb: isDesktop,
+      fullscreenWeb: false,
       airplay: true,
       pip: isDesktop,
       autoplay: false,
@@ -108,6 +123,18 @@ const Player = ({
                 art.pause();
               },
             },
+            ...(hasNextEpisode
+              ? [
+                  {
+                    position: 'left',
+                    html: '<svg xmlns="http://www.w3.org/2000/svg" height="36" width="36" viewBox="0 0 36 36"><path fill="#ffffff" d="M 12,24 20.5,18 12,12 V 24 z M 22,12 v 12 h 2 V 12 h -2 z" /></svg>',
+                    tooltip: 'Next Episode',
+                    click: () => {
+                      if (nextEpisodeUrl) navigate(nextEpisodeUrl);
+                    },
+                  },
+                ]
+              : []),
           ]
         : [
             {
@@ -119,6 +146,18 @@ const Player = ({
                 art.pause();
               },
             },
+            ...(hasNextEpisode
+              ? [
+                  {
+                    position: 'left',
+                    html: '<svg xmlns="http://www.w3.org/2000/svg" height="36" width="36" viewBox="0 0 36 36"><path fill="#ffffff" d="M 12,24 20.5,18 12,12 V 24 z M 22,12 v 12 h 2 V 12 h -2 z" /></svg>',
+                    tooltip: 'Next Episode',
+                    click: () => {
+                      if (nextEpisodeUrl) navigate(nextEpisodeUrl);
+                    },
+                  },
+                ]
+              : []),
           ],
       settings: [
         {
@@ -156,6 +195,20 @@ const Player = ({
             return item.html;
           },
         },
+        ...(autoPlay
+          ? [
+              {
+                html: 'Auto Play',
+                tooltip: playNextEpisode ? 'On' : 'Off',
+                switch: playNextEpisode,
+                onSwitch: (item: { tooltip: string; switch: boolean }) => {
+                  item.tooltip = !item.switch ? 'On' : 'Off';
+                  setPlayNextEpisode(!item.switch);
+                  return !item.switch;
+                },
+              },
+            ]
+          : []),
       ],
     });
     if (getInstance && typeof getInstance === 'function') {
@@ -167,7 +220,7 @@ const Player = ({
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [subtitles]);
+  }, [subtitles, currentEpisode]);
   return (
     <>
       <div ref={artRef} style={style} {...rest} />

@@ -1,7 +1,7 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { Suspense } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
 import {
   useCatch,
@@ -11,12 +11,15 @@ import {
   useParams,
   useLocation,
   useFetcher,
+  useNavigate,
 } from '@remix-run/react';
 import { Container, Spacer, Loading } from '@nextui-org/react';
 import { ClientOnly } from 'remix-utils';
 import { isDesktop } from 'react-device-detect';
 import artplayerPluginHlsQuality from 'artplayer-plugin-hls-quality';
+import Hls from 'hls.js';
 
+import { authenticate, insertHistory } from '~/services/supabase';
 import {
   getAnimeEpisodeStream,
   getAnimeInfo,
@@ -28,26 +31,45 @@ import {
   getKissKhEpisodeStream,
   getKissKhEpisodeSubtitle,
 } from '~/services/kisskh/kisskh.server';
-import { IEpisode } from '~/services/consumet/anilist/anilist.types';
+import { IEpisodeInfo } from '~/services/consumet/anilist/anilist.types';
 import { loklokGetTvEpInfo } from '~/services/loklok';
 import { LOKLOK_URL } from '~/services/loklok/utils.server';
 import { IMovieSource, IMovieSubtitle } from '~/services/consumet/flixhq/flixhq.types';
+import updateHistory from '~/utils/update-history';
+import useLocalStorage from '~/hooks/useLocalStorage';
 
 import ArtPlayer from '~/src/components/elements/player/ArtPlayer';
 import AspectRatio from '~/src/components/elements/aspect-ratio/AspectRatio';
+import WatchDetail from '~/src/components/elements/shared/WatchDetail';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
-import updateHistory from '~/utils/update-history';
-import { authenticate, insertHistory } from '~/services/supabase';
-import Hls from 'hls.js';
 
 type LoaderData = {
   provider?: string;
+  idProvider?: number | string;
   sources: IMovieSource[] | undefined;
   detail: Awaited<ReturnType<typeof getAnimeInfo>>;
+  episodes: Awaited<ReturnType<typeof getAnimeEpisodeInfo>>;
   subtitles?: IMovieSubtitle[] | undefined;
   userId?: string;
-  episodeInfo: IEpisode | undefined;
+  episodeInfo: IEpisodeInfo | undefined;
+  hasNextEpisode?: boolean;
+};
+
+const checkHasNextEpisode = (
+  provider: string,
+  currentEpisode: number,
+  totalEpisodes: number,
+  totalProviderEpisodes?: number,
+) => {
+  if (provider === 'Gogo' || provider === 'Zoro') {
+    return totalEpisodes > currentEpisode;
+  }
+  if (totalEpisodes > currentEpisode) {
+    if (totalProviderEpisodes) {
+      return totalProviderEpisodes > currentEpisode;
+    }
+  }
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -66,7 +88,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     getAnimeEpisodeStream(episodeId),
   ]);
 
-  const episodeInfo = episodes?.find((e: IEpisode) => e.number === Number(episode));
+  const totalEpisodes = Number(episodes?.length);
+  const episodeInfo = episodes?.find((e: IEpisodeInfo) => e.number === Number(episode));
 
   if (user) {
     insertHistory({
@@ -92,10 +115,20 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   if (provider === 'Loklok') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
     const tvDetail = await loklokGetTvEpInfo(idProvider, Number(episode) - 1);
+    const totalProviderEpisodes = Number(tvDetail?.data?.episodeCount);
+    const hasNextEpisode = checkHasNextEpisode(
+      provider,
+      Number(episodeInfo?.number),
+      totalEpisodes,
+      totalProviderEpisodes,
+    );
 
     return json<LoaderData>({
       provider,
+      idProvider,
       detail,
+      episodes,
+      hasNextEpisode,
       sources: tvDetail?.sources,
       subtitles: tvDetail?.subtitles.map((sub) => ({
         lang: `${sub.language} (${sub.lang})`,
@@ -108,10 +141,17 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   if (provider === 'Gogo') {
     const episodeDetail = await getAnimeEpisodeStream(episodeId, 'gogoanime');
+    const hasNextEpisode = checkHasNextEpisode(
+      provider,
+      Number(episodeInfo?.number),
+      totalEpisodes,
+    );
 
     return json<LoaderData>({
       provider,
       detail,
+      episodes,
+      hasNextEpisode,
       sources: episodeDetail?.sources,
       userId: user?.id,
       episodeInfo,
@@ -120,10 +160,17 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   if (provider === 'Zoro') {
     const episodeDetail = await getAnimeEpisodeStream(episodeId, 'zoro');
+    const hasNextEpisode = checkHasNextEpisode(
+      provider,
+      Number(episodeInfo?.number),
+      totalEpisodes,
+    );
 
     return json<LoaderData>({
       provider,
       detail,
+      episodes,
+      hasNextEpisode,
       sources: episodeDetail?.sources,
       userId: user?.id,
       episodeInfo,
@@ -139,6 +186,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     return json<LoaderData>({
       provider,
       detail,
+      episodes,
       sources: [
         {
           url: episodeDetail?.sources[0]?.file || '',
@@ -154,6 +202,13 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   if (provider === 'KissKh') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
     const episodeDetail = await getKissKhInfo(Number(idProvider));
+    const totalProviderEpisodes = Number(episodeDetail?.episodes?.length);
+    const hasNextEpisode = checkHasNextEpisode(
+      provider,
+      Number(episodeInfo?.number),
+      totalEpisodes,
+      totalProviderEpisodes,
+    );
     const episodeSearch = episodeDetail?.episodes?.find((e) => e?.number === Number(episode));
     const [episodeStream, episodeSubtitle] = await Promise.all([
       getKissKhEpisodeStream(Number(episodeSearch?.id)),
@@ -164,7 +219,10 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
     return json<LoaderData>({
       provider,
+      idProvider,
       detail,
+      episodes,
+      hasNextEpisode,
       sources: [{ url: episodeStream?.Video || '', isM3U8: true, quality: 'auto' }],
       subtitles: episodeSubtitle?.map((sub) => ({
         lang: sub.label,
@@ -178,7 +236,13 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   if (!detail || !sources) throw new Response('Not Found', { status: 404 });
 
-  return json<LoaderData>({ detail, sources: sources.sources, userId: user?.id, episodeInfo });
+  return json<LoaderData>({
+    detail,
+    episodes,
+    sources: sources.sources,
+    userId: user?.id,
+    episodeInfo,
+  });
 };
 
 export const meta: MetaFunction = ({ data, params }) => {
@@ -244,13 +308,24 @@ export const handle = {
 };
 
 const AnimeEpisodeWatch = () => {
-  const { provider, detail, sources, subtitles, episodeInfo, userId } = useLoaderData<LoaderData>();
+  const {
+    provider,
+    idProvider,
+    detail,
+    episodes,
+    hasNextEpisode,
+    sources,
+    subtitles,
+    episodeInfo,
+    userId,
+  } = useLoaderData<LoaderData>();
   const { episodeId } = useParams();
-
   const fetcher = useFetcher();
   const location = useLocation();
+  const navigate = useNavigate();
   let hls: Hls | null = null;
-
+  const [isVideoEnded, setIsVideoEnded] = useState<boolean>(false);
+  const [playNextEpisode] = useLocalStorage('playNextEpisode', true);
   const subtitleSelector = subtitles?.map(({ lang, url }: { lang: string; url: string }) => ({
     html: lang.toString(),
     url: url.toString(),
@@ -277,6 +352,26 @@ const AnimeEpisodeWatch = () => {
           isDASH: true,
           ...(quality === 'default' && { default: true }),
         }));
+
+  useEffect(() => {
+    if (isVideoEnded && playNextEpisode && hasNextEpisode && provider) {
+      if (provider === 'Gogo' || provider === 'Zoro') {
+        navigate(
+          `/anime/${detail?.id}/episode/${
+            episodes && episodes[episodes.findIndex((e) => e.id === episodeId) + 1].id
+          }?provider=${provider}&id=${idProvider}&episode=${Number(episodeInfo?.number) + 1}`,
+        );
+      }
+      if (idProvider) {
+        navigate(
+          `/anime/${detail?.id}/episode/${
+            episodes && episodes[episodes.findIndex((e) => e.id === episodeId) + 1].id
+          }?provider=${provider}&id=${idProvider}&episode=${Number(episodeInfo?.number) + 1}`,
+        );
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isVideoEnded]);
   return (
     <Container
       fluid
@@ -285,8 +380,7 @@ const AnimeEpisodeWatch = () => {
         paddingLeft: '88px',
         paddingRight: '23px',
         '@smMax': {
-          paddingLeft: '1rem',
-          paddingBottom: '65px',
+          padding: '100px 0 65px 0',
         },
       }}
     >
@@ -296,6 +390,18 @@ const AnimeEpisodeWatch = () => {
             <AspectRatio.Root ratio={7 / 3}>
               {sources && (
                 <ArtPlayer
+                  autoPlay
+                  currentEpisode={episodeInfo?.number}
+                  hasNextEpisode={hasNextEpisode}
+                  nextEpisodeUrl={
+                    hasNextEpisode
+                      ? `/anime/${detail?.id}/episode/${
+                          episodes && episodes[episodes.findIndex((e) => e.id === episodeId) + 1].id
+                        }?provider=${provider}&id=${idProvider}&episode=${
+                          Number(episodeInfo?.number) + 1
+                        }`
+                      : undefined
+                  }
                   option={{
                     title: `${
                       detail?.title?.userPreferred || detail?.title?.english || ''
@@ -305,18 +411,18 @@ const AnimeEpisodeWatch = () => {
                         ? sources?.find(
                             (item: { quality: number | string; url: string }) =>
                               Number(item.quality) === 720,
-                          )?.url || ''
+                          )?.url || sources[0]?.url
                         : provider === 'Gogo' || provider === 'Zoro'
                         ? sources?.find(
                             (item: { quality: number | string; url: string }) =>
                               item.quality === 'default',
-                          )?.url || ''
+                          )?.url || sources[0]?.url
                         : provider === 'Bilibili' || provider === 'KissKh'
                         ? sources[0]?.url
                         : sources?.find(
                             (item: { quality: number | string; url: string }) =>
                               item.quality === 'default',
-                          )?.url || '',
+                          )?.url || sources[0]?.url,
                     subtitle: {
                       url:
                         provider === 'Loklok'
@@ -356,19 +462,17 @@ const AnimeEpisodeWatch = () => {
                         },
                       },
                     ],
-                    type:
-                      provider === 'Loklok' ||
-                      provider === 'Gogo' ||
-                      provider === 'Zoro' ||
-                      provider === 'KissKh'
-                        ? 'm3u8'
-                        : 'dash',
+                    type: provider === 'Bilibili' ? 'dash' : 'm3u8',
                     customType:
-                      provider === 'Loklok' ||
-                      provider === 'Gogo' ||
-                      provider === 'Zoro' ||
-                      provider === 'KissKh'
+                      provider === 'Bilibili'
                         ? {
+                            mpd: async (video: HTMLMediaElement, url: string) => {
+                              const { default: dashjs } = await import('dashjs');
+                              const player = dashjs.MediaPlayer().create();
+                              player.initialize(video, url, true);
+                            },
+                          }
+                        : {
                             m3u8: async (video: HTMLMediaElement, url: string) => {
                               if (hls) {
                                 hls.destroy();
@@ -377,16 +481,12 @@ const AnimeEpisodeWatch = () => {
                                 hls = new Hls();
                                 hls.loadSource(url);
                                 hls.attachMedia(video);
-                              } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                                video.src = url;
+                              } else {
+                                const canPlay = video.canPlayType('application/vnd.apple.mpegurl');
+                                if (canPlay === 'probably' || canPlay === 'maybe') {
+                                  video.src = url;
+                                }
                               }
-                            },
-                          }
-                        : {
-                            mpd: async (video: HTMLMediaElement, url: string) => {
-                              const { default: dashjs } = await import('dashjs');
-                              const player = dashjs.MediaPlayer().create();
-                              player.initialize(video, url, true);
                             },
                           },
                     plugins:
@@ -408,6 +508,7 @@ const AnimeEpisodeWatch = () => {
                   }}
                   getInstance={(art) => {
                     art.on('ready', () => {
+                      setIsVideoEnded(false);
                       const t = new URLSearchParams(location.search).get('t');
                       if (t) {
                         art.currentTime = Number(t);
@@ -432,12 +533,17 @@ const AnimeEpisodeWatch = () => {
                       art.layers.title.style.display = 'block';
                     });
                     art.on('play', () => {
+                      setIsVideoEnded(false);
                       art.layers.title.style.display = 'none';
                     });
                     art.on('hover', (state: boolean) => {
                       art.layers.title.style.display = state || !art.playing ? 'block' : 'none';
                     });
+                    art.on('video:ended', () => {
+                      setIsVideoEnded(true);
+                    });
                     art.on('destroy', () => {
+                      setIsVideoEnded(false);
                       if (hls) {
                         hls.destroy();
                       }
@@ -449,6 +555,22 @@ const AnimeEpisodeWatch = () => {
           </Suspense>
         )}
       </ClientOnly>
+      <Spacer y={1} />
+      <WatchDetail
+        type="anime"
+        id={detail?.id}
+        episodes={episodes}
+        title={detail?.title?.english || ''}
+        orgTitle={detail?.title?.native || ''}
+        year={Number(detail?.releaseDate)}
+        overview={detail?.description || ''}
+        posterPath={detail?.image}
+        anilistRating={detail?.rating}
+        genresAnime={detail?.genres}
+        recommendationsAnime={detail?.recommendations}
+        color={detail?.color}
+        trailerAnime={detail?.trailer}
+      />
     </Container>
   );
 };

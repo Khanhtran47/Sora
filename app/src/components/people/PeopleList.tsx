@@ -68,8 +68,8 @@ const PeopleListCard = ({
   };
   setSlideProgress?: React.Dispatch<React.SetStateAction<number>>;
 }) => {
-  const isSm = useMediaQuery(960);
-  const gap = isSm ? 1 : 2;
+  const isMd = useMediaQuery(960);
+  const gap = isMd ? 1 : 2;
 
   return (
     <Grid.Container gap={gap} justify="flex-start" alignItems="center">
