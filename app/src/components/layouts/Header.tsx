@@ -33,7 +33,6 @@ import kleeCute from '../../assets/images/avatar.png';
 import SunIcon from '../../assets/icons/SunIcon.js';
 import MoonIcon from '../../assets/icons/MoonIcon.js';
 import MenuIcon from '../../assets/icons/MenuIcon.js';
-import ArrowLeftIcon from '../../assets/icons/ArrowLeftIcon.js';
 import SearchIcon from '../../assets/icons/SearchIcon.js';
 import GlobalIcon from '../../assets/icons/GlobalIcon.js';
 // import menuNavBlack from '../../assets/lotties/lottieflow-menu-nav-11-6-000000-easey.json';
@@ -112,8 +111,11 @@ const slideHorizontalAnimation = {
 const languages = ['en', 'fr', 'vi'];
 
 const AppBar = styled(Grid.Container, {
-  zIndex: 999,
-  position: 'fixed',
+  zIndex: 990,
+  position: 'sticky',
+  '@sm': {
+    borderTopLeftRadius: '$xl',
+  },
 });
 
 const DropdownPage = ({
@@ -491,6 +493,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
   const [lottie, setLottie] = React.useState<AnimationItem>();
   const isSm = useMediaQuery(650);
+  const isMd = useMediaQuery(960);
   const scrollDirection = useScrollDirection();
 
   React.useEffect(() => {
@@ -506,12 +509,11 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       justify="space-between"
       alignItems="center"
       color="inherit"
-      className="flex justify-between backdrop-blur-md border-b transition-all duration-500"
+      className="flex backdrop-blur-md transition-all duration-500"
       gap={2}
       wrap="nowrap"
       css={{
         backgroundColor: '$backgroundAlpha',
-        borderBottomColor: '$border',
         width: '100%',
         top: isSm && scrollDirection === 'down' ? -64 : 0,
         height: 64,
@@ -529,19 +531,20 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
           },
         }}
       >
-        <Button
-          onClick={open ? handleDrawerClose : handleDrawerOpen}
-          light
-          auto
-          aria-label="menu"
-          css={{
-            paddingRight: 8,
-            paddingLeft: 8,
-            marginRight: 12,
-          }}
-        >
-          {open ? <ArrowLeftIcon /> : <MenuIcon />}
-        </Button>
+        {isMd && (
+          <Button
+            onClick={open ? handleDrawerClose : handleDrawerOpen}
+            light
+            auto
+            aria-label="Menu Icon"
+            icon={<MenuIcon />}
+            css={{
+              paddingRight: 8,
+              paddingLeft: 8,
+              marginRight: 12,
+            }}
+          />
+        )}
         <NavLink linkTo="/" isLogo />
       </Grid>
 
@@ -559,6 +562,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
           pages.map((page) => (
             <Tooltip
               key={page.pageName}
+              hideArrow
               placement="bottom"
               content={<DropdownPage pagesDropdown={page?.pageDropdown || []} />}
             >
@@ -573,7 +577,11 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
 
       <Grid xs={6} sm={3} justify="flex-end" alignItems="center">
         {/* Search */}
-        <Tooltip placement="bottom" content={<DropdownPage pagesDropdown={searchDropdown || []} />}>
+        <Tooltip
+          hideArrow
+          placement="bottomEnd"
+          content={<DropdownPage pagesDropdown={searchDropdown || []} />}
+        >
           <NavLink
             linkTo="/search"
             isIcon
@@ -584,7 +592,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
         {/* Dropdown setting */}
         <Popover placement="bottom-right" isOpen={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
           <Popover.Trigger>
-            <Button auto light aria-label="dropdown">
+            <Button auto light aria-label="dropdown" css={{ padding: '0 $xs' }}>
               <Player
                 lottieRef={(instance) => {
                   setLottie(instance);
@@ -606,6 +614,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
               transition: 'height 0.5s',
               width: 280,
               zIndex: 999,
+              borderWidth: 0,
             }}
           >
             <MultiLevelDropdown user={user} />

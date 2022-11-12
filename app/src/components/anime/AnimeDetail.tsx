@@ -42,9 +42,6 @@ const AnimeDetail = (props: IAnimeDetail) => {
 
   const isXs = useMediaQuery(425, 'max');
   const isSm = useMediaQuery(650, 'max');
-  const isMd = useMediaQuery(960, 'max');
-  // TODO: style mobile in landscape mode
-  // const isMdLand = useMediaQuery(960, 'max', 'landscape');
 
   const { id, genres, title, releaseDate, rating, image, cover, type, trailer, color } = item || {};
 
@@ -58,27 +55,28 @@ const AnimeDetail = (props: IAnimeDetail) => {
       css={{
         display: 'flex',
         flexFlow: 'column',
-        width: '100vw',
+        width: '100%',
         height: `calc(${JSON.stringify(size?.height)}px + 1rem)`,
         borderWidth: 0,
       }}
     >
-      <Card.Header ref={ref} css={{ position: 'absolute', zIndex: 1, flexGrow: 1 }}>
+      <Card.Header
+        ref={ref}
+        css={{
+          position: 'absolute',
+          zIndex: 1,
+          flexGrow: 1,
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
         <Row
           fluid
           align="stretch"
           justify="center"
           css={{
-            padding: 0,
-            '@xs': {
-              padding: '0 3vw',
-            },
-            '@sm': {
-              padding: '0 6vw',
-            },
-            '@md': {
-              padding: '0 12vw',
-            },
+            padding: '20px',
+            maxWidth: '1920px',
           }}
         >
           {!isSm && (
@@ -95,7 +93,6 @@ const AnimeDetail = (props: IAnimeDetail) => {
                   css={{
                     minWidth: 'auto !important',
                     minHeight: '205px !important',
-                    marginTop: '10vh',
                     borderRadius: '24px',
                   }}
                   loaderUrl="/api/image"
@@ -153,7 +150,6 @@ const AnimeDetail = (props: IAnimeDetail) => {
           <Col
             span={isSm ? 12 : 8}
             css={{
-              marginTop: `${isMd ? '8vh' : '10vh'}`,
               display: 'flex',
               flexFlow: 'column',
               justifyContent: 'flex-start',
@@ -319,8 +315,8 @@ const AnimeDetail = (props: IAnimeDetail) => {
           src={cover || BackgroundDefault}
           css={{
             minHeight: '100vh !important',
-            minWidth: '100vw !important',
-            width: '100vw',
+            minWidth: '100% !important',
+            width: '100%',
             height: `calc(${JSON.stringify(size?.height)}px + 1rem)`,
             top: 0,
             left: 0,
@@ -329,6 +325,7 @@ const AnimeDetail = (props: IAnimeDetail) => {
           }}
           title={title?.userPreferred || title?.english || title?.romaji || title?.native}
           alt={title?.userPreferred || title?.english || title?.romaji || title?.native}
+          containerCss={{ margin: 0 }}
           loaderUrl="/api/image"
           placeholder="blur"
           responsive={[

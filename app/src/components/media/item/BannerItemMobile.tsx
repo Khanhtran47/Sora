@@ -23,7 +23,6 @@ const BannerItemMobile = ({
         as="div"
         isPressable
         css={{
-          marginTop: '4rem',
           w: '100%',
           position: 'relative',
           borderWidth: 0,

@@ -98,7 +98,6 @@ const SeasonDetail = () => {
   const size: IUseSize = useSize(ref);
   const isXs = useMediaQuery(425, 'max');
   const isSm = useMediaQuery(650, 'max');
-  const isMd = useMediaQuery(960, 'max');
 
   return (
     <>
@@ -108,7 +107,7 @@ const SeasonDetail = () => {
           display: 'flex',
           flexDirection: 'column',
           height: `calc(${JSON.stringify(size?.height)}px + 1rem)`,
-          width: '100vw',
+          width: '100%',
           borderWidth: 0,
         }}
       >
@@ -119,173 +118,171 @@ const SeasonDetail = () => {
             zIndex: 1,
             flexGrow: 1,
             display: 'flex',
-            alignItems: 'stretch',
             justifyContent: 'center',
-            '@xs': {
-              padding: '0 3vw',
-            },
-            '@sm': {
-              padding: '0 6vw',
-            },
-            '@md': {
-              padding: '0 12vw',
-            },
           }}
         >
-          {!isSm && (
-            <Col span={4}>
-              {detail?.poster_path ? (
-                <Card.Image
-                  // @ts-ignore
-                  as={Image}
-                  src={TMDB.posterUrl(detail?.poster_path)}
-                  alt={detail?.name}
-                  title={detail?.name}
-                  objectFit="cover"
-                  width="50%"
-                  css={{
-                    minWidth: 'auto !important',
-                    marginTop: '10vh',
-                    borderRadius: '24px',
-                  }}
-                  loaderUrl="/api/image"
-                  placeholder="blur"
-                  responsive={[
-                    {
-                      size: {
-                        width: 137,
-                        height: 205,
-                      },
-                      maxWidth: 960,
-                    },
-                    {
-                      size: {
-                        width: 158,
-                        height: 237,
-                      },
-                      maxWidth: 1280,
-                    },
-                    {
-                      size: {
-                        width: 173,
-                        height: 260,
-                      },
-                      maxWidth: 1400,
-                    },
-                    {
-                      size: {
-                        width: 239,
-                        height: 359,
-                      },
-                    },
-                  ]}
-                  options={{
-                    contentType: MimeType.WEBP,
-                  }}
-                />
-              ) : (
-                <Row align="center" justify="center">
-                  <Avatar
-                    icon={<PhotoIcon width={48} height={48} />}
-                    css={{
-                      width: '50% !important',
-                      size: '$20',
-                      minWidth: 'auto !important',
-                      minHeight: '205px !important',
-                      marginTop: '10vh',
-                      borderRadius: '24px !important',
-                    }}
-                  />
-                </Row>
-              )}
-            </Col>
-          )}
-          <Col
-            span={isSm ? 12 : 8}
+          <Row
+            fluid
+            align="stretch"
+            justify="center"
             css={{
-              marginTop: `${isMd ? '8vh' : '10vh'}`,
-              display: 'flex',
-              flexFlow: 'column',
-              justifyContent: 'flex-start',
+              padding: '20px',
+              maxWidth: '1920px',
             }}
           >
-            {isSm &&
-              (detail?.poster_path ? (
-                <>
-                  <Row>
-                    <Card.Image
-                      // @ts-ignore
-                      as={Image}
-                      src={TMDB.posterUrl(detail?.poster_path)}
-                      alt={detail?.name}
-                      title={detail?.name}
-                      objectFit="cover"
-                      width={isXs ? '70%' : '40%'}
-                      css={{
-                        minWidth: 'auto !important',
-                        marginTop: '2rem',
-                        borderRadius: '24px',
-                      }}
-                      loaderUrl="/api/image"
-                      placeholder="blur"
-                      options={{
-                        contentType: MimeType.WEBP,
-                      }}
-                      responsive={[
-                        {
-                          size: {
-                            width: 246,
-                            height: 369,
-                          },
-                          maxWidth: 375,
+            {!isSm && (
+              <Col span={4}>
+                {detail?.poster_path ? (
+                  <Card.Image
+                    // @ts-ignore
+                    as={Image}
+                    src={TMDB.posterUrl(detail?.poster_path)}
+                    alt={detail?.name}
+                    title={detail?.name}
+                    objectFit="cover"
+                    width="50%"
+                    css={{
+                      minWidth: 'auto !important',
+                      borderRadius: '24px',
+                    }}
+                    loaderUrl="/api/image"
+                    placeholder="blur"
+                    responsive={[
+                      {
+                        size: {
+                          width: 137,
+                          height: 205,
                         },
-                        {
-                          size: {
-                            width: 235,
-                            height: 352,
-                          },
+                        maxWidth: 960,
+                      },
+                      {
+                        size: {
+                          width: 158,
+                          height: 237,
                         },
-                      ]}
-                    />
-                  </Row>
-                  <Spacer y={1} />
-                </>
-              ) : (
-                <>
+                        maxWidth: 1280,
+                      },
+                      {
+                        size: {
+                          width: 173,
+                          height: 260,
+                        },
+                        maxWidth: 1400,
+                      },
+                      {
+                        size: {
+                          width: 239,
+                          height: 359,
+                        },
+                      },
+                    ]}
+                    options={{
+                      contentType: MimeType.WEBP,
+                    }}
+                  />
+                ) : (
                   <Row align="center" justify="center">
                     <Avatar
                       icon={<PhotoIcon width={48} height={48} />}
                       css={{
-                        width: `${isXs ? '70%' : '40%'} !important`,
+                        width: '50% !important',
                         size: '$20',
                         minWidth: 'auto !important',
                         minHeight: '205px !important',
-                        marginTop: '2rem',
+                        marginTop: '10vh',
                         borderRadius: '24px !important',
                       }}
                     />
                   </Row>
-                  <Spacer y={1} />
-                </>
-              ))}
-            <Row>
-              <H2 h2 weight="bold">
-                {detail?.name}
-              </H2>
-            </Row>
-            <Row>
-              <H5 h5 weight="bold">
-                {detail?.episodes?.length || 0} episodes &middot; {detail?.air_date}{' '}
-              </H5>
-            </Row>
-            {detail?.overview && (
-              <Row>
-                <H6 h6>{detail.overview}</H6>
-              </Row>
+                )}
+              </Col>
             )}
-            <Spacer y={1} />
-            <Tab pages={detailTab} linkTo={`/tv-shows/${tvId}/season/${seasonId}`} />
-          </Col>
+            <Col
+              span={isSm ? 12 : 8}
+              css={{
+                display: 'flex',
+                flexFlow: 'column',
+                justifyContent: 'flex-start',
+              }}
+            >
+              {isSm &&
+                (detail?.poster_path ? (
+                  <>
+                    <Row>
+                      <Card.Image
+                        // @ts-ignore
+                        as={Image}
+                        src={TMDB.posterUrl(detail?.poster_path)}
+                        alt={detail?.name}
+                        title={detail?.name}
+                        objectFit="cover"
+                        width={isXs ? '70%' : '40%'}
+                        css={{
+                          minWidth: 'auto !important',
+                          marginTop: '2rem',
+                          borderRadius: '24px',
+                        }}
+                        loaderUrl="/api/image"
+                        placeholder="blur"
+                        options={{
+                          contentType: MimeType.WEBP,
+                        }}
+                        responsive={[
+                          {
+                            size: {
+                              width: 246,
+                              height: 369,
+                            },
+                            maxWidth: 375,
+                          },
+                          {
+                            size: {
+                              width: 235,
+                              height: 352,
+                            },
+                          },
+                        ]}
+                      />
+                    </Row>
+                    <Spacer y={1} />
+                  </>
+                ) : (
+                  <>
+                    <Row align="center" justify="center">
+                      <Avatar
+                        icon={<PhotoIcon width={48} height={48} />}
+                        css={{
+                          width: `${isXs ? '70%' : '40%'} !important`,
+                          size: '$20',
+                          minWidth: 'auto !important',
+                          minHeight: '205px !important',
+                          marginTop: '2rem',
+                          borderRadius: '24px !important',
+                        }}
+                      />
+                    </Row>
+                    <Spacer y={1} />
+                  </>
+                ))}
+              <Row>
+                <H2 h2 weight="bold">
+                  {detail?.name}
+                </H2>
+              </Row>
+              <Row>
+                <H5 h5 weight="bold">
+                  {detail?.episodes?.length || 0} episodes &middot; {detail?.air_date}{' '}
+                </H5>
+              </Row>
+              {detail?.overview && (
+                <Row>
+                  <H6 h6>{detail.overview}</H6>
+                </Row>
+              )}
+              <Spacer y={1} />
+              <Tab pages={detailTab} linkTo={`/tv-shows/${tvId}/season/${seasonId}`} />
+            </Col>
+          </Row>
         </Card.Header>
         <Card.Body css={{ p: 0 }}>
           <Card.Image
@@ -296,8 +293,8 @@ const SeasonDetail = () => {
             }
             css={{
               minHeight: '100vh !important',
-              minWidth: '100vw !important',
-              width: '100vw',
+              minWidth: '100% !important',
+              width: '100%',
               height: '100vh',
               top: 0,
               left: 0,
@@ -306,6 +303,7 @@ const SeasonDetail = () => {
             }}
             title={detail?.name}
             alt={detail?.name}
+            containerCss={{ margin: 0 }}
             loaderUrl="/api/image"
             placeholder="blur"
             responsive={[

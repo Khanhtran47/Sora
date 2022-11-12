@@ -1,6 +1,5 @@
 import { RouteMatch, useLocation } from '@remix-run/react';
 import { Grid, Spacer, Text } from '@nextui-org/react';
-import useMediaQuery from '~/hooks/useMediaQuery';
 
 interface IBreadCrumbProps {
   matches: RouteMatch[];
@@ -8,7 +7,6 @@ interface IBreadCrumbProps {
 
 const BreadCrumb = (props: IBreadCrumbProps) => {
   const { matches } = props;
-  const isXs = useMediaQuery(425, 'max');
   const location = useLocation();
   if (
     location.pathname === '/' ||
@@ -22,13 +20,12 @@ const BreadCrumb = (props: IBreadCrumbProps) => {
       justify="flex-start"
       alignItems="center"
       gap={2}
-      wrap="nowrap"
+      wrap="wrap"
       css={{
-        position: 'absolute',
         width: 'fit-content',
-        height: 25,
+        height: 'auto',
         padding: 0,
-        margin: `${isXs ? '64px 0 0 8px !important' : '64px 0 0 88px !important'}`,
+        margin: '0 0 15px 0',
         zIndex: 1,
       }}
     >
@@ -37,7 +34,18 @@ const BreadCrumb = (props: IBreadCrumbProps) => {
         .filter((match) => match.handle && match.handle.breadcrumb)
         // render breadcrumbs!
         .map((match, index) => (
-          <Text color="primary" span key={index} style={{ display: 'flex', flexDirection: 'row' }}>
+          <Text
+            color="primary"
+            span
+            key={index}
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              justifyContent: 'flex-start',
+              alignItems: 'center',
+            }}
+          >
             {index ? (
               <>
                 <Spacer x={0.5} />

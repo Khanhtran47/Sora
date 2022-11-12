@@ -26,13 +26,13 @@ const MediaListGrid = ({
   const isXs = useMediaQuery(370);
   if (isCoverCard) {
     return (
-      <Grid.Container gap={1} justify="flex-start" alignItems="stretch" wrap="wrap">
+      <Grid.Container gap={1} justify="flex-start" alignItems="stretch" xl wrap="wrap">
         {coverItem &&
           coverItem?.length > 0 &&
           coverItem.map((item, index) => {
             const href = `/collections/${item.id}`;
             return (
-              <Grid xs={12} md={6} xl={4} key={item.id} justify={isXs ? 'center' : 'flex-start'}>
+              <Grid xs={12} md={6} xl={4} key={item.id} justify="center">
                 <motion.div
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -54,22 +54,20 @@ const MediaListGrid = ({
     );
   }
   return (
-    <Grid.Container gap={1} justify="flex-start" alignItems="stretch" wrap="wrap">
+    <Grid.Container
+      gap={1}
+      justify="flex-start"
+      alignItems="stretch"
+      wrap="wrap"
+      css={{ maxWidth: '1920px' }}
+    >
       {items &&
         items?.length > 0 &&
         items.map((item, index) => {
           const type = item?.mediaType || itemsType;
           const href = `${type === 'movie' ? '/movies/' : '/tv-shows/'}${item.id}/`;
           return (
-            <Grid
-              xs={isXs ? 12 : 6}
-              sm={4}
-              md={3}
-              lg={2.4}
-              xl={2}
-              key={item.id}
-              justify={isXs ? 'center' : 'flex-start'}
-            >
+            <Grid xs={isXs ? 12 : 6} sm={4} md={3} lg={2.4} xl={2} key={item.id} justify="center">
               <motion.div
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1 }}

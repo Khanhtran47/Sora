@@ -43,11 +43,11 @@ const Copyright = () => (
         contentType: MimeType.WEBP,
       }}
     />
-    <Link href="https://sora-anime.vercel.app/">
-      <H5 h5 css={{ marginTop: '1rem' }}>
+    <H5 h5 css={{ marginTop: '1rem' }}>
+      <Link href="https://sora-anime.vercel.app/" aria-label="Website Link">
         © Sora
-      </H5>
-    </Link>{' '}
+      </Link>
+    </H5>
   </Container>
 );
 

@@ -107,6 +107,7 @@ const ListTvShows = () => {
       >
         {shows && shows.items && shows.items.length > 0 && (
           <MediaList
+            listType="grid"
             items={shows.items}
             listName={t('discoverTv')}
             showFilter

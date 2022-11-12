@@ -28,22 +28,20 @@ const BottomNav = () => {
     <Container
       fluid
       display="flex"
-      justify="space-between"
+      justify="space-around"
       alignItems="center"
       wrap="nowrap"
-      className="backdrop-blur-md border-t transition-all duration-500"
+      className="backdrop-blur-md transition-all duration-500"
       css={{
         backgroundColor: '$backgroundAlpha',
-        borderTopColor: '$border',
         position: 'fixed',
-        bottom: isSm && scrollDirection === 'down' ? -64 : 0,
+        bottom: isSm && scrollDirection === 'down' ? -64 : 10,
         height: 64,
         padding: 0,
         margin: 0,
-        zIndex: 999,
-        '@xs': {
-          display: 'none',
-        },
+        zIndex: 990,
+        borderRadius: '$xl',
+        width: 'calc(100% - 1rem)',
       }}
     >
       {pages.map((page) => (

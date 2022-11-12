@@ -7,11 +7,13 @@ import { Navigation } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 import { IPeople } from '~/services/tmdb/tmdb.types';
+import useMediaQuery from '~/hooks/useMediaQuery';
+
 import ChevronRightIcon from '~/src/assets/icons/ChevronRightIcon.js';
 import ChevronLeftIcon from '~/src/assets/icons/ChevronLeftIcon.js';
-import useMediaQuery from '~/hooks/useMediaQuery';
-import { H3 } from '~/src/components/styles/Text.styles';
 
+import Flex from '../styles/Flex.styles';
+import { H3 } from '../styles/Text.styles';
 import PeopleItem from './PeopleItem';
 
 /**
@@ -30,15 +32,20 @@ interface IPeopleListProps {
 }
 
 const PeopleListGrid = ({ items, virtual }: { items: IPeople[]; virtual?: boolean }) => {
-  const isXs = useMediaQuery(650);
-  const gap = isXs ? 1 : 3;
+  const isXs = useMediaQuery(370);
   return (
-    <Grid.Container gap={gap} justify="flex-start" alignItems="stretch">
+    <Grid.Container
+      gap={1}
+      justify="flex-start"
+      alignItems="stretch"
+      wrap="wrap"
+      css={{ maxWidth: '1920px' }}
+    >
       {items?.length > 0 &&
         items.map((item) => {
           const href = `/people/${item.id}/overview`;
           return (
-            <Grid xs={6} sm={4} md={3} lg={2} key={item.id}>
+            <Grid xs={isXs ? 12 : 6} sm={4} md={3} lg={2.4} xl={2} key={item.id} justify="center">
               <Link
                 to={href}
                 style={{
@@ -132,7 +139,12 @@ const PeopleList = (props: IPeopleListProps) => {
   }
 
   return (
-    <>
+    <Flex
+      direction="column"
+      justify="center"
+      align={displayType === 'grid' || displayType === 'table' ? 'center' : 'start'}
+      css={{ width: '100%' }}
+    >
       {listName && (
         <H3 h3 css={{ margin: '0 0 20px 0' }}>
           {listName}
@@ -206,7 +218,7 @@ const PeopleList = (props: IPeopleListProps) => {
         </Row>
       )}
       {list}
-    </>
+    </Flex>
   );
 };
 

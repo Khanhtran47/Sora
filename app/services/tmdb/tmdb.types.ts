@@ -265,6 +265,7 @@ export interface IPeopleCredits {
 export interface IDetailImages {
   id?: number;
   backdrops?: Image[];
+  logos?: Image[];
   posters?: Image[];
 }
 

@@ -320,17 +320,7 @@ const MovieWatch = () => {
     }),
   );
   return (
-    <Container
-      fluid
-      css={{
-        paddingTop: '100px',
-        paddingLeft: '88px',
-        paddingRight: '23px',
-        '@smMax': {
-          padding: '100px 0 65px 0',
-        },
-      }}
-    >
+    <Container fluid responsive css={{ margin: 0, padding: 0 }}>
       <ClientOnly fallback={<Loading type="default" />}>
         {() => (
           <Suspense fallback={<Loading type="default" />}>

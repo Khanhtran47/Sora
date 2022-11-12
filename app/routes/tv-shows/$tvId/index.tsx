@@ -74,16 +74,8 @@ const Overview = () => {
       justify="center"
       css={{
         marginTop: '0.75rem',
-        padding: '0 0.75rem',
-        '@xs': {
-          padding: '0 3vw',
-        },
-        '@sm': {
-          padding: '0 6vw',
-        },
-        '@md': {
-          padding: '0 12vw',
-        },
+        padding: '20px',
+        maxWidth: '1920px',
       }}
     >
       {!isSm && (
@@ -141,7 +133,7 @@ const Overview = () => {
           </H6>
         </Row>
         <Spacer y={1} />
-        <Row>
+        <Row wrap="wrap">
           {detail?.created_by && detail?.created_by.length > 0 && (
             <>
               <H6 h6>

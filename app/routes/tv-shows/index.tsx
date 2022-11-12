@@ -146,12 +146,12 @@ const TvIndexPage = () => {
         justify="flex-start"
         direction="column"
         css={{
+          padding: 0,
           marginTop: '48px',
-          paddingLeft: '88px',
           minHeight: '564px',
           '@xsMax': {
-            paddingLeft: 'calc(var(--nextui-space-sm))',
-            paddingRight: 'calc(var(--nextui-space-sm))',
+            paddingLeft: 'var(--nextui-space-sm)',
+            paddingRight: 'var(--nextui-space-sm)',
           },
         }}
       >
