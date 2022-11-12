@@ -109,11 +109,13 @@ const MediaListBanner = ({
   return (
     <Grid.Container
       gap={1}
-      justify="flex-start"
+      justify="center"
+      alignItems="center"
       css={{
         margin: 0,
         padding: 0,
         width: '100%',
+        maxWidth: '1920px',
         minHeight: isSm ? '' : '672px !important',
       }}
     >

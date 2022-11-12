@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/indent */
 import * as React from 'react';
 import { Container } from '@nextui-org/react';
-import { useLocation, RouteMatch } from '@remix-run/react';
+import { RouteMatch } from '@remix-run/react';
 import type { User } from '@supabase/supabase-js';
 
 /* Components */
+import Flex from '../styles/Flex.styles';
 import Header from './Header';
 import LeftDrawer from './LeftDrawer';
 import Copyright from './Copyright';
@@ -17,8 +18,8 @@ interface ILayout {
   matches: RouteMatch[];
 }
 
-const Layout = ({ children, user, matches }: ILayout) => {
-  const location = useLocation();
+const Layout = (props: ILayout) => {
+  const { children, user, matches } = props;
   const [open, setOpen] = React.useState(false);
 
   const handleDrawerOpen = () => {
@@ -31,56 +32,59 @@ const Layout = ({ children, user, matches }: ILayout) => {
 
   return (
     <Container
+      justify="flex-end"
       className="!max-w-full"
       css={{
+        display: 'flex',
         margin: 0,
         padding: 0,
+        backgroundColor: '$backgroundContrast',
       }}
     >
-      <Header
+      <LeftDrawer
         open={open}
         handleDrawerOpen={handleDrawerOpen}
         handleDrawerClose={handleDrawerClose}
-        user={user}
       />
-      <LeftDrawer open={open} handleDrawerClose={handleDrawerClose} />
-      <BreadCrumb matches={matches} />
-      <Container
-        className="!max-w-full"
-        as="main"
+      <Flex
+        direction="column"
+        className="w-full"
         css={{
-          zIndex: 0,
+          backgroundColor: '$background',
           margin: 0,
-          minHeight: '100vh',
-          height: 'fit-content',
-          ...(location.pathname === '/' ||
-          location.pathname === '/anime' ||
-          location.pathname === '/movies' ||
-          location.pathname === '/tv-shows' ||
-          location.pathname.split('/')[2]?.match(/^\d+$/)
-            ? {
-                paddingTop: '8px',
-                paddingLeft: 0,
-                paddingRight: 0,
-                '@xsMax': {
-                  paddingBottom: '65px',
-                },
-              }
-            : {
-                paddingTop: '100px',
-                paddingLeft: '88px',
-                paddingRight: 0,
-                '@xsMax': {
-                  paddingLeft: 0,
-                  paddingBottom: '65px',
-                },
-              }),
+          width: '100%',
+          '@sm': {
+            borderTopLeftRadius: '$xl',
+            width: 'calc(100% - 65px)',
+          },
         }}
       >
-        {children}
-      </Container>
-      <Copyright />
-      <BottomNav />
+        <Header
+          open={open}
+          handleDrawerOpen={handleDrawerOpen}
+          handleDrawerClose={handleDrawerClose}
+          user={user}
+        />
+        <BreadCrumb matches={matches} />
+        <Container
+          as="main"
+          fluid
+          css={{
+            zIndex: 0,
+            minHeight: '100vh',
+            padding: '20px 0 0 0',
+            margin: 0,
+            '@sm': {
+              paddingLeft: '20px',
+              paddingRight: '20px',
+            },
+          }}
+        >
+          {children}
+        </Container>
+        <Copyright />
+        <BottomNav />
+      </Flex>
     </Container>
   );
 };

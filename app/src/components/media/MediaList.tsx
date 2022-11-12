@@ -4,11 +4,14 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { IMedia } from '~/services/tmdb/tmdb.types';
+
 import ChevronRightIcon from '~/src/assets/icons/ChevronRightIcon.js';
 import ChevronLeftIcon from '~/src/assets/icons/ChevronLeftIcon.js';
-import { H3 } from '~/src/components/styles/Text.styles';
+
 import { MediaListTable, MediaListCard, MediaListBanner, MediaListGrid } from './list';
 import Filter from '../elements/filter/Filter';
+import { H3 } from '../styles/Text.styles';
+import Flex from '../styles/Flex.styles';
 
 /**
  * MediaList type:
@@ -113,7 +116,16 @@ const MediaList = (props: IMediaListProps) => {
   }
 
   return (
-    <>
+    <Flex
+      direction="column"
+      justify="center"
+      align={
+        listType === 'grid' || listType === 'table' || listType === 'slider-banner'
+          ? 'center'
+          : 'start'
+      }
+      css={{ width: '100%' }}
+    >
       {listName && (
         <H3 h3 css={{ margin: '20px 0 20px 0' }}>
           {listName}
@@ -195,7 +207,7 @@ const MediaList = (props: IMediaListProps) => {
         />
       )}
       {list}
-    </>
+    </Flex>
   );
 };
 

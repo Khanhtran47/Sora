@@ -28,7 +28,7 @@ const BottomNav = () => {
     <Container
       fluid
       display="flex"
-      justify="space-between"
+      justify="space-around"
       alignItems="center"
       wrap="nowrap"
       className="backdrop-blur-md border-t transition-all duration-500"

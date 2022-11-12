@@ -85,6 +85,7 @@ const Index = () => {
       animate={{ x: '0', opacity: 1 }}
       exit={{ y: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
+      style={{ width: '100%' }}
     >
       <MediaList
         listType="slider-banner"
@@ -99,8 +100,8 @@ const Index = () => {
         direction="column"
         css={{
           marginTop: '48px',
-          paddingLeft: '88px',
           minHeight: '564px',
+          padding: 0,
           '@xsMax': {
             paddingLeft: 'calc(var(--nextui-space-sm))',
             paddingRight: 'calc(var(--nextui-space-sm))',

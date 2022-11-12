@@ -4,7 +4,8 @@ export const lightTheme = createTheme({
   type: 'light',
   theme: {
     colors: {
-      backgroundTransparent: 'rgba(255, 255, 255, 0)',
+      backgroundContrast: '#f6f7ff',
+      backgroundTransparent: 'rgba(0, 0, 0, 0)',
     },
   },
 });
@@ -24,9 +25,9 @@ export const bumblebeeTheme = createTheme({
     colors: {
       // background colors
       background: '#FEFAEA',
-      backgroundAlpha: 'rgba(255, 255, 255, 0.8)',
+      backgroundAlpha: 'rgb(254, 250, 234, 0.8)',
       foreground: '$black',
-      backgroundContrast: '$white',
+      backgroundContrast: '#fffdf4',
       backgroundTransparent: 'rgba(0, 0, 0, 0)',
 
       // brand colors
@@ -64,9 +65,9 @@ export const autumnTheme = createTheme({
     colors: {
       // background colors
       background: '#FCE6E3',
-      backgroundAlpha: 'rgba(255, 255, 255, 0.8)',
+      backgroundAlpha: 'rgba(252, 230, 227, 0.8)',
       foreground: '$black',
-      backgroundContrast: '#826A5C',
+      backgroundContrast: '#fff2f2',
       backgroundTransparent: 'rgba(0, 0, 0, 0)',
 
       // brand colors
@@ -109,7 +110,7 @@ export const retroTheme = createTheme({
       background: '#e2d8b3',
       backgroundAlpha: 'rgb(226, 216, 179, 0.8)',
       foreground: '$black',
-      backgroundContrast: '#7d7259',
+      backgroundContrast: '#c8bb9e',
       backgroundTransparent: 'rgba(0, 0, 0, 0)',
 
       // brand colors

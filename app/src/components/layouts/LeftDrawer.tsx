@@ -1,11 +1,15 @@
 import * as React from 'react';
-import { NavLink } from '@remix-run/react';
-import { Spacer, Grid, Container, Row, styled } from '@nextui-org/react';
+import { NavLink as RemixNavLink } from '@remix-run/react';
+import { Spacer, Grid, Container, Row, Button, styled } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
+import { AnimatePresence, motion } from 'framer-motion';
 
 import { H5 } from '~/src/components/styles/Text.styles';
+import NavLink from '../elements/NavLink';
 
 /* icons */
+import MenuIcon from '../../assets/icons/MenuIcon.js';
+import ArrowLeftIcon from '../../assets/icons/ArrowLeftIcon.js';
 import TrendingIcon from '../../assets/icons/TrendingIcon.js';
 import NewReleaseIcon from '../../assets/icons/NewReleaseIcon.js';
 import TopRatedIcon from '../../assets/icons/TopRatedIcon.js';
@@ -13,10 +17,11 @@ import HistoryIcon from '../../assets/icons/HistoryIcon.js';
 import TwoUsers from '../../assets/icons/TwoUsersIcon.js';
 import CategoryIcon from '../../assets/icons/CategoryIcon.js';
 
-const drawerWidth = 240;
+const drawerWidth = 250;
 
 interface ILeftDrawerProps {
   open: boolean;
+  handleDrawerOpen: () => void;
   handleDrawerClose: () => void;
 }
 
@@ -24,17 +29,72 @@ export const handle = {
   i18n: 'left-drawer',
 };
 
+const leftDrawerLink = [
+  {
+    pageName: 'trending',
+    pageLink: 'trending',
+  },
+  {
+    pageName: 'people',
+    pageLink: 'people',
+  },
+  {
+    pageName: 'Collections',
+    pageLink: 'collections',
+  },
+  {
+    pageName: 'newReleases',
+    pageLink: 'new-releases',
+  },
+  {
+    pageName: 'imdbTop',
+    pageLink: 'imdb-top',
+  },
+  {
+    pageName: 'history',
+    pageLink: 'watch-history',
+  },
+];
+
+const iconItem = (index: number, filled: boolean) => {
+  let icon;
+  switch (index) {
+    case 0:
+      icon = <TrendingIcon filled={filled} />;
+      break;
+    case 1:
+      icon = <TwoUsers filled={filled} />;
+      break;
+    case 2:
+      icon = <CategoryIcon filled={filled} />;
+      break;
+    case 3:
+      icon = <NewReleaseIcon filled={filled} />;
+      break;
+    case 4:
+      icon = <TopRatedIcon filled={filled} />;
+      break;
+    case 5:
+      icon = <HistoryIcon />;
+      break;
+    default:
+  }
+  return icon;
+};
+
 const openedMixin = () => ({
   width: drawerWidth,
-  transitionProperty: 'width',
+  transitionProperty: 'all',
   transitionDuration: '225ms',
   transitionTimingFunction: 'ease-out',
   transitionDelay: '0ms',
   overflowX: 'hidden',
+  borderTopRightRadius: '$xl',
+  borderBottomRightRadius: '$xl',
 });
 
 const closedMixin = () => ({
-  transitionProperty: 'width',
+  transitionProperty: 'all',
   transitionDuration: '195ms',
   transitionTimingFunction: 'ease-in',
   transitionDelay: '0ms',
@@ -53,68 +113,17 @@ const Drawer = styled(Container, {
   whiteSpace: 'nowrap',
   boxSizing: 'border-box',
   margin: 0,
-  height: '100%',
+  height: '100vh',
   position: 'fixed',
-  zIndex: 990,
+  top: 0,
+  left: 0,
+  zIndex: 999,
 });
 
 const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
   const { t } = useTranslation('left-drawer');
   const wrapperRef = React.useRef<HTMLDivElement>(null);
-  const { open, handleDrawerClose } = props;
-
-  const iconItem = (index: number, filled: boolean) => {
-    let icon;
-    switch (index) {
-      case 0:
-        icon = <TrendingIcon filled={filled} />;
-        break;
-      case 1:
-        icon = <TwoUsers filled={filled} />;
-        break;
-      case 2:
-        icon = <CategoryIcon filled={filled} />;
-        break;
-      case 3:
-        icon = <NewReleaseIcon filled={filled} />;
-        break;
-      case 4:
-        icon = <TopRatedIcon filled={filled} />;
-        break;
-      case 5:
-        icon = <HistoryIcon />;
-        break;
-      default:
-    }
-    return icon;
-  };
-
-  const leftDrawerLink = [
-    {
-      pageName: 'trending',
-      pageLink: 'trending',
-    },
-    {
-      pageName: 'people',
-      pageLink: 'people',
-    },
-    {
-      pageName: 'Collections',
-      pageLink: 'collections',
-    },
-    {
-      pageName: 'newReleases',
-      pageLink: 'new-releases',
-    },
-    {
-      pageName: 'imdbTop',
-      pageLink: 'imdb-top',
-    },
-    {
-      pageName: 'history',
-      pageLink: 'watch-history',
-    },
-  ];
+  const { open, handleDrawerClose, handleDrawerOpen } = props;
 
   /**
    * If the drawer is open and the user clicks outside of the drawer, close the drawer.
@@ -139,8 +148,7 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
   return (
     <Drawer
       css={{
-        backgroundColor: '$backgroundAlpha',
-        borderRightColor: '$border',
+        backgroundColor: '$backgroundContrast',
         ...(open && {
           ...openedMixin(),
         }),
@@ -150,19 +158,27 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
         paddingLeft: 0,
         paddingRight: 0,
       }}
-      className="backdrop-blur-md px-0 border-r"
       as="nav"
       ref={wrapperRef}
     >
-      <Row
-        css={{
-          marginTop: 64,
-        }}
-      >
+      <Row justify="center" align="center" css={{ height: '65px' }}>
+        <Button
+          onClick={open ? handleDrawerClose : handleDrawerOpen}
+          light
+          auto
+          aria-label="Menu Icon"
+          icon={open ? <ArrowLeftIcon /> : <MenuIcon />}
+          css={{
+            marginRight: open ? 20 : 0,
+          }}
+        />
+        {open ? <NavLink linkTo="/" isLogo /> : null}
+      </Row>
+      <Row>
         <Grid.Container>
           {leftDrawerLink.map((page, index: number) => (
             <Grid key={page.pageName} css={{ marginTop: '10px' }} xs={12}>
-              <NavLink
+              <RemixNavLink
                 to={`/${page.pageLink}`}
                 className="flex flex-row"
                 onClick={handleDrawerClose}
@@ -176,41 +192,50 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                 aria-label={page.pageName}
               >
                 {({ isActive }) => (
-                  <H5
-                    h5
-                    color="primary"
-                    css={{
-                      margin: 0,
-                      display: 'flex',
-                      minHeight: 65,
-                      minWidth: 65,
-                      alignItems: 'center',
-                      justifyContent: 'flex-start',
-                      borderRadius: '14px',
-                      transition: 'opacity 0.25s ease 0s, background 0.25s ease 0s',
-                      '&:hover': {
-                        opacity: '0.8',
-                        backgroundColor: '$primaryLightHover',
-                      },
-                      ...(open && {
-                        width: drawerWidth,
-                      }),
-                      ...(isActive && {
-                        background: '$primaryLightActive',
-                      }),
-                      paddingLeft: 20,
-                    }}
-                  >
-                    {isActive ? iconItem(index, true) : iconItem(index, false)}
-                    {open && (
-                      <>
-                        <Spacer />
-                        {t(page.pageName)}
-                      </>
-                    )}
-                  </H5>
+                  <AnimatePresence>
+                    <H5
+                      h5
+                      color="primary"
+                      css={{
+                        margin: 0,
+                        display: 'flex',
+                        minHeight: 65,
+                        minWidth: 65,
+                        alignItems: 'center',
+                        justifyContent: 'flex-start',
+                        borderRadius: '14px',
+                        transition: 'opacity 0.25s ease 0s, background 0.25s ease 0s',
+                        '&:hover': {
+                          opacity: '0.8',
+                          backgroundColor: '$primaryLightHover',
+                        },
+                        ...(open && {
+                          width: drawerWidth,
+                        }),
+                        ...(isActive && {
+                          background: '$primaryLightActive',
+                        }),
+                        paddingLeft: 20,
+                      }}
+                    >
+                      {isActive ? iconItem(index, true) : iconItem(index, false)}
+                      {open && (
+                        <>
+                          <Spacer />
+                          <motion.div
+                            initial={{ opacity: 0, x: '-20%' }}
+                            animate={{ opacity: 1, x: '0' }}
+                            exit={{ opacity: 0, x: '-20%' }}
+                            transition={{ duration: 0.225, ease: 'easeOut' }}
+                          >
+                            {t(page.pageName)}
+                          </motion.div>
+                        </>
+                      )}
+                    </H5>
+                  </AnimatePresence>
                 )}
-              </NavLink>
+              </RemixNavLink>
             </Grid>
           ))}
         </Grid.Container>

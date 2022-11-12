@@ -114,7 +114,9 @@ const MovieDetail = () => {
         as="div"
         fluid
         responsive
+        justify="center"
         css={{
+          display: 'flex',
           margin: 0,
           padding: 0,
         }}

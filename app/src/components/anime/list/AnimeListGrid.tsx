@@ -116,7 +116,14 @@ const AnimeListGrid = ({
   }, [fetcher.type]);
 
   return (
-    <Grid.Container ref={parentRef} gap={1} justify="flex-start" alignItems="stretch" wrap="wrap">
+    <Grid.Container
+      ref={parentRef}
+      gap={1}
+      justify="flex-start"
+      alignItems="stretch"
+      wrap="wrap"
+      css={{ maxWidth: '1920px' }}
+    >
       {listItems?.length > 0 &&
         listItems.map((item) => (
           <Grid
@@ -127,7 +134,7 @@ const AnimeListGrid = ({
             md={3}
             lg={2.4}
             xl={2}
-            justify={isXs ? 'center' : 'flex-start'}
+            justify="center"
           >
             <motion.div
               exit={{ opacity: 0 }}
