@@ -25,7 +25,7 @@ const BreadCrumb = (props: IBreadCrumbProps) => {
         width: 'fit-content',
         height: 'auto',
         padding: 0,
-        margin: '8px 0 15px 20px',
+        margin: '0 0 15px 0',
         zIndex: 1,
       }}
     >

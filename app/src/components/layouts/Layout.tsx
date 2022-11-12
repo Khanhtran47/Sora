@@ -4,6 +4,8 @@ import { Container } from '@nextui-org/react';
 import { RouteMatch } from '@remix-run/react';
 import type { User } from '@supabase/supabase-js';
 
+import useMediaQuery from '~/hooks/useMediaQuery';
+
 /* Components */
 import Flex from '../styles/Flex.styles';
 import Header from './Header';
@@ -21,6 +23,7 @@ interface ILayout {
 const Layout = (props: ILayout) => {
   const { children, user, matches } = props;
   const [open, setOpen] = React.useState(false);
+  const isSm = useMediaQuery(650, 'max');
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -48,6 +51,8 @@ const Layout = (props: ILayout) => {
       />
       <Flex
         direction="column"
+        justify="center"
+        align="center"
         className="w-full"
         css={{
           backgroundColor: '$background',
@@ -65,14 +70,13 @@ const Layout = (props: ILayout) => {
           handleDrawerClose={handleDrawerClose}
           user={user}
         />
-        <BreadCrumb matches={matches} />
         <Container
           as="main"
           fluid
           css={{
             zIndex: 0,
             minHeight: '100vh',
-            padding: '20px 0 0 0',
+            padding: 0,
             margin: 0,
             '@sm': {
               paddingLeft: '20px',
@@ -80,10 +84,11 @@ const Layout = (props: ILayout) => {
             },
           }}
         >
+          <BreadCrumb matches={matches} />
           {children}
         </Container>
         <Copyright />
-        <BottomNav />
+        {isSm ? <BottomNav /> : null}
       </Flex>
     </Container>
   );
