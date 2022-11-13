@@ -23,7 +23,7 @@ interface ILayout {
 const Layout = (props: ILayout) => {
   const { children, user, matches } = props;
   const [open, setOpen] = React.useState(false);
-  const isSm = useMediaQuery(650, 'max');
+  const isSm = useMediaQuery('(max-width: 650px)');
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -78,7 +78,7 @@ const Layout = (props: ILayout) => {
             minHeight: '100vh',
             padding: 0,
             margin: 0,
-            '@sm': {
+            '@xs': {
               paddingLeft: '20px',
               paddingRight: '20px',
             },

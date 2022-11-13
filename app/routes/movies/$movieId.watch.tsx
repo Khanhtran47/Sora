@@ -287,7 +287,7 @@ const MovieWatch = () => {
         genresTv: { [id: string]: string };
       }
     | undefined = useRouteData('root');
-  const isSm = useMediaQuery(650, 'max');
+  const isSm = useMediaQuery('(max-width: 650px)');
   const id = detail && detail.id;
   const [player, setPlayer] = useState<string>('1');
   const [source, setSource] = useState<string>(Player.moviePlayerUrl(Number(id), 1));

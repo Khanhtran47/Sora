@@ -27,8 +27,8 @@ const AnimeListCard = ({
   itemType?: 'banner' | 'card' | 'episode-card';
   provider?: string;
 }) => {
-  const isSm = useMediaQuery(650);
-  const isLg = useMediaQuery(1400);
+  const isSm = useMediaQuery('(max-width: 650px)');
+  const isLg = useMediaQuery('(max-width: 1400px)');
   const gap = isSm ? 1 : 2;
 
   return (

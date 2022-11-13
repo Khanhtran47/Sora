@@ -47,8 +47,8 @@ const MediaDetail = (props: IMediaDetail) => {
   const size: IUseSize = useSize(ref);
   const navigate = useNavigate();
 
-  const isXs = useMediaQuery(425, 'max');
-  const isSm = useMediaQuery(650, 'max');
+  const isXs = useMediaQuery('(max-width: 425px)');
+  const isSm = useMediaQuery('(max-width: 650px)');
 
   const [visible, setVisible] = useState(false);
   const closeHandler = () => {

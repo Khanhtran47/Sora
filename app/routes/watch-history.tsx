@@ -39,7 +39,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 const History = () => {
   const { histories, page, totalPage } = useLoaderData<LoaderData>();
-  const isXs = useMediaQuery(650);
+  const isXs = useMediaQuery('(max-width: 650px)');
   const navigate = useNavigate();
   const location = useLocation();
   const ref = useRef<HTMLDivElement>(null);

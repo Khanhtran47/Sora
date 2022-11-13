@@ -45,8 +45,8 @@ export const meta: MetaFunction = ({ params }) => ({
 const PhotosPage = () => {
   const { images } = useLoaderData<LoaderData>();
   const tvData: { detail: ITvShowDetail } | undefined = useRouteData('routes/movies/$movieId');
-  const isLg = useMediaQuery(1280, 'max');
-  const isXs = useMediaQuery(375, 'max');
+  const isLg = useMediaQuery('(max-width: 1280px)');
+  const isXs = useMediaQuery('(max-width: 375px)');
   const smallItemStyles: React.CSSProperties = {
     cursor: 'pointer',
     objectFit: 'cover',

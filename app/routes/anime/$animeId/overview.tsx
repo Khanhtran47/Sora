@@ -22,7 +22,7 @@ export const meta: MetaFunction = ({ params }) => ({
 const Overview = () => {
   const animeData: { detail: IAnimeInfo } | undefined = useRouteData('routes/anime/$animeId');
   const detail = animeData && animeData.detail;
-  const isSm = useMediaQuery(650, 'max');
+  const isSm = useMediaQuery('(max-width: 650px)');
   return (
     <Row
       fluid

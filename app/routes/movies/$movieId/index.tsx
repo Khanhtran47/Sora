@@ -68,10 +68,7 @@ const Overview = () => {
   const detail = movieData && movieData.detail;
   const navigate = useNavigate();
 
-  // const isXs = useMediaQuery(425, 'max');
-  const isSm = useMediaQuery(650, 'max');
-  // const isMd = useMediaQuery(960, 'max');
-  // const isMdLand = useMediaQuery(960, 'max', 'landscape');
+  const isSm = useMediaQuery('(max-width: 650px)');
   const onClickViewMore = (type: 'cast' | 'similar' | 'recommendations') => {
     navigate(`/movies/${detail?.id}/${type}`);
   };

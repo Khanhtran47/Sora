@@ -64,7 +64,7 @@ const SearchRoute = () => {
     | undefined = useRouteData('root');
   const navigate = useNavigate();
   const { movieKeyword } = useParams();
-  const isXs = useMediaQuery(650);
+  const isXs = useMediaQuery('(max-width: 650px)');
   const { t } = useTranslation();
   const [listName] = React.useState(t('searchResults'));
 

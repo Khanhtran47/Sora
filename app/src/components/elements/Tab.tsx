@@ -17,7 +17,7 @@ interface ITabProps {
 const Tab = (props: ITabProps) => {
   const { pages, linkTo } = props;
   const { t } = useTranslation();
-  // const isMd = useMediaQuery(960);
+  // const isMd = useMediaQuery('(max-width: 960px)');
   return (
     <Row
       className="border-b"

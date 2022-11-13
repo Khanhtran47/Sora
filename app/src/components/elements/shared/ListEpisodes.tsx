@@ -32,7 +32,7 @@ interface IListEpisodesProps {
 
 const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) => {
   const { type, id, episodes, title, orgTitle, year, translations, season } = props;
-  const isSm = useMediaQuery(650, 'max');
+  const isSm = useMediaQuery('(max-width: 650px)');
   const [visible, setVisible] = useState(false);
   const [episodeId, setEpisodeEpisodeId] = useState<string>();
   const [episodeNumber, setEpisodeNumber] = useState<number>();

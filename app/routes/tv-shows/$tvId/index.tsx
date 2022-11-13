@@ -62,8 +62,7 @@ const Overview = () => {
   const detail = tvData && tvData.detail;
   const navigate = useNavigate();
 
-  const isSm = useMediaQuery(650, 'max');
-  // const isMdLand = useMediaQuery(960, 'max', 'landscape');
+  const isSm = useMediaQuery('(max-width: 650px)');
   const onClickViewMore = (type: 'cast' | 'similar' | 'recommendations') => {
     navigate(`/tv-shows/${detail?.id}/${type}`);
   };

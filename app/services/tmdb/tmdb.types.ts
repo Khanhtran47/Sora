@@ -253,7 +253,7 @@ export interface IPeopleExternalIds {
 
 export interface IPeopleImages {
   id?: number;
-  profiles?: Image[];
+  profiles?: IImage[];
 }
 
 export interface IPeopleCredits {
@@ -264,12 +264,12 @@ export interface IPeopleCredits {
 
 export interface IDetailImages {
   id?: number;
-  backdrops?: Image[];
-  logos?: Image[];
-  posters?: Image[];
+  backdrops?: IImage[];
+  logos?: IImage[];
+  posters?: IImage[];
 }
 
-export interface Image {
+export interface IImage {
   aspect_ratio?: number;
   file_path?: string;
   height?: number;

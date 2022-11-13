@@ -91,7 +91,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
     setVisible(false);
     if (type === 'movie' || type === 'tv') setTrailer({});
   };
-  const isSm = useMediaQuery(650, 'max');
+  const isSm = useMediaQuery('(max-width: 650px)');
   const colorBackground = tinycolor(color).isDark()
     ? tinycolor(color).brighten(40).saturate(70).spin(180).toString()
     : tinycolor(color).darken(40).saturate(70).spin(180).toString();

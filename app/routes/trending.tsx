@@ -69,7 +69,7 @@ const Trending = () => {
     | undefined = useRouteData('root');
   const navigate = useNavigate();
   const location = useLocation();
-  const isXs = useMediaQuery(650);
+  const isXs = useMediaQuery('(max-width: 650px)');
   const { t } = useTranslation();
 
   const paginationChangeHandler = (page: number) => navigate(`/trending?page=${page}`);
