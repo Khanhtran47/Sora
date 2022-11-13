@@ -273,6 +273,7 @@ const AnimeBannerItemDesktop = ({ item, active }: { item: IAnimeResult; active?:
               <Col
                 // @ts-ignore
                 as={motion.div}
+                span={4}
                 animate={
                   active && !showTrailer ? 'inView' : active && showTrailer ? 'outView' : 'outView'
                 }
