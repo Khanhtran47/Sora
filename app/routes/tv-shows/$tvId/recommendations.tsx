@@ -60,7 +60,7 @@ const RecommendationsPage = () => {
       }
     | undefined = useRouteData('root');
   const navigate = useNavigate();
-  const isXs = useMediaQuery(650);
+  const isXs = useMediaQuery('(max-width: 650px)');
   const paginationChangeHandler = (page: number) =>
     navigate(`/tv-shows/${tvId}/recommendations?page=${page}`);
 

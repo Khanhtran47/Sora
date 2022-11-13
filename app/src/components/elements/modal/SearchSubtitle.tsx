@@ -86,7 +86,7 @@ const SearchSubtitles = ({
         languages: ILanguage[];
       }
     | undefined = useRouteData('root');
-  const isSm = useMediaQuery(650);
+  const isSm = useMediaQuery('(max-width: 650px)');
   const fetcher = useFetcher();
   const { width } = useWindowSize();
   const { value, bindings } = useInput('');

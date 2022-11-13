@@ -37,8 +37,8 @@ const CardItem = ({
     rootMargin: '3000px 1000px',
     triggerOnce: !virtual,
   });
-  const isSm = useMediaQuery(650, 'max');
-  const isLg = useMediaQuery(1400, 'max');
+  const isSm = useMediaQuery('(max-width: 650px)');
+  const isLg = useMediaQuery('(max-width: 1400px)');
   const fetcher = useFetcher();
   const [trailerCard, setTrailerCard] = React.useState<Trailer>({});
   const [, setIsCardPlaying] = useLocalStorage('cardPlaying', false);

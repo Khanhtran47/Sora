@@ -97,7 +97,7 @@ const CustomNavigation = ({ slot }: { slot: 'container-end' }) => {
 };
 
 const AnimeListBanner = ({ items }: { items: IAnimeResult[] }) => {
-  const isSm = useMediaQuery(650, 'max');
+  const isSm = useMediaQuery('(max-width: 650px)');
   return (
     <Grid.Container
       gap={1}
@@ -108,7 +108,6 @@ const AnimeListBanner = ({ items }: { items: IAnimeResult[] }) => {
         padding: 0,
         width: '100%',
         maxWidth: '1920px',
-        minHeight: isSm ? '' : '672px !important',
       }}
     >
       {items?.length > 0 && (
@@ -123,16 +122,17 @@ const AnimeListBanner = ({ items }: { items: IAnimeResult[] }) => {
               : {
                   type: 'bullets',
                   clickable: true,
-                  bulletClass: 'swiper-pagination-bullet !bg-gray-500 !w-7 !h-7 !mt-2',
+                  bulletClass: 'swiper-pagination-bullet !bg-primary !w-7 !h-7 !mt-2',
                   renderBullet: (index, className) => {
                     return `<span class="${className}">${index + 1}</span>`;
                   },
                 }
           }
           virtual
+          style={{ width: '100%' }}
         >
           {items.map((item, index) => (
-            <SwiperSlide key={index} virtualIndex={index}>
+            <SwiperSlide key={index} virtualIndex={index} style={{ width: '100%' }}>
               {({ isActive }) => <AnimeItem type="banner" item={item} active={isActive} />}
             </SwiperSlide>
           ))}

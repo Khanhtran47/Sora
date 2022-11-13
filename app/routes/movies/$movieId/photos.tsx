@@ -86,8 +86,8 @@ const uiElements: GalleryProps['uiElements'] = [
 const PhotosPage = () => {
   const { images } = useLoaderData<LoaderData>();
   const movieData: { detail: IMovieDetail } | undefined = useRouteData('routes/movies/$movieId');
-  const isLg = useMediaQuery(1280, 'max');
-  const isXs = useMediaQuery(375, 'max');
+  const isLg = useMediaQuery('(max-width: 1280px)');
+  const isXs = useMediaQuery('(max-width: 375px)');
   const smallItemStyles: React.CSSProperties = {
     cursor: 'pointer',
     objectFit: 'cover',

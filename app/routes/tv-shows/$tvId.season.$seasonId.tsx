@@ -96,8 +96,8 @@ const SeasonDetail = () => {
   const { tvId, seasonId } = useParams();
   const ref = React.useRef<HTMLDivElement>(null);
   const size: IUseSize = useSize(ref);
-  const isXs = useMediaQuery(425, 'max');
-  const isSm = useMediaQuery(650, 'max');
+  const isXs = useMediaQuery('(max-width: 425px)');
+  const isSm = useMediaQuery('(max-width: 650px)');
 
   return (
     <>

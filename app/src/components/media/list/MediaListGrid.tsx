@@ -23,7 +23,7 @@ const MediaListGrid = ({
   virtual?: boolean;
   itemsType?: 'movie' | 'tv';
 }) => {
-  const isXs = useMediaQuery(370);
+  const isXs = useMediaQuery('(max-width: 370px)');
   if (isCoverCard) {
     return (
       <Grid.Container gap={1} justify="flex-start" alignItems="stretch" xl wrap="wrap">

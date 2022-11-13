@@ -38,7 +38,7 @@ const Episodes = () => {
     'routes/tv-shows/$tvId.season.$seasonId',
   );
   const seasonDetail = seasonData && seasonData.detail;
-  const isSm = useMediaQuery(650, 'max');
+  const isSm = useMediaQuery('(max-width: 650px)');
   return (
     <Row
       fluid

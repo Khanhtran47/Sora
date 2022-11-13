@@ -90,7 +90,7 @@ const detailTab = [
 
 const PeopleDetailPage = () => {
   const { detail, externalIds } = useLoaderData<LoaderData>();
-  const isSm = useMediaQuery(650, 'max');
+  const isSm = useMediaQuery('(max-width: 650px)');
   return (
     <Container
       as="div"

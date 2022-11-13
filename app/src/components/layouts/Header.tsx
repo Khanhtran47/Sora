@@ -492,8 +492,8 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   const { open, handleDrawerOpen, handleDrawerClose, user } = props;
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
   const [lottie, setLottie] = React.useState<AnimationItem>();
-  const isSm = useMediaQuery(650);
-  const isMd = useMediaQuery(960);
+  const isSm = useMediaQuery('(max-width: 650px)');
+  const isMd = useMediaQuery('(max-width: 960px)');
   const scrollDirection = useScrollDirection();
 
   React.useEffect(() => {

@@ -56,7 +56,7 @@ const SearchRoute = () => {
   const { searchResults } = useLoaderData<LoaderData>() || {};
   const navigate = useNavigate();
   const { peopleKeyword } = useParams();
-  const isXs = useMediaQuery(650);
+  const isXs = useMediaQuery('(max-width: 650px)');
   const { t } = useTranslation();
   const [listName] = React.useState(t('searchResults'));
 

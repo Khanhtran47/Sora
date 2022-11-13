@@ -22,7 +22,7 @@ const pages = [
 
 const BottomNav = () => {
   const scrollDirection = useScrollDirection();
-  const isSm = useMediaQuery(650, 'max');
+  const isSm = useMediaQuery('(max-width: 650px)');
 
   return (
     <Container

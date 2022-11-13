@@ -68,7 +68,7 @@ const SearchRoute = () => {
   const { tvKeyword } = useParams();
   const { t } = useTranslation();
   const [listName] = React.useState(t('searchResults'));
-  const isXs = useMediaQuery(650);
+  const isXs = useMediaQuery('(max-width: 650px)');
 
   const paginationChangeHandler = (page: number) =>
     navigate(`/search/tv/${tvKeyword}?page=${page}`);

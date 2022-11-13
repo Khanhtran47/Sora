@@ -25,7 +25,7 @@ const AnimeListGrid = ({
   itemType?: 'banner' | 'card' | 'episode-card';
   provider?: string;
 }) => {
-  const isXs = useMediaQuery(370);
+  const isXs = useMediaQuery('(max-width: 370px)');
   const fetcher = useFetcher();
   const [listItems, setListItems] = React.useState<IAnimeResult[]>(items);
   const parentRef = React.useRef<HTMLDivElement>(null);

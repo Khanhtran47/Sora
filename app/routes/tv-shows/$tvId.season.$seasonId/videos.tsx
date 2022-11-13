@@ -39,7 +39,7 @@ export const meta: MetaFunction = ({ params }) => ({
 const VideosPage = () => {
   const { videos } = useLoaderData<LoaderData>();
   const fetcher = useFetcher();
-  const isSm = useMediaQuery(650, 'max');
+  const isSm = useMediaQuery('(max-width: 650px)');
   const [activeType, setActiveType] = React.useState<number>(0);
   const [activeTypeVideos, setActiveTypeVideos] = React.useState<Item[] | []>([]);
   const [visible, setVisible] = React.useState(false);

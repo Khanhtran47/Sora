@@ -482,7 +482,7 @@ const EpisodeWatch = () => {
       }
     | undefined = useRouteData('root');
   const { seasonId, episodeId } = useParams();
-  const isSm = useMediaQuery(650, 'max');
+  const isSm = useMediaQuery('(max-width: 650px)');
   const id = detail && detail.id;
   const [player, setPlayer] = useState<string>('1');
   const [source, setSource] = useState<string>(Player.moviePlayerUrl(Number(id), 1));

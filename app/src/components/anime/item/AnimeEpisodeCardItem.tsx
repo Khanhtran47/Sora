@@ -15,8 +15,8 @@ const AnimeEpisodeCardItem = ({ item, virtual }: { item: IAnimeEpisode; virtual?
     rootMargin: '3000px 1000px',
     triggerOnce: !virtual,
   });
-  const isSm = useMediaQuery(650, 'max');
-  const isLg = useMediaQuery(1400, 'max');
+  const isSm = useMediaQuery('(max-width: 650px)');
+  const isLg = useMediaQuery('(max-width: 1400px)');
 
   return (
     <>

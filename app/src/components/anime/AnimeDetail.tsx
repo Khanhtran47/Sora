@@ -40,8 +40,8 @@ const AnimeDetail = (props: IAnimeDetail) => {
   const ref = React.useRef<HTMLDivElement>(null);
   const size: IUseSize = useSize(ref);
 
-  const isXs = useMediaQuery(425, 'max');
-  const isSm = useMediaQuery(650, 'max');
+  const isXs = useMediaQuery('(max-width: 425px)');
+  const isSm = useMediaQuery('(max-width: 650px)');
 
   const { id, genres, title, releaseDate, rating, image, cover, type, trailer, color } = item || {};
 

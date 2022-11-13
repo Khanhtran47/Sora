@@ -32,7 +32,7 @@ interface IPeopleListProps {
 }
 
 const PeopleListGrid = ({ items, virtual }: { items: IPeople[]; virtual?: boolean }) => {
-  const isXs = useMediaQuery(370);
+  const isXs = useMediaQuery('(max-width: 370px)');
   return (
     <Grid.Container
       gap={1}
@@ -75,7 +75,7 @@ const PeopleListCard = ({
   };
   setSlideProgress?: React.Dispatch<React.SetStateAction<number>>;
 }) => {
-  const isMd = useMediaQuery(960);
+  const isMd = useMediaQuery('(max-width: 960px)');
   const gap = isMd ? 1 : 2;
 
   return (

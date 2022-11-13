@@ -42,7 +42,7 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
   const profilePath = detail?.profile_path
     ? TMDB?.profileUrl(detail?.profile_path || '', 'h632')
     : undefined;
-  const isSm = useMediaQuery(650, 'max');
+  const isSm = useMediaQuery('(max-width: 650px)');
   let gender = '';
   switch (detail?.gender) {
     case 0:
