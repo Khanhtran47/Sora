@@ -146,6 +146,7 @@ export const meta: MetaFunction = () => ({
     'Watch Sora Online For Free! Sora is a multinational website for movies, series and anime fans. ',
   keywords:
     'Sora, Sora movie, sora movies, Watch movies online, watch series online, watch free movies, free movies to watch online, watch movies online free, free movies streaming, free movies full, free movies download, watch movies hd, movies to watch, watch movies, anime free to watch and download, free anime, watch anime online, watch anime, anime, watch anime online free, watch anime free, watchsub',
+  'theme-color': 'var(--nextui-colors-primary)',
   'og:type': 'website',
   'og:url': 'https://sora-anime.vercel.app',
   'og:title': 'Sora - Free Movies and Free Series',

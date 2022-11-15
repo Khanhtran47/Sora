@@ -80,7 +80,7 @@ export const handle = {
   ),
 };
 
-const MovieDetail = () => {
+const AnimeDetailPage = () => {
   const { detail } = useLoaderData<LoaderData>();
   const { state } = useLocation();
   const currentTime = state && (state as { currentTime: number | undefined }).currentTime;
@@ -132,4 +132,4 @@ export const ErrorBoundary = ({ error }: { error: Error }) => {
   return <ErrorBoundaryView error={error} isProd={isProd} />;
 };
 
-export default MovieDetail;
+export default AnimeDetailPage;
