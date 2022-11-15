@@ -169,7 +169,7 @@ export const meta: MetaFunction = () => {
       'og:image:width': '650',
       'og:image:height': '350',
       'og:description':
-        'Watch Sora Online For Free! Sora is a multinational website for movies, series and anime fans - Very fast streaming - No Registration Required - Click NOW',
+        'Watch Sora Online For Free! Sora is a multinational website for movies, series and anime fans - Very fast streaming - Click NOW',
     };
   }
   return {
@@ -181,6 +181,7 @@ export const meta: MetaFunction = () => {
     keywords:
       'Sora, Sora movie, sora movies, Watch movies online, watch series online, watch free movies, free movies to watch online, watch movies online free, free movies streaming, free movies full, free movies download, watch movies hd, movies to watch, watch movies, anime free to watch and download, free anime, watch anime online, watch anime, anime, watch anime online free, watch anime free, watchsub',
     'og:type': 'website',
+    'og:site_name': 'Sora',
     'og:url': 'https://sora-anime.vercel.app',
     'og:title': 'Sora - Free Movies and Free Series',
     'og:image':
@@ -188,7 +189,7 @@ export const meta: MetaFunction = () => {
     'og:image:width': '650',
     'og:image:height': '350',
     'og:description':
-      'Watch Sora Online For Free! Sora is a multinational website for movies, series and anime fans - Very fast streaming - No Registration Required - Click NOW',
+      'Watch Sora Online For Free! Sora is a multinational website for movies, series and anime fans - Very fast streaming - Click NOW',
   };
 };
 

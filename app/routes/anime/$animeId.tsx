@@ -83,7 +83,6 @@ export const handle = {
 
 const AnimeDetailPage = () => {
   const { detail } = useLoaderData<LoaderData>();
-  console.log('🚀 ~ file: $animeId.tsx ~ line 85 ~ AnimeDetailPage ~ detail', detail);
   const { state } = useLocation();
   const currentTime = state && (state as { currentTime: number | undefined }).currentTime;
   const [visible, setVisible] = React.useState(false);
