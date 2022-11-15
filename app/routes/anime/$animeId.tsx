@@ -39,7 +39,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     };
   }
   const { detail } = data;
-  const { title } = detail;
+  const { title, color } = detail;
   return {
     title: `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native
@@ -58,6 +58,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     }, English, Subtitle ${
       title?.userPreferred || title?.english || title?.romaji || title?.native
     }, English Subtitle`,
+    ...(color ? { 'theme-color': color } : null),
     'og:url': `https://sora-anime.vercel.app/anime/${params.animeId}`,
     'og:title': `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native
@@ -65,7 +66,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     'og:description': `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native
     } in full HD online with Subtitle`,
-    'og:image': detail.cover,
+    'og:image': `https://img.anili.st/media/${params.animeId}`,
   };
 };
 
@@ -82,6 +83,7 @@ export const handle = {
 
 const AnimeDetailPage = () => {
   const { detail } = useLoaderData<LoaderData>();
+  console.log('🚀 ~ file: $animeId.tsx ~ line 85 ~ AnimeDetailPage ~ detail', detail);
   const { state } = useLocation();
   const currentTime = state && (state as { currentTime: number | undefined }).currentTime;
   const [visible, setVisible] = React.useState(false);
