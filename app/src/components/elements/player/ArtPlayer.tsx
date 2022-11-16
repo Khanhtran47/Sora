@@ -86,6 +86,7 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
       whitelist: ['*'],
       theme: 'var(--nextui-colors-primary)',
       container: artRef.current,
+      autoMini: isDesktop,
       moreVideoAttr: isDesktop
         ? {
             crossOrigin: 'anonymous',
