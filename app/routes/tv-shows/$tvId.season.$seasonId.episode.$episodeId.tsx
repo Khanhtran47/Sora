@@ -157,6 +157,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       const totalProviderEpisodes = Number(tvDetail?.data?.episodeCount);
       const hasNextEpisode = checkHasNextEpisode(eid, totalEpisodes, totalProviderEpisodes);
       return json<LoaderData>({
+        idProvider,
         provider,
         detail,
         imdbId,
@@ -181,6 +182,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     const totalProviderEpisodes = Number(tvDetail?.data?.episodeCount);
     const hasNextEpisode = checkHasNextEpisode(eid, totalEpisodes, totalProviderEpisodes);
     return json<LoaderData>({
+      idProvider,
       provider,
       detail,
       imdbId,

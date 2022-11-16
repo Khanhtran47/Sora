@@ -41,6 +41,7 @@ const SelectProviderModal = ({
   const { width } = useWindowSize();
   const findTranslation = translations?.translations.find((item) => item.iso_639_1 === 'en');
   const handleProvider = (item: { id: string | number; provider: string }) => {
+    closeHandler();
     if (type === 'movie') navigate(`/movies/${id}/watch?provider=${item.provider}&id=${item.id}`);
     else if (type === 'tv')
       navigate(
