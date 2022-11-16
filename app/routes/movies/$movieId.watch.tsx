@@ -429,7 +429,6 @@ const MovieWatch = () => {
                     type: 'movie',
                   }}
                   getInstance={(art) => {
-                    console.log('🚀 ~ file: $movieId.watch.tsx ~ line 427 ~ MovieWatch ~ art', art);
                     art.on('ready', () => {
                       const t = new URLSearchParams(location.search).get('t');
                       if (t) {
