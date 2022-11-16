@@ -366,13 +366,18 @@ const MovieWatch = () => {
                               item.lang.includes('English'),
                             )?.url || '',
                       encoding: 'utf-8',
+                      type:
+                        provider === 'Flixhq' || provider === 'Loklok'
+                          ? 'vtt'
+                          : provider === 'KissKh'
+                          ? 'srt'
+                          : '',
                       style: {
                         fontSize: isDesktop ? '40px' : '20px',
                       },
                     },
                     poster: TMDB.backdropUrl(detail?.backdrop_path || '', isSm ? 'w780' : 'w1280'),
                     isLive: false,
-                    autoMini: true,
                     backdrop: true,
                     playsInline: true,
                     autoPlayback: true,

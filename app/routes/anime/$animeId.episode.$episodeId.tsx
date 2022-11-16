@@ -428,13 +428,18 @@ const AnimeEpisodeWatch = () => {
                               item.lang.includes('English'),
                             )?.url || '',
                       encoding: 'utf-8',
+                      type:
+                        provider === 'Flixhq' || provider === 'Loklok'
+                          ? 'vtt'
+                          : provider === 'KissKh'
+                          ? 'srt'
+                          : '',
                       style: {
                         fontSize: isDesktop ? '40px' : '20px',
                       },
                     },
                     poster: detail?.cover,
                     isLive: false,
-                    autoMini: true,
                     backdrop: true,
                     playsInline: true,
                     autoPlayback: true,
