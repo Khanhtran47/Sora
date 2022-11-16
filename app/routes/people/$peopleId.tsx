@@ -98,12 +98,7 @@ const PeopleDetailPage = () => {
       responsive
       css={{
         margin: 0,
-        paddingTop: '92px',
-        paddingLeft: '88px',
-        '@smMax': {
-          paddingLeft: 0,
-          paddingBottom: '65px',
-        },
+        padding: 0,
       }}
     >
       <Tab pages={detailTab} linkTo={`/people/${detail?.id}`} />

@@ -13,9 +13,6 @@ const Copyright = () => (
     alignItems="center"
     css={{
       padding: '60px 0 60px 0',
-      '@sm': {
-        padding: '60px 0 30px 88px',
-      },
     }}
   >
     <NextImage

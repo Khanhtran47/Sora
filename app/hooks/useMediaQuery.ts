@@ -1,44 +1,42 @@
-import { useEffect, useState } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 const useMediaQuery = (query: string): boolean => {
-  const getMatches = (queryMatch: string): boolean => {
-    // Prevents SSR issues
-    if (typeof window !== 'undefined') {
-      return window.matchMedia(queryMatch).matches;
+  const [targetReached, setTargetReached] = useState<boolean>(false);
+
+  const updateTarget = useCallback((e) => {
+    if (e.matches) {
+      setTargetReached(true);
+    } else {
+      setTargetReached(false);
     }
-    return false;
-  };
-
-  const [matches, setMatches] = useState<boolean>(getMatches(query));
-
-  function handleChange() {
-    setMatches(getMatches(query));
-  }
+  }, []);
 
   useEffect(() => {
     const matchMedia = window.matchMedia(query);
 
-    // Triggered at the first client-side load and if query changes
-    handleChange();
-
     // Listen matchMedia
     if (matchMedia.addListener) {
-      matchMedia.addListener(handleChange);
+      matchMedia.addListener(updateTarget);
     } else {
-      matchMedia.addEventListener('change', handleChange);
+      matchMedia.addEventListener('change', updateTarget);
+    }
+
+    // Check on mount (callback is not called until a change occurs)
+    if (matchMedia.matches) {
+      setTargetReached(true);
     }
 
     return () => {
       if (matchMedia.removeListener) {
-        matchMedia.removeListener(handleChange);
+        matchMedia.removeListener(updateTarget);
       } else {
-        matchMedia.removeEventListener('change', handleChange);
+        matchMedia.removeEventListener('change', updateTarget);
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
 
-  return matches;
+  return targetReached;
 };
 
 export default useMediaQuery;
