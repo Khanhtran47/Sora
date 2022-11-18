@@ -3373,10 +3373,10 @@ artplayer-plugin-hls-quality@^1.0.0:
   resolved "https://registry.yarnpkg.com/artplayer-plugin-hls-quality/-/artplayer-plugin-hls-quality-1.0.0.tgz#69454709d528ae856deb7cbe0d7e6dbabdfb85ec"
   integrity sha512-3bEh4MILauqQ0LtzKe3Jx50JjFACMvq5LcdoJzQnSTgY5rl7OrfD9u07/o1GbElyJrzHNI0mPX+KBl3BIT5ygw==
 
-artplayer@^4.5.10:
-  version "4.5.10"
-  resolved "https://registry.yarnpkg.com/artplayer/-/artplayer-4.5.10.tgz#8a9f538d4ea4fdeecdcb3dcf39faed7ddb75f702"
-  integrity sha512-768U9K/BhdWobG/lb9lMN62Db125/zguoAhmhqZrqP6Z20lLgS3Z4uBMDTzCLugRD7S6Y9JdQ2FLfYqvy/V53w==
+artplayer@^4.5.11:
+  version "4.5.11"
+  resolved "https://registry.yarnpkg.com/artplayer/-/artplayer-4.5.11.tgz#49e3d78d9e8c0316397c2aad2bf90cee400f2ad6"
+  integrity sha512-WvejQ19Xs1TYnsnFvllD6ulZb6ib7OmoCZyb8is1Gv/YmxFF0T8irED9rcFBUjWrmnG+59pFvnycgC4+xX61vQ==
   dependencies:
     option-validator "^2.0.6"
     screenfull "^6.0.2"

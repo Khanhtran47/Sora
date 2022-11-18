@@ -84,9 +84,6 @@ const CollectionDetail = () => {
         direction="column"
         alignItems="center"
         css={{
-          paddingTop: '100px',
-          paddingLeft: '88px',
-          paddingRight: 0,
           '@xsMax': {
             paddingLeft: 'calc(var(--nextui-space-sm))',
             paddingRight: 'calc(var(--nextui-space-sm))',

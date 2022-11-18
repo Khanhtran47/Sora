@@ -234,7 +234,7 @@ const Overview = () => {
                           options={{
                             contentType: MimeType.WEBP,
                           }}
-                          containerCss={{ margin: 0, minWidth: '130px' }}
+                          containerCss={{ margin: 0, minWidth: '130px', borderRadius: '$lg' }}
                           responsive={[
                             {
                               size: {
@@ -248,6 +248,7 @@ const Overview = () => {
                         <Avatar
                           icon={<PhotoIcon width={48} height={48} />}
                           pointer
+                          squared
                           css={{
                             minWidth: '130px !important',
                             minHeight: '195px !important',

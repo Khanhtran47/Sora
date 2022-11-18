@@ -63,6 +63,9 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
     setVisible(false);
   };
   React.useEffect(() => {
+    setSubtitles(subtitleSelector || []);
+  }, [subtitleSelector]);
+  React.useEffect(() => {
     const art = new Artplayer({
       ...option,
       autoSize: isDesktop,
@@ -241,4 +244,4 @@ const ArtPlayer = styled(Player, {
   },
 });
 
-export default ArtPlayer;
+export default React.memo(ArtPlayer);

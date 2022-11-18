@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { Suspense, useState, useEffect } from 'react';
+import { Suspense, useState, useEffect, useMemo } from 'react';
 import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
 import {
   useCatch,
@@ -182,11 +183,20 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     const animeInfo = await getBilibiliInfo(Number(idProvider));
     const episodeSearch = animeInfo?.episodes?.find((e) => e?.number === Number(episode));
     const episodeDetail = await getBilibiliEpisode(Number(episodeSearch?.id));
+    const totalProviderEpisodes = Number(animeInfo?.totalEpisodes);
+    const hasNextEpisode = checkHasNextEpisode(
+      provider,
+      Number(episodeInfo?.number),
+      totalEpisodes,
+      totalProviderEpisodes,
+    );
 
     return json<LoaderData>({
       provider,
+      idProvider,
       detail,
       episodes,
+      hasNextEpisode,
       sources: [
         {
           url: episodeDetail?.sources[0]?.file || '',
@@ -194,6 +204,10 @@ export const loader: LoaderFunction = async ({ request, params }) => {
           quality: 'auto',
         },
       ],
+      subtitles: episodeDetail?.subtitles.map((sub) => ({
+        lang: `${sub.language} (${sub.lang})`,
+        url: sub.file,
+      })),
       userId: user?.id,
       episodeInfo,
     });
@@ -326,32 +340,69 @@ const AnimeEpisodeWatch = () => {
   let hls: Hls | null = null;
   const [isVideoEnded, setIsVideoEnded] = useState<boolean>(false);
   const [playNextEpisode] = useLocalStorage('playNextEpisode', true);
-  const subtitleSelector = subtitles?.map(({ lang, url }: { lang: string; url: string }) => ({
-    html: lang.toString(),
-    url: url.toString(),
-    ...(provider === 'Loklok' && lang === 'en' && { default: true }),
-    ...(provider === 'KissKh' && lang === 'English' && { default: true }),
-  }));
-  const qualitySelector =
-    provider === 'Loklok' || provider === 'Gogo' || provider === 'Zoro'
-      ? sources?.map(({ quality, url }: { quality: number | string; url: string }) => ({
-          html: quality.toString(),
-          url: url.toString(),
-          isM3U8: true,
-          isDASH: false,
-          ...(provider === 'Loklok' && Number(quality) === 720 && { default: true }),
-          ...((provider === 'Gogo' || provider === 'Zoro') &&
-            quality === 'default' && { default: true }),
-        }))
-      : provider === 'Bilibili'
-      ? undefined
-      : sources?.map(({ quality, url }: { quality: number | string; url: string }) => ({
-          html: quality.toString(),
-          url: url.toString(),
-          isM3U8: false,
-          isDASH: true,
-          ...(quality === 'default' && { default: true }),
-        }));
+  const qualitySelector = useMemo<
+    | {
+        default?: boolean | undefined;
+        html: string;
+        url: string;
+        isM3U8: boolean;
+        isDASH: boolean;
+      }[]
+    | undefined
+  >(
+    () =>
+      provider === 'Loklok' || provider === 'Gogo' || provider === 'Zoro'
+        ? sources?.map(({ quality, url }: { quality: number | string; url: string }) => ({
+            html: quality.toString(),
+            url: url.toString(),
+            isM3U8: true,
+            isDASH: false,
+            ...(provider === 'Loklok' && Number(quality) === 720 && { default: true }),
+            ...((provider === 'Gogo' || provider === 'Zoro') &&
+              quality === 'default' && { default: true }),
+          }))
+        : provider === 'Bilibili'
+        ? sources?.map(({ quality, url }: { quality: number | string; url: string }) => ({
+            html: quality.toString(),
+            url: url.toString(),
+            isM3U8: false,
+            isDASH: true,
+            ...(provider === 'Bilibili' && quality === 'auto' && { default: true }),
+          }))
+        : sources?.map(({ quality, url }: { quality: number | string; url: string }) => ({
+            html: quality.toString(),
+            url: url.toString(),
+            isM3U8: false,
+            isDASH: true,
+            ...(quality === 'default' && { default: true }),
+          })),
+    [provider, sources],
+  );
+
+  const subtitleSelector = useMemo<
+    | {
+        default?: boolean | undefined;
+        html: string;
+        url: string;
+      }[]
+    | undefined
+  >(
+    ():
+      | {
+          default?: boolean | undefined;
+          html: string;
+          url: string;
+        }[]
+      | undefined =>
+      subtitles?.map(({ lang, url }: { lang: string; url: string }) => ({
+        html: lang.toString(),
+        url: url.toString(),
+        ...(provider === 'Loklok' && lang.includes('en') && { default: true }),
+        ...(provider === 'Bilibili' && lang.includes('en') && { default: true }),
+        ...(provider === 'KissKh' && lang === 'English' && { default: true }),
+      })),
+    [provider, subtitles],
+  );
 
   useEffect(() => {
     if (isVideoEnded && playNextEpisode && hasNextEpisode && provider) {
@@ -413,6 +464,7 @@ const AnimeEpisodeWatch = () => {
                             (item: { quality: number | string; url: string }) =>
                               item.quality === 'default',
                           )?.url || sources[0]?.url,
+                    type: provider === 'Bilibili' ? 'mpd' : 'm3u8',
                     subtitle: {
                       url:
                         provider === 'Loklok'
@@ -429,7 +481,7 @@ const AnimeEpisodeWatch = () => {
                             )?.url || '',
                       encoding: 'utf-8',
                       type:
-                        provider === 'Flixhq' || provider === 'Loklok'
+                        provider === 'Flixhq' || provider === 'Loklok' || provider === 'Bilibili'
                           ? 'vtt'
                           : provider === 'KissKh'
                           ? 'srt'
@@ -457,14 +509,13 @@ const AnimeEpisodeWatch = () => {
                         },
                       },
                     ],
-                    type: provider === 'Bilibili' ? 'dash' : 'm3u8',
                     customType:
                       provider === 'Bilibili'
                         ? {
                             mpd: async (video: HTMLMediaElement, url: string) => {
                               const { default: dashjs } = await import('dashjs');
                               const player = dashjs.MediaPlayer().create();
-                              player.initialize(video, url, true);
+                              player.initialize(video, url, false);
                             },
                           }
                         : {

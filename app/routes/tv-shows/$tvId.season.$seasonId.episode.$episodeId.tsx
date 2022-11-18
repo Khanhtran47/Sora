@@ -2,7 +2,7 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, Suspense, useMemo } from 'react';
 import { MetaFunction, LoaderFunction, json } from '@remix-run/node';
 import {
   useCatch,
@@ -494,22 +494,51 @@ const EpisodeWatch = () => {
   const navigate = useNavigate();
   let hls: Hls | null = null;
   const [playNextEpisode] = useLocalStorage('playNextEpisode', true);
-  const subtitleSelector = subtitles?.map(({ lang, url }: { lang: string; url: string }) => ({
-    html: lang.toString(),
-    url: url.toString(),
-    ...(provider === 'Flixhq' && lang === 'English' && { default: true }),
-    ...(provider === 'KissKh' && lang === 'English' && { default: true }),
-    ...(provider === 'Loklok' && lang === 'en' && { default: true }),
-  }));
-  const qualitySelector = sources?.map(
-    ({ quality, url }: { quality: number | string; url: string }) => ({
-      html: quality.toString(),
-      url: url.toString(),
-      isM3U8: true,
-      isDASH: false,
-      ...(provider === 'Flixhq' && quality === 'auto' && { default: true }),
-      ...(provider === 'Loklok' && Number(quality) === 720 && { default: true }),
-    }),
+  const qualitySelector = useMemo<
+    | {
+        default?: boolean | undefined;
+        html: string;
+        url: string;
+        isM3U8: boolean;
+        isDASH: boolean;
+      }[]
+    | undefined
+  >(
+    () =>
+      sources?.map(({ quality, url }: { quality: number | string; url: string }) => ({
+        html: quality.toString(),
+        url: url.toString(),
+        isM3U8: true,
+        isDASH: false,
+        ...(provider === 'Flixhq' && quality === 'auto' && { default: true }),
+        ...(provider === 'Loklok' && Number(quality) === 720 && { default: true }),
+      })),
+    [provider, sources],
+  );
+
+  const subtitleSelector = useMemo<
+    | {
+        default?: boolean | undefined;
+        html: string;
+        url: string;
+      }[]
+    | undefined
+  >(
+    ():
+      | {
+          default?: boolean | undefined;
+          html: string;
+          url: string;
+        }[]
+      | undefined =>
+      subtitles?.map(({ lang, url }: { lang: string; url: string }) => ({
+        html: lang.toString(),
+        url: url.toString(),
+        ...(provider === 'Flixhq' && lang === 'English' && { default: true }),
+        ...(provider === 'KissKh' && lang === 'English' && { default: true }),
+        ...(provider === 'Loklok' && lang.includes('en') && { default: true }),
+      })),
+    [provider, subtitles],
   );
 
   useEffect(

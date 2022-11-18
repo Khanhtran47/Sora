@@ -437,7 +437,12 @@ const Overview = () => {
                             options={{
                               contentType: MimeType.WEBP,
                             }}
-                            containerCss={{ margin: 0, minWidth: '60px', flexBasis: '60px' }}
+                            containerCss={{
+                              margin: 0,
+                              minWidth: '60px',
+                              flexBasis: '60px',
+                              borderRadius: '$lg',
+                            }}
                             responsive={[
                               {
                                 size: {
@@ -451,6 +456,7 @@ const Overview = () => {
                           <Avatar
                             icon={<PhotoIcon width={48} height={48} />}
                             pointer
+                            squared
                             css={{
                               minWidth: '60px !important',
                               minHeight: '80px !important',
@@ -505,7 +511,12 @@ const Overview = () => {
                             options={{
                               contentType: MimeType.WEBP,
                             }}
-                            containerCss={{ margin: 0, minWidth: '60px', flexBasis: '60px' }}
+                            containerCss={{
+                              margin: 0,
+                              minWidth: '60px',
+                              flexBasis: '60px',
+                              borderRadius: '$lg',
+                            }}
                             responsive={[
                               {
                                 size: {
@@ -519,6 +530,7 @@ const Overview = () => {
                           <Avatar
                             icon={<PhotoIcon width={48} height={48} />}
                             pointer
+                            squared
                             css={{
                               minWidth: '60px !important',
                               minHeight: '80px !important',

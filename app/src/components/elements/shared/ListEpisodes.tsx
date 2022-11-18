@@ -150,7 +150,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                               options={{
                                 contentType: MimeType.WEBP,
                               }}
-                              containerCss={{ margin: 0, minWidth: '227px' }}
+                              containerCss={{ margin: 0, minWidth: '227px', borderRadius: '$lg' }}
                               responsive={[
                                 {
                                   size: {
@@ -192,7 +192,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                               options={{
                                 contentType: MimeType.WEBP,
                               }}
-                              containerCss={{ margin: 0, minWidth: '227px' }}
+                              containerCss={{ margin: 0, minWidth: '227px', borderRadius: '$lg' }}
                               responsive={[
                                 {
                                   size: {
