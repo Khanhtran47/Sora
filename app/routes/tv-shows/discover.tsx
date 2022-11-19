@@ -18,6 +18,9 @@ import MediaList from '~/src/components/media/MediaList';
 type LoaderData = {
   shows: Awaited<ReturnType<typeof getListTvShows>>;
   withGenres?: string;
+  withOriginalLanguage?: string;
+  withStatus?: string;
+  withType?: string;
   sortBy?: string;
 };
 
@@ -75,6 +78,9 @@ export const loader: LoaderFunction = async ({ request }) => {
       withType,
     ),
     withGenres,
+    withOriginalLanguage,
+    withStatus,
+    withType,
     sortBy,
   });
 };
@@ -88,7 +94,8 @@ export const handle = {
 };
 
 const ListTvShows = () => {
-  const { shows, withGenres, sortBy } = useLoaderData<LoaderData>();
+  const { shows, withGenres, withOriginalLanguage, withStatus, withType, sortBy } =
+    useLoaderData<LoaderData>();
   const rootData:
     | {
         user?: User;
@@ -107,6 +114,9 @@ const ListTvShows = () => {
     let url = `?page=${page}`;
 
     if (withGenres) url += `&with_genres=${withGenres}`;
+    if (withOriginalLanguage) url += `&with_original_language=${withOriginalLanguage}`;
+    if (withStatus) url += `&with_status=${withStatus}`;
+    if (withType) url += `&with_type=${withType}`;
     if (sortBy) url += `&sort_by=${sortBy}`;
 
     navigate(url);

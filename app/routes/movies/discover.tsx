@@ -18,6 +18,7 @@ import MediaList from '~/src/components/media/MediaList';
 type LoaderData = {
   movies: Awaited<ReturnType<typeof getListMovies>>;
   withGenres?: string;
+  withOriginalLanguage?: string;
   sortBy?: string;
 };
 
@@ -61,6 +62,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       Number(voteCountGte),
     ),
     withGenres,
+    withOriginalLanguage,
     sortBy,
   });
 };
@@ -74,7 +76,7 @@ export const handle = {
 };
 
 const ListMovies = () => {
-  const { movies, withGenres, sortBy } = useLoaderData<LoaderData>();
+  const { movies, withGenres, withOriginalLanguage, sortBy } = useLoaderData<LoaderData>();
   const rootData:
     | {
         user?: User;
@@ -93,6 +95,7 @@ const ListMovies = () => {
     let url = `?page=${page}`;
 
     if (withGenres) url += `&with_genres=${withGenres}`;
+    if (withOriginalLanguage) url += `&with_original_language=${withOriginalLanguage}`;
     if (sortBy) url += `&sort_by=${sortBy}`;
 
     navigate(url);
