@@ -8,9 +8,11 @@ import { useRouteData } from 'remix-utils';
 import type { User } from '@supabase/supabase-js';
 
 import { authenticate } from '~/services/supabase';
-import { getListMovies, getListGenre, getListDiscover } from '~/services/tmdb/tmdb.server';
+import { getListMovies, getListDiscover } from '~/services/tmdb/tmdb.server';
+import { ILanguage } from '~/services/tmdb/tmdb.types';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import i18next from '~/i18n/i18next.server';
+
 import MediaList from '~/src/components/media/MediaList';
 
 type LoaderData = {
@@ -37,17 +39,27 @@ export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page')) || undefined;
   if (page && (page < 1 || page > 1000)) page = 1;
-  const genres = await getListGenre('movie', locale);
 
   const withGenres = url.searchParams.get('with_genres') || undefined;
   let sortBy = url.searchParams.get('sort_by') || undefined;
   if (sortBy && !sortBy.includes('.')) sortBy += '.desc';
+  const voteCountGte = url.searchParams.get('vote_count.gte') || 300;
+  const withOriginalLanguage = url.searchParams.get('with_original_language') || undefined;
 
   return json<LoaderData>({
-    movies:
-      sortBy || genres
-        ? await getListDiscover('movie', withGenres, sortBy, locale, page)
-        : await getListMovies('popular', locale, page),
+    movies: await getListDiscover(
+      'movie',
+      withGenres,
+      sortBy,
+      locale,
+      page,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      withOriginalLanguage,
+      Number(voteCountGte),
+    ),
     withGenres,
     sortBy,
   });
@@ -67,6 +79,7 @@ const ListMovies = () => {
     | {
         user?: User;
         locale: string;
+        languages: ILanguage[];
         genresMovie: { [id: string]: string };
         genresTv: { [id: string]: string };
       }
@@ -115,6 +128,7 @@ const ListMovies = () => {
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
             mediaType="movie"
+            languages={rootData?.languages}
           />
         )}
         <Pagination

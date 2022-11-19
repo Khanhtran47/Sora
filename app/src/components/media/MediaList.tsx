@@ -3,7 +3,7 @@ import { Button, Row, Spacer } from '@nextui-org/react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { IMedia } from '~/services/tmdb/tmdb.types';
+import { IMedia, ILanguage } from '~/services/tmdb/tmdb.types';
 
 import ChevronRightIcon from '~/src/assets/icons/ChevronRightIcon.js';
 import ChevronLeftIcon from '~/src/assets/icons/ChevronLeftIcon.js';
@@ -36,6 +36,7 @@ interface IMediaListProps {
   coverItem?: { id: number; name: string; backdropPath: string }[];
   virtual?: boolean;
   itemsType?: 'movie' | 'tv';
+  languages?: ILanguage[];
 }
 
 const MediaList = (props: IMediaListProps) => {
@@ -54,6 +55,7 @@ const MediaList = (props: IMediaListProps) => {
     coverItem,
     virtual,
     itemsType,
+    languages,
   } = props;
   let { listType } = props;
 
@@ -204,6 +206,7 @@ const MediaList = (props: IMediaListProps) => {
           genres={mediaType === 'movie' ? genresMovie : genresTv}
           listType={displayType}
           mediaType={mediaType}
+          languages={languages}
         />
       )}
       {list}

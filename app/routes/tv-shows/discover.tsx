@@ -8,10 +8,12 @@ import { useRouteData } from 'remix-utils';
 import type { User } from '@supabase/supabase-js';
 
 import { authenticate } from '~/services/supabase';
-import { getListTvShows, getListGenre, getListDiscover } from '~/services/tmdb/tmdb.server';
-import MediaList from '~/src/components/media/MediaList';
+import { getListTvShows, getListDiscover } from '~/services/tmdb/tmdb.server';
+import { ILanguage } from '~/services/tmdb/tmdb.types';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import i18next from '~/i18n/i18next.server';
+
+import MediaList from '~/src/components/media/MediaList';
 
 type LoaderData = {
   shows: Awaited<ReturnType<typeof getListTvShows>>;
@@ -36,18 +38,42 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page')) || undefined;
-  const genres = await getListGenre('tv', locale);
   if (page && (page < 1 || page > 1000)) page = 1;
 
   const withGenres = url.searchParams.get('with_genres') || undefined;
   let sortBy = url.searchParams.get('sort_by') || undefined;
   if (sortBy && !sortBy.includes('.')) sortBy += sortBy === 'original_title' ? '.asc' : '.desc';
+  const voteCountGte = url.searchParams.get('vote_count.gte') || 300;
+  const withOriginalLanguage = url.searchParams.get('with_original_language') || undefined;
+  const withStatus = url.searchParams.get('with_status') || undefined;
+  const withType = url.searchParams.get('with_type') || undefined;
 
   return json<LoaderData>({
-    shows:
-      sortBy || genres
-        ? await getListDiscover('tv', withGenres, sortBy, locale, page)
-        : await getListTvShows('on_the_air', locale, page),
+    shows: await getListDiscover(
+      'tv',
+      withGenres,
+      sortBy,
+      locale,
+      page,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      withOriginalLanguage,
+      Number(voteCountGte),
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      withStatus,
+      withType,
+    ),
     withGenres,
     sortBy,
   });
@@ -67,6 +93,7 @@ const ListTvShows = () => {
     | {
         user?: User;
         locale: string;
+        languages: ILanguage[];
         genresMovie: { [id: string]: string };
         genresTv: { [id: string]: string };
       }
@@ -114,6 +141,7 @@ const ListTvShows = () => {
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
             mediaType="tv"
+            languages={rootData?.languages}
           />
         )}
         <Pagination
