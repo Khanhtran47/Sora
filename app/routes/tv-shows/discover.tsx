@@ -22,6 +22,8 @@ type LoaderData = {
   withStatus?: string;
   withType?: string;
   sortBy?: string;
+  firstAirDateGte?: string;
+  firstAirDateLte?: string;
 };
 
 export const meta: MetaFunction = () => ({
@@ -50,6 +52,8 @@ export const loader: LoaderFunction = async ({ request }) => {
   const withOriginalLanguage = url.searchParams.get('with_original_language') || undefined;
   const withStatus = url.searchParams.get('with_status') || undefined;
   const withType = url.searchParams.get('with_type') || undefined;
+  const firstAirDateGte = url.searchParams.get('date.gte') || undefined;
+  const firstAirDateLte = url.searchParams.get('date.lte') || undefined;
 
   return json<LoaderData>({
     shows: await getListDiscover(
@@ -60,8 +64,8 @@ export const loader: LoaderFunction = async ({ request }) => {
       page,
       undefined,
       undefined,
-      undefined,
-      undefined,
+      firstAirDateGte,
+      firstAirDateLte,
       withOriginalLanguage,
       Number(voteCountGte),
       undefined,
@@ -82,6 +86,8 @@ export const loader: LoaderFunction = async ({ request }) => {
     withStatus,
     withType,
     sortBy,
+    firstAirDateGte,
+    firstAirDateLte,
   });
 };
 
@@ -94,8 +100,16 @@ export const handle = {
 };
 
 const ListTvShows = () => {
-  const { shows, withGenres, withOriginalLanguage, withStatus, withType, sortBy } =
-    useLoaderData<LoaderData>();
+  const {
+    shows,
+    withGenres,
+    withOriginalLanguage,
+    withStatus,
+    withType,
+    sortBy,
+    firstAirDateGte,
+    firstAirDateLte,
+  } = useLoaderData<LoaderData>();
   const rootData:
     | {
         user?: User;
@@ -118,6 +132,8 @@ const ListTvShows = () => {
     if (withStatus) url += `&with_status=${withStatus}`;
     if (withType) url += `&with_type=${withType}`;
     if (sortBy) url += `&sort_by=${sortBy}`;
+    if (firstAirDateGte) url += `&date.gte=${firstAirDateGte}`;
+    if (firstAirDateLte) url += `&date.lte=${firstAirDateLte}`;
 
     navigate(url);
   };

@@ -19,6 +19,8 @@ type LoaderData = {
   movies: Awaited<ReturnType<typeof getListMovies>>;
   withGenres?: string;
   withOriginalLanguage?: string;
+  releaseDateGte?: string;
+  releaseDateLte?: string;
   sortBy?: string;
 };
 
@@ -46,6 +48,8 @@ export const loader: LoaderFunction = async ({ request }) => {
   if (sortBy && !sortBy.includes('.')) sortBy += '.desc';
   const voteCountGte = url.searchParams.get('vote_count.gte') || 300;
   const withOriginalLanguage = url.searchParams.get('with_original_language') || undefined;
+  const releaseDateGte = url.searchParams.get('date.gte') || undefined;
+  const releaseDateLte = url.searchParams.get('date.lte') || undefined;
 
   return json<LoaderData>({
     movies: await getListDiscover(
@@ -54,8 +58,8 @@ export const loader: LoaderFunction = async ({ request }) => {
       sortBy,
       locale,
       page,
-      undefined,
-      undefined,
+      releaseDateGte,
+      releaseDateLte,
       undefined,
       undefined,
       withOriginalLanguage,
@@ -63,6 +67,8 @@ export const loader: LoaderFunction = async ({ request }) => {
     ),
     withGenres,
     withOriginalLanguage,
+    releaseDateGte,
+    releaseDateLte,
     sortBy,
   });
 };
@@ -76,7 +82,8 @@ export const handle = {
 };
 
 const ListMovies = () => {
-  const { movies, withGenres, withOriginalLanguage, sortBy } = useLoaderData<LoaderData>();
+  const { movies, withGenres, withOriginalLanguage, releaseDateGte, releaseDateLte, sortBy } =
+    useLoaderData<LoaderData>();
   const rootData:
     | {
         user?: User;
@@ -96,6 +103,8 @@ const ListMovies = () => {
 
     if (withGenres) url += `&with_genres=${withGenres}`;
     if (withOriginalLanguage) url += `&with_original_language=${withOriginalLanguage}`;
+    if (releaseDateGte) url += `&date.gte=${releaseDateGte}`;
+    if (releaseDateLte) url += `&date.lte=${releaseDateLte}`;
     if (sortBy) url += `&sort_by=${sortBy}`;
 
     navigate(url);

@@ -2,11 +2,13 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react';
-import { Row, Grid, Button, Dropdown } from '@nextui-org/react';
+import { Row, Grid, Button, Dropdown, Input, useInput, Tooltip } from '@nextui-org/react';
 import { useLocation, useNavigate, Form } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 
 import { ILanguage } from '~/services/tmdb/tmdb.types';
+
+import { sortMovieItems, sortTvItems, tvStatus, tvType } from '~/src/constants/filterItems';
 
 import { H6 } from '~/src/components/styles/Text.styles';
 
@@ -17,26 +19,6 @@ interface IFilterProps {
   mediaType?: 'movie' | 'tv';
   languages?: ILanguage[];
 }
-
-const sortMovieItems = ['popularity', 'release_date', 'original_title', 'vote_average'];
-const sortTvItems = ['popularity', 'first_air_date', 'vote_average'];
-const tvStatus: { [id: string]: string } = {
-  0: 'Returning Series',
-  1: 'Planned',
-  2: 'In Production',
-  3: 'Ended',
-  4: 'Canceled',
-  5: 'Pilot',
-};
-const tvType: { [id: string]: string } = {
-  0: 'Documentary',
-  1: 'News',
-  2: 'Miniseries',
-  3: 'Reality',
-  4: 'Scripted',
-  5: 'Talk Show',
-  6: 'Video',
-};
 
 const Filter = (props: IFilterProps) => {
   const { onChange, genres, listType, mediaType, languages } = props;
@@ -67,6 +49,8 @@ const Filter = (props: IFilterProps) => {
   const preTypeSet = !preType ? new Set(['All']) : new Set(['All', ...preType.split(',')]);
   const preSortSet = !preSort ? new Set(['popularity']) : new Set([preSort.split('.')[0]]);
 
+  const { value: releaseDateFrom, bindings: releaseDateFromBindings } = useInput('');
+  const { value: releaseDateTo, bindings: releaseDateToBindings } = useInput('');
   const [genre, setGenre] = React.useState(preGenresSet);
   const [lang, setLanguage] = React.useState(preLanguagesSet);
   const [status, setStatus] = React.useState(preStatusSet);
@@ -111,9 +95,23 @@ const Filter = (props: IFilterProps) => {
   const selectedSort = React.useMemo(() => t(Array.from(sort)[0]), [sort, t]);
 
   const setQueryHandler = React.useCallback(
-    (_genre = genre, _lang = lang, _status = status, _type = type, _sort = sort) => {
+    (
+      _releaseDateFrom = releaseDateFrom,
+      _releaseDateTo = releaseDateTo,
+      _genre = genre,
+      _lang = lang,
+      _status = status,
+      _type = type,
+      _sort = sort,
+    ) => {
       let newQuery = '';
       const params = new URLSearchParams();
+      if (_releaseDateFrom) {
+        params.append('date.gte', _releaseDateFrom);
+      }
+      if (_releaseDateTo) {
+        params.append('date.lte', _releaseDateTo);
+      }
       if (_genre.size > 1) {
         params.append('with_genres', Array.from(_genre).slice(1).join(','));
       }
@@ -134,7 +132,7 @@ const Filter = (props: IFilterProps) => {
 
       setQuery(newQuery);
     },
-    [genre, lang, status, type, sort, mediaType],
+    [releaseDateFrom, releaseDateTo, genre, lang, status, type, sort, mediaType],
   );
 
   const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
@@ -143,8 +141,8 @@ const Filter = (props: IFilterProps) => {
   };
 
   React.useEffect(
-    () => setQueryHandler(genre, lang, status, type, sort),
-    [genre, lang, status, type, sort, setQueryHandler],
+    () => setQueryHandler(releaseDateFrom, releaseDateTo, genre, lang, status, type, sort),
+    [releaseDateFrom, releaseDateTo, genre, lang, status, type, sort, setQueryHandler],
   );
 
   return (
@@ -156,6 +154,7 @@ const Filter = (props: IFilterProps) => {
       alignItems="center"
       css={{
         padding: '$xs',
+        marginBottom: '$6',
         '@md': {
           padding: '$md',
         },
@@ -164,9 +163,35 @@ const Filter = (props: IFilterProps) => {
     >
       <Grid>
         <Row justify="center">
+          <H6 h6> {t('release-dates')} </H6>
+        </Row>
+        <Row css={{ marginTop: '6px' }}>
+          <Input
+            {...releaseDateFromBindings}
+            clearable
+            bordered
+            color="primary"
+            fullWidth
+            helperText={t('from')}
+            type="date"
+            css={{ marginRight: '1rem' }}
+          />
+          <Input
+            {...releaseDateToBindings}
+            clearable
+            bordered
+            color="primary"
+            fullWidth
+            helperText={t('to')}
+            type="date"
+          />
+        </Row>
+      </Grid>
+      <Grid>
+        <Row justify="center">
           <H6 h6> {t('genre')} </H6>
         </Row>
-        <Row css={{ margin: '6px' }}>
+        <Row css={{ marginTop: '6px' }}>
           {genres && (
             <Dropdown>
               <Dropdown.Button css={{ tt: 'capitalize' }}>{selectedGenre}</Dropdown.Button>
@@ -189,7 +214,7 @@ const Filter = (props: IFilterProps) => {
         <Row justify="center">
           <H6 h6> {t('language')} </H6>
         </Row>
-        <Row css={{ margin: '6px' }}>
+        <Row css={{ marginTop: '6px' }}>
           {languageItems && (
             <Dropdown>
               <Dropdown.Button css={{ tt: 'capitalize' }}>{selectedLanguage}</Dropdown.Button>
@@ -214,7 +239,7 @@ const Filter = (props: IFilterProps) => {
             <Row justify="center">
               <H6 h6> {t('status')} </H6>
             </Row>
-            <Row css={{ margin: '6px' }}>
+            <Row css={{ marginTop: '6px' }}>
               {tvStatus && (
                 <Dropdown>
                   <Dropdown.Button css={{ tt: 'capitalize' }}>{selectedStatus}</Dropdown.Button>
@@ -237,7 +262,7 @@ const Filter = (props: IFilterProps) => {
             <Row justify="center">
               <H6 h6> {t('type')} </H6>
             </Row>
-            <Row css={{ margin: '6px' }}>
+            <Row css={{ marginTop: '6px' }}>
               {tvType && (
                 <Dropdown>
                   <Dropdown.Button css={{ tt: 'capitalize' }}>{selectedType}</Dropdown.Button>
@@ -262,7 +287,7 @@ const Filter = (props: IFilterProps) => {
         <Row justify="center">
           <H6 h6> {t('sortBy')} </H6>
         </Row>
-        <Row css={{ margin: '6px' }}>
+        <Row css={{ marginTop: '6px' }}>
           <Dropdown>
             <Dropdown.Button css={{ tt: 'capitalize' }}>{selectedSort}</Dropdown.Button>
             <Dropdown.Menu
@@ -283,7 +308,7 @@ const Filter = (props: IFilterProps) => {
         <Row justify="center">
           <H6 h6> {t('discover')} </H6>
         </Row>
-        <Row css={{ margin: '6px' }}>
+        <Row css={{ marginTop: '6px' }}>
           <Button auto type="submit">
             {t('letsGo')}
           </Button>
@@ -293,8 +318,8 @@ const Filter = (props: IFilterProps) => {
         <Row justify="center">
           <H6 h6> {t('listType')} </H6>
         </Row>
-        <Row>
-          <Button.Group>
+        <Row css={{ marginTop: '6px' }}>
+          <Button.Group css={{ margin: 0 }}>
             <Button
               type="button"
               onClick={() => onChange('grid')}
