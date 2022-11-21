@@ -8,14 +8,23 @@ import { useRouteData } from 'remix-utils';
 import type { User } from '@supabase/supabase-js';
 
 import { authenticate } from '~/services/supabase';
-import { getListMovies, getListGenre, getListDiscover } from '~/services/tmdb/tmdb.server';
+import { getListMovies, getListDiscover } from '~/services/tmdb/tmdb.server';
+import { ILanguage } from '~/services/tmdb/tmdb.types';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import i18next from '~/i18n/i18next.server';
+
 import MediaList from '~/src/components/media/MediaList';
 
 type LoaderData = {
   movies: Awaited<ReturnType<typeof getListMovies>>;
   withGenres?: string;
+  withOriginalLanguage?: string;
+  releaseDateGte?: string;
+  releaseDateLte?: string;
+  voteAverageGte?: string;
+  voteAverageLte?: string;
+  withRuntimeGte?: string;
+  withRuntimeLte?: string;
   sortBy?: string;
 };
 
@@ -37,18 +46,53 @@ export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page')) || undefined;
   if (page && (page < 1 || page > 1000)) page = 1;
-  const genres = await getListGenre('movie', locale);
 
   const withGenres = url.searchParams.get('with_genres') || undefined;
   let sortBy = url.searchParams.get('sort_by') || undefined;
   if (sortBy && !sortBy.includes('.')) sortBy += '.desc';
+  const voteCountGte = url.searchParams.get('vote_count.gte') || 300;
+  const withOriginalLanguage = url.searchParams.get('with_original_language') || undefined;
+  const releaseDateGte = url.searchParams.get('date.gte') || undefined;
+  const releaseDateLte = url.searchParams.get('date.lte') || undefined;
+  const voteAverageGte = url.searchParams.get('vote_average.gte') || undefined;
+  const voteAverageLte = url.searchParams.get('vote_average.lte') || undefined;
+  const withRuntimeGte = url.searchParams.get('with_runtime.gte') || undefined;
+  const withRuntimeLte = url.searchParams.get('with_runtime.lte') || undefined;
 
   return json<LoaderData>({
-    movies:
-      sortBy || genres
-        ? await getListDiscover('movie', withGenres, sortBy, locale, page)
-        : await getListMovies('popular', locale, page),
+    movies: await getListDiscover(
+      'movie',
+      withGenres,
+      sortBy,
+      locale,
+      page,
+      releaseDateGte,
+      releaseDateLte,
+      undefined,
+      undefined,
+      withOriginalLanguage,
+      Number(voteCountGte),
+      voteAverageGte ? Number(voteAverageGte) : undefined,
+      voteAverageLte ? Number(voteAverageLte) : undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      withRuntimeGte ? Number(withRuntimeGte) : undefined,
+      withRuntimeLte ? Number(withRuntimeLte) : undefined,
+      undefined,
+      undefined,
+    ),
     withGenres,
+    withOriginalLanguage,
+    releaseDateGte,
+    releaseDateLte,
+    voteAverageGte,
+    voteAverageLte,
+    withRuntimeGte,
+    withRuntimeLte,
     sortBy,
   });
 };
@@ -62,11 +106,23 @@ export const handle = {
 };
 
 const ListMovies = () => {
-  const { movies, withGenres, sortBy } = useLoaderData<LoaderData>();
+  const {
+    movies,
+    withGenres,
+    withOriginalLanguage,
+    releaseDateGte,
+    releaseDateLte,
+    sortBy,
+    voteAverageGte,
+    voteAverageLte,
+    withRuntimeGte,
+    withRuntimeLte,
+  } = useLoaderData<LoaderData>();
   const rootData:
     | {
         user?: User;
         locale: string;
+        languages: ILanguage[];
         genresMovie: { [id: string]: string };
         genresTv: { [id: string]: string };
       }
@@ -80,6 +136,13 @@ const ListMovies = () => {
     let url = `?page=${page}`;
 
     if (withGenres) url += `&with_genres=${withGenres}`;
+    if (withOriginalLanguage) url += `&with_original_language=${withOriginalLanguage}`;
+    if (releaseDateGte) url += `&date.gte=${releaseDateGte}`;
+    if (releaseDateLte) url += `&date.lte=${releaseDateLte}`;
+    if (voteAverageGte) url += `&vote_average.gte=${voteAverageGte}`;
+    if (voteAverageLte) url += `&vote_average.lte=${voteAverageLte}`;
+    if (withRuntimeGte) url += `&with_runtime.gte=${withRuntimeGte}`;
+    if (withRuntimeLte) url += `&with_runtime.lte=${withRuntimeLte}`;
     if (sortBy) url += `&sort_by=${sortBy}`;
 
     navigate(url);
@@ -109,12 +172,14 @@ const ListMovies = () => {
         {movies && movies.items && movies.items.length > 0 && (
           <MediaList
             listType="grid"
+            showListTypeChangeButton
             items={movies.items}
             listName={t('discoverMovies')}
-            showFilter
+            showFilterButton
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
             mediaType="movie"
+            languages={rootData?.languages}
           />
         )}
         <Pagination

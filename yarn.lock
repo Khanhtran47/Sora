@@ -1948,6 +1948,15 @@
     "@react-aria/utils" "^3.13.3"
     "@react-types/shared" "^3.14.1"
 
+"@react-aria/interactions@^3.13.0":
+  version "3.13.0"
+  resolved "https://registry.yarnpkg.com/@react-aria/interactions/-/interactions-3.13.0.tgz#897ee2b4a7751bcf22c716ceccfc1321f427a8f2"
+  integrity sha512-gbZL+qs+6FPitR/abAramth4lqz/drEzXwzIDF6p6WyajF805mjyAgZin1/3mQygSE5BwJNDU7jMUSGRvgFyTw==
+  dependencies:
+    "@babel/runtime" "^7.6.2"
+    "@react-aria/utils" "^3.14.1"
+    "@react-types/shared" "^3.16.0"
+
 "@react-aria/label@3.4.0":
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/@react-aria/label/-/label-3.4.0.tgz#81bf096bd28990d54e6db1ca9294391b7ed0d064"
@@ -2087,6 +2096,13 @@
   dependencies:
     "@babel/runtime" "^7.6.2"
 
+"@react-aria/ssr@^3.4.0":
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/@react-aria/ssr/-/ssr-3.4.0.tgz#a2b9a170214f56e41d3c4c933d0d8fcffa07a12a"
+  integrity sha512-qzuGk14/fUyUAoW/EBwgFcuMkVNXJVGlezTgZ1HovpCZ+p9844E7MUFHE7CuzFzPEIkVeqhBNIoIu+VJJ8YCOA==
+  dependencies:
+    "@babel/runtime" "^7.6.2"
+
 "@react-aria/table@3.4.0":
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/@react-aria/table/-/table-3.4.0.tgz#e4a71139bc96285625d2d8de2d6adc1103e66305"
@@ -2141,6 +2157,17 @@
     "@react-aria/ssr" "^3.3.0"
     "@react-stately/utils" "^3.5.1"
     "@react-types/shared" "^3.14.1"
+    clsx "^1.1.1"
+
+"@react-aria/utils@^3.14.1":
+  version "3.14.1"
+  resolved "https://registry.yarnpkg.com/@react-aria/utils/-/utils-3.14.1.tgz#36aeb077f758f1f325951b1e3376a905217edd84"
+  integrity sha512-+ynP0YlxN02MHVEBaeuTrIhBsfBYpfJn36pZm2t7ZEFbafH8DPaMGZ70ffYZXAESkWzRULXL3e79DheWOFI1qA==
+  dependencies:
+    "@babel/runtime" "^7.6.2"
+    "@react-aria/ssr" "^3.4.0"
+    "@react-stately/utils" "^3.5.1"
+    "@react-types/shared" "^3.16.0"
     clsx "^1.1.1"
 
 "@react-aria/visually-hidden@3.4.0", "@react-aria/visually-hidden@^3.4.0":
@@ -2514,6 +2541,11 @@
   version "3.14.1"
   resolved "https://registry.yarnpkg.com/@react-types/shared/-/shared-3.14.1.tgz#8fe25f729426e8043054e442eb5392364200e028"
   integrity sha512-yPPgVRWWanXqbdxFTgJmVwx0JlcnEK3dqkKDIbVk6mxAHvEESI9+oDnHvO8IMHqF+GbrTCzVtAs0zwhYI/uHJA==
+
+"@react-types/shared@^3.16.0":
+  version "3.16.0"
+  resolved "https://registry.yarnpkg.com/@react-types/shared/-/shared-3.16.0.tgz#cab7bf0376969d1773480ecb2d6da5aa91391db5"
+  integrity sha512-IQgU4oAEvMwylEvaTsr2XB1G/mAoMe1JFYLD6G78v++oAR9l8o9MQxZ0YSeANDkqTamb2gKezGoT1RxvSKjVxw==
 
 "@react-types/switch@^3.2.3":
   version "3.2.3"

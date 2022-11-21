@@ -98,6 +98,7 @@ const Trending = () => {
         {todayTrending && todayTrending.items && todayTrending.items.length > 0 && (
           <MediaList
             listType="grid"
+            showListTypeChangeButton
             items={todayTrending?.items}
             listName={t('todayTrending')}
             genresMovie={rootData?.genresMovie}

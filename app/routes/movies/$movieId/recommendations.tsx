@@ -84,6 +84,7 @@ const RecommendationsPage = () => {
         <>
           <MediaList
             listType="grid"
+            showListTypeChangeButton
             items={recommendations.items}
             listName="Recommendations"
             genresMovie={rootData?.genresMovie}

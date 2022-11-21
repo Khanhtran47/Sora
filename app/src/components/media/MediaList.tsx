@@ -1,12 +1,16 @@
-import * as React from 'react';
-import { Button, Row, Spacer } from '@nextui-org/react';
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
+import { Button, Row, Spacer, Loading } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
+import { ClientOnly } from 'remix-utils';
+import { AnimatePresence, motion } from 'framer-motion';
 
-import { IMedia } from '~/services/tmdb/tmdb.types';
+import { IMedia, ILanguage } from '~/services/tmdb/tmdb.types';
 
+import FilterIcon from '~/src/assets/icons/FilterIcon.js';
 import ChevronRightIcon from '~/src/assets/icons/ChevronRightIcon.js';
 import ChevronLeftIcon from '~/src/assets/icons/ChevronLeftIcon.js';
+import ViewGridIcon from '~/src/assets/icons/ViewGridIcon.js';
+import ViewTableIcon from '~/src/assets/icons/ViewTableIcon.js';
 
 import { MediaListTable, MediaListCard, MediaListBanner, MediaListGrid } from './list';
 import Filter from '../elements/filter/Filter';
@@ -24,7 +28,8 @@ interface IMediaListProps {
   listType?: 'table' | 'slider-card' | 'slider-banner' | 'grid';
   listName?: string | (() => never);
   items?: IMedia[];
-  showFilter?: boolean;
+  showFilterButton?: boolean;
+  showListTypeChangeButton?: boolean;
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
   mediaType?: 'movie' | 'tv';
@@ -36,13 +41,15 @@ interface IMediaListProps {
   coverItem?: { id: number; name: string; backdropPath: string }[];
   virtual?: boolean;
   itemsType?: 'movie' | 'tv';
+  languages?: ILanguage[];
 }
 
 const MediaList = (props: IMediaListProps) => {
   const {
     listName,
     items,
-    showFilter,
+    showFilterButton,
+    showListTypeChangeButton,
     genresMovie,
     genresTv,
     mediaType,
@@ -54,12 +61,17 @@ const MediaList = (props: IMediaListProps) => {
     coverItem,
     virtual,
     itemsType,
+    languages,
   } = props;
   let { listType } = props;
+  let list;
+  const { t } = useTranslation();
 
-  const [prevEl, setPrevEl] = React.useState<HTMLElement | null>(null);
-  const [nextEl, setNextEl] = React.useState<HTMLElement | null>(null);
-  const [slideProgress, setSlideProgress] = React.useState<number>(0);
+  const [prevEl, setPrevEl] = useState<HTMLElement | null>(null);
+  const [nextEl, setNextEl] = useState<HTMLElement | null>(null);
+  const [slideProgress, setSlideProgress] = useState<number>(0);
+  const [displayType, setDisplayType] = useState<string>(listType as string);
+  const [showFilter, setShowFilter] = useState<boolean>(false);
 
   if (!listType && typeof window !== 'undefined') {
     listType =
@@ -67,15 +79,10 @@ const MediaList = (props: IMediaListProps) => {
       'grid';
   }
 
-  const [displayType, setDisplayType] = useState<string>(listType as string);
-  const { t } = useTranslation();
-
   const filterChangeHandler = (value: string) => {
     setDisplayType(value);
     localStorage.setItem('listType', value);
   };
-
-  let list;
 
   switch (displayType) {
     case 'grid':
@@ -124,13 +131,46 @@ const MediaList = (props: IMediaListProps) => {
           ? 'center'
           : 'start'
       }
-      css={{ width: '100%' }}
+      css={{ width: '100%', maxWidth: '1920px' }}
     >
-      {listName && (
-        <H3 h3 css={{ margin: '20px 0 20px 0' }}>
-          {listName}
-        </H3>
-      )}
+      {listName || showFilterButton || showListTypeChangeButton ? (
+        <Flex direction="row" justify="between" align="center" wrap="wrap" css={{ width: '100%' }}>
+          {listName && (
+            <H3 h3 css={{ margin: '20px 0 20px 0' }}>
+              {listName}
+            </H3>
+          )}
+          {showFilterButton || showListTypeChangeButton ? (
+            <Flex direction="row" justify="end" align="center" css={{ gap: '$5' }}>
+              {showFilterButton ? (
+                <Button
+                  auto
+                  color="primary"
+                  bordered={!showFilter}
+                  icon={<FilterIcon />}
+                  onClick={() => setShowFilter(!showFilter)}
+                />
+              ) : null}
+              {showListTypeChangeButton ? (
+                <Button.Group css={{ margin: 0 }}>
+                  <Button
+                    type="button"
+                    onClick={() => filterChangeHandler('grid')}
+                    icon={<ViewGridIcon width={40} height={40} />}
+                    {...(displayType === 'grid' ? {} : { ghost: true })}
+                  />
+                  <Button
+                    type="button"
+                    onClick={() => filterChangeHandler('table')}
+                    icon={<ViewTableIcon width={40} height={40} />}
+                    {...(displayType === 'table' ? {} : { ghost: true })}
+                  />
+                </Button.Group>
+              ) : null}
+            </Flex>
+          ) : null}
+        </Flex>
+      ) : null}
       {showMoreList && (
         <Row fluid justify="space-between" wrap="nowrap" align="center">
           <Button
@@ -198,14 +238,29 @@ const MediaList = (props: IMediaListProps) => {
           )}
         </Row>
       )}
-      {showFilter && mediaType && (
-        <Filter
-          onChange={filterChangeHandler}
-          genres={mediaType === 'movie' ? genresMovie : genresTv}
-          listType={displayType}
-          mediaType={mediaType}
-        />
-      )}
+      <AnimatePresence>
+        {showFilter && mediaType && (
+          <ClientOnly fallback={<Loading type="default" />}>
+            {() => (
+              <Suspense fallback={<Loading type="default" />}>
+                <motion.div
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.2 }}
+                  style={{ width: '100%' }}
+                >
+                  <Filter
+                    genres={mediaType === 'movie' ? genresMovie : genresTv}
+                    mediaType={mediaType}
+                    languages={languages}
+                  />
+                </motion.div>
+              </Suspense>
+            )}
+          </ClientOnly>
+        )}
+      </AnimatePresence>
       {list}
     </Flex>
   );

@@ -373,4 +373,4 @@ const AnimeDetail = (props: IAnimeDetail) => {
   );
 };
 
-export default AnimeDetail;
+export default React.memo(AnimeDetail);

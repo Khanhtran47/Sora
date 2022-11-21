@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
-import { useRef, useState } from 'react';
+import { useRef, useState, memo } from 'react';
 import { useNavigate } from '@remix-run/react';
 import { Card, Col, Row, Button, Spacer, Avatar } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
@@ -495,4 +495,4 @@ const MediaDetail = (props: IMediaDetail) => {
   );
 };
 
-export default MediaDetail;
+export default memo(MediaDetail);

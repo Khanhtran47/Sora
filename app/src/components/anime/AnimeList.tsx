@@ -23,7 +23,7 @@ interface IAnimeListProps {
   listType?: 'table' | 'slider-card' | 'slider-banner' | 'grid';
   listName?: string | (() => never);
   items: IAnimeResult[] | IAnimeEpisode[];
-  // showFilter?: boolean;
+  // showFilterButton?: boolean;
   showMoreList?: boolean;
   onClickViewMore?: () => void;
   navigationButtons?: boolean;
@@ -38,7 +38,7 @@ const AnimeList = (props: IAnimeListProps) => {
   const {
     listName,
     items,
-    // showFilter,
+    // showFilterButton,
     showMoreList,
     onClickViewMore,
     navigationButtons,
@@ -189,7 +189,7 @@ const AnimeList = (props: IAnimeListProps) => {
           )}
         </Row>
       )}
-      {/* {showFilter && mediaType && genres && (
+      {/* {showFilterButton && mediaType && genres && (
         <Filter
           onChange={filterChangeHandler}
           genres={genres}

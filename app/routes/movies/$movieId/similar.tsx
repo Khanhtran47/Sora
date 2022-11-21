@@ -84,6 +84,7 @@ const SimilarPage = () => {
         <>
           <MediaList
             listType="grid"
+            showListTypeChangeButton
             itemsType="movie"
             items={similar.items}
             listName="Similar Movies"

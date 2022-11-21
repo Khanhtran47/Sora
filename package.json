@@ -27,6 +27,7 @@
     "@radix-ui/react-select": "^1.0.0",
     "@radix-ui/react-slider": "^1.0.0",
     "@radix-ui/react-toast": "^1.0.0",
+    "@react-aria/interactions": "^3.13.0",
     "@remix-run/node": "^1.6.5",
     "@remix-run/react": "^1.6.5",
     "@remix-run/serve": "^1.6.5",

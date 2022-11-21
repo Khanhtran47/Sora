@@ -301,6 +301,24 @@ export class TMDB {
     sort_by?: string,
     language?: string,
     page?: number,
+    releaseDateGte?: string,
+    releaseDateLte?: string,
+    firstAirDateGte?: string,
+    firstAirDateLte?: string,
+    withOriginalLanguage?: string,
+    voteCountGte?: number,
+    voteAverageGte?: number,
+    voteAverageLte?: number,
+    withCast?: string,
+    withCrew?: string,
+    withPeople?: string,
+    withCompanies?: string,
+    withNetworks?: string,
+    withKeywords?: string,
+    withRuntimeGte?: number,
+    withRuntimeLte?: number,
+    withStatus?: string,
+    withType?: string,
   ) => {
     let url = `${this.API_BASE_URL}discover/${type}?api_key=${this.key}`;
 
@@ -308,7 +326,24 @@ export class TMDB {
     if (sort_by) url += `&sort_by=${sort_by}`;
     if (language) url += `&language=${language}`;
     if (page) url += `&page=${page}`;
-    url += '&vote_count.gte=300';
+    if (withOriginalLanguage) url += `&with_original_language=${withOriginalLanguage}`;
+    if (releaseDateGte) url += `&release_date.gte=${releaseDateGte}`;
+    if (releaseDateLte) url += `&release_date.lte=${releaseDateLte}`;
+    if (firstAirDateGte) url += `&first_air_date.gte=${firstAirDateGte}`;
+    if (firstAirDateLte) url += `&first_air_date.lte=${firstAirDateLte}`;
+    if (voteCountGte) url += `&vote_count.gte=${voteCountGte}`;
+    if (voteAverageGte) url += `&vote_average.gte=${voteAverageGte}`;
+    if (voteAverageLte) url += `&vote_average.lte=${voteAverageLte}`;
+    if (withCast) url += `&with_cast=${withCast}`;
+    if (withCrew) url += `&with_crew=${withCrew}`;
+    if (withPeople) url += `&with_people=${withPeople}`;
+    if (withCompanies) url += `&with_companies=${withCompanies}`;
+    if (withNetworks) url += `&with_networks=${withNetworks}`;
+    if (withKeywords) url += `&with_keywords=${withKeywords}`;
+    if (withRuntimeGte) url += `&with_runtime.gte=${withRuntimeGte}`;
+    if (withRuntimeLte) url += `&with_runtime.lte=${withRuntimeLte}`;
+    if (withStatus) url += `&with_status=${withStatus}`;
+    if (withType) url += `&with_type=${withType}`;
 
     return url;
   };
