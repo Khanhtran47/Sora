@@ -315,8 +315,8 @@ export class TMDB {
     withCompanies?: string,
     withNetworks?: string,
     withKeywords?: string,
-    withRuntimeGte?: string,
-    withRuntimeLte?: string,
+    withRuntimeGte?: number,
+    withRuntimeLte?: number,
     withStatus?: string,
     withType?: string,
   ) => {

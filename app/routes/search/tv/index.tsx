@@ -81,6 +81,7 @@ const SearchRoute = () => {
         {todayTrending && todayTrending.items && todayTrending?.items.length > 0 && (
           <MediaList
             listType="grid"
+            showListTypeChangeButton
             items={todayTrending && todayTrending.items}
             listName={t('todayTrending')}
             genresMovie={rootData?.genresMovie}

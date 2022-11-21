@@ -101,6 +101,7 @@ const SearchRoute = () => {
         {searchResults && searchResults.items && searchResults?.items.length > 0 && (
           <MediaList
             listType="grid"
+            showListTypeChangeButton
             items={searchResults.items}
             listName={listName}
             genresMovie={rootData?.genresMovie}

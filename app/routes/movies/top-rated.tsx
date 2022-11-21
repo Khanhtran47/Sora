@@ -90,6 +90,7 @@ const ListMovies = () => {
         {movies && movies.items && movies.items.length > 0 && (
           <MediaList
             listType="grid"
+            showListTypeChangeButton
             items={movies.items}
             listName={t('topRatedMovies')}
             genresMovie={rootData?.genresMovie}

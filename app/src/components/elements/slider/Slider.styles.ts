@@ -10,12 +10,12 @@ export const StyledSlider = styled(SliderPrimitive.Root, {
   width: 200,
 
   '&[data-orientation="horizontal"]': {
-    height: 20,
+    height: 40,
   },
 
   '&[data-orientation="vertical"]': {
     flexDirection: 'column',
-    width: 20,
+    width: 40,
     height: 100,
   },
 });
@@ -26,13 +26,13 @@ export const StyledTrack = styled(SliderPrimitive.Track, {
   flexGrow: 1,
   borderRadius: '9999px',
 
-  '&[data-orientation="horizontal"]': { height: 3 },
-  '&[data-orientation="vertical"]': { width: 3 },
+  '&[data-orientation="horizontal"]': { height: 10 },
+  '&[data-orientation="vertical"]': { width: 10 },
 });
 
 export const StyledRange = styled(SliderPrimitive.Range, {
   position: 'absolute',
-  backgroundColor: '$backgroundContrast',
+  background: '$gradient',
   borderRadius: '9999px',
   height: '100%',
 });
@@ -42,9 +42,10 @@ export const StyledThumb = styled(SliderPrimitive.Thumb, {
   display: 'block',
   width: 20,
   height: 20,
-  backgroundColor: '$background',
+  backgroundColor: '$primary',
   boxShadow: '$sm',
   borderRadius: 10,
-  '&:hover': { backgroundColor: '$primary' },
+  '&:hover': { backgroundColor: '$primaryLightHover', cursor: 'grab' },
+  '&:active': { backgroundColor: '$primaryLightActive' },
   '&:focus': { boxShadow: '$xs' },
 });

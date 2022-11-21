@@ -24,6 +24,10 @@ type LoaderData = {
   sortBy?: string;
   firstAirDateGte?: string;
   firstAirDateLte?: string;
+  voteAverageGte?: string;
+  voteAverageLte?: string;
+  withRuntimeGte?: string;
+  withRuntimeLte?: string;
 };
 
 export const meta: MetaFunction = () => ({
@@ -54,6 +58,10 @@ export const loader: LoaderFunction = async ({ request }) => {
   const withType = url.searchParams.get('with_type') || undefined;
   const firstAirDateGte = url.searchParams.get('date.gte') || undefined;
   const firstAirDateLte = url.searchParams.get('date.lte') || undefined;
+  const voteAverageGte = url.searchParams.get('vote_average.gte') || undefined;
+  const voteAverageLte = url.searchParams.get('vote_average.lte') || undefined;
+  const withRuntimeGte = url.searchParams.get('with_runtime.gte') || undefined;
+  const withRuntimeLte = url.searchParams.get('with_runtime.lte') || undefined;
 
   return json<LoaderData>({
     shows: await getListDiscover(
@@ -68,16 +76,16 @@ export const loader: LoaderFunction = async ({ request }) => {
       firstAirDateLte,
       withOriginalLanguage,
       Number(voteCountGte),
+      voteAverageGte ? Number(voteAverageGte) : undefined,
+      voteAverageLte ? Number(voteAverageLte) : undefined,
       undefined,
       undefined,
       undefined,
       undefined,
       undefined,
       undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
+      withRuntimeGte ? Number(withRuntimeGte) : undefined,
+      withRuntimeLte ? Number(withRuntimeLte) : undefined,
       withStatus,
       withType,
     ),
@@ -86,8 +94,12 @@ export const loader: LoaderFunction = async ({ request }) => {
     withStatus,
     withType,
     sortBy,
+    voteAverageGte,
+    voteAverageLte,
     firstAirDateGte,
     firstAirDateLte,
+    withRuntimeGte,
+    withRuntimeLte,
   });
 };
 
@@ -109,6 +121,10 @@ const ListTvShows = () => {
     sortBy,
     firstAirDateGte,
     firstAirDateLte,
+    voteAverageGte,
+    voteAverageLte,
+    withRuntimeGte,
+    withRuntimeLte,
   } = useLoaderData<LoaderData>();
   const rootData:
     | {
@@ -131,9 +147,13 @@ const ListTvShows = () => {
     if (withOriginalLanguage) url += `&with_original_language=${withOriginalLanguage}`;
     if (withStatus) url += `&with_status=${withStatus}`;
     if (withType) url += `&with_type=${withType}`;
-    if (sortBy) url += `&sort_by=${sortBy}`;
     if (firstAirDateGte) url += `&date.gte=${firstAirDateGte}`;
     if (firstAirDateLte) url += `&date.lte=${firstAirDateLte}`;
+    if (voteAverageGte) url += `&vote_average.gte=${voteAverageGte}`;
+    if (voteAverageLte) url += `&vote_average.lte=${voteAverageLte}`;
+    if (withRuntimeGte) url += `&with_runtime.gte=${withRuntimeGte}`;
+    if (withRuntimeLte) url += `&with_runtime.lte=${withRuntimeLte}`;
+    if (sortBy) url += `&sort_by=${sortBy}`;
 
     navigate(url);
   };
@@ -161,9 +181,10 @@ const ListTvShows = () => {
         {shows && shows.items && shows.items.length > 0 && (
           <MediaList
             listType="grid"
+            showListTypeChangeButton
             items={shows.items}
             listName={t('discoverTv')}
-            showFilter
+            showFilterButton
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
             mediaType="tv"

@@ -94,6 +94,7 @@ const CollectionDetail = () => {
         {detail && detail.items && detail.items.length > 0 && (
           <MediaList
             listType="grid"
+            showListTypeChangeButton
             items={detail?.items}
             listName={detail?.name}
             genresMovie={rootData?.genresMovie}

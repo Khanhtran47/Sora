@@ -21,6 +21,10 @@ type LoaderData = {
   withOriginalLanguage?: string;
   releaseDateGte?: string;
   releaseDateLte?: string;
+  voteAverageGte?: string;
+  voteAverageLte?: string;
+  withRuntimeGte?: string;
+  withRuntimeLte?: string;
   sortBy?: string;
 };
 
@@ -50,6 +54,10 @@ export const loader: LoaderFunction = async ({ request }) => {
   const withOriginalLanguage = url.searchParams.get('with_original_language') || undefined;
   const releaseDateGte = url.searchParams.get('date.gte') || undefined;
   const releaseDateLte = url.searchParams.get('date.lte') || undefined;
+  const voteAverageGte = url.searchParams.get('vote_average.gte') || undefined;
+  const voteAverageLte = url.searchParams.get('vote_average.lte') || undefined;
+  const withRuntimeGte = url.searchParams.get('with_runtime.gte') || undefined;
+  const withRuntimeLte = url.searchParams.get('with_runtime.lte') || undefined;
 
   return json<LoaderData>({
     movies: await getListDiscover(
@@ -64,11 +72,27 @@ export const loader: LoaderFunction = async ({ request }) => {
       undefined,
       withOriginalLanguage,
       Number(voteCountGte),
+      voteAverageGte ? Number(voteAverageGte) : undefined,
+      voteAverageLte ? Number(voteAverageLte) : undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      withRuntimeGte ? Number(withRuntimeGte) : undefined,
+      withRuntimeLte ? Number(withRuntimeLte) : undefined,
+      undefined,
+      undefined,
     ),
     withGenres,
     withOriginalLanguage,
     releaseDateGte,
     releaseDateLte,
+    voteAverageGte,
+    voteAverageLte,
+    withRuntimeGte,
+    withRuntimeLte,
     sortBy,
   });
 };
@@ -82,8 +106,18 @@ export const handle = {
 };
 
 const ListMovies = () => {
-  const { movies, withGenres, withOriginalLanguage, releaseDateGte, releaseDateLte, sortBy } =
-    useLoaderData<LoaderData>();
+  const {
+    movies,
+    withGenres,
+    withOriginalLanguage,
+    releaseDateGte,
+    releaseDateLte,
+    sortBy,
+    voteAverageGte,
+    voteAverageLte,
+    withRuntimeGte,
+    withRuntimeLte,
+  } = useLoaderData<LoaderData>();
   const rootData:
     | {
         user?: User;
@@ -105,6 +139,10 @@ const ListMovies = () => {
     if (withOriginalLanguage) url += `&with_original_language=${withOriginalLanguage}`;
     if (releaseDateGte) url += `&date.gte=${releaseDateGte}`;
     if (releaseDateLte) url += `&date.lte=${releaseDateLte}`;
+    if (voteAverageGte) url += `&vote_average.gte=${voteAverageGte}`;
+    if (voteAverageLte) url += `&vote_average.lte=${voteAverageLte}`;
+    if (withRuntimeGte) url += `&with_runtime.gte=${withRuntimeGte}`;
+    if (withRuntimeLte) url += `&with_runtime.lte=${withRuntimeLte}`;
     if (sortBy) url += `&sort_by=${sortBy}`;
 
     navigate(url);
@@ -134,9 +172,10 @@ const ListMovies = () => {
         {movies && movies.items && movies.items.length > 0 && (
           <MediaList
             listType="grid"
+            showListTypeChangeButton
             items={movies.items}
             listName={t('discoverMovies')}
-            showFilter
+            showFilterButton
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
             mediaType="movie"
