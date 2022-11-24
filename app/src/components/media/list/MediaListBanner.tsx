@@ -1,22 +1,25 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable arrow-body-style */
-import * as React from 'react';
-import { Grid, Button } from '@nextui-org/react';
-import { Pagination, Virtual } from 'swiper';
-import { Swiper, SwiperSlide, useSwiper } from 'swiper/react';
+import { useState } from 'react';
+import { Grid, Button, styled } from '@nextui-org/react';
+import { Virtual, Thumbs, FreeMode } from 'swiper';
+import { Swiper as SwiperReact, SwiperSlide, useSwiper } from 'swiper/react';
+import type { Swiper } from 'swiper';
 
 import { IMedia } from '~/services/tmdb/tmdb.types';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import useLocalStorage from '~/hooks/useLocalStorage';
+
 import PlayIcon from '~/src/assets/icons/PlayIcon.js';
 import StopIcon from '~/src/assets/icons/StopIcon.js';
 import ChevronRightIcon from '~/src/assets/icons/ChevronRightIcon.js';
 import ChevronLeftIcon from '~/src/assets/icons/ChevronLeftIcon.js';
+
 import MediaItem from '../item';
 
 const CustomNavigation = ({ slot }: { slot: 'container-end' }) => {
   const swiper = useSwiper();
-  const [slideProgress, setSlideProgress] = React.useState<number>(0);
+  const [slideProgress, setSlideProgress] = useState<number>(0);
   const [isPlayTrailer, setIsPlayTrailer] = useLocalStorage('playTrailer', false);
 
   swiper.on('slideChange', (e) => {
@@ -45,6 +48,7 @@ const CustomNavigation = ({ slot }: { slot: 'container-end' }) => {
           '&:hover': {
             opacity: '0.8',
           },
+          '@lgMin': { bottom: '270px' },
         }}
         aria-label="Play Trailer"
       />
@@ -66,6 +70,7 @@ const CustomNavigation = ({ slot }: { slot: 'container-end' }) => {
           '&:hover': {
             opacity: '0.8',
           },
+          '@lgMin': { bottom: '200px' },
         }}
         aria-label="Previous"
         disabled={slideProgress === 0}
@@ -88,6 +93,7 @@ const CustomNavigation = ({ slot }: { slot: 'container-end' }) => {
           '&:hover': {
             opacity: '0.8',
           },
+          '@lgMin': { bottom: '200px' },
         }}
         aria-label="Next"
         disabled={slideProgress === 1}
@@ -95,6 +101,14 @@ const CustomNavigation = ({ slot }: { slot: 'container-end' }) => {
     </div>
   );
 };
+
+const SwiperSlideStyled = styled(SwiperSlide, {
+  width: '240px',
+  opacity: 0.5,
+  '&.swiper-slide-thumb-active': {
+    opacity: 1,
+  },
+});
 
 const MediaListBanner = ({
   items,
@@ -106,6 +120,9 @@ const MediaListBanner = ({
   genresTv?: { [id: string]: string };
 }) => {
   const isSm = useMediaQuery('(max-width: 650px)');
+  const isXl = useMediaQuery('(max-width: 1400px)');
+  const [thumbsSwiper, setThumbsSwiper] = useState<Swiper | null>(null);
+
   return (
     <Grid.Container
       gap={1}
@@ -116,44 +133,69 @@ const MediaListBanner = ({
         padding: 0,
         width: '100%',
         maxWidth: '1920px',
+        position: 'relative',
       }}
     >
       {items && items?.length > 0 && (
-        <Swiper
-          modules={[Pagination, Virtual]}
-          grabCursor
-          spaceBetween={isSm ? 10 : 0}
-          slidesPerView={isSm ? 1.075 : 1}
-          pagination={
-            isSm
-              ? false
-              : {
-                  type: 'bullets',
-                  clickable: true,
-                  bulletClass: 'swiper-pagination-bullet !bg-primary !w-7 !h-7 !mt-2',
-                  renderBullet: (index, className) => {
-                    return `<span class="${className}">${index + 1}</span>`;
-                  },
-                }
-          }
-          virtual
-          style={{ width: '100%' }}
-        >
-          {items.map((item, index) => (
-            <SwiperSlide key={index} virtualIndex={index} style={{ width: '100%' }}>
-              {({ isActive }) => (
-                <MediaItem
-                  type="banner"
-                  item={item}
-                  genresMovie={genresMovie}
-                  genresTv={genresTv}
-                  active={isActive}
-                />
-              )}
-            </SwiperSlide>
-          ))}
-          {!isSm && <CustomNavigation slot="container-end" />}
-        </Swiper>
+        <>
+          <SwiperReact
+            modules={[Virtual, Thumbs, FreeMode]}
+            grabCursor
+            spaceBetween={isSm ? 10 : 0}
+            slidesPerView={isSm ? 1.075 : 1}
+            thumbs={isXl ? undefined : { swiper: thumbsSwiper }}
+            virtual
+            style={{ width: '100%' }}
+          >
+            {items.map((item, index) => (
+              <SwiperSlide key={index} virtualIndex={index} style={{ width: '100%' }}>
+                {({ isActive }) => (
+                  <MediaItem
+                    type="banner"
+                    item={item}
+                    genresMovie={genresMovie}
+                    genresTv={genresTv}
+                    active={isActive}
+                  />
+                )}
+              </SwiperSlide>
+            ))}
+            {!isSm && <CustomNavigation slot="container-end" />}
+          </SwiperReact>
+          {!isXl ? (
+            <SwiperReact
+              grabCursor
+              spaceBetween={10}
+              slidesPerView="auto"
+              freeMode
+              watchSlidesProgress
+              modules={[FreeMode, Thumbs]}
+              onSwiper={setThumbsSwiper}
+              style={{
+                position: 'absolute',
+                bottom: '15px',
+                left: '0',
+                width: '100%',
+                padding: '1rem 0.5rem',
+              }}
+            >
+              {items.map((item, index) => (
+                <SwiperSlideStyled key={index}>
+                  {({ isActive }) => (
+                    <MediaItem
+                      type="banner"
+                      compact
+                      item={item}
+                      genresMovie={genresMovie}
+                      genresTv={genresTv}
+                      active={isActive}
+                    />
+                  )}
+                </SwiperSlideStyled>
+              ))}
+            </SwiperReact>
+          ) : null}
+        </>
       )}
     </Grid.Container>
   );

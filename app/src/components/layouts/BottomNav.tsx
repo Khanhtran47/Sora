@@ -3,22 +3,9 @@ import { Container } from '@nextui-org/react';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import useScrollDirection from '~/hooks/useScrollDirection';
 
-import NavLink from '../elements/NavLink';
+import { bottomNavPages } from '~/src/constants/navPages';
 
-const pages = [
-  {
-    pageName: 'Movies',
-    pageLink: 'movies',
-  },
-  {
-    pageName: 'TV Shows',
-    pageLink: 'tv-shows',
-  },
-  {
-    pageName: 'Anime',
-    pageLink: 'anime',
-  },
-];
+import NavLink from '../elements/NavLink';
 
 const BottomNav = () => {
   const scrollDirection = useScrollDirection();
@@ -44,7 +31,7 @@ const BottomNav = () => {
         width: 'calc(100% - 1rem)',
       }}
     >
-      {pages.map((page) => (
+      {bottomNavPages.map((page) => (
         <NavLink linkTo={`/${page.pageLink}`} linkName={page.pageName} key={page.pageName} />
       ))}
     </Container>

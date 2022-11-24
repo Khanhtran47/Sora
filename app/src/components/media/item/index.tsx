@@ -11,13 +11,23 @@ interface IMediaItem {
   isCoverCard?: boolean;
   coverItem?: { id: number; name: string; backdropPath: string };
   virtual?: boolean;
+  compact?: boolean;
 }
 
 const MediaItem = (props: IMediaItem) => {
-  const { type, item, genresMovie, genresTv, active, isCoverCard, coverItem, virtual } = props;
+  const { type, item, genresMovie, genresTv, active, isCoverCard, coverItem, virtual, compact } =
+    props;
 
   if (type === 'banner') {
-    return <BannerItem item={item} genresMovie={genresMovie} genresTv={genresTv} active={active} />;
+    return (
+      <BannerItem
+        item={item}
+        genresMovie={genresMovie}
+        genresTv={genresTv}
+        active={active}
+        compact={compact}
+      />
+    );
   }
   return (
     <CardItem

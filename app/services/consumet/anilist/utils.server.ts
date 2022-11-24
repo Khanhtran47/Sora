@@ -46,39 +46,41 @@ export default class Anilist {
     status?: 'RELEASING' | 'NOT_YET_RELEASED' | 'FINISHED' | 'CANCELLED' | 'HIATUS',
   ): string => {
     let url = `${Anilist.API_BASE_URL}advanced-search`;
+    const params = new URLSearchParams();
     if (query) {
-      url += `?query=${query}`;
+      params.append('query', query);
     }
     if (type) {
-      url += `&type=${type}`;
+      params.append('type', type);
     }
     if (page) {
-      url += `&page=${page}`;
+      params.append('page', page.toString());
     }
     if (perPage) {
-      url += `&perPage=${perPage}`;
+      params.append('perPage', perPage.toString());
     }
     if (season) {
-      url += `&season=${season}`;
+      params.append('season', season);
     }
     if (format) {
-      url += `&format=${format}`;
+      params.append('format', format);
     }
     if (sort) {
-      url += `&sort=${sort}`;
+      params.append('sort', sort.toString());
     }
     if (genres) {
-      url += `&genres=${genres}`;
+      params.append('genres', genres.toString());
     }
     if (id) {
-      url += `&id=${id}`;
+      params.append('id', id);
     }
     if (year) {
-      url += `&year=${year}`;
+      params.append('year', year.toString());
     }
     if (status) {
-      url += `&status=${status}`;
+      params.append('status', status);
     }
+    url += `?${params.toString()}`;
     return url;
   };
 

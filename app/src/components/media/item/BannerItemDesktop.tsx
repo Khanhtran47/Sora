@@ -40,17 +40,16 @@ const variants = {
   showTrailer: { opacity: 1, scale: 0.75, x: -40 },
 };
 
-const BannerItemDesktop = ({
-  item,
-  genresMovie,
-  genresTv,
-  active,
-}: {
+interface IBannerItemDesktopProps {
   item?: IMedia;
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
   active?: boolean;
-}) => {
+  compact?: boolean;
+}
+
+const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
+  const { item, genresMovie, genresTv, active, compact } = props;
   const { t } = useTranslation();
   const fetcher = useFetcher();
   const navigate = useNavigate();
@@ -182,10 +181,77 @@ const BannerItemDesktop = ({
     pauseVideoOnCardPlaying();
   }, [isCardPlaying]);
 
+  if (compact) {
+    return (
+      <AspectRatio.Root ratio={16 / 9}>
+        <Card
+          as="div"
+          isHoverable
+          isPressable
+          css={{
+            minWidth: '240px !important',
+            minHeight: '135px !important',
+            borderWidth: 0,
+            filter: 'var(--nextui-dropShadows-md)',
+          }}
+          role="figure"
+          ref={ref}
+        >
+          <Card.Body css={{ p: 0 }}>
+            <Card.Image
+              // @ts-ignore
+              as={Image}
+              src={backdropPath || ''}
+              objectFit="cover"
+              width="100%"
+              height="auto"
+              alt={title}
+              title={title}
+              css={{
+                minWidth: '240px !important',
+                minHeight: '135px !important',
+              }}
+              loaderUrl="/api/image"
+              placeholder="blur"
+              options={{
+                contentType: MimeType.WEBP,
+              }}
+              responsive={[
+                {
+                  size: {
+                    width: 240,
+                    height: 135,
+                  },
+                },
+              ]}
+            />
+          </Card.Body>
+          <Card.Footer
+            className="backdrop-blur-md"
+            css={{
+              position: 'absolute',
+              backgroundColor: '$backgroundAlpha',
+              borderTop: '$borderWeights$light solid $border',
+              bottom: 0,
+              zIndex: 1,
+              justifyContent: 'center',
+            }}
+          >
+            <H5 h5 weight="bold">
+              {title}
+            </H5>
+          </Card.Footer>
+        </Card>
+      </AspectRatio.Root>
+    );
+  }
+
   return (
     <AspectRatio.Root ratio={16 / 8} ref={bannerRef}>
       <Card ref={ref} variant="flat" css={{ w: width, h: height, borderWidth: 0 }} role="figure">
-        <Card.Header css={{ position: 'absolute', zIndex: 1, h: height }}>
+        <Card.Header
+          css={{ position: 'absolute', zIndex: 1, h: height, '@lgMin': { h: height - 160 } }}
+        >
           <Row
             gap={isMd ? 0.5 : 3}
             css={{ h: height, display: 'flex', justifyContent: 'center', alignItems: 'center' }}
@@ -578,6 +644,7 @@ const BannerItemDesktop = ({
                 '&:hover': {
                   opacity: '0.8',
                 },
+                '@lgMin': { bottom: '270px' },
               }}
               aria-label="Toggle Mute"
               onClick={isMuted ? unMute : mute}
