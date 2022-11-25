@@ -1,6 +1,28 @@
 {
-  "name":"",
-  "short_name":"",
+  "name": "Sora Anime",
+  "short_name": "Sora",
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "browser",
+    "fullscreen"
+  ],
+  "description": "An app for watching movies, anime, reading manga and more",
+  "start_url": "https://sora-anime.vercel.app",
+  "dir": "ltr",
+  "scope": "https://sora-anime.vercel.app",
+  "lang": "en",
+  "orientation": "any",
+  "categories": [
+    "books",
+    "entertainment",
+    "music",
+    "news",
+    "personalization",
+    "photo"
+  ],
   "icons":
   [
     {
@@ -13,8 +35,5 @@
       "sizes":"512x512",
       "type":"image/png"
     }
-  ],
-  "theme_color":"#ffffff",
-  "background_color":"#ffffff",
-  "display":"standalone"
+  ]
 }

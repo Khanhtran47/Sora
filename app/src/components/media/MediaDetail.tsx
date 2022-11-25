@@ -66,7 +66,7 @@ const MediaDetail = (props: IMediaDetail) => {
     ? TMDB?.posterUrl(item?.poster_path || '', 'w342')
     : undefined;
   const backdropPath = item?.backdrop_path
-    ? TMDB?.backdropUrl(item?.backdrop_path || '', 'w780')
+    ? TMDB?.backdropUrl(item?.backdrop_path || '', 'w1280')
     : undefined;
   const releaseYear = new Date(
     (item as IMovieDetail)?.release_date || (item as ITvShowDetail)?.first_air_date || '',

@@ -68,8 +68,8 @@ const ListPeoplePopular = () => {
         justify="center"
         css={{
           '@xsMax': {
-            paddingLeft: 'calc(var(--nextui-space-sm))',
-            paddingRight: 'calc(var(--nextui-space-sm))',
+            paddingLeft: '$sm',
+            paddingRight: '$sm',
           },
         }}
       >

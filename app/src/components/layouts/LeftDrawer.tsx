@@ -1,11 +1,14 @@
 import * as React from 'react';
 import { NavLink as RemixNavLink } from '@remix-run/react';
-import { Spacer, Grid, Container, Row, Button, styled } from '@nextui-org/react';
+import { Spacer, Grid, Row, Button } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
 
+import { leftDrawerPages } from '~/src/constants/navPages';
+
 import { H5 } from '~/src/components/styles/Text.styles';
 import NavLink from '../elements/NavLink';
+import { drawerWidth, openedMixin, closedMixin, Drawer } from './Layout.styles';
 
 /* icons */
 import MenuIcon from '../../assets/icons/MenuIcon.js';
@@ -17,8 +20,6 @@ import HistoryIcon from '../../assets/icons/HistoryIcon.js';
 import TwoUsers from '../../assets/icons/TwoUsersIcon.js';
 import CategoryIcon from '../../assets/icons/CategoryIcon.js';
 
-const drawerWidth = 250;
-
 interface ILeftDrawerProps {
   open: boolean;
   handleDrawerOpen: () => void;
@@ -28,33 +29,6 @@ interface ILeftDrawerProps {
 export const handle = {
   i18n: 'left-drawer',
 };
-
-const leftDrawerLink = [
-  {
-    pageName: 'trending',
-    pageLink: 'trending',
-  },
-  {
-    pageName: 'people',
-    pageLink: 'people',
-  },
-  {
-    pageName: 'Collections',
-    pageLink: 'collections',
-  },
-  {
-    pageName: 'newReleases',
-    pageLink: 'new-releases',
-  },
-  {
-    pageName: 'imdbTop',
-    pageLink: 'imdb-top',
-  },
-  {
-    pageName: 'history',
-    pageLink: 'watch-history',
-  },
-];
 
 const iconItem = (index: number, filled: boolean) => {
   let icon;
@@ -81,44 +55,6 @@ const iconItem = (index: number, filled: boolean) => {
   }
   return icon;
 };
-
-const openedMixin = () => ({
-  width: drawerWidth,
-  transitionProperty: 'all',
-  transitionDuration: '225ms',
-  transitionTimingFunction: 'ease-out',
-  transitionDelay: '0ms',
-  overflowX: 'hidden',
-  borderTopRightRadius: '$xl',
-  borderBottomRightRadius: '$xl',
-});
-
-const closedMixin = () => ({
-  transitionProperty: 'all',
-  transitionDuration: '195ms',
-  transitionTimingFunction: 'ease-in',
-  transitionDelay: '0ms',
-  overflowX: 'hidden',
-  width: 0,
-  '@sm': {
-    width: 65,
-  },
-});
-
-const Drawer = styled(Container, {
-  flexGrow: 0,
-  flexBasis: 'auto',
-  width: drawerWidth,
-  flexShrink: 0,
-  whiteSpace: 'nowrap',
-  boxSizing: 'border-box',
-  margin: 0,
-  height: '100vh',
-  position: 'fixed',
-  top: 0,
-  left: 0,
-  zIndex: 999,
-});
 
 const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
   const { t } = useTranslation('left-drawer');
@@ -176,7 +112,7 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
       </Row>
       <Row>
         <Grid.Container>
-          {leftDrawerLink.map((page, index: number) => (
+          {leftDrawerPages.map((page, index: number) => (
             <Grid key={page.pageName} css={{ marginTop: '10px' }} xs={12}>
               <RemixNavLink
                 to={`/${page.pageLink}`}

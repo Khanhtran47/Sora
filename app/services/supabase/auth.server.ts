@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { Session } from '@supabase/supabase-js';
 import { redirect } from '@remix-run/node';
+import isbot from 'isbot';
+
 import sgConfigs from '../configs.server';
 import supabase from './client.server';
 import { commitAuthCookie, getSessionFromCookie } from './cookie.server';
@@ -39,12 +41,15 @@ export async function requestPayload(req: Request) {
 
 export async function authenticate(request: Request, headers = new Headers()) {
   // try to get the session (from cookie) and payload from request
-  const [session, payload] = await Promise.all([
+  const [session, payload, botcheck] = await Promise.all([
     getSessionFromCookie(request.headers.get('Cookie')),
     requestPayload(request),
+    isbot(request.headers.get('User-Agent')),
   ]);
 
-  if (!session.has('auth_token')) {
+  if (botcheck) {
+    throw new Response(null, { status: 500 });
+  } else if (!session.has('auth_token')) {
     // there is no token, no signed-in or expired cookie
     if (sgConfigs.__globalAuthRequired) {
       // if global auth is required, redirect to /sign-in

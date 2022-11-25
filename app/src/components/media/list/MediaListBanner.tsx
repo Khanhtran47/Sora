@@ -1,22 +1,30 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable arrow-body-style */
-import * as React from 'react';
-import { Grid, Button } from '@nextui-org/react';
-import { Pagination, Virtual } from 'swiper';
-import { Swiper, SwiperSlide, useSwiper } from 'swiper/react';
+import { useState } from 'react';
+import { Grid, Button, Card, styled } from '@nextui-org/react';
+import { Thumbs, Pagination } from 'swiper';
+import { Swiper as SwiperReact, SwiperSlide, useSwiper } from 'swiper/react';
+import type { Swiper } from 'swiper';
 
 import { IMedia } from '~/services/tmdb/tmdb.types';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import useLocalStorage from '~/hooks/useLocalStorage';
+
 import PlayIcon from '~/src/assets/icons/PlayIcon.js';
 import StopIcon from '~/src/assets/icons/StopIcon.js';
 import ChevronRightIcon from '~/src/assets/icons/ChevronRightIcon.js';
 import ChevronLeftIcon from '~/src/assets/icons/ChevronLeftIcon.js';
+
+import { H5 } from '~/src/components/styles/Text.styles';
+import Svg from '~/src/components/styles/Svg.styles';
+import BannerItemCompact from '../item/BannerItemCompact';
 import MediaItem from '../item';
 
 const CustomNavigation = ({ slot }: { slot: 'container-end' }) => {
   const swiper = useSwiper();
-  const [slideProgress, setSlideProgress] = React.useState<number>(0);
+  const isXl = useMediaQuery('(max-width: 1400px)');
+  const [slideProgress, setSlideProgress] = useState<number>(0);
   const [isPlayTrailer, setIsPlayTrailer] = useLocalStorage('playTrailer', false);
 
   swiper.on('slideChange', (e) => {
@@ -45,67 +53,201 @@ const CustomNavigation = ({ slot }: { slot: 'container-end' }) => {
           '&:hover': {
             opacity: '0.8',
           },
+          '@lgMin': { bottom: '200px' },
         }}
         aria-label="Play Trailer"
       />
+      {isXl ? (
+        <>
+          <Button
+            auto
+            color="primary"
+            rounded
+            ghost
+            icon={<ChevronLeftIcon fill="currentColor" />}
+            onClick={() => swiper.slidePrev()}
+            css={{
+              width: '44px',
+              height: '44px',
+              cursor: 'pointer',
+              position: 'absolute',
+              bottom: '10px',
+              right: '85px',
+              zIndex: '90',
+              '&:hover': {
+                opacity: '0.8',
+              },
+              '@lgMin': { bottom: '200px' },
+            }}
+            aria-label="Previous"
+            disabled={slideProgress === 0}
+          />
+          <Button
+            auto
+            color="primary"
+            rounded
+            ghost
+            icon={<ChevronRightIcon fill="currentColor" />}
+            onClick={() => swiper.slideNext()}
+            css={{
+              width: '44px',
+              height: '44px',
+              cursor: 'pointer',
+              position: 'absolute',
+              bottom: '10px',
+              right: '35px',
+              zIndex: '90',
+              '&:hover': {
+                opacity: '0.8',
+              },
+              '@lgMin': { bottom: '200px' },
+            }}
+            aria-label="Next"
+            disabled={slideProgress === 1}
+          />
+        </>
+      ) : null}
+    </div>
+  );
+};
+
+const CustomNavigationThumbs = ({ slot }: { slot: 'container-end' }) => {
+  const swiper = useSwiper();
+
+  return (
+    <div slot={slot}>
       <Button
         auto
         color="primary"
-        rounded
-        ghost
-        icon={<ChevronLeftIcon fill="currentColor" />}
+        flat
+        className="backdrop-blur-md"
+        icon={<ChevronLeftIcon fill="currentColor" filled />}
         onClick={() => swiper.slidePrev()}
         css={{
-          width: '44px',
+          p: 0,
+          m: 0,
+          backgroundColor: '$backgroundAlpha',
+          borderRadius: '$xs',
+          width: 'min-content',
           height: '44px',
           cursor: 'pointer',
           position: 'absolute',
-          bottom: '10px',
-          right: '85px',
+          top: '60px',
+          left: '2px',
           zIndex: '90',
-          '&:hover': {
+          [`& ${Svg}`]: {
             opacity: '0.8',
+            scale: '0.8',
+          },
+          '&:hover': {
+            [`& ${Svg}`]: {
+              opacity: 1,
+              scale: 1,
+            },
           },
         }}
         aria-label="Previous"
-        disabled={slideProgress === 0}
       />
       <Button
         auto
         color="primary"
-        rounded
-        ghost
-        icon={<ChevronRightIcon fill="currentColor" />}
+        flat
+        className="backdrop-blur-md"
+        icon={<ChevronRightIcon fill="currentColor" filled />}
         onClick={() => swiper.slideNext()}
         css={{
-          width: '44px',
+          p: 0,
+          m: 0,
+          backgroundColor: '$backgroundAlpha',
+          borderRadius: '$xs',
+          width: 'min-content',
           height: '44px',
           cursor: 'pointer',
           position: 'absolute',
-          bottom: '10px',
-          right: '35px',
+          top: '60px',
+          right: '2px',
           zIndex: '90',
-          '&:hover': {
+          [`& ${Svg}`]: {
             opacity: '0.8',
+            scale: '0.8',
+          },
+          '&:hover': {
+            [`& ${Svg}`]: {
+              opacity: 1,
+              scale: 1,
+            },
           },
         }}
         aria-label="Next"
-        disabled={slideProgress === 1}
       />
     </div>
   );
 };
 
-const MediaListBanner = ({
-  items,
-  genresMovie,
-  genresTv,
-}: {
+Card.toString = () => '.card';
+Card.Image.toString = () => '.card-image';
+
+const SwiperSlideStyled = styled(SwiperSlide, {
+  overflow: 'hidden',
+  borderRadius: '$lg',
+  width: '240px',
+  height: 'auto',
+  margin: '8px 4px',
+  '&:hover': {
+    boxShadow: '0 0 0 4px var(--nextui-colors-primarySolidHover)',
+  },
+  [`& ${Card}`]: {
+    transition: 'all 0.3s ease',
+    transform: 'scale(1.04, 1)',
+    '&:hover': {
+      transform: 'scale(1.025, 1)',
+      [`& ${H5}`]: {
+        display: 'block',
+      },
+      [`& ${Card.Image}`]: {},
+      '&::after': {
+        content: '',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '150px',
+        height: '135px',
+        backgroundImage: 'linear-gradient(90deg, $background, $backgroundTransparent)',
+      },
+    },
+  },
+  '&.swiper-slide-thumb-active': {
+    boxShadow: '0 0 0 4px var(--nextui-colors-primary)',
+    [`& ${Card}`]: {
+      transform: 'scale(1)',
+      [`& ${H5}`]: {
+        display: 'block',
+      },
+      '&::after': {
+        content: '',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '200px',
+        height: '135px',
+        backgroundImage: 'linear-gradient(90deg, $background, $backgroundTransparent)',
+      },
+    },
+  },
+});
+
+interface IMediaListBannerProps {
   items?: IMedia[];
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
-}) => {
+}
+
+const MediaListBanner = (props: IMediaListBannerProps) => {
+  const { items, genresMovie, genresTv } = props;
   const isSm = useMediaQuery('(max-width: 650px)');
+  const isXl = useMediaQuery('(max-width: 1400px)');
+  const [thumbsSwiper, setThumbsSwiper] = useState<Swiper | null>(null);
+
   return (
     <Grid.Container
       gap={1}
@@ -116,44 +258,83 @@ const MediaListBanner = ({
         padding: 0,
         width: '100%',
         maxWidth: '1920px',
+        position: 'relative',
       }}
     >
       {items && items?.length > 0 && (
-        <Swiper
-          modules={[Pagination, Virtual]}
-          grabCursor
-          spaceBetween={isSm ? 10 : 0}
-          slidesPerView={isSm ? 1.075 : 1}
-          pagination={
-            isSm
-              ? false
-              : {
-                  type: 'bullets',
-                  clickable: true,
-                  bulletClass: 'swiper-pagination-bullet !bg-primary !w-7 !h-7 !mt-2',
-                  renderBullet: (index, className) => {
-                    return `<span class="${className}">${index + 1}</span>`;
-                  },
-                }
-          }
-          virtual
-          style={{ width: '100%' }}
-        >
-          {items.map((item, index) => (
-            <SwiperSlide key={index} virtualIndex={index} style={{ width: '100%' }}>
-              {({ isActive }) => (
-                <MediaItem
-                  type="banner"
-                  item={item}
-                  genresMovie={genresMovie}
-                  genresTv={genresTv}
-                  active={isActive}
-                />
-              )}
-            </SwiperSlide>
-          ))}
-          {!isSm && <CustomNavigation slot="container-end" />}
-        </Swiper>
+        <>
+          <SwiperReact
+            modules={[Thumbs, Pagination]}
+            grabCursor
+            spaceBetween={isSm ? 10 : 0}
+            slidesPerView={isSm ? 1.075 : 1}
+            thumbs={isXl ? undefined : { swiper: thumbsSwiper }}
+            loop
+            pagination={
+              isSm
+                ? false
+                : isXl
+                ? {
+                    type: 'bullets',
+                    clickable: true,
+                    bulletClass: 'swiper-pagination-bullet !bg-primary !w-7 !h-7 !mt-2',
+                    renderBullet: (index, className) => {
+                      return `<span class="${className}">${index + 1}</span>`;
+                    },
+                  }
+                : false
+            }
+            style={{ width: '100%' }}
+          >
+            {items.map((item, index) => (
+              <SwiperSlide
+                key={`${item.id}-${index}`}
+                virtualIndex={index}
+                style={{ width: '100%' }}
+              >
+                {({ isActive }) => (
+                  <MediaItem
+                    key={`${item.id}-${index}`}
+                    type="banner"
+                    item={item}
+                    genresMovie={genresMovie}
+                    genresTv={genresTv}
+                    active={isActive}
+                  />
+                )}
+              </SwiperSlide>
+            ))}
+            {!isSm && <CustomNavigation slot="container-end" />}
+          </SwiperReact>
+          {!isXl ? (
+            <SwiperReact
+              grabCursor
+              cssMode
+              spaceBetween={20}
+              slidesPerView="auto"
+              slidesPerGroup={1}
+              slidesPerGroupAuto
+              watchSlidesProgress
+              modules={[Thumbs]}
+              onSwiper={setThumbsSwiper}
+              loop
+              style={{
+                position: 'absolute',
+                bottom: '15px',
+                left: '0',
+                width: '100%',
+                minHeight: '150px',
+              }}
+            >
+              {items.map((item, index) => (
+                <SwiperSlideStyled key={index}>
+                  <BannerItemCompact item={item} />
+                </SwiperSlideStyled>
+              ))}
+              {!isSm && <CustomNavigationThumbs slot="container-end" />}
+            </SwiperReact>
+          ) : null}
+        </>
       )}
     </Grid.Container>
   );

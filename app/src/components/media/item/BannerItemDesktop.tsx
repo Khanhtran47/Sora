@@ -40,17 +40,15 @@ const variants = {
   showTrailer: { opacity: 1, scale: 0.75, x: -40 },
 };
 
-const BannerItemDesktop = ({
-  item,
-  genresMovie,
-  genresTv,
-  active,
-}: {
+interface IBannerItemDesktopProps {
   item?: IMedia;
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
   active?: boolean;
-}) => {
+}
+
+const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
+  const { item, genresMovie, genresTv, active } = props;
   const { t } = useTranslation();
   const fetcher = useFetcher();
   const navigate = useNavigate();
@@ -133,11 +131,13 @@ const BannerItemDesktop = ({
   };
 
   useEffect(() => {
-    if (active === true && isPlayTrailer === true) {
-      fetcher.load(`/api/media?id=${item?.id}&type=${item?.mediaType}&video=true`);
-    } else {
-      fetcher.load(`/api/media?id=${item?.id}&type=${item?.mediaType}`);
-      setTrailerBanner({});
+    if (active === true) {
+      if (isPlayTrailer === true) {
+        fetcher.load(`/api/media?id=${item?.id}&type=${item?.mediaType}&video=true`);
+      } else {
+        fetcher.load(`/api/media?id=${item?.id}&type=${item?.mediaType}`);
+        setTrailerBanner({});
+      }
     }
   }, [active, isPlayTrailer]);
 
@@ -148,13 +148,13 @@ const BannerItemDesktop = ({
   }, [isPlayTrailer]);
 
   useEffect(() => {
-    if (active === true && fetcher.data && fetcher.data.videos) {
+    if (active === true && fetcher.data && fetcher.data.videos && inView) {
       const { results } = fetcher.data.videos;
       const officialTrailer = results.find((result: Trailer) => result.type === 'Trailer');
       setTrailerBanner(officialTrailer);
     }
 
-    if (active === true && fetcher.data && fetcher.data.images) {
+    if (active === true && fetcher.data && fetcher.data.images && inView) {
       const { logos } = fetcher.data.images;
       if (logos && logos.length > 0) setLogo(logos[0]);
     }
@@ -185,7 +185,9 @@ const BannerItemDesktop = ({
   return (
     <AspectRatio.Root ratio={16 / 8} ref={bannerRef}>
       <Card ref={ref} variant="flat" css={{ w: width, h: height, borderWidth: 0 }} role="figure">
-        <Card.Header css={{ position: 'absolute', zIndex: 1, h: height }}>
+        <Card.Header
+          css={{ position: 'absolute', zIndex: 1, h: height, '@lgMin': { h: height - 160 } }}
+        >
           <Row
             gap={isMd ? 0.5 : 3}
             css={{ h: height, display: 'flex', justifyContent: 'center', alignItems: 'center' }}
@@ -378,7 +380,7 @@ const BannerItemDesktop = ({
                 </Button>
               </Row>
             </Col>
-            {!isLg && (
+            {!isLg && active ? (
               <Col
                 // @ts-ignore
                 as={motion.div}
@@ -404,6 +406,7 @@ const BannerItemDesktop = ({
                     display: 'flex',
                     justifyContent: 'center',
                   }}
+                  showSkeleton={false}
                   css={{
                     minWidth: 'auto !important',
                     minHeight: 'auto !important',
@@ -438,7 +441,7 @@ const BannerItemDesktop = ({
                   }}
                 />
               </Col>
-            )}
+            ) : null}
           </Row>
         </Card.Header>
         <Card.Body
@@ -454,11 +457,14 @@ const BannerItemDesktop = ({
               width: '100%',
               height: '100px',
               backgroundImage: 'linear-gradient(0deg, $background, $backgroundTransparent)',
+              '@lgMin': {
+                height: '250px',
+              },
             },
           }}
         >
           <AnimatePresence>
-            {!showTrailer && (
+            {!showTrailer && active ? (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -496,11 +502,11 @@ const BannerItemDesktop = ({
                   }}
                 />
               </motion.div>
-            )}
+            ) : null}
           </AnimatePresence>
           <ClientOnly fallback={<Loading type="default" />}>
             {() => {
-              if (trailerBanner?.key && !isSm && isPlayTrailer)
+              if (trailerBanner?.key && !isSm && isPlayTrailer && active && inView)
                 return (
                   <Suspense fallback={<Loading type="default" />}>
                     <YouTube
@@ -530,7 +536,7 @@ const BannerItemDesktop = ({
                       }}
                       onPlay={() => {
                         setIsPlayed(true);
-                        setShowTrailer(true);
+                        if (active && inView) setShowTrailer(true);
                       }}
                       onPause={() => {
                         setShowTrailer(false);
@@ -578,6 +584,7 @@ const BannerItemDesktop = ({
                 '&:hover': {
                   opacity: '0.8',
                 },
+                '@lgMin': { bottom: '200px' },
               }}
               aria-label="Toggle Mute"
               onClick={isMuted ? unMute : mute}

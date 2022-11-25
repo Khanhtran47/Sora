@@ -5,7 +5,7 @@ import { Container } from '@nextui-org/react';
 import Tab from '~/src/components/elements/Tab';
 
 const animePage = [
-  // { pageName: 'Discover Anime', pageLink: '/discover' },
+  { pageName: 'Discover Anime', pageLink: '/discover' },
   { pageName: 'Recent Episodes', pageLink: '/recent-episodes' },
   { pageName: 'Popular Anime', pageLink: '/popular' },
   { pageName: 'Trending Anime', pageLink: '/trending' },

@@ -5,7 +5,7 @@ node_modules
 .output
 
 public/build
-api/_build
+api
 
 .env
 .vscode

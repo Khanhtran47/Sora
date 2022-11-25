@@ -12,7 +12,6 @@ type BannerItemProps = {
 
 const BannerItem = ({ item, genresMovie, genresTv, active }: BannerItemProps) => {
   const isSm = useMediaQuery('(max-width: 650px)');
-
   if (isSm) {
     return <BannerItemMobile item={item} genresMovie={genresMovie} genresTv={genresTv} />;
   }

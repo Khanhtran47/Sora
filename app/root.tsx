@@ -33,6 +33,8 @@ import swiperStyles from 'swiper/css';
 import swiperPaginationStyles from 'swiper/css/navigation';
 // @ts-ignore
 import swiperNavigationStyles from 'swiper/css/pagination';
+// @ts-ignore
+import swiperThumbsStyles from 'swiper/css/thumbs';
 import type { User } from '@supabase/supabase-js';
 import { AnimatePresence, motion } from 'framer-motion';
 import NProgress from 'nprogress';
@@ -115,6 +117,46 @@ export const links: LinksFunction = () => [
   { rel: 'manifest', href: '/site.webmanifest' },
   { rel: 'icon', href: '/favicon.ico' },
   {
+    rel: 'preload',
+    as: 'style',
+    href: styles,
+  },
+  {
+    rel: 'preload',
+    as: 'style',
+    href: swiperStyles,
+  },
+  {
+    rel: 'preload',
+    as: 'style',
+    href: swiperPaginationStyles,
+  },
+  {
+    rel: 'preload',
+    as: 'style',
+    href: swiperNavigationStyles,
+  },
+  {
+    rel: 'preload',
+    as: 'style',
+    href: swiperThumbsStyles,
+  },
+  {
+    rel: 'preload',
+    as: 'style',
+    href: nProgressStyles,
+  },
+  {
+    rel: 'preload',
+    as: 'style',
+    href: photoSwipeStyles,
+  },
+  {
+    rel: 'preload',
+    as: 'style',
+    href: remixImageStyles,
+  },
+  {
     rel: 'stylesheet',
     href: styles,
   },
@@ -129,6 +171,10 @@ export const links: LinksFunction = () => [
   {
     rel: 'stylesheet',
     href: swiperNavigationStyles,
+  },
+  {
+    rel: 'stylesheet',
+    href: swiperThumbsStyles,
   },
   {
     rel: 'stylesheet',

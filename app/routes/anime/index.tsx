@@ -74,8 +74,8 @@ const AnimePage = () => {
           marginTop: '48px',
           minHeight: '564px',
           '@xsMax': {
-            paddingLeft: 'calc(var(--nextui-space-sm))',
-            paddingRight: 'calc(var(--nextui-space-sm))',
+            paddingLeft: '$sm',
+            paddingRight: '$sm',
           },
         }}
       >
