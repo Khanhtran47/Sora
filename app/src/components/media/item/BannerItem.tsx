@@ -8,23 +8,10 @@ type BannerItemProps = {
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
   active?: boolean;
-  compact?: boolean;
 };
 
-const BannerItem = ({ item, genresMovie, genresTv, active, compact }: BannerItemProps) => {
+const BannerItem = ({ item, genresMovie, genresTv, active }: BannerItemProps) => {
   const isSm = useMediaQuery('(max-width: 650px)');
-
-  if (compact) {
-    return (
-      <BannerItemDesktop
-        item={item}
-        genresMovie={genresMovie}
-        genresTv={genresTv}
-        active={active}
-        compact
-      />
-    );
-  }
   if (isSm) {
     return <BannerItemMobile item={item} genresMovie={genresMovie} genresTv={genresTv} />;
   }

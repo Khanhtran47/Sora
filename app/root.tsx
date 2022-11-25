@@ -35,8 +35,6 @@ import swiperPaginationStyles from 'swiper/css/navigation';
 import swiperNavigationStyles from 'swiper/css/pagination';
 // @ts-ignore
 import swiperThumbsStyles from 'swiper/css/thumbs';
-// @ts-ignore
-import swiperFreemodeStyles from 'swiper/css/free-mode';
 import type { User } from '@supabase/supabase-js';
 import { AnimatePresence, motion } from 'framer-motion';
 import NProgress from 'nprogress';
@@ -141,11 +139,6 @@ export const links: LinksFunction = () => [
   {
     rel: 'preload',
     as: 'style',
-    href: swiperFreemodeStyles,
-  },
-  {
-    rel: 'preload',
-    as: 'style',
     href: swiperThumbsStyles,
   },
   {
@@ -178,10 +171,6 @@ export const links: LinksFunction = () => [
   {
     rel: 'stylesheet',
     href: swiperNavigationStyles,
-  },
-  {
-    rel: 'stylesheet',
-    href: swiperFreemodeStyles,
   },
   {
     rel: 'stylesheet',

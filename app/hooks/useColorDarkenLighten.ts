@@ -11,7 +11,7 @@ export default function useColorDarkenLighten(imageUrl?: string) {
   const { isDark } = useTheme();
 
   const { data, loading, error } = useColor(
-    `https://api.allorigins.win/raw?url=${encodeURIComponent(imageUrl || '')}`,
+    `https://corsproxy.io/?${encodeURIComponent(imageUrl || '')}`,
     'hex',
     {
       crossOrigin: 'anonymous',
