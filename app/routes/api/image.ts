@@ -21,6 +21,7 @@ const config = {
   cache: new DiskCache({
     path: path.join(os.tmpdir(), 'img'),
   }),
+  redirectOnFail: true,
   resolver: fetchImage,
   transformer: sharpTransformer,
   basePath: process.env.NODE_ENV === 'development' ? 'public' : '/',
