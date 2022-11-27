@@ -8,7 +8,7 @@ export const loader: ActionFunction = async ({ request }) => {
   const { searchParams } = new URL(request.url);
   const session = await getSessionFromCookie(request.headers.get('Cookie'));
 
-  return redirect(searchParams.get('ref') || request.referrer || '/', {
+  return redirect(searchParams.get('ref') || '/', {
     headers: {
       'Set-Cookie': await destroyAuthCookie(session),
     },
