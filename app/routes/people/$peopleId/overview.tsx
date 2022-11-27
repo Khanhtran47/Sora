@@ -9,7 +9,8 @@ import { useFetcher } from '@remix-run/react';
 import { useRouteData } from 'remix-utils';
 import type { User } from '@supabase/supabase-js';
 
-import { IPeopleDetail, IMedia, IPeople } from '~/services/tmdb/tmdb.types';
+import { IPeopleDetail, IPeople } from '~/services/tmdb/tmdb.types';
+import { IMedia } from '~/types/media';
 import TMDB from '~/utils/media';
 import MediaList from '~/src/components/media/MediaList';
 import { H6 } from '~/src/components/styles/Text.styles';

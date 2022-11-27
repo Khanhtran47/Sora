@@ -181,7 +181,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
               ? `/anime/${item.id}/overview`
               : itemsType === 'people'
               ? `/people/${item.id}/overview`
-              : itemsType === 'movie'
+              : item?.mediaType === 'movie' || itemsType === 'movie'
               ? `/movies/${item.id}`
               : `/tv-shows/${item.id}`;
           return (
