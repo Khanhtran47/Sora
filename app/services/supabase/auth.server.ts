@@ -53,7 +53,8 @@ export async function authenticate(request: Request, headers = new Headers()) {
     // there is no token, no signed-in or expired cookie
     if (sgConfigs.__globalAuthRequired) {
       // if global auth is required, redirect to /sign-in
-      throw redirect(`/sign-in?ref=${request.referrer || request.headers.get('Referer') || '/'}`);
+      const url = new URL(request.url);
+      throw redirect(`/sign-in?ref=${url.pathname + url.search}`);
     }
   } else {
     // there is some access token in cookie session

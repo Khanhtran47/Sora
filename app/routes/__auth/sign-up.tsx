@@ -59,7 +59,7 @@ export const action: ActionFunction = async ({ request }) => {
   const authCookie = await getSessionFromCookie(request.headers.get('Cookie'));
 
   if (authCookie.has('auth_token')) {
-    return redirect(searchParams.get('ref') || request.referrer || '/');
+    return redirect(searchParams.get('ref') || '/');
   }
 
   const payload = await requestPayload(request);
@@ -70,7 +70,7 @@ export const action: ActionFunction = async ({ request }) => {
     req_payload: payload,
   });
 
-  return redirect(searchParams.get('ref') || request.referrer || '/', {
+  return redirect(searchParams.get('ref') || '/', {
     headers: {
       'Set-Cookie': await commitAuthCookie(authCookie),
     },
@@ -82,7 +82,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const session = await getSessionFromCookie(request.headers.get('Cookie'));
 
   if (session.has('auth_token')) {
-    return redirect(searchParams.get('ref') || request.referrer || '/');
+    return redirect(searchParams.get('ref') || '/');
   }
 
   return null;
