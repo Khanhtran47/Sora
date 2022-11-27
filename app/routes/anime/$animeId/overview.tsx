@@ -333,7 +333,7 @@ const Overview = () => {
                             minHeight: '187px !important',
                           }}
                           loaderUrl="/api/image"
-                          placeholder="blur"
+                          placeholder="empty"
                           options={{
                             contentType: MimeType.WEBP,
                           }}
@@ -437,7 +437,7 @@ const Overview = () => {
                               minHeight: '80px !important',
                             }}
                             loaderUrl="/api/image"
-                            placeholder="blur"
+                            placeholder="empty"
                             options={{
                               contentType: MimeType.WEBP,
                             }}
@@ -512,7 +512,7 @@ const Overview = () => {
                               minHeight: '80px !important',
                             }}
                             loaderUrl="/api/image"
-                            placeholder="blur"
+                            placeholder="empty"
                             options={{
                               contentType: MimeType.WEBP,
                             }}

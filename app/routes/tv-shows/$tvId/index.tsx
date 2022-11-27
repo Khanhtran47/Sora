@@ -231,7 +231,7 @@ const Overview = () => {
                             minHeight: '195px !important',
                           }}
                           loaderUrl="/api/image"
-                          placeholder="blur"
+                          placeholder="empty"
                           options={{
                             contentType: MimeType.WEBP,
                           }}

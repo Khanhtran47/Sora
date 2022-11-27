@@ -147,7 +147,7 @@ const SeasonDetail = () => {
                       borderRadius: '24px',
                     }}
                     loaderUrl="/api/image"
-                    placeholder="blur"
+                    placeholder="empty"
                     responsive={[
                       {
                         size: {
@@ -225,7 +225,7 @@ const SeasonDetail = () => {
                         }}
                         showSkeleton={false}
                         loaderUrl="/api/image"
-                        placeholder="blur"
+                        placeholder="empty"
                         options={{
                           contentType: MimeType.WEBP,
                         }}
@@ -308,7 +308,7 @@ const SeasonDetail = () => {
             alt={detail?.name}
             containerCss={{ margin: 0 }}
             loaderUrl="/api/image"
-            placeholder="blur"
+            placeholder="empty"
             responsive={[
               {
                 size: {

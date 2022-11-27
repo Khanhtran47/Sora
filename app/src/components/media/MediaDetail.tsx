@@ -123,7 +123,7 @@ const MediaDetail = (props: IMediaDetail) => {
                     }}
                     showSkeleton={false}
                     loaderUrl="/api/image"
-                    placeholder="blur"
+                    placeholder="empty"
                     responsive={[
                       {
                         size: {
@@ -229,7 +229,7 @@ const MediaDetail = (props: IMediaDetail) => {
                             }}
                             showSkeleton={false}
                             loaderUrl="/api/image"
-                            placeholder="blur"
+                            placeholder="empty"
                             options={{
                               contentType: MimeType.WEBP,
                             }}
@@ -440,7 +440,7 @@ const MediaDetail = (props: IMediaDetail) => {
             showSkeleton={false}
             containerCss={{ margin: 0 }}
             loaderUrl="/api/image"
-            placeholder="blur"
+            placeholder="empty"
             responsive={[
               {
                 size: {

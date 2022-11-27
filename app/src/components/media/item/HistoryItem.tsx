@@ -33,7 +33,7 @@ const HistoryItem = ({ item }: IHistoryItem) => {
                 src={item.poster || notFound}
                 alt={item.title}
                 objectFit="cover"
-                placeholder="blur"
+                placeholder="empty"
               />
               {watched > 5 && <Progress size="xs" value={watched} color="error" />}
             </Col>

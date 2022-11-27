@@ -75,7 +75,7 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
           alt={titleItem}
           title={titleItem}
           loaderUrl="/api/image"
-          placeholder="blur"
+          placeholder="empty"
           responsive={[
             {
               size: {

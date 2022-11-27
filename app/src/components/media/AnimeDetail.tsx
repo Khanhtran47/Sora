@@ -97,7 +97,7 @@ const AnimeDetail = (props: IAnimeDetail) => {
                     borderRadius: '24px',
                   }}
                   loaderUrl="/api/image"
-                  placeholder="blur"
+                  placeholder="empty"
                   responsive={[
                     {
                       size: {
@@ -178,7 +178,7 @@ const AnimeDetail = (props: IAnimeDetail) => {
                         borderRadius: '24px',
                       }}
                       loaderUrl="/api/image"
-                      placeholder="blur"
+                      placeholder="empty"
                       options={{
                         contentType: MimeType.WEBP,
                       }}
@@ -330,7 +330,7 @@ const AnimeDetail = (props: IAnimeDetail) => {
           containerCss={{ margin: 0 }}
           showSkeleton={false}
           loaderUrl="/api/image"
-          placeholder="blur"
+          placeholder="empty"
           responsive={[
             {
               size: {

@@ -159,7 +159,7 @@ const PhotosPage = () => {
                               }}
                               title={tvData?.detail?.name}
                               loaderUrl="/api/image"
-                              placeholder="blur"
+                              placeholder="empty"
                               options={{
                                 contentType: MimeType.WEBP,
                               }}
@@ -222,7 +222,7 @@ const PhotosPage = () => {
                               }}
                               title={tvData?.detail?.name}
                               loaderUrl="/api/image"
-                              placeholder="blur"
+                              placeholder="empty"
                               options={{
                                 contentType: MimeType.WEBP,
                               }}
@@ -285,7 +285,7 @@ const PhotosPage = () => {
                               }}
                               title={tvData?.detail?.name}
                               loaderUrl="/api/image"
-                              placeholder="blur"
+                              placeholder="empty"
                               options={{
                                 contentType: MimeType.WEBP,
                               }}

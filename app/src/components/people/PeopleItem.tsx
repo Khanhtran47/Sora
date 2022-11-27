@@ -55,7 +55,7 @@ const CardItem = ({ item, virtual }: { item: IPeople; virtual?: boolean }) => {
                     minHeight: '240px !important',
                   }}
                   loaderUrl="/api/image"
-                  placeholder="blur"
+                  placeholder="empty"
                   options={{
                     contentType: MimeType.WEBP,
                   }}

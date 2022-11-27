@@ -147,7 +147,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                                 minHeight: '127px !important',
                               }}
                               loaderUrl="/api/image"
-                              placeholder="blur"
+                              placeholder="empty"
                               options={{
                                 contentType: MimeType.WEBP,
                               }}
@@ -190,7 +190,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                                 minHeight: '127px !important',
                               }}
                               loaderUrl="/api/image"
-                              placeholder="blur"
+                              placeholder="empty"
                               options={{
                                 contentType: MimeType.WEBP,
                               }}

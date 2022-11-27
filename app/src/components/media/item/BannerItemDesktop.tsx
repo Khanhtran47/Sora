@@ -402,7 +402,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                 </Button>
               </Row>
             </Col>
-            {!isLg && active ? (
+            {!isLg ? (
               <Col
                 // @ts-ignore
                 as={motion.div}
@@ -442,7 +442,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                   }}
                   loading="eager"
                   loaderUrl="/api/image"
-                  placeholder="blur"
+                  placeholder="empty"
                   responsive={[
                     {
                       size: {
@@ -510,7 +510,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                   alt={titleItem}
                   title={titleItem}
                   loaderUrl="/api/image"
-                  placeholder="blur"
+                  placeholder="empty"
                   responsive={[
                     {
                       size: {

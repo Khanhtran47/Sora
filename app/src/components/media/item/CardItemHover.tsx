@@ -115,7 +115,7 @@ const CardItemHover = (props: ICardItemHoverProps) => {
                     minHeight: 'auto !important',
                   }}
                   loaderUrl="/api/image"
-                  placeholder="blur"
+                  placeholder="empty"
                   options={{
                     contentType: MimeType.WEBP,
                   }}
