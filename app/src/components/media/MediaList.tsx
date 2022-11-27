@@ -1,10 +1,12 @@
 import { useState, Suspense } from 'react';
-import { Button, Row, Spacer, Loading } from '@nextui-org/react';
+import { Button, Row, Spacer, Loading, Pagination } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { ClientOnly } from 'remix-utils';
 import { AnimatePresence, motion } from 'framer-motion';
 
-import { IMedia, ILanguage } from '~/services/tmdb/tmdb.types';
+import { IMedia } from '~/types/media';
+import { ILanguage } from '~/services/tmdb/tmdb.types';
+import useMediaQuery from '~/hooks/useMediaQuery';
 
 import FilterIcon from '~/src/assets/icons/FilterIcon.js';
 import ChevronRightIcon from '~/src/assets/icons/ChevronRightIcon.js';
@@ -25,43 +27,57 @@ import Flex from '../styles/Flex.styles';
  * grid of cards
  */
 interface IMediaListProps {
-  listType?: 'table' | 'slider-card' | 'slider-banner' | 'grid';
-  listName?: string | (() => never);
-  items?: IMedia[];
-  showFilterButton?: boolean;
-  showListTypeChangeButton?: boolean;
-  genresMovie?: { [id: string]: string };
-  genresTv?: { [id: string]: string };
-  mediaType?: 'movie' | 'tv';
-  showMoreList?: boolean;
-  onClickViewMore?: () => void;
-  cardType?: 'media' | 'similar-movie' | 'similar-tv';
-  navigationButtons?: boolean;
-  isCoverCard?: boolean;
-  coverItem?: { id: number; name: string; backdropPath: string }[];
-  virtual?: boolean;
-  itemsType?: 'movie' | 'tv';
-  languages?: ILanguage[];
+  coverItem?: { id: number; name: string; backdropPath: string }[]; // require when cover card is true, value is cover items to show
+  currentPage?: number; // require when pagination is true, loading type is page, value is current page
+  genresMovie?: { [id: string]: string }; // pass genres movie object
+  genresTv?: { [id: string]: string }; // pass genres tv object
+  hasNextPage?: boolean; // require when loading type is scroll, value is true if there is a next page
+  isCoverCard?: boolean; // value is true if the cover card is active
+  items?: IMedia[]; // value is items to show
+  itemsType?: 'movie' | 'tv' | 'anime' | 'people' | 'episode'; // value is type of items to show, help to show the correct url, item type and item title
+  languages?: ILanguage[]; // pass languages object
+  listName?: string | (() => never); // value is name of the list
+  listType?: 'table' | 'slider-card' | 'slider-banner' | 'grid'; // value is type of list to show
+  loadingType?: 'page' | 'scroll'; // value is type of loading to show
+  mediaType?: 'movie' | 'tv'; // value is type of media to show, help for filter type
+  navigationButtons?: boolean; // value is true if the navigation buttons are active
+  onClickViewMore?: () => void; // require when view more button is true, value is function to execute when view more button is clicked
+  onPageChangeHandler?: (page: number) => void; // require when pagination is true, value is function to execute when page is changed
+  provider?: string; // value is provider name, help to show the correct url for episode itemsType
+  routeName?: string; // value is route name, help to load the correct route when scrolling
+  showFilterButton?: boolean; // value is true if the filter button is active
+  showListTypeChangeButton?: boolean; // value is true if the list type change button is active
+  showMoreList?: boolean; // value is true if the view more button is active
+  showPagination?: boolean; // value is true if the pagination is active
+  totalPages?: number; // require when pagination is true, value is total pages
+  virtual?: boolean; // value is true if the list is virtual
 }
 
 const MediaList = (props: IMediaListProps) => {
   const {
-    listName,
-    items,
-    showFilterButton,
-    showListTypeChangeButton,
+    coverItem,
+    currentPage,
     genresMovie,
     genresTv,
-    mediaType,
-    showMoreList,
-    onClickViewMore,
-    cardType,
-    navigationButtons,
+    hasNextPage,
     isCoverCard,
-    coverItem,
-    virtual,
+    items,
     itemsType,
     languages,
+    listName,
+    loadingType,
+    mediaType,
+    navigationButtons,
+    onClickViewMore,
+    onPageChangeHandler,
+    provider,
+    routeName,
+    showFilterButton,
+    showListTypeChangeButton,
+    showMoreList,
+    showPagination,
+    totalPages,
+    virtual,
   } = props;
   let { listType } = props;
   let list;
@@ -72,6 +88,7 @@ const MediaList = (props: IMediaListProps) => {
   const [slideProgress, setSlideProgress] = useState<number>(0);
   const [displayType, setDisplayType] = useState<string>(listType as string);
   const [showFilter, setShowFilter] = useState<boolean>(false);
+  const isXs = useMediaQuery('(max-width: 650px)');
 
   if (!listType && typeof window !== 'undefined') {
     listType =
@@ -88,13 +105,17 @@ const MediaList = (props: IMediaListProps) => {
     case 'grid':
       list = (
         <MediaListGrid
-          items={items}
+          coverItem={coverItem}
           genresMovie={genresMovie}
           genresTv={genresTv}
+          hasNextPage={hasNextPage}
           isCoverCard={isCoverCard}
-          coverItem={coverItem}
-          virtual={virtual}
+          items={items}
           itemsType={itemsType}
+          loadingType={loadingType}
+          provider={provider}
+          routeName={routeName}
+          virtual={virtual}
         />
       );
       break;
@@ -107,14 +128,15 @@ const MediaList = (props: IMediaListProps) => {
     case 'slider-card':
       list = (
         <MediaListCard
-          items={items}
-          type={cardType || 'media'}
-          navigation={{ nextEl, prevEl }}
+          coverItem={coverItem}
           genresMovie={genresMovie}
           genresTv={genresTv}
-          setSlideProgress={setSlideProgress}
           isCoverCard={isCoverCard}
-          coverItem={coverItem}
+          items={items}
+          itemsType={itemsType}
+          navigation={{ nextEl, prevEl }}
+          provider={provider}
+          setSlideProgress={setSlideProgress}
           virtual={virtual}
         />
       );
@@ -262,6 +284,16 @@ const MediaList = (props: IMediaListProps) => {
         )}
       </AnimatePresence>
       {list}
+      {showPagination && totalPages && totalPages > 1 ? (
+        <Pagination
+          total={totalPages}
+          initialPage={currentPage}
+          shadow
+          onChange={onPageChangeHandler}
+          css={{ marginTop: '30px' }}
+          {...(isXs && { size: 'xs' })}
+        />
+      ) : null}
     </Flex>
   );
 };

@@ -1,7 +1,7 @@
 import { Divider } from '@nextui-org/react';
 import { useRef } from 'react';
 import useSize, { IUseSize } from '~/hooks/useSize';
-import { IMedia } from '~/services/tmdb/tmdb.types';
+import { IMedia } from '~/types/media';
 import { RowItem } from '../item';
 
 type IProps = {

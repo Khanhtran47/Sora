@@ -5,19 +5,22 @@ import { useLoaderData, useNavigate } from '@remix-run/react';
 import { Row, Col, Spacer, Divider } from '@nextui-org/react';
 import type { User } from '@supabase/supabase-js';
 import { useRouteData } from 'remix-utils';
-import { getSimilar, getVideos, getCredits, getRecommendation } from '~/services/tmdb/tmdb.server';
-import { IMovieDetail, IPeople } from '~/services/tmdb/tmdb.types';
-import MediaList from '~/src/components/media/MediaList';
-import PeopleList from '~/src/components/people/PeopleList';
-import { H6 } from '~/src/components/styles/Text.styles';
+
 import useMediaQuery from '~/hooks/useMediaQuery';
 import { authenticate } from '~/services/supabase';
+import { getSimilar, getVideos, getCredits, getRecommendation } from '~/services/tmdb/tmdb.server';
+import { IMovieDetail, IPeople } from '~/services/tmdb/tmdb.types';
+import { postFetchDataHandler } from '~/services/tmdb/utils.server';
+import { IMedia } from '~/types/media';
+
+import MediaList from '~/src/components/media/MediaList';
+import { H6 } from '~/src/components/styles/Text.styles';
 
 type LoaderData = {
   videos: Awaited<ReturnType<typeof getVideos>>;
   similar: Awaited<ReturnType<typeof getSimilar>>;
   recommendations: Awaited<ReturnType<typeof getRecommendation>>;
-  topBilledCast: IPeople[];
+  topBilledCast: IMedia[];
   directors: IPeople[];
 };
 
@@ -43,19 +46,14 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     videos,
     similar,
     recommendations,
-    topBilledCast: credits && credits.cast && credits.cast.slice(0, 9),
+    topBilledCast: credits &&
+      credits.cast && [...postFetchDataHandler(credits.cast.slice(0, 9), 'people')],
     directors: credits && credits.crew && credits.crew.filter(({ job }) => job === 'Director'),
   });
 };
 
 const Overview = () => {
-  const {
-    similar,
-    // videos,
-    recommendations,
-    topBilledCast,
-    directors,
-  } = useLoaderData<LoaderData>();
+  const { similar, recommendations, topBilledCast, directors } = useLoaderData<LoaderData>();
   const movieData: { detail: IMovieDetail } | undefined = useRouteData('routes/movies/$movieId');
   const rootData:
     | {
@@ -167,13 +165,14 @@ const Overview = () => {
         <Spacer y={1} />
         {topBilledCast && topBilledCast.length > 0 && (
           <>
-            <PeopleList
+            <MediaList
               listType="slider-card"
               items={topBilledCast}
-              listName="Top Billed Cast"
+              listName="Top Cast"
               showMoreList
               onClickViewMore={() => onClickViewMore('cast')}
               navigationButtons
+              itemsType="people"
             />
             <Spacer y={1} />
             <Divider x={1} css={{ m: 0 }} />
@@ -188,7 +187,7 @@ const Overview = () => {
               listName="Recommendations"
               showMoreList
               onClickViewMore={() => onClickViewMore('recommendations')}
-              cardType="similar-movie"
+              itemsType="movie"
               navigationButtons
               genresMovie={rootData?.genresMovie}
               genresTv={rootData?.genresTv}
@@ -207,7 +206,7 @@ const Overview = () => {
               listName="Similar Movies"
               showMoreList
               onClickViewMore={() => onClickViewMore('similar')}
-              cardType="similar-movie"
+              itemsType="movie"
               navigationButtons
               genresMovie={rootData?.genresMovie}
               genresTv={rootData?.genresTv}

@@ -1,40 +1,11 @@
-export interface IAnimeSearch {
-  currentPage: number;
-  hasNextPage: boolean;
-  results: IAnimeResult[];
-}
+import { IMedia } from '~/types/media';
 
-export interface IRecentAnimeEpisodes {
-  currentPage: number;
-  hasNextPage: boolean;
-  results: IAnimeEpisode[];
-  totalPages: number;
-  totalResults: number;
-}
-
-export interface IAnimeAdvancedSearch {
-  currentPage: number;
-  hasNextPage: boolean;
-  results: IAnimeResult[];
-  totalPages: number;
-  totalResults: number;
-}
-
-export interface IAnimeGenre {
-  currentPage: number;
-  hasNextPage: boolean;
-  results: IAnimeResult[];
-}
 export interface IAnimeList {
   currentPage: number;
   hasNextPage: boolean;
-  results: IAnimeResult[];
-}
-
-export interface IAnimeAiringSchedule {
-  currentPage: number;
-  hasNextPage: boolean;
-  results: IAnimeResult[];
+  results: IAnimeResult[] | IAnimeEpisode[] | IMedia[];
+  totalPages?: number;
+  totalResults?: number;
 }
 
 export interface IAnimeEpisode {
@@ -69,7 +40,7 @@ export interface IAnimeInfo {
   nextAiringEpisode?: IAiring;
   popularity?: number;
   rating?: number;
-  recommendations: IAnimeResult[];
+  recommendations: IAnimeResult[] | IMedia[];
   relations?: IAnimeResult[];
   releaseDate?: number;
   season?: string;
@@ -90,22 +61,22 @@ export interface IAnimeEpisodeStream {
 }
 
 export interface IAnimeResult {
-  color?: null | string;
+  color?: string;
   cover?: string;
   description?: string;
-  duration?: number | null;
+  duration?: number;
   episodes?: number;
   genres?: string[];
   id?: string;
   image?: string;
   malId?: number;
   popularity?: number;
-  rating?: number | null;
+  rating?: number;
   relationType?: string;
-  releaseDate?: number | null;
+  releaseDate?: number;
   status?: string;
   title?: Title;
-  totalEpisodes?: number | null;
+  totalEpisodes?: number;
   trailer?: ITrailer;
   type?: Type;
 }

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable no-bitwise */
-import { IMedia } from '~/services/tmdb/tmdb.types';
+import { IMedia } from '~/types/media';
 
 export type PosterSize = 'w92' | 'w154' | 'w185' | 'w342' | 'w500' | 'w780' | 'original';
 export type BackdropSize = 'w300' | 'w780' | 'w1280' | 'original';

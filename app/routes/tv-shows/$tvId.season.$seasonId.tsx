@@ -141,12 +141,13 @@ const SeasonDetail = () => {
                     title={detail?.name}
                     objectFit="cover"
                     width="50%"
+                    showSkeleton
                     css={{
                       minWidth: 'auto !important',
                       borderRadius: '24px',
                     }}
                     loaderUrl="/api/image"
-                    placeholder="blur"
+                    placeholder="empty"
                     responsive={[
                       {
                         size: {
@@ -222,8 +223,9 @@ const SeasonDetail = () => {
                           marginTop: '2rem',
                           borderRadius: '24px',
                         }}
+                        showSkeleton
                         loaderUrl="/api/image"
-                        placeholder="blur"
+                        placeholder="empty"
                         options={{
                           contentType: MimeType.WEBP,
                         }}
@@ -291,6 +293,7 @@ const SeasonDetail = () => {
             src={
               detail?.poster_path ? TMDB.posterUrl(detail?.poster_path, 'w342') : BackgroundDefault
             }
+            showSkeleton
             css={{
               minHeight: '100vh !important',
               minWidth: '100% !important',
@@ -305,7 +308,7 @@ const SeasonDetail = () => {
             alt={detail?.name}
             containerCss={{ margin: 0 }}
             loaderUrl="/api/image"
-            placeholder="blur"
+            placeholder="empty"
             responsive={[
               {
                 size: {

@@ -5,11 +5,13 @@ import { Row } from '@nextui-org/react';
 
 import { authenticate } from '~/services/supabase';
 import { getCredits } from '~/services/tmdb/tmdb.server';
-import { IPeople } from '~/services/tmdb/tmdb.types';
-import PeopleList from '~/src/components/people/PeopleList';
+import { postFetchDataHandler } from '~/services/tmdb/utils.server';
+import { IMedia } from '~/types/media';
+
+import MediaList from '~/src/components/media/MediaList';
 
 type LoaderData = {
-  cast: IPeople[];
+  cast: IMedia[];
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -23,7 +25,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   if (!credits) throw new Response('Not found', { status: 404 });
 
-  return json<LoaderData>({ cast: credits.cast });
+  return json<LoaderData>({ cast: [...postFetchDataHandler(credits.cast, 'people')] });
 };
 
 export const meta: MetaFunction = ({ params }) => ({
@@ -32,6 +34,7 @@ export const meta: MetaFunction = ({ params }) => ({
 
 const CastPage = () => {
   const { cast } = useLoaderData<LoaderData>();
+  console.log('🚀 ~ file: cast.tsx ~ line 37 ~ CastPage ~ cast', cast);
 
   return (
     <Row
@@ -50,12 +53,8 @@ const CastPage = () => {
         },
       }}
     >
-      {/*
-        TODO: Need react virtual to load this list
-        This list has a lot of items, so i limit it to 24 items until we install react virtual
-      */}
       {cast && cast.length > 0 && (
-        <PeopleList listType="grid" items={cast.slice(0, 24)} listName="Cast" virtual />
+        <MediaList listType="grid" items={cast} listName="Cast" virtual itemsType="people" />
       )}
     </Row>
   );

@@ -17,13 +17,13 @@ import {
 import Image, { MimeType } from 'remix-image';
 import tinycolor from 'tinycolor2';
 
-import { IMedia, IEpisode, IMovieTranslations } from '~/services/tmdb/tmdb.types';
-import { IAnimeResult, ITrailer, IEpisodeInfo } from '~/services/consumet/anilist/anilist.types';
+import { IEpisode, IMovieTranslations } from '~/services/tmdb/tmdb.types';
+import { ITrailer, IEpisodeInfo } from '~/services/consumet/anilist/anilist.types';
+import { IMedia } from '~/types/media';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
 
 import MediaList from '~/src/components/media/MediaList';
-import AnimeList from '~/src/components/anime/AnimeList';
 import ListEpisodes from '~/src/components/elements/shared/ListEpisodes';
 import Flex from '~/src/components/styles/Flex.styles';
 import { H2, H5, H6 } from '~/src/components/styles/Text.styles';
@@ -48,7 +48,7 @@ interface IWatchDetailProps {
   }[];
   genresAnime?: string[];
   recommendationsMovies?: IMedia[];
-  recommendationsAnime?: IAnimeResult[];
+  recommendationsAnime?: IMedia[];
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
   color?: string;
@@ -201,13 +201,14 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
                   title={title}
                   objectFit="cover"
                   width="50%"
+                  showSkeleton
                   css={{
                     minWidth: 'auto !important',
                     minHeight: '205px !important',
                     borderRadius: '24px',
                   }}
                   loaderUrl="/api/image"
-                  placeholder="blur"
+                  placeholder="empty"
                   responsive={[
                     {
                       size: {
@@ -395,17 +396,17 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
         recommendationsMovies.length > 0 ? (
           <>
             <MediaList
-              listType="slider-card"
+              genresMovie={genresMovie}
+              genresTv={genresTv}
               items={recommendationsMovies}
+              itemsType={type}
               listName="You May Also Like"
-              showMoreList
+              listType="slider-card"
+              navigationButtons
               onClickViewMore={() =>
                 navigate(`/${type === 'movie' ? 'movies' : 'tv-shows'}/${id}/recommendations`)
               }
-              cardType={`similar-${type as 'movie' | 'tv'}`}
-              navigationButtons
-              genresMovie={genresMovie}
-              genresTv={genresTv}
+              showMoreList
             />
             <Spacer y={1} />
             <Divider x={1} css={{ m: 0 }} />
@@ -414,10 +415,11 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
         ) : null}
         {type === 'anime' && recommendationsAnime && recommendationsAnime.length > 0 ? (
           <>
-            <AnimeList
-              listType="slider-card"
+            <MediaList
               items={recommendationsAnime}
+              itemsType="anime"
               listName="You May Also Like"
+              listType="slider-card"
               navigationButtons
             />
             <Spacer y={1} />

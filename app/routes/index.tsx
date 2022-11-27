@@ -15,12 +15,10 @@ import {
   getListTvShows,
   getListPeople,
 } from '~/services/tmdb/tmdb.server';
-import { IMedia, IPeople } from '~/services/tmdb/tmdb.types';
 import { getAnimePopular } from '~/services/consumet/anilist/anilist.server';
-import { IAnimeResult } from '~/services/consumet/anilist/anilist.types';
+import { IMedia } from '~/types/media';
+
 import MediaList from '~/src/components/media/MediaList';
-import AnimeList from '~/src/components/anime/AnimeList';
-import PeopleList from '~/src/components/people/PeopleList';
 import featuredList from '~/src/constants/featuredList';
 
 export const handle = {
@@ -31,8 +29,8 @@ type LoaderData = {
   todayTrending: IMedia[] | undefined;
   movies: IMedia[] | undefined;
   shows: IMedia[] | undefined;
-  popularAnime: IAnimeResult[] | undefined;
-  people: IPeople[] | undefined;
+  popularAnime: IMedia[] | undefined;
+  people: IMedia[] | undefined;
 };
 
 export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
@@ -54,8 +52,8 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
     todayTrending: todayTrending && todayTrending.items && todayTrending.items.slice(0, 10),
     movies: movies && movies.items && movies.items.slice(0, 16),
     shows: shows && shows.items && shows.items.slice(0, 16),
-    popularAnime: anime && anime.results,
-    people: people && people.results && people.results.slice(0, 16),
+    popularAnime: anime && (anime.results as IMedia[]),
+    people: people && people.items && people.items.slice(0, 16),
   });
 };
 
@@ -88,10 +86,10 @@ const Index = () => {
       style={{ width: '100%' }}
     >
       <MediaList
-        listType="slider-banner"
-        items={todayTrending}
         genresMovie={rootData?.genresMovie}
         genresTv={rootData?.genresTv}
+        items={todayTrending}
+        listType="slider-banner"
       />
       <Container
         fluid
@@ -111,39 +109,40 @@ const Index = () => {
         {movies.length > 0 && (
           <>
             <MediaList
-              listType="slider-card"
-              items={movies}
-              listName={t('popularMovies')}
-              showMoreList
-              onClickViewMore={() => onClickViewMore('movies')}
-              navigationButtons
               genresMovie={rootData?.genresMovie}
               genresTv={rootData?.genresTv}
+              items={movies}
+              listName={t('popularMovies')}
+              listType="slider-card"
+              navigationButtons
+              onClickViewMore={() => onClickViewMore('movies')}
+              showMoreList
             />
             <Spacer y={1.5} />
           </>
         )}
         {shows.length > 0 && (
           <MediaList
-            listType="slider-card"
-            items={shows}
-            listName={t('popularTv')}
-            showMoreList
-            onClickViewMore={() => onClickViewMore('tv-shows')}
-            navigationButtons
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
+            items={shows}
+            listName={t('popularTv')}
+            listType="slider-card"
+            navigationButtons
+            onClickViewMore={() => onClickViewMore('tv-shows')}
+            showMoreList
           />
         )}
         {popularAnime && popularAnime.length > 0 && (
           <>
-            <AnimeList
-              listType="slider-card"
+            <MediaList
               items={popularAnime}
+              itemsType="anime"
               listName="Popular Anime"
-              showMoreList
-              onClickViewMore={() => navigate('/anime/popular')}
+              listType="slider-card"
               navigationButtons
+              onClickViewMore={() => navigate('/anime/popular')}
+              showMoreList
             />
             <Spacer y={1.5} />
           </>
@@ -151,26 +150,27 @@ const Index = () => {
         {featuredList && (
           <>
             <MediaList
-              listType="slider-card"
-              listName="Featured Collections"
-              showMoreList
-              onClickViewMore={() => navigate('/collections')}
-              navigationButtons
-              isCoverCard
               coverItem={featuredList}
+              isCoverCard
+              listName="Featured Collections"
+              listType="slider-card"
+              navigationButtons
+              onClickViewMore={() => navigate('/collections')}
+              showMoreList
             />
             <Spacer y={1.5} />
           </>
         )}
         {people.length > 0 && (
           <>
-            <PeopleList
-              listType="slider-card"
+            <MediaList
               items={people}
               listName={t('popularPeople')}
-              showMoreList
-              onClickViewMore={() => onClickViewMore('people')}
+              listType="slider-card"
               navigationButtons
+              onClickViewMore={() => onClickViewMore('people')}
+              showMoreList
+              itemsType="people"
             />
             <Spacer y={1.5} />
           </>

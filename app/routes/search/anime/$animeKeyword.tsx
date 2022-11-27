@@ -4,9 +4,11 @@ import { Container } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 
 import { authenticate } from '~/services/supabase';
-import SearchForm from '~/src/components/elements/SearchForm';
-import AnimeList from '~/src/components/anime/AnimeList';
 import { getAnimeSearch } from '~/services/consumet/anilist/anilist.server';
+import { IMedia } from '~/types/media';
+
+import MediaList from '~/src/components/media/MediaList';
+import SearchForm from '~/src/components/elements/SearchForm';
 
 type LoaderData = {
   searchResults: Awaited<ReturnType<typeof getAnimeSearch>>;
@@ -77,11 +79,13 @@ const SearchRoute = () => {
         }}
       >
         {searchResults && searchResults.results && searchResults.results.length > 0 && (
-          <AnimeList
-            listType="grid"
-            items={searchResults.results}
+          <MediaList
             hasNextPage={searchResults.hasNextPage || false}
+            items={searchResults.results as IMedia[]}
+            itemsType="anime"
             listName="Search Results"
+            listType="grid"
+            loadingType="scroll"
             routeName={location.pathname}
             virtual
           />

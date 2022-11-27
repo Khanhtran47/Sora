@@ -24,11 +24,14 @@ import { useInView } from 'react-intersection-observer';
 import useLocalStorage from '~/hooks/useLocalStorage';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import useSize from '~/hooks/useSize';
-import { IMedia, IImage } from '~/services/tmdb/tmdb.types';
+import { IImage } from '~/services/tmdb/tmdb.types';
+import { ITrailer } from '~/services/consumet/anilist/anilist.types';
+import { Title } from '~/types/media';
 import TMDB from '~/utils/media';
 
 import AspectRatio from '~/src/components/elements/aspect-ratio/AspectRatio';
 import { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
+import Rating from '~/src/components/elements/shared/Rating';
 import { H5, H6 } from '~/src/components/styles/Text.styles';
 
 import VolumeUp from '~/src/assets/icons/VolumeUpIcon.js';
@@ -41,18 +44,40 @@ const variants = {
 };
 
 interface IBannerItemDesktopProps {
-  item?: IMedia;
+  active?: boolean;
+  backdropPath: string;
+  genreIds: number[];
+  genresAnime: string[];
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
-  active?: boolean;
+  id: number;
+  mediaType: 'movie' | 'tv' | 'anime' | 'people';
+  overview: string;
+  posterPath: string;
+  title: string | Title;
+  trailer?: ITrailer;
+  voteAverage: number;
 }
 
 const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
-  const { item, genresMovie, genresTv, active } = props;
+  const {
+    active,
+    backdropPath,
+    genreIds,
+    genresAnime,
+    genresMovie,
+    genresTv,
+    id,
+    mediaType,
+    overview,
+    posterPath,
+    title,
+    trailer,
+    voteAverage,
+  } = props;
   const { t } = useTranslation();
   const fetcher = useFetcher();
   const navigate = useNavigate();
-  const { backdropPath, overview, posterPath, title, id, mediaType } = item || {};
   const [logo, setLogo] = useState<IImage>();
   const [player, setPlayer] = useState<ReturnType<YouTube['getInternalPlayer']>>();
   const [isPlayed, setIsPlayed] = useState<boolean>(false);
@@ -70,36 +95,32 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
   const [isMuted, setIsMuted] = useLocalStorage('muteTrailer', true);
   const [isPlayTrailer] = useLocalStorage('playTrailer', false);
   const [isCardPlaying] = useLocalStorage('cardPlaying', false);
+  const titleItem =
+    typeof title === 'string'
+      ? title
+      : title?.userPreferred || title?.english || title?.romaji || title?.native;
 
   const mute = useCallback(() => {
     if (!player) return;
-
     player.mute();
-
     setIsMuted(true);
   }, [player]);
 
   const unMute = useCallback(() => {
     if (!player) return;
-
     player.unMute();
-
     setIsMuted(false);
   }, [player]);
 
   const play = useCallback(() => {
     if (!player) return;
-
     player.playVideo();
-
     setIsPlayed(true);
   }, [player]);
 
   const pause = useCallback(() => {
     if (!player) return;
-
     player.pauseVideo();
-
     setIsPlayed(false);
   }, [player]);
 
@@ -124,41 +145,39 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
     if (player) {
       if (isCardPlaying && isPlayed) {
         pause();
-      } else if (!isCardPlaying && !isPlayed) {
-        play();
       }
     }
   };
 
   useEffect(() => {
-    if (active === true) {
+    // fetch logo and youtube trailer key from tmdb
+    if (active === true && mediaType !== 'anime') {
       if (isPlayTrailer === true) {
-        fetcher.load(`/api/media?id=${item?.id}&type=${item?.mediaType}&video=true`);
+        fetcher.load(`/api/media?id=${id}&type=${mediaType}&video=true`);
       } else {
-        fetcher.load(`/api/media?id=${item?.id}&type=${item?.mediaType}`);
+        fetcher.load(`/api/media?id=${id}&type=${mediaType}`);
         setTrailerBanner({});
       }
     }
   }, [active, isPlayTrailer]);
 
   useEffect(() => {
-    if (!isPlayTrailer === true) {
-      setShowTrailer(false);
-    }
-  }, [isPlayTrailer]);
-
-  useEffect(() => {
-    if (active === true && fetcher.data && fetcher.data.videos && inView) {
+    if (active === true && fetcher.data && fetcher.data.videos && inView && mediaType !== 'anime') {
       const { results } = fetcher.data.videos;
       const officialTrailer = results.find((result: Trailer) => result.type === 'Trailer');
       setTrailerBanner(officialTrailer);
     }
-
-    if (active === true && fetcher.data && fetcher.data.images && inView) {
+    if (active === true && fetcher.data && fetcher.data.images && inView && mediaType !== 'anime') {
       const { logos } = fetcher.data.images;
       if (logos && logos.length > 0) setLogo(logos[0]);
     }
   }, [fetcher.data]);
+
+  useEffect(() => {
+    if (!isPlayTrailer === true) {
+      setShowTrailer(false);
+    }
+  }, [isPlayTrailer]);
 
   useEffect(() => {
     const watchScroll = () => {
@@ -172,7 +191,6 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
 
   useEffect(() => {
     document.addEventListener('visibilitychange', handleVisibility);
-
     return () => {
       document.removeEventListener('visibilitychange', handleVisibility);
     };
@@ -222,8 +240,8 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                 >
                   <NextImage
                     src={TMDB.logoUrl(logo.file_path, isLg ? 'w185' : 'w300')}
-                    alt={title}
-                    title={title}
+                    alt={titleItem}
+                    title={titleItem}
                     objectFit="cover"
                     width="100%"
                     height="auto"
@@ -261,7 +279,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                   transition={{ duration: 0.5 }}
                   variants={variants}
                 >
-                  {title}
+                  {titleItem}
                 </Text>
               )}
               <AnimatePresence>
@@ -283,21 +301,10 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                     transition={{ duration: 0.5, delay: 0.25 }}
                     variants={variants}
                   >
-                    <H5
-                      h5
-                      weight="bold"
-                      css={{
-                        backgroundColor: '#3ec2c2',
-                        borderRadius: '$xs',
-                        padding: '0 0.25rem 0 0.25rem',
-                        marginRight: '0.5rem',
-                      }}
-                    >
-                      TMDb
-                    </H5>
-                    <H5 h5 weight="bold">
-                      {item?.voteAverage?.toFixed(1)}
-                    </H5>
+                    <Rating
+                      rating={mediaType === 'anime' ? voteAverage : Number(voteAverage.toFixed(1))}
+                      ratingType={mediaType}
+                    />
                     <Spacer x={1.5} />
                     <H5
                       h5
@@ -306,22 +313,29 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                         flexDirection: 'row',
                       }}
                     >
-                      {item?.genreIds?.slice(0, 2).map((genreId) => {
-                        if (mediaType === 'movie') {
-                          return (
+                      {mediaType === 'anime'
+                        ? genresAnime?.slice(0, 2).map((genre) => (
                             <>
-                              {genresMovie?.[genreId]}
+                              {genre}
                               <Spacer x={0.5} />
                             </>
-                          );
-                        }
-                        return (
-                          <>
-                            {genresTv?.[genreId]}
-                            <Spacer x={0.5} />
-                          </>
-                        );
-                      })}
+                          ))
+                        : genreIds?.map((genreId) => {
+                            if (mediaType === 'movie') {
+                              return (
+                                <>
+                                  {genresMovie?.[genreId]}
+                                  <Spacer x={0.5} />
+                                </>
+                              );
+                            }
+                            return (
+                              <>
+                                {genresTv?.[genreId]}
+                                <Spacer x={0.5} />
+                              </>
+                            );
+                          })}
                     </H5>
                   </Row>
                 ) : null}
@@ -349,9 +363,8 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                     exit={{ opacity: 0, x: 40 }}
                     transition={{ duration: 0.5, delay: 0.5 }}
                     variants={variants}
-                  >
-                    {overview}
-                  </Text>
+                    dangerouslySetInnerHTML={{ __html: overview || '' }}
+                  />
                 ) : null}
               </AnimatePresence>
               <Row
@@ -369,9 +382,18 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                     marginTop: '1.125rem',
                   }}
                   onClick={() =>
-                    navigate(`/${mediaType === 'movie' ? 'movies/' : 'tv-shows/'}${id}/`, {
-                      state: { currentTime: player ? player.playerInfo.currentTime : 0 },
-                    })
+                    navigate(
+                      `/${
+                        mediaType === 'movie'
+                          ? 'movies/'
+                          : mediaType === 'tv'
+                          ? 'tv-shows/'
+                          : 'anime/'
+                      }${id}/${mediaType === 'anime' ? 'overview' : ''}`,
+                      {
+                        state: { currentTime: player ? player.playerInfo.currentTime : 0 },
+                      },
+                    )
                   }
                 >
                   <H6 h6 weight="bold" transform="uppercase">
@@ -380,7 +402,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                 </Button>
               </Row>
             </Col>
-            {!isLg && active ? (
+            {!isLg ? (
               <Col
                 // @ts-ignore
                 as={motion.div}
@@ -398,15 +420,15 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                   // @ts-ignore
                   as={Image}
                   src={posterPath || ''}
-                  alt={title}
-                  title={title}
+                  alt={titleItem}
+                  title={titleItem}
                   objectFit="cover"
                   width="100%"
                   containerCss={{
                     display: 'flex',
                     justifyContent: 'center',
                   }}
-                  showSkeleton={false}
+                  showSkeleton
                   css={{
                     minWidth: 'auto !important',
                     minHeight: 'auto !important',
@@ -420,7 +442,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                   }}
                   loading="eager"
                   loaderUrl="/api/image"
-                  placeholder="blur"
+                  placeholder="empty"
                   responsive={[
                     {
                       size: {
@@ -484,11 +506,11 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                     objectFit: 'cover',
                     opacity: 0.3,
                   }}
-                  showSkeleton={false}
-                  alt={title}
-                  title={title}
+                  showSkeleton
+                  alt={titleItem}
+                  title={titleItem}
                   loaderUrl="/api/image"
-                  placeholder="blur"
+                  placeholder="empty"
                   responsive={[
                     {
                       size: {
@@ -506,17 +528,17 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
           </AnimatePresence>
           <ClientOnly fallback={<Loading type="default" />}>
             {() => {
-              if (trailerBanner?.key && !isSm && isPlayTrailer && active && inView)
+              if (trailerBanner?.key && !isSm && isPlayTrailer && active)
                 return (
                   <Suspense fallback={<Loading type="default" />}>
                     <YouTube
-                      videoId={active ? trailerBanner.key : ''}
+                      videoId={trailerBanner.key}
                       opts={{
                         height: '100%',
                         width: '100%',
                         playerVars: {
                           // https://developers.google.com/youtube/player_parameters
-                          autoplay: 1,
+                          autoplay: 0,
                           modestbranding: 1,
                           controls: 0,
                           disablekb: 1,
@@ -528,15 +550,75 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                           cc_load_policy: 0,
                           playsinline: 1,
                           mute: 1,
+                          origin: 'https://sora-anime.vercel.app',
                         },
                       }}
                       onReady={({ target }) => {
+                        if (active && inView) target.playVideo();
                         setPlayer(target);
                         if (!isMuted) target.unMute();
                       }}
                       onPlay={() => {
                         setIsPlayed(true);
                         if (active && inView) setShowTrailer(true);
+                      }}
+                      onPause={() => {
+                        setShowTrailer(false);
+                      }}
+                      onEnd={() => {
+                        setShowTrailer(false);
+                      }}
+                      onError={() => {
+                        setShowTrailer(false);
+                      }}
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                      }}
+                      className={
+                        showTrailer
+                          ? 'relative !w-full overflow-hidden !h-[300%] !-top-[100%] opacity-80'
+                          : 'hidden'
+                      }
+                    />
+                  </Suspense>
+                );
+              if (trailer?.id && trailer?.site === 'youtube' && isPlayTrailer && !isSm && active)
+                return (
+                  <Suspense fallback={<Loading type="default" />}>
+                    <YouTube
+                      videoId={trailer?.id}
+                      opts={{
+                        height: '100%',
+                        width: '100%',
+                        playerVars: {
+                          // https://developers.google.com/youtube/player_parameters
+                          autoplay: 0,
+                          modestbranding: 1,
+                          controls: 0,
+                          disablekb: 1,
+                          showinfo: 0,
+                          branding: 0,
+                          rel: 0,
+                          autohide: 0,
+                          iv_load_policy: 3,
+                          cc_load_policy: 0,
+                          playsinline: 1,
+                          mute: 1,
+                          origin: 'https://sora-anime.vercel.app',
+                        },
+                      }}
+                      onReady={({ target }) => {
+                        if (active && inView) target.playVideo();
+                        setPlayer(target);
+                        if (!isMuted) target.unMute();
+                      }}
+                      onPlay={() => {
+                        setIsPlayed(true);
+                        setShowTrailer(true);
                       }}
                       onPause={() => {
                         setShowTrailer(false);

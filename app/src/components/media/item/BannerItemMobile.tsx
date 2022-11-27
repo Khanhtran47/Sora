@@ -1,21 +1,43 @@
+/* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Card, Row, Col, Spacer } from '@nextui-org/react';
 import { Link } from '@remix-run/react';
 import Image, { MimeType } from 'remix-image';
 
-import { IMedia } from '~/services/tmdb/tmdb.types';
-import { H2, H5 } from '~/src/components/styles/Text.styles';
+import { Title } from '~/types/media';
 
-const BannerItemMobile = ({
-  item,
-  genresMovie,
-  genresTv,
-}: {
-  item?: IMedia;
+import { H2, H5 } from '~/src/components/styles/Text.styles';
+import Rating from '~/src/components/elements/shared/Rating';
+
+interface IBannerItemMobileProps {
+  backdropPath: string;
+  genreIds: number[];
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
-}) => {
-  const { backdropPath, title, mediaType, id } = item || {};
+  id: number | string;
+  mediaType: 'movie' | 'tv' | 'anime' | 'people';
+  title: string | Title;
+  voteAverage: number;
+  genresAnime: string[];
+}
+
+const BannerItemMobile = (props: IBannerItemMobileProps) => {
+  const {
+    backdropPath,
+    genreIds,
+    genresMovie,
+    genresTv,
+    id,
+    mediaType,
+    title,
+    voteAverage,
+    genresAnime,
+  } = props;
+
+  const titleItem =
+    typeof title === 'string'
+      ? title
+      : title?.userPreferred || title?.english || title?.romaji || title?.native;
 
   return (
     <Link to={`/${mediaType === 'movie' ? 'movies/' : 'tv-shows/'}${id}/`}>
@@ -48,11 +70,12 @@ const BannerItemMobile = ({
           containerCss={{
             overflow: 'visible',
           }}
+          showSkeleton
           objectFit="cover"
-          alt={title}
-          title={title}
+          alt={titleItem}
+          title={titleItem}
           loaderUrl="/api/image"
-          placeholder="blur"
+          placeholder="empty"
           responsive={[
             {
               size: {
@@ -93,25 +116,13 @@ const BannerItemMobile = ({
                 whiteSpace: 'nowrap',
               }}
             >
-              {title}
+              {titleItem}
             </H2>
             <Row css={{ marginTop: '1.25rem' }} align="center">
-              <H5
-                h5
-                weight="bold"
-                css={{
-                  backgroundColor: '#3ec2c2',
-                  borderRadius: '$xs',
-                  padding: '0 0.25rem 0 0.25rem',
-                  marginRight: '0.5rem',
-                }}
-              >
-                TMDb
-              </H5>
-              <H5 h5 weight="bold">
-                {item?.voteAverage?.toFixed(1)}
-              </H5>
-              <Spacer x={1.5} />
+              <Rating
+                rating={mediaType === 'anime' ? voteAverage : Number(voteAverage.toFixed(1))}
+                ratingType={mediaType}
+              />
               <H5
                 h5
                 css={{
@@ -123,22 +134,29 @@ const BannerItemMobile = ({
                   whiteSpace: 'nowrap',
                 }}
               >
-                {item?.genreIds?.map((genreId) => {
-                  if (mediaType === 'movie') {
-                    return (
+                {mediaType === 'anime'
+                  ? genresAnime?.slice(0, 2).map((genre) => (
                       <>
-                        {genresMovie?.[genreId]}
+                        {genre}
                         <Spacer x={0.5} />
                       </>
-                    );
-                  }
-                  return (
-                    <>
-                      {genresTv?.[genreId]}
-                      <Spacer x={0.5} />
-                    </>
-                  );
-                })}
+                    ))
+                  : genreIds?.map((genreId) => {
+                      if (mediaType === 'movie') {
+                        return (
+                          <>
+                            {genresMovie?.[genreId]}
+                            <Spacer x={0.5} />
+                          </>
+                        );
+                      }
+                      return (
+                        <>
+                          {genresTv?.[genreId]}
+                          <Spacer x={0.5} />
+                        </>
+                      );
+                    })}
               </H5>
             </Row>
           </Col>

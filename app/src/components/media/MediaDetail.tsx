@@ -121,8 +121,9 @@ const MediaDetail = (props: IMediaDetail) => {
                       minHeight: '205px !important',
                       borderRadius: '24px',
                     }}
+                    showSkeleton
                     loaderUrl="/api/image"
-                    placeholder="blur"
+                    placeholder="empty"
                     responsive={[
                       {
                         size: {
@@ -226,8 +227,9 @@ const MediaDetail = (props: IMediaDetail) => {
                               borderRadius: '24px',
                               minHeight: '205px !important',
                             }}
+                            showSkeleton
                             loaderUrl="/api/image"
-                            placeholder="blur"
+                            placeholder="empty"
                             options={{
                               contentType: MimeType.WEBP,
                             }}
@@ -435,9 +437,10 @@ const MediaDetail = (props: IMediaDetail) => {
             }}
             title={title}
             alt={title}
+            showSkeleton
             containerCss={{ margin: 0 }}
             loaderUrl="/api/image"
-            placeholder="blur"
+            placeholder="empty"
             responsive={[
               {
                 size: {

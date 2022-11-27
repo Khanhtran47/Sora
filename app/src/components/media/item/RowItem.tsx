@@ -1,7 +1,7 @@
 /* eslint-disable no-nested-ternary */
 import { Grid, Image, Text, useTheme } from '@nextui-org/react';
 import { Link } from '@remix-run/react';
-import { IMedia } from '~/services/tmdb/tmdb.types';
+import { IMedia } from '~/types/media';
 
 interface IRowItem {
   item: IMedia;

@@ -1,15 +1,11 @@
 import { lruCache } from '~/services/lru-cache';
-import Anilist from './utils.server';
+import { Anilist, fetchAnimeEpisodeHandler, fetchAnimeResultsHandler } from './utils.server';
 import {
-  IAnimeSearch,
   IAnimeList,
-  IAnimeAdvancedSearch,
   IAnimeInfo,
-  IAnimeAiringSchedule,
   IAnimeEpisodeStream,
-  IAnimeGenre,
-  IRecentAnimeEpisodes,
   IEpisodeInfo,
+  IAnimeResult,
 } from './anilist.types';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -31,32 +27,41 @@ const fetcher = async <T = any>(url: string): Promise<T> => {
   return data;
 };
 
+const getListFromAnilist = async (url: string, type: 'result' | 'episode'): Promise<IAnimeList> => {
+  try {
+    const fetched = await fetcher(url);
+    return {
+      currentPage: fetched.currentPage,
+      hasNextPage: fetched.hasNextPage,
+      results:
+        type === 'result'
+          ? [...fetchAnimeResultsHandler(fetched.results)]
+          : [...fetchAnimeEpisodeHandler(fetched.results)],
+      ...(fetched.totalPages && { totalPages: fetched.totalPages }),
+      ...(fetched.totalResults && { totalResults: fetched.totalResults }),
+    } as IAnimeList;
+  } catch (error) {
+    console.error(error);
+    return { currentPage: 0, hasNextPage: false, results: [] };
+  }
+};
+
 export const getAnimeSearch = async (
   query: string,
   page?: number,
   perPage?: number,
-): Promise<IAnimeSearch | undefined> => {
-  try {
-    const fetched = await fetcher<IAnimeSearch>(Anilist.animeSearchUrl(query, page, perPage));
-    return fetched;
-  } catch (error) {
-    console.log(error);
-  }
+): Promise<IAnimeList | undefined> => {
+  const url = Anilist.animeSearchUrl(query, page, perPage);
+  return getListFromAnilist(url, 'result');
 };
 
 export const getAnimeRecentEpisodes = async (
   provider?: string | undefined,
   page?: number,
   perPage?: number,
-): Promise<IRecentAnimeEpisodes | undefined> => {
-  try {
-    const fetched = await fetcher<IRecentAnimeEpisodes>(
-      Anilist.animeRecentEpisodesUrl(provider, page, perPage),
-    );
-    return fetched;
-  } catch (error) {
-    console.error(error);
-  }
+): Promise<IAnimeList | undefined> => {
+  const url = Anilist.animeRecentEpisodesUrl(provider, page, perPage);
+  return getListFromAnilist(url, 'episode');
 };
 
 export const getAnimeAdvancedSearch = async (
@@ -71,33 +76,30 @@ export const getAnimeAdvancedSearch = async (
   id?: string,
   year?: number,
   status?: 'RELEASING' | 'NOT_YET_RELEASED' | 'FINISHED' | 'CANCELLED' | 'HIATUS',
-): Promise<IAnimeAdvancedSearch | undefined> => {
-  try {
-    const fetched = await fetcher<IAnimeAdvancedSearch>(
-      Anilist.animeAdvancedSearchUrl(
-        query,
-        type,
-        page,
-        perPage,
-        season,
-        format,
-        sort,
-        genres,
-        id,
-        year,
-        status,
-      ),
-    );
-    return fetched;
-  } catch (error) {
-    console.error(error);
-  }
+): Promise<IAnimeList | undefined> => {
+  const url = Anilist.animeAdvancedSearchUrl(
+    query,
+    type,
+    page,
+    perPage,
+    season,
+    format,
+    sort,
+    genres,
+    id,
+    year,
+    status,
+  );
+  return getListFromAnilist(url, 'result');
 };
 
 export const getAnimeRandom = async (): Promise<IAnimeInfo | undefined> => {
   try {
     const fetched = await fetcher<IAnimeInfo>(Anilist.animeRandomUrl());
-    return fetched;
+    return {
+      ...fetched,
+      recommendations: [...fetchAnimeResultsHandler(fetched.recommendations as IAnimeResult[])],
+    };
   } catch (error) {
     console.log(error);
   }
@@ -107,33 +109,21 @@ export const getAnimeTrending = async (
   page?: number,
   perPage?: number,
 ): Promise<IAnimeList | undefined> => {
-  try {
-    const fetched = await fetcher<IAnimeList>(Anilist.animeTrendingUrl(page, perPage));
-    return fetched;
-  } catch (error) {
-    console.error(error);
-  }
+  const url = Anilist.animeTrendingUrl(page, perPage);
+  return getListFromAnilist(url, 'result');
 };
 
 export const getAnimePopular = async (
   page?: number,
   perPage?: number,
 ): Promise<IAnimeList | undefined> => {
-  try {
-    const fetched = await fetcher<IAnimeList>(Anilist.animePopularUrl(page, perPage));
-    return fetched;
-  } catch (error) {
-    console.error(error);
-  }
+  const url = Anilist.animePopularUrl(page, perPage);
+  return getListFromAnilist(url, 'result');
 };
 
-export const getAnimeGenre = async (genres: string[]): Promise<IAnimeGenre | undefined> => {
-  try {
-    const fetched = await fetcher<IAnimeGenre>(Anilist.animeGenreUrl(genres));
-    return fetched;
-  } catch (error) {
-    console.error(error);
-  }
+export const getAnimeGenre = async (genres: string[]): Promise<IAnimeList | undefined> => {
+  const url = Anilist.animeGenreUrl(genres);
+  return getListFromAnilist(url, 'result');
 };
 
 export const getAnimeAiringSchedule = async (
@@ -142,15 +132,9 @@ export const getAnimeAiringSchedule = async (
   weekStart?: number | string,
   weekEnd?: number | string,
   notYetAired?: boolean,
-): Promise<IAnimeAiringSchedule | undefined> => {
-  try {
-    const fetched = await fetcher<IAnimeAiringSchedule>(
-      Anilist.animeAiringSchedule(page, perPage, weekStart, weekEnd, notYetAired),
-    );
-    return fetched;
-  } catch (error) {
-    console.log(error);
-  }
+): Promise<IAnimeList | undefined> => {
+  const url = Anilist.animeAiringSchedule(page, perPage, weekStart, weekEnd, notYetAired);
+  return getListFromAnilist(url, 'result');
 };
 
 export const getAnimeInfo = async (
@@ -161,7 +145,10 @@ export const getAnimeInfo = async (
 ): Promise<IAnimeInfo | undefined> => {
   try {
     const fetched = await fetcher<IAnimeInfo>(Anilist.animeInfoUrl(id, dub, provider));
-    return fetched;
+    return {
+      ...fetched,
+      recommendations: [...fetchAnimeResultsHandler(fetched.recommendations as IAnimeResult[])],
+    };
   } catch (error) {
     console.log(error);
   }

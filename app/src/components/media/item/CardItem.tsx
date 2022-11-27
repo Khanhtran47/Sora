@@ -1,3 +1,4 @@
+/* eslint-disable no-unsafe-optional-chaining */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import * as React from 'react';
@@ -10,38 +11,77 @@ import { motion } from 'framer-motion';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
 import useLocalStorage from '~/hooks/useLocalStorage';
-import { IMedia } from '~/services/tmdb/tmdb.types';
-import { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
-import { H5 } from '~/src/components/styles/Text.styles';
+import { IMedia, Title } from '~/types/media';
+import { ITrailer } from '~/services/consumet/anilist/anilist.types';
+
 import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
 
+import { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
+import { H5, H6 } from '~/src/components/styles/Text.styles';
 import CardItemHover from './CardItemHover';
 
-const CardItem = ({
-  item,
-  coverItem,
-  genresMovie,
-  genresTv,
-  isCoverCard,
-  virtual,
-}: {
-  item?: IMedia | undefined;
-  coverItem?: { id: number; name: string; backdropPath: string };
+interface ICardItemProps {
+  backdropPath: string;
+  character: string;
+  color?: string;
+  episodeNumber?: number;
+  episodeTitle?: string;
+  genreIds: number[];
+  genresAnime: string[];
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
+  id: number;
   isCoverCard?: boolean;
+  isEpisodeCard?: boolean;
+  job: string;
+  knownFor?: IMedia[];
+  mediaType: 'movie' | 'tv' | 'anime' | 'people';
+  overview: string;
+  posterPath: string;
+  releaseDate: string | number;
+  title: string | Title;
+  trailer?: ITrailer;
   virtual?: boolean;
-}) => {
-  const { title, posterPath } = item || {};
+  voteAverage: number;
+}
+
+const CardItem = (props: ICardItemProps) => {
+  const {
+    backdropPath,
+    character,
+    color,
+    episodeNumber,
+    episodeTitle,
+    genreIds,
+    genresAnime,
+    genresMovie,
+    genresTv,
+    id,
+    isCoverCard,
+    isEpisodeCard,
+    job,
+    knownFor,
+    mediaType,
+    overview,
+    posterPath,
+    releaseDate,
+    title,
+    trailer,
+    virtual,
+    voteAverage,
+  } = props;
   const { ref, inView } = useInView({
     rootMargin: '3000px 1000px',
     triggerOnce: !virtual,
   });
   const isSm = useMediaQuery('(max-width: 650px)');
-  const isLg = useMediaQuery('(max-width: 1400px)');
   const fetcher = useFetcher();
   const [trailerCard, setTrailerCard] = React.useState<Trailer>({});
   const [, setIsCardPlaying] = useLocalStorage('cardPlaying', false);
+  const titleItem =
+    typeof title === 'string'
+      ? title
+      : title?.userPreferred || title?.english || title?.romaji || title?.native;
 
   React.useEffect(() => {
     if (fetcher.data && fetcher.data.videos) {
@@ -63,46 +103,52 @@ const CardItem = ({
             minHeight: `${isSm ? '158px' : '270px'} !important`,
             borderWidth: 0,
             filter: 'var(--nextui-dropShadows-md)',
+            '&:hover': {
+              boxShadow: '0 0 0 1px var(--nextui-colors-primarySolidHover)',
+            },
           }}
           role="figure"
           ref={ref}
         >
-          <Card.Body css={{ p: 0 }}>
-            <Card.Image
-              // @ts-ignore
-              as={Image}
-              src={coverItem?.backdropPath || ''}
-              objectFit="cover"
-              width="100%"
-              height="auto"
-              alt={title}
-              title={title}
-              css={{
-                minWidth: `${isSm ? '280px' : '480px'} !important`,
-                minHeight: `${isSm ? '158px' : '270px'} !important`,
-              }}
-              loaderUrl="/api/image"
-              placeholder="blur"
-              options={{
-                contentType: MimeType.WEBP,
-              }}
-              responsive={[
-                {
-                  size: {
-                    width: 280,
-                    height: 158,
+          {inView ? (
+            <Card.Body css={{ p: 0 }}>
+              <Card.Image
+                // @ts-ignore
+                as={Image}
+                src={backdropPath}
+                objectFit="cover"
+                width="100%"
+                height="auto"
+                alt={titleItem}
+                title={titleItem}
+                css={{
+                  minWidth: `${isSm ? '280px' : '480px'} !important`,
+                  minHeight: `${isSm ? '158px' : '270px'} !important`,
+                }}
+                showSkeleton
+                loaderUrl="/api/image"
+                placeholder="empty"
+                options={{
+                  contentType: MimeType.WEBP,
+                }}
+                responsive={[
+                  {
+                    size: {
+                      width: 280,
+                      height: 158,
+                    },
+                    maxWidth: 650,
                   },
-                  maxWidth: 650,
-                },
-                {
-                  size: {
-                    width: 480,
-                    height: 270,
+                  {
+                    size: {
+                      width: 480,
+                      height: 270,
+                    },
                   },
-                },
-              ]}
-            />
-          </Card.Body>
+                ]}
+              />
+            </Card.Body>
+          ) : null}
           <Card.Footer
             className="backdrop-blur-md"
             css={{
@@ -115,7 +161,7 @@ const CardItem = ({
             }}
           >
             <H5 h5 weight="bold">
-              {coverItem?.name}
+              {titleItem}
             </H5>
           </Card.Footer>
         </Card>
@@ -131,16 +177,24 @@ const CardItem = ({
         isHoverable
         isPressable
         css={{
-          minWidth: `${isSm ? '164px' : isLg ? '210px' : '240px'} !important`,
-          minHeight: `${isSm ? '323px' : isLg ? '435px' : '488px'} !important`,
+          minWidth: `${isSm ? '244px' : mediaType === 'people' ? '160px' : '280px'} !important`,
+          minHeight: `${isSm ? '344px' : mediaType === 'people' ? '318px' : '488px'} !important`,
           borderWidth: 0,
           filter: 'var(--nextui-dropShadows-md)',
+          '&:hover': {
+            boxShadow: '0 0 0 1px var(--nextui-colors-primarySolidHover)',
+          },
         }}
         role="figure"
         ref={ref}
       >
-        {inView && (
-          <Card.Body css={{ p: 0 }}>
+        {inView ? (
+          <Card.Body
+            css={{
+              p: 0,
+              minHeight: `${isSm ? '344px' : mediaType === 'people' ? '160px' : '410px'}`,
+            }}
+          >
             {posterPath ? (
               <Card.Image
                 // @ts-ignore
@@ -149,36 +203,34 @@ const CardItem = ({
                 objectFit="cover"
                 width="100%"
                 height="auto"
-                alt={title}
-                title={title}
+                alt={titleItem}
+                title={titleItem}
                 css={{
-                  minWidth: `${isSm ? '164px' : isLg ? '210px' : '240px'} !important`,
-                  minHeight: `${isSm ? '245px' : isLg ? '357px' : '410px'} !important`,
+                  minWidth: `${
+                    isSm ? '244px' : mediaType === 'people' ? '160px' : '280px'
+                  } !important`,
+                  minHeight: `${
+                    isSm ? '344px' : mediaType === 'people' ? '240px' : '410px'
+                  } !important`,
                 }}
+                showSkeleton
                 loaderUrl="/api/image"
-                placeholder="blur"
+                placeholder="empty"
                 options={{
                   contentType: MimeType.WEBP,
                 }}
                 responsive={[
                   {
                     size: {
-                      width: 164,
-                      height: 245,
+                      width: mediaType === 'people' ? 160 : 244,
+                      height: mediaType === 'people' ? 240 : 344,
                     },
                     maxWidth: 650,
                   },
                   {
                     size: {
-                      width: 210,
-                      height: 357,
-                    },
-                    maxWidth: 1280,
-                  },
-                  {
-                    size: {
-                      width: 240,
-                      height: 410,
+                      width: mediaType === 'people' ? 160 : 280,
+                      height: mediaType === 'people' ? 240 : 410,
                     },
                   },
                 ]}
@@ -188,45 +240,63 @@ const CardItem = ({
                 icon={<PhotoIcon width={48} height={48} />}
                 pointer
                 css={{
-                  minWidth: `${isSm ? '164px' : isLg ? '210px' : '240px'} !important`,
-                  minHeight: `${isSm ? '245px' : isLg ? '357px' : '410px'} !important`,
+                  minWidth: `${
+                    isSm ? '244px' : mediaType === 'people' ? '160px' : '280px'
+                  } !important`,
+                  minHeight: `${
+                    isSm ? '344px' : mediaType === 'people' ? '240px' : '410px'
+                  } !important`,
                   size: '$20',
                   borderRadius: '0 !important',
                 }}
               />
             )}
           </Card.Body>
-        )}
+        ) : null}
         <Tooltip
           placement="top"
           content={
             <ClientOnly fallback={<Loading type="default" />}>
-              {() => (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.2, ease: [0, 0.71, 0.2, 1.01] }}
-                >
-                  <CardItemHover
-                    item={item}
-                    genresMovie={genresMovie}
-                    genresTv={genresTv}
-                    trailer={trailerCard}
-                  />
-                </motion.div>
-              )}
+              {() => {
+                if (isEpisodeCard || mediaType === 'people') {
+                  return null;
+                }
+                return (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.2, ease: [0, 0.71, 0.2, 1.01] }}
+                  >
+                    <CardItemHover
+                      backdropPath={backdropPath}
+                      genreIds={genreIds}
+                      genresAnime={genresAnime}
+                      genresMovie={genresMovie}
+                      genresTv={genresTv}
+                      mediaType={mediaType}
+                      overview={overview}
+                      posterPath={posterPath}
+                      releaseDate={releaseDate}
+                      title={titleItem || ''}
+                      trailer={trailer || trailerCard}
+                      voteAverage={voteAverage}
+                    />
+                  </motion.div>
+                );
+              }}
             </ClientOnly>
           }
           rounded
           shadow
           hideArrow
           offset={0}
+          visible={false}
           className="!w-fit"
+          css={isEpisodeCard || mediaType === 'people' ? { p: 0 } : {}}
           onVisibleChange={(visible) => {
             if (visible) {
-              fetcher.load(
-                `/${item?.mediaType === 'movie' ? 'movies' : 'tv-shows'}/${item?.id}/videos`,
-              );
+              if (mediaType !== 'anime' && mediaType !== 'people')
+                fetcher.load(`/${mediaType === 'movie' ? 'movies' : 'tv-shows'}/${id}/videos`);
             } else {
               setIsCardPlaying(false);
             }
@@ -237,20 +307,54 @@ const CardItem = ({
               justifyItems: 'flex-start',
               flexDirection: 'column',
               alignItems: 'flex-start',
-              minHeight: '4.875rem',
-              maxWidth: `${isSm ? '164px' : isLg ? '210px' : '240px'}`,
+              minHeight: mediaType === 'people' ? '5.25rem' : '4.875rem',
+              maxWidth: `${isSm ? '244px' : mediaType === 'people' ? '160px' : '280px'}`,
             }}
           >
             <H5
               h5
               weight="bold"
               css={{
-                minWidth: `${isSm ? '130px' : isLg ? '180px' : '210px'}`,
+                ...(color ? { color } : null),
+                minWidth: `${isSm ? '150px' : mediaType === 'people' ? '100px' : '240px'}`,
                 padding: '0 0.25rem',
               }}
             >
-              {title}
+              {titleItem}
             </H5>
+            {isEpisodeCard ? (
+              <H6 h6 css={{ color: '$accents7', fontWeight: '$semibold', fontSize: '$sm' }}>
+                EP {episodeNumber} - {episodeTitle}
+              </H6>
+            ) : null}
+            {mediaType === 'people' ? (
+              <>
+                {knownFor ? (
+                  <H6
+                    h6
+                    className="!line-clamp-2"
+                    css={{ color: '$accents7', fontWeight: '$semibold' }}
+                  >
+                    {knownFor?.map((movie, index) => (
+                      <>
+                        {movie?.title || movie?.originalTitle || movie?.name || movie?.originalName}
+                        {knownFor?.length && (index < knownFor?.length - 1 ? ', ' : '')}
+                      </>
+                    ))}
+                  </H6>
+                ) : null}
+                {character ? (
+                  <H6 h6 css={{ color: '$accents7', fontWeight: '$semibold' }}>
+                    {character}
+                  </H6>
+                ) : null}
+                {job ? (
+                  <H6 h6 css={{ color: '$accents7', fontWeight: '$semibold' }}>
+                    {job}
+                  </H6>
+                ) : null}
+              </>
+            ) : null}
           </Card.Footer>
         </Tooltip>
       </Card>

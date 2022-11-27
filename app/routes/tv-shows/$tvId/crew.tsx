@@ -3,13 +3,15 @@ import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { Row } from '@nextui-org/react';
 
-import { getCredits } from '~/services/tmdb/tmdb.server';
-import { IPeople } from '~/services/tmdb/tmdb.types';
-import PeopleList from '~/src/components/people/PeopleList';
 import { authenticate } from '~/services/supabase';
+import { getCredits } from '~/services/tmdb/tmdb.server';
+import { postFetchDataHandler } from '~/services/tmdb/utils.server';
+import { IMedia } from '~/types/media';
+
+import MediaList from '~/src/components/media/MediaList';
 
 type LoaderData = {
-  crew: IPeople[];
+  crew: IMedia[];
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -23,7 +25,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   if (!credits) throw new Response('Not found', { status: 404 });
 
-  return json<LoaderData>({ crew: credits.crew });
+  return json<LoaderData>({ crew: [...postFetchDataHandler(credits.crew, 'people')] });
 };
 
 export const meta: MetaFunction = ({ params }) => ({
@@ -51,7 +53,7 @@ const CrewPage = () => {
       }}
     >
       {crew && crew.length > 0 && (
-        <PeopleList listType="grid" items={crew} listName="Crew" virtual />
+        <MediaList listType="grid" items={crew} listName="Crew" virtual itemsType="people" />
       )}
     </Row>
   );

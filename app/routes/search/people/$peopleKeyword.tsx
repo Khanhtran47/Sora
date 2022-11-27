@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { DataFunctionArgs, json, LoaderFunction, MetaFunction } from '@remix-run/node';
 import { useLoaderData, useNavigate, useParams, Link, RouteMatch } from '@remix-run/react';
-import { Container, Pagination } from '@nextui-org/react';
+import { Container } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 
 import { getSearchPerson } from '~/services/tmdb/tmdb.server';
-import PeopleList from '~/src/components/people/PeopleList';
-import useMediaQuery from '~/hooks/useMediaQuery';
+import MediaList from '~/src/components/media/MediaList';
 import i18next from '~/i18n/i18next.server';
 import SearchForm from '~/src/components/elements/SearchForm';
 import { authenticate } from '~/services/supabase';
@@ -56,7 +55,6 @@ const SearchRoute = () => {
   const { searchResults } = useLoaderData<LoaderData>() || {};
   const navigate = useNavigate();
   const { peopleKeyword } = useParams();
-  const isXs = useMediaQuery('(max-width: 650px)');
   const { t } = useTranslation();
   const [listName] = React.useState(t('searchResults'));
 
@@ -89,16 +87,17 @@ const SearchRoute = () => {
         }}
       >
         {searchResults && searchResults.results?.length > 0 && (
-          <PeopleList listType="grid" items={searchResults.results} listName={listName} />
+          <MediaList
+            currentPage={searchResults.page}
+            items={searchResults.results}
+            listName={listName}
+            listType="grid"
+            onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
+            showPagination
+            totalPages={searchResults.totalPages}
+            itemsType="people"
+          />
         )}
-        <Pagination
-          total={searchResults?.total_pages}
-          initialPage={searchResults?.page}
-          shadow
-          onChange={paginationChangeHandler}
-          css={{ marginTop: '30px' }}
-          {...(isXs && { size: 'xs' })}
-        />
       </Container>
     </>
   );

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import * as React from 'react';
@@ -9,35 +10,46 @@ import { ClientOnly } from 'remix-utils';
 
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import useLocalStorage from '~/hooks/useLocalStorage';
-import { IMedia } from '~/services/tmdb/tmdb.types';
 import { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
+import { ITrailer } from '~/services/consumet/anilist/anilist.types';
+
 import Flex from '~/src/components/styles/Flex.styles';
 import { H4, H5, H6 } from '~/src/components/styles/Text.styles';
+import Rating from '~/src/components/elements/shared/Rating';
 
 import VolumeUp from '~/src/assets/icons/VolumeUpIcon.js';
 import VolumeOff from '~/src/assets/icons/VolumeOffIcon.js';
 
-const CardItemHover = ({
-  item,
-  genresMovie,
-  genresTv,
-  trailer,
-}: {
-  item?: IMedia;
+interface ICardItemHoverProps {
+  backdropPath: string;
+  genreIds: number[];
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
-  trailer?: Trailer;
-}) => {
+  mediaType: 'movie' | 'tv' | 'anime' | 'people';
+  overview: string;
+  posterPath: string;
+  releaseDate: string | number;
+  title: string;
+  trailer?: Trailer | ITrailer;
+  voteAverage: number;
+  genresAnime: string[];
+}
+
+const CardItemHover = (props: ICardItemHoverProps) => {
   const {
-    title,
-    overview,
-    releaseDate,
-    voteAverage,
-    mediaType,
-    posterPath,
     backdropPath,
     genreIds,
-  } = item || {};
+    genresMovie,
+    genresTv,
+    mediaType,
+    overview,
+    posterPath,
+    releaseDate,
+    title,
+    trailer,
+    voteAverage,
+    genresAnime,
+  } = props;
   const { loading, colorDarkenLighten, colorBackground } = useColorDarkenLighten(posterPath);
   const [player, setPlayer] = React.useState<ReturnType<YouTube['getInternalPlayer']>>();
   const [showTrailer, setShowTrailer] = React.useState<boolean>(false);
@@ -47,17 +59,13 @@ const CardItemHover = ({
 
   const mute = React.useCallback(() => {
     if (!player) return;
-
     player.mute();
-
     setIsMuted(true);
   }, [player]);
 
   const unMute = React.useCallback(() => {
     if (!player) return;
-
     player.unMute();
-
     setIsMuted(false);
   }, [player]);
 
@@ -69,6 +77,8 @@ const CardItemHover = ({
 
   return (
     <Container
+      justify="center"
+      alignItems="center"
       css={{
         padding: '0.75rem 0.375rem',
         minWidth: '350px',
@@ -105,7 +115,7 @@ const CardItemHover = ({
                     minHeight: 'auto !important',
                   }}
                   loaderUrl="/api/image"
-                  placeholder="blur"
+                  placeholder="empty"
                   options={{
                     contentType: MimeType.WEBP,
                   }}
@@ -123,10 +133,14 @@ const CardItemHover = ({
           </AnimatePresence>
           <ClientOnly fallback={<Loading type="default" />}>
             {() => {
-              if (trailer?.key && isPlayTrailer)
+              if (
+                ((trailer as Trailer)?.key ||
+                  ((trailer as ITrailer)?.id && (trailer as ITrailer)?.site === 'youtube')) &&
+                isPlayTrailer
+              )
                 return (
                   <YouTube
-                    videoId={trailer.key}
+                    videoId={(trailer as Trailer).key || (trailer as ITrailer).id}
                     opts={{
                       width: '388px',
                       height: '218.25px',
@@ -144,6 +158,7 @@ const CardItemHover = ({
                         cc_load_policy: 0,
                         playsinline: 1,
                         mute: 1,
+                        origin: 'https://sora-anime.vercel.app',
                       },
                     }}
                     onReady={({ target }) => {
@@ -190,15 +205,14 @@ const CardItemHover = ({
             </H4>
           </Row>
           <Spacer y={0.5} />
-          {genreIds && (
+          {genreIds || genresAnime ? (
             <>
               <Flex direction="row">
-                {item?.genreIds?.slice(0, 3).map((genreId) => {
-                  if (mediaType === 'movie') {
-                    return (
+                {mediaType === 'anime'
+                  ? genresAnime?.slice(0, 2).map((genre, index) => (
                       <>
                         <H5
-                          key={genreId}
+                          key={index}
                           h5
                           color={colorDarkenLighten}
                           css={{
@@ -207,34 +221,53 @@ const CardItemHover = ({
                             padding: '0 0.5rem 0 0.5rem',
                           }}
                         >
-                          {genresMovie?.[genreId]}
+                          {genre}
                         </H5>
-                        <Spacer x={0.25} />
+                        <Spacer x={0.5} />
                       </>
-                    );
-                  }
-                  return (
-                    <>
-                      <H5
-                        key={genreId}
-                        h5
-                        color={colorDarkenLighten}
-                        css={{
-                          backgroundColor: colorBackground,
-                          borderRadius: '$md',
-                          padding: '0 0.25rem 0 0.25rem',
-                        }}
-                      >
-                        {genresTv?.[genreId]}
-                      </H5>
-                      <Spacer x={0.25} />
-                    </>
-                  );
-                })}
+                    ))
+                  : genreIds?.slice(0, 3).map((genreId) => {
+                      if (mediaType === 'movie') {
+                        return (
+                          <>
+                            <H5
+                              key={genreId}
+                              h5
+                              color={colorDarkenLighten}
+                              css={{
+                                backgroundColor: colorBackground,
+                                borderRadius: '$md',
+                                padding: '0 0.5rem 0 0.5rem',
+                              }}
+                            >
+                              {genresMovie?.[genreId]}
+                            </H5>
+                            <Spacer x={0.25} />
+                          </>
+                        );
+                      }
+                      return (
+                        <>
+                          <H5
+                            key={genreId}
+                            h5
+                            color={colorDarkenLighten}
+                            css={{
+                              backgroundColor: colorBackground,
+                              borderRadius: '$md',
+                              padding: '0 0.25rem 0 0.25rem',
+                            }}
+                          >
+                            {genresTv?.[genreId]}
+                          </H5>
+                          <Spacer x={0.25} />
+                        </>
+                      );
+                    })}
               </Flex>
               <Spacer y={0.5} />
             </>
-          )}
+          ) : null}
           {overview && (
             <>
               <H6 h6 className="!line-clamp-2">
@@ -248,19 +281,11 @@ const CardItemHover = ({
               <H5 h5>{`${mediaType === 'movie' ? 'Movie' : 'TV-Show'} • ${releaseDate}`}</H5>
             )}
             {voteAverage && (
-              <Flex direction="row">
-                <H5
-                  h5
-                  css={{
-                    backgroundColor: '#3ec2c2',
-                    borderRadius: '$xs',
-                    padding: '0 0.25rem 0 0.25rem',
-                    marginRight: '0.5rem',
-                  }}
-                >
-                  TMDb
-                </H5>
-                <H5 h5>{item?.voteAverage?.toFixed(1)}</H5>
+              <Flex direction="row" align="center">
+                <Rating
+                  rating={mediaType === 'anime' ? voteAverage : Number(voteAverage.toFixed(1))}
+                  ratingType={mediaType}
+                />
               </Flex>
             )}
           </Row>

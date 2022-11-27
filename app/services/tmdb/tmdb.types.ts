@@ -1,3 +1,5 @@
+import { IMedia } from '~/types/media';
+
 // https://developers.themoviedb.org/3/configuration/get-api-configuration
 export type PosterSize = 'w92' | 'w154' | 'w185' | 'w342' | 'w500' | 'w780' | 'original';
 export type BackdropSize = 'w300' | 'w780' | 'w1280' | 'original';
@@ -16,27 +18,6 @@ export type ListPersonType = 'popular' | 'latest';
  * Here is just some common fields
  * this could be extended in the future to create more specific interface
  */
-export interface IMedia {
-  backdropPath?: string;
-  id?: number;
-  mediaType: 'movie' | 'tv';
-  originalLanguage?: string;
-  overview?: string;
-  popularity?: number;
-  posterPath?: string;
-  releaseDate?: string; // release_date - first-air-date
-  title?: string; // title - name - original_title - original_name
-  voteAverage?: number;
-  voteCount?: number;
-  genreIds?: number[];
-  adult?: boolean;
-  video?: boolean;
-  originalCountry?: string;
-  originalTitle?: string;
-  firstAirDate?: string;
-  name?: string;
-  originalName?: string;
-}
 
 export interface IMediaList {
   items?: IMedia[];
@@ -218,9 +199,9 @@ export interface IPeople {
 
 export interface IListPeople {
   page: number;
-  results: IPeople[];
-  total_pages: number;
-  total_results: number;
+  results: IMedia[];
+  totalPages: number;
+  totalResults: number;
 }
 
 export interface IPeopleDetail {

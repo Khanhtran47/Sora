@@ -139,6 +139,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                               objectFit="cover"
                               width="227px"
                               height="100%"
+                              showSkeleton
                               alt={episode?.name || ''}
                               title={episode?.name || ''}
                               css={{
@@ -146,7 +147,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                                 minHeight: '127px !important',
                               }}
                               loaderUrl="/api/image"
-                              placeholder="blur"
+                              placeholder="empty"
                               options={{
                                 contentType: MimeType.WEBP,
                               }}
@@ -183,12 +184,13 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                               height="100%"
                               alt={episode?.title || ''}
                               title={episode?.title || ''}
+                              showSkeleton
                               css={{
                                 minWidth: '227px !important',
                                 minHeight: '127px !important',
                               }}
                               loaderUrl="/api/image"
-                              placeholder="blur"
+                              placeholder="empty"
                               options={{
                                 contentType: MimeType.WEBP,
                               }}
@@ -215,7 +217,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                             />
                           ))}
                         <Flex direction="column" justify="start" css={{ p: '1rem' }}>
-                          <H5 h5 weight="bold">
+                          <H5 h5 weight="bold" className="line-clamp-1">
                             Episode{' '}
                             {type === 'tv'
                               ? isSm

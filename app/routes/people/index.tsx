@@ -1,13 +1,12 @@
 import { useLoaderData, useNavigate, useLocation, Link } from '@remix-run/react';
 import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
-import { Container, Pagination } from '@nextui-org/react';
+import { Container } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
 import { authenticate } from '~/services/supabase';
-import PeopleList from '~/src/components/people/PeopleList';
+import MediaList from '~/src/components/media/MediaList';
 import { getListPeople } from '~/services/tmdb/tmdb.server';
-import useMediaQuery from '~/hooks/useMediaQuery';
 import i18next from '~/i18n/i18next.server';
 
 type LoaderData = {
@@ -49,7 +48,6 @@ const ListPeoplePopular = () => {
   const { people } = useLoaderData<LoaderData>();
   const navigate = useNavigate();
   const location = useLocation();
-  const isXs = useMediaQuery('(max-width: 650px)');
   const { t } = useTranslation();
 
   const paginationChangeHandler = (page: number) => navigate(`/people?page=${page}`);
@@ -73,18 +71,17 @@ const ListPeoplePopular = () => {
           },
         }}
       >
-        {people && people.results && people.results.length > 0 && (
-          <>
-            <PeopleList listType="grid" items={people.results} listName={t('popularPeople')} />
-            <Pagination
-              total={people.total_pages}
-              initialPage={people.page}
-              shadow
-              onChange={paginationChangeHandler}
-              css={{ marginTop: '30px' }}
-              {...(isXs && { size: 'xs' })}
-            />
-          </>
+        {people && people.items && people.items.length > 0 && (
+          <MediaList
+            currentPage={people.page}
+            items={people.items}
+            listName={t('popularPeople')}
+            listType="grid"
+            onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
+            showPagination
+            totalPages={people.totalPages}
+            itemsType="people"
+          />
         )}
       </Container>
     </motion.div>

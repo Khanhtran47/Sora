@@ -5,7 +5,9 @@ import { motion } from 'framer-motion';
 
 import { getAnimeTrending } from '~/services/consumet/anilist/anilist.server';
 import { authenticate } from '~/services/supabase';
-import AnimeList from '~/src/components/anime/AnimeList';
+import { IMedia } from '~/types/media';
+
+import MediaList from '~/src/components/media/MediaList';
 
 type LoaderData = {
   items: Awaited<ReturnType<typeof getAnimeTrending>>;
@@ -69,11 +71,13 @@ const TrendingAnime = () => {
         }}
       >
         {items && items.results && items.results.length > 0 && (
-          <AnimeList
-            listType="grid"
-            items={items.results}
+          <MediaList
             hasNextPage={items.hasNextPage || false}
+            items={items.results as IMedia[]}
+            itemsType="anime"
             listName="Trending Anime"
+            listType="grid"
+            loadingType="scroll"
             routeName="/anime/trending"
             virtual
           />

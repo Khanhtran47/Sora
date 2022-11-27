@@ -6,35 +6,36 @@ import { Navigation } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
-import { IMedia } from '~/services/tmdb/tmdb.types';
+import { IMedia } from '~/types/media';
 import MediaItem from '../item';
 
-const MediaListCard = ({
-  items,
-  type,
-  navigation,
-  genresMovie,
-  genresTv,
-  setSlideProgress,
-  isCoverCard,
-  coverItem,
-  virtual,
-}: {
-  items?: IMedia[];
-  type?: 'media' | 'similar-tv' | 'similar-movie';
-  navigation?: {
-    nextEl?: string | HTMLElement | null;
-    prevEl?: string | HTMLElement | null;
-  };
+interface IMediaListCardProps {
+  coverItem?: { id: number; name: string; backdropPath: string }[];
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
-  setSlideProgress?: React.Dispatch<React.SetStateAction<number>>;
   isCoverCard?: boolean;
-  coverItem?: { id: number; name: string; backdropPath: string }[];
+  items?: IMedia[];
+  itemsType?: 'movie' | 'tv' | 'anime' | 'people' | 'episode';
+  navigation?: { nextEl?: string | HTMLElement | null; prevEl?: string | HTMLElement | null };
+  provider?: string;
+  setSlideProgress?: React.Dispatch<React.SetStateAction<number>>;
   virtual?: boolean;
-}) => {
+}
+
+const MediaListCard = (props: IMediaListCardProps) => {
+  const {
+    coverItem,
+    genresMovie,
+    genresTv,
+    isCoverCard,
+    items,
+    itemsType,
+    navigation,
+    provider,
+    setSlideProgress,
+    virtual,
+  } = props;
   const isSm = useMediaQuery('(max-width: 650px)');
-  const isLg = useMediaQuery('(max-width: 1400px)');
   const gap = isSm ? 1 : 2;
 
   if (isCoverCard) {
@@ -67,10 +68,11 @@ const MediaListCard = ({
                   >
                     <Link to={href} style={{ display: 'flex', padding: '0.5rem 0' }}>
                       <MediaItem
-                        key={item.id}
-                        type="card"
-                        coverItem={item}
+                        backdropPath={item?.backdropPath}
                         isCoverCard={isCoverCard}
+                        key={item.id}
+                        title={item?.name}
+                        type="card"
                         virtual={virtual}
                       />
                     </Link>
@@ -102,23 +104,47 @@ const MediaListCard = ({
         >
           {items &&
             items.map((item, i) => {
-              const href = `${
-                item.mediaType === 'movie' || type === 'similar-movie' ? '/movies/' : '/tv-shows/'
-              }${item.id}/`;
+              const href =
+                itemsType && itemsType === 'episode'
+                  ? `/anime/${item.id}/episode/${item.episodeId}?provider=${provider}&episode=${item.episodeNumber}`
+                  : itemsType === 'anime'
+                  ? `/anime/${item.id}/overview`
+                  : itemsType === 'people'
+                  ? `/people/${item.id}/overview`
+                  : itemsType === 'movie'
+                  ? `/movies/${item.id}`
+                  : `/tv-shows/${item.id}`;
               return (
                 <SwiperSlide
                   key={i}
                   style={{
-                    width: `${isSm ? '164px' : isLg ? '210px' : '240px'}`,
+                    width: `${isSm ? '244px' : item?.mediaType === 'people' ? '160px' : '280px'}`,
                   }}
                 >
                   <Link to={href} style={{ display: 'flex', padding: '0.5rem 0' }}>
                     <MediaItem
-                      key={item.id}
-                      type="card"
-                      item={item}
+                      backdropPath={item?.backdropPath}
+                      character={item?.character}
+                      color={item?.color}
+                      episodeNumber={item?.episodeNumber}
+                      episodeTitle={item?.episodeTitle}
+                      genreIds={item?.genreIds}
+                      genresAnime={item?.genresAnime}
                       genresMovie={genresMovie}
                       genresTv={genresTv}
+                      id={item?.id}
+                      job={item?.job}
+                      key={item.id}
+                      knownFor={item?.knownFor}
+                      mediaType={item?.mediaType}
+                      overview={item?.overview}
+                      posterPath={item?.posterPath}
+                      releaseDate={item?.releaseDate}
+                      title={item?.title}
+                      trailer={item?.trailer}
+                      type={itemsType === 'episode' ? itemsType : 'card'}
+                      virtual={virtual}
+                      voteAverage={item?.voteAverage}
                     />
                   </Link>
                 </SwiperSlide>

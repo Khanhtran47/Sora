@@ -10,8 +10,9 @@ import {
   getAnimeRecentEpisodes,
 } from '~/services/consumet/anilist/anilist.server';
 import { authenticate } from '~/services/supabase';
+import { IMedia } from '~/types/media';
 
-import AnimeList from '~/src/components/anime/AnimeList';
+import MediaList from '~/src/components/media/MediaList';
 
 export const handle = {
   i18n: 'anime',
@@ -62,7 +63,7 @@ const AnimePage = () => {
       transition={{ duration: 0.3 }}
     >
       {trending && trending.results && trending.results.length > 0 && (
-        <AnimeList listType="slider-banner" items={trending?.results} />
+        <MediaList listType="slider-banner" items={trending?.results as IMedia[]} />
       )}
       <Container
         fluid
@@ -80,25 +81,26 @@ const AnimePage = () => {
         }}
       >
         {popular && popular.results && popular.results.length > 0 && (
-          <AnimeList
-            listType="slider-card"
-            items={popular.results}
+          <MediaList
+            items={popular.results as IMedia[]}
+            itemsType="anime"
             listName="Popular Anime"
-            showMoreList
-            onClickViewMore={() => navigate('/anime/popular')}
+            listType="slider-card"
             navigationButtons
+            onClickViewMore={() => navigate('/anime/popular')}
+            showMoreList
           />
         )}
         {recentEpisodes && recentEpisodes.results && recentEpisodes.results.length > 0 && (
-          <AnimeList
-            listType="slider-card"
-            items={recentEpisodes.results}
+          <MediaList
+            items={recentEpisodes.results as IMedia[]}
+            itemsType="episode"
             listName="Recent Episodes"
-            showMoreList
-            onClickViewMore={() => navigate('/anime/recent-episodes')}
+            listType="slider-card"
             navigationButtons
-            itemType="episode-card"
+            onClickViewMore={() => navigate('/anime/recent-episodes')}
             provider="gogoanime"
+            showMoreList
           />
         )}
       </Container>

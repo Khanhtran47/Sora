@@ -27,7 +27,7 @@ const Copyright = () => (
         borderRadius: '50%',
       }}
       loaderUrl="/api/image"
-      placeholder="blur"
+      placeholder="empty"
       responsive={[
         {
           size: {

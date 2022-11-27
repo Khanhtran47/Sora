@@ -90,13 +90,14 @@ const AnimeDetail = (props: IAnimeDetail) => {
                   alt={title?.userPreferred || title?.english || title?.romaji || title?.native}
                   objectFit="cover"
                   width="50%"
+                  showSkeleton
                   css={{
                     minWidth: 'auto !important',
                     minHeight: '205px !important',
                     borderRadius: '24px',
                   }}
                   loaderUrl="/api/image"
-                  placeholder="blur"
+                  placeholder="empty"
                   responsive={[
                     {
                       size: {
@@ -169,6 +170,7 @@ const AnimeDetail = (props: IAnimeDetail) => {
                       alt={title?.userPreferred || title?.english || title?.romaji || title?.native}
                       objectFit="cover"
                       width={isXs ? '70%' : '40%'}
+                      showSkeleton
                       css={{
                         minWidth: 'auto !important',
                         minHeight: '205px !important',
@@ -176,7 +178,7 @@ const AnimeDetail = (props: IAnimeDetail) => {
                         borderRadius: '24px',
                       }}
                       loaderUrl="/api/image"
-                      placeholder="blur"
+                      placeholder="empty"
                       options={{
                         contentType: MimeType.WEBP,
                       }}
@@ -326,8 +328,9 @@ const AnimeDetail = (props: IAnimeDetail) => {
           title={title?.userPreferred || title?.english || title?.romaji || title?.native}
           alt={title?.userPreferred || title?.english || title?.romaji || title?.native}
           containerCss={{ margin: 0 }}
+          showSkeleton
           loaderUrl="/api/image"
-          placeholder="blur"
+          placeholder="empty"
           responsive={[
             {
               size: {

@@ -1,22 +1,74 @@
 import useMediaQuery from '~/hooks/useMediaQuery';
-import { IMedia } from '~/services/tmdb/tmdb.types';
+import { Title } from '~/types/media';
+import { ITrailer } from '~/services/consumet/anilist/anilist.types';
+
 import BannerItemMobile from './BannerItemMobile';
 import BannerItemDesktop from './BannerItemDesktop';
 
-type BannerItemProps = {
-  item?: IMedia;
+interface IBannerItemProps {
+  active?: boolean;
+  backdropPath: string;
+  genreIds: number[];
+  genresAnime: string[];
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
-  active?: boolean;
-};
+  id: number;
+  mediaType: 'movie' | 'tv' | 'anime' | 'people';
+  overview: string;
+  posterPath: string;
+  title: string | Title;
+  trailer?: ITrailer;
+  voteAverage: number;
+}
 
-const BannerItem = ({ item, genresMovie, genresTv, active }: BannerItemProps) => {
+const BannerItem = (props: IBannerItemProps) => {
+  const {
+    active,
+    backdropPath,
+    genreIds,
+    genresMovie,
+    genresTv,
+    genresAnime,
+    id,
+    mediaType,
+    overview,
+    posterPath,
+    title,
+    trailer,
+    voteAverage,
+  } = props;
   const isSm = useMediaQuery('(max-width: 650px)');
   if (isSm) {
-    return <BannerItemMobile item={item} genresMovie={genresMovie} genresTv={genresTv} />;
+    return (
+      <BannerItemMobile
+        backdropPath={backdropPath}
+        genreIds={genreIds}
+        genresMovie={genresMovie}
+        genresTv={genresTv}
+        id={id}
+        mediaType={mediaType}
+        title={title}
+        voteAverage={voteAverage}
+        genresAnime={genresAnime}
+      />
+    );
   }
   return (
-    <BannerItemDesktop item={item} genresMovie={genresMovie} genresTv={genresTv} active={active} />
+    <BannerItemDesktop
+      active={active}
+      backdropPath={backdropPath}
+      genreIds={genreIds}
+      genresAnime={genresAnime}
+      genresMovie={genresMovie}
+      genresTv={genresTv}
+      id={id}
+      mediaType={mediaType}
+      overview={overview}
+      posterPath={posterPath}
+      title={title}
+      trailer={trailer}
+      voteAverage={voteAverage}
+    />
   );
 };
 

@@ -9,7 +9,9 @@ import Image, { MimeType } from 'remix-image';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import { IAnimeInfo } from '~/services/consumet/anilist/anilist.types';
 
-import AnimeList from '~/src/components/anime/AnimeList';
+import { IMedia } from '~/types/media';
+
+import MediaList from '~/src/components/media/MediaList';
 import { H3, H5, H6 } from '~/src/components/styles/Text.styles';
 import Flex from '~/src/components/styles/Flex.styles';
 
@@ -313,6 +315,7 @@ const Overview = () => {
                           objectFit="cover"
                           width="100%"
                           height="auto"
+                          showSkeleton
                           alt={
                             relation.title?.userPreferred ||
                             relation.title?.english ||
@@ -330,7 +333,7 @@ const Overview = () => {
                             minHeight: '187px !important',
                           }}
                           loaderUrl="/api/image"
-                          placeholder="blur"
+                          placeholder="empty"
                           options={{
                             contentType: MimeType.WEBP,
                           }}
@@ -423,6 +426,7 @@ const Overview = () => {
                             // @ts-ignore
                             as={Image}
                             src={character.image}
+                            showSkeleton
                             objectFit="cover"
                             width="60px"
                             height="100%"
@@ -433,7 +437,7 @@ const Overview = () => {
                               minHeight: '80px !important',
                             }}
                             loaderUrl="/api/image"
-                            placeholder="blur"
+                            placeholder="empty"
                             options={{
                               contentType: MimeType.WEBP,
                             }}
@@ -500,6 +504,7 @@ const Overview = () => {
                             objectFit="cover"
                             width="60px"
                             height="100%"
+                            showSkeleton
                             alt={character.voiceActors[0].name?.full}
                             title={character.voiceActors[0].name?.full}
                             css={{
@@ -507,7 +512,7 @@ const Overview = () => {
                               minHeight: '80px !important',
                             }}
                             loaderUrl="/api/image"
-                            placeholder="blur"
+                            placeholder="empty"
                             options={{
                               contentType: MimeType.WEBP,
                             }}
@@ -552,10 +557,11 @@ const Overview = () => {
         )}
         {detail?.recommendations && detail?.recommendations.length > 0 && (
           <>
-            <AnimeList
-              listType="slider-card"
-              items={detail?.recommendations}
+            <MediaList
+              items={detail?.recommendations as IMedia[]}
+              itemsType="anime"
               listName="Recommendations"
+              listType="slider-card"
               navigationButtons
             />
             <Spacer y={1} />

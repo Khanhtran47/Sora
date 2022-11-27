@@ -2,13 +2,12 @@
 import * as React from 'react';
 import { DataFunctionArgs, json, LoaderFunction, MetaFunction } from '@remix-run/node';
 import { useLoaderData, useNavigate, useParams, Link, RouteMatch } from '@remix-run/react';
-import { Container, Pagination } from '@nextui-org/react';
+import { Container } from '@nextui-org/react';
 import { useRouteData } from 'remix-utils';
 import type { User } from '@supabase/supabase-js';
 
 import { getSearchTvShows } from '~/services/tmdb/tmdb.server';
 import MediaList from '~/src/components/media/MediaList';
-import useMediaQuery from '~/hooks/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import SearchForm from '~/src/components/elements/SearchForm';
 import { authenticate } from '~/services/supabase';
@@ -68,7 +67,6 @@ const SearchRoute = () => {
   const { tvKeyword } = useParams();
   const { t } = useTranslation();
   const [listName] = React.useState(t('searchResults'));
-  const isXs = useMediaQuery('(max-width: 650px)');
 
   const paginationChangeHandler = (page: number) =>
     navigate(`/search/tv/${tvKeyword}?page=${page}`);
@@ -106,16 +104,12 @@ const SearchRoute = () => {
             listName={listName}
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
+            showPagination
+            totalPages={searchResults?.totalPages}
+            currentPage={searchResults?.page}
+            onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
           />
         )}
-        <Pagination
-          total={searchResults.totalPages}
-          initialPage={searchResults.page}
-          shadow
-          onChange={paginationChangeHandler}
-          css={{ marginTop: '30px' }}
-          {...(isXs && { size: 'xs' })}
-        />
       </Container>
     </>
   );

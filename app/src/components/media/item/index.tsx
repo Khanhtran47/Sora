@@ -1,32 +1,104 @@
-import { IMedia } from '~/services/tmdb/tmdb.types';
+import { IMedia, Title } from '~/types/media';
+import { ITrailer } from '~/services/consumet/anilist/anilist.types';
 import BannerItem from './BannerItem';
 import CardItem from './CardItem';
 
 interface IMediaItem {
-  type: 'banner' | 'card';
-  item?: IMedia;
-  genresMovie?: { [id: string]: string };
-  genresTv?: { [id: string]: string };
-  active?: boolean;
-  isCoverCard?: boolean;
-  coverItem?: { id: number; name: string; backdropPath: string };
-  virtual?: boolean;
+  active?: boolean; // help for detecting active banner, require when type is banner
+  backdropPath?: string; // value is backdrop path of media
+  character?: string; // value is character name, can exist when media type is people
+  color?: string; // value is color of banner image, can exist when media type is anime
+  episodeNumber?: number; // value is episode number, require when type is episode
+  episodeTitle?: string; // value is episode title, require when type is episode
+  genreIds?: number[]; // value is genres of a movie or tv-series, require when type is movie or tv
+  genresAnime?: string[]; // value is genres of an anime, require when type is anime
+  genresMovie?: { [id: string]: string }; // value is all genres of movies, require when type is movie
+  genresTv?: { [id: string]: string }; // value is all genres of tv-series, require when type is tv
+  id?: number | string; // value is id of media
+  isCoverCard?: boolean; // value is true if the cover card is active
+  job?: string; // value is job of a person, can exist when media type is people
+  knownFor?: IMedia[]; // value is known for of a person, can exist when media type is people
+  mediaType?: 'movie' | 'tv' | 'anime' | 'people'; // value is type of media
+  overview?: string; // value is overview of media
+  posterPath?: string; // value is poster path of media
+  releaseDate?: string | number; // value is release date of media
+  title?: string | Title; // value is title of media
+  trailer?: ITrailer; // value is trailer of media
+  type: 'banner' | 'card' | 'episode'; // value is type of media item
+  virtual?: boolean; // value is true if the media is virtual
+  voteAverage?: number; // value is vote average of media
 }
 
 const MediaItem = (props: IMediaItem) => {
-  const { type, item, genresMovie, genresTv, active, isCoverCard, coverItem, virtual } = props;
+  const {
+    active,
+    backdropPath,
+    character,
+    color,
+    episodeNumber,
+    episodeTitle,
+    genreIds,
+    genresAnime,
+    genresMovie,
+    genresTv,
+    id,
+    isCoverCard,
+    job,
+    knownFor,
+    mediaType,
+    overview,
+    posterPath,
+    releaseDate,
+    title,
+    trailer,
+    type,
+    virtual,
+    voteAverage,
+  } = props;
 
   if (type === 'banner') {
-    return <BannerItem item={item} genresMovie={genresMovie} genresTv={genresTv} active={active} />;
+    return (
+      <BannerItem
+        active={active}
+        backdropPath={backdropPath || ''}
+        genreIds={genreIds || []}
+        genresAnime={genresAnime || []}
+        genresMovie={genresMovie}
+        genresTv={genresTv}
+        id={Number(id)}
+        mediaType={mediaType || 'movie'}
+        overview={overview || ''}
+        posterPath={posterPath || ''}
+        title={title || ''}
+        trailer={trailer}
+        voteAverage={voteAverage || 0}
+      />
+    );
   }
   return (
     <CardItem
-      item={item}
+      backdropPath={backdropPath || ''}
+      character={character || ''}
+      color={color}
+      episodeNumber={episodeNumber}
+      episodeTitle={episodeTitle}
+      genreIds={genreIds || []}
+      genresAnime={genresAnime || []}
       genresMovie={genresMovie}
       genresTv={genresTv}
+      id={Number(id)}
       isCoverCard={isCoverCard}
-      coverItem={coverItem}
+      isEpisodeCard={type === 'episode'}
+      job={job || ''}
+      knownFor={knownFor}
+      mediaType={mediaType || 'movie'}
+      overview={overview || ''}
+      posterPath={posterPath || ''}
+      releaseDate={releaseDate || ''}
+      title={title || ''}
+      trailer={trailer}
       virtual={virtual}
+      voteAverage={voteAverage || 0}
     />
   );
 };

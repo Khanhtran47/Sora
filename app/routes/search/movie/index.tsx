@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
 import { DataFunctionArgs, json, LoaderFunction } from '@remix-run/node';
 import { useLoaderData, useNavigate, Link } from '@remix-run/react';
-import { Container, Pagination } from '@nextui-org/react';
+import { Container } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { useRouteData } from 'remix-utils';
 import type { User } from '@supabase/supabase-js';
@@ -9,7 +9,6 @@ import type { User } from '@supabase/supabase-js';
 import { getTrending } from '~/services/tmdb/tmdb.server';
 import MediaList from '~/src/components/media/MediaList';
 import SearchForm from '~/src/components/elements/SearchForm';
-import useMediaQuery from '~/hooks/useMediaQuery';
 import i18next from '~/i18n/i18next.server';
 import { authenticate } from '~/services/supabase';
 
@@ -48,7 +47,6 @@ const SearchRoute = () => {
       }
     | undefined = useRouteData('root');
   const navigate = useNavigate();
-  const isXs = useMediaQuery('(max-width: 650px)');
   const { t } = useTranslation();
 
   const paginationChangeHandler = (page: number) => navigate(`/search/movie?page=${page}`);
@@ -82,20 +80,16 @@ const SearchRoute = () => {
           <MediaList
             listType="grid"
             showListTypeChangeButton
-            items={todayTrending && todayTrending.items}
+            items={todayTrending?.items}
             listName={t('todayTrending')}
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
+            showPagination
+            totalPages={todayTrending?.totalPages}
+            currentPage={todayTrending?.page}
+            onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
           />
         )}
-        <Pagination
-          total={todayTrending?.totalPages}
-          initialPage={todayTrending?.page}
-          shadow
-          onChange={paginationChangeHandler}
-          css={{ marginTop: '30px' }}
-          {...(isXs && { size: 'xs' })}
-        />
       </Container>
     </>
   );

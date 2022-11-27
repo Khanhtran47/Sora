@@ -10,7 +10,7 @@ import NProgress from 'nprogress';
 
 import i18next from '~/i18n/i18next.server';
 import { getListTvShows } from '~/services/tmdb/tmdb.server';
-import { IMedia } from '~/services/tmdb/tmdb.types';
+import { IMedia } from '~/types/media';
 import MediaList from '~/src/components/media/MediaList';
 import SkeletonItem from '~/src/components/elements/skeleton/Item';
 import useSize from '~/hooks/useSize';

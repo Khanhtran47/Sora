@@ -3,10 +3,12 @@ import { useLoaderData, useNavigate, Link } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 
-import SearchForm from '~/src/components/elements/SearchForm';
-import AnimeList from '~/src/components/anime/AnimeList';
 import { getAnimeTrending } from '~/services/consumet/anilist/anilist.server';
 import { authenticate } from '~/services/supabase';
+import { IMedia } from '~/types/media';
+
+import MediaList from '~/src/components/media/MediaList';
+import SearchForm from '~/src/components/elements/SearchForm';
 
 type LoaderData = {
   items: Awaited<ReturnType<typeof getAnimeTrending>>;
@@ -62,11 +64,13 @@ const SearchRoute = () => {
         }}
       >
         {items && items.results && items.results.length > 0 && (
-          <AnimeList
-            listType="grid"
-            items={items.results}
+          <MediaList
             hasNextPage={items.hasNextPage || false}
+            items={items.results as IMedia[]}
+            itemsType="anime"
             listName="Trending Anime"
+            listType="grid"
+            loadingType="scroll"
             routeName="/anime/trending"
             virtual
           />

@@ -80,7 +80,7 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
             borderRadius: '0.75rem',
           }}
           loaderUrl="/api/image"
-          placeholder="blur"
+          placeholder="empty"
           responsive={[
             {
               size: {
