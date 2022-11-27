@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
 import { useLoaderData, useNavigate, useLocation, Link } from '@remix-run/react';
 import { json, LoaderFunction, MetaFunction } from '@remix-run/node';
-import { Container, Pagination } from '@nextui-org/react';
+import { Container } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useRouteData } from 'remix-utils';
@@ -10,7 +10,6 @@ import type { User } from '@supabase/supabase-js';
 import { authenticate } from '~/services/supabase';
 import { getListTvShows, getListDiscover } from '~/services/tmdb/tmdb.server';
 import { ILanguage } from '~/services/tmdb/tmdb.types';
-import useMediaQuery from '~/hooks/useMediaQuery';
 import i18next from '~/i18n/i18next.server';
 
 import MediaList from '~/src/components/media/MediaList';
@@ -137,7 +136,6 @@ const ListTvShows = () => {
     | undefined = useRouteData('root');
   const navigate = useNavigate();
   const location = useLocation();
-  const isXs = useMediaQuery('(max-width: 650px)');
   const { t } = useTranslation();
 
   const paginationChangeHandler = (page: number) => {
@@ -189,16 +187,12 @@ const ListTvShows = () => {
             genresTv={rootData?.genresTv}
             mediaType="tv"
             languages={rootData?.languages}
+            showPagination
+            totalPages={shows.totalPages}
+            currentPage={shows.page}
+            onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
           />
         )}
-        <Pagination
-          total={shows.totalPages}
-          initialPage={shows.page}
-          shadow
-          onChange={paginationChangeHandler}
-          css={{ marginTop: '30px' }}
-          {...(isXs && { size: 'xs' })}
-        />
       </Container>
     </motion.div>
   );

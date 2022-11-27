@@ -7,7 +7,7 @@ import { Thumbs, Pagination } from 'swiper';
 import { Swiper as SwiperReact, SwiperSlide, useSwiper } from 'swiper/react';
 import type { Swiper } from 'swiper';
 
-import { IMedia } from '~/services/tmdb/tmdb.types';
+import { IMedia } from '~/types/media';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import useLocalStorage from '~/hooks/useLocalStorage';
 
@@ -113,7 +113,6 @@ const CustomNavigation = ({ slot }: { slot: 'container-end' }) => {
 
 const CustomNavigationThumbs = ({ slot }: { slot: 'container-end' }) => {
   const swiper = useSwiper();
-
   return (
     <div slot={slot}>
       <Button
@@ -184,6 +183,7 @@ const CustomNavigationThumbs = ({ slot }: { slot: 'container-end' }) => {
   );
 };
 
+// target React components for Stitches
 Card.toString = () => '.card';
 Card.Image.toString = () => '.card-image';
 
@@ -237,13 +237,13 @@ const SwiperSlideStyled = styled(SwiperSlide, {
 });
 
 interface IMediaListBannerProps {
-  items?: IMedia[];
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
+  items?: IMedia[];
 }
 
 const MediaListBanner = (props: IMediaListBannerProps) => {
-  const { items, genresMovie, genresTv } = props;
+  const { genresMovie, genresTv, items } = props;
   const isSm = useMediaQuery('(max-width: 650px)');
   const isXl = useMediaQuery('(max-width: 1400px)');
   const [thumbsSwiper, setThumbsSwiper] = useState<Swiper | null>(null);
@@ -294,12 +294,21 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
               >
                 {({ isActive }) => (
                   <MediaItem
-                    key={`${item.id}-${index}`}
-                    type="banner"
-                    item={item}
+                    active={isActive}
+                    backdropPath={item?.backdropPath}
+                    genreIds={item?.genreIds}
+                    genresAnime={item?.genresAnime}
                     genresMovie={genresMovie}
                     genresTv={genresTv}
-                    active={isActive}
+                    id={item?.id}
+                    key={`${item.id}-${index}`}
+                    mediaType={item?.mediaType}
+                    overview={item?.overview}
+                    posterPath={item?.posterPath}
+                    title={item?.title}
+                    trailer={item?.trailer}
+                    type="banner"
+                    voteAverage={item?.voteAverage}
                   />
                 )}
               </SwiperSlide>
@@ -328,7 +337,10 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
             >
               {items.map((item, index) => (
                 <SwiperSlideStyled key={index}>
-                  <BannerItemCompact item={item} />
+                  <BannerItemCompact
+                    backdropPath={item?.backdropPath || ''}
+                    title={item?.title || ''}
+                  />
                 </SwiperSlideStyled>
               ))}
               {!isSm && <CustomNavigationThumbs slot="container-end" />}

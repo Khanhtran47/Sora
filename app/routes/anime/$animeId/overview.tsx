@@ -9,7 +9,9 @@ import Image, { MimeType } from 'remix-image';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import { IAnimeInfo } from '~/services/consumet/anilist/anilist.types';
 
-import AnimeList from '~/src/components/anime/AnimeList';
+import { IMedia } from '~/types/media';
+
+import MediaList from '~/src/components/media/MediaList';
 import { H3, H5, H6 } from '~/src/components/styles/Text.styles';
 import Flex from '~/src/components/styles/Flex.styles';
 
@@ -552,10 +554,11 @@ const Overview = () => {
         )}
         {detail?.recommendations && detail?.recommendations.length > 0 && (
           <>
-            <AnimeList
-              listType="slider-card"
-              items={detail?.recommendations}
+            <MediaList
+              items={detail?.recommendations as IMedia[]}
+              itemsType="anime"
               listName="Recommendations"
+              listType="slider-card"
               navigationButtons
             />
             <Spacer y={1} />

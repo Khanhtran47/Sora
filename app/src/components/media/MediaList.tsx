@@ -1,10 +1,12 @@
 import { useState, Suspense } from 'react';
-import { Button, Row, Spacer, Loading } from '@nextui-org/react';
+import { Button, Row, Spacer, Loading, Pagination } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { ClientOnly } from 'remix-utils';
 import { AnimatePresence, motion } from 'framer-motion';
 
-import { IMedia, ILanguage } from '~/services/tmdb/tmdb.types';
+import { IMedia } from '~/types/media';
+import { ILanguage } from '~/services/tmdb/tmdb.types';
+import useMediaQuery from '~/hooks/useMediaQuery';
 
 import FilterIcon from '~/src/assets/icons/FilterIcon.js';
 import ChevronRightIcon from '~/src/assets/icons/ChevronRightIcon.js';
@@ -30,18 +32,25 @@ interface IMediaListProps {
   items?: IMedia[];
   showFilterButton?: boolean;
   showListTypeChangeButton?: boolean;
+  showPagination?: boolean;
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
   mediaType?: 'movie' | 'tv';
   showMoreList?: boolean;
   onClickViewMore?: () => void;
-  cardType?: 'media' | 'similar-movie' | 'similar-tv';
   navigationButtons?: boolean;
   isCoverCard?: boolean;
   coverItem?: { id: number; name: string; backdropPath: string }[];
   virtual?: boolean;
-  itemsType?: 'movie' | 'tv';
+  itemsType?: 'movie' | 'tv' | 'anime' | 'episode';
   languages?: ILanguage[];
+  totalPages?: number;
+  currentPage?: number;
+  onPageChangeHandler?: (page: number) => void;
+  hasNextPage?: boolean;
+  routeName?: string;
+  provider?: string;
+  loadingType?: 'page' | 'scroll';
 }
 
 const MediaList = (props: IMediaListProps) => {
@@ -50,18 +59,25 @@ const MediaList = (props: IMediaListProps) => {
     items,
     showFilterButton,
     showListTypeChangeButton,
+    showPagination,
     genresMovie,
     genresTv,
     mediaType,
     showMoreList,
     onClickViewMore,
-    cardType,
     navigationButtons,
     isCoverCard,
     coverItem,
     virtual,
     itemsType,
     languages,
+    totalPages,
+    currentPage,
+    onPageChangeHandler,
+    hasNextPage,
+    routeName,
+    provider,
+    loadingType,
   } = props;
   let { listType } = props;
   let list;
@@ -72,6 +88,7 @@ const MediaList = (props: IMediaListProps) => {
   const [slideProgress, setSlideProgress] = useState<number>(0);
   const [displayType, setDisplayType] = useState<string>(listType as string);
   const [showFilter, setShowFilter] = useState<boolean>(false);
+  const isXs = useMediaQuery('(max-width: 650px)');
 
   if (!listType && typeof window !== 'undefined') {
     listType =
@@ -88,13 +105,17 @@ const MediaList = (props: IMediaListProps) => {
     case 'grid':
       list = (
         <MediaListGrid
-          items={items}
+          coverItem={coverItem}
           genresMovie={genresMovie}
           genresTv={genresTv}
+          hasNextPage={hasNextPage}
           isCoverCard={isCoverCard}
-          coverItem={coverItem}
-          virtual={virtual}
+          items={items}
           itemsType={itemsType}
+          loadingType={loadingType}
+          provider={provider}
+          routeName={routeName}
+          virtual={virtual}
         />
       );
       break;
@@ -107,14 +128,15 @@ const MediaList = (props: IMediaListProps) => {
     case 'slider-card':
       list = (
         <MediaListCard
-          items={items}
-          type={cardType || 'media'}
-          navigation={{ nextEl, prevEl }}
+          coverItem={coverItem}
           genresMovie={genresMovie}
           genresTv={genresTv}
-          setSlideProgress={setSlideProgress}
           isCoverCard={isCoverCard}
-          coverItem={coverItem}
+          items={items}
+          itemsType={itemsType}
+          navigation={{ nextEl, prevEl }}
+          provider={provider}
+          setSlideProgress={setSlideProgress}
           virtual={virtual}
         />
       );
@@ -262,6 +284,16 @@ const MediaList = (props: IMediaListProps) => {
         )}
       </AnimatePresence>
       {list}
+      {showPagination && totalPages && totalPages > 1 ? (
+        <Pagination
+          total={totalPages}
+          initialPage={currentPage}
+          shadow
+          onChange={onPageChangeHandler}
+          css={{ marginTop: '30px' }}
+          {...(isXs && { size: 'xs' })}
+        />
+      ) : null}
     </Flex>
   );
 };

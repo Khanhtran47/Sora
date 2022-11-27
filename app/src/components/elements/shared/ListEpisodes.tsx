@@ -215,7 +215,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                             />
                           ))}
                         <Flex direction="column" justify="start" css={{ p: '1rem' }}>
-                          <H5 h5 weight="bold">
+                          <H5 h5 weight="bold" className="line-clamp-1">
                             Episode{' '}
                             {type === 'tv'
                               ? isSm

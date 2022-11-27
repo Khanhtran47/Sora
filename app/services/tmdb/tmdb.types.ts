@@ -25,14 +25,14 @@ export interface IMedia {
   popularity?: number;
   posterPath?: string;
   releaseDate?: string; // release_date - first-air-date
-  title?: string; // title - name - original_title - original_name
+  title?: string; // title - name
   voteAverage?: number;
   voteCount?: number;
   genreIds?: number[];
   adult?: boolean;
   video?: boolean;
   originalCountry?: string;
-  originalTitle?: string;
+  originalTitle?: string; // original_title - original_name
   firstAirDate?: string;
   name?: string;
   originalName?: string;

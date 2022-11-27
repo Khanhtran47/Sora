@@ -2,13 +2,12 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
 import { useLoaderData, useNavigate, Link, RouteMatch, useParams } from '@remix-run/react';
-import { Row, Pagination } from '@nextui-org/react';
+import { Row } from '@nextui-org/react';
 import { useRouteData } from 'remix-utils';
 import type { User } from '@supabase/supabase-js';
 
 import { authenticate } from '~/services/supabase';
 import { getSimilar } from '~/services/tmdb/tmdb.server';
-import useMediaQuery from '~/hooks/useMediaQuery';
 import i18next from '~/i18n/i18next.server';
 import MediaList from '~/src/components/media/MediaList';
 
@@ -59,7 +58,6 @@ const SimilarPage = () => {
       }
     | undefined = useRouteData('root');
   const navigate = useNavigate();
-  const isXs = useMediaQuery('(max-width: 650px)');
   const paginationChangeHandler = (page: number) =>
     navigate(`/movies/${movieId}/similar?page=${page}`);
 
@@ -81,25 +79,19 @@ const SimilarPage = () => {
       }}
     >
       {similar && similar.items && similar.items.length > 0 && (
-        <>
-          <MediaList
-            listType="grid"
-            showListTypeChangeButton
-            itemsType="movie"
-            items={similar.items}
-            listName="Similar Movies"
-            genresMovie={rootData?.genresMovie}
-            genresTv={rootData?.genresTv}
-          />
-          <Pagination
-            total={similar.totalPages}
-            initialPage={similar.page}
-            shadow
-            onChange={paginationChangeHandler}
-            css={{ marginTop: '30px' }}
-            {...(isXs && { size: 'xs' })}
-          />
-        </>
+        <MediaList
+          listType="grid"
+          showListTypeChangeButton
+          itemsType="movie"
+          items={similar.items}
+          listName="Similar Movies"
+          genresMovie={rootData?.genresMovie}
+          genresTv={rootData?.genresTv}
+          showPagination
+          totalPages={similar.totalPages}
+          currentPage={similar.page}
+          onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
+        />
       )}
     </Row>
   );

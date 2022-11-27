@@ -4,7 +4,9 @@ import { Container } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 
 import { authenticate } from '~/services/supabase';
-import AnimeList from '~/src/components/anime/AnimeList';
+import { IMedia } from '~/types/media';
+
+import MediaList from '~/src/components/media/MediaList';
 import { getAnimeRecentEpisodes } from '~/services/consumet/anilist/anilist.server';
 
 type LoaderData = {
@@ -73,15 +75,16 @@ const RecentEpisodes = () => {
         }}
       >
         {items && items.results && items.results.length > 0 && (
-          <AnimeList
-            listType="grid"
-            itemType="episode-card"
-            items={items.results}
+          <MediaList
             hasNextPage={items.hasNextPage || false}
+            items={items.results as IMedia[]}
+            itemsType="episode"
             listName="Recent Episodes"
+            listType="grid"
+            loadingType="scroll"
+            provider={provider}
             routeName="/anime/recent-episodes"
             virtual
-            provider={provider}
           />
         )}
       </Container>

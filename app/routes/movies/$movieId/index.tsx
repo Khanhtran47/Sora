@@ -188,7 +188,7 @@ const Overview = () => {
               listName="Recommendations"
               showMoreList
               onClickViewMore={() => onClickViewMore('recommendations')}
-              cardType="similar-movie"
+              itemsType="movie"
               navigationButtons
               genresMovie={rootData?.genresMovie}
               genresTv={rootData?.genresTv}
@@ -207,7 +207,7 @@ const Overview = () => {
               listName="Similar Movies"
               showMoreList
               onClickViewMore={() => onClickViewMore('similar')}
-              cardType="similar-movie"
+              itemsType="movie"
               navigationButtons
               genresMovie={rootData?.genresMovie}
               genresTv={rootData?.genresTv}

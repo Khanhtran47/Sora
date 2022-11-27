@@ -3,9 +3,11 @@ import { json, LoaderFunction, DataFunctionArgs, MetaFunction } from '@remix-run
 import { Container } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 
-import AnimeList from '~/src/components/anime/AnimeList';
+import { IMedia } from '~/types/media';
 import { authenticate } from '~/services/supabase';
 import { getAnimeAdvancedSearch } from '~/services/consumet/anilist/anilist.server';
+
+import MediaList from '~/src/components/media/MediaList';
 
 type LoaderData = {
   items: Awaited<ReturnType<typeof getAnimeAdvancedSearch>>;
@@ -105,11 +107,13 @@ const DiscoverAnime = () => {
         }}
       >
         {items && items.results && items.results.length > 0 && (
-          <AnimeList
-            listType="grid"
-            items={items.results}
+          <MediaList
             hasNextPage={items.hasNextPage || false}
+            items={items.results as IMedia[]}
+            itemsType="anime"
             listName="Discover Anime"
+            listType="grid"
+            loadingType="scroll"
             routeName={location.pathname}
             virtual
           />

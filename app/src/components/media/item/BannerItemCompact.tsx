@@ -2,18 +2,22 @@
 import { Card } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
 
-import { IMedia } from '~/services/tmdb/tmdb.types';
+import { Title } from '~/types/media';
 
 import AspectRatio from '~/src/components/elements/aspect-ratio/AspectRatio';
 import { H5 } from '~/src/components/styles/Text.styles';
 
 interface IBannerItemCompactProps {
-  item?: IMedia;
+  backdropPath: string;
+  title: string | Title;
 }
 
 const BannerItemCompact = (props: IBannerItemCompactProps) => {
-  const { item } = props;
-  const { backdropPath, title } = item || {};
+  const { backdropPath, title } = props;
+  const titleItem =
+    typeof title === 'string'
+      ? title
+      : title?.userPreferred || title?.english || title?.romaji || title?.native;
   return (
     <AspectRatio.Root ratio={16 / 9}>
       <Card
@@ -35,12 +39,12 @@ const BannerItemCompact = (props: IBannerItemCompactProps) => {
             // @ts-ignore
             as={Image}
             className="card-image"
-            src={backdropPath || ''}
+            src={backdropPath}
             objectFit="cover"
             width="100%"
             height="auto"
-            alt={title}
-            title={title}
+            alt={titleItem}
+            title={titleItem}
             css={{
               minWidth: '240px !important',
               minHeight: '135px !important',
@@ -73,7 +77,7 @@ const BannerItemCompact = (props: IBannerItemCompactProps) => {
           }}
         >
           <H5 h5 weight="bold" className="line-clamp-3" css={{ display: 'none' }}>
-            {title}
+            {titleItem}
           </H5>
         </Card.Footer>
       </Card>

@@ -7,7 +7,7 @@ import { Container } from '@nextui-org/react';
 import { getAnimeInfo } from '~/services/consumet/anilist/anilist.server';
 import { authenticate } from '~/services/supabase';
 
-import AnimeDetail from '~/src/components/anime/AnimeDetail';
+import AnimeDetail from '~/src/components/media/AnimeDetail';
 import WatchTrailerModal from '~/src/components/elements/modal/WatchTrailerModal';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';

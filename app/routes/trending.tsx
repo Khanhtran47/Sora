@@ -2,7 +2,7 @@
 import { DataFunctionArgs, json, LoaderFunction, MetaFunction } from '@remix-run/node';
 import { useLoaderData, useNavigate, useLocation, Link } from '@remix-run/react';
 import { motion } from 'framer-motion';
-import { Container, Pagination } from '@nextui-org/react';
+import { Container } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { useRouteData } from 'remix-utils';
 import type { User } from '@supabase/supabase-js';
@@ -10,7 +10,6 @@ import type { User } from '@supabase/supabase-js';
 import { authenticate } from '~/services/supabase';
 import { getTrending } from '~/services/tmdb/tmdb.server';
 import MediaList from '~/src/components/media/MediaList';
-import useMediaQuery from '~/hooks/useMediaQuery';
 import i18next from '~/i18n/i18next.server';
 
 type LoaderData = {
@@ -69,7 +68,6 @@ const Trending = () => {
     | undefined = useRouteData('root');
   const navigate = useNavigate();
   const location = useLocation();
-  const isXs = useMediaQuery('(max-width: 650px)');
   const { t } = useTranslation();
 
   const paginationChangeHandler = (page: number) => navigate(`/trending?page=${page}`);
@@ -97,22 +95,19 @@ const Trending = () => {
       >
         {todayTrending && todayTrending.items && todayTrending.items.length > 0 && (
           <MediaList
-            listType="grid"
-            showListTypeChangeButton
-            items={todayTrending?.items}
-            listName={t('todayTrending')}
+            currentPage={todayTrending?.page}
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
+            items={todayTrending?.items}
+            listName={t('todayTrending')}
+            listType="grid"
+            loadingType="page"
+            onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
+            showListTypeChangeButton
+            showPagination
+            totalPages={todayTrending?.totalPages}
           />
         )}
-        <Pagination
-          total={todayTrending?.totalPages}
-          initialPage={todayTrending?.page}
-          shadow
-          onChange={paginationChangeHandler}
-          css={{ marginTop: '30px' }}
-          {...(isXs && { size: 'xs' })}
-        />
       </Container>
     </motion.div>
   );
