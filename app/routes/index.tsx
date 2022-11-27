@@ -139,6 +139,7 @@ const Index = () => {
           <>
             <MediaList
               items={popularAnime}
+              itemsType="anime"
               listName="Popular Anime"
               listType="slider-card"
               navigationButtons

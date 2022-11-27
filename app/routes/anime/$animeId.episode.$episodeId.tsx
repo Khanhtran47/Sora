@@ -36,6 +36,7 @@ import { IEpisodeInfo } from '~/services/consumet/anilist/anilist.types';
 import { loklokGetTvEpInfo } from '~/services/loklok';
 import { LOKLOK_URL } from '~/services/loklok/utils.server';
 import { IMovieSource, IMovieSubtitle } from '~/services/consumet/flixhq/flixhq.types';
+import { IMedia } from '~/types/media';
 import updateHistory from '~/utils/update-history';
 import useLocalStorage from '~/hooks/useLocalStorage';
 
@@ -613,7 +614,7 @@ const AnimeEpisodeWatch = () => {
         posterPath={detail?.image}
         anilistRating={detail?.rating}
         genresAnime={detail?.genres}
-        recommendationsAnime={detail?.recommendations}
+        recommendationsAnime={detail?.recommendations as IMedia[]}
         color={detail?.color}
         trailerAnime={detail?.trailer}
       />

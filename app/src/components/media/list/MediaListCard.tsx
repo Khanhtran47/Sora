@@ -36,7 +36,6 @@ const MediaListCard = (props: IMediaListCardProps) => {
     virtual,
   } = props;
   const isSm = useMediaQuery('(max-width: 650px)');
-  const isLg = useMediaQuery('(max-width: 1400px)');
   const gap = isSm ? 1 : 2;
 
   if (isCoverCard) {
@@ -117,7 +116,7 @@ const MediaListCard = (props: IMediaListCardProps) => {
                 <SwiperSlide
                   key={i}
                   style={{
-                    width: `${isSm ? '164px' : isLg ? '210px' : '240px'}`,
+                    width: `${isSm ? '244px' : '280px'}`,
                   }}
                 >
                   <Link to={href} style={{ display: 'flex', padding: '0.5rem 0' }}>

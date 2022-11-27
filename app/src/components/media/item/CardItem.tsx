@@ -68,7 +68,6 @@ const CardItem = (props: ICardItemProps) => {
     triggerOnce: !virtual,
   });
   const isSm = useMediaQuery('(max-width: 650px)');
-  const isLg = useMediaQuery('(max-width: 1400px)');
   const fetcher = useFetcher();
   const [trailerCard, setTrailerCard] = React.useState<Trailer>({});
   const [, setIsCardPlaying] = useLocalStorage('cardPlaying', false);
@@ -168,8 +167,8 @@ const CardItem = (props: ICardItemProps) => {
         isHoverable
         isPressable
         css={{
-          minWidth: `${isSm ? '164px' : isLg ? '210px' : '240px'} !important`,
-          minHeight: `${isSm ? '323px' : isLg ? '435px' : '488px'} !important`,
+          minWidth: `${isSm ? '244px' : '280px'} !important`,
+          minHeight: `${isSm ? '344px' : '488px'} !important`,
           borderWidth: 0,
           filter: 'var(--nextui-dropShadows-md)',
         }}
@@ -177,7 +176,7 @@ const CardItem = (props: ICardItemProps) => {
         ref={ref}
       >
         {inView ? (
-          <Card.Body css={{ p: 0 }}>
+          <Card.Body css={{ p: 0, minHeight: `${isSm ? '344px' : '410px'}` }}>
             {posterPath ? (
               <Card.Image
                 // @ts-ignore
@@ -189,8 +188,8 @@ const CardItem = (props: ICardItemProps) => {
                 alt={titleItem}
                 title={titleItem}
                 css={{
-                  minWidth: `${isSm ? '164px' : isLg ? '210px' : '240px'} !important`,
-                  minHeight: `${isSm ? '245px' : isLg ? '357px' : '410px'} !important`,
+                  minWidth: `${isSm ? '244px' : '280px'} !important`,
+                  minHeight: `${isSm ? '344px' : '410px'} !important`,
                 }}
                 showSkeleton={false}
                 loaderUrl="/api/image"
@@ -201,21 +200,14 @@ const CardItem = (props: ICardItemProps) => {
                 responsive={[
                   {
                     size: {
-                      width: 164,
-                      height: 245,
+                      width: 244,
+                      height: 344,
                     },
                     maxWidth: 650,
                   },
                   {
                     size: {
-                      width: 210,
-                      height: 357,
-                    },
-                    maxWidth: 1280,
-                  },
-                  {
-                    size: {
-                      width: 240,
+                      width: 280,
                       height: 410,
                     },
                   },
@@ -226,8 +218,8 @@ const CardItem = (props: ICardItemProps) => {
                 icon={<PhotoIcon width={48} height={48} />}
                 pointer
                 css={{
-                  minWidth: `${isSm ? '164px' : isLg ? '210px' : '240px'} !important`,
-                  minHeight: `${isSm ? '245px' : isLg ? '357px' : '410px'} !important`,
+                  minWidth: `${isSm ? '244px' : '280px'} !important`,
+                  minHeight: `${isSm ? '344px' : '410px'} !important`,
                   size: '$20',
                   borderRadius: '0 !important',
                 }}
@@ -289,7 +281,7 @@ const CardItem = (props: ICardItemProps) => {
               flexDirection: 'column',
               alignItems: 'flex-start',
               minHeight: '4.875rem',
-              maxWidth: `${isSm ? '164px' : isLg ? '210px' : '240px'}`,
+              maxWidth: `${isSm ? '244px' : '280px'}`,
             }}
           >
             <H5
@@ -297,7 +289,7 @@ const CardItem = (props: ICardItemProps) => {
               weight="bold"
               css={{
                 ...(color ? { color } : null),
-                minWidth: `${isSm ? '130px' : isLg ? '180px' : '210px'}`,
+                minWidth: `${isSm ? '150px' : '240px'}`,
                 padding: '0 0.25rem',
               }}
             >

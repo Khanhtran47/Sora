@@ -82,24 +82,25 @@ const AnimePage = () => {
       >
         {popular && popular.results && popular.results.length > 0 && (
           <MediaList
-            listType="slider-card"
             items={popular.results as IMedia[]}
+            itemsType="anime"
             listName="Popular Anime"
-            showMoreList
-            onClickViewMore={() => navigate('/anime/popular')}
+            listType="slider-card"
             navigationButtons
+            onClickViewMore={() => navigate('/anime/popular')}
+            showMoreList
           />
         )}
         {recentEpisodes && recentEpisodes.results && recentEpisodes.results.length > 0 && (
           <MediaList
-            listType="slider-card"
             items={recentEpisodes.results as IMedia[]}
-            listName="Recent Episodes"
-            showMoreList
-            onClickViewMore={() => navigate('/anime/recent-episodes')}
-            navigationButtons
             itemsType="episode"
+            listName="Recent Episodes"
+            listType="slider-card"
+            navigationButtons
+            onClickViewMore={() => navigate('/anime/recent-episodes')}
             provider="gogoanime"
+            showMoreList
           />
         )}
       </Container>

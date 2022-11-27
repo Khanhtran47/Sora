@@ -39,7 +39,10 @@ const MediaListGrid = (props: IMediaListCardProps) => {
     routeName,
     virtual,
   } = props;
-  const isXs = useMediaQuery('(max-width: 370px)');
+  const isXs = useMediaQuery('(max-width: 540px)');
+  const isSm = useMediaQuery('(max-width: 1040px)');
+  const isMd = useMediaQuery('(max-width: 1340px)');
+  const isLg = useMediaQuery('(max-width: 1660px)');
   const fetcher = useFetcher();
   const [listItems, setListItems] = useState<IMedia[]>(items || []);
   const parentRef = useRef<HTMLDivElement>(null);
@@ -180,7 +183,15 @@ const MediaListGrid = (props: IMediaListCardProps) => {
               ? `/movies/${item.id}`
               : `/tv-shows/${item.id}`;
           return (
-            <Grid xs={isXs ? 12 : 6} sm={4} md={3} lg={2.4} xl={2} key={item.id} justify="center">
+            <Grid
+              xs={isXs ? 12 : 6}
+              sm={isSm ? 6 : 4}
+              md={isMd ? 4 : 3}
+              lg={isLg ? 3 : 2.4}
+              xl={2}
+              key={item.id}
+              justify="center"
+            >
               <motion.div
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1 }}
