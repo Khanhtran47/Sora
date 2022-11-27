@@ -315,6 +315,7 @@ const Overview = () => {
                           objectFit="cover"
                           width="100%"
                           height="auto"
+                          showSkeleton={false}
                           alt={
                             relation.title?.userPreferred ||
                             relation.title?.english ||
@@ -425,6 +426,7 @@ const Overview = () => {
                             // @ts-ignore
                             as={Image}
                             src={character.image}
+                            showSkeleton={false}
                             objectFit="cover"
                             width="60px"
                             height="100%"
@@ -502,6 +504,7 @@ const Overview = () => {
                             objectFit="cover"
                             width="60px"
                             height="100%"
+                            showSkeleton={false}
                             alt={character.voiceActors[0].name?.full}
                             title={character.voiceActors[0].name?.full}
                             css={{

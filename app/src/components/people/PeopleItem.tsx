@@ -49,6 +49,7 @@ const CardItem = ({ item, virtual }: { item: IPeople; virtual?: boolean }) => {
                   height="auto"
                   alt={name}
                   title={name}
+                  showSkeleton={false}
                   css={{
                     minWidth: '160px !important',
                     minHeight: '240px !important',

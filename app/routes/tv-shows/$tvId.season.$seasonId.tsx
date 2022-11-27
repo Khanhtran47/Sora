@@ -141,6 +141,7 @@ const SeasonDetail = () => {
                     title={detail?.name}
                     objectFit="cover"
                     width="50%"
+                    showSkeleton={false}
                     css={{
                       minWidth: 'auto !important',
                       borderRadius: '24px',
@@ -222,6 +223,7 @@ const SeasonDetail = () => {
                           marginTop: '2rem',
                           borderRadius: '24px',
                         }}
+                        showSkeleton={false}
                         loaderUrl="/api/image"
                         placeholder="blur"
                         options={{
@@ -291,6 +293,7 @@ const SeasonDetail = () => {
             src={
               detail?.poster_path ? TMDB.posterUrl(detail?.poster_path, 'w342') : BackgroundDefault
             }
+            showSkeleton={false}
             css={{
               minHeight: '100vh !important',
               minWidth: '100% !important',
