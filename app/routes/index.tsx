@@ -15,12 +15,10 @@ import {
   getListTvShows,
   getListPeople,
 } from '~/services/tmdb/tmdb.server';
-import { IPeople } from '~/services/tmdb/tmdb.types';
 import { getAnimePopular } from '~/services/consumet/anilist/anilist.server';
 import { IMedia } from '~/types/media';
 
 import MediaList from '~/src/components/media/MediaList';
-import PeopleList from '~/src/components/people/PeopleList';
 import featuredList from '~/src/constants/featuredList';
 
 export const handle = {
@@ -32,7 +30,7 @@ type LoaderData = {
   movies: IMedia[] | undefined;
   shows: IMedia[] | undefined;
   popularAnime: IMedia[] | undefined;
-  people: IPeople[] | undefined;
+  people: IMedia[] | undefined;
 };
 
 export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
@@ -55,7 +53,7 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
     movies: movies && movies.items && movies.items.slice(0, 16),
     shows: shows && shows.items && shows.items.slice(0, 16),
     popularAnime: anime && (anime.results as IMedia[]),
-    people: people && people.results && people.results.slice(0, 16),
+    people: people && people.items && people.items.slice(0, 16),
   });
 };
 
@@ -165,13 +163,14 @@ const Index = () => {
         )}
         {people.length > 0 && (
           <>
-            <PeopleList
+            <MediaList
               items={people}
               listName={t('popularPeople')}
               listType="slider-card"
               navigationButtons
               onClickViewMore={() => onClickViewMore('people')}
               showMoreList
+              itemsType="people"
             />
             <Spacer y={1.5} />
           </>

@@ -51,7 +51,7 @@ interface IBannerItemDesktopProps {
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
   id: number;
-  mediaType: 'movie' | 'tv' | 'anime';
+  mediaType: 'movie' | 'tv' | 'anime' | 'people';
   overview: string;
   posterPath: string;
   title: string | Title;
@@ -389,7 +389,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                           : mediaType === 'tv'
                           ? 'tv-shows/'
                           : 'anime/'
-                      }${id}/${mediaType === 'anime' ? 'overview' : null}`,
+                      }${id}/${mediaType === 'anime' ? 'overview' : ''}`,
                       {
                         state: { currentTime: player ? player.playerInfo.currentTime : 0 },
                       },

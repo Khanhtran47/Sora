@@ -1,11 +1,10 @@
 import { DataFunctionArgs, json, LoaderFunction } from '@remix-run/node';
 import { useLoaderData, useNavigate, Link } from '@remix-run/react';
-import { Container, Pagination } from '@nextui-org/react';
+import { Container } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 
 import { getListPeople } from '~/services/tmdb/tmdb.server';
-import PeopleList from '~/src/components/people/PeopleList';
-import useMediaQuery from '~/hooks/useMediaQuery';
+import MediaList from '~/src/components/media/MediaList';
 import i18next from '~/i18n/i18next.server';
 import SearchForm from '~/src/components/elements/SearchForm';
 import { authenticate } from '~/services/supabase';
@@ -37,7 +36,6 @@ export const handle = {
 const SearchRoute = () => {
   const { people } = useLoaderData<LoaderData>() || {};
   const navigate = useNavigate();
-  const isXs = useMediaQuery('(max-width: 650px)');
   const { t } = useTranslation();
 
   const paginationChangeHandler = (page: number) => navigate(`/people/popular?page=${page}`);
@@ -67,17 +65,18 @@ const SearchRoute = () => {
           },
         }}
       >
-        {people && people.results?.length > 0 && (
-          <PeopleList listType="grid" items={people.results} listName={t('popularPeople')} />
+        {people && people.items && people.items.length > 0 && (
+          <MediaList
+            currentPage={people.page}
+            items={people.items}
+            listName={t('popularPeople')}
+            listType="grid"
+            onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
+            showPagination
+            totalPages={people.totalPages}
+            itemsType="people"
+          />
         )}
-        <Pagination
-          total={people?.total_pages}
-          initialPage={people?.page}
-          shadow
-          onChange={paginationChangeHandler}
-          css={{ marginTop: '30px' }}
-          {...(isXs && { size: 'xs' })}
-        />
       </Container>
     </>
   );

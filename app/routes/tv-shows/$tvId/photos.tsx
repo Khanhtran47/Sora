@@ -1,8 +1,4 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable no-nested-ternary */
-/* eslint-disable @typescript-eslint/indent */
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
 import { Image as NextImage, Row, Spacer } from '@nextui-org/react';
@@ -85,7 +81,7 @@ const uiElements: GalleryProps['uiElements'] = [
 
 const PhotosPage = () => {
   const { images } = useLoaderData<LoaderData>();
-  const tvData: { detail: ITvShowDetail } | undefined = useRouteData('routes/movies/$movieId');
+  const tvData: { detail: ITvShowDetail } | undefined = useRouteData('routes/tv-shows/$tvId');
   const isLg = useMediaQuery('(max-width: 1280px)');
   const isXs = useMediaQuery('(max-width: 375px)');
   const smallItemStyles: React.CSSProperties = {
@@ -159,7 +155,7 @@ const PhotosPage = () => {
                               }}
                               title={tvData?.detail?.name}
                               loaderUrl="/api/image"
-                              placeholder="empty"
+                              placeholder="blur"
                               options={{
                                 contentType: MimeType.WEBP,
                               }}
@@ -222,7 +218,7 @@ const PhotosPage = () => {
                               }}
                               title={tvData?.detail?.name}
                               loaderUrl="/api/image"
-                              placeholder="empty"
+                              placeholder="blur"
                               options={{
                                 contentType: MimeType.WEBP,
                               }}
@@ -285,7 +281,7 @@ const PhotosPage = () => {
                               }}
                               title={tvData?.detail?.name}
                               loaderUrl="/api/image"
-                              placeholder="empty"
+                              placeholder="blur"
                               options={{
                                 contentType: MimeType.WEBP,
                               }}

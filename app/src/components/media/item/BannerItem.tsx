@@ -13,7 +13,7 @@ interface IBannerItemProps {
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
   id: number;
-  mediaType: 'movie' | 'tv' | 'anime';
+  mediaType: 'movie' | 'tv' | 'anime' | 'people';
   overview: string;
   posterPath: string;
   title: string | Title;

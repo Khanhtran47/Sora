@@ -151,7 +151,7 @@ const MediaPage = () => {
                           }}
                           title={peopleData?.detail?.name}
                           loaderUrl="/api/image"
-                          placeholder="empty"
+                          placeholder="blur"
                           options={{
                             contentType: MimeType.WEBP,
                           }}

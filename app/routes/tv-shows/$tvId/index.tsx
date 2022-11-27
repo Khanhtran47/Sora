@@ -8,21 +8,23 @@ import type { User } from '@supabase/supabase-js';
 import { useRouteData } from 'remix-utils';
 import Image, { MimeType } from 'remix-image';
 
-import { getSimilar, getCredits, getRecommendation } from '~/services/tmdb/tmdb.server';
-import { ITvShowDetail, IPeople } from '~/services/tmdb/tmdb.types';
-import MediaList from '~/src/components/media/MediaList';
-import PeopleList from '~/src/components/people/PeopleList';
-import TMDB from '~/utils/media';
-import useMediaQuery from '~/hooks/useMediaQuery';
-import { H3, H4, H5, H6 } from '~/src/components/styles/Text.styles';
-import Flex from '~/src/components/styles/Flex.styles';
 import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
 import { authenticate } from '~/services/supabase';
+import { getSimilar, getCredits, getRecommendation } from '~/services/tmdb/tmdb.server';
+import { ITvShowDetail } from '~/services/tmdb/tmdb.types';
+import MediaList from '~/src/components/media/MediaList';
+import TMDB from '~/utils/media';
+import useMediaQuery from '~/hooks/useMediaQuery';
+import { postFetchDataHandler } from '~/services/tmdb/utils.server';
+import { IMedia } from '~/types/media';
+
+import { H3, H4, H5, H6 } from '~/src/components/styles/Text.styles';
+import Flex from '~/src/components/styles/Flex.styles';
 
 type LoaderData = {
   similar: Awaited<ReturnType<typeof getSimilar>>;
   recommendations: Awaited<ReturnType<typeof getRecommendation>>;
-  topBilledCast: IPeople[];
+  topBilledCast: IMedia[];
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -44,7 +46,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   return json<LoaderData>({
     similar,
     recommendations,
-    topBilledCast: credits && credits.cast && credits.cast.slice(0, 9),
+    topBilledCast: credits &&
+      credits.cast && [...postFetchDataHandler(credits.cast.slice(0, 9), 'people')],
   });
 };
 
@@ -175,13 +178,14 @@ const Overview = () => {
         <Spacer y={1} />
         {topBilledCast && topBilledCast.length > 0 && (
           <>
-            <PeopleList
+            <MediaList
               listType="slider-card"
               items={topBilledCast}
               listName="Top Cast"
               showMoreList
               onClickViewMore={() => onClickViewMore('cast')}
               navigationButtons
+              itemsType="people"
             />
             <Spacer y={1} />
             <Divider x={1} css={{ m: 0 }} />

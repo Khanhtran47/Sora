@@ -15,7 +15,7 @@ interface IBannerItemMobileProps {
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
   id: number | string;
-  mediaType: 'movie' | 'tv' | 'anime';
+  mediaType: 'movie' | 'tv' | 'anime' | 'people';
   title: string | Title;
   voteAverage: number;
   genresAnime: string[];

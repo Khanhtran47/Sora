@@ -42,7 +42,7 @@ interface IMediaListProps {
   isCoverCard?: boolean;
   coverItem?: { id: number; name: string; backdropPath: string }[];
   virtual?: boolean;
-  itemsType?: 'movie' | 'tv' | 'anime' | 'episode';
+  itemsType?: 'movie' | 'tv' | 'anime' | 'people' | 'episode';
   languages?: ILanguage[];
   totalPages?: number;
   currentPage?: number;

@@ -24,7 +24,10 @@ import {
 import { fetcher, postFetchDataHandler, TMDB } from './utils.server';
 
 // reusable function
-const getListFromTMDB = async (url: string, type?: 'movie' | 'tv'): Promise<IMediaList> => {
+const getListFromTMDB = async (
+  url: string,
+  type?: 'movie' | 'tv' | 'people',
+): Promise<IMediaList> => {
   try {
     const fetched = await fetcher(url);
 
@@ -221,15 +224,17 @@ export const getListPeople = async (
   type: ListPersonType,
   language?: string,
   page?: number,
-): Promise<IListPeople | undefined> => {
-  try {
-    const fetched = await fetcher<IListPeople>(TMDB.listPerson(type, language, page));
-    if (!fetched?.results) throw new Error('Dont have result');
+): Promise<IMediaList | undefined> => {
+  // try {
+  //   const fetched = await fetcher<IListPeople>();
+  //   if (!fetched?.results) throw new Error('Dont have result');
 
-    return fetched;
-  } catch (error) {
-    console.error(error);
-  }
+  //   return fetched;
+  // } catch (error) {
+  //   console.error(error);
+  // }
+  const url = TMDB.listPerson(type, language, page);
+  return getListFromTMDB(url, 'people');
 };
 
 export const getPeopleDetail = async (

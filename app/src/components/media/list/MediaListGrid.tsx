@@ -18,7 +18,7 @@ interface IMediaListCardProps {
   hasNextPage?: boolean;
   isCoverCard?: boolean;
   items?: IMedia[];
-  itemsType?: 'movie' | 'tv' | 'anime' | 'episode';
+  itemsType?: 'movie' | 'tv' | 'anime' | 'people' | 'episode';
   loadingType?: 'page' | 'scroll';
   provider?: string;
   routeName?: string;
@@ -179,6 +179,8 @@ const MediaListGrid = (props: IMediaListCardProps) => {
               ? `/anime/${item.id}/episode/${item.episodeId}?provider=${provider}&episode=${item.episodeNumber}`
               : itemsType === 'anime'
               ? `/anime/${item.id}/overview`
+              : itemsType === 'people'
+              ? `/people/${item.id}/overview`
               : itemsType === 'movie'
               ? `/movies/${item.id}`
               : `/tv-shows/${item.id}`;
@@ -204,6 +206,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
                 <Link to={href}>
                   <MediaItem
                     backdropPath={item?.backdropPath}
+                    character={item?.character}
                     color={item?.color}
                     episodeNumber={item?.episodeNumber}
                     episodeTitle={item?.episodeTitle}
@@ -212,7 +215,9 @@ const MediaListGrid = (props: IMediaListCardProps) => {
                     genresMovie={genresMovie}
                     genresTv={genresTv}
                     id={item?.id}
+                    job={item?.job}
                     key={item.id}
+                    knownFor={item?.knownFor}
                     mediaType={item?.mediaType}
                     overview={item?.overview}
                     posterPath={item?.posterPath}

@@ -1,10 +1,12 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { env } from 'process';
+import { IMedia } from '~/types/media';
 import { lruCache } from '../lru-cache';
 import {
   BackdropSize,
-  IMedia,
+  ProfileSize,
   ListMovieType,
   ListTvShowType,
   MediaType,
@@ -48,6 +50,13 @@ export class TMDB {
       return `${this.MEDIA_BASE_URL}${size}/${path}`;
     }
     return `${this.MEDIA_BASE_URL}${size}/${path}`;
+  };
+
+  static profileUrl = (path: string | undefined, size?: ProfileSize): string => {
+    if (size) {
+      return `${this.MEDIA_BASE_URL}${size}/${path}`;
+    }
+    return `${this.MEDIA_BASE_URL}original/${path}`;
   };
 
   static listMoviesUrl = (
@@ -406,47 +415,69 @@ export const fetcher = async <T = any>(url: string): Promise<T> => {
   return data;
 };
 
-export const postFetchDataHandler = (data: any, mediaType?: 'movie' | 'tv'): IMedia[] => {
+export const postFetchDataHandler = (
+  data: any,
+  mediaType?: 'movie' | 'tv' | 'people',
+): IMedia[] => {
   const result: IMedia[] = [];
 
   const transform = (item: any): IMedia =>
-    mediaType
+    mediaType && mediaType !== 'people'
       ? {
-          id: item.id,
-          title: mediaType === 'movie' ? item.title : item.name,
-          overview: item.overview,
-          posterPath: item.poster_path ? TMDB.posterUrl(item.poster_path, 'w342') : undefined,
-          backdropPath: item.backdrop_path
-            ? TMDB.backdropUrl(item.backdrop_path, 'w1280')
-            : undefined,
-          releaseDate: item.release_date || item.first_air_date,
-          voteAverage: item.vote_average,
-          voteCount: item.vote_count,
-          mediaType: mediaType || item.media_type,
-          popularity: item.popularity,
-          originalLanguage: item.original_language,
-          genreIds: item.genre_ids,
           ...(mediaType && mediaType === 'movie' && { adult: item.adult }),
           ...(mediaType && mediaType === 'movie' && { video: item.video }),
           ...(mediaType && mediaType === 'tv' && { originalCountry: item.original_country }),
-          originalTitle: mediaType === 'movie' ? item.original_title : item.original_name,
-        }
-      : {
-          id: item.id,
-          title: item.title || item.name,
-          overview: item.overview,
-          posterPath: item.poster_path ? TMDB.posterUrl(item.poster_path, 'w342') : undefined,
           backdropPath: item.backdrop_path
             ? TMDB.backdropUrl(item.backdrop_path, 'w1280')
             : undefined,
+          genreIds: item.genre_ids,
+          id: item.id,
+          mediaType: mediaType || item.media_type,
+          originalLanguage: item.original_language,
+          originalTitle: mediaType === 'movie' ? item.original_title : item.original_name,
+          overview: item.overview,
+          popularity: item.popularity,
+          posterPath: item.poster_path ? TMDB.posterUrl(item.poster_path, 'w342') : undefined,
           releaseDate: item.release_date || item.first_air_date,
+          title: mediaType === 'movie' ? item.title : item.name,
           voteAverage: item.vote_average,
           voteCount: item.vote_count,
+        }
+      : mediaType === 'people'
+      ? {
+          adult: item.adult,
+          castId: item.cast_id,
+          character: item.character,
+          creditId: item.credit_id,
+          department: item.department,
+          gender: item.gender,
+          id: item.id,
+          job: item.job,
+          knownFor: item.known_for,
+          knownForDepartment: item.known_for_department,
           mediaType: mediaType || item.media_type,
+          title: item.name,
+          order: item.order,
+          originalName: item.original_name,
           popularity: item.popularity,
-          originalLanguage: item.original_language,
+          posterPath: item.profile_path ? TMDB?.profileUrl(item?.profile_path, 'w185') : undefined,
+        }
+      : {
+          backdropPath: item.backdrop_path
+            ? TMDB.backdropUrl(item.backdrop_path, 'w1280')
+            : undefined,
           genreIds: item.genre_ids,
+          id: item.id,
+          mediaType: mediaType || item.media_type,
+          originalLanguage: item.original_language,
           originalTitle: item.original_title || item.original_name,
+          overview: item.overview,
+          popularity: item.popularity,
+          posterPath: item.poster_path ? TMDB.posterUrl(item.poster_path, 'w342') : undefined,
+          releaseDate: item.release_date || item.first_air_date,
+          title: item.title || item.name,
+          voteAverage: item.vote_average,
+          voteCount: item.vote_count,
         };
 
   if (Array.isArray(data?.results)) {

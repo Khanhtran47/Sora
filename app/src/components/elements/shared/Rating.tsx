@@ -6,7 +6,7 @@ import { H5 } from '~/src/components/styles/Text.styles';
 
 interface IRatingProps {
   rating: number;
-  ratingType?: 'movie' | 'tv' | 'anime';
+  ratingType?: 'movie' | 'tv' | 'anime' | 'people';
 }
 
 const Rating = (props: IRatingProps) => {

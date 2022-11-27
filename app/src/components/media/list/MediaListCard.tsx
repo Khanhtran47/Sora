@@ -15,7 +15,7 @@ interface IMediaListCardProps {
   genresTv?: { [id: string]: string };
   isCoverCard?: boolean;
   items?: IMedia[];
-  itemsType?: 'movie' | 'tv' | 'anime' | 'episode';
+  itemsType?: 'movie' | 'tv' | 'anime' | 'people' | 'episode';
   navigation?: { nextEl?: string | HTMLElement | null; prevEl?: string | HTMLElement | null };
   provider?: string;
   setSlideProgress?: React.Dispatch<React.SetStateAction<number>>;
@@ -109,6 +109,8 @@ const MediaListCard = (props: IMediaListCardProps) => {
                   ? `/anime/${item.id}/episode/${item.episodeId}?provider=${provider}&episode=${item.episodeNumber}`
                   : itemsType === 'anime'
                   ? `/anime/${item.id}/overview`
+                  : itemsType === 'people'
+                  ? `/people/${item.id}/overview`
                   : itemsType === 'movie'
                   ? `/movies/${item.id}`
                   : `/tv-shows/${item.id}`;
@@ -116,12 +118,13 @@ const MediaListCard = (props: IMediaListCardProps) => {
                 <SwiperSlide
                   key={i}
                   style={{
-                    width: `${isSm ? '244px' : '280px'}`,
+                    width: `${isSm ? '244px' : item?.mediaType === 'people' ? '160px' : '280px'}`,
                   }}
                 >
                   <Link to={href} style={{ display: 'flex', padding: '0.5rem 0' }}>
                     <MediaItem
                       backdropPath={item?.backdropPath}
+                      character={item?.character}
                       color={item?.color}
                       episodeNumber={item?.episodeNumber}
                       episodeTitle={item?.episodeTitle}
@@ -130,7 +133,9 @@ const MediaListCard = (props: IMediaListCardProps) => {
                       genresMovie={genresMovie}
                       genresTv={genresTv}
                       id={item?.id}
+                      job={item?.job}
                       key={item.id}
+                      knownFor={item?.knownFor}
                       mediaType={item?.mediaType}
                       overview={item?.overview}
                       posterPath={item?.posterPath}

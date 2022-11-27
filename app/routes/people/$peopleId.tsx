@@ -9,7 +9,7 @@ import useMediaQuery from '~/hooks/useMediaQuery';
 import TMDB from '~/utils/media';
 import { authenticate } from '~/services/supabase';
 
-import PeopleDetail from '~/src/components/people/PeopleDetail';
+import PeopleDetail from '~/src/components/media/PeopleDetail';
 import Tab from '~/src/components/elements/Tab';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';

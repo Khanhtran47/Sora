@@ -1,4 +1,4 @@
-import { Title } from '~/types/media';
+import { IMedia, Title } from '~/types/media';
 import { ITrailer } from '~/services/consumet/anilist/anilist.types';
 import BannerItem from './BannerItem';
 import CardItem from './CardItem';
@@ -6,6 +6,7 @@ import CardItem from './CardItem';
 interface IMediaItem {
   active?: boolean;
   backdropPath?: string;
+  character?: string;
   color?: string;
   episodeNumber?: number;
   episodeTitle?: string;
@@ -15,7 +16,9 @@ interface IMediaItem {
   genresTv?: { [id: string]: string };
   id?: number | string;
   isCoverCard?: boolean;
-  mediaType?: 'movie' | 'tv' | 'anime';
+  job?: string;
+  knownFor?: IMedia[];
+  mediaType?: 'movie' | 'tv' | 'anime' | 'people';
   overview?: string;
   posterPath?: string;
   releaseDate?: string | number;
@@ -30,6 +33,7 @@ const MediaItem = (props: IMediaItem) => {
   const {
     active,
     backdropPath,
+    character,
     color,
     episodeNumber,
     episodeTitle,
@@ -39,6 +43,8 @@ const MediaItem = (props: IMediaItem) => {
     genresTv,
     id,
     isCoverCard,
+    job,
+    knownFor,
     mediaType,
     overview,
     posterPath,
@@ -72,6 +78,7 @@ const MediaItem = (props: IMediaItem) => {
   return (
     <CardItem
       backdropPath={backdropPath || ''}
+      character={character || ''}
       color={color}
       episodeNumber={episodeNumber}
       episodeTitle={episodeTitle}
@@ -82,6 +89,8 @@ const MediaItem = (props: IMediaItem) => {
       id={Number(id)}
       isCoverCard={isCoverCard}
       isEpisodeCard={type === 'episode'}
+      job={job || ''}
+      knownFor={knownFor}
       mediaType={mediaType || 'movie'}
       overview={overview || ''}
       posterPath={posterPath || ''}

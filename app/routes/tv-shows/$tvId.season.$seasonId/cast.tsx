@@ -6,11 +6,13 @@ import { Row } from '@nextui-org/react';
 import i18next from '~/i18n/i18next.server';
 import { authenticate } from '~/services/supabase';
 import { getTvSeasonCredits } from '~/services/tmdb/tmdb.server';
-import { IPeople } from '~/services/tmdb/tmdb.types';
-import PeopleList from '~/src/components/people/PeopleList';
+import { postFetchDataHandler } from '~/services/tmdb/utils.server';
+import { IMedia } from '~/types/media';
+
+import MediaList from '~/src/components/media/MediaList';
 
 type LoaderData = {
-  cast: IPeople[];
+  cast: IMedia[];
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -25,7 +27,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   if (!credits) throw new Response('Not found', { status: 404 });
 
-  return json<LoaderData>({ cast: credits.cast });
+  return json<LoaderData>({ cast: [...postFetchDataHandler(credits.cast, 'people')] });
 };
 
 export const meta: MetaFunction = ({ params }) => ({
@@ -53,7 +55,7 @@ const CastPage = () => {
       }}
     >
       {cast && cast.length > 0 && (
-        <PeopleList listType="grid" items={cast} listName="Cast" virtual />
+        <MediaList listType="grid" items={cast} listName="Cast" virtual itemsType="people" />
       )}
     </Row>
   );

@@ -25,7 +25,7 @@ interface ICardItemHoverProps {
   genreIds: number[];
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
-  mediaType: 'movie' | 'tv' | 'anime';
+  mediaType: 'movie' | 'tv' | 'anime' | 'people';
   overview: string;
   posterPath: string;
   releaseDate: string | number;
@@ -281,7 +281,7 @@ const CardItemHover = (props: ICardItemHoverProps) => {
               <H5 h5>{`${mediaType === 'movie' ? 'Movie' : 'TV-Show'} • ${releaseDate}`}</H5>
             )}
             {voteAverage && (
-              <Flex direction="row">
+              <Flex direction="row" align="center">
                 <Rating
                   rating={mediaType === 'anime' ? voteAverage : Number(voteAverage.toFixed(1))}
                   ratingType={mediaType}

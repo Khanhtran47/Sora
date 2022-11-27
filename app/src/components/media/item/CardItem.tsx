@@ -1,3 +1,4 @@
+/* eslint-disable no-unsafe-optional-chaining */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import * as React from 'react';
@@ -10,7 +11,7 @@ import { motion } from 'framer-motion';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
 import useLocalStorage from '~/hooks/useLocalStorage';
-import { Title } from '~/types/media';
+import { IMedia, Title } from '~/types/media';
 import { ITrailer } from '~/services/consumet/anilist/anilist.types';
 
 import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
@@ -21,6 +22,7 @@ import CardItemHover from './CardItemHover';
 
 interface ICardItemProps {
   backdropPath: string;
+  character: string;
   color?: string;
   episodeNumber?: number;
   episodeTitle?: string;
@@ -31,7 +33,9 @@ interface ICardItemProps {
   id: number;
   isCoverCard?: boolean;
   isEpisodeCard?: boolean;
-  mediaType: 'movie' | 'tv' | 'anime';
+  job: string;
+  knownFor?: IMedia[];
+  mediaType: 'movie' | 'tv' | 'anime' | 'people';
   overview: string;
   posterPath: string;
   releaseDate: string | number;
@@ -44,6 +48,7 @@ interface ICardItemProps {
 const CardItem = (props: ICardItemProps) => {
   const {
     backdropPath,
+    character,
     color,
     episodeNumber,
     episodeTitle,
@@ -54,6 +59,8 @@ const CardItem = (props: ICardItemProps) => {
     id,
     isCoverCard,
     isEpisodeCard,
+    job,
+    knownFor,
     mediaType,
     overview,
     posterPath,
@@ -96,6 +103,9 @@ const CardItem = (props: ICardItemProps) => {
             minHeight: `${isSm ? '158px' : '270px'} !important`,
             borderWidth: 0,
             filter: 'var(--nextui-dropShadows-md)',
+            '&:hover': {
+              boxShadow: '0 0 0 1px var(--nextui-colors-primarySolidHover)',
+            },
           }}
           role="figure"
           ref={ref}
@@ -167,16 +177,24 @@ const CardItem = (props: ICardItemProps) => {
         isHoverable
         isPressable
         css={{
-          minWidth: `${isSm ? '244px' : '280px'} !important`,
-          minHeight: `${isSm ? '344px' : '488px'} !important`,
+          minWidth: `${isSm ? '244px' : mediaType === 'people' ? '160px' : '280px'} !important`,
+          minHeight: `${isSm ? '344px' : mediaType === 'people' ? '318px' : '488px'} !important`,
           borderWidth: 0,
           filter: 'var(--nextui-dropShadows-md)',
+          '&:hover': {
+            boxShadow: '0 0 0 1px var(--nextui-colors-primarySolidHover)',
+          },
         }}
         role="figure"
         ref={ref}
       >
         {inView ? (
-          <Card.Body css={{ p: 0, minHeight: `${isSm ? '344px' : '410px'}` }}>
+          <Card.Body
+            css={{
+              p: 0,
+              minHeight: `${isSm ? '344px' : mediaType === 'people' ? '160px' : '410px'}`,
+            }}
+          >
             {posterPath ? (
               <Card.Image
                 // @ts-ignore
@@ -188,8 +206,12 @@ const CardItem = (props: ICardItemProps) => {
                 alt={titleItem}
                 title={titleItem}
                 css={{
-                  minWidth: `${isSm ? '244px' : '280px'} !important`,
-                  minHeight: `${isSm ? '344px' : '410px'} !important`,
+                  minWidth: `${
+                    isSm ? '244px' : mediaType === 'people' ? '160px' : '280px'
+                  } !important`,
+                  minHeight: `${
+                    isSm ? '344px' : mediaType === 'people' ? '240px' : '410px'
+                  } !important`,
                 }}
                 showSkeleton={false}
                 loaderUrl="/api/image"
@@ -200,15 +222,15 @@ const CardItem = (props: ICardItemProps) => {
                 responsive={[
                   {
                     size: {
-                      width: 244,
-                      height: 344,
+                      width: mediaType === 'people' ? 160 : 244,
+                      height: mediaType === 'people' ? 240 : 344,
                     },
                     maxWidth: 650,
                   },
                   {
                     size: {
-                      width: 280,
-                      height: 410,
+                      width: mediaType === 'people' ? 160 : 280,
+                      height: mediaType === 'people' ? 240 : 410,
                     },
                   },
                 ]}
@@ -218,8 +240,12 @@ const CardItem = (props: ICardItemProps) => {
                 icon={<PhotoIcon width={48} height={48} />}
                 pointer
                 css={{
-                  minWidth: `${isSm ? '244px' : '280px'} !important`,
-                  minHeight: `${isSm ? '344px' : '410px'} !important`,
+                  minWidth: `${
+                    isSm ? '244px' : mediaType === 'people' ? '160px' : '280px'
+                  } !important`,
+                  minHeight: `${
+                    isSm ? '344px' : mediaType === 'people' ? '240px' : '410px'
+                  } !important`,
                   size: '$20',
                   borderRadius: '0 !important',
                 }}
@@ -232,7 +258,7 @@ const CardItem = (props: ICardItemProps) => {
           content={
             <ClientOnly fallback={<Loading type="default" />}>
               {() => {
-                if (isEpisodeCard) {
+                if (isEpisodeCard || mediaType === 'people') {
                   return null;
                 }
                 return (
@@ -266,9 +292,10 @@ const CardItem = (props: ICardItemProps) => {
           offset={0}
           visible={false}
           className="!w-fit"
+          css={isEpisodeCard || mediaType === 'people' ? { p: 0 } : {}}
           onVisibleChange={(visible) => {
             if (visible) {
-              if (mediaType !== 'anime')
+              if (mediaType !== 'anime' && mediaType !== 'people')
                 fetcher.load(`/${mediaType === 'movie' ? 'movies' : 'tv-shows'}/${id}/videos`);
             } else {
               setIsCardPlaying(false);
@@ -280,8 +307,8 @@ const CardItem = (props: ICardItemProps) => {
               justifyItems: 'flex-start',
               flexDirection: 'column',
               alignItems: 'flex-start',
-              minHeight: '4.875rem',
-              maxWidth: `${isSm ? '244px' : '280px'}`,
+              minHeight: mediaType === 'people' ? '5.25rem' : '4.875rem',
+              maxWidth: `${isSm ? '244px' : mediaType === 'people' ? '160px' : '280px'}`,
             }}
           >
             <H5
@@ -289,7 +316,7 @@ const CardItem = (props: ICardItemProps) => {
               weight="bold"
               css={{
                 ...(color ? { color } : null),
-                minWidth: `${isSm ? '150px' : '240px'}`,
+                minWidth: `${isSm ? '150px' : mediaType === 'people' ? '100px' : '240px'}`,
                 padding: '0 0.25rem',
               }}
             >
@@ -299,6 +326,34 @@ const CardItem = (props: ICardItemProps) => {
               <H6 h6 css={{ color: '$accents7', fontWeight: '$semibold', fontSize: '$sm' }}>
                 EP {episodeNumber} - {episodeTitle}
               </H6>
+            ) : null}
+            {mediaType === 'people' ? (
+              <>
+                {knownFor ? (
+                  <H6
+                    h6
+                    className="!line-clamp-2"
+                    css={{ color: '$accents7', fontWeight: '$semibold' }}
+                  >
+                    {knownFor?.map((movie, index) => (
+                      <>
+                        {movie?.title || movie?.originalTitle || movie?.name || movie?.originalName}
+                        {knownFor?.length && (index < knownFor?.length - 1 ? ', ' : '')}
+                      </>
+                    ))}
+                  </H6>
+                ) : null}
+                {character ? (
+                  <H6 h6 css={{ color: '$accents7', fontWeight: '$semibold' }}>
+                    {character}
+                  </H6>
+                ) : null}
+                {job ? (
+                  <H6 h6 css={{ color: '$accents7', fontWeight: '$semibold' }}>
+                    {job}
+                  </H6>
+                ) : null}
+              </>
             ) : null}
           </Card.Footer>
         </Tooltip>
