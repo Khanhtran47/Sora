@@ -125,7 +125,7 @@ const CardItem = (props: ICardItemProps) => {
                   minWidth: `${isSm ? '280px' : '480px'} !important`,
                   minHeight: `${isSm ? '158px' : '270px'} !important`,
                 }}
-                showSkeleton={false}
+                showSkeleton
                 loaderUrl="/api/image"
                 placeholder="empty"
                 options={{
@@ -213,7 +213,7 @@ const CardItem = (props: ICardItemProps) => {
                     isSm ? '344px' : mediaType === 'people' ? '240px' : '410px'
                   } !important`,
                 }}
-                showSkeleton={false}
+                showSkeleton
                 loaderUrl="/api/image"
                 placeholder="empty"
                 options={{

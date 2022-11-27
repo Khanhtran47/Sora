@@ -227,7 +227,7 @@ const Overview = () => {
                           objectFit="cover"
                           width="130px"
                           height="100%"
-                          showSkeleton={false}
+                          showSkeleton
                           alt={season.name}
                           title={season.name}
                           css={{

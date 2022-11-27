@@ -70,7 +70,7 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
           containerCss={{
             overflow: 'visible',
           }}
-          showSkeleton={false}
+          showSkeleton
           objectFit="cover"
           alt={titleItem}
           title={titleItem}

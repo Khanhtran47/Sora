@@ -201,7 +201,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
                   title={title}
                   objectFit="cover"
                   width="50%"
-                  showSkeleton={false}
+                  showSkeleton
                   css={{
                     minWidth: 'auto !important',
                     minHeight: '205px !important',

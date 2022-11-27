@@ -121,7 +121,7 @@ const MediaDetail = (props: IMediaDetail) => {
                       minHeight: '205px !important',
                       borderRadius: '24px',
                     }}
-                    showSkeleton={false}
+                    showSkeleton
                     loaderUrl="/api/image"
                     placeholder="empty"
                     responsive={[
@@ -227,7 +227,7 @@ const MediaDetail = (props: IMediaDetail) => {
                               borderRadius: '24px',
                               minHeight: '205px !important',
                             }}
-                            showSkeleton={false}
+                            showSkeleton
                             loaderUrl="/api/image"
                             placeholder="empty"
                             options={{
@@ -437,7 +437,7 @@ const MediaDetail = (props: IMediaDetail) => {
             }}
             title={title}
             alt={title}
-            showSkeleton={false}
+            showSkeleton
             containerCss={{ margin: 0 }}
             loaderUrl="/api/image"
             placeholder="empty"

@@ -428,7 +428,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                     display: 'flex',
                     justifyContent: 'center',
                   }}
-                  showSkeleton={false}
+                  showSkeleton
                   css={{
                     minWidth: 'auto !important',
                     minHeight: 'auto !important',
@@ -506,7 +506,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                     objectFit: 'cover',
                     opacity: 0.3,
                   }}
-                  showSkeleton={false}
+                  showSkeleton
                   alt={titleItem}
                   title={titleItem}
                   loaderUrl="/api/image"

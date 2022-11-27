@@ -90,7 +90,7 @@ const AnimeDetail = (props: IAnimeDetail) => {
                   alt={title?.userPreferred || title?.english || title?.romaji || title?.native}
                   objectFit="cover"
                   width="50%"
-                  showSkeleton={false}
+                  showSkeleton
                   css={{
                     minWidth: 'auto !important',
                     minHeight: '205px !important',
@@ -170,7 +170,7 @@ const AnimeDetail = (props: IAnimeDetail) => {
                       alt={title?.userPreferred || title?.english || title?.romaji || title?.native}
                       objectFit="cover"
                       width={isXs ? '70%' : '40%'}
-                      showSkeleton={false}
+                      showSkeleton
                       css={{
                         minWidth: 'auto !important',
                         minHeight: '205px !important',
@@ -328,7 +328,7 @@ const AnimeDetail = (props: IAnimeDetail) => {
           title={title?.userPreferred || title?.english || title?.romaji || title?.native}
           alt={title?.userPreferred || title?.english || title?.romaji || title?.native}
           containerCss={{ margin: 0 }}
-          showSkeleton={false}
+          showSkeleton
           loaderUrl="/api/image"
           placeholder="empty"
           responsive={[

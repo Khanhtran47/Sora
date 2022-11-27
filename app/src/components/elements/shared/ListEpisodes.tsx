@@ -139,7 +139,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                               objectFit="cover"
                               width="227px"
                               height="100%"
-                              showSkeleton={false}
+                              showSkeleton
                               alt={episode?.name || ''}
                               title={episode?.name || ''}
                               css={{
@@ -184,7 +184,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                               height="100%"
                               alt={episode?.title || ''}
                               title={episode?.title || ''}
-                              showSkeleton={false}
+                              showSkeleton
                               css={{
                                 minWidth: '227px !important',
                                 minHeight: '127px !important',

@@ -45,7 +45,7 @@ const BannerItemCompact = (props: IBannerItemCompactProps) => {
             height="auto"
             alt={titleItem}
             title={titleItem}
-            showSkeleton={false}
+            showSkeleton
             css={{
               minWidth: '240px !important',
               minHeight: '135px !important',
