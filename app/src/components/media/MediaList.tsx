@@ -27,57 +27,57 @@ import Flex from '../styles/Flex.styles';
  * grid of cards
  */
 interface IMediaListProps {
-  listType?: 'table' | 'slider-card' | 'slider-banner' | 'grid';
-  listName?: string | (() => never);
-  items?: IMedia[];
-  showFilterButton?: boolean;
-  showListTypeChangeButton?: boolean;
-  showPagination?: boolean;
-  genresMovie?: { [id: string]: string };
-  genresTv?: { [id: string]: string };
-  mediaType?: 'movie' | 'tv';
-  showMoreList?: boolean;
-  onClickViewMore?: () => void;
-  navigationButtons?: boolean;
-  isCoverCard?: boolean;
-  coverItem?: { id: number; name: string; backdropPath: string }[];
-  virtual?: boolean;
-  itemsType?: 'movie' | 'tv' | 'anime' | 'people' | 'episode';
-  languages?: ILanguage[];
-  totalPages?: number;
-  currentPage?: number;
-  onPageChangeHandler?: (page: number) => void;
-  hasNextPage?: boolean;
-  routeName?: string;
-  provider?: string;
-  loadingType?: 'page' | 'scroll';
+  coverItem?: { id: number; name: string; backdropPath: string }[]; // require when cover card is true, value is cover items to show
+  currentPage?: number; // require when pagination is true, loading type is page, value is current page
+  genresMovie?: { [id: string]: string }; // pass genres movie object
+  genresTv?: { [id: string]: string }; // pass genres tv object
+  hasNextPage?: boolean; // require when loading type is scroll, value is true if there is a next page
+  isCoverCard?: boolean; // value is true if the cover card is active
+  items?: IMedia[]; // value is items to show
+  itemsType?: 'movie' | 'tv' | 'anime' | 'people' | 'episode'; // value is type of items to show, help to show the correct url, item type and item title
+  languages?: ILanguage[]; // pass languages object
+  listName?: string | (() => never); // value is name of the list
+  listType?: 'table' | 'slider-card' | 'slider-banner' | 'grid'; // value is type of list to show
+  loadingType?: 'page' | 'scroll'; // value is type of loading to show
+  mediaType?: 'movie' | 'tv'; // value is type of media to show, help for filter type
+  navigationButtons?: boolean; // value is true if the navigation buttons are active
+  onClickViewMore?: () => void; // require when view more button is true, value is function to execute when view more button is clicked
+  onPageChangeHandler?: (page: number) => void; // require when pagination is true, value is function to execute when page is changed
+  provider?: string; // value is provider name, help to show the correct url for episode itemsType
+  routeName?: string; // value is route name, help to load the correct route when scrolling
+  showFilterButton?: boolean; // value is true if the filter button is active
+  showListTypeChangeButton?: boolean; // value is true if the list type change button is active
+  showMoreList?: boolean; // value is true if the view more button is active
+  showPagination?: boolean; // value is true if the pagination is active
+  totalPages?: number; // require when pagination is true, value is total pages
+  virtual?: boolean; // value is true if the list is virtual
 }
 
 const MediaList = (props: IMediaListProps) => {
   const {
-    listName,
-    items,
-    showFilterButton,
-    showListTypeChangeButton,
-    showPagination,
+    coverItem,
+    currentPage,
     genresMovie,
     genresTv,
-    mediaType,
-    showMoreList,
-    onClickViewMore,
-    navigationButtons,
+    hasNextPage,
     isCoverCard,
-    coverItem,
-    virtual,
+    items,
     itemsType,
     languages,
-    totalPages,
-    currentPage,
-    onPageChangeHandler,
-    hasNextPage,
-    routeName,
-    provider,
+    listName,
     loadingType,
+    mediaType,
+    navigationButtons,
+    onClickViewMore,
+    onPageChangeHandler,
+    provider,
+    routeName,
+    showFilterButton,
+    showListTypeChangeButton,
+    showMoreList,
+    showPagination,
+    totalPages,
+    virtual,
   } = props;
   let { listType } = props;
   let list;

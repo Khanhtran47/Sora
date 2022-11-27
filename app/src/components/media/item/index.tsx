@@ -4,29 +4,29 @@ import BannerItem from './BannerItem';
 import CardItem from './CardItem';
 
 interface IMediaItem {
-  active?: boolean;
-  backdropPath?: string;
-  character?: string;
-  color?: string;
-  episodeNumber?: number;
-  episodeTitle?: string;
-  genreIds?: number[];
-  genresAnime?: string[];
-  genresMovie?: { [id: string]: string };
-  genresTv?: { [id: string]: string };
-  id?: number | string;
-  isCoverCard?: boolean;
-  job?: string;
-  knownFor?: IMedia[];
-  mediaType?: 'movie' | 'tv' | 'anime' | 'people';
-  overview?: string;
-  posterPath?: string;
-  releaseDate?: string | number;
-  title?: string | Title;
-  trailer?: ITrailer;
-  type: 'banner' | 'card' | 'episode';
-  virtual?: boolean;
-  voteAverage?: number;
+  active?: boolean; // help for detecting active banner, require when type is banner
+  backdropPath?: string; // value is backdrop path of media
+  character?: string; // value is character name, can exist when media type is people
+  color?: string; // value is color of banner image, can exist when media type is anime
+  episodeNumber?: number; // value is episode number, require when type is episode
+  episodeTitle?: string; // value is episode title, require when type is episode
+  genreIds?: number[]; // value is genres of a movie or tv-series, require when type is movie or tv
+  genresAnime?: string[]; // value is genres of an anime, require when type is anime
+  genresMovie?: { [id: string]: string }; // value is all genres of movies, require when type is movie
+  genresTv?: { [id: string]: string }; // value is all genres of tv-series, require when type is tv
+  id?: number | string; // value is id of media
+  isCoverCard?: boolean; // value is true if the cover card is active
+  job?: string; // value is job of a person, can exist when media type is people
+  knownFor?: IMedia[]; // value is known for of a person, can exist when media type is people
+  mediaType?: 'movie' | 'tv' | 'anime' | 'people'; // value is type of media
+  overview?: string; // value is overview of media
+  posterPath?: string; // value is poster path of media
+  releaseDate?: string | number; // value is release date of media
+  title?: string | Title; // value is title of media
+  trailer?: ITrailer; // value is trailer of media
+  type: 'banner' | 'card' | 'episode'; // value is type of media item
+  virtual?: boolean; // value is true if the media is virtual
+  voteAverage?: number; // value is vote average of media
 }
 
 const MediaItem = (props: IMediaItem) => {
