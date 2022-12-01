@@ -34,7 +34,6 @@ export const meta: MetaFunction = ({ params }) => ({
 
 const CastPage = () => {
   const { cast } = useLoaderData<LoaderData>();
-  console.log('🚀 ~ file: cast.tsx ~ line 37 ~ CastPage ~ cast', cast);
 
   return (
     <Row

@@ -1,5 +1,5 @@
 import { useState, Suspense } from 'react';
-import { Button, Row, Spacer, Loading, Pagination } from '@nextui-org/react';
+import { Button, Row, Spacer, Loading, Pagination, Tooltip } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { ClientOnly } from 'remix-utils';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -165,13 +165,15 @@ const MediaList = (props: IMediaListProps) => {
           {showFilterButton || showListTypeChangeButton ? (
             <Flex direction="row" justify="end" align="center" css={{ gap: '$5' }}>
               {showFilterButton ? (
-                <Button
-                  auto
-                  color="primary"
-                  bordered={!showFilter}
-                  icon={<FilterIcon />}
-                  onClick={() => setShowFilter(!showFilter)}
-                />
+                <Tooltip content={t('show-hide-filter')}>
+                  <Button
+                    auto
+                    color="primary"
+                    bordered={!showFilter}
+                    icon={<FilterIcon />}
+                    onClick={() => setShowFilter(!showFilter)}
+                  />
+                </Tooltip>
               ) : null}
               {showListTypeChangeButton ? (
                 <Button.Group css={{ margin: 0 }}>

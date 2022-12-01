@@ -90,7 +90,6 @@ export const getAnimeAdvancedSearch = async (
     year,
     status,
   );
-  console.log('🚀 ~ file: anilist.server.ts:93 ~ url', url);
   return getListFromAnilist(url, 'result');
 };
 

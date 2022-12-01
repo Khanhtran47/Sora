@@ -3,7 +3,7 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react';
-import { Row, Grid, Button, Dropdown, Input, useInput } from '@nextui-org/react';
+import { Row, Grid, Button, Dropdown, Tooltip, Input, useInput } from '@nextui-org/react';
 import { useLocation, useNavigate, Form } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 
@@ -731,29 +731,31 @@ const Filter = (props: IFilterProps) => {
       ) : null}
       <Grid xs={12} sm={12}>
         <Row justify="flex-end" css={{ marginTop: '6px', gap: '6px' }}>
-          <Button
-            auto
-            type="button"
-            onClick={() => {
-              setReleaseDateFrom(preDateGte || '');
-              setReleaseDateTo(preDateLte || '');
-              setGenre(preGenresSet);
-              setLanguage(preLanguagesSet);
-              setStatus(preStatusSet);
-              setType(preTypeSet);
-              setSort(preSortSet);
-              setVoteCount(preVoteCountArray);
-              setVoteAverage(preVoteAverageArray);
-              setRuntime(preRuntimeArray);
-              setAnimeQuery(preAnimeQuery || '');
-              setYear(preAnimeYearSet);
-              setSeason(preAnimeSeasonSet);
-              setFormat(preAnimeFormatSet);
-              setStatusAnime(preAnimeStatusSet);
-            }}
-          >
-            {t('reset')}
-          </Button>
+          <Tooltip content={t('reset-tooltip')}>
+            <Button
+              auto
+              type="button"
+              onClick={() => {
+                setReleaseDateFrom(preDateGte || '');
+                setReleaseDateTo(preDateLte || '');
+                setGenre(preGenresSet);
+                setLanguage(preLanguagesSet);
+                setStatus(preStatusSet);
+                setType(preTypeSet);
+                setSort(preSortSet);
+                setVoteCount(preVoteCountArray);
+                setVoteAverage(preVoteAverageArray);
+                setRuntime(preRuntimeArray);
+                setAnimeQuery(preAnimeQuery || '');
+                setYear(preAnimeYearSet);
+                setSeason(preAnimeSeasonSet);
+                setFormat(preAnimeFormatSet);
+                setStatusAnime(preAnimeStatusSet);
+              }}
+            >
+              {t('reset')}
+            </Button>
+          </Tooltip>
           <Button auto type="submit">
             {t('discover')}
           </Button>
