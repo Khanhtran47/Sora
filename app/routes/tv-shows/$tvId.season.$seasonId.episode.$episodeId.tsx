@@ -29,16 +29,8 @@ import {
   getImdbRating,
   getTvSeasonDetail,
 } from '~/services/tmdb/tmdb.server';
-import {
-  getMovieSearch,
-  getMovieInfo,
-  getMovieEpisodeStreamLink,
-} from '~/services/consumet/flixhq/flixhq.server';
-import {
-  IMovieResult,
-  IMovieSource,
-  IMovieSubtitle,
-} from '~/services/consumet/flixhq/flixhq.types';
+import { getMovieInfo, getMovieEpisodeStreamLink } from '~/services/consumet/flixhq/flixhq.server';
+import { IMovieSource, IMovieSubtitle } from '~/services/consumet/flixhq/flixhq.types';
 import {
   getKissKhInfo,
   getKissKhEpisodeStream,
@@ -79,17 +71,39 @@ export const meta: MetaFunction = ({ data, params }) => {
   if (!data) {
     return {
       title: 'Missing Episode',
-      description: `This season of tv show doesn't have episode ${params.episodeId}`,
+      description: `This season of tv show doesn't have episode ${params.episodeId || ''}`,
     };
   }
   const { detail } = data;
   return {
-    title: `Watch ${detail.name} season ${params.seasonId} episode ${params.episodeId} HD online Free - Sora`,
-    description: `Watch ${detail.name} season ${params.seasonId} episode ${params.episodeId} in full HD online with Subtitle`,
-    keywords: `Watch ${detail.name} season ${params.seasonId} episode ${params.episodeId}, Stream ${detail.name} season ${params.seasonId} episode ${params.episodeId}, Watch ${detail.name} season ${params.seasonId} episode ${params.episodeId} HD, Online ${detail.name} season ${params.seasonId} episode ${params.episodeId}, Streaming ${detail.name} season ${params.seasonId} episode ${params.episodeId}, English, Subtitle ${detail.name} season ${params.seasonId} episode ${params.episodeId}, English Subtitle`,
-    'og:url': `https://sora-anime.vercel.app/tv-shows/${params.tvId}/season/${params.seasonId}/episode/${params.episodeId}`,
-    'og:title': `Watch ${detail.name} season ${params.seasonId} episode ${params.episodeId} HD online Free - Sora`,
-    'og:description': `Watch ${detail.name} season ${params.seasonId} episode ${params.episodeId} in full HD online with Subtitle`,
+    title: `Watch ${detail.name || ''} season ${params.seasonId || ''} episode ${
+      params.episodeId || ''
+    } HD online Free - Sora`,
+    description: `Watch ${detail.name || ''} season ${params.seasonId || ''} episode ${
+      params.episodeId
+    } in full HD online with Subtitle`,
+    keywords: `Watch ${detail.name || ''} season ${params.seasonId || ''} episode ${
+      params.episodeId
+    }, Stream ${detail.name || ''} season ${params.seasonId || ''} episode ${
+      params.episodeId || ''
+    }, Watch ${detail.name || ''} season ${params.seasonId || ''} episode ${
+      params.episodeId || ''
+    } HD, Online ${detail.name || ''} season ${params.seasonId || ''} episode ${
+      params.episodeId || ''
+    }, Streaming ${detail.name || ''} season ${params.seasonId || ''} episode ${
+      params.episodeId || ''
+    }, English, Subtitle ${detail.name || ''} season ${params.seasonId || ''} episode ${
+      params.episodeId || ''
+    }, English Subtitle`,
+    'og:url': `https://sora-anime.vercel.app/tv-shows/${params.tvId}/season/${
+      params.seasonId
+    }/episode/${params.episodeId || ''}`,
+    'og:title': `Watch ${detail.name || ''} season ${params.seasonId || ''} episode ${
+      params.episodeId
+    } HD online Free - Sora`,
+    'og:description': `Watch ${detail.name || ''} season ${params.seasonId || ''} episode ${
+      params.episodeId
+    } in full HD online with Subtitle`,
     'og:image': TMDB.backdropUrl(detail?.backdrop_path || '', 'w780'),
     refresh: {
       httpEquiv: 'Content-Security-Policy',
@@ -109,7 +123,10 @@ const checkHasNextEpisode = (
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const [user, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
+  const [user, locale] = await Promise.all([
+    authenticate(request, true),
+    i18next.getLocale(request),
+  ]);
 
   const url = new URL(request.url);
   const provider = url.searchParams.get('provider');
@@ -118,9 +135,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const tid = Number(tvId);
   const sid = Number(seasonId);
   const eid = Number(episodeId);
-
-  if (!tid) throw new Response('Not Found', { status: 404 });
-  if (!sid) throw new Response('Not Found', { status: 404 });
+  if (!tid || !sid || !provider || !idProvider) throw new Response('Not Found', { status: 404 });
 
   const [detail, imdbId, recommendations, seasonDetail] = await Promise.all([
     getTvShowDetail(tid),
@@ -128,6 +143,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     getRecommendation('tv', tid),
     getTvSeasonDetail(tid, sid),
   ]);
+  if (!imdbId || !detail) throw new Response('Not Found', { status: 404 });
   const totalEpisodes = Number(seasonDetail?.episodes.length);
 
   if (user) {
@@ -362,70 +378,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       userId: user?.id,
     });
   }
-  let search;
-  let tvDetail;
-  let tvEpisodeDetail;
-  let tvEpisodeStreamLink;
-  let imdbRating;
-  if ((detail && detail.original_language === 'en') || locale === 'en') {
-    [search, imdbRating] = await Promise.all([
-      getMovieSearch(detail?.name || ''),
-      imdbId ? getImdbRating(imdbId) : undefined,
-    ]);
-    const findMovie: IMovieResult | undefined = search?.results.find(
-      (item) => item.title === detail?.name,
-    );
-    if (findMovie && findMovie.id) {
-      tvDetail = await getMovieInfo(findMovie.id);
-      tvEpisodeDetail = tvDetail?.episodes?.find(
-        (episode) => episode.season === Number(seasonId) && episode.number === Number(episodeId),
-      );
-      if (tvEpisodeDetail) {
-        tvEpisodeStreamLink = await getMovieEpisodeStreamLink(
-          tvEpisodeDetail?.id || '',
-          tvDetail?.id || '',
-        );
-      }
-    }
-  } else {
-    const translations = await getTranslations('tv', tid);
-    const findTranslation = translations?.translations.find((item) => item.iso_639_1 === 'en');
-    if (findTranslation) {
-      [search, imdbRating] = await Promise.all([
-        getMovieSearch(detail?.name || ''),
-        imdbId ? getImdbRating(imdbId) : undefined,
-      ]);
-      const findMovie: IMovieResult | undefined = search?.results.find(
-        (item) => item.title === detail?.name,
-      );
-      if (findMovie && findMovie.id) {
-        tvDetail = await getMovieInfo(findMovie.id);
-        tvEpisodeDetail = tvDetail?.episodes?.find(
-          (episode) => episode.season === Number(seasonId) && episode.number === Number(episodeId),
-        );
-        if (tvEpisodeDetail) {
-          tvEpisodeStreamLink = await getMovieEpisodeStreamLink(
-            tvEpisodeDetail?.id || '',
-            tvDetail?.id || '',
-          );
-        }
-      }
-    }
-  }
-
-  if (!imdbId || !detail) throw new Response('Not Found', { status: 404 });
-
-  return json<LoaderData>({
-    detail,
-    imdbId,
-    recommendations,
-    imdbRating,
-    seasonDetail,
-    data: tvDetail,
-    sources: tvEpisodeStreamLink?.sources,
-    subtitles: tvEpisodeStreamLink?.subtitles,
-    userId: user?.id,
-  });
 };
 
 export const handle = {

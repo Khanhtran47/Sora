@@ -39,7 +39,11 @@ export async function requestPayload(req: Request) {
   return payloadAttrs.map((attr) => req.headers.get(attr)).join('');
 }
 
-export async function authenticate(request: Request, headers = new Headers()) {
+export async function authenticate(
+  request: Request,
+  customAuthRequired?: boolean,
+  headers = new Headers(),
+) {
   // try to get the session (from cookie) and payload from request
   const [session, payload, botcheck] = await Promise.all([
     getSessionFromCookie(request.headers.get('Cookie')),
@@ -51,7 +55,7 @@ export async function authenticate(request: Request, headers = new Headers()) {
     throw new Response(null, { status: 500 });
   } else if (!session.has('auth_token')) {
     // there is no token, no signed-in or expired cookie
-    if (sgConfigs.__globalAuthRequired) {
+    if (sgConfigs.__globalAuthRequired || customAuthRequired) {
       // if global auth is required, redirect to /sign-in
       const url = new URL(request.url);
       throw redirect(`/sign-in?ref=${url.pathname + url.search}`);

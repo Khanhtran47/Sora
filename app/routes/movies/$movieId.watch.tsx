@@ -21,16 +21,16 @@ import { authenticate, insertHistory } from '~/services/supabase';
 import {
   getMovieDetail,
   getRecommendation,
-  getTranslations,
+  // getTranslations,
   getImdbRating,
 } from '~/services/tmdb/tmdb.server';
 import {
-  getMovieSearch,
+  // getMovieSearch,
   getMovieInfo,
   getMovieEpisodeStreamLink,
 } from '~/services/consumet/flixhq/flixhq.server';
 import {
-  IMovieResult,
+  // IMovieResult,
   IMovieSource,
   IMovieSubtitle,
 } from '~/services/consumet/flixhq/flixhq.types';
@@ -39,9 +39,12 @@ import {
   getKissKhEpisodeStream,
   getKissKhEpisodeSubtitle,
 } from '~/services/kisskh/kisskh.server';
-import { loklokSearchMovieSub, loklokGetMovieInfo } from '~/services/loklok';
+import {
+  // loklokSearchMovieSub,
+  loklokGetMovieInfo,
+} from '~/services/loklok';
 import { LOKLOK_URL } from '~/services/loklok/utils.server';
-import i18next from '~/i18n/i18next.server';
+// import i18next from '~/i18n/i18next.server';
 import TMDB from '~/utils/media';
 import Player from '~/utils/player';
 import updateHistory from '~/utils/update-history';
@@ -62,13 +65,17 @@ export const meta: MetaFunction = ({ data, params }) => {
   }
   const { detail } = data;
   return {
-    title: `Watch ${detail.title} HD online Free - Sora`,
-    description: `Watch ${detail.title} in full HD online with Subtitle`,
-    keywords: `Watch ${detail.title}, Stream ${detail.title}, Watch ${detail.title} HD, Online ${detail.title}, Streaming ${detail.title}, English, Subtitle ${detail.title}, English Subtitle`,
+    title: `Watch ${detail.title || ''} HD online Free - Sora`,
+    description: `Watch ${detail.title || ''} in full HD online with Subtitle`,
+    keywords: `Watch ${detail.title || ''}, Stream ${detail.title || ''}, Watch ${
+      detail.title || ''
+    } HD, Online ${detail.title || ''}, Streaming ${detail.title || ''}, English, Subtitle ${
+      detail.title || ''
+    }, English Subtitle`,
     'og:url': `https://sora-anime.vercel.app/movies/${params.movieId}/watch`,
-    'og:title': `Watch ${detail.title} HD online Free - Sora`,
-    'og:description': `Watch ${detail.title} in full HD online with Subtitle`,
-    'og:image': TMDB.backdropUrl(detail?.backdrop_path || '', 'w780'),
+    'og:title': `Watch ${detail.title || ''} HD online Free - Sora`,
+    'og:description': `Watch ${detail.title || ''} in full HD online with Subtitle`,
+    'og:image': detail?.backdrop_path ? TMDB.backdropUrl(detail?.backdrop_path, 'w780') : undefined,
     refresh: {
       httpEquiv: 'Content-Security-Policy',
       content: 'upgrade-insecure-requests',
@@ -88,20 +95,19 @@ type DataLoader = {
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const [user, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
+  const user = await authenticate(request, true);
 
   const url = new URL(request.url);
   const provider = url.searchParams.get('provider');
   const idProvider = url.searchParams.get('id');
   const { movieId } = params;
   const mid = Number(movieId);
-  if (!mid) throw new Response('Not Found', { status: 404 });
-
-  // const detail = await getMovieDetail(mid);
+  if (!mid || !provider || !idProvider) throw new Response('Not Found', { status: 404 });
   const [detail, recommendations] = await Promise.all([
     getMovieDetail(mid),
     getRecommendation('movie', mid),
   ]);
+  if (!detail) throw new Response('Not Found', { status: 404 });
 
   if (user) {
     insertHistory({
@@ -196,68 +202,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       userId: user?.id,
     });
   }
-  let search;
-  let movieDetail;
-  let movieStreamLink;
-  let loklokSubtitles: IMovieSubtitle[] = [];
-  let imdbRating;
-  if ((detail && detail.original_language === 'en') || locale === 'en') {
-    [imdbRating, search] = await Promise.all([
-      detail?.imdb_id ? getImdbRating(detail?.imdb_id) : undefined,
-      getMovieSearch(detail?.title || ''),
-    ]);
-    const findMovie: IMovieResult | undefined = search?.results.find(
-      (item) => item.title === detail?.title,
-    );
-    if (findMovie && findMovie.id) {
-      movieDetail = await getMovieInfo(findMovie.id);
-      movieStreamLink = await getMovieEpisodeStreamLink(
-        movieDetail?.episodes[0].id || '',
-        movieDetail?.id || '',
-      );
-    }
-
-    loklokSubtitles = await loklokSearchMovieSub(
-      detail?.title || '',
-      detail?.original_title || '',
-      new Date(detail?.release_date || 1000).getFullYear(),
-    );
-  } else {
-    const translations = await getTranslations('movie', mid);
-    const findTranslation = translations?.translations.find((item) => item.iso_639_1 === 'en');
-    if (findTranslation) {
-      [imdbRating, search] = await Promise.all([
-        detail?.imdb_id ? getImdbRating(detail?.imdb_id) : undefined,
-        getMovieSearch(findTranslation.data?.title || ''),
-      ]);
-      const findMovie: IMovieResult | undefined = search?.results.find(
-        (item) => item.title === findTranslation.data?.title,
-      );
-      if (findMovie && findMovie.id) {
-        movieDetail = await getMovieInfo(findMovie.id);
-        movieStreamLink = await getMovieEpisodeStreamLink(
-          movieDetail?.episodes[0].id || '',
-          movieDetail?.id || '',
-        );
-      }
-      loklokSubtitles = await loklokSearchMovieSub(
-        findTranslation.data?.title || '',
-        '',
-        new Date(detail?.release_date || 1000).getFullYear(),
-      );
-    }
-  }
-  if (!detail) throw new Response('Not Found', { status: 404 });
-
-  return json<DataLoader>({
-    detail,
-    recommendations,
-    imdbRating,
-    data: movieDetail,
-    sources: movieStreamLink?.sources,
-    subtitles: [...(movieStreamLink?.subtitles || []), ...loklokSubtitles],
-    userId: user?.id,
-  });
 };
 
 export const handle = {
