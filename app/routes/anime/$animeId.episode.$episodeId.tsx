@@ -75,7 +75,7 @@ const checkHasNextEpisode = (
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const user = await authenticate(request);
+  const user = await authenticate(request, true);
 
   const url = new URL(request.url);
   const provider = url.searchParams.get('provider');
@@ -272,31 +272,31 @@ export const meta: MetaFunction = ({ data, params }) => {
   return {
     title: `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
-    } episode ${episodeInfo.number} HD online Free - Sora`,
+    } episode ${episodeInfo.number || ''} HD online Free - Sora`,
     description: `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
-    } episode ${episodeInfo.number} in full HD online with Subtitle`,
+    } episode ${episodeInfo.number || ''} in full HD online with Subtitle`,
     keywords: `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
-    } episode ${episodeInfo.number}, Stream ${
+    } episode ${episodeInfo.number || ''}, Stream ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
-    } episode ${episodeInfo.number}, Watch ${
+    } episode ${episodeInfo.number || ''}, Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
-    } episode ${episodeInfo.number} HD, Online ${
+    } episode ${episodeInfo.number || ''} HD, Online ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
-    } episode ${episodeInfo.number}, Streaming ${
+    } episode ${episodeInfo.number || ''}, Streaming ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
-    } episode ${episodeInfo.number}, English, Subtitle ${
+    } episode ${episodeInfo.number || ''}, English, Subtitle ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
-    } episode ${episodeInfo.number}, English Subtitle`,
+    } episode ${episodeInfo.number || ''}, English Subtitle`,
     'og:url': `https://sora-anime.vercel.app/anime/${params.animeId}/episode/${params.episodeId}`,
     'og:title': `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
-    } episode ${episodeInfo.number} HD online Free - Sora`,
+    } episode ${episodeInfo.number || ''} HD online Free - Sora`,
     'og:description': `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
-    } episode ${episodeInfo.number} in full HD online with Subtitle`,
-    'og:image': episodeInfo?.image || detail.cover,
+    } episode ${episodeInfo.number || ''} in full HD online with Subtitle`,
+    'og:image': episodeInfo?.image || detail.cover || '',
   };
 };
 

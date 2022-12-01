@@ -1,5 +1,5 @@
 import { useState, Suspense } from 'react';
-import { Button, Row, Spacer, Loading, Pagination } from '@nextui-org/react';
+import { Button, Row, Spacer, Loading, Pagination, Tooltip } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { ClientOnly } from 'remix-utils';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { IMedia } from '~/types/media';
 import { ILanguage } from '~/services/tmdb/tmdb.types';
 import useMediaQuery from '~/hooks/useMediaQuery';
+import useLocalStorage from '~/hooks/useLocalStorage';
 
 import FilterIcon from '~/src/assets/icons/FilterIcon.js';
 import ChevronRightIcon from '~/src/assets/icons/ChevronRightIcon.js';
@@ -39,7 +40,7 @@ interface IMediaListProps {
   listName?: string | (() => never); // value is name of the list
   listType?: 'table' | 'slider-card' | 'slider-banner' | 'grid'; // value is type of list to show
   loadingType?: 'page' | 'scroll'; // value is type of loading to show
-  mediaType?: 'movie' | 'tv'; // value is type of media to show, help for filter type
+  mediaType?: 'movie' | 'tv' | 'anime'; // value is type of media to show, help for filter type
   navigationButtons?: boolean; // value is true if the navigation buttons are active
   onClickViewMore?: () => void; // require when view more button is true, value is function to execute when view more button is clicked
   onPageChangeHandler?: (page: number) => void; // require when pagination is true, value is function to execute when page is changed
@@ -87,7 +88,7 @@ const MediaList = (props: IMediaListProps) => {
   const [nextEl, setNextEl] = useState<HTMLElement | null>(null);
   const [slideProgress, setSlideProgress] = useState<number>(0);
   const [displayType, setDisplayType] = useState<string>(listType as string);
-  const [showFilter, setShowFilter] = useState<boolean>(false);
+  const [showFilter, setShowFilter] = useLocalStorage('showFilter', false);
   const isXs = useMediaQuery('(max-width: 650px)');
 
   if (!listType && typeof window !== 'undefined') {
@@ -165,13 +166,15 @@ const MediaList = (props: IMediaListProps) => {
           {showFilterButton || showListTypeChangeButton ? (
             <Flex direction="row" justify="end" align="center" css={{ gap: '$5' }}>
               {showFilterButton ? (
-                <Button
-                  auto
-                  color="primary"
-                  bordered={!showFilter}
-                  icon={<FilterIcon />}
-                  onClick={() => setShowFilter(!showFilter)}
-                />
+                <Tooltip content={t('show-hide-filter')}>
+                  <Button
+                    auto
+                    color="primary"
+                    bordered={!showFilter}
+                    icon={<FilterIcon />}
+                    onClick={() => setShowFilter(!showFilter)}
+                  />
+                </Tooltip>
               ) : null}
               {showListTypeChangeButton ? (
                 <Button.Group css={{ margin: 0 }}>

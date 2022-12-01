@@ -54,7 +54,7 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
       | 'HIATUS') || undefined;
   const genres = url.searchParams.get('genres')?.split(',') || undefined;
   const id = url.searchParams.get('id') || undefined;
-  const year = Number(url.searchParams.get('number')) || undefined;
+  const year = Number(url.searchParams.get('year')) || undefined;
 
   return json<LoaderData>({
     items: await getAnimeAdvancedSearch(
@@ -114,8 +114,10 @@ const DiscoverAnime = () => {
             listName="Discover Anime"
             listType="grid"
             loadingType="scroll"
-            routeName={location.pathname}
+            routeName={`${location.pathname}${location.search || ''}`}
             virtual
+            mediaType="anime"
+            showFilterButton
           />
         )}
       </Container>

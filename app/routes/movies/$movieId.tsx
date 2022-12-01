@@ -57,13 +57,17 @@ export const meta: MetaFunction = ({ data, params }) => {
   }
   const { detail } = data;
   return {
-    title: `Watch ${detail.title} HD online Free - Sora`,
-    description: `Watch ${detail.title} in full HD online with Subtitle`,
-    keywords: `Watch ${detail.title}, Stream ${detail.title}, Watch ${detail.title} HD, Online ${detail.title}, Streaming ${detail.title}, English, Subtitle ${detail.title}, English Subtitle`,
+    title: `Watch ${detail.title || ''} HD online Free - Sora`,
+    description: `Watch ${detail.title || ''} in full HD online with Subtitle`,
+    keywords: `Watch ${detail.title || ''}, Stream ${detail.title || ''}, Watch ${
+      detail.title || ''
+    } HD, Online ${detail.title || ''}, Streaming ${detail.title || ''}, English, Subtitle ${
+      detail.title || ''
+    }, English Subtitle`,
     'og:url': `https://sora-anime.vercel.app/movies/${params.movieId}`,
-    'og:title': `Watch ${detail.title} HD online Free - Sora`,
-    'og:description': `Watch ${detail.title} in full HD online with Subtitle`,
-    'og:image': TMDB.backdropUrl(detail?.backdrop_path || '', 'w780'),
+    'og:title': `Watch ${detail.title || ''} HD online Free - Sora`,
+    'og:description': `Watch ${detail.title || ''} in full HD online with Subtitle`,
+    'og:image': detail?.backdrop_path ? TMDB.backdropUrl(detail?.backdrop_path, 'w780') : undefined,
   };
 };
 

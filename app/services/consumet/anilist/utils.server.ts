@@ -68,10 +68,10 @@ export class Anilist {
       params.append('format', format);
     }
     if (sort) {
-      params.append('sort', sort.toString());
+      params.append('sort', JSON.stringify(sort));
     }
     if (genres) {
-      params.append('genres', genres.toString());
+      params.append('genres', JSON.stringify(genres));
     }
     if (id) {
       params.append('id', id);

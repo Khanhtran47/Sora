@@ -22,7 +22,7 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const user = await authenticate(request);
+  const user = await authenticate(request, true);
 
   const { searchParams } = new URL(request.url);
   const page = Number(searchParams.get('page')) || 1;

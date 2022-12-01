@@ -42,29 +42,31 @@ export const meta: MetaFunction = ({ data, params }) => {
   const { title, color } = detail;
   return {
     title: `Watch ${
-      title?.userPreferred || title?.english || title?.romaji || title?.native
+      title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     } HD online Free - Sora`,
     description: `Watch ${
-      title?.userPreferred || title?.english || title?.romaji || title?.native
+      title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     } in full HD online with Subtitle`,
     keywords: `Watch ${
-      title?.userPreferred || title?.english || title?.romaji || title?.native
-    }, Stream ${title?.userPreferred || title?.english || title?.romaji || title?.native}, Watch ${
-      title?.userPreferred || title?.english || title?.romaji || title?.native
+      title?.userPreferred || title?.english || title?.romaji || title?.native || ''
+    }, Stream ${
+      title?.userPreferred || title?.english || title?.romaji || title?.native || ''
+    }, Watch ${
+      title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     } HD, Online ${
-      title?.userPreferred || title?.english || title?.romaji || title?.native
+      title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     }, Streaming ${
-      title?.userPreferred || title?.english || title?.romaji || title?.native
+      title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     }, English, Subtitle ${
-      title?.userPreferred || title?.english || title?.romaji || title?.native
+      title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     }, English Subtitle`,
     ...(color ? { 'theme-color': color } : null),
     'og:url': `https://sora-anime.vercel.app/anime/${params.animeId}`,
     'og:title': `Watch ${
-      title?.userPreferred || title?.english || title?.romaji || title?.native
+      title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     } HD online Free - Sora`,
     'og:description': `Watch ${
-      title?.userPreferred || title?.english || title?.romaji || title?.native
+      title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     } in full HD online with Subtitle`,
     'og:image': `https://img.anili.st/media/${params.animeId}`,
   };

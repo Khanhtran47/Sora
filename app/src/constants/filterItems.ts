@@ -20,3 +20,41 @@ export const tvType: { [id: string]: string } = {
   5: 'Talk Show',
   6: 'Video',
 };
+
+export const animeGenres: string[] = [
+  'Action',
+  'Adventure',
+  'Cars',
+  'Comedy',
+  'Drama',
+  'Fantasy',
+  'Horror',
+  'Mahou Shoujo',
+  'Mecha',
+  'Music',
+  'Mystery',
+  'Psychological',
+  'Romance',
+  'Sci-Fi',
+  'Slice of Life',
+  'Sports',
+  'Supernatural',
+  'Thriller',
+];
+
+export const animeFormat: string[] = ['MOVIE', 'MUSIC', 'ONA', 'OVA', 'SPECIAL', 'TV_SHORT', 'TV'];
+
+export const animeSort: string[] = [
+  'popularity',
+  'title-english',
+  'score',
+  'trending',
+  'favourites',
+  'episodes',
+  'start-date',
+  'updated-at',
+];
+
+export const animeSeason = ['FALL', 'SPRING', 'SUMMER', 'WINTER'];
+
+export const animeStatus = ['CANCELLED', 'FINISHED', 'HIATUS', 'NOT_YET_RELEASED', 'RELEASING'];
