@@ -102,7 +102,9 @@ const Filter = (props: IFilterProps) => {
   const preSortSet = !preSort
     ? new Set(['popularity'])
     : new Set([
-        preSort.includes('_') ? preSort.replace(/_DESC/g, '').toLowerCase() : preSort.split('.')[0],
+        preSort.includes('_')
+          ? preSort.replace(/_DESC/g, '').toLowerCase().replace('_', '-')
+          : preSort.split('.')[0],
       ]);
 
   const {

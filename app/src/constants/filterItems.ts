@@ -52,7 +52,6 @@ export const animeSort: string[] = [
   'favourites',
   'episodes',
   'start-date',
-  'end-date',
   'updated-at',
 ];
 
