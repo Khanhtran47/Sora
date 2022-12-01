@@ -39,7 +39,7 @@ interface IMediaListProps {
   listName?: string | (() => never); // value is name of the list
   listType?: 'table' | 'slider-card' | 'slider-banner' | 'grid'; // value is type of list to show
   loadingType?: 'page' | 'scroll'; // value is type of loading to show
-  mediaType?: 'movie' | 'tv'; // value is type of media to show, help for filter type
+  mediaType?: 'movie' | 'tv' | 'anime'; // value is type of media to show, help for filter type
   navigationButtons?: boolean; // value is true if the navigation buttons are active
   onClickViewMore?: () => void; // require when view more button is true, value is function to execute when view more button is clicked
   onPageChangeHandler?: (page: number) => void; // require when pagination is true, value is function to execute when page is changed

@@ -53,8 +53,10 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
       | 'CANCELLED'
       | 'HIATUS') || undefined;
   const genres = url.searchParams.get('genres')?.split(',') || undefined;
+  console.log('🚀 ~ file: discover.tsx:56 ~ constloader:LoaderFunction= ~ genres', genres);
   const id = url.searchParams.get('id') || undefined;
-  const year = Number(url.searchParams.get('number')) || undefined;
+  const year = Number(url.searchParams.get('year')) || undefined;
+  console.log('🚀 ~ file: discover.tsx:59 ~ constloader:LoaderFunction= ~ year', year);
 
   return json<LoaderData>({
     items: await getAnimeAdvancedSearch(
@@ -84,6 +86,7 @@ export const handle = {
 const DiscoverAnime = () => {
   const { items } = useLoaderData<LoaderData>();
   const location = useLocation();
+  console.log('🚀 ~ file: discover.tsx:88 ~ DiscoverAnime ~ location', location);
 
   return (
     <motion.div
@@ -114,8 +117,10 @@ const DiscoverAnime = () => {
             listName="Discover Anime"
             listType="grid"
             loadingType="scroll"
-            routeName={location.pathname}
+            routeName={`${location.pathname}${location.search || ''}`}
             virtual
+            mediaType="anime"
+            showFilterButton
           />
         )}
       </Container>
