@@ -99,7 +99,11 @@ const Filter = (props: IFilterProps) => {
   const preAnimeStatusSet = !preAnimeStatus ? new Set(['All']) : new Set([preAnimeStatus]);
   const preAnimeFormatSet = !preAnimeFormat ? new Set(['All']) : new Set([preAnimeFormat]);
   const preGenresSet = !preGenres ? new Set(['All']) : new Set(['All', ...preGenres.split(',')]);
-  const preSortSet = !preSort ? new Set(['popularity']) : new Set([preSort.split('.')[0]]);
+  const preSortSet = !preSort
+    ? new Set(['popularity'])
+    : new Set([
+        preSort.includes('_') ? preSort.replace(/_DESC/g, '').toLowerCase() : preSort.split('.')[0],
+      ]);
 
   const {
     value: releaseDateFrom,
@@ -717,7 +721,7 @@ const Filter = (props: IFilterProps) => {
                   onSelectionChange={(keys: any) => setSort(keys)}
                 >
                   {animeSort.map((item) => (
-                    <Dropdown.Item key={item}>{item}</Dropdown.Item>
+                    <Dropdown.Item key={item}>{t(item)}</Dropdown.Item>
                   ))}
                 </Dropdown.Menu>
               </Dropdown>
@@ -742,6 +746,10 @@ const Filter = (props: IFilterProps) => {
               setVoteAverage(preVoteAverageArray);
               setRuntime(preRuntimeArray);
               setAnimeQuery(preAnimeQuery || '');
+              setYear(preAnimeYearSet);
+              setSeason(preAnimeSeasonSet);
+              setFormat(preAnimeFormatSet);
+              setStatusAnime(preAnimeStatusSet);
             }}
           >
             {t('reset')}
