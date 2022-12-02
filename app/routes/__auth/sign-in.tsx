@@ -56,7 +56,9 @@ export const action: ActionFunction = async ({ request }) => {
     req_payload: payload,
   });
 
-  return redirect(searchParams.get('ref') || '/', {
+  const ref = (searchParams.get('ref') || '/').replace('_0x3F_', '?').replace('_0x26', '&');
+
+  return redirect(ref, {
     headers: {
       'Set-Cookie': await commitAuthCookie(authCookie),
     },
@@ -66,9 +68,10 @@ export const action: ActionFunction = async ({ request }) => {
 export const loader: LoaderFunction = async ({ request }) => {
   const session = await getSessionFromCookie(request.headers.get('Cookie'));
   const { searchParams } = new URL(request.url);
+  const ref = (searchParams.get('ref') || '/').replace('_0x3F_', '?').replace('_0x26', '&');
 
   if (session.has('auth_token')) {
-    return redirect(searchParams.get('ref') || '/');
+    return redirect(ref);
   }
 
   return null;

@@ -58,7 +58,8 @@ export async function authenticate(
     if (sgConfigs.__globalAuthRequired || customAuthRequired) {
       // if global auth is required, redirect to /sign-in
       const url = new URL(request.url);
-      throw redirect(`/sign-in?ref=${url.pathname + url.search}`);
+      const ref = (url.pathname + url.search).replace('?', '_0x3F_').replace('&', '_0x26');
+      throw redirect(`/sign-in?ref=${ref}`);
     }
   } else {
     // there is some access token in cookie session

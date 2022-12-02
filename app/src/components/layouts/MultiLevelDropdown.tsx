@@ -47,6 +47,10 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
   const location = useLocation();
   const [search] = useSearchParams();
 
+  const ref = (search.get('ref') || location.pathname + location.search)
+    .replace('?', '_0x3F_')
+    .replace('&', '_0x26');
+
   return (
     <motion.div
       className="dropdown"
@@ -92,9 +96,7 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                   {user?.email ?? 'klee@example.com'}
                 </H6>
               ) : (
-                <Link
-                  to={`/sign-in?ref=${search.get('ref') || location.pathname + location.search}`}
-                >
+                <Link to={`/sign-in?ref=${ref}`}>
                   <H6 h6 weight="bold" color="inherit" css={{ textTransform: 'uppercase' }}>
                     Sign In
                   </H6>
@@ -139,9 +141,7 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
           <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
             {user ? (
               <Button flat color="error" size="md" css={{ w: 260, h: 50 }}>
-                <Link
-                  to={`/sign-in?ref=${search.get('ref') || location.pathname + location.search}`}
-                >
+                <Link to={`/sign-out?ref=${ref}`}>
                   <H5 h5 color="error">
                     Log out
                   </H5>
@@ -149,11 +149,7 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
               </Button>
             ) : (
               <Button flat color="primary" size="md" css={{ w: 260, h: 50 }}>
-                <Link
-                  to={`/sign-in?ref=${search.get('ref') || location.pathname + location.search}`}
-                >
-                  Sign Up
-                </Link>
+                <Link to={`/sign-up?ref=${ref}`}>Sign Up</Link>
               </Button>
             )}
           </Grid>
