@@ -91,6 +91,19 @@ export const meta: MetaFunction = ({ data, params }) => {
         title?.userPreferred || title?.english || title?.romaji || title?.native || ''
       } in full HD online with Subtitle`,
     'og:image': `https://img.anili.st/media/${params.animeId}`,
+    'twitter:card': 'summary_large_image',
+    'twitter:site': '@sora_anime',
+    'twitter:domain': 'sora-anime.vercel.app',
+    'twitter:url': `https://sora-anime.vercel.app/anime/${params.animeId}`,
+    'twitter:title': `Watch ${
+      title?.userPreferred || title?.english || title?.romaji || title?.native || ''
+    } HD online Free - Sora`,
+    'twitter:description':
+      description.replace(/<\/?[^>]+(>|$)/g, '') ||
+      `Watch ${
+        title?.userPreferred || title?.english || title?.romaji || title?.native || ''
+      } in full HD online with Subtitle`,
+    'twitter:image': `https://img.anili.st/media/${params.animeId}`,
   };
 };
 
