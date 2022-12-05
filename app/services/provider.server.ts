@@ -17,6 +17,7 @@ const getProviderList = async (
   year?: number | string | null,
   season?: number | string | null,
   animeId?: number,
+  animeType?: string,
 ): Promise<
   | {
       id?: string | number | null;
@@ -102,7 +103,7 @@ const getProviderList = async (
     const [flixhqDetail, loklokDetail, kissKhDetail] = await Promise.all([
       findFlixhq && findFlixhq.id ? getMovieInfo(findFlixhq.id) : undefined,
       loklokSearch && loklokSearch.data?.id
-        ? getLoklokOrgDetail(loklokSearch.data.id, loklokSearch.data.dramaType.name)
+        ? getLoklokOrgDetail(loklokSearch.data.id, 'tv')
         : undefined,
       findKissKh && findKissKh.id ? getKissKhInfo(findKissKh.id) : undefined,
     ]);
@@ -165,7 +166,7 @@ const getProviderList = async (
     });
     const [loklokDetail, kissKhDetail, bilibiliDetail] = await Promise.all([
       loklokSearch && loklokSearch.data?.id
-        ? getLoklokOrgDetail(loklokSearch.data.id, loklokSearch.data.dramaType.name)
+        ? getLoklokOrgDetail(loklokSearch.data.id, animeType || 'tv')
         : undefined,
       findKissKh && findKissKh.id ? getKissKhInfo(findKissKh.id) : undefined,
       findBilibili && findBilibili.id ? getBilibiliInfo(findBilibili.id) : undefined,

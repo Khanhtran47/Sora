@@ -32,7 +32,16 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const title = detail.title?.english || detail.title?.userPreferred || detail.title?.romaji || '';
   const orgTitle = detail.title?.native;
   const year = detail.releaseDate;
-  const providers = await getProviderList('anime', title, orgTitle, year, undefined, aid);
+  const animeType = detail?.type?.toLowerCase() || 'tv';
+  const providers = await getProviderList(
+    'anime',
+    title,
+    orgTitle,
+    year,
+    undefined,
+    aid,
+    animeType,
+  );
 
   if (providers && providers.length > 0) {
     return json({ detail, providers });
