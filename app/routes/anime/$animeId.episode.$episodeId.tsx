@@ -34,7 +34,7 @@ import {
   getKissKhEpisodeSubtitle,
 } from '~/services/kisskh/kisskh.server';
 import { IEpisodeInfo } from '~/services/consumet/anilist/anilist.types';
-import { loklokGetTvEpInfo } from '~/services/loklok';
+import { loklokGetTvEpInfo, loklokGetMovieInfo } from '~/services/loklok';
 import { LOKLOK_URL } from '~/services/loklok/utils.server';
 import { IMovieSource, IMovieSubtitle } from '~/services/consumet/flixhq/flixhq.types';
 import { IMedia } from '~/types/media';
@@ -127,7 +127,9 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   if (provider === 'Loklok') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
     const [tvDetail, providers] = await Promise.all([
-      loklokGetTvEpInfo(idProvider, Number(episodeId) - 1),
+      detail?.type === 'MOVIE'
+        ? loklokGetMovieInfo(idProvider)
+        : loklokGetTvEpInfo(idProvider, Number(episodeId) - 1),
       getProviderList('anime', title, orgTitle, year, undefined, aid),
     ]);
     const totalProviderEpisodes = Number(tvDetail?.data?.episodeCount);

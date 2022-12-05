@@ -42,9 +42,12 @@ export const loklokGetTvEpInfo = async (id: string, episodeIndex = 0) => {
   }
 };
 
-export const getLoklokOrgDetail = async (id: string): Promise<ILoklokInfoData | undefined> => {
+export const getLoklokOrgDetail = async (
+  id: string,
+  type: string,
+): Promise<ILoklokInfoData | undefined> => {
   try {
-    const info = await fetcher<ILoklokMediaInfo>(`${LOKLOK_URL}/tv/orgDetail?id=${id}`);
+    const info = await fetcher<ILoklokMediaInfo>(`${LOKLOK_URL}/${type}/orgDetail?id=${id}`);
 
     if (info && info.data) return info.data;
     return undefined;

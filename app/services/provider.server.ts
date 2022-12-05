@@ -101,7 +101,9 @@ const getProviderList = async (
     });
     const [flixhqDetail, loklokDetail, kissKhDetail] = await Promise.all([
       findFlixhq && findFlixhq.id ? getMovieInfo(findFlixhq.id) : undefined,
-      loklokSearch && loklokSearch.data?.id ? getLoklokOrgDetail(loklokSearch.data.id) : undefined,
+      loklokSearch && loklokSearch.data?.id
+        ? getLoklokOrgDetail(loklokSearch.data.id, loklokSearch.data.dramaType.name)
+        : undefined,
       findKissKh && findKissKh.id ? getKissKhInfo(findKissKh.id) : undefined,
     ]);
     if (findFlixhq && findFlixhq.id)
@@ -134,7 +136,6 @@ const getProviderList = async (
       getKissKhSearch(title, 3),
       getAnimeEpisodeInfo(animeId),
     ]);
-    console.log('🚀 ~ file: provider.server.ts:130 ~ loklokSearch', loklokSearch);
     const provider: {
       id?: string | number | null;
       provider: string;
@@ -163,7 +164,9 @@ const getProviderList = async (
       return anime.title.toLowerCase() === title.toLowerCase();
     });
     const [loklokDetail, kissKhDetail, bilibiliDetail] = await Promise.all([
-      loklokSearch && loklokSearch.data?.id ? getLoklokOrgDetail(loklokSearch.data.id) : undefined,
+      loklokSearch && loklokSearch.data?.id
+        ? getLoklokOrgDetail(loklokSearch.data.id, loklokSearch.data.dramaType.name)
+        : undefined,
       findKissKh && findKissKh.id ? getKissKhInfo(findKissKh.id) : undefined,
       findBilibili && findBilibili.id ? getBilibiliInfo(findBilibili.id) : undefined,
     ]);
