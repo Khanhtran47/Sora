@@ -163,7 +163,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
           <NavLink
             linkTo="/search"
             isIcon
-            style={{ marginTop: '3px' }}
+            style={{ marginTop: '3px', color: 'var(--nextui-colors-primary)' }}
             icon={<SearchIcon fill="currentColor" filled />}
           />
         </Tooltip>
