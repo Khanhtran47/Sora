@@ -68,7 +68,9 @@ export const meta: MetaFunction = ({ data, params }) => {
     'og:title': `Watch ${detail.title || ''} HD online Free - Sora`,
     'og:description':
       detail?.overview || `Watch ${detail.title || ''} in full HD online with Subtitle`,
-    'og:image': detail?.backdrop_path ? TMDB.backdropUrl(detail?.backdrop_path, 'w780') : undefined,
+    'og:image': detail?.backdrop_path
+      ? TMDB.backdropUrl(detail?.backdrop_path, 'w1280')
+      : undefined,
   };
 };
 
