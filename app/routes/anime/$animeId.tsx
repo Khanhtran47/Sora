@@ -6,6 +6,7 @@ import { Container } from '@nextui-org/react';
 
 import { getAnimeInfo } from '~/services/consumet/anilist/anilist.server';
 import { authenticate } from '~/services/supabase';
+import getProviderList from '~/services/provider.server';
 
 import AnimeDetail from '~/src/components/media/AnimeDetail';
 import WatchTrailerModal from '~/src/components/elements/modal/WatchTrailerModal';
@@ -14,20 +15,28 @@ import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 
 type LoaderData = {
   detail: Awaited<ReturnType<typeof getAnimeInfo>>;
+  providers?: {
+    id?: string | number | null;
+    provider: string;
+    episodesCount?: number;
+  }[];
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  await authenticate(request);
-
   const { animeId } = params;
   const aid = Number(animeId);
-
-  if (!aid) throw new Response('Not Found', { status: 404 });
-
+  if (!animeId) throw new Response('Not Found', { status: 404 });
+  await authenticate(request);
   const detail = await getAnimeInfo(aid);
-
   if (!detail) throw new Response('Not Found', { status: 404 });
+  const title = detail.title?.english || detail.title?.userPreferred || detail.title?.romaji || '';
+  const orgTitle = detail.title?.native;
+  const year = detail.releaseDate;
+  const providers = await getProviderList('anime', title, orgTitle, year, undefined, aid);
 
+  if (providers && providers.length > 0) {
+    return json({ detail, providers });
+  }
   return json<LoaderData>({ detail });
 };
 

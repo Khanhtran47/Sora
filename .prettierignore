@@ -1,3 +1,7 @@
 public
-api/_build
+api
 .env-example
+node_modules
+build
+.env
+/styles/tailwind.css

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
@@ -33,7 +34,16 @@ export const meta: MetaFunction = ({ params }) => ({
 
 const EpisodesPage = () => {
   const { episodes } = useLoaderData<LoaderData>();
-  const animeData: { detail: IAnimeInfo } | undefined = useRouteData('routes/anime/$animeId');
+  const animeData:
+    | {
+        detail: IAnimeInfo;
+        providers: {
+          id?: string | number | null;
+          provider: string;
+          episodesCount?: number;
+        }[];
+      }
+    | undefined = useRouteData('routes/anime/$animeId');
   const detail = animeData && animeData.detail;
   const isSm = useMediaQuery('(max-width: 650px)');
 
@@ -61,9 +71,7 @@ const EpisodesPage = () => {
           type="anime"
           id={detail?.id}
           episodes={episodes}
-          title={detail?.title?.english || ''}
-          orgTitle={detail?.title?.native || ''}
-          year={Number(detail?.releaseDate)}
+          providers={animeData?.providers || []}
         />
       </Col>
     </Row>

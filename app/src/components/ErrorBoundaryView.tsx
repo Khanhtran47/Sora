@@ -9,12 +9,17 @@ interface IErrorBoundary {
 
 const ErrorBoundary = ({ error, isProd }: IErrorBoundary) => (
   <>
-    <Text h1 color="warning" css={{ textAlign: 'center', pt: '88px' }}>
+    <Text h1 color="error" css={{ textAlign: 'center' }}>
       Some thing went wrong
     </Text>
-    <Text h4 color="warning" css={{ textAlign: 'center' }}>
+    <Text h4 color="error" css={{ textAlign: 'center' }}>
       {isProd ? 'We are already working on fixing-it' : error.message}
     </Text>
+    {!isProd ? (
+      <Text as="p" size={14} css={{}}>
+        {error.stack}
+      </Text>
+    ) : null}
     <Image
       autoResize
       width={480}
@@ -24,14 +29,6 @@ const ErrorBoundary = ({ error, isProd }: IErrorBoundary) => (
       css={{
         marginTop: '20px',
       }}
-    />
-    <Text
-      h1
-      size={20}
-      css={{
-        textAlign: 'center',
-      }}
-      weight="bold"
     />
   </>
 );

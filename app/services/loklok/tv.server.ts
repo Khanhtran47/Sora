@@ -1,4 +1,4 @@
-import type { ILoklokMediaInfo, ILoklokSearchData } from './loklok.type';
+import type { ILoklokMediaInfo, ILoklokSearchData, ILoklokInfoData } from './loklok.type';
 import { fetcher, LOKLOK_URL } from './utils.server';
 
 /**
@@ -17,6 +17,7 @@ export const loklokSearchOneTv = async (
     if (season) url += `&season=${season}`;
     const res = await fetcher<{ data: ILoklokSearchData }>(url);
     if (res) return res;
+    return undefined;
   } catch (e) {
     console.error(e);
   }
@@ -31,10 +32,22 @@ export const loklokSearchOneTv = async (
 export const loklokGetTvEpInfo = async (id: string, episodeIndex = 0) => {
   try {
     const info = await fetcher<ILoklokMediaInfo>(
-      `${LOKLOK_URL}/tv/detail?id=${id}&episodeId=${episodeIndex}`,
+      `${LOKLOK_URL}/tv/detail?id=${id}&episodeIndex=${episodeIndex}`,
     );
 
     if (info && info.data) return info;
+    return undefined;
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const getLoklokOrgDetail = async (id: string): Promise<ILoklokInfoData | undefined> => {
+  try {
+    const info = await fetcher<ILoklokMediaInfo>(`${LOKLOK_URL}/tv/orgDetail?id=${id}`);
+
+    if (info && info.data) return info.data;
+    return undefined;
   } catch (e) {
     console.error(e);
   }
@@ -64,7 +77,7 @@ export const loklokSearchTvEpInfo = async (
     if (!res || !res.data) return;
 
     const info = await fetcher<ILoklokMediaInfo>(
-      `${LOKLOK_URL}/tv/detail?id=${res.data.id}&episodeId=${episodeIndex}`,
+      `${LOKLOK_URL}/tv/detail?id=${res.data.id}&episodeIndex=${episodeIndex}`,
     );
 
     if (info && info.data) return info;
@@ -82,7 +95,7 @@ export const loklokSearchTvEpInfo = async (
 export const loklokGetTvEpSub = async (id: string, episodeIndex = 0) => {
   try {
     const info = await fetcher<ILoklokMediaInfo>(
-      `${LOKLOK_URL}/tv/detail?id=${id}&episodeId=${episodeIndex}`,
+      `${LOKLOK_URL}/tv/detail?id=${id}&episodeIndex=${episodeIndex}`,
     );
 
     if (info && info.data) {
@@ -122,7 +135,7 @@ export const loklokSearchTvEpSub = async (
     if (!res || !res.data) return [];
 
     const info = await fetcher<ILoklokMediaInfo>(
-      `${LOKLOK_URL}/tv/detail?id=${res.data.id}&episodeId=${episodeIndex}`,
+      `${LOKLOK_URL}/tv/detail?id=${res.data.id}&episodeIndex=${episodeIndex}`,
     );
 
     if (info && info.data) {

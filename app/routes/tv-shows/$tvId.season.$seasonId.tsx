@@ -1,17 +1,19 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
-import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
+import { json, MetaFunction } from '@remix-run/node';
+import type { LoaderFunction, LoaderArgs } from '@remix-run/node';
 import { useCatch, useLoaderData, Outlet, Link, RouteMatch, useParams } from '@remix-run/react';
 import { Container, Spacer, Card, Col, Row, Avatar } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
 import useSize, { IUseSize } from '~/hooks/useSize';
-import { getTvSeasonDetail } from '~/services/tmdb/tmdb.server';
 import i18next from '~/i18n/i18next.server';
 import TMDB from '~/utils/media';
+import { getTvShowDetail, getTvSeasonDetail } from '~/services/tmdb/tmdb.server';
 import { authenticate } from '~/services/supabase';
+import getProviderList from '~/services/provider.server';
 
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
@@ -22,22 +24,42 @@ import BackgroundDefault from '~/src/assets/images/background-default.jpg';
 
 type LoaderData = {
   detail: Awaited<ReturnType<typeof getTvSeasonDetail>>;
+  providers?: {
+    id?: string | number | null;
+    provider: string;
+    episodesCount?: number;
+  }[];
 };
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader: LoaderFunction = async ({ request, params }: LoaderArgs) => {
   const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
 
   const { tvId, seasonId } = params;
+  if (!tvId || !seasonId) throw new Error('Missing params');
   const tid = Number(tvId);
   const sid = Number(seasonId);
 
-  if (!tid || !sid) throw new Response('Not Found', { status: 404 });
+  // get translators
 
-  const detail = await getTvSeasonDetail(tid, sid, locale);
+  const [seasonDetail, detail] = await Promise.all([
+    getTvSeasonDetail(tid, sid, locale),
+    getTvShowDetail(tid),
+  ]);
+  if (!seasonDetail) throw new Response('Not Found', { status: 404 });
+  const title = detail?.name || '';
+  const orgTitle = detail?.original_name || '';
+  const year = new Date(seasonDetail?.air_date || '').getFullYear();
+  const season = seasonDetail?.season_number;
 
-  if (!detail) throw new Response('Not Found', { status: 404 });
+  const providers = await getProviderList('tv', title, orgTitle, year, season);
 
-  return json<LoaderData>({ detail });
+  if (providers && providers.length > 0)
+    return json<LoaderData>({
+      detail: seasonDetail,
+      providers,
+    });
+
+  return json<LoaderData>({ detail: seasonDetail });
 };
 
 export const meta: MetaFunction = ({ data, params }) => {

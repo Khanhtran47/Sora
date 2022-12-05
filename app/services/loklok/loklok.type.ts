@@ -79,7 +79,7 @@ export interface ILoklokInfoData {
     seasonID: string;
     seasonName: string;
   };
-  episodeVo: number;
+  episodeVo: any[];
   id: string;
   introduction: string;
   likeList: ILoklokLikeItem[];
