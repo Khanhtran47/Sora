@@ -422,7 +422,8 @@ const App = () => {
                       fontSize: '48px !important',
                       margin: 0,
                       fontWeight: 600,
-                      backgroundImage: 'linear-gradient(45deg, #0072F5 -20%, #FF4ECD 50%)',
+                      backgroundImage:
+                        'linear-gradient(45deg, var(--nextui-colors-primary), var(--nextui-colors-secondary) 50%)',
                       WebkitBackgroundClip: 'text',
                       WebkitTextFillColor: 'transparent',
                       fontFamily: 'monospace',
@@ -434,7 +435,7 @@ const App = () => {
                   </h1>
                 </div>
                 <div style={{ width: `${size}px`, height: `${size}px` }} className="animate-spin">
-                  <div className="h-full w-full border-4 border-t-purple-500 border-b-purple-700 rounded-[50%]" />
+                  <div className="h-full w-full border-4 border-t-primary border-b-primary rounded-[50%]" />
                 </div>
               </motion.div>
             </div>

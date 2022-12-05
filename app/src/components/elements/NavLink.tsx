@@ -91,7 +91,7 @@ const LogoNavLink = ({ linkTo }: { linkTo: string }) => (
       h2
       css={{
         margin: 0,
-        textGradient: '45deg, $blue600 -20%, $pink600 50%',
+        textGradient: '45deg, $primary, $secondary 50%',
         mr: 2,
         fontFamily: 'monospace',
         letterSpacing: '.3rem',
