@@ -21,6 +21,7 @@ import artplayerPluginHlsQuality from 'artplayer-plugin-hls-quality';
 import Hls from 'hls.js';
 
 import { authenticate, insertHistory } from '~/services/supabase';
+import getProviderList from '~/services/provider.server';
 import {
   getAnimeEpisodeStream,
   getAnimeInfo,
@@ -33,10 +34,11 @@ import {
   getKissKhEpisodeSubtitle,
 } from '~/services/kisskh/kisskh.server';
 import { IEpisodeInfo } from '~/services/consumet/anilist/anilist.types';
-import { loklokGetTvEpInfo } from '~/services/loklok';
+import { loklokGetTvEpInfo, loklokGetMovieInfo } from '~/services/loklok';
 import { LOKLOK_URL } from '~/services/loklok/utils.server';
 import { IMovieSource, IMovieSubtitle } from '~/services/consumet/flixhq/flixhq.types';
 import { IMedia } from '~/types/media';
+
 import updateHistory from '~/utils/update-history';
 import useLocalStorage from '~/hooks/useLocalStorage';
 
@@ -56,6 +58,11 @@ type LoaderData = {
   userId?: string;
   episodeInfo: IEpisodeInfo | undefined;
   hasNextEpisode?: boolean;
+  providers?: {
+    id?: string | number | null;
+    provider: string;
+    episodesCount?: number;
+  }[];
 };
 
 const checkHasNextEpisode = (
@@ -75,23 +82,26 @@ const checkHasNextEpisode = (
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const user = await authenticate(request, true);
+  const user = await authenticate(request, true, true);
 
   const url = new URL(request.url);
   const provider = url.searchParams.get('provider');
   const idProvider = url.searchParams.get('id');
-  const episode = url.searchParams.get('episode');
   const { animeId, episodeId } = params;
+  const aid = Number(animeId);
   if (!animeId || !episodeId) throw new Response('Not Found', { status: 404 });
 
-  const [detail, episodes, sources] = await Promise.all([
+  const [detail, episodes] = await Promise.all([
     getAnimeInfo(animeId),
     getAnimeEpisodeInfo(animeId),
-    getAnimeEpisodeStream(episodeId),
   ]);
-
+  const title =
+    detail?.title?.english || detail?.title?.userPreferred || detail?.title?.romaji || '';
+  const orgTitle = detail?.title?.native;
+  const year = detail?.releaseDate;
+  const episodeIndex = episodes && episodes[Number(episodeId) - 1].id;
   const totalEpisodes = Number(episodes?.length);
-  const episodeInfo = episodes?.find((e: IEpisodeInfo) => e.number === Number(episode));
+  const episodeInfo = episodes?.find((e: IEpisodeInfo) => e.number === Number(episodeId));
 
   if (user) {
     insertHistory({
@@ -116,7 +126,12 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   if (provider === 'Loklok') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
-    const tvDetail = await loklokGetTvEpInfo(idProvider, Number(episode) - 1);
+    const [tvDetail, providers] = await Promise.all([
+      detail?.type === 'MOVIE'
+        ? loklokGetMovieInfo(idProvider)
+        : loklokGetTvEpInfo(idProvider, Number(episodeId) - 1),
+      getProviderList('anime', title, orgTitle, year, undefined, aid),
+    ]);
     const totalProviderEpisodes = Number(tvDetail?.data?.episodeCount);
     const hasNextEpisode = checkHasNextEpisode(
       provider,
@@ -138,11 +153,15 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       })),
       userId: user?.id,
       episodeInfo,
+      providers,
     });
   }
 
   if (provider === 'Gogo') {
-    const episodeDetail = await getAnimeEpisodeStream(episodeId, 'gogoanime');
+    const [episodeDetail, providers] = await Promise.all([
+      getAnimeEpisodeStream(episodeIndex, 'gogoanime'),
+      getProviderList('anime', title, orgTitle, year, undefined, aid),
+    ]);
     const hasNextEpisode = checkHasNextEpisode(
       provider,
       Number(episodeInfo?.number),
@@ -157,11 +176,15 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       sources: episodeDetail?.sources,
       userId: user?.id,
       episodeInfo,
+      providers,
     });
   }
 
   if (provider === 'Zoro') {
-    const episodeDetail = await getAnimeEpisodeStream(episodeId, 'zoro');
+    const [episodeDetail, providers] = await Promise.all([
+      getAnimeEpisodeStream(episodeIndex, 'zoro'),
+      getProviderList('anime', title, orgTitle, year, undefined, aid),
+    ]);
     const hasNextEpisode = checkHasNextEpisode(
       provider,
       Number(episodeInfo?.number),
@@ -176,13 +199,17 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       sources: episodeDetail?.sources,
       userId: user?.id,
       episodeInfo,
+      providers,
     });
   }
 
   if (provider === 'Bilibili') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
-    const animeInfo = await getBilibiliInfo(Number(idProvider));
-    const episodeSearch = animeInfo?.episodes?.find((e) => e?.number === Number(episode));
+    const [animeInfo, providers] = await Promise.all([
+      getBilibiliInfo(Number(idProvider)),
+      getProviderList('anime', title, orgTitle, year, undefined, aid),
+    ]);
+    const episodeSearch = animeInfo?.episodes?.find((e) => e?.number === Number(episodeId));
     const episodeDetail = await getBilibiliEpisode(Number(episodeSearch?.id));
     const totalProviderEpisodes = Number(animeInfo?.totalEpisodes);
     const hasNextEpisode = checkHasNextEpisode(
@@ -211,12 +238,17 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       })),
       userId: user?.id,
       episodeInfo,
+      providers,
     });
   }
 
   if (provider === 'KissKh') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
-    const episodeDetail = await getKissKhInfo(Number(idProvider));
+    const [episodeDetail, providers] = await Promise.all([
+      getKissKhInfo(Number(idProvider)),
+      getProviderList('anime', title, orgTitle, year, undefined, aid),
+    ]);
+
     const totalProviderEpisodes = Number(episodeDetail?.episodes?.length);
     const hasNextEpisode = checkHasNextEpisode(
       provider,
@@ -224,7 +256,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       totalEpisodes,
       totalProviderEpisodes,
     );
-    const episodeSearch = episodeDetail?.episodes?.find((e) => e?.number === Number(episode));
+    const episodeSearch = episodeDetail?.episodes?.find((e) => e?.number === Number(episodeId));
     const [episodeStream, episodeSubtitle] = await Promise.all([
       getKissKhEpisodeStream(Number(episodeSearch?.id)),
       episodeSearch && episodeSearch.sub > 0
@@ -246,8 +278,13 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       })),
       userId: user?.id,
       episodeInfo,
+      providers,
     });
   }
+  const [sources, providers] = await Promise.all([
+    getAnimeEpisodeStream(episodeIndex),
+    getProviderList('anime', title, orgTitle, year, undefined, aid),
+  ]);
 
   if (!detail || !sources) throw new Response('Not Found', { status: 404 });
 
@@ -257,6 +294,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     sources: sources.sources,
     userId: user?.id,
     episodeInfo,
+    providers,
   });
 };
 
@@ -268,35 +306,35 @@ export const meta: MetaFunction = ({ data, params }) => {
     };
   }
   const { detail, episodeInfo } = data;
-  const { title } = detail;
+  const { title } = detail || {};
   return {
     title: `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
-    } episode ${episodeInfo.number || ''} HD online Free - Sora`,
+    } episode ${episodeInfo?.number || ''} HD online Free - Sora`,
     description: `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
-    } episode ${episodeInfo.number || ''} in full HD online with Subtitle`,
+    } episode ${episodeInfo?.number || ''} in full HD online with Subtitle`,
     keywords: `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
-    } episode ${episodeInfo.number || ''}, Stream ${
+    } episode ${episodeInfo?.number || ''}, Stream ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
-    } episode ${episodeInfo.number || ''}, Watch ${
+    } episode ${episodeInfo?.number || ''}, Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
-    } episode ${episodeInfo.number || ''} HD, Online ${
+    } episode ${episodeInfo?.number || ''} HD, Online ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
-    } episode ${episodeInfo.number || ''}, Streaming ${
+    } episode ${episodeInfo?.number || ''}, Streaming ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
-    } episode ${episodeInfo.number || ''}, English, Subtitle ${
+    } episode ${episodeInfo?.number || ''}, English, Subtitle ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
-    } episode ${episodeInfo.number || ''}, English Subtitle`,
+    } episode ${episodeInfo?.number || ''}, English Subtitle`,
     'og:url': `https://sora-anime.vercel.app/anime/${params.animeId}/episode/${params.episodeId}`,
     'og:title': `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
-    } episode ${episodeInfo.number || ''} HD online Free - Sora`,
+    } episode ${episodeInfo?.number || ''} HD online Free - Sora`,
     'og:description': `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
-    } episode ${episodeInfo.number || ''} in full HD online with Subtitle`,
-    'og:image': episodeInfo?.image || detail.cover || '',
+    } episode ${episodeInfo?.number || ''} in full HD online with Subtitle`,
+    'og:image': episodeInfo?.image || detail?.cover || '',
   };
 };
 
@@ -333,6 +371,7 @@ const AnimeEpisodeWatch = () => {
     subtitles,
     episodeInfo,
     userId,
+    providers,
   } = useLoaderData<LoaderData>();
   const { episodeId } = useParams();
   const fetcher = useFetcher();
@@ -355,7 +394,9 @@ const AnimeEpisodeWatch = () => {
       provider === 'Loklok' || provider === 'Gogo' || provider === 'Zoro'
         ? sources?.map(({ quality, url }: { quality: number | string; url: string }) => ({
             html: quality.toString(),
-            url: url.toString(),
+            url: url.toString().startsWith('http:')
+              ? `https://cors.proxy.consumet.org/${url.toString()}`
+              : url.toString(),
             isM3U8: true,
             isDASH: false,
             ...(provider === 'Loklok' && Number(quality) === 720 && { default: true }),
@@ -608,8 +649,6 @@ const AnimeEpisodeWatch = () => {
         id={detail?.id}
         episodes={episodes}
         title={detail?.title?.english || ''}
-        orgTitle={detail?.title?.native || ''}
-        year={Number(detail?.releaseDate)}
         overview={detail?.description || ''}
         posterPath={detail?.image}
         anilistRating={detail?.rating}
@@ -617,6 +656,7 @@ const AnimeEpisodeWatch = () => {
         recommendationsAnime={detail?.recommendations as IMedia[]}
         color={detail?.color}
         trailerAnime={detail?.trailer}
+        providers={providers}
       />
     </Container>
   );

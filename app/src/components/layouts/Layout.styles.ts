@@ -1,4 +1,5 @@
 import { Grid, Container, styled } from '@nextui-org/react';
+import { Player } from '@lottiefiles/react-lottie-player';
 
 export const drawerWidth = 250;
 
@@ -46,4 +47,10 @@ export const Drawer = styled(Container, {
   top: 0,
   left: 0,
   zIndex: 999,
+});
+
+export const PlayerStyled = styled(Player, {
+  '& path': {
+    stroke: '$primary',
+  },
 });

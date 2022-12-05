@@ -63,7 +63,7 @@ export const meta: MetaFunction = ({ data, params }) => {
       description: `There is no movie with the ID: ${params.movieId}`,
     };
   }
-  const { detail } = data;
+  const { detail } = data || {};
   return {
     title: `Watch ${detail.title || ''} HD online Free - Sora`,
     description: `Watch ${detail.title || ''} in full HD online with Subtitle`,
@@ -95,7 +95,7 @@ type DataLoader = {
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const user = await authenticate(request, true);
+  const user = await authenticate(request, true, true);
 
   const url = new URL(request.url);
   const provider = url.searchParams.get('provider');
@@ -251,7 +251,9 @@ const MovieWatch = () => {
     () =>
       sources?.map(({ quality, url }: { quality: number | string; url: string }) => ({
         html: quality.toString(),
-        url: url.toString(),
+        url: url.toString().startsWith('http:')
+          ? `https://cors.proxy.consumet.org/${url.toString()}`
+          : url.toString(),
         isM3U8: true,
         isDASH: false,
         ...(provider === 'Flixhq' && quality === 'auto' && { default: true }),

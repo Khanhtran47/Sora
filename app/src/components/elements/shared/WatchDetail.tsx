@@ -17,7 +17,7 @@ import {
 import Image, { MimeType } from 'remix-image';
 import tinycolor from 'tinycolor2';
 
-import { IEpisode, IMovieTranslations } from '~/services/tmdb/tmdb.types';
+import { IEpisode } from '~/services/tmdb/tmdb.types';
 import { ITrailer, IEpisodeInfo } from '~/services/consumet/anilist/anilist.types';
 import { IMedia } from '~/types/media';
 
@@ -36,7 +36,6 @@ interface IWatchDetailProps {
   id?: number | string | undefined;
   type: 'movie' | 'tv' | 'anime';
   title: string;
-  orgTitle?: string;
   overview?: string;
   posterPath?: string;
   tmdbRating?: number;
@@ -54,9 +53,12 @@ interface IWatchDetailProps {
   color?: string;
   trailerAnime?: ITrailer;
   episodes?: IEpisode[] | IEpisodeInfo[];
-  year?: number;
-  translations?: IMovieTranslations;
   season?: number;
+  providers?: {
+    id?: string | number | null;
+    provider: string;
+    episodesCount?: number;
+  }[];
 }
 
 const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
@@ -64,7 +66,6 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
     id,
     type,
     title,
-    orgTitle,
     overview,
     posterPath,
     tmdbRating,
@@ -79,9 +80,8 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
     color,
     trailerAnime,
     episodes,
-    year,
-    translations,
     season,
+    providers,
   } = props;
   const fetcher = useFetcher();
   const navigate = useNavigate();
@@ -163,9 +163,9 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
                     type="anime"
                     id={id}
                     episodes={episodes}
-                    title={title}
-                    orgTitle={orgTitle || ''}
-                    year={Number(year)}
+                    providers={providers || []}
+                    // episodeId
+                    // episodeNumber
                   />
                 </Col>
               ) : null}
@@ -175,11 +175,8 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
                     type="tv"
                     id={id}
                     episodes={episodes}
-                    title={title}
-                    orgTitle={orgTitle || ''}
-                    year={Number(year)}
-                    translations={translations}
                     season={season}
+                    providers={providers || [{ provider: 'Embed' }]}
                   />
                 </Col>
               ) : null}

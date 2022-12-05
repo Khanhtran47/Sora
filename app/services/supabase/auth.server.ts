@@ -42,6 +42,7 @@ export async function requestPayload(req: Request) {
 export async function authenticate(
   request: Request,
   customAuthRequired?: boolean,
+  botcheckRequired?: boolean,
   headers = new Headers(),
 ) {
   // try to get the session (from cookie) and payload from request
@@ -51,7 +52,7 @@ export async function authenticate(
     isbot(request.headers.get('User-Agent')),
   ]);
 
-  if (botcheck) {
+  if (botcheck && botcheckRequired) {
     throw new Response(null, { status: 500 });
   } else if (!session.has('auth_token')) {
     // there is no token, no signed-in or expired cookie

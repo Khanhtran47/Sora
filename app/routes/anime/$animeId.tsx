@@ -6,6 +6,7 @@ import { Container } from '@nextui-org/react';
 
 import { getAnimeInfo } from '~/services/consumet/anilist/anilist.server';
 import { authenticate } from '~/services/supabase';
+import getProviderList from '~/services/provider.server';
 
 import AnimeDetail from '~/src/components/media/AnimeDetail';
 import WatchTrailerModal from '~/src/components/elements/modal/WatchTrailerModal';
@@ -14,20 +15,37 @@ import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 
 type LoaderData = {
   detail: Awaited<ReturnType<typeof getAnimeInfo>>;
+  providers?: {
+    id?: string | number | null;
+    provider: string;
+    episodesCount?: number;
+  }[];
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  await authenticate(request);
-
   const { animeId } = params;
   const aid = Number(animeId);
-
-  if (!aid) throw new Response('Not Found', { status: 404 });
-
+  if (!animeId) throw new Response('Not Found', { status: 404 });
+  await authenticate(request);
   const detail = await getAnimeInfo(aid);
-
   if (!detail) throw new Response('Not Found', { status: 404 });
+  const title = detail.title?.english || detail.title?.userPreferred || detail.title?.romaji || '';
+  const orgTitle = detail.title?.native;
+  const year = detail.releaseDate;
+  const animeType = detail?.type?.toLowerCase() || 'tv';
+  const providers = await getProviderList(
+    'anime',
+    title,
+    orgTitle,
+    year,
+    undefined,
+    aid,
+    animeType,
+  );
 
+  if (providers && providers.length > 0) {
+    return json({ detail, providers });
+  }
   return json<LoaderData>({ detail });
 };
 
@@ -39,14 +57,16 @@ export const meta: MetaFunction = ({ data, params }) => {
     };
   }
   const { detail } = data;
-  const { title, color } = detail;
+  const { title, color, description } = detail;
   return {
     title: `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     } HD online Free - Sora`,
-    description: `Watch ${
-      title?.userPreferred || title?.english || title?.romaji || title?.native || ''
-    } in full HD online with Subtitle`,
+    description:
+      description.replace(/<\/?[^>]+(>|$)/g, '') ||
+      `Watch ${
+        title?.userPreferred || title?.english || title?.romaji || title?.native || ''
+      } in full HD online with Subtitle`,
     keywords: `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     }, Stream ${
@@ -65,10 +85,25 @@ export const meta: MetaFunction = ({ data, params }) => {
     'og:title': `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     } HD online Free - Sora`,
-    'og:description': `Watch ${
-      title?.userPreferred || title?.english || title?.romaji || title?.native || ''
-    } in full HD online with Subtitle`,
+    'og:description':
+      description.replace(/<\/?[^>]+(>|$)/g, '') ||
+      `Watch ${
+        title?.userPreferred || title?.english || title?.romaji || title?.native || ''
+      } in full HD online with Subtitle`,
     'og:image': `https://img.anili.st/media/${params.animeId}`,
+    'twitter:card': 'summary_large_image',
+    'twitter:site': '@sora_anime',
+    'twitter:domain': 'sora-anime.vercel.app',
+    'twitter:url': `https://sora-anime.vercel.app/anime/${params.animeId}`,
+    'twitter:title': `Watch ${
+      title?.userPreferred || title?.english || title?.romaji || title?.native || ''
+    } HD online Free - Sora`,
+    'twitter:description':
+      description.replace(/<\/?[^>]+(>|$)/g, '') ||
+      `Watch ${
+        title?.userPreferred || title?.english || title?.romaji || title?.native || ''
+      } in full HD online with Subtitle`,
+    'twitter:image': `https://img.anili.st/media/${params.animeId}`,
   };
 };
 

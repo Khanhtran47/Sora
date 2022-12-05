@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { Button, Grid, Row, Tooltip, Popover, Spacer } from '@nextui-org/react';
 import type { User } from '@supabase/supabase-js';
-import { Player } from '@lottiefiles/react-lottie-player';
 import type { AnimationItem } from 'lottie-web';
 import { useTranslation } from 'react-i18next';
 
@@ -14,7 +13,7 @@ import { pages, searchDropdown } from '~/src/constants/navPages';
 /* Components */
 import NavLink from '../elements/NavLink';
 import MultiLevelDropdown from './MultiLevelDropdown';
-import { AppBar } from './Layout.styles';
+import { AppBar, PlayerStyled } from './Layout.styles';
 
 /* Assets */
 import MenuIcon from '../../assets/icons/MenuIcon.js';
@@ -163,7 +162,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
           <NavLink
             linkTo="/search"
             isIcon
-            style={{ marginTop: '3px' }}
+            style={{ marginTop: '3px', color: 'var(--nextui-colors-primary)' }}
             icon={<SearchIcon fill="currentColor" filled />}
           />
         </Tooltip>
@@ -171,7 +170,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
         <Popover placement="bottom-right" isOpen={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
           <Popover.Trigger>
             <Button auto light aria-label="dropdown" css={{ padding: '0 $xs' }}>
-              <Player
+              <PlayerStyled
                 lottieRef={(instance) => {
                   setLottie(instance);
                 }}

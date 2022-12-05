@@ -1,15 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import * as React from 'react';
-import { Link, useLocation, useNavigate, useSearchParams } from '@remix-run/react';
+import { useLocation, useNavigate, useSearchParams } from '@remix-run/react';
 import { Avatar, Button, Grid, Switch, useTheme, Divider } from '@nextui-org/react';
 import { useTheme as useRemixTheme } from 'next-themes';
 import { motion } from 'framer-motion';
 import type { User } from '@supabase/supabase-js';
-import { Player } from '@lottiefiles/react-lottie-player';
 import { useTranslation } from 'react-i18next';
 
 /* Components */
 import { H5, H6 } from '~/src/components/styles/Text.styles';
+import { PlayerStyled } from './Layout.styles';
 
 /* Assets */
 import kleeCute from '../../assets/images/avatar.png';
@@ -90,17 +90,18 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                   css={{ cursor: 'pointer' }}
                 />
               }
+              onClick={() => {
+                if (!user) navigate(`/sign-in?ref=${ref}`);
+              }}
             >
               {user ? (
-                <H6 h6 weight="bold" color="inherit" css={{ marginLeft: '3.5rem !important' }}>
+                <H6 h6 weight="bold" color="primary" css={{ marginLeft: '3.5rem !important' }}>
                   {user?.email ?? 'klee@example.com'}
                 </H6>
               ) : (
-                <Link to={`/sign-in?ref=${ref}`}>
-                  <H6 h6 weight="bold" color="inherit" css={{ textTransform: 'uppercase' }}>
-                    Sign In
-                  </H6>
-                </Link>
+                <H6 h6 weight="bold" color="primary" css={{ textTransform: 'uppercase' }}>
+                  Sign In
+                </H6>
               )}
             </Button>
             <Divider x={1} css={{ width: 260, margin: '10px 40px 0 0' }} />
@@ -140,16 +141,30 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
           </Grid>
           <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
             {user ? (
-              <Button flat color="error" size="md" css={{ w: 260, h: 50 }}>
-                <Link to={`/sign-out?ref=${ref}`}>
-                  <H5 h5 color="error">
-                    Log out
-                  </H5>
-                </Link>
+              <Button
+                flat
+                color="error"
+                size="md"
+                onClick={() => {
+                  navigate(`/sign-out?ref=${ref}`);
+                }}
+                css={{ w: 260, h: 50 }}
+              >
+                <H5 h5 color="error">
+                  Log out
+                </H5>
               </Button>
             ) : (
-              <Button flat color="primary" size="md" css={{ w: 260, h: 50 }}>
-                <Link to={`/sign-up?ref=${ref}`}>Sign Up</Link>
+              <Button
+                flat
+                color="primary"
+                size="md"
+                onClick={() => {
+                  navigate(`/sign-up?ref=${ref}`);
+                }}
+                css={{ w: 260, h: 50 }}
+              >
+                Sign Up
               </Button>
             )}
           </Grid>
@@ -174,7 +189,7 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                   }}
                   css={{ w: 260, h: 50 }}
                   icon={
-                    <Player
+                    <PlayerStyled
                       src={arrowLeft}
                       hover
                       autoplay={false}
@@ -227,7 +242,7 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                   }}
                   css={{ w: 260, h: 50 }}
                   icon={
-                    <Player
+                    <PlayerStyled
                       src={arrowLeft}
                       hover
                       autoplay={false}

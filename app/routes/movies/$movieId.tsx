@@ -58,7 +58,7 @@ export const meta: MetaFunction = ({ data, params }) => {
   const { detail } = data;
   return {
     title: `Watch ${detail.title || ''} HD online Free - Sora`,
-    description: `Watch ${detail.title || ''} in full HD online with Subtitle`,
+    description: detail?.overview || `Watch ${detail.title || ''} in full HD online with Subtitle`,
     keywords: `Watch ${detail.title || ''}, Stream ${detail.title || ''}, Watch ${
       detail.title || ''
     } HD, Online ${detail.title || ''}, Streaming ${detail.title || ''}, English, Subtitle ${
@@ -66,8 +66,21 @@ export const meta: MetaFunction = ({ data, params }) => {
     }, English Subtitle`,
     'og:url': `https://sora-anime.vercel.app/movies/${params.movieId}`,
     'og:title': `Watch ${detail.title || ''} HD online Free - Sora`,
-    'og:description': `Watch ${detail.title || ''} in full HD online with Subtitle`,
-    'og:image': detail?.backdrop_path ? TMDB.backdropUrl(detail?.backdrop_path, 'w780') : undefined,
+    'og:description':
+      detail?.overview || `Watch ${detail.title || ''} in full HD online with Subtitle`,
+    'og:image': detail?.backdrop_path
+      ? TMDB.backdropUrl(detail?.backdrop_path, 'w1280')
+      : undefined,
+    'twitter:card': 'summary_large_image',
+    'twitter:site': '@sora_anime',
+    'twitter:domain': 'sora-anime.vercel.app',
+    'twitter:url': `https://sora-anime.vercel.app/movies/${params.movieId}`,
+    'twitter:title': `Watch ${detail.title || ''} HD online Free - Sora`,
+    'twitter:description':
+      detail?.overview || `Watch ${detail.title || ''} in full HD online with Subtitle`,
+    'twitter:image': detail?.backdrop_path
+      ? TMDB.backdropUrl(detail?.backdrop_path, 'w1280')
+      : undefined,
   };
 };
 

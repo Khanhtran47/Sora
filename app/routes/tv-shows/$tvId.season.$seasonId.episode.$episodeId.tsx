@@ -3,7 +3,8 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { useState, useEffect, Suspense, useMemo } from 'react';
-import { MetaFunction, LoaderFunction, json } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type { LoaderFunction, MetaFunction, LoaderArgs } from '@remix-run/node';
 import {
   useCatch,
   useLoaderData,
@@ -20,6 +21,7 @@ import { isDesktop } from 'react-device-detect';
 import Hls from 'hls.js';
 import artplayerPluginHlsQuality from 'artplayer-plugin-hls-quality';
 
+import i18next from '~/i18n/i18next.server';
 import { authenticate, insertHistory } from '~/services/supabase';
 import {
   getTvShowDetail,
@@ -37,8 +39,9 @@ import {
   getKissKhEpisodeSubtitle,
 } from '~/services/kisskh/kisskh.server';
 import { loklokGetTvEpInfo } from '~/services/loklok';
-import i18next from '~/i18n/i18next.server';
+import getProviderList from '~/services/provider.server';
 import { LOKLOK_URL } from '~/services/loklok/utils.server';
+
 import TMDB from '~/utils/media';
 import Player from '~/utils/player';
 import updateHistory from '~/utils/update-history';
@@ -65,6 +68,11 @@ type LoaderData = {
   userId?: string;
   imdbRating?: { count: number; star: number };
   hasNextEpisode?: boolean;
+  providers?: {
+    id?: string | number | null;
+    provider: string;
+    episodesCount?: number;
+  }[];
 };
 
 export const meta: MetaFunction = ({ data, params }) => {
@@ -74,7 +82,7 @@ export const meta: MetaFunction = ({ data, params }) => {
       description: `This season of tv show doesn't have episode ${params.episodeId || ''}`,
     };
   }
-  const { detail } = data;
+  const { detail } = data || {};
   return {
     title: `Watch ${detail.name || ''} season ${params.seasonId || ''} episode ${
       params.episodeId || ''
@@ -122,9 +130,9 @@ const checkHasNextEpisode = (
   }
 };
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader: LoaderFunction = async ({ request, params }: LoaderArgs) => {
   const [user, locale] = await Promise.all([
-    authenticate(request, true),
+    authenticate(request, true, true),
     i18next.getLocale(request),
   ]);
 
@@ -135,7 +143,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const tid = Number(tvId);
   const sid = Number(seasonId);
   const eid = Number(episodeId);
-  if (!tid || !sid || !provider || !idProvider) throw new Response('Not Found', { status: 404 });
+  if (!tvId || !seasonId || !episodeId || !provider || !idProvider)
+    throw new Response('Not Found', { status: 404 });
 
   const [detail, imdbId, recommendations, seasonDetail] = await Promise.all([
     getTvShowDetail(tid),
@@ -145,6 +154,10 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   ]);
   if (!imdbId || !detail) throw new Response('Not Found', { status: 404 });
   const totalEpisodes = Number(seasonDetail?.episodes.length);
+  const title = detail?.name || '';
+  const orgTitle = detail?.original_name || '';
+  const year = new Date(seasonDetail?.air_date || '').getFullYear();
+  const season = seasonDetail?.season_number;
 
   if (user) {
     insertHistory({
@@ -165,10 +178,11 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   if (provider === 'Loklok') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
     if ((detail && detail?.original_language !== 'en') || locale !== 'en') {
-      const [tvDetail, imdbRating, translations] = await Promise.all([
+      const [tvDetail, imdbRating, translations, providers] = await Promise.all([
         loklokGetTvEpInfo(idProvider, Number(episodeId) - 1),
         imdbId ? getImdbRating(imdbId) : undefined,
         getTranslations('tv', tid),
+        getProviderList('tv', title, orgTitle, year, season),
       ]);
       const totalProviderEpisodes = Number(tvDetail?.data?.episodeCount);
       const hasNextEpisode = checkHasNextEpisode(eid, totalEpisodes, totalProviderEpisodes);
@@ -188,12 +202,14 @@ export const loader: LoaderFunction = async ({ request, params }) => {
           url: `${LOKLOK_URL}/subtitle?url=${sub.url}`,
         })),
         userId: user?.id,
+        providers,
       });
     }
 
-    const [tvDetail, imdbRating] = await Promise.all([
+    const [tvDetail, imdbRating, providers] = await Promise.all([
       loklokGetTvEpInfo(idProvider, Number(episodeId) - 1),
       imdbId ? getImdbRating(imdbId) : undefined,
+      getProviderList('tv', title, orgTitle, year, season),
     ]);
     const totalProviderEpisodes = Number(tvDetail?.data?.episodeCount);
     const hasNextEpisode = checkHasNextEpisode(eid, totalEpisodes, totalProviderEpisodes);
@@ -212,16 +228,18 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         url: `${LOKLOK_URL}/subtitle?url=${sub.url}`,
       })),
       userId: user?.id,
+      providers,
     });
   }
 
   if (provider === 'Flixhq') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
     if ((detail && detail?.original_language !== 'en') || locale !== 'en') {
-      const [tvDetail, imdbRating, translations] = await Promise.all([
+      const [tvDetail, imdbRating, translations, providers] = await Promise.all([
         getMovieInfo(idProvider),
         imdbId ? getImdbRating(imdbId) : undefined,
         getTranslations('tv', tid),
+        getProviderList('tv', title, orgTitle, year, season),
       ]);
       const totalProviderEpisodes = Number(tvDetail?.episodes?.length);
       const hasNextEpisode = checkHasNextEpisode(eid, totalEpisodes, totalProviderEpisodes);
@@ -247,12 +265,14 @@ export const loader: LoaderFunction = async ({ request, params }) => {
           sources: tvEpisodeStreamLink?.sources,
           subtitles: tvEpisodeStreamLink?.subtitles,
           userId: user?.id,
+          providers,
         });
       }
     }
-    const [tvDetail, imdbRating] = await Promise.all([
+    const [tvDetail, imdbRating, providers] = await Promise.all([
       getMovieInfo(idProvider),
       imdbId ? getImdbRating(imdbId) : undefined,
+      getProviderList('tv', title, orgTitle, year, season),
     ]);
     const totalProviderEpisodes = Number(tvDetail?.episodes?.length);
     const hasNextEpisode = checkHasNextEpisode(eid, totalEpisodes, totalProviderEpisodes);
@@ -277,6 +297,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         sources: tvEpisodeStreamLink?.sources,
         subtitles: tvEpisodeStreamLink?.subtitles,
         userId: user?.id,
+        providers,
       });
     }
   }
@@ -284,10 +305,11 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   if (provider === 'KissKh') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
     if ((detail && detail?.original_language !== 'en') || locale !== 'en') {
-      const [episodeDetail, imdbRating, translations] = await Promise.all([
+      const [episodeDetail, imdbRating, translations, providers] = await Promise.all([
         getKissKhInfo(Number(idProvider)),
         imdbId ? getImdbRating(imdbId) : undefined,
         getTranslations('tv', tid),
+        getProviderList('tv', title, orgTitle, year, season),
       ]);
       const totalProviderEpisodes = Number(episodeDetail?.episodes?.length);
       const hasNextEpisode = checkHasNextEpisode(eid, totalEpisodes, totalProviderEpisodes);
@@ -316,12 +338,14 @@ export const loader: LoaderFunction = async ({ request, params }) => {
           ...(sub.default && { default: true }),
         })),
         userId: user?.id,
+        providers,
       });
     }
 
-    const [episodeDetail, imdbRating] = await Promise.all([
+    const [episodeDetail, imdbRating, providers] = await Promise.all([
       getKissKhInfo(Number(idProvider)),
       imdbId ? getImdbRating(imdbId) : undefined,
+      getProviderList('tv', title, orgTitle, year, season),
     ]);
     const totalProviderEpisodes = Number(episodeDetail?.episodes?.length);
     const hasNextEpisode = checkHasNextEpisode(eid, totalEpisodes, totalProviderEpisodes);
@@ -349,14 +373,16 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         ...(sub.default && { default: true }),
       })),
       userId: user?.id,
+      providers,
     });
   }
 
   if (provider === 'Embed') {
     if ((detail && detail?.original_language !== 'en') || locale !== 'en') {
-      const [imdbRating, translations] = await Promise.all([
+      const [imdbRating, translations, providers] = await Promise.all([
         imdbId ? getImdbRating(imdbId) : undefined,
         getTranslations('tv', tid),
+        getProviderList('tv', title, orgTitle, year, season),
       ]);
       return json<LoaderData>({
         detail,
@@ -366,9 +392,13 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         seasonDetail,
         translations,
         userId: user?.id,
+        providers,
       });
     }
-    const imdbRating = imdbId ? await getImdbRating(imdbId) : undefined;
+    const [imdbRating, providers] = await Promise.all([
+      imdbId ? await getImdbRating(imdbId) : undefined,
+      getProviderList('tv', title, orgTitle, year, season),
+    ]);
     return json<LoaderData>({
       detail,
       imdbId,
@@ -376,6 +406,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       imdbRating,
       seasonDetail,
       userId: user?.id,
+      providers,
     });
   }
 };
@@ -427,6 +458,7 @@ const EpisodeWatch = () => {
     sources,
     subtitles,
     userId,
+    providers,
   } = useLoaderData<LoaderData>();
   const rootData:
     | {
@@ -459,7 +491,9 @@ const EpisodeWatch = () => {
     () =>
       sources?.map(({ quality, url }: { quality: number | string; url: string }) => ({
         html: quality.toString(),
-        url: url.toString(),
+        url: url.toString().startsWith('http:')
+          ? `https://cors.proxy.consumet.org/${url.toString()}`
+          : url.toString(),
         isM3U8: true,
         isDASH: false,
         ...(provider === 'Flixhq' && quality === 'auto' && { default: true }),
@@ -554,6 +588,7 @@ const EpisodeWatch = () => {
                             (item: { quality: number | string; url: string }) =>
                               item.quality === 'auto',
                           )?.url || sources[0]?.url,
+                    type: 'm3u8',
                     subtitle: {
                       url:
                         provider === 'Flixhq'
@@ -741,6 +776,7 @@ const EpisodeWatch = () => {
         recommendationsMovies={recommendations?.items}
         season={seasonDetail?.season_number}
         translations={translations}
+        providers={providers}
       />
     </Container>
   );

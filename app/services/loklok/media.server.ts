@@ -1,10 +1,10 @@
 /* eslint-disable import/prefer-default-export */
 import { fetcher, LOKLOK_URL } from './utils.server';
 
-export const loklokGetMedia = async (contentId: string, episodeId: string, category: 0 | 1) => {
+export const loklokGetMedia = async (contentId: string, episodeIndex: string, category: 0 | 1) => {
   try {
     const res = await fetcher(
-      `${LOKLOK_URL}/api/media?contentId=${contentId}&episodeId=${episodeId}&category=${category}`,
+      `${LOKLOK_URL}/api/media?contentId=${contentId}&episodeIndex=${episodeIndex}&category=${category}`,
     );
 
     return res;

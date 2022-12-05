@@ -212,8 +212,8 @@ export const meta: MetaFunction = () => {
       'og:title': 'Sora - Free Movies and Free Series',
       'og:image':
         'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/5298bac0-b8bf-4c80-af67-725c1272dbb0/ddnbut6-17aefce2-bb77-4091-9c5d-6e0933f8e17a.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzUyOThiYWMwLWI4YmYtNGM4MC1hZjY3LTcyNWMxMjcyZGJiMFwvZGRuYnV0Ni0xN2FlZmNlMi1iYjc3LTQwOTEtOWM1ZC02ZTA5MzNmOGUxN2EuanBnIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.FOyQ7bWyeWdLg4fLDoeBhBjaxmNtQNV-MZA40AOk-4A',
-      'og:image:width': '650',
-      'og:image:height': '350',
+      'og:image:width': '1200',
+      'og:image:height': '630',
       'og:description':
         'Watch Sora Online For Free! Sora is a multinational website for movies, series and anime fans - Very fast streaming - Click NOW',
     };
@@ -232,8 +232,8 @@ export const meta: MetaFunction = () => {
     'og:title': 'Sora - Free Movies and Free Series',
     'og:image':
       'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/5298bac0-b8bf-4c80-af67-725c1272dbb0/ddnbut6-17aefce2-bb77-4091-9c5d-6e0933f8e17a.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzUyOThiYWMwLWI4YmYtNGM4MC1hZjY3LTcyNWMxMjcyZGJiMFwvZGRuYnV0Ni0xN2FlZmNlMi1iYjc3LTQwOTEtOWM1ZC02ZTA5MzNmOGUxN2EuanBnIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.FOyQ7bWyeWdLg4fLDoeBhBjaxmNtQNV-MZA40AOk-4A',
-    'og:image:width': '650',
-    'og:image:height': '350',
+    'og:image:width': '1200',
+    'og:image:height': '630',
     'og:description':
       'Watch Sora Online For Free! Sora is a multinational website for movies, series and anime fans - Very fast streaming - Click NOW',
   };
@@ -422,7 +422,8 @@ const App = () => {
                       fontSize: '48px !important',
                       margin: 0,
                       fontWeight: 600,
-                      backgroundImage: 'linear-gradient(45deg, #0072F5 -20%, #FF4ECD 50%)',
+                      backgroundImage:
+                        'linear-gradient(45deg, var(--nextui-colors-primary), var(--nextui-colors-secondary) 50%)',
                       WebkitBackgroundClip: 'text',
                       WebkitTextFillColor: 'transparent',
                       fontFamily: 'monospace',
@@ -434,7 +435,7 @@ const App = () => {
                   </h1>
                 </div>
                 <div style={{ width: `${size}px`, height: `${size}px` }} className="animate-spin">
-                  <div className="h-full w-full border-4 border-t-purple-500 border-b-purple-700 rounded-[50%]" />
+                  <div className="h-full w-full border-4 border-t-primary border-b-primary rounded-[50%]" />
                 </div>
               </motion.div>
             </div>

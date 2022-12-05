@@ -22,19 +22,20 @@ type SelectProviderModalProps = {
   episodeId?: string;
 };
 
-const SelectProviderModal = ({
-  id,
-  visible,
-  closeHandler,
-  type,
-  title,
-  origTitle,
-  year,
-  translations,
-  season,
-  episode,
-  episodeId,
-}: SelectProviderModalProps) => {
+const SelectProviderModal = (props: SelectProviderModalProps) => {
+  const {
+    id,
+    visible,
+    closeHandler,
+    type,
+    title,
+    origTitle,
+    year,
+    translations,
+    season,
+    episode,
+    episodeId,
+  } = props;
   const fetcher = useFetcher();
   const navigate = useNavigate();
   const [provider, setProvider] = useState<{ id: string | number; provider: string }[]>();
