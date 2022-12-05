@@ -5,11 +5,11 @@ import { Avatar, Button, Grid, Switch, useTheme, Divider } from '@nextui-org/rea
 import { useTheme as useRemixTheme } from 'next-themes';
 import { motion } from 'framer-motion';
 import type { User } from '@supabase/supabase-js';
-import { Player } from '@lottiefiles/react-lottie-player';
 import { useTranslation } from 'react-i18next';
 
 /* Components */
 import { H5, H6 } from '~/src/components/styles/Text.styles';
+import { PlayerStyled } from './Layout.styles';
 
 /* Assets */
 import kleeCute from '../../assets/images/avatar.png';
@@ -189,7 +189,7 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                   }}
                   css={{ w: 260, h: 50 }}
                   icon={
-                    <Player
+                    <PlayerStyled
                       src={arrowLeft}
                       hover
                       autoplay={false}
@@ -242,7 +242,7 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                   }}
                   css={{ w: 260, h: 50 }}
                   icon={
-                    <Player
+                    <PlayerStyled
                       src={arrowLeft}
                       hover
                       autoplay={false}
