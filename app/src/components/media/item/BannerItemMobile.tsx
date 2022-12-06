@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Card, Row, Col, Spacer } from '@nextui-org/react';
@@ -40,7 +41,11 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
       : title?.userPreferred || title?.english || title?.romaji || title?.native;
 
   return (
-    <Link to={`/${mediaType === 'movie' ? 'movies/' : 'tv-shows/'}${id}/`}>
+    <Link
+      to={`/${
+        mediaType === 'movie' ? 'movies/' : mediaType === 'tv' ? 'tv-shows/' : 'anime/'
+      }${id}/${mediaType === 'anime' ? 'overview' : ''}`}
+    >
       <Card
         as="div"
         isPressable

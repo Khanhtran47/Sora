@@ -448,20 +448,11 @@ const AnimeEpisodeWatch = () => {
 
   useEffect(() => {
     if (isVideoEnded && playNextEpisode && hasNextEpisode && provider) {
-      if (provider === 'Gogo' || provider === 'Zoro') {
-        navigate(
-          `/anime/${detail?.id}/episode/${
-            episodes && episodes[episodes.findIndex((e) => e.id === episodeId) + 1].id
-          }?provider=${provider}&id=${idProvider}&episode=${Number(episodeInfo?.number) + 1}`,
-        );
-      }
-      if (idProvider) {
-        navigate(
-          `/anime/${detail?.id}/episode/${
-            episodes && episodes[episodes.findIndex((e) => e.id === episodeId) + 1].id
-          }?provider=${provider}&id=${idProvider}&episode=${Number(episodeInfo?.number) + 1}`,
-        );
-      }
+      navigate(
+        `/anime/${detail?.id}/episode/${
+          Number(episodeInfo?.number) + 1
+        }?provider=${provider}&id=${idProvider}`,
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isVideoEnded]);
@@ -479,10 +470,8 @@ const AnimeEpisodeWatch = () => {
                   nextEpisodeUrl={
                     hasNextEpisode
                       ? `/anime/${detail?.id}/episode/${
-                          episodes && episodes[episodes.findIndex((e) => e.id === episodeId) + 1].id
-                        }?provider=${provider}&id=${idProvider}&episode=${
                           Number(episodeInfo?.number) + 1
-                        }`
+                        }?provider=${provider}&id=${idProvider}`
                       : undefined
                   }
                   option={{

@@ -244,4 +244,4 @@ const ArtPlayer = styled(Player, {
   },
 });
 
-export default React.memo(ArtPlayer);
+export default ArtPlayer;
