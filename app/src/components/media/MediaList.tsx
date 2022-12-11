@@ -291,7 +291,7 @@ const MediaList = (props: IMediaListProps) => {
         <Pagination
           total={totalPages}
           initialPage={currentPage}
-          shadow
+          // shadow
           onChange={onPageChangeHandler}
           css={{ marginTop: '30px' }}
           {...(isXs && { size: 'xs' })}

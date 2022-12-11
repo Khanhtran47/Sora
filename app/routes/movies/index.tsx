@@ -10,11 +10,13 @@ import NProgress from 'nprogress';
 
 import i18next from '~/i18n/i18next.server';
 import { getListMovies } from '~/services/tmdb/tmdb.server';
+import { authenticate } from '~/services/supabase';
 import { IMedia } from '~/types/media';
+
+import useSize from '~/hooks/useSize';
+
 import MediaList from '~/src/components/media/MediaList';
 import SkeletonItem from '~/src/components/elements/skeleton/Item';
-import useSize from '~/hooks/useSize';
-import { authenticate } from '~/services/supabase';
 
 type LoaderData = {
   popular: Awaited<ReturnType<typeof getListMovies>>;

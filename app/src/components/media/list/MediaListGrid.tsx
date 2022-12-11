@@ -180,14 +180,14 @@ const MediaListGrid = (props: IMediaListCardProps) => {
         listItems.map((item, index) => {
           const href =
             itemsType && itemsType === 'episode'
-              ? `/anime/${item.id}/episode/${item.episodeId}?provider=${provider}&episode=${item.episodeNumber}`
+              ? `/anime/${item.id}/episode/${item.episodeNumber}?provider=${provider}`
               : itemsType === 'anime'
               ? `/anime/${item.id}/overview`
               : itemsType === 'people'
               ? `/people/${item.id}/overview`
               : item?.mediaType === 'movie' || itemsType === 'movie'
-              ? `/movies/${item.id}`
-              : `/tv-shows/${item.id}`;
+              ? `/movies/${item.id}/`
+              : `/tv-shows/${item.id}/`;
           return (
             <Grid
               xs={isXs ? 12 : 6}
@@ -241,13 +241,14 @@ const MediaListGrid = (props: IMediaListCardProps) => {
         <Grid xs={12} justify="center">
           <div ref={bottomRef} />
           <Button
-            shadow
+            // shadow
             color="primary"
             onClick={() => {
               setShowLoadMore(false);
               setShouldFetch(true);
               bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
             }}
+            css={{ marginTop: '$xl' }}
           >
             Load More
           </Button>

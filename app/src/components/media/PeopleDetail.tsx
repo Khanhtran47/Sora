@@ -15,6 +15,7 @@ import { IPeopleDetail } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
 import useMediaQuery from '~/hooks/useMediaQuery';
 
+import Flex from '~/src/components/styles/Flex.styles';
 import { H3, H4, H5, H6 } from '~/src/components/styles/Text.styles';
 
 import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
@@ -261,14 +262,16 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
           justifyContent: 'flex-start',
           flexWrap: 'wrap',
           flexDirection: 'row',
+          alignItems: 'center',
           '@xs': {
             flexDirection: 'column',
             justifyContent: 'center',
           },
         }}
       >
-        <H5
-          h5
+        <Flex
+          direction="column"
+          justify="start"
           css={{
             marginBottom: '0.5rem !important',
             '@xs': {
@@ -277,22 +280,16 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
             },
           }}
         >
-          <strong>Known For</strong>
-          <br />
-        </H5>
-        <H6
-          h6
-          css={{
-            '@xs': {
-              width: '70%',
-            },
-          }}
-        >
-          {detail?.known_for_department}
-        </H6>
+          <H5 h5>
+            <strong>Known For</strong>
+            <br />
+          </H5>
+          <H6 h6>{detail?.known_for_department}</H6>
+        </Flex>
         <Spacer y={1} />
-        <H5
-          h5
+        <Flex
+          direction="column"
+          justify="start"
           css={{
             marginBottom: '0.5rem !important',
             '@xs': {
@@ -301,22 +298,16 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
             },
           }}
         >
-          <strong>Gender</strong>
-          <br />
-        </H5>
-        <H6
-          h6
-          css={{
-            '@xs': {
-              width: '70%',
-            },
-          }}
-        >
-          {gender}
-        </H6>
+          <H5 h5>
+            <strong>Gender</strong>
+            <br />
+          </H5>
+          <H6 h6>{gender}</H6>
+        </Flex>
         <Spacer y={1} />
-        <H5
-          h5
+        <Flex
+          direction="column"
+          justify="start"
           css={{
             marginBottom: '0.5rem !important',
             '@xs': {
@@ -325,22 +316,16 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
             },
           }}
         >
-          <strong>Birthday</strong>
-          <br />
-        </H5>
-        <H6
-          h6
-          css={{
-            '@xs': {
-              width: '70%',
-            },
-          }}
-        >
-          {detail?.birthday}
-        </H6>
+          <H5 h5>
+            <strong>Birthday</strong>
+            <br />
+          </H5>
+          <H6 h6>{detail?.birthday}</H6>
+        </Flex>
         <Spacer y={1} />
-        <H5
-          h5
+        <Flex
+          direction="column"
+          justify="start"
           css={{
             marginBottom: '0.5rem !important',
             '@xs': {
@@ -349,43 +334,30 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
             },
           }}
         >
-          <strong>Place of Birth</strong>
-          <br />
-        </H5>
-        <H6
-          h6
-          css={{
-            '@xs': {
-              width: '70%',
-            },
-          }}
-        >
-          {detail?.place_of_birth}
-        </H6>
+          <H5 h5>
+            <strong>Place of Birth</strong>
+            <br />
+          </H5>
+          <H6 h6>{detail?.place_of_birth}</H6>
+        </Flex>
         <Spacer y={1} />
         {!isSm && (
-          <>
-            <H5
-              h5
-              css={{
-                marginBottom: '0.5rem !important',
-                '@xs': {
-                  margin: 0,
-                  width: '70%',
-                },
-              }}
-            >
+          <Flex
+            direction="column"
+            justify="start"
+            css={{
+              marginBottom: '0.5rem !important',
+              '@xs': {
+                margin: 0,
+                width: '70%',
+              },
+            }}
+          >
+            <H5 h5>
               <strong>Also Known As</strong>
               <br />
             </H5>
-            <H6
-              h6
-              css={{
-                '@xs': {
-                  width: '70%',
-                },
-              }}
-            >
+            <H6 h6>
               {detail?.also_known_as?.map((name) => (
                 <>
                   <span key={name}>{name}</span>
@@ -394,7 +366,7 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
               ))}
             </H6>
             <Spacer y={1} />
-          </>
+          </Flex>
         )}
       </Row>
     </>

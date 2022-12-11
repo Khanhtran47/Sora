@@ -10,7 +10,7 @@ import useMediaQuery from '~/hooks/useMediaQuery';
 import Flex from '../styles/Flex.styles';
 import Header from './Header';
 import LeftDrawer from './LeftDrawer';
-import Copyright from './Copyright';
+import Footer from './Footer';
 import BottomNav from './BottomNav';
 import BreadCrumb from './BreadCrumb';
 
@@ -25,14 +25,6 @@ const Layout = (props: ILayout) => {
   const [open, setOpen] = React.useState(false);
   const isSm = useMediaQuery('(max-width: 650px)');
 
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
-
   return (
     <Container
       justify="flex-end"
@@ -44,11 +36,7 @@ const Layout = (props: ILayout) => {
         backgroundColor: '$backgroundContrast',
       }}
     >
-      <LeftDrawer
-        open={open}
-        handleDrawerOpen={handleDrawerOpen}
-        handleDrawerClose={handleDrawerClose}
-      />
+      <LeftDrawer open={open} setOpen={setOpen} />
       <Flex
         direction="column"
         justify="center"
@@ -60,16 +48,12 @@ const Layout = (props: ILayout) => {
           width: '100%',
           '@sm': {
             borderTopLeftRadius: '$xl',
+            borderBottomLeftRadius: '$xl',
             width: 'calc(100% - 65px)',
           },
         }}
       >
-        <Header
-          open={open}
-          handleDrawerOpen={handleDrawerOpen}
-          handleDrawerClose={handleDrawerClose}
-          user={user}
-        />
+        <Header open={open} user={user} setOpen={setOpen} />
         <Container
           as="main"
           fluid
@@ -87,7 +71,7 @@ const Layout = (props: ILayout) => {
           <BreadCrumb matches={matches} />
           {children}
         </Container>
-        <Copyright />
+        <Footer />
         {isSm ? <BottomNav /> : null}
       </Flex>
     </Container>

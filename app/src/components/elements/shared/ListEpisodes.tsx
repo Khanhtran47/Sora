@@ -347,7 +347,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
           <Pagination
             total={maxPage}
             initialPage={currentPage}
-            shadow
+            // shadow
             onChange={(page) => gotoPage(page)}
             css={{ marginTop: '2rem' }}
             {...(isSm && { size: 'xs' })}

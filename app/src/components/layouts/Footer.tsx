@@ -4,7 +4,7 @@ import Image, { MimeType } from 'remix-image';
 import { H5 } from '~/src/components/styles/Text.styles';
 import LogoFooter from '~/src/assets/images/logo_footer.png';
 
-const Copyright = () => (
+const Footer = () => (
   <Container
     fluid
     display="flex"
@@ -13,6 +13,9 @@ const Copyright = () => (
     alignItems="center"
     css={{
       padding: '60px 0 60px 0',
+      '@sm': {
+        borderBottomLeftRadius: '$xl',
+      },
     }}
   >
     <NextImage
@@ -48,4 +51,4 @@ const Copyright = () => (
   </Container>
 );
 
-export default Copyright;
+export default Footer;

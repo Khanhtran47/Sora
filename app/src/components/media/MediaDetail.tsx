@@ -177,7 +177,7 @@ const MediaDetail = (props: IMediaDetail) => {
                     <Row align="center" justify="center">
                       <Button
                         auto
-                        shadow
+                        // shadow
                         rounded
                         color="gradient"
                         css={{
@@ -273,7 +273,7 @@ const MediaDetail = (props: IMediaDetail) => {
                     <Row>
                       <Button
                         auto
-                        shadow
+                        // shadow
                         rounded
                         color="gradient"
                         size="sm"
@@ -308,6 +308,13 @@ const MediaDetail = (props: IMediaDetail) => {
                   {runtime ? ` • ${Math.floor(runtime / 60)}h ${runtime % 60}m` : null}
                 </H5>
               </Row>
+              {tagline && (
+                <Row>
+                  <H5 h5 css={{ fontStyle: 'italic', marginTop: '10px' }}>
+                    {tagline}
+                  </H5>
+                </Row>
+              )}
               <Spacer y={0.5} />
               <Flex direction="row">
                 <H5
@@ -341,19 +348,11 @@ const MediaDetail = (props: IMediaDetail) => {
                   </>
                 )}
               </Flex>
-              {tagline && (
-                <Row>
-                  <H5 h5 css={{ fontStyle: 'italic', marginTop: '10px' }}>
-                    {tagline}
-                  </H5>
-                </Row>
-              )}
               <Spacer y={1} />
               <Row>
                 <Button
                   auto
-                  shadow
-                  rounded
+                  // shadow
                   size={isSm ? 'sm' : 'md'}
                   onClick={() => handler && handler(Number(id))}
                 >
@@ -379,8 +378,7 @@ const MediaDetail = (props: IMediaDetail) => {
                         color="primary"
                         auto
                         ghost
-                        rounded
-                        shadow
+                        // shadow
                         key={genre?.id}
                         size={isSm ? 'sm' : 'md'}
                         css={{ marginBottom: '0.125rem' }}

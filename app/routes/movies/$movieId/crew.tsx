@@ -41,21 +41,14 @@ const CrewPage = () => {
       justify="center"
       align="center"
       css={{
+        display: 'flex',
         flexDirection: 'column',
         '@xsMax': {
           paddingLeft: '$sm',
           paddingRight: '$sm',
         },
-        '@xs': {
-          paddingLeft: '88px',
-          paddingRight: '1rem',
-        },
       }}
     >
-      {/*
-        TODO: Need react virtual to load this list
-        This list has a lot of items, so i limit it to 24 items until we install react virtual
-      */}
       {crew && crew.length > 0 && (
         <MediaList listType="grid" items={crew} listName="Crew" virtual itemsType="people" />
       )}
