@@ -478,6 +478,7 @@ const EpisodeWatch = () => {
   const navigate = useNavigate();
   let hls: Hls | null = null;
   const [playNextEpisode] = useLocalStorage('playNextEpisode', true);
+  const currentEpisode = useMemo(() => Number(episodeId), [episodeId]);
   const qualitySelector = useMemo<
     | {
         default?: boolean | undefined;
@@ -530,23 +531,23 @@ const EpisodeWatch = () => {
   useEffect(
     () =>
       player === '2'
-        ? setSource(Player.tvPlayerUrl(Number(imdbId), Number(player), Number(episodeId) || 1))
+        ? setSource(Player.tvPlayerUrl(Number(imdbId), Number(player), currentEpisode || 1))
         : setSource(
             Player.tvPlayerUrl(
               Number(detail?.id),
               Number(player),
               Number(seasonId) || 1,
-              Number(episodeId),
+              currentEpisode,
             ),
           ),
-    [player, imdbId, seasonId, episodeId, detail?.id],
+    [player, imdbId, seasonId, detail?.id, currentEpisode],
   );
 
   useEffect(() => {
     if (isVideoEnded && playNextEpisode && provider && idProvider && hasNextEpisode)
       navigate(
         `/tv-shows/${detail?.id}/season/${seasonId}/episode/${
-          Number(episodeId) + 1
+          currentEpisode + 1
         }?provider=${provider}&id=${idProvider}`,
       );
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -560,12 +561,12 @@ const EpisodeWatch = () => {
               {sources ? (
                 <ArtPlayer
                   autoPlay
-                  currentEpisode={Number(episodeId)}
+                  currentEpisode={currentEpisode}
                   hasNextEpisode={hasNextEpisode}
                   nextEpisodeUrl={
                     hasNextEpisode
                       ? `/tv-shows/${detail?.id}/season/${seasonId}/episode/${
-                          Number(episodeId) + 1
+                          currentEpisode + 1
                         }?provider=${provider}&id=${idProvider}`
                       : undefined
                   }
@@ -672,7 +673,7 @@ const EpisodeWatch = () => {
                   subtitleOptions={{
                     parent_tmdb_id: detail?.id,
                     season_number: Number(seasonId),
-                    episode_number: Number(episodeId),
+                    episode_number: currentEpisode,
                     type: 'episode',
                   }}
                   getInstance={(art) => {

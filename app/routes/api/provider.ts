@@ -22,9 +22,8 @@ export const loader: LoaderFunction = async ({ request }: LoaderArgs) => {
   const orgTitle = url.searchParams.get('orgTitle');
   const year = url.searchParams.get('year');
   const season = url.searchParams.get('season');
-  const episodeId = url.searchParams.get('episodeId');
   if (!title || !type) throw new Response('Missing params', { status: 400 });
-  const provider = await getProviderList(type, title, orgTitle, year, season, episodeId);
+  const provider = await getProviderList(type, title, orgTitle, year, season);
   if (provider && provider.length > 0) return json<LoaderData>({ provider }, { status: 200 });
 
   return json<LoaderData>({

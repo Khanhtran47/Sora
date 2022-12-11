@@ -5,6 +5,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import * as React from 'react';
 import { Card, Col, Row, Button, Spacer, Avatar } from '@nextui-org/react';
+import { useNavigate } from '@remix-run/react';
 import Image, { MimeType } from 'remix-image';
 import tinycolor from 'tinycolor2';
 
@@ -37,6 +38,7 @@ const detailTab = [
 const AnimeDetail = (props: IAnimeDetail) => {
   // const { t } = useTranslation();
   const { item, handler } = props;
+  const navigate = useNavigate();
   const ref = React.useRef<HTMLDivElement>(null);
   const size: IUseSize = useSize(ref);
 
@@ -246,8 +248,7 @@ const AnimeDetail = (props: IAnimeDetail) => {
               <Row>
                 <Button
                   auto
-                  shadow
-                  rounded
+                  // shadow
                   size={isSm ? 'sm' : 'md'}
                   onClick={() => handler && handler(Number(id))}
                 >
@@ -272,9 +273,9 @@ const AnimeDetail = (props: IAnimeDetail) => {
                   <>
                     <Button
                       auto
-                      rounded
                       key={index}
                       size={isSm ? 'sm' : 'md'}
+                      onClick={() => navigate(`/anime/discover?genres=${genre}`)}
                       css={{
                         marginBottom: '0.125rem',
                         background: color,

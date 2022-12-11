@@ -270,9 +270,11 @@ const CardItemHover = (props: ICardItemHoverProps) => {
           ) : null}
           {overview && (
             <>
-              <H6 h6 className="!line-clamp-2">
-                {overview}
-              </H6>
+              <H6
+                h6
+                className="!line-clamp-2"
+                dangerouslySetInnerHTML={{ __html: overview || '' }}
+              />
               <Spacer y={0.5} />
             </>
           )}

@@ -102,7 +102,12 @@ const History = () => {
                 />
               </Grid>
               <Grid xs={12}>
-                <Button shadow color="primary" auto onClick={searchHistoryHandler}>
+                <Button
+                  // shadow
+                  color="primary"
+                  auto
+                  onClick={searchHistoryHandler}
+                >
                   Search History
                 </Button>
               </Grid>
@@ -130,7 +135,7 @@ const History = () => {
         <Pagination
           total={totalPage}
           initialPage={page}
-          shadow
+          // shadow
           onChange={paginationChangeHandler}
           css={{ marginTop: '30px' }}
           {...(isXs && { size: 'xs' })}

@@ -321,7 +321,7 @@ const SearchSubtitles = ({
                 <Pagination
                   total={totalPages}
                   initialPage={page}
-                  shadow
+                  // shadow
                   onChange={handlePageChange}
                   {...(isSm && { size: 'xs' })}
                 />

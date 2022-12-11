@@ -106,14 +106,14 @@ const MediaListCard = (props: IMediaListCardProps) => {
             items.map((item, i) => {
               const href =
                 itemsType && itemsType === 'episode'
-                  ? `/anime/${item.id}/episode/${item.episodeId}?provider=${provider}&episode=${item.episodeNumber}`
+                  ? `/anime/${item.id}/episode/${item.episodeNumber}?provider=${provider}`
                   : itemsType === 'anime'
                   ? `/anime/${item.id}/overview`
                   : itemsType === 'people'
                   ? `/people/${item.id}/overview`
                   : item?.mediaType === 'movie' || itemsType === 'movie'
-                  ? `/movies/${item.id}`
-                  : `/tv-shows/${item.id}`;
+                  ? `/movies/${item.id}/`
+                  : `/tv-shows/${item.id}/`;
               return (
                 <SwiperSlide
                   key={i}

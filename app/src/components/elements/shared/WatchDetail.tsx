@@ -325,7 +325,6 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
                       color="primary"
                       auto
                       ghost
-                      rounded
                       key={genre?.id}
                       size={isSm ? 'sm' : 'md'}
                       css={{ marginBottom: '0.125rem' }}
@@ -348,9 +347,9 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
                   <>
                     <Button
                       auto
-                      rounded
                       key={index}
                       size={isSm ? 'sm' : 'md'}
+                      onClick={() => navigate(`/anime/discover?genres=${genre}`)}
                       css={{
                         marginBottom: '0.125rem',
                         background: color,

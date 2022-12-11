@@ -22,8 +22,7 @@ import CategoryIcon from '../../assets/icons/CategoryIcon.js';
 
 interface ILeftDrawerProps {
   open: boolean;
-  handleDrawerOpen: () => void;
-  handleDrawerClose: () => void;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const handle = {
@@ -59,7 +58,7 @@ const iconItem = (index: number, filled: boolean) => {
 const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
   const { t } = useTranslation('left-drawer');
   const wrapperRef = React.useRef<HTMLDivElement>(null);
-  const { open, handleDrawerClose, handleDrawerOpen } = props;
+  const { open, setOpen } = props;
 
   /**
    * If the drawer is open and the user clicks outside of the drawer, close the drawer.
@@ -69,7 +68,7 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleClickOutside = (event: any) => {
     if (open && wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-      handleDrawerClose();
+      setOpen(false);
     }
   };
 
@@ -99,11 +98,11 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
     >
       <Row justify="center" align="center" css={{ height: '65px' }}>
         <Button
-          onClick={open ? handleDrawerClose : handleDrawerOpen}
           light
           auto
           aria-label="Menu Icon"
           icon={open ? <ArrowLeftIcon /> : <MenuIcon />}
+          onClick={() => setOpen(!open)}
           css={{
             marginRight: open ? 20 : 0,
           }}
@@ -117,7 +116,7 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
               <RemixNavLink
                 to={`/${page.pageLink}`}
                 className="flex flex-row"
-                onClick={handleDrawerClose}
+                onClick={() => setOpen(false)}
                 style={{
                   display: 'block',
                   minHeight: 65,

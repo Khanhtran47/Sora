@@ -377,7 +377,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
               >
                 <Button
                   auto
-                  shadow
+                  // shadow
                   css={{
                     marginTop: '1.125rem',
                   }}

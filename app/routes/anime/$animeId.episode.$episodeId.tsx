@@ -43,6 +43,7 @@ import updateHistory from '~/utils/update-history';
 import useLocalStorage from '~/hooks/useLocalStorage';
 
 import ArtPlayer from '~/src/components/elements/player/ArtPlayer';
+import PlayerError from '~/src/components/elements/player/PlayerError';
 import AspectRatio from '~/src/components/elements/aspect-ratio/AspectRatio';
 import WatchDetail from '~/src/components/elements/shared/WatchDetail';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
@@ -74,10 +75,8 @@ const checkHasNextEpisode = (
   if (provider === 'Gogo' || provider === 'Zoro') {
     return totalEpisodes > currentEpisode;
   }
-  if (totalEpisodes > currentEpisode) {
-    if (totalProviderEpisodes) {
-      return totalProviderEpisodes > currentEpisode;
-    }
+  if (totalProviderEpisodes) {
+    return totalProviderEpisodes > currentEpisode;
   }
 };
 
@@ -99,7 +98,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     detail?.title?.english || detail?.title?.userPreferred || detail?.title?.romaji || '';
   const orgTitle = detail?.title?.native;
   const year = detail?.releaseDate;
-  const episodeIndex = episodes && episodes[Number(episodeId) - 1].id;
+  const episodeIndex = episodes && episodes[Number(episodeId) - 1]?.id;
   const totalEpisodes = Number(episodes?.length);
   const episodeInfo = episodes?.find((e: IEpisodeInfo) => e.number === Number(episodeId));
 
@@ -214,7 +213,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     const totalProviderEpisodes = Number(animeInfo?.totalEpisodes);
     const hasNextEpisode = checkHasNextEpisode(
       provider,
-      Number(episodeInfo?.number),
+      Number(episodeId),
       totalEpisodes,
       totalProviderEpisodes,
     );
@@ -252,7 +251,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     const totalProviderEpisodes = Number(episodeDetail?.episodes?.length);
     const hasNextEpisode = checkHasNextEpisode(
       provider,
-      Number(episodeInfo?.number),
+      Number(episodeId),
       totalEpisodes,
       totalProviderEpisodes,
     );
@@ -369,7 +368,6 @@ const AnimeEpisodeWatch = () => {
     hasNextEpisode,
     sources,
     subtitles,
-    episodeInfo,
     userId,
     providers,
   } = useLoaderData<LoaderData>();
@@ -380,6 +378,7 @@ const AnimeEpisodeWatch = () => {
   let hls: Hls | null = null;
   const [isVideoEnded, setIsVideoEnded] = useState<boolean>(false);
   const [playNextEpisode] = useLocalStorage('playNextEpisode', true);
+  const currentEpisode = useMemo(() => Number(episodeId), [episodeId]);
   const qualitySelector = useMemo<
     | {
         default?: boolean | undefined;
@@ -449,9 +448,7 @@ const AnimeEpisodeWatch = () => {
   useEffect(() => {
     if (isVideoEnded && playNextEpisode && hasNextEpisode && provider) {
       navigate(
-        `/anime/${detail?.id}/episode/${
-          Number(episodeInfo?.number) + 1
-        }?provider=${provider}&id=${idProvider}`,
+        `/anime/${detail?.id}/episode/${currentEpisode + 1}?provider=${provider}&id=${idProvider}`,
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -462,22 +459,22 @@ const AnimeEpisodeWatch = () => {
         {() => (
           <Suspense fallback={<Loading type="default" />}>
             <AspectRatio.Root ratio={7 / 3}>
-              {sources && (
+              {sources ? (
                 <ArtPlayer
                   autoPlay
-                  currentEpisode={episodeInfo?.number}
+                  currentEpisode={currentEpisode}
                   hasNextEpisode={hasNextEpisode}
                   nextEpisodeUrl={
                     hasNextEpisode
                       ? `/anime/${detail?.id}/episode/${
-                          Number(episodeInfo?.number) + 1
+                          currentEpisode + 1
                         }?provider=${provider}&id=${idProvider}`
                       : undefined
                   }
                   option={{
                     title: `${
                       detail?.title?.userPreferred || detail?.title?.english || ''
-                    } Episode ${episodeInfo?.number}`,
+                    } Episode ${episodeId}`,
                     url:
                       provider === 'Loklok'
                         ? sources?.find(
@@ -531,7 +528,7 @@ const AnimeEpisodeWatch = () => {
                         name: 'title',
                         html: `<span>${
                           detail?.title?.userPreferred || detail?.title?.english || ''
-                        } - EP ${episodeInfo?.number}</span>`,
+                        } - EP ${currentEpisode}</span>`,
                         style: {
                           position: 'absolute',
                           top: '15px',
@@ -626,6 +623,11 @@ const AnimeEpisodeWatch = () => {
                       }
                     });
                   }}
+                />
+              ) : (
+                <PlayerError
+                  title="Video not found"
+                  message="The video you are trying to watch is not available."
                 />
               )}
             </AspectRatio.Root>

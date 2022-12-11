@@ -41,14 +41,11 @@ const CastPage = () => {
       justify="center"
       align="center"
       css={{
+        display: 'flex',
         flexDirection: 'column',
         '@xsMax': {
           paddingLeft: '$sm',
           paddingRight: '$sm',
-        },
-        '@xs': {
-          paddingLeft: '88px',
-          paddingRight: '1rem',
         },
       }}
     >

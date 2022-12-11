@@ -1,8 +1,10 @@
+import { useState, useEffect, useRef } from 'react';
 import { LoaderFunction, json, DataFunctionArgs } from '@remix-run/node';
-import { useNavigate, useLoaderData, useLocation, Link } from '@remix-run/react';
-import { Container } from '@nextui-org/react';
+import { useFetcher, useNavigate, useLoaderData, useLocation, Link } from '@remix-run/react';
+import { Container, Spacer } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 // import { useTranslation } from 'react-i18next';
+import NProgress from 'nprogress';
 
 import {
   getAnimeTrending,
@@ -12,7 +14,12 @@ import {
 import { authenticate } from '~/services/supabase';
 import { IMedia } from '~/types/media';
 
+import useSize from '~/hooks/useSize';
+
+import { animeGenres } from '~/src/constants/filterItems';
+
 import MediaList from '~/src/components/media/MediaList';
+import SkeletonItem from '~/src/components/elements/skeleton/Item';
 
 export const handle = {
   i18n: 'anime',
@@ -53,6 +60,76 @@ const AnimePage = () => {
   const { trending, popular, recentEpisodes } = useLoaderData<LoaderData>() || {};
   const location = useLocation();
   const navigate = useNavigate();
+  const fetcher = useFetcher();
+
+  const [listItems, setListItems] = useState<IMedia[][] | undefined>([]);
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const [clientHeight, setClientHeight] = useState(0);
+  const [shouldFetch, setShouldFetch] = useState(true);
+  const [order, setOrder] = useState(0);
+
+  const parentRef = useRef<HTMLElement>(null);
+  const { height } = useSize(parentRef);
+
+  useEffect(() => {
+    const scrollListener = () => {
+      setClientHeight(window.innerHeight);
+      setScrollPosition(window.scrollY);
+    };
+
+    // Avoid running during SSR
+    if (typeof window !== 'undefined') {
+      window.addEventListener('scroll', scrollListener);
+    }
+
+    // Clean up
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('scroll', scrollListener);
+      }
+    };
+  }, []);
+
+  // Listen on scrolls. Fire on some self-described breakpoint
+  useEffect(() => {
+    if (!shouldFetch || !height) return;
+    if (clientHeight + scrollPosition - 200 < height) return;
+
+    fetcher.load(`/anime/discover?genres=${animeGenres[order]}`);
+    setShouldFetch(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scrollPosition, clientHeight, height]);
+
+  useEffect(() => {
+    if (fetcher.data && fetcher.data.length === 0) {
+      setShouldFetch(false);
+      return;
+    }
+
+    if (fetcher.data) {
+      if (fetcher.data.items) {
+        setListItems((prevItems) =>
+          prevItems ? [...prevItems, fetcher.data.items.results] : [fetcher.data.items.results],
+        );
+        if (order < animeGenres.length - 1) {
+          setOrder(order + 1);
+          setShouldFetch(true);
+        } else {
+          setShouldFetch(false);
+        }
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fetcher.data]);
+
+  useEffect(() => {
+    if (fetcher.type === 'normalLoad') {
+      NProgress.start();
+    }
+    if (fetcher.type === 'done') {
+      NProgress.done();
+    }
+  }, [fetcher.type]);
 
   return (
     <motion.main
@@ -61,6 +138,7 @@ const AnimePage = () => {
       animate={{ x: '0', opacity: 1 }}
       exit={{ y: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
+      ref={parentRef}
     >
       {trending && trending.results && trending.results.length > 0 && (
         <MediaList listType="slider-banner" items={trending?.results as IMedia[]} />
@@ -102,6 +180,39 @@ const AnimePage = () => {
             provider="gogoanime"
             showMoreList
           />
+        )}
+        {listItems &&
+          listItems.length > 0 &&
+          listItems.map((items, index) => {
+            if (items && items.length > 0)
+              return (
+                <>
+                  <MediaList
+                    items={items}
+                    itemsType="anime"
+                    key={index}
+                    listName={animeGenres[index]}
+                    listType="slider-card"
+                    navigationButtons
+                    onClickViewMore={() => navigate(`/anime/discover?genres=${animeGenres[index]}`)}
+                    showMoreList
+                  />
+                  <Spacer y={1.5} />
+                </>
+              );
+            return null;
+          })}
+        {fetcher.type === 'normalLoad' && (
+          <div className="animate-pulse">
+            <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-32 mb-2.5" />
+            <div className="mb-10 w-48 h-2 bg-gray-200 rounded-full dark:bg-gray-700" />
+            <div className="flex justify-start flex-row">
+              <SkeletonItem />
+              <SkeletonItem />
+              <SkeletonItem />
+            </div>
+            <span className="sr-only">Loading...</span>
+          </div>
         )}
       </Container>
     </motion.main>

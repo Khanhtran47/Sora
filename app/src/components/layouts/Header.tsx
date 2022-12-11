@@ -26,9 +26,8 @@ import dropdown from '../../assets/lotties/lottieflow-dropdown-03-0072F5-easey.j
 
 interface IHeaderProps {
   open: boolean;
-  handleDrawerOpen: () => void;
-  handleDrawerClose: () => void;
   user?: User;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const handle = {
@@ -66,7 +65,7 @@ const DropdownPage = ({
 
 const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   const { t } = useTranslation('header');
-  const { open, handleDrawerOpen, handleDrawerClose, user } = props;
+  const { open, user, setOpen } = props;
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
   const [lottie, setLottie] = React.useState<AnimationItem>();
   const isSm = useMediaQuery('(max-width: 650px)');
@@ -110,7 +109,6 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       >
         {isMd && (
           <Button
-            onClick={open ? handleDrawerClose : handleDrawerOpen}
             light
             auto
             aria-label="Menu Icon"
@@ -120,6 +118,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
               paddingLeft: 8,
               marginRight: 12,
             }}
+            onClick={() => setOpen(!open)}
           />
         )}
         <NavLink linkTo="/" isLogo />
