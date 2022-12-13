@@ -14,7 +14,7 @@ import TMDB from '~/utils/media';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import useSize, { IUseSize } from '~/hooks/useSize';
 
-import Tab from '~/src/components/elements/Tab';
+import TabLink from '~/src/components/elements/tab/TabLink';
 import Flex from '~/src/components/styles/Flex.styles';
 import { H2, H5 } from '~/src/components/styles/Text.styles';
 import SelectProviderModal from '~/src/components/elements/modal/SelectProviderModal';
@@ -396,7 +396,7 @@ const MediaDetail = (props: IMediaDetail) => {
                     </>
                   ))}
               </Row>
-              <Tab
+              <TabLink
                 pages={detailTab}
                 linkTo={`/${type === 'movie' ? 'movies' : 'tv-shows'}/${id}`}
               />

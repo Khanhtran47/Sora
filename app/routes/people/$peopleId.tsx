@@ -10,7 +10,7 @@ import TMDB from '~/utils/media';
 import { authenticate } from '~/services/supabase';
 
 import PeopleDetail from '~/src/components/media/PeopleDetail';
-import Tab from '~/src/components/elements/Tab';
+import TabLink from '~/src/components/elements/tab/TabLink';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 
@@ -105,7 +105,7 @@ const PeopleDetailPage = () => {
         padding: 0,
       }}
     >
-      <Tab pages={detailTab} linkTo={`/people/${detail?.id}`} />
+      <TabLink pages={detailTab} linkTo={`/people/${detail?.id}`} />
       <Row
         fluid
         align="stretch"

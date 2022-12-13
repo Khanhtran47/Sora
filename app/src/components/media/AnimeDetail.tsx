@@ -15,7 +15,7 @@ import { IAnimeInfo } from '~/services/consumet/anilist/anilist.types';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import useSize, { IUseSize } from '~/hooks/useSize';
 
-import Tab from '~/src/components/elements/Tab';
+import TabLink from '~/src/components/elements/tab/TabLink';
 import { H2, H5 } from '~/src/components/styles/Text.styles';
 import Flex from '~/src/components/styles/Flex.styles';
 
@@ -292,7 +292,7 @@ const AnimeDetail = (props: IAnimeDetail) => {
                   </>
                 ))}
             </Row>
-            <Tab pages={detailTab} linkTo={`/anime/${id}`} />
+            <TabLink pages={detailTab} linkTo={`/anime/${id}`} />
           </Col>
         </Row>
       </Card.Header>

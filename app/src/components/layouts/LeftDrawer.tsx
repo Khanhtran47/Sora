@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { NavLink as RemixNavLink } from '@remix-run/react';
-import { Spacer, Grid, Row, Button } from '@nextui-org/react';
+import { Spacer, Grid, Row, Button, Tooltip } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
+
+import useMediaQuery from '~/hooks/useMediaQuery';
 
 import { leftDrawerPages } from '~/src/constants/navPages';
 
@@ -14,9 +16,9 @@ import { drawerWidth, openedMixin, closedMixin, Drawer } from './Layout.styles';
 import MenuIcon from '../../assets/icons/MenuIcon.js';
 import ArrowLeftIcon from '../../assets/icons/ArrowLeftIcon.js';
 import TrendingIcon from '../../assets/icons/TrendingIcon.js';
-import NewReleaseIcon from '../../assets/icons/NewReleaseIcon.js';
-import TopRatedIcon from '../../assets/icons/TopRatedIcon.js';
-import HistoryIcon from '../../assets/icons/HistoryIcon.js';
+import Settings from '../../assets/icons/SettingsIcon.js';
+import Library from '../../assets/icons/LibraryIcon.js';
+import History from '../../assets/icons/HistoryIcon.js';
 import TwoUsers from '../../assets/icons/TwoUsersIcon.js';
 import CategoryIcon from '../../assets/icons/CategoryIcon.js';
 
@@ -42,13 +44,13 @@ const iconItem = (index: number, filled: boolean) => {
       icon = <CategoryIcon filled={filled} />;
       break;
     case 3:
-      icon = <NewReleaseIcon filled={filled} />;
+      icon = <Library filled={filled} />;
       break;
     case 4:
-      icon = <TopRatedIcon filled={filled} />;
+      icon = <History filled={filled} />;
       break;
     case 5:
-      icon = <HistoryIcon />;
+      icon = <Settings filled={filled} />;
       break;
     default:
   }
@@ -57,6 +59,7 @@ const iconItem = (index: number, filled: boolean) => {
 
 const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
   const { t } = useTranslation('left-drawer');
+  const isSm = useMediaQuery('(max-width: 650px)');
   const wrapperRef = React.useRef<HTMLDivElement>(null);
   const { open, setOpen } = props;
 
@@ -96,7 +99,7 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
       as="nav"
       ref={wrapperRef}
     >
-      <Row justify="center" align="center" css={{ height: '65px' }}>
+      <Row justify="flex-start" align="center" css={{ height: '65px' }}>
         <Button
           light
           auto
@@ -104,7 +107,9 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
           icon={open ? <ArrowLeftIcon /> : <MenuIcon />}
           onClick={() => setOpen(!open)}
           css={{
-            marginRight: open ? 20 : 0,
+            marginLeft: 12.5,
+            marginRight: open ? 10 : 0,
+            transition: 'all 0.3s ease',
           }}
         />
         {open ? <NavLink linkTo="/" isLogo /> : null}
@@ -113,64 +118,72 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
         <Grid.Container>
           {leftDrawerPages.map((page, index: number) => (
             <Grid key={page.pageName} css={{ marginTop: '10px' }} xs={12}>
-              <RemixNavLink
-                to={`/${page.pageLink}`}
-                className="flex flex-row"
-                onClick={() => setOpen(false)}
-                style={{
-                  display: 'block',
-                  minHeight: 65,
-                  minWidth: 65,
-                  justifyContent: open ? 'initial' : 'center',
-                  alignItems: 'center',
-                }}
-                aria-label={page.pageName}
+              <Tooltip
+                content={open || isSm ? null : t(page.pageName)}
+                placement="right"
+                color="primary"
+                offset={10}
+                hideArrow={open}
               >
-                {({ isActive }) => (
-                  <AnimatePresence>
-                    <H5
-                      h5
-                      color="primary"
-                      css={{
-                        margin: 0,
-                        display: 'flex',
-                        minHeight: 65,
-                        minWidth: 65,
-                        alignItems: 'center',
-                        justifyContent: 'flex-start',
-                        borderRadius: '14px',
-                        transition: 'opacity 0.25s ease 0s, background 0.25s ease 0s',
-                        '&:hover': {
-                          opacity: '0.8',
-                          backgroundColor: '$primaryLightHover',
-                        },
-                        ...(open && {
-                          width: drawerWidth,
-                        }),
-                        ...(isActive && {
-                          background: '$primaryLightActive',
-                        }),
-                        paddingLeft: 20,
-                      }}
-                    >
-                      {isActive ? iconItem(index, true) : iconItem(index, false)}
-                      {open && (
-                        <>
-                          <Spacer />
-                          <motion.div
-                            initial={{ opacity: 0, x: '-20%' }}
-                            animate={{ opacity: 1, x: '0' }}
-                            exit={{ opacity: 0, x: '-20%' }}
-                            transition={{ duration: 0.225, ease: 'easeOut' }}
-                          >
-                            {t(page.pageName)}
-                          </motion.div>
-                        </>
-                      )}
-                    </H5>
-                  </AnimatePresence>
-                )}
-              </RemixNavLink>
+                <RemixNavLink
+                  to={`/${page.pageLink}`}
+                  className="flex flex-row"
+                  onClick={() => setOpen(false)}
+                  style={{
+                    display: 'block',
+                    minHeight: 65,
+                    minWidth: 65,
+                    justifyContent: open ? 'initial' : 'center',
+                    alignItems: 'center',
+                  }}
+                  aria-label={page.pageName}
+                >
+                  {({ isActive }) => (
+                    <AnimatePresence>
+                      <H5
+                        h5
+                        color="primary"
+                        css={{
+                          margin: 0,
+                          display: 'flex',
+                          minHeight: 65,
+                          minWidth: 65,
+                          alignItems: 'center',
+                          justifyContent: 'flex-start',
+                          borderRadius: '14px',
+                          transition: 'opacity 0.25s ease 0s, background 0.25s ease 0s',
+                          '&:hover': {
+                            opacity: '0.8',
+                            backgroundColor: '$primaryLightHover',
+                          },
+                          ...(open && {
+                            width: drawerWidth,
+                          }),
+                          ...(isActive && {
+                            background: '$primaryLightActive',
+                          }),
+                          paddingLeft: 20,
+                        }}
+                      >
+                        {isActive ? iconItem(index, true) : iconItem(index, false)}
+                        {open && (
+                          <>
+                            <Spacer />
+                            <motion.div
+                              initial={{ opacity: 0, x: '-20%' }}
+                              animate={{ opacity: 1, x: '0' }}
+                              exit={{ opacity: 0, x: '-20%' }}
+                              transition={{ duration: 0.225, ease: 'easeOut' }}
+                            >
+                              {t(page.pageName)}
+                            </motion.div>
+                          </>
+                        )}
+                      </H5>
+                    </AnimatePresence>
+                  )}
+                </RemixNavLink>
+              </Tooltip>
             </Grid>
           ))}
         </Grid.Container>

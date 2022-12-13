@@ -2,7 +2,7 @@ import { MetaFunction } from '@remix-run/node';
 import { NavLink, Outlet, useLocation } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
 
-import Tab from '~/src/components/elements/Tab';
+import TabLink from '~/src/components/elements/tab/TabLink';
 
 const animePage = [
   { pageName: 'Discover Anime', pageLink: '/discover' },
@@ -42,7 +42,7 @@ const AnimeIndexPage = () => {
     );
   return (
     <Container fluid css={{ m: 0, p: 0 }}>
-      <Tab pages={animePage} linkTo="/anime" />
+      <TabLink pages={animePage} linkTo="/anime" />
       <Outlet />
     </Container>
   );

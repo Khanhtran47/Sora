@@ -42,7 +42,7 @@ const DropdownPage = ({
     pageLink: string;
   }[];
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('header');
 
   return (
     <Grid.Container
@@ -107,20 +107,20 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
           },
         }}
       >
-        {isMd && (
-          <Button
-            light
-            auto
+        {isMd ? (
+          <button
+            type="button"
             aria-label="Menu Icon"
-            icon={<MenuIcon />}
-            css={{
+            onClick={() => setOpen(!open)}
+            style={{
               paddingRight: 8,
               paddingLeft: 8,
               marginRight: 12,
             }}
-            onClick={() => setOpen(!open)}
-          />
-        )}
+          >
+            <MenuIcon />
+          </button>
+        ) : null}
         <NavLink linkTo="/" isLogo />
       </Grid>
 

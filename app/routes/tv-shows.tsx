@@ -2,7 +2,7 @@ import { MetaFunction } from '@remix-run/node';
 import { NavLink, Outlet, useLocation } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
 
-import Tab from '~/src/components/elements/Tab';
+import TabLink from '~/src/components/elements/tab/TabLink';
 
 export const meta: MetaFunction = () => ({
   title: 'Free Series HD - Watch Series and Movies HD Online on Sora',
@@ -42,7 +42,7 @@ const TvPage = () => {
     );
   return (
     <Container fluid css={{ m: 0, p: 0 }}>
-      <Tab pages={tvPage} linkTo="/tv-shows" />
+      <TabLink pages={tvPage} linkTo="/tv-shows" />
       <Outlet />
     </Container>
   );

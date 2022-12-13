@@ -1,7 +1,7 @@
 import { styled } from '@nextui-org/react';
 import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area';
 
-const SCROLLBAR_SIZE = 10;
+const SCROLLBAR_SIZE = 7;
 
 export const StyledScrollArea = styled(ScrollAreaPrimitive.Root, {
   width: 200,

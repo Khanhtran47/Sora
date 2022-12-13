@@ -24,9 +24,12 @@ const BreadCrumb = (props: IBreadCrumbProps) => {
       css={{
         width: 'fit-content',
         height: 'auto',
-        padding: 0,
+        padding: '0 $sm',
         margin: '0 0 15px 0',
         zIndex: 1,
+        '@xs': {
+          padding: 0,
+        },
       }}
     >
       {matches

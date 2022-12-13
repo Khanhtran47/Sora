@@ -17,7 +17,7 @@ import getProviderList from '~/services/provider.server';
 
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
-import Tab from '~/src/components/elements/Tab';
+import TabLink from '~/src/components/elements/tab/TabLink';
 import { H2, H5, H6 } from '~/src/components/styles/Text.styles';
 import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
 import BackgroundDefault from '~/src/assets/images/background-default.jpg';
@@ -308,7 +308,7 @@ const SeasonDetail = () => {
                 </Row>
               )}
               <Spacer y={1} />
-              <Tab pages={detailTab} linkTo={`/tv-shows/${tvId}/season/${seasonId}`} />
+              <TabLink pages={detailTab} linkTo={`/tv-shows/${tvId}/season/${seasonId}`} />
             </Col>
           </Row>
         </Card.Header>

@@ -2,7 +2,7 @@ import { MetaFunction } from '@remix-run/node';
 import { NavLink, Outlet } from '@remix-run/react';
 import { Container } from '@nextui-org/react';
 
-import Tab from '~/src/components/elements/Tab';
+import TabLink from '~/src/components/elements/tab/TabLink';
 
 const searchPage = [
   { pageName: 'search.title.movie', pageLink: 'movie' },
@@ -36,7 +36,7 @@ export const handle = {
 
 const SearchPage = () => (
   <Container fluid css={{ m: 0, p: 0 }}>
-    <Tab pages={searchPage} linkTo="/search/" />
+    <TabLink pages={searchPage} linkTo="/search/" />
 
     <Outlet />
   </Container>
