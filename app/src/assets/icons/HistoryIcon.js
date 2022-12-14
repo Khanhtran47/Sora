@@ -17,67 +17,67 @@ const Light = ({ color }) => (
   />
 );
 
-    const History = ({
-      fill = 'currentColor',
-      filled = false,
-      size = 0,
-      height = 0,
-      width = 0,
-      ...props
-    }) => {
-      switch (filled) {
-      case false:
+const History = ({
+  fill = 'currentColor',
+  filled = false,
+  size = 0,
+  height = 0,
+  width = 0,
+  ...props
+}) => {
+  switch (filled) {
+    case false:
       return (
         <Svg
-      className = ""
-      width = {size || width || 24} height = {size || height || 24} viewBox =
-          "0 0 22 22"
-      xmlns = "http://www.w3.org/2000/svg"
+          className=""
+          width={size || width || 24}
+          height={size || height || 24}
+          viewBox="0 0 22 22"
+          xmlns="http://www.w3.org/2000/svg"
           css={{
-      display: 'inline',
+            display: 'inline',
           }}
           {...props}
         >
-          <Light color={
-      fill} />
+          <Light color={fill} />
         </Svg>
       );
-      default:
+    default:
       return (
         <Svg
-      className = ""
-      width = {size || width || 24} height = {size || height || 24} viewBox =
-          "0 0 22 22"
-      xmlns = "http://www.w3.org/2000/svg"
+          className=""
+          width={size || width || 24}
+          height={size || height || 24}
+          viewBox="0 0 22 22"
+          xmlns="http://www.w3.org/2000/svg"
           css={{
-      display: 'inline',
+            display: 'inline',
           }}
           {...props}
         >
-          <Bold color={
-      fill} />;
+          <Bold color={fill} />;
         </Svg>
       );
-      }
-    };
+  }
+};
 
-    History.displayName = 'HistoryIcon';
+History.displayName = 'HistoryIcon';
 
-    Bold.propTypes = {
-      color : PropTypes.string,
-    };
+Bold.propTypes = {
+  color: PropTypes.string,
+};
 
-    Light.propTypes = {
-      color : PropTypes.string,
-    };
+Light.propTypes = {
+  color: PropTypes.string,
+};
 
-    History.propTypes = {
-      fill : PropTypes.string,
-      filled : PropTypes.bool,
-      size : PropTypes.number,
-      width : PropTypes.number,
-      height : PropTypes.number,
-      strokeWidth : PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]),
-    };
+History.propTypes = {
+  fill: PropTypes.string,
+  filled: PropTypes.bool,
+  size: PropTypes.number,
+  width: PropTypes.number,
+  height: PropTypes.number,
+  strokeWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+};
 
-    export default History;
+export default History;
