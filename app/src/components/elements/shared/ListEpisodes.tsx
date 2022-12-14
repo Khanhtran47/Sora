@@ -102,10 +102,11 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
         <H3 h3>Episodes</H3>
         <Flex direction="row" justify="end" align="center" className="space-x-2">
           {providers ? (
-            <Dropdown>
+            <Dropdown isBordered>
               <Dropdown.Button css={{ tt: 'capitalize' }}>{selectedValue}</Dropdown.Button>
               <Dropdown.Menu
                 aria-label="Provider Selection"
+                color="primary"
                 disallowEmptySelection
                 selectionMode="single"
                 selectedKeys={selectedProvider}

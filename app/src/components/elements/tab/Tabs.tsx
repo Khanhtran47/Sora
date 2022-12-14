@@ -26,37 +26,37 @@ export const TabsTrigger = styled(TabsPrimitive.Trigger, {
   justifyContent: 'center',
   color: '$slate11',
   border: '1px solid transparent',
-  borderTopLeftRadius: '$sm',
-  borderTopRightRadius: '$sm',
+  borderTopLeftRadius: '$xs',
+  borderTopRightRadius: '$xs',
   zIndex: '10',
-  '&:first-child': { borderTopLeftRadius: '$sm' },
-  '&:last-child': { borderTopRightRadius: '$sm' },
+  '&:first-child': { borderTopLeftRadius: '$xs' },
+  '&:last-child': { borderTopRightRadius: '$xs' },
   '&:hover': {
     opacity: '0.8',
     color: '$primarySolidHover',
-    borderBottomColor: '$primary',
+  },
+  '&[data-disabled]': {
+    color: '$neutral',
+    cursor: 'not-allowed',
   },
   '&[data-state="active"]': {
     color: '$primary',
-    borderBottomColor: '$primary',
     backgroundColor: '$backgroundContrast',
   },
   '&[data-orientation="vertical"]': {
     justifyContent: 'flex-start',
     borderTopRightRadius: 0,
-    borderBottomLeftRadius: '$sm',
+    borderBottomLeftRadius: '$xs',
     borderBottomColor: 'transparent',
     '&:hover': {
       opacity: '0.8',
       color: '$primarySolidHover',
-      borderRightColor: '$primary',
     },
     '&[data-state="active"]': {
-      borderRightColor: '$primary',
       backgroundColor: '$backgroundContrast',
     },
   },
-  '&:focus': { borderColor: '$primaryLightActive' },
+  '&:focus': { backgroundColor: '$backgroundContrast' },
 });
 
 const StyledTabsList = styled(TabsPrimitive.List, {
@@ -68,10 +68,12 @@ const StyledTabsList = styled(TabsPrimitive.List, {
   },
   '&[data-orientation="horizontal"]': {
     borderBottom: '1px solid $border',
+    padding: '5px 5px 0 5px',
   },
   '&[data-orientation="vertical"]': {
     flexDirection: 'column',
     borderRight: '1px solid $border',
+    padding: '5px 0 5px 5px',
   },
 });
 

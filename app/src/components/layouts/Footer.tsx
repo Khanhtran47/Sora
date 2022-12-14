@@ -21,8 +21,8 @@ const Footer = () => (
     <NextImage
       // @ts-ignore
       as={Image}
-      alt="Klee Cute"
-      title="Klee Cute"
+      alt="Logo Footer"
+      title="Logo Footer"
       src={LogoFooter}
       width="76px"
       height="76px"
