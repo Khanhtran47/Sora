@@ -190,12 +190,13 @@ const Settings = () => {
                   direction="column"
                   css={{ '@smMax': { px: '$sm' } }}
                 >
-                  <Collapse.Group splitted accordion={false} css={{ borderRadius: '$xs' }}>
+                  <Collapse.Group splitted accordion={false}>
                     <Collapse
-                      title="Theme"
-                      subtitle="Customize your aplication theme."
+                      title={t('theme')}
+                      subtitle={t('theme-subtitle')}
                       css={{
                         background: '$backgroundAlpha !important',
+                        borderRadius: '$xs !important',
                       }}
                     >
                       <Radio.Group
@@ -240,11 +241,12 @@ const Settings = () => {
                       </Radio.Group>
                     </Collapse>
                     <Collapse
-                      title="Layout"
-                      subtitle="Toggle application layout and style."
+                      title={t('layout')}
+                      subtitle={t('layout-subtitle')}
                       disabled
                       css={{
                         background: '$backgroundAlpha !important',
+                        borderRadius: '$xs !important',
                       }}
                     >
                       <H6>
@@ -255,10 +257,11 @@ const Settings = () => {
                       </H6>
                     </Collapse>
                     <Collapse
-                      title="Experiments"
-                      subtitle="This is a collection of experiments we're working on that might turn out to be useful."
+                      title={t('experiments')}
+                      subtitle={t('experiments-subtitle')}
                       css={{
                         background: '$backgroundAlpha !important',
+                        borderRadius: '$xs !important',
                       }}
                     >
                       <Flex direction="row" justify="start" align="center" className="space-x-2">
@@ -266,12 +269,12 @@ const Settings = () => {
                           checked={isPlayTrailer}
                           onChange={(e) => setIsPlayTrailer(e.target.checked)}
                         />
-                        <H6>Play trailer preview</H6>
+                        <H6>{t('play-trailer')}</H6>
                       </Flex>
                       <Spacer y={1} />
                       <Flex direction="row" justify="start" align="center" className="space-x-2">
                         <Switch checked={isMuted} onChange={(e) => setIsMuted(e.target.checked)} />
-                        <H6>Mute trailer preview</H6>
+                        <H6>{t('mute-trailer')}</H6>
                       </Flex>
                     </Collapse>
                   </Collapse.Group>
