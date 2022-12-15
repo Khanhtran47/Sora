@@ -7,7 +7,6 @@ export const StyledScrollArea = styled(ScrollAreaPrimitive.Root, {
   width: 200,
   height: 225,
   borderRadius: 4,
-  overflow: 'hidden',
   boxShadow: '$sm',
 });
 

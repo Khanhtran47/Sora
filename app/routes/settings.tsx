@@ -3,28 +3,33 @@
 import { useState, useMemo } from 'react';
 import type { MetaFunction } from '@remix-run/node';
 import { NavLink, useLocation, useNavigate } from '@remix-run/react';
-import { Container, Spacer, Dropdown, Image as NextImage, styled } from '@nextui-org/react';
+import {
+  Container,
+  Spacer,
+  Dropdown,
+  Image as NextImage,
+  Collapse,
+  Switch,
+  Radio,
+  Tooltip,
+  styled,
+} from '@nextui-org/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useRouteData } from 'remix-utils';
 import Image, { MimeType } from 'remix-image';
+import { useTheme } from 'next-themes';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
+import useLocalStorage from '~/hooks/useLocalStorage';
 
-import settingsTab from '~/src/constants/settings';
+import { settingsTab, listThemes } from '~/src/constants/settings';
 import languages from '~/src/constants/languages';
 
 import AboutLogo from '~/src/components/elements/NavLink';
 import { H2, H6 } from '~/src/components/styles/Text.styles';
 import Flex from '~/src/components/styles/Flex.styles';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '~/src/components/elements/tab/Tabs';
-import {
-  ScrollArea,
-  ScrollAreaViewport,
-  ScrollAreaScrollbar,
-  ScrollAreaThumb,
-  ScrollAreaCorner,
-} from '~/src/components/elements/scroll-area/ScrollArea';
 
 import LogoFooter from '~/src/assets/images/logo_footer.png';
 
@@ -51,12 +56,15 @@ const Underline = styled(motion.div, {
 const Settings = () => {
   const location = useLocation();
   const navigate = useNavigate();
-
   const rootData: { locale: string } | undefined = useRouteData('root');
   const { locale } = rootData || { locale: 'en' };
   const { t } = useTranslation('settings');
+  const { theme, setTheme } = useTheme();
+  const isXs = useMediaQuery('(max-width: 450px)');
   const isSm = useMediaQuery('(max-width: 650px)');
   const [activeTab, setActiveTab] = useState('general-tab');
+  const [isMuted, setIsMuted] = useLocalStorage('muteTrailer', true);
+  const [isPlayTrailer, setIsPlayTrailer] = useLocalStorage('playTrailer', false);
   const [selectedLang, setSelectedLang] = useState(new Set([locale]));
 
   const selectedLangValue = useMemo(
@@ -95,58 +103,39 @@ const Settings = () => {
           orientation={isSm ? 'horizontal' : 'vertical'}
           onValueChange={(value) => setActiveTab(value)}
         >
-          <ScrollArea
-            type="scroll"
-            scrollHideDelay={100}
-            css={{
-              height: '100%',
-              '@xsMax': {
-                width: '100%',
-                height: 55,
-                maxWidth: 'calc(100vw - 1.5rem)',
-              },
-            }}
-          >
-            <ScrollAreaViewport>
-              <TabsList>
-                {settingsTab.map((tab) => (
-                  <TabsTrigger
-                    key={tab.id}
-                    value={tab.id}
-                    disabled={tab.disabled}
-                    css={{
-                      position: 'relative',
-                      '&[data-state="active"]': {
-                        [`& ${Underline}`]: {
-                          height: 3,
-                          width: '100%',
-                          bottom: 0,
-                        },
+          <TabsList>
+            {settingsTab.map((tab) => (
+              <TabsTrigger
+                key={tab.id}
+                value={tab.id}
+                disabled={tab.disabled}
+                css={{
+                  position: 'relative',
+                  '&[data-state="active"]': {
+                    [`& ${Underline}`]: {
+                      height: 3,
+                      width: '100%',
+                      bottom: 0,
+                    },
+                  },
+                  '&[data-orientation="vertical"]': {
+                    '&[data-state="active"]': {
+                      [`& ${Underline}`]: {
+                        width: 3,
+                        height: 49,
+                        right: 0,
                       },
-                      '&[data-orientation="vertical"]': {
-                        '&[data-state="active"]': {
-                          [`& ${Underline}`]: {
-                            width: 3,
-                            height: 49,
-                            right: 0,
-                          },
-                        },
-                      },
-                    }}
-                  >
-                    {activeTab === tab.id ? (
-                      <Underline className="underline" layoutId="underline" />
-                    ) : null}
-                    {t(tab.title)}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-            </ScrollAreaViewport>
-            <ScrollAreaScrollbar orientation="horizontal">
-              <ScrollAreaThumb />
-            </ScrollAreaScrollbar>
-            <ScrollAreaCorner />
-          </ScrollArea>
+                    },
+                  },
+                }}
+              >
+                {activeTab === tab.id ? (
+                  <Underline className="underline" layoutId="underline" />
+                ) : null}
+                {t(tab.title)}
+              </TabsTrigger>
+            ))}
+          </TabsList>
           <AnimatePresence exitBeforeEnter>
             <TabsContent value="general-tab" asChild>
               <motion.div
@@ -155,7 +144,13 @@ const Settings = () => {
                 exit={{ y: -10, opacity: 0 }}
                 transition={{ duration: 0.2 }}
               >
-                <Container fluid display="flex" justify="flex-start" direction="column">
+                <Container
+                  fluid
+                  display="flex"
+                  justify="flex-start"
+                  direction="column"
+                  css={{ '@smMax': { px: '$sm' } }}
+                >
                   <Flex direction="column" justify="start" align="start" className="space-y-2">
                     <H6>{t('language')}</H6>
                     <Dropdown isBordered>
@@ -188,8 +183,98 @@ const Settings = () => {
                 exit={{ y: -10, opacity: 0 }}
                 transition={{ duration: 0.2 }}
               >
-                <Container fluid display="flex" justify="flex-start" direction="column">
-                  <H6>Panel 2</H6>
+                <Container
+                  fluid
+                  display="flex"
+                  justify="flex-start"
+                  direction="column"
+                  css={{ '@smMax': { px: '$sm' } }}
+                >
+                  <Collapse.Group splitted accordion={false} css={{ borderRadius: '$xs' }}>
+                    <Collapse
+                      title="Theme"
+                      subtitle="Customize your aplication theme."
+                      css={{
+                        background: '$backgroundAlpha !important',
+                      }}
+                    >
+                      <Radio.Group
+                        orientation={isXs ? 'vertical' : 'horizontal'}
+                        defaultValue={theme}
+                        size="sm"
+                        onChange={(value) => {
+                          if (value === 'light' || value === 'dark') {
+                            setTheme(value);
+                          } else if (['bumblebee', 'retro', 'autumn'].includes(value)) {
+                            setTheme('light');
+                            setTheme(value);
+                          } else {
+                            setTheme('dark');
+                            setTheme(value);
+                          }
+                        }}
+                      >
+                        {listThemes.map((themeItem) => (
+                          <Tooltip
+                            key={themeItem.id}
+                            content={isXs ? null : themeItem.title}
+                            rounded
+                            color="primary"
+                            hideArrow
+                            offset={0}
+                          >
+                            <Radio
+                              key={themeItem.id}
+                              value={themeItem.id}
+                              css={{
+                                p: '$xs',
+                                '--nextui--radioColor': themeItem.color,
+                                '--nextui-colors-border': themeItem.color,
+                                '--nextui--radioColorHover': themeItem.colorHover,
+                              }}
+                            >
+                              {isXs ? themeItem.title : null}
+                            </Radio>
+                          </Tooltip>
+                        ))}
+                      </Radio.Group>
+                    </Collapse>
+                    <Collapse
+                      title="Layout"
+                      subtitle="Toggle application layout and style."
+                      disabled
+                      css={{
+                        background: '$backgroundAlpha !important',
+                      }}
+                    >
+                      <H6>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                        consequat.
+                      </H6>
+                    </Collapse>
+                    <Collapse
+                      title="Experiments"
+                      subtitle="This is a collection of experiments we're working on that might turn out to be useful."
+                      css={{
+                        background: '$backgroundAlpha !important',
+                      }}
+                    >
+                      <Flex direction="row" justify="start" align="center" className="space-x-2">
+                        <Switch
+                          checked={isPlayTrailer}
+                          onChange={(e) => setIsPlayTrailer(e.target.checked)}
+                        />
+                        <H6>Play trailer preview</H6>
+                      </Flex>
+                      <Spacer y={1} />
+                      <Flex direction="row" justify="start" align="center" className="space-x-2">
+                        <Switch checked={isMuted} onChange={(e) => setIsMuted(e.target.checked)} />
+                        <H6>Mute trailer preview</H6>
+                      </Flex>
+                    </Collapse>
+                  </Collapse.Group>
                 </Container>
               </motion.div>
             </TabsContent>
@@ -200,7 +285,13 @@ const Settings = () => {
                 exit={{ y: -10, opacity: 0 }}
                 transition={{ duration: 0.2 }}
               >
-                <Container fluid display="flex" justify="flex-start" direction="column">
+                <Container
+                  fluid
+                  display="flex"
+                  justify="flex-start"
+                  direction="column"
+                  css={{ '@smMax': { px: '$sm' } }}
+                >
                   <H6>Panel 3</H6>
                 </Container>
               </motion.div>
@@ -212,7 +303,13 @@ const Settings = () => {
                 exit={{ y: -10, opacity: 0 }}
                 transition={{ duration: 0.2 }}
               >
-                <Container fluid display="flex" justify="flex-start" direction="column">
+                <Container
+                  fluid
+                  display="flex"
+                  justify="flex-start"
+                  direction="column"
+                  css={{ '@smMax': { px: '$sm' } }}
+                >
                   <H6>Panel 4</H6>
                 </Container>
               </motion.div>
