@@ -1,8 +1,8 @@
 import { MetaFunction } from '@remix-run/node';
 import { NavLink, Outlet, useLocation } from '@remix-run/react';
-import { Container } from '@nextui-org/react';
+import { Container, Badge } from '@nextui-org/react';
 
-import Tab from '~/src/components/elements/Tab';
+import TabLink from '~/src/components/elements/tab/TabLink';
 
 export const meta: MetaFunction = () => ({
   title: 'Free Series HD - Watch Series and Movies HD Online on Sora',
@@ -27,7 +27,19 @@ const tvPage = [
 export const handle = {
   breadcrumb: () => (
     <NavLink to="/tv-shows" aria-label="Tv Series Page">
-      Tv Shows
+      {({ isActive }) => (
+        <Badge
+          color="primary"
+          variant="flat"
+          css={{
+            opacity: isActive ? 1 : 0.7,
+            transition: 'opacity 0.25s ease 0s',
+            '&:hover': { opacity: 0.8 },
+          }}
+        >
+          Tv Shows
+        </Badge>
+      )}
     </NavLink>
   ),
 };
@@ -42,7 +54,7 @@ const TvPage = () => {
     );
   return (
     <Container fluid css={{ m: 0, p: 0 }}>
-      <Tab pages={tvPage} linkTo="/tv-shows" />
+      <TabLink pages={tvPage} linkTo="/tv-shows" />
       <Outlet />
     </Container>
   );

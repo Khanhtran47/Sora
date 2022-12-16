@@ -3,8 +3,8 @@
 import * as React from 'react';
 import { json, MetaFunction } from '@remix-run/node';
 import type { LoaderFunction, LoaderArgs } from '@remix-run/node';
-import { useCatch, useLoaderData, Outlet, Link, RouteMatch, useParams } from '@remix-run/react';
-import { Container, Spacer, Card, Col, Row, Avatar } from '@nextui-org/react';
+import { useCatch, useLoaderData, Outlet, NavLink, RouteMatch, useParams } from '@remix-run/react';
+import { Container, Spacer, Card, Col, Row, Avatar, Badge } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
@@ -17,7 +17,7 @@ import getProviderList from '~/services/provider.server';
 
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
-import Tab from '~/src/components/elements/Tab';
+import TabLink from '~/src/components/elements/tab/TabLink';
 import { H2, H5, H6 } from '~/src/components/styles/Text.styles';
 import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
 import BackgroundDefault from '~/src/assets/images/background-default.jpg';
@@ -88,23 +88,47 @@ export const meta: MetaFunction = ({ data, params }) => {
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
     <>
-      <Link
+      <NavLink
         to={`/tv-shows/${match.params.tvId}`}
         aria-label={
           match.data?.detail?.name || match.data?.detail?.original_name || match.params.tvId
         }
       >
-        {match.data?.detail?.name || match.data?.detail?.original_name || match.params.tvId}
-      </Link>
-      <Spacer x={0.5} />
+        {({ isActive }) => (
+          <Badge
+            color="primary"
+            variant="flat"
+            css={{
+              opacity: isActive ? 1 : 0.7,
+              transition: 'opacity 0.25s ease 0s',
+              '&:hover': { opacity: 0.8 },
+            }}
+          >
+            {match.data?.detail?.name || match.data?.detail?.original_name || match.params.tvId}
+          </Badge>
+        )}
+      </NavLink>
+      <Spacer x={0.25} />
       <span> ❱ </span>
-      <Spacer x={0.5} />
-      <Link
+      <Spacer x={0.25} />
+      <NavLink
         to={`/tv-shows/${match.params.tvId}/season/${match.params.seasonId}/`}
         aria-label={`Season ${match.params.seasonId}`}
       >
-        Season {match.params.seasonId}
-      </Link>
+        {({ isActive }) => (
+          <Badge
+            color="primary"
+            variant="flat"
+            css={{
+              opacity: isActive ? 1 : 0.7,
+              transition: 'opacity 0.25s ease 0s',
+              '&:hover': { opacity: 0.8 },
+            }}
+          >
+            Season {match.params.seasonId}
+          </Badge>
+        )}
+      </NavLink>
     </>
   ),
 };
@@ -308,7 +332,7 @@ const SeasonDetail = () => {
                 </Row>
               )}
               <Spacer y={1} />
-              <Tab pages={detailTab} linkTo={`/tv-shows/${tvId}/season/${seasonId}`} />
+              <TabLink pages={detailTab} linkTo={`/tv-shows/${tvId}/season/${seasonId}`} />
             </Col>
           </Row>
         </Card.Header>

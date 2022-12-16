@@ -1,0 +1,20 @@
+{
+  "settings": "Settings",
+  "general": "General",
+  "language": "Language",
+  "appearance": "Appearance",
+  "account": "Account",
+  "player": "Player",
+  "about": "About",
+  "en": "English",
+  "fr": "French",
+  "vi": "Vietnamese",
+  "theme": "Theme",
+  "theme-subtitle": "Customize your aplication theme.",
+  "layout": "Layout",
+  "layout-subtitle": "Customize your application layout and style.",
+  "experiments": "Experiments",
+  "experiments-subtitle": "This is a collection of experiments we're working on that might turn out to be useful.",
+  "play-trailer": "Play trailer preview",
+  "mute-trailer": "Mute trailer preview"
+}

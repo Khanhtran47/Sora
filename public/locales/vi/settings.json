@@ -1,0 +1,20 @@
+{
+  "settings": "Cài đặt",
+  "general": "Tổng quan",
+  "language": "Ngôn ngữ",
+  "appearance": "Giao diện",
+  "account": "Tài khoản",
+  "player": "Trình phát",
+  "about": "Giới thiệu",
+  "en": "Tiếng Anh",
+  "fr": "Tiếng Pháp",
+  "vi": "Tiếng Việt",
+  "theme": "Giao diện",
+  "theme-subtitle": "Tùy chỉnh giao diện cho ứng dụng.",
+  "layout": "Bố cục",
+  "layout-subtitle": "Tùy chỉnh bố cục và kiểu dáng ứng dụng.",
+  "experiments": "Thử nghiệm",
+  "experiments-subtitle": "Đây là một tập hợp các thử nghiệm mà chúng tôi đang làm việc để có thể sử dụng được.",
+  "play-trailer": "Phát trailer",
+  "mute-trailer": "Tắt tiếng trailer"
+}

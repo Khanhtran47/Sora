@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DataFunctionArgs, json, LoaderFunction, MetaFunction } from '@remix-run/node';
-import { useLoaderData, useNavigate, useParams, Link, RouteMatch } from '@remix-run/react';
-import { Container } from '@nextui-org/react';
+import { useLoaderData, useNavigate, useParams, NavLink, RouteMatch } from '@remix-run/react';
+import { Container, Badge } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 
 import { getSearchPerson } from '~/services/tmdb/tmdb.server';
@@ -42,12 +42,24 @@ export const meta: MetaFunction = ({ data, params }) => {
 
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
-    <Link
+    <NavLink
       to={`/search/people/${match.params.peopleKeyword}`}
       aria-label={match.params.peopleKeyword}
     >
-      {match.params.peopleKeyword}
-    </Link>
+      {({ isActive }) => (
+        <Badge
+          color="primary"
+          variant="flat"
+          css={{
+            opacity: isActive ? 1 : 0.7,
+            transition: 'opacity 0.25s ease 0s',
+            '&:hover': { opacity: 0.8 },
+          }}
+        >
+          {match.params.peopleKeyword}
+        </Badge>
+      )}
+    </NavLink>
   ),
 };
 

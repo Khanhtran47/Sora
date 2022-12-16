@@ -1,13 +1,12 @@
 import { styled } from '@nextui-org/react';
 import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area';
 
-const SCROLLBAR_SIZE = 10;
+const SCROLLBAR_SIZE = 7;
 
 export const StyledScrollArea = styled(ScrollAreaPrimitive.Root, {
   width: 200,
   height: 225,
   borderRadius: 4,
-  overflow: 'hidden',
   boxShadow: '$sm',
 });
 
@@ -24,9 +23,10 @@ export const StyledScrollbar = styled(ScrollAreaPrimitive.Scrollbar, {
   // disable browser handling of all panning and zooming gestures on touch devices
   touchAction: 'none',
   padding: 2,
-  background: '$gray800',
+  zIndex: 99,
+  background: '$accents8',
   transition: 'background 160ms ease-out',
-  '&:hover': { background: '$gray500' },
+  '&:hover': { background: '$accents5' },
   '&[data-orientation="vertical"]': { width: SCROLLBAR_SIZE },
   '&[data-orientation="horizontal"]': {
     flexDirection: 'column',
@@ -36,7 +36,7 @@ export const StyledScrollbar = styled(ScrollAreaPrimitive.Scrollbar, {
 
 export const StyledThumb = styled(ScrollAreaPrimitive.Thumb, {
   flex: 1,
-  background: '$gray100',
+  background: '$accents1',
   borderRadius: SCROLLBAR_SIZE,
   // increase target size for touch devices https://www.w3.org/WAI/WCAG21/Understanding/target-size.html
   position: 'relative',
@@ -54,5 +54,5 @@ export const StyledThumb = styled(ScrollAreaPrimitive.Thumb, {
 });
 
 export const StyledCorner = styled(ScrollAreaPrimitive.Corner, {
-  background: '$gray500',
+  background: '$accents5',
 });

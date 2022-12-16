@@ -14,7 +14,7 @@ interface ITabProps {
   linkTo?: string;
 }
 
-const Tab = (props: ITabProps) => {
+const TabLink = (props: ITabProps) => {
   const { pages, linkTo } = props;
   const { t } = useTranslation();
   // const isMd = useMediaQuery('(max-width: 960px)');
@@ -83,4 +83,4 @@ const Tab = (props: ITabProps) => {
   );
 };
 
-export default Tab;
+export default TabLink;

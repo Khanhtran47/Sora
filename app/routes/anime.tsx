@@ -1,8 +1,8 @@
 import { MetaFunction } from '@remix-run/node';
 import { NavLink, Outlet, useLocation } from '@remix-run/react';
-import { Container } from '@nextui-org/react';
+import { Container, Badge } from '@nextui-org/react';
 
-import Tab from '~/src/components/elements/Tab';
+import TabLink from '~/src/components/elements/tab/TabLink';
 
 const animePage = [
   { pageName: 'Discover Anime', pageLink: '/discover' },
@@ -27,7 +27,19 @@ export const meta: MetaFunction = () => ({
 export const handle = {
   breadcrumb: () => (
     <NavLink to="/anime" aria-label="Anime Page">
-      Anime
+      {({ isActive }) => (
+        <Badge
+          color="primary"
+          variant="flat"
+          css={{
+            opacity: isActive ? 1 : 0.7,
+            transition: 'opacity 0.25s ease 0s',
+            '&:hover': { opacity: 0.8 },
+          }}
+        >
+          Anime
+        </Badge>
+      )}
     </NavLink>
   ),
 };
@@ -42,7 +54,7 @@ const AnimeIndexPage = () => {
     );
   return (
     <Container fluid css={{ m: 0, p: 0 }}>
-      <Tab pages={animePage} linkTo="/anime" />
+      <TabLink pages={animePage} linkTo="/anime" />
       <Outlet />
     </Container>
   );

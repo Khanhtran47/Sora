@@ -1,5 +1,7 @@
 import { RouteMatch, useLocation } from '@remix-run/react';
-import { Grid, Spacer, Text } from '@nextui-org/react';
+import { Grid, Spacer } from '@nextui-org/react';
+
+import Flex from '~/src/components/styles/Flex.styles';
 
 interface IBreadCrumbProps {
   matches: RouteMatch[];
@@ -24,9 +26,12 @@ const BreadCrumb = (props: IBreadCrumbProps) => {
       css={{
         width: 'fit-content',
         height: 'auto',
-        padding: 0,
+        padding: '0 $sm',
         margin: '0 0 15px 0',
         zIndex: 1,
+        '@xs': {
+          padding: 0,
+        },
       }}
     >
       {matches
@@ -34,27 +39,23 @@ const BreadCrumb = (props: IBreadCrumbProps) => {
         .filter((match) => match.handle && match.handle.breadcrumb)
         // render breadcrumbs!
         .map((match, index) => (
-          <Text
-            color="primary"
-            span
-            key={index}
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              justifyContent: 'flex-start',
-              alignItems: 'center',
-            }}
+          <Flex
+            direction="row"
+            justify="start"
+            align="center"
+            wrap="wrap"
+            key={match.id}
+            style={{ color: 'var(--nextui-colors-primarySolidHover)' }}
           >
             {index ? (
               <>
-                <Spacer x={0.5} />
+                <Spacer x={0.25} />
                 <span> ❱ </span>
-                <Spacer x={0.5} />
+                <Spacer x={0.25} />
               </>
             ) : null}
             {match?.handle?.breadcrumb(match)}
-          </Text>
+          </Flex>
         ))}
     </Grid.Container>
   );

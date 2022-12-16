@@ -4,7 +4,7 @@ import * as React from 'react';
 import type { LinksFunction, LoaderFunction, MetaFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import {
-  Link,
+  NavLink,
   Links,
   LiveReload,
   Meta,
@@ -19,13 +19,7 @@ import {
   RouteMatch,
   useLocation,
 } from '@remix-run/react';
-import {
-  NextUIProvider,
-  Text,
-  Image as NextImage,
-  Link as NextLink,
-  useSSR,
-} from '@nextui-org/react';
+import { NextUIProvider, Text, Image as NextImage, Link, Badge, useSSR } from '@nextui-org/react';
 import { ThemeProvider as RemixThemesProvider } from 'next-themes';
 // @ts-ignore
 import swiperStyles from 'swiper/css';
@@ -306,9 +300,21 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export const handle = {
   breadcrumb: () => (
-    <Link to="/" aria-label="Home Page">
-      <Home width={16} height={16} />
-    </Link>
+    <NavLink to="/" aria-label="Home Page">
+      {({ isActive }) => (
+        <Badge
+          color="primary"
+          variant="flat"
+          css={{
+            opacity: isActive ? 1 : 0.7,
+            transition: 'opacity 0.25s ease 0s',
+            '&:hover': { opacity: 0.8 },
+          }}
+        >
+          <Home width={16} height={16} />
+        </Badge>
+      )}
+    </NavLink>
   ),
 };
 
@@ -504,7 +510,7 @@ export const CatchBoundary = () => {
               }}
               weight="bold"
             >
-              <NextLink href="/">Go Back</NextLink>
+              <Link href="/">Go Back</Link>
             </Text>
           </>
         </NextUIProvider>
@@ -542,7 +548,7 @@ export const ErrorBoundary = ({ error }: { error: Error }) => {
             }}
             weight="bold"
           >
-            <NextLink href="/">Go Back</NextLink>
+            <Link href="/">Go Back</Link>
           </Text>
         </NextUIProvider>
       </RemixThemesProvider>

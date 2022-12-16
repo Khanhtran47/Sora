@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/indent */
 import * as React from 'react';
 import { DataFunctionArgs, json, LoaderFunction, MetaFunction } from '@remix-run/node';
-import { useLoaderData, useNavigate, useParams, Link, RouteMatch } from '@remix-run/react';
-import { Container } from '@nextui-org/react';
+import { useLoaderData, useNavigate, useParams, NavLink, RouteMatch } from '@remix-run/react';
+import { Container, Badge } from '@nextui-org/react';
 import { useRouteData } from 'remix-utils';
 import type { User } from '@supabase/supabase-js';
 
@@ -47,9 +47,21 @@ export const meta: MetaFunction = ({ data, params }) => {
 
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
-    <Link to={`/search/tv/${match.params.tvKeyword}`} aria-label={match.params.tvKeyword}>
-      {match.params.tvKeyword}
-    </Link>
+    <NavLink to={`/search/tv/${match.params.tvKeyword}`} aria-label={match.params.tvKeyword}>
+      {({ isActive }) => (
+        <Badge
+          color="primary"
+          variant="flat"
+          css={{
+            opacity: isActive ? 1 : 0.7,
+            transition: 'opacity 0.25s ease 0s',
+            '&:hover': { opacity: 0.8 },
+          }}
+        >
+          {match.params.tvKeyword}
+        </Badge>
+      )}
+    </NavLink>
   ),
 };
 

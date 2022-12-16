@@ -67,15 +67,15 @@ export const leftDrawerPages = [
     pageLink: 'collections',
   },
   {
-    pageName: 'newReleases',
-    pageLink: 'new-releases',
-  },
-  {
-    pageName: 'imdbTop',
-    pageLink: 'imdb-top',
+    pageName: 'My List',
+    pageLink: 'list',
   },
   {
     pageName: 'history',
     pageLink: 'watch-history',
+  },
+  {
+    pageName: 'Settings',
+    pageLink: 'settings',
   },
 ];

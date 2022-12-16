@@ -1,6 +1,6 @@
 import { DataFunctionArgs, json, LoaderFunction, MetaFunction } from '@remix-run/node';
-import { useLoaderData, useNavigate, Link, RouteMatch, useLocation } from '@remix-run/react';
-import { Container } from '@nextui-org/react';
+import { useLoaderData, useNavigate, NavLink, RouteMatch, useLocation } from '@remix-run/react';
+import { Container, Badge } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 
 import { authenticate } from '~/services/supabase';
@@ -42,9 +42,24 @@ export const meta: MetaFunction = ({ data, params }) => {
 
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
-    <Link to={`/search/anime/${match.params.animeKeyword}`} aria-label={match.params.animeKeyword}>
-      {match.params.animeKeyword}
-    </Link>
+    <NavLink
+      to={`/search/anime/${match.params.animeKeyword}`}
+      aria-label={match.params.animeKeyword}
+    >
+      {({ isActive }) => (
+        <Badge
+          color="primary"
+          variant="flat"
+          css={{
+            opacity: isActive ? 1 : 0.7,
+            transition: 'opacity 0.25s ease 0s',
+            '&:hover': { opacity: 0.8 },
+          }}
+        >
+          {match.params.animeKeyword}
+        </Badge>
+      )}
+    </NavLink>
   ),
 };
 

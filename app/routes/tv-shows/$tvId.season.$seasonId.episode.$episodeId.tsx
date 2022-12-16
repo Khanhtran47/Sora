@@ -8,14 +8,14 @@ import type { LoaderFunction, MetaFunction, LoaderArgs } from '@remix-run/node';
 import {
   useCatch,
   useLoaderData,
-  Link,
+  NavLink,
   RouteMatch,
   useParams,
   useFetcher,
   useLocation,
   useNavigate,
 } from '@remix-run/react';
-import { Container, Spacer, Loading, Radio } from '@nextui-org/react';
+import { Container, Spacer, Loading, Radio, Badge } from '@nextui-org/react';
 import { ClientOnly, useRouteData } from 'remix-utils';
 import { isDesktop } from 'react-device-detect';
 import Hls from 'hls.js';
@@ -414,32 +414,68 @@ export const loader: LoaderFunction = async ({ request, params }: LoaderArgs) =>
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
     <>
-      <Link
+      <NavLink
         to={`/tv-shows/${match.params.tvId}`}
         aria-label={
           match.data?.detail?.name || match.data?.detail?.original_name || match.params.tvId
         }
       >
-        {match.data?.detail?.name || match.data?.detail?.original_name || match.params.tvId}
-      </Link>
-      <Spacer x={0.5} />
+        {({ isActive }) => (
+          <Badge
+            color="primary"
+            variant="flat"
+            css={{
+              opacity: isActive ? 1 : 0.7,
+              transition: 'opacity 0.25s ease 0s',
+              '&:hover': { opacity: 0.8 },
+            }}
+          >
+            {match.data?.detail?.name || match.data?.detail?.original_name || match.params.tvId}
+          </Badge>
+        )}
+      </NavLink>
+      <Spacer x={0.25} />
       <span> ❱ </span>
-      <Spacer x={0.5} />
-      <Link
+      <Spacer x={0.25} />
+      <NavLink
         to={`/tv-shows/${match.params.tvId}/season/${match.params.seasonId}/`}
         aria-label={`Season ${match.params.seasonId}`}
       >
-        Season {match.params.seasonId}
-      </Link>
-      <Spacer x={0.5} />
+        {({ isActive }) => (
+          <Badge
+            color="primary"
+            variant="flat"
+            css={{
+              opacity: isActive ? 1 : 0.7,
+              transition: 'opacity 0.25s ease 0s',
+              '&:hover': { opacity: 0.8 },
+            }}
+          >
+            Season {match.params.seasonId}
+          </Badge>
+        )}
+      </NavLink>
+      <Spacer x={0.25} />
       <span> ❱ </span>
-      <Spacer x={0.5} />
-      <Link
+      <Spacer x={0.25} />
+      <NavLink
         to={`/tv-shows/${match.params.tvId}/season/${match.params.seasonId}/episode/${match.params.episodeId}`}
         aria-label={`Episode ${match.params.episodeId}`}
       >
-        Episode {match.params.episodeId}
-      </Link>
+        {({ isActive }) => (
+          <Badge
+            color="primary"
+            variant="flat"
+            css={{
+              opacity: isActive ? 1 : 0.7,
+              transition: 'opacity 0.25s ease 0s',
+              '&:hover': { opacity: 0.8 },
+            }}
+          >
+            Episode {match.params.episodeId}
+          </Badge>
+        )}
+      </NavLink>
     </>
   ),
 };

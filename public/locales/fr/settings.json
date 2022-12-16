@@ -1,0 +1,20 @@
+{
+  "settings": "Paramètres",
+  "general": "Général",
+  "language": "Langue",
+  "appearance": "Apparence",
+  "account": "Compte",
+  "player": "Lecteur",
+  "about": "À propos",
+  "en": "Anglais",
+  "fr": "Français",
+  "vi": "Vietnamien",
+  "theme": "Thème",
+  "theme-subtitle": "Personnalisez le thème de votre application.",
+  "layout": "Disposition",
+  "layout-subtitle": "Personnalisez la disposition et le style de votre application.",
+  "experiments": "Expériences",
+  "experiments-subtitle": "Ceci est une collection d'expériences sur lesquelles nous travaillons qui pourraient s'avérer utiles.",
+  "play-trailer": "Lire la bande-annonce",
+  "mute-trailer": "Couper le son de la bande-annonce"
+}

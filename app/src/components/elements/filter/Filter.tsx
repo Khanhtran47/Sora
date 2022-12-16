@@ -395,10 +395,11 @@ const Filter = (props: IFilterProps) => {
             </Row>
             <Row css={{ marginTop: '6px' }}>
               {genres && (
-                <Dropdown>
+                <Dropdown isBordered>
                   <Dropdown.Button css={{ tt: 'capitalize' }}>{selectedGenre}</Dropdown.Button>
                   <Dropdown.Menu
                     aria-label="Genres Selection"
+                    color="primary"
                     disallowEmptySelection
                     selectionMode="multiple"
                     selectedKeys={genre}
@@ -418,10 +419,11 @@ const Filter = (props: IFilterProps) => {
             </Row>
             <Row css={{ marginTop: '6px' }}>
               {languageItems && (
-                <Dropdown>
+                <Dropdown isBordered>
                   <Dropdown.Button css={{ tt: 'capitalize' }}>{selectedLanguage}</Dropdown.Button>
                   <Dropdown.Menu
                     aria-label="Original Language Selection"
+                    color="primary"
                     disallowEmptySelection
                     selectionMode="single"
                     selectedKeys={lang}
@@ -443,10 +445,11 @@ const Filter = (props: IFilterProps) => {
                 </Row>
                 <Row css={{ marginTop: '6px' }}>
                   {tvStatus && (
-                    <Dropdown>
+                    <Dropdown isBordered>
                       <Dropdown.Button css={{ tt: 'capitalize' }}>{selectedStatus}</Dropdown.Button>
                       <Dropdown.Menu
                         aria-label="Status Selection"
+                        color="primary"
                         disallowEmptySelection
                         selectionMode="multiple"
                         selectedKeys={status}
@@ -466,10 +469,11 @@ const Filter = (props: IFilterProps) => {
                 </Row>
                 <Row css={{ marginTop: '6px' }}>
                   {tvType && (
-                    <Dropdown>
+                    <Dropdown isBordered>
                       <Dropdown.Button css={{ tt: 'capitalize' }}>{selectedType}</Dropdown.Button>
                       <Dropdown.Menu
                         aria-label="Type Selection"
+                        color="primary"
                         disallowEmptySelection
                         selectionMode="multiple"
                         selectedKeys={type}
@@ -490,10 +494,11 @@ const Filter = (props: IFilterProps) => {
               <H6 h6> {t('sortBy')} </H6>
             </Row>
             <Row css={{ marginTop: '6px' }}>
-              <Dropdown>
+              <Dropdown isBordered>
                 <Dropdown.Button css={{ tt: 'capitalize' }}>{selectedSort}</Dropdown.Button>
                 <Dropdown.Menu
                   aria-label="Sort By Selection"
+                  color="primary"
                   disallowEmptySelection
                   selectionMode="single"
                   selectedKeys={sort}
@@ -597,10 +602,11 @@ const Filter = (props: IFilterProps) => {
             </Row>
             <Row css={{ marginTop: '6px' }}>
               {animeGenres && (
-                <Dropdown>
+                <Dropdown isBordered>
                   <Dropdown.Button css={{ tt: 'capitalize' }}>{selectedGenre}</Dropdown.Button>
                   <Dropdown.Menu
                     aria-label="Genres Selection"
+                    color="primary"
                     disallowEmptySelection
                     selectionMode="multiple"
                     selectedKeys={genre}
@@ -620,10 +626,11 @@ const Filter = (props: IFilterProps) => {
             </Row>
             <Row css={{ marginTop: '6px' }}>
               {animeYearItems && (
-                <Dropdown>
+                <Dropdown isBordered>
                   <Dropdown.Button css={{ tt: 'capitalize' }}>{selectedYear}</Dropdown.Button>
                   <Dropdown.Menu
                     aria-label="Year Selection"
+                    color="primary"
                     disallowEmptySelection
                     selectionMode="single"
                     selectedKeys={year}
@@ -643,10 +650,11 @@ const Filter = (props: IFilterProps) => {
             </Row>
             <Row css={{ marginTop: '6px' }}>
               {animeSeasonItems && (
-                <Dropdown>
+                <Dropdown isBordered>
                   <Dropdown.Button css={{ tt: 'capitalize' }}>{selectedSeason}</Dropdown.Button>
                   <Dropdown.Menu
                     aria-label="Season Selection"
+                    color="primary"
                     disallowEmptySelection
                     selectionMode="single"
                     selectedKeys={season}
@@ -666,10 +674,11 @@ const Filter = (props: IFilterProps) => {
             </Row>
             <Row css={{ marginTop: '6px' }}>
               {animeFormatItems && (
-                <Dropdown>
+                <Dropdown isBordered>
                   <Dropdown.Button css={{ tt: 'capitalize' }}>{selectedFormat}</Dropdown.Button>
                   <Dropdown.Menu
                     aria-label="Fromat Selection"
+                    color="primary"
                     disallowEmptySelection
                     selectionMode="single"
                     selectedKeys={format}
@@ -689,13 +698,14 @@ const Filter = (props: IFilterProps) => {
             </Row>
             <Row css={{ marginTop: '6px' }}>
               {animeStatusItems && (
-                <Dropdown>
+                <Dropdown isBordered>
                   <Dropdown.Button css={{ tt: 'capitalize' }}>
                     {selectedStatusAnime}
                   </Dropdown.Button>
                   <Dropdown.Menu
                     aria-label="Airing Status Selection"
                     disallowEmptySelection
+                    color="primary"
                     selectionMode="single"
                     selectedKeys={statusAnime}
                     onSelectionChange={(key: any) => setStatusAnime(key)}
@@ -713,11 +723,12 @@ const Filter = (props: IFilterProps) => {
               <H6 h6> {t('sortBy')} </H6>
             </Row>
             <Row css={{ marginTop: '6px' }}>
-              <Dropdown>
+              <Dropdown isBordered>
                 <Dropdown.Button css={{ tt: 'capitalize' }}>{selectedSort}</Dropdown.Button>
                 <Dropdown.Menu
                   aria-label="Sort By Selection"
                   disallowEmptySelection
+                  color="primary"
                   selectionMode="single"
                   selectedKeys={sort}
                   onSelectionChange={(keys: any) => setSort(keys)}

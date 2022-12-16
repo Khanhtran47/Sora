@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
-import { useCatch, useLoaderData, Outlet, Link, RouteMatch } from '@remix-run/react';
-import { Container, Row, Col, Spacer } from '@nextui-org/react';
+import { useCatch, useLoaderData, Outlet, NavLink, RouteMatch } from '@remix-run/react';
+import { Container, Row, Col, Spacer, Badge } from '@nextui-org/react';
 
 import { getPeopleDetail, getPeopleExternalIds } from '~/services/tmdb/tmdb.server';
 import i18next from '~/i18n/i18next.server';
@@ -10,7 +10,7 @@ import TMDB from '~/utils/media';
 import { authenticate } from '~/services/supabase';
 
 import PeopleDetail from '~/src/components/media/PeopleDetail';
-import Tab from '~/src/components/elements/Tab';
+import TabLink from '~/src/components/elements/tab/TabLink';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 
@@ -70,18 +70,42 @@ export const meta: MetaFunction = ({ data, params }) => {
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
     <>
-      <Link to="/people" aria-label="Popular People">
-        Popular People
-      </Link>
-      <Spacer x={0.5} />
+      <NavLink to="/people" aria-label="Popular People">
+        {({ isActive }) => (
+          <Badge
+            color="primary"
+            variant="flat"
+            css={{
+              opacity: isActive ? 1 : 0.7,
+              transition: 'opacity 0.25s ease 0s',
+              '&:hover': { opacity: 0.8 },
+            }}
+          >
+            Popular People
+          </Badge>
+        )}
+      </NavLink>
+      <Spacer x={0.25} />
       <span> ❱ </span>
-      <Spacer x={0.5} />
-      <Link
+      <Spacer x={0.25} />
+      <NavLink
         to={`/people/${match.params.peopleId}`}
         aria-label={match.data?.detail?.name || match.params.peopleId}
       >
-        {match.data?.detail?.name || match.params.peopleId}
-      </Link>
+        {({ isActive }) => (
+          <Badge
+            color="primary"
+            variant="flat"
+            css={{
+              opacity: isActive ? 1 : 0.7,
+              transition: 'opacity 0.25s ease 0s',
+              '&:hover': { opacity: 0.8 },
+            }}
+          >
+            {match.data?.detail?.name || match.params.peopleId}
+          </Badge>
+        )}
+      </NavLink>
     </>
   ),
 };
@@ -105,7 +129,7 @@ const PeopleDetailPage = () => {
         padding: 0,
       }}
     >
-      <Tab pages={detailTab} linkTo={`/people/${detail?.id}`} />
+      <TabLink pages={detailTab} linkTo={`/people/${detail?.id}`} />
       <Row
         fluid
         align="stretch"

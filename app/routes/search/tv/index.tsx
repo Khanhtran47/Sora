@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
 import { DataFunctionArgs, json, LoaderFunction } from '@remix-run/node';
-import { useLoaderData, useNavigate, Link } from '@remix-run/react';
-import { Container } from '@nextui-org/react';
+import { useLoaderData, useNavigate, NavLink } from '@remix-run/react';
+import { Container, Badge } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { useRouteData } from 'remix-utils';
 import type { User } from '@supabase/supabase-js';
@@ -30,9 +30,21 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
 
 export const handle = {
   breadcrumb: () => (
-    <Link to="/search/tv" aria-label="Search Tv">
-      Search Tv
-    </Link>
+    <NavLink to="/search/tv" aria-label="Search Tv">
+      {({ isActive }) => (
+        <Badge
+          color="primary"
+          variant="flat"
+          css={{
+            opacity: isActive ? 1 : 0.7,
+            transition: 'opacity 0.25s ease 0s',
+            '&:hover': { opacity: 0.8 },
+          }}
+        >
+          Search Tv
+        </Badge>
+      )}
+    </NavLink>
   ),
 };
 

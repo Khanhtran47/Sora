@@ -1,6 +1,6 @@
 import { DataFunctionArgs, json, LoaderFunction } from '@remix-run/node';
-import { useLoaderData, useNavigate, Link } from '@remix-run/react';
-import { Container } from '@nextui-org/react';
+import { useLoaderData, useNavigate, NavLink } from '@remix-run/react';
+import { Container, Badge } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 
 import { getAnimeTrending } from '~/services/consumet/anilist/anilist.server';
@@ -28,9 +28,21 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
 
 export const handle = {
   breadcrumb: () => (
-    <Link to="/search/anime" aria-label="Search Anime">
-      Search Anime
-    </Link>
+    <NavLink to="/search/anime" aria-label="Search Anime">
+      {({ isActive }) => (
+        <Badge
+          color="primary"
+          variant="flat"
+          css={{
+            opacity: isActive ? 1 : 0.7,
+            transition: 'opacity 0.25s ease 0s',
+            '&:hover': { opacity: 0.8 },
+          }}
+        >
+          Search Anime
+        </Badge>
+      )}
+    </NavLink>
   ),
 };
 

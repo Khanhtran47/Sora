@@ -29,7 +29,6 @@ const TextNavLink = ({
         weight="bold"
         color="primary"
         css={{
-          textTransform: 'uppercase',
           padding: '0.25rem 0.5rem',
           borderRadius: '14px',
           transition: 'opacity 0.25s ease 0s, background 0.25s ease 0s',
@@ -66,7 +65,6 @@ const IconNavLink = ({
         color="primary"
         css={{
           margin: 0,
-          textTransform: 'uppercase',
           padding: '0.25rem 0.5rem',
           borderRadius: '14px',
           transition: 'opacity 0.25s ease 0s, background 0.25s ease 0s',

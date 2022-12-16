@@ -17,7 +17,7 @@ import ViewTableIcon from '~/src/assets/icons/ViewTableIcon.js';
 
 import { MediaListTable, MediaListCard, MediaListBanner, MediaListGrid } from './list';
 import Filter from '../elements/filter/Filter';
-import { H3 } from '../styles/Text.styles';
+import { H2 } from '../styles/Text.styles';
 import Flex from '../styles/Flex.styles';
 
 /**
@@ -159,9 +159,17 @@ const MediaList = (props: IMediaListProps) => {
       {listName || showFilterButton || showListTypeChangeButton ? (
         <Flex direction="row" justify="between" align="center" wrap="wrap" css={{ width: '100%' }}>
           {listName && (
-            <H3 h3 css={{ margin: '20px 0 20px 0' }}>
+            <H2
+              h2
+              css={{
+                margin: '20px 0 20px 0',
+                '@xsMax': {
+                  fontSize: '1.75rem !important',
+                },
+              }}
+            >
               {listName}
-            </H3>
+            </H2>
           )}
           {showFilterButton || showListTypeChangeButton ? (
             <Flex direction="row" justify="end" align="center" css={{ gap: '$5' }}>

@@ -6,12 +6,12 @@ import { MetaFunction, LoaderFunction, json } from '@remix-run/node';
 import {
   useCatch,
   useLoaderData,
-  Link,
+  NavLink,
   RouteMatch,
   useFetcher,
   useLocation,
 } from '@remix-run/react';
-import { Container, Spacer, Loading, Radio } from '@nextui-org/react';
+import { Container, Spacer, Loading, Radio, Badge } from '@nextui-org/react';
 import { ClientOnly, useRouteData } from 'remix-utils';
 import { isDesktop } from 'react-device-detect';
 import Hls from 'hls.js';
@@ -207,16 +207,42 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
     <>
-      <Link
+      <NavLink
         to={`/movies/${match.params.movieId}`}
         aria-label={match.data?.detail?.title || match.params.movieId}
       >
-        {match.data?.detail?.title || match.params.movieId}
-      </Link>
-      <Spacer x={0.5} />
+        {({ isActive }) => (
+          <Badge
+            color="primary"
+            variant="flat"
+            css={{
+              opacity: isActive ? 1 : 0.7,
+              transition: 'opacity 0.25s ease 0s',
+              '&:hover': { opacity: 0.8 },
+            }}
+          >
+            {match.data?.detail?.title || match.params.movieId}
+          </Badge>
+        )}
+      </NavLink>
+      <Spacer x={0.25} />
       <span> ❱ </span>
-      <Spacer x={0.5} />
-      <Link to={`/movies/${match.params.movieId}/watch`}>Watch</Link>
+      <Spacer x={0.25} />
+      <NavLink to={`/movies/${match.params.movieId}/watch`}>
+        {({ isActive }) => (
+          <Badge
+            color="primary"
+            variant="flat"
+            css={{
+              opacity: isActive ? 1 : 0.7,
+              transition: 'opacity 0.25s ease 0s',
+              '&:hover': { opacity: 0.8 },
+            }}
+          >
+            Watch
+          </Badge>
+        )}
+      </NavLink>
     </>
   ),
 };

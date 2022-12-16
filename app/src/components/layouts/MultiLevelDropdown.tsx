@@ -7,6 +7,8 @@ import { motion } from 'framer-motion';
 import type { User } from '@supabase/supabase-js';
 import { useTranslation } from 'react-i18next';
 
+import languages from '~/src/constants/languages';
+
 /* Components */
 import { H5, H6 } from '~/src/components/styles/Text.styles';
 import { PlayerStyled } from './Layout.styles';
@@ -32,8 +34,6 @@ const slideHorizontalAnimation = {
     },
   },
 };
-
-const languages = ['en', 'fr', 'vi'];
 
 const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
   const { isDark } = useTheme();
