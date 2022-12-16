@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { LoaderFunction, json, DataFunctionArgs } from '@remix-run/node';
-import { useFetcher, useNavigate, useLoaderData, useLocation, Link } from '@remix-run/react';
+import { useFetcher, useNavigate, useLoaderData, useLocation } from '@remix-run/react';
 import { Container, Spacer } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 // import { useTranslation } from 'react-i18next';
@@ -20,15 +20,6 @@ import { animeGenres } from '~/src/constants/filterItems';
 
 import MediaList from '~/src/components/media/MediaList';
 import SkeletonItem from '~/src/components/elements/skeleton/Item';
-
-export const handle = {
-  i18n: 'anime',
-  breadcrumb: () => (
-    <Link to="/anime" aria-label="Anime">
-      Anime
-    </Link>
-  ),
-};
 
 type LoaderData = {
   trending: Awaited<ReturnType<typeof getAnimeTrending>>;

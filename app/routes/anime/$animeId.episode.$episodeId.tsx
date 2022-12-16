@@ -7,14 +7,14 @@ import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
 import {
   useCatch,
   useLoaderData,
-  Link,
+  NavLink,
   RouteMatch,
   useParams,
   useLocation,
   useFetcher,
   useNavigate,
 } from '@remix-run/react';
-import { Container, Spacer, Loading } from '@nextui-org/react';
+import { Container, Spacer, Loading, Badge } from '@nextui-org/react';
 import { ClientOnly } from 'remix-utils';
 import { isDesktop } from 'react-device-detect';
 import artplayerPluginHlsQuality from 'artplayer-plugin-hls-quality';
@@ -340,21 +340,45 @@ export const meta: MetaFunction = ({ data, params }) => {
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
     <>
-      <Link
+      <NavLink
         to={`/anime/${match.params.animeId}/overview`}
         aria-label={match.data?.detail?.title?.english || match.data?.detail?.title?.romaji}
       >
-        {match.data?.detail?.title?.english || match.data?.detail?.title?.romaji}
-      </Link>
-      <Spacer x={0.5} />
+        {({ isActive }) => (
+          <Badge
+            color="primary"
+            variant="flat"
+            css={{
+              opacity: isActive ? 1 : 0.7,
+              transition: 'opacity 0.25s ease 0s',
+              '&:hover': { opacity: 0.8 },
+            }}
+          >
+            {match.data?.detail?.title?.english || match.data?.detail?.title?.romaji}
+          </Badge>
+        )}
+      </NavLink>
+      <Spacer x={0.25} />
       <span> ❱ </span>
-      <Spacer x={0.5} />
-      <Link
+      <Spacer x={0.25} />
+      <NavLink
         to={`/anime/${match.params.animeId}/episode/${match.params.episodeId}`}
         aria-label={match?.data?.episodeInfo?.title || match.params.episodeId}
       >
-        {match?.data?.episodeInfo?.title || match.params.episodeId}
-      </Link>
+        {({ isActive }) => (
+          <Badge
+            color="primary"
+            variant="flat"
+            css={{
+              opacity: isActive ? 1 : 0.7,
+              transition: 'opacity 0.25s ease 0s',
+              '&:hover': { opacity: 0.8 },
+            }}
+          >
+            {match?.data?.episodeInfo?.title || match.params.episodeId}
+          </Badge>
+        )}
+      </NavLink>
     </>
   ),
 };

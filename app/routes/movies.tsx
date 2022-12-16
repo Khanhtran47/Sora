@@ -1,6 +1,6 @@
 import { MetaFunction } from '@remix-run/node';
 import { NavLink, Outlet, useLocation } from '@remix-run/react';
-import { Container } from '@nextui-org/react';
+import { Container, Badge } from '@nextui-org/react';
 
 import TabLink from '~/src/components/elements/tab/TabLink';
 
@@ -26,7 +26,19 @@ const moviePage = [
 export const handle = {
   breadcrumb: () => (
     <NavLink to="/movies" aria-label="Movies Page">
-      Movies
+      {({ isActive }) => (
+        <Badge
+          color="primary"
+          variant="flat"
+          css={{
+            opacity: isActive ? 1 : 0.7,
+            transition: 'opacity 0.25s ease 0s',
+            '&:hover': { opacity: 0.8 },
+          }}
+        >
+          Movies
+        </Badge>
+      )}
     </NavLink>
   ),
 };

@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
-import { useLoaderData, useNavigate, Link, RouteMatch, useParams } from '@remix-run/react';
-import { Row } from '@nextui-org/react';
+import { useLoaderData, useNavigate, NavLink, RouteMatch, useParams } from '@remix-run/react';
+import { Row, Badge } from '@nextui-org/react';
 import { useRouteData } from 'remix-utils';
 import type { User } from '@supabase/supabase-js';
 
@@ -40,9 +40,21 @@ export const meta: MetaFunction = ({ params }) => ({
 
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
-    <Link to={`/tv-shows/${match.params.movieId}/similar`} aria-label="Similar Tv">
-      Similar Tv Shows
-    </Link>
+    <NavLink to={`/tv-shows/${match.params.movieId}/similar`} aria-label="Similar Tv">
+      {({ isActive }) => (
+        <Badge
+          color="primary"
+          variant="flat"
+          css={{
+            opacity: isActive ? 1 : 0.7,
+            transition: 'opacity 0.25s ease 0s',
+            '&:hover': { opacity: 0.8 },
+          }}
+        >
+          Similar Tv Shows
+        </Badge>
+      )}
+    </NavLink>
   ),
 };
 

@@ -1,6 +1,6 @@
 import { ActionFunction, LoaderFunction, json, redirect } from '@remix-run/node';
-import { useActionData, Link, useLocation } from '@remix-run/react';
-import { Container } from '@nextui-org/react';
+import { useActionData, NavLink, useLocation } from '@remix-run/react';
+import { Container, Badge } from '@nextui-org/react';
 
 import {
   signInWithPassword,
@@ -79,9 +79,21 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export const handle = {
   breadcrumb: () => (
-    <Link to="/sign-in" aria-label="Sign In Page">
-      Sign In
-    </Link>
+    <NavLink to="/sign-in" aria-label="Sign In Page">
+      {({ isActive }) => (
+        <Badge
+          color="primary"
+          variant="flat"
+          css={{
+            opacity: isActive ? 1 : 0.7,
+            transition: 'opacity 0.25s ease 0s',
+            '&:hover': { opacity: 0.8 },
+          }}
+        >
+          Sign In
+        </Badge>
+      )}
+    </NavLink>
   ),
 };
 

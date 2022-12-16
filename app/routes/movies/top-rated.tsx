@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
-import { useLoaderData, useNavigate, useLocation, Link } from '@remix-run/react';
+import { useLoaderData, useNavigate, useLocation, NavLink } from '@remix-run/react';
 import { json, LoaderFunction, MetaFunction } from '@remix-run/node';
-import { Container } from '@nextui-org/react';
+import { Container, Badge } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useRouteData } from 'remix-utils';
@@ -42,9 +42,21 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export const handle = {
   breadcrumb: () => (
-    <Link to="/movies/top-rated" aria-label="Top Rated Movies">
-      Top Rated Movies
-    </Link>
+    <NavLink to="/movies/top-rated" aria-label="Top Rated Movies">
+      {({ isActive }) => (
+        <Badge
+          color="primary"
+          variant="flat"
+          css={{
+            opacity: isActive ? 1 : 0.7,
+            transition: 'opacity 0.25s ease 0s',
+            '&:hover': { opacity: 0.8 },
+          }}
+        >
+          Top Rated Movies
+        </Badge>
+      )}
+    </NavLink>
   ),
 };
 

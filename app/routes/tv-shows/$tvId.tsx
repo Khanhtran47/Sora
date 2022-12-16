@@ -5,12 +5,12 @@ import {
   useCatch,
   useLoaderData,
   Outlet,
-  Link,
+  NavLink,
   RouteMatch,
   useFetcher,
   useLocation,
 } from '@remix-run/react';
-import { Container } from '@nextui-org/react';
+import { Container, Badge } from '@nextui-org/react';
 
 import {
   getTvShowDetail,
@@ -91,14 +91,26 @@ export const meta: MetaFunction = ({ data, params }) => {
 
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
-    <Link
+    <NavLink
       to={`/tv-shows/${match.params.tvId}`}
       aria-label={
         match.data?.detail?.name || match.data?.detail?.original_name || match.params.tvId
       }
     >
-      {match.data?.detail?.name || match.data?.detail?.original_name || match.params.tvId}
-    </Link>
+      {({ isActive }) => (
+        <Badge
+          color="primary"
+          variant="flat"
+          css={{
+            opacity: isActive ? 1 : 0.7,
+            transition: 'opacity 0.25s ease 0s',
+            '&:hover': { opacity: 0.8 },
+          }}
+        >
+          {match.data?.detail?.name || match.data?.detail?.original_name || match.params.tvId}
+        </Badge>
+      )}
+    </NavLink>
   ),
 };
 

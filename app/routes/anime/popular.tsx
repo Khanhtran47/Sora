@@ -1,6 +1,6 @@
-import { useLoaderData, useLocation, Link } from '@remix-run/react';
+import { useLoaderData, useLocation, NavLink } from '@remix-run/react';
 import { json, LoaderFunction, DataFunctionArgs, MetaFunction } from '@remix-run/node';
-import { Container } from '@nextui-org/react';
+import { Container, Badge } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 
 import { IMedia } from '~/types/media';
@@ -39,9 +39,21 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
 
 export const handle = {
   breadcrumb: () => (
-    <Link to="/anime/popular" aria-label="Popular Anime">
-      Popular Anime
-    </Link>
+    <NavLink to="/anime/popular" aria-label="Popular Anime">
+      {({ isActive }) => (
+        <Badge
+          color="primary"
+          variant="flat"
+          css={{
+            opacity: isActive ? 1 : 0.7,
+            transition: 'opacity 0.25s ease 0s',
+            '&:hover': { opacity: 0.8 },
+          }}
+        >
+          Popular Anime
+        </Badge>
+      )}
+    </NavLink>
   ),
 };
 

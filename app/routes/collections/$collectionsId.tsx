@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/indent */
 import { DataFunctionArgs, json, LoaderFunction, MetaFunction } from '@remix-run/node';
-import { useLoaderData, useLocation, Link, RouteMatch } from '@remix-run/react';
+import { useLoaderData, useLocation, NavLink, RouteMatch } from '@remix-run/react';
 import { motion } from 'framer-motion';
-import { Container, Spacer } from '@nextui-org/react';
+import { Container, Spacer, Badge } from '@nextui-org/react';
 import { useRouteData } from 'remix-utils';
 import type { User } from '@supabase/supabase-js';
 
@@ -41,18 +41,42 @@ export const loader: LoaderFunction = async ({ request, params }: DataFunctionAr
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
     <>
-      <Link to="/collections" aria-label="Collections">
-        Collections
-      </Link>
-      <Spacer x={0.5} />
+      <NavLink to="/collections" aria-label="Collections">
+        {({ isActive }) => (
+          <Badge
+            color="primary"
+            variant="flat"
+            css={{
+              opacity: isActive ? 1 : 0.7,
+              transition: 'opacity 0.25s ease 0s',
+              '&:hover': { opacity: 0.8 },
+            }}
+          >
+            Collections
+          </Badge>
+        )}
+      </NavLink>
+      <Spacer x={0.25} />
       <span> ❱ </span>
-      <Spacer x={0.5} />
-      <Link
+      <Spacer x={0.25} />
+      <NavLink
         to={`/collections/${match.params.collectionsId}`}
         aria-label={match.data?.detail?.name || match.params.collectionsId}
       >
-        {match.data?.detail?.name || match.params.collectionsId}
-      </Link>
+        {({ isActive }) => (
+          <Badge
+            color="primary"
+            variant="flat"
+            css={{
+              opacity: isActive ? 1 : 0.7,
+              transition: 'opacity 0.25s ease 0s',
+              '&:hover': { opacity: 0.8 },
+            }}
+          >
+            {match.data?.detail?.name || match.params.collectionsId}
+          </Badge>
+        )}
+      </NavLink>
     </>
   ),
 };

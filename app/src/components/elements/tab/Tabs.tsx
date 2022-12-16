@@ -118,12 +118,13 @@ TabsList.displayName = 'TabsList';
 
 export const TabsContent = styled(TabsPrimitive.Content, {
   flexGrow: 1,
-  padding: 5,
+  py: 20,
+  px: 5,
   '@xs': {
-    padding: 10,
+    px: 10,
   },
   '@md': {
-    padding: 20,
+    px: 20,
   },
   outline: 'none',
   '&:focus': {

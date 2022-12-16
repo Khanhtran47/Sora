@@ -1,6 +1,6 @@
 import type { MetaFunction } from '@remix-run/node';
 import { NavLink, useLocation } from '@remix-run/react';
-import { Container, Spacer } from '@nextui-org/react';
+import { Container, Spacer, Badge } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 
 import { H2, H6 } from '~/src/components/styles/Text.styles';
@@ -24,7 +24,19 @@ export const meta: MetaFunction = () => ({
 export const handle = {
   breadcrumb: () => (
     <NavLink to="/design-system" aria-label="Design system Page">
-      Design System
+      {({ isActive }) => (
+        <Badge
+          color="primary"
+          variant="flat"
+          css={{
+            opacity: isActive ? 1 : 0.7,
+            transition: 'opacity 0.25s ease 0s',
+            '&:hover': { opacity: 0.8 },
+          }}
+        >
+          Design System
+        </Badge>
+      )}
     </NavLink>
   ),
 };

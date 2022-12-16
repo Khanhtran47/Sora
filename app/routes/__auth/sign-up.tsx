@@ -1,6 +1,6 @@
 import { ActionFunction, LoaderFunction, json, redirect } from '@remix-run/node';
-import { useActionData, Link } from '@remix-run/react';
-import { Container } from '@nextui-org/react';
+import { useActionData, NavLink } from '@remix-run/react';
+import { Container, Badge } from '@nextui-org/react';
 
 import {
   getSessionFromCookie,
@@ -93,9 +93,21 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export const handle = {
   breadcrumb: () => (
-    <Link to="/sign-up" aria-label="Sign Up Page">
-      Sign Up
-    </Link>
+    <NavLink to="/sign-up" aria-label="Sign Up Page">
+      {({ isActive }) => (
+        <Badge
+          color="primary"
+          variant="flat"
+          css={{
+            opacity: isActive ? 1 : 0.7,
+            transition: 'opacity 0.25s ease 0s',
+            '&:hover': { opacity: 0.8 },
+          }}
+        >
+          Sign Up
+        </Badge>
+      )}
+    </NavLink>
   ),
 };
 

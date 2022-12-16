@@ -1,6 +1,6 @@
 import { DataFunctionArgs, json, LoaderFunction } from '@remix-run/node';
-import { useLoaderData, useNavigate, Link } from '@remix-run/react';
-import { Container } from '@nextui-org/react';
+import { useLoaderData, useNavigate, NavLink } from '@remix-run/react';
+import { Container, Badge } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 
 import { getListPeople } from '~/services/tmdb/tmdb.server';
@@ -27,9 +27,21 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
 
 export const handle = {
   breadcrumb: () => (
-    <Link to="/search/people" aria-label="Search People">
-      Search People
-    </Link>
+    <NavLink to="/search/people" aria-label="Search People">
+      {({ isActive }) => (
+        <Badge
+          color="primary"
+          variant="flat"
+          css={{
+            opacity: isActive ? 1 : 0.7,
+            transition: 'opacity 0.25s ease 0s',
+            '&:hover': { opacity: 0.8 },
+          }}
+        >
+          Search People
+        </Badge>
+      )}
+    </NavLink>
   ),
 };
 

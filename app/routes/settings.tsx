@@ -12,6 +12,7 @@ import {
   Switch,
   Radio,
   Tooltip,
+  Badge,
   styled,
 } from '@nextui-org/react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -43,7 +44,19 @@ export const meta: MetaFunction = () => ({
 export const handle = {
   breadcrumb: () => (
     <NavLink to="/settings" aria-label="Settings Page">
-      Settings
+      {({ isActive }) => (
+        <Badge
+          color="primary"
+          variant="flat"
+          css={{
+            opacity: isActive ? 1 : 0.7,
+            transition: 'opacity 0.25s ease 0s',
+            '&:hover': { opacity: 0.8 },
+          }}
+        >
+          Settings
+        </Badge>
+      )}
     </NavLink>
   ),
 };

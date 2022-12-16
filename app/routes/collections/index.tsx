@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/indent */
 import { MetaFunction } from '@remix-run/node';
-import { useLocation, Link } from '@remix-run/react';
+import { useLocation, NavLink } from '@remix-run/react';
 import { motion } from 'framer-motion';
-import { Container } from '@nextui-org/react';
+import { Container, Badge } from '@nextui-org/react';
 
 import MediaList from '~/src/components/media/MediaList';
 import featuredList from '~/src/constants/featuredList';
@@ -21,9 +21,21 @@ export const meta: MetaFunction = () => ({
 
 export const handle = {
   breadcrumb: () => (
-    <Link to="/collections" aria-label="Collections">
-      Collections
-    </Link>
+    <NavLink to="/collections" aria-label="Collections">
+      {({ isActive }) => (
+        <Badge
+          color="primary"
+          variant="flat"
+          css={{
+            opacity: isActive ? 1 : 0.7,
+            transition: 'opacity 0.25s ease 0s',
+            '&:hover': { opacity: 0.8 },
+          }}
+        >
+          Collections
+        </Badge>
+      )}
+    </NavLink>
   ),
 };
 

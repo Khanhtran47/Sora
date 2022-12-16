@@ -1,8 +1,15 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
 import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
-import { useCatch, useLoaderData, Outlet, Link, RouteMatch, useLocation } from '@remix-run/react';
-import { Container } from '@nextui-org/react';
+import {
+  useCatch,
+  useLoaderData,
+  Outlet,
+  NavLink,
+  RouteMatch,
+  useLocation,
+} from '@remix-run/react';
+import { Container, Badge } from '@nextui-org/react';
 
 import { getAnimeInfo } from '~/services/consumet/anilist/anilist.server';
 import { authenticate } from '~/services/supabase';
@@ -109,12 +116,24 @@ export const meta: MetaFunction = ({ data, params }) => {
 
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
-    <Link
+    <NavLink
       to={`/anime/${match.params.animeId}/overview`}
       aria-label={match.data?.detail?.title?.english || match.data?.detail?.title?.romaji}
     >
-      {match.data?.detail?.title?.english || match.data?.detail?.title?.romaji}
-    </Link>
+      {({ isActive }) => (
+        <Badge
+          color="primary"
+          variant="flat"
+          css={{
+            opacity: isActive ? 1 : 0.7,
+            transition: 'opacity 0.25s ease 0s',
+            '&:hover': { opacity: 0.8 },
+          }}
+        >
+          {match.data?.detail?.title?.english || match.data?.detail?.title?.romaji}
+        </Badge>
+      )}
+    </NavLink>
   ),
 };
 

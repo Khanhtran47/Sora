@@ -39,8 +39,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
     routeName,
     virtual,
   } = props;
-  const isXs = useMediaQuery('(max-width: 540px)');
-  const isSm = useMediaQuery('(max-width: 1040px)');
+  const isXs = useMediaQuery('(max-width: 370px)');
   const isMd = useMediaQuery('(max-width: 1340px)');
   const isLg = useMediaQuery('(max-width: 1660px)');
   const fetcher = useFetcher();
@@ -191,7 +190,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
           return (
             <Grid
               xs={isXs ? 12 : 6}
-              sm={isSm ? 6 : 4}
+              sm={4}
               md={isMd ? 4 : 3}
               lg={isLg ? 3 : 2.4}
               xl={2}

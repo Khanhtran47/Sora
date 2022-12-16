@@ -5,12 +5,12 @@ import {
   useCatch,
   useLoaderData,
   Outlet,
-  Link,
+  NavLink,
   RouteMatch,
   useFetcher,
   useLocation,
 } from '@remix-run/react';
-import { Container } from '@nextui-org/react';
+import { Container, Badge } from '@nextui-org/react';
 
 import { getMovieDetail, getTranslations, getImdbRating } from '~/services/tmdb/tmdb.server';
 import i18next from '~/i18n/i18next.server';
@@ -86,12 +86,24 @@ export const meta: MetaFunction = ({ data, params }) => {
 
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
-    <Link
+    <NavLink
       to={`/movies/${match.params.movieId}`}
       aria-label={match.data?.detail?.title || match.params.movieId}
     >
-      {match.data?.detail?.title || match.params.movieId}
-    </Link>
+      {({ isActive }) => (
+        <Badge
+          color="primary"
+          variant="flat"
+          css={{
+            opacity: isActive ? 1 : 0.7,
+            transition: 'opacity 0.25s ease 0s',
+            '&:hover': { opacity: 0.8 },
+          }}
+        >
+          {match.data?.detail?.title || match.params.movieId}
+        </Badge>
+      )}
+    </NavLink>
   ),
 };
 

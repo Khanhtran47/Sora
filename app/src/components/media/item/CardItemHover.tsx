@@ -87,7 +87,9 @@ const CardItemHover = (props: ICardItemHoverProps) => {
       }}
     >
       {loading ? (
-        <Loading type="points-opacity" />
+        <Flex justify="center" align="center" className="w-full">
+          <Loading type="points-opacity" />
+        </Flex>
       ) : (
         <>
           <AnimatePresence>
