@@ -33,6 +33,11 @@ import Flex from '~/src/components/styles/Flex.styles';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '~/src/components/elements/tab/Tabs';
 
 import LogoFooter from '~/src/assets/images/logo_footer.png';
+import SettingsIcon from '~/src/assets/icons/SettingsIcon.js';
+import Brush from '~/src/assets/icons/BrushIcon.js';
+import User from '~/src/assets/icons/UserIcon.js';
+import Play from '~/src/assets/icons/PlayIcon.js';
+import Info from '~/src/assets/icons/InfoIcon.js';
 
 export const meta: MetaFunction = () => ({
   title: 'Settings',
@@ -65,6 +70,29 @@ const Underline = styled(motion.div, {
   position: 'absolute',
   backgroundColor: '$primary',
 });
+
+const settingsIcon = (id: string, filled: boolean) => {
+  let icon;
+  switch (id) {
+    case 'general-tab':
+      icon = <SettingsIcon filled={filled} />;
+      break;
+    case 'appearance-tab':
+      icon = <Brush filled={filled} />;
+      break;
+    case 'account-tab':
+      icon = <User filled={filled} />;
+      break;
+    case 'player-tab':
+      icon = <Play filled={filled} />;
+      break;
+    case 'about-tab':
+      icon = <Info filled={filled} />;
+      break;
+    default:
+  }
+  return icon;
+};
 
 const Settings = () => {
   const location = useLocation();
@@ -142,10 +170,13 @@ const Settings = () => {
                   },
                 }}
               >
+                {settingsIcon(tab.id, activeTab === tab.id)}
+                <H6 h6 css={{ color: 'inherit', marginLeft: '0.5rem' }}>
+                  {t(tab.title)}
+                </H6>
                 {activeTab === tab.id ? (
                   <Underline className="underline" layoutId="underline" />
                 ) : null}
-                {t(tab.title)}
               </TabsTrigger>
             ))}
           </TabsList>
