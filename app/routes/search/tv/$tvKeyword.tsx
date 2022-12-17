@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/indent */
-import * as React from 'react';
 import { DataFunctionArgs, json, LoaderFunction, MetaFunction } from '@remix-run/node';
 import { useLoaderData, useNavigate, useParams, NavLink, RouteMatch } from '@remix-run/react';
 import { Container, Badge } from '@nextui-org/react';
@@ -78,7 +77,6 @@ const SearchRoute = () => {
   const navigate = useNavigate();
   const { tvKeyword } = useParams();
   const { t } = useTranslation();
-  const [listName] = React.useState(t('searchResults'));
 
   const paginationChangeHandler = (page: number) =>
     navigate(`/search/tv/${tvKeyword}?page=${page}`);
@@ -93,7 +91,7 @@ const SearchRoute = () => {
         onSubmit={onSubmit}
         textOnButton={t('search.action')}
         textHelper={t('search.helper.tv')}
-        textPlaceHolder={t('search.placeHolder.anime')}
+        textPlaceHolder={t('search.placeHolder.tv')}
       />
       <Container
         fluid
@@ -113,7 +111,7 @@ const SearchRoute = () => {
             listType="grid"
             showListTypeChangeButton
             items={searchResults.items}
-            listName={listName}
+            listName={t('search.searchResults')}
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
             showPagination

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { DataFunctionArgs, json, LoaderFunction, MetaFunction } from '@remix-run/node';
 import { useLoaderData, useNavigate, useParams, NavLink, RouteMatch } from '@remix-run/react';
 import { Container, Badge } from '@nextui-org/react';
@@ -36,7 +35,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     'og:url': `https://sora-anime.vercel.app/search/people/${params.peopleKeyword}`,
     'og:title': `Search results for '${params.peopleKeyword}' on Sora`,
     'og:description': `Watch ${params.peopleKeyword} in full HD online with Subtitle`,
-    'og:image': searchResults?.items[0]?.backdropPath || searchResults?.items[0]?.posterPath || '',
+    'og:image': searchResults?.items[0]?.posterPath || '',
   };
 };
 
@@ -65,10 +64,10 @@ export const handle = {
 
 const SearchRoute = () => {
   const { searchResults } = useLoaderData<LoaderData>() || {};
+  console.log('🚀 ~ file: $peopleKeyword.tsx:67 ~ SearchRoute ~ searchResults', searchResults);
   const navigate = useNavigate();
   const { peopleKeyword } = useParams();
   const { t } = useTranslation();
-  const [listName] = React.useState(t('searchResults'));
 
   const paginationChangeHandler = (page: number) =>
     navigate(`/search/people/${peopleKeyword}?page=${page}`);
@@ -98,11 +97,11 @@ const SearchRoute = () => {
           },
         }}
       >
-        {searchResults && searchResults.results?.length > 0 && (
+        {searchResults && searchResults.items && searchResults.items?.length > 0 && (
           <MediaList
             currentPage={searchResults.page}
-            items={searchResults.results}
-            listName={listName}
+            items={searchResults.items}
+            listName={t('search.searchResults')}
             listType="grid"
             onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
             showPagination

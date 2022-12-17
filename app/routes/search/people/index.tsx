@@ -47,6 +47,7 @@ export const handle = {
 
 const SearchRoute = () => {
   const { people } = useLoaderData<LoaderData>() || {};
+  console.log('🚀 ~ file: index.tsx:50 ~ SearchRoute ~ people', people);
   const navigate = useNavigate();
   const { t } = useTranslation();
 

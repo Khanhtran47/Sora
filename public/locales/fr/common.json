@@ -52,5 +52,27 @@
   "release_date": "Date de sortie",
   "original_title": "Nom",
   "vote_average": "Vote moyen",
-  "first_air_date": "Première diffusion"
+  "first_air_date": "Première diffusion",
+  "search": {
+    "title": {
+      "movie": "Recherche de films",
+      "tv": "Recherche de TVs",
+      "people": "Recherche de personnes",
+      "anime": "Recherche d'animé"
+    },
+    "action": "Recherchez",
+    "searchResults": "Résultats de recherche",
+    "placeHolder": {
+      "movie": "Nom du film",
+      "tv": "Titre du TV",
+      "people": "Personne",
+      "anime": "Anime"
+    },
+    "helper": {
+      "movie": "Entrez le nom du film et recherchez",
+      "tv": "Entrez le titre du TV et recherchez",
+      "people": "Entrez le nom de la personne et recherchez",
+      "anime": "Entrez le nom de l'animé et recherchez"
+    }
+  }
 }

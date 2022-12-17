@@ -98,7 +98,7 @@ const SearchRoute = () => {
             hasNextPage={searchResults.hasNextPage || false}
             items={searchResults.results as IMedia[]}
             itemsType="anime"
-            listName="Search Results"
+            listName={t('search.searchResults')}
             listType="grid"
             loadingType="scroll"
             routeName={location.pathname}

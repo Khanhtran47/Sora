@@ -52,5 +52,27 @@
   "release_date": "Release Date",
   "original_title": "Name",
   "vote_average": "Vote Average",
-  "first_air_date": "First Air Date"
+  "first_air_date": "First Air Date",
+  "search": {
+    "title": {
+      "movie": "Search Movies",
+      "tv": "Search TV Shows",
+      "people": "Search People",
+      "anime": "Search Anime"
+    },
+    "action": "Search",
+    "searchResults": "Search Results",
+    "placeHolder": {
+      "movie": "Movie name",
+      "tv": "TV show title",
+      "people": "People",
+      "anime": "Anime"
+    },
+    "helper": {
+      "movie": "Enter movie name and search",
+      "tv": "Enter tv show title and search",
+      "people": "Enter people name and search",
+      "anime": "Enter anime name and search"
+    }
+  }
 }

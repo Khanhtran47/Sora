@@ -9,7 +9,6 @@ import {
   MediaType,
   TimeWindowType,
   IListGenre,
-  IListPeople,
   IPeopleDetail,
   ListPersonType,
   IPeopleExternalIds,
@@ -225,14 +224,6 @@ export const getListPeople = async (
   language?: string,
   page?: number,
 ): Promise<IMediaList | undefined> => {
-  // try {
-  //   const fetched = await fetcher<IListPeople>();
-  //   if (!fetched?.results) throw new Error('Dont have result');
-
-  //   return fetched;
-  // } catch (error) {
-  //   console.error(error);
-  // }
   const url = TMDB.listPerson(type, language, page);
   return getListFromTMDB(url, 'people');
 };
@@ -325,17 +316,9 @@ export const getSearchPerson = async (
   include_adult?: boolean,
   language?: string,
   region?: string,
-): Promise<IListPeople | undefined> => {
-  try {
-    const fetched = await fetcher<IListPeople>(
-      TMDB.searchPerson(keyword, page, include_adult, language, region),
-    );
-    if (!fetched?.results) throw new Error('Dont have result');
-
-    return fetched;
-  } catch (error) {
-    console.error(error);
-  }
+): Promise<IMediaList | undefined> => {
+  const url = TMDB.searchPerson(keyword, page, include_adult, language, region);
+  return getListFromTMDB(url, 'people');
 };
 
 /* =======================================End of Search Field========================================= */
