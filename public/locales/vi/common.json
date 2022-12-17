@@ -52,26 +52,5 @@
   "release_date": "Ngày phát hành",
   "original_title": "Tên",
   "vote_average": "Điểm",
-  "first_air_date": "Ngày công chiếu",
-  "search": {
-    "title": {
-      "movie": "Tìm kiếm phim lẻ",
-      "tv": "Tìm kiếm phim bộ",
-      "people": "Tìm kiếm diễn viên",
-      "anime": "Tìm kiếm anime"
-    },
-    "action": "Tìm kiếm",
-    "placeHolder": {
-      "movie": "Tên phim",
-      "tv": "Tên phim",
-      "people": "Tên diễn viên",
-      "anime": "Tên Anime"
-    },
-    "helper": {
-      "movie": "Nhập tên phim và tìm kiếm",
-      "tv": "Nhập tên phim và tìm kiếm",
-      "people": "Nhập tên diễn viên và tìm kiếm",
-      "anime": "Nhập tên anime và tìm kiếm"
-    }
-  }
+  "first_air_date": "Ngày công chiếu"
 }

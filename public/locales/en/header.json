@@ -20,5 +20,26 @@
   "logout": "Log Out",
   "en": "English",
   "fr": "French",
-  "vi": "Vietnamese"
+  "vi": "Vietnamese",
+  "search": {
+    "title": {
+      "movie": "Search Movies",
+      "tv": "Search TV Shows",
+      "people": "Search People",
+      "anime": "Search Anime"
+    },
+    "action": "Search",
+    "placeHolder": {
+      "movie": "Movie name",
+      "tv": "TV show title",
+      "people": "People",
+      "anime": "Anime"
+    },
+    "helper": {
+      "movie": "Enter movie name and search",
+      "tv": "Enter tv show title and search",
+      "people": "Enter people name and search",
+      "anime": "Enter anime name and search"
+    }
+  }
 }

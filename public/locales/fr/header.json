@@ -20,5 +20,26 @@
   "logout": "Déconnexion",
   "en": "Anglais",
   "fr": "Français",
-  "vi": "Vietnamien"
+  "vi": "Vietnamien",
+  "search": {
+    "title": {
+      "movie": "Recherche de films",
+      "tv": "Recherche de TVs",
+      "people": "Recherche de personnes",
+      "anime": "Recherche d'animé"
+    },
+    "action": "Recherchez",
+    "placeHolder": {
+      "movie": "Nom du film",
+      "tv": "Titre du TV",
+      "people": "Personne",
+      "anime": "Anime"
+    },
+    "helper": {
+      "movie": "Entrez le nom du film et recherchez",
+      "tv": "Entrez le titre du TV et recherchez",
+      "people": "Entrez le nom de la personne et recherchez",
+      "anime": "Entrez le nom de l'animé et recherchez"
+    }
+  }
 }
