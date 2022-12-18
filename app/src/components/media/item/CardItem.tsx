@@ -80,6 +80,7 @@ const CardItem = (props: ICardItemProps) => {
   const fetcher = useFetcher();
   const [trailerCard, setTrailerCard] = React.useState<Trailer>({});
   const [, setIsCardPlaying] = useLocalStorage('cardPlaying', false);
+  const [isPlayTrailer] = useLocalStorage('playTrailer', false);
   const titleItem =
     typeof title === 'string'
       ? title
@@ -314,7 +315,7 @@ const CardItem = (props: ICardItemProps) => {
         css={isEpisodeCard || mediaType === 'people' ? { p: 0 } : {}}
         onVisibleChange={(visible) => {
           if (visible) {
-            if (mediaType !== 'anime' && mediaType !== 'people')
+            if (mediaType !== 'anime' && mediaType !== 'people' && isPlayTrailer)
               fetcher.load(`/${mediaType === 'movie' ? 'movies' : 'tv-shows'}/${id}/videos`);
           } else {
             setIsCardPlaying(false);

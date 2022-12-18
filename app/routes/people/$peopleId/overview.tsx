@@ -45,9 +45,9 @@ const OverviewPage = () => {
   }, [peopleData]);
   React.useEffect(() => {
     if (fetcher.data && fetcher.data.searchResults) {
-      const { results } = fetcher.data.searchResults;
-      const peopleFound = results.find((result: IPeople) => result.id === peopleData?.detail?.id);
-      setKnownFor(TMDB.postFetchDataHandler(peopleFound?.known_for));
+      const { items } = fetcher.data.searchResults;
+      const peopleFound = items.find((result: IPeople) => result.id === peopleData?.detail?.id);
+      setKnownFor(TMDB.postFetchDataHandler(peopleFound?.knownFor));
     }
   }, [fetcher.data]);
   return (
