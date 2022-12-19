@@ -80,9 +80,9 @@ export const meta: MetaFunction = ({ data, params }) => {
     'twitter:site': '@sora_anime',
     'twitter:domain': 'sora-anime.vercel.app',
     'twitter:url': `https://sora-anime.vercel.app/tv-shows/${params.tvId}`,
-    'twitter:title': `Watch ${detail.name || ''} HD online Free - Sora`,
+    'twitter:title': `Watch ${detail?.name || ''} HD online Free - Sora`,
     'twitter:description':
-      detail?.overview || `Watch ${detail.name || ''} in full HD online with Subtitle`,
+      detail?.overview || `Watch ${detail?.name || ''} in full HD online with Subtitle`,
     'twitter:image': detail?.backdrop_path
       ? TMDB.backdropUrl(detail?.backdrop_path, 'w1280')
       : undefined,

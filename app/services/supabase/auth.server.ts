@@ -43,6 +43,7 @@ export async function authenticate(
   request: Request,
   customAuthRequired?: boolean,
   botcheckRequired?: boolean,
+  payloadCheckRequired?: boolean,
   headers = new Headers(),
 ) {
   // try to get the session (from cookie) and payload from request
@@ -66,7 +67,11 @@ export async function authenticate(
     // there is some access token in cookie session
     const authToken = session.get('auth_token');
 
-    if (payload !== authToken?.req_payload) {
+    if (
+      payload !== authToken?.req_payload &&
+      process.env.NODE_ENV === 'production' &&
+      payloadCheckRequired
+    ) {
       // the access token and the agent does not come from same agent
       throw new Response(null, { status: 200 });
     }

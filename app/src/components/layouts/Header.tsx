@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable react-hooks/exhaustive-deps */
 import * as React from 'react';
 import { Button, Grid, Row, Tooltip, Popover, Spacer } from '@nextui-org/react';
@@ -166,7 +167,13 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
           />
         </Tooltip>
         {/* Dropdown setting */}
-        <Popover placement="bottom-right" isOpen={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
+        <Popover
+          shouldFlip
+          triggerType="menu"
+          placement="bottom-right"
+          isOpen={isDropdownOpen}
+          onOpenChange={setIsDropdownOpen}
+        >
           <Popover.Trigger>
             <Button auto light aria-label="dropdown" css={{ padding: '0 $xs' }}>
               <PlayerStyled
@@ -188,7 +195,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
               transform: 'none',
               overflow: 'hidden',
               transition: 'height 0.5s',
-              width: 280,
+              width: 240,
               zIndex: 999,
               borderWidth: 0,
             }}

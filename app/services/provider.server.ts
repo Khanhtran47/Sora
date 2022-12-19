@@ -171,7 +171,6 @@ const getProviderList = async (
       findKissKh && findKissKh.id ? getKissKhInfo(findKissKh.id) : undefined,
       findBilibili && findBilibili.id ? getBilibiliInfo(findBilibili.id) : undefined,
     ]);
-    console.log('🚀 ~ file: provider.server.ts:168 ~ bilibiliDetail', bilibiliDetail);
     if (findKissKh && findKissKh.id)
       provider.push({
         id: findKissKh.id.toString(),

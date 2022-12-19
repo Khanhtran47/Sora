@@ -15,7 +15,7 @@ import {
   useLocation,
   useNavigate,
 } from '@remix-run/react';
-import { Container, Spacer, Loading, Radio, Badge } from '@nextui-org/react';
+import { Container, Spacer, Loading, Badge } from '@nextui-org/react';
 import { ClientOnly, useRouteData } from 'remix-utils';
 import { isDesktop } from 'react-device-detect';
 import Hls from 'hls.js';
@@ -43,13 +43,12 @@ import getProviderList from '~/services/provider.server';
 import { LOKLOK_URL } from '~/services/loklok/utils.server';
 
 import TMDB from '~/utils/media';
-import Player from '~/utils/player';
 import updateHistory from '~/utils/update-history';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import useLocalStorage from '~/hooks/useLocalStorage';
 
 import ArtPlayer from '~/src/components/elements/player/ArtPlayer';
-import AspectRatio from '~/src/components/elements/aspect-ratio/AspectRatio';
+import PlayerError from '~/src/components/elements/player/PlayerError';
 import WatchDetail from '~/src/components/elements/shared/WatchDetail';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
@@ -84,32 +83,32 @@ export const meta: MetaFunction = ({ data, params }) => {
   }
   const { detail } = data || {};
   return {
-    title: `Watch ${detail.name || ''} season ${params.seasonId || ''} episode ${
+    title: `Watch ${detail?.name || ''} season ${params.seasonId || ''} episode ${
       params.episodeId || ''
     } HD online Free - Sora`,
-    description: `Watch ${detail.name || ''} season ${params.seasonId || ''} episode ${
+    description: `Watch ${detail?.name || ''} season ${params.seasonId || ''} episode ${
       params.episodeId
     } in full HD online with Subtitle`,
-    keywords: `Watch ${detail.name || ''} season ${params.seasonId || ''} episode ${
+    keywords: `Watch ${detail?.name || ''} season ${params.seasonId || ''} episode ${
       params.episodeId
-    }, Stream ${detail.name || ''} season ${params.seasonId || ''} episode ${
+    }, Stream ${detail?.name || ''} season ${params.seasonId || ''} episode ${
       params.episodeId || ''
-    }, Watch ${detail.name || ''} season ${params.seasonId || ''} episode ${
+    }, Watch ${detail?.name || ''} season ${params.seasonId || ''} episode ${
       params.episodeId || ''
-    } HD, Online ${detail.name || ''} season ${params.seasonId || ''} episode ${
+    } HD, Online ${detail?.name || ''} season ${params.seasonId || ''} episode ${
       params.episodeId || ''
-    }, Streaming ${detail.name || ''} season ${params.seasonId || ''} episode ${
+    }, Streaming ${detail?.name || ''} season ${params.seasonId || ''} episode ${
       params.episodeId || ''
-    }, English, Subtitle ${detail.name || ''} season ${params.seasonId || ''} episode ${
+    }, English, Subtitle ${detail?.name || ''} season ${params.seasonId || ''} episode ${
       params.episodeId || ''
     }, English Subtitle`,
     'og:url': `https://sora-anime.vercel.app/tv-shows/${params.tvId}/season/${
       params.seasonId
     }/episode/${params.episodeId || ''}`,
-    'og:title': `Watch ${detail.name || ''} season ${params.seasonId || ''} episode ${
+    'og:title': `Watch ${detail?.name || ''} season ${params.seasonId || ''} episode ${
       params.episodeId
     } HD online Free - Sora`,
-    'og:description': `Watch ${detail.name || ''} season ${params.seasonId || ''} episode ${
+    'og:description': `Watch ${detail?.name || ''} season ${params.seasonId || ''} episode ${
       params.episodeId
     } in full HD online with Subtitle`,
     'og:image': TMDB.backdropUrl(detail?.backdrop_path || '', 'w780'),
@@ -132,7 +131,7 @@ const checkHasNextEpisode = (
 
 export const loader: LoaderFunction = async ({ request, params }: LoaderArgs) => {
   const [user, locale] = await Promise.all([
-    authenticate(request, true, true),
+    authenticate(request, true, true, true),
     i18next.getLocale(request),
   ]);
 
@@ -485,7 +484,6 @@ const EpisodeWatch = () => {
     provider,
     idProvider,
     detail,
-    imdbId,
     recommendations,
     imdbRating,
     seasonDetail,
@@ -506,8 +504,6 @@ const EpisodeWatch = () => {
   const { seasonId, episodeId } = useParams();
   const isSm = useMediaQuery('(max-width: 650px)');
   const id = detail && detail.id;
-  const [player, setPlayer] = useState<string>('1');
-  const [source, setSource] = useState<string>(Player.moviePlayerUrl(Number(id), 1));
   const [isVideoEnded, setIsVideoEnded] = useState<boolean>(false);
   const fetcher = useFetcher();
   const location = useLocation();
@@ -564,21 +560,6 @@ const EpisodeWatch = () => {
     [provider, subtitles],
   );
 
-  useEffect(
-    () =>
-      player === '2'
-        ? setSource(Player.tvPlayerUrl(Number(imdbId), Number(player), currentEpisode || 1))
-        : setSource(
-            Player.tvPlayerUrl(
-              Number(detail?.id),
-              Number(player),
-              Number(seasonId) || 1,
-              currentEpisode,
-            ),
-          ),
-    [player, imdbId, seasonId, detail?.id, currentEpisode],
-  );
-
   useEffect(() => {
     if (isVideoEnded && playNextEpisode && provider && idProvider && hasNextEpisode)
       navigate(
@@ -593,228 +574,221 @@ const EpisodeWatch = () => {
       <ClientOnly fallback={<Loading type="default" />}>
         {() => (
           <Suspense fallback={<Loading type="default" />}>
-            <AspectRatio.Root ratio={7 / 3}>
-              {sources ? (
-                <ArtPlayer
-                  autoPlay
-                  currentEpisode={currentEpisode}
-                  hasNextEpisode={hasNextEpisode}
-                  nextEpisodeUrl={
-                    hasNextEpisode
-                      ? `/tv-shows/${detail?.id}/season/${seasonId}/episode/${
-                          currentEpisode + 1
-                        }?provider=${provider}&id=${idProvider}`
-                      : undefined
-                  }
-                  option={{
-                    title: detail?.name,
+            {sources ? (
+              <ArtPlayer
+                key={`${detail?.id}-${seasonId}-${episodeId}-${provider}-${idProvider}`}
+                id={Number(id)}
+                type="tv"
+                autoPlay
+                currentEpisode={currentEpisode}
+                hasNextEpisode={hasNextEpisode}
+                nextEpisodeUrl={
+                  hasNextEpisode
+                    ? `/tv-shows/${detail?.id}/season/${seasonId}/episode/${
+                        currentEpisode + 1
+                      }?provider=${provider}&id=${idProvider}`
+                    : undefined
+                }
+                option={{
+                  title: detail?.name,
+                  url:
+                    provider === 'Flixhq'
+                      ? sources?.find(
+                          (item: { quality: number | string; url: string }) =>
+                            item.quality === 'auto',
+                        )?.url || sources[0]?.url
+                      : provider === 'Loklok'
+                      ? sources?.find(
+                          (item: { quality: number | string; url: string }) =>
+                            Number(item.quality) === 720,
+                        )?.url || sources[0]?.url
+                      : provider === 'KissKh'
+                      ? sources[0]?.url
+                      : sources?.find(
+                          (item: { quality: number | string; url: string }) =>
+                            item.quality === 'auto',
+                        )?.url || sources[0]?.url,
+                  type: 'm3u8',
+                  subtitle: {
                     url:
                       provider === 'Flixhq'
-                        ? sources?.find(
-                            (item: { quality: number | string; url: string }) =>
-                              item.quality === 'auto',
-                          )?.url || sources[0]?.url
+                        ? subtitles?.find((item: { lang: string; url: string }) =>
+                            item.lang.includes('English'),
+                          )?.url || ''
                         : provider === 'Loklok'
-                        ? sources?.find(
-                            (item: { quality: number | string; url: string }) =>
-                              Number(item.quality) === 720,
-                          )?.url || sources[0]?.url
+                        ? subtitles?.find((item: { lang: string; url: string }) =>
+                            item.lang.includes('English'),
+                          )?.url || ''
                         : provider === 'KissKh'
-                        ? sources[0]?.url
-                        : sources?.find(
-                            (item: { quality: number | string; url: string }) =>
-                              item.quality === 'auto',
-                          )?.url || sources[0]?.url,
-                    type: 'm3u8',
-                    subtitle: {
-                      url:
-                        provider === 'Flixhq'
-                          ? subtitles?.find((item: { lang: string; url: string }) =>
-                              item.lang.includes('English'),
-                            )?.url || ''
-                          : provider === 'Loklok'
-                          ? subtitles?.find((item: { lang: string; url: string }) =>
-                              item.lang.includes('English'),
-                            )?.url || ''
-                          : provider === 'KissKh'
-                          ? subtitles?.find(
-                              (item: { lang: string; url: string; default?: boolean }) =>
-                                item.default,
-                            )?.url || ''
-                          : subtitles?.find((item: { lang: string; url: string }) =>
-                              item.lang.includes('English'),
-                            )?.url || '',
-                      encoding: 'utf-8',
-                      type:
-                        provider === 'Flixhq' || provider === 'Loklok'
-                          ? 'vtt'
-                          : provider === 'KissKh'
-                          ? 'srt'
-                          : '',
+                        ? subtitles?.find(
+                            (item: { lang: string; url: string; default?: boolean }) =>
+                              item.default,
+                          )?.url || ''
+                        : subtitles?.find((item: { lang: string; url: string }) =>
+                            item.lang.includes('English'),
+                          )?.url || '',
+                    encoding: 'utf-8',
+                    type:
+                      provider === 'Flixhq' || provider === 'Loklok'
+                        ? 'vtt'
+                        : provider === 'KissKh'
+                        ? 'srt'
+                        : '',
+                    style: {
+                      fontSize: isDesktop ? '40px' : '20px',
+                    },
+                  },
+                  poster: TMDB.backdropUrl(detail?.backdrop_path || '', isSm ? 'w780' : 'w1280'),
+                  isLive: false,
+                  backdrop: true,
+                  playsInline: true,
+                  autoPlayback: true,
+                  layers: [
+                    {
+                      name: 'title',
+                      html: `<span>${detail?.name} - SS ${seasonId} - EP ${episodeId}</span>`,
                       style: {
-                        fontSize: isDesktop ? '40px' : '20px',
+                        position: 'absolute',
+                        top: '15px',
+                        left: '15px',
+                        fontSize: '1.125rem',
                       },
                     },
-                    poster: TMDB.backdropUrl(detail?.backdrop_path || '', isSm ? 'w780' : 'w1280'),
-                    isLive: false,
-                    backdrop: true,
-                    playsInline: true,
-                    autoPlayback: true,
-                    layers: [
-                      {
-                        name: 'title',
-                        html: `<span>${detail?.name} - SS ${seasonId} - EP ${episodeId}</span>`,
-                        style: {
-                          position: 'absolute',
-                          top: '15px',
-                          left: '15px',
-                          fontSize: '1.125rem',
-                        },
-                      },
-                    ],
-                    customType: {
-                      m3u8: (video: HTMLMediaElement, url: string) => {
-                        if (hls) {
-                          hls.destroy();
-                        }
-                        if (Hls.isSupported()) {
-                          hls = new Hls();
-                          hls.loadSource(url);
-                          hls.attachMedia(video);
-                        } else {
-                          const canPlay = video.canPlayType('application/vnd.apple.mpegurl');
-                          if (canPlay === 'probably' || canPlay === 'maybe') {
-                            video.src = url;
-                          }
-                        }
-                      },
-                    },
-                    plugins:
-                      provider === 'KissKh'
-                        ? [
-                            artplayerPluginHlsQuality({
-                              setting: true,
-                              title: 'Quality',
-                              auto: 'Auto',
-                            }),
-                          ]
-                        : [],
-                  }}
-                  qualitySelector={qualitySelector || []}
-                  subtitleSelector={subtitleSelector || []}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                  }}
-                  subtitleOptions={{
-                    parent_tmdb_id: detail?.id,
-                    season_number: Number(seasonId),
-                    episode_number: currentEpisode,
-                    type: 'episode',
-                  }}
-                  getInstance={(art) => {
-                    art.on('ready', () => {
-                      setIsVideoEnded(false);
-                      const t = new URLSearchParams(location.search).get('t');
-                      if (t) {
-                        art.currentTime = Number(t);
-                      }
-                    });
-
-                    if (userId) {
-                      updateHistory(
-                        art,
-                        fetcher,
-                        userId,
-                        location.pathname + location.search,
-                        'tv',
-                        detail?.name || detail?.name || '',
-                        detail?.overview || '',
-                        seasonId,
-                        episodeId,
-                      );
-                    }
-
-                    art.on('pause', () => {
-                      art.layers.title.style.display = 'block';
-                    });
-                    art.on('play', () => {
-                      setIsVideoEnded(false);
-                      art.layers.title.style.display = 'none';
-                    });
-                    art.on('hover', (state: boolean) => {
-                      art.layers.title.style.display = state || !art.playing ? 'block' : 'none';
-                    });
-                    art.on('video:ended', () => {
-                      setIsVideoEnded(true);
-                    });
-                    art.on('destroy', () => {
-                      setIsVideoEnded(false);
+                  ],
+                  customType: {
+                    m3u8: (video: HTMLMediaElement, url: string) => {
                       if (hls) {
                         hls.destroy();
                       }
-                    });
-                  }}
-                />
-              ) : (
-                <iframe
-                  id="iframe"
-                  src={source}
-                  style={{
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: '100%',
-                  }}
-                  frameBorder="0"
-                  title="movie-player"
-                  allowFullScreen
-                  scrolling="no"
-                  // @ts-expect-error: this is expected
-                  sandbox
-                />
-              )}
-            </AspectRatio.Root>
-            {!sources && (
-              <>
-                <Spacer y={1} />
-                <Radio.Group
-                  label="Choose Player"
-                  defaultValue="1"
-                  orientation="horizontal"
-                  value={player}
-                  onChange={setPlayer}
-                >
-                  <Radio value="1">Player 1</Radio>
-                  <Radio value="2">Player 2</Radio>
-                  <Radio value="3">Player 3</Radio>
-                </Radio.Group>
-              </>
+                      if (Hls.isSupported()) {
+                        hls = new Hls();
+                        hls.loadSource(url);
+                        hls.attachMedia(video);
+                      } else {
+                        const canPlay = video.canPlayType('application/vnd.apple.mpegurl');
+                        if (canPlay === 'probably' || canPlay === 'maybe') {
+                          video.src = url;
+                        }
+                      }
+                    },
+                  },
+                  plugins:
+                    provider === 'KissKh'
+                      ? [
+                          artplayerPluginHlsQuality({
+                            setting: true,
+                            title: 'Quality',
+                            auto: 'Auto',
+                          }),
+                        ]
+                      : [],
+                }}
+                qualitySelector={qualitySelector || []}
+                subtitleSelector={subtitleSelector || []}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                }}
+                subtitleOptions={{
+                  parent_tmdb_id: detail?.id,
+                  season_number: Number(seasonId),
+                  episode_number: currentEpisode,
+                  type: 'episode',
+                  title: detail?.name,
+                  sub_format: provider === 'KissKh' ? 'srt' : 'webvtt',
+                }}
+                getInstance={(art) => {
+                  art.on('ready', () => {
+                    setIsVideoEnded(false);
+                    const t = new URLSearchParams(location.search).get('t');
+                    if (t) {
+                      art.currentTime = Number(t);
+                    }
+                  });
+
+                  if (userId) {
+                    updateHistory(
+                      art,
+                      fetcher,
+                      userId,
+                      location.pathname + location.search,
+                      'tv',
+                      detail?.name || detail?.name || '',
+                      detail?.overview || '',
+                      seasonId,
+                      episodeId,
+                    );
+                  }
+
+                  art.on('pause', () => {
+                    art.layers.title.style.display = 'block';
+                  });
+                  art.on('play', () => {
+                    setIsVideoEnded(false);
+                    art.layers.title.style.display = 'none';
+                  });
+                  art.on('hover', (state: boolean) => {
+                    art.layers.title.style.display = state || !art.playing ? 'block' : 'none';
+                  });
+                  art.on('video:ended', () => {
+                    setIsVideoEnded(true);
+                  });
+                  art.on('destroy', () => {
+                    setIsVideoEnded(false);
+                    if (hls) {
+                      hls.destroy();
+                    }
+                  });
+                }}
+              />
+            ) : (
+              <PlayerError
+                title="Video not found"
+                message="The video you are trying to watch is not available."
+              />
             )}
           </Suspense>
         )}
       </ClientOnly>
-      <Spacer y={1} />
-      <WatchDetail
-        id={Number(id)}
-        type="tv"
-        title={detail?.name || ''}
-        orgTitle={detail?.original_name || ''}
-        year={new Date(seasonDetail?.air_date || '').getFullYear()}
-        // @ts-ignore
-        episodes={seasonDetail?.episodes}
-        overview={detail?.overview || ''}
-        posterPath={detail?.poster_path ? TMDB.posterUrl(detail?.poster_path, 'w342') : undefined}
-        tmdbRating={detail?.vote_average}
-        imdbRating={imdbRating?.star}
-        genresMedia={detail?.genres}
-        genresMovie={rootData?.genresMovie}
-        genresTv={rootData?.genresTv}
-        recommendationsMovies={recommendations?.items}
-        season={seasonDetail?.season_number}
-        translations={translations}
-        providers={providers}
-      />
+      <Container
+        fluid
+        alignItems="stretch"
+        justify="center"
+        css={{
+          marginTop: '0.75rem',
+          padding: '0 0.75rem',
+          '@xs': {
+            padding: '0 3vw',
+          },
+          '@sm': {
+            padding: '0 6vw',
+          },
+          '@md': {
+            padding: '0 12vw',
+          },
+        }}
+      >
+        <WatchDetail
+          id={Number(id)}
+          type="tv"
+          title={detail?.name || ''}
+          orgTitle={detail?.original_name || ''}
+          year={new Date(seasonDetail?.air_date || '').getFullYear()}
+          // @ts-ignore
+          episodes={seasonDetail?.episodes}
+          overview={detail?.overview || ''}
+          posterPath={detail?.poster_path ? TMDB.posterUrl(detail?.poster_path, 'w342') : undefined}
+          tmdbRating={detail?.vote_average}
+          imdbRating={imdbRating?.star}
+          genresMedia={detail?.genres}
+          genresMovie={rootData?.genresMovie}
+          genresTv={rootData?.genresTv}
+          recommendationsMovies={recommendations?.items}
+          season={seasonDetail?.season_number}
+          translations={translations}
+          providers={providers}
+        />
+      </Container>
     </Container>
   );
 };

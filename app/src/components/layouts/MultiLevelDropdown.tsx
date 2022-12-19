@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import * as React from 'react';
+import { useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from '@remix-run/react';
 import { Avatar, Button, Grid, Switch, useTheme, Divider } from '@nextui-org/react';
 import { useTheme as useRemixTheme } from 'next-themes';
@@ -28,28 +28,34 @@ const slideHorizontalAnimation = {
     },
   },
   right: {
-    x: -290,
+    x: -250,
     transition: {
       duration: 0.3,
     },
   },
 };
 
-const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
+interface IMultiLevelDropdownProps {
+  user?: User | undefined;
+}
+
+const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
+  const { user } = props;
   const { isDark } = useTheme();
   const { setTheme } = useRemixTheme();
   const navigate = useNavigate();
-  const [isLeftMenu, setIsLeftMenu] = React.useState(true);
-  const [isLanguageTab, setIsLanguageTab] = React.useState(false);
-  const [isDisplayTab, setIsDisplayTab] = React.useState(false);
-  const { t } = useTranslation('header');
-
   const location = useLocation();
   const [search] = useSearchParams();
+  const [isLeftMenu, setIsLeftMenu] = useState(true);
+  const [isLanguageTab, setIsLanguageTab] = useState(false);
+  const [isDisplayTab, setIsDisplayTab] = useState(false);
+  const { t } = useTranslation('header');
 
   const ref = (search.get('ref') || location.pathname + location.search)
     .replace('?', '_0x3F_')
     .replace('&', '_0x26');
+  const parts = user?.email?.split('@');
+  const username = parts?.shift();
 
   return (
     <motion.div
@@ -57,6 +63,7 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
       initial="left"
       animate={isLeftMenu ? 'left' : 'right'}
       variants={slideHorizontalAnimation}
+      layout
       style={{
         display: 'flex',
         flexDirection: 'row',
@@ -64,22 +71,18 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
         height: '100%',
         position: 'relative',
         transition: 'height 0.3s',
-        width: '590px',
-        transform: `${isLeftMenu ? 'none' : ' translateZ(0px) translateX(-290px)'}`,
+        width: '480px',
+        transform: `${isLeftMenu ? 'none' : ' translateZ(0px) translateX(-250px)'}`,
       }}
     >
       <motion.div>
-        <Grid.Container
-          css={{
-            flexDirection: 'column',
-          }}
-        >
-          <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
+        <Grid.Container css={{ flexDirection: 'column' }}>
+          <Grid css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}>
             <Button
               light
               color="primary"
               size="md"
-              css={{ w: 260, h: 50 }}
+              css={{ w: 220, h: 50 }}
               icon={
                 <Avatar
                   size="md"
@@ -95,8 +98,14 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
               }}
             >
               {user ? (
-                <H6 h6 weight="bold" color="primary" css={{ marginLeft: '3.5rem !important' }}>
-                  {user?.email ?? 'klee@example.com'}
+                <H6
+                  h6
+                  weight="bold"
+                  color="primary"
+                  className="line-clamp-1"
+                  css={{ marginLeft: '3.5rem !important' }}
+                >
+                  {username ?? 'klee@example.com'}
                 </H6>
               ) : (
                 <H6 h6 weight="bold" color="primary" css={{ textTransform: 'uppercase' }}>
@@ -104,9 +113,9 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                 </H6>
               )}
             </Button>
-            <Divider x={1} css={{ width: 260, margin: '10px 40px 0 0' }} />
+            <Divider x={1} css={{ width: 220, margin: '10px 40px 0 0' }} />
           </Grid>
-          <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
+          <Grid css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}>
             <Button
               flat
               color="primary"
@@ -115,7 +124,7 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                 setIsLanguageTab(true);
                 setIsLeftMenu(false);
               }}
-              css={{ w: 260, h: 50 }}
+              css={{ w: 220, h: 50 }}
               icon={<GlobalIcon />}
             >
               <H6 h6 color="primary">
@@ -123,7 +132,7 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
               </H6>
             </Button>
           </Grid>
-          <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
+          <Grid css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}>
             <Button
               flat
               color="primary"
@@ -132,14 +141,14 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                 setIsDisplayTab(true);
                 setIsLeftMenu(false);
               }}
-              css={{ w: 260, h: 50 }}
+              css={{ w: 220, h: 50 }}
             >
               <H6 h6 color="primary">
                 Display
               </H6>
             </Button>
           </Grid>
-          <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
+          <Grid css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}>
             {user ? (
               <Button
                 flat
@@ -148,7 +157,7 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                 onClick={() => {
                   navigate(`/sign-out?ref=${ref}`);
                 }}
-                css={{ w: 260, h: 50 }}
+                css={{ w: 220, h: 50 }}
               >
                 <H5 h5 color="error">
                   Log out
@@ -162,7 +171,7 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                 onClick={() => {
                   navigate(`/sign-up?ref=${ref}`);
                 }}
-                css={{ w: 260, h: 50 }}
+                css={{ w: 220, h: 50 }}
               >
                 Sign Up
               </Button>
@@ -171,14 +180,10 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
         </Grid.Container>
       </motion.div>
       <motion.div>
-        <Grid.Container
-          css={{
-            flexDirection: 'column',
-          }}
-        >
+        <Grid.Container css={{ flexDirection: 'column' }}>
           {isLanguageTab && (
             <>
-              <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
+              <Grid css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}>
                 <Button
                   light
                   color="primary"
@@ -187,7 +192,7 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                     setIsLanguageTab(false);
                     setIsLeftMenu(true);
                   }}
-                  css={{ w: 260, h: 50 }}
+                  css={{ w: 220, h: 50 }}
                   icon={
                     <PlayerStyled
                       src={arrowLeft}
@@ -203,12 +208,12 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                     Language
                   </H6>
                 </Button>
-                <Divider x={1} css={{ width: 260, margin: '10px 40px 0 0' }} />
+                <Divider x={1} css={{ width: 220, margin: '10px 40px 0 0' }} />
               </Grid>
               {languages.map((lng) => (
                 <Grid
                   key={lng}
-                  css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}
+                  css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}
                 >
                   <Button
                     flat
@@ -219,7 +224,7 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                       setIsLeftMenu(true);
                       navigate(`${location.pathname}?lng=${lng}`);
                     }}
-                    css={{ w: 260, h: 50 }}
+                    css={{ w: 220, h: 50 }}
                   >
                     <H6 h6 color="primary">
                       {t(lng)}
@@ -231,7 +236,7 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
           )}
           {isDisplayTab && (
             <>
-              <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
+              <Grid css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}>
                 <Button
                   light
                   color="primary"
@@ -240,7 +245,7 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                     setIsDisplayTab(false);
                     setIsLeftMenu(true);
                   }}
-                  css={{ w: 260, h: 50 }}
+                  css={{ w: 220, h: 50 }}
                   icon={
                     <PlayerStyled
                       src={arrowLeft}
@@ -256,7 +261,7 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                     Display
                   </H6>
                 </Button>
-                <Divider x={1} css={{ width: 260, margin: '10px 40px 0 0' }} />
+                <Divider x={1} css={{ width: 220, margin: '10px 40px 0 0' }} />
               </Grid>
               <Grid
                 direction="row"
@@ -264,7 +269,7 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                 alignItems="center"
                 css={{
                   display: 'flex',
-                  width: 280,
+                  width: 240,
                   minHeight: 65,
                 }}
               >
@@ -279,7 +284,7 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                 />
                 <H6 h6>Dark mode</H6>
               </Grid>
-              <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
+              <Grid css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}>
                 <Button
                   flat
                   size="md"
@@ -288,16 +293,16 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                     setTheme('bumblebee');
                   }}
                   css={{
-                    w: 260,
+                    w: 220,
                     h: 50,
                     color: '#C08921 !important',
                     backgroundColor: '#FBEAAB !important',
                   }}
                 >
-                  Bumblebee Theme
+                  Bumblebee
                 </Button>
               </Grid>
-              <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
+              <Grid css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}>
                 <Button
                   flat
                   size="md"
@@ -306,16 +311,16 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                     setTheme('synthwave');
                   }}
                   css={{
-                    w: 260,
+                    w: 220,
                     h: 50,
                     color: '#D427A5 !important',
                     backgroundColor: '#FEAEC9 !important',
                   }}
                 >
-                  Synthwave Theme
+                  Synthwave
                 </Button>
               </Grid>
-              <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
+              <Grid css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}>
                 <Button
                   flat
                   size="md"
@@ -324,16 +329,16 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                     setTheme('retro');
                   }}
                   css={{
-                    w: 260,
+                    w: 220,
                     h: 50,
                     color: '#CD6C70 !important',
                     backgroundColor: '#FDE2D7 !important',
                   }}
                 >
-                  Retro Theme
+                  Retro
                 </Button>
               </Grid>
-              <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
+              <Grid css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}>
                 <Button
                   flat
                   size="md"
@@ -342,16 +347,16 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                     setTheme('dracula');
                   }}
                   css={{
-                    w: 260,
+                    w: 220,
                     h: 50,
                     color: '#DB58B0 !important',
                     backgroundColor: '#FFC9D8 !important',
                   }}
                 >
-                  Dracula Theme
+                  Dracula
                 </Button>
               </Grid>
-              <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
+              <Grid css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}>
                 <Button
                   flat
                   size="md"
@@ -360,16 +365,16 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                     setTheme('autumn');
                   }}
                   css={{
-                    w: 260,
+                    w: 220,
                     h: 50,
                     color: '#78022C !important',
                     backgroundColor: '#F39694 !important',
                   }}
                 >
-                  Autumn Theme
+                  Autumn
                 </Button>
               </Grid>
-              <Grid css={{ margin: '10px 0 0 10px', width: 280, minHeight: 65, display: 'block' }}>
+              <Grid css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}>
                 <Button
                   flat
                   size="md"
@@ -378,13 +383,13 @@ const MultiLevelDropdown = ({ user }: { user: User | undefined }) => {
                     setTheme('night');
                   }}
                   css={{
-                    w: 260,
+                    w: 220,
                     h: 50,
                     color: '#2894D5 !important',
                     backgroundColor: '#AFF5FE !important',
                   }}
                 >
-                  Night Theme
+                  Night
                 </Button>
               </Grid>
             </>

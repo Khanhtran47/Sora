@@ -57,17 +57,17 @@ export const meta: MetaFunction = ({ data, params }) => {
   }
   const { detail } = data;
   return {
-    title: `Watch ${detail.title || ''} HD online Free - Sora`,
-    description: detail?.overview || `Watch ${detail.title || ''} in full HD online with Subtitle`,
-    keywords: `Watch ${detail.title || ''}, Stream ${detail.title || ''}, Watch ${
-      detail.title || ''
-    } HD, Online ${detail.title || ''}, Streaming ${detail.title || ''}, English, Subtitle ${
-      detail.title || ''
+    title: `Watch ${detail?.title || ''} HD online Free - Sora`,
+    description: detail?.overview || `Watch ${detail?.title || ''} in full HD online with Subtitle`,
+    keywords: `Watch ${detail?.title || ''}, Stream ${detail?.title || ''}, Watch ${
+      detail?.title || ''
+    } HD, Online ${detail?.title || ''}, Streaming ${detail?.title || ''}, English, Subtitle ${
+      detail?.title || ''
     }, English Subtitle`,
     'og:url': `https://sora-anime.vercel.app/movies/${params.movieId}`,
-    'og:title': `Watch ${detail.title || ''} HD online Free - Sora`,
+    'og:title': `Watch ${detail?.title || ''} HD online Free - Sora`,
     'og:description':
-      detail?.overview || `Watch ${detail.title || ''} in full HD online with Subtitle`,
+      detail?.overview || `Watch ${detail?.title || ''} in full HD online with Subtitle`,
     'og:image': detail?.backdrop_path
       ? TMDB.backdropUrl(detail?.backdrop_path, 'w1280')
       : undefined,
@@ -75,9 +75,9 @@ export const meta: MetaFunction = ({ data, params }) => {
     'twitter:site': '@sora_anime',
     'twitter:domain': 'sora-anime.vercel.app',
     'twitter:url': `https://sora-anime.vercel.app/movies/${params.movieId}`,
-    'twitter:title': `Watch ${detail.title || ''} HD online Free - Sora`,
+    'twitter:title': `Watch ${detail?.title || ''} HD online Free - Sora`,
     'twitter:description':
-      detail?.overview || `Watch ${detail.title || ''} in full HD online with Subtitle`,
+      detail?.overview || `Watch ${detail?.title || ''} in full HD online with Subtitle`,
     'twitter:image': detail?.backdrop_path
       ? TMDB.backdropUrl(detail?.backdrop_path, 'w1280')
       : undefined,

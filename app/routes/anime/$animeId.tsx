@@ -64,7 +64,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     };
   }
   const { detail } = data;
-  const { title, color, description } = detail;
+  const { title, color, description } = detail || {};
   return {
     title: `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''

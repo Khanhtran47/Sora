@@ -1,17 +1,27 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import * as React from 'react';
-import { styled } from '@nextui-org/react';
-import { useNavigate } from '@remix-run/react';
+import { useState, useEffect, useRef, memo } from 'react';
+import type { CSSProperties } from 'react';
+import { Button, Tooltip, Spacer, styled } from '@nextui-org/react';
+import { useNavigate, useFetcher } from '@remix-run/react';
 import Artplayer from 'artplayer';
 import { isMobile, isTablet, isDesktop } from 'react-device-detect';
 
+import { ITrailer } from '~/services/consumet/anilist/anilist.types';
+
 import useLocalStorage from '~/hooks/useLocalStorage';
-import SearchSubtitles from '../modal/SearchSubtitle';
+
+import Flex from '~/src/components/styles/Flex.styles';
+import AspectRatio from '~/src/components/elements/aspect-ratio/AspectRatio';
+import WatchTrailerModal, { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
+import SearchSubtitles from '~/src/components/elements/modal/SearchSubtitle';
 
 interface IPlayerProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   option: any;
+  id?: number | string | undefined;
+  type: 'movie' | 'tv' | 'anime';
+  trailerAnime?: ITrailer;
   autoPlay: boolean;
   currentEpisode?: number;
   hasNextEpisode?: boolean;
@@ -25,7 +35,7 @@ interface IPlayerProps {
   }[];
   subtitleSelector?: { html: string; url: string; default?: boolean }[];
   getInstance: (art: Artplayer) => void;
-  style?: React.CSSProperties | undefined;
+  style?: CSSProperties | undefined;
   subtitleOptions?: {
     imdb_id?: number;
     tmdb_id?: number;
@@ -35,12 +45,17 @@ interface IPlayerProps {
     episode_number?: number;
     season_number?: number;
     type?: 'movie' | 'episode' | 'all';
+    title?: string;
+    sub_format: 'srt' | 'webvtt';
   };
 }
 
 const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
   const {
     option,
+    id,
+    type,
+    trailerAnime,
     autoPlay,
     currentEpisode,
     hasNextEpisode,
@@ -53,19 +68,30 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
     ...rest
   } = props;
   const navigate = useNavigate();
-  const [visible, setVisible] = React.useState(false);
-  const [subtitles, setSubtitles] = React.useState<
-    { html: string; url: string; default?: boolean }[]
-  >(subtitleSelector || []);
-  const [playNextEpisode, setPlayNextEpisode] = useLocalStorage('playNextEpisode', true);
-  const artRef = React.useRef<HTMLDivElement>(null);
-  const closeHandler = () => {
-    setVisible(false);
+  const fetcher = useFetcher();
+  const [isSearchModalVisible, setSearchModalVisible] = useState(false);
+  const [isWatchTrailerModalVisible, setWatchTrailerModalVisible] = useState(false);
+  const [trailer, setTrailer] = useState<Trailer>({});
+  const closeWatchTrailerModalHandler = () => {
+    setWatchTrailerModalVisible(false);
+    if (type === 'movie' || type === 'tv') setTrailer({});
   };
-  React.useEffect(() => {
-    setSubtitles(subtitleSelector || []);
-  }, [subtitleSelector]);
-  React.useEffect(() => {
+  const [subtitles, setSubtitles] = useState<{ html: string; url: string; default?: boolean }[]>(
+    subtitleSelector || [],
+  );
+  const [playNextEpisode, setPlayNextEpisode] = useLocalStorage('playNextEpisode', true);
+  const artRef = useRef<HTMLDivElement>(null);
+  const closeSearchModalHandler = () => {
+    setSearchModalVisible(false);
+  };
+  useEffect(() => {
+    if (fetcher.data && fetcher.data.videos) {
+      const { results } = fetcher.data.videos;
+      const officialTrailer = results.find((result: Trailer) => result.type === 'Trailer');
+      setTrailer(officialTrailer);
+    }
+  }, [fetcher.data]);
+  useEffect(() => {
     const art = new Artplayer({
       ...option,
       autoSize: isDesktop,
@@ -123,7 +149,7 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
               html: '<svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 48 48"><path d="M0 0h48v48H0z" fill="none"/><path fill="#ffffff" d="M40 8H8c-2.21 0-4 1.79-4 4v24c0 2.21 1.79 4 4 4h32c2.21 0 4-1.79 4-4V12c0-2.21-1.79-4-4-4zM8 24h8v4H8v-4zm20 12H8v-4h20v4zm12 0h-8v-4h8v4zm0-8H20v-4h20v4z"/></svg>',
               tooltip: 'Search Subtitles',
               click: () => {
-                setVisible(true);
+                setSearchModalVisible(true);
                 art.pause();
               },
             },
@@ -146,7 +172,7 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
               html: '<svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 48 48"><path d="M0 0h48v48H0z" fill="none"/><path fill="#ffffff" d="M40 8H8c-2.21 0-4 1.79-4 4v24c0 2.21 1.79 4 4 4h32c2.21 0 4-1.79 4-4V12c0-2.21-1.79-4-4-4zM8 24h8v4H8v-4zm20 12H8v-4h20v4zm12 0h-8v-4h8v4zm0-8H20v-4h20v4z"/></svg>',
               tooltip: 'Search Subtitles',
               click: () => {
-                setVisible(true);
+                setSearchModalVisible(true);
                 art.pause();
               },
             },
@@ -227,13 +253,74 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
   }, [subtitles, currentEpisode]);
   return (
     <>
-      <div ref={artRef} style={style} {...rest} />
+      <AspectRatio.Root ratio={isMobile ? 16 / 9 : 7 / 3}>
+        <div ref={artRef} style={style} {...rest} />
+      </AspectRatio.Root>
+      <Flex
+        justify="start"
+        align="center"
+        wrap="wrap"
+        css={{
+          marginTop: '1.5rem',
+          padding: '0 0.75rem',
+          '@xs': {
+            padding: '0 3vw',
+          },
+          '@sm': {
+            padding: '0 6vw',
+          },
+          '@md': {
+            padding: '0 12vw',
+          },
+        }}
+      >
+        <Tooltip content="In development">
+          <Button size="sm" color="primary" auto ghost css={{ marginBottom: '0.75rem' }}>
+            Toggle Light
+          </Button>
+        </Tooltip>
+        <Spacer x={0.5} />
+        <Button
+          size="sm"
+          color="primary"
+          auto
+          ghost
+          onClick={() => {
+            setWatchTrailerModalVisible(true);
+            if (type === 'movie' || type === 'tv')
+              fetcher.load(`/${type === 'movie' ? 'movies' : 'tv-shows'}/${id}/videos`);
+          }}
+          css={{ marginBottom: '0.75rem' }}
+        >
+          Watch Trailer
+        </Button>
+        <Spacer x={0.5} />
+        <Tooltip content="In development">
+          <Button size="sm" color="primary" auto ghost css={{ marginBottom: '0.75rem' }}>
+            Add to My List
+          </Button>
+        </Tooltip>
+      </Flex>
       <SearchSubtitles
-        visible={visible}
-        closeHandler={closeHandler}
+        visible={isSearchModalVisible}
+        closeHandler={closeSearchModalHandler}
         setSubtitles={setSubtitles}
         subtitleOptions={subtitleOptions}
       />
+      {(type === 'movie' || type === 'tv') && (
+        <WatchTrailerModal
+          trailer={trailer}
+          visible={isWatchTrailerModalVisible}
+          closeHandler={closeWatchTrailerModalHandler}
+        />
+      )}
+      {type === 'anime' && trailerAnime && (
+        <WatchTrailerModal
+          trailer={trailerAnime}
+          visible={isWatchTrailerModalVisible}
+          closeHandler={closeWatchTrailerModalHandler}
+        />
+      )}
     </>
   );
 };
@@ -244,4 +331,4 @@ const ArtPlayer = styled(Player, {
   },
 });
 
-export default ArtPlayer;
+export default memo(ArtPlayer);

@@ -6,7 +6,7 @@ import { lruCache } from '../lru-cache';
 const fetcher = async <T = any>(
   url: string,
   method: string,
-  body?: { file_id: number },
+  body?: { file_id: number; sub_format: string },
 ): Promise<T> => {
   if (lruCache) {
     const cached = lruCache.get<T>(url);
@@ -94,10 +94,14 @@ export const getSubtitlesSearch = async (
   }
 };
 
-export const getSubtitleDownload = async (id: number): Promise<ISubtitleDownload | undefined> => {
+export const getSubtitleDownload = async (
+  id: number,
+  sub_format: 'srt' | 'webvtt',
+): Promise<ISubtitleDownload | undefined> => {
   try {
     const fetched = await fetcher<ISubtitleDownload>(Opensubtitles.subtitleDownloadUrl(), 'POST', {
       file_id: id,
+      sub_format,
     });
     return fetched;
   } catch (error) {
