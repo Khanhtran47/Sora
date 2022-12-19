@@ -2,7 +2,8 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/indent */
-import * as React from 'react';
+import { useState, useEffect } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
 import {
   Modal,
   Loading,
@@ -47,11 +48,11 @@ import ChevronDownIcon from '~/src/assets/icons/ChevronDownIcon.js';
 import ChevronUpIcon from '~/src/assets/icons/ChevronUpIcon.js';
 import TickIcon from '~/src/assets/icons/TickIcon.js';
 
-type SearchSubtitlesProps = {
+interface ISearchSubtitlesProps {
   visible: boolean;
   closeHandler: () => void;
-  setSubtitles: React.Dispatch<
-    React.SetStateAction<
+  setSubtitles: Dispatch<
+    SetStateAction<
       {
         html: string;
         url: string;
@@ -68,15 +69,13 @@ type SearchSubtitlesProps = {
     episode_number?: number;
     season_number?: number;
     type?: 'movie' | 'episode' | 'all';
+    title?: string;
+    sub_format: 'srt' | 'webvtt';
   };
-};
+}
 
-const SearchSubtitles = ({
-  visible,
-  closeHandler,
-  subtitleOptions,
-  setSubtitles,
-}: SearchSubtitlesProps) => {
+const SearchSubtitles = (props: ISearchSubtitlesProps) => {
+  const { visible, closeHandler, subtitleOptions, setSubtitles } = props;
   const rootData:
     | {
         user?: User;
@@ -89,14 +88,24 @@ const SearchSubtitles = ({
   const isSm = useMediaQuery('(max-width: 650px)');
   const fetcher = useFetcher();
   const { width } = useWindowSize();
-  const { value, bindings } = useInput('');
-  const [language, setLanguage] = React.useState<string>();
-  const [page, setPage] = React.useState<number>(1);
-  const [totalPages, setTotalPages] = React.useState<number>(0);
-  const [subtitle, setSubtitle] = React.useState<ISubtitle>();
-  const [subtitlesSearch, setSubtitlesSearch] = React.useState<ISubtitlesSearch>();
-  const [isGetSubtitleLink, setIsGetSubtitleLink] = React.useState<boolean>(false);
-  const [open, setOpen] = React.useState(false);
+
+  const preInput: string | undefined =
+    subtitleOptions?.type === 'movie'
+      ? subtitleOptions?.title
+      : subtitleOptions?.type === 'episode'
+      ? `${subtitleOptions?.title} ${
+          subtitleOptions?.season_number ? `S${subtitleOptions?.season_number}` : ''
+        } ${subtitleOptions?.episode_number ? `E${subtitleOptions?.episode_number}` : ''}`
+      : '';
+
+  const { value, bindings } = useInput(preInput || '');
+  const [language, setLanguage] = useState<string>();
+  const [page, setPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const [subtitle, setSubtitle] = useState<ISubtitle>();
+  const [subtitlesSearch, setSubtitlesSearch] = useState<ISubtitlesSearch>();
+  const [isGetSubtitleLink, setIsGetSubtitleLink] = useState<boolean>(false);
+  const [open, setOpen] = useState(false);
 
   const handlePageChange = (page: number) => {
     setSubtitlesSearch(undefined);
@@ -142,7 +151,9 @@ const SearchSubtitles = ({
   const handleSubtitleClick = (subtitle: ISubtitle) => {
     setSubtitle(subtitle);
     setIsGetSubtitleLink(true);
-    fetcher.load(`/api/subtitles/download?file_id=${subtitle.attributes.files[0].file_id}`);
+    fetcher.load(
+      `/api/subtitles/download?file_id=${subtitle.attributes.files[0].file_id}&sub_format=${subtitleOptions?.sub_format}`,
+    );
   };
 
   const searchSubtitles = () => {
@@ -183,7 +194,7 @@ const SearchSubtitles = ({
     fetcher.load(url);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (fetcher.data && fetcher.data.subtitlesSearch) {
       setSubtitlesSearch(fetcher.data.subtitlesSearch);
       setPage(fetcher.data.subtitlesSearch.page);
