@@ -21,13 +21,11 @@ import { isDesktop } from 'react-device-detect';
 import Hls from 'hls.js';
 import artplayerPluginHlsQuality from 'artplayer-plugin-hls-quality';
 
-import i18next from '~/i18n/i18next.server';
 import { authenticate, insertHistory } from '~/services/supabase';
 import {
   getTvShowDetail,
   getTvShowIMDBId,
   getRecommendation,
-  getTranslations,
   getImdbRating,
   getTvSeasonDetail,
 } from '~/services/tmdb/tmdb.server';
@@ -60,7 +58,6 @@ type LoaderData = {
   imdbId: Awaited<ReturnType<typeof getTvShowIMDBId>>;
   recommendations: Awaited<ReturnType<typeof getRecommendation>>;
   seasonDetail: Awaited<ReturnType<typeof getTvSeasonDetail>>;
-  translations?: Awaited<ReturnType<typeof getTranslations>>;
   data?: Awaited<ReturnType<typeof getMovieInfo>>;
   sources?: IMovieSource[] | undefined;
   subtitles?: IMovieSubtitle[] | undefined;
@@ -130,10 +127,7 @@ const checkHasNextEpisode = (
 };
 
 export const loader: LoaderFunction = async ({ request, params }: LoaderArgs) => {
-  const [user, locale] = await Promise.all([
-    authenticate(request, true, true, true),
-    i18next.getLocale(request),
-  ]);
+  const user = await authenticate(request, true, true, true);
 
   const url = new URL(request.url);
   const provider = url.searchParams.get('provider');
@@ -176,34 +170,6 @@ export const loader: LoaderFunction = async ({ request, params }: LoaderArgs) =>
 
   if (provider === 'Loklok') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
-    if ((detail && detail?.original_language !== 'en') || locale !== 'en') {
-      const [tvDetail, imdbRating, translations, providers] = await Promise.all([
-        loklokGetTvEpInfo(idProvider, Number(episodeId) - 1),
-        imdbId ? getImdbRating(imdbId) : undefined,
-        getTranslations('tv', tid),
-        getProviderList('tv', title, orgTitle, year, season),
-      ]);
-      const totalProviderEpisodes = Number(tvDetail?.data?.episodeCount);
-      const hasNextEpisode = checkHasNextEpisode(eid, totalEpisodes, totalProviderEpisodes);
-      return json<LoaderData>({
-        idProvider,
-        provider,
-        detail,
-        imdbId,
-        recommendations,
-        imdbRating,
-        seasonDetail,
-        translations,
-        hasNextEpisode,
-        sources: tvDetail?.sources,
-        subtitles: tvDetail?.subtitles.map((sub) => ({
-          lang: `${sub.language} (${sub.lang})`,
-          url: `${LOKLOK_URL}/subtitle?url=${sub.url}`,
-        })),
-        userId: user?.id,
-        providers,
-      });
-    }
 
     const [tvDetail, imdbRating, providers] = await Promise.all([
       loklokGetTvEpInfo(idProvider, Number(episodeId) - 1),
@@ -233,41 +199,6 @@ export const loader: LoaderFunction = async ({ request, params }: LoaderArgs) =>
 
   if (provider === 'Flixhq') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
-    if ((detail && detail?.original_language !== 'en') || locale !== 'en') {
-      const [tvDetail, imdbRating, translations, providers] = await Promise.all([
-        getMovieInfo(idProvider),
-        imdbId ? getImdbRating(imdbId) : undefined,
-        getTranslations('tv', tid),
-        getProviderList('tv', title, orgTitle, year, season),
-      ]);
-      const totalProviderEpisodes = Number(tvDetail?.episodes?.length);
-      const hasNextEpisode = checkHasNextEpisode(eid, totalEpisodes, totalProviderEpisodes);
-      const tvEpisodeDetail = tvDetail?.episodes?.find(
-        (episode) => episode.season === Number(seasonId) && episode.number === Number(episodeId),
-      );
-      if (tvEpisodeDetail) {
-        const tvEpisodeStreamLink = await getMovieEpisodeStreamLink(
-          tvEpisodeDetail?.id || '',
-          tvDetail?.id || '',
-        );
-        return json<LoaderData>({
-          provider,
-          idProvider,
-          detail,
-          imdbId,
-          recommendations,
-          imdbRating,
-          seasonDetail,
-          hasNextEpisode,
-          translations,
-          data: tvDetail,
-          sources: tvEpisodeStreamLink?.sources,
-          subtitles: tvEpisodeStreamLink?.subtitles,
-          userId: user?.id,
-          providers,
-        });
-      }
-    }
     const [tvDetail, imdbRating, providers] = await Promise.all([
       getMovieInfo(idProvider),
       imdbId ? getImdbRating(imdbId) : undefined,
@@ -303,43 +234,6 @@ export const loader: LoaderFunction = async ({ request, params }: LoaderArgs) =>
 
   if (provider === 'KissKh') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
-    if ((detail && detail?.original_language !== 'en') || locale !== 'en') {
-      const [episodeDetail, imdbRating, translations, providers] = await Promise.all([
-        getKissKhInfo(Number(idProvider)),
-        imdbId ? getImdbRating(imdbId) : undefined,
-        getTranslations('tv', tid),
-        getProviderList('tv', title, orgTitle, year, season),
-      ]);
-      const totalProviderEpisodes = Number(episodeDetail?.episodes?.length);
-      const hasNextEpisode = checkHasNextEpisode(eid, totalEpisodes, totalProviderEpisodes);
-      const episodeSearch = episodeDetail?.episodes?.find((e) => e?.number === Number(episodeId));
-      const [episodeStream, episodeSubtitle] = await Promise.all([
-        getKissKhEpisodeStream(Number(episodeSearch?.id)),
-        episodeSearch && episodeSearch.sub > 0
-          ? getKissKhEpisodeSubtitle(Number(episodeSearch?.id))
-          : undefined,
-      ]);
-
-      return json<LoaderData>({
-        provider,
-        idProvider,
-        detail,
-        imdbId,
-        recommendations,
-        imdbRating,
-        seasonDetail,
-        hasNextEpisode,
-        translations,
-        sources: [{ url: episodeStream?.Video || '', isM3U8: true, quality: 'auto' }],
-        subtitles: episodeSubtitle?.map((sub) => ({
-          lang: sub.label,
-          url: sub.src,
-          ...(sub.default && { default: true }),
-        })),
-        userId: user?.id,
-        providers,
-      });
-    }
 
     const [episodeDetail, imdbRating, providers] = await Promise.all([
       getKissKhInfo(Number(idProvider)),
@@ -371,39 +265,6 @@ export const loader: LoaderFunction = async ({ request, params }: LoaderArgs) =>
         url: sub.src,
         ...(sub.default && { default: true }),
       })),
-      userId: user?.id,
-      providers,
-    });
-  }
-
-  if (provider === 'Embed') {
-    if ((detail && detail?.original_language !== 'en') || locale !== 'en') {
-      const [imdbRating, translations, providers] = await Promise.all([
-        imdbId ? getImdbRating(imdbId) : undefined,
-        getTranslations('tv', tid),
-        getProviderList('tv', title, orgTitle, year, season),
-      ]);
-      return json<LoaderData>({
-        detail,
-        imdbId,
-        recommendations,
-        imdbRating,
-        seasonDetail,
-        translations,
-        userId: user?.id,
-        providers,
-      });
-    }
-    const [imdbRating, providers] = await Promise.all([
-      imdbId ? await getImdbRating(imdbId) : undefined,
-      getProviderList('tv', title, orgTitle, year, season),
-    ]);
-    return json<LoaderData>({
-      detail,
-      imdbId,
-      recommendations,
-      imdbRating,
-      seasonDetail,
       userId: user?.id,
       providers,
     });
@@ -488,7 +349,6 @@ const EpisodeWatch = () => {
     imdbRating,
     seasonDetail,
     hasNextEpisode,
-    translations,
     sources,
     subtitles,
     userId,
@@ -772,8 +632,6 @@ const EpisodeWatch = () => {
           id={Number(id)}
           type="tv"
           title={detail?.name || ''}
-          orgTitle={detail?.original_name || ''}
-          year={new Date(seasonDetail?.air_date || '').getFullYear()}
           // @ts-ignore
           episodes={seasonDetail?.episodes}
           overview={detail?.overview || ''}
@@ -785,7 +643,6 @@ const EpisodeWatch = () => {
           genresTv={rootData?.genresTv}
           recommendationsMovies={recommendations?.items}
           season={seasonDetail?.season_number}
-          translations={translations}
           providers={providers}
         />
       </Container>
