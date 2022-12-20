@@ -12,8 +12,8 @@ import i18next from '~/i18n/i18next.server';
 import {
   getTrending,
   getListMovies,
-  getListTvShows,
   getListPeople,
+  getListDiscover,
 } from '~/services/tmdb/tmdb.server';
 import { getAnimePopular } from '~/services/consumet/anilist/anilist.server';
 import { IMedia } from '~/types/media';
@@ -43,7 +43,19 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
   const [todayTrending, movies, shows, anime, people] = await Promise.all([
     getTrending('all', 'day', locale, page),
     getListMovies('popular', locale, page),
-    getListTvShows('popular', locale, page),
+    getListDiscover(
+      'tv',
+      undefined,
+      undefined,
+      locale,
+      page,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      50,
+    ),
     getAnimePopular(page, 16),
     getListPeople('popular', locale, page),
   ]);

@@ -8,12 +8,12 @@ import { useRouteData } from 'remix-utils';
 import type { User } from '@supabase/supabase-js';
 
 import { authenticate } from '~/services/supabase';
-import { getListTvShows } from '~/services/tmdb/tmdb.server';
+import { getListDiscover } from '~/services/tmdb/tmdb.server';
 import i18next from '~/i18n/i18next.server';
 import MediaList from '~/src/components/media/MediaList';
 
 type LoaderData = {
-  shows: Awaited<ReturnType<typeof getListTvShows>>;
+  shows: Awaited<ReturnType<typeof getListDiscover>>;
 };
 
 export const meta: MetaFunction = () => ({
@@ -36,7 +36,19 @@ export const loader: LoaderFunction = async ({ request }) => {
   if (page && (page < 1 || page > 1000)) page = 1;
 
   return json<LoaderData>({
-    shows: await getListTvShows('popular', locale, page),
+    shows: await getListDiscover(
+      'tv',
+      undefined,
+      undefined,
+      locale,
+      page,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      50,
+    ),
   });
 };
 

@@ -4483,6 +4483,11 @@ dayjs@^1.11.1:
   resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.5.tgz#00e8cc627f231f9499c19b38af49f56dc0ac5e93"
   integrity sha512-CAdX5Q3YW3Gclyo5Vpqkgpj8fSdLQcRuzfX6mC6Phy0nfJ0eGYOeS7m4mt2plDWLAtA4TqTakvbboHvUxfe4iA==
 
+dayjs@^1.11.7:
+  version "1.11.7"
+  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.7.tgz#4b296922642f70999544d1144a2c25730fce63e2"
+  integrity sha512-+Yw9U6YO5TQohxLcIkrXBeY73WP3ejHWVvx8XCk3gxvQDCTEmS48ZrSZCKciI7Bhl/uCMyxYtE9UqRILmFphkQ==
+
 deasync@^0.1.0:
   version "0.1.28"
   resolved "https://registry.yarnpkg.com/deasync/-/deasync-0.1.28.tgz#9b447b79b3f822432f0ab6a8614c0062808b5ad2"
@@ -4528,6 +4533,11 @@ decode-uri-component@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/decode-uri-component/-/decode-uri-component-0.2.0.tgz#eb3913333458775cb84cd1a1fae062106bb87545"
   integrity sha512-hjf+xovcEn31w/EUYdTXQh/8smFL/dzYjohQGEIgjyNavaJfBY2p5F527Bo1VPATxv0VYTUC2bOcXvqFwk78Og==
+
+decode-uri-component@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/decode-uri-component/-/decode-uri-component-0.2.2.tgz#e69dbe25d37941171dd540e024c444cd5188e1e9"
+  integrity sha512-FqUYQ+8o158GyGTrMFJms9qh3CqTKvAqgqsTnkLI8sKu0028orqBhxNMFkFen0zGyg6epACD32pjVk58ngIErQ==
 
 decompress-response@^6.0.0:
   version "6.0.0"
@@ -9041,12 +9051,12 @@ quantize@^1.0.1:
   version "1.2.0"
   resolved "https://codeload.github.com/lokesh/quantize/tar.gz/f572abd2646b5944852535c8a26fdb958a5d7c4b"
 
-query-string@^7.1.1:
-  version "7.1.1"
-  resolved "https://registry.yarnpkg.com/query-string/-/query-string-7.1.1.tgz#754620669db978625a90f635f12617c271a088e1"
-  integrity sha512-MplouLRDHBZSG9z7fpuAAcI7aAYjDLhtsiVZsevsfaHWDS2IDdORKbSd1kWUA+V4zyva/HZoSfpwnYMMQDhb0w==
+query-string@^7.1.3:
+  version "7.1.3"
+  resolved "https://registry.yarnpkg.com/query-string/-/query-string-7.1.3.tgz#a1cf90e994abb113a325804a972d98276fe02328"
+  integrity sha512-hh2WYhq4fi8+b+/2Kg9CEge4fDPvHS534aOOvOZeQ3+Vf2mCFsaFBYj0i+iXcAq6I9Vzp5fjMFBlONvayDC1qg==
   dependencies:
-    decode-uri-component "^0.2.0"
+    decode-uri-component "^0.2.2"
     filter-obj "^1.1.0"
     split-on-first "^1.0.0"
     strict-uri-encode "^2.0.0"
@@ -9355,21 +9365,21 @@ remix-i18next@^4.1.1:
     lru-cache "^7.10.0"
     use-consistent-value "^1.0.0"
 
-remix-image-sharp@^0.1.3:
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/remix-image-sharp/-/remix-image-sharp-0.1.3.tgz#b33ddc1dbb9515c2fc3a244b9240cea3650f21ff"
-  integrity sha512-iK0oLs5Rr1pP4lGnJbw1G5eGg1waoTkUwlIcdn08YI4WNxRV671iWHmItrlPcmeiqipZd6OfmJErZF8j+92oHA==
+remix-image-sharp@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/remix-image-sharp/-/remix-image-sharp-0.1.4.tgz#7805857ba23728812c35d7c2aae1bfa9e62e83fe"
+  integrity sha512-27OwpnOqO2pGHFEcTK21INtyzqTrIjyQDVZwc6P63VkCzJTW6UBQcz8z4Z5Ob0tbqidOwwY1vWvIbCC6S8ImdQ==
 
-remix-image@^1.3.3:
-  version "1.3.3"
-  resolved "https://registry.yarnpkg.com/remix-image/-/remix-image-1.3.3.tgz#c4d67989b9fde6d83d035ee5b045c8c3db2758e8"
-  integrity sha512-Mjayx1rhHf0YWq6DLPFzUa5A5WMOsh6YOMAQjPhFyG1v0CwxXmsisiDaCqhRm9ai7Y1uDmVfXqXIRpvEqF1EOg==
+remix-image@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/remix-image/-/remix-image-1.4.0.tgz#86786f1c8face351e7027e03a3a0ad4460c3962b"
+  integrity sha512-eYWEacZDmt8tF4DsXPKZSRW9V0I/ypTKni1kN273bex7hYzNxR/pEQp396WME2EK+Nnh6s9EdyaQeXe90T5FEQ==
   dependencies:
     clsx "^1.2.1"
     is-svg "^4.3.2"
     js-image-lib "^1.0.1"
     lru-cache "^7.14.0"
-    query-string "^7.1.1"
+    query-string "^7.1.3"
 
 remix-utils@^4.3.0:
   version "4.3.0"
@@ -9633,6 +9643,13 @@ semver@^7.3.5, semver@^7.3.7:
   dependencies:
     lru-cache "^6.0.0"
 
+semver@^7.3.8:
+  version "7.3.8"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-7.3.8.tgz#07a78feafb3f7b32347d725e33de7e2a2df67798"
+  integrity sha512-NB1ctGL5rlHrPJtFDVIVzTyQylMLu9N9VICA6HSFJo8MCGVTMW6gfpicwKmmK/dAjTOrqu5l63JJOpDSrAis3A==
+  dependencies:
+    lru-cache "^6.0.0"
+
 send@0.18.0:
   version "0.18.0"
   resolved "https://registry.yarnpkg.com/send/-/send-0.18.0.tgz#670167cc654b05f5aa4a767f9113bb371bc706be"
@@ -9689,16 +9706,16 @@ shallow-clone@^3.0.0:
   dependencies:
     kind-of "^6.0.2"
 
-sharp@^0.31.0:
-  version "0.31.0"
-  resolved "https://registry.yarnpkg.com/sharp/-/sharp-0.31.0.tgz#ce9b5202a5667486721cf07fd5b52360b1c2275a"
-  integrity sha512-ft96f8WzGxavg0rkLpMw90MTPMUZDyf0tHjPPh8Ob59xt6KzX8EqtotcqZGUm7kwqpX2pmYiyYX2LL0IZ/FDEw==
+sharp@^0.31.2:
+  version "0.31.2"
+  resolved "https://registry.yarnpkg.com/sharp/-/sharp-0.31.2.tgz#a8411c80512027f5a452b76d599268760c4e5dfa"
+  integrity sha512-DUdNVEXgS5A97cTagSLIIp8dUZ/lZtk78iNVZgHdHbx1qnQR7JAHY0BnXnwwH39Iw+VKhO08CTYhIg0p98vQ5Q==
   dependencies:
     color "^4.2.3"
     detect-libc "^2.0.1"
     node-addon-api "^5.0.0"
     prebuild-install "^7.1.1"
-    semver "^7.3.7"
+    semver "^7.3.8"
     simple-get "^4.0.1"
     tar-fs "^2.1.1"
     tunnel-agent "^0.6.0"

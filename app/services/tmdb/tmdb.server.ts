@@ -441,6 +441,8 @@ export const getListDiscover = async (
   withRuntimeLte?: number,
   withStatus?: string,
   withType?: string,
+  airDateGte?: string,
+  airDateLte?: string,
 ): Promise<IMediaList> => {
   const url = TMDB.discoverUrl(
     type,
@@ -466,6 +468,8 @@ export const getListDiscover = async (
     withRuntimeLte,
     type === 'tv' ? withStatus : undefined,
     type === 'tv' ? withType : undefined,
+    type === 'tv' ? airDateGte : undefined,
+    type === 'tv' ? airDateLte : undefined,
   );
 
   return getListFromTMDB(url, type);

@@ -25,6 +25,7 @@ type LoaderData = {
   withRuntimeGte?: string;
   withRuntimeLte?: string;
   sortBy?: string;
+  voteCountGte?: number;
 };
 
 export const meta: MetaFunction = () => ({
@@ -93,6 +94,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     withRuntimeGte,
     withRuntimeLte,
     sortBy,
+    voteCountGte: Number(voteCountGte),
   });
 };
 
@@ -128,6 +130,7 @@ const ListMovies = () => {
     voteAverageLte,
     withRuntimeGte,
     withRuntimeLte,
+    voteCountGte,
   } = useLoaderData<LoaderData>();
   const rootData:
     | {
@@ -153,6 +156,7 @@ const ListMovies = () => {
     if (voteAverageLte) url += `&vote_average.lte=${voteAverageLte}`;
     if (withRuntimeGte) url += `&with_runtime.gte=${withRuntimeGte}`;
     if (withRuntimeLte) url += `&with_runtime.lte=${withRuntimeLte}`;
+    if (voteCountGte) url += `&vote_count.gte=${voteCountGte}`;
     if (sortBy) url += `&sort_by=${sortBy}`;
 
     navigate(url);

@@ -18,13 +18,14 @@ const fixedVercelUrl = vercelUrl.startsWith('https') ? vercelUrl : `https://${ve
 
 const config = {
   selfUrl: process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : fixedVercelUrl,
-  cache: new DiskCache({
+  cache: process.env.NODE_ENV === 'development' ? null : new DiskCache({
     path: path.join(os.tmpdir(), 'img'),
   }),
   redirectOnFail: true,
   resolver: fetchImage,
   transformer: sharpTransformer,
   basePath: process.env.NODE_ENV === 'development' ? 'public' : '/',
+  verbose: false,
 };
 
 export const loader: LoaderFunction = ({ request }) => {

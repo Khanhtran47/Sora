@@ -6,14 +6,15 @@ import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useRouteData } from 'remix-utils';
 import type { User } from '@supabase/supabase-js';
+import dayjs from 'dayjs';
 
 import { authenticate } from '~/services/supabase';
-import { getListTvShows } from '~/services/tmdb/tmdb.server';
+import { getListDiscover } from '~/services/tmdb/tmdb.server';
 import i18next from '~/i18n/i18next.server';
 import MediaList from '~/src/components/media/MediaList';
 
 type LoaderData = {
-  shows: Awaited<ReturnType<typeof getListTvShows>>;
+  shows: Awaited<ReturnType<typeof getListDiscover>>;
 };
 
 export const meta: MetaFunction = () => ({
@@ -35,8 +36,40 @@ export const loader: LoaderFunction = async ({ request }) => {
   let page = Number(url.searchParams.get('page')) || undefined;
   if (page && (page < 1 || page > 1000)) page = 1;
 
+  const today = dayjs();
+  // get next 7 days
+  const next7Days = today.add(7, 'day');
+  const formattedToday = today.format('YYYY-MM-DD');
+  const formattedNext7Days = next7Days.format('YYYY-MM-DD');
+
   return json<LoaderData>({
-    shows: await getListTvShows('on_the_air', locale, page),
+    shows: await getListDiscover(
+      'tv',
+      undefined,
+      undefined,
+      locale,
+      page,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      50,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      formattedToday,
+      formattedNext7Days,
+    ),
   });
 };
 
