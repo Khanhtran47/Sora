@@ -328,6 +328,8 @@ export class TMDB {
     withRuntimeLte?: number,
     withStatus?: string,
     withType?: string,
+    airDateGte?: string,
+    airDateLte?: string,
   ) => {
     let url = `${this.API_BASE_URL}discover/${type}?api_key=${this.key}`;
 
@@ -353,7 +355,10 @@ export class TMDB {
     if (withRuntimeLte) url += `&with_runtime.lte=${withRuntimeLte}`;
     if (withStatus) url += `&with_status=${withStatus}`;
     if (withType) url += `&with_type=${withType}`;
+    if (airDateGte) url += `&air_date.gte=${airDateGte}`;
+    if (airDateLte) url += `&air_date.lte=${airDateLte}`;
 
+    console.log('🚀 ~ file: utils.server.ts:363 ~ TMDB ~ url', url);
     return url;
   };
 

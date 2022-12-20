@@ -7,9 +7,10 @@ import { motion } from 'framer-motion';
 import { useRouteData } from 'remix-utils';
 import type { User } from '@supabase/supabase-js';
 import NProgress from 'nprogress';
+import dayjs from 'dayjs';
 
 import i18next from '~/i18n/i18next.server';
-import { getListTvShows } from '~/services/tmdb/tmdb.server';
+import { getListTvShows, getListDiscover } from '~/services/tmdb/tmdb.server';
 import { IMedia } from '~/types/media';
 import MediaList from '~/src/components/media/MediaList';
 import SkeletonItem from '~/src/components/elements/skeleton/Item';
@@ -26,10 +27,53 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
   const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
 
   const page = 1;
+  const today = dayjs();
+  // get next 7 days
+  const next7Days = today.add(7, 'day');
+  const formattedToday = today.format('YYYY-MM-DD');
+  const formattedNext7Days = next7Days.format('YYYY-MM-DD');
   const [popular, topRated, onTheAir] = await Promise.all([
-    getListTvShows('popular', locale, page),
+    getListDiscover(
+      'tv',
+      undefined,
+      undefined,
+      locale,
+      page,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      50,
+    ),
     getListTvShows('top_rated', locale, page),
-    getListTvShows('on_the_air', locale, page),
+    getListDiscover(
+      'tv',
+      undefined,
+      undefined,
+      locale,
+      page,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      50,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      formattedToday,
+      formattedNext7Days,
+    ),
   ]);
   return json<LoaderData>({
     popular,
@@ -177,7 +221,7 @@ const TvIndexPage = () => {
               items={onTheAir.items}
               listName="On the air Tv"
               showMoreList
-              onClickViewMore={() => navigate('/tv-shows/upcoming')}
+              onClickViewMore={() => navigate('/tv-shows/on-tv')}
               navigationButtons
               genresMovie={rootData?.genresMovie}
               genresTv={rootData?.genresTv}

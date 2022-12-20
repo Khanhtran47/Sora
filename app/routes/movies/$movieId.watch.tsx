@@ -24,25 +24,14 @@ import {
   // getTranslations,
   getImdbRating,
 } from '~/services/tmdb/tmdb.server';
-import {
-  // getMovieSearch,
-  getMovieInfo,
-  getMovieEpisodeStreamLink,
-} from '~/services/consumet/flixhq/flixhq.server';
-import {
-  // IMovieResult,
-  IMovieSource,
-  IMovieSubtitle,
-} from '~/services/consumet/flixhq/flixhq.types';
+import { getMovieInfo, getMovieEpisodeStreamLink } from '~/services/consumet/flixhq/flixhq.server';
+import { IMovieSource, IMovieSubtitle } from '~/services/consumet/flixhq/flixhq.types';
 import {
   getKissKhInfo,
   getKissKhEpisodeStream,
   getKissKhEpisodeSubtitle,
 } from '~/services/kisskh/kisskh.server';
-import {
-  // loklokSearchMovieSub,
-  loklokGetMovieInfo,
-} from '~/services/loklok';
+import { loklokGetMovieInfo } from '~/services/loklok';
 import { LOKLOK_URL } from '~/services/loklok/utils.server';
 // import i18next from '~/i18n/i18next.server';
 import TMDB from '~/utils/media';
