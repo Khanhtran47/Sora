@@ -21,6 +21,8 @@ import YouTube from 'react-youtube';
 import { ClientOnly } from 'remix-utils';
 import { useInView } from 'react-intersection-observer';
 
+import useCardHoverStore from '~/store/card/useCardHoverStore';
+
 import useLocalStorage from '~/hooks/useLocalStorage';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import useSize from '~/hooks/useSize';
@@ -92,9 +94,10 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
   const bannerRef = useRef<HTMLDivElement>(null);
   const { width, height } = useSize(bannerRef);
 
+  const isCardPlaying = useCardHoverStore((state) => state.isCardPlaying);
+
   const [isMuted, setIsMuted] = useLocalStorage('muteTrailer', true);
   const [isPlayTrailer] = useLocalStorage('playTrailer', false);
-  const [isCardPlaying] = useLocalStorage('cardPlaying', false);
   const titleItem =
     typeof title === 'string'
       ? title
@@ -239,6 +242,8 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                   }}
                 >
                   <NextImage
+                    // @ts-ignore
+                    as={Image}
                     src={TMDB.logoUrl(logo.file_path, isLg ? 'w185' : 'w300')}
                     alt={titleItem}
                     title={titleItem}
@@ -260,6 +265,11 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                       maxHeight: `${
                         isLg ? 185 / Number(logo.aspect_ratio) : 300 / Number(logo.aspect_ratio)
                       }px`,
+                    }}
+                    loaderUrl="/api/image"
+                    placeholder="empty"
+                    options={{
+                      contentType: MimeType.WEBP,
                     }}
                   />
                 </motion.div>

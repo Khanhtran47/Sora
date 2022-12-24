@@ -87,12 +87,14 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
     const providerData = providers.find((p) => p.provider === provider);
     if (type === 'tv')
       navigate(
-        `/tv-shows/${id}/season/${season}/episode/${index + 1}?provider=${provider}&id=${
+        `/tv-shows/${id}/season/${season}/episode/${index + 1}/watch?provider=${provider}&id=${
           providerData?.id
         }`,
       );
     else if (type === 'anime') {
-      navigate(`/anime/${id}/episode/${index + 1}?provider=${provider}&id=${providerData?.id}`);
+      navigate(
+        `/anime/${id}/episode/${index + 1}/watch?provider=${provider}&id=${providerData?.id}`,
+      );
     }
   };
 

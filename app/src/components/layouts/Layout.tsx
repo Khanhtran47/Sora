@@ -13,6 +13,7 @@ import LeftDrawer from './LeftDrawer';
 import Footer from './Footer';
 import BottomNav from './BottomNav';
 import BreadCrumb from './BreadCrumb';
+import GlobalPlayer from './GlobalPlayer';
 
 interface ILayout {
   children: React.ReactNode;
@@ -69,6 +70,7 @@ const Layout = (props: ILayout) => {
           }}
         >
           <BreadCrumb matches={matches} />
+          <GlobalPlayer matches={matches} />
           {children}
         </Container>
         <Footer />

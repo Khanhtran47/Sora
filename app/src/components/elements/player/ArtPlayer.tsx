@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useState, useEffect, useRef, memo } from 'react';
@@ -6,6 +7,8 @@ import { Button, Tooltip, Spacer, styled } from '@nextui-org/react';
 import { useNavigate, useFetcher } from '@remix-run/react';
 import Artplayer from 'artplayer';
 import { isMobile, isTablet, isDesktop } from 'react-device-detect';
+
+import usePlayerState from '~/store/player/usePlayerState';
 
 import { ITrailer } from '~/services/consumet/anilist/anilist.types';
 
@@ -48,6 +51,7 @@ interface IPlayerProps {
     title?: string;
     sub_format: 'srt' | 'webvtt';
   };
+  hideBottomGroupButtons?: boolean;
 }
 
 const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
@@ -65,6 +69,7 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
     getInstance,
     style,
     subtitleOptions,
+    hideBottomGroupButtons = false,
     ...rest
   } = props;
   const navigate = useNavigate();
@@ -72,6 +77,7 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
   const [isSearchModalVisible, setSearchModalVisible] = useState(false);
   const [isWatchTrailerModalVisible, setWatchTrailerModalVisible] = useState(false);
   const [trailer, setTrailer] = useState<Trailer>({});
+  const isMini = usePlayerState((state) => state.isMini);
   const closeWatchTrailerModalHandler = () => {
     setWatchTrailerModalVisible(false);
     if (type === 'movie' || type === 'tv') setTrailer({});
@@ -94,10 +100,10 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
   useEffect(() => {
     const art = new Artplayer({
       ...option,
-      autoSize: isDesktop,
+      autoSize: false,
       loop: !autoPlay,
       mutex: true,
-      setting: true,
+      setting: false,
       flip: true,
       playbackRate: true,
       aspectRatio: true,
@@ -115,7 +121,11 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
       whitelist: ['*'],
       theme: 'var(--nextui-colors-primary)',
       container: artRef.current,
-      autoMini: isDesktop,
+      autoMini: false,
+      hotkey: true,
+      icons: {
+        state: '',
+      },
       moreVideoAttr: isDesktop
         ? {
             crossOrigin: 'anonymous',
@@ -253,54 +263,56 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
   }, [subtitles, currentEpisode]);
   return (
     <>
-      <AspectRatio.Root ratio={isMobile ? 16 / 9 : 7 / 3}>
+      <AspectRatio.Root ratio={isMini ? undefined : isMobile ? 16 / 9 : 7 / 3}>
         <div ref={artRef} style={style} {...rest} />
       </AspectRatio.Root>
-      <Flex
-        justify="start"
-        align="center"
-        wrap="wrap"
-        css={{
-          marginTop: '1.5rem',
-          padding: '0 0.75rem',
-          '@xs': {
-            padding: '0 3vw',
-          },
-          '@sm': {
-            padding: '0 6vw',
-          },
-          '@md': {
-            padding: '0 12vw',
-          },
-        }}
-      >
-        <Tooltip content="In development">
-          <Button size="sm" color="primary" auto ghost css={{ marginBottom: '0.75rem' }}>
-            Toggle Light
-          </Button>
-        </Tooltip>
-        <Spacer x={0.5} />
-        <Button
-          size="sm"
-          color="primary"
-          auto
-          ghost
-          onClick={() => {
-            setWatchTrailerModalVisible(true);
-            if (type === 'movie' || type === 'tv')
-              fetcher.load(`/${type === 'movie' ? 'movies' : 'tv-shows'}/${id}/videos`);
+      {!hideBottomGroupButtons ? (
+        <Flex
+          justify="start"
+          align="center"
+          wrap="wrap"
+          css={{
+            marginTop: '1.5rem',
+            padding: '0 0.75rem',
+            '@xs': {
+              padding: '0 3vw',
+            },
+            '@sm': {
+              padding: '0 6vw',
+            },
+            '@md': {
+              padding: '0 12vw',
+            },
           }}
-          css={{ marginBottom: '0.75rem' }}
         >
-          Watch Trailer
-        </Button>
-        <Spacer x={0.5} />
-        <Tooltip content="In development">
-          <Button size="sm" color="primary" auto ghost css={{ marginBottom: '0.75rem' }}>
-            Add to My List
+          <Tooltip content="In development">
+            <Button size="sm" color="primary" auto ghost css={{ marginBottom: '0.75rem' }}>
+              Toggle Light
+            </Button>
+          </Tooltip>
+          <Spacer x={0.5} />
+          <Button
+            size="sm"
+            color="primary"
+            auto
+            ghost
+            onClick={() => {
+              setWatchTrailerModalVisible(true);
+              if (type === 'movie' || type === 'tv')
+                fetcher.load(`/${type === 'movie' ? 'movies' : 'tv-shows'}/${id}/videos`);
+            }}
+            css={{ marginBottom: '0.75rem' }}
+          >
+            Watch Trailer
           </Button>
-        </Tooltip>
-      </Flex>
+          <Spacer x={0.5} />
+          <Tooltip content="In development">
+            <Button size="sm" color="primary" auto ghost css={{ marginBottom: '0.75rem' }}>
+              Add to My List
+            </Button>
+          </Tooltip>
+        </Flex>
+      ) : null}
       <SearchSubtitles
         visible={isSearchModalVisible}
         closeHandler={closeSearchModalHandler}

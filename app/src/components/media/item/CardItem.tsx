@@ -9,6 +9,8 @@ import { useInView } from 'react-intersection-observer';
 import { ClientOnly } from 'remix-utils';
 import { motion } from 'framer-motion';
 
+import useCardHoverStore from '~/store/card/useCardHoverStore';
+
 import useMediaQuery from '~/hooks/useMediaQuery';
 import useLocalStorage from '~/hooks/useLocalStorage';
 import { IMedia, Title } from '~/types/media';
@@ -78,8 +80,8 @@ const CardItem = (props: ICardItemProps) => {
   const isMd = useMediaQuery('(max-width: 960px)');
   const isLg = useMediaQuery('(max-width: 1400px)');
   const fetcher = useFetcher();
+  const setIsCardPlaying = useCardHoverStore((state) => state.setIsCardPlaying);
   const [trailerCard, setTrailerCard] = React.useState<Trailer>({});
-  const [, setIsCardPlaying] = useLocalStorage('cardPlaying', false);
   const [isPlayTrailer] = useLocalStorage('playTrailer', false);
   const titleItem =
     typeof title === 'string'
