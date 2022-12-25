@@ -64,7 +64,6 @@ const TvOverview = () => {
       }
     | undefined = useRouteData('root');
   const detail = tvData && tvData.detail;
-  console.log('🚀 ~ file: index.tsx:67 ~ TvOverview ~ detail', detail);
   const navigate = useNavigate();
 
   const isSm = useMediaQuery('(max-width: 650px)');

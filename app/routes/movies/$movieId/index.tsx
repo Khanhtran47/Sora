@@ -69,7 +69,6 @@ const MovieOverview = () => {
       }
     | undefined = useRouteData('root');
   const detail = movieData && movieData.detail;
-  console.log('🚀 ~ file: index.tsx:68 ~ Overview ~ detail', detail);
   const navigate = useNavigate();
 
   const isSm = useMediaQuery('(max-width: 650px)');

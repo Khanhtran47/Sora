@@ -24,7 +24,6 @@ export const meta: MetaFunction = ({ params }) => ({
 const Overview = () => {
   const animeData: { detail: IAnimeInfo } | undefined = useRouteData('routes/anime/$animeId');
   const detail = animeData && animeData.detail;
-  console.log('🚀 ~ file: overview.tsx:27 ~ Overview ~ detail', detail);
   const isSm = useMediaQuery('(max-width: 650px)');
   return (
     <Row

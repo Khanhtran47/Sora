@@ -92,7 +92,6 @@ const getProviderList = async (
         : undefined,
       getKissKhSearch(title),
     ]);
-    console.log('🚀 ~ file: provider.server.ts:84 ~ loklokSearch', loklokSearch);
     const provider = [];
     const findFlixhq: IMovieResult | undefined = search?.results.find(
       (movie) => movie.title.toLowerCase() === title.toLowerCase() && movie?.type === 'TV Series',
