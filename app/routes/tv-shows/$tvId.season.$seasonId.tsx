@@ -23,7 +23,8 @@ import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
 import BackgroundDefault from '~/src/assets/images/background-default.jpg';
 
 type LoaderData = {
-  detail: Awaited<ReturnType<typeof getTvSeasonDetail>>;
+  detail: Awaited<ReturnType<typeof getTvShowDetail>>;
+  seasonDetail: Awaited<ReturnType<typeof getTvSeasonDetail>>;
   providers?: {
     id?: string | number | null;
     provider: string;
@@ -55,11 +56,12 @@ export const loader: LoaderFunction = async ({ request, params }: LoaderArgs) =>
 
   if (providers && providers.length > 0)
     return json<LoaderData>({
-      detail: seasonDetail,
+      detail,
+      seasonDetail,
       providers,
     });
 
-  return json<LoaderData>({ detail: seasonDetail });
+  return json<LoaderData>({ detail, seasonDetail });
 };
 
 export const meta: MetaFunction = ({ data, params }) => {
@@ -69,18 +71,22 @@ export const meta: MetaFunction = ({ data, params }) => {
       description: `This Tv show doesn't have season ${params.seasonId}`,
     };
   }
-  const { detail } = data;
+  const { detail, seasonDetail } = data;
   return {
-    title: `Watch ${detail?.name || ''} HD online Free - Sora`,
-    description: `Watch ${detail?.name || ''} in full HD online with Subtitle`,
+    title: `Watch ${detail?.name || ''} ${seasonDetail?.name || ''} HD online Free - Sora`,
+    description: `Watch ${detail?.name || ''} ${
+      seasonDetail?.name || ''
+    } in full HD online with Subtitle`,
     keywords: `Watch ${detail?.name || ''}, Stream ${detail?.name || ''}, Watch ${
       detail?.name || ''
     } HD, Online ${detail?.name || ''}, Streaming ${detail?.name || ''}, English, Subtitle ${
       detail?.name || ''
     }, English Subtitle`,
     'og:url': `https://sora-anime.vercel.app/tv-shows/${params.tvId}/season/${params.seasonId}`,
-    'og:title': `Watch ${detail?.name || ''} HD online Free - Sora`,
-    'og:description': `Watch ${detail?.name || ''} in full HD online with Subtitle`,
+    'og:title': `Watch ${detail?.name || ''} ${seasonDetail?.name || ''} HD online Free - Sora`,
+    'og:description': `Watch ${detail?.name || ''} ${
+      seasonDetail?.name || ''
+    } in full HD online with Subtitle`,
     'og:image': detail?.poster_path ? TMDB.posterUrl(detail?.poster_path, 'w185') : undefined,
   };
 };
@@ -142,7 +148,7 @@ const detailTab = [
 ];
 
 const SeasonDetail = () => {
-  const { detail } = useLoaderData<LoaderData>();
+  const { seasonDetail } = useLoaderData<LoaderData>();
   const { tvId, seasonId } = useParams();
   const ref = React.useRef<HTMLDivElement>(null);
   const size: IUseSize = useSize(ref);
@@ -182,13 +188,13 @@ const SeasonDetail = () => {
           >
             {!isSm && (
               <Col span={4}>
-                {detail?.poster_path ? (
+                {seasonDetail?.poster_path ? (
                   <Card.Image
                     // @ts-ignore
                     as={Image}
-                    src={TMDB.posterUrl(detail?.poster_path)}
-                    alt={detail?.name}
-                    title={detail?.name}
+                    src={TMDB.posterUrl(seasonDetail?.poster_path)}
+                    alt={seasonDetail?.name}
+                    title={seasonDetail?.name}
                     objectFit="cover"
                     width="50%"
                     showSkeleton
@@ -257,15 +263,15 @@ const SeasonDetail = () => {
               }}
             >
               {isSm &&
-                (detail?.poster_path ? (
+                (seasonDetail?.poster_path ? (
                   <>
                     <Row>
                       <Card.Image
                         // @ts-ignore
                         as={Image}
-                        src={TMDB.posterUrl(detail?.poster_path)}
-                        alt={detail?.name}
-                        title={detail?.name}
+                        src={TMDB.posterUrl(seasonDetail?.poster_path)}
+                        alt={seasonDetail?.name}
+                        title={seasonDetail?.name}
                         objectFit="cover"
                         width={isXs ? '70%' : '40%'}
                         css={{
@@ -318,17 +324,17 @@ const SeasonDetail = () => {
                 ))}
               <Row>
                 <H2 h2 weight="bold">
-                  {detail?.name}
+                  {seasonDetail?.name}
                 </H2>
               </Row>
               <Row>
                 <H5 h5 weight="bold">
-                  {detail?.episodes?.length || 0} episodes &middot; {detail?.air_date}{' '}
+                  {seasonDetail?.episodes?.length || 0} episodes &middot; {seasonDetail?.air_date}{' '}
                 </H5>
               </Row>
-              {detail?.overview && (
+              {seasonDetail?.overview && (
                 <Row>
-                  <H6 h6>{detail.overview}</H6>
+                  <H6 h6>{seasonDetail.overview}</H6>
                 </Row>
               )}
               <Spacer y={1} />
@@ -341,7 +347,9 @@ const SeasonDetail = () => {
             // @ts-ignore
             as={Image}
             src={
-              detail?.poster_path ? TMDB.posterUrl(detail?.poster_path, 'w342') : BackgroundDefault
+              seasonDetail?.poster_path
+                ? TMDB.posterUrl(seasonDetail?.poster_path, 'w342')
+                : BackgroundDefault
             }
             showSkeleton
             css={{
@@ -354,8 +362,8 @@ const SeasonDetail = () => {
               objectFit: 'cover',
               opacity: 0.3,
             }}
-            title={detail?.name}
-            alt={detail?.name}
+            title={seasonDetail?.name}
+            alt={seasonDetail?.name}
             containerCss={{ margin: 0 }}
             loaderUrl="/api/image"
             placeholder="empty"
@@ -378,7 +386,7 @@ const SeasonDetail = () => {
         as="div"
         xl
         css={{
-          margin: 0,
+          margin: '0.75rem 0 0 0',
           padding: 0,
         }}
       >

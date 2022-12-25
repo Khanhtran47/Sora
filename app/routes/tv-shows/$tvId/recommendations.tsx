@@ -59,7 +59,7 @@ export const meta: MetaFunction = ({ params }) => ({
   'og:url': `https://sora-anime.vercel.app/tv-shows/${params.tvId}/recommendations`,
 });
 
-const RecommendationsPage = () => {
+const TvRecommendationsPage = () => {
   const { tvId } = useParams();
   const { recommendations } = useLoaderData<LoaderData>();
   const rootData:
@@ -106,4 +106,4 @@ const RecommendationsPage = () => {
   );
 };
 
-export default RecommendationsPage;
+export default TvRecommendationsPage;

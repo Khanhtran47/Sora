@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { MetaFunction } from '@remix-run/node';
-import { Row, Col, Spacer, Divider, Card, Avatar, Grid } from '@nextui-org/react';
+import { Row, Col, Card, Avatar, Grid } from '@nextui-org/react';
 import { useRouteData } from 'remix-utils';
 import Image, { MimeType } from 'remix-image';
 
@@ -12,7 +12,7 @@ import { IAnimeInfo } from '~/services/consumet/anilist/anilist.types';
 import { IMedia } from '~/types/media';
 
 import MediaList from '~/src/components/media/MediaList';
-import { H3, H5, H6 } from '~/src/components/styles/Text.styles';
+import { H2, H5, H6 } from '~/src/components/styles/Text.styles';
 import Flex from '~/src/components/styles/Flex.styles';
 
 import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
@@ -32,265 +32,185 @@ const Overview = () => {
       justify="center"
       css={{
         marginTop: '0.75rem',
-        padding: '20px',
         maxWidth: '1920px',
+        px: '1.5rem',
+        '@xs': {
+          px: 'calc(0.75rem + 3vw)',
+        },
+        '@sm': {
+          px: 'calc(0.75rem + 6vw)',
+        },
+        '@md': {
+          px: 'calc(0.75rem + 12vw)',
+        },
+        '@lg': {
+          px: 'calc(0.75rem + 20px)',
+        },
       }}
     >
       {!isSm && (
-        <Col span={4}>
-          {detail?.nextAiringEpisode && (
-            <Flex direction="column" justify="center" align="center">
-              <H5
-                h5
-                weight="bold"
-                css={{
-                  marginBottom: '0.25rem !important',
-                  width: '50%',
-                }}
-              >
-                Airing
-              </H5>
-              <H6
-                h6
-                css={{
-                  width: '50%',
-                }}
-              >
-                {`Ep${detail?.nextAiringEpisode?.episode}: ${detail?.nextAiringEpisode?.timeUntilAiring}`}
-              </H6>
-              <Spacer y={1} />
-            </Flex>
-          )}
-          {detail?.totalEpisodes && (
-            <Flex direction="column" justify="center" align="center">
-              <H5
-                h5
-                weight="bold"
-                css={{
-                  marginBottom: '0.25rem !important',
-                  width: '50%',
-                }}
-              >
-                Episodes
-              </H5>
-              <H6
-                h6
-                css={{
-                  width: '50%',
-                }}
-              >
-                {detail?.totalEpisodes}
-              </H6>
-              <Spacer y={1} />
-            </Flex>
-          )}
-          {detail?.duration && (
-            <Flex direction="column" justify="center" align="center">
-              <H5
-                h5
-                weight="bold"
-                css={{
-                  marginBottom: '0.25rem !important',
-                  width: '50%',
-                }}
-              >
-                Episode Duration
-              </H5>
-              <H6
-                h6
-                css={{
-                  width: '50%',
-                }}
-              >
-                {detail?.duration}
-              </H6>
-              <Spacer y={1} />
-            </Flex>
-          )}
-          {detail?.status && (
-            <Flex direction="column" justify="center" align="center">
-              <H5
-                h5
-                weight="bold"
-                css={{
-                  marginBottom: '0.25rem !important',
-                  width: '50%',
-                }}
-              >
-                Status
-              </H5>
-              <H6
-                h6
-                css={{
-                  width: '50%',
-                }}
-              >
-                {detail?.status}
-              </H6>
-              <Spacer y={1} />
-            </Flex>
-          )}
-          {detail?.startDate && (
-            <Flex direction="column" justify="center" align="center">
-              <H5
-                h5
-                weight="bold"
-                css={{
-                  marginBottom: '0.25rem !important',
-                  width: '50%',
-                }}
-              >
-                Start Date
-              </H5>
-              <H6
-                h6
-                css={{
-                  width: '50%',
-                }}
-              >
-                {`${detail?.startDate?.day}/${detail?.startDate?.month}/${detail?.startDate?.year}`}
-              </H6>
-              <Spacer y={1} />
-            </Flex>
-          )}
-          {detail?.endDate && (
-            <Flex direction="column" justify="center" align="center">
-              <H5
-                h5
-                weight="bold"
-                css={{
-                  marginBottom: '0.25rem !important',
-                  width: '50%',
-                }}
-              >
-                End Date
-              </H5>
-              <H6
-                h6
-                css={{
-                  width: '50%',
-                }}
-              >
-                {`${detail?.endDate?.day}/${detail?.endDate?.month}/${detail?.endDate?.year}`}
-              </H6>
-              <Spacer y={1} />
-            </Flex>
-          )}
-          {detail?.countryOfOrigin && (
-            <Flex direction="column" justify="center" align="center">
-              <H5
-                h5
-                weight="bold"
-                css={{
-                  marginBottom: '0.25rem !important',
-                  width: '50%',
-                }}
-              >
-                Country of Origin
-              </H5>
-              <H6
-                h6
-                css={{
-                  width: '50%',
-                }}
-              >
-                {detail?.countryOfOrigin}
-              </H6>
-              <Spacer y={1} />
-            </Flex>
-          )}
-          {detail?.popularity && (
-            <Flex direction="column" justify="center" align="center">
-              <H5
-                h5
-                weight="bold"
-                css={{
-                  marginBottom: '0.25rem !important',
-                  width: '50%',
-                }}
-              >
-                Popularity
-              </H5>
-              <H6
-                h6
-                css={{
-                  width: '50%',
-                }}
-              >
-                {detail?.popularity}
-              </H6>
-              <Spacer y={1} />
-            </Flex>
-          )}
-          {detail?.studios && (
-            <Flex direction="column" justify="center" align="center">
-              <H5
-                h5
-                weight="bold"
-                css={{
-                  marginBottom: '0.25rem !important',
-                  width: '50%',
-                }}
-              >
-                Studios
-              </H5>
-              {detail?.studios.map((studio, index) => (
-                <H6
-                  key={index}
-                  h6
-                  css={{
-                    width: '50%',
-                  }}
-                >
-                  {studio}
+        <Col span={4} css={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center' }}>
+          <Flex
+            direction="column"
+            align="start"
+            justify="center"
+            className="space-y-4"
+            css={{
+              borderRadius: '$lg',
+              backgroundColor: '$backgroundContrast',
+              width: '50%',
+              padding: '$md',
+              '@smMax': {
+                width: '100%',
+              },
+              '@mdMax': {
+                width: '75%',
+              },
+            }}
+          >
+            {detail?.nextAiringEpisode && (
+              <Flex direction="column">
+                <H5 h5 weight="bold">
+                  Airing
+                </H5>
+                <H6 h6>
+                  {`Ep${detail?.nextAiringEpisode?.episode}: ${detail?.nextAiringEpisode?.timeUntilAiring}`}
                 </H6>
-              ))}
-              <Spacer y={1} />
-            </Flex>
-          )}
-          {detail?.synonyms && (
-            <Flex direction="column" justify="center" align="center">
-              <H5
-                h5
-                weight="bold"
-                css={{
-                  marginBottom: '0.25rem !important',
-                  width: '50%',
-                }}
-              >
-                Synonyms
-              </H5>
-              {detail?.synonyms.map((synonym, index) => (
-                <H6
-                  key={index}
-                  h6
-                  css={{
-                    width: '50%',
-                  }}
-                >
-                  {synonym}
+              </Flex>
+            )}
+            {detail?.totalEpisodes && (
+              <Flex direction="column">
+                <H5 h5 weight="bold">
+                  Episodes
+                </H5>
+                <H6 h6>{detail?.totalEpisodes}</H6>
+              </Flex>
+            )}
+            {detail?.duration && (
+              <Flex direction="column">
+                <H5 h5 weight="bold">
+                  Episode Duration
+                </H5>
+                <H6 h6>{detail?.duration}</H6>
+              </Flex>
+            )}
+            {detail?.status && (
+              <Flex direction="column">
+                <H5 h5 weight="bold">
+                  Status
+                </H5>
+                <H6 h6>{detail?.status}</H6>
+              </Flex>
+            )}
+            {detail?.startDate && (
+              <Flex direction="column">
+                <H5 h5 weight="bold">
+                  Start Date
+                </H5>
+                <H6 h6>
+                  {`${detail?.startDate?.day}/${detail?.startDate?.month}/${detail?.startDate?.year}`}
                 </H6>
-              ))}
-              <Spacer y={1} />
-            </Flex>
-          )}
+              </Flex>
+            )}
+            {detail?.endDate && (
+              <Flex direction="column">
+                <H5 h5 weight="bold">
+                  End Date
+                </H5>
+                <H6 h6>
+                  {`${detail?.endDate?.day}/${detail?.endDate?.month}/${detail?.endDate?.year}`}
+                </H6>
+              </Flex>
+            )}
+            {detail?.countryOfOrigin && (
+              <Flex direction="column">
+                <H5 h5 weight="bold">
+                  Country of Origin
+                </H5>
+                <H6 h6>{detail?.countryOfOrigin}</H6>
+              </Flex>
+            )}
+            {detail?.popularity && (
+              <Flex direction="column">
+                <H5 h5 weight="bold">
+                  Popularity
+                </H5>
+                <H6 h6>{detail?.popularity}</H6>
+              </Flex>
+            )}
+            {detail?.studios && (
+              <Flex direction="column">
+                <H5 h5 weight="bold">
+                  Studios
+                </H5>
+                {detail?.studios.map((studio, index) => (
+                  <H6
+                    key={index}
+                    h6
+                    css={{
+                      width: '50%',
+                    }}
+                  >
+                    {studio}
+                  </H6>
+                ))}
+              </Flex>
+            )}
+            {detail?.synonyms && (
+              <Flex direction="column">
+                <H5 h5 weight="bold">
+                  Synonyms
+                </H5>
+                {detail?.synonyms.map((synonym, index) => (
+                  <H6
+                    key={index}
+                    h6
+                    css={{
+                      width: '50%',
+                    }}
+                  >
+                    {synonym}
+                  </H6>
+                ))}
+              </Flex>
+            )}
+          </Flex>
         </Col>
       )}
       <Col span={isSm ? 12 : 8}>
-        <Row>
-          <H6
-            h6
-            css={{ textAlign: 'justify' }}
-            dangerouslySetInnerHTML={{ __html: detail?.description || '' }}
-          />
-        </Row>
-        <Spacer y={1} />
-        <Divider x={1} css={{ m: 0 }} />
+        <Flex
+          direction="column"
+          align="start"
+          justify="center"
+          className="space-y-4"
+          css={{
+            borderRadius: '$lg',
+            backgroundColor: '$backgroundContrast',
+            justifyContent: 'flex-start',
+            padding: '$md',
+          }}
+        >
+          <Row>
+            <H6
+              h6
+              css={{ textAlign: 'justify' }}
+              dangerouslySetInnerHTML={{ __html: detail?.description || '' }}
+            />
+          </Row>
+        </Flex>
         {detail?.relations && detail.relations.length > 0 && (
           <>
-            <H3 h3 css={{ margin: '20px 0 20px 0' }}>
+            <H2
+              h2
+              css={{
+                margin: '20px 0 20px 0',
+                '@xsMax': {
+                  fontSize: '1.75rem !important',
+                },
+              }}
+            >
               Relations
-            </H3>
+            </H2>
             <Grid.Container gap={1}>
               {detail.relations.map((relation) => (
                 <Grid key={relation.id} xs={6} sm={2.4} xl>
@@ -390,15 +310,21 @@ const Overview = () => {
                 </Grid>
               ))}
             </Grid.Container>
-            <Spacer y={1} />
-            <Divider x={1} css={{ m: 0 }} />
           </>
         )}
         {detail?.characters && detail.characters.length > 0 && (
           <>
-            <H3 h3 css={{ margin: '20px 0 20px 0' }}>
+            <H2
+              h2
+              css={{
+                margin: '20px 0 20px 0',
+                '@xsMax': {
+                  fontSize: '1.75rem !important',
+                },
+              }}
+            >
               Characters
-            </H3>
+            </H2>
             <Grid.Container gap={1}>
               {detail.characters.slice(0, 12).map((character) => (
                 <Grid key={character.id} xs={12} md={6}>
@@ -551,23 +477,16 @@ const Overview = () => {
                 </Grid>
               ))}
             </Grid.Container>
-            <Spacer y={1} />
-            <Divider x={1} css={{ m: 0 }} />
           </>
         )}
         {detail?.recommendations && detail?.recommendations.length > 0 && (
-          <>
-            <MediaList
-              items={detail?.recommendations as IMedia[]}
-              itemsType="anime"
-              listName="Recommendations"
-              listType="slider-card"
-              navigationButtons
-            />
-            <Spacer y={1} />
-            <Divider x={1} css={{ m: 0 }} />
-            <Spacer y={1} />
-          </>
+          <MediaList
+            items={detail?.recommendations as IMedia[]}
+            itemsType="anime"
+            listName="Recommendations"
+            listType="slider-card"
+            navigationButtons
+          />
         )}
       </Col>
     </Row>

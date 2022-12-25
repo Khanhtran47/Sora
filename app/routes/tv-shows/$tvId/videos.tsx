@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
 import { useLoaderData, useFetcher } from '@remix-run/react';
 import { Row, Col, Button, Grid, Card } from '@nextui-org/react';
@@ -33,14 +33,14 @@ export const meta: MetaFunction = ({ params }) => ({
   'og:url': `https://sora-anime.vercel.app/tv-shows/${params.tvId}/videos`,
 });
 
-const VideosPage = () => {
+const TvVideosPage = () => {
   const { videos } = useLoaderData<LoaderData>();
   const fetcher = useFetcher();
   const isSm = useMediaQuery('(max-width: 650px)');
-  const [activeType, setActiveType] = React.useState<number>(0);
-  const [activeTypeVideos, setActiveTypeVideos] = React.useState<Item[] | []>([]);
-  const [visible, setVisible] = React.useState(false);
-  const [trailer, setTrailer] = React.useState<Trailer>({});
+  const [activeType, setActiveType] = useState<number>(0);
+  const [activeTypeVideos, setActiveTypeVideos] = useState<Item[] | []>([]);
+  const [visible, setVisible] = useState(false);
+  const [trailer, setTrailer] = useState<Trailer>({});
 
   const closeHandler = () => {
     setVisible(false);
@@ -76,7 +76,7 @@ const VideosPage = () => {
       activeVideo: 'Opening Credits',
     },
   ];
-  React.useEffect(() => {
+  useEffect(() => {
     if (videos) {
       let activeVideo = [];
       const activeTypeVideo = typeVideo.find((item) => item.activeType === activeType);
@@ -86,7 +86,7 @@ const VideosPage = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeType, videos]);
-  React.useEffect(() => {
+  useEffect(() => {
     if (fetcher.data && fetcher.data.youtubeVideo) {
       setActiveTypeVideos(fetcher.data.youtubeVideo);
     }
@@ -99,17 +99,21 @@ const VideosPage = () => {
       justify="center"
       css={{
         marginTop: '0.75rem',
-        padding: '0 0.75rem',
+        maxWidth: '1920px',
+        flexDirection: isSm ? 'column' : 'row',
+        px: '0.75rem',
         '@xs': {
-          padding: '0 3vw',
+          px: '3vw',
         },
         '@sm': {
-          padding: '0 6vw',
+          px: '6vw',
         },
         '@md': {
-          padding: '0 12vw',
+          px: '12vw',
         },
-        flexDirection: isSm ? 'column' : 'row',
+        '@lg': {
+          px: 'calc(0.75rem + 20px)',
+        },
       }}
     >
       <Col
@@ -202,4 +206,4 @@ const VideosPage = () => {
   );
 };
 
-export default VideosPage;
+export default TvVideosPage;

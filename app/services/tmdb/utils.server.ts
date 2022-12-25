@@ -357,8 +357,6 @@ export class TMDB {
     if (withType) url += `&with_type=${withType}`;
     if (airDateGte) url += `&air_date.gte=${airDateGte}`;
     if (airDateLte) url += `&air_date.lte=${airDateLte}`;
-
-    console.log('🚀 ~ file: utils.server.ts:363 ~ TMDB ~ url', url);
     return url;
   };
 
