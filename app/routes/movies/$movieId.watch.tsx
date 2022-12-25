@@ -13,7 +13,6 @@ import {
 } from '@remix-run/react';
 import { Container, Spacer, Loading, Badge } from '@nextui-org/react';
 import { ClientOnly, useRouteData } from 'remix-utils';
-import { isDesktop } from 'react-device-detect';
 import Hls from 'hls.js';
 import artplayerPluginHlsQuality from 'artplayer-plugin-hls-quality';
 
@@ -353,9 +352,6 @@ const MovieWatch = () => {
                         : provider === 'KissKh'
                         ? 'srt'
                         : '',
-                    style: {
-                      fontSize: isDesktop ? '40px' : '20px',
-                    },
                   },
                   poster: TMDB.backdropUrl(detail?.backdrop_path || '', isSm ? 'w780' : 'w1280'),
                   isLive: false,
@@ -417,6 +413,14 @@ const MovieWatch = () => {
                     if (t) {
                       art.currentTime = Number(t);
                     }
+                    art.subtitle.style({
+                      fontSize: `${art.height * 0.05}px`,
+                    });
+                  });
+                  art.on('resize', () => {
+                    art.subtitle.style({
+                      fontSize: `${art.height * 0.05}px`,
+                    });
                   });
                   if (userId) {
                     updateHistory(
