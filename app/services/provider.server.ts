@@ -83,10 +83,16 @@ const getProviderList = async (
     const [search, loklokSearch, kisskhSearch] = await Promise.all([
       getMovieSearch(title),
       sgConfigs.__loklokProvider
-        ? loklokSearchOneTv(title, orgTitle || '', Number(year), Number(season))
+        ? loklokSearchOneTv(
+            `${title} ${Number(season) > 1 ? `Season ${season}` : ''}`,
+            orgTitle || '',
+            Number(year),
+            Number(season),
+          )
         : undefined,
       getKissKhSearch(title),
     ]);
+    console.log('🚀 ~ file: provider.server.ts:84 ~ loklokSearch', loklokSearch);
     const provider = [];
     const findFlixhq: IMovieResult | undefined = search?.results.find(
       (movie) => movie.title.toLowerCase() === title.toLowerCase() && movie?.type === 'TV Series',
@@ -111,7 +117,9 @@ const getProviderList = async (
       provider.push({
         id: findFlixhq.id,
         provider: 'Flixhq',
-        episodesCount: flixhqDetail?.episodes ? flixhqDetail.episodes.length : 0,
+        episodesCount: flixhqDetail?.episodes
+          ? flixhqDetail.episodes.filter((episode) => episode.season === Number(season)).length
+          : 0,
       });
     if (findKissKh && findKissKh.id)
       provider.push({

@@ -3,9 +3,9 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
-import * as React from 'react';
+import { useEffect, useRef } from 'react';
 import { Card, Col, Row, Button, Spacer, Avatar } from '@nextui-org/react';
-import { useNavigate } from '@remix-run/react';
+import { useNavigate, useLocation } from '@remix-run/react';
 import Image, { MimeType } from 'remix-image';
 import tinycolor from 'tinycolor2';
 
@@ -39,17 +39,29 @@ const AnimeDetail = (props: IAnimeDetail) => {
   // const { t } = useTranslation();
   const { item, handler } = props;
   const navigate = useNavigate();
-  const ref = React.useRef<HTMLDivElement>(null);
+  const location = useLocation();
+  const ref = useRef<HTMLDivElement>(null);
   const size: IUseSize = useSize(ref);
 
   const isXs = useMediaQuery('(max-width: 425px)');
   const isSm = useMediaQuery('(max-width: 650px)');
+  const isMd = useMediaQuery('(max-width: 960px)');
+  const isLg = useMediaQuery('(max-width: 1280px)');
+
+  const backgroundImageHeight = isXs ? 80 : isSm ? 119 : isMd ? 178 : isLg ? 267 : 400;
+  const backgroundGradientHeight = isXs ? 30 : isSm ? 50 : isMd ? 70 : isLg ? 90 : 110;
 
   const { id, genres, title, releaseDate, rating, image, cover, type, trailer, color } = item || {};
 
   const colorBackground = tinycolor(color).isDark()
     ? tinycolor(color).brighten(40).saturate(70).spin(180).toString()
     : tinycolor(color).darken(40).saturate(70).spin(180).toString();
+
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+    }
+  }, [ref, location.pathname]);
 
   return (
     <Card
@@ -58,15 +70,95 @@ const AnimeDetail = (props: IAnimeDetail) => {
         display: 'flex',
         flexFlow: 'column',
         width: '100%',
-        height: `calc(${JSON.stringify(size?.height)}px + 1rem)`,
+        height: `calc(${JSON.stringify(size?.height)}px + ${backgroundImageHeight}px - 2rem)`,
         borderWidth: 0,
+        backgroundColor: '$background',
       }}
     >
-      <Card.Header
+      <Card.Body
+        css={{
+          p: 0,
+          overflow: 'hidden',
+          margin: 0,
+          '&::after': {
+            content: '',
+            position: 'absolute',
+            top: `calc(${backgroundImageHeight}px - ${backgroundGradientHeight}px)`,
+            left: 0,
+            width: '100%',
+            height: `${backgroundGradientHeight}px`,
+            backgroundImage: 'linear-gradient(0deg, $background, $backgroundTransparent)',
+          },
+        }}
+      >
+        <Card.Image
+          // @ts-ignore
+          as={Image}
+          src={cover || BackgroundDefault}
+          css={{
+            minHeight: `${backgroundImageHeight}px !important`,
+            minWidth: '100% !important',
+            width: '100%',
+            height: `${backgroundImageHeight}px !important`,
+            top: 0,
+            left: 0,
+            objectFit: 'cover',
+            objectPosition: 'center',
+            opacity: 0.8,
+          }}
+          title={title?.userPreferred || title?.english || title?.romaji || title?.native}
+          alt={title?.userPreferred || title?.english || title?.romaji || title?.native}
+          containerCss={{ margin: 0 }}
+          showSkeleton
+          loaderUrl="/api/image"
+          placeholder="empty"
+          responsive={[
+            {
+              size: {
+                width: 376,
+                height: 80,
+              },
+              maxWidth: 375,
+            },
+            {
+              size: {
+                width: 564,
+                height: 119,
+              },
+              maxWidth: 650,
+            },
+            {
+              size: {
+                width: 845,
+                height: 178,
+              },
+              maxWidth: 960,
+            },
+            {
+              size: {
+                width: 1267,
+                height: 267,
+              },
+              maxWidth: 1280,
+            },
+            {
+              size: {
+                width: 1900,
+                height: 400,
+              },
+            },
+          ]}
+          options={{
+            contentType: MimeType.WEBP,
+          }}
+        />
+      </Card.Body>
+      <Card.Footer
         ref={ref}
         css={{
           position: 'absolute',
           zIndex: 1,
+          bottom: 0,
           flexGrow: 1,
           display: 'flex',
           justifyContent: 'center',
@@ -77,7 +169,19 @@ const AnimeDetail = (props: IAnimeDetail) => {
           align="stretch"
           justify="center"
           css={{
-            padding: '20px',
+            px: '0.75rem',
+            '@xs': {
+              px: '3vw',
+            },
+            '@sm': {
+              px: '6vw',
+            },
+            '@md': {
+              px: '12vw',
+            },
+            '@lg': {
+              px: '20px',
+            },
             maxWidth: '1920px',
           }}
         >
@@ -91,7 +195,7 @@ const AnimeDetail = (props: IAnimeDetail) => {
                   title={title?.userPreferred || title?.english || title?.romaji || title?.native}
                   alt={title?.userPreferred || title?.english || title?.romaji || title?.native}
                   objectFit="cover"
-                  width="50%"
+                  width={isLg ? '75%' : isMd ? '100%' : '50%'}
                   showSkeleton
                   css={{
                     minWidth: 'auto !important',
@@ -138,11 +242,10 @@ const AnimeDetail = (props: IAnimeDetail) => {
                   <Avatar
                     icon={<PhotoIcon width={48} height={48} />}
                     css={{
-                      width: '50% !important',
+                      width: `${isLg ? '75%' : isMd ? '100%' : '50%'} !important`,
                       size: '$20',
                       minWidth: 'auto !important',
                       minHeight: '205px !important',
-                      marginTop: '10vh',
                       borderRadius: '24px !important',
                     }}
                   />
@@ -295,86 +398,9 @@ const AnimeDetail = (props: IAnimeDetail) => {
             <TabLink pages={detailTab} linkTo={`/anime/${id}`} />
           </Col>
         </Row>
-      </Card.Header>
-      <Card.Body
-        css={{
-          p: 0,
-          overflow: 'hidden',
-          margin: 0,
-          '&::after': {
-            content: '',
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            width: '100%',
-            height: '100px',
-            backgroundImage: 'linear-gradient(0deg, $background, $backgroundTransparent)',
-          },
-        }}
-      >
-        <Card.Image
-          // @ts-ignore
-          as={Image}
-          src={cover || BackgroundDefault}
-          css={{
-            minHeight: '100vh !important',
-            minWidth: '100% !important',
-            width: '100%',
-            height: `calc(${JSON.stringify(size?.height)}px + 1rem)`,
-            top: 0,
-            left: 0,
-            objectFit: 'cover',
-            opacity: 0.3,
-          }}
-          title={title?.userPreferred || title?.english || title?.romaji || title?.native}
-          alt={title?.userPreferred || title?.english || title?.romaji || title?.native}
-          containerCss={{ margin: 0 }}
-          showSkeleton
-          loaderUrl="/api/image"
-          placeholder="empty"
-          responsive={[
-            {
-              size: {
-                width: 375,
-                height: 605,
-              },
-              maxWidth: 375,
-            },
-            {
-              size: {
-                width: 650,
-                height: 605,
-              },
-              maxWidth: 650,
-            },
-            {
-              size: {
-                width: 960,
-                height: 605,
-              },
-              maxWidth: 960,
-            },
-            {
-              size: {
-                width: 1280,
-                height: 720,
-              },
-              maxWidth: 1280,
-            },
-            {
-              size: {
-                width: 1400,
-                height: 787,
-              },
-            },
-          ]}
-          options={{
-            contentType: MimeType.WEBP,
-          }}
-        />
-      </Card.Body>
+      </Card.Footer>
     </Card>
   );
 };
 
-export default React.memo(AnimeDetail);
+export default AnimeDetail;

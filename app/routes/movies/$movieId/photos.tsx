@@ -79,7 +79,7 @@ const uiElements: GalleryProps['uiElements'] = [
   },
 ];
 
-const PhotosPage = () => {
+const MoviePhotosPage = () => {
   const { images } = useLoaderData<LoaderData>();
   const movieData: { detail: IMovieDetail } | undefined = useRouteData('routes/movies/$movieId');
   const isLg = useMediaQuery('(max-width: 1280px)');
@@ -295,4 +295,4 @@ const PhotosPage = () => {
   );
 };
 
-export default PhotosPage;
+export default MoviePhotosPage;
