@@ -297,7 +297,7 @@ export const handle = {
       <span> ❱ </span>
       <Spacer x={0.25} />
       <NavLink
-        to={`/tv-shows/${match.params.tvId}/season/${match.params.seasonId}/`}
+        to={`/tv-shows/${match.params.tvId}/season/${match.params.seasonId}`}
         aria-label={`Season ${match.params.seasonId}`}
       >
         {({ isActive }) => (
