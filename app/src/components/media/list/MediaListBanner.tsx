@@ -197,16 +197,28 @@ const SwiperSlideStyled = styled(SwiperSlide, {
     boxShadow: '0 0 0 4px var(--nextui-colors-primarySolidHover)',
   },
   [`& ${Card}`]: {
-    transition: 'all 0.3s ease',
-    transform: 'scale(1.04, 1)',
+    transition: 'all 0.4s ease',
+    transform: 'scale(1.125, 1.03) translateX(-10px)',
+    '&::after': {
+      transition: 'all 0.4s ease',
+      opacity: 0,
+      content: '',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '150px',
+      height: '135px',
+      backgroundImage: 'linear-gradient(90deg, $background, $backgroundTransparent)',
+    },
     '&:hover': {
-      transform: 'scale(1.025, 1)',
+      transform: 'scale(1.075, 1.015) translateX(-5px)',
       [`& ${H5}`]: {
         display: 'block',
       },
       [`& ${Card.Image}`]: {},
       '&::after': {
         content: '',
+        opacity: 1,
         position: 'absolute',
         top: 0,
         left: 0,
@@ -219,12 +231,13 @@ const SwiperSlideStyled = styled(SwiperSlide, {
   '&.swiper-slide-thumb-active': {
     boxShadow: '0 0 0 4px var(--nextui-colors-primary)',
     [`& ${Card}`]: {
-      transform: 'scale(1)',
+      transform: 'scale(1) translateX(0)',
       [`& ${H5}`]: {
         display: 'block',
       },
       '&::after': {
         content: '',
+        opacity: 1,
         position: 'absolute',
         top: 0,
         left: 0,
@@ -266,13 +279,14 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
           <SwiperReact
             modules={[Thumbs, Pagination]}
             grabCursor
-            spaceBetween={isSm ? 10 : 0}
-            slidesPerView={isSm ? 1.075 : 1}
+            spaceBetween={isSm ? 20 : 0}
+            slidesPerView={isSm ? 1.15 : 1}
+            centeredSlides={isSm}
             thumbs={isXl ? undefined : { swiper: thumbsSwiper }}
             loop
             pagination={
               isSm
-                ? false
+                ? { dynamicBullets: true }
                 : isXl
                 ? {
                     type: 'bullets',

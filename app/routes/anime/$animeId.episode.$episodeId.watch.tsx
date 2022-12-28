@@ -16,7 +16,6 @@ import {
 } from '@remix-run/react';
 import { Container, Spacer, Loading, Badge } from '@nextui-org/react';
 import { ClientOnly } from 'remix-utils';
-import { isDesktop } from 'react-device-detect';
 import artplayerPluginHlsQuality from 'artplayer-plugin-hls-quality';
 import Hls from 'hls.js';
 
@@ -540,9 +539,6 @@ const AnimeEpisodeWatch = () => {
                         : provider === 'KissKh'
                         ? 'srt'
                         : '',
-                    style: {
-                      fontSize: isDesktop ? '40px' : '20px',
-                    },
                   },
                   poster: detail?.cover,
                   isLive: false,
@@ -618,6 +614,14 @@ const AnimeEpisodeWatch = () => {
                     if (t) {
                       art.currentTime = Number(t);
                     }
+                    art.subtitle.style({
+                      fontSize: `${art.height * 0.05}px`,
+                    });
+                  });
+                  art.on('resize', () => {
+                    art.subtitle.style({
+                      fontSize: `${art.height * 0.05}px`,
+                    });
                   });
 
                   if (userId) {

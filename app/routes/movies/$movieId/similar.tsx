@@ -58,7 +58,7 @@ export const handle = {
   ),
 };
 
-const SimilarPage = () => {
+const MovieSimilarPage = () => {
   const { movieId } = useParams();
   const { similar } = useLoaderData<LoaderData>();
   const rootData:
@@ -106,4 +106,4 @@ const SimilarPage = () => {
   );
 };
 
-export default SimilarPage;
+export default MovieSimilarPage;

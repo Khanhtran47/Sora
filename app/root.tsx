@@ -32,13 +32,21 @@ import swiperThumbsStyles from 'swiper/css/thumbs';
 import type { User } from '@supabase/supabase-js';
 import { AnimatePresence, motion } from 'framer-motion';
 import NProgress from 'nprogress';
-import nProgressStyles from 'nprogress/nprogress.css';
 import { useChangeLanguage } from 'remix-i18next';
 import { useTranslation } from 'react-i18next';
 import photoSwipeStyles from 'photoswipe/dist/photoswipe.css';
 import remixImageStyles from 'remix-image/remix-image.css';
 import { MetronomeLinks } from '@metronome-sh/react';
 import Image, { MimeType } from 'remix-image';
+import FontStyles100 from '@fontsource/inter/100.css';
+import FontStyles200 from '@fontsource/inter/200.css';
+import FontStyles300 from '@fontsource/inter/300.css';
+import FontStyles400 from '@fontsource/inter/400.css';
+import FontStyles500 from '@fontsource/inter/500.css';
+import FontStyles600 from '@fontsource/inter/600.css';
+import FontStyles700 from '@fontsource/inter/700.css';
+import FontStyles800 from '@fontsource/inter/800.css';
+import FontStyles900 from '@fontsource/inter/900.css';
 
 import * as gtag from '~/utils/gtags.client';
 import globalStyles from '~/styles/global.stitches';
@@ -56,6 +64,7 @@ import { getListGenre, getListLanguages } from '~/services/tmdb/tmdb.server';
 import Layout from '~/src/components/layouts/Layout';
 import Home from '~/src/assets/icons/HomeIcon.js';
 import styles from '~/styles/tailwind.css';
+import nProgressStyles from '~/src/components/styles/nprogress.css';
 import { getUserFromCookie } from './services/supabase';
 import pageNotFound from './src/assets/images/404.gif';
 import i18next, { i18nCookie } from './i18n/i18next.server';
@@ -151,6 +160,51 @@ export const links: LinksFunction = () => [
     href: remixImageStyles,
   },
   {
+    rel: 'preload',
+    as: 'style',
+    href: FontStyles100,
+  },
+  {
+    rel: 'preload',
+    as: 'style',
+    href: FontStyles200,
+  },
+  {
+    rel: 'preload',
+    as: 'style',
+    href: FontStyles300,
+  },
+  {
+    rel: 'preload',
+    as: 'style',
+    href: FontStyles400,
+  },
+  {
+    rel: 'preload',
+    as: 'style',
+    href: FontStyles500,
+  },
+  {
+    rel: 'preload',
+    as: 'style',
+    href: FontStyles600,
+  },
+  {
+    rel: 'preload',
+    as: 'style',
+    href: FontStyles700,
+  },
+  {
+    rel: 'preload',
+    as: 'style',
+    href: FontStyles800,
+  },
+  {
+    rel: 'preload',
+    as: 'style',
+    href: FontStyles900,
+  },
+  {
     rel: 'stylesheet',
     href: styles,
   },
@@ -181,6 +235,42 @@ export const links: LinksFunction = () => [
   {
     rel: 'stylesheet',
     href: remixImageStyles,
+  },
+  {
+    rel: 'stylesheet',
+    href: FontStyles100,
+  },
+  {
+    rel: 'stylesheet',
+    href: FontStyles200,
+  },
+  {
+    rel: 'stylesheet',
+    href: FontStyles300,
+  },
+  {
+    rel: 'stylesheet',
+    href: FontStyles400,
+  },
+  {
+    rel: 'stylesheet',
+    href: FontStyles500,
+  },
+  {
+    rel: 'stylesheet',
+    href: FontStyles600,
+  },
+  {
+    rel: 'stylesheet',
+    href: FontStyles700,
+  },
+  {
+    rel: 'stylesheet',
+    href: FontStyles800,
+  },
+  {
+    rel: 'stylesheet',
+    href: FontStyles900,
   },
 ];
 
@@ -347,9 +437,9 @@ const App = () => {
   React.useEffect(() => {
     // and when it's something else it means it's either submitting a form or
     // waiting for the loaders of the next location so we start it
-    if (state === 'loading') NProgress.start();
+    if (state === 'loading') NProgress.configure({ showSpinner: false }).start();
     // when the state is idle then we can to complete the progress bar
-    if (state === 'idle') NProgress.done();
+    if (state === 'idle') NProgress.configure({ showSpinner: false }).done();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transition.state]);
 

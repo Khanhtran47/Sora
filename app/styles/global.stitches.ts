@@ -12,7 +12,7 @@ const globalStyles = globalCss({
     padding: 0,
   },
   body: {
-    fontFamily: 'Inter, sans-serif',
+    fontFamily: 'Inter !important',
     fontWeight: 400,
   },
   html: {
@@ -23,6 +23,10 @@ const globalStyles = globalCss({
     '@sm': {
       fontSize: '100%',
     },
+  },
+  ':root': {
+    '--swiper-theme-color': 'var(--nextui-colors-primary)',
+    '--swiper-pagination-bullet-inactive-color': 'var(--nextui-colors-primarySolidHover)',
   },
 });
 

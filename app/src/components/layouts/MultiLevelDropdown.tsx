@@ -71,7 +71,7 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
         height: '100%',
         position: 'relative',
         transition: 'height 0.3s',
-        width: '480px',
+        width: '240px',
         transform: `${isLeftMenu ? 'none' : ' translateZ(0px) translateX(-250px)'}`,
       }}
     >

@@ -41,7 +41,8 @@ const BannerItem = (props: IBannerItemProps) => {
   if (isSm) {
     return (
       <BannerItemMobile
-        backdropPath={backdropPath}
+        active={active}
+        posterPath={posterPath}
         genreIds={genreIds}
         genresMovie={genresMovie}
         genresTv={genresTv}

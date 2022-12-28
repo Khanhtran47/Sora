@@ -1,9 +1,10 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
-import { useRef, useState, memo } from 'react';
-import { useNavigate } from '@remix-run/react';
+import { useRef, useState, useEffect } from 'react';
+import { useNavigate, useLocation } from '@remix-run/react';
 import { Card, Col, Row, Button, Spacer, Avatar } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
 
@@ -46,9 +47,15 @@ const MediaDetail = (props: IMediaDetail) => {
   const ref = useRef<HTMLDivElement>(null);
   const size: IUseSize = useSize(ref);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const isXs = useMediaQuery('(max-width: 425px)');
   const isSm = useMediaQuery('(max-width: 650px)');
+  const isMd = useMediaQuery('(max-width: 960px)');
+  const isLg = useMediaQuery('(max-width: 1280px)');
+
+  const backgroundImageHeight = isXs ? 240 : isSm ? 360 : isMd ? 480 : isLg ? 720 : 787.5;
+  const backgroundGradientHeight = isXs ? 100 : isSm ? 150 : isMd ? 200 : isLg ? 250 : 300;
 
   const [visible, setVisible] = useState(false);
   const closeHandler = () => {
@@ -75,6 +82,12 @@ const MediaDetail = (props: IMediaDetail) => {
     (item as IMovieDetail)?.release_date || (item as ITvShowDetail)?.first_air_date || '',
   ).toLocaleDateString('fr-FR');
 
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+    }
+  }, [ref, location.pathname]);
+
   return (
     <>
       <Card
@@ -83,15 +96,94 @@ const MediaDetail = (props: IMediaDetail) => {
           display: 'flex',
           flexFlow: 'column',
           width: '100%',
-          height: `calc(${JSON.stringify(size?.height)}px + 1rem)`,
+          height: `calc(${JSON.stringify(size?.height)}px + ${backgroundImageHeight}px - 10rem)`,
           borderWidth: 0,
+          backgroundColor: '$background',
         }}
       >
-        <Card.Header
+        <Card.Body
+          css={{
+            p: 0,
+            overflow: 'hidden',
+            margin: 0,
+            '&::after': {
+              content: '',
+              position: 'absolute',
+              top: `calc(${backgroundImageHeight}px - ${backgroundGradientHeight}px)`,
+              left: 0,
+              width: '100%',
+              height: `${backgroundGradientHeight}px`,
+              backgroundImage: 'linear-gradient(to top, $background, $backgroundTransparent)',
+            },
+          }}
+        >
+          <Card.Image
+            // @ts-ignore
+            as={Image}
+            src={backdropPath || BackgroundDefault}
+            css={{
+              minHeight: `${backgroundImageHeight}px !important`,
+              minWidth: '100% !important',
+              width: '100%',
+              height: `${backgroundImageHeight}px !important`,
+              top: 0,
+              left: 0,
+              objectFit: 'cover',
+              opacity: 0.8,
+            }}
+            title={title}
+            alt={title}
+            showSkeleton
+            containerCss={{ margin: 0 }}
+            loaderUrl="/api/image"
+            placeholder="empty"
+            responsive={[
+              {
+                size: {
+                  width: 426,
+                  height: 240,
+                },
+                maxWidth: 375,
+              },
+              {
+                size: {
+                  width: 640,
+                  height: 360,
+                },
+                maxWidth: 650,
+              },
+              {
+                size: {
+                  width: 854,
+                  height: 480,
+                },
+                maxWidth: 960,
+              },
+              {
+                size: {
+                  width: 1280,
+                  height: 720,
+                },
+                maxWidth: 1280,
+              },
+              {
+                size: {
+                  width: 1400,
+                  height: 787.5,
+                },
+              },
+            ]}
+            options={{
+              contentType: MimeType.WEBP,
+            }}
+          />
+        </Card.Body>
+        <Card.Footer
           ref={ref}
           css={{
             position: 'absolute',
             zIndex: 1,
+            bottom: 0,
             display: 'flex',
             flexGrow: 1,
             justifyContent: 'center',
@@ -102,7 +194,19 @@ const MediaDetail = (props: IMediaDetail) => {
             align="stretch"
             justify="center"
             css={{
-              padding: '20px',
+              px: '0.75rem',
+              '@xs': {
+                px: '3vw',
+              },
+              '@sm': {
+                px: '6vw',
+              },
+              '@md': {
+                px: '12vw',
+              },
+              '@lg': {
+                px: '20px',
+              },
               maxWidth: '1920px',
             }}
           >
@@ -115,7 +219,7 @@ const MediaDetail = (props: IMediaDetail) => {
                     src={posterPath}
                     alt={title}
                     objectFit="cover"
-                    width="50%"
+                    width={isLg ? '75%' : isMd ? '100%' : '50%'}
                     css={{
                       minWidth: 'auto !important',
                       minHeight: '205px !important',
@@ -162,11 +266,10 @@ const MediaDetail = (props: IMediaDetail) => {
                     <Avatar
                       icon={<PhotoIcon width={48} height={48} />}
                       css={{
-                        width: '50% !important',
+                        width: `${isLg ? '75%' : isMd ? '100%' : '50%'} !important`,
                         size: '$20',
                         minWidth: 'auto !important',
                         minHeight: '205px !important',
-                        marginTop: '10vh',
                         borderRadius: '24px !important',
                       }}
                     />
@@ -181,7 +284,7 @@ const MediaDetail = (props: IMediaDetail) => {
                         rounded
                         color="gradient"
                         css={{
-                          width: '50%',
+                          width: `${isLg ? '75%' : isMd ? '100%' : '50%'}`,
                           margin: '0.5rem 0 0.5rem 0',
                           '@xs': {
                             marginTop: '4vh',
@@ -402,84 +505,7 @@ const MediaDetail = (props: IMediaDetail) => {
               />
             </Col>
           </Row>
-        </Card.Header>
-        <Card.Body
-          css={{
-            p: 0,
-            overflow: 'hidden',
-            margin: 0,
-            '&::after': {
-              content: '',
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-              width: '100%',
-              height: '100px',
-              backgroundImage: 'linear-gradient(0deg, $background, $backgroundTransparent)',
-            },
-          }}
-        >
-          <Card.Image
-            // @ts-ignore
-            as={Image}
-            src={backdropPath || BackgroundDefault}
-            css={{
-              minHeight: '100vh !important',
-              minWidth: '100% !important',
-              width: '100%',
-              height: `calc(${JSON.stringify(size?.height)}px + 1rem)`,
-              top: 0,
-              left: 0,
-              objectFit: 'cover',
-              opacity: 0.3,
-            }}
-            title={title}
-            alt={title}
-            showSkeleton
-            containerCss={{ margin: 0 }}
-            loaderUrl="/api/image"
-            placeholder="empty"
-            responsive={[
-              {
-                size: {
-                  width: 375,
-                  height: 605,
-                },
-                maxWidth: 375,
-              },
-              {
-                size: {
-                  width: 650,
-                  height: 605,
-                },
-                maxWidth: 650,
-              },
-              {
-                size: {
-                  width: 960,
-                  height: 605,
-                },
-                maxWidth: 960,
-              },
-              {
-                size: {
-                  width: 1280,
-                  height: 720,
-                },
-                maxWidth: 1280,
-              },
-              {
-                size: {
-                  width: 1400,
-                  height: 787,
-                },
-              },
-            ]}
-            options={{
-              contentType: MimeType.WEBP,
-            }}
-          />
-        </Card.Body>
+        </Card.Footer>
       </Card>
       <SelectProviderModal
         visible={visible}
@@ -496,4 +522,4 @@ const MediaDetail = (props: IMediaDetail) => {
   );
 };
 
-export default memo(MediaDetail);
+export default MediaDetail;

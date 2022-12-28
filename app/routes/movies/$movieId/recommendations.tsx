@@ -58,7 +58,7 @@ export const handle = {
   ),
 };
 
-const RecommendationsPage = () => {
+const MovieRecommendationsPage = () => {
   const { movieId } = useParams();
   const { recommendations } = useLoaderData<LoaderData>();
   const rootData:
@@ -105,4 +105,4 @@ const RecommendationsPage = () => {
   );
 };
 
-export default RecommendationsPage;
+export default MovieRecommendationsPage;

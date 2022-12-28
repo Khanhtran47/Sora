@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { LoaderFunction, json } from '@remix-run/node';
 import { useLoaderData, useNavigate, Link } from '@remix-run/react';
-import { Row, Col, Spacer, Divider, Image as NextImage, Card, Avatar } from '@nextui-org/react';
+import { Row, Col, Spacer, Image as NextImage, Card, Avatar } from '@nextui-org/react';
 import type { User } from '@supabase/supabase-js';
 import { useRouteData } from 'remix-utils';
 import Image, { MimeType } from 'remix-image';
@@ -11,7 +11,7 @@ import Image, { MimeType } from 'remix-image';
 import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
 import { authenticate } from '~/services/supabase';
 import { getSimilar, getCredits, getRecommendation } from '~/services/tmdb/tmdb.server';
-import { ITvShowDetail } from '~/services/tmdb/tmdb.types';
+import { ITvShowDetail, ILanguage } from '~/services/tmdb/tmdb.types';
 import MediaList from '~/src/components/media/MediaList';
 import TMDB from '~/utils/media';
 import useMediaQuery from '~/hooks/useMediaQuery';
@@ -51,13 +51,14 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   });
 };
 
-const Overview = () => {
+const TvOverview = () => {
   const { similar, recommendations, topBilledCast } = useLoaderData<LoaderData>();
   const tvData: { detail: ITvShowDetail } | undefined = useRouteData('routes/tv-shows/$tvId');
   const rootData:
     | {
         user?: User;
         locale: string;
+        languages: ILanguage[];
         genresMovie: { [id: string]: string };
         genresTv: { [id: string]: string };
       }
@@ -76,80 +77,126 @@ const Overview = () => {
       justify="center"
       css={{
         marginTop: '0.75rem',
-        padding: '20px',
         maxWidth: '1920px',
+        px: '1.5rem',
+        '@xs': {
+          px: 'calc(0.75rem + 3vw)',
+        },
+        '@sm': {
+          px: 'calc(0.75rem + 6vw)',
+        },
+        '@md': {
+          px: 'calc(0.75rem + 12vw)',
+        },
+        '@lg': {
+          px: 'calc(0.75rem + 20px)',
+        },
       }}
     >
       {!isSm && (
-        <Col span={4}>
-          <Row justify="center" fluid>
-            <H6 h6 css={{ width: '50%' }}>
+        <Col span={4} css={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center' }}>
+          <Flex
+            direction="column"
+            align="start"
+            justify="center"
+            className="space-y-4"
+            css={{
+              borderRadius: '$lg',
+              backgroundColor: '$backgroundContrast',
+              width: '50%',
+              padding: '$md',
+              '@smMax': {
+                width: '100%',
+              },
+              '@mdMax': {
+                width: '75%',
+              },
+            }}
+          >
+            <H6 h6>
               <strong>Status</strong>
               <br />
               {detail?.status}
             </H6>
-          </Row>
-          <Spacer y={1} />
-          <Row justify="center">
-            <H6 h6 css={{ width: '50%' }}>
+            <H6 h6>
               <strong>Network</strong>
               <br />
               {detail?.networks &&
                 detail.networks.map((network, index) => (
                   <NextImage
+                    // @ts-ignore
+                    as={Image}
                     key={`network-item-${index}`}
                     src={TMDB.logoUrl(network?.logo_path || '', 'w154')}
                     alt="Network Image"
+                    title={network?.name}
+                    showSkeleton
                     objectFit="cover"
-                    containerCss={{
-                      padding: '$sm',
-                      backgroundColor: 'var(--nextui-colors-accents5)',
+                    containerCss={{ padding: '$sm' }}
+                    loaderUrl="/api/image"
+                    placeholder="empty"
+                    option={{
+                      contentType: MimeType.WEBP,
                     }}
                   />
                 ))}
             </H6>
-          </Row>
-          <Spacer y={1} />
-          <Row justify="center">
-            <H6 h6 css={{ width: '50%' }}>
+            <H6 h6>
               <strong>Type</strong>
               <br />
               {detail?.type}
             </H6>
-          </Row>
-          <Spacer y={1} />
-          <Row justify="center">
-            <H6 h6 css={{ width: '50%' }}>
+            <H6 h6>
               <strong>Original Language</strong>
               <br />
-              {detail?.original_language}
+              {rootData?.languages?.find((lang) => lang.iso_639_1 === detail?.original_language)
+                ?.english_name || detail?.original_language}
             </H6>
-          </Row>
-          <Spacer y={1} />
+          </Flex>
         </Col>
       )}
       <Col span={isSm ? 12 : 8}>
-        <Row>
-          <H6 h6 css={{ textAlign: 'justify' }}>
-            {detail?.overview}
-          </H6>
-        </Row>
-        <Spacer y={1} />
-        <Row wrap="wrap">
-          {detail?.created_by && detail?.created_by.length > 0 && (
-            <>
+        <Flex
+          direction="column"
+          align="start"
+          justify="center"
+          className="space-y-4"
+          css={{
+            borderRadius: '$lg',
+            backgroundColor: '$backgroundContrast',
+            justifyContent: 'flex-start',
+            padding: '$md',
+          }}
+        >
+          <Row>
+            <H6 h6 css={{ textAlign: 'justify' }}>
+              {detail?.overview}
+            </H6>
+          </Row>
+          <Flex
+            direction={isSm ? 'column' : 'row'}
+            wrap="wrap"
+            className={`${isSm ? 'space-y-4' : 'space-x-8'}`}
+          >
+            {detail?.created_by && detail?.created_by.length > 0 && (
               <H6 h6>
                 <strong>Creators</strong>
                 <br />
-                {detail.created_by.map((creator) => (
-                  <p key={`director-item-${creator.id}}`}>{creator.name}</p>
-                ))}
+                <Flex direction="column">
+                  {detail.created_by.map((creator) => (
+                    <Link
+                      key={`director-item-${creator.id}}`}
+                      to={`/people/${creator.id}/overview`}
+                      style={{ lineHeight: '1.75rem' }}
+                      className="text-[var(--nextui-color-text)] hover:text-primary"
+                    >
+                      {creator.name}
+                    </Link>
+                  ))}
+                </Flex>
               </H6>
-              <Spacer x={2} />
-            </>
-          )}
-          {detail?.production_countries && detail.production_countries.length > 0 && (
-            <>
+            )}
+            {detail?.production_countries && detail.production_countries.length > 0 && (
               <H6 h6>
                 <strong>Production Countries</strong>
                 <br />
@@ -157,11 +204,8 @@ const Overview = () => {
                   <p key={`country-item-${index}`}>{country.name}</p>
                 ))}
               </H6>
-              <Spacer x={2} />
-            </>
-          )}
-          {detail?.spoken_languages && detail.spoken_languages.length > 0 && (
-            <>
+            )}
+            {detail?.spoken_languages && detail.spoken_languages.length > 0 && (
               <H6 h6>
                 <strong>Spoken Languages</strong>
                 <br />
@@ -169,28 +213,19 @@ const Overview = () => {
                   <p key={`language-item-${index}`}>{language.english_name}</p>
                 ))}
               </H6>
-              <Spacer x={2} />
-            </>
-          )}
-        </Row>
-        <Spacer y={1} />
-        <Divider x={1} css={{ m: 0 }} />
-        <Spacer y={1} />
+            )}
+          </Flex>
+        </Flex>
         {topBilledCast && topBilledCast.length > 0 && (
-          <>
-            <MediaList
-              listType="slider-card"
-              items={topBilledCast}
-              listName="Top Cast"
-              showMoreList
-              onClickViewMore={() => onClickViewMore('cast')}
-              navigationButtons
-              itemsType="people"
-            />
-            <Spacer y={1} />
-            <Divider x={1} css={{ m: 0 }} />
-            <Spacer y={1} />
-          </>
+          <MediaList
+            listType="slider-card"
+            items={topBilledCast}
+            listName="Top Cast"
+            showMoreList
+            onClickViewMore={() => onClickViewMore('cast')}
+            navigationButtons
+            itemsType="people"
+          />
         )}
         {detail?.seasons && detail?.seasons.length > 0 && (
           <>
@@ -278,50 +313,37 @@ const Overview = () => {
                   <Spacer y={1} />
                 </Link>
               ))}
-            <Spacer y={1} />
-            <Divider x={1} css={{ m: 0 }} />
-            <Spacer y={1} />
           </>
         )}
         {recommendations && recommendations.items && recommendations.items.length > 0 && (
-          <>
-            <MediaList
-              listType="slider-card"
-              items={recommendations.items}
-              listName="Recommendations"
-              showMoreList
-              onClickViewMore={() => onClickViewMore('recommendations')}
-              itemsType="tv"
-              navigationButtons
-              genresMovie={rootData?.genresMovie}
-              genresTv={rootData?.genresTv}
-            />
-            <Spacer y={1} />
-            <Divider x={1} css={{ m: 0 }} />
-            <Spacer y={1} />
-          </>
+          <MediaList
+            listType="slider-card"
+            items={recommendations.items}
+            listName="Recommendations"
+            showMoreList
+            onClickViewMore={() => onClickViewMore('recommendations')}
+            itemsType="tv"
+            navigationButtons
+            genresMovie={rootData?.genresMovie}
+            genresTv={rootData?.genresTv}
+          />
         )}
         {similar.items && similar.items.length > 0 && (
-          <>
-            <MediaList
-              listType="slider-card"
-              items={similar.items}
-              listName="Similar Tv-Shows"
-              showMoreList
-              onClickViewMore={() => onClickViewMore('similar')}
-              itemsType="tv"
-              navigationButtons
-              genresMovie={rootData?.genresMovie}
-              genresTv={rootData?.genresTv}
-            />
-            <Spacer y={1} />
-            <Divider x={1} css={{ m: 0 }} />
-            <Spacer y={1} />
-          </>
+          <MediaList
+            listType="slider-card"
+            items={similar.items}
+            listName="Similar Tv-Shows"
+            showMoreList
+            onClickViewMore={() => onClickViewMore('similar')}
+            itemsType="tv"
+            navigationButtons
+            genresMovie={rootData?.genresMovie}
+            genresTv={rootData?.genresTv}
+          />
         )}
       </Col>
     </Row>
   );
 };
 
-export default Overview;
+export default TvOverview;
