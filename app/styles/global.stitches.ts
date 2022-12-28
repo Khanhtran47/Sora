@@ -12,7 +12,7 @@ const globalStyles = globalCss({
     padding: 0,
   },
   body: {
-    fontFamily: 'Inter, sans-serif !important',
+    fontFamily: 'Inter !important',
     fontWeight: 400,
   },
   html: {

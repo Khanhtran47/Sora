@@ -38,6 +38,15 @@ import photoSwipeStyles from 'photoswipe/dist/photoswipe.css';
 import remixImageStyles from 'remix-image/remix-image.css';
 import { MetronomeLinks } from '@metronome-sh/react';
 import Image, { MimeType } from 'remix-image';
+import FontStyles100 from '@fontsource/inter/100.css';
+import FontStyles200 from '@fontsource/inter/200.css';
+import FontStyles300 from '@fontsource/inter/300.css';
+import FontStyles400 from '@fontsource/inter/400.css';
+import FontStyles500 from '@fontsource/inter/500.css';
+import FontStyles600 from '@fontsource/inter/600.css';
+import FontStyles700 from '@fontsource/inter/700.css';
+import FontStyles800 from '@fontsource/inter/800.css';
+import FontStyles900 from '@fontsource/inter/900.css';
 
 import * as gtag from '~/utils/gtags.client';
 import globalStyles from '~/styles/global.stitches';
@@ -151,6 +160,51 @@ export const links: LinksFunction = () => [
     href: remixImageStyles,
   },
   {
+    rel: 'preload',
+    as: 'style',
+    href: FontStyles100,
+  },
+  {
+    rel: 'preload',
+    as: 'style',
+    href: FontStyles200,
+  },
+  {
+    rel: 'preload',
+    as: 'style',
+    href: FontStyles300,
+  },
+  {
+    rel: 'preload',
+    as: 'style',
+    href: FontStyles400,
+  },
+  {
+    rel: 'preload',
+    as: 'style',
+    href: FontStyles500,
+  },
+  {
+    rel: 'preload',
+    as: 'style',
+    href: FontStyles600,
+  },
+  {
+    rel: 'preload',
+    as: 'style',
+    href: FontStyles700,
+  },
+  {
+    rel: 'preload',
+    as: 'style',
+    href: FontStyles800,
+  },
+  {
+    rel: 'preload',
+    as: 'style',
+    href: FontStyles900,
+  },
+  {
     rel: 'stylesheet',
     href: styles,
   },
@@ -181,6 +235,42 @@ export const links: LinksFunction = () => [
   {
     rel: 'stylesheet',
     href: remixImageStyles,
+  },
+  {
+    rel: 'stylesheet',
+    href: FontStyles100,
+  },
+  {
+    rel: 'stylesheet',
+    href: FontStyles200,
+  },
+  {
+    rel: 'stylesheet',
+    href: FontStyles300,
+  },
+  {
+    rel: 'stylesheet',
+    href: FontStyles400,
+  },
+  {
+    rel: 'stylesheet',
+    href: FontStyles500,
+  },
+  {
+    rel: 'stylesheet',
+    href: FontStyles600,
+  },
+  {
+    rel: 'stylesheet',
+    href: FontStyles700,
+  },
+  {
+    rel: 'stylesheet',
+    href: FontStyles800,
+  },
+  {
+    rel: 'stylesheet',
+    href: FontStyles900,
   },
 ];
 
