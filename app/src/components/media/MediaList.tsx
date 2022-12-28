@@ -21,36 +21,263 @@ import { H2 } from '../styles/Text.styles';
 import Flex from '../styles/Flex.styles';
 
 /**
- * MediaList type:
- * table
- * slider of cards
- * slider of banners
- * grid of cards
+ * @typedef {Object} IMediaListProps
+ * @property {Array<{ id: number; name: string; backdropPath: string }>} [coverItem] - Require when cover card is true, value is cover items to show
+ * @property {number} [currentPage] - Require when pagination is true, loading type is page, value is current page
+ * @property {{ [id: string]: string }} [genresMovie] - Pass genres movie object
+ * @property {{ [id: string]: string }} [genresTv] - Pass genres tv object
+ * @property {boolean} [hasNextPage] - Require when loading type is scroll, value is true if there is a next page
+ * @property {boolean} [isCoverCard] - Value is true if the cover card is active
+ * @property {Array<IMedia>} [items] - Value is items to show
+ * @property {'movie' | 'tv' | 'anime' | 'people' | 'episode'} [itemsType] - Value is type of items to show, help to show the correct url, item type and item title
+ * @property {Array<ILanguage>} [languages] - Pass languages object
+ * @property {string | (() => never)} [listName] - Value is list name to show
+ * @property {'table' | 'card' | 'banner' | 'grid'} [listType] - Value is list type to show
+ * @property {'page' | 'scroll'} [loadingType] - Value is loading type to show
+ * @property {'movie' | 'tv' | 'anime'} [mediaType] - Value is media type to show, help for filter type
+ * @property {boolean} [navigationButtons] - Value is true if the navigation buttons are active
+ * @property {() => void} [onClickViewMore] - Require when view more button is true, value is function to execute when view more button is clicked
+ * @property {(page: number) => void} [onPageChangeHandler] - Require when pagination is true, value is function to execute when page is changed
+ * @property {string} [provider] - Value is provider name, help to show the correct url for episode itemsType
+ * @property {string} [routeName] - Value is route name, help to load the correct route when scrolling
+ * @property {boolean} [showFilterButton] - Value is true if the filter button is active
+ * @property {boolean} [showListTypeChangeButton] - Value is true if the list type change button is active
+ * @property {boolean} [showMoreList] - Value is true if the view more button is active
+ * @property {boolean} [showPagination] - Value is true if the pagination is active
+ * @property {number} [totalPages] - Require when pagination is true, value is total pages
+ * @property {boolean} [virtual] - Value is true if the virtual list is active
  */
 interface IMediaListProps {
-  coverItem?: { id: number; name: string; backdropPath: string }[]; // require when cover card is true, value is cover items to show
-  currentPage?: number; // require when pagination is true, loading type is page, value is current page
-  genresMovie?: { [id: string]: string }; // pass genres movie object
-  genresTv?: { [id: string]: string }; // pass genres tv object
-  hasNextPage?: boolean; // require when loading type is scroll, value is true if there is a next page
-  isCoverCard?: boolean; // value is true if the cover card is active
-  items?: IMedia[]; // value is items to show
-  itemsType?: 'movie' | 'tv' | 'anime' | 'people' | 'episode'; // value is type of items to show, help to show the correct url, item type and item title
-  languages?: ILanguage[]; // pass languages object
-  listName?: string | (() => never); // value is name of the list
-  listType?: 'table' | 'slider-card' | 'slider-banner' | 'grid'; // value is type of list to show
-  loadingType?: 'page' | 'scroll'; // value is type of loading to show
-  mediaType?: 'movie' | 'tv' | 'anime'; // value is type of media to show, help for filter type
-  navigationButtons?: boolean; // value is true if the navigation buttons are active
-  onClickViewMore?: () => void; // require when view more button is true, value is function to execute when view more button is clicked
-  onPageChangeHandler?: (page: number) => void; // require when pagination is true, value is function to execute when page is changed
-  provider?: string; // value is provider name, help to show the correct url for episode itemsType
-  routeName?: string; // value is route name, help to load the correct route when scrolling
-  showFilterButton?: boolean; // value is true if the filter button is active
-  showListTypeChangeButton?: boolean; // value is true if the list type change button is active
-  showMoreList?: boolean; // value is true if the view more button is active
-  showPagination?: boolean; // value is true if the pagination is active
-  totalPages?: number; // require when pagination is true, value is total pages
+  /**
+   * Require when cover card is true, value is cover items to show
+   * @type {Array<{ id: number; name: string; backdropPath: string }>}
+   * @memberof IMediaListProps
+   * @example
+   * [
+   *  {
+   *    id: 1,
+   *    name: 'Movie name',
+   *    backdropPath: '/backdrop/path'
+   *  }
+   * ]
+   */
+  coverItem?: { id: number; name: string; backdropPath: string }[];
+  /**
+   * Require when pagination is true, loading type is page, value is current page
+   * @type {number}
+   * @memberof IMediaListProps
+   * @example
+   * 1
+   * 2
+   * 3
+   * ...
+   * 10
+   */
+  currentPage?: number;
+  /**
+   * Pass genres movie object
+   * @type {{ [id: string]: string }}
+   * @memberof IMediaListProps
+   * @example
+   * {
+   *  '1': 'Action',
+   *  '2': 'Adventure',
+   *  '3': 'Animation',
+   *  '4': 'Comedy',
+   * }
+   */
+  genresMovie?: { [id: string]: string };
+  /**
+   * Pass genres tv object
+   * @type {{ [id: string]: string }}
+   * @memberof IMediaListProps
+   * @example
+   * {
+   *  '1': 'Action',
+   *  '2': 'Adventure',
+   *  '3': 'Animation',
+   *  '4': 'Comedy',
+   * }
+   */
+  genresTv?: { [id: string]: string };
+  /**
+   * Require when loading type is scroll, value is true if there is a next page
+   * @type {boolean}
+   * @memberof IMediaListProps
+   * @example
+   * true
+   * false
+   */
+  hasNextPage?: boolean;
+  /**
+   * Value is true if the cover card is active
+   * @type {boolean}
+   * @memberof IMediaListProps
+   * @example
+   * true
+   * false
+   */
+  isCoverCard?: boolean;
+  /**
+   * Value is items to show
+   * @type {Array<IMedia>}
+   * @memberof IMediaListProps
+   * @see IMedia
+   */
+  items?: IMedia[];
+  /**
+   * Value is type of items to show, help to show the correct url, item type and item title
+   * @type {'movie' | 'tv' | 'anime' | 'people' | 'episode'}
+   * @memberof IMediaListProps
+   * @example
+   * 'movie'
+   * 'tv'
+   * 'anime'
+   * 'people'
+   * 'episode'
+   */
+  itemsType?: 'movie' | 'tv' | 'anime' | 'people' | 'episode';
+  /**
+   * Pass languages object
+   * @type {Array<ILanguage>}
+   * @memberof IMediaListProps
+   * @see ILanguage
+   */
+  languages?: ILanguage[];
+  /**
+   * Value is name of the list
+   * @type {string | (() => never)}
+   * @memberof IMediaListProps
+   * @example
+   * 'Popular Movies'
+   * t('Popular Movies')
+   */
+  listName?: string | (() => never);
+  /**
+   * Value is type of list to show
+   * @type {'table' | 'slider-card' | 'slider-banner' | 'grid'}
+   * @memberof IMediaListProps
+   * @example
+   * 'table'
+   * 'slider-card'
+   * 'slider-banner'
+   * 'grid'
+   */
+  listType?: 'table' | 'slider-card' | 'slider-banner' | 'grid';
+  /**
+   * Value is type of loading to show
+   * @type {'page' | 'scroll'}
+   * @memberof IMediaListProps
+   * @example
+   * 'page'
+   * 'scroll'
+   */
+  loadingType?: 'page' | 'scroll';
+  /**
+   * Value is true if the media to show, help for filter type
+   * @type {'movie' | 'tv' | 'anime'}
+   * @memberof IMediaListProps
+   * @example
+   * 'movie'
+   * 'tv'
+   * 'anime'
+   */
+  mediaType?: 'movie' | 'tv' | 'anime';
+  /**
+   * Value is true if the navigation buttons are active
+   * @type {boolean}
+   * @memberof IMediaListProps
+   * @example
+   * true
+   * false
+   */
+  navigationButtons?: boolean;
+  /**
+   * Require when view more button is true, value is function to execute when view more button is clicked
+   * @memberof IMediaListProps
+   * @example
+   * () => console.log('View more button is clicked')
+   */
+  onClickViewMore?: () => void;
+  /**
+   * Require when pagination is true, value is function to execute when page is changed
+   * @memberof IMediaListProps
+   * @example
+   * (page: number) => console.log('Page is changed to', page)
+   */
+  onPageChangeHandler?: (page: number) => void;
+  /**
+   * Value is provider name, help to show the correct url for episode itemsType
+   * @type {string}
+   * @memberof IMediaListProps
+   * @example
+   * 'Gogo'
+   * 'Zoro'
+   */
+  provider?: string;
+  /**
+   * Value is route name, help to load the correct route when scrolling in scroll loading type
+   * @type {string}
+   * @memberof IMediaListProps
+   * @example
+   * '/anime/popular'
+   */
+  routeName?: string;
+  /**
+   * Value is true if the filter button is active
+   * @type {boolean}
+   * @memberof IMediaListProps
+   * @example
+   * true
+   * false
+   */
+  showFilterButton?: boolean;
+  /**
+   * Value is true if the list type change button is active
+   * @type {boolean}
+   * @memberof IMediaListProps
+   * @example
+   * true
+   * false
+   */
+  showListTypeChangeButton?: boolean;
+  /**
+   * Value is true if the view more button is active
+   * @type {boolean}
+   * @memberof IMediaListProps
+   * @example
+   * true
+   * false
+   */
+  showMoreList?: boolean;
+  /**
+   * Value is true if the pagination is active
+   * @type {boolean}
+   * @memberof IMediaListProps
+   * @example
+   * true
+   * false
+   */
+  showPagination?: boolean;
+  /**
+   * Require when pagination is true, value is total pages
+   * @type {number}
+   * @memberof IMediaListProps
+   * @example
+   * 10
+   * 20
+   * 30
+   * ...
+   */
+  totalPages?: number;
+  /**
+   * Value is true if the list is virtual
+   * @type {boolean}
+   * @memberof IMediaListProps
+   * @example
+   * true
+   * false
+   */
   virtual?: boolean; // value is true if the list is virtual
 }
 
@@ -89,7 +316,7 @@ const MediaList = (props: IMediaListProps) => {
   const [slideProgress, setSlideProgress] = useState<number>(0);
   const [displayType, setDisplayType] = useState<string>(listType as string);
   const [showFilter, setShowFilter] = useLocalStorage('showFilter', false);
-  const isXs = useMediaQuery('(max-width: 650px)');
+  const isSm = useMediaQuery('(max-width: 650px)');
 
   if (!listType && typeof window !== 'undefined') {
     listType =
@@ -208,6 +435,7 @@ const MediaList = (props: IMediaListProps) => {
         <Row fluid justify="space-between" wrap="nowrap" align="center">
           <Button
             auto
+            size={isSm ? 'sm' : 'md'}
             rounded
             ghost
             onClick={onClickViewMore}
@@ -233,8 +461,8 @@ const MediaList = (props: IMediaListProps) => {
                 ghost
                 ref={(node) => setPrevEl(node)}
                 css={{
-                  width: '44px',
-                  height: '44px',
+                  width: isSm ? '32px' : '44px',
+                  height: isSm ? '32px' : '44px',
                   padding: 0,
                   cursor: 'pointer',
                   '&:hover': {
@@ -243,9 +471,8 @@ const MediaList = (props: IMediaListProps) => {
                 }}
                 aria-label="Previous"
                 disabled={slideProgress === 0}
-              >
-                <ChevronLeftIcon />
-              </Button>
+                icon={<ChevronLeftIcon />}
+              />
               <Spacer x={0.25} />
               <Button
                 auto
@@ -254,8 +481,8 @@ const MediaList = (props: IMediaListProps) => {
                 ghost
                 ref={(node) => setNextEl(node)}
                 css={{
-                  width: '44px',
-                  height: '44px',
+                  width: isSm ? '32px' : '44px',
+                  height: isSm ? '32px' : '44px',
                   padding: 0,
                   cursor: 'pointer',
                   '&:hover': {
@@ -264,9 +491,8 @@ const MediaList = (props: IMediaListProps) => {
                 }}
                 aria-label="Next"
                 disabled={slideProgress === 1}
-              >
-                <ChevronRightIcon />
-              </Button>
+                icon={<ChevronRightIcon />}
+              />
             </div>
           )}
         </Row>
@@ -302,7 +528,7 @@ const MediaList = (props: IMediaListProps) => {
           // shadow
           onChange={onPageChangeHandler}
           css={{ marginTop: '30px' }}
-          {...(isXs && { size: 'xs' })}
+          {...(isSm && { size: 'xs' })}
         />
       ) : null}
     </Flex>

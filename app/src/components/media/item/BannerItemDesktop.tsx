@@ -11,6 +11,7 @@ import {
   Spacer,
   Loading,
   Text,
+  Badge,
   Image as NextImage,
 } from '@nextui-org/react';
 import { useFetcher, useNavigate } from '@remix-run/react';
@@ -311,12 +312,17 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                       css={{
                         display: 'flex',
                         flexDirection: 'row',
+                        [`& ${Badge}`]: {
+                          border: 0,
+                        },
                       }}
                     >
                       {mediaType === 'anime'
                         ? genresAnime?.slice(0, 2).map((genre) => (
                             <>
-                              {genre}
+                              <Badge variant="flat" color="primary">
+                                {genre}
+                              </Badge>
                               <Spacer x={0.5} />
                             </>
                           ))
@@ -324,14 +330,18 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                             if (mediaType === 'movie') {
                               return (
                                 <>
-                                  {genresMovie?.[genreId]}
+                                  <Badge variant="flat" color="primary">
+                                    {genresMovie?.[genreId]}
+                                  </Badge>
                                   <Spacer x={0.5} />
                                 </>
                               );
                             }
                             return (
                               <>
-                                {genresTv?.[genreId]}
+                                <Badge variant="flat" color="primary">
+                                  {genresTv?.[genreId]}
+                                </Badge>
                                 <Spacer x={0.5} />
                               </>
                             );
@@ -488,9 +498,10 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
           <AnimatePresence>
             {!showTrailer && active ? (
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
+                initial={{ opacity: 0, scale: 1.2, y: 40 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
                 style={{ overflow: 'hidden' }}
               >
                 <Card.Image
