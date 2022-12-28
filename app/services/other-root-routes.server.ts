@@ -16,14 +16,12 @@ export const otherRootRoutes: Record<string, Handler> = {
   '/robots.txt': async () => {
     return generateRobotsTxt(
       [
-        { type: 'sitemap', value: 'https://sora-anime.vercel.app/sitemap.xml' },
         { type: 'userAgent', value: 'SemrushBot' },
         { type: 'disallow', value: '/' },
-        { type: 'userAgent', value: '*' },
-        { type: 'disallow', value: '' },
+        { type: 'sitemap', value: 'https://sora-anime.vercel.app/sitemap.xml' },
       ],
       {
-        appendOnDefaultPolicies: false,
+        appendOnDefaultPolicies: true,
         headers: {
           'Cache-Control': `public, max-age=${60 * 5}`,
         },
