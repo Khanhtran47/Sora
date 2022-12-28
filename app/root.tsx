@@ -55,7 +55,7 @@ import { getListGenre, getListLanguages } from '~/services/tmdb/tmdb.server';
 import Layout from '~/src/components/layouts/Layout';
 import Home from '~/src/assets/icons/HomeIcon.js';
 import styles from '~/styles/tailwind.css';
-import nProgressStyles from '~/styles/nprogress.css';
+import nProgressStyles from '~/src/components/styles/nprogress.css';
 import { getUserFromCookie } from './services/supabase';
 import pageNotFound from './src/assets/images/404.gif';
 import i18next, { i18nCookie } from './i18n/i18next.server';

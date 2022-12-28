@@ -9,5 +9,5 @@ api
 
 .env
 .vscode
-app/styles/tailwind.css
+app/styles/*.css
 yarn-error.log
