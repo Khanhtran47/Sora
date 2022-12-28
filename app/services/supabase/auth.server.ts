@@ -53,7 +53,12 @@ export async function authenticate(
     isbot(request.headers.get('User-Agent')),
   ]);
 
-  if (botcheck && botcheckRequired) {
+  if (
+    botcheck &&
+    botcheckRequired &&
+    request.headers.get('User-Agent') ===
+      'Mozilla/5.0 (compatible; SemrushBot/7~bl; +http://www.semrush.com/bot.html)'
+  ) {
     throw new Response(null, { status: 500 });
   } else if (!session.has('auth_token')) {
     // there is no token, no signed-in or expired cookie
