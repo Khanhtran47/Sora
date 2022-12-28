@@ -162,10 +162,10 @@ const TvIndexPage = () => {
 
   React.useEffect(() => {
     if (fetcher.type === 'normalLoad') {
-      NProgress.start();
+      NProgress.configure({ showSpinner: false }).start();
     }
     if (fetcher.type === 'done') {
-      NProgress.done();
+      NProgress.configure({ showSpinner: false }).done();
     }
   }, [fetcher.type]);
 
