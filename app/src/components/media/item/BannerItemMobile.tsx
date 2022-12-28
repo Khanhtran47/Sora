@@ -121,9 +121,8 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
             <AnimatePresence>
               {inView ? (
                 <motion.div
-                  animate={
-                    active ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0.5, scale: 1.2, y: 40 }
-                  }
+                  initial={{ opacity: 0, scale: 1.2, y: 40 }}
+                  animate={active && { opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 1.2, y: 40 }}
                   transition={{ duration: 0.5 }}
                   style={{ overflow: 'hidden' }}
