@@ -1183,6 +1183,13 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
 
+"@balavishnuvj/remix-seo@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@balavishnuvj/remix-seo/-/remix-seo-1.0.2.tgz#0e2a6dc82509b6801f046ad15c0d455b3294e9d2"
+  integrity sha512-uSG0bc8ex0wj+RSO/hhtI/9BK7WlopYtIyrCR9A5GtwPyodNelR2ZRKg1PmyfSEndVgPIUFvpmCKT8GLZQbrYw==
+  dependencies:
+    lodash "^4.17.21"
+
 "@csstools/postcss-cascade-layers@^1.1.0":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@csstools/postcss-cascade-layers/-/postcss-cascade-layers-1.1.1.tgz#8a997edf97d34071dd2e37ea6022447dd9e795ad"

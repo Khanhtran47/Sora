@@ -1,3 +1,5 @@
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-restricted-syntax */
 import type { EntryContext } from '@remix-run/node';
 import { RemixServer } from '@remix-run/react';
 import { renderToString } from 'react-dom/server';
@@ -8,6 +10,8 @@ import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { resolve } from 'node:path';
 import postCss, { AcceptedPlugin } from 'postcss';
 import postCssPresetEnv from 'postcss-preset-env';
+
+import { otherRootRouteHandlers } from '~/services/other-root-routes.server';
 
 import i18next from './i18n/i18next.server';
 import i18n from './i18n/i18n.config';
@@ -53,6 +57,11 @@ export default async function handleRequest(
   ]).process(styles.props.dangerouslySetInnerHTML.__html, {
     from: undefined,
   });
+
+  for (const handler of otherRootRouteHandlers) {
+    const otherRouteResponse = await handler(request, remixContext);
+    if (otherRouteResponse) return otherRouteResponse;
+  }
 
   const html = renderToString(
     <I18nextProvider i18n={instance}>

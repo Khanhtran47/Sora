@@ -16,6 +16,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@balavishnuvj/remix-seo": "^1.0.2",
     "@fontsource/inter": "^4.5.14",
     "@lottiefiles/react-lottie-player": "^3.4.9",
     "@metronome-sh/react": "^5.7.0",
