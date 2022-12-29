@@ -30,6 +30,8 @@ export const handle = {
   playerSettings: () => ({
     isMini: false,
     shouldShowPlayer: true,
+    url: 'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8',
+    routePlayer: '/test/player',
   }),
 };
 

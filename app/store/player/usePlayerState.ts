@@ -8,11 +8,14 @@ interface PlayerState {
   isMini: boolean;
   toggleMini: () => void;
   setIsMini: (isMini: boolean) => void;
+  routePlayer: string;
+  setRoutePlayer: (routePlayer: string) => void;
 }
 
 const defaultState = {
   shouldShowPlayer: false,
   isMini: false,
+  routePlayer: '',
 };
 
 const usePlayerState = create<PlayerState>((set) => ({
@@ -21,6 +24,7 @@ const usePlayerState = create<PlayerState>((set) => ({
   setShouldShowPlayer: (shouldShowPlayer: boolean) => set({ shouldShowPlayer }),
   toggleMini: () => set((state) => ({ isMini: !state.isMini })),
   setIsMini: (isMini: boolean) => set({ isMini }),
+  setRoutePlayer: (routePlayer: string) => set({ routePlayer }),
 }));
 
 if (process.env.NODE_ENV === 'development' && typeof document !== 'undefined') {

@@ -14,7 +14,7 @@ export const meta: MetaFunction = () => ({
 
 export const loader = async () => {
   // redirect to home page if in production
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.VERCEL_ENV === 'production') {
     return redirect('/');
   }
   return {};

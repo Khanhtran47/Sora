@@ -1,10 +1,10 @@
+/* eslint-disable @typescript-eslint/indent */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Suspense, useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { RouteMatch, useLocation } from '@remix-run/react';
+import { RouteMatch, useLocation, useNavigate } from '@remix-run/react';
 import { Container, Button, Popover } from '@nextui-org/react';
 import Artplayer from 'artplayer';
-import { ClientOnly } from 'remix-utils';
 import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
 import Hls from 'hls.js';
 import { isMobile } from 'react-device-detect';
@@ -82,13 +82,13 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
 const GlobalPlayer = (props: IGlobalPlayerProps) => {
   const { matches } = props;
   const location = useLocation();
+  const navigate = useNavigate();
   const constraintsRef = useRef<HTMLDivElement>(null);
   const [artplayer, setArtplayer] = useState<Artplayer | null>(null);
   const [show, setShow] = useState(false);
 
-  const { isMini, shouldShowPlayer, setIsMini, setShouldShowPlayer } = usePlayerState(
-    (state) => state,
-  );
+  const { isMini, shouldShowPlayer, setIsMini, setShouldShowPlayer, routePlayer, setRoutePlayer } =
+    usePlayerState((state) => state);
   const matchesFiltered = matches.find(
     (match) => match?.pathname.includes('player') || match?.pathname.includes('watch'),
   );
@@ -105,8 +105,16 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
   }, [shouldPlayInBackground]);
 
   useEffect(() => {
-    setShouldShowPlayer(playerSettings?.shouldShowPlayer);
-  }, [shouldShowPlayer]);
+    if (playerSettings?.shouldShowPlayer) {
+      if (playerSettings?.shouldShowPlayer === true) setShouldShowPlayer(true);
+      else if (playerSettings?.shouldShowPlayer === false && shouldPlayInBackground)
+        setShouldShowPlayer(true);
+      else setShouldShowPlayer(false);
+    }
+    if (playerSettings?.routePlayer) {
+      setRoutePlayer(playerSettings?.routePlayer);
+    }
+  }, [playerSettings]);
 
   useEffect(() => {
     if (shouldPlayInBackground && !isMobile) return;
@@ -116,107 +124,129 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
 
   return (
     <Container responsive css={{ margin: 0, padding: 0, width: isMini ? '20rem' : '100%' }}>
-      <ClientOnly fallback="Loading...">
-        {() => (
-          <Suspense fallback="Loading...">
-            <div className="fixed inset-0 pointer-events-none" ref={constraintsRef} />
-            {shouldShowPlayer ? (
-              <AnimatePresence initial={false}>
-                <motion.div
-                  drag={shouldPlayInBackground}
-                  dragConstraints={constraintsRef}
-                  dragElastic={0.1}
-                  dragMomentum={false}
-                  dragTransition={{ bounceStiffness: 600, bounceDamping: 10 }}
-                  className={shouldPlayInBackground ? 'fixed bottom-4 right-4 z-[9999]' : ''}
-                  style={{
-                    x,
-                    y,
-                    width: isMini ? '25rem' : '100%',
-                    height: isMini ? '14.0625rem' : '100%',
-                  }}
-                >
-                  <ArtPlayer
-                    type="movie"
-                    // key={} for re-rendering the player
-                    autoPlay={false}
-                    hideBottomGroupButtons
-                    option={{
-                      container: '.artplayer-app',
-                      autoplay: true,
-                      url: 'https://cache.387e6278d8e06083d813358762e0ac63.com/631a7154-808b-11ed-b76c-625f9a4201fc.m3u8?videoid=222961417930',
-                      layers: [
-                        {
-                          html: '',
-                          name: 'playlist',
-                        },
-                        {
-                          html: '',
-                          name: 'portal',
-                          disable: !Artplayer.utils.isMobile,
-                        },
-                      ],
-                      customType: {
-                        m3u8: (video: HTMLMediaElement, url: string) => {
-                          if (Hls.isSupported()) {
-                            const hls = new Hls();
-                            hls.loadSource(url);
-                            hls.attachMedia(video);
-                          } else {
-                            const canPlay = video.canPlayType('application/vnd.apple.mpegurl');
-                            if (canPlay === 'probably' || canPlay === 'maybe') {
-                              video.src = url;
-                            }
-                          }
-                        },
-                      },
-                    }}
-                    getInstance={(art) => {
-                      art.on('ready', () => {
-                        art.controls.add({
-                          tooltip: 'Playlist',
-                          position: 'right',
-                          html: 'icon',
-                          name: 'playlist',
-                          click: () => {
-                            setShow((state) => !state);
-                          },
-                        });
-                        art.controls.add({
-                          position: 'right',
-                          name: 'portal',
-                          html: '',
-                        });
-                        setArtplayer(art);
-                        console.log(art);
-                      });
-                    }}
-                    css={{
-                      width: isMini ? '25rem' : '100%',
-                      height: isMini ? '14.0625rem' : '100%',
-                      '& div': {
-                        '&.art-controls': {
-                          display: isMini && 'none !important',
-                        },
-                        '&.art-bottom': {
-                          height: isMini && '6px !important',
-                          padding: isMini && '0 !important',
-                        },
-                        '&.art-control-progress': {
-                          height: isMini && '6px !important',
-                        },
-                      },
-                    }}
-                  />
-                </motion.div>
-              </AnimatePresence>
-            ) : null}
-          </Suspense>
-        )}
-      </ClientOnly>
+      <div className="fixed inset-0 pointer-events-none" ref={constraintsRef} />
+      {shouldShowPlayer ? (
+        <AnimatePresence initial={false}>
+          <motion.div
+            layout
+            drag={shouldPlayInBackground}
+            dragConstraints={constraintsRef}
+            dragElastic={0.1}
+            dragMomentum={false}
+            dragTransition={{ bounceStiffness: 600, bounceDamping: 10 }}
+            className={shouldPlayInBackground ? 'fixed bottom-4 right-4 z-[9999]' : ''}
+            style={{
+              x,
+              y,
+              width: isMini ? '25rem' : '100%',
+              height: isMini ? '14.0625rem' : '100%',
+            }}
+          >
+            <ArtPlayer
+              type="movie"
+              // key={} for re-rendering the player
+              autoPlay={false}
+              hideBottomGroupButtons
+              option={{
+                container: '.artplayer-app',
+                autoplay: true,
+                url: playerSettings?.url,
+                layers: [
+                  {
+                    html: '',
+                    name: 'expandPlayer',
+                    style: {
+                      position: 'absolute',
+                      top: '10px',
+                      left: '10px',
+                    },
+                  },
+                  {
+                    html: '',
+                    name: 'closePlayer',
+                    style: {
+                      position: 'absolute',
+                      top: '10px',
+                      right: '10px',
+                    },
+                  },
+                  {
+                    html: '',
+                    name: 'portal',
+                    disable: !Artplayer.utils.isMobile,
+                  },
+                ],
+                customType: {
+                  m3u8: (video: HTMLMediaElement, url: string) => {
+                    if (Hls.isSupported()) {
+                      const hls = new Hls();
+                      hls.loadSource(url);
+                      hls.attachMedia(video);
+                    } else {
+                      const canPlay = video.canPlayType('application/vnd.apple.mpegurl');
+                      if (canPlay === 'probably' || canPlay === 'maybe') {
+                        video.src = url;
+                      }
+                    }
+                  },
+                },
+              }}
+              getInstance={(art) => {
+                art.on('ready', () => {
+                  art.controls.add({
+                    tooltip: 'Playlist',
+                    position: 'right',
+                    html: 'icon',
+                    name: 'playlist',
+                    click: () => {
+                      setShow((state) => !state);
+                    },
+                  });
+                  art.controls.add({
+                    position: 'right',
+                    name: 'portal',
+                    html: '',
+                  });
+                  setArtplayer(art);
+                  console.log(art);
+                });
+              }}
+              css={{
+                width: isMini ? '25rem' : '100%',
+                height: isMini ? '14.0625rem' : '100%',
+                '& div': {
+                  '&.art-controls': {
+                    display: isMini && 'none !important',
+                  },
+                  '&.art-bottom': {
+                    height: isMini && '6px !important',
+                    padding: isMini && '0 !important',
+                  },
+                  '&.art-control-progress': {
+                    height: isMini && '6px !important',
+                  },
+                },
+              }}
+            />
+          </motion.div>
+        </AnimatePresence>
+      ) : null}
       {show ? <div className="playlist">Playlist</div> : null}
-      {show && artplayer
-        ? createPortal(<div className="playlist">Playlist</div>, artplayer.layers.playlist)
+      {isMini && artplayer
+        ? createPortal(
+            <Button auto light onClick={() => navigate(routePlayer)}>
+              +
+            </Button>,
+            artplayer.layers.expandPlayer,
+          )
+        : null}
+      {isMini && artplayer
+        ? createPortal(
+            <Button auto light onClick={() => setShouldShowPlayer(false)}>
+              x
+            </Button>,
+            artplayer.layers.closePlayer,
+          )
         : null}
       {artplayer && Artplayer.utils.isMobile
         ? createPortal(<PlayerSettings artplayer={artplayer} />, artplayer.layers.portal)
