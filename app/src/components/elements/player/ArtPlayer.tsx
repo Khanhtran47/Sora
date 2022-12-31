@@ -123,9 +123,6 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
       container: artRef.current,
       autoMini: false,
       hotkey: true,
-      icons: {
-        state: '',
-      },
       moreVideoAttr: isDesktop
         ? {
             crossOrigin: 'anonymous',

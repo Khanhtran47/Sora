@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { RouteMatch, useLocation, useNavigate } from '@remix-run/react';
-import { Container, Button, Popover, Tooltip } from '@nextui-org/react';
+import { Container, Button, Popover, Tooltip, keyframes } from '@nextui-org/react';
 import Artplayer from 'artplayer';
 import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
 import Hls from 'hls.js';
@@ -60,9 +60,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
       onOpenChange={setSettingsOpen}
     >
       <Popover.Trigger>
-        <Tooltip content="Settings">
-          <Button auto light aria-label="dropdown" icon={<Settings />} />
-        </Tooltip>
+        <Button auto light aria-label="dropdown" icon={<Settings />} />
       </Popover.Trigger>
       <Popover.Content
         css={{
@@ -115,6 +113,34 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
   );
   const x = useMotionValue(0);
   const y = useMotionValue(0);
+
+  const jumpAnimation = keyframes({
+    '15%': {
+      borderBottomRightRadius: '3px',
+    },
+    '25%': {
+      transform: 'translateY(9px) rotate(22.5deg)',
+    },
+    '50%': {
+      transform: 'translateY(18px) scale(1, .9) rotate(45deg)',
+      borderBottomRightRadius: '40px',
+    },
+    '75%': {
+      transform: 'translateY(9px) rotate(67.5deg)',
+    },
+    '100%': {
+      transform: 'translateY(0) rotate(90deg)',
+    },
+  });
+
+  const shadowAnimation = keyframes({
+    '0%, 100%': {
+      transform: 'scale(1, 1)',
+    },
+    '50%': {
+      transform: 'scale(1.2, 1)',
+    },
+  });
 
   useEffect(() => {
     setIsMini(shouldPlayInBackground);
@@ -223,6 +249,10 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                     },
                   },
                 ],
+                icons: {
+                  state: '',
+                  loading: '<div class="custom-loader"></div>',
+                },
                 customType: {
                   m3u8: (video: HTMLMediaElement, url: string) => {
                     if (Hls.isSupported()) {
@@ -258,6 +288,35 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                 width: isMini ? '25rem' : '100%',
                 height: isMini ? '14.0625rem' : '100%',
                 '& div': {
+                  '&.custom-loader': {
+                    width: '48px',
+                    height: '48px',
+                    margin: 'auto',
+                    position: 'relative',
+
+                    '&::before': {
+                      content: "''",
+                      width: '48px',
+                      height: '5px',
+                      background: '$primarySolidHover',
+                      position: 'absolute',
+                      top: '60px',
+                      left: 0,
+                      borderRadius: '50%',
+                      animation: `${shadowAnimation} 0.5s linear infinite`,
+                    },
+                    '&::after': {
+                      content: "''",
+                      width: '100%',
+                      height: '100%',
+                      background: '$primary',
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      borderRadius: '4px',
+                      animation: `${jumpAnimation} 0.5s linear infinite`,
+                    },
+                  },
                   '&.art-controls': {
                     display: isMini && 'none !important',
                   },
@@ -288,7 +347,7 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                   },
                   '&.art-layer-controlButtons': {
                     transition: 'all 0.3s ease',
-                    display: 'none',
+                    opacity: 0,
                   },
                 },
                 '&:hover': {
@@ -307,8 +366,7 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                       display: isMini && 'block',
                     },
                     '&.art-layer-controlButtons': {
-                      transition: 'all 0.3s ease',
-                      display: isMini && 'block',
+                      opacity: 1,
                     },
                   },
                 },
