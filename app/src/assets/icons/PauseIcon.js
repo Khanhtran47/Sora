@@ -4,11 +4,11 @@ import PropTypes from 'prop-types';
 const Bold = ({ color }) => (
   <g>
     <path
-      d="M17.49 9.59965L5.6 16.7696C4.9 17.1896 4 16.6896 4 15.8696V7.86965C4 4.37965 7.77 2.19965 10.8 3.93965L15.39 6.57965L17.48 7.77965C18.17 8.18965 18.18 9.18965 17.49 9.59965Z"
+      d="M10.65 19.11V4.89C10.65 3.54 10.08 3 8.64 3H5.01C3.57 3 3 3.54 3 4.89V19.11C3 20.46 3.57 21 5.01 21H8.64C10.08 21 10.65 20.46 10.65 19.11Z"
       fill={color}
     />
     <path
-      d="M18.0888 15.4606L14.0388 17.8006L9.99883 20.1306C8.54883 20.9606 6.90883 20.7906 5.71883 19.9506C5.13883 19.5506 5.20883 18.6606 5.81883 18.3006L18.5288 10.6806C19.1288 10.3206 19.9188 10.6606 20.0288 11.3506C20.2788 12.9006 19.6388 14.5706 18.0888 15.4606Z"
+      d="M21.0016 19.11V4.89C21.0016 3.54 20.4316 3 18.9916 3H15.3616C13.9316 3 13.3516 3.54 13.3516 4.89V19.11C13.3516 20.46 13.9216 21 15.3616 21H18.9916C20.4316 21 21.0016 20.46 21.0016 19.11Z"
       fill={color}
     />
   </g>
@@ -17,17 +17,23 @@ const Bold = ({ color }) => (
 const Light = ({ color, strokeWidth }) => (
   <g>
     <path
-      d="M4 11.9999V8.43989C4 4.01989 7.13 2.2099 10.96 4.4199L14.05 6.1999L17.14 7.9799C20.97 10.1899 20.97 13.8099 17.14 16.0199L14.05 17.7999L10.96 19.5799C7.13 21.7899 4 19.9799 4 15.5599V11.9999Z"
+      d="M10.65 19.11V4.89C10.65 3.54 10.08 3 8.64 3H5.01C3.57 3 3 3.54 3 4.89V19.11C3 20.46 3.57 21 5.01 21H8.64C10.08 21 10.65 20.46 10.65 19.11Z"
       stroke={color}
       strokeWidth={strokeWidth}
-      strokeMiterlimit="10"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M21 19.11V4.89C21 3.54 20.43 3 18.99 3H15.36C13.93 3 13.35 3.54 13.35 4.89V19.11C13.35 20.46 13.92 21 15.36 21H18.99C20.43 21 21 20.46 21 19.11Z"
+      stroke={color}
+      strokeWidth={strokeWidth}
       strokeLinecap="round"
       strokeLinejoin="round"
     />
   </g>
 );
 
-const Play = ({
+const Pause = ({
   fill = 'currentColor',
   filled = false,
   size = 0,
@@ -61,7 +67,7 @@ const Play = ({
   }
 };
 
-Play.displayName = 'IconlyPlay';
+Pause.displayName = 'PauseIcon';
 
 Bold.propTypes = {
   color: PropTypes.string,
@@ -72,7 +78,7 @@ Light.propTypes = {
   strokeWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
-Play.propTypes = {
+Pause.propTypes = {
   fill: PropTypes.string,
   filled: PropTypes.bool,
   size: PropTypes.number,
@@ -81,4 +87,4 @@ Play.propTypes = {
   strokeWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
-export default Play;
+export default Pause;

@@ -11,7 +11,7 @@ export const meta: MetaFunction = () => ({
 
 export const handle = {
   breadcrumb: () => (
-    <NavLink to="/player" aria-label="Player Page">
+    <NavLink to="/test/player" aria-label="Player Page">
       {({ isActive }) => (
         <Badge
           color="primary"
@@ -32,6 +32,7 @@ export const handle = {
     shouldShowPlayer: true,
     url: 'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8',
     routePlayer: '/test/player',
+    title: 'Test Player',
   }),
 };
 

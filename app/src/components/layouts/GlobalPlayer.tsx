@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { RouteMatch, useLocation, useNavigate } from '@remix-run/react';
-import { Container, Button, Popover } from '@nextui-org/react';
+import { Container, Button, Popover, Tooltip } from '@nextui-org/react';
 import Artplayer from 'artplayer';
 import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
 import Hls from 'hls.js';
@@ -12,8 +12,15 @@ import { isMobile } from 'react-device-detect';
 import usePlayerState from '~/store/player/usePlayerState';
 
 import ArtPlayer from '~/src/components/elements/player/ArtPlayer';
+import { H5 } from '~/src/components/styles/Text.styles';
+import Flex from '~/src/components/styles/Flex.styles';
+import Box from '~/src/components/styles/Box.styles';
 
 import Settings from '~/src/assets/icons/SettingsIcon.js';
+import Close from '~/src/assets/icons/CloseIcon.js';
+import Expand from '~/src/assets/icons/ExpandIcon.js';
+import Play from '~/src/assets/icons/PlayIcon.js';
+import Pause from '~/src/assets/icons/PauseIcon.js';
 
 interface IPlayerSettingsProps {
   artplayer: Artplayer | null;
@@ -53,7 +60,9 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
       onOpenChange={setSettingsOpen}
     >
       <Popover.Trigger>
-        <Button auto light aria-label="dropdown" icon={<Settings filled />} />
+        <Tooltip content="Settings">
+          <Button auto light aria-label="dropdown" icon={<Settings />} />
+        </Tooltip>
       </Popover.Trigger>
       <Popover.Content
         css={{
@@ -85,10 +94,17 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
   const navigate = useNavigate();
   const constraintsRef = useRef<HTMLDivElement>(null);
   const [artplayer, setArtplayer] = useState<Artplayer | null>(null);
-  const [show, setShow] = useState(false);
-
-  const { isMini, shouldShowPlayer, setIsMini, setShouldShowPlayer, routePlayer, setRoutePlayer } =
-    usePlayerState((state) => state);
+  const [isPlayerPlaying, setIsPlayerPlaying] = useState(false);
+  const {
+    isMini,
+    shouldShowPlayer,
+    setIsMini,
+    setShouldShowPlayer,
+    routePlayer,
+    setRoutePlayer,
+    titlePlayer,
+    setTitlePlayer,
+  } = usePlayerState((state) => state);
   const matchesFiltered = matches.find(
     (match) => match?.pathname.includes('player') || match?.pathname.includes('watch'),
   );
@@ -114,6 +130,9 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
     if (playerSettings?.routePlayer) {
       setRoutePlayer(playerSettings?.routePlayer);
     }
+    if (playerSettings?.title) {
+      setTitlePlayer(playerSettings?.title);
+    }
   }, [playerSettings]);
 
   useEffect(() => {
@@ -125,8 +144,8 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
   return (
     <Container responsive css={{ margin: 0, padding: 0, width: isMini ? '20rem' : '100%' }}>
       <div className="fixed inset-0 pointer-events-none" ref={constraintsRef} />
-      {shouldShowPlayer ? (
-        <AnimatePresence initial={false}>
+      <AnimatePresence initial={false}>
+        {shouldShowPlayer ? (
           <motion.div
             layout
             drag={shouldPlayInBackground}
@@ -134,7 +153,9 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
             dragElastic={0.1}
             dragMomentum={false}
             dragTransition={{ bounceStiffness: 600, bounceDamping: 10 }}
-            className={shouldPlayInBackground ? 'fixed bottom-4 right-4 z-[9999]' : ''}
+            exit={{ opacity: 0, x: 250 }}
+            transition={{ duration: 0.3 }}
+            className={shouldPlayInBackground ? 'fixed bottom-16 right-4 z-[9999]' : ''}
             style={{
               x,
               y,
@@ -154,6 +175,28 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                 layers: [
                   {
                     html: '',
+                    name: 'mask',
+                    style: {
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      height: '100%',
+                    },
+                  },
+                  {
+                    html: '',
+                    name: 'controlButtons',
+                    style: {
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      height: '100%',
+                    },
+                  },
+                  {
+                    html: '',
                     name: 'expandPlayer',
                     style: {
                       position: 'absolute',
@@ -167,13 +210,17 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                     style: {
                       position: 'absolute',
                       top: '10px',
-                      right: '10px',
+                      left: '50px',
                     },
                   },
                   {
                     html: '',
-                    name: 'portal',
-                    disable: !Artplayer.utils.isMobile,
+                    name: 'settings',
+                    style: {
+                      position: 'absolute',
+                      top: '10px',
+                      right: '10px',
+                    },
                   },
                 ],
                 customType: {
@@ -194,21 +241,17 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
               getInstance={(art) => {
                 art.on('ready', () => {
                   art.controls.add({
-                    tooltip: 'Playlist',
-                    position: 'right',
-                    html: 'icon',
-                    name: 'playlist',
-                    click: () => {
-                      setShow((state) => !state);
-                    },
-                  });
-                  art.controls.add({
                     position: 'right',
                     name: 'portal',
                     html: '',
                   });
                   setArtplayer(art);
-                  console.log(art);
+                });
+                art.on('play', () => {
+                  setIsPlayerPlaying(true);
+                });
+                art.on('pause', () => {
+                  setIsPlayerPlaying(false);
                 });
               }}
               css={{
@@ -219,38 +262,147 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                     display: isMini && 'none !important',
                   },
                   '&.art-bottom': {
-                    height: isMini && '6px !important',
+                    height: isMini && '7px !important',
                     padding: isMini && '0 !important',
                   },
                   '&.art-control-progress': {
-                    height: isMini && '6px !important',
+                    height: isMini && '7px !important',
+                    alignItems: isMini && 'flex-end !important',
+                  },
+                  '&.art-layer-expandPlayer': {
+                    transition: 'all 0.3s ease',
+                    opacity: 0,
+                  },
+                  '&.art-layer-closePlayer': {
+                    transition: 'all 0.3s ease',
+                    opacity: 0,
+                  },
+                  '&.art-layer-settings': {
+                    transition: 'all 0.3s ease',
+                    opacity: 0,
+                  },
+                  '&.art-layer-mask': {
+                    transition: 'all 0.3s ease',
+                    backgroundColor: 'rgba(0, 0, 0, 0)',
+                    display: 'none',
+                  },
+                  '&.art-layer-controlButtons': {
+                    transition: 'all 0.3s ease',
+                    display: 'none',
+                  },
+                },
+                '&:hover': {
+                  '& div': {
+                    '&.art-layer-expandPlayer': {
+                      opacity: 1,
+                    },
+                    '&.art-layer-closePlayer': {
+                      opacity: 1,
+                    },
+                    '&.art-layer-settings': {
+                      opacity: 1,
+                    },
+                    '&.art-layer-mask': {
+                      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                      display: isMini && 'block',
+                    },
+                    '&.art-layer-controlButtons': {
+                      transition: 'all 0.3s ease',
+                      display: isMini && 'block',
+                    },
                   },
                 },
               }}
             />
+            {isMini ? (
+              <Flex
+                direction="column"
+                align="start"
+                justify="center"
+                css={{
+                  position: 'absolute',
+                  bottom: '-64px',
+                  left: 0,
+                  right: 0,
+                  height: '64px',
+                  padding: '$sm',
+                  backgroundColor: '$backgroundContrast',
+                }}
+              >
+                <H5
+                  h5
+                  weight="bold"
+                  onClick={() => navigate(routePlayer)}
+                  css={{ cursor: 'pointer' }}
+                >
+                  {titlePlayer}
+                </H5>
+              </Flex>
+            ) : null}
           </motion.div>
-        </AnimatePresence>
-      ) : null}
-      {show ? <div className="playlist">Playlist</div> : null}
+        ) : null}
+      </AnimatePresence>
+      {/* Creating a portal for the player layers */}
       {isMini && artplayer
         ? createPortal(
-            <Button auto light onClick={() => navigate(routePlayer)}>
-              +
-            </Button>,
+            <Box
+              css={{
+                width: '100%',
+                height: '100%',
+                zIndex: 1,
+              }}
+            />,
+            artplayer.layers.mask,
+          )
+        : null}
+      {isMini && artplayer
+        ? createPortal(
+            <Flex direction="row" align="center" justify="center" css={{ w: '100%', h: '100%' }}>
+              <Tooltip content={isPlayerPlaying ? 'Pause' : 'Play'}>
+                <Button
+                  auto
+                  light
+                  onClick={() => {
+                    if (isPlayerPlaying) {
+                      artplayer.pause();
+                    } else {
+                      artplayer.play();
+                    }
+                  }}
+                  icon={
+                    isPlayerPlaying ? (
+                      <Pause height={48} width={48} />
+                    ) : (
+                      <Play height={48} width={48} />
+                    )
+                  }
+                  css={{ height: '48px' }}
+                />
+              </Tooltip>
+            </Flex>,
+            artplayer.layers.controlButtons,
+          )
+        : null}
+      {isMini && artplayer
+        ? createPortal(
+            <Tooltip content="Expand">
+              <Button auto light onClick={() => navigate(routePlayer)} icon={<Expand />} />
+            </Tooltip>,
             artplayer.layers.expandPlayer,
           )
         : null}
       {isMini && artplayer
         ? createPortal(
-            <Button auto light onClick={() => setShouldShowPlayer(false)}>
-              x
-            </Button>,
+            <Tooltip content="Close">
+              <Button auto light onClick={() => setShouldShowPlayer(false)} icon={<Close />} />
+            </Tooltip>,
             artplayer.layers.closePlayer,
           )
         : null}
-      {artplayer && Artplayer.utils.isMobile
-        ? createPortal(<PlayerSettings artplayer={artplayer} />, artplayer.layers.portal)
+      {isMini && artplayer
+        ? createPortal(<PlayerSettings artplayer={artplayer} />, artplayer.layers.settings)
         : null}
+      {/* Creating portals for the player controls */}
       {artplayer && !isMini
         ? createPortal(<PlayerSettings artplayer={artplayer} />, artplayer.controls.portal)
         : null}
