@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { RouteMatch, useLocation, useNavigate } from '@remix-run/react';
-import { Container, Button, Popover, Tooltip, keyframes } from '@nextui-org/react';
+import { Container, Button, Tooltip, keyframes } from '@nextui-org/react';
 import Artplayer from 'artplayer';
 import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
 import Hls from 'hls.js';
@@ -12,79 +12,19 @@ import { isMobile } from 'react-device-detect';
 import usePlayerState from '~/store/player/usePlayerState';
 
 import ArtPlayer from '~/src/components/elements/player/ArtPlayer';
+import PlayerSettings from '~/src/components/elements/player/PlayerSettings';
 import { H5 } from '~/src/components/styles/Text.styles';
 import Flex from '~/src/components/styles/Flex.styles';
 import Box from '~/src/components/styles/Box.styles';
 
-import Settings from '~/src/assets/icons/SettingsIcon.js';
 import Close from '~/src/assets/icons/CloseIcon.js';
 import Expand from '~/src/assets/icons/ExpandIcon.js';
 import Play from '~/src/assets/icons/PlayIcon.js';
 import Pause from '~/src/assets/icons/PauseIcon.js';
 
-interface IPlayerSettingsProps {
-  artplayer: Artplayer | null;
-}
-
 interface IGlobalPlayerProps {
   matches: RouteMatch[];
 }
-
-// const slideHorizontalAnimation = {
-//   left: {
-//     x: 0,
-//     transition: {
-//       duration: 0.3,
-//     },
-//   },
-//   right: {
-//     x: -250,
-//     transition: {
-//       duration: 0.3,
-//     },
-//   },
-// };
-
-const PlayerSettings = (props: IPlayerSettingsProps) => {
-  const { artplayer } = props;
-  const [isSettingsOpen, setSettingsOpen] = useState(false);
-  // const [isLeftMenu, setIsLeftMenu] = useState(true);
-  // const [isLanguageTab, setIsLanguageTab] = useState(false);
-  // const [isDisplayTab, setIsDisplayTab] = useState(false);
-  return (
-    <Popover
-      shouldFlip
-      triggerType="menu"
-      placement="top"
-      isOpen={isSettingsOpen}
-      onOpenChange={setSettingsOpen}
-    >
-      <Popover.Trigger>
-        <Button auto light aria-label="dropdown" icon={<Settings />} />
-      </Popover.Trigger>
-      <Popover.Content
-        css={{
-          display: 'block',
-          opacity: 1,
-          transform: 'none',
-          overflow: 'hidden',
-          transition: 'height 0.5s',
-          width: 240,
-          zIndex: 999,
-          borderWidth: 0,
-        }}
-      >
-        <Button auto onClick={() => artplayer?.play()}>
-          play
-        </Button>
-        <Button auto onClick={() => artplayer?.pause()}>
-          pause
-        </Button>
-        <p>test</p>
-      </Popover.Content>
-    </Popover>
-  );
-};
 
 const GlobalPlayer = (props: IGlobalPlayerProps) => {
   const { matches } = props;
