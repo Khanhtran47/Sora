@@ -433,7 +433,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
       shouldFlip
       placement="bottom"
       isOpen={isSettingsOpen}
-      onOpenChange={setSettingsOpen}
+      onOpenChange={(isOpen) => setSettingsOpen(isOpen)}
       isBordered
       disableShadow
       onClose={() => setDropdownLevelKey('general')}
