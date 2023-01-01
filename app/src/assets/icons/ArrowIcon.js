@@ -5,8 +5,9 @@ import Svg from '../../components/styles/Svg.styles';
 
 const Right = ({ color }) => (
   <path
-    d="M8.91156 20.6695C8.72156 20.6695 8.53156 20.5995 8.38156 20.4495C8.09156 20.1595 8.09156 19.6795 8.38156 19.3895L14.9016 12.8695C15.3816 12.3895 15.3816 11.6095 14.9016 11.1295L8.38156 4.60953C8.09156 4.31953 8.09156 3.83953 8.38156 3.54953C8.67156 3.25953 9.15156 3.25953 9.44156 3.54953L15.9616 10.0695C16.4716 10.5795 16.7616 11.2695 16.7616 11.9995C16.7616 12.7295 16.4816 13.4195 15.9616 13.9295L9.44156 20.4495C9.29156 20.5895 9.10156 20.6695 8.91156 20.6695Z"
-    fill={color}
+d = "M8.91156 20.6695C8.72156 20.6695 8.53156 20.5995 8.38156 20.4495C8.09156 20.1595 8.09156 19.6795 8.38156 19.3895L14.9016 12.8695C15.3816 12.3895 15.3816 11.6095 14.9016 11.1295L8.38156 4.60953C8.09156 4.31953 8.09156 3.83953 8.38156 3.54953C8.67156 3.25953 9.15156 3.25953 9.44156 3.54953L15.9616 10.0695C16.4716 10.5795 16.7616 11.2695 16.7616 11.9995C16.7616 12.7295 16.4816 13.4195 15.9616 13.9295L9.44156 20.4495C9.29156 20.5895 9.10156 20.6695 8.91156 20.6695Z"
+    fill={
+  color}
   />
 );
 
@@ -19,8 +20,9 @@ const Left = ({ color }) => (
 
 const Up = ({ color }) => (
   <path
-    d="M19.9195 15.7981C19.7295 15.7981 19.5395 15.7281 19.3895 15.5781L12.8695 9.05813C12.3895 8.57813 11.6095 8.57813 11.1295 9.05813L4.60953 15.5781C4.31953 15.8681 3.83953 15.8681 3.54953 15.5781C3.25953 15.2881 3.25953 14.8081 3.54953 14.5181L10.0695 7.99812C11.1295 6.93813 12.8595 6.93813 13.9295 7.99812L20.4495 14.5181C20.7395 14.8081 20.7395 15.2881 20.4495 15.5781C20.2995 15.7181 20.1095 15.7981 19.9195 15.7981Z"
-    fill={color}
+d = "M19.9195 15.7981C19.7295 15.7981 19.5395 15.7281 19.3895 15.5781L12.8695 9.05813C12.3895 8.57813 11.6095 8.57813 11.1295 9.05813L4.60953 15.5781C4.31953 15.8681 3.83953 15.8681 3.54953 15.5781C3.25953 15.2881 3.25953 14.8081 3.54953 14.5181L10.0695 7.99812C11.1295 6.93813 12.8595 6.93813 13.9295 7.99812L20.4495 14.5181C20.7395 14.8081 20.7395 15.2881 20.4495 15.5781C20.2995 15.7181 20.1095 15.7981 19.9195 15.7981Z"
+    fill={
+  color}
   />
 );
 
@@ -31,122 +33,122 @@ const Down = ({ color }) => (
   />
 );
 
-const Arrow = ({
-  fill = 'currentColor',
-  direction = 'right',
-  size = 0,
-  height = 0,
-  width = 0,
-  ...props
-}) => {
-  switch (direction) {
-    case 'right':
+    const Arrow = ({
+      fill = 'currentColor',
+      direction = 'right',
+      size = 0,
+      height = 0,
+      width = 0,
+      ...props
+    }) => {
+      switch (direction) {
+      case 'right':
       return (
         <Svg
-          className=""
-          width={size || width || 24}
-          height={size || height || 24}
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
+      className = ""
+      width = {size || width || 24} height = {size || height || 24} viewBox =
+          "0 0 24 24"
+      xmlns = "http://www.w3.org/2000/svg"
           css={{
-            display: 'inline',
+      display: 'inline',
           }}
           {...props}
         >
-          <Right color={fill} />
+          <Right color={
+      fill} />
         </Svg>
       );
-    case 'left':
+      case 'left':
       return (
         <Svg
-          className=""
-          width={size || width || 24}
-          height={size || height || 24}
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
+      className = ""
+      width = {size || width || 24} height = {size || height || 24} viewBox =
+          "0 0 24 24"
+      xmlns = "http://www.w3.org/2000/svg"
           css={{
-            display: 'inline',
+      display: 'inline',
           }}
           {...props}
         >
-          <Left color={fill} />
+          <Left color={
+      fill} />
         </Svg>
       );
-    case 'up':
+      case 'up':
       return (
         <Svg
-          className=""
-          width={size || width || 24}
-          height={size || height || 24}
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
+      className = ""
+      width = {size || width || 24} height = {size || height || 24} viewBox =
+          "0 0 24 24"
+      xmlns = "http://www.w3.org/2000/svg"
           css={{
-            display: 'inline',
+      display: 'inline',
           }}
           {...props}
         >
-          <Up color={fill} />
+          <Up color={
+      fill} />
         </Svg>
       );
-    case 'down':
+      case 'down':
       return (
         <Svg
-          className=""
-          width={size || width || 24}
-          height={size || height || 24}
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
+      className = ""
+      width = {size || width || 24} height = {size || height || 24} viewBox =
+          "0 0 24 24"
+      xmlns = "http://www.w3.org/2000/svg"
           css={{
-            display: 'inline',
+      display: 'inline',
           }}
           {...props}
         >
-          <Down color={fill} />
+          <Down color={
+      fill} />
         </Svg>
       );
-    default:
+      default:
       return (
         <Svg
-          className=""
-          width={size || width || 24}
-          height={size || height || 24}
-          viewBox="0 0 22 22"
-          xmlns="http://www.w3.org/2000/svg"
+      className = ""
+      width = {size || width || 24} height = {size || height || 24} viewBox =
+          "0 0 22 22"
+      xmlns = "http://www.w3.org/2000/svg"
           css={{
-            display: 'inline',
+      display: 'inline',
           }}
           {...props}
         >
-          <Right color={fill} />
+          <Right color={
+      fill} />
         </Svg>
       );
-  }
-};
+      }
+    };
 
-Arrow.displayName = 'ArrowIcon';
+    Arrow.displayName = 'ArrowIcon';
 
-Right.propTypes = {
-  color: PropTypes.string,
-};
+    Right.propTypes = {
+      color : PropTypes.string,
+    };
 
-Left.propTypes = {
-  color: PropTypes.string,
-};
+    Left.propTypes = {
+      color : PropTypes.string,
+    };
 
-Up.propTypes = {
-  color: PropTypes.string,
-};
+    Up.propTypes = {
+      color : PropTypes.string,
+    };
 
-Down.propTypes = {
-  color: PropTypes.string,
-};
+    Down.propTypes = {
+      color : PropTypes.string,
+    };
 
-Arrow.propTypes = {
-  fill: PropTypes.string,
-  direction: PropTypes.string,
-  size: PropTypes.number,
-  width: PropTypes.number,
-  height: PropTypes.number,
-};
+    Arrow.propTypes = {
+      fill : PropTypes.string,
+      direction : PropTypes.string,
+      size : PropTypes.number,
+      width : PropTypes.number,
+      height : PropTypes.number,
+    };
 
-export default Arrow;
+    export default Arrow;
