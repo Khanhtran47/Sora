@@ -23,10 +23,10 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
   const { artplayer } = props;
   const [isSettingsOpen, setSettingsOpen] = useState(false);
   const [dropdownLevelKey, setDropdownLevelKey] = useState('general');
-  const [currentPlaySpeed, setCurrentPlaySpeed] = useState('Normal');
-  const [currentAspectRatio, setCurrentAspectRatio] = useState('Default');
-  const [currentVideoFlip, setCurrentVideoFlip] = useState('Normal');
-  const [currentSubtitleOffset, setCurrentSubtitleOffset] = useState('Normal');
+  const currentPlaySpeed = useMemo(() => artplayer?.playbackRate, [artplayer]);
+  const currentAspectRatio = useMemo(() => artplayer?.aspectRatio, [artplayer]);
+  const currentVideoFlip = useMemo(() => artplayer?.flip, [artplayer]);
+  const currentSubtitleOffset = useMemo(() => artplayer?.subtitleOffset, [artplayer]);
   const dropdownLevel = [
     {
       id: 'general',
@@ -76,7 +76,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
       key: 'play-speed',
       showTitle: true,
       showBackButton: true,
-      backButtonAction: () => setDropdownLevelKey('general'),
+      // backButtonAction: () => setDropdownLevelKey('general'),
       title: 'Play Speed',
       listItems: [
         {
@@ -86,11 +86,10 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.playbackRate = 0.5;
-              setCurrentPlaySpeed('0.5x');
-              setDropdownLevelKey('general');
+              // setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentPlaySpeed === '0.5x',
+          isCurrent: currentPlaySpeed === 0.5,
         },
         {
           id: '0.75x',
@@ -99,11 +98,10 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.playbackRate = 0.75;
-              setCurrentPlaySpeed('0.75x');
-              setDropdownLevelKey('general');
+              // setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentPlaySpeed === '0.75x',
+          isCurrent: currentPlaySpeed === 0.75,
         },
         {
           id: 'normal',
@@ -112,11 +110,10 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.playbackRate = 1.0;
-              setCurrentPlaySpeed('Normal');
-              setDropdownLevelKey('general');
+              // setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentPlaySpeed === 'Normal',
+          isCurrent: currentPlaySpeed === 1.0,
         },
         {
           id: '1.25x',
@@ -125,11 +122,10 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.playbackRate = 1.25;
-              setCurrentPlaySpeed('1.25x');
-              setDropdownLevelKey('general');
+              // setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentPlaySpeed === '1.25x',
+          isCurrent: currentPlaySpeed === 1.25,
         },
         {
           id: '1.5x',
@@ -138,11 +134,10 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.playbackRate = 1.5;
-              setCurrentPlaySpeed('1.5x');
-              setDropdownLevelKey('general');
+              // setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentPlaySpeed === '1.5x',
+          isCurrent: currentPlaySpeed === 1.5,
         },
         {
           id: '1.75x',
@@ -151,11 +146,10 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.playbackRate = 1.75;
-              setCurrentPlaySpeed('1.75x');
-              setDropdownLevelKey('general');
+              // setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentPlaySpeed === '1.75x',
+          isCurrent: currentPlaySpeed === 1.75,
         },
         {
           id: '2x',
@@ -164,11 +158,10 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.playbackRate = 2.0;
-              setCurrentPlaySpeed('2x');
-              setDropdownLevelKey('general');
+              // setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentPlaySpeed === '2x',
+          isCurrent: currentPlaySpeed === 2,
         },
       ],
     },
@@ -177,7 +170,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
       key: 'aspect-ratio',
       showTitle: true,
       showBackButton: true,
-      backButtonAction: () => setDropdownLevelKey('general'),
+      // backButtonAction: () => setDropdownLevelKey('general'),
       title: 'Aspect Ratio',
       listItems: [
         {
@@ -187,11 +180,10 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.aspectRatio = 'default';
-              setCurrentAspectRatio('Default');
-              setDropdownLevelKey('general');
+              // setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentAspectRatio === 'Default',
+          isCurrent: currentAspectRatio === 'default',
         },
         {
           id: '16:9',
@@ -200,8 +192,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.aspectRatio = '16:9';
-              setCurrentAspectRatio('16:9');
-              setDropdownLevelKey('general');
+              // setDropdownLevelKey('general');
             }
           },
           isCurrent: currentAspectRatio === '16:9',
@@ -213,8 +204,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.aspectRatio = '4:3';
-              setCurrentAspectRatio('4:3');
-              setDropdownLevelKey('general');
+              // setDropdownLevelKey('general');
             }
           },
           isCurrent: currentAspectRatio === '4:3',
@@ -226,7 +216,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
       key: 'video-flip',
       showTitle: true,
       showBackButton: true,
-      backButtonAction: () => setDropdownLevelKey('general'),
+      // backButtonAction: () => setDropdownLevelKey('general'),
       title: 'Video Flip',
       listItems: [
         {
@@ -236,11 +226,10 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.flip = 'normal';
-              setCurrentVideoFlip('Normal');
-              setDropdownLevelKey('general');
+              // setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentVideoFlip === 'Normal',
+          isCurrent: currentVideoFlip === 'normal',
         },
         {
           id: 'flip-horizontally',
@@ -249,11 +238,10 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.flip = 'horizontally';
-              setCurrentVideoFlip('Horizontally');
-              setDropdownLevelKey('general');
+              // setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentVideoFlip === 'Horizontally',
+          isCurrent: currentVideoFlip === 'horizontally',
         },
         {
           id: 'flip-vertically',
@@ -262,11 +250,10 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.flip = 'vertically';
-              setCurrentVideoFlip('Vertically');
-              setDropdownLevelKey('general');
+              // setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentVideoFlip === 'Vertically',
+          isCurrent: currentVideoFlip === 'vertically',
         },
       ],
     },
@@ -275,7 +262,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
       key: 'subtitle-offset',
       showTitle: true,
       showBackButton: true,
-      backButtonAction: () => setDropdownLevelKey('general'),
+      // backButtonAction: () => setDropdownLevelKey('general'),
       title: 'Subtitle Offset',
       listItems: [
         {
@@ -285,11 +272,10 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.subtitleOffset = -5;
-              setCurrentSubtitleOffset('-5s');
-              setDropdownLevelKey('general');
+              // setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentSubtitleOffset === '-5s',
+          isCurrent: currentSubtitleOffset === -5,
         },
         {
           id: '-4s',
@@ -298,11 +284,10 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.subtitleOffset = -4;
-              setCurrentSubtitleOffset('-4s');
-              setDropdownLevelKey('general');
+              // setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentSubtitleOffset === '-4s',
+          isCurrent: currentSubtitleOffset === -4,
         },
         {
           id: '-3s',
@@ -311,11 +296,10 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.subtitleOffset = -3;
-              setCurrentSubtitleOffset('-3s');
-              setDropdownLevelKey('general');
+              // setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentSubtitleOffset === '-3s',
+          isCurrent: currentSubtitleOffset === -3,
         },
         {
           id: '-2s',
@@ -323,11 +307,10 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.subtitleOffset = -2;
-              setCurrentSubtitleOffset('-2s');
-              setDropdownLevelKey('general');
+              // setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentSubtitleOffset === '-2s',
+          isCurrent: currentSubtitleOffset === -2,
         },
         {
           id: '-1s',
@@ -336,11 +319,10 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.subtitleOffset = -1;
-              setCurrentSubtitleOffset('-1s');
-              setDropdownLevelKey('general');
+              // setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentSubtitleOffset === '-1s',
+          isCurrent: currentSubtitleOffset === -1,
         },
         {
           id: 'normal',
@@ -349,11 +331,10 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.subtitleOffset = 0;
-              setCurrentSubtitleOffset('Normal');
-              setDropdownLevelKey('general');
+              // setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentSubtitleOffset === 'Normal',
+          isCurrent: currentSubtitleOffset === 0,
         },
         {
           id: '1s',
@@ -362,11 +343,10 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.subtitleOffset = 1;
-              setCurrentSubtitleOffset('1s');
-              setDropdownLevelKey('general');
+              // setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentSubtitleOffset === '1s',
+          isCurrent: currentSubtitleOffset === 1,
         },
         {
           id: '2s',
@@ -375,11 +355,10 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.subtitleOffset = 2;
-              setCurrentSubtitleOffset('2s');
-              setDropdownLevelKey('general');
+              // setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentSubtitleOffset === '2s',
+          isCurrent: currentSubtitleOffset === 2,
         },
         {
           id: '3s',
@@ -388,11 +367,10 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.subtitleOffset = 3;
-              setCurrentSubtitleOffset('3s');
-              setDropdownLevelKey('general');
+              // setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentSubtitleOffset === '3s',
+          isCurrent: currentSubtitleOffset === 3,
         },
         {
           id: '4s',
@@ -401,11 +379,10 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.subtitleOffset = 4;
-              setCurrentSubtitleOffset('4s');
-              setDropdownLevelKey('general');
+              // setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentSubtitleOffset === '4s',
+          isCurrent: currentSubtitleOffset === 4,
         },
         {
           id: '5s',
@@ -414,11 +391,10 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.subtitleOffset = 5;
-              setCurrentSubtitleOffset('5s');
-              setDropdownLevelKey('general');
+              // setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentSubtitleOffset === '5s',
+          isCurrent: currentSubtitleOffset === 5,
         },
       ],
     },
@@ -452,7 +428,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                       <Button
                         auto
                         light
-                        onClick={currentDropdownLevel?.backButtonAction}
+                        // onClick={currentDropdownLevel?.backButtonAction}
                         icon={<Arrow direction="left" />}
                       />
                     ) : null}

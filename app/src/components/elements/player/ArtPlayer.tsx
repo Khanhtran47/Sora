@@ -133,29 +133,29 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
             'x5-video-orientation': 'portraint',
             preload: 'metadata',
           },
-      controls: [
-        {
-          position: 'right',
-          html: '<svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 48 48"><path d="M0 0h48v48H0z" fill="none"/><path fill="#ffffff" d="M40 8H8c-2.21 0-4 1.79-4 4v24c0 2.21 1.79 4 4 4h32c2.21 0 4-1.79 4-4V12c0-2.21-1.79-4-4-4zM8 24h8v4H8v-4zm20 12H8v-4h20v4zm12 0h-8v-4h8v4zm0-8H20v-4h20v4z"/></svg>',
-          tooltip: 'Search Subtitles',
-          click: () => {
-            setSearchModalVisible(true);
-            art.pause();
-          },
-        },
-        ...(hasNextEpisode
-          ? [
-              {
-                position: 'left',
-                html: '<svg xmlns="http://www.w3.org/2000/svg" height="36" width="36" viewBox="0 0 36 36"><path fill="#ffffff" d="M 12,24 20.5,18 12,12 V 24 z M 22,12 v 12 h 2 V 12 h -2 z" /></svg>',
-                tooltip: 'Next Episode',
-                click: () => {
-                  if (nextEpisodeUrl) navigate(nextEpisodeUrl);
-                },
-              },
-            ]
-          : []),
-      ],
+      // controls: [
+      //   {
+      //     position: 'right',
+      //     html: '<svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 48 48"><path d="M0 0h48v48H0z" fill="none"/><path fill="#ffffff" d="M40 8H8c-2.21 0-4 1.79-4 4v24c0 2.21 1.79 4 4 4h32c2.21 0 4-1.79 4-4V12c0-2.21-1.79-4-4-4zM8 24h8v4H8v-4zm20 12H8v-4h20v4zm12 0h-8v-4h8v4zm0-8H20v-4h20v4z"/></svg>',
+      //     tooltip: 'Search Subtitles',
+      //     click: () => {
+      //       setSearchModalVisible(true);
+      //       art.pause();
+      //     },
+      //   },
+      //   ...(hasNextEpisode
+      //     ? [
+      //         {
+      //           position: 'left',
+      //           html: '<svg xmlns="http://www.w3.org/2000/svg" height="36" width="36" viewBox="0 0 36 36"><path fill="#ffffff" d="M 12,24 20.5,18 12,12 V 24 z M 22,12 v 12 h 2 V 12 h -2 z" /></svg>',
+      //           tooltip: 'Next Episode',
+      //           click: () => {
+      //             if (nextEpisodeUrl) navigate(nextEpisodeUrl);
+      //           },
+      //         },
+      //       ]
+      //     : []),
+      // ],
       settings: [
         {
           width: 200,

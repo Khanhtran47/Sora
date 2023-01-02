@@ -207,14 +207,16 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                     }
                   },
                 },
-              }}
-              getInstance={(art) => {
-                art.on('ready', () => {
-                  art.controls.add({
+                controls: [
+                  {
                     position: 'right',
                     name: 'portal',
                     html: '',
-                  });
+                  },
+                ],
+              }}
+              getInstance={(art) => {
+                art.on('ready', () => {
                   setArtplayer(art);
                 });
                 art.on('play', () => {
@@ -233,7 +235,6 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                     height: '48px',
                     margin: 'auto',
                     position: 'relative',
-
                     '&::before': {
                       content: "''",
                       width: '48px',
@@ -397,9 +398,9 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
             artplayer.layers.closePlayer,
           )
         : null}
-      {isMini && artplayer
+      {/* {isMini && artplayer
         ? createPortal(<PlayerSettings artplayer={artplayer} />, artplayer.layers.settings)
-        : null}
+        : null} */}
       {/* Creating portals for the player controls */}
       {artplayer && !isMini
         ? createPortal(<PlayerSettings artplayer={artplayer} />, artplayer.controls.portal)
