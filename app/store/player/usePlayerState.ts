@@ -1,5 +1,4 @@
 import create from 'zustand';
-import { mountStoreDevtool } from 'simple-zustand-devtools';
 
 interface PlayerState {
   shouldShowPlayer: boolean;
@@ -30,9 +29,5 @@ const usePlayerState = create<PlayerState>((set) => ({
   setRoutePlayer: (routePlayer: string) => set({ routePlayer }),
   setTitlePlayer: (titlePlayer: string) => set({ titlePlayer }),
 }));
-
-if (process.env.NODE_ENV === 'development' && typeof document !== 'undefined') {
-  mountStoreDevtool('Player Store', usePlayerState);
-}
 
 export default usePlayerState;

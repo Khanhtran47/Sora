@@ -46,7 +46,7 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
   const matchesFiltered = matches.find(
     (match) => match?.pathname.includes('player') || match?.pathname.includes('watch'),
   );
-  const playerSettings = matchesFiltered?.handle?.playerSettings();
+  const playerSettings = matchesFiltered?.handle?.playerSettings;
   const shouldPlayInBackground = useMemo(
     () => !(location?.pathname.includes('player') || location?.pathname.includes('watch')),
     [location?.pathname],
@@ -210,8 +210,9 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                 controls: [
                   {
                     position: 'right',
-                    name: 'portal',
+                    name: 'settings',
                     html: '',
+                    toolbar: 'Settings',
                   },
                 ],
               }}
@@ -265,6 +266,9 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                     height: isMini && '7px !important',
                     padding: isMini && '0 !important',
                   },
+                  '&.art-notice': {
+                    justifyContent: 'center',
+                  },
                   '&.art-control-progress': {
                     height: isMini && '7px !important',
                     alignItems: isMini && 'flex-end !important',
@@ -288,7 +292,7 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                   },
                   '&.art-layer-controlButtons': {
                     transition: 'all 0.3s ease',
-                    opacity: 0,
+                    display: 'none',
                   },
                 },
                 '&:hover': {
@@ -307,7 +311,7 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                       display: isMini && 'block',
                     },
                     '&.art-layer-controlButtons': {
-                      opacity: 1,
+                      display: isMini && 'block',
                     },
                   },
                 },
@@ -403,7 +407,7 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
         : null} */}
       {/* Creating portals for the player controls */}
       {artplayer && !isMini
-        ? createPortal(<PlayerSettings artplayer={artplayer} />, artplayer.controls.portal)
+        ? createPortal(<PlayerSettings artplayer={artplayer} />, artplayer.controls.settings)
         : null}
     </Container>
   );

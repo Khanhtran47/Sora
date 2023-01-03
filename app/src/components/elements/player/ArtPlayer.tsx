@@ -156,57 +156,57 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
       //       ]
       //     : []),
       // ],
-      settings: [
-        {
-          width: 200,
-          html: 'Subtitle',
-          icon: '<svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 48 48"><path d="M0 0h48v48H0z" fill="none"/><path fill="#ffffff" d="M40 8H8c-2.21 0-4 1.79-4 4v24c0 2.21 1.79 4 4 4h32c2.21 0 4-1.79 4-4V12c0-2.21-1.79-4-4-4zM8 24h8v4H8v-4zm20 12H8v-4h20v4zm12 0h-8v-4h8v4zm0-8H20v-4h20v4z"/></svg>',
-          tooltip: 'English',
-          selector: [
-            {
-              html: 'Display',
-              tooltip: 'Show',
-              switch: true,
-              onSwitch: (item) => {
-                item.tooltip = item.switch ? 'Hide' : 'Show';
-                art.subtitle.show = !item.switch;
-                return !item.switch;
-              },
-            },
-            ...subtitles,
-          ],
-          onSelect: (item) => {
-            // @ts-ignore
-            art.subtitle.url = item.url;
-            return item.html;
-          },
-        },
-        {
-          html: 'Select Quality',
-          width: 150,
-          tooltip: 'auto',
-          selector: qualitySelector,
-          onSelect: (item) => {
-            // @ts-ignore
-            art.switchQuality(item.url, item.html);
-            return item.html;
-          },
-        },
-        ...(autoPlay
-          ? [
-              {
-                html: 'Auto Play',
-                tooltip: playNextEpisode ? 'On' : 'Off',
-                switch: playNextEpisode,
-                onSwitch: (item: { tooltip: string; switch: boolean }) => {
-                  item.tooltip = !item.switch ? 'On' : 'Off';
-                  setPlayNextEpisode(!item.switch);
-                  return !item.switch;
-                },
-              },
-            ]
-          : []),
-      ],
+      // settings: [
+      //   {
+      //     width: 200,
+      //     html: 'Subtitle',
+      //     icon: '<svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 48 48"><path d="M0 0h48v48H0z" fill="none"/><path fill="#ffffff" d="M40 8H8c-2.21 0-4 1.79-4 4v24c0 2.21 1.79 4 4 4h32c2.21 0 4-1.79 4-4V12c0-2.21-1.79-4-4-4zM8 24h8v4H8v-4zm20 12H8v-4h20v4zm12 0h-8v-4h8v4zm0-8H20v-4h20v4z"/></svg>',
+      //     tooltip: 'English',
+      //     selector: [
+      //       {
+      //         html: 'Display',
+      //         tooltip: 'Show',
+      //         switch: true,
+      //         onSwitch: (item) => {
+      //           item.tooltip = item.switch ? 'Hide' : 'Show';
+      //           art.subtitle.show = !item.switch;
+      //           return !item.switch;
+      //         },
+      //       },
+      //       ...subtitles,
+      //     ],
+      //     onSelect: (item) => {
+      //       // @ts-ignore
+      //       art.subtitle.url = item.url;
+      //       return item.html;
+      //     },
+      //   },
+      //   {
+      //     html: 'Select Quality',
+      //     width: 150,
+      //     tooltip: 'auto',
+      //     selector: qualitySelector,
+      //     onSelect: (item) => {
+      //       // @ts-ignore
+      //       art.switchQuality(item.url, item.html);
+      //       return item.html;
+      //     },
+      //   },
+      //   ...(autoPlay
+      //     ? [
+      //         {
+      //           html: 'Auto Play',
+      //           tooltip: playNextEpisode ? 'On' : 'Off',
+      //           switch: playNextEpisode,
+      //           onSwitch: (item: { tooltip: string; switch: boolean }) => {
+      //             item.tooltip = !item.switch ? 'On' : 'Off';
+      //             setPlayNextEpisode(!item.switch);
+      //             return !item.switch;
+      //           },
+      //         },
+      //       ]
+      //     : []),
+      // ],
     });
     if (getInstance && typeof getInstance === 'function') {
       getInstance(art);

@@ -3817,18 +3817,22 @@ array.prototype.tosorted@^1.1.1:
     es-shim-unscopables "^1.0.0"
     get-intrinsic "^1.1.3"
 
+artplayer-plugin-control@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/artplayer-plugin-control/-/artplayer-plugin-control-1.0.0.tgz#29d1f1230954563a31875a975b64d995d2fb15ea"
+  integrity sha512-LBLCyVuL9UtHFFwDXAPG0vm2snVv82kZKr6+kMSlVxzpaX8Nl5xJEFqFwFz1Pc2EvBR6uP3ytAvyA7WvqAA5cA==
+
 artplayer-plugin-hls-quality@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/artplayer-plugin-hls-quality/-/artplayer-plugin-hls-quality-1.0.0.tgz#69454709d528ae856deb7cbe0d7e6dbabdfb85ec"
   integrity sha512-3bEh4MILauqQ0LtzKe3Jx50JjFACMvq5LcdoJzQnSTgY5rl7OrfD9u07/o1GbElyJrzHNI0mPX+KBl3BIT5ygw==
 
-artplayer@^4.5.12:
-  version "4.5.12"
-  resolved "https://registry.yarnpkg.com/artplayer/-/artplayer-4.5.12.tgz#8e540bd95e279ba2d04b031879cb172e6b946ecb"
-  integrity sha512-MTmbZOep0+NYf5H0Rm1j7dgDg/eHoxaOnU2PwPKYAwh0acc8zWOAmo39AEzJffZDIOgIUiVCt5Dl9dCDqKLgKg==
+artplayer@^4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/artplayer/-/artplayer-4.6.0.tgz#d0f07fddc3efaa94cf067f5028cd065d7a27a150"
+  integrity sha512-dv93RmpMzb9VIfKsvjlmp6zbnLD9gPcMDkJ1aQGGczU+F5Jly0h249HtEsgnr8hc00c8YQp7GeAJsuMu9vwI4w==
   dependencies:
     option-validator "^2.0.6"
-    screenfull "^6.0.2"
 
 asn1@~0.2.3:
   version "0.2.6"
@@ -10401,11 +10405,6 @@ schema-dts@^1.1.0:
   resolved "https://registry.yarnpkg.com/schema-dts/-/schema-dts-1.1.0.tgz#33227971076ef1daa33e56a3127a8aae030e81c9"
   integrity sha512-vdmbs/5ycj4zyKpZIDqTcy+IZi4s7c38RVAYuDmRi7zgxUT8wRWPMLzg0jr7FjdVunYu9yZ00F3+XcZTTFcTOQ==
 
-screenfull@^6.0.2:
-  version "6.0.2"
-  resolved "https://registry.yarnpkg.com/screenfull/-/screenfull-6.0.2.tgz#3dbe4b8c4f8f49fb8e33caa8f69d0bca730ab238"
-  integrity sha512-AQdy8s4WhNvUZ6P8F6PB21tSPIYKniic+Ogx0AacBMjKP1GUHN2E9URxQHtCusiwxudnCKkdy4GrHXPPJSkCCw==
-
 semver@7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.0.0.tgz#5f3ca35761e47e05b206c6daff2cf814f0316b8e"
@@ -10556,11 +10555,6 @@ simple-swizzle@^0.2.2:
   integrity sha512-JA//kQgZtbuY83m+xT+tXJkmJncGMTFT+C+g2h2R9uxkYIrE2yy9sgmcLhCnw57/WSD+Eh3J97FPEDFnbXnDUg==
   dependencies:
     is-arrayish "^0.3.1"
-
-simple-zustand-devtools@1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/simple-zustand-devtools/-/simple-zustand-devtools-1.0.1.tgz#0586c00190f52c842f7b25e4390730ec435cf85f"
-  integrity sha512-/+g+XA7ojPRa+ZDPy1dHBwtf+nBn+ZWN5RUTRgz1lNl5ZTqETo2uhjCl7KzQWlKzLO7CfQrmxK+dTI/5iAF3/Q==
 
 sister@^3.0.0:
   version "3.0.2"

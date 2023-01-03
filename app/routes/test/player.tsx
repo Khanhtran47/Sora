@@ -27,13 +27,13 @@ export const handle = {
       )}
     </NavLink>
   ),
-  playerSettings: () => ({
+  playerSettings: {
     isMini: false,
     shouldShowPlayer: true,
-    url: 'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8',
+    url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
     routePlayer: '/test/player',
     title: 'Test Player',
-  }),
+  },
 };
 
 const Player = () => null;

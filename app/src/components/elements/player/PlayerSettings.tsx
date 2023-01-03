@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable no-nested-ternary */
 import { useMemo, useState } from 'react';
-import { Spacer, Popover, Button, Divider } from '@nextui-org/react';
+import { Spacer, Popover, Button, Divider, Tooltip } from '@nextui-org/react';
 
 import { H6 } from '~/src/components/styles/Text.styles';
 import ResizablePanel from '~/src/components/elements/shared/ResizablePanel';
@@ -23,10 +23,10 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
   const { artplayer } = props;
   const [isSettingsOpen, setSettingsOpen] = useState(false);
   const [dropdownLevelKey, setDropdownLevelKey] = useState('general');
-  const currentPlaySpeed = useMemo(() => artplayer?.playbackRate, [artplayer]);
-  const currentAspectRatio = useMemo(() => artplayer?.aspectRatio, [artplayer]);
-  const currentVideoFlip = useMemo(() => artplayer?.flip, [artplayer]);
-  const currentSubtitleOffset = useMemo(() => artplayer?.subtitleOffset, [artplayer]);
+  const [currentPlaySpeed, setCurrentPlaySpeed] = useState('Normal');
+  const [currentAspectRatio, setCurrentAspectRatio] = useState('Default');
+  const [currentVideoFlip, setCurrentVideoFlip] = useState('Normal');
+  const [currentSubtitleOffset, setCurrentSubtitleOffset] = useState('Normal');
   const dropdownLevel = [
     {
       id: 'general',
@@ -76,7 +76,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
       key: 'play-speed',
       showTitle: true,
       showBackButton: true,
-      // backButtonAction: () => setDropdownLevelKey('general'),
+      backButtonAction: () => setDropdownLevelKey('general'),
       title: 'Play Speed',
       listItems: [
         {
@@ -86,10 +86,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.playbackRate = 0.5;
-              // setDropdownLevelKey('general');
+              setCurrentPlaySpeed('0.5x');
+              setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentPlaySpeed === 0.5,
+          isCurrent: currentPlaySpeed === '0.5x',
         },
         {
           id: '0.75x',
@@ -98,10 +99,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.playbackRate = 0.75;
-              // setDropdownLevelKey('general');
+              setCurrentPlaySpeed('0.75x');
+              setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentPlaySpeed === 0.75,
+          isCurrent: currentPlaySpeed === '0.75x',
         },
         {
           id: 'normal',
@@ -110,10 +112,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.playbackRate = 1.0;
-              // setDropdownLevelKey('general');
+              setCurrentPlaySpeed('Normal');
+              setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentPlaySpeed === 1.0,
+          isCurrent: currentPlaySpeed === 'Normal',
         },
         {
           id: '1.25x',
@@ -122,10 +125,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.playbackRate = 1.25;
-              // setDropdownLevelKey('general');
+              setCurrentPlaySpeed('1.25x');
+              setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentPlaySpeed === 1.25,
+          isCurrent: currentPlaySpeed === '1.25x',
         },
         {
           id: '1.5x',
@@ -134,10 +138,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.playbackRate = 1.5;
-              // setDropdownLevelKey('general');
+              setCurrentPlaySpeed('1.5x');
+              setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentPlaySpeed === 1.5,
+          isCurrent: currentPlaySpeed === '1.5x',
         },
         {
           id: '1.75x',
@@ -146,10 +151,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.playbackRate = 1.75;
-              // setDropdownLevelKey('general');
+              setCurrentPlaySpeed('1.75x');
+              setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentPlaySpeed === 1.75,
+          isCurrent: currentPlaySpeed === '1.75x',
         },
         {
           id: '2x',
@@ -158,10 +164,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.playbackRate = 2.0;
-              // setDropdownLevelKey('general');
+              setCurrentPlaySpeed('2x');
+              setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentPlaySpeed === 2,
+          isCurrent: currentPlaySpeed === '2x',
         },
       ],
     },
@@ -170,7 +177,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
       key: 'aspect-ratio',
       showTitle: true,
       showBackButton: true,
-      // backButtonAction: () => setDropdownLevelKey('general'),
+      backButtonAction: () => setDropdownLevelKey('general'),
       title: 'Aspect Ratio',
       listItems: [
         {
@@ -180,10 +187,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.aspectRatio = 'default';
-              // setDropdownLevelKey('general');
+              setCurrentAspectRatio('Default');
+              setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentAspectRatio === 'default',
+          isCurrent: currentAspectRatio === 'Default',
         },
         {
           id: '16:9',
@@ -192,7 +200,8 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.aspectRatio = '16:9';
-              // setDropdownLevelKey('general');
+              setCurrentAspectRatio('16:9');
+              setDropdownLevelKey('general');
             }
           },
           isCurrent: currentAspectRatio === '16:9',
@@ -204,7 +213,8 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.aspectRatio = '4:3';
-              // setDropdownLevelKey('general');
+              setCurrentAspectRatio('4:3');
+              setDropdownLevelKey('general');
             }
           },
           isCurrent: currentAspectRatio === '4:3',
@@ -216,7 +226,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
       key: 'video-flip',
       showTitle: true,
       showBackButton: true,
-      // backButtonAction: () => setDropdownLevelKey('general'),
+      backButtonAction: () => setDropdownLevelKey('general'),
       title: 'Video Flip',
       listItems: [
         {
@@ -226,10 +236,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.flip = 'normal';
-              // setDropdownLevelKey('general');
+              setCurrentVideoFlip('Normal');
+              setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentVideoFlip === 'normal',
+          isCurrent: currentVideoFlip === 'Normal',
         },
         {
           id: 'flip-horizontally',
@@ -238,10 +249,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.flip = 'horizontally';
-              // setDropdownLevelKey('general');
+              setCurrentVideoFlip('Horizontally');
+              setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentVideoFlip === 'horizontally',
+          isCurrent: currentVideoFlip === 'Horizontally',
         },
         {
           id: 'flip-vertically',
@@ -250,10 +262,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.flip = 'vertically';
-              // setDropdownLevelKey('general');
+              setCurrentVideoFlip('Vertically');
+              setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentVideoFlip === 'vertically',
+          isCurrent: currentVideoFlip === 'Vertically',
         },
       ],
     },
@@ -262,7 +275,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
       key: 'subtitle-offset',
       showTitle: true,
       showBackButton: true,
-      // backButtonAction: () => setDropdownLevelKey('general'),
+      backButtonAction: () => setDropdownLevelKey('general'),
       title: 'Subtitle Offset',
       listItems: [
         {
@@ -272,10 +285,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.subtitleOffset = -5;
-              // setDropdownLevelKey('general');
+              setCurrentSubtitleOffset('-5s');
+              setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentSubtitleOffset === -5,
+          isCurrent: currentSubtitleOffset === '-5s',
         },
         {
           id: '-4s',
@@ -284,10 +298,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.subtitleOffset = -4;
-              // setDropdownLevelKey('general');
+              setCurrentSubtitleOffset('-4s');
+              setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentSubtitleOffset === -4,
+          isCurrent: currentSubtitleOffset === '-4s',
         },
         {
           id: '-3s',
@@ -296,10 +311,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.subtitleOffset = -3;
-              // setDropdownLevelKey('general');
+              setCurrentSubtitleOffset('-3s');
+              setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentSubtitleOffset === -3,
+          isCurrent: currentSubtitleOffset === '-3s',
         },
         {
           id: '-2s',
@@ -307,10 +323,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.subtitleOffset = -2;
-              // setDropdownLevelKey('general');
+              setCurrentSubtitleOffset('-2s');
+              setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentSubtitleOffset === -2,
+          isCurrent: currentSubtitleOffset === '-2s',
         },
         {
           id: '-1s',
@@ -319,10 +336,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.subtitleOffset = -1;
-              // setDropdownLevelKey('general');
+              setCurrentSubtitleOffset('-1s');
+              setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentSubtitleOffset === -1,
+          isCurrent: currentSubtitleOffset === '-1s',
         },
         {
           id: 'normal',
@@ -331,10 +349,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.subtitleOffset = 0;
-              // setDropdownLevelKey('general');
+              setCurrentSubtitleOffset('Normal');
+              setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentSubtitleOffset === 0,
+          isCurrent: currentSubtitleOffset === 'Normal',
         },
         {
           id: '1s',
@@ -343,10 +362,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.subtitleOffset = 1;
-              // setDropdownLevelKey('general');
+              setCurrentSubtitleOffset('1s');
+              setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentSubtitleOffset === 1,
+          isCurrent: currentSubtitleOffset === '1s',
         },
         {
           id: '2s',
@@ -355,10 +375,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.subtitleOffset = 2;
-              // setDropdownLevelKey('general');
+              setCurrentSubtitleOffset('2s');
+              setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentSubtitleOffset === 2,
+          isCurrent: currentSubtitleOffset === '2s',
         },
         {
           id: '3s',
@@ -367,10 +388,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.subtitleOffset = 3;
-              // setDropdownLevelKey('general');
+              setCurrentSubtitleOffset('3s');
+              setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentSubtitleOffset === 3,
+          isCurrent: currentSubtitleOffset === '3s',
         },
         {
           id: '4s',
@@ -379,10 +401,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.subtitleOffset = 4;
-              // setDropdownLevelKey('general');
+              setCurrentSubtitleOffset('4s');
+              setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentSubtitleOffset === 4,
+          isCurrent: currentSubtitleOffset === '4s',
         },
         {
           id: '5s',
@@ -391,10 +414,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action: () => {
             if (artplayer) {
               artplayer.subtitleOffset = 5;
-              // setDropdownLevelKey('general');
+              setCurrentSubtitleOffset('5s');
+              setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentSubtitleOffset === 5,
+          isCurrent: currentSubtitleOffset === '5s',
         },
       ],
     },
@@ -405,121 +429,128 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
     [dropdownLevelKey],
   );
   return (
-    <Popover
-      shouldFlip
-      placement="bottom"
-      isOpen={isSettingsOpen}
-      onOpenChange={(isOpen) => setSettingsOpen(isOpen)}
-      isBordered
-      disableShadow
-      onClose={() => setDropdownLevelKey('general')}
-    >
-      <Popover.Trigger>
-        <Button auto light aria-label="dropdown" icon={<Settings filled />} />
-      </Popover.Trigger>
-      <Popover.Content>
-        <ResizablePanel>
-          {currentDropdownLevel ? (
-            <Flex direction="column" align="start" justify="start" className="space-y-2 px-2 py-2">
-              {currentDropdownLevel?.showBackButton || currentDropdownLevel?.showTitle ? (
-                <>
-                  <Flex direction="row" align="center" justify="between">
-                    {currentDropdownLevel?.showBackButton ? (
-                      <Button
-                        auto
-                        light
-                        // onClick={currentDropdownLevel?.backButtonAction}
-                        icon={<Arrow direction="left" />}
-                      />
-                    ) : null}
-                    {currentDropdownLevel?.showTitle ? (
-                      <H6 h6 css={{ margin: 0 }} weight="semibold">
-                        {currentDropdownLevel?.title}
-                      </H6>
-                    ) : null}
-                  </Flex>
-                  <Divider />
-                </>
-              ) : null}
+    <Tooltip content="Settings" placement="top">
+      <Popover
+        shouldFlip
+        placement="bottom"
+        isOpen={isSettingsOpen}
+        onOpenChange={(isOpen) => setSettingsOpen(isOpen)}
+        isBordered
+        disableShadow
+        onClose={() => setDropdownLevelKey('general')}
+      >
+        <Popover.Trigger>
+          <Button auto light aria-label="dropdown" icon={<Settings filled />} />
+        </Popover.Trigger>
+        <Popover.Content>
+          <ResizablePanel>
+            {currentDropdownLevel ? (
               <Flex
                 direction="column"
                 align="start"
                 justify="start"
                 className="space-y-2 px-2 py-2"
               >
-                {currentDropdownLevel?.listItems.map((item) => (
-                  <Button
-                    key={item.id}
-                    auto
-                    light
-                    onClick={item.action}
-                    css={{
-                      p: 0,
-                      width: '100%',
-                      '& span': {
-                        '&.nextui-button-text': {
-                          display: 'block',
-                          width: '100%',
-                        },
-                      },
-                    }}
-                  >
-                    <Flex direction="row" align="center" justify="between" className="space-x-8">
-                      <Flex direction="row" align="center" className="space-x-2">
-                        {item?.showIcon ? (
-                          (
-                            item as {
-                              id: string;
-                              title: string;
-                              description: string;
-                              showIcon: boolean;
-                              icon: JSX.Element;
-                              action: () => void;
-                              currentValue: string;
-                            }
-                          )?.icon
-                        ) : (
-                            item as {
-                              id: string;
-                              title: string;
-                              showIcon: boolean;
-                              action: () => void;
-                              isCurrent: boolean;
-                            }
-                          )?.isCurrent ? (
-                          <Tick />
-                        ) : (
-                          <Spacer x={1.15} />
-                        )}
+                {currentDropdownLevel?.showBackButton || currentDropdownLevel?.showTitle ? (
+                  <>
+                    <Flex direction="row" align="center" justify="between">
+                      {currentDropdownLevel?.showBackButton ? (
+                        <Button
+                          auto
+                          light
+                          onClick={currentDropdownLevel?.backButtonAction}
+                          icon={<Arrow direction="left" />}
+                        />
+                      ) : null}
+                      {currentDropdownLevel?.showTitle ? (
                         <H6 h6 css={{ margin: 0 }} weight="semibold">
-                          {item.title}
+                          {currentDropdownLevel?.title}
                         </H6>
-                      </Flex>
-                      <Flex direction="row" align="center" className="space-x-2">
-                        <H6 h6 css={{ margin: 0, color: '$accents9' }} weight="thin">
-                          {(
-                            item as {
-                              id: string;
-                              title: string;
-                              description: string;
-                              showIcon: boolean;
-                              icon: JSX.Element;
-                              action: () => void;
-                              currentValue: string;
-                            }
-                          )?.currentValue || ''}
-                        </H6>
-                        {item.showIcon ? <Arrow direction="right" /> : null}
-                      </Flex>
+                      ) : null}
                     </Flex>
-                  </Button>
-                ))}
+                    <Divider />
+                  </>
+                ) : null}
+                <Flex
+                  direction="column"
+                  align="start"
+                  justify="start"
+                  className="space-y-2 px-2 py-2"
+                >
+                  {currentDropdownLevel?.listItems.map((item) => (
+                    <Button
+                      key={item.id}
+                      auto
+                      light
+                      onClick={item.action}
+                      css={{
+                        p: 0,
+                        width: '100%',
+                        '& span': {
+                          '&.nextui-button-text': {
+                            display: 'block',
+                            width: '100%',
+                          },
+                        },
+                      }}
+                    >
+                      <Flex direction="row" align="center" justify="between" className="space-x-8">
+                        <Flex direction="row" align="center" className="space-x-2">
+                          {item?.showIcon ? (
+                            (
+                              item as {
+                                id: string;
+                                title: string;
+                                description: string;
+                                showIcon: boolean;
+                                icon: JSX.Element;
+                                action: () => void;
+                                currentValue: string;
+                              }
+                            )?.icon
+                          ) : (
+                              item as {
+                                id: string;
+                                title: string;
+                                showIcon: boolean;
+                                action: () => void;
+                                isCurrent: boolean;
+                              }
+                            )?.isCurrent ? (
+                            <Tick />
+                          ) : (
+                            <Spacer x={1.15} />
+                          )}
+                          <H6 h6 css={{ margin: 0 }} weight="semibold">
+                            {item.title}
+                          </H6>
+                        </Flex>
+                        <Flex direction="row" align="center" className="space-x-2">
+                          <H6 h6 css={{ margin: 0, color: '$accents9' }} weight="thin">
+                            {(
+                              item as {
+                                id: string;
+                                title: string;
+                                description: string;
+                                showIcon: boolean;
+                                icon: JSX.Element;
+                                action: () => void;
+                                currentValue: string;
+                              }
+                            )?.currentValue || ''}
+                          </H6>
+                          {item.showIcon ? <Arrow direction="right" /> : null}
+                        </Flex>
+                      </Flex>
+                    </Button>
+                  ))}
+                </Flex>
               </Flex>
-            </Flex>
-          ) : null}
-        </ResizablePanel>
-      </Popover.Content>
-    </Popover>
+            ) : null}
+          </ResizablePanel>
+        </Popover.Content>
+      </Popover>
+    </Tooltip>
   );
 };
 
