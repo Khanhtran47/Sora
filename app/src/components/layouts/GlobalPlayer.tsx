@@ -7,7 +7,8 @@ import { Container, Button, Tooltip, keyframes } from '@nextui-org/react';
 import Artplayer from 'artplayer';
 import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
 import Hls from 'hls.js';
-import { isMobile } from 'react-device-detect';
+import { isDesktop, isMobile } from 'react-device-detect';
+import artplayerPluginControl from 'artplayer-plugin-control';
 
 import usePlayerState from '~/store/player/usePlayerState';
 
@@ -84,6 +85,9 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
 
   useEffect(() => {
     setIsMini(shouldPlayInBackground);
+    if (artplayer && artplayer.plugins.artplayerPluginControl?.enable) {
+      artplayer.plugins.artplayerPluginControl.enable = !shouldPlayInBackground;
+    }
   }, [shouldPlayInBackground]);
 
   useEffect(() => {
@@ -108,7 +112,7 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
   }, [x, y, shouldPlayInBackground]);
 
   return (
-    <Container responsive css={{ margin: 0, padding: 0, width: isMini ? '20rem' : '100%' }}>
+    <Container fluid css={{ margin: 0, padding: 0, width: isMini ? '20rem' : '100%' }}>
       <div className="fixed inset-0 pointer-events-none" ref={constraintsRef} />
       <AnimatePresence initial={false}>
         {shouldShowPlayer ? (
@@ -152,7 +156,7 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                   },
                   {
                     html: '',
-                    name: 'controlButtons',
+                    name: 'playPauseButton',
                     style: {
                       position: 'absolute',
                       top: 0,
@@ -163,34 +167,17 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                   },
                   {
                     html: '',
-                    name: 'expandPlayer',
+                    name: 'topControlButtons',
                     style: {
                       position: 'absolute',
-                      top: '10px',
-                      left: '10px',
-                    },
-                  },
-                  {
-                    html: '',
-                    name: 'closePlayer',
-                    style: {
-                      position: 'absolute',
-                      top: '10px',
-                      left: '50px',
-                    },
-                  },
-                  {
-                    html: '',
-                    name: 'settings',
-                    style: {
-                      position: 'absolute',
-                      top: '10px',
-                      right: '10px',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
                     },
                   },
                 ],
                 icons: {
-                  state: '',
+                  // state: isDesktop && '',
                   loading: '<div class="custom-loader"></div>',
                 },
                 customType: {
@@ -212,13 +199,28 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                     position: 'right',
                     name: 'settings',
                     html: '',
-                    toolbar: 'Settings',
+                    tooltip: 'Settings',
                   },
                 ],
+                plugins: [artplayerPluginControl()],
               }}
               getInstance={(art) => {
                 art.on('ready', () => {
                   setArtplayer(art);
+                  console.log(art);
+                  art.controls.add({
+                    position: 'top',
+                    name: 'test',
+                    html: '',
+                    tooltip: 'Test',
+                    style: {
+                      position: 'absolute',
+                      bottom: `${Number(art?.height) - 30}px`,
+                      left: '0px',
+                      padding: '0px 7px',
+                      width: '100%',
+                    },
+                  });
                 });
                 art.on('play', () => {
                   setIsPlayerPlaying(true);
@@ -230,6 +232,9 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
               css={{
                 width: isMini ? '25rem' : '100%',
                 height: isMini ? '14.0625rem' : '100%',
+                borderTopLeftRadius: isMini ? '$sm' : 0,
+                borderTopRightRadius: isMini ? '$sm' : 0,
+                overflow: 'hidden',
                 '& div': {
                   '&.custom-loader': {
                     width: '48px',
@@ -265,6 +270,7 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                   '&.art-bottom': {
                     height: isMini && '7px !important',
                     padding: isMini && '0 !important',
+                    flexDirection: isMobile ? 'column-reverse' : 'column',
                   },
                   '&.art-notice': {
                     justifyContent: 'center',
@@ -273,44 +279,39 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                     height: isMini && '7px !important',
                     alignItems: isMini && 'flex-end !important',
                   },
-                  '&.art-layer-expandPlayer': {
-                    transition: 'all 0.3s ease',
-                    opacity: 0,
-                  },
-                  '&.art-layer-closePlayer': {
-                    transition: 'all 0.3s ease',
-                    opacity: 0,
-                  },
-                  '&.art-layer-settings': {
-                    transition: 'all 0.3s ease',
-                    opacity: 0,
-                  },
                   '&.art-layer-mask': {
                     transition: 'all 0.3s ease',
                     backgroundColor: 'rgba(0, 0, 0, 0)',
                     display: 'none',
                   },
-                  '&.art-layer-controlButtons': {
+                  '&.art-layer-playPauseButton': {
                     transition: 'all 0.3s ease',
                     display: 'none',
+                  },
+                  '&.art-layer-topControlButtons': {
+                    transition: 'all 0.3s ease',
+                    display: 'none',
+                  },
+                  '&.art-control-playAndPause': {
+                    display: isMobile ? 'none !important' : 'flex',
+                  },
+                  '&.art-control-volume': {
+                    display: isMobile ? 'none !important' : 'flex',
+                  },
+                  '&.art-state': {
+                    display: isDesktop && 'none !important',
                   },
                 },
                 '&:hover': {
                   '& div': {
-                    '&.art-layer-expandPlayer': {
-                      opacity: 1,
-                    },
-                    '&.art-layer-closePlayer': {
-                      opacity: 1,
-                    },
-                    '&.art-layer-settings': {
-                      opacity: 1,
-                    },
                     '&.art-layer-mask': {
                       backgroundColor: 'rgba(0, 0, 0, 0.5)',
                       display: isMini && 'block',
                     },
-                    '&.art-layer-controlButtons': {
+                    '&.art-layer-playPauseButton': {
+                      display: isMini && 'block',
+                    },
+                    '&.art-layer-topControlButtons': {
                       display: isMini && 'block',
                     },
                   },
@@ -330,6 +331,8 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                   height: '64px',
                   padding: '$sm',
                   backgroundColor: '$backgroundContrast',
+                  borderBottomLeftRadius: '$sm',
+                  borderBottomRightRadius: '$sm',
                 }}
               >
                 <H5
@@ -360,7 +363,15 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
         : null}
       {isMini && artplayer
         ? createPortal(
-            <Flex direction="row" align="center" justify="center" css={{ w: '100%', h: '100%' }}>
+            <Flex
+              direction="row"
+              align="center"
+              justify="center"
+              css={{
+                w: '100%',
+                h: '100%',
+              }}
+            >
               <Tooltip content={isPlayerPlaying ? 'Pause' : 'Play'}>
                 <Button
                   auto
@@ -374,37 +385,34 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                   }}
                   icon={
                     isPlayerPlaying ? (
-                      <Pause height={48} width={48} />
+                      <Pause height={48} width={48} filled />
                     ) : (
-                      <Play height={48} width={48} />
+                      <Play height={48} width={48} filled />
                     )
                   }
                   css={{ height: '48px' }}
                 />
               </Tooltip>
             </Flex>,
-            artplayer.layers.controlButtons,
+            artplayer.layers.playPauseButton,
           )
         : null}
       {isMini && artplayer
         ? createPortal(
-            <Tooltip content="Expand">
-              <Button auto light onClick={() => navigate(routePlayer)} icon={<Expand />} />
-            </Tooltip>,
-            artplayer.layers.expandPlayer,
+            <Flex direction="row" align="center" justify="between">
+              <Flex direction="row" align="center" justify="center" className="space-x-1">
+                <Tooltip content="Expand">
+                  <Button auto light onClick={() => navigate(routePlayer)} icon={<Expand />} />
+                </Tooltip>
+                <Tooltip content="Close">
+                  <Button auto light onClick={() => setShouldShowPlayer(false)} icon={<Close />} />
+                </Tooltip>
+              </Flex>
+              <PlayerSettings artplayer={artplayer} />
+            </Flex>,
+            artplayer.layers.topControlButtons,
           )
         : null}
-      {isMini && artplayer
-        ? createPortal(
-            <Tooltip content="Close">
-              <Button auto light onClick={() => setShouldShowPlayer(false)} icon={<Close />} />
-            </Tooltip>,
-            artplayer.layers.closePlayer,
-          )
-        : null}
-      {/* {isMini && artplayer
-        ? createPortal(<PlayerSettings artplayer={artplayer} />, artplayer.layers.settings)
-        : null} */}
       {/* Creating portals for the player controls */}
       {artplayer && !isMini
         ? createPortal(<PlayerSettings artplayer={artplayer} />, artplayer.controls.settings)

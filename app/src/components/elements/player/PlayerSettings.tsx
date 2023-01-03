@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable no-nested-ternary */
 import { useMemo, useState } from 'react';
-import { Spacer, Popover, Button, Divider, Tooltip } from '@nextui-org/react';
+import { Spacer, Popover, Button, Divider } from '@nextui-org/react';
 
 import { H6 } from '~/src/components/styles/Text.styles';
 import ResizablePanel from '~/src/components/elements/shared/ResizablePanel';
@@ -429,128 +429,127 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
     [dropdownLevelKey],
   );
   return (
-    <Tooltip content="Settings" placement="top">
-      <Popover
-        shouldFlip
-        placement="bottom"
-        isOpen={isSettingsOpen}
-        onOpenChange={(isOpen) => setSettingsOpen(isOpen)}
-        isBordered
-        disableShadow
-        onClose={() => setDropdownLevelKey('general')}
+    <Popover
+      shouldFlip
+      placement="top"
+      isOpen={isSettingsOpen}
+      onOpenChange={(isOpen) => setSettingsOpen(isOpen)}
+      isBordered
+      disableShadow
+      onClose={() => setDropdownLevelKey('general')}
+    >
+      <Popover.Trigger>
+        <Button auto light aria-label="dropdown" icon={<Settings filled />} />
+      </Popover.Trigger>
+      <Popover.Content
+        css={{
+          backgroundColor: '$backgroundAlpha',
+          backdropFilter: 'blur(21px) saturate(180%)',
+          '-webkit-backdrop-filter': 'blur(21px) saturate(180%)',
+        }}
       >
-        <Popover.Trigger>
-          <Button auto light aria-label="dropdown" icon={<Settings filled />} />
-        </Popover.Trigger>
-        <Popover.Content>
-          <ResizablePanel>
-            {currentDropdownLevel ? (
+        <ResizablePanel>
+          {currentDropdownLevel ? (
+            <Flex direction="column" align="start" justify="start" className="space-y-2 px-2 py-2">
+              {currentDropdownLevel?.showBackButton || currentDropdownLevel?.showTitle ? (
+                <>
+                  <Flex direction="row" align="center" justify="between">
+                    {currentDropdownLevel?.showBackButton ? (
+                      <Button
+                        auto
+                        light
+                        onClick={currentDropdownLevel?.backButtonAction}
+                        icon={<Arrow direction="left" />}
+                      />
+                    ) : null}
+                    {currentDropdownLevel?.showTitle ? (
+                      <H6 h6 css={{ margin: 0 }} weight="semibold">
+                        {currentDropdownLevel?.title}
+                      </H6>
+                    ) : null}
+                  </Flex>
+                  <Divider />
+                </>
+              ) : null}
               <Flex
                 direction="column"
                 align="start"
                 justify="start"
                 className="space-y-2 px-2 py-2"
               >
-                {currentDropdownLevel?.showBackButton || currentDropdownLevel?.showTitle ? (
-                  <>
-                    <Flex direction="row" align="center" justify="between">
-                      {currentDropdownLevel?.showBackButton ? (
-                        <Button
-                          auto
-                          light
-                          onClick={currentDropdownLevel?.backButtonAction}
-                          icon={<Arrow direction="left" />}
-                        />
-                      ) : null}
-                      {currentDropdownLevel?.showTitle ? (
-                        <H6 h6 css={{ margin: 0 }} weight="semibold">
-                          {currentDropdownLevel?.title}
-                        </H6>
-                      ) : null}
-                    </Flex>
-                    <Divider />
-                  </>
-                ) : null}
-                <Flex
-                  direction="column"
-                  align="start"
-                  justify="start"
-                  className="space-y-2 px-2 py-2"
-                >
-                  {currentDropdownLevel?.listItems.map((item) => (
-                    <Button
-                      key={item.id}
-                      auto
-                      light
-                      onClick={item.action}
-                      css={{
-                        p: 0,
-                        width: '100%',
-                        '& span': {
-                          '&.nextui-button-text': {
-                            display: 'block',
-                            width: '100%',
-                          },
+                {currentDropdownLevel?.listItems.map((item) => (
+                  <Button
+                    key={item.id}
+                    auto
+                    light
+                    onClick={item.action}
+                    css={{
+                      p: 0,
+                      width: '100%',
+                      '& span': {
+                        '&.nextui-button-text': {
+                          display: 'block',
+                          width: '100%',
                         },
-                      }}
-                    >
-                      <Flex direction="row" align="center" justify="between" className="space-x-8">
-                        <Flex direction="row" align="center" className="space-x-2">
-                          {item?.showIcon ? (
-                            (
-                              item as {
-                                id: string;
-                                title: string;
-                                description: string;
-                                showIcon: boolean;
-                                icon: JSX.Element;
-                                action: () => void;
-                                currentValue: string;
-                              }
-                            )?.icon
-                          ) : (
-                              item as {
-                                id: string;
-                                title: string;
-                                showIcon: boolean;
-                                action: () => void;
-                                isCurrent: boolean;
-                              }
-                            )?.isCurrent ? (
-                            <Tick />
-                          ) : (
-                            <Spacer x={1.15} />
-                          )}
-                          <H6 h6 css={{ margin: 0 }} weight="semibold">
-                            {item.title}
-                          </H6>
-                        </Flex>
-                        <Flex direction="row" align="center" className="space-x-2">
-                          <H6 h6 css={{ margin: 0, color: '$accents9' }} weight="thin">
-                            {(
-                              item as {
-                                id: string;
-                                title: string;
-                                description: string;
-                                showIcon: boolean;
-                                icon: JSX.Element;
-                                action: () => void;
-                                currentValue: string;
-                              }
-                            )?.currentValue || ''}
-                          </H6>
-                          {item.showIcon ? <Arrow direction="right" /> : null}
-                        </Flex>
+                      },
+                    }}
+                  >
+                    <Flex direction="row" align="center" justify="between" className="space-x-8">
+                      <Flex direction="row" align="center" className="space-x-2">
+                        {item?.showIcon ? (
+                          (
+                            item as {
+                              id: string;
+                              title: string;
+                              description: string;
+                              showIcon: boolean;
+                              icon: JSX.Element;
+                              action: () => void;
+                              currentValue: string;
+                            }
+                          )?.icon
+                        ) : (
+                            item as {
+                              id: string;
+                              title: string;
+                              showIcon: boolean;
+                              action: () => void;
+                              isCurrent: boolean;
+                            }
+                          )?.isCurrent ? (
+                          <Tick />
+                        ) : (
+                          <Spacer x={1.15} />
+                        )}
+                        <H6 h6 css={{ margin: 0 }} weight="semibold">
+                          {item.title}
+                        </H6>
                       </Flex>
-                    </Button>
-                  ))}
-                </Flex>
+                      <Flex direction="row" align="center" className="space-x-2">
+                        <H6 h6 css={{ margin: 0, color: '$accents9' }} weight="thin">
+                          {(
+                            item as {
+                              id: string;
+                              title: string;
+                              description: string;
+                              showIcon: boolean;
+                              icon: JSX.Element;
+                              action: () => void;
+                              currentValue: string;
+                            }
+                          )?.currentValue || ''}
+                        </H6>
+                        {item.showIcon ? <Arrow direction="right" /> : null}
+                      </Flex>
+                    </Flex>
+                  </Button>
+                ))}
               </Flex>
-            ) : null}
-          </ResizablePanel>
-        </Popover.Content>
-      </Popover>
-    </Tooltip>
+            </Flex>
+          ) : null}
+        </ResizablePanel>
+      </Popover.Content>
+    </Popover>
   );
 };
 
