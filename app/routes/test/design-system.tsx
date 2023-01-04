@@ -7,9 +7,16 @@ import { NavLink, useLocation } from '@remix-run/react';
 import { Container, Spacer, Badge, Popover, Button, Divider } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 
-import { H2, H6 } from '~/src/components/styles/Text.styles';
+import { H2, H4, H6 } from '~/src/components/styles/Text.styles';
 import ResizablePanel from '~/src/components/elements/shared/ResizablePanel';
 import Flex from '~/src/components/styles/Flex.styles';
+import {
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetTitle,
+  SheetDescription,
+} from '~/src/components/elements/shared/Sheet';
 
 import Settings from '~/src/assets/icons/SettingsIcon.js';
 import Arrow from '~/src/assets/icons/ArrowIcon.js';
@@ -541,6 +548,60 @@ const DesignSystem = () => {
           </Popover.Content>
         </Popover>
         <Spacer y={1} />
+        <Flex direction="row" className="space-x-2">
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button auto ghost aria-label="dropdown">
+                Top
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="top" hideCloseButton>
+              <SheetTitle asChild>
+                <H4 h4>Sheet Title</H4>
+              </SheetTitle>
+              <SheetDescription>Sheet Description</SheetDescription>
+            </SheetContent>
+          </Sheet>
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button auto ghost aria-label="dropdown">
+                Right
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" hideCloseButton>
+              <SheetTitle asChild>
+                <H4 h4>Sheet Title</H4>
+              </SheetTitle>
+              <SheetDescription>Sheet Description</SheetDescription>
+            </SheetContent>
+          </Sheet>
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button auto ghost aria-label="dropdown">
+                Bottom
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="bottom" hideCloseButton>
+              <SheetTitle asChild>
+                <H4 h4>Sheet Title</H4>
+              </SheetTitle>
+              <SheetDescription>Sheet Description</SheetDescription>
+            </SheetContent>
+          </Sheet>
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button auto ghost aria-label="dropdown">
+                Left
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" hideCloseButton>
+              <SheetTitle asChild>
+                <H4 h4>Sheet Title</H4>
+              </SheetTitle>
+              <SheetDescription>Sheet Description</SheetDescription>
+            </SheetContent>
+          </Sheet>
+        </Flex>
       </Container>
     </motion.main>
   );
