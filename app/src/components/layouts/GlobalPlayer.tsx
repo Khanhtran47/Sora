@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect, useRef, useMemo } from 'react';
@@ -8,6 +9,7 @@ import Artplayer from 'artplayer';
 import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
 import Hls from 'hls.js';
 import { isDesktop, isMobile } from 'react-device-detect';
+// @ts-ignore
 import artplayerPluginControl from 'artplayer-plugin-control';
 
 import usePlayerState from '~/store/player/usePlayerState';
@@ -142,6 +144,7 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                 container: '.artplayer-app',
                 autoplay: true,
                 url: playerSettings?.url,
+                subtitle: playerSettings?.subtitle,
                 layers: [
                   {
                     html: '',
@@ -208,6 +211,10 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                 art.on('ready', () => {
                   setArtplayer(art);
                   console.log(art);
+                  art.subtitle.style({
+                    color: '#fe9200',
+                    fontSize: `${art.height * 0.05}px`,
+                  });
                   art.controls.add({
                     position: 'top',
                     name: 'test',
@@ -236,6 +243,9 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                 borderTopRightRadius: isMini ? '$sm' : 0,
                 overflow: 'hidden',
                 '& div': {
+                  '&.art-video-player': {
+                    fontFamily: 'Inter !important',
+                  },
                   '&.custom-loader': {
                     width: '48px',
                     height: '48px',
@@ -300,6 +310,9 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                   },
                   '&.art-state': {
                     display: isDesktop && 'none !important',
+                  },
+                  '&.art-subtitle': {
+                    bottom: isMini && '7px !important',
                   },
                 },
                 '&:hover': {
@@ -402,7 +415,12 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
             <Flex direction="row" align="center" justify="between">
               <Flex direction="row" align="center" justify="center" className="space-x-1">
                 <Tooltip content="Expand">
-                  <Button auto light onClick={() => navigate(routePlayer)} icon={<Expand />} />
+                  <Button
+                    auto
+                    light
+                    onClick={() => navigate(routePlayer)}
+                    icon={<Expand filled />}
+                  />
                 </Tooltip>
                 <Tooltip content="Close">
                   <Button auto light onClick={() => setShouldShowPlayer(false)} icon={<Close />} />

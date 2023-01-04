@@ -30,9 +30,14 @@ export const handle = {
   playerSettings: {
     isMini: false,
     shouldShowPlayer: true,
-    url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+    url: 'https://artplayer.org/assets/sample/video.mp4',
     routePlayer: '/test/player',
     title: 'Test Player',
+    subtitle: {
+      url: 'https://artplayer.org/assets/sample/subtitle.srt',
+      type: 'srt',
+      encoding: 'utf-8',
+    },
   },
 };
 

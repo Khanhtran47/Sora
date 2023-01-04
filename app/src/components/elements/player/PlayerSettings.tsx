@@ -2,10 +2,12 @@
 /* eslint-disable no-nested-ternary */
 import { useMemo, useState } from 'react';
 import { Spacer, Popover, Button, Divider } from '@nextui-org/react';
+import { isMobileOnly } from 'react-device-detect';
 
 import { H6 } from '~/src/components/styles/Text.styles';
 import ResizablePanel from '~/src/components/elements/shared/ResizablePanel';
 import Flex from '~/src/components/styles/Flex.styles';
+import { Sheet, SheetTrigger, SheetContent } from '~/src/components/elements/shared/Sheet';
 
 import Settings from '~/src/assets/icons/SettingsIcon.js';
 import Arrow from '~/src/assets/icons/ArrowIcon.js';
@@ -54,7 +56,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
         {
           id: 'video-flip',
           title: 'Video Flip',
-          description: 'Flip the video horizontally or vertically',
+          description: 'Flip the video horizontal or vertical',
           showIcon: true,
           icon: <Flip />,
           action: () => setDropdownLevelKey('video-flip'),
@@ -243,30 +245,30 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           isCurrent: currentVideoFlip === 'Normal',
         },
         {
-          id: 'flip-horizontally',
-          title: 'Flip Horizontally',
+          id: 'flip-horizontal',
+          title: 'Flip Horizontal',
           showIcon: false,
           action: () => {
             if (artplayer) {
-              artplayer.flip = 'horizontally';
-              setCurrentVideoFlip('Horizontally');
+              artplayer.flip = 'horizontal';
+              setCurrentVideoFlip('Horizontal');
               setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentVideoFlip === 'Horizontally',
+          isCurrent: currentVideoFlip === 'Horizontal',
         },
         {
-          id: 'flip-vertically',
-          title: 'Flip Vertically',
+          id: 'flip-vertical',
+          title: 'Flip Vertical',
           showIcon: false,
           action: () => {
             if (artplayer) {
-              artplayer.flip = 'vertically';
-              setCurrentVideoFlip('Vertically');
+              artplayer.flip = 'vertical';
+              setCurrentVideoFlip('Vertical');
               setDropdownLevelKey('general');
             }
           },
-          isCurrent: currentVideoFlip === 'Vertically',
+          isCurrent: currentVideoFlip === 'Vertical',
         },
       ],
     },
@@ -428,6 +430,127 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [dropdownLevelKey],
   );
+  if (isMobileOnly) {
+    return (
+      <Sheet>
+        <SheetTrigger asChild>
+          <Button auto light aria-label="dropdown" icon={<Settings filled />} />
+        </SheetTrigger>
+        <SheetContent
+          side="bottom"
+          hideCloseButton
+          // portals overlay and content parts into the player when fullscreen is enabled
+          container={artplayer?.fullscreen === true ? artplayer?.template?.$player : document.body}
+        >
+          <ResizablePanel>
+            {currentDropdownLevel ? (
+              <Flex
+                direction="column"
+                align="start"
+                justify="start"
+                className="space-y-2 px-2 py-2 w-full"
+              >
+                {currentDropdownLevel?.showBackButton || currentDropdownLevel?.showTitle ? (
+                  <>
+                    <Flex direction="row" align="center" justify="between">
+                      {currentDropdownLevel?.showBackButton ? (
+                        <Button
+                          auto
+                          light
+                          onClick={currentDropdownLevel?.backButtonAction}
+                          icon={<Arrow direction="left" />}
+                        />
+                      ) : null}
+                      {currentDropdownLevel?.showTitle ? (
+                        <H6 h6 css={{ margin: 0 }} weight="semibold">
+                          {currentDropdownLevel?.title}
+                        </H6>
+                      ) : null}
+                    </Flex>
+                    <Divider />
+                  </>
+                ) : null}
+                <Flex
+                  direction="column"
+                  align="start"
+                  justify="start"
+                  className="space-y-2 px-2 py-2 w-full"
+                >
+                  {currentDropdownLevel?.listItems.map((item) => (
+                    <Button
+                      key={item.id}
+                      auto
+                      light
+                      onClick={item.action}
+                      css={{
+                        p: 0,
+                        width: '100%',
+                        '& span': {
+                          '&.nextui-button-text': {
+                            display: 'block',
+                            width: '100%',
+                          },
+                        },
+                      }}
+                    >
+                      <Flex direction="row" align="center" justify="between" className="space-x-8">
+                        <Flex direction="row" align="center" className="space-x-2">
+                          {item?.showIcon ? (
+                            (
+                              item as {
+                                id: string;
+                                title: string;
+                                description: string;
+                                showIcon: boolean;
+                                icon: JSX.Element;
+                                action: () => void;
+                                currentValue: string;
+                              }
+                            )?.icon
+                          ) : (
+                              item as {
+                                id: string;
+                                title: string;
+                                showIcon: boolean;
+                                action: () => void;
+                                isCurrent: boolean;
+                              }
+                            )?.isCurrent ? (
+                            <Tick />
+                          ) : (
+                            <Spacer x={1.15} />
+                          )}
+                          <H6 h6 css={{ margin: 0 }} weight="semibold">
+                            {item.title}
+                          </H6>
+                        </Flex>
+                        <Flex direction="row" align="center" className="space-x-2">
+                          <H6 h6 css={{ margin: 0, color: '$accents9' }} weight="thin">
+                            {(
+                              item as {
+                                id: string;
+                                title: string;
+                                description: string;
+                                showIcon: boolean;
+                                icon: JSX.Element;
+                                action: () => void;
+                                currentValue: string;
+                              }
+                            )?.currentValue || ''}
+                          </H6>
+                          {item.showIcon ? <Arrow direction="right" /> : null}
+                        </Flex>
+                      </Flex>
+                    </Button>
+                  ))}
+                </Flex>
+              </Flex>
+            ) : null}
+          </ResizablePanel>
+        </SheetContent>
+      </Sheet>
+    );
+  }
   return (
     <Popover
       shouldFlip

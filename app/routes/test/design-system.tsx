@@ -35,7 +35,7 @@ export const meta: MetaFunction = () => ({
 
 export const handle = {
   breadcrumb: () => (
-    <NavLink to="/design-system" aria-label="Design system Page">
+    <NavLink to="/test/design-system" aria-label="Design system Page">
       {({ isActive }) => (
         <Badge
           color="primary"
@@ -582,10 +582,116 @@ const DesignSystem = () => {
               </Button>
             </SheetTrigger>
             <SheetContent side="bottom" hideCloseButton>
-              <SheetTitle asChild>
-                <H4 h4>Sheet Title</H4>
-              </SheetTitle>
-              <SheetDescription>Sheet Description</SheetDescription>
+              <ResizablePanel>
+                {currentDropdownLevel ? (
+                  <Flex
+                    direction="column"
+                    align="start"
+                    justify="start"
+                    className="space-y-2 px-2 py-2"
+                  >
+                    {currentDropdownLevel?.showBackButton || currentDropdownLevel?.showTitle ? (
+                      <>
+                        <Flex direction="row" align="center" justify="between">
+                          {currentDropdownLevel?.showBackButton ? (
+                            <Button
+                              auto
+                              light
+                              onClick={currentDropdownLevel?.backButtonAction}
+                              icon={<Arrow direction="left" />}
+                            />
+                          ) : null}
+                          {currentDropdownLevel?.showTitle ? (
+                            <H6 h6 css={{ margin: 0 }} weight="semibold">
+                              {currentDropdownLevel?.title}
+                            </H6>
+                          ) : null}
+                        </Flex>
+                        <Divider />
+                      </>
+                    ) : null}
+                    <Flex
+                      direction="column"
+                      align="start"
+                      justify="start"
+                      className="space-y-2 px-2 py-2"
+                    >
+                      {currentDropdownLevel?.listItems.map((item) => (
+                        <Button
+                          key={item.id}
+                          auto
+                          light
+                          onClick={item.action}
+                          css={{
+                            p: 0,
+                            width: '100%',
+                            '& span': {
+                              '&.nextui-button-text': {
+                                display: 'block',
+                                width: '100%',
+                              },
+                            },
+                          }}
+                        >
+                          <Flex
+                            direction="row"
+                            align="center"
+                            justify="between"
+                            className="space-x-8"
+                          >
+                            <Flex direction="row" align="center" className="space-x-2">
+                              {item?.showIcon ? (
+                                (
+                                  item as {
+                                    id: string;
+                                    title: string;
+                                    description: string;
+                                    showIcon: boolean;
+                                    icon: JSX.Element;
+                                    action: () => void;
+                                    currentValue: string;
+                                  }
+                                )?.icon
+                              ) : (
+                                  item as {
+                                    id: string;
+                                    title: string;
+                                    showIcon: boolean;
+                                    action: () => void;
+                                    isCurrent: boolean;
+                                  }
+                                )?.isCurrent ? (
+                                <Tick />
+                              ) : (
+                                <Spacer x={1.15} />
+                              )}
+                              <H6 h6 css={{ margin: 0 }} weight="semibold">
+                                {item.title}
+                              </H6>
+                            </Flex>
+                            <Flex direction="row" align="center" className="space-x-2">
+                              <H6 h6 css={{ margin: 0, color: '$accents9' }} weight="thin">
+                                {(
+                                  item as {
+                                    id: string;
+                                    title: string;
+                                    description: string;
+                                    showIcon: boolean;
+                                    icon: JSX.Element;
+                                    action: () => void;
+                                    currentValue: string;
+                                  }
+                                )?.currentValue || ''}
+                              </H6>
+                              {item.showIcon ? <Arrow direction="right" /> : null}
+                            </Flex>
+                          </Flex>
+                        </Button>
+                      ))}
+                    </Flex>
+                  </Flex>
+                ) : null}
+              </ResizablePanel>
             </SheetContent>
           </Sheet>
           <Sheet>

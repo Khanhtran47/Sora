@@ -57,7 +57,7 @@ const StyledContent = styled(DialogPrimitive.Content, {
   bottom: 0,
   width: 250,
   zIndex: 9999,
-  padding: '$9',
+  padding: '$2',
   outline: 'none',
 
   // Among other things, prevents text alignment inconsistencies when dialog can't be centered in the viewport evenly.
@@ -81,7 +81,8 @@ const StyledContent = styled(DialogPrimitive.Content, {
       top: {
         $$transformValue: 'translate3d(0,-100%,0)',
         width: '100%',
-        height: 300,
+        height: 'auto',
+        minHeight: 100,
         bottom: 'auto',
         borderBottomLeftRadius: '$lg',
         borderBottomRightRadius: '$lg',
@@ -97,7 +98,8 @@ const StyledContent = styled(DialogPrimitive.Content, {
       bottom: {
         $$transformValue: 'translate3d(0,100%,0)',
         width: '100%',
-        height: 300,
+        height: 'auto',
+        minHeight: 100,
         bottom: 0,
         top: 'auto',
         borderTopLeftRadius: '$lg',
@@ -121,18 +123,18 @@ const StyledContent = styled(DialogPrimitive.Content, {
 
 const StyledCloseButton = styled(DialogPrimitive.Close, {
   position: 'absolute',
-  top: '$7',
-  right: '$7',
+  top: '$2',
+  right: '$2',
 });
 
 type SheetContentVariants = VariantProps<typeof StyledContent>;
 type DialogContentPrimitiveProps = React.ComponentProps<typeof DialogPrimitive.Content>;
 type SheetContentProps = DialogContentPrimitiveProps &
-  SheetContentVariants & { css?: CSS; hideCloseButton?: boolean };
+  SheetContentVariants & { css?: CSS; hideCloseButton?: boolean; container?: HTMLElement };
 
 const SheetContent = React.forwardRef<React.ElementRef<typeof StyledContent>, SheetContentProps>(
-  ({ children, hideCloseButton, ...props }, forwardedRef) => (
-    <DialogPrimitive.Portal>
+  ({ children, hideCloseButton, container = document.body, ...props }, forwardedRef) => (
+    <DialogPrimitive.Portal container={container}>
       <StyledOverlay />
       <StyledContent {...props} ref={forwardedRef}>
         {children}
