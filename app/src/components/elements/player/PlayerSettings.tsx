@@ -441,6 +441,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           hideCloseButton
           // portals overlay and content parts into the player when fullscreen is enabled
           container={artplayer?.fullscreen === true ? artplayer?.template?.$player : document.body}
+          css={{ padding: '$2 !important' }}
         >
           <ResizablePanel>
             {currentDropdownLevel ? (

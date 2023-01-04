@@ -1,8 +1,10 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import useMeasure from '~/hooks/useMeasure';
+import useScreen from '~/hooks/useScreen';
 
 import {
   ScrollArea,
@@ -31,12 +33,22 @@ const ignoreCircularReferences = () => {
 
 const ResizablePanel = ({ children }: { children: React.ReactNode }) => {
   const [ref, { height, width }] = useMeasure<HTMLDivElement>();
+  const screen = useScreen();
+  const panelHeight = useMemo(() => {
+    if (height && screen?.height) {
+      if (height > 400) {
+        return screen?.height > 400 ? 400 : screen.height - 24;
+      }
+      return height > screen?.height ? screen.height - 24 : height;
+    }
+    return 'auto';
+  }, [screen?.height, height]);
 
   return (
     <motion.div
       className="relative overflow-hidden"
       animate={{
-        height: height ? (height > 400 ? 400 : height) : 'auto',
+        height: panelHeight,
         width: width || 'auto',
       }}
       transition={{ duration: 0.25 }}
@@ -53,7 +65,7 @@ const ResizablePanel = ({ children }: { children: React.ReactNode }) => {
           <ScrollArea
             type="auto"
             css={{
-              height: height ? (height > 400 ? 400 : height) : 'auto',
+              height: panelHeight,
               width: width || 'auto',
             }}
           >
