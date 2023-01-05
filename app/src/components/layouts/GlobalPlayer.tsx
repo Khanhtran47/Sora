@@ -17,6 +17,7 @@ import tinycolor from 'tinycolor2';
 import usePlayerState from '~/store/player/usePlayerState';
 
 import useLocalStorage from '~/hooks/useLocalStorage';
+import useMeasure from '~/hooks/useMeasure';
 
 import ArtPlayer from '~/src/components/elements/player/ArtPlayer';
 import PlayerSettings from '~/src/components/elements/player/PlayerSettings';
@@ -37,6 +38,7 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
   const { matches } = props;
   const location = useLocation();
   const navigate = useNavigate();
+  const [ref, { height }] = useMeasure<HTMLDivElement>();
   const constraintsRef = useRef<HTMLDivElement>(null);
   const [artplayer, setArtplayer] = useState<Artplayer | null>(null);
   const [isPlayerPlaying, setIsPlayerPlaying] = useState(false);
@@ -163,9 +165,7 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
   );
   const playerSettings = matchesFiltered?.handle?.playerSettings;
   const shouldPlayInBackground = useMemo(
-    () =>
-      !(location?.pathname.includes('player') || location?.pathname.includes('watch')) &&
-      !isMobileOnly,
+    () => !(location?.pathname.includes('player') || location?.pathname.includes('watch')),
     [location?.pathname],
   );
   const x = useMotionValue(0);
@@ -209,12 +209,15 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
   useEffect(() => {
     if (playerSettings?.shouldShowPlayer) {
       if (playerSettings?.shouldShowPlayer === true) setShouldShowPlayer(true);
-      else if (playerSettings?.shouldShowPlayer === false && shouldPlayInBackground)
+      else if (
+        playerSettings?.shouldShowPlayer === false &&
+        shouldPlayInBackground &&
+        !isMobileOnly
+      )
         setShouldShowPlayer(true);
       else setShouldShowPlayer(false);
-    } else {
-      setShouldShowPlayer(false);
-    }
+    } else if (shouldPlayInBackground && !isMobileOnly) setShouldShowPlayer(true);
+    else setShouldShowPlayer(false);
     if (playerSettings?.routePlayer) {
       setRoutePlayer(playerSettings?.routePlayer);
     }
@@ -236,6 +239,7 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
         {shouldShowPlayer ? (
           <motion.div
             layout
+            ref={ref}
             drag={shouldPlayInBackground}
             dragConstraints={constraintsRef}
             dragElastic={0.1}
@@ -329,42 +333,6 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                 art.on('ready', () => {
                   setArtplayer(art);
                   console.log(art);
-                  art.subtitle.style({
-                    color:
-                      currentSubtitleFontColor === 'White'
-                        ? '#fff'
-                        : currentSubtitleFontColor === 'Blue'
-                        ? '#0072F5'
-                        : currentSubtitleFontColor === 'Purple'
-                        ? '#7828C8'
-                        : currentSubtitleFontColor === 'Green'
-                        ? '#17C964'
-                        : currentSubtitleFontColor === 'Yellow'
-                        ? '#F5A524'
-                        : currentSubtitleFontColor === 'Red'
-                        ? '#F31260'
-                        : currentSubtitleFontColor === 'Cyan'
-                        ? '#06B7DB'
-                        : currentSubtitleFontColor === 'Pink'
-                        ? '#FF4ECD'
-                        : currentSubtitleFontColor === 'White'
-                        ? '#7828C8'
-                        : '#000',
-                    fontSize:
-                      currentSubtitleFontSize === '50%'
-                        ? `${art.height * 0.05 * 0.5}px`
-                        : currentSubtitleFontSize === '75%'
-                        ? `${art.height * 0.05 * 0.75}px`
-                        : currentSubtitleFontSize === '100%'
-                        ? `${art.height * 0.05}px`
-                        : currentSubtitleFontSize === '150%'
-                        ? `${art.height * 0.05 * 1.5}px`
-                        : currentSubtitleFontSize === '200%'
-                        ? `${art.height * 0.05 * 2}px`
-                        : currentSubtitleFontSize === '300%'
-                        ? `${art.height * 0.05 * 3}px`
-                        : `${art.height * 0.05 * 4}px`,
-                  });
                   art.controls.add({
                     position: 'top',
                     name: 'test',
@@ -468,10 +436,44 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                     justifyContent: 'center',
                     flexDirection: 'column',
                     backgroundColor: subtitleWindowColor,
+                    color:
+                      currentSubtitleFontColor === 'White'
+                        ? '#fff'
+                        : currentSubtitleFontColor === 'Blue'
+                        ? '#0072F5'
+                        : currentSubtitleFontColor === 'Purple'
+                        ? '#7828C8'
+                        : currentSubtitleFontColor === 'Green'
+                        ? '#17C964'
+                        : currentSubtitleFontColor === 'Yellow'
+                        ? '#F5A524'
+                        : currentSubtitleFontColor === 'Red'
+                        ? '#F31260'
+                        : currentSubtitleFontColor === 'Cyan'
+                        ? '#06B7DB'
+                        : currentSubtitleFontColor === 'Pink'
+                        ? '#FF4ECD'
+                        : currentSubtitleFontColor === 'White'
+                        ? '#7828C8'
+                        : '#000',
+                    fontSize:
+                      currentSubtitleFontSize === '50%'
+                        ? `${height * 0.05 * 0.5}px`
+                        : currentSubtitleFontSize === '75%'
+                        ? `${height * 0.05 * 0.75}px`
+                        : currentSubtitleFontSize === '100%'
+                        ? `${height * 0.05}px`
+                        : currentSubtitleFontSize === '150%'
+                        ? `${height * 0.05 * 1.5}px`
+                        : currentSubtitleFontSize === '200%'
+                        ? `${height * 0.05 * 2}px`
+                        : currentSubtitleFontSize === '300%'
+                        ? `${height * 0.05 * 3}px`
+                        : `${height * 0.05 * 4}px`,
                     '& p': {
                       p: '$4',
                       backgroundColor: subtitleBackgroundColor,
-                      m: '5px 0',
+                      m: '$2 0',
                     },
                   },
                 },
