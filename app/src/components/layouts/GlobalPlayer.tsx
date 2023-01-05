@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable react-hooks/exhaustive-deps */
@@ -8,11 +9,14 @@ import { Container, Button, Tooltip, keyframes } from '@nextui-org/react';
 import Artplayer from 'artplayer';
 import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
 import Hls from 'hls.js';
-import { isDesktop, isMobile } from 'react-device-detect';
+import { isDesktop, isMobile, isMobileOnly } from 'react-device-detect';
 // @ts-ignore
 import artplayerPluginControl from 'artplayer-plugin-control';
+import tinycolor from 'tinycolor2';
 
 import usePlayerState from '~/store/player/usePlayerState';
+
+import useLocalStorage from '~/hooks/useLocalStorage';
 
 import ArtPlayer from '~/src/components/elements/player/ArtPlayer';
 import PlayerSettings from '~/src/components/elements/player/PlayerSettings';
@@ -36,6 +40,7 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
   const constraintsRef = useRef<HTMLDivElement>(null);
   const [artplayer, setArtplayer] = useState<Artplayer | null>(null);
   const [isPlayerPlaying, setIsPlayerPlaying] = useState(false);
+
   const {
     isMini,
     shouldShowPlayer,
@@ -46,12 +51,121 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
     titlePlayer,
     setTitlePlayer,
   } = usePlayerState((state) => state);
+
+  const [currentSubtitleFontColor] = useLocalStorage('sora-settings_subtitle_font-color', 'White');
+  const [currentSubtitleFontSize] = useLocalStorage('sora-settings_subtitle_font-size', '100%');
+  const [currentSubtitleBackgroundColor] = useLocalStorage(
+    'sora-settings_subtitle_background-color',
+    'Black',
+  );
+  const [currentSubtitleBackgroundOpacity] = useLocalStorage(
+    'sora-settings_subtitle_background-opacity',
+    '0%',
+  );
+  const [currentSubtitleWindowColor] = useLocalStorage(
+    'sora-settings_subtitle_window-color',
+    'Black',
+  );
+  const [currentSubtitleWindowOpacity] = useLocalStorage(
+    'sora-settings_subtitle_window-opacity',
+    '0%',
+  );
+  let backgroundColor;
+  let windowColor;
+
+  const subtitleBackgroundColor = useMemo(() => {
+    switch (currentSubtitleBackgroundColor) {
+      case 'Black':
+        backgroundColor = tinycolor('#000000');
+        backgroundColor.setAlpha(Number(currentSubtitleBackgroundOpacity.replace(/%/g, '')) / 100);
+        return backgroundColor.toHslString();
+      case 'Blue':
+        backgroundColor = tinycolor('#0072F5');
+        backgroundColor.setAlpha(Number(currentSubtitleBackgroundOpacity.replace(/%/g, '')) / 100);
+        return backgroundColor.toHslString();
+      case 'Purple':
+        backgroundColor = tinycolor('#7828C8');
+        backgroundColor.setAlpha(Number(currentSubtitleBackgroundOpacity.replace(/%/g, '')) / 100);
+        return backgroundColor.toHslString();
+      case 'Green':
+        backgroundColor = tinycolor('#17C964');
+        backgroundColor.setAlpha(Number(currentSubtitleBackgroundOpacity.replace(/%/g, '')) / 100);
+        return backgroundColor.toHslString();
+      case 'Yellow':
+        backgroundColor = tinycolor('#F5A524');
+        backgroundColor.setAlpha(Number(currentSubtitleBackgroundOpacity.replace(/%/g, '')) / 100);
+        return backgroundColor.toHslString();
+      case 'Red':
+        backgroundColor = tinycolor('#F31260');
+        backgroundColor.setAlpha(Number(currentSubtitleBackgroundOpacity.replace(/%/g, '')) / 100);
+        return backgroundColor.toHslString();
+      case 'Cyan':
+        backgroundColor = tinycolor('#06B7DB');
+        backgroundColor.setAlpha(Number(currentSubtitleBackgroundOpacity.replace(/%/g, '')) / 100);
+        return backgroundColor.toHslString();
+      case 'Pink':
+        backgroundColor = tinycolor('#FF4ECD');
+        backgroundColor.setAlpha(Number(currentSubtitleBackgroundOpacity.replace(/%/g, '')) / 100);
+        return backgroundColor.toHslString();
+      case 'White':
+        backgroundColor = tinycolor('#FFFFFF');
+        backgroundColor.setAlpha(Number(currentSubtitleBackgroundOpacity.replace(/%/g, '')) / 100);
+        return backgroundColor.toHslString();
+      default:
+        break;
+    }
+  }, [currentSubtitleBackgroundColor, currentSubtitleBackgroundOpacity]);
+  const subtitleWindowColor = useMemo(() => {
+    switch (currentSubtitleWindowColor) {
+      case 'Black':
+        windowColor = tinycolor('#000000');
+        windowColor.setAlpha(Number(currentSubtitleWindowOpacity.replace(/%/g, '')) / 100);
+        return windowColor.toHslString();
+      case 'Blue':
+        windowColor = tinycolor('#0072F5');
+        windowColor.setAlpha(Number(currentSubtitleWindowOpacity.replace(/%/g, '')) / 100);
+        return windowColor.toHslString();
+      case 'Purple':
+        windowColor = tinycolor('#7828C8');
+        windowColor.setAlpha(Number(currentSubtitleWindowOpacity.replace(/%/g, '')) / 100);
+        return windowColor.toHslString();
+      case 'Green':
+        windowColor = tinycolor('#17C964');
+        windowColor.setAlpha(Number(currentSubtitleWindowOpacity.replace(/%/g, '')) / 100);
+        return windowColor.toHslString();
+      case 'Yellow':
+        windowColor = tinycolor('#F5A524');
+        windowColor.setAlpha(Number(currentSubtitleWindowOpacity.replace(/%/g, '')) / 100);
+        return windowColor.toHslString();
+      case 'Red':
+        windowColor = tinycolor('#F31260');
+        windowColor.setAlpha(Number(currentSubtitleWindowOpacity.replace(/%/g, '')) / 100);
+        return windowColor.toHslString();
+      case 'Cyan':
+        windowColor = tinycolor('#06B7DB');
+        windowColor.setAlpha(Number(currentSubtitleWindowOpacity.replace(/%/g, '')) / 100);
+        return windowColor.toHslString();
+      case 'Pink':
+        windowColor = tinycolor('#FF4ECD');
+        windowColor.setAlpha(Number(currentSubtitleWindowOpacity.replace(/%/g, '')) / 100);
+        return windowColor.toHslString();
+      case 'White':
+        windowColor = tinycolor('#FFFFFF');
+        windowColor.setAlpha(Number(currentSubtitleWindowOpacity.replace(/%/g, '')) / 100);
+        return windowColor.toHslString();
+      default:
+        break;
+    }
+  }, [currentSubtitleWindowColor, currentSubtitleWindowOpacity]);
+
   const matchesFiltered = matches.find(
     (match) => match?.pathname.includes('player') || match?.pathname.includes('watch'),
   );
   const playerSettings = matchesFiltered?.handle?.playerSettings;
   const shouldPlayInBackground = useMemo(
-    () => !(location?.pathname.includes('player') || location?.pathname.includes('watch')),
+    () =>
+      !(location?.pathname.includes('player') || location?.pathname.includes('watch')) &&
+      !isMobileOnly,
     [location?.pathname],
   );
   const x = useMotionValue(0);
@@ -98,6 +212,8 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
       else if (playerSettings?.shouldShowPlayer === false && shouldPlayInBackground)
         setShouldShowPlayer(true);
       else setShouldShowPlayer(false);
+    } else {
+      setShouldShowPlayer(false);
     }
     if (playerSettings?.routePlayer) {
       setRoutePlayer(playerSettings?.routePlayer);
@@ -125,6 +241,8 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
             dragElastic={0.1}
             dragMomentum={false}
             dragTransition={{ bounceStiffness: 600, bounceDamping: 10 }}
+            initial={{ opacity: 0, x: 0 }}
+            animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 250 }}
             transition={{ duration: 0.3 }}
             className={shouldPlayInBackground ? 'fixed bottom-16 right-4 z-[9999]' : ''}
@@ -212,8 +330,40 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                   setArtplayer(art);
                   console.log(art);
                   art.subtitle.style({
-                    color: '#fe9200',
-                    fontSize: `${art.height * 0.05}px`,
+                    color:
+                      currentSubtitleFontColor === 'White'
+                        ? '#fff'
+                        : currentSubtitleFontColor === 'Blue'
+                        ? '#0072F5'
+                        : currentSubtitleFontColor === 'Purple'
+                        ? '#7828C8'
+                        : currentSubtitleFontColor === 'Green'
+                        ? '#17C964'
+                        : currentSubtitleFontColor === 'Yellow'
+                        ? '#F5A524'
+                        : currentSubtitleFontColor === 'Red'
+                        ? '#F31260'
+                        : currentSubtitleFontColor === 'Cyan'
+                        ? '#06B7DB'
+                        : currentSubtitleFontColor === 'Pink'
+                        ? '#FF4ECD'
+                        : currentSubtitleFontColor === 'White'
+                        ? '#7828C8'
+                        : '#000',
+                    fontSize:
+                      currentSubtitleFontSize === '50%'
+                        ? `${art.height * 0.05 * 0.5}px`
+                        : currentSubtitleFontSize === '75%'
+                        ? `${art.height * 0.05 * 0.75}px`
+                        : currentSubtitleFontSize === '100%'
+                        ? `${art.height * 0.05}px`
+                        : currentSubtitleFontSize === '150%'
+                        ? `${art.height * 0.05 * 1.5}px`
+                        : currentSubtitleFontSize === '200%'
+                        ? `${art.height * 0.05 * 2}px`
+                        : currentSubtitleFontSize === '300%'
+                        ? `${art.height * 0.05 * 3}px`
+                        : `${art.height * 0.05 * 4}px`,
                   });
                   art.controls.add({
                     position: 'top',
@@ -313,6 +463,16 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                   },
                   '&.art-subtitle': {
                     bottom: isMini && '7px !important',
+                    display: 'flex !important',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexDirection: 'column',
+                    backgroundColor: subtitleWindowColor,
+                    '& p': {
+                      p: '$4',
+                      backgroundColor: subtitleBackgroundColor,
+                      m: '5px 0',
+                    },
                   },
                 },
                 '&:hover': {
