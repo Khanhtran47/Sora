@@ -1,3 +1,4 @@
+import { json } from '@remix-run/node';
 import type { MetaFunction } from '@remix-run/node';
 import { NavLink } from '@remix-run/react';
 import { Badge } from '@nextui-org/react';
@@ -8,6 +9,53 @@ export const meta: MetaFunction = () => ({
   'og:title': 'Player',
   'og:description': 'This page for testing the player',
 });
+
+export const loader = async () => {
+  return json({
+    provider: 'test',
+    idProvider: 'test-player',
+    subtitles: [
+      {
+        url: 'https://artplayer.org/assets/sample/subtitle.srt',
+        lang: 'ch-jp',
+      },
+      {
+        url: 'https://artplayer.org/assets/sample/subtitle.cn.srt',
+        lang: 'ch',
+      },
+      {
+        url: 'https://artplayer.org/assets/sample/subtitle.jp.srt',
+        lang: 'jp',
+      },
+    ],
+    sources: [
+      {
+        quality: 360,
+        url: 'https://artplayer.org/assets/sample/video.mp4',
+      },
+      {
+        quality: 480,
+        url: 'https://artplayer.org/assets/sample/video.mp4',
+      },
+      {
+        quality: 720,
+        url: 'https://artplayer.org/assets/sample/video.mp4',
+      },
+      {
+        quality: 1080,
+        url: 'https://artplayer.org/assets/sample/video.mp4',
+      },
+    ],
+    episodeInfo: {
+      id: 'test-player-episode',
+      title: 'Your name',
+      description: "It's a test episode",
+      number: 1,
+      image: 'https://artplayer.org/assets/sample/poster.jpg',
+    },
+    hasNextEpisode: true,
+  });
+};
 
 export const handle = {
   breadcrumb: () => (

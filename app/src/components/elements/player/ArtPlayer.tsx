@@ -6,7 +6,7 @@ import type { CSSProperties } from 'react';
 import { Button, Tooltip, Spacer, styled } from '@nextui-org/react';
 import { useNavigate, useFetcher } from '@remix-run/react';
 import Artplayer from 'artplayer';
-import { isMobile, isTablet, isDesktop } from 'react-device-detect';
+import { isMobile } from 'react-device-detect';
 
 import usePlayerState from '~/store/player/usePlayerState';
 
@@ -100,39 +100,7 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
   useEffect(() => {
     const art = new Artplayer({
       ...option,
-      autoSize: false,
-      loop: !autoPlay,
-      mutex: true,
-      setting: false,
-      flip: true,
-      playbackRate: true,
-      aspectRatio: true,
-      fullscreen: true,
-      fullscreenWeb: false,
-      airplay: true,
-      pip: isDesktop,
-      autoplay: false,
-      screenshot: isDesktop,
-      subtitleOffset: true,
-      fastForward: isMobile || isTablet,
-      lock: isMobile || isTablet,
-      miniProgressBar: true,
-      autoOrientation: isMobile || isTablet,
-      whitelist: ['*'],
-      theme: 'var(--nextui-colors-primary)',
       container: artRef.current,
-      autoMini: false,
-      hotkey: true,
-      moreVideoAttr: isDesktop
-        ? {
-            crossOrigin: 'anonymous',
-          }
-        : {
-            'x5-video-player-type': 'h5',
-            'x5-video-player-fullscreen': false,
-            'x5-video-orientation': 'portraint',
-            preload: 'metadata',
-          },
       // controls: [
       //   {
       //     position: 'right',

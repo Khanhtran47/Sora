@@ -13,6 +13,7 @@ import { isDesktop, isMobile, isMobileOnly } from 'react-device-detect';
 // @ts-ignore
 import artplayerPluginControl from 'artplayer-plugin-control';
 import tinycolor from 'tinycolor2';
+import { useRouteData } from 'remix-utils';
 
 import usePlayerState from '~/store/player/usePlayerState';
 
@@ -29,6 +30,7 @@ import Close from '~/src/assets/icons/CloseIcon.js';
 import Expand from '~/src/assets/icons/ExpandIcon.js';
 import Play from '~/src/assets/icons/PlayIcon.js';
 import Pause from '~/src/assets/icons/PauseIcon.js';
+import { IMovieSource, IMovieSubtitle } from '~/services/consumet/flixhq/flixhq.types';
 
 interface IGlobalPlayerProps {
   matches: RouteMatch[];
@@ -38,6 +40,99 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
   const { matches } = props;
   const location = useLocation();
   const navigate = useNavigate();
+
+  const matchesFiltered = useMemo(
+    () =>
+      matches.find(
+        (match) => match?.pathname.includes('player') || match?.pathname.includes('watch'),
+      ),
+    [matches],
+  );
+  const playerData:
+    | {
+        provider?: string;
+        idProvider?: number | string;
+        sources: IMovieSource[] | undefined;
+        subtitles?: IMovieSubtitle[] | undefined;
+        hasNextEpisode?: boolean;
+      }
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    | undefined = matchesFiltered ? useRouteData(matchesFiltered.id) : undefined;
+  const playerSettings = matchesFiltered?.handle?.playerSettings;
+  const { provider, idProvider, hasNextEpisode, sources, subtitles } = playerData || {};
+  const shouldPlayInBackground = useMemo(
+    () => !(location?.pathname.includes('player') || location?.pathname.includes('watch')),
+    [location?.pathname],
+  );
+  const qualitySelector = useMemo<
+    | {
+        default?: boolean | undefined;
+        html: string;
+        url: string;
+        isM3U8: boolean;
+        isDASH: boolean;
+      }[]
+    | undefined
+  >(
+    () =>
+      provider === 'Loklok' || provider === 'Gogo' || provider === 'Zoro'
+        ? sources?.map(({ quality, url }: { quality: number | string; url: string }) => ({
+            html: quality.toString(),
+            url: url.toString().startsWith('http:')
+              ? `https://cors.proxy.consumet.org/${url.toString()}`
+              : url.toString(),
+            isM3U8: true,
+            isDASH: false,
+            ...(provider === 'Loklok' && Number(quality) === 720 && { default: true }),
+            ...((provider === 'Gogo' || provider === 'Zoro') &&
+              quality === 'default' && { default: true }),
+          }))
+        : provider === 'Bilibili'
+        ? sources?.map(({ quality, url }: { quality: number | string; url: string }) => ({
+            html: quality.toString(),
+            url: url.toString(),
+            isM3U8: false,
+            isDASH: true,
+            ...(quality === 'auto' && { default: true }),
+          }))
+        : provider === 'test'
+        ? sources?.map(({ quality, url }: { quality: number | string; url: string }) => ({
+            html: quality.toString(),
+            url: url.toString(),
+            isM3U8: true,
+            isDASH: false,
+            ...(quality === 720 && { default: true }),
+          }))
+        : sources?.map(({ quality, url }: { quality: number | string; url: string }) => ({
+            html: quality.toString(),
+            url: url.toString(),
+            isM3U8: true,
+            isDASH: false,
+            ...(quality === 'default' && { default: true }),
+          })),
+    [provider, sources],
+  );
+
+  const subtitleSelector = useMemo<
+    | {
+        default?: boolean | undefined;
+        html: string;
+        url: string;
+      }[]
+    | undefined
+  >(
+    () =>
+      subtitles?.map(({ lang, url }: { lang: string; url: string }) => ({
+        html: lang.toString(),
+        url: url.toString(),
+        ...(provider === 'Loklok' && lang.includes('en') && { default: true }),
+        ...(provider === 'Bilibili' && lang.includes('en') && { default: true }),
+        ...(provider === 'KissKh' && lang === 'English' && { default: true }),
+        ...(provider === 'test' && lang === 'ch-jp' && { default: true }),
+      })),
+    [provider, subtitles],
+  );
+
   const [ref, { height }] = useMeasure<HTMLDivElement>();
   const constraintsRef = useRef<HTMLDivElement>(null);
   const [artplayer, setArtplayer] = useState<Artplayer | null>(null);
@@ -160,14 +255,6 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
     }
   }, [currentSubtitleWindowColor, currentSubtitleWindowOpacity]);
 
-  const matchesFiltered = matches.find(
-    (match) => match?.pathname.includes('player') || match?.pathname.includes('watch'),
-  );
-  const playerSettings = matchesFiltered?.handle?.playerSettings;
-  const shouldPlayInBackground = useMemo(
-    () => !(location?.pathname.includes('player') || location?.pathname.includes('watch')),
-    [location?.pathname],
-  );
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
@@ -236,7 +323,7 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
     <Container fluid css={{ margin: 0, padding: 0, width: isMini ? '20rem' : '100%' }}>
       <div className="fixed inset-0 pointer-events-none" ref={constraintsRef} />
       <AnimatePresence initial={false}>
-        {shouldShowPlayer ? (
+        {shouldShowPlayer && sources ? (
           <motion.div
             layout
             ref={ref}
@@ -263,10 +350,83 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
               autoPlay={false}
               hideBottomGroupButtons
               option={{
-                container: '.artplayer-app',
-                autoplay: true,
-                url: playerSettings?.url,
-                subtitle: playerSettings?.subtitle,
+                container: 'player',
+                autoSize: false,
+                loop: false,
+                mutex: true,
+                setting: false,
+                flip: true,
+                playbackRate: true,
+                aspectRatio: true,
+                fullscreen: true,
+                fullscreenWeb: false,
+                airplay: true,
+                pip: isDesktop,
+                autoplay: false,
+                screenshot: isDesktop,
+                subtitleOffset: true,
+                fastForward: isMobile,
+                lock: isMobile,
+                miniProgressBar: true,
+                autoOrientation: isMobile,
+                whitelist: ['*'],
+                theme: 'var(--nextui-colors-primary)',
+                autoMini: false,
+                hotkey: true,
+                moreVideoAttr: isDesktop
+                  ? {
+                      crossOrigin: 'anonymous',
+                    }
+                  : {
+                      'x5-video-player-type': 'h5',
+                      'x5-video-player-fullscreen': false,
+                      'x5-video-orientation': 'portraint',
+                      preload: 'metadata',
+                    },
+                url:
+                  provider === 'Loklok'
+                    ? sources?.find(
+                        (item: { quality: number | string; url: string }) =>
+                          Number(item.quality) === 720,
+                      )?.url || sources[0]?.url
+                    : provider === 'Gogo' || provider === 'Zoro'
+                    ? sources?.find(
+                        (item: { quality: number | string; url: string }) =>
+                          item.quality === 'default',
+                      )?.url || sources[0]?.url
+                    : provider === 'Bilibili' || provider === 'KissKh'
+                    ? sources[0]?.url
+                    : provider === 'test'
+                    ? sources?.find((source) => Number(source.quality) === 720)?.url
+                    : sources?.find(
+                        (item: { quality: number | string; url: string }) =>
+                          item.quality === 'default',
+                      )?.url || sources[0]?.url,
+                subtitle: {
+                  url:
+                    provider === 'Loklok'
+                      ? subtitles?.find((item: { lang: string; url: string }) =>
+                          item.lang.includes('English'),
+                        )?.url
+                      : provider === 'KissKh'
+                      ? subtitles?.find(
+                          (item: { lang: string; url: string; default?: boolean }) => item.default,
+                        )?.url || ''
+                      : provider === 'test'
+                      ? subtitles?.find((item: { lang: string; url: string }) =>
+                          item.lang.includes('ch-jp'),
+                        )?.url || ''
+                      : subtitles?.find((item: { lang: string; url: string }) =>
+                          item.lang.includes('English'),
+                        )?.url || '',
+                  encoding: 'utf-8',
+                  type:
+                    provider === 'Flixhq' || provider === 'Loklok' || provider === 'Bilibili'
+                      ? 'vtt'
+                      : provider === 'KissKh'
+                      ? 'srt'
+                      : '',
+                },
                 layers: [
                   {
                     html: '',
@@ -471,9 +631,9 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                         ? `${height * 0.05 * 3}px`
                         : `${height * 0.05 * 4}px`,
                     '& p': {
-                      p: '$4',
+                      p: '$2',
                       backgroundColor: subtitleBackgroundColor,
-                      m: '$2 0',
+                      m: 0,
                     },
                   },
                 },
@@ -588,14 +748,25 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                   <Button auto light onClick={() => setShouldShowPlayer(false)} icon={<Close />} />
                 </Tooltip>
               </Flex>
-              <PlayerSettings artplayer={artplayer} />
+              <PlayerSettings
+                artplayer={artplayer}
+                qualitySelector={qualitySelector}
+                subtitleSelector={subtitleSelector}
+              />
             </Flex>,
             artplayer.layers.topControlButtons,
           )
         : null}
       {/* Creating portals for the player controls */}
       {artplayer && !isMini
-        ? createPortal(<PlayerSettings artplayer={artplayer} />, artplayer.controls.settings)
+        ? createPortal(
+            <PlayerSettings
+              artplayer={artplayer}
+              qualitySelector={qualitySelector}
+              subtitleSelector={subtitleSelector}
+            />,
+            artplayer.controls.settings,
+          )
         : null}
     </Container>
   );
