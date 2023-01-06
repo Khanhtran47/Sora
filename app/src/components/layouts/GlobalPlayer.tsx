@@ -209,23 +209,18 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
 
   useEffect(() => {
     setIsMini(shouldPlayInBackground);
-    if (artplayer) {
+    if (artplayer && !isMobile) {
       artplayer.plugins.artplayerPluginControl.enable = !shouldPlayInBackground;
     }
   }, [shouldPlayInBackground]);
 
   useEffect(() => {
-    if (playerSettings) {
-      if (playerSettings?.shouldShowPlayer === true) setShouldShowPlayer(true);
-      else if (
-        playerSettings?.shouldShowPlayer === false &&
-        shouldPlayInBackground &&
-        !isMobileOnly
-      )
-        setShouldShowPlayer(true);
-      else setShouldShowPlayer(false);
-    }
-  }, [playerSettings]);
+    if (playerSettings?.shouldShowPlayer && playerData && !shouldPlayInBackground)
+      setShouldShowPlayer(true);
+    else if (!playerSettings && shouldPlayInBackground && playerData && !isMobileOnly)
+      setShouldShowPlayer(true);
+    else setShouldShowPlayer(false);
+  }, [playerSettings, playerData]);
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -237,10 +232,10 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
 
   const RouteData: PlayerData = useRouteData(matchesFiltered?.id as string);
   useEffect(() => {
-    if (RouteData && shouldShowPlayer) {
+    if (RouteData) {
       setPlayerData(RouteData);
     }
-  }, [matchesFiltered?.id, shouldShowPlayer]);
+  }, [matchesFiltered?.id]);
 
   useEffect(() => {
     if (playerData) {
@@ -307,7 +302,7 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
     <Container fluid css={{ margin: 0, padding: 0, width: isMini ? '20rem' : '100%' }}>
       <div className="fixed inset-0 pointer-events-none" ref={constraintsRef} />
       <AnimatePresence initial={false}>
-        {shouldShowPlayer && playerData ? (
+        {shouldShowPlayer ? (
           <motion.div
             layout
             ref={ref}
@@ -328,380 +323,385 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
               height: isMini ? '14.0625rem' : '100%',
             }}
           >
-            <ArtPlayer
-              type="movie"
-              key={`${playerData?.id}-${playerData?.routePlayer}-${playerData?.titlePlayer}-${playerData?.provider}`}
-              autoPlay={false}
-              hideBottomGroupButtons
-              option={{
-                type: provider === 'Bilibili' ? 'mpd' : provider === 'test' ? 'mp4' : 'm3u8',
-                autoSize: false,
-                loop: false,
-                mutex: true,
-                setting: false,
-                flip: true,
-                playbackRate: true,
-                aspectRatio: true,
-                fullscreen: true,
-                fullscreenWeb: false,
-                airplay: true,
-                pip: isDesktop,
-                autoplay: false,
-                screenshot: isDesktop,
-                subtitleOffset: true,
-                fastForward: isMobile,
-                lock: isMobile,
-                miniProgressBar: true,
-                autoOrientation: isMobile,
-                isLive: false,
-                playsInline: true,
-                autoPlayback: true,
-                whitelist: ['*'],
-                theme: 'var(--nextui-colors-primary)',
-                autoMini: false,
-                hotkey: true,
-                moreVideoAttr: isDesktop
-                  ? {
-                      crossOrigin: 'anonymous',
-                    }
-                  : {
-                      'x5-video-player-type': 'h5',
-                      'x5-video-player-fullscreen': false,
-                      'x5-video-orientation': 'portraint',
-                      preload: 'metadata',
-                    },
-                url:
-                  provider === 'Loklok'
-                    ? sources?.find(
-                        (item: { quality: number | string; url: string }) =>
-                          Number(item.quality) === 720,
-                      )?.url ||
-                      (sources && sources[0]?.url)
-                    : provider === 'Flixhq'
-                    ? sources?.find(
-                        (item: { quality: number | string; url: string }) =>
-                          item.quality === 'auto',
-                      )?.url ||
-                      (sources && sources[0]?.url)
-                    : provider === 'Gogo' || provider === 'Zoro'
-                    ? sources?.find(
-                        (item: { quality: number | string; url: string }) =>
-                          item.quality === 'default',
-                      )?.url ||
-                      (sources && sources[0]?.url)
-                    : provider === 'Bilibili' || provider === 'KissKh'
-                    ? sources && sources[0]?.url
-                    : provider === 'test'
-                    ? sources?.find((source) => Number(source.quality) === 720)?.url
-                    : sources?.find(
-                        (item: { quality: number | string; url: string }) =>
-                          item.quality === 'default',
-                      )?.url ||
-                      (sources && sources[0]?.url) ||
-                      '',
-                subtitle: {
-                  url:
-                    provider === 'Loklok'
-                      ? subtitles?.find((item: { lang: string; url: string }) =>
-                          item.lang.includes('English'),
-                        )?.url
-                      : provider === 'Flixhq'
-                      ? subtitles?.find((item: { lang: string; url: string }) =>
-                          item.lang.includes('English'),
-                        )?.url || ''
-                      : provider === 'KissKh'
-                      ? subtitles?.find(
-                          (item: { lang: string; url: string; default?: boolean }) => item.default,
-                        )?.url || ''
-                      : provider === 'test'
-                      ? subtitles?.find((item: { lang: string; url: string }) =>
-                          item.lang.includes('ch-jp'),
-                        )?.url || ''
-                      : subtitles?.find((item: { lang: string; url: string }) =>
-                          item.lang.includes('English'),
-                        )?.url || '',
-                  encoding: 'utf-8',
-                  type:
-                    provider === 'Flixhq' || provider === 'Loklok' || provider === 'Bilibili'
-                      ? 'vtt'
-                      : provider === 'KissKh'
-                      ? 'srt'
-                      : '',
-                },
-                title: playerData?.titlePlayer,
-                poster: playerData?.posterPlayer,
-                layers: [
-                  {
-                    html: '',
-                    name: 'mask',
-                    style: {
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      width: '100%',
-                      height: '100%',
-                    },
-                  },
-                  {
-                    html: '',
-                    name: 'playPauseButton',
-                    style: {
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      width: '100%',
-                      height: '100%',
-                    },
-                  },
-                  {
-                    html: '',
-                    name: 'topControlButtons',
-                    style: {
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      width: '100%',
-                    },
-                  },
-                ],
-                icons: {
-                  // state: isDesktop && '',
-                  loading: '<div class="custom-loader"></div>',
-                },
-                customType:
-                  provider === 'Bilibili'
-                    ? {
-                        mpd: async (video: HTMLMediaElement, url: string) => {
-                          const { default: dashjs } = await import('dashjs');
-                          const player = dashjs.MediaPlayer().create();
-                          player.initialize(video, url, false);
+            {playerData ? (
+              <>
+                <ArtPlayer
+                  type="movie"
+                  key={`${playerData?.id}-${playerData?.routePlayer}-${playerData?.titlePlayer}-${playerData?.provider}`}
+                  autoPlay={false}
+                  hideBottomGroupButtons
+                  option={{
+                    type: provider === 'Bilibili' ? 'mpd' : provider === 'test' ? 'mp4' : 'm3u8',
+                    autoSize: false,
+                    loop: false,
+                    mutex: true,
+                    setting: false,
+                    flip: true,
+                    playbackRate: true,
+                    aspectRatio: true,
+                    fullscreen: true,
+                    fullscreenWeb: false,
+                    airplay: true,
+                    pip: isDesktop,
+                    autoplay: false,
+                    screenshot: isDesktop,
+                    subtitleOffset: true,
+                    fastForward: isMobile,
+                    lock: isMobile,
+                    miniProgressBar: true,
+                    autoOrientation: isMobile,
+                    isLive: false,
+                    playsInline: true,
+                    autoPlayback: true,
+                    whitelist: ['*'],
+                    theme: 'var(--nextui-colors-primary)',
+                    autoMini: false,
+                    hotkey: true,
+                    moreVideoAttr: isDesktop
+                      ? {
+                          crossOrigin: 'anonymous',
+                        }
+                      : {
+                          'x5-video-player-type': 'h5',
+                          'x5-video-player-fullscreen': false,
+                          'x5-video-orientation': 'portraint',
+                          preload: 'metadata',
                         },
-                      }
-                    : {
-                        m3u8: async (video: HTMLMediaElement, url: string) => {
-                          if (hls) {
-                            hls.destroy();
-                          }
-                          if (Hls.isSupported()) {
-                            hls = new Hls();
-                            hls.loadSource(url);
-                            hls.attachMedia(video);
-                          } else {
-                            const canPlay = video.canPlayType('application/vnd.apple.mpegurl');
-                            if (canPlay === 'probably' || canPlay === 'maybe') {
-                              video.src = url;
-                            }
-                          }
+                    url:
+                      provider === 'Loklok'
+                        ? sources?.find(
+                            (item: { quality: number | string; url: string }) =>
+                              Number(item.quality) === 720,
+                          )?.url ||
+                          (sources && sources[0]?.url)
+                        : provider === 'Flixhq'
+                        ? sources?.find(
+                            (item: { quality: number | string; url: string }) =>
+                              item.quality === 'auto',
+                          )?.url ||
+                          (sources && sources[0]?.url)
+                        : provider === 'Gogo' || provider === 'Zoro'
+                        ? sources?.find(
+                            (item: { quality: number | string; url: string }) =>
+                              item.quality === 'default',
+                          )?.url ||
+                          (sources && sources[0]?.url)
+                        : provider === 'Bilibili' || provider === 'KissKh'
+                        ? sources && sources[0]?.url
+                        : provider === 'test'
+                        ? sources?.find((source) => Number(source.quality) === 720)?.url
+                        : sources?.find(
+                            (item: { quality: number | string; url: string }) =>
+                              item.quality === 'default',
+                          )?.url ||
+                          (sources && sources[0]?.url) ||
+                          '',
+                    subtitle: {
+                      url:
+                        provider === 'Loklok'
+                          ? subtitles?.find((item: { lang: string; url: string }) =>
+                              item.lang.includes('English'),
+                            )?.url
+                          : provider === 'Flixhq'
+                          ? subtitles?.find((item: { lang: string; url: string }) =>
+                              item.lang.includes('English'),
+                            )?.url || ''
+                          : provider === 'KissKh'
+                          ? subtitles?.find(
+                              (item: { lang: string; url: string; default?: boolean }) =>
+                                item.default,
+                            )?.url || ''
+                          : provider === 'test'
+                          ? subtitles?.find((item: { lang: string; url: string }) =>
+                              item.lang.includes('ch-jp'),
+                            )?.url || ''
+                          : subtitles?.find((item: { lang: string; url: string }) =>
+                              item.lang.includes('English'),
+                            )?.url || '',
+                      encoding: 'utf-8',
+                      type:
+                        provider === 'Flixhq' || provider === 'Loklok' || provider === 'Bilibili'
+                          ? 'vtt'
+                          : provider === 'KissKh'
+                          ? 'srt'
+                          : '',
+                    },
+                    title: playerData?.titlePlayer,
+                    poster: playerData?.posterPlayer,
+                    layers: [
+                      {
+                        html: '',
+                        name: 'mask',
+                        style: {
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          width: '100%',
+                          height: '100%',
                         },
                       },
-                controls: [
-                  {
-                    position: 'right',
-                    name: 'settings',
-                    html: '',
-                    tooltip: 'Settings',
-                  },
-                ],
-                plugins: [artplayerPluginControl()],
-              }}
-              getInstance={(art) => {
-                art.on('ready', () => {
-                  setArtplayer(art);
-                  console.log(art);
-                  art.controls.add({
-                    position: 'top',
-                    name: 'test',
-                    html: '',
-                    tooltip: 'Test',
-                    style: {
-                      position: 'absolute',
-                      bottom: `${Number(art?.height) - 30}px`,
-                      left: '0px',
-                      padding: '0px 7px',
-                      width: '100%',
+                      {
+                        html: '',
+                        name: 'playPauseButton',
+                        style: {
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          width: '100%',
+                          height: '100%',
+                        },
+                      },
+                      {
+                        html: '',
+                        name: 'topControlButtons',
+                        style: {
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          width: '100%',
+                        },
+                      },
+                    ],
+                    icons: {
+                      // state: isDesktop && '',
+                      loading: '<div class="custom-loader"></div>',
                     },
-                  });
-                });
-                art.on('play', () => {
-                  setIsPlayerPlaying(true);
-                });
-                art.on('pause', () => {
-                  setIsPlayerPlaying(false);
-                });
-              }}
-              css={{
-                width: isMini ? '25rem' : '100%',
-                height: isMini ? '14.0625rem' : '100%',
-                borderTopLeftRadius: isMini ? '$sm' : 0,
-                borderTopRightRadius: isMini ? '$sm' : 0,
-                overflow: 'hidden',
-                '& div': {
-                  '&.art-video-player': {
-                    fontFamily: 'Inter !important',
-                  },
-                  '&.custom-loader': {
-                    width: '48px',
-                    height: '48px',
-                    margin: 'auto',
-                    position: 'relative',
-                    '&::before': {
-                      content: "''",
-                      width: '48px',
-                      height: '5px',
-                      background: '$primarySolidHover',
+                    customType:
+                      provider === 'Bilibili'
+                        ? {
+                            mpd: async (video: HTMLMediaElement, url: string) => {
+                              const { default: dashjs } = await import('dashjs');
+                              const player = dashjs.MediaPlayer().create();
+                              player.initialize(video, url, false);
+                            },
+                          }
+                        : {
+                            m3u8: async (video: HTMLMediaElement, url: string) => {
+                              if (hls) {
+                                hls.destroy();
+                              }
+                              if (Hls.isSupported()) {
+                                hls = new Hls();
+                                hls.loadSource(url);
+                                hls.attachMedia(video);
+                              } else {
+                                const canPlay = video.canPlayType('application/vnd.apple.mpegurl');
+                                if (canPlay === 'probably' || canPlay === 'maybe') {
+                                  video.src = url;
+                                }
+                              }
+                            },
+                          },
+                    controls: [
+                      {
+                        position: 'right',
+                        name: 'settings',
+                        html: '',
+                        tooltip: 'Settings',
+                      },
+                    ],
+                    plugins: [artplayerPluginControl()],
+                  }}
+                  getInstance={(art) => {
+                    art.on('ready', () => {
+                      setArtplayer(art);
+                      console.log(art);
+                      art.controls.add({
+                        position: 'top',
+                        name: 'test',
+                        html: '',
+                        tooltip: 'Test',
+                        style: {
+                          position: 'absolute',
+                          bottom: `${Number(art?.height) - 30}px`,
+                          left: '0px',
+                          padding: '0px 7px',
+                          width: '100%',
+                        },
+                      });
+                    });
+                    art.on('play', () => {
+                      setIsPlayerPlaying(true);
+                    });
+                    art.on('pause', () => {
+                      setIsPlayerPlaying(false);
+                    });
+                  }}
+                  css={{
+                    width: isMini ? '25rem' : '100%',
+                    height: isMini ? '14.0625rem' : '100%',
+                    borderTopLeftRadius: isMini ? '$sm' : 0,
+                    borderTopRightRadius: isMini ? '$sm' : 0,
+                    overflow: 'hidden',
+                    '& div': {
+                      '&.art-video-player': {
+                        fontFamily: 'Inter !important',
+                      },
+                      '&.custom-loader': {
+                        width: '48px',
+                        height: '48px',
+                        margin: 'auto',
+                        position: 'relative',
+                        '&::before': {
+                          content: "''",
+                          width: '48px',
+                          height: '5px',
+                          background: '$primarySolidHover',
+                          position: 'absolute',
+                          top: '60px',
+                          left: 0,
+                          borderRadius: '50%',
+                          animation: `${shadowAnimation} 0.5s linear infinite`,
+                        },
+                        '&::after': {
+                          content: "''",
+                          width: '100%',
+                          height: '100%',
+                          background: '$primary',
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          borderRadius: '4px',
+                          animation: `${jumpAnimation} 0.5s linear infinite`,
+                        },
+                      },
+                      '&.art-controls': {
+                        display: isMini && 'none !important',
+                      },
+                      '&.art-bottom': {
+                        height: isMini && '7px !important',
+                        padding: isMini && '0 !important',
+                        flexDirection: isMobile ? 'column-reverse' : 'column',
+                      },
+                      '&.art-notice': {
+                        justifyContent: 'center',
+                      },
+                      '&.art-control-progress': {
+                        height: isMini && '7px !important',
+                        alignItems: isMini && 'flex-end !important',
+                      },
+                      '&.art-layer-mask': {
+                        transition: 'all 0.3s ease',
+                        backgroundColor: 'rgba(0, 0, 0, 0)',
+                        display: 'none',
+                      },
+                      '&.art-layer-playPauseButton': {
+                        transition: 'all 0.3s ease',
+                        display: 'none',
+                      },
+                      '&.art-layer-topControlButtons': {
+                        transition: 'all 0.3s ease',
+                        display: 'none',
+                      },
+                      '&.art-control-playAndPause': {
+                        display: isMobile ? 'none !important' : 'flex',
+                      },
+                      '&.art-control-volume': {
+                        display: isMobile ? 'none !important' : 'flex',
+                      },
+                      '&.art-state': {
+                        display: isDesktop && 'none !important',
+                      },
+                      '&.art-subtitle': {
+                        bottom: isMini && '7px !important',
+                        display: 'flex !important',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexDirection: 'column',
+                        backgroundColor: subtitleWindowColor,
+                        color:
+                          currentSubtitleFontColor === 'White'
+                            ? '#fff'
+                            : currentSubtitleFontColor === 'Blue'
+                            ? '#0072F5'
+                            : currentSubtitleFontColor === 'Purple'
+                            ? '#7828C8'
+                            : currentSubtitleFontColor === 'Green'
+                            ? '#17C964'
+                            : currentSubtitleFontColor === 'Yellow'
+                            ? '#F5A524'
+                            : currentSubtitleFontColor === 'Red'
+                            ? '#F31260'
+                            : currentSubtitleFontColor === 'Cyan'
+                            ? '#06B7DB'
+                            : currentSubtitleFontColor === 'Pink'
+                            ? '#FF4ECD'
+                            : currentSubtitleFontColor === 'White'
+                            ? '#7828C8'
+                            : '#000',
+                        fontSize:
+                          currentSubtitleFontSize === '50%'
+                            ? `${height * 0.05 * 0.5}px`
+                            : currentSubtitleFontSize === '75%'
+                            ? `${height * 0.05 * 0.75}px`
+                            : currentSubtitleFontSize === '100%'
+                            ? `${height * 0.05}px`
+                            : currentSubtitleFontSize === '150%'
+                            ? `${height * 0.05 * 1.5}px`
+                            : currentSubtitleFontSize === '200%'
+                            ? `${height * 0.05 * 2}px`
+                            : currentSubtitleFontSize === '300%'
+                            ? `${height * 0.05 * 3}px`
+                            : `${height * 0.05 * 4}px`,
+                        '& p': {
+                          p: '$2',
+                          backgroundColor: subtitleBackgroundColor,
+                          m: 0,
+                        },
+                      },
+                    },
+                    '&:hover': {
+                      '& div': {
+                        '&.art-layer-mask': {
+                          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                          display: isMini && 'block',
+                        },
+                        '&.art-layer-playPauseButton': {
+                          display: isMini && 'block',
+                        },
+                        '&.art-layer-topControlButtons': {
+                          display: isMini && 'block',
+                        },
+                      },
+                    },
+                  }}
+                />
+                {isMini ? (
+                  <Flex
+                    direction="column"
+                    align="start"
+                    justify="center"
+                    css={{
                       position: 'absolute',
-                      top: '60px',
+                      bottom: '-64px',
                       left: 0,
-                      borderRadius: '50%',
-                      animation: `${shadowAnimation} 0.5s linear infinite`,
-                    },
-                    '&::after': {
-                      content: "''",
-                      width: '100%',
-                      height: '100%',
-                      background: '$primary',
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      borderRadius: '4px',
-                      animation: `${jumpAnimation} 0.5s linear infinite`,
-                    },
-                  },
-                  '&.art-controls': {
-                    display: isMini && 'none !important',
-                  },
-                  '&.art-bottom': {
-                    height: isMini && '7px !important',
-                    padding: isMini && '0 !important',
-                    flexDirection: isMobile ? 'column-reverse' : 'column',
-                  },
-                  '&.art-notice': {
-                    justifyContent: 'center',
-                  },
-                  '&.art-control-progress': {
-                    height: isMini && '7px !important',
-                    alignItems: isMini && 'flex-end !important',
-                  },
-                  '&.art-layer-mask': {
-                    transition: 'all 0.3s ease',
-                    backgroundColor: 'rgba(0, 0, 0, 0)',
-                    display: 'none',
-                  },
-                  '&.art-layer-playPauseButton': {
-                    transition: 'all 0.3s ease',
-                    display: 'none',
-                  },
-                  '&.art-layer-topControlButtons': {
-                    transition: 'all 0.3s ease',
-                    display: 'none',
-                  },
-                  '&.art-control-playAndPause': {
-                    display: isMobile ? 'none !important' : 'flex',
-                  },
-                  '&.art-control-volume': {
-                    display: isMobile ? 'none !important' : 'flex',
-                  },
-                  '&.art-state': {
-                    display: isDesktop && 'none !important',
-                  },
-                  '&.art-subtitle': {
-                    bottom: isMini && '7px !important',
-                    display: 'flex !important',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexDirection: 'column',
-                    backgroundColor: subtitleWindowColor,
-                    color:
-                      currentSubtitleFontColor === 'White'
-                        ? '#fff'
-                        : currentSubtitleFontColor === 'Blue'
-                        ? '#0072F5'
-                        : currentSubtitleFontColor === 'Purple'
-                        ? '#7828C8'
-                        : currentSubtitleFontColor === 'Green'
-                        ? '#17C964'
-                        : currentSubtitleFontColor === 'Yellow'
-                        ? '#F5A524'
-                        : currentSubtitleFontColor === 'Red'
-                        ? '#F31260'
-                        : currentSubtitleFontColor === 'Cyan'
-                        ? '#06B7DB'
-                        : currentSubtitleFontColor === 'Pink'
-                        ? '#FF4ECD'
-                        : currentSubtitleFontColor === 'White'
-                        ? '#7828C8'
-                        : '#000',
-                    fontSize:
-                      currentSubtitleFontSize === '50%'
-                        ? `${height * 0.05 * 0.5}px`
-                        : currentSubtitleFontSize === '75%'
-                        ? `${height * 0.05 * 0.75}px`
-                        : currentSubtitleFontSize === '100%'
-                        ? `${height * 0.05}px`
-                        : currentSubtitleFontSize === '150%'
-                        ? `${height * 0.05 * 1.5}px`
-                        : currentSubtitleFontSize === '200%'
-                        ? `${height * 0.05 * 2}px`
-                        : currentSubtitleFontSize === '300%'
-                        ? `${height * 0.05 * 3}px`
-                        : `${height * 0.05 * 4}px`,
-                    '& p': {
-                      p: '$2',
-                      backgroundColor: subtitleBackgroundColor,
-                      m: 0,
-                    },
-                  },
-                },
-                '&:hover': {
-                  '& div': {
-                    '&.art-layer-mask': {
-                      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                      display: isMini && 'block',
-                    },
-                    '&.art-layer-playPauseButton': {
-                      display: isMini && 'block',
-                    },
-                    '&.art-layer-topControlButtons': {
-                      display: isMini && 'block',
-                    },
-                  },
-                },
-              }}
-            />
-            {isMini ? (
-              <Flex
-                direction="column"
-                align="start"
-                justify="center"
-                css={{
-                  position: 'absolute',
-                  bottom: '-64px',
-                  left: 0,
-                  right: 0,
-                  height: '64px',
-                  padding: '$sm',
-                  backgroundColor: '$backgroundContrast',
-                  borderBottomLeftRadius: '$sm',
-                  borderBottomRightRadius: '$sm',
-                }}
-              >
-                <H5
-                  h5
-                  weight="bold"
-                  onClick={() => navigate(routePlayer)}
-                  css={{ cursor: 'pointer' }}
-                >
-                  {titlePlayer}
-                </H5>
-              </Flex>
-            ) : null}
+                      right: 0,
+                      height: '64px',
+                      padding: '$sm',
+                      backgroundColor: '$backgroundContrast',
+                      borderBottomLeftRadius: '$sm',
+                      borderBottomRightRadius: '$sm',
+                    }}
+                  >
+                    <H5
+                      h5
+                      weight="bold"
+                      onClick={() => navigate(routePlayer)}
+                      css={{ cursor: 'pointer' }}
+                    >
+                      {titlePlayer}
+                    </H5>
+                  </Flex>
+                ) : null}
+              </>
+            ) : (
+              <PlayerError
+                title="Video not found"
+                message="The video you are trying to watch is not available."
+              />
+            )}
           </motion.div>
-        ) : (
-          <PlayerError
-            title="Video not found"
-            message="The video you are trying to watch is not available."
-          />
-        )}
+        ) : null}
       </AnimatePresence>
       {/* Creating a portal for the player layers */}
       {isMini && artplayer
@@ -765,7 +765,20 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                   />
                 </Tooltip>
                 <Tooltip content="Close">
-                  <Button auto light onClick={() => setShouldShowPlayer(false)} icon={<Close />} />
+                  <Button
+                    auto
+                    light
+                    onClick={() => {
+                      setShouldShowPlayer(false);
+                      setPlayerData(undefined);
+                      setIsMini(false);
+                      setRoutePlayer('');
+                      setTitlePlayer('');
+                      setQualitySelector([]);
+                      setSubtitleSelector([]);
+                    }}
+                    icon={<Close />}
+                  />
                 </Tooltip>
               </Flex>
               <PlayerSettings
