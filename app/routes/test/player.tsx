@@ -10,8 +10,8 @@ export const meta: MetaFunction = () => ({
   'og:description': 'This page for testing the player',
 });
 
-export const loader = async () => {
-  return json({
+export const loader = async () =>
+  json({
     provider: 'test',
     idProvider: 'test-player',
     subtitles: [
@@ -54,8 +54,11 @@ export const loader = async () => {
       image: 'https://artplayer.org/assets/sample/poster.jpg',
     },
     hasNextEpisode: true,
+    routePlayer: '/test/player',
+    titlePlayer: 'Test Player',
+    id: 'test-player',
+    posterPlayer: 'https://artplayer.org/assets/sample/poster.jpg',
   });
-};
 
 export const handle = {
   breadcrumb: () => (
@@ -78,14 +81,6 @@ export const handle = {
   playerSettings: {
     isMini: false,
     shouldShowPlayer: true,
-    url: 'https://artplayer.org/assets/sample/video.mp4',
-    routePlayer: '/test/player',
-    title: 'Test Player',
-    subtitle: {
-      url: 'https://artplayer.org/assets/sample/subtitle.srt',
-      type: 'srt',
-      encoding: 'utf-8',
-    },
   },
 };
 

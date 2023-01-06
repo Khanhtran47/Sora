@@ -1229,7 +1229,22 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
       return level;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [qualitySelector, subtitleSelector, currentSubtitle, currentQuality],
+    [
+      qualitySelector,
+      subtitleSelector,
+      currentSubtitle,
+      currentQuality,
+      currentPlaySpeed,
+      currentAspectRatio,
+      currentVideoFlip,
+      currentSubtitleOffset,
+      currentSubtitleFontColor,
+      currentSubtitleFontSize,
+      currentSubtitleBackgroundColor,
+      currentSubtitleBackgroundOpacity,
+      currentSubtitleWindowColor,
+      currentSubtitleWindowOpacity,
+    ],
   );
   const currentDropdownLevel = useMemo(
     () => dropdownLevel.find((level) => level.key === dropdownLevelKey),

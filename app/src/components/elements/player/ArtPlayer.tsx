@@ -99,8 +99,8 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
   }, [fetcher.data]);
   useEffect(() => {
     const art = new Artplayer({
-      ...option,
       container: artRef.current,
+      ...option,
       // controls: [
       //   {
       //     position: 'right',

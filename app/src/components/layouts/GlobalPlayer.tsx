@@ -16,12 +16,14 @@ import tinycolor from 'tinycolor2';
 import { useRouteData } from 'remix-utils';
 
 import usePlayerState from '~/store/player/usePlayerState';
+import type { PlayerData } from '~/store/player/usePlayerState';
 
 import useLocalStorage from '~/hooks/useLocalStorage';
 import useMeasure from '~/hooks/useMeasure';
 
 import ArtPlayer from '~/src/components/elements/player/ArtPlayer';
 import PlayerSettings from '~/src/components/elements/player/PlayerSettings';
+import PlayerError from '~/src/components/elements/player/PlayerError';
 import { H5 } from '~/src/components/styles/Text.styles';
 import Flex from '~/src/components/styles/Flex.styles';
 import Box from '~/src/components/styles/Box.styles';
@@ -30,114 +32,43 @@ import Close from '~/src/assets/icons/CloseIcon.js';
 import Expand from '~/src/assets/icons/ExpandIcon.js';
 import Play from '~/src/assets/icons/PlayIcon.js';
 import Pause from '~/src/assets/icons/PauseIcon.js';
-import { IMovieSource, IMovieSubtitle } from '~/services/consumet/flixhq/flixhq.types';
 
 interface IGlobalPlayerProps {
   matches: RouteMatch[];
 }
 
+const jumpAnimation = keyframes({
+  '15%': {
+    borderBottomRightRadius: '3px',
+  },
+  '25%': {
+    transform: 'translateY(9px) rotate(22.5deg)',
+  },
+  '50%': {
+    transform: 'translateY(18px) scale(1, .9) rotate(45deg)',
+    borderBottomRightRadius: '40px',
+  },
+  '75%': {
+    transform: 'translateY(9px) rotate(67.5deg)',
+  },
+  '100%': {
+    transform: 'translateY(0) rotate(90deg)',
+  },
+});
+
+const shadowAnimation = keyframes({
+  '0%, 100%': {
+    transform: 'scale(1, 1)',
+  },
+  '50%': {
+    transform: 'scale(1.2, 1)',
+  },
+});
+
 const GlobalPlayer = (props: IGlobalPlayerProps) => {
   const { matches } = props;
   const location = useLocation();
   const navigate = useNavigate();
-
-  const matchesFiltered = useMemo(
-    () =>
-      matches.find(
-        (match) => match?.pathname.includes('player') || match?.pathname.includes('watch'),
-      ),
-    [matches],
-  );
-  const playerData:
-    | {
-        provider?: string;
-        idProvider?: number | string;
-        sources: IMovieSource[] | undefined;
-        subtitles?: IMovieSubtitle[] | undefined;
-        hasNextEpisode?: boolean;
-      }
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    | undefined = matchesFiltered ? useRouteData(matchesFiltered.id) : undefined;
-  const playerSettings = matchesFiltered?.handle?.playerSettings;
-  const { provider, idProvider, hasNextEpisode, sources, subtitles } = playerData || {};
-  const shouldPlayInBackground = useMemo(
-    () => !(location?.pathname.includes('player') || location?.pathname.includes('watch')),
-    [location?.pathname],
-  );
-  const qualitySelector = useMemo<
-    | {
-        default?: boolean | undefined;
-        html: string;
-        url: string;
-        isM3U8: boolean;
-        isDASH: boolean;
-      }[]
-    | undefined
-  >(
-    () =>
-      provider === 'Loklok' || provider === 'Gogo' || provider === 'Zoro'
-        ? sources?.map(({ quality, url }: { quality: number | string; url: string }) => ({
-            html: quality.toString(),
-            url: url.toString().startsWith('http:')
-              ? `https://cors.proxy.consumet.org/${url.toString()}`
-              : url.toString(),
-            isM3U8: true,
-            isDASH: false,
-            ...(provider === 'Loklok' && Number(quality) === 720 && { default: true }),
-            ...((provider === 'Gogo' || provider === 'Zoro') &&
-              quality === 'default' && { default: true }),
-          }))
-        : provider === 'Bilibili'
-        ? sources?.map(({ quality, url }: { quality: number | string; url: string }) => ({
-            html: quality.toString(),
-            url: url.toString(),
-            isM3U8: false,
-            isDASH: true,
-            ...(quality === 'auto' && { default: true }),
-          }))
-        : provider === 'test'
-        ? sources?.map(({ quality, url }: { quality: number | string; url: string }) => ({
-            html: quality.toString(),
-            url: url.toString(),
-            isM3U8: true,
-            isDASH: false,
-            ...(quality === 720 && { default: true }),
-          }))
-        : sources?.map(({ quality, url }: { quality: number | string; url: string }) => ({
-            html: quality.toString(),
-            url: url.toString(),
-            isM3U8: true,
-            isDASH: false,
-            ...(quality === 'default' && { default: true }),
-          })),
-    [provider, sources],
-  );
-
-  const subtitleSelector = useMemo<
-    | {
-        default?: boolean | undefined;
-        html: string;
-        url: string;
-      }[]
-    | undefined
-  >(
-    () =>
-      subtitles?.map(({ lang, url }: { lang: string; url: string }) => ({
-        html: lang.toString(),
-        url: url.toString(),
-        ...(provider === 'Loklok' && lang.includes('en') && { default: true }),
-        ...(provider === 'Bilibili' && lang.includes('en') && { default: true }),
-        ...(provider === 'KissKh' && lang === 'English' && { default: true }),
-        ...(provider === 'test' && lang === 'ch-jp' && { default: true }),
-      })),
-    [provider, subtitles],
-  );
-
-  const [ref, { height }] = useMeasure<HTMLDivElement>();
-  const constraintsRef = useRef<HTMLDivElement>(null);
-  const [artplayer, setArtplayer] = useState<Artplayer | null>(null);
-  const [isPlayerPlaying, setIsPlayerPlaying] = useState(false);
-
   const {
     isMini,
     shouldShowPlayer,
@@ -147,7 +78,31 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
     setRoutePlayer,
     titlePlayer,
     setTitlePlayer,
+    playerData,
+    setPlayerData,
+    qualitySelector,
+    setQualitySelector,
+    subtitleSelector,
+    setSubtitleSelector,
   } = usePlayerState((state) => state);
+
+  const { provider, sources, subtitles } = playerData || {};
+  let backgroundColor;
+  let windowColor;
+  let hls: Hls | null = null;
+  const matchesFiltered = matches.find(
+    (match) => match?.pathname.includes('player') || match?.pathname.includes('watch'),
+  );
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const playerSettings = matchesFiltered?.handle?.playerSettings;
+  const shouldPlayInBackground = useMemo(
+    () => !(location?.pathname.includes('player') || location?.pathname.includes('watch')),
+    [location?.pathname],
+  );
+  const [ref, { height }] = useMeasure<HTMLDivElement>();
+  const constraintsRef = useRef<HTMLDivElement>(null);
+  const [artplayer, setArtplayer] = useState<Artplayer | null>(null);
+  const [isPlayerPlaying, setIsPlayerPlaying] = useState(false);
 
   const [currentSubtitleFontColor] = useLocalStorage('sora-settings_subtitle_font-color', 'White');
   const [currentSubtitleFontSize] = useLocalStorage('sora-settings_subtitle_font-size', '100%');
@@ -167,9 +122,6 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
     'sora-settings_subtitle_window-opacity',
     '0%',
   );
-  let backgroundColor;
-  let windowColor;
-
   const subtitleBackgroundColor = useMemo(() => {
     switch (currentSubtitleBackgroundColor) {
       case 'Black':
@@ -255,46 +207,15 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
     }
   }, [currentSubtitleWindowColor, currentSubtitleWindowOpacity]);
 
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-
-  const jumpAnimation = keyframes({
-    '15%': {
-      borderBottomRightRadius: '3px',
-    },
-    '25%': {
-      transform: 'translateY(9px) rotate(22.5deg)',
-    },
-    '50%': {
-      transform: 'translateY(18px) scale(1, .9) rotate(45deg)',
-      borderBottomRightRadius: '40px',
-    },
-    '75%': {
-      transform: 'translateY(9px) rotate(67.5deg)',
-    },
-    '100%': {
-      transform: 'translateY(0) rotate(90deg)',
-    },
-  });
-
-  const shadowAnimation = keyframes({
-    '0%, 100%': {
-      transform: 'scale(1, 1)',
-    },
-    '50%': {
-      transform: 'scale(1.2, 1)',
-    },
-  });
-
   useEffect(() => {
     setIsMini(shouldPlayInBackground);
-    if (artplayer && artplayer.plugins.artplayerPluginControl?.enable) {
+    if (artplayer) {
       artplayer.plugins.artplayerPluginControl.enable = !shouldPlayInBackground;
     }
   }, [shouldPlayInBackground]);
 
   useEffect(() => {
-    if (playerSettings?.shouldShowPlayer) {
+    if (playerSettings) {
       if (playerSettings?.shouldShowPlayer === true) setShouldShowPlayer(true);
       else if (
         playerSettings?.shouldShowPlayer === false &&
@@ -303,27 +224,90 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
       )
         setShouldShowPlayer(true);
       else setShouldShowPlayer(false);
-    } else if (shouldPlayInBackground && !isMobileOnly) setShouldShowPlayer(true);
-    else setShouldShowPlayer(false);
-    if (playerSettings?.routePlayer) {
-      setRoutePlayer(playerSettings?.routePlayer);
-    }
-    if (playerSettings?.title) {
-      setTitlePlayer(playerSettings?.title);
     }
   }, [playerSettings]);
 
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
   useEffect(() => {
     if (shouldPlayInBackground && !isMobile) return;
     x.set(0);
     y.set(0);
   }, [x, y, shouldPlayInBackground]);
 
+  const RouteData: PlayerData = useRouteData(matchesFiltered?.id as string);
+  useEffect(() => {
+    if (RouteData && shouldShowPlayer) {
+      setPlayerData(RouteData);
+    }
+  }, [matchesFiltered?.id, shouldShowPlayer]);
+
+  useEffect(() => {
+    if (playerData) {
+      if (provider && sources && sources.length > 0) {
+        setQualitySelector(
+          provider === 'Loklok' ||
+            provider === 'Gogo' ||
+            provider === 'Zoro' ||
+            provider === 'Flixhq'
+            ? sources?.map(({ quality, url }: { quality: number | string; url: string }) => ({
+                html: quality.toString(),
+                url: url.toString().startsWith('http:')
+                  ? `https://cors.proxy.consumet.org/${url.toString()}`
+                  : url.toString(),
+                isM3U8: true,
+                isDASH: false,
+                ...(provider === 'Flixhq' && quality === 'auto' && { default: true }),
+                ...(provider === 'Loklok' && Number(quality) === 720 && { default: true }),
+                ...((provider === 'Gogo' || provider === 'Zoro') &&
+                  quality === 'default' && { default: true }),
+              }))
+            : provider === 'Bilibili'
+            ? sources?.map(({ quality, url }: { quality: number | string; url: string }) => ({
+                html: quality.toString(),
+                url: url.toString(),
+                isM3U8: false,
+                isDASH: true,
+                ...(quality === 'auto' && { default: true }),
+              }))
+            : provider === 'test'
+            ? sources?.map(({ quality, url }: { quality: number | string; url: string }) => ({
+                html: quality.toString(),
+                url: url.toString(),
+                isM3U8: true,
+                isDASH: false,
+                ...(quality === 720 && { default: true }),
+              }))
+            : sources?.map(({ quality, url }: { quality: number | string; url: string }) => ({
+                html: quality.toString(),
+                url: url.toString(),
+                isM3U8: true,
+                isDASH: false,
+                ...(quality === 'default' && { default: true }),
+              })),
+        );
+        setSubtitleSelector(
+          subtitles?.map(({ lang, url }: { lang: string; url: string }) => ({
+            html: lang.toString(),
+            url: url.toString(),
+            ...(provider === 'Flixhq' && lang === 'English' && { default: true }),
+            ...(provider === 'Loklok' && lang.includes('en') && { default: true }),
+            ...(provider === 'Bilibili' && lang.includes('en') && { default: true }),
+            ...(provider === 'KissKh' && lang === 'English' && { default: true }),
+            ...(provider === 'test' && lang === 'ch-jp' && { default: true }),
+          })),
+        );
+        setRoutePlayer(playerData?.routePlayer);
+        setTitlePlayer(playerData?.titlePlayer);
+      }
+    }
+  }, [playerData]);
+
   return (
     <Container fluid css={{ margin: 0, padding: 0, width: isMini ? '20rem' : '100%' }}>
       <div className="fixed inset-0 pointer-events-none" ref={constraintsRef} />
       <AnimatePresence initial={false}>
-        {shouldShowPlayer && sources ? (
+        {shouldShowPlayer && playerData ? (
           <motion.div
             layout
             ref={ref}
@@ -346,11 +330,11 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
           >
             <ArtPlayer
               type="movie"
-              // key={} for re-rendering the player
+              key={`${playerData?.id}-${playerData?.routePlayer}-${playerData?.titlePlayer}-${playerData?.provider}`}
               autoPlay={false}
               hideBottomGroupButtons
               option={{
-                container: 'player',
+                type: provider === 'Bilibili' ? 'mpd' : 'm3u8',
                 autoSize: false,
                 loop: false,
                 mutex: true,
@@ -369,6 +353,9 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                 lock: isMobile,
                 miniProgressBar: true,
                 autoOrientation: isMobile,
+                isLive: false,
+                playsInline: true,
+                autoPlayback: true,
                 whitelist: ['*'],
                 theme: 'var(--nextui-colors-primary)',
                 autoMini: false,
@@ -388,26 +375,40 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                     ? sources?.find(
                         (item: { quality: number | string; url: string }) =>
                           Number(item.quality) === 720,
-                      )?.url || sources[0]?.url
+                      )?.url ||
+                      (sources && sources[0]?.url)
+                    : provider === 'Flixhq'
+                    ? sources?.find(
+                        (item: { quality: number | string; url: string }) =>
+                          item.quality === 'auto',
+                      )?.url ||
+                      (sources && sources[0]?.url)
                     : provider === 'Gogo' || provider === 'Zoro'
                     ? sources?.find(
                         (item: { quality: number | string; url: string }) =>
                           item.quality === 'default',
-                      )?.url || sources[0]?.url
+                      )?.url ||
+                      (sources && sources[0]?.url)
                     : provider === 'Bilibili' || provider === 'KissKh'
-                    ? sources[0]?.url
+                    ? sources && sources[0]?.url
                     : provider === 'test'
                     ? sources?.find((source) => Number(source.quality) === 720)?.url
                     : sources?.find(
                         (item: { quality: number | string; url: string }) =>
                           item.quality === 'default',
-                      )?.url || sources[0]?.url,
+                      )?.url ||
+                      (sources && sources[0]?.url) ||
+                      '',
                 subtitle: {
                   url:
                     provider === 'Loklok'
                       ? subtitles?.find((item: { lang: string; url: string }) =>
                           item.lang.includes('English'),
                         )?.url
+                      : provider === 'Flixhq'
+                      ? subtitles?.find((item: { lang: string; url: string }) =>
+                          item.lang.includes('English'),
+                        )?.url || ''
                       : provider === 'KissKh'
                       ? subtitles?.find(
                           (item: { lang: string; url: string; default?: boolean }) => item.default,
@@ -427,6 +428,8 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                       ? 'srt'
                       : '',
                 },
+                title: playerData?.titlePlayer,
+                poster: playerData?.posterPlayer,
                 layers: [
                   {
                     html: '',
@@ -465,20 +468,32 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                   // state: isDesktop && '',
                   loading: '<div class="custom-loader"></div>',
                 },
-                customType: {
-                  m3u8: (video: HTMLMediaElement, url: string) => {
-                    if (Hls.isSupported()) {
-                      const hls = new Hls();
-                      hls.loadSource(url);
-                      hls.attachMedia(video);
-                    } else {
-                      const canPlay = video.canPlayType('application/vnd.apple.mpegurl');
-                      if (canPlay === 'probably' || canPlay === 'maybe') {
-                        video.src = url;
+                customType:
+                  provider === 'Bilibili'
+                    ? {
+                        mpd: async (video: HTMLMediaElement, url: string) => {
+                          const { default: dashjs } = await import('dashjs');
+                          const player = dashjs.MediaPlayer().create();
+                          player.initialize(video, url, false);
+                        },
                       }
-                    }
-                  },
-                },
+                    : {
+                        m3u8: async (video: HTMLMediaElement, url: string) => {
+                          if (hls) {
+                            hls.destroy();
+                          }
+                          if (Hls.isSupported()) {
+                            hls = new Hls();
+                            hls.loadSource(url);
+                            hls.attachMedia(video);
+                          } else {
+                            const canPlay = video.canPlayType('application/vnd.apple.mpegurl');
+                            if (canPlay === 'probably' || canPlay === 'maybe') {
+                              video.src = url;
+                            }
+                          }
+                        },
+                      },
                 controls: [
                   {
                     position: 'right',
@@ -681,7 +696,12 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
               </Flex>
             ) : null}
           </motion.div>
-        ) : null}
+        ) : (
+          <PlayerError
+            title="Video not found"
+            message="The video you are trying to watch is not available."
+          />
+        )}
       </AnimatePresence>
       {/* Creating a portal for the player layers */}
       {isMini && artplayer
