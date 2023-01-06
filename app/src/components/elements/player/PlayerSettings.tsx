@@ -1474,6 +1474,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                     onClick={item.action}
                     css={{
                       p: '$4',
+                      height: 'auto',
                       width: '100%',
                       '& span': {
                         '&.nextui-button-text': {

@@ -2,6 +2,7 @@
 import create from 'zustand';
 
 import { IMovieSource, IMovieSubtitle } from '~/services/consumet/flixhq/flixhq.types';
+import { ITrailer } from '~/services/consumet/anilist/anilist.types';
 
 export type PlayerData =
   | {
@@ -14,6 +15,8 @@ export type PlayerData =
       titlePlayer: string;
       id: number | string;
       posterPlayer: string;
+      typeVideo: 'movie' | 'tv' | 'anime';
+      trailerAnime?: ITrailer;
     }
   | undefined;
 

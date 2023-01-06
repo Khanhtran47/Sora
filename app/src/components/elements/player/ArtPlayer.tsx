@@ -1,10 +1,14 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { useState, useEffect, useRef, memo } from 'react';
+import {
+  // useState,
+  useEffect,
+  useRef,
+  memo,
+} from 'react';
 import type { CSSProperties } from 'react';
-import { Button, Tooltip, Spacer, styled } from '@nextui-org/react';
-import { useNavigate, useFetcher } from '@remix-run/react';
+import { styled } from '@nextui-org/react';
 import Artplayer from 'artplayer';
 import { isMobile } from 'react-device-detect';
 
@@ -12,18 +16,15 @@ import usePlayerState from '~/store/player/usePlayerState';
 
 import { ITrailer } from '~/services/consumet/anilist/anilist.types';
 
-import useLocalStorage from '~/hooks/useLocalStorage';
+// import useLocalStorage from '~/hooks/useLocalStorage';
 
-import Flex from '~/src/components/styles/Flex.styles';
 import AspectRatio from '~/src/components/elements/aspect-ratio/AspectRatio';
-import WatchTrailerModal, { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
-import SearchSubtitles from '~/src/components/elements/modal/SearchSubtitle';
+// import SearchSubtitles from '~/src/components/elements/modal/SearchSubtitle';
 
 interface IPlayerProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   option: any;
   id?: number | string | undefined;
-  type: 'movie' | 'tv' | 'anime';
   trailerAnime?: ITrailer;
   autoPlay: boolean;
   currentEpisode?: number;
@@ -58,7 +59,6 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
   const {
     option,
     id,
-    type,
     trailerAnime,
     autoPlay,
     currentEpisode,
@@ -69,34 +69,18 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
     getInstance,
     style,
     subtitleOptions,
-    hideBottomGroupButtons = false,
     ...rest
   } = props;
-  const navigate = useNavigate();
-  const fetcher = useFetcher();
-  const [isSearchModalVisible, setSearchModalVisible] = useState(false);
-  const [isWatchTrailerModalVisible, setWatchTrailerModalVisible] = useState(false);
-  const [trailer, setTrailer] = useState<Trailer>({});
+  // const [isSearchModalVisible, setSearchModalVisible] = useState(false);
   const isMini = usePlayerState((state) => state.isMini);
-  const closeWatchTrailerModalHandler = () => {
-    setWatchTrailerModalVisible(false);
-    if (type === 'movie' || type === 'tv') setTrailer({});
-  };
-  const [subtitles, setSubtitles] = useState<{ html: string; url: string; default?: boolean }[]>(
-    subtitleSelector || [],
-  );
-  const [playNextEpisode, setPlayNextEpisode] = useLocalStorage('playNextEpisode', true);
+  // const [subtitles, setSubtitles] = useState<{ html: string; url: string; default?: boolean }[]>(
+  //   subtitleSelector || [],
+  // );
+  // const [playNextEpisode, setPlayNextEpisode] = useLocalStorage('playNextEpisode', true);
   const artRef = useRef<HTMLDivElement>(null);
-  const closeSearchModalHandler = () => {
-    setSearchModalVisible(false);
-  };
-  useEffect(() => {
-    if (fetcher.data && fetcher.data.videos) {
-      const { results } = fetcher.data.videos;
-      const officialTrailer = results.find((result: Trailer) => result.type === 'Trailer');
-      setTrailer(officialTrailer);
-    }
-  }, [fetcher.data]);
+  // const closeSearchModalHandler = () => {
+  //   setSearchModalVisible(false);
+  // };
   useEffect(() => {
     const art = new Artplayer({
       container: artRef.current,
@@ -185,80 +169,14 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [subtitles, currentEpisode]);
+  }, [
+    // subtitles,
+    currentEpisode,
+  ]);
   return (
-    <>
-      <AspectRatio.Root ratio={isMini ? undefined : isMobile ? 16 / 9 : 7 / 3}>
-        <div ref={artRef} style={style} {...rest} />
-      </AspectRatio.Root>
-      {!hideBottomGroupButtons ? (
-        <Flex
-          justify="start"
-          align="center"
-          wrap="wrap"
-          css={{
-            marginTop: '1.5rem',
-            padding: '0 0.75rem',
-            '@xs': {
-              padding: '0 3vw',
-            },
-            '@sm': {
-              padding: '0 6vw',
-            },
-            '@md': {
-              padding: '0 12vw',
-            },
-          }}
-        >
-          <Tooltip content="In development">
-            <Button size="sm" color="primary" auto ghost css={{ marginBottom: '0.75rem' }}>
-              Toggle Light
-            </Button>
-          </Tooltip>
-          <Spacer x={0.5} />
-          <Button
-            size="sm"
-            color="primary"
-            auto
-            ghost
-            onClick={() => {
-              setWatchTrailerModalVisible(true);
-              if (type === 'movie' || type === 'tv')
-                fetcher.load(`/${type === 'movie' ? 'movies' : 'tv-shows'}/${id}/videos`);
-            }}
-            css={{ marginBottom: '0.75rem' }}
-          >
-            Watch Trailer
-          </Button>
-          <Spacer x={0.5} />
-          <Tooltip content="In development">
-            <Button size="sm" color="primary" auto ghost css={{ marginBottom: '0.75rem' }}>
-              Add to My List
-            </Button>
-          </Tooltip>
-        </Flex>
-      ) : null}
-      <SearchSubtitles
-        visible={isSearchModalVisible}
-        closeHandler={closeSearchModalHandler}
-        setSubtitles={setSubtitles}
-        subtitleOptions={subtitleOptions}
-      />
-      {(type === 'movie' || type === 'tv') && (
-        <WatchTrailerModal
-          trailer={trailer}
-          visible={isWatchTrailerModalVisible}
-          closeHandler={closeWatchTrailerModalHandler}
-        />
-      )}
-      {type === 'anime' && trailerAnime && (
-        <WatchTrailerModal
-          trailer={trailerAnime}
-          visible={isWatchTrailerModalVisible}
-          closeHandler={closeWatchTrailerModalHandler}
-        />
-      )}
-    </>
+    <AspectRatio.Root ratio={isMini ? undefined : isMobile ? 16 / 9 : 7 / 3}>
+      <div ref={artRef} style={style} {...rest} />
+    </AspectRatio.Root>
   );
 };
 

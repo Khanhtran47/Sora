@@ -1,20 +1,9 @@
 /* eslint-disable @typescript-eslint/indent */
-/* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { Suspense, useMemo } from 'react';
 import { MetaFunction, LoaderFunction, json } from '@remix-run/node';
-import {
-  useCatch,
-  useLoaderData,
-  NavLink,
-  RouteMatch,
-  useFetcher,
-  useLocation,
-} from '@remix-run/react';
-import { Container, Spacer, Loading, Badge } from '@nextui-org/react';
-import { ClientOnly, useRouteData } from 'remix-utils';
-import Hls from 'hls.js';
-import artplayerPluginHlsQuality from 'artplayer-plugin-hls-quality';
+import { useCatch, useLoaderData, NavLink, RouteMatch } from '@remix-run/react';
+import { Container, Spacer, Badge } from '@nextui-org/react';
+import { useRouteData } from 'remix-utils';
 
 import { authenticate, insertHistory } from '~/services/supabase';
 import {
@@ -36,7 +25,6 @@ import { LOKLOK_URL } from '~/services/loklok/utils.server';
 import TMDB from '~/utils/media';
 import { TMDB as TmdbUtils } from '~/services/tmdb/utils.server';
 import updateHistory from '~/utils/update-history';
-import useMediaQuery from '~/hooks/useMediaQuery';
 
 import WatchDetail from '~/src/components/elements/shared/WatchDetail';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
@@ -82,6 +70,7 @@ type DataLoader = {
   titlePlayer: string;
   id: number | string;
   posterPlayer: string;
+  typeVideo: 'movie' | 'tv' | 'anime';
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -137,6 +126,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       titlePlayer,
       id: mid,
       posterPlayer,
+      typeVideo: 'movie',
     });
   }
 
@@ -163,6 +153,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       titlePlayer,
       id: mid,
       posterPlayer,
+      typeVideo: 'movie',
     });
   }
 
@@ -195,6 +186,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       titlePlayer,
       id: mid,
       posterPlayer,
+      typeVideo: 'movie',
     });
   }
 
@@ -209,6 +201,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       titlePlayer,
       id: mid,
       posterPlayer,
+      typeVideo: 'movie',
     });
   }
 };
@@ -272,7 +265,7 @@ const MovieWatch = () => {
   const id = detail && detail.id;
   const releaseYear = new Date(detail?.release_date || '').getFullYear();
   return (
-    <Container fluid responsive css={{ margin: 0, padding: 0 }}>
+    <>
       {/* <ClientOnly fallback={<Loading type="default" />}>
         {() => (
           <Suspense fallback={<Loading type="default" />}>
@@ -459,7 +452,7 @@ const MovieWatch = () => {
           recommendationsMovies={recommendations?.items}
         />
       </Container>
-    </Container>
+    </>
   );
 };
 

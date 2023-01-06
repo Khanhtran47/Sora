@@ -4,7 +4,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { RouteMatch, useLocation, useNavigate } from '@remix-run/react';
+import { RouteMatch, useLocation, useNavigate, useFetcher } from '@remix-run/react';
 import { Container, Button, Tooltip, keyframes } from '@nextui-org/react';
 import Artplayer from 'artplayer';
 import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
@@ -27,6 +27,7 @@ import PlayerError from '~/src/components/elements/player/PlayerError';
 import { H5 } from '~/src/components/styles/Text.styles';
 import Flex from '~/src/components/styles/Flex.styles';
 import Box from '~/src/components/styles/Box.styles';
+import WatchTrailerModal, { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
 
 import Close from '~/src/assets/icons/CloseIcon.js';
 import Expand from '~/src/assets/icons/ExpandIcon.js';
@@ -69,6 +70,7 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
   const { matches } = props;
   const location = useLocation();
   const navigate = useNavigate();
+  const fetcher = useFetcher();
   const {
     isMini,
     shouldShowPlayer,
@@ -86,7 +88,8 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
     setSubtitleSelector,
   } = usePlayerState((state) => state);
 
-  const { provider, sources, subtitles } = playerData || {};
+  const { provider, sources, subtitles, id, posterPlayer, typeVideo, trailerAnime } =
+    playerData || {};
   let backgroundColor;
   let windowColor;
   let hls: Hls | null = null;
@@ -239,6 +242,21 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
     }
   }, [matchesFiltered?.id]);
 
+  const [isWatchTrailerModalVisible, setWatchTrailerModalVisible] = useState(false);
+  const [trailer, setTrailer] = useState<Trailer>({});
+  const closeWatchTrailerModalHandler = () => {
+    setWatchTrailerModalVisible(false);
+    artplayer?.play();
+    if (typeVideo === 'movie' || typeVideo === 'tv') setTrailer({});
+  };
+  useEffect(() => {
+    if (fetcher.data && fetcher.data.videos) {
+      const { results } = fetcher.data.videos;
+      const officialTrailer = results.find((result: Trailer) => result.type === 'Trailer');
+      setTrailer(officialTrailer);
+    }
+  }, [fetcher.data]);
+
   useEffect(() => {
     if (playerData) {
       if (provider && sources && sources.length > 0) {
@@ -328,8 +346,7 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
             {playerData ? (
               <>
                 <ArtPlayer
-                  type="movie"
-                  key={`${playerData?.id}-${playerData?.routePlayer}-${playerData?.titlePlayer}-${playerData?.provider}`}
+                  key={`${id}-${routePlayer}-${titlePlayer}-${provider}`}
                   autoPlay={false}
                   hideBottomGroupButtons
                   option={{
@@ -359,6 +376,7 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                     theme: 'var(--nextui-colors-primary)',
                     autoMini: false,
                     hotkey: true,
+                    useSSR: false,
                     moreVideoAttr: isDesktop
                       ? {
                           crossOrigin: 'anonymous',
@@ -428,8 +446,8 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                           ? 'srt'
                           : '',
                     },
-                    title: playerData?.titlePlayer,
-                    poster: playerData?.posterPlayer,
+                    title: titlePlayer,
+                    poster: posterPlayer,
                     layers: [
                       {
                         html: '',
@@ -702,6 +720,67 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                     </H5>
                   </Flex>
                 ) : null}
+                {!isMini ? (
+                  <Flex
+                    justify="start"
+                    align="center"
+                    wrap="wrap"
+                    className="space-x-4"
+                    css={{
+                      marginTop: '1.5rem',
+                      padding: '0 0.75rem',
+                      '@xs': {
+                        padding: '0 3vw',
+                      },
+                      '@sm': {
+                        padding: '0 6vw',
+                      },
+                      '@md': {
+                        padding: '0 12vw',
+                      },
+                    }}
+                  >
+                    <Tooltip content="In development">
+                      <Button
+                        size="sm"
+                        color="primary"
+                        auto
+                        ghost
+                        css={{ marginBottom: '0.75rem' }}
+                      >
+                        Toggle Light
+                      </Button>
+                    </Tooltip>
+                    <Button
+                      size="sm"
+                      color="primary"
+                      auto
+                      ghost
+                      onClick={() => {
+                        artplayer?.pause();
+                        setWatchTrailerModalVisible(true);
+                        if (typeVideo === 'movie' || typeVideo === 'tv')
+                          fetcher.load(
+                            `/${typeVideo === 'movie' ? 'movies' : 'tv-shows'}/${id}/videos`,
+                          );
+                      }}
+                      css={{ marginBottom: '0.75rem' }}
+                    >
+                      Watch Trailer
+                    </Button>
+                    <Tooltip content="In development">
+                      <Button
+                        size="sm"
+                        color="primary"
+                        auto
+                        ghost
+                        css={{ marginBottom: '0.75rem' }}
+                      >
+                        Add to My List
+                      </Button>
+                    </Tooltip>
+                  </Flex>
+                ) : null}
               </>
             ) : (
               <PlayerError
@@ -817,6 +896,20 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
             artplayer.controls.settings,
           )
         : null}
+      {(typeVideo === 'movie' || typeVideo === 'tv') && (
+        <WatchTrailerModal
+          trailer={trailer}
+          visible={isWatchTrailerModalVisible}
+          closeHandler={closeWatchTrailerModalHandler}
+        />
+      )}
+      {typeVideo === 'anime' && trailerAnime && (
+        <WatchTrailerModal
+          trailer={trailerAnime}
+          visible={isWatchTrailerModalVisible}
+          closeHandler={closeWatchTrailerModalHandler}
+        />
+      )}
     </Container>
   );
 };
