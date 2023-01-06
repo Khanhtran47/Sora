@@ -24,7 +24,7 @@ import { LOKLOK_URL } from '~/services/loklok/utils.server';
 // import i18next from '~/i18n/i18next.server';
 import TMDB from '~/utils/media';
 import { TMDB as TmdbUtils } from '~/services/tmdb/utils.server';
-import updateHistory from '~/utils/update-history';
+// import updateHistory from '~/utils/update-history';
 
 import WatchDetail from '~/src/components/elements/shared/WatchDetail';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';

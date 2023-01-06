@@ -2,22 +2,10 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { Suspense, useState, useEffect, useMemo } from 'react';
+// import { useState, useEffect, useMemo } from 'react';
 import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
-import {
-  useCatch,
-  useLoaderData,
-  NavLink,
-  RouteMatch,
-  useParams,
-  useLocation,
-  useFetcher,
-  useNavigate,
-} from '@remix-run/react';
-import { Container, Spacer, Loading, Badge } from '@nextui-org/react';
-import { ClientOnly } from 'remix-utils';
-import artplayerPluginHlsQuality from 'artplayer-plugin-hls-quality';
-import Hls from 'hls.js';
+import { useCatch, useLoaderData, NavLink, RouteMatch } from '@remix-run/react';
+import { Container, Spacer, Badge } from '@nextui-org/react';
 
 import { authenticate, insertHistory } from '~/services/supabase';
 import getProviderList from '~/services/provider.server';
@@ -32,17 +20,15 @@ import {
   getKissKhEpisodeStream,
   getKissKhEpisodeSubtitle,
 } from '~/services/kisskh/kisskh.server';
-import { IEpisodeInfo } from '~/services/consumet/anilist/anilist.types';
+import { IEpisodeInfo, ITrailer } from '~/services/consumet/anilist/anilist.types';
 import { loklokGetTvEpInfo, loklokGetMovieInfo } from '~/services/loklok';
 import { LOKLOK_URL } from '~/services/loklok/utils.server';
 import { IMovieSource, IMovieSubtitle } from '~/services/consumet/flixhq/flixhq.types';
 import { IMedia } from '~/types/media';
 
-import updateHistory from '~/utils/update-history';
-import useLocalStorage from '~/hooks/useLocalStorage';
+// import updateHistory from '~/utils/update-history';
+// import useLocalStorage from '~/hooks/useLocalStorage';
 
-import ArtPlayer from '~/src/components/elements/player/ArtPlayer';
-import PlayerError from '~/src/components/elements/player/PlayerError';
 import WatchDetail from '~/src/components/elements/shared/WatchDetail';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
@@ -62,6 +48,12 @@ type LoaderData = {
     provider: string;
     episodesCount?: number;
   }[];
+  routePlayer: string;
+  titlePlayer: string;
+  id: number | string;
+  posterPlayer: string;
+  typeVideo: 'movie' | 'tv' | 'anime';
+  trailerAnime?: ITrailer;
 };
 
 const checkHasNextEpisode = (
@@ -84,6 +76,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const url = new URL(request.url);
   const provider = url.searchParams.get('provider');
   const idProvider = url.searchParams.get('id');
+  const routePlayer = `${url.pathname}${url.search}`;
   const { animeId, episodeId } = params;
   const aid = Number(animeId);
   if (!animeId || !episodeId) throw new Response('Not Found', { status: 404 });
@@ -99,6 +92,9 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const episodeIndex = episodes && episodes[Number(episodeId) - 1]?.id;
   const totalEpisodes = Number(episodes?.length);
   const episodeInfo = episodes?.find((e: IEpisodeInfo) => e.number === Number(episodeId));
+  const titlePlayer = `${title} episode ${episodeId}`;
+  const posterPlayer = detail?.cover || '';
+  const trailerAnime = detail?.trailer;
 
   if (user) {
     insertHistory({
@@ -151,6 +147,12 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       userId: user?.id,
       episodeInfo,
       providers,
+      routePlayer,
+      titlePlayer,
+      id: aid,
+      posterPlayer,
+      typeVideo: 'anime',
+      trailerAnime,
     });
   }
 
@@ -174,6 +176,12 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       userId: user?.id,
       episodeInfo,
       providers,
+      routePlayer,
+      titlePlayer,
+      id: aid,
+      posterPlayer,
+      typeVideo: 'anime',
+      trailerAnime,
     });
   }
 
@@ -197,6 +205,12 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       userId: user?.id,
       episodeInfo,
       providers,
+      routePlayer,
+      titlePlayer,
+      id: aid,
+      posterPlayer,
+      typeVideo: 'anime',
+      trailerAnime,
     });
   }
 
@@ -236,6 +250,12 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       userId: user?.id,
       episodeInfo,
       providers,
+      routePlayer,
+      titlePlayer,
+      id: aid,
+      posterPlayer,
+      typeVideo: 'anime',
+      trailerAnime,
     });
   }
 
@@ -276,6 +296,12 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       userId: user?.id,
       episodeInfo,
       providers,
+      routePlayer,
+      titlePlayer,
+      id: aid,
+      posterPlayer,
+      typeVideo: 'anime',
+      trailerAnime,
     });
   }
   const [sources, providers] = await Promise.all([
@@ -292,6 +318,12 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     userId: user?.id,
     episodeInfo,
     providers,
+    routePlayer,
+    titlePlayer,
+    id: aid,
+    posterPlayer,
+    typeVideo: 'anime',
+    trailerAnime,
   });
 };
 
@@ -379,105 +411,39 @@ export const handle = {
       </NavLink>
     </>
   ),
+  playerSettings: {
+    isMini: false,
+    shouldShowPlayer: true,
+  },
 };
 
 const AnimeEpisodeWatch = () => {
   const {
-    provider,
-    idProvider,
+    // provider,
+    // idProvider,
     detail,
     episodes,
-    hasNextEpisode,
-    sources,
-    subtitles,
-    userId,
+    // hasNextEpisode,
+    // userId,
     providers,
   } = useLoaderData<LoaderData>();
-  const { episodeId } = useParams();
-  const fetcher = useFetcher();
-  const location = useLocation();
-  const navigate = useNavigate();
-  let hls: Hls | null = null;
-  const [isVideoEnded, setIsVideoEnded] = useState<boolean>(false);
-  const [playNextEpisode] = useLocalStorage('playNextEpisode', true);
-  const currentEpisode = useMemo(() => Number(episodeId), [episodeId]);
-  const qualitySelector = useMemo<
-    | {
-        default?: boolean | undefined;
-        html: string;
-        url: string;
-        isM3U8: boolean;
-        isDASH: boolean;
-      }[]
-    | undefined
-  >(
-    () =>
-      provider === 'Loklok' || provider === 'Gogo' || provider === 'Zoro'
-        ? sources?.map(({ quality, url }: { quality: number | string; url: string }) => ({
-            html: quality.toString(),
-            url: url.toString().startsWith('http:')
-              ? `https://cors.proxy.consumet.org/${url.toString()}`
-              : url.toString(),
-            isM3U8: true,
-            isDASH: false,
-            ...(provider === 'Loklok' && Number(quality) === 720 && { default: true }),
-            ...((provider === 'Gogo' || provider === 'Zoro') &&
-              quality === 'default' && { default: true }),
-          }))
-        : provider === 'Bilibili'
-        ? sources?.map(({ quality, url }: { quality: number | string; url: string }) => ({
-            html: quality.toString(),
-            url: url.toString(),
-            isM3U8: false,
-            isDASH: true,
-            ...(provider === 'Bilibili' && quality === 'auto' && { default: true }),
-          }))
-        : sources?.map(({ quality, url }: { quality: number | string; url: string }) => ({
-            html: quality.toString(),
-            url: url.toString(),
-            isM3U8: false,
-            isDASH: true,
-            ...(quality === 'default' && { default: true }),
-          })),
-    [provider, sources],
-  );
+  // const { episodeId } = useParams();
+  // const navigate = useNavigate();
+  // const [isVideoEnded, setIsVideoEnded] = useState<boolean>(false);
+  // const [playNextEpisode] = useLocalStorage('playNextEpisode', true);
+  // const currentEpisode = useMemo(() => Number(episodeId), [episodeId]);
 
-  const subtitleSelector = useMemo<
-    | {
-        default?: boolean | undefined;
-        html: string;
-        url: string;
-      }[]
-    | undefined
-  >(
-    ():
-      | {
-          default?: boolean | undefined;
-          html: string;
-          url: string;
-        }[]
-      | undefined =>
-      subtitles?.map(({ lang, url }: { lang: string; url: string }) => ({
-        html: lang.toString(),
-        url: url.toString(),
-        ...(provider === 'Loklok' && lang.includes('en') && { default: true }),
-        ...(provider === 'Bilibili' && lang.includes('en') && { default: true }),
-        ...(provider === 'KissKh' && lang === 'English' && { default: true }),
-      })),
-    [provider, subtitles],
-  );
-
-  useEffect(() => {
-    if (isVideoEnded && playNextEpisode && hasNextEpisode && provider) {
-      navigate(
-        `/anime/${detail?.id}/episode/${currentEpisode + 1}?provider=${provider}&id=${idProvider}`,
-      );
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isVideoEnded]);
+  // useEffect(() => {
+  //   if (isVideoEnded && playNextEpisode && hasNextEpisode && provider) {
+  //     navigate(
+  //       `/anime/${detail?.id}/episode/${currentEpisode + 1}?provider=${provider}&id=${idProvider}`,
+  //     );
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [isVideoEnded]);
   return (
-    <Container responsive fluid css={{ margin: 0, padding: 0 }}>
-      <ClientOnly fallback={<Loading type="default" />}>
+    <>
+      {/* <ClientOnly fallback={<Loading type="default" />}>
         {() => (
           <Suspense fallback={<Loading type="default" />}>
             {sources ? (
@@ -585,16 +551,6 @@ const AnimeEpisodeWatch = () => {
                             }
                           },
                         },
-                  plugins:
-                    provider === 'KissKh'
-                      ? [
-                          artplayerPluginHlsQuality({
-                            setting: true,
-                            title: 'Quality',
-                            auto: 'Auto',
-                          }),
-                        ]
-                      : [],
                 }}
                 qualitySelector={qualitySelector || []}
                 subtitleSelector={subtitleSelector || []}
@@ -667,7 +623,7 @@ const AnimeEpisodeWatch = () => {
             )}
           </Suspense>
         )}
-      </ClientOnly>
+      </ClientOnly> */}
       <Container
         fluid
         alignItems="stretch"
@@ -700,7 +656,7 @@ const AnimeEpisodeWatch = () => {
           providers={providers}
         />
       </Container>
-    </Container>
+    </>
   );
 };
 

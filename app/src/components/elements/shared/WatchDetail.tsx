@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { memo } from 'react';
 import { useNavigate } from '@remix-run/react';
-import { Spacer, Divider, Button, Row, Col, Card, Avatar } from '@nextui-org/react';
+import { Spacer, Button, Row, Col, Card, Avatar } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
 import tinycolor from 'tinycolor2';
 
@@ -78,7 +78,6 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
 
   return (
     <>
-      <Spacer y={2} />
       {type === 'anime' || type === 'tv' ? (
         <>
           <Row>
@@ -106,9 +105,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
               </Col>
             ) : null}
           </Row>
-          <Spacer y={1} />
-          <Divider x={1} css={{ m: 0 }} />
-          <Spacer y={1} />
+          <Spacer y={2} />
         </>
       ) : null}
       <Row css={{ backgroundColor: '$backgroundContrast', p: '$9', borderRadius: '$lg' }}>

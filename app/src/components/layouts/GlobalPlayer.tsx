@@ -1,5 +1,4 @@
 /* eslint-disable no-nested-ternary */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect, useRef, useMemo } from 'react';
@@ -10,8 +9,6 @@ import Artplayer from 'artplayer';
 import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
 import Hls from 'hls.js';
 import { isDesktop, isMobile, isMobileOnly } from 'react-device-detect';
-// @ts-ignore
-import artplayerPluginControl from 'artplayer-plugin-control';
 import tinycolor from 'tinycolor2';
 import { useRouteData } from 'remix-utils';
 
@@ -33,6 +30,8 @@ import Close from '~/src/assets/icons/CloseIcon.js';
 import Expand from '~/src/assets/icons/ExpandIcon.js';
 import Play from '~/src/assets/icons/PlayIcon.js';
 import Pause from '~/src/assets/icons/PauseIcon.js';
+// import Next from '~/src/assets/icons/NextIcon.js';
+// import Previous from '~/src/assets/icons/PreviousIcon.js';
 
 interface IGlobalPlayerProps {
   matches: RouteMatch[];
@@ -222,7 +221,7 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
   useEffect(() => {
     if (playerSettings?.shouldShowPlayer && playerData && !shouldPlayInBackground)
       setShouldShowPlayer(true);
-    else if (!playerSettings && shouldPlayInBackground && playerData && !isMobileOnly)
+    else if (!playerSettings && shouldPlayInBackground && playerData?.sources && !isMobileOnly)
       setShouldShowPlayer(true);
     else setShouldShowPlayer(false);
   }, [playerSettings, playerData]);
@@ -343,12 +342,10 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
               height: isMini ? '14.0625rem' : '100%',
             }}
           >
-            {playerData ? (
+            {playerData?.sources ? (
               <>
                 <ArtPlayer
                   key={`${id}-${routePlayer}-${titlePlayer}-${provider}`}
-                  autoPlay={false}
-                  hideBottomGroupButtons
                   option={{
                     type: provider === 'Bilibili' ? 'mpd' : provider === 'test' ? 'mp4' : 'm3u8',
                     autoSize: false,
@@ -485,6 +482,35 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                     icons: {
                       // state: isDesktop && '',
                       loading: '<div class="custom-loader"></div>',
+                      play: `
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M17.49 9.59965L5.6 16.7696C4.9 17.1896 4 16.6896 4 15.8696V7.86965C4 4.37965 7.77 2.19965 10.8 3.93965L15.39 6.57965L17.48 7.77965C18.17 8.18965 18.18 9.18965 17.49 9.59965Z" fill="#eee"/>
+                          <path d="M18.0888 15.4606L14.0388 17.8006L9.99883 20.1306C8.54883 20.9606 6.90883 20.7906 5.71883 19.9506C5.13883 19.5506 5.20883 18.6606 5.81883 18.3006L18.5288 10.6806C19.1288 10.3206 19.9188 10.6606 20.0288 11.3506C20.2788 12.9006 19.6388 14.5706 18.0888 15.4606Z" fill="#eee"/>
+                        </svg>
+                      `,
+                      screenshot: `
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M18.0002 6C17.3902 6 16.8302 5.65 16.5502 5.11L15.8302 3.66C15.3702 2.75 14.1702 2 13.1502 2H10.8602C9.83017 2 8.63017 2.75 8.17017 3.66L7.45017 5.11C7.17017 5.65 6.61017 6 6.00017 6C3.83017 6 2.11017 7.83 2.25017 9.99L2.77017 18.25C2.89017 20.31 4.00017 22 6.76017 22H17.2402C20.0002 22 21.1002 20.31 21.2302 18.25L21.7502 9.99C21.8902 7.83 20.1702 6 18.0002 6ZM10.5002 7.25H13.5002C13.9102 7.25 14.2502 7.59 14.2502 8C14.2502 8.41 13.9102 8.75 13.5002 8.75H10.5002C10.0902 8.75 9.75017 8.41 9.75017 8C9.75017 7.59 10.0902 7.25 10.5002 7.25ZM12.0002 18.12C10.1402 18.12 8.62017 16.61 8.62017 14.74C8.62017 12.87 10.1302 11.36 12.0002 11.36C13.8702 11.36 15.3802 12.87 15.3802 14.74C15.3802 16.61 13.8602 18.12 12.0002 18.12Z" fill="#eee"/>
+                        </svg>
+                      `,
+                      pip: `
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM18.5 16.4C18.5 17.9 17.9 18.5 16.4 18.5H12.6C11.1 18.5 10.5 17.9 10.5 16.4V14.6C10.5 13.1 11.1 12.5 12.6 12.5H16.4C17.9 12.5 18.5 13.1 18.5 14.6V16.4Z" fill="#eee"/>
+                        </svg>
+                      `,
+                      fullscreenOn: `
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM10.22 21H7.91C5.2 21 3 18.8 3 16.09V13.78C3 13.37 3.34 13.03 3.75 13.03C4.16 13.03 4.5 13.37 4.5 13.78V16.09C4.5 17.97 6.03 19.5 7.91 19.5H10.22C10.63 19.5 10.97 19.84 10.97 20.25C10.97 20.66 10.64 21 10.22 21ZM10.22 4.5H7.91C6.03 4.5 4.5 6.03 4.5 7.91V10.22C4.5 10.63 4.16 10.97 3.75 10.97C3.34 10.97 3 10.64 3 10.22V7.91C3 5.2 5.2 3 7.91 3H10.22C10.63 3 10.97 3.34 10.97 3.75C10.97 4.16 10.64 4.5 10.22 4.5ZM21 16.09C21 18.8 18.8 21 16.09 21H14.7C14.29 21 13.95 20.66 13.95 20.25C13.95 19.84 14.29 19.5 14.7 19.5H16.09C17.97 19.5 19.5 17.97 19.5 16.09V14.7C19.5 14.29 19.84 13.95 20.25 13.95C20.66 13.95 21 14.29 21 14.7V16.09ZM21 10.22C21 10.63 20.66 10.97 20.25 10.97C19.84 10.97 19.5 10.63 19.5 10.22V7.91C19.5 6.03 17.97 4.5 16.09 4.5H13.78C13.37 4.5 13.03 4.16 13.03 3.75C13.03 3.34 13.36 3 13.78 3H16.09C18.8 3 21 5.2 21 7.91V10.22Z" fill="#eee"/>
+                        </svg>
+                      `,
+                      fullscreenOff: `
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M3 9C3 8.44772 3.44772 8 4 8H8L8 4C8 3.44772 8.44772 3 9 3C9.55229 3 10 3.44772 10 4L10 9C10 9.55229 9.55228 10 9 10H4C3.44772 10 3 9.55229 3 9Z" fill="#eee"/>
+                          <path d="M20 8C20.5523 8 21 8.44772 21 9C21 9.55229 20.5523 10 20 10H15C14.4477 10 14 9.55229 14 9L14 4C14 3.44772 14.4477 3 15 3C15.5523 3 16 3.44772 16 4V8H20Z" fill="#eee"/>
+                          <path d="M20 16C20.5523 16 21 15.5523 21 15C21 14.4477 20.5523 14 20 14H15C14.4477 14 14 14.4477 14 15L14 20C14 20.5523 14.4477 21 15 21C15.5523 21 16 20.5523 16 20V16H20Z" fill="#eee"/>
+                          <path d="M4 16C3.44772 16 3 15.5523 3 15C3 14.4477 3.44772 14 4 14H9C9.55228 14 10 14.4477 10 15L10 20C10 20.5523 9.55229 21 9 21C8.44772 21 8 20.5523 8 20L8 16H4Z" fill="#eee"/>
+                        </svg>
+                      `,
                     },
                     customType:
                       provider === 'Bilibili'
@@ -520,10 +546,9 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                         tooltip: 'Settings',
                       },
                     ],
-                    plugins: [artplayerPluginControl()],
                   }}
                   getInstance={(art) => {
-                    art.on('ready', () => {
+                    art.on('ready', async () => {
                       setArtplayer(art);
                       console.log(art);
                       art.controls.add({
@@ -597,7 +622,9 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                       '&.art-bottom': {
                         height: isMini && '7px !important',
                         padding: isMini && '0 !important',
-                        flexDirection: isMobile ? 'column-reverse' : 'column',
+                        flexDirection: isMobile && 'column-reverse',
+                        opacity: !isMini && isSettingsOpen && 1,
+                        visibility: !isMini && isSettingsOpen && 'visible',
                       },
                       '&.art-notice': {
                         justifyContent: 'center',
@@ -621,10 +648,10 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                         display: isMini && isSettingsOpen ? 'block' : 'none',
                       },
                       '&.art-control-playAndPause': {
-                        display: isMobile ? 'none !important' : 'flex',
+                        display: isMobile && 'none !important',
                       },
                       '&.art-control-volume': {
-                        display: isMobile ? 'none !important' : 'flex',
+                        display: isMobile && 'none !important',
                       },
                       '&.art-state': {
                         display: isDesktop && 'none !important',

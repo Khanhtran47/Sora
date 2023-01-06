@@ -1,24 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { useState, useEffect, Suspense, useMemo } from 'react';
+// import { useState, useEffect, useMemo } from 'react';
 import { json } from '@remix-run/node';
 import type { LoaderFunction, MetaFunction, LoaderArgs } from '@remix-run/node';
-import {
-  useCatch,
-  useLoaderData,
-  NavLink,
-  RouteMatch,
-  useParams,
-  useFetcher,
-  useLocation,
-  useNavigate,
-} from '@remix-run/react';
-import { Container, Spacer, Loading, Badge } from '@nextui-org/react';
-import { ClientOnly, useRouteData } from 'remix-utils';
-import Hls from 'hls.js';
-import artplayerPluginHlsQuality from 'artplayer-plugin-hls-quality';
+import { useCatch, useLoaderData, NavLink, RouteMatch } from '@remix-run/react';
+import { Container, Spacer, Badge } from '@nextui-org/react';
+import { useRouteData } from 'remix-utils';
 
 import { authenticate, insertHistory } from '~/services/supabase';
 import {
@@ -40,12 +28,10 @@ import getProviderList from '~/services/provider.server';
 import { LOKLOK_URL } from '~/services/loklok/utils.server';
 
 import TMDB from '~/utils/media';
-import updateHistory from '~/utils/update-history';
-import useMediaQuery from '~/hooks/useMediaQuery';
-import useLocalStorage from '~/hooks/useLocalStorage';
+import { TMDB as TmdbUtils } from '~/services/tmdb/utils.server';
+// import updateHistory from '~/utils/update-history';
+// import useLocalStorage from '~/hooks/useLocalStorage';
 
-import ArtPlayer from '~/src/components/elements/player/ArtPlayer';
-import PlayerError from '~/src/components/elements/player/PlayerError';
 import WatchDetail from '~/src/components/elements/shared/WatchDetail';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
@@ -68,6 +54,11 @@ type LoaderData = {
     provider: string;
     episodesCount?: number;
   }[];
+  routePlayer: string;
+  titlePlayer: string;
+  id: number | string;
+  posterPlayer: string;
+  typeVideo: 'movie' | 'tv' | 'anime';
 };
 
 export const meta: MetaFunction = ({ data, params }) => {
@@ -131,6 +122,7 @@ export const loader: LoaderFunction = async ({ request, params }: LoaderArgs) =>
   const url = new URL(request.url);
   const provider = url.searchParams.get('provider');
   const idProvider = url.searchParams.get('id');
+  const routePlayer = `${url.pathname}${url.search}`;
   const { tvId, seasonId, episodeId } = params;
   const tid = Number(tvId);
   const sid = Number(seasonId);
@@ -150,6 +142,8 @@ export const loader: LoaderFunction = async ({ request, params }: LoaderArgs) =>
   const orgTitle = detail?.original_name || '';
   const year = new Date(seasonDetail?.air_date || '').getFullYear();
   const season = seasonDetail?.season_number;
+  const titlePlayer = `${detail?.name} season ${season} episode ${episodeId}`;
+  const posterPlayer = TmdbUtils.backdropUrl(detail?.backdrop_path || '', 'w1280');
 
   if (user) {
     insertHistory({
@@ -193,6 +187,11 @@ export const loader: LoaderFunction = async ({ request, params }: LoaderArgs) =>
       })),
       userId: user?.id,
       providers,
+      routePlayer,
+      titlePlayer,
+      id: tid,
+      posterPlayer,
+      typeVideo: 'tv',
     });
   }
 
@@ -227,6 +226,11 @@ export const loader: LoaderFunction = async ({ request, params }: LoaderArgs) =>
         subtitles: tvEpisodeStreamLink?.subtitles,
         userId: user?.id,
         providers,
+        routePlayer,
+        titlePlayer,
+        id: tid,
+        posterPlayer,
+        typeVideo: 'tv',
       });
     }
   }
@@ -266,6 +270,11 @@ export const loader: LoaderFunction = async ({ request, params }: LoaderArgs) =>
       })),
       userId: user?.id,
       providers,
+      routePlayer,
+      titlePlayer,
+      id: tid,
+      posterPlayer,
+      typeVideo: 'tv',
     });
   }
 };
@@ -337,20 +346,22 @@ export const handle = {
       </NavLink>
     </>
   ),
+  playerSettings: {
+    isMini: false,
+    shouldShowPlayer: true,
+  },
 };
 
 const EpisodeWatch = () => {
   const {
-    provider,
-    idProvider,
+    // provider,
+    // idProvider,
     detail,
     recommendations,
     imdbRating,
     seasonDetail,
-    hasNextEpisode,
-    sources,
-    subtitles,
-    userId,
+    // hasNextEpisode,
+    // userId,
     providers,
   } = useLoaderData<LoaderData>();
   const rootData:
@@ -360,77 +371,25 @@ const EpisodeWatch = () => {
         genresTv: { [id: string]: string };
       }
     | undefined = useRouteData('root');
-  const { seasonId, episodeId } = useParams();
-  const isSm = useMediaQuery('(max-width: 650px)');
+  // const { seasonId, episodeId } = useParams();
   const id = detail && detail.id;
-  const [isVideoEnded, setIsVideoEnded] = useState<boolean>(false);
-  const fetcher = useFetcher();
-  const location = useLocation();
-  const navigate = useNavigate();
-  let hls: Hls | null = null;
-  const [playNextEpisode] = useLocalStorage('playNextEpisode', true);
-  const currentEpisode = useMemo(() => Number(episodeId), [episodeId]);
-  const qualitySelector = useMemo<
-    | {
-        default?: boolean | undefined;
-        html: string;
-        url: string;
-        isM3U8: boolean;
-        isDASH: boolean;
-      }[]
-    | undefined
-  >(
-    () =>
-      sources?.map(({ quality, url }: { quality: number | string; url: string }) => ({
-        html: quality.toString(),
-        url: url.toString().startsWith('http:')
-          ? `https://cors.proxy.consumet.org/${url.toString()}`
-          : url.toString(),
-        isM3U8: true,
-        isDASH: false,
-        ...(provider === 'Flixhq' && quality === 'auto' && { default: true }),
-        ...(provider === 'Loklok' && Number(quality) === 720 && { default: true }),
-      })),
-    [provider, sources],
-  );
+  // const [isVideoEnded, setIsVideoEnded] = useState<boolean>(false);
+  // const navigate = useNavigate();
+  // const [playNextEpisode] = useLocalStorage('playNextEpisode', true);
+  // const currentEpisode = useMemo(() => Number(episodeId), [episodeId]);
 
-  const subtitleSelector = useMemo<
-    | {
-        default?: boolean | undefined;
-        html: string;
-        url: string;
-      }[]
-    | undefined
-  >(
-    ():
-      | {
-          default?: boolean | undefined;
-          html: string;
-          url: string;
-        }[]
-      | undefined =>
-      subtitles?.map(({ lang, url }: { lang: string; url: string }) => ({
-        html: lang.toString(),
-        url: url.toString(),
-        ...(provider === 'Flixhq' && lang === 'English' && { default: true }),
-        ...(provider === 'KissKh' && lang === 'English' && { default: true }),
-        ...(provider === 'Loklok' && lang.includes('en') && { default: true }),
-      })),
-    [provider, subtitles],
-  );
-
-  useEffect(() => {
-    if (isVideoEnded && playNextEpisode && provider && idProvider && hasNextEpisode)
-      navigate(
-        `/tv-shows/${detail?.id}/season/${seasonId}/episode/${
-          currentEpisode + 1
-        }?provider=${provider}&id=${idProvider}`,
-      );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isVideoEnded]);
+  // useEffect(() => {
+  //   if (isVideoEnded && playNextEpisode && provider && idProvider && hasNextEpisode)
+  //     navigate(
+  //       `/tv-shows/${detail?.id}/season/${seasonId}/episode/${
+  //         currentEpisode + 1
+  //       }?provider=${provider}&id=${idProvider}`,
+  //     );
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [isVideoEnded]);
   return (
-    <Container fluid responsive css={{ margin: 0, padding: 0 }}>
-      <ClientOnly fallback={<Loading type="default" />}>
+    <>
+      {/* <ClientOnly fallback={<Loading type="default" />}>
         {() => (
           <Suspense fallback={<Loading type="default" />}>
             {sources ? (
@@ -613,7 +572,7 @@ const EpisodeWatch = () => {
             )}
           </Suspense>
         )}
-      </ClientOnly>
+      </ClientOnly> */}
       <Container
         fluid
         alignItems="stretch"
@@ -650,7 +609,7 @@ const EpisodeWatch = () => {
           providers={providers}
         />
       </Container>
-    </Container>
+    </>
   );
 };
 
