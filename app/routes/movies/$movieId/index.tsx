@@ -124,7 +124,7 @@ const MovieOverview = () => {
               {detail?.status}
             </H6>
             <H6 h6>
-              <strong>Network</strong>
+              <strong>Production Companies</strong>
               <br />
               {detail?.production_companies &&
                 detail.production_companies.map((company) => (

@@ -3,7 +3,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { RouteMatch, useLocation, useNavigate, useFetcher } from '@remix-run/react';
+import { RouteMatch, useLocation, useNavigate, useFetcher, useMatches } from '@remix-run/react';
 import { Container, Button, Tooltip, keyframes } from '@nextui-org/react';
 import Artplayer from 'artplayer';
 import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
@@ -33,10 +33,6 @@ import Pause from '~/src/assets/icons/PauseIcon.js';
 // import Next from '~/src/assets/icons/NextIcon.js';
 // import Previous from '~/src/assets/icons/PreviousIcon.js';
 
-interface IGlobalPlayerProps {
-  matches: RouteMatch[];
-}
-
 const jumpAnimation = keyframes({
   '15%': {
     borderBottomRightRadius: '3px',
@@ -65,11 +61,11 @@ const shadowAnimation = keyframes({
   },
 });
 
-const GlobalPlayer = (props: IGlobalPlayerProps) => {
-  const { matches } = props;
+const GlobalPlayer = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const fetcher = useFetcher();
+  const matches = useMatches();
   const {
     isMini,
     shouldShowPlayer,
@@ -87,15 +83,26 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
     setSubtitleSelector,
   } = usePlayerState((state) => state);
 
-  const { provider, sources, subtitles, id, posterPlayer, typeVideo, trailerAnime } =
-    playerData || {};
+  const {
+    provider,
+    sources,
+    subtitles,
+    id,
+    posterPlayer,
+    typeVideo,
+    trailerAnime,
+    hasNextEpisode,
+  } = playerData || {};
   let backgroundColor;
   let windowColor;
   let hls: Hls | null = null;
-  const matchesFiltered = matches.find(
-    (match) => match?.pathname.includes('player') || match?.pathname.includes('watch'),
+  const matchesFiltered = useMemo(
+    () =>
+      matches.find(
+        (match) => match?.pathname.includes('player') || match?.pathname.includes('watch'),
+      ),
+    [matches],
   );
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const playerSettings = matchesFiltered?.handle?.playerSettings;
   const shouldPlayInBackground = useMemo(
     () => !(location?.pathname.includes('player') || location?.pathname.includes('watch')),
@@ -236,7 +243,7 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
     if (RouteData) {
       setPlayerData(RouteData);
     }
-  }, [matchesFiltered?.id]);
+  }, [matchesFiltered?.pathname]);
 
   const [isWatchTrailerModalVisible, setWatchTrailerModalVisible] = useState(false);
   const [trailer, setTrailer] = useState<Trailer>({});
@@ -483,6 +490,25 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path d="M17.49 9.59965L5.6 16.7696C4.9 17.1896 4 16.6896 4 15.8696V7.86965C4 4.37965 7.77 2.19965 10.8 3.93965L15.39 6.57965L17.48 7.77965C18.17 8.18965 18.18 9.18965 17.49 9.59965Z" fill="#eee"/>
                           <path d="M18.0888 15.4606L14.0388 17.8006L9.99883 20.1306C8.54883 20.9606 6.90883 20.7906 5.71883 19.9506C5.13883 19.5506 5.20883 18.6606 5.81883 18.3006L18.5288 10.6806C19.1288 10.3206 19.9188 10.6606 20.0288 11.3506C20.2788 12.9006 19.6388 14.5706 18.0888 15.4606Z" fill="#eee"/>
+                        </svg>
+                      `,
+                      pause: `
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M10.65 19.11V4.89C10.65 3.54 10.08 3 8.64 3H5.01C3.57 3 3 3.54 3 4.89V19.11C3 20.46 3.57 21 5.01 21H8.64C10.08 21 10.65 20.46 10.65 19.11Z" fill="#eee"/>
+                          <path d="M21.0016 19.11V4.89C21.0016 3.54 20.4316 3 18.9916 3H15.3616C13.9316 3 13.3516 3.54 13.3516 4.89V19.11C13.3516 20.46 13.9216 21 15.3616 21H18.9916C20.4316 21 21.0016 20.46 21.0016 19.11Z" fill="#eee"/>
+                        </svg>
+                      `,
+                      volume: `
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M18.0003 16.7503C17.8403 16.7503 17.6903 16.7003 17.5503 16.6003C17.2203 16.3503 17.1503 15.8803 17.4003 15.5503C18.9703 13.4603 18.9703 10.5403 17.4003 8.45027C17.1503 8.12027 17.2203 7.65027 17.5503 7.40027C17.8803 7.15027 18.3503 7.22027 18.6003 7.55027C20.5603 10.1703 20.5603 13.8303 18.6003 16.4503C18.4503 16.6503 18.2303 16.7503 18.0003 16.7503Z" fill="#eee"/>
+                          <path d="M19.8284 19.2503C19.6684 19.2503 19.5184 19.2003 19.3784 19.1003C19.0484 18.8503 18.9784 18.3803 19.2284 18.0503C21.8984 14.4903 21.8984 9.51027 19.2284 5.95027C18.9784 5.62027 19.0484 5.15027 19.3784 4.90027C19.7084 4.65027 20.1784 4.72027 20.4284 5.05027C23.4984 9.14027 23.4984 14.8603 20.4284 18.9503C20.2884 19.1503 20.0584 19.2503 19.8284 19.2503Z" fill="#eee"/>
+                          <path d="M14.02 3.78168C12.9 3.16168 11.47 3.32168 10.01 4.23168L7.09 6.06168C6.89 6.18168 6.66 6.25168 6.43 6.25168H5.5H5C2.58 6.25168 1.25 7.58168 1.25 10.0017V14.0017C1.25 16.4217 2.58 17.7517 5 17.7517H5.5H6.43C6.66 17.7517 6.89 17.8217 7.09 17.9417L10.01 19.7717C10.89 20.3217 11.75 20.5917 12.55 20.5917C13.07 20.5917 13.57 20.4717 14.02 20.2217C15.13 19.6017 15.75 18.3117 15.75 16.5917V7.41168C15.75 5.69168 15.13 4.40168 14.02 3.78168Z" fill="#eee"/>
+                        </svg>
+                      `,
+                      volumeClose: `
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M22.5314 13.4197L21.0814 11.9697L22.4814 10.5697C22.7714 10.2797 22.7714 9.79969 22.4814 9.50969C22.1914 9.21969 21.7114 9.21969 21.4214 9.50969L20.0214 10.9097L18.5714 9.45969C18.2814 9.16969 17.8014 9.16969 17.5114 9.45969C17.2214 9.74969 17.2214 10.2297 17.5114 10.5197L18.9614 11.9697L17.4714 13.4597C17.1814 13.7497 17.1814 14.2297 17.4714 14.5197C17.6214 14.6697 17.8114 14.7397 18.0014 14.7397C18.1914 14.7397 18.3814 14.6697 18.5314 14.5197L20.0214 13.0297L21.4714 14.4797C21.6214 14.6297 21.8114 14.6997 22.0014 14.6997C22.1914 14.6997 22.3814 14.6297 22.5314 14.4797C22.8214 14.1897 22.8214 13.7197 22.5314 13.4197Z" fill="#eee"/>
+                          <path d="M14.02 3.78168C12.9 3.16168 11.47 3.32168 10.01 4.23168L7.09 6.06168C6.89 6.18168 6.66 6.25168 6.43 6.25168H5.5H5C2.58 6.25168 1.25 7.58168 1.25 10.0017V14.0017C1.25 16.4217 2.58 17.7517 5 17.7517H5.5H6.43C6.66 17.7517 6.89 17.8217 7.09 17.9417L10.01 19.7717C10.89 20.3217 11.75 20.5917 12.55 20.5917C13.07 20.5917 13.57 20.4717 14.02 20.2217C15.13 19.6017 15.75 18.3117 15.75 16.5917V7.41168C15.75 5.69168 15.13 4.40168 14.02 3.78168Z" fill="#eee"/>
                         </svg>
                       `,
                       screenshot: `
