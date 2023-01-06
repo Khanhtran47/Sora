@@ -213,9 +213,6 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
 
   useEffect(() => {
     setIsMini(shouldPlayInBackground);
-    if (artplayer && !isMobile) {
-      artplayer.plugins.artplayerPluginControl.enable = !shouldPlayInBackground;
-    }
   }, [shouldPlayInBackground]);
 
   useEffect(() => {
