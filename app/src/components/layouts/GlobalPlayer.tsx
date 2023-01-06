@@ -3,7 +3,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { RouteMatch, useLocation, useNavigate, useFetcher, useMatches } from '@remix-run/react';
+import { useLocation, useNavigate, useFetcher, useMatches, useParams } from '@remix-run/react';
 import { Container, Button, Tooltip, keyframes } from '@nextui-org/react';
 import Artplayer from 'artplayer';
 import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
@@ -30,8 +30,8 @@ import Close from '~/src/assets/icons/CloseIcon.js';
 import Expand from '~/src/assets/icons/ExpandIcon.js';
 import Play from '~/src/assets/icons/PlayIcon.js';
 import Pause from '~/src/assets/icons/PauseIcon.js';
-// import Next from '~/src/assets/icons/NextIcon.js';
-// import Previous from '~/src/assets/icons/PreviousIcon.js';
+import Next from '~/src/assets/icons/NextIcon.js';
+import Previous from '~/src/assets/icons/PreviousIcon.js';
 
 const jumpAnimation = keyframes({
   '15%': {
@@ -66,6 +66,7 @@ const GlobalPlayer = () => {
   const navigate = useNavigate();
   const fetcher = useFetcher();
   const matches = useMatches();
+  const { seasonId, episodeId } = useParams();
   const {
     isMini,
     shouldShowPlayer,
@@ -92,6 +93,8 @@ const GlobalPlayer = () => {
     typeVideo,
     trailerAnime,
     hasNextEpisode,
+    idProvider,
+    userId,
   } = playerData || {};
   let backgroundColor;
   let windowColor;
@@ -108,10 +111,12 @@ const GlobalPlayer = () => {
     () => !(location?.pathname.includes('player') || location?.pathname.includes('watch')),
     [location?.pathname],
   );
+  const currentEpisode = useMemo(() => Number(episodeId), [episodeId]);
   const [ref, { height }] = useMeasure<HTMLDivElement>();
   const constraintsRef = useRef<HTMLDivElement>(null);
   const [artplayer, setArtplayer] = useState<Artplayer | null>(null);
   const [isPlayerPlaying, setIsPlayerPlaying] = useState(false);
+  const [isVideoEnded, setIsVideoEnded] = useState(false);
   const [isPlayerFullScreen, setIsPlayerFullScreen] = useState(false);
   const [isSettingsOpen, setSettingsOpen] = useState(false);
 
@@ -133,6 +138,7 @@ const GlobalPlayer = () => {
     'sora-settings_subtitle_window-opacity',
     '0%',
   );
+  const [playNextEpisode] = useLocalStorage('sora-settings_play-next-episode', true);
   const subtitleBackgroundColor = useMemo(() => {
     switch (currentSubtitleBackgroundColor) {
       case 'Black':
@@ -245,6 +251,48 @@ const GlobalPlayer = () => {
     }
   }, [matchesFiltered?.pathname]);
 
+  const nextEpisodeUrl = useMemo(() => {
+    if (typeVideo === 'tv') {
+      return `/tv-shows/${id}/season/${seasonId}/episode/${
+        currentEpisode + 1
+      }/watch?provider=${provider}&id=${idProvider}`;
+    }
+    if (typeVideo === 'anime') {
+      return `/anime/${id}/episode/${
+        currentEpisode + 1
+      }/watch?provider=${provider}&id=${idProvider}`;
+    }
+  }, [typeVideo, id, seasonId, currentEpisode, provider, idProvider]);
+
+  const prevEpisodeUrl = useMemo(() => {
+    if (currentEpisode > 1) {
+      if (typeVideo === 'tv') {
+        return `/tv-shows/${id}/season/${seasonId}/episode/${
+          currentEpisode - 1
+        }/watch?provider=${provider}&id=${idProvider}`;
+      }
+      if (typeVideo === 'anime') {
+        return `/anime/${id}/episode/${
+          currentEpisode - 1
+        }/watch?provider=${provider}&id=${idProvider}`;
+      }
+    }
+  }, [typeVideo, id, seasonId, currentEpisode, provider, idProvider]);
+
+  useEffect(() => {
+    if (
+      isVideoEnded &&
+      playNextEpisode &&
+      provider &&
+      idProvider &&
+      hasNextEpisode &&
+      nextEpisodeUrl &&
+      typeVideo !== 'movie'
+    ) {
+      navigate(nextEpisodeUrl);
+    }
+  }, [isVideoEnded]);
+
   const [isWatchTrailerModalVisible, setWatchTrailerModalVisible] = useState(false);
   const [trailer, setTrailer] = useState<Trailer>({});
   const closeWatchTrailerModalHandler = () => {
@@ -284,6 +332,14 @@ const GlobalPlayer = () => {
             ? sources?.map(({ quality, url }: { quality: number | string; url: string }) => ({
                 html: quality.toString(),
                 url: url.toString(),
+                isM3U8: false,
+                isDASH: true,
+                ...(quality === 'auto' && { default: true }),
+              }))
+            : provider === 'KissKh'
+            ? sources?.map(({ quality, url }: { quality: number | string; url: string }) => ({
+                html: quality.toString(),
+                url: `https://cors.proxy.consumet.org/${url.toString()}`,
                 isM3U8: false,
                 isDASH: true,
                 ...(quality === 'auto' && { default: true }),
@@ -407,8 +463,10 @@ const GlobalPlayer = () => {
                               item.quality === 'default',
                           )?.url ||
                           (sources && sources[0]?.url)
-                        : provider === 'Bilibili' || provider === 'KissKh'
+                        : provider === 'Bilibili'
                         ? sources && sources[0]?.url
+                        : provider === 'KissKh'
+                        ? sources && `https://cors.proxy.consumet.org/${sources[0]?.url}`
                         : provider === 'test'
                         ? sources?.find((source) => Number(source.quality) === 720)?.url
                         : sources?.find(
@@ -568,10 +626,17 @@ const GlobalPlayer = () => {
                         html: '',
                         tooltip: 'Settings',
                       },
+                      ...(currentEpisode > 1 && isDesktop
+                        ? [{ position: 'left', name: 'prev', html: '' }]
+                        : []),
+                      ...(hasNextEpisode && isDesktop
+                        ? [{ position: 'left', name: 'next', html: '' }]
+                        : []),
                     ],
                   }}
                   getInstance={(art) => {
                     art.on('ready', async () => {
+                      setIsVideoEnded(false);
                       setArtplayer(art);
                       console.log(art);
                       art.controls.add({
@@ -589,6 +654,7 @@ const GlobalPlayer = () => {
                       });
                     });
                     art.on('play', () => {
+                      setIsVideoEnded(false);
                       setIsPlayerPlaying(true);
                     });
                     art.on('pause', () => {
@@ -598,7 +664,17 @@ const GlobalPlayer = () => {
                       setIsPlayerFullScreen(state);
                     });
                     art.on('video:ended', () => {
+                      setIsVideoEnded(true);
                       setIsPlayerPlaying(false);
+                    });
+                    art.on('destroy', () => {
+                      setIsVideoEnded(false);
+                      setIsPlayerPlaying(false);
+                      setIsPlayerFullScreen(false);
+                      setArtplayer(null);
+                      if (hls) {
+                        hls.destroy();
+                      }
                     });
                   }}
                   css={{
@@ -946,6 +1022,31 @@ const GlobalPlayer = () => {
             artplayer.controls.settings,
           )
         : null}
+      {artplayer?.controls.prev && !isMini && currentEpisode > 1 && isDesktop
+        ? createPortal(
+            <Button
+              auto
+              light
+              onClick={() => prevEpisodeUrl && navigate(prevEpisodeUrl)}
+              icon={<Previous filled />}
+              css={{ color: '#eee' }}
+            />,
+            artplayer.controls.prev,
+          )
+        : null}
+      {artplayer?.controls.next && !isMini && hasNextEpisode && isDesktop
+        ? createPortal(
+            <Button
+              auto
+              light
+              onClick={() => nextEpisodeUrl && navigate(nextEpisodeUrl)}
+              icon={<Next filled />}
+              css={{ color: '#eee' }}
+            />,
+            artplayer.controls.next,
+          )
+        : null}
+
       {(typeVideo === 'movie' || typeVideo === 'tv') && (
         <WatchTrailerModal
           trailer={trailer}

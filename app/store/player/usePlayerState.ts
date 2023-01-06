@@ -17,6 +17,8 @@ export type PlayerData =
       posterPlayer: string;
       typeVideo: 'movie' | 'tv' | 'anime';
       trailerAnime?: ITrailer;
+      currentEpisode?: number;
+      userId?: string;
     }
   | undefined;
 
