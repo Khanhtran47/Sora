@@ -334,7 +334,7 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
               autoPlay={false}
               hideBottomGroupButtons
               option={{
-                type: provider === 'Bilibili' ? 'mpd' : 'm3u8',
+                type: provider === 'Bilibili' ? 'mpd' : provider === 'test' ? 'mp4' : 'm3u8',
                 autoSize: false,
                 loop: false,
                 mutex: true,
