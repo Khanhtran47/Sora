@@ -103,6 +103,8 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
   const constraintsRef = useRef<HTMLDivElement>(null);
   const [artplayer, setArtplayer] = useState<Artplayer | null>(null);
   const [isPlayerPlaying, setIsPlayerPlaying] = useState(false);
+  const [isPlayerFullScreen, setIsPlayerFullScreen] = useState(false);
+  const [isSettingsOpen, setSettingsOpen] = useState(false);
 
   const [currentSubtitleFontColor] = useLocalStorage('sora-settings_subtitle_font-color', 'White');
   const [currentSubtitleFontSize] = useLocalStorage('sora-settings_subtitle_font-size', '100%');
@@ -342,7 +344,7 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                     fullscreen: true,
                     fullscreenWeb: false,
                     airplay: true,
-                    pip: isDesktop,
+                    pip: true,
                     autoplay: false,
                     screenshot: isDesktop,
                     subtitleOffset: true,
@@ -526,6 +528,12 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                     art.on('pause', () => {
                       setIsPlayerPlaying(false);
                     });
+                    art.on('fullscreen', (state) => {
+                      setIsPlayerFullScreen(state);
+                    });
+                    art.on('video:ended', () => {
+                      setIsPlayerPlaying(false);
+                    });
                   }}
                   css={{
                     width: isMini ? '25rem' : '100%',
@@ -582,8 +590,9 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                       },
                       '&.art-layer-mask': {
                         transition: 'all 0.3s ease',
-                        backgroundColor: 'rgba(0, 0, 0, 0)',
-                        display: 'none',
+                        backgroundColor:
+                          isMini && isSettingsOpen ? 'rgba(0, 0, 0, 0.5)' : 'rgba(0, 0, 0, 0)',
+                        display: isMini && isSettingsOpen ? 'block' : 'none',
                       },
                       '&.art-layer-playPauseButton': {
                         transition: 'all 0.3s ease',
@@ -591,7 +600,7 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                       },
                       '&.art-layer-topControlButtons': {
                         transition: 'all 0.3s ease',
-                        display: 'none',
+                        display: isMini && isSettingsOpen ? 'block' : 'none',
                       },
                       '&.art-control-playAndPause': {
                         display: isMobile ? 'none !important' : 'flex',
@@ -776,6 +785,7 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                       setTitlePlayer('');
                       setQualitySelector([]);
                       setSubtitleSelector([]);
+                      setIsPlayerPlaying(false);
                     }}
                     icon={<Close />}
                   />
@@ -785,6 +795,9 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
                 artplayer={artplayer}
                 qualitySelector={qualitySelector}
                 subtitleSelector={subtitleSelector}
+                isPlayerFullScreen={isPlayerFullScreen}
+                isSettingsOpen={isSettingsOpen}
+                setSettingsOpen={setSettingsOpen}
               />
             </Flex>,
             artplayer.layers.topControlButtons,
@@ -797,6 +810,9 @@ const GlobalPlayer = (props: IGlobalPlayerProps) => {
               artplayer={artplayer}
               qualitySelector={qualitySelector}
               subtitleSelector={subtitleSelector}
+              isPlayerFullScreen={isPlayerFullScreen}
+              isSettingsOpen={isSettingsOpen}
+              setSettingsOpen={setSettingsOpen}
             />,
             artplayer.controls.settings,
           )

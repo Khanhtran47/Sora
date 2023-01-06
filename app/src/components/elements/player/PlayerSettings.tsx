@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable no-nested-ternary */
 import { useMemo, useState } from 'react';
-import { Spacer, Popover, Button, Divider } from '@nextui-org/react';
+import { Spacer, Button, Divider } from '@nextui-org/react';
 import { isMobileOnly } from 'react-device-detect';
 
 import useLocalStorage from '~/hooks/useLocalStorage';
@@ -9,6 +9,8 @@ import useLocalStorage from '~/hooks/useLocalStorage';
 import { H6 } from '~/src/components/styles/Text.styles';
 import ResizablePanel from '~/src/components/elements/shared/ResizablePanel';
 import Flex from '~/src/components/styles/Flex.styles';
+import Box from '~/src/components/styles/Box.styles';
+import { Popover, PopoverTrigger, PopoverContent } from '~/src/components/elements/shared/Popover';
 import { Sheet, SheetTrigger, SheetContent } from '~/src/components/elements/shared/Sheet';
 
 import Settings from '~/src/assets/icons/SettingsIcon.js';
@@ -30,12 +32,21 @@ interface IPlayerSettingsProps {
     isDASH?: boolean;
   }[];
   subtitleSelector?: { html: string; url: string; default?: boolean }[];
+  isPlayerFullScreen?: boolean;
+  isSettingsOpen: boolean;
+  setSettingsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const PlayerSettings = (props: IPlayerSettingsProps) => {
-  const { artplayer, qualitySelector, subtitleSelector } = props;
+  const {
+    artplayer,
+    qualitySelector,
+    subtitleSelector,
+    isPlayerFullScreen,
+    isSettingsOpen,
+    setSettingsOpen,
+  } = props;
 
-  const [isSettingsOpen, setSettingsOpen] = useState(false);
   const [dropdownLevelKey, setDropdownLevelKey] = useState('general');
   const [currentPlaySpeed, setCurrentPlaySpeed] = useState('Normal');
   const [currentAspectRatio, setCurrentAspectRatio] = useState('Default');
@@ -1267,16 +1278,16 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           side="bottom"
           hideCloseButton
           // portals overlay and content parts into the player when fullscreen is enabled
-          container={artplayer?.fullscreen === true ? artplayer?.template?.$player : document.body}
+          container={isPlayerFullScreen ? artplayer?.template?.$player : document.body}
           css={{ padding: '$2 !important' }}
         >
-          <ResizablePanel>
+          <ResizablePanel contentWidth="full">
             {currentDropdownLevel ? (
               <Flex
                 direction="column"
                 align="start"
                 justify="start"
-                className="space-y-2 px-2 py-2 w-full"
+                className="space-y-2 !p-2 w-full"
               >
                 {currentDropdownLevel?.showBackButton || currentDropdownLevel?.showTitle ? (
                   <>
@@ -1314,7 +1325,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                   direction="column"
                   align="start"
                   justify="start"
-                  className="space-y-2 px-2 py-2 w-full"
+                  className="space-y-2 !p-2 w-full"
                 >
                   {currentDropdownLevel?.listItems.map((item) => (
                     <Button
@@ -1392,17 +1403,8 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
     );
   }
   return (
-    <Popover
-      shouldFlip
-      placement="top"
-      isOpen={isSettingsOpen}
-      onOpenChange={(isOpen) => setSettingsOpen(isOpen)}
-      isBordered
-      disableShadow
-      onClose={() => setDropdownLevelKey('general')}
-      offset={5}
-    >
-      <Popover.Trigger>
+    <Popover open={isSettingsOpen} onOpenChange={(open) => setSettingsOpen(open)}>
+      <PopoverTrigger asChild>
         <Button
           auto
           light
@@ -1410,20 +1412,30 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           icon={<Settings filled />}
           css={{ color: '#eee' }}
         />
-      </Popover.Trigger>
-      <Popover.Content
+      </PopoverTrigger>
+      <PopoverContent
+        side="top"
+        // portals overlay and content parts into the player when fullscreen is enabled
+        container={isPlayerFullScreen ? artplayer?.template?.$player : document.body}
         css={{
+          zIndex: 1000,
           backgroundColor: '$backgroundAlpha',
           backdropFilter: 'blur(21px) saturate(180%)',
           '-webkit-backdrop-filter': 'blur(21px) saturate(180%)',
+          border: '1px solid $border',
         }}
       >
-        <ResizablePanel>
+        <ResizablePanel contentWidth="fit">
           {currentDropdownLevel ? (
-            <Flex direction="column" align="start" justify="start" className="space-y-2 px-2 py-2">
+            <Flex direction="column" align="start" justify="start" className="space-y-2 w-fit">
               {currentDropdownLevel?.showBackButton || currentDropdownLevel?.showTitle ? (
-                <>
-                  <Flex direction="row" align="center" justify="between" className="w-full">
+                <Box className="w-full">
+                  <Flex
+                    direction="row"
+                    align="center"
+                    justify="between"
+                    className="w-fit !p-2 space-x-4"
+                  >
                     <Flex direction="row" align="center" justify="start">
                       {currentDropdownLevel?.showBackButton ? (
                         <Button
@@ -1434,7 +1446,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                         />
                       ) : null}
                       {currentDropdownLevel?.showTitle ? (
-                        <H6 h6 css={{ margin: 0 }} weight="semibold">
+                        <H6 h6 css={{ margin: 0, px: '$6' }} weight="semibold">
                           {currentDropdownLevel?.title}
                         </H6>
                       ) : null}
@@ -1450,15 +1462,10 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                       </Button>
                     ) : null}
                   </Flex>
-                  <Divider />
-                </>
+                  <Divider css={{ m: 0 }} />
+                </Box>
               ) : null}
-              <Flex
-                direction="column"
-                align="start"
-                justify="start"
-                className="space-y-2 px-2 py-2 w-full"
-              >
+              <Flex direction="column" align="start" justify="start" className="space-y-2 w-full">
                 {currentDropdownLevel?.listItems.map((item) => (
                   <Button
                     key={item.id}
@@ -1466,13 +1473,16 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                     light
                     onClick={item.action}
                     css={{
-                      p: 0,
+                      p: '$4',
                       width: '100%',
                       '& span': {
                         '&.nextui-button-text': {
                           display: 'block',
                           width: '100%',
                         },
+                      },
+                      '&:hover': {
+                        backgroundColor: '$backgroundAlpha',
                       },
                     }}
                   >
@@ -1530,7 +1540,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
             </Flex>
           ) : null}
         </ResizablePanel>
-      </Popover.Content>
+      </PopoverContent>
     </Popover>
   );
 };

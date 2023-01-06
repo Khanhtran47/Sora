@@ -31,7 +31,13 @@ const ignoreCircularReferences = () => {
   };
 };
 
-const ResizablePanel = ({ children }: { children: React.ReactNode }) => {
+const ResizablePanel = ({
+  children,
+  contentWidth,
+}: {
+  children: React.ReactNode;
+  contentWidth: 'full' | 'fit';
+}) => {
   const [ref, { height, width }] = useMeasure<HTMLDivElement>();
   const screen = useScreen();
   const panelHeight = useMemo(() => {
@@ -70,7 +76,9 @@ const ResizablePanel = ({ children }: { children: React.ReactNode }) => {
             }}
           >
             <ScrollAreaViewport>
-              <div ref={ref}>{children}</div>
+              <div ref={ref} className={`w-${contentWidth}`}>
+                {children}
+              </div>
             </ScrollAreaViewport>
             <ScrollAreaScrollbar orientation="vertical" css={{ width: '10px !important' }}>
               <ScrollAreaThumb />
