@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable no-nested-ternary */
 import { useMemo, useState } from 'react';
-import { Spacer, Button, Divider } from '@nextui-org/react';
+import { Spacer, Button, Divider, Switch, SwitchEvent } from '@nextui-org/react';
 import { isMobileOnly } from 'react-device-detect';
 
 import useLocalStorage from '~/hooks/useLocalStorage';
@@ -35,6 +35,8 @@ interface IPlayerSettingsProps {
   subtitleSelector?: { html: string; url: string; default?: boolean }[];
   isPlayerFullScreen?: boolean;
   isSettingsOpen: boolean;
+  showSubtitle: boolean;
+  setShowSubtitle: React.Dispatch<React.SetStateAction<boolean>>;
   setSettingsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setSearchModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -46,6 +48,8 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
     subtitleSelector,
     isPlayerFullScreen,
     isSettingsOpen,
+    showSubtitle,
+    setShowSubtitle,
     setSettingsOpen,
     setSearchModalVisible,
   } = props;
@@ -108,6 +112,9 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           action?: () => void;
           currentValue?: string;
           isCurrent?: boolean;
+          isSwitch?: boolean;
+          isSwitchOn?: boolean;
+          switchAction?: (e: SwitchEvent) => void;
         }[];
       }[] = [
         {
@@ -380,6 +387,20 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           extraButtonAction: () => setDropdownLevelKey('subtitle-settings'),
           extraButtonTitle: 'Subtitle Settings',
           listItems: [
+            {
+              id: 'toggle-subtitle',
+              title: 'Show Subtitle',
+              showIcon: false,
+              action: undefined,
+              isSwitch: true,
+              isSwitchOn: showSubtitle,
+              switchAction: (e: SwitchEvent) => {
+                if (artplayer) {
+                  artplayer.subtitle.show = e.target.checked;
+                  setShowSubtitle(e.target.checked);
+                }
+              },
+            },
             {
               id: 'search-subtitle',
               title: 'Search Subtitle',
@@ -1495,7 +1516,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                     light
                     onClick={item.action}
                     css={{
-                      p: '$4',
+                      p: '$4 !important',
                       height: 'auto',
                       width: '100%',
                       '& span': {
@@ -1541,20 +1562,26 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                         </H6>
                       </Flex>
                       <Flex direction="row" align="center" className="space-x-2">
-                        <H6 h6 css={{ margin: 0, color: '$accents9' }} weight="thin">
-                          {(
-                            item as {
-                              id: string;
-                              title: string;
-                              description: string;
-                              showIcon: boolean;
-                              icon: JSX.Element;
-                              action: () => void;
-                              currentValue: string;
-                            }
-                          )?.currentValue || ''}
-                        </H6>
-                        {item.showIcon ? <Arrow direction="right" /> : null}
+                        {item?.isSwitch ? (
+                          <Switch checked={showSubtitle} onChange={item.switchAction} />
+                        ) : (
+                          <>
+                            <H6 h6 css={{ margin: 0, color: '$accents9' }} weight="thin">
+                              {(
+                                item as {
+                                  id: string;
+                                  title: string;
+                                  description: string;
+                                  showIcon: boolean;
+                                  icon: JSX.Element;
+                                  action: () => void;
+                                  currentValue: string;
+                                }
+                              )?.currentValue || ''}
+                            </H6>
+                            {item.showIcon ? <Arrow direction="right" /> : null}
+                          </>
+                        )}
                       </Flex>
                     </Flex>
                   </Button>

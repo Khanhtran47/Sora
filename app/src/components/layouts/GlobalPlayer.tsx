@@ -116,12 +116,14 @@ const GlobalPlayer = () => {
   const currentEpisode = useMemo(() => Number(episodeId), [episodeId]);
   const [ref, { height }] = useMeasure<HTMLDivElement>();
   const constraintsRef = useRef<HTMLDivElement>(null);
+  const [autoShowSubtitle] = useLocalStorage('sora-settings_subtitle_auto-show', false);
   const [artplayer, setArtplayer] = useState<Artplayer | null>(null);
   const [isPlayerPlaying, setIsPlayerPlaying] = useState(false);
   const [isVideoEnded, setIsVideoEnded] = useState(false);
   const [isPlayerFullScreen, setIsPlayerFullScreen] = useState(false);
   const [isSettingsOpen, setSettingsOpen] = useState(false);
   const [isSearchModalVisible, setSearchModalVisible] = useState(false);
+  const [showSubtitle, setShowSubtitle] = useState(autoShowSubtitle);
 
   const [currentSubtitleFontColor] = useLocalStorage('sora-settings_subtitle_font-color', 'White');
   const [currentSubtitleFontSize] = useLocalStorage('sora-settings_subtitle_font-size', '100%');
@@ -659,6 +661,9 @@ const GlobalPlayer = () => {
                           width: '100%',
                         },
                       });
+                      if (autoShowSubtitle && art.subtitle) {
+                        art.subtitle.show = autoShowSubtitle;
+                      }
                     });
                     art.on('play', () => {
                       setIsVideoEnded(false);
@@ -753,9 +758,9 @@ const GlobalPlayer = () => {
                         transition: 'all 0.3s ease',
                         display: isMini && isSettingsOpen ? 'block' : 'none',
                       },
-                      '&.art-control-playAndPause': {
-                        display: isMobile && 'none !important',
-                      },
+                      // '&.art-control-playAndPause': {
+                      //   display: isMobile && 'none !important',
+                      // },
                       '&.art-control-volume': {
                         display: isMobile && 'none !important',
                       },
@@ -764,7 +769,7 @@ const GlobalPlayer = () => {
                       },
                       '&.art-subtitle': {
                         bottom: isMini && '7px !important',
-                        display: 'flex !important',
+                        display: showSubtitle ? 'flex !important' : 'none !important',
                         alignItems: 'center',
                         justifyContent: 'center',
                         flexDirection: 'column',
@@ -1026,6 +1031,8 @@ const GlobalPlayer = () => {
                 subtitleSelector={subtitleSelector}
                 isPlayerFullScreen={isPlayerFullScreen}
                 isSettingsOpen={isSettingsOpen}
+                showSubtitle={showSubtitle}
+                setShowSubtitle={setShowSubtitle}
                 setSettingsOpen={setSettingsOpen}
                 setSearchModalVisible={setSearchModalVisible}
               />
@@ -1042,6 +1049,8 @@ const GlobalPlayer = () => {
               subtitleSelector={subtitleSelector}
               isPlayerFullScreen={isPlayerFullScreen}
               isSettingsOpen={isSettingsOpen}
+              showSubtitle={showSubtitle}
+              setShowSubtitle={setShowSubtitle}
               setSettingsOpen={setSettingsOpen}
               setSearchModalVisible={setSearchModalVisible}
             />,
