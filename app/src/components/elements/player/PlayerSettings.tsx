@@ -1276,7 +1276,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
   );
   if (isMobileOnly) {
     return (
-      <Sheet>
+      <Sheet
+        onOpenChange={(open) => {
+          if (!open) setDropdownLevelKey('general');
+        }}
+      >
         <SheetTrigger asChild>
           <Button
             auto
@@ -1415,7 +1419,13 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
     );
   }
   return (
-    <Popover open={isSettingsOpen} onOpenChange={(open) => setSettingsOpen(open)}>
+    <Popover
+      open={isSettingsOpen}
+      onOpenChange={(open) => {
+        setSettingsOpen(open);
+        if (!open) setDropdownLevelKey('general');
+      }}
+    >
       <PopoverTrigger asChild>
         <Button
           auto

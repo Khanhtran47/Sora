@@ -84,7 +84,6 @@ const GlobalPlayer = () => {
     subtitleSelector,
     setSubtitleSelector,
   } = usePlayerState((state) => state);
-  console.log('🚀 ~ file: GlobalPlayer.tsx:87 ~ GlobalPlayer ~ subtitleSelector', subtitleSelector);
 
   const {
     provider,
