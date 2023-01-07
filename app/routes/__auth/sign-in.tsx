@@ -21,7 +21,7 @@ export const action: ActionFunction = async ({ request }) => {
   const email = data.get('email')?.toString();
   const password = data.get('password')?.toString();
 
-  if (!email || !/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/.test(email)) {
+  if (!email || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i.test(email)) {
     return json<ActionData>({ error: 'Please enter a valid email!' });
   }
 
