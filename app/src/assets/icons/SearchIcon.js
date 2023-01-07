@@ -1,58 +1,82 @@
-/* eslint-disable react/no-unknown-property */
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react/jsx-filename-extension */
-/* eslint-disable react/prop-types */
-/* eslint-disable react/self-closing-comp */
-const SearchIcon = ({
+import PropTypes from 'prop-types';
+
+const Bold = ({ color }) => (
+  <g transform="translate(2 2)">
+    <path
+      d="M17.741,19.608l-2.12-2.43a1.083,1.083,0,0,1,0-1.524.986.986,0,0,1,1.393,0l2.554,2.062h.045a1.348,1.348,0,0,1,0,1.892,1.315,1.315,0,0,1-1.872,0ZM0,8.67A8.624,8.624,0,0,1,8.578,0a8.531,8.531,0,0,1,6.065,2.54,8.716,8.716,0,0,1,2.512,6.13A8.624,8.624,0,0,1,8.578,17.34,8.624,8.624,0,0,1,0,8.67Z"
+      fill={color}
+    />
+  </g>
+);
+
+const Light = ({ color, strokeWidth }) => (
+  <g
+    transform="translate(2 2)"
+    fill="none"
+    stroke={color}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeMiterlimit={10}
+    strokeWidth={strokeWidth}
+  >
+    <circle cx={8.989} cy={8.989} r={8.989} transform="translate(.778 .778)" />
+    <path d="M16.018 16.485L19.542 20" />
+  </g>
+);
+
+const Search = ({
   fill = 'currentColor',
   filled = false,
   size = 0,
   height = 0,
   width = 0,
-  label = '',
   ...props
 }) => {
-  if (filled) {
-    return (
-      <svg width={size || width || 24} height={size || height || 24} viewBox="0 0 24 24" {...props}>
-        <ellipse cx="10.5992" cy="10.6532" rx="8.59922" ry="8.65324" fill={fill} />
-        <path
-          fill={fill}
-          opacity="0.4"
-          d="M20.6746 21.9553C20.3406 21.9444 20.0229 21.807 19.7854 21.5705L17.7489 19.1902C17.3123 18.7909 17.2766 18.1123 17.6689 17.6689C17.8525 17.4831 18.1021 17.3786 18.3625 17.3786C18.6229 17.3786 18.8726 17.4831 19.0562 17.6689L21.6172 19.7181C21.9862 20.0957 22.1 20.6563 21.9079 21.1492C21.7158 21.6422 21.2536 21.9754 20.728 22L20.6746 21.9553Z"
-        />
-      </svg>
-    );
+  switch (filled) {
+    case false:
+      return (
+        <svg
+          width={size || width || 24}
+          height={size || height || 24}
+          viewBox="0 0 24 24"
+          {...props}
+        >
+          <Light color={fill} strokeWidth={1.5} />
+        </svg>
+      );
+    default:
+      return (
+        <svg
+          width={size || width || 24}
+          height={size || height || 24}
+          viewBox="0 0 24 24"
+          {...props}
+        >
+          <Bold color={fill} />;
+        </svg>
+      );
   }
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={size || width || 24}
-      height={size || height || 24}
-      viewBox="0 0 24 24"
-      {...props}
-    >
-      <circle
-        fill={fill}
-        cx="11.7666"
-        cy="11.7666"
-        r="8.98856"
-        stroke="#200E32"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-      <path
-        opacity="0.4"
-        d="M18.0183 18.4852L21.5423 22.0001"
-        stroke="#200E32"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-    </svg>
-  );
 };
 
-export default SearchIcon;
+Search.displayName = 'PauseIcon';
+
+Bold.propTypes = {
+  color: PropTypes.string,
+};
+
+Light.propTypes = {
+  color: PropTypes.string,
+  strokeWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+};
+
+Search.propTypes = {
+  fill: PropTypes.string,
+  filled: PropTypes.bool,
+  size: PropTypes.number,
+  width: PropTypes.number,
+  height: PropTypes.number,
+  strokeWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+};
+
+export default Search;
