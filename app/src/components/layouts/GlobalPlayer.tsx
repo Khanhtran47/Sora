@@ -25,6 +25,7 @@ import { H5 } from '~/src/components/styles/Text.styles';
 import Flex from '~/src/components/styles/Flex.styles';
 import Box from '~/src/components/styles/Box.styles';
 import WatchTrailerModal, { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
+import SearchSubtitles from '~/src/components/elements/modal/SearchSubtitle';
 
 import Close from '~/src/assets/icons/CloseIcon.js';
 import Expand from '~/src/assets/icons/ExpandIcon.js';
@@ -83,6 +84,7 @@ const GlobalPlayer = () => {
     subtitleSelector,
     setSubtitleSelector,
   } = usePlayerState((state) => state);
+  console.log('🚀 ~ file: GlobalPlayer.tsx:87 ~ GlobalPlayer ~ subtitleSelector', subtitleSelector);
 
   const {
     provider,
@@ -95,6 +97,7 @@ const GlobalPlayer = () => {
     hasNextEpisode,
     idProvider,
     userId,
+    subtitleOptions,
   } = playerData || {};
   let backgroundColor;
   let windowColor;
@@ -119,6 +122,7 @@ const GlobalPlayer = () => {
   const [isVideoEnded, setIsVideoEnded] = useState(false);
   const [isPlayerFullScreen, setIsPlayerFullScreen] = useState(false);
   const [isSettingsOpen, setSettingsOpen] = useState(false);
+  const [isSearchModalVisible, setSearchModalVisible] = useState(false);
 
   const [currentSubtitleFontColor] = useLocalStorage('sora-settings_subtitle_font-color', 'White');
   const [currentSubtitleFontSize] = useLocalStorage('sora-settings_subtitle_font-size', '100%');
@@ -223,6 +227,10 @@ const GlobalPlayer = () => {
         break;
     }
   }, [currentSubtitleWindowColor, currentSubtitleWindowOpacity]);
+
+  const closeSearchModalHandler = () => {
+    setSearchModalVisible(false);
+  };
 
   useEffect(() => {
     setIsMini(shouldPlayInBackground);
@@ -842,6 +850,7 @@ const GlobalPlayer = () => {
                       onClick={() => navigate(routePlayer)}
                       className="line-clamp-1"
                       css={{ cursor: 'pointer' }}
+                      title={titlePlayer}
                     >
                       {titlePlayer}
                     </H5>
@@ -1019,6 +1028,7 @@ const GlobalPlayer = () => {
                 isPlayerFullScreen={isPlayerFullScreen}
                 isSettingsOpen={isSettingsOpen}
                 setSettingsOpen={setSettingsOpen}
+                setSearchModalVisible={setSearchModalVisible}
               />
             </Flex>,
             artplayer.layers.topControlButtons,
@@ -1034,6 +1044,7 @@ const GlobalPlayer = () => {
               isPlayerFullScreen={isPlayerFullScreen}
               isSettingsOpen={isSettingsOpen}
               setSettingsOpen={setSettingsOpen}
+              setSearchModalVisible={setSearchModalVisible}
             />,
             artplayer.controls.settings,
           )
@@ -1062,7 +1073,11 @@ const GlobalPlayer = () => {
             artplayer.controls.next,
           )
         : null}
-
+      <SearchSubtitles
+        visible={isSearchModalVisible}
+        closeHandler={closeSearchModalHandler}
+        subtitleOptions={subtitleOptions}
+      />
       {(typeVideo === 'movie' || typeVideo === 'tv') && (
         <WatchTrailerModal
           trailer={trailer}

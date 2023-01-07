@@ -21,6 +21,7 @@ import Flip from '~/src/assets/icons/FlipIcon.js';
 import Ratio from '~/src/assets/icons/RatioIcon.js';
 import Subtitle from '~/src/assets/icons/SubtitleIcon.js';
 import Filter from '~/src/assets/icons/FilterIcon.js';
+import Search from '~/src/assets/icons/SearchIcon.js';
 
 interface IPlayerSettingsProps {
   artplayer: Artplayer | null;
@@ -35,6 +36,7 @@ interface IPlayerSettingsProps {
   isPlayerFullScreen?: boolean;
   isSettingsOpen: boolean;
   setSettingsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setSearchModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const PlayerSettings = (props: IPlayerSettingsProps) => {
@@ -45,6 +47,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
     isPlayerFullScreen,
     isSettingsOpen,
     setSettingsOpen,
+    setSearchModalVisible,
   } = props;
 
   const [dropdownLevelKey, setDropdownLevelKey] = useState('general');
@@ -364,6 +367,41 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
               },
               isCurrent: currentVideoFlip === 'Vertical',
             },
+          ],
+        },
+        {
+          id: 'subtitle',
+          key: 'subtitle',
+          showTitle: true,
+          showBackButton: true,
+          backButtonAction: () => setDropdownLevelKey('general'),
+          title: 'Subtitle',
+          showExtraButton: true,
+          extraButtonAction: () => setDropdownLevelKey('subtitle-settings'),
+          extraButtonTitle: 'Subtitle Settings',
+          listItems: [
+            {
+              id: 'search-subtitle',
+              title: 'Search Subtitle',
+              showIcon: true,
+              icon: <Search />,
+              action: () => setSearchModalVisible(true),
+            },
+            ...(subtitleSelector
+              ? subtitleSelector.map((subtitle) => ({
+                  id: subtitle.html,
+                  title: subtitle.html,
+                  showIcon: false,
+                  action: () => {
+                    if (artplayer) {
+                      artplayer.subtitle.switch(subtitle.url, { name: subtitle.html });
+                      setCurrentSubtitle(subtitle.html);
+                      setDropdownLevelKey('general');
+                    }
+                  },
+                  isCurrent: currentSubtitle === subtitle.html,
+                }))
+              : []),
           ],
         },
         {
@@ -1188,32 +1226,6 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           ],
         },
       ];
-      if (subtitleSelector) {
-        level.push({
-          id: 'subtitle',
-          key: 'subtitle',
-          showTitle: true,
-          showBackButton: true,
-          backButtonAction: () => setDropdownLevelKey('general'),
-          title: 'Subtitle',
-          showExtraButton: true,
-          extraButtonAction: () => setDropdownLevelKey('subtitle-settings'),
-          extraButtonTitle: 'Subtitle Settings',
-          listItems: subtitleSelector.map((subtitle) => ({
-            id: subtitle.html,
-            title: subtitle.html,
-            showIcon: false,
-            action: () => {
-              if (artplayer) {
-                artplayer.subtitle.switch(subtitle.url, { name: subtitle.html });
-                setCurrentSubtitle(subtitle.html);
-                setDropdownLevelKey('general');
-              }
-            },
-            isCurrent: currentSubtitle === subtitle.html,
-          })),
-        });
-      }
       if (qualitySelector) {
         level.push({
           id: 'quality',

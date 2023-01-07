@@ -71,6 +71,18 @@ type DataLoader = {
   id: number | string;
   posterPlayer: string;
   typeVideo: 'movie' | 'tv' | 'anime';
+  subtitleOptions: {
+    imdb_id?: number | undefined;
+    tmdb_id?: number | undefined;
+    parent_feature_id?: number;
+    parent_imdb_id?: number;
+    parent_tmdb_id?: number;
+    episode_number?: number;
+    season_number?: number;
+    type?: string;
+    title?: string;
+    sub_format: string;
+  };
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -90,6 +102,12 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   if (!detail) throw new Response('Not Found', { status: 404 });
   const titlePlayer = detail?.title || detail?.original_title || '';
   const posterPlayer = TmdbUtils.backdropUrl(detail?.backdrop_path || '', 'w1280');
+  const subtitleOptions = {
+    tmdb_id: detail?.id,
+    type: 'movie',
+    title: detail?.title,
+    sub_format: provider === 'KissKh' ? 'srt' : 'webvtt',
+  };
 
   if (user) {
     insertHistory({
@@ -127,6 +145,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       id: mid,
       posterPlayer,
       typeVideo: 'movie',
+      subtitleOptions,
     });
   }
 
@@ -154,6 +173,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       id: mid,
       posterPlayer,
       typeVideo: 'movie',
+      subtitleOptions,
     });
   }
 
@@ -187,6 +207,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       id: mid,
       posterPlayer,
       typeVideo: 'movie',
+      subtitleOptions,
     });
   }
 
@@ -202,6 +223,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       id: mid,
       posterPlayer,
       typeVideo: 'movie',
+      subtitleOptions,
     });
   }
 };

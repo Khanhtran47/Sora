@@ -59,6 +59,18 @@ type LoaderData = {
   id: number | string;
   posterPlayer: string;
   typeVideo: 'movie' | 'tv' | 'anime';
+  subtitleOptions: {
+    imdb_id?: number | undefined;
+    tmdb_id?: number | undefined;
+    parent_feature_id?: number;
+    parent_imdb_id?: number;
+    parent_tmdb_id?: number;
+    episode_number?: number;
+    season_number?: number;
+    type?: string;
+    title?: string;
+    sub_format: string;
+  };
 };
 
 export const meta: MetaFunction = ({ data, params }) => {
@@ -144,6 +156,14 @@ export const loader: LoaderFunction = async ({ request, params }: LoaderArgs) =>
   const season = seasonDetail?.season_number;
   const titlePlayer = `${detail?.name} season ${season} episode ${episodeId}`;
   const posterPlayer = TmdbUtils.backdropUrl(detail?.backdrop_path || '', 'w1280');
+  const subtitleOptions = {
+    parent_tmdb_id: detail?.id,
+    season_number: sid,
+    episode_number: eid,
+    type: 'episode',
+    title: detail?.name,
+    sub_format: provider === 'KissKh' ? 'srt' : 'webvtt',
+  };
 
   if (user) {
     insertHistory({
@@ -192,6 +212,7 @@ export const loader: LoaderFunction = async ({ request, params }: LoaderArgs) =>
       id: tid,
       posterPlayer,
       typeVideo: 'tv',
+      subtitleOptions,
     });
   }
 
@@ -231,6 +252,7 @@ export const loader: LoaderFunction = async ({ request, params }: LoaderArgs) =>
         id: tid,
         posterPlayer,
         typeVideo: 'tv',
+        subtitleOptions,
       });
     }
   }
@@ -275,6 +297,7 @@ export const loader: LoaderFunction = async ({ request, params }: LoaderArgs) =>
       id: tid,
       posterPlayer,
       typeVideo: 'tv',
+      subtitleOptions,
     });
   }
 };

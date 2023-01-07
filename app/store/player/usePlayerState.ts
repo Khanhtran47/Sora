@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/indent */
 import create from 'zustand';
 
@@ -19,6 +20,18 @@ export type PlayerData =
       trailerAnime?: ITrailer;
       currentEpisode?: number;
       userId?: string;
+      subtitleOptions?: {
+        imdb_id?: number;
+        tmdb_id?: number;
+        parent_feature_id?: number;
+        parent_imdb_id?: number;
+        parent_tmdb_id?: number;
+        episode_number?: number;
+        season_number?: number;
+        type?: 'movie' | 'episode' | 'all';
+        title?: string;
+        sub_format: 'srt' | 'webvtt';
+      };
     }
   | undefined;
 
@@ -53,6 +66,7 @@ interface PlayerState {
   setQualitySelector: (qualitySelector: QualitySelector) => void;
   subtitleSelector: SubtitleSelector;
   setSubtitleSelector: (subtitleSelector: SubtitleSelector) => void;
+  updateSubtitleSelector: (subtitles: SubtitleSelector) => void;
 }
 
 const defaultState = {
@@ -75,6 +89,9 @@ const usePlayerState = create<PlayerState>((set) => ({
   setTitlePlayer: (titlePlayer: string) => set({ titlePlayer }),
   setPlayerData: (playerData: PlayerData) => set({ playerData }),
   setQualitySelector: (qualitySelector: QualitySelector) => set({ qualitySelector }),
+  updateSubtitleSelector: (subtitles: SubtitleSelector) =>
+    // @ts-ignore
+    set((state) => ({ subtitleSelector: [...state.subtitleSelector, ...subtitles] })),
   setSubtitleSelector: (subtitleSelector: SubtitleSelector) => set({ subtitleSelector }),
 }));
 

@@ -54,6 +54,18 @@ type LoaderData = {
   posterPlayer: string;
   typeVideo: 'movie' | 'tv' | 'anime';
   trailerAnime?: ITrailer;
+  subtitleOptions: {
+    imdb_id?: number | undefined;
+    tmdb_id?: number | undefined;
+    parent_feature_id?: number;
+    parent_imdb_id?: number;
+    parent_tmdb_id?: number;
+    episode_number?: number;
+    season_number?: number;
+    type?: string;
+    title?: string;
+    sub_format: string;
+  };
 };
 
 const checkHasNextEpisode = (
@@ -95,6 +107,11 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const titlePlayer = `${title} episode ${episodeId}`;
   const posterPlayer = detail?.cover || '';
   const trailerAnime = detail?.trailer;
+  const subtitleOptions = {
+    type: 'episode',
+    title: detail?.title?.userPreferred || detail?.title?.english || '',
+    sub_format: provider === 'KissKh' ? 'srt' : 'webvtt',
+  };
 
   if (user) {
     insertHistory({
@@ -153,6 +170,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       posterPlayer,
       typeVideo: 'anime',
       trailerAnime,
+      subtitleOptions,
     });
   }
 
@@ -182,6 +200,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       posterPlayer,
       typeVideo: 'anime',
       trailerAnime,
+      subtitleOptions,
     });
   }
 
@@ -211,6 +230,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       posterPlayer,
       typeVideo: 'anime',
       trailerAnime,
+      subtitleOptions,
     });
   }
 
@@ -256,6 +276,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       posterPlayer,
       typeVideo: 'anime',
       trailerAnime,
+      subtitleOptions,
     });
   }
 
@@ -302,6 +323,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       posterPlayer,
       typeVideo: 'anime',
       trailerAnime,
+      subtitleOptions,
     });
   }
   const [sources, providers] = await Promise.all([
@@ -324,6 +346,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     posterPlayer,
     typeVideo: 'anime',
     trailerAnime,
+    subtitleOptions,
   });
 };
 

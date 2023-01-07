@@ -55,16 +55,10 @@ interface IPlayerProps {
 
 const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
   const { option, getInstance, style, ...rest } = props;
-  // const [isSearchModalVisible, setSearchModalVisible] = useState(false);
   const isMini = usePlayerState((state) => state.isMini);
-  // const [subtitles, setSubtitles] = useState<{ html: string; url: string; default?: boolean }[]>(
-  //   subtitleSelector || [],
-  // );
+
   // const [playNextEpisode, setPlayNextEpisode] = useLocalStorage('playNextEpisode', true);
   const artRef = useRef<HTMLDivElement>(null);
-  // const closeSearchModalHandler = () => {
-  //   setSearchModalVisible(false);
-  // };
   useEffect(
     () => {
       const art = new Artplayer({
