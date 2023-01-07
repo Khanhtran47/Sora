@@ -35,7 +35,7 @@ export const action: ActionFunction = async ({ request }) => {
     }
   }
 
-  if (!email || !/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/.test(email)) {
+  if (!email || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i.test(email)) {
     return json<ActionData>({ errorCode: 'invalidEmail' });
   }
 
