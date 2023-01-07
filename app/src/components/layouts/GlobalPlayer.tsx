@@ -18,6 +18,8 @@ import type { PlayerData } from '~/store/player/usePlayerState';
 import useLocalStorage from '~/hooks/useLocalStorage';
 import useMeasure from '~/hooks/useMeasure';
 
+import updateHistory from '~/utils/update-history';
+
 import ArtPlayer from '~/src/components/elements/player/ArtPlayer';
 import PlayerSettings from '~/src/components/elements/player/PlayerSettings';
 import PlayerError from '~/src/components/elements/player/PlayerError';
@@ -381,7 +383,11 @@ const GlobalPlayer = () => {
           })),
         );
         setRoutePlayer(playerData?.routePlayer);
-        setTitlePlayer(playerData?.titlePlayer);
+        setTitlePlayer(
+          `${playerData?.titlePlayer}${seasonId ? ` season ${seasonId}` : ''}${
+            episodeId ? ` episode ${episodeId}` : ''
+          }`,
+        );
       }
     }
   }, [playerData]);
@@ -645,6 +651,10 @@ const GlobalPlayer = () => {
                   }}
                   getInstance={(art) => {
                     art.on('ready', async () => {
+                      const t = new URLSearchParams(location.search).get('t');
+                      if (t) {
+                        art.currentTime = Number(t);
+                      }
                       setIsVideoEnded(false);
                       setArtplayer(art);
                       console.log(art);
@@ -665,6 +675,47 @@ const GlobalPlayer = () => {
                         art.subtitle.show = autoShowSubtitle;
                       }
                     });
+                    if (userId) {
+                      switch (typeVideo) {
+                        case 'movie':
+                          updateHistory(
+                            art,
+                            fetcher,
+                            userId,
+                            location.pathname + location.search,
+                            'movie',
+                            playerData?.titlePlayer,
+                            playerData?.overview,
+                          );
+                          break;
+                        case 'tv':
+                          updateHistory(
+                            art,
+                            fetcher,
+                            userId,
+                            location.pathname + location.search,
+                            'tv',
+                            playerData?.titlePlayer,
+                            playerData?.overview,
+                            seasonId,
+                            episodeId,
+                          );
+                          break;
+                        case 'anime':
+                          updateHistory(
+                            art,
+                            fetcher,
+                            userId,
+                            location.pathname + location.search,
+                            'anime',
+                            playerData?.titlePlayer,
+                            playerData?.overview,
+                            episodeId,
+                          );
+                          break;
+                        default:
+                      }
+                    }
                     art.on('play', () => {
                       setIsVideoEnded(false);
                       setIsPlayerPlaying(true);

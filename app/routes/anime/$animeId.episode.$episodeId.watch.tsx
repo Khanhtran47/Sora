@@ -66,6 +66,7 @@ type LoaderData = {
     title?: string;
     sub_format: string;
   };
+  overview: string;
 };
 
 const checkHasNextEpisode = (
@@ -112,6 +113,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     title: detail?.title?.userPreferred || detail?.title?.english || '',
     sub_format: provider === 'KissKh' ? 'srt' : 'webvtt',
   };
+  const overview = detail?.description;
 
   if (user) {
     insertHistory({
@@ -171,6 +173,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       typeVideo: 'anime',
       trailerAnime,
       subtitleOptions,
+      overview,
     });
   }
 
@@ -201,6 +204,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       typeVideo: 'anime',
       trailerAnime,
       subtitleOptions,
+      overview,
     });
   }
 
@@ -231,6 +235,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       typeVideo: 'anime',
       trailerAnime,
       subtitleOptions,
+      overview,
     });
   }
 
@@ -277,6 +282,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       typeVideo: 'anime',
       trailerAnime,
       subtitleOptions,
+      overview,
     });
   }
 
@@ -324,6 +330,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       typeVideo: 'anime',
       trailerAnime,
       subtitleOptions,
+      overview,
     });
   }
   const [sources, providers] = await Promise.all([
@@ -347,6 +354,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     typeVideo: 'anime',
     trailerAnime,
     subtitleOptions,
+    overview,
   });
 };
 

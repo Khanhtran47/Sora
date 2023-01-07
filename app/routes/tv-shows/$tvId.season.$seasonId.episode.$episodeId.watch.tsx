@@ -71,6 +71,7 @@ type LoaderData = {
     title?: string;
     sub_format: string;
   };
+  overview?: string;
 };
 
 export const meta: MetaFunction = ({ data, params }) => {
@@ -164,6 +165,7 @@ export const loader: LoaderFunction = async ({ request, params }: LoaderArgs) =>
     title: detail?.name,
     sub_format: provider === 'KissKh' ? 'srt' : 'webvtt',
   };
+  const overview = detail?.overview || undefined;
 
   if (user) {
     insertHistory({
@@ -213,6 +215,7 @@ export const loader: LoaderFunction = async ({ request, params }: LoaderArgs) =>
       posterPlayer,
       typeVideo: 'tv',
       subtitleOptions,
+      overview,
     });
   }
 
@@ -253,6 +256,7 @@ export const loader: LoaderFunction = async ({ request, params }: LoaderArgs) =>
         posterPlayer,
         typeVideo: 'tv',
         subtitleOptions,
+        overview,
       });
     }
   }
@@ -298,6 +302,7 @@ export const loader: LoaderFunction = async ({ request, params }: LoaderArgs) =>
       posterPlayer,
       typeVideo: 'tv',
       subtitleOptions,
+      overview,
     });
   }
 };

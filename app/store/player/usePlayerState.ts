@@ -32,6 +32,7 @@ export type PlayerData =
         title?: string;
         sub_format: 'srt' | 'webvtt';
       };
+      overview: string;
     }
   | undefined;
 
