@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/indent */
 import React from 'react';
-import { styled, CSS, css } from '@nextui-org/react';
+import { styled, CSS, css, keyframes } from '@nextui-org/react';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import Box from '../../styles/Box.styles';
 
@@ -13,12 +13,41 @@ export const panelStyles = css({
 
 export const Panel = styled('div', panelStyles);
 
+const slideUpAndFade = keyframes({
+  '0%': { opacity: 0, transform: 'translateY(40px) scale(0.5)' },
+  '100%': { opacity: 1, transform: 'translateY(0) scale(1)' },
+});
+
+const slideRightAndFade = keyframes({
+  '0%': { opacity: 0, transform: 'translateX(-40px) scale(0.5)' },
+  '100%': { opacity: 1, transform: 'translateX(0) scale(1)' },
+});
+
+const slideDownAndFade = keyframes({
+  '0%': { opacity: 0, transform: 'translateY(-40px) scale(0.5)' },
+  '100%': { opacity: 1, transform: 'translateY(0) scale(1)' },
+});
+
+const slideLeftAndFade = keyframes({
+  '0%': { opacity: 0, transform: 'translateX(40px) scale(0.5)' },
+  '100%': { opacity: 1, transform: 'translateX(0) scale(1)' },
+});
+
 const Popover = PopoverPrimitive.Root;
 const PopoverTrigger = PopoverPrimitive.Trigger;
 
 const StyledContent = styled(PopoverPrimitive.Content, panelStyles, {
   minWidth: 100,
   minHeight: '$6',
+  animationDuration: '400ms',
+  animationTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+  willChange: 'transform, opacity',
+  '&[data-state="open"]': {
+    '&[data-side="top"]': { animationName: slideDownAndFade },
+    '&[data-side="right"]': { animationName: slideLeftAndFade },
+    '&[data-side="bottom"]': { animationName: slideUpAndFade },
+    '&[data-side="left"]': { animationName: slideRightAndFade },
+  },
   '&:focus': {
     outline: 'none',
   },
