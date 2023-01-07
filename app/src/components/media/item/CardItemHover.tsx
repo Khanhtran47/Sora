@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import * as React from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Container, Loading, Row, Spacer, Image as NextImage, Button } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
 import { motion, AnimatePresence } from 'framer-motion';
 import YouTube from 'react-youtube';
 import { ClientOnly } from 'remix-utils';
+
+import useCardHoverStore from '~/store/card/useCardHoverStore';
 
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import useLocalStorage from '~/hooks/useLocalStorage';
@@ -51,25 +53,25 @@ const CardItemHover = (props: ICardItemHoverProps) => {
     genresAnime,
   } = props;
   const { loading, colorDarkenLighten, colorBackground } = useColorDarkenLighten(posterPath);
-  const [player, setPlayer] = React.useState<ReturnType<YouTube['getInternalPlayer']>>();
-  const [showTrailer, setShowTrailer] = React.useState<boolean>(false);
+  const [player, setPlayer] = useState<ReturnType<YouTube['getInternalPlayer']>>();
+  const [showTrailer, setShowTrailer] = useState<boolean>(false);
+  const setIsCardPlaying = useCardHoverStore((state) => state.setIsCardPlaying);
   const [isMuted, setIsMuted] = useLocalStorage('muteTrailer', true);
-  const [, setIsCardPlaying] = useLocalStorage('cardPlaying', false);
   const [isPlayTrailer] = useLocalStorage('playTrailer', false);
 
-  const mute = React.useCallback(() => {
+  const mute = useCallback(() => {
     if (!player) return;
     player.mute();
     setIsMuted(true);
   }, [player]);
 
-  const unMute = React.useCallback(() => {
+  const unMute = useCallback(() => {
     if (!player) return;
     player.unMute();
     setIsMuted(false);
   }, [player]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isPlayTrailer === true) {
       setShowTrailer(false);
     }

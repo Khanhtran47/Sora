@@ -3,7 +3,6 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/indent */
 import { useState, useEffect } from 'react';
-import type { Dispatch, SetStateAction } from 'react';
 import {
   Modal,
   Loading,
@@ -18,6 +17,8 @@ import {
 import { useFetcher } from '@remix-run/react';
 import { ClientOnly, useRouteData } from 'remix-utils';
 import type { User } from '@supabase/supabase-js';
+
+import usePlayerState from '~/store/player/usePlayerState';
 
 import useWindowSize from '~/hooks/useWindowSize';
 import useMediaQuery from '~/hooks/useMediaQuery';
@@ -51,15 +52,6 @@ import TickIcon from '~/src/assets/icons/TickIcon.js';
 interface ISearchSubtitlesProps {
   visible: boolean;
   closeHandler: () => void;
-  setSubtitles: Dispatch<
-    SetStateAction<
-      {
-        html: string;
-        url: string;
-        default?: boolean | undefined;
-      }[]
-    >
-  >;
   subtitleOptions?: {
     imdb_id?: number;
     tmdb_id?: number;
@@ -75,7 +67,7 @@ interface ISearchSubtitlesProps {
 }
 
 const SearchSubtitles = (props: ISearchSubtitlesProps) => {
-  const { visible, closeHandler, subtitleOptions, setSubtitles } = props;
+  const { visible, closeHandler, subtitleOptions } = props;
   const rootData:
     | {
         user?: User;
@@ -88,6 +80,7 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
   const isSm = useMediaQuery('(max-width: 650px)');
   const fetcher = useFetcher();
   const { width } = useWindowSize();
+  const { updateSubtitleSelector } = usePlayerState((state) => state);
 
   const preInput: string | undefined =
     subtitleOptions?.type === 'movie'
@@ -208,7 +201,7 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
         },
       ];
       // @ts-ignore
-      setSubtitles((prevState) => [...prevState, ...newSubtitle]);
+      updateSubtitleSelector(newSubtitle);
       setOpen(true);
       setIsGetSubtitleLink(false);
     }

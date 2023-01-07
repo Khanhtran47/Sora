@@ -108,7 +108,7 @@ const MediaListCard = (props: IMediaListCardProps) => {
             items.map((item, i) => {
               const href =
                 itemsType && itemsType === 'episode'
-                  ? `/anime/${item.id}/episode/${item.episodeNumber}?provider=${provider}`
+                  ? `/anime/${item.id}/episode/${item.episodeNumber}/watch?provider=${provider}`
                   : itemsType === 'anime'
                   ? `/anime/${item.id}/overview`
                   : itemsType === 'people'

@@ -9,7 +9,7 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 2px;
+  height: 4px;
   background: #27c4f5 linear-gradient(to right, #27c4f5, #a307ba, #fd8d32, #70c050, #27c4f5);
   background-size: 500%;
   animation: 2s linear infinite barprogress, 0.3s fadein;

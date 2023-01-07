@@ -1,6 +1,5 @@
 import React from 'react';
 import useIsomorphicLayoutEffect from '~/hooks/useIsomorphicLayoutEffect';
-import { v4 as uuidv4 } from 'uuid';
 
 const SYMBOL_KEY = '__wrap_balancer';
 const IS_SERVER = typeof window === 'undefined';
@@ -85,7 +84,7 @@ if (!IS_SERVER && process.env.NODE_ENV !== 'production') {
 const Balancer: React.FC<Props> = ({ as = 'span', ratio = 1, children, ...props }) => {
   const As = as;
   const wrapperRef = React.useRef();
-  const id = React.useMemo(() => uuidv4(), []);
+  const id = React.useMemo(() => crypto.randomUUID(), []);
 
   // Re-balance on content change and on mount/hydration
   useIsomorphicLayoutEffect(() => {

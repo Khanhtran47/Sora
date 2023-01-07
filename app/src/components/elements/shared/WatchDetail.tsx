@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { memo } from 'react';
 import { useNavigate } from '@remix-run/react';
-import { Spacer, Divider, Button, Row, Col, Card, Avatar } from '@nextui-org/react';
+import { Spacer, Button, Row, Col, Card, Avatar } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
 import tinycolor from 'tinycolor2';
 
@@ -78,8 +78,6 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
 
   return (
     <>
-      <Divider x={1} css={{ m: 0 }} />
-      <Spacer y={1} />
       {type === 'anime' || type === 'tv' ? (
         <>
           <Row>
@@ -107,12 +105,10 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
               </Col>
             ) : null}
           </Row>
-          <Spacer y={1} />
-          <Divider x={1} css={{ m: 0 }} />
-          <Spacer y={1} />
+          <Spacer y={2} />
         </>
       ) : null}
-      <Row>
+      <Row css={{ backgroundColor: '$backgroundContrast', p: '$9', borderRadius: '$lg' }}>
         {!isSm && (
           <Col span={4}>
             {posterPath ? (
@@ -310,9 +306,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
           <Spacer y={1} />
         </Col>
       </Row>
-      <Spacer y={1} />
-      <Divider x={1} css={{ m: 0 }} />
-      <Spacer y={1} />
+      <Spacer y={2} />
       {(type === 'movie' || type === 'tv') &&
       recommendationsMovies &&
       recommendationsMovies.length > 0 ? (
@@ -330,9 +324,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
             }
             showMoreList
           />
-          <Spacer y={1} />
-          <Divider x={1} css={{ m: 0 }} />
-          <Spacer y={1} />
+          <Spacer y={2} />
         </>
       ) : null}
       {type === 'anime' && recommendationsAnime && recommendationsAnime.length > 0 ? (
@@ -344,9 +336,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
             listType="slider-card"
             navigationButtons
           />
-          <Spacer y={1} />
-          <Divider x={1} css={{ m: 0 }} />
-          <Spacer y={1} />
+          <Spacer y={2} />
         </>
       ) : null}
     </>

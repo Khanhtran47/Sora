@@ -2,30 +2,38 @@
 import PropTypes from 'prop-types';
 
 const Bold = ({ color }) => (
-  <g transform="translate(2 2)">
+  <g>
     <path
-      d="M17.741,19.608l-2.12-2.43a1.083,1.083,0,0,1,0-1.524.986.986,0,0,1,1.393,0l2.554,2.062h.045a1.348,1.348,0,0,1,0,1.892,1.315,1.315,0,0,1-1.872,0ZM0,8.67A8.624,8.624,0,0,1,8.578,0a8.531,8.531,0,0,1,6.065,2.54,8.716,8.716,0,0,1,2.512,6.13A8.624,8.624,0,0,1,8.578,17.34,8.624,8.624,0,0,1,0,8.67Z"
+      d="M10.65 19.11V4.89C10.65 3.54 10.08 3 8.64 3H5.01C3.57 3 3 3.54 3 4.89V19.11C3 20.46 3.57 21 5.01 21H8.64C10.08 21 10.65 20.46 10.65 19.11Z"
+      fill={color}
+    />
+    <path
+      d="M21.0016 19.11V4.89C21.0016 3.54 20.4316 3 18.9916 3H15.3616C13.9316 3 13.3516 3.54 13.3516 4.89V19.11C13.3516 20.46 13.9216 21 15.3616 21H18.9916C20.4316 21 21.0016 20.46 21.0016 19.11Z"
       fill={color}
     />
   </g>
 );
 
 const Light = ({ color, strokeWidth }) => (
-  <g
-    transform="translate(2 2)"
-    fill="none"
-    stroke={color}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    strokeMiterlimit={10}
-    strokeWidth={strokeWidth}
-  >
-    <circle cx={8.989} cy={8.989} r={8.989} transform="translate(.778 .778)" />
-    <path d="M16.018 16.485L19.542 20" />
+  <g>
+    <path
+      d="M10.65 19.11V4.89C10.65 3.54 10.08 3 8.64 3H5.01C3.57 3 3 3.54 3 4.89V19.11C3 20.46 3.57 21 5.01 21H8.64C10.08 21 10.65 20.46 10.65 19.11Z"
+      stroke={color}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M21 19.11V4.89C21 3.54 20.43 3 18.99 3H15.36C13.93 3 13.35 3.54 13.35 4.89V19.11C13.35 20.46 13.92 21 15.36 21H18.99C20.43 21 21 20.46 21 19.11Z"
+      stroke={color}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   </g>
 );
 
-const Search = ({
+const Pause = ({
   fill = 'currentColor',
   filled = false,
   size = 0,
@@ -59,7 +67,7 @@ const Search = ({
   }
 };
 
-Search.displayName = 'PauseIcon';
+Pause.displayName = 'PauseIcon';
 
 Bold.propTypes = {
   color: PropTypes.string,
@@ -70,7 +78,7 @@ Light.propTypes = {
   strokeWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
-Search.propTypes = {
+Pause.propTypes = {
   fill: PropTypes.string,
   filled: PropTypes.bool,
   size: PropTypes.number,
@@ -79,4 +87,4 @@ Search.propTypes = {
   strokeWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
-export default Search;
+export default Pause;
