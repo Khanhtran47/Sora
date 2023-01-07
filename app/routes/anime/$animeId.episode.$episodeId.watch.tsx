@@ -1,8 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-nested-ternary */
-/* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
-// import { useState, useEffect, useMemo } from 'react';
 import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
 import { useCatch, useLoaderData, NavLink, RouteMatch } from '@remix-run/react';
 import { Container, Spacer, Badge } from '@nextui-org/react';
@@ -25,9 +21,6 @@ import { loklokGetTvEpInfo, loklokGetMovieInfo } from '~/services/loklok';
 import { LOKLOK_URL } from '~/services/loklok/utils.server';
 import { IMovieSource, IMovieSubtitle } from '~/services/consumet/flixhq/flixhq.types';
 import { IMedia } from '~/types/media';
-
-// import updateHistory from '~/utils/update-history';
-// import useLocalStorage from '~/hooks/useLocalStorage';
 
 import WatchDetail from '~/src/components/elements/shared/WatchDetail';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
@@ -66,7 +59,7 @@ type LoaderData = {
     title?: string;
     sub_format: string;
   };
-  overview: string;
+  overview?: string;
 };
 
 const checkHasNextEpisode = (
@@ -105,7 +98,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const episodeIndex = episodes && episodes[Number(episodeId) - 1]?.id;
   const totalEpisodes = Number(episodes?.length);
   const episodeInfo = episodes?.find((e: IEpisodeInfo) => e.number === Number(episodeId));
-  const titlePlayer = `${title} episode ${episodeId}`;
+  const titlePlayer = title;
   const posterPlayer = detail?.cover || '';
   const trailerAnime = detail?.trailer;
   const subtitleOptions = {
@@ -449,245 +442,40 @@ export const handle = {
 };
 
 const AnimeEpisodeWatch = () => {
-  const {
-    // provider,
-    // idProvider,
-    detail,
-    episodes,
-    // hasNextEpisode,
-    // userId,
-    providers,
-  } = useLoaderData<LoaderData>();
-  // const { episodeId } = useParams();
-  // const navigate = useNavigate();
-  // const [isVideoEnded, setIsVideoEnded] = useState<boolean>(false);
-  // const [playNextEpisode] = useLocalStorage('playNextEpisode', true);
-  // const currentEpisode = useMemo(() => Number(episodeId), [episodeId]);
-
-  // useEffect(() => {
-  //   if (isVideoEnded && playNextEpisode && hasNextEpisode && provider) {
-  //     navigate(
-  //       `/anime/${detail?.id}/episode/${currentEpisode + 1}?provider=${provider}&id=${idProvider}`,
-  //     );
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [isVideoEnded]);
+  const { detail, episodes, providers } = useLoaderData<LoaderData>();
   return (
-    <>
-      {/* <ClientOnly fallback={<Loading type="default" />}>
-        {() => (
-          <Suspense fallback={<Loading type="default" />}>
-            {sources ? (
-              <ArtPlayer
-                key={`${detail?.id}-${currentEpisode}-${provider}-${idProvider}`}
-                type="anime"
-                id={detail?.id}
-                trailerAnime={detail?.trailer}
-                autoPlay
-                currentEpisode={currentEpisode}
-                hasNextEpisode={hasNextEpisode}
-                nextEpisodeUrl={
-                  hasNextEpisode
-                    ? `/anime/${detail?.id}/episode/${
-                        currentEpisode + 1
-                      }?provider=${provider}&id=${idProvider}`
-                    : undefined
-                }
-                option={{
-                  title: `${
-                    detail?.title?.userPreferred || detail?.title?.english || ''
-                  } Episode ${episodeId}`,
-                  url:
-                    provider === 'Loklok'
-                      ? sources?.find(
-                          (item: { quality: number | string; url: string }) =>
-                            Number(item.quality) === 720,
-                        )?.url || sources[0]?.url
-                      : provider === 'Gogo' || provider === 'Zoro'
-                      ? sources?.find(
-                          (item: { quality: number | string; url: string }) =>
-                            item.quality === 'default',
-                        )?.url || sources[0]?.url
-                      : provider === 'Bilibili' || provider === 'KissKh'
-                      ? sources[0]?.url
-                      : sources?.find(
-                          (item: { quality: number | string; url: string }) =>
-                            item.quality === 'default',
-                        )?.url || sources[0]?.url,
-                  type: provider === 'Bilibili' ? 'mpd' : 'm3u8',
-                  subtitle: {
-                    url:
-                      provider === 'Loklok'
-                        ? subtitles?.find((item: { lang: string; url: string }) =>
-                            item.lang.includes('English'),
-                          )?.url
-                        : provider === 'KissKh'
-                        ? subtitles?.find(
-                            (item: { lang: string; url: string; default?: boolean }) =>
-                              item.default,
-                          )?.url || ''
-                        : subtitles?.find((item: { lang: string; url: string }) =>
-                            item.lang.includes('English'),
-                          )?.url || '',
-                    encoding: 'utf-8',
-                    type:
-                      provider === 'Flixhq' || provider === 'Loklok' || provider === 'Bilibili'
-                        ? 'vtt'
-                        : provider === 'KissKh'
-                        ? 'srt'
-                        : '',
-                  },
-                  poster: detail?.cover,
-                  isLive: false,
-                  backdrop: true,
-                  playsInline: true,
-                  autoPlayback: true,
-                  layers: [
-                    {
-                      name: 'title',
-                      html: `<span>${
-                        detail?.title?.userPreferred || detail?.title?.english || ''
-                      } - EP ${currentEpisode}</span>`,
-                      style: {
-                        position: 'absolute',
-                        top: '15px',
-                        left: '15px',
-                        fontSize: '1.125rem',
-                      },
-                    },
-                  ],
-                  customType:
-                    provider === 'Bilibili'
-                      ? {
-                          mpd: async (video: HTMLMediaElement, url: string) => {
-                            const { default: dashjs } = await import('dashjs');
-                            const player = dashjs.MediaPlayer().create();
-                            player.initialize(video, url, false);
-                          },
-                        }
-                      : {
-                          m3u8: async (video: HTMLMediaElement, url: string) => {
-                            if (hls) {
-                              hls.destroy();
-                            }
-                            if (Hls.isSupported()) {
-                              hls = new Hls();
-                              hls.loadSource(url);
-                              hls.attachMedia(video);
-                            } else {
-                              const canPlay = video.canPlayType('application/vnd.apple.mpegurl');
-                              if (canPlay === 'probably' || canPlay === 'maybe') {
-                                video.src = url;
-                              }
-                            }
-                          },
-                        },
-                }}
-                qualitySelector={qualitySelector || []}
-                subtitleSelector={subtitleSelector || []}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                }}
-                subtitleOptions={{
-                  type: 'episode',
-                  title: detail?.title?.userPreferred || detail?.title?.english || '',
-                  sub_format: provider === 'KissKh' ? 'srt' : 'webvtt',
-                }}
-                getInstance={(art) => {
-                  art.on('ready', () => {
-                    setIsVideoEnded(false);
-                    const t = new URLSearchParams(location.search).get('t');
-                    if (t) {
-                      art.currentTime = Number(t);
-                    }
-                    art.subtitle.style({
-                      fontSize: `${art.height * 0.05}px`,
-                    });
-                  });
-                  art.on('resize', () => {
-                    art.subtitle.style({
-                      fontSize: `${art.height * 0.05}px`,
-                    });
-                  });
-
-                  if (userId) {
-                    updateHistory(
-                      art,
-                      fetcher,
-                      userId,
-                      location.pathname + location.search,
-                      'anime',
-                      detail?.title?.userPreferred || detail?.title?.english || '',
-                      detail?.description || '',
-                      detail?.season,
-                      episodeId,
-                    );
-                  }
-
-                  art.on('pause', () => {
-                    art.layers.title.style.display = 'block';
-                  });
-                  art.on('play', () => {
-                    setIsVideoEnded(false);
-                    art.layers.title.style.display = 'none';
-                  });
-                  art.on('hover', (state: boolean) => {
-                    art.layers.title.style.display = state || !art.playing ? 'block' : 'none';
-                  });
-                  art.on('video:ended', () => {
-                    setIsVideoEnded(true);
-                  });
-                  art.on('destroy', () => {
-                    setIsVideoEnded(false);
-                    if (hls) {
-                      hls.destroy();
-                    }
-                  });
-                }}
-              />
-            ) : (
-              <PlayerError
-                title="Video not found"
-                message="The video you are trying to watch is not available."
-              />
-            )}
-          </Suspense>
-        )}
-      </ClientOnly> */}
-      <Container
-        fluid
-        alignItems="stretch"
-        justify="center"
-        css={{
-          marginTop: '0.75rem',
-          padding: '0 0.75rem',
-          '@xs': {
-            padding: '0 3vw',
-          },
-          '@sm': {
-            padding: '0 6vw',
-          },
-          '@md': {
-            padding: '0 12vw',
-          },
-        }}
-      >
-        <WatchDetail
-          type="anime"
-          id={detail?.id}
-          episodes={episodes}
-          title={detail?.title?.english || ''}
-          overview={detail?.description || ''}
-          posterPath={detail?.image}
-          anilistRating={detail?.rating}
-          genresAnime={detail?.genres}
-          recommendationsAnime={detail?.recommendations as IMedia[]}
-          color={detail?.color}
-          providers={providers}
-        />
-      </Container>
-    </>
+    <Container
+      fluid
+      alignItems="stretch"
+      justify="center"
+      css={{
+        marginTop: '0.75rem',
+        padding: '0 0.75rem',
+        '@xs': {
+          padding: '0 3vw',
+        },
+        '@sm': {
+          padding: '0 6vw',
+        },
+        '@md': {
+          padding: '0 12vw',
+        },
+      }}
+    >
+      <WatchDetail
+        type="anime"
+        id={detail?.id}
+        episodes={episodes}
+        title={detail?.title?.english || ''}
+        overview={detail?.description || ''}
+        posterPath={detail?.image}
+        anilistRating={detail?.rating}
+        genresAnime={detail?.genres}
+        recommendationsAnime={detail?.recommendations as IMedia[]}
+        color={detail?.color}
+        providers={providers}
+      />
+    </Container>
   );
 };
 

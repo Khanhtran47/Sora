@@ -24,7 +24,6 @@ import { LOKLOK_URL } from '~/services/loklok/utils.server';
 // import i18next from '~/i18n/i18next.server';
 import TMDB from '~/utils/media';
 import { TMDB as TmdbUtils } from '~/services/tmdb/utils.server';
-// import updateHistory from '~/utils/update-history';
 
 import WatchDetail from '~/src/components/elements/shared/WatchDetail';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
@@ -293,194 +292,38 @@ const MovieWatch = () => {
   const id = detail && detail.id;
   const releaseYear = new Date(detail?.release_date || '').getFullYear();
   return (
-    <>
-      {/* <ClientOnly fallback={<Loading type="default" />}>
-        {() => (
-          <Suspense fallback={<Loading type="default" />}>
-            {sources ? (
-              <ArtPlayer
-                key={`${detail?.id}-${provider}`}
-                id={Number(id)}
-                type="movie"
-                autoPlay={false}
-                option={{
-                  title: detail?.title,
-                  url:
-                    provider === 'Flixhq'
-                      ? sources?.find(
-                          (item: { quality: number | string; url: string }) =>
-                            item.quality === 'auto',
-                        )?.url || sources[0]?.url
-                      : provider === 'Loklok'
-                      ? sources?.find(
-                          (item: { quality: number | string; url: string }) =>
-                            Number(item.quality) === 720,
-                        )?.url || sources[0]?.url
-                      : provider === 'KissKh'
-                      ? sources[0]?.url
-                      : sources?.find(
-                          (item: { quality: number | string; url: string }) =>
-                            item.quality === 'auto',
-                        )?.url || sources[0]?.url,
-                  subtitle: {
-                    url:
-                      provider === 'Flixhq'
-                        ? subtitles?.find((item: { lang: string; url: string }) =>
-                            item.lang.includes('English'),
-                          )?.url || ''
-                        : provider === 'Loklok'
-                        ? subtitles?.find((item: { lang: string; url: string }) =>
-                            item.lang.includes('English'),
-                          )?.url || ''
-                        : provider === 'KissKh'
-                        ? subtitles?.find(
-                            (item: { lang: string; url: string; default?: boolean }) =>
-                              item.default,
-                          )?.url || ''
-                        : subtitles?.find((item: { lang: string; url: string }) =>
-                            item.lang.includes('English'),
-                          )?.url || '',
-                    encoding: 'utf-8',
-                    type:
-                      provider === 'Flixhq' || provider === 'Loklok'
-                        ? 'vtt'
-                        : provider === 'KissKh'
-                        ? 'srt'
-                        : '',
-                  },
-                  poster: TMDB.backdropUrl(detail?.backdrop_path || '', isSm ? 'w780' : 'w1280'),
-                  isLive: false,
-                  backdrop: true,
-                  playsInline: true,
-                  autoPlayback: true,
-                  layers: [
-                    {
-                      name: 'title',
-                      html: `<span>${detail?.title}</span>`,
-                      style: {
-                        position: 'absolute',
-                        top: '15px',
-                        left: '15px',
-                        fontSize: '1.125rem',
-                      },
-                    },
-                  ],
-                  customType: {
-                    m3u8: (video: HTMLMediaElement, url: string) => {
-                      if (Hls.isSupported()) {
-                        const hls = new Hls();
-                        hls.loadSource(url);
-                        hls.attachMedia(video);
-                      } else {
-                        const canPlay = video.canPlayType('application/vnd.apple.mpegurl');
-                        if (canPlay === 'probably' || canPlay === 'maybe') {
-                          video.src = url;
-                        }
-                      }
-                    },
-                  },
-                  plugins:
-                    provider === 'KissKh'
-                      ? [
-                          artplayerPluginHlsQuality({
-                            setting: true,
-                            title: 'Quality',
-                            auto: 'Auto',
-                          }),
-                        ]
-                      : [],
-                }}
-                qualitySelector={qualitySelector || []}
-                subtitleSelector={subtitleSelector || []}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                }}
-                subtitleOptions={{
-                  tmdb_id: detail?.id,
-                  type: 'movie',
-                  title: detail?.title,
-                  sub_format: provider === 'KissKh' ? 'srt' : 'webvtt',
-                }}
-                getInstance={(art) => {
-                  art.on('ready', () => {
-                    const t = new URLSearchParams(location.search).get('t');
-                    if (t) {
-                      art.currentTime = Number(t);
-                    }
-                    art.subtitle.style({
-                      fontSize: `${art.height * 0.05}px`,
-                    });
-                  });
-                  art.on('resize', () => {
-                    art.subtitle.style({
-                      fontSize: `${art.height * 0.05}px`,
-                    });
-                  });
-                  if (userId) {
-                    updateHistory(
-                      art,
-                      fetcher,
-                      userId,
-                      location.pathname + location.search,
-                      'movie',
-                      detail?.title || detail?.original_title || '',
-                      detail?.overview || '',
-                    );
-                  }
-                  art.on('pause', () => {
-                    art.layers.title.style.display = 'block';
-                  });
-                  art.on('play', () => {
-                    art.layers.title.style.display = 'none';
-                  });
-                  art.on('hover', (state: boolean) => {
-                    art.layers.title.style.display = state || !art.playing ? 'block' : 'none';
-                  });
-                }}
-              />
-            ) : (
-              <PlayerError
-                title="Video not found"
-                message="The video you are trying to watch is not available."
-              />
-            )}
-          </Suspense>
-        )}
-      </ClientOnly> */}
-      <Container
-        fluid
-        alignItems="stretch"
-        justify="center"
-        css={{
-          marginTop: '0.75rem',
-          padding: '0 0.75rem',
-          '@xs': {
-            padding: '0 3vw',
-          },
-          '@sm': {
-            padding: '0 6vw',
-          },
-          '@md': {
-            padding: '0 12vw',
-          },
-        }}
-      >
-        <WatchDetail
-          id={Number(id)}
-          type="movie"
-          title={`${detail?.title} (${releaseYear})`}
-          overview={detail?.overview || ''}
-          posterPath={detail?.poster_path ? TMDB.posterUrl(detail?.poster_path, 'w342') : undefined}
-          tmdbRating={detail?.vote_average}
-          imdbRating={imdbRating?.star}
-          genresMedia={detail?.genres}
-          genresMovie={rootData?.genresMovie}
-          genresTv={rootData?.genresTv}
-          recommendationsMovies={recommendations?.items}
-        />
-      </Container>
-    </>
+    <Container
+      fluid
+      alignItems="stretch"
+      justify="center"
+      css={{
+        marginTop: '0.75rem',
+        padding: '0 0.75rem',
+        '@xs': {
+          padding: '0 3vw',
+        },
+        '@sm': {
+          padding: '0 6vw',
+        },
+        '@md': {
+          padding: '0 12vw',
+        },
+      }}
+    >
+      <WatchDetail
+        id={Number(id)}
+        type="movie"
+        title={`${detail?.title} (${releaseYear})`}
+        overview={detail?.overview || ''}
+        posterPath={detail?.poster_path ? TMDB.posterUrl(detail?.poster_path, 'w342') : undefined}
+        tmdbRating={detail?.vote_average}
+        imdbRating={imdbRating?.star}
+        genresMedia={detail?.genres}
+        genresMovie={rootData?.genresMovie}
+        genresTv={rootData?.genresTv}
+        recommendationsMovies={recommendations?.items}
+      />
+    </Container>
   );
 };
 

@@ -245,7 +245,7 @@ const GlobalPlayer = () => {
     else if (!playerSettings && shouldPlayInBackground && playerData?.sources && !isMobileOnly)
       setShouldShowPlayer(true);
     else setShouldShowPlayer(false);
-  }, [playerSettings, playerData]);
+  }, [playerSettings, playerData, userId]);
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -657,7 +657,6 @@ const GlobalPlayer = () => {
                       }
                       setIsVideoEnded(false);
                       setArtplayer(art);
-                      console.log(art);
                       art.controls.add({
                         position: 'top',
                         name: 'test',
@@ -729,6 +728,9 @@ const GlobalPlayer = () => {
                     art.on('video:ended', () => {
                       setIsVideoEnded(true);
                       setIsPlayerPlaying(false);
+                    });
+                    art.on('subtitleUpdate', (text) => {
+                      art.template.$subtitle.innerHTML = text;
                     });
                     art.on('destroy', () => {
                       setIsVideoEnded(false);
@@ -1058,7 +1060,7 @@ const GlobalPlayer = () => {
                     icon={<Expand filled />}
                   />
                 </Tooltip>
-                <Tooltip content="Close">
+                {/* <Tooltip content="Close">
                   <Button
                     auto
                     light
@@ -1074,7 +1076,7 @@ const GlobalPlayer = () => {
                     }}
                     icon={<Close />}
                   />
-                </Tooltip>
+                </Tooltip> */}
               </Flex>
               <PlayerSettings
                 artplayer={artplayer}

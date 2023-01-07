@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
-// import { useState, useEffect, useMemo } from 'react';
 import { json } from '@remix-run/node';
 import type { LoaderFunction, MetaFunction, LoaderArgs } from '@remix-run/node';
 import { useCatch, useLoaderData, NavLink, RouteMatch } from '@remix-run/react';
@@ -29,8 +28,6 @@ import { LOKLOK_URL } from '~/services/loklok/utils.server';
 
 import TMDB from '~/utils/media';
 import { TMDB as TmdbUtils } from '~/services/tmdb/utils.server';
-// import updateHistory from '~/utils/update-history';
-// import useLocalStorage from '~/hooks/useLocalStorage';
 
 import WatchDetail from '~/src/components/elements/shared/WatchDetail';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
@@ -155,7 +152,7 @@ export const loader: LoaderFunction = async ({ request, params }: LoaderArgs) =>
   const orgTitle = detail?.original_name || '';
   const year = new Date(seasonDetail?.air_date || '').getFullYear();
   const season = seasonDetail?.season_number;
-  const titlePlayer = `${detail?.name} season ${season} episode ${episodeId}`;
+  const titlePlayer = detail?.name || detail?.original_name || '';
   const posterPlayer = TmdbUtils.backdropUrl(detail?.backdrop_path || '', 'w1280');
   const subtitleOptions = {
     parent_tmdb_id: detail?.id,
@@ -381,263 +378,52 @@ export const handle = {
 };
 
 const EpisodeWatch = () => {
-  const {
-    // provider,
-    // idProvider,
-    detail,
-    recommendations,
-    imdbRating,
-    seasonDetail,
-    // hasNextEpisode,
-    // userId,
-    providers,
-  } = useLoaderData<LoaderData>();
+  const { detail, recommendations, imdbRating, seasonDetail, providers } =
+    useLoaderData<LoaderData>();
   const rootData:
     | {
-        locale: string;
         genresMovie: { [id: string]: string };
         genresTv: { [id: string]: string };
       }
     | undefined = useRouteData('root');
-  // const { seasonId, episodeId } = useParams();
   const id = detail && detail.id;
-  // const [isVideoEnded, setIsVideoEnded] = useState<boolean>(false);
-  // const navigate = useNavigate();
-  // const [playNextEpisode] = useLocalStorage('playNextEpisode', true);
-  // const currentEpisode = useMemo(() => Number(episodeId), [episodeId]);
-
-  // useEffect(() => {
-  //   if (isVideoEnded && playNextEpisode && provider && idProvider && hasNextEpisode)
-  //     navigate(
-  //       `/tv-shows/${detail?.id}/season/${seasonId}/episode/${
-  //         currentEpisode + 1
-  //       }?provider=${provider}&id=${idProvider}`,
-  //     );
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [isVideoEnded]);
   return (
-    <>
-      {/* <ClientOnly fallback={<Loading type="default" />}>
-        {() => (
-          <Suspense fallback={<Loading type="default" />}>
-            {sources ? (
-              <ArtPlayer
-                key={`${detail?.id}-${seasonId}-${episodeId}-${provider}-${idProvider}`}
-                id={Number(id)}
-                type="tv"
-                autoPlay
-                currentEpisode={currentEpisode}
-                hasNextEpisode={hasNextEpisode}
-                nextEpisodeUrl={
-                  hasNextEpisode
-                    ? `/tv-shows/${detail?.id}/season/${seasonId}/episode/${
-                        currentEpisode + 1
-                      }?provider=${provider}&id=${idProvider}`
-                    : undefined
-                }
-                option={{
-                  title: detail?.name,
-                  url:
-                    provider === 'Flixhq'
-                      ? sources?.find(
-                          (item: { quality: number | string; url: string }) =>
-                            item.quality === 'auto',
-                        )?.url || sources[0]?.url
-                      : provider === 'Loklok'
-                      ? sources?.find(
-                          (item: { quality: number | string; url: string }) =>
-                            Number(item.quality) === 720,
-                        )?.url || sources[0]?.url
-                      : provider === 'KissKh'
-                      ? sources[0]?.url
-                      : sources?.find(
-                          (item: { quality: number | string; url: string }) =>
-                            item.quality === 'auto',
-                        )?.url || sources[0]?.url,
-                  type: 'm3u8',
-                  subtitle: {
-                    url:
-                      provider === 'Flixhq'
-                        ? subtitles?.find((item: { lang: string; url: string }) =>
-                            item.lang.includes('English'),
-                          )?.url || ''
-                        : provider === 'Loklok'
-                        ? subtitles?.find((item: { lang: string; url: string }) =>
-                            item.lang.includes('English'),
-                          )?.url || ''
-                        : provider === 'KissKh'
-                        ? subtitles?.find(
-                            (item: { lang: string; url: string; default?: boolean }) =>
-                              item.default,
-                          )?.url || ''
-                        : subtitles?.find((item: { lang: string; url: string }) =>
-                            item.lang.includes('English'),
-                          )?.url || '',
-                    encoding: 'utf-8',
-                    type:
-                      provider === 'Flixhq' || provider === 'Loklok'
-                        ? 'vtt'
-                        : provider === 'KissKh'
-                        ? 'srt'
-                        : '',
-                  },
-                  poster: TMDB.backdropUrl(detail?.backdrop_path || '', isSm ? 'w780' : 'w1280'),
-                  isLive: false,
-                  backdrop: true,
-                  playsInline: true,
-                  autoPlayback: true,
-                  layers: [
-                    {
-                      name: 'title',
-                      html: `<span>${detail?.name} - SS ${seasonId} - EP ${episodeId}</span>`,
-                      style: {
-                        position: 'absolute',
-                        top: '15px',
-                        left: '15px',
-                        fontSize: '1.125rem',
-                      },
-                    },
-                  ],
-                  customType: {
-                    m3u8: (video: HTMLMediaElement, url: string) => {
-                      if (hls) {
-                        hls.destroy();
-                      }
-                      if (Hls.isSupported()) {
-                        hls = new Hls();
-                        hls.loadSource(url);
-                        hls.attachMedia(video);
-                      } else {
-                        const canPlay = video.canPlayType('application/vnd.apple.mpegurl');
-                        if (canPlay === 'probably' || canPlay === 'maybe') {
-                          video.src = url;
-                        }
-                      }
-                    },
-                  },
-                  plugins:
-                    provider === 'KissKh'
-                      ? [
-                          artplayerPluginHlsQuality({
-                            setting: true,
-                            title: 'Quality',
-                            auto: 'Auto',
-                          }),
-                        ]
-                      : [],
-                }}
-                qualitySelector={qualitySelector || []}
-                subtitleSelector={subtitleSelector || []}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                }}
-                subtitleOptions={{
-                  parent_tmdb_id: detail?.id,
-                  season_number: Number(seasonId),
-                  episode_number: currentEpisode,
-                  type: 'episode',
-                  title: detail?.name,
-                  sub_format: provider === 'KissKh' ? 'srt' : 'webvtt',
-                }}
-                getInstance={(art) => {
-                  art.on('ready', () => {
-                    setIsVideoEnded(false);
-                    const t = new URLSearchParams(location.search).get('t');
-                    if (t) {
-                      art.currentTime = Number(t);
-                    }
-                    art.subtitle.style({
-                      fontSize: `${art.height * 0.05}px`,
-                    });
-                  });
-                  art.on('resize', () => {
-                    art.subtitle.style({
-                      fontSize: `${art.height * 0.05}px`,
-                    });
-                  });
-
-                  if (userId) {
-                    updateHistory(
-                      art,
-                      fetcher,
-                      userId,
-                      location.pathname + location.search,
-                      'tv',
-                      detail?.name || detail?.name || '',
-                      detail?.overview || '',
-                      seasonId,
-                      episodeId,
-                    );
-                  }
-
-                  art.on('pause', () => {
-                    art.layers.title.style.display = 'block';
-                  });
-                  art.on('play', () => {
-                    setIsVideoEnded(false);
-                    art.layers.title.style.display = 'none';
-                  });
-                  art.on('hover', (state: boolean) => {
-                    art.layers.title.style.display = state || !art.playing ? 'block' : 'none';
-                  });
-                  art.on('video:ended', () => {
-                    setIsVideoEnded(true);
-                  });
-                  art.on('destroy', () => {
-                    setIsVideoEnded(false);
-                    if (hls) {
-                      hls.destroy();
-                    }
-                  });
-                }}
-              />
-            ) : (
-              <PlayerError
-                title="Video not found"
-                message="The video you are trying to watch is not available."
-              />
-            )}
-          </Suspense>
-        )}
-      </ClientOnly> */}
-      <Container
-        fluid
-        alignItems="stretch"
-        justify="center"
-        css={{
-          marginTop: '0.75rem',
-          padding: '0 0.75rem',
-          '@xs': {
-            padding: '0 3vw',
-          },
-          '@sm': {
-            padding: '0 6vw',
-          },
-          '@md': {
-            padding: '0 12vw',
-          },
-        }}
-      >
-        <WatchDetail
-          id={Number(id)}
-          type="tv"
-          title={detail?.name || ''}
-          // @ts-ignore
-          episodes={seasonDetail?.episodes}
-          overview={detail?.overview || ''}
-          posterPath={detail?.poster_path ? TMDB.posterUrl(detail?.poster_path, 'w342') : undefined}
-          tmdbRating={detail?.vote_average}
-          imdbRating={imdbRating?.star}
-          genresMedia={detail?.genres}
-          genresMovie={rootData?.genresMovie}
-          genresTv={rootData?.genresTv}
-          recommendationsMovies={recommendations?.items}
-          season={seasonDetail?.season_number}
-          providers={providers}
-        />
-      </Container>
-    </>
+    <Container
+      fluid
+      alignItems="stretch"
+      justify="center"
+      css={{
+        marginTop: '0.75rem',
+        padding: '0 0.75rem',
+        '@xs': {
+          padding: '0 3vw',
+        },
+        '@sm': {
+          padding: '0 6vw',
+        },
+        '@md': {
+          padding: '0 12vw',
+        },
+      }}
+    >
+      <WatchDetail
+        id={Number(id)}
+        type="tv"
+        title={detail?.name || ''}
+        // @ts-ignore
+        episodes={seasonDetail?.episodes}
+        overview={detail?.overview || ''}
+        posterPath={detail?.poster_path ? TMDB.posterUrl(detail?.poster_path, 'w342') : undefined}
+        tmdbRating={detail?.vote_average}
+        imdbRating={imdbRating?.star}
+        genresMedia={detail?.genres}
+        genresMovie={rootData?.genresMovie}
+        genresTv={rootData?.genresTv}
+        recommendationsMovies={recommendations?.items}
+        season={seasonDetail?.season_number}
+        providers={providers}
+      />
+    </Container>
   );
 };
 
