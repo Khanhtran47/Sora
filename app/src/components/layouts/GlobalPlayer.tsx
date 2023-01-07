@@ -821,9 +821,9 @@ const GlobalPlayer = () => {
                 />
                 {isMini ? (
                   <Flex
-                    direction="column"
-                    align="start"
-                    justify="center"
+                    direction="row"
+                    align="center"
+                    justify="between"
                     css={{
                       position: 'absolute',
                       bottom: '-64px',
@@ -840,10 +840,26 @@ const GlobalPlayer = () => {
                       h5
                       weight="bold"
                       onClick={() => navigate(routePlayer)}
+                      className="line-clamp-1"
                       css={{ cursor: 'pointer' }}
                     >
                       {titlePlayer}
                     </H5>
+                    <Button
+                      auto
+                      light
+                      onClick={() => {
+                        setShouldShowPlayer(false);
+                        setPlayerData(undefined);
+                        setIsMini(false);
+                        setRoutePlayer('');
+                        setTitlePlayer('');
+                        setQualitySelector([]);
+                        setSubtitleSelector([]);
+                        setIsPlayerPlaying(false);
+                      }}
+                      icon={<Close />}
+                    />
                   </Flex>
                 ) : null}
                 {!isMini ? (

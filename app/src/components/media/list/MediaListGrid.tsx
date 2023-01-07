@@ -179,7 +179,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
         listItems.map((item, index) => {
           const href =
             itemsType && itemsType === 'episode'
-              ? `/anime/${item.id}/episode/${item.episodeNumber}?provider=${provider}`
+              ? `/anime/${item.id}/episode/${item.episodeNumber}/watch?provider=${provider}`
               : itemsType === 'anime'
               ? `/anime/${item.id}/overview`
               : itemsType === 'people'
