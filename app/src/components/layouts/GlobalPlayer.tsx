@@ -1152,18 +1152,23 @@ const GlobalPlayer = () => {
         : null}
       {!isMini && artplayer && showSkipButton
         ? createPortal(
-            <Button
-              auto
-              flat
-              css={{ px: '$md !important' }}
-              onClick={() => {
-                if (currentHighlight?.end) {
-                  artplayer.currentTime = currentHighlight?.end;
-                }
-              }}
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.4 }}
             >
-              {`Skip ${currentHighlight?.text || ''}`}
-            </Button>,
+              <Button
+                auto
+                css={{ px: '$md !important' }}
+                onClick={() => {
+                  if (currentHighlight?.end) {
+                    artplayer.currentTime = currentHighlight?.end;
+                  }
+                }}
+              >
+                {`Skip ${currentHighlight?.text || ''}`}
+              </Button>
+            </motion.div>,
             artplayer.layers.skipButton,
           )
         : null}
