@@ -18,6 +18,7 @@ import {
 } from '~/services/kisskh/kisskh.server';
 import { IEpisodeInfo, ITrailer } from '~/services/consumet/anilist/anilist.types';
 import { loklokGetTvEpInfo, loklokGetMovieInfo } from '~/services/loklok';
+import { getAniskip, IAniSkipResponse } from '~/services/aniskip/aniskip.server';
 import { LOKLOK_URL } from '~/services/loklok/utils.server';
 import { IMovieSource, IMovieSubtitle } from '~/services/consumet/flixhq/flixhq.types';
 import { IMedia } from '~/types/media';
@@ -60,6 +61,11 @@ type LoaderData = {
     sub_format: string;
   };
   overview?: string;
+  highlights?: {
+    start: number;
+    end: number;
+    text: string;
+  }[];
 };
 
 const checkHasNextEpisode = (
@@ -107,6 +113,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     sub_format: provider === 'KissKh' ? 'srt' : 'webvtt',
   };
   const overview = detail?.description;
+  const malId = detail?.malId;
+  const skipTypes = ['op', 'ed', 'mixed-ed', 'mixed-op', 'recap'];
 
   if (user) {
     insertHistory({
@@ -129,13 +137,38 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     });
   }
 
+  const highlights: {
+    start: number;
+    end: number;
+    text: string;
+  }[] = [];
+  const getHighlights = async (aniskip: IAniSkipResponse) => {
+    if (aniskip.statusCode === 200) {
+      const { results } = aniskip;
+      // eslint-disable-next-line no-restricted-syntax
+      for (const skipType of skipTypes) {
+        const item = results.find((result) => result.skipType === skipType);
+        if (item) {
+          highlights.push({
+            start: item?.interval?.startTime,
+            end: item?.interval?.endTime,
+            text: item?.skipType.toUpperCase(),
+          });
+        }
+      }
+      // sort highlights by start time
+      highlights.sort((a, b) => a.start - b.start);
+    }
+  };
+
   if (provider === 'Loklok') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
-    const [tvDetail, providers] = await Promise.all([
+    const [tvDetail, providers, aniskip] = await Promise.all([
       detail?.type === 'MOVIE'
         ? loklokGetMovieInfo(idProvider)
         : loklokGetTvEpInfo(idProvider, Number(episodeId) - 1),
       getProviderList('anime', title, orgTitle, year, undefined, aid),
+      malId ? getAniskip(malId, Number(episodeId)) : undefined,
     ]);
     const totalProviderEpisodes = Number(tvDetail?.data?.episodeCount);
     const hasNextEpisode = checkHasNextEpisode(
@@ -144,7 +177,33 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       totalEpisodes,
       totalProviderEpisodes,
     );
-
+    if (aniskip) {
+      await getHighlights(aniskip);
+      return json<LoaderData>({
+        provider,
+        idProvider,
+        detail,
+        episodes,
+        hasNextEpisode,
+        sources: tvDetail?.sources,
+        subtitles: tvDetail?.subtitles.map((sub) => ({
+          lang: `${sub.language} (${sub.lang})`,
+          url: `${LOKLOK_URL}/subtitle?url=${sub.url}`,
+        })),
+        userId: user?.id,
+        episodeInfo,
+        providers,
+        routePlayer,
+        titlePlayer,
+        id: aid,
+        posterPlayer,
+        typeVideo: 'anime',
+        trailerAnime,
+        subtitleOptions,
+        overview,
+        highlights,
+      });
+    }
     return json<LoaderData>({
       provider,
       idProvider,
@@ -171,16 +230,38 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   }
 
   if (provider === 'Gogo') {
-    const [episodeDetail, providers] = await Promise.all([
+    const [episodeDetail, providers, aniskip] = await Promise.all([
       getAnimeEpisodeStream(episodeIndex, 'gogoanime'),
       getProviderList('anime', title, orgTitle, year, undefined, aid),
+      malId ? getAniskip(malId, Number(episodeId)) : undefined,
     ]);
     const hasNextEpisode = checkHasNextEpisode(
       provider,
       Number(episodeInfo?.number),
       totalEpisodes,
     );
-
+    if (aniskip) {
+      await getHighlights(aniskip);
+      return json<LoaderData>({
+        provider,
+        detail,
+        episodes,
+        hasNextEpisode,
+        sources: episodeDetail?.sources,
+        userId: user?.id,
+        episodeInfo,
+        providers,
+        routePlayer,
+        titlePlayer,
+        id: aid,
+        posterPlayer,
+        typeVideo: 'anime',
+        trailerAnime,
+        subtitleOptions,
+        overview,
+        highlights,
+      });
+    }
     return json<LoaderData>({
       provider,
       detail,
@@ -202,15 +283,39 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   }
 
   if (provider === 'Zoro') {
-    const [episodeDetail, providers] = await Promise.all([
+    const [episodeDetail, providers, aniskip] = await Promise.all([
       getAnimeEpisodeStream(episodeIndex, 'zoro'),
       getProviderList('anime', title, orgTitle, year, undefined, aid),
+      malId ? getAniskip(malId, Number(episodeId)) : undefined,
     ]);
     const hasNextEpisode = checkHasNextEpisode(
       provider,
       Number(episodeInfo?.number),
       totalEpisodes,
     );
+    if (aniskip) {
+      await getHighlights(aniskip);
+      return json<LoaderData>({
+        provider,
+        detail,
+        episodes,
+        hasNextEpisode,
+        sources: episodeDetail?.sources,
+        userId: user?.id,
+        episodeInfo,
+        providers,
+        routePlayer,
+        titlePlayer,
+        id: aid,
+        posterPlayer,
+        typeVideo: 'anime',
+        trailerAnime,
+        subtitleOptions,
+        overview,
+
+        highlights,
+      });
+    }
 
     return json<LoaderData>({
       provider,
@@ -234,9 +339,10 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   if (provider === 'Bilibili') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
-    const [animeInfo, providers] = await Promise.all([
+    const [animeInfo, providers, aniskip] = await Promise.all([
       getBilibiliInfo(Number(idProvider)),
       getProviderList('anime', title, orgTitle, year, undefined, aid),
+      malId ? getAniskip(malId, Number(episodeId)) : undefined,
     ]);
     const episodeSearch = animeInfo?.episodes?.find((e) => e?.number === Number(episodeId));
     const episodeDetail = await getBilibiliEpisode(Number(episodeSearch?.id));
@@ -247,6 +353,40 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       totalEpisodes,
       totalProviderEpisodes,
     );
+    if (aniskip) {
+      await getHighlights(aniskip);
+      return json<LoaderData>({
+        provider,
+        idProvider,
+        detail,
+        episodes,
+        hasNextEpisode,
+        sources: [
+          {
+            url: episodeDetail?.sources[0]?.file || '',
+            isDASH: episodeDetail?.sources[0]?.type === 'dash',
+            quality: 'auto',
+          },
+        ],
+        subtitles: episodeDetail?.subtitles.map((sub) => ({
+          lang: `${sub.language} (${sub.lang})`,
+          url: sub.file,
+        })),
+        userId: user?.id,
+        episodeInfo,
+        providers,
+        routePlayer,
+        titlePlayer,
+        id: aid,
+        posterPlayer,
+        typeVideo: 'anime',
+        trailerAnime,
+        subtitleOptions,
+        overview,
+
+        highlights,
+      });
+    }
 
     return json<LoaderData>({
       provider,
@@ -281,9 +421,10 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   if (provider === 'KissKh') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
-    const [episodeDetail, providers] = await Promise.all([
+    const [episodeDetail, providers, aniskip] = await Promise.all([
       getKissKhInfo(Number(idProvider)),
       getProviderList('anime', title, orgTitle, year, undefined, aid),
+      malId ? getAniskip(malId, Number(episodeId)) : undefined,
     ]);
 
     const totalProviderEpisodes = Number(episodeDetail?.episodes?.length);
@@ -300,6 +441,36 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         ? getKissKhEpisodeSubtitle(Number(episodeSearch?.id))
         : undefined,
     ]);
+
+    if (aniskip) {
+      await getHighlights(aniskip);
+      return json<LoaderData>({
+        provider,
+        idProvider,
+        detail,
+        episodes,
+        hasNextEpisode,
+        sources: [{ url: episodeStream?.Video || '', isM3U8: true, quality: 'auto' }],
+        subtitles: episodeSubtitle?.map((sub) => ({
+          lang: sub.label,
+          url: sub.src,
+          ...(sub.default && { default: true }),
+        })),
+        userId: user?.id,
+        episodeInfo,
+        providers,
+        routePlayer,
+        titlePlayer,
+        id: aid,
+        posterPlayer,
+        typeVideo: 'anime',
+        trailerAnime,
+        subtitleOptions,
+        overview,
+
+        highlights,
+      });
+    }
 
     return json<LoaderData>({
       provider,
@@ -326,12 +497,33 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       overview,
     });
   }
-  const [sources, providers] = await Promise.all([
+  const [sources, providers, aniskip] = await Promise.all([
     getAnimeEpisodeStream(episodeIndex),
     getProviderList('anime', title, orgTitle, year, undefined, aid),
+    malId ? getAniskip(malId, Number(episodeId)) : undefined,
   ]);
 
   if (!detail || !sources) throw new Response('Not Found', { status: 404 });
+  if (aniskip) {
+    await getHighlights(aniskip);
+    return json<LoaderData>({
+      detail,
+      episodes,
+      sources: sources.sources,
+      userId: user?.id,
+      episodeInfo,
+      providers,
+      routePlayer,
+      titlePlayer,
+      id: aid,
+      posterPlayer,
+      typeVideo: 'anime',
+      trailerAnime,
+      subtitleOptions,
+      overview,
+      highlights,
+    });
+  }
 
   return json<LoaderData>({
     detail,

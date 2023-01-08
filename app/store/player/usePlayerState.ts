@@ -33,6 +33,12 @@ export type PlayerData =
         sub_format: 'srt' | 'webvtt';
       };
       overview: string;
+      malId?: number;
+      highlights?: {
+        start: number;
+        end: number;
+        text: string;
+      }[];
     }
   | undefined;
 
