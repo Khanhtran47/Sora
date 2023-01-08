@@ -1413,20 +1413,26 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                           </H6>
                         </Flex>
                         <Flex direction="row" align="center" className="space-x-2">
-                          <H6 h6 css={{ margin: 0, color: '$accents9' }} weight="thin">
-                            {(
-                              item as {
-                                id: string;
-                                title: string;
-                                description: string;
-                                showIcon: boolean;
-                                icon: JSX.Element;
-                                action: () => void;
-                                currentValue: string;
-                              }
-                            )?.currentValue || ''}
-                          </H6>
-                          {item.showIcon ? <Arrow direction="right" /> : null}
+                          {item?.isSwitch ? (
+                            <Switch checked={showSubtitle} onChange={item.switchAction} />
+                          ) : (
+                            <>
+                              <H6 h6 css={{ margin: 0, color: '$accents9' }} weight="thin">
+                                {(
+                                  item as {
+                                    id: string;
+                                    title: string;
+                                    description: string;
+                                    showIcon: boolean;
+                                    icon: JSX.Element;
+                                    action: () => void;
+                                    currentValue: string;
+                                  }
+                                )?.currentValue || ''}
+                              </H6>
+                              {item.showIcon ? <Arrow direction="right" /> : null}
+                            </>
+                          )}
                         </Flex>
                       </Flex>
                     </Button>
