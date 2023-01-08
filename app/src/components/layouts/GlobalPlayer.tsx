@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable react-hooks/exhaustive-deps */
@@ -64,6 +65,12 @@ const shadowAnimation = keyframes({
   },
 });
 
+type Highlight = {
+  start: number;
+  end: number;
+  text: string;
+};
+
 const GlobalPlayer = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -99,6 +106,7 @@ const GlobalPlayer = () => {
     idProvider,
     userId,
     subtitleOptions,
+    highlights,
   } = playerData || {};
   let backgroundColor;
   let windowColor;
@@ -126,6 +134,8 @@ const GlobalPlayer = () => {
   const [isSettingsOpen, setSettingsOpen] = useState(false);
   const [isSearchModalVisible, setSearchModalVisible] = useState(false);
   const [showSubtitle, setShowSubtitle] = useState(autoShowSubtitle);
+  const [showSkipButton, setShowSkipButton] = useState(false);
+  const [currentHighlight, setCurrentHighlight] = useState<Highlight | null>(null);
 
   const [currentSubtitleFontColor] = useLocalStorage('sora-settings_subtitle_font-color', 'White');
   const [currentSubtitleFontSize] = useLocalStorage('sora-settings_subtitle_font-size', '100%');
@@ -329,9 +339,10 @@ const GlobalPlayer = () => {
             provider === 'Flixhq'
             ? sources?.map(({ quality, url }: { quality: number | string; url: string }) => ({
                 html: quality.toString(),
-                url: url.toString().startsWith('http:')
-                  ? `https://cors.proxy.consumet.org/${url.toString()}`
-                  : url.toString(),
+                url:
+                  url.toString().startsWith('http:') || provider === 'Gogo' || provider === 'Zoro'
+                    ? `https://cors.proxy.consumet.org/${url.toString()}`
+                    : url.toString(),
                 isM3U8: true,
                 isDASH: false,
                 ...(provider === 'Flixhq' && quality === 'auto' && { default: true }),
@@ -473,11 +484,13 @@ const GlobalPlayer = () => {
                           )?.url ||
                           (sources && sources[0]?.url)
                         : provider === 'Gogo' || provider === 'Zoro'
-                        ? sources?.find(
-                            (item: { quality: number | string; url: string }) =>
-                              item.quality === 'default',
-                          )?.url ||
-                          (sources && sources[0]?.url)
+                        ? `https://cors.proxy.consumet.org/${
+                            sources?.find(
+                              (item: { quality: number | string; url: string }) =>
+                                item.quality === 'default',
+                            )?.url
+                          }` ||
+                          (sources && `https://cors.proxy.consumet.org/${sources[0]?.url}`)
                         : provider === 'Bilibili'
                         ? sources && sources[0]?.url
                         : provider === 'KissKh'
@@ -553,6 +566,15 @@ const GlobalPlayer = () => {
                           top: 0,
                           left: 0,
                           width: '100%',
+                        },
+                      },
+                      {
+                        html: '',
+                        name: 'skipButton',
+                        style: {
+                          position: 'absolute',
+                          bottom: '65px',
+                          right: '10px',
                         },
                       },
                     ],
@@ -655,6 +677,7 @@ const GlobalPlayer = () => {
                       if (t) {
                         art.currentTime = Number(t);
                       }
+                      console.log(art);
                       setIsVideoEnded(false);
                       setArtplayer(art);
                       art.controls.add({
@@ -721,6 +744,40 @@ const GlobalPlayer = () => {
                     });
                     art.on('pause', () => {
                       setIsPlayerPlaying(false);
+                    });
+                    art.on('video:loadedmetadata', () => {
+                      if (highlights) {
+                        const $highlight = art.query('.art-progress-highlight');
+                        // @ts-ignore
+                        const { append, createElement, setStyles } = art.constructor.utils;
+                        for (let index = 0; index < highlights.length; index += 1) {
+                          const item = highlights[index];
+                          const left = (item.start / art.duration) * 100;
+                          const width = ((item.end - item.start) / art.duration) * 100;
+                          const $item = createElement('span');
+                          $item.dataset.text = item.text;
+                          setStyles($item, {
+                            left: `${left}%`,
+                            width: `${width}%`,
+                            backgroundColor: 'var(--nextui-colors-secondary) !important',
+                          });
+                          append($highlight, $item);
+                        }
+                      }
+                    });
+                    art.on('video:timeupdate', () => {
+                      if (highlights) {
+                        const fintCurrentHighlight = highlights.find(
+                          (item) => art.currentTime >= item.start && art.currentTime <= item.end,
+                        );
+                        if (fintCurrentHighlight) {
+                          setShowSkipButton(true);
+                          setCurrentHighlight(fintCurrentHighlight);
+                        } else {
+                          setShowSkipButton(false);
+                          setCurrentHighlight(null);
+                        }
+                      }
                     });
                     art.on('fullscreen', (state) => {
                       setIsPlayerFullScreen(state);
@@ -1091,6 +1148,28 @@ const GlobalPlayer = () => {
               />
             </Flex>,
             artplayer.layers.topControlButtons,
+          )
+        : null}
+      {!isMini && artplayer && showSkipButton
+        ? createPortal(
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.4 }}
+            >
+              <Button
+                auto
+                css={{ px: '$md !important' }}
+                onClick={() => {
+                  if (currentHighlight?.end) {
+                    artplayer.currentTime = currentHighlight?.end;
+                  }
+                }}
+              >
+                {`Skip ${currentHighlight?.text || ''}`}
+              </Button>
+            </motion.div>,
+            artplayer.layers.skipButton,
           )
         : null}
       {/* Creating portals for the player controls */}
