@@ -24,7 +24,7 @@ import updateHistory from '~/utils/update-history';
 import ArtPlayer from '~/src/components/elements/player/ArtPlayer';
 import PlayerSettings from '~/src/components/elements/player/PlayerSettings';
 import PlayerError from '~/src/components/elements/player/PlayerError';
-import { H5 } from '~/src/components/styles/Text.styles';
+import { H5, H6 } from '~/src/components/styles/Text.styles';
 import Flex from '~/src/components/styles/Flex.styles';
 import Box from '~/src/components/styles/Box.styles';
 import WatchTrailerModal, { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
@@ -433,6 +433,7 @@ const GlobalPlayer = () => {
                 <ArtPlayer
                   key={`${id}-${routePlayer}-${titlePlayer}-${provider}`}
                   option={{
+                    id: `${id}-${routePlayer}-${titlePlayer}-${provider}`,
                     type: provider === 'Bilibili' ? 'mpd' : provider === 'test' ? 'mp4' : 'm3u8',
                     autoSize: false,
                     loop: false,
@@ -560,7 +561,7 @@ const GlobalPlayer = () => {
                       },
                       {
                         html: '',
-                        name: 'topControlButtons',
+                        name: 'miniTopControlButtons',
                         style: {
                           position: 'absolute',
                           top: 0,
@@ -677,22 +678,24 @@ const GlobalPlayer = () => {
                       if (t) {
                         art.currentTime = Number(t);
                       }
-                      console.log(art);
+                      if (art?.height) {
+                        art.controls.add({
+                          position: 'right',
+                          name: 'topControlButtons',
+                          html: '',
+                          style: {
+                            position: 'absolute',
+                            bottom: `${Number(art?.height) - (isMobile ? 70 : 55)}px`,
+                            left: isMobile ? '-7px' : '-10px',
+                            width: `${Number(art?.width)}px`,
+                            padding: '0 7px 0 7px',
+                            height: '55px',
+                            cursor: 'default',
+                          },
+                        });
+                      }
                       setIsVideoEnded(false);
                       setArtplayer(art);
-                      art.controls.add({
-                        position: 'top',
-                        name: 'test',
-                        html: '',
-                        tooltip: 'Test',
-                        style: {
-                          position: 'absolute',
-                          bottom: `${Number(art?.height) - 30}px`,
-                          left: '0px',
-                          padding: '0px 7px',
-                          width: '100%',
-                        },
-                      });
                       if (autoShowSubtitle && art.subtitle) {
                         art.subtitle.show = autoShowSubtitle;
                       }
@@ -746,6 +749,7 @@ const GlobalPlayer = () => {
                       setIsPlayerPlaying(false);
                     });
                     art.on('video:loadedmetadata', () => {
+                      /* Adding highlights in player's progress bar */
                       if (highlights) {
                         const $highlight = art.query('.art-progress-highlight');
                         // @ts-ignore
@@ -765,7 +769,17 @@ const GlobalPlayer = () => {
                         }
                       }
                     });
+                    art.on('resize', () => {
+                      // eslint-disable-next-line @typescript-eslint/dot-notation
+                      const $topControlButtons = art.controls['topControlButtons'];
+                      // set top control buttons position when player resize
+                      $topControlButtons.style.bottom = `${
+                        Number(art?.height) - (isMobile ? 70 : 55)
+                      }px`;
+                      $topControlButtons.style.width = `${Number(art?.width)}px`;
+                    });
                     art.on('video:timeupdate', () => {
+                      /* Finding the current highlight and show skip button */
                       if (highlights) {
                         const fintCurrentHighlight = highlights.find(
                           (item) => art.currentTime >= item.start && art.currentTime <= item.end,
@@ -864,13 +878,26 @@ const GlobalPlayer = () => {
                         transition: 'all 0.3s ease',
                         display: 'none',
                       },
-                      '&.art-layer-topControlButtons': {
+                      '&.art-layer-miniTopControlButtons': {
                         transition: 'all 0.3s ease',
                         display: isMini && isSettingsOpen ? 'block' : 'none',
                       },
                       // '&.art-control-playAndPause': {
                       //   display: isMobile && 'none !important',
                       // },
+                      '&.art-control-topControlButtons': {
+                        '&::before': {
+                          content: '',
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          width: '100%',
+                          height: '100px',
+                          backgroundImage: 'linear-gradient(#000,#00000099,#0000)',
+                          backgroundPosition: 'top',
+                          backgroundRepeat: 'repeat-x',
+                        },
+                      },
                       '&.art-control-volume': {
                         display: isMobile && 'none !important',
                       },
@@ -934,7 +961,7 @@ const GlobalPlayer = () => {
                         '&.art-layer-playPauseButton': {
                           display: isMini && 'block',
                         },
-                        '&.art-layer-topControlButtons': {
+                        '&.art-layer-miniTopControlButtons': {
                           display: isMini && 'block',
                         },
                       },
@@ -1147,7 +1174,7 @@ const GlobalPlayer = () => {
                 setSearchModalVisible={setSearchModalVisible}
               />
             </Flex>,
-            artplayer.layers.topControlButtons,
+            artplayer.layers.miniTopControlButtons,
           )
         : null}
       {!isMini && artplayer && showSkipButton
@@ -1173,7 +1200,7 @@ const GlobalPlayer = () => {
           )
         : null}
       {/* Creating portals for the player controls */}
-      {artplayer && !isMini
+      {artplayer && !isMini && isDesktop
         ? createPortal(
             <PlayerSettings
               artplayer={artplayer}
@@ -1213,6 +1240,61 @@ const GlobalPlayer = () => {
             artplayer.controls.next,
           )
         : null}
+      {artplayer?.controls.topControlButtons && !isMini
+        ? createPortal(
+            <Flex direction="row" align="center" justify="start" className="w-full z-10 space-x-2">
+              <Flex
+                direction="row"
+                align="center"
+                justify="start"
+                className="space-x-2 basis-2/3 shrink grow-0 w-2/3"
+              >
+                {isPlayerFullScreen ? (
+                  <Flex
+                    direction="column"
+                    align="start"
+                    justify="center"
+                    className="space-y-2 w-full"
+                  >
+                    <H6
+                      h6
+                      weight="bold"
+                      className="text-ellipsis text-start whitespace-nowrap overflow-hidden w-full"
+                    >
+                      {playerData?.titlePlayer}
+                    </H6>
+                    <H6 h6 weight="light" css={{ color: '$accents8' }}>
+                      {seasonId ? ` Season ${seasonId}` : ''}
+                      {episodeId ? ` Episode ${episodeId}` : ''}
+                    </H6>
+                  </Flex>
+                ) : null}
+              </Flex>
+              {isMobile ? (
+                <Flex
+                  direction="row"
+                  align="center"
+                  justify="end"
+                  className="space-x-2 grow shrink-0 basis-1/3"
+                >
+                  <PlayerSettings
+                    artplayer={artplayer}
+                    qualitySelector={qualitySelector}
+                    subtitleSelector={subtitleSelector}
+                    isPlayerFullScreen={isPlayerFullScreen}
+                    isSettingsOpen={isSettingsOpen}
+                    showSubtitle={showSubtitle}
+                    setShowSubtitle={setShowSubtitle}
+                    setSettingsOpen={setSettingsOpen}
+                    setSearchModalVisible={setSearchModalVisible}
+                  />
+                </Flex>
+              ) : null}
+            </Flex>,
+            artplayer.controls.topControlButtons,
+          )
+        : null}
+
       <SearchSubtitles
         visible={isSearchModalVisible}
         closeHandler={closeSearchModalHandler}
