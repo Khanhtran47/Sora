@@ -14,7 +14,7 @@ import {
   useLoaderData,
   useOutlet,
   useFetchers,
-  useTransition,
+  useNavigation,
   useMatches,
   RouteMatch,
   useLocation,
@@ -444,7 +444,7 @@ const App = () => {
   globalStyles();
   const outlet = useOutlet();
   const fetchers = useFetchers();
-  const transition = useTransition();
+  const navigation = useNavigation();
   const matches: RouteMatch[] = useMatches();
   const { user, locale, gaTrackingId } = useLoaderData<typeof loader>();
 
@@ -459,10 +459,10 @@ const App = () => {
    * Here we consider both loading and submitting as loading.
    */
   const state = React.useMemo<'idle' | 'loading'>(() => {
-    const states = [transition.state, ...fetchers.map((fetcher) => fetcher.state)];
+    const states = [navigation.state, ...fetchers.map((fetcher) => fetcher.state)];
     if (states.every((item) => item === 'idle')) return 'idle';
     return 'loading';
-  }, [transition.state, fetchers]);
+  }, [navigation.state, fetchers]);
 
   React.useEffect(() => {
     // and when it's something else it means it's either submitting a form or
@@ -471,7 +471,7 @@ const App = () => {
     // when the state is idle then we can to complete the progress bar
     if (state === 'idle') NProgress.configure({ showSpinner: false }).done();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [transition.state]);
+  }, [navigation.state]);
 
   React.useEffect(() => {
     const theme = localStorage.getItem('theme');
