@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type { LoaderArgs, MetaFunction } from '@remix-run/node';
 import { useCatch, useLoaderData, NavLink, RouteMatch } from '@remix-run/react';
 import { Container, Spacer, Badge } from '@nextui-org/react';
 
@@ -16,57 +17,17 @@ import {
   getKissKhEpisodeStream,
   getKissKhEpisodeSubtitle,
 } from '~/services/kisskh/kisskh.server';
-import { IEpisodeInfo, ITrailer } from '~/services/consumet/anilist/anilist.types';
+import { IEpisodeInfo } from '~/services/consumet/anilist/anilist.types';
 import { loklokGetTvEpInfo, loklokGetMovieInfo } from '~/services/loklok';
 import { getAniskip, IAniSkipResponse } from '~/services/aniskip/aniskip.server';
 import { LOKLOK_URL } from '~/services/loklok/utils.server';
-import { IMovieSource, IMovieSubtitle } from '~/services/consumet/flixhq/flixhq.types';
+import { CACHE_CONTROL } from '~/utils/server/http';
+
 import { IMedia } from '~/types/media';
 
 import WatchDetail from '~/src/components/elements/shared/WatchDetail';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
-
-type LoaderData = {
-  provider?: string;
-  idProvider?: number | string;
-  sources: IMovieSource[] | undefined;
-  detail: Awaited<ReturnType<typeof getAnimeInfo>>;
-  episodes: Awaited<ReturnType<typeof getAnimeEpisodeInfo>>;
-  subtitles?: IMovieSubtitle[] | undefined;
-  userId?: string;
-  episodeInfo: IEpisodeInfo | undefined;
-  hasNextEpisode?: boolean;
-  providers?: {
-    id?: string | number | null;
-    provider: string;
-    episodesCount?: number;
-  }[];
-  routePlayer: string;
-  titlePlayer: string;
-  id: number | string;
-  posterPlayer: string;
-  typeVideo: 'movie' | 'tv' | 'anime';
-  trailerAnime?: ITrailer;
-  subtitleOptions: {
-    imdb_id?: number | undefined;
-    tmdb_id?: number | undefined;
-    parent_feature_id?: number;
-    parent_imdb_id?: number;
-    parent_tmdb_id?: number;
-    episode_number?: number;
-    season_number?: number;
-    type?: string;
-    title?: string;
-    sub_format: string;
-  };
-  overview?: string;
-  highlights?: {
-    start: number;
-    end: number;
-    text: string;
-  }[];
-};
 
 const checkHasNextEpisode = (
   provider: string,
@@ -82,7 +43,7 @@ const checkHasNextEpisode = (
   }
 };
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const user = await authenticate(request, true, true, true);
 
   const url = new URL(request.url);
@@ -179,7 +140,40 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     );
     if (aniskip) {
       await getHighlights(aniskip);
-      return json<LoaderData>({
+      return json(
+        {
+          provider,
+          idProvider,
+          detail,
+          episodes,
+          hasNextEpisode,
+          sources: tvDetail?.sources,
+          subtitles: tvDetail?.subtitles.map((sub) => ({
+            lang: `${sub.language} (${sub.lang})`,
+            url: `${LOKLOK_URL}/subtitle?url=${sub.url}`,
+          })),
+          userId: user?.id,
+          episodeInfo,
+          providers,
+          routePlayer,
+          titlePlayer,
+          id: aid,
+          posterPlayer,
+          typeVideo: 'anime',
+          trailerAnime,
+          subtitleOptions,
+          overview,
+          highlights,
+        },
+        {
+          headers: {
+            'Cache-Control': CACHE_CONTROL.detail,
+          },
+        },
+      );
+    }
+    return json(
+      {
         provider,
         idProvider,
         detail,
@@ -201,32 +195,13 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         trailerAnime,
         subtitleOptions,
         overview,
-        highlights,
-      });
-    }
-    return json<LoaderData>({
-      provider,
-      idProvider,
-      detail,
-      episodes,
-      hasNextEpisode,
-      sources: tvDetail?.sources,
-      subtitles: tvDetail?.subtitles.map((sub) => ({
-        lang: `${sub.language} (${sub.lang})`,
-        url: `${LOKLOK_URL}/subtitle?url=${sub.url}`,
-      })),
-      userId: user?.id,
-      episodeInfo,
-      providers,
-      routePlayer,
-      titlePlayer,
-      id: aid,
-      posterPlayer,
-      typeVideo: 'anime',
-      trailerAnime,
-      subtitleOptions,
-      overview,
-    });
+      },
+      {
+        headers: {
+          'Cache-Control': CACHE_CONTROL.detail,
+        },
+      },
+    );
   }
 
   if (provider === 'Gogo') {
@@ -242,7 +217,35 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     );
     if (aniskip) {
       await getHighlights(aniskip);
-      return json<LoaderData>({
+      return json(
+        {
+          provider,
+          detail,
+          episodes,
+          hasNextEpisode,
+          sources: episodeDetail?.sources,
+          userId: user?.id,
+          episodeInfo,
+          providers,
+          routePlayer,
+          titlePlayer,
+          id: aid,
+          posterPlayer,
+          typeVideo: 'anime',
+          trailerAnime,
+          subtitleOptions,
+          overview,
+          highlights,
+        },
+        {
+          headers: {
+            'Cache-Control': CACHE_CONTROL.detail,
+          },
+        },
+      );
+    }
+    return json(
+      {
         provider,
         detail,
         episodes,
@@ -259,27 +262,13 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         trailerAnime,
         subtitleOptions,
         overview,
-        highlights,
-      });
-    }
-    return json<LoaderData>({
-      provider,
-      detail,
-      episodes,
-      hasNextEpisode,
-      sources: episodeDetail?.sources,
-      userId: user?.id,
-      episodeInfo,
-      providers,
-      routePlayer,
-      titlePlayer,
-      id: aid,
-      posterPlayer,
-      typeVideo: 'anime',
-      trailerAnime,
-      subtitleOptions,
-      overview,
-    });
+      },
+      {
+        headers: {
+          'Cache-Control': CACHE_CONTROL.detail,
+        },
+      },
+    );
   }
 
   if (provider === 'Zoro') {
@@ -295,7 +284,37 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     );
     if (aniskip) {
       await getHighlights(aniskip);
-      return json<LoaderData>({
+      return json(
+        {
+          provider,
+          detail,
+          episodes,
+          hasNextEpisode,
+          sources: episodeDetail?.sources,
+          userId: user?.id,
+          episodeInfo,
+          providers,
+          routePlayer,
+          titlePlayer,
+          id: aid,
+          posterPlayer,
+          typeVideo: 'anime',
+          trailerAnime,
+          subtitleOptions,
+          overview,
+
+          highlights,
+        },
+        {
+          headers: {
+            'Cache-Control': CACHE_CONTROL.detail,
+          },
+        },
+      );
+    }
+
+    return json(
+      {
         provider,
         detail,
         episodes,
@@ -312,29 +331,13 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         trailerAnime,
         subtitleOptions,
         overview,
-
-        highlights,
-      });
-    }
-
-    return json<LoaderData>({
-      provider,
-      detail,
-      episodes,
-      hasNextEpisode,
-      sources: episodeDetail?.sources,
-      userId: user?.id,
-      episodeInfo,
-      providers,
-      routePlayer,
-      titlePlayer,
-      id: aid,
-      posterPlayer,
-      typeVideo: 'anime',
-      trailerAnime,
-      subtitleOptions,
-      overview,
-    });
+      },
+      {
+        headers: {
+          'Cache-Control': CACHE_CONTROL.detail,
+        },
+      },
+    );
   }
 
   if (provider === 'Bilibili') {
@@ -355,7 +358,48 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     );
     if (aniskip) {
       await getHighlights(aniskip);
-      return json<LoaderData>({
+      return json(
+        {
+          provider,
+          idProvider,
+          detail,
+          episodes,
+          hasNextEpisode,
+          sources: [
+            {
+              url: episodeDetail?.sources[0]?.file || '',
+              isDASH: episodeDetail?.sources[0]?.type === 'dash',
+              quality: 'auto',
+            },
+          ],
+          subtitles: episodeDetail?.subtitles.map((sub) => ({
+            lang: `${sub.language} (${sub.lang})`,
+            url: sub.file,
+          })),
+          userId: user?.id,
+          episodeInfo,
+          providers,
+          routePlayer,
+          titlePlayer,
+          id: aid,
+          posterPlayer,
+          typeVideo: 'anime',
+          trailerAnime,
+          subtitleOptions,
+          overview,
+
+          highlights,
+        },
+        {
+          headers: {
+            'Cache-Control': CACHE_CONTROL.detail,
+          },
+        },
+      );
+    }
+
+    return json(
+      {
         provider,
         idProvider,
         detail,
@@ -383,40 +427,13 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         trailerAnime,
         subtitleOptions,
         overview,
-
-        highlights,
-      });
-    }
-
-    return json<LoaderData>({
-      provider,
-      idProvider,
-      detail,
-      episodes,
-      hasNextEpisode,
-      sources: [
-        {
-          url: episodeDetail?.sources[0]?.file || '',
-          isDASH: episodeDetail?.sources[0]?.type === 'dash',
-          quality: 'auto',
+      },
+      {
+        headers: {
+          'Cache-Control': CACHE_CONTROL.detail,
         },
-      ],
-      subtitles: episodeDetail?.subtitles.map((sub) => ({
-        lang: `${sub.language} (${sub.lang})`,
-        url: sub.file,
-      })),
-      userId: user?.id,
-      episodeInfo,
-      providers,
-      routePlayer,
-      titlePlayer,
-      id: aid,
-      posterPlayer,
-      typeVideo: 'anime',
-      trailerAnime,
-      subtitleOptions,
-      overview,
-    });
+      },
+    );
   }
 
   if (provider === 'KissKh') {
@@ -444,7 +461,43 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
     if (aniskip) {
       await getHighlights(aniskip);
-      return json<LoaderData>({
+      return json(
+        {
+          provider,
+          idProvider,
+          detail,
+          episodes,
+          hasNextEpisode,
+          sources: [{ url: episodeStream?.Video || '', isM3U8: true, quality: 'auto' }],
+          subtitles: episodeSubtitle?.map((sub) => ({
+            lang: sub.label,
+            url: sub.src,
+            ...(sub.default && { default: true }),
+          })),
+          userId: user?.id,
+          episodeInfo,
+          providers,
+          routePlayer,
+          titlePlayer,
+          id: aid,
+          posterPlayer,
+          typeVideo: 'anime',
+          trailerAnime,
+          subtitleOptions,
+          overview,
+
+          highlights,
+        },
+        {
+          headers: {
+            'Cache-Control': CACHE_CONTROL.detail,
+          },
+        },
+      );
+    }
+
+    return json(
+      {
         provider,
         idProvider,
         detail,
@@ -467,35 +520,13 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         trailerAnime,
         subtitleOptions,
         overview,
-
-        highlights,
-      });
-    }
-
-    return json<LoaderData>({
-      provider,
-      idProvider,
-      detail,
-      episodes,
-      hasNextEpisode,
-      sources: [{ url: episodeStream?.Video || '', isM3U8: true, quality: 'auto' }],
-      subtitles: episodeSubtitle?.map((sub) => ({
-        lang: sub.label,
-        url: sub.src,
-        ...(sub.default && { default: true }),
-      })),
-      userId: user?.id,
-      episodeInfo,
-      providers,
-      routePlayer,
-      titlePlayer,
-      id: aid,
-      posterPlayer,
-      typeVideo: 'anime',
-      trailerAnime,
-      subtitleOptions,
-      overview,
-    });
+      },
+      {
+        headers: {
+          'Cache-Control': CACHE_CONTROL.detail,
+        },
+      },
+    );
   }
   const [sources, providers, aniskip] = await Promise.all([
     getAnimeEpisodeStream(episodeIndex),
@@ -506,7 +537,34 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   if (!detail || !sources) throw new Response('Not Found', { status: 404 });
   if (aniskip) {
     await getHighlights(aniskip);
-    return json<LoaderData>({
+    return json(
+      {
+        detail,
+        episodes,
+        sources: sources.sources,
+        userId: user?.id,
+        episodeInfo,
+        providers,
+        routePlayer,
+        titlePlayer,
+        id: aid,
+        posterPlayer,
+        typeVideo: 'anime',
+        trailerAnime,
+        subtitleOptions,
+        overview,
+        highlights,
+      },
+      {
+        headers: {
+          'Cache-Control': CACHE_CONTROL.detail,
+        },
+      },
+    );
+  }
+
+  return json(
+    {
       detail,
       episodes,
       sources: sources.sources,
@@ -521,26 +579,13 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       trailerAnime,
       subtitleOptions,
       overview,
-      highlights,
-    });
-  }
-
-  return json<LoaderData>({
-    detail,
-    episodes,
-    sources: sources.sources,
-    userId: user?.id,
-    episodeInfo,
-    providers,
-    routePlayer,
-    titlePlayer,
-    id: aid,
-    posterPlayer,
-    typeVideo: 'anime',
-    trailerAnime,
-    subtitleOptions,
-    overview,
-  });
+    },
+    {
+      headers: {
+        'Cache-Control': CACHE_CONTROL.detail,
+      },
+    },
+  );
 };
 
 export const meta: MetaFunction = ({ data, params }) => {
@@ -634,7 +679,7 @@ export const handle = {
 };
 
 const AnimeEpisodeWatch = () => {
-  const { detail, episodes, providers } = useLoaderData<LoaderData>();
+  const { detail, episodes, providers } = useLoaderData<typeof loader>();
   return (
     <Container
       fluid

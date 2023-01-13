@@ -30,7 +30,7 @@ export class CustomDiskCache extends Cache {
 
     this.config = {
       path: config?.path ?? "tmp/img",
-      ttl: config?.ttl ?? 24 * 60 * 60,
+      ttl: config?.ttl ?? 24 * 60 * 60 * 30,
       tbd: config?.tbd ?? 365 * 24 * 60 * 60,
     };
 

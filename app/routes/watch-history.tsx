@@ -1,5 +1,7 @@
+import { useRef, useState } from 'react';
 import { NavLink, useLoaderData, useLocation, useNavigate } from '@remix-run/react';
-import { LoaderFunction, json } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type { LoaderArgs } from '@remix-run/node';
 import { authenticate, getCountHistory, getHistory, IHistory } from '~/services/supabase';
 import {
   Button,
@@ -13,8 +15,10 @@ import {
 } from '@nextui-org/react';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
+
+import { CACHE_CONTROL } from '~/utils/server/http';
+
 import HistoryItem from '~/src/components/media/item/HistoryItem';
-import { useRef, useState } from 'react';
 
 export const handle = {
   breadcrumb: () => (
@@ -36,13 +40,7 @@ export const handle = {
   ),
 };
 
-type LoaderData = {
-  histories: IHistory[];
-  page: number;
-  totalPage: number;
-};
-
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const user = await authenticate(request, true);
 
   const { searchParams } = new URL(request.url);
@@ -51,15 +49,22 @@ export const loader: LoaderFunction = async ({ request }) => {
   const from = searchParams.get('from');
   const to = searchParams.get('to');
 
-  return json<LoaderData>({
-    histories: user ? await getHistory(user.id, types, from, to, page) : [],
-    totalPage: user ? Math.ceil((await getCountHistory(user.id, types, from, to)) / 20) : 0,
-    page,
-  });
+  return json(
+    {
+      histories: user ? await getHistory(user.id, types, from, to, page) : [],
+      totalPage: user ? Math.ceil((await getCountHistory(user.id, types, from, to)) / 20) : 0,
+      page,
+    },
+    {
+      headers: {
+        'Cache-Control': CACHE_CONTROL.default,
+      },
+    },
+  );
 };
 
 const History = () => {
-  const { histories, page, totalPage } = useLoaderData<LoaderData>();
+  const { histories, page, totalPage } = useLoaderData<typeof loader>();
   const isXs = useMediaQuery('(max-width: 650px)');
   const navigate = useNavigate();
   const location = useLocation();

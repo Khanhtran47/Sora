@@ -10,6 +10,7 @@ import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { resolve } from 'node:path';
 import postCss, { AcceptedPlugin } from 'postcss';
 import postCssPresetEnv from 'postcss-preset-env';
+import { etag } from 'remix-etag';
 
 import { otherRootRouteHandlers } from '~/services/other-root-routes.server';
 
@@ -40,8 +41,6 @@ export default async function handleRequest(
       ns, // The namespaces the routes about to render wants to use
       backend: {
         loadPath: resolve('./public/locales/{{lng}}/{{ns}}.json'),
-        // Disable cache for translation files in development
-        requestOptions: { cache: process.env.NODE_ENV === 'production' ? 'default' : 'no-cache' },
       },
     });
 
@@ -71,8 +70,10 @@ export default async function handleRequest(
 
   responseHeaders.set('Content-Type', 'text/html');
 
-  return new Response(`<!DOCTYPE html>${html}`, {
+  const response = new Response(`<!DOCTYPE html>${html}`, {
     status: responseStatusCode,
     headers: responseHeaders,
   });
+
+  return etag({ request, response });
 }

@@ -65,7 +65,7 @@ export const action: ActionFunction = async ({ request }) => {
   });
 };
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }) => {
   const session = await getSessionFromCookie(request.headers.get('Cookie'));
   const { searchParams } = new URL(request.url);
   const ref = (searchParams.get('ref') || '/').replace('_0x3F_', '?').replace('_0x26', '&');

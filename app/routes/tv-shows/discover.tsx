@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
 import { useLoaderData, useNavigate, useLocation, NavLink } from '@remix-run/react';
-import { json, LoaderFunction, MetaFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type { MetaFunction, LoaderArgs } from '@remix-run/node';
 import { Container, Badge } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -8,27 +9,12 @@ import { useRouteData } from 'remix-utils';
 import type { User } from '@supabase/supabase-js';
 
 import { authenticate } from '~/services/supabase';
-import { getListTvShows, getListDiscover } from '~/services/tmdb/tmdb.server';
+import { getListDiscover } from '~/services/tmdb/tmdb.server';
 import { ILanguage } from '~/services/tmdb/tmdb.types';
 import i18next from '~/i18n/i18next.server';
+import { CACHE_CONTROL } from '~/utils/server/http';
 
 import MediaList from '~/src/components/media/MediaList';
-
-type LoaderData = {
-  shows: Awaited<ReturnType<typeof getListTvShows>>;
-  withGenres?: string;
-  withOriginalLanguage?: string;
-  withStatus?: string;
-  withType?: string;
-  sortBy?: string;
-  firstAirDateGte?: string;
-  firstAirDateLte?: string;
-  voteAverageGte?: string;
-  voteAverageLte?: string;
-  withRuntimeGte?: string;
-  withRuntimeLte?: string;
-  voteCountGte?: number;
-};
 
 export const meta: MetaFunction = () => ({
   title: 'Discover and Watch movies and tv shows free | Sora',
@@ -42,7 +28,7 @@ export const meta: MetaFunction = () => ({
     'Official Sora website to watch movies online HD for free, Watch TV show & TV series and Download all movies and series FREE',
 });
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
 
   const url = new URL(request.url);
@@ -63,45 +49,52 @@ export const loader: LoaderFunction = async ({ request }) => {
   const withRuntimeGte = url.searchParams.get('with_runtime.gte') || undefined;
   const withRuntimeLte = url.searchParams.get('with_runtime.lte') || undefined;
 
-  return json<LoaderData>({
-    shows: await getListDiscover(
-      'tv',
+  return json(
+    {
+      shows: await getListDiscover(
+        'tv',
+        withGenres,
+        sortBy,
+        locale,
+        page,
+        undefined,
+        undefined,
+        firstAirDateGte,
+        firstAirDateLte,
+        withOriginalLanguage,
+        Number(voteCountGte),
+        voteAverageGte ? Number(voteAverageGte) : undefined,
+        voteAverageLte ? Number(voteAverageLte) : undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        withRuntimeGte ? Number(withRuntimeGte) : undefined,
+        withRuntimeLte ? Number(withRuntimeLte) : undefined,
+        withStatus,
+        withType,
+      ),
       withGenres,
-      sortBy,
-      locale,
-      page,
-      undefined,
-      undefined,
-      firstAirDateGte,
-      firstAirDateLte,
       withOriginalLanguage,
-      Number(voteCountGte),
-      voteAverageGte ? Number(voteAverageGte) : undefined,
-      voteAverageLte ? Number(voteAverageLte) : undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      withRuntimeGte ? Number(withRuntimeGte) : undefined,
-      withRuntimeLte ? Number(withRuntimeLte) : undefined,
       withStatus,
       withType,
-    ),
-    withGenres,
-    withOriginalLanguage,
-    withStatus,
-    withType,
-    sortBy,
-    voteAverageGte,
-    voteAverageLte,
-    firstAirDateGte,
-    firstAirDateLte,
-    withRuntimeGte,
-    withRuntimeLte,
-    voteCountGte: Number(voteCountGte),
-  });
+      sortBy,
+      voteAverageGte,
+      voteAverageLte,
+      firstAirDateGte,
+      firstAirDateLte,
+      withRuntimeGte,
+      withRuntimeLte,
+      voteCountGte: Number(voteCountGte),
+    },
+    {
+      headers: {
+        'Cache-Control': CACHE_CONTROL.discover,
+      },
+    },
+  );
 };
 
 export const handle = {
@@ -139,7 +132,7 @@ const ListTvShows = () => {
     withRuntimeGte,
     withRuntimeLte,
     voteCountGte,
-  } = useLoaderData<LoaderData>();
+  } = useLoaderData<typeof loader>();
   const rootData:
     | {
         user?: User;

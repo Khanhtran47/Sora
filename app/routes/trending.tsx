@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/indent */
-import { DataFunctionArgs, json, LoaderFunction, MetaFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type { LoaderArgs, MetaFunction } from '@remix-run/node';
 import { useLoaderData, useNavigate, useLocation, NavLink } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import { Container, Badge } from '@nextui-org/react';
@@ -9,13 +10,10 @@ import type { User } from '@supabase/supabase-js';
 
 import { authenticate } from '~/services/supabase';
 import { getTrending } from '~/services/tmdb/tmdb.server';
-import MediaList from '~/src/components/media/MediaList';
 import i18next from '~/i18n/i18next.server';
+import { CACHE_CONTROL } from '~/utils/server/http';
 
-type LoaderData = {
-  todayTrending: Awaited<ReturnType<typeof getTrending>>;
-  // weekTrending: Awaited<ReturnType<typeof getTrending>>;
-};
+import MediaList from '~/src/components/media/MediaList';
 
 export const meta: MetaFunction = () => ({
   title: 'Watch Top Trending movies and tv shows free | Sora',
@@ -29,23 +27,37 @@ export const meta: MetaFunction = () => ({
     'Official Sora website to watch movies online HD for free, Watch TV show & TV series and Download all movies and series FREE',
 });
 
-export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
 
   const url = new URL(request.url);
   const page = Number(url.searchParams.get('page'));
 
   if (!page || page < 1 || page > 1000) {
-    return json<LoaderData>({
-      todayTrending: await getTrending('all', 'day', locale),
-      // weekTrending: await getTrending('all', 'week'),
-    });
+    return json(
+      {
+        todayTrending: await getTrending('all', 'day', locale),
+        // weekTrending: await getTrending('all', 'week'),
+      },
+      {
+        headers: {
+          'Cache-Control': CACHE_CONTROL.trending,
+        },
+      },
+    );
   }
 
-  return json<LoaderData>({
-    todayTrending: await getTrending('all', 'day', locale, page),
-    // weekTrending: await getTrending('all', 'week', page),
-  });
+  return json(
+    {
+      todayTrending: await getTrending('all', 'day', locale, page),
+      // weekTrending: await getTrending('all', 'week', page),
+    },
+    {
+      headers: {
+        'Cache-Control': CACHE_CONTROL.trending,
+      },
+    },
+  );
 };
 
 export const handle = {
@@ -69,7 +81,7 @@ export const handle = {
 };
 
 const Trending = () => {
-  const { todayTrending } = useLoaderData<LoaderData>() || {};
+  const { todayTrending } = useLoaderData<typeof loader>();
   const rootData:
     | {
         user?: User;

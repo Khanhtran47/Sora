@@ -1,7 +1,7 @@
 /* eslint-disable react/no-danger */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import * as React from 'react';
-import type { LinksFunction, LoaderFunction, MetaFunction } from '@remix-run/node';
+import type { LinksFunction, MetaFunction, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import {
   NavLink,
@@ -14,7 +14,7 @@ import {
   useLoaderData,
   useOutlet,
   useFetchers,
-  useTransition,
+  useNavigation,
   useMatches,
   RouteMatch,
   useLocation,
@@ -29,7 +29,6 @@ import swiperPaginationStyles from 'swiper/css/navigation';
 import swiperNavigationStyles from 'swiper/css/pagination';
 // @ts-ignore
 import swiperThumbsStyles from 'swiper/css/thumbs';
-import type { User } from '@supabase/supabase-js';
 import { AnimatePresence, motion } from 'framer-motion';
 import NProgress from 'nprogress';
 import { useChangeLanguage } from 'remix-i18next';
@@ -47,8 +46,9 @@ import FontStyles600 from '@fontsource/inter/600.css';
 import FontStyles700 from '@fontsource/inter/700.css';
 import FontStyles800 from '@fontsource/inter/800.css';
 import FontStyles900 from '@fontsource/inter/900.css';
+import { SSRProvider } from '@react-aria/ssr';
 
-import * as gtag from '~/utils/gtags.client';
+import * as gtag from '~/utils/client/gtags.client';
 import globalStyles from '~/styles/global.stitches';
 import {
   lightTheme,
@@ -78,46 +78,8 @@ interface DocumentProps {
   gaTrackingId?: string;
 }
 
-interface LoaderDataType {
-  user?: User;
-  locale: string;
-  genresMovie: Awaited<ReturnType<typeof getListGenre>>;
-  genresTv: Awaited<ReturnType<typeof getListGenre>>;
-  languages: Awaited<ReturnType<typeof getListLanguages>>;
-  gaTrackingId: string | undefined;
-}
-
 export const links: LinksFunction = () => [
-  {
-    rel: 'apple-touch-icon',
-    sizes: '180x180',
-    href: '/favicons/apple-touch-icon.png',
-  },
-  {
-    rel: 'icon',
-    type: 'image/png',
-    sizes: '512x512',
-    href: '/favicons/android-chrome-512x512.png',
-  },
-  {
-    rel: 'icon',
-    type: 'image/png',
-    sizes: '192x192',
-    href: '/favicons/android-chrome-192x192.png',
-  },
-  {
-    rel: 'icon',
-    type: 'image/png',
-    sizes: '32x32',
-    href: '/favicons/favicon-32x32.png',
-  },
-  {
-    rel: 'icon',
-    type: 'image/png',
-    sizes: '16x16',
-    href: '/favicons/favicon-16x16.png',
-  },
-  { rel: 'manifest', href: '/site.webmanifest' },
+  { rel: 'manifest', href: '/resources/manifest.json' },
   { rel: 'icon', href: '/favicon.ico' },
   {
     rel: 'preload',
@@ -323,13 +285,79 @@ export const meta: MetaFunction = () => {
   };
 };
 
+let isMount = true;
+
 const Document = ({ children, title, lang, dir, gaTrackingId }: DocumentProps) => {
   const location = useLocation();
+  const matches = useMatches();
+
+  /**
+   * It takes an object and returns a clone of that object, using for deleting handlers in matches.
+   * @param {T} obj - T - The object to be cloned.
+   * @returns A clone of the object.
+   */
+  function cloneObject<T>(obj: T): T {
+    const clone: T = {} as T;
+    // eslint-disable-next-line no-restricted-syntax
+    for (const key in obj) {
+      if (typeof obj[key] === 'object' && obj[key] != null) {
+        if (`${obj[key]}` === '[object Window]') {
+          delete obj[key];
+          // eslint-disable-next-line no-continue
+          continue;
+        }
+        clone[key] = cloneObject(obj[key]);
+      } else clone[key] = obj[key];
+    }
+    return clone;
+  }
+
   React.useEffect(() => {
     if (gaTrackingId?.length) {
       gtag.pageview(location.pathname, gaTrackingId);
     }
   }, [location, gaTrackingId]);
+
+  React.useEffect(() => {
+    const mounted = isMount;
+    isMount = false;
+    if ('serviceWorker' in navigator) {
+      if (navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller?.postMessage(
+          JSON.stringify(
+            cloneObject({
+              type: 'REMIX_NAVIGATION',
+              isMount: mounted,
+              location,
+              matches,
+              manifest: window.__remixManifest,
+            }),
+          ),
+        );
+      } else {
+        const listener = async () => {
+          await navigator.serviceWorker.ready;
+          navigator.serviceWorker.controller?.postMessage(
+            JSON.stringify(
+              cloneObject({
+                type: 'REMIX_NAVIGATION',
+                isMount: mounted,
+                location,
+                matches,
+                manifest: window.__remixManifest,
+              }),
+            ),
+          );
+        };
+        navigator.serviceWorker.addEventListener('controllerchange', listener);
+        return () => {
+          navigator.serviceWorker.removeEventListener('controllerchange', listener);
+        };
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location]);
+
   return (
     <html lang={lang} dir={dir}>
       <head>
@@ -362,20 +390,22 @@ const Document = ({ children, title, lang, dir, gaTrackingId }: DocumentProps) =
         {children}
         <ScrollRestoration />
         <Scripts />
-        {process.env.NODE_ENV === 'development' && <LiveReload />}
+        {process.env.NODE_ENV === 'development' ? <LiveReload /> : null}
       </body>
     </html>
   );
 };
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const locale = await i18next.getLocale(request);
   const gaTrackingId = process.env.GA_TRACKING_ID;
   const user = await getUserFromCookie(request.headers.get('Cookie') || '');
 
-  const headers = new Headers({ 'Set-Cookie': await i18nCookie.serialize(locale) });
+  const headers = new Headers({
+    'Set-Cookie': await i18nCookie.serialize(locale),
+  });
 
-  return json<LoaderDataType>(
+  return json(
     {
       user: user || undefined,
       locale,
@@ -414,9 +444,9 @@ const App = () => {
   globalStyles();
   const outlet = useOutlet();
   const fetchers = useFetchers();
-  const transition = useTransition();
+  const navigation = useNavigation();
   const matches: RouteMatch[] = useMatches();
-  const { user, locale, gaTrackingId } = useLoaderData<LoaderDataType>();
+  const { user, locale, gaTrackingId } = useLoaderData<typeof loader>();
 
   const { i18n } = useTranslation();
   useChangeLanguage(locale);
@@ -429,10 +459,10 @@ const App = () => {
    * Here we consider both loading and submitting as loading.
    */
   const state = React.useMemo<'idle' | 'loading'>(() => {
-    const states = [transition.state, ...fetchers.map((fetcher) => fetcher.state)];
+    const states = [navigation.state, ...fetchers.map((fetcher) => fetcher.state)];
     if (states.every((item) => item === 'idle')) return 'idle';
     return 'loading';
-  }, [transition.state, fetchers]);
+  }, [navigation.state, fetchers]);
 
   React.useEffect(() => {
     // and when it's something else it means it's either submitting a form or
@@ -441,7 +471,7 @@ const App = () => {
     // when the state is idle then we can to complete the progress bar
     if (state === 'idle') NProgress.configure({ showSpinner: false }).done();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [transition.state]);
+  }, [navigation.state]);
 
   React.useEffect(() => {
     const theme = localStorage.getItem('theme');
@@ -569,42 +599,44 @@ export const CatchBoundary = () => {
 
   return (
     <Document title={`${caught.status} ${caught.statusText}`}>
-      <RemixThemesProvider
-        defaultTheme="system"
-        attribute="class"
-        value={{
-          light: lightTheme.className,
-          dark: darkTheme.className,
-        }}
-      >
-        <NextUIProvider>
-          <>
-            <Text h1 color="warning" css={{ textAlign: 'center' }}>
-              {caught.status} {caught.statusText} {message}
-            </Text>
-            <NextImage
-              autoResize
-              width={480}
-              src={pageNotFound}
-              alt="404"
-              objectFit="cover"
-              css={{
-                marginTop: '20px',
-              }}
-            />
-            <Text
-              h1
-              size={20}
-              css={{
-                textAlign: 'center',
-              }}
-              weight="bold"
-            >
-              <Link href="/">Go Back</Link>
-            </Text>
-          </>
-        </NextUIProvider>
-      </RemixThemesProvider>
+      <SSRProvider>
+        <RemixThemesProvider
+          defaultTheme="system"
+          attribute="class"
+          value={{
+            light: lightTheme.className,
+            dark: darkTheme.className,
+          }}
+        >
+          <NextUIProvider>
+            <>
+              <Text h1 color="warning" css={{ textAlign: 'center' }}>
+                {caught.status} {caught.statusText} {message}
+              </Text>
+              <NextImage
+                autoResize
+                width={480}
+                src={pageNotFound}
+                alt="404"
+                objectFit="cover"
+                css={{
+                  marginTop: '20px',
+                }}
+              />
+              <Text
+                h1
+                size={20}
+                css={{
+                  textAlign: 'center',
+                }}
+                weight="bold"
+              >
+                <Link href="/">Go Back</Link>
+              </Text>
+            </>
+          </NextUIProvider>
+        </RemixThemesProvider>
+      </SSRProvider>
     </Document>
   );
 };

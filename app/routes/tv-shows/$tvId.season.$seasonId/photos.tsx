@@ -2,7 +2,8 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
 import { Image as NextImage, Row, Spacer } from '@nextui-org/react';
-import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type { MetaFunction, LoaderArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { Gallery, Item, GalleryProps } from 'react-photoswipe-gallery';
 import { useRouteData } from 'remix-utils';
@@ -13,15 +14,15 @@ import i18next from '~/i18n/i18next.server';
 import { authenticate } from '~/services/supabase';
 import { getTvSeasonImages } from '~/services/tmdb/tmdb.server';
 import { ITvShowDetail } from '~/services/tmdb/tmdb.types';
+import { CACHE_CONTROL } from '~/utils/server/http';
+
 import useMediaQuery from '~/hooks/useMediaQuery';
+
 import TMDB from '~/utils/media';
+
 import { H6 } from '~/src/components/styles/Text.styles';
 
-type LoaderData = {
-  images: Awaited<ReturnType<typeof getTvSeasonImages>>;
-};
-
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
 
   const { tvId, seasonId } = params;
@@ -31,7 +32,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const images = await getTvSeasonImages(tid, Number(seasonId), locale);
   if (!images) throw new Response('Not Found', { status: 404 });
 
-  return json<LoaderData>({ images });
+  return json({ images }, { headers: { 'Cache-Control': CACHE_CONTROL.detail } });
 };
 
 export const meta: MetaFunction = ({ params }) => ({
@@ -39,7 +40,7 @@ export const meta: MetaFunction = ({ params }) => ({
 });
 
 const PhotosPage = () => {
-  const { images } = useLoaderData<LoaderData>();
+  const { images } = useLoaderData<typeof loader>();
   const tvData: { detail: ITvShowDetail } | undefined = useRouteData('routes/movies/$movieId');
   const isLg = useMediaQuery('(max-width: 1280px)');
   const isXs = useMediaQuery('(max-width: 375px)');

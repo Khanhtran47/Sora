@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
-import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type { MetaFunction, LoaderArgs } from '@remix-run/node';
 import {
   useCatch,
   useLoaderData,
@@ -20,19 +21,15 @@ import {
 } from '~/services/tmdb/tmdb.server';
 import { authenticate } from '~/services/supabase';
 import i18next from '~/i18n/i18next.server';
+import { CACHE_CONTROL } from '~/utils/server/http';
+
 import TMDB from '~/utils/media';
 import MediaDetail from '~/src/components/media/MediaDetail';
 import WatchTrailerModal, { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 
-type LoaderData = {
-  detail: Awaited<ReturnType<typeof getTvShowDetail>>;
-  translations?: Awaited<ReturnType<typeof getTranslations>>;
-  imdbRating?: { count: number; star: number };
-};
-
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
 
   const { tvId } = params;
@@ -46,11 +43,21 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       getTranslations('tv', tid),
       imdbId ? getImdbRating(imdbId) : undefined,
     ]);
-    return json<LoaderData>({ detail, translations, imdbRating });
+    return json(
+      { detail, translations, imdbRating },
+      {
+        headers: { 'Cache-Control': CACHE_CONTROL.detail },
+      },
+    );
   }
 
   const imdbRating = imdbId ? await getImdbRating(imdbId) : undefined;
-  return json<LoaderData>({ detail, imdbRating });
+  return json(
+    { detail, imdbRating, translations: undefined },
+    {
+      headers: { 'Cache-Control': CACHE_CONTROL.detail },
+    },
+  );
 };
 
 export const meta: MetaFunction = ({ data, params }) => {
@@ -115,7 +122,7 @@ export const handle = {
 };
 
 const TvShowDetail = () => {
-  const { detail, translations, imdbRating } = useLoaderData<LoaderData>();
+  const { detail, translations, imdbRating } = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
   const { state } = useLocation();
   const currentTime = state && (state as { currentTime: number | undefined }).currentTime;

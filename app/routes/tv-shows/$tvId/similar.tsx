@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type { MetaFunction, LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useNavigate, NavLink, RouteMatch, useParams } from '@remix-run/react';
 import { Row, Badge } from '@nextui-org/react';
 import { useRouteData } from 'remix-utils';
@@ -9,13 +10,11 @@ import type { User } from '@supabase/supabase-js';
 import { authenticate } from '~/services/supabase';
 import { getSimilar } from '~/services/tmdb/tmdb.server';
 import i18next from '~/i18n/i18next.server';
+import { CACHE_CONTROL } from '~/utils/server/http';
+
 import MediaList from '~/src/components/media/MediaList';
 
-type LoaderData = {
-  similar: Awaited<ReturnType<typeof getSimilar>>;
-};
-
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
 
   const { tvId } = params;
@@ -29,9 +28,14 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const similar = await getSimilar('tv', mid, page, locale);
   if (!similar) throw new Response('Not Found', { status: 404 });
 
-  return json<LoaderData>({
-    similar,
-  });
+  return json(
+    {
+      similar,
+    },
+    {
+      headers: { 'Cache-Control': CACHE_CONTROL.detail },
+    },
+  );
 };
 
 export const meta: MetaFunction = ({ params }) => ({
@@ -60,7 +64,7 @@ export const handle = {
 
 const TvSimilarPage = () => {
   const { tvId } = useParams();
-  const { similar } = useLoaderData<LoaderData>();
+  const { similar } = useLoaderData<typeof loader>();
   const rootData:
     | {
         user?: User;

@@ -1,17 +1,16 @@
 import { useLoaderData, useLocation, NavLink } from '@remix-run/react';
-import { json, LoaderFunction, DataFunctionArgs, MetaFunction } from '@remix-run/node';
+import { json, MetaFunction } from '@remix-run/node';
+import type { LoaderArgs } from '@remix-run/node';
 import { Container, Badge } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 
 import { getAnimeTrending } from '~/services/consumet/anilist/anilist.server';
 import { authenticate } from '~/services/supabase';
+import { CACHE_CONTROL } from '~/utils/server/http';
+
 import { IMedia } from '~/types/media';
 
 import MediaList from '~/src/components/media/MediaList';
-
-type LoaderData = {
-  items: Awaited<ReturnType<typeof getAnimeTrending>>;
-};
 
 export const meta: MetaFunction = () => ({
   title: 'Watch Top Trending anime free | Sora',
@@ -25,16 +24,21 @@ export const meta: MetaFunction = () => ({
     'Official Sora website to watch anime online HD for free, Watch TV show & TV series and Download all anime FREE',
 });
 
-export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
+export const loader = async ({ request }: LoaderArgs) => {
   await authenticate(request);
 
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page'));
   if (!page && (page < 1 || page > 1000)) page = 1;
 
-  return json<LoaderData>({
-    items: await getAnimeTrending(page, 20),
-  });
+  return json(
+    {
+      items: await getAnimeTrending(page, 20),
+    },
+    {
+      headers: { 'Cache-Control': CACHE_CONTROL.trending },
+    },
+  );
 };
 
 export const handle = {
@@ -58,7 +62,7 @@ export const handle = {
 };
 
 const TrendingAnime = () => {
-  const { items } = useLoaderData<LoaderData>();
+  const { items } = useLoaderData<typeof loader>();
   const location = useLocation();
 
   return (

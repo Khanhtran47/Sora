@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { MetaFunction, LoaderFunction, json } from '@remix-run/node';
+import { MetaFunction, json } from '@remix-run/node';
+import type { LoaderArgs } from '@remix-run/node';
 import { useCatch, useLoaderData, NavLink, RouteMatch } from '@remix-run/react';
 import { Container, Spacer, Badge } from '@nextui-org/react';
 import { useRouteData } from 'remix-utils';
@@ -13,7 +14,6 @@ import {
   getImdbRating,
 } from '~/services/tmdb/tmdb.server';
 import { getMovieInfo, getMovieEpisodeStreamLink } from '~/services/consumet/flixhq/flixhq.server';
-import { IMovieSource, IMovieSubtitle } from '~/services/consumet/flixhq/flixhq.types';
 import {
   getKissKhInfo,
   getKissKhEpisodeStream,
@@ -24,6 +24,7 @@ import { LOKLOK_URL } from '~/services/loklok/utils.server';
 // import i18next from '~/i18n/i18next.server';
 import TMDB from '~/utils/media';
 import { TMDB as TmdbUtils } from '~/services/tmdb/utils.server';
+import { CACHE_CONTROL } from '~/utils/server/http';
 
 import WatchDetail from '~/src/components/elements/shared/WatchDetail';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
@@ -56,36 +57,7 @@ export const meta: MetaFunction = ({ data, params }) => {
   };
 };
 
-type DataLoader = {
-  provider?: string;
-  detail: Awaited<ReturnType<typeof getMovieDetail>>;
-  recommendations: Awaited<ReturnType<typeof getRecommendation>>;
-  data?: Awaited<ReturnType<typeof getMovieInfo>>;
-  sources?: IMovieSource[] | undefined;
-  subtitles?: IMovieSubtitle[] | undefined;
-  userId?: string;
-  imdbRating?: { count: number; star: number };
-  routePlayer: string;
-  titlePlayer: string;
-  id: number | string;
-  posterPlayer: string;
-  typeVideo: 'movie' | 'tv' | 'anime';
-  subtitleOptions: {
-    imdb_id?: number | undefined;
-    tmdb_id?: number | undefined;
-    parent_feature_id?: number;
-    parent_imdb_id?: number;
-    parent_tmdb_id?: number;
-    episode_number?: number;
-    season_number?: number;
-    type?: string;
-    title?: string;
-    sub_format: string;
-  };
-  overview?: string;
-};
-
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const user = await authenticate(request, true, true, true);
 
   const url = new URL(request.url);
@@ -130,25 +102,32 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       loklokGetMovieInfo(idProvider),
       detail?.imdb_id ? getImdbRating(detail?.imdb_id) : undefined,
     ]);
-    return json<DataLoader>({
-      provider,
-      detail,
-      recommendations,
-      imdbRating,
-      sources: movieDetail?.sources,
-      subtitles: movieDetail?.subtitles.map((sub) => ({
-        lang: `${sub.language} (${sub.lang})`,
-        url: `${LOKLOK_URL}/subtitle?url=${sub.url}`,
-      })),
-      userId: user?.id,
-      routePlayer,
-      titlePlayer,
-      id: mid,
-      posterPlayer,
-      typeVideo: 'movie',
-      subtitleOptions,
-      overview,
-    });
+    return json(
+      {
+        provider,
+        detail,
+        recommendations,
+        imdbRating,
+        sources: movieDetail?.sources,
+        subtitles: movieDetail?.subtitles.map((sub) => ({
+          lang: `${sub.language} (${sub.lang})`,
+          url: `${LOKLOK_URL}/subtitle?url=${sub.url}`,
+        })),
+        userId: user?.id,
+        routePlayer,
+        titlePlayer,
+        id: mid,
+        posterPlayer,
+        typeVideo: 'movie',
+        subtitleOptions,
+        overview,
+      },
+      {
+        headers: {
+          'Cache-Control': CACHE_CONTROL.watch,
+        },
+      },
+    );
   }
 
   if (provider === 'Flixhq') {
@@ -161,23 +140,30 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       movieDetail?.episodes[0].id || '',
       movieDetail?.id || '',
     );
-    return json<DataLoader>({
-      provider,
-      detail,
-      recommendations,
-      imdbRating,
-      data: movieDetail,
-      sources: movieStreamLink?.sources,
-      subtitles: movieStreamLink?.subtitles,
-      userId: user?.id,
-      routePlayer,
-      titlePlayer,
-      id: mid,
-      posterPlayer,
-      typeVideo: 'movie',
-      subtitleOptions,
-      overview,
-    });
+    return json(
+      {
+        provider,
+        detail,
+        recommendations,
+        imdbRating,
+        data: movieDetail,
+        sources: movieStreamLink?.sources,
+        subtitles: movieStreamLink?.subtitles,
+        userId: user?.id,
+        routePlayer,
+        titlePlayer,
+        id: mid,
+        posterPlayer,
+        typeVideo: 'movie',
+        subtitleOptions,
+        overview,
+      },
+      {
+        headers: {
+          'Cache-Control': CACHE_CONTROL.watch,
+        },
+      },
+    );
   }
 
   if (provider === 'KissKh') {
@@ -193,17 +179,40 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         : undefined,
     ]);
 
-    return json<DataLoader>({
-      provider,
+    return json(
+      {
+        provider,
+        detail,
+        recommendations,
+        imdbRating,
+        sources: [{ url: episodeStream?.Video || '', isM3U8: true, quality: 'auto' }],
+        subtitles: episodeSubtitle?.map((sub) => ({
+          lang: sub.label,
+          url: sub.src,
+          ...(sub.default && { default: true }),
+        })),
+        userId: user?.id,
+        routePlayer,
+        titlePlayer,
+        id: mid,
+        posterPlayer,
+        typeVideo: 'movie',
+        subtitleOptions,
+        overview,
+      },
+      {
+        headers: {
+          'Cache-Control': CACHE_CONTROL.watch,
+        },
+      },
+    );
+  }
+  const imdbRating = detail?.imdb_id ? await getImdbRating(detail?.imdb_id) : undefined;
+  return json(
+    {
       detail,
       recommendations,
       imdbRating,
-      sources: [{ url: episodeStream?.Video || '', isM3U8: true, quality: 'auto' }],
-      subtitles: episodeSubtitle?.map((sub) => ({
-        lang: sub.label,
-        url: sub.src,
-        ...(sub.default && { default: true }),
-      })),
       userId: user?.id,
       routePlayer,
       titlePlayer,
@@ -212,25 +221,13 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       typeVideo: 'movie',
       subtitleOptions,
       overview,
-    });
-  }
-
-  if (provider === 'Embed') {
-    const imdbRating = detail?.imdb_id ? await getImdbRating(detail?.imdb_id) : undefined;
-    return json<DataLoader>({
-      detail,
-      recommendations,
-      imdbRating,
-      userId: user?.id,
-      routePlayer,
-      titlePlayer,
-      id: mid,
-      posterPlayer,
-      typeVideo: 'movie',
-      subtitleOptions,
-      overview,
-    });
-  }
+    },
+    {
+      headers: {
+        'Cache-Control': CACHE_CONTROL.watch,
+      },
+    },
+  );
 };
 
 export const handle = {
@@ -281,7 +278,7 @@ export const handle = {
 };
 
 const MovieWatch = () => {
-  const { detail, recommendations, imdbRating } = useLoaderData<DataLoader>();
+  const { detail, recommendations, imdbRating } = useLoaderData<typeof loader>();
   const rootData:
     | {
         locale: string;

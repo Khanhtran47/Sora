@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { useRef } from 'react';
-import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type { MetaFunction, LoaderArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { Row, Pagination, Spacer } from '@nextui-org/react';
 
@@ -8,7 +9,7 @@ import i18next from '~/i18n/i18next.server';
 import { authenticate } from '~/services/supabase';
 import { getTvSeasonCredits } from '~/services/tmdb/tmdb.server';
 import { postFetchDataHandler } from '~/services/tmdb/utils.server';
-import { IMedia } from '~/types/media';
+import { CACHE_CONTROL } from '~/utils/server/http';
 
 import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
 import useMediaQuery from '~/hooks/useMediaQuery';
@@ -16,11 +17,7 @@ import useMediaQuery from '~/hooks/useMediaQuery';
 import MediaList from '~/src/components/media/MediaList';
 import Flex from '~/src/components/styles/Flex.styles';
 
-type LoaderData = {
-  crew: IMedia[];
-};
-
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
 
   const { tvId, seasonId } = params;
@@ -31,7 +28,10 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   if (!credits) throw new Response('Not found', { status: 404 });
 
-  return json<LoaderData>({ crew: [...postFetchDataHandler(credits.crew, 'people')] });
+  return json(
+    { crew: [...postFetchDataHandler(credits.crew, 'people')] },
+    { headers: { 'Cache-Control': CACHE_CONTROL.detail } },
+  );
 };
 
 export const meta: MetaFunction = ({ params }) => ({
@@ -39,7 +39,7 @@ export const meta: MetaFunction = ({ params }) => ({
 });
 
 const TvSeasonCrewPage = () => {
-  const { crew } = useLoaderData<LoaderData>();
+  const { crew } = useLoaderData<typeof loader>();
   const isSm = useMediaQuery('(max-width: 650px)');
   const ref = useRef<HTMLDivElement>(null);
   const { gotoPage, currentPage, maxPage, currentData } = useSplitArrayIntoPage(crew || [], 20);

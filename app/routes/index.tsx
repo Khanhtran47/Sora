@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/indent */
-import { LoaderFunction, json, DataFunctionArgs } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type { LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 import { Container, Spacer } from '@nextui-org/react';
 import { motion } from 'framer-motion';
@@ -16,6 +17,8 @@ import {
   getListDiscover,
 } from '~/services/tmdb/tmdb.server';
 import { getAnimePopular } from '~/services/consumet/anilist/anilist.server';
+import { CACHE_CONTROL } from '~/utils/server/http';
+
 import { IMedia } from '~/types/media';
 
 import MediaList from '~/src/components/media/MediaList';
@@ -25,15 +28,7 @@ export const handle = {
   i18n: 'home',
 };
 
-type LoaderData = {
-  todayTrending: IMedia[] | undefined;
-  movies: IMedia[] | undefined;
-  shows: IMedia[] | undefined;
-  popularAnime: IMedia[] | undefined;
-  people: IMedia[] | undefined;
-};
-
-export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
 
   const url = new URL(request.url);
@@ -60,17 +55,24 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
     getListPeople('popular', locale, page),
   ]);
 
-  return json<LoaderData>({
-    todayTrending: todayTrending && todayTrending.items && todayTrending.items.slice(0, 10),
-    movies: movies && movies.items && movies.items.slice(0, 16),
-    shows: shows && shows.items && shows.items.slice(0, 16),
-    popularAnime: anime && (anime.results as IMedia[]),
-    people: people && people.items && people.items.slice(0, 16),
-  });
+  return json(
+    {
+      todayTrending: todayTrending && todayTrending.items && todayTrending.items.slice(0, 10),
+      movies: movies && movies.items && movies.items.slice(0, 16),
+      shows: shows && shows.items && shows.items.slice(0, 16),
+      popularAnime: anime && (anime.results as IMedia[]),
+      people: people && people.items && people.items.slice(0, 16),
+    },
+    {
+      headers: {
+        'Cache-Control': CACHE_CONTROL.home,
+      },
+    },
+  );
 };
 
 const Index = () => {
-  const { movies, shows, popularAnime, people, todayTrending } = useLoaderData();
+  const { movies, shows, popularAnime, people, todayTrending } = useLoaderData<typeof loader>();
   const rootData:
     | {
         user?: User;
@@ -118,7 +120,7 @@ const Index = () => {
           },
         }}
       >
-        {movies.length > 0 && (
+        {movies && movies.length > 0 && (
           <>
             <MediaList
               genresMovie={rootData?.genresMovie}
@@ -133,7 +135,7 @@ const Index = () => {
             <Spacer y={1.5} />
           </>
         )}
-        {shows.length > 0 && (
+        {shows && shows.length > 0 && (
           <MediaList
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
@@ -145,7 +147,7 @@ const Index = () => {
             showMoreList
           />
         )}
-        {popularAnime && popularAnime.length > 0 && (
+        {popularAnime && popularAnime && popularAnime.length > 0 && (
           <>
             <MediaList
               items={popularAnime}
@@ -173,7 +175,7 @@ const Index = () => {
             <Spacer y={1.5} />
           </>
         )}
-        {people.length > 0 && (
+        {people && people.length > 0 && (
           <>
             <MediaList
               items={people}

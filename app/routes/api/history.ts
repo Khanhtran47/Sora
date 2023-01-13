@@ -1,7 +1,8 @@
-import { LoaderFunction, ActionFunction, redirect } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
+import type { ActionArgs } from '@remix-run/node';
 import { authenticate, getUserFromCookie, insertHistory } from '~/services/supabase';
 
-export const action: ActionFunction = async ({ request }) => {
+export const action = async ({ request }: ActionArgs) => {
   let headers = new Headers();
   const user = await authenticate(request, true);
 
@@ -43,6 +44,6 @@ export const action: ActionFunction = async ({ request }) => {
   return new Response(null, { status: 400 });
 };
 
-export const loader: LoaderFunction = async () => {
+export const loader = async () => {
   return redirect('/');
 };

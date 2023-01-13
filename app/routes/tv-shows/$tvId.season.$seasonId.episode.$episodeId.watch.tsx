@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { json } from '@remix-run/node';
-import type { LoaderFunction, MetaFunction, LoaderArgs } from '@remix-run/node';
+import type { MetaFunction, LoaderArgs } from '@remix-run/node';
 import { useCatch, useLoaderData, NavLink, RouteMatch } from '@remix-run/react';
 import { Container, Spacer, Badge } from '@nextui-org/react';
 import { useRouteData } from 'remix-utils';
@@ -16,7 +16,6 @@ import {
   getTvSeasonDetail,
 } from '~/services/tmdb/tmdb.server';
 import { getMovieInfo, getMovieEpisodeStreamLink } from '~/services/consumet/flixhq/flixhq.server';
-import { IMovieSource, IMovieSubtitle } from '~/services/consumet/flixhq/flixhq.types';
 import {
   getKissKhInfo,
   getKissKhEpisodeStream,
@@ -25,6 +24,7 @@ import {
 import { loklokGetTvEpInfo } from '~/services/loklok';
 import getProviderList from '~/services/provider.server';
 import { LOKLOK_URL } from '~/services/loklok/utils.server';
+import { CACHE_CONTROL } from '~/utils/server/http';
 
 import TMDB from '~/utils/media';
 import { TMDB as TmdbUtils } from '~/services/tmdb/utils.server';
@@ -32,44 +32,6 @@ import { TMDB as TmdbUtils } from '~/services/tmdb/utils.server';
 import WatchDetail from '~/src/components/elements/shared/WatchDetail';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
-
-type LoaderData = {
-  provider?: string;
-  idProvider?: number | string;
-  detail: Awaited<ReturnType<typeof getTvShowDetail>>;
-  imdbId: Awaited<ReturnType<typeof getTvShowIMDBId>>;
-  recommendations: Awaited<ReturnType<typeof getRecommendation>>;
-  seasonDetail: Awaited<ReturnType<typeof getTvSeasonDetail>>;
-  data?: Awaited<ReturnType<typeof getMovieInfo>>;
-  sources?: IMovieSource[] | undefined;
-  subtitles?: IMovieSubtitle[] | undefined;
-  userId?: string;
-  imdbRating?: { count: number; star: number };
-  hasNextEpisode?: boolean;
-  providers?: {
-    id?: string | number | null;
-    provider: string;
-    episodesCount?: number;
-  }[];
-  routePlayer: string;
-  titlePlayer: string;
-  id: number | string;
-  posterPlayer: string;
-  typeVideo: 'movie' | 'tv' | 'anime';
-  subtitleOptions: {
-    imdb_id?: number | undefined;
-    tmdb_id?: number | undefined;
-    parent_feature_id?: number;
-    parent_imdb_id?: number;
-    parent_tmdb_id?: number;
-    episode_number?: number;
-    season_number?: number;
-    type?: string;
-    title?: string;
-    sub_format: string;
-  };
-  overview?: string;
-};
 
 export const meta: MetaFunction = ({ data, params }) => {
   if (!data) {
@@ -126,7 +88,7 @@ const checkHasNextEpisode = (
   }
 };
 
-export const loader: LoaderFunction = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const user = await authenticate(request, true, true, true);
 
   const url = new URL(request.url);
@@ -190,30 +152,37 @@ export const loader: LoaderFunction = async ({ request, params }: LoaderArgs) =>
     ]);
     const totalProviderEpisodes = Number(tvDetail?.data?.episodeCount);
     const hasNextEpisode = checkHasNextEpisode(eid, totalEpisodes, totalProviderEpisodes);
-    return json<LoaderData>({
-      idProvider,
-      provider,
-      detail,
-      imdbId,
-      recommendations,
-      imdbRating,
-      seasonDetail,
-      hasNextEpisode,
-      sources: tvDetail?.sources,
-      subtitles: tvDetail?.subtitles.map((sub) => ({
-        lang: `${sub.language} (${sub.lang})`,
-        url: `${LOKLOK_URL}/subtitle?url=${sub.url}`,
-      })),
-      userId: user?.id,
-      providers,
-      routePlayer,
-      titlePlayer,
-      id: tid,
-      posterPlayer,
-      typeVideo: 'tv',
-      subtitleOptions,
-      overview,
-    });
+    return json(
+      {
+        idProvider,
+        provider,
+        detail,
+        imdbId,
+        recommendations,
+        imdbRating,
+        seasonDetail,
+        hasNextEpisode,
+        sources: tvDetail?.sources,
+        subtitles: tvDetail?.subtitles.map((sub) => ({
+          lang: `${sub.language} (${sub.lang})`,
+          url: `${LOKLOK_URL}/subtitle?url=${sub.url}`,
+        })),
+        userId: user?.id,
+        providers,
+        routePlayer,
+        titlePlayer,
+        id: tid,
+        posterPlayer,
+        typeVideo: 'tv',
+        subtitleOptions,
+        overview,
+      },
+      {
+        headers: {
+          'Cache-Control': CACHE_CONTROL.watch,
+        },
+      },
+    );
   }
 
   if (provider === 'Flixhq') {
@@ -233,28 +202,35 @@ export const loader: LoaderFunction = async ({ request, params }: LoaderArgs) =>
         tvEpisodeDetail?.id || '',
         tvDetail?.id || '',
       );
-      return json<LoaderData>({
-        provider,
-        idProvider,
-        detail,
-        imdbId,
-        recommendations,
-        imdbRating,
-        seasonDetail,
-        hasNextEpisode,
-        data: tvDetail,
-        sources: tvEpisodeStreamLink?.sources,
-        subtitles: tvEpisodeStreamLink?.subtitles,
-        userId: user?.id,
-        providers,
-        routePlayer,
-        titlePlayer,
-        id: tid,
-        posterPlayer,
-        typeVideo: 'tv',
-        subtitleOptions,
-        overview,
-      });
+      return json(
+        {
+          provider,
+          idProvider,
+          detail,
+          imdbId,
+          recommendations,
+          imdbRating,
+          seasonDetail,
+          hasNextEpisode,
+          data: tvDetail,
+          sources: tvEpisodeStreamLink?.sources,
+          subtitles: tvEpisodeStreamLink?.subtitles,
+          userId: user?.id,
+          providers,
+          routePlayer,
+          titlePlayer,
+          id: tid,
+          posterPlayer,
+          typeVideo: 'tv',
+          subtitleOptions,
+          overview,
+        },
+        {
+          headers: {
+            'Cache-Control': CACHE_CONTROL.watch,
+          },
+        },
+      );
     }
   }
 
@@ -276,32 +252,62 @@ export const loader: LoaderFunction = async ({ request, params }: LoaderArgs) =>
         : undefined,
     ]);
 
-    return json<LoaderData>({
-      provider,
-      idProvider,
-      detail,
-      imdbId,
-      recommendations,
-      imdbRating,
-      seasonDetail,
-      hasNextEpisode,
-      sources: [{ url: episodeStream?.Video || '', isM3U8: true, quality: 'auto' }],
-      subtitles: episodeSubtitle?.map((sub) => ({
-        lang: sub.label,
-        url: sub.src,
-        ...(sub.default && { default: true }),
-      })),
-      userId: user?.id,
-      providers,
-      routePlayer,
-      titlePlayer,
-      id: tid,
-      posterPlayer,
-      typeVideo: 'tv',
-      subtitleOptions,
-      overview,
-    });
+    return json(
+      {
+        provider,
+        idProvider,
+        detail,
+        imdbId,
+        recommendations,
+        imdbRating,
+        seasonDetail,
+        hasNextEpisode,
+        sources: [{ url: episodeStream?.Video || '', isM3U8: true, quality: 'auto' }],
+        subtitles: episodeSubtitle?.map((sub) => ({
+          lang: sub.label,
+          url: sub.src,
+          ...(sub.default && { default: true }),
+        })),
+        userId: user?.id,
+        providers,
+        routePlayer,
+        titlePlayer,
+        id: tid,
+        posterPlayer,
+        typeVideo: 'tv',
+        subtitleOptions,
+        overview,
+      },
+      {
+        headers: {
+          'Cache-Control': CACHE_CONTROL.watch,
+        },
+      },
+    );
   }
+
+  const [imdbRating, providers] = await Promise.all([
+    imdbId ? getImdbRating(imdbId) : undefined,
+    getProviderList('tv', title, orgTitle, year, season),
+  ]);
+  return json({
+    idProvider,
+    provider,
+    detail,
+    imdbId,
+    recommendations,
+    imdbRating,
+    seasonDetail,
+    providers,
+    userId: user?.id,
+    routePlayer,
+    titlePlayer,
+    id: tid,
+    posterPlayer,
+    typeVideo: 'tv',
+    subtitleOptions,
+    overview,
+  });
 };
 
 export const handle = {
@@ -379,7 +385,7 @@ export const handle = {
 
 const EpisodeWatch = () => {
   const { detail, recommendations, imdbRating, seasonDetail, providers } =
-    useLoaderData<LoaderData>();
+    useLoaderData<typeof loader>();
   const rootData:
     | {
         genresMovie: { [id: string]: string };

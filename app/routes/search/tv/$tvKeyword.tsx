@@ -1,34 +1,43 @@
 /* eslint-disable @typescript-eslint/indent */
-import { DataFunctionArgs, json, LoaderFunction, MetaFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type { MetaFunction, LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useNavigate, useParams, NavLink, RouteMatch } from '@remix-run/react';
 import { Container, Badge } from '@nextui-org/react';
 import { useRouteData } from 'remix-utils';
 import type { User } from '@supabase/supabase-js';
 
 import { getSearchTvShows } from '~/services/tmdb/tmdb.server';
-import MediaList from '~/src/components/media/MediaList';
 import { useTranslation } from 'react-i18next';
-import SearchForm from '~/src/components/elements/SearchForm';
 import { authenticate } from '~/services/supabase';
+import { CACHE_CONTROL } from '~/utils/server/http';
 
-type LoaderData = {
-  searchResults: Awaited<ReturnType<typeof getSearchTvShows>>;
-};
+import MediaList from '~/src/components/media/MediaList';
+import SearchForm from '~/src/components/elements/SearchForm';
 
-export const loader: LoaderFunction = async ({ request, params }: DataFunctionArgs) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   await authenticate(request);
 
   const keyword = params?.tvKeyword || '';
   const url = new URL(request.url);
   const page = Number(url.searchParams.get('page'));
   if (!page || page < 1 || page > 1000) {
-    return json<LoaderData>({
-      searchResults: await getSearchTvShows(keyword),
-    });
+    return json(
+      {
+        searchResults: await getSearchTvShows(keyword),
+      },
+      {
+        headers: { 'Cache-Control': CACHE_CONTROL.search },
+      },
+    );
   }
-  return json<LoaderData>({
-    searchResults: await getSearchTvShows(keyword, page),
-  });
+  return json(
+    {
+      searchResults: await getSearchTvShows(keyword, page),
+    },
+    {
+      headers: { 'Cache-Control': CACHE_CONTROL.search },
+    },
+  );
 };
 
 export const meta: MetaFunction = ({ data, params }) => {
@@ -65,7 +74,7 @@ export const handle = {
 };
 
 const SearchRoute = () => {
-  const { searchResults } = useLoaderData<LoaderData>() || {};
+  const { searchResults } = useLoaderData<typeof loader>() || {};
   const rootData:
     | {
         user?: User;

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type { MetaFunction, LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useNavigate, NavLink, RouteMatch, useParams } from '@remix-run/react';
 import { Row, Badge } from '@nextui-org/react';
 import { useRouteData } from 'remix-utils';
@@ -8,14 +9,12 @@ import type { User } from '@supabase/supabase-js';
 
 import { getRecommendation } from '~/services/tmdb/tmdb.server';
 import i18next from '~/i18n/i18next.server';
-import MediaList from '~/src/components/media/MediaList';
 import { authenticate } from '~/services/supabase';
+import { CACHE_CONTROL } from '~/utils/server/http';
 
-type LoaderData = {
-  recommendations: Awaited<ReturnType<typeof getRecommendation>>;
-};
+import MediaList from '~/src/components/media/MediaList';
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   await authenticate(request);
 
   const { tvId } = params;
@@ -30,9 +29,14 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const recommendations = await getRecommendation('tv', mid, page, locale);
   if (!recommendations) throw new Response('Not Found', { status: 404 });
 
-  return json<LoaderData>({
-    recommendations,
-  });
+  return json(
+    {
+      recommendations,
+    },
+    {
+      headers: { 'Cache-Control': CACHE_CONTROL.detail },
+    },
+  );
 };
 
 export const handle = {
@@ -61,7 +65,7 @@ export const meta: MetaFunction = ({ params }) => ({
 
 const TvRecommendationsPage = () => {
   const { tvId } = useParams();
-  const { recommendations } = useLoaderData<LoaderData>();
+  const { recommendations } = useLoaderData<typeof loader>();
   const rootData:
     | {
         user?: User;

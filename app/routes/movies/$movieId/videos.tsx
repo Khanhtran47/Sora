@@ -2,22 +2,21 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { useEffect, useState } from 'react';
-import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type { MetaFunction, LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useFetcher } from '@remix-run/react';
 import { Row, Col, Button, Grid, Card } from '@nextui-org/react';
 
 import { authenticate } from '~/services/supabase';
 import { getVideos } from '~/services/tmdb/tmdb.server';
 import { Item } from '~/services/youtube/youtube.types';
+import { CACHE_CONTROL } from '~/utils/server/http';
+
 import useMediaQuery from '~/hooks/useMediaQuery';
 import WatchTrailerModal, { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
 import { H5, H6 } from '~/src/components/styles/Text.styles';
 
-type LoaderData = {
-  videos: Awaited<ReturnType<typeof getVideos>>;
-};
-
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   await authenticate(request);
 
   const { movieId } = params;
@@ -26,7 +25,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   if (!mid) throw new Response('Not Found', { status: 404 });
   const videos = await getVideos('movie', mid);
 
-  return json<LoaderData>({ videos });
+  return json({ videos }, { headers: { 'Cache-Control': CACHE_CONTROL.detail } });
 };
 
 export const meta: MetaFunction = ({ params }) => ({
@@ -34,7 +33,7 @@ export const meta: MetaFunction = ({ params }) => ({
 });
 
 const MovieVideosPage = () => {
-  const { videos } = useLoaderData<LoaderData>();
+  const { videos } = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
   const isSm = useMediaQuery('(max-width: 650px)');
   const [activeType, setActiveType] = useState<number>(0);

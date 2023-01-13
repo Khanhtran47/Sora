@@ -1,5 +1,6 @@
 import { useLoaderData, useLocation, NavLink } from '@remix-run/react';
-import { json, LoaderFunction, DataFunctionArgs, MetaFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type { LoaderArgs, MetaFunction } from '@remix-run/node';
 import { Container, Badge } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 
@@ -8,10 +9,6 @@ import { authenticate } from '~/services/supabase';
 import { getAnimeAdvancedSearch } from '~/services/consumet/anilist/anilist.server';
 
 import MediaList from '~/src/components/media/MediaList';
-
-type LoaderData = {
-  items: Awaited<ReturnType<typeof getAnimeAdvancedSearch>>;
-};
 
 export const meta: MetaFunction = () => ({
   title: 'Discover and watch anime for free | Sora',
@@ -25,7 +22,7 @@ export const meta: MetaFunction = () => ({
     'Official Sora website to watch anime online HD for free, Watch TV show & TV series and Download all anime FREE',
 });
 
-export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
+export const loader = async ({ request }: LoaderArgs) => {
   await authenticate(request);
 
   const url = new URL(request.url);
@@ -56,7 +53,7 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
   const id = url.searchParams.get('id') || undefined;
   const year = Number(url.searchParams.get('year')) || undefined;
 
-  return json<LoaderData>({
+  return json({
     items: await getAnimeAdvancedSearch(
       query,
       type,
@@ -94,7 +91,7 @@ export const handle = {
 };
 
 const DiscoverAnime = () => {
-  const { items } = useLoaderData<LoaderData>();
+  const { items } = useLoaderData<typeof loader>();
   const location = useLocation();
 
   return (

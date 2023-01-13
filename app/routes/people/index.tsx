@@ -1,17 +1,16 @@
 import { useLoaderData, useNavigate, useLocation, NavLink } from '@remix-run/react';
-import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type { MetaFunction, LoaderArgs } from '@remix-run/node';
 import { Container, Badge } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
 import { authenticate } from '~/services/supabase';
-import MediaList from '~/src/components/media/MediaList';
 import { getListPeople } from '~/services/tmdb/tmdb.server';
 import i18next from '~/i18n/i18next.server';
+import { CACHE_CONTROL } from '~/utils/server/http';
 
-type LoaderData = {
-  people: Awaited<ReturnType<typeof getListPeople>>;
-};
+import MediaList from '~/src/components/media/MediaList';
 
 export const meta: MetaFunction = () => ({
   title: 'Discover most popular celebs on Sora',
@@ -24,16 +23,21 @@ export const meta: MetaFunction = () => ({
   'og:description': 'Discover the most popular celebrities right now on Sora.',
 });
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
 
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page')) || undefined;
   if (page && (page < 1 || page > 1000)) page = 1;
 
-  return json<LoaderData>({
-    people: await getListPeople('popular', locale, page),
-  });
+  return json(
+    {
+      people: await getListPeople('popular', locale, page),
+    },
+    {
+      headers: { 'Cache-Control': CACHE_CONTROL.trending },
+    },
+  );
 };
 
 export const handle = {
@@ -57,7 +61,7 @@ export const handle = {
 };
 
 const ListPeoplePopular = () => {
-  const { people } = useLoaderData<LoaderData>();
+  const { people } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
