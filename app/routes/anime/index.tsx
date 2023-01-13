@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { LoaderFunction, json, DataFunctionArgs } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type { LoaderArgs } from '@remix-run/node';
 import { useFetcher, useNavigate, useLoaderData, useLocation } from '@remix-run/react';
 import { Container, Spacer } from '@nextui-org/react';
 import { motion } from 'framer-motion';
@@ -12,6 +13,8 @@ import {
   getAnimeRecentEpisodes,
 } from '~/services/consumet/anilist/anilist.server';
 import { authenticate } from '~/services/supabase';
+import { CACHE_CONTROL } from '~/utils/server/http';
+
 import { IMedia } from '~/types/media';
 
 import useSize from '~/hooks/useSize';
@@ -21,13 +24,7 @@ import { animeGenres } from '~/src/constants/filterItems';
 import MediaList from '~/src/components/media/MediaList';
 import SkeletonItem from '~/src/components/elements/skeleton/Item';
 
-type LoaderData = {
-  trending: Awaited<ReturnType<typeof getAnimeTrending>>;
-  popular: Awaited<ReturnType<typeof getAnimePopular>>;
-  recentEpisodes: Awaited<ReturnType<typeof getAnimeRecentEpisodes>>;
-};
-
-export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
+export const loader = async ({ request }: LoaderArgs) => {
   await authenticate(request);
 
   const url = new URL(request.url);
@@ -40,15 +37,20 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
     getAnimeRecentEpisodes('gogoanime', page, 20),
   ]);
 
-  return json<LoaderData>({
-    trending: trendingAnime,
-    popular: popularAnime,
-    recentEpisodes,
-  });
+  return json(
+    {
+      trending: trendingAnime,
+      popular: popularAnime,
+      recentEpisodes,
+    },
+    {
+      headers: { 'Cache-Control': CACHE_CONTROL.anime },
+    },
+  );
 };
 
 const AnimePage = () => {
-  const { trending, popular, recentEpisodes } = useLoaderData<LoaderData>() || {};
+  const { trending, popular, recentEpisodes } = useLoaderData<typeof loader>() || {};
   const location = useLocation();
   const navigate = useNavigate();
   const fetcher = useFetcher();

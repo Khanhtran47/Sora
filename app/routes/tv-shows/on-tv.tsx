@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
 import { useLoaderData, useNavigate, useLocation, NavLink } from '@remix-run/react';
-import { json, LoaderFunction, MetaFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type { MetaFunction, LoaderArgs } from '@remix-run/node';
 import { Container, Badge } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -11,11 +12,9 @@ import dayjs from 'dayjs';
 import { authenticate } from '~/services/supabase';
 import { getListDiscover } from '~/services/tmdb/tmdb.server';
 import i18next from '~/i18n/i18next.server';
-import MediaList from '~/src/components/media/MediaList';
+import { CACHE_CONTROL } from '~/utils/server/http';
 
-type LoaderData = {
-  shows: Awaited<ReturnType<typeof getListDiscover>>;
-};
+import MediaList from '~/src/components/media/MediaList';
 
 export const meta: MetaFunction = () => ({
   title: 'Watch On TV movies and tv shows free | Sora',
@@ -29,7 +28,7 @@ export const meta: MetaFunction = () => ({
     'Official Sora website to watch movies online HD for free, Watch TV show & TV series and Download all movies and series FREE',
 });
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
 
   const url = new URL(request.url);
@@ -42,35 +41,42 @@ export const loader: LoaderFunction = async ({ request }) => {
   const formattedToday = today.format('YYYY-MM-DD');
   const formattedNext7Days = next7Days.format('YYYY-MM-DD');
 
-  return json<LoaderData>({
-    shows: await getListDiscover(
-      'tv',
-      undefined,
-      undefined,
-      locale,
-      page,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      50,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      formattedToday,
-      formattedNext7Days,
-    ),
-  });
+  return json(
+    {
+      shows: await getListDiscover(
+        'tv',
+        undefined,
+        undefined,
+        locale,
+        page,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        50,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        formattedToday,
+        formattedNext7Days,
+      ),
+    },
+    {
+      headers: {
+        'Cache-Control': CACHE_CONTROL.trending,
+      },
+    },
+  );
 };
 
 export const handle = {
@@ -94,7 +100,7 @@ export const handle = {
 };
 
 const ListTvShows = () => {
-  const { shows } = useLoaderData<LoaderData>();
+  const { shows } = useLoaderData<typeof loader>();
   const rootData:
     | {
         user?: User;

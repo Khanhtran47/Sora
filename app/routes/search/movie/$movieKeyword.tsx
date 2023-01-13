@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/indent */
-import { DataFunctionArgs, json, LoaderFunction, MetaFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type { MetaFunction, LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useNavigate, useParams, NavLink, RouteMatch } from '@remix-run/react';
 import { Container, Badge } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
@@ -10,13 +11,11 @@ import { authenticate } from '~/services/supabase';
 import { getSearchMovies } from '~/services/tmdb/tmdb.server';
 import MediaList from '~/src/components/media/MediaList';
 import i18next from '~/i18n/i18next.server';
+import { CACHE_CONTROL } from '~/utils/server/http';
+
 import SearchForm from '~/src/components/elements/SearchForm';
 
-type LoaderData = {
-  searchResults: Awaited<ReturnType<typeof getSearchMovies>>;
-};
-
-export const loader: LoaderFunction = async ({ request, params }: DataFunctionArgs) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
 
   const keyword = params?.movieKeyword || '';
@@ -24,9 +23,14 @@ export const loader: LoaderFunction = async ({ request, params }: DataFunctionAr
   let page = Number(url.searchParams.get('page')) || undefined;
   if (page && (page < 1 || page > 1000)) page = 1;
 
-  return json<LoaderData>({
-    searchResults: await getSearchMovies(keyword, page, locale),
-  });
+  return json(
+    {
+      searchResults: await getSearchMovies(keyword, page, locale),
+    },
+    {
+      headers: { 'Cache-Control': CACHE_CONTROL.search },
+    },
+  );
 };
 
 export const meta: MetaFunction = ({ data, params }) => {
@@ -66,7 +70,7 @@ export const handle = {
 };
 
 const SearchRoute = () => {
-  const { searchResults } = useLoaderData<LoaderData>() || {};
+  const { searchResults } = useLoaderData<typeof loader>() || {};
   const rootData:
     | {
         user?: User;

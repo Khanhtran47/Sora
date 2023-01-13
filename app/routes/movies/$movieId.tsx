@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
-import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type { LoaderArgs, MetaFunction } from '@remix-run/node';
 import {
   useCatch,
   useLoaderData,
@@ -14,21 +15,17 @@ import { Container, Badge } from '@nextui-org/react';
 
 import { getMovieDetail, getTranslations, getImdbRating } from '~/services/tmdb/tmdb.server';
 import i18next from '~/i18n/i18next.server';
-import TMDB from '~/utils/media';
 import { authenticate } from '~/services/supabase';
+import { CACHE_CONTROL } from '~/utils/server/http';
+
+import TMDB from '~/utils/media';
 
 import MediaDetail from '~/src/components/media/MediaDetail';
 import WatchTrailerModal, { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 
-type LoaderData = {
-  detail: Awaited<ReturnType<typeof getMovieDetail>>;
-  translations?: Awaited<ReturnType<typeof getTranslations>>;
-  imdbRating?: { count: number; star: number };
-};
-
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
 
   const { movieId } = params;
@@ -42,10 +39,24 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       getTranslations('movie', mid),
       detail?.imdb_id ? getImdbRating(detail?.imdb_id) : undefined,
     ]);
-    return json<LoaderData>({ detail, translations, imdbRating });
+    return json(
+      { detail, imdbRating, translations },
+      {
+        headers: {
+          'Cache-Control': CACHE_CONTROL.movie,
+        },
+      },
+    );
   }
   const imdbRating = detail?.imdb_id ? await getImdbRating(detail?.imdb_id) : undefined;
-  return json<LoaderData>({ detail, imdbRating });
+  return json(
+    { detail, imdbRating, translations: undefined },
+    {
+      headers: {
+        'Cache-Control': CACHE_CONTROL.movie,
+      },
+    },
+  );
 };
 
 export const meta: MetaFunction = ({ data, params }) => {
@@ -108,7 +119,7 @@ export const handle = {
 };
 
 const MovieDetail = () => {
-  const { detail, translations, imdbRating } = useLoaderData<LoaderData>();
+  const { detail, imdbRating, translations } = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
   const { state } = useLocation();
   const currentTime = state && (state as { currentTime: number }).currentTime;

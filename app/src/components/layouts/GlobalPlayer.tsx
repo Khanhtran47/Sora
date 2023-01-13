@@ -19,7 +19,7 @@ import type { PlayerData } from '~/store/player/usePlayerState';
 import useLocalStorage from '~/hooks/useLocalStorage';
 import useMeasure from '~/hooks/useMeasure';
 
-import updateHistory from '~/utils/update-history';
+import updateHistory from '~/utils/client/update-history';
 
 import ArtPlayer from '~/src/components/elements/player/ArtPlayer';
 import PlayerSettings from '~/src/components/elements/player/PlayerSettings';

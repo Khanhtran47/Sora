@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/indent */
-import create from 'zustand';
+import { create } from 'zustand';
 
 import { IMovieSource, IMovieSubtitle } from '~/services/consumet/flixhq/flixhq.types';
 import { ITrailer } from '~/services/consumet/anilist/anilist.types';

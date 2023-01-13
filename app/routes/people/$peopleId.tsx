@@ -1,29 +1,23 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type { MetaFunction, LoaderArgs } from '@remix-run/node';
 import { useCatch, useLoaderData, Outlet, NavLink, RouteMatch } from '@remix-run/react';
 import { Container, Row, Col, Spacer, Badge } from '@nextui-org/react';
 
 import { getPeopleDetail, getPeopleExternalIds } from '~/services/tmdb/tmdb.server';
 import i18next from '~/i18n/i18next.server';
+import { authenticate } from '~/services/supabase';
+import { CACHE_CONTROL } from '~/utils/server/http';
+
 import useMediaQuery from '~/hooks/useMediaQuery';
 import TMDB from '~/utils/media';
-import { authenticate } from '~/services/supabase';
 
 import PeopleDetail from '~/src/components/media/PeopleDetail';
 import TabLink from '~/src/components/elements/tab/TabLink';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 
-type LoaderData = {
-  detail: Awaited<ReturnType<typeof getPeopleDetail>>;
-  externalIds: {
-    facebookId: null | string;
-    instagramId: string | null;
-    twitterId: null | string;
-  };
-};
-
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
 
   const { peopleId } = params;
@@ -34,14 +28,19 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const externalIds = await getPeopleExternalIds(pid, locale);
   if (!detail || !externalIds) throw new Response('Not Found', { status: 404 });
 
-  return json<LoaderData>({
-    detail,
-    externalIds: {
-      facebookId: externalIds.facebook_id || null,
-      instagramId: externalIds.instagram_id || null,
-      twitterId: externalIds.twitter_id || null,
+  return json(
+    {
+      detail,
+      externalIds: {
+        facebookId: externalIds.facebook_id || null,
+        instagramId: externalIds.instagram_id || null,
+        twitterId: externalIds.twitter_id || null,
+      },
     },
-  });
+    {
+      headers: { 'Cache-Control': CACHE_CONTROL.detail },
+    },
+  );
 };
 
 export const meta: MetaFunction = ({ data, params }) => {
@@ -117,7 +116,7 @@ const detailTab = [
 ];
 
 const PeopleDetailPage = () => {
-  const { detail, externalIds } = useLoaderData<LoaderData>();
+  const { detail, externalIds } = useLoaderData<typeof loader>();
   const isSm = useMediaQuery('(max-width: 650px)');
   return (
     <Container

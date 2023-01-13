@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
 import * as React from 'react';
-import { LoaderFunction, json, DataFunctionArgs } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type { LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useLocation, useNavigate, useFetcher } from '@remix-run/react';
 import { Container, Spacer } from '@nextui-org/react';
 import { motion } from 'framer-motion';
@@ -11,19 +12,16 @@ import dayjs from 'dayjs';
 
 import i18next from '~/i18n/i18next.server';
 import { getListTvShows, getListDiscover } from '~/services/tmdb/tmdb.server';
+import { authenticate } from '~/services/supabase';
+import { CACHE_CONTROL } from '~/utils/server/http';
+
 import { IMedia } from '~/types/media';
+
 import MediaList from '~/src/components/media/MediaList';
 import SkeletonItem from '~/src/components/elements/skeleton/Item';
 import useSize from '~/hooks/useSize';
-import { authenticate } from '~/services/supabase';
 
-type LoaderData = {
-  popular: Awaited<ReturnType<typeof getListTvShows>>;
-  topRated: Awaited<ReturnType<typeof getListTvShows>>;
-  onTheAir: Awaited<ReturnType<typeof getListTvShows>>;
-};
-
-export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
 
   const page = 1;
@@ -75,15 +73,22 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
       formattedNext7Days,
     ),
   ]);
-  return json<LoaderData>({
-    popular,
-    topRated,
-    onTheAir,
-  });
+  return json(
+    {
+      popular,
+      topRated,
+      onTheAir,
+    },
+    {
+      headers: {
+        'Cache-Control': CACHE_CONTROL.tv,
+      },
+    },
+  );
 };
 
 const TvIndexPage = () => {
-  const { popular, topRated, onTheAir } = useLoaderData();
+  const { popular, topRated, onTheAir } = useLoaderData<typeof loader>();
   const rootData:
     | {
         user?: User;
@@ -199,7 +204,7 @@ const TvIndexPage = () => {
           },
         }}
       >
-        {topRated && topRated.items.length > 0 && (
+        {topRated?.items && topRated.items.length > 0 && (
           <>
             <MediaList
               listType="slider-card"
@@ -214,7 +219,7 @@ const TvIndexPage = () => {
             <Spacer y={1.5} />
           </>
         )}
-        {onTheAir && onTheAir.items.length > 0 && (
+        {onTheAir?.items && onTheAir.items.length > 0 && (
           <>
             <MediaList
               listType="slider-card"

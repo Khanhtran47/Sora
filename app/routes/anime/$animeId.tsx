@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
-import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type { LoaderArgs, MetaFunction } from '@remix-run/node';
 import {
   useCatch,
   useLoaderData,
@@ -14,22 +15,14 @@ import { Container, Badge } from '@nextui-org/react';
 import { getAnimeInfo } from '~/services/consumet/anilist/anilist.server';
 import { authenticate } from '~/services/supabase';
 import getProviderList from '~/services/provider.server';
+import { CACHE_CONTROL } from '~/utils/server/http';
 
 import AnimeDetail from '~/src/components/media/AnimeDetail';
 import WatchTrailerModal from '~/src/components/elements/modal/WatchTrailerModal';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 
-type LoaderData = {
-  detail: Awaited<ReturnType<typeof getAnimeInfo>>;
-  providers?: {
-    id?: string | number | null;
-    provider: string;
-    episodesCount?: number;
-  }[];
-};
-
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const { animeId } = params;
   const aid = Number(animeId);
   if (!animeId) throw new Response('Not Found', { status: 404 });
@@ -53,7 +46,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   if (providers && providers.length > 0) {
     return json({ detail, providers });
   }
-  return json<LoaderData>({ detail });
+  return json({ detail }, { headers: { 'Cache-Control': CACHE_CONTROL.detail } });
 };
 
 export const meta: MetaFunction = ({ data, params }) => {
@@ -138,7 +131,7 @@ export const handle = {
 };
 
 const AnimeDetailPage = () => {
-  const { detail } = useLoaderData<LoaderData>();
+  const { detail } = useLoaderData<typeof loader>();
   const { state } = useLocation();
   const currentTime = state && (state as { currentTime: number | undefined }).currentTime;
   const [visible, setVisible] = React.useState(false);

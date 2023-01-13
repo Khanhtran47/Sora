@@ -1,23 +1,28 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type { MetaFunction, LoaderArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
+
 import i18next from '~/i18n/i18next.server';
 import { getPeopleCredits } from '~/services/tmdb/tmdb.server';
+import { CACHE_CONTROL } from '~/utils/server/http';
+
 import { MediaListTable } from '~/src/components/media/list';
 
-type LoaderData = {
-  credits: Awaited<ReturnType<typeof getPeopleCredits>>;
-};
-
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const locale = await i18next.getLocale(request);
   const { peopleId } = params;
   const pid = Number(peopleId);
   if (!pid) throw new Response('Not Found', { status: 404 });
 
-  return json<LoaderData>({
-    credits: await getPeopleCredits(pid, undefined, locale),
-  });
+  return json(
+    {
+      credits: await getPeopleCredits(pid, undefined, locale),
+    },
+    {
+      headers: { 'Cache-Control': CACHE_CONTROL.detail },
+    },
+  );
 };
 
 export const meta: MetaFunction = ({ params }) => ({
@@ -25,7 +30,7 @@ export const meta: MetaFunction = ({ params }) => ({
 });
 
 const CreditsPage = () => {
-  const { credits } = useLoaderData<LoaderData>();
+  const { credits } = useLoaderData<typeof loader>();
 
   return <MediaListTable items={credits?.cast || []} simplified sorted />;
 };

@@ -42,7 +42,7 @@
 
 <div align="center">
   <a href="https://github.com/Khanhtran47/remix-movie">
-    <img src="images/screenshot.png" alt="screenshot">
+    <img src="public/images/screenshot.png" alt="screenshot">
   </a>
 </div>
 

@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { LoaderFunction, json } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type { LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useNavigate, Link } from '@remix-run/react';
 import { Row, Col, Image as NextImage } from '@nextui-org/react';
 import type { User } from '@supabase/supabase-js';
@@ -11,24 +12,17 @@ import Image, { MimeType } from 'remix-image';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import { authenticate } from '~/services/supabase';
 import { getSimilar, getVideos, getCredits, getRecommendation } from '~/services/tmdb/tmdb.server';
-import { IMovieDetail, IPeople, ILanguage } from '~/services/tmdb/tmdb.types';
+import { IMovieDetail, ILanguage } from '~/services/tmdb/tmdb.types';
 import { postFetchDataHandler } from '~/services/tmdb/utils.server';
-import { IMedia } from '~/types/media';
+import { CACHE_CONTROL } from '~/utils/server/http';
+
 import TMDB from '~/utils/media';
 
 import MediaList from '~/src/components/media/MediaList';
 import { H6 } from '~/src/components/styles/Text.styles';
 import Flex from '~/src/components/styles/Flex.styles';
 
-type LoaderData = {
-  videos: Awaited<ReturnType<typeof getVideos>>;
-  similar: Awaited<ReturnType<typeof getSimilar>>;
-  recommendations: Awaited<ReturnType<typeof getRecommendation>>;
-  topBilledCast: IMedia[];
-  directors: IPeople[];
-};
-
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   await authenticate(request);
 
   const { movieId } = params;
@@ -46,18 +40,25 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   if (!similar || !videos || !credits || !recommendations)
     throw new Response('Not Found', { status: 404 });
 
-  return json<LoaderData>({
-    videos,
-    similar,
-    recommendations,
-    topBilledCast: credits &&
-      credits.cast && [...postFetchDataHandler(credits.cast.slice(0, 9), 'people')],
-    directors: credits && credits.crew && credits.crew.filter(({ job }) => job === 'Director'),
-  });
+  return json(
+    {
+      videos,
+      similar,
+      recommendations,
+      topBilledCast: credits &&
+        credits.cast && [...postFetchDataHandler(credits.cast.slice(0, 9), 'people')],
+      directors: credits && credits.crew && credits.crew.filter(({ job }) => job === 'Director'),
+    },
+    {
+      headers: {
+        'Cache-Control': CACHE_CONTROL.detail,
+      },
+    },
+  );
 };
 
 const MovieOverview = () => {
-  const { similar, recommendations, topBilledCast, directors } = useLoaderData<LoaderData>();
+  const { similar, recommendations, topBilledCast, directors } = useLoaderData<typeof loader>();
   const movieData: { detail: IMovieDetail } | undefined = useRouteData('routes/movies/$movieId');
   const rootData:
     | {

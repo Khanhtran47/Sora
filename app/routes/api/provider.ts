@@ -1,19 +1,12 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { json } from '@remix-run/node';
-import type {LoaderFunction, LoaderArgs} from '@remix-run/node';
+import type {LoaderArgs} from '@remix-run/node';
 
 import getProviderList from '~/services/provider.server';
 import { authenticate } from '~/services/supabase';
+import { CACHE_CONTROL } from '~/utils/server/http';
 
-type LoaderData = {
-  provider: {
-    id?: string | number | null;
-    provider: string;
-    episodesCount?: number;
-  }[];
-};
-
-export const loader: LoaderFunction = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderArgs) => {
   await authenticate(request);
 
   const url = new URL(request.url);
@@ -24,9 +17,13 @@ export const loader: LoaderFunction = async ({ request }: LoaderArgs) => {
   const season = url.searchParams.get('season');
   if (!title || !type) throw new Response('Missing params', { status: 400 });
   const provider = await getProviderList(type, title, orgTitle, year, season);
-  if (provider && provider.length > 0) return json<LoaderData>({ provider }, { status: 200 });
+  if (provider && provider.length > 0) return json({ provider }, { status: 200, headers: { 'Cache-Control': CACHE_CONTROL.default } });
 
-  return json<LoaderData>({
-    provider: [{ provider: 'Embed' }],
+  return json({
+    provider: undefined,
+  }, {
+    headers: {
+      'Cache-Control': CACHE_CONTROL.default,
+    }
   });
 };

@@ -1,28 +1,32 @@
-import { DataFunctionArgs, json, LoaderFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type { LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useNavigate, NavLink } from '@remix-run/react';
 import { Container, Badge } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 
 import { getListPeople } from '~/services/tmdb/tmdb.server';
-import MediaList from '~/src/components/media/MediaList';
 import i18next from '~/i18n/i18next.server';
-import SearchForm from '~/src/components/elements/SearchForm';
 import { authenticate } from '~/services/supabase';
+import { CACHE_CONTROL } from '~/utils/server/http';
 
-type LoaderData = {
-  people: Awaited<ReturnType<typeof getListPeople>>;
-};
+import MediaList from '~/src/components/media/MediaList';
+import SearchForm from '~/src/components/elements/SearchForm';
 
-export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
 
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page')) || undefined;
   if (page && (page < 1 || page > 1000)) page = 1;
 
-  return json<LoaderData>({
-    people: await getListPeople('popular', locale, page),
-  });
+  return json(
+    {
+      people: await getListPeople('popular', locale, page),
+    },
+    {
+      headers: { 'Cache-Control': CACHE_CONTROL.trending },
+    },
+  );
 };
 
 export const handle = {
@@ -46,7 +50,7 @@ export const handle = {
 };
 
 const SearchRoute = () => {
-  const { people } = useLoaderData<LoaderData>() || {};
+  const { people } = useLoaderData<typeof loader>() || {};
   const navigate = useNavigate();
   const { t } = useTranslation();
 

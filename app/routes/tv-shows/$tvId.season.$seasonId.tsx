@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
-import { json, MetaFunction } from '@remix-run/node';
-import type { LoaderFunction, LoaderArgs } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type { LoaderArgs, MetaFunction } from '@remix-run/node';
 import { useCatch, useLoaderData, Outlet, NavLink, RouteMatch, useParams } from '@remix-run/react';
 import { Container, Spacer, Card, Col, Row, Avatar, Badge } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
@@ -14,6 +14,7 @@ import TMDB from '~/utils/media';
 import { getTvShowDetail, getTvSeasonDetail } from '~/services/tmdb/tmdb.server';
 import { authenticate } from '~/services/supabase';
 import getProviderList from '~/services/provider.server';
+import { CACHE_CONTROL } from '~/utils/server/http';
 
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
@@ -22,17 +23,7 @@ import { H2, H5, H6 } from '~/src/components/styles/Text.styles';
 import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
 import BackgroundDefault from '~/src/assets/images/background-default.jpg';
 
-type LoaderData = {
-  detail: Awaited<ReturnType<typeof getTvShowDetail>>;
-  seasonDetail: Awaited<ReturnType<typeof getTvSeasonDetail>>;
-  providers?: {
-    id?: string | number | null;
-    provider: string;
-    episodesCount?: number;
-  }[];
-};
-
-export const loader: LoaderFunction = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
 
   const { tvId, seasonId } = params;
@@ -55,13 +46,16 @@ export const loader: LoaderFunction = async ({ request, params }: LoaderArgs) =>
   const providers = await getProviderList('tv', title, orgTitle, year, season);
 
   if (providers && providers.length > 0)
-    return json<LoaderData>({
-      detail,
-      seasonDetail,
-      providers,
-    });
+    return json(
+      {
+        detail,
+        seasonDetail,
+        providers,
+      },
+      { headers: { 'Cache-Control': CACHE_CONTROL.season } },
+    );
 
-  return json<LoaderData>({ detail, seasonDetail });
+  return json({ detail, seasonDetail }, { headers: { 'Cache-Control': CACHE_CONTROL.season } });
 };
 
 export const meta: MetaFunction = ({ data, params }) => {
@@ -148,7 +142,7 @@ const detailTab = [
 ];
 
 const SeasonDetail = () => {
-  const { seasonDetail } = useLoaderData<LoaderData>();
+  const { seasonDetail } = useLoaderData<typeof loader>();
   const { tvId, seasonId } = useParams();
   const ref = React.useRef<HTMLDivElement>(null);
   const size: IUseSize = useSize(ref);

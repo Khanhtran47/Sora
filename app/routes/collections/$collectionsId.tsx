@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/indent */
-import { DataFunctionArgs, json, LoaderFunction, MetaFunction } from '@remix-run/node';
+import { json, MetaFunction } from '@remix-run/node';
+import type { LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useLocation, NavLink, RouteMatch } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import { Container, Spacer, Badge } from '@nextui-org/react';
@@ -8,12 +9,10 @@ import type { User } from '@supabase/supabase-js';
 
 import { authenticate } from '~/services/supabase';
 import { getListDetail } from '~/services/tmdb/tmdb.server';
-import MediaList from '~/src/components/media/MediaList';
 import i18next from '~/i18n/i18next.server';
+import { CACHE_CONTROL } from '~/utils/server/http';
 
-type LoaderData = {
-  detail: Awaited<ReturnType<typeof getListDetail>>;
-};
+import MediaList from '~/src/components/media/MediaList';
 
 export const meta: MetaFunction = () => ({
   title: 'Watch Top Trending movies and tv shows free | Sora',
@@ -27,15 +26,18 @@ export const meta: MetaFunction = () => ({
     'Official Sora website to watch movies online HD for free, Watch TV show & TV series and Download all movies and series FREE',
 });
 
-export const loader: LoaderFunction = async ({ request, params }: DataFunctionArgs) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
 
   const { collectionsId } = params;
   const cid = Number(collectionsId);
 
-  return json<LoaderData>({
-    detail: await getListDetail(cid, locale),
-  });
+  return json(
+    {
+      detail: await getListDetail(cid, locale),
+    },
+    { headers: { 'Cache-Control': CACHE_CONTROL.collection } },
+  );
 };
 
 export const handle = {
@@ -82,7 +84,7 @@ export const handle = {
 };
 
 const CollectionDetail = () => {
-  const { detail } = useLoaderData<LoaderData>() || {};
+  const { detail } = useLoaderData<typeof loader>();
   const rootData:
     | {
         user?: User;

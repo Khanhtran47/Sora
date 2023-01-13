@@ -1,17 +1,16 @@
 import { useLoaderData, useLocation, NavLink } from '@remix-run/react';
-import { json, LoaderFunction, DataFunctionArgs, MetaFunction } from '@remix-run/node';
+import { json, MetaFunction } from '@remix-run/node';
+import type { LoaderArgs } from '@remix-run/node';
 import { Container, Badge } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 
 import { IMedia } from '~/types/media';
+
+import { CACHE_CONTROL } from '~/utils/server/http';
 import { authenticate } from '~/services/supabase';
 import { getAnimePopular } from '~/services/consumet/anilist/anilist.server';
 
 import MediaList from '~/src/components/media/MediaList';
-
-type LoaderData = {
-  items: Awaited<ReturnType<typeof getAnimePopular>>;
-};
 
 export const meta: MetaFunction = () => ({
   title: 'Watch Popular anime free | Sora',
@@ -25,16 +24,21 @@ export const meta: MetaFunction = () => ({
     'Official Sora website to watch anime online HD for free, Watch TV show & TV series and Download all anime FREE',
 });
 
-export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
+export const loader = async ({ request }: LoaderArgs) => {
   await authenticate(request);
 
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page'));
   if (!page && (page < 1 || page > 1000)) page = 1;
 
-  return json<LoaderData>({
-    items: await getAnimePopular(page, 20),
-  });
+  return json(
+    {
+      items: await getAnimePopular(page, 20),
+    },
+    {
+      headers: { 'Cache-Control': CACHE_CONTROL.popular },
+    },
+  );
 };
 
 export const handle = {
@@ -58,7 +62,7 @@ export const handle = {
 };
 
 const PopularAnime = () => {
-  const { items } = useLoaderData<LoaderData>();
+  const { items } = useLoaderData<typeof loader>();
   const location = useLocation();
 
   return (

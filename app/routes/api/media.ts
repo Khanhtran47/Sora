@@ -1,15 +1,12 @@
-import { LoaderFunction, json } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type {LoaderArgs} from '@remix-run/node';
 
 import i18next from '~/i18n/i18next.server';
 import { authenticate } from '~/services/supabase';
 import { getImages, getVideos } from '~/services/tmdb/tmdb.server';
+import { CACHE_CONTROL } from '~/utils/server/http';
 
-type LoaderData = {
-  images: Awaited<ReturnType<typeof getImages>>;
-  videos: Awaited<ReturnType<typeof getVideos>>;
-};
-
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
 
   const url = new URL(request.url);
@@ -26,5 +23,9 @@ export const loader: LoaderFunction = async ({ request }) => {
     isFetchVideos ? getVideos(type, id) : undefined,
   ]);
 
-  return json<LoaderData>({ images, videos });
+  return json({ images, videos }, {
+    headers: {
+      'Cache-Control': CACHE_CONTROL.default,
+    }
+  });
 };

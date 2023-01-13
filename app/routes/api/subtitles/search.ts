@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { LoaderFunction, json } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import { LoaderArgs } from '@remix-run/node';
+
 import { getSubtitlesSearch } from '~/services/open-subtitles/open-subtitles.server';
+import {CACHE_CONTROL} from '~/utils/server/http';
 
-type LoaderData = {
-  subtitlesSearch: Awaited<ReturnType<typeof getSubtitlesSearch>>;
-};
-
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const url = new URL(request.url);
   const tmdb_id = url.searchParams.get('tmdb_id');
   const parent_tmdb_id = url.searchParams.get('parent_tmdb_id');
@@ -42,5 +41,9 @@ export const loader: LoaderFunction = async ({ request }) => {
     undefined,
   );
 
-  return json<LoaderData>({ subtitlesSearch });
+  return json({ subtitlesSearch }, {
+    headers: {
+      'Cache-Control': CACHE_CONTROL.default,
+    }
+  });
 };

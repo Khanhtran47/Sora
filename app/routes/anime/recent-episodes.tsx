@@ -1,18 +1,16 @@
 import { useLoaderData, useLocation, NavLink } from '@remix-run/react';
-import { json, LoaderFunction, DataFunctionArgs, MetaFunction } from '@remix-run/node';
+import { json, MetaFunction } from '@remix-run/node';
+import type { LoaderArgs } from '@remix-run/node';
 import { Container, Badge } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 
 import { authenticate } from '~/services/supabase';
+import { getAnimeRecentEpisodes } from '~/services/consumet/anilist/anilist.server';
+import { CACHE_CONTROL } from '~/utils/server/http';
+
 import { IMedia } from '~/types/media';
 
 import MediaList from '~/src/components/media/MediaList';
-import { getAnimeRecentEpisodes } from '~/services/consumet/anilist/anilist.server';
-
-type LoaderData = {
-  items: Awaited<ReturnType<typeof getAnimeRecentEpisodes>>;
-  provider: string;
-};
 
 export const meta: MetaFunction = () => ({
   title: 'Watch Recent Anime Episodes | Sora',
@@ -26,7 +24,7 @@ export const meta: MetaFunction = () => ({
     'Official Sora website to watch anime online HD for free, Watch TV show & TV series and Download all anime FREE',
 });
 
-export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
+export const loader = async ({ request }: LoaderArgs) => {
   await authenticate(request);
 
   const url = new URL(request.url);
@@ -35,10 +33,15 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
   if (!page && (page < 1 || page > 1000)) page = 1;
   if (!provider) provider = 'gogoanime';
 
-  return json<LoaderData>({
-    items: await getAnimeRecentEpisodes(provider, page, 20),
-    provider,
-  });
+  return json(
+    {
+      items: await getAnimeRecentEpisodes(provider, page, 20),
+      provider,
+    },
+    {
+      headers: { 'Cache-Control': CACHE_CONTROL.default },
+    },
+  );
 };
 
 export const handle = {
@@ -62,7 +65,7 @@ export const handle = {
 };
 
 const RecentEpisodes = () => {
-  const { items, provider } = useLoaderData<LoaderData>();
+  const { items, provider } = useLoaderData<typeof loader>();
   const location = useLocation();
 
   return (

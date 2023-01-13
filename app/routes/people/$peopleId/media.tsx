@@ -6,7 +6,8 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
 import { Image as NextImage, Row, Spacer } from '@nextui-org/react';
-import { LoaderFunction, json, MetaFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type { MetaFunction, LoaderArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { Gallery, Item, GalleryProps } from 'react-photoswipe-gallery';
 import { useRouteData } from 'remix-utils';
@@ -16,15 +17,13 @@ import { InView } from 'react-intersection-observer';
 import i18next from '~/i18n/i18next.server';
 import { getPeopleImages } from '~/services/tmdb/tmdb.server';
 import { IPeopleDetail } from '~/services/tmdb/tmdb.types';
+import { CACHE_CONTROL } from '~/utils/server/http';
+
 import useMediaQuery from '~/hooks/useMediaQuery';
 import TMDB from '~/utils/media';
 import { H6 } from '~/src/components/styles/Text.styles';
 
-type LoaderData = {
-  images: Awaited<ReturnType<typeof getPeopleImages>>;
-};
-
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const locale = await i18next.getLocale(request);
   const { peopleId } = params;
   const pid = Number(peopleId);
@@ -33,7 +32,12 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const images = await getPeopleImages(pid, locale);
   if (!images) throw new Response('Not Found', { status: 404 });
 
-  return json<LoaderData>({ images });
+  return json(
+    { images },
+    {
+      headers: { 'Cache-Control': CACHE_CONTROL.detail },
+    },
+  );
 };
 
 export const meta: MetaFunction = ({ params }) => ({
@@ -41,7 +45,7 @@ export const meta: MetaFunction = ({ params }) => ({
 });
 
 const MediaPage = () => {
-  const { images } = useLoaderData<LoaderData>();
+  const { images } = useLoaderData<typeof loader>();
   const peopleData:
     | {
         detail: IPeopleDetail;

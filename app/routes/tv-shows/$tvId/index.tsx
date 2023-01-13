@@ -1,33 +1,30 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { LoaderFunction, json } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type { LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useNavigate, Link } from '@remix-run/react';
 import { Row, Col, Spacer, Image as NextImage, Card, Avatar } from '@nextui-org/react';
 import type { User } from '@supabase/supabase-js';
 import { useRouteData } from 'remix-utils';
 import Image, { MimeType } from 'remix-image';
 
-import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
 import { authenticate } from '~/services/supabase';
 import { getSimilar, getCredits, getRecommendation } from '~/services/tmdb/tmdb.server';
 import { ITvShowDetail, ILanguage } from '~/services/tmdb/tmdb.types';
-import MediaList from '~/src/components/media/MediaList';
+import { postFetchDataHandler } from '~/services/tmdb/utils.server';
+import { CACHE_CONTROL } from '~/utils/server/http';
+
 import TMDB from '~/utils/media';
 import useMediaQuery from '~/hooks/useMediaQuery';
-import { postFetchDataHandler } from '~/services/tmdb/utils.server';
-import { IMedia } from '~/types/media';
 
 import { H3, H4, H5, H6 } from '~/src/components/styles/Text.styles';
 import Flex from '~/src/components/styles/Flex.styles';
+import MediaList from '~/src/components/media/MediaList';
 
-type LoaderData = {
-  similar: Awaited<ReturnType<typeof getSimilar>>;
-  recommendations: Awaited<ReturnType<typeof getRecommendation>>;
-  topBilledCast: IMedia[];
-};
+import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   await authenticate(request);
 
   const { tvId } = params;
@@ -43,16 +40,23 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   if (!similar || !credits || !recommendations) throw new Response('Not Found', { status: 404 });
 
-  return json<LoaderData>({
-    similar,
-    recommendations,
-    topBilledCast: credits &&
-      credits.cast && [...postFetchDataHandler(credits.cast.slice(0, 9), 'people')],
-  });
+  return json(
+    {
+      similar,
+      recommendations,
+      topBilledCast: credits &&
+        credits.cast && [...postFetchDataHandler(credits.cast.slice(0, 9), 'people')],
+    },
+    {
+      headers: {
+        'Cache-Control': CACHE_CONTROL.detail,
+      },
+    },
+  );
 };
 
 const TvOverview = () => {
-  const { similar, recommendations, topBilledCast } = useLoaderData<LoaderData>();
+  const { similar, recommendations, topBilledCast } = useLoaderData<typeof loader>();
   const tvData: { detail: ITvShowDetail } | undefined = useRouteData('routes/tv-shows/$tvId');
   const rootData:
     | {

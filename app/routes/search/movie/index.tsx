@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/indent */
-import { DataFunctionArgs, json, LoaderFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type { LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useNavigate, NavLink } from '@remix-run/react';
 import { Container, Badge } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
@@ -7,25 +8,28 @@ import { useRouteData } from 'remix-utils';
 import type { User } from '@supabase/supabase-js';
 
 import { getTrending } from '~/services/tmdb/tmdb.server';
-import MediaList from '~/src/components/media/MediaList';
-import SearchForm from '~/src/components/elements/SearchForm';
 import i18next from '~/i18n/i18next.server';
 import { authenticate } from '~/services/supabase';
+import { CACHE_CONTROL } from '~/utils/server/http';
 
-type LoaderData = {
-  todayTrending: Awaited<ReturnType<typeof getTrending>>;
-};
+import MediaList from '~/src/components/media/MediaList';
+import SearchForm from '~/src/components/elements/SearchForm';
 
-export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
 
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page')) || undefined;
   if (page && (page < 1 || page > 1000)) page = 1;
 
-  return json<LoaderData>({
-    todayTrending: await getTrending('all', 'day', locale, page),
-  });
+  return json(
+    {
+      todayTrending: await getTrending('all', 'day', locale, page),
+    },
+    {
+      headers: { 'Cache-Control': CACHE_CONTROL.trending },
+    },
+  );
 };
 
 export const handle = {
@@ -49,7 +53,7 @@ export const handle = {
 };
 
 const SearchRoute = () => {
-  const { todayTrending } = useLoaderData<LoaderData>() || {};
+  const { todayTrending } = useLoaderData<typeof loader>() || {};
   const rootData:
     | {
         user?: User;

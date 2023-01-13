@@ -1,20 +1,19 @@
-import { DataFunctionArgs, json, LoaderFunction, MetaFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type { MetaFunction, LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useNavigate, NavLink, RouteMatch, useLocation } from '@remix-run/react';
 import { Container, Badge } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 
 import { authenticate } from '~/services/supabase';
 import { getAnimeSearch } from '~/services/consumet/anilist/anilist.server';
+import { CACHE_CONTROL } from '~/utils/server/http';
+
 import { IMedia } from '~/types/media';
 
 import MediaList from '~/src/components/media/MediaList';
 import SearchForm from '~/src/components/elements/SearchForm';
 
-type LoaderData = {
-  searchResults: Awaited<ReturnType<typeof getAnimeSearch>>;
-};
-
-export const loader: LoaderFunction = async ({ request, params }: DataFunctionArgs) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   await authenticate(request);
 
   const keyword = params?.animeKeyword || '';
@@ -22,9 +21,14 @@ export const loader: LoaderFunction = async ({ request, params }: DataFunctionAr
   let page = Number(url.searchParams.get('page'));
   if (!page && (page < 1 || page > 1000)) page = 1;
 
-  return json<LoaderData>({
-    searchResults: await getAnimeSearch(keyword, page, 20),
-  });
+  return json(
+    {
+      searchResults: await getAnimeSearch(keyword, page, 20),
+    },
+    {
+      headers: { 'Cache-Control': CACHE_CONTROL.search },
+    },
+  );
 };
 
 export const meta: MetaFunction = ({ data, params }) => {
@@ -64,7 +68,7 @@ export const handle = {
 };
 
 const SearchRoute = () => {
-  const { searchResults } = useLoaderData<LoaderData>();
+  const { searchResults } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const location = useLocation();

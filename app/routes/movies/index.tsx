@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
 import * as React from 'react';
-import { LoaderFunction, json, DataFunctionArgs } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type { LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useLocation, useNavigate, useFetcher } from '@remix-run/react';
 import { Container, Spacer } from '@nextui-org/react';
 import { motion } from 'framer-motion';
@@ -11,6 +12,8 @@ import NProgress from 'nprogress';
 import i18next from '~/i18n/i18next.server';
 import { getListMovies } from '~/services/tmdb/tmdb.server';
 import { authenticate } from '~/services/supabase';
+import { CACHE_CONTROL } from '~/utils/server/http';
+
 import { IMedia } from '~/types/media';
 
 import useSize from '~/hooks/useSize';
@@ -18,13 +21,7 @@ import useSize from '~/hooks/useSize';
 import MediaList from '~/src/components/media/MediaList';
 import SkeletonItem from '~/src/components/elements/skeleton/Item';
 
-type LoaderData = {
-  popular: Awaited<ReturnType<typeof getListMovies>>;
-  topRated: Awaited<ReturnType<typeof getListMovies>>;
-  upcoming: Awaited<ReturnType<typeof getListMovies>>;
-};
-
-export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
 
   const page = 1;
@@ -33,15 +30,22 @@ export const loader: LoaderFunction = async ({ request }: DataFunctionArgs) => {
     getListMovies('top_rated', locale, page),
     getListMovies('upcoming', locale, page),
   ]);
-  return json<LoaderData>({
-    popular,
-    topRated,
-    upcoming,
-  });
+  return json(
+    {
+      popular,
+      topRated,
+      upcoming,
+    },
+    {
+      headers: {
+        'Cache-Control': CACHE_CONTROL.movie,
+      },
+    },
+  );
 };
 
 const MoviesIndexPage = () => {
-  const { popular, topRated, upcoming } = useLoaderData();
+  const { popular, topRated, upcoming } = useLoaderData<typeof loader>();
   const rootData:
     | {
         user?: User;
@@ -157,7 +161,7 @@ const MoviesIndexPage = () => {
           },
         }}
       >
-        {topRated && topRated.items.length > 0 && (
+        {topRated?.items && topRated?.items?.length > 0 ? (
           <>
             <MediaList
               listType="slider-card"
@@ -171,8 +175,8 @@ const MoviesIndexPage = () => {
             />
             <Spacer y={1.5} />
           </>
-        )}
-        {upcoming && upcoming.items.length > 0 && (
+        ) : null}
+        {upcoming?.items && upcoming.items?.length > 0 ? (
           <>
             <MediaList
               listType="slider-card"
@@ -186,7 +190,7 @@ const MoviesIndexPage = () => {
             />
             <Spacer y={1.5} />
           </>
-        )}
+        ) : null}
         {listItems &&
           listItems.length > 0 &&
           listItems.map((items, index) => {

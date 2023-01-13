@@ -1,19 +1,18 @@
-import { DataFunctionArgs, json, LoaderFunction, MetaFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type { MetaFunction, LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useNavigate, useParams, NavLink, RouteMatch } from '@remix-run/react';
 import { Container, Badge } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 
 import { getSearchPerson } from '~/services/tmdb/tmdb.server';
-import MediaList from '~/src/components/media/MediaList';
 import i18next from '~/i18n/i18next.server';
-import SearchForm from '~/src/components/elements/SearchForm';
 import { authenticate } from '~/services/supabase';
+import { CACHE_CONTROL } from '~/utils/server/http';
 
-type LoaderData = {
-  searchResults: Awaited<ReturnType<typeof getSearchPerson>>;
-};
+import MediaList from '~/src/components/media/MediaList';
+import SearchForm from '~/src/components/elements/SearchForm';
 
-export const loader: LoaderFunction = async ({ request, params }: DataFunctionArgs) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
 
   const keyword = params?.peopleKeyword || '';
@@ -21,9 +20,14 @@ export const loader: LoaderFunction = async ({ request, params }: DataFunctionAr
   let page = Number(url.searchParams.get('page')) || undefined;
   if (page && (page < 1 || page > 1000)) page = 1;
 
-  return json<LoaderData>({
-    searchResults: await getSearchPerson(keyword, page, undefined, locale),
-  });
+  return json(
+    {
+      searchResults: await getSearchPerson(keyword, page, undefined, locale),
+    },
+    {
+      headers: { 'Cache-Control': CACHE_CONTROL.search },
+    },
+  );
 };
 
 export const meta: MetaFunction = ({ data, params }) => {
@@ -63,7 +67,7 @@ export const handle = {
 };
 
 const SearchRoute = () => {
-  const { searchResults } = useLoaderData<LoaderData>() || {};
+  const { searchResults } = useLoaderData<typeof loader>() || {};
   const navigate = useNavigate();
   const { peopleKeyword } = useParams();
   const { t } = useTranslation();
