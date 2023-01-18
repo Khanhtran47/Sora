@@ -46,7 +46,6 @@ import FontStyles600 from '@fontsource/inter/600.css';
 import FontStyles700 from '@fontsource/inter/700.css';
 import FontStyles800 from '@fontsource/inter/800.css';
 import FontStyles900 from '@fontsource/inter/900.css';
-import { SSRProvider } from '@react-aria/ssr';
 
 import * as gtag from '~/utils/client/gtags.client';
 import globalStyles from '~/styles/global.stitches';
@@ -599,44 +598,42 @@ export const CatchBoundary = () => {
 
   return (
     <Document title={`${caught.status} ${caught.statusText}`}>
-      <SSRProvider>
-        <RemixThemesProvider
-          defaultTheme="system"
-          attribute="class"
-          value={{
-            light: lightTheme.className,
-            dark: darkTheme.className,
-          }}
-        >
-          <NextUIProvider>
-            <>
-              <Text h1 color="warning" css={{ textAlign: 'center' }}>
-                {caught.status} {caught.statusText} {message}
-              </Text>
-              <NextImage
-                autoResize
-                width={480}
-                src={pageNotFound}
-                alt="404"
-                objectFit="cover"
-                css={{
-                  marginTop: '20px',
-                }}
-              />
-              <Text
-                h1
-                size={20}
-                css={{
-                  textAlign: 'center',
-                }}
-                weight="bold"
-              >
-                <Link href="/">Go Back</Link>
-              </Text>
-            </>
-          </NextUIProvider>
-        </RemixThemesProvider>
-      </SSRProvider>
+      <RemixThemesProvider
+        defaultTheme="system"
+        attribute="class"
+        value={{
+          light: lightTheme.className,
+          dark: darkTheme.className,
+        }}
+      >
+        <NextUIProvider>
+          <>
+            <Text h1 color="warning" css={{ textAlign: 'center' }}>
+              {caught.status} {caught.statusText} {message}
+            </Text>
+            <NextImage
+              autoResize
+              width={480}
+              src={pageNotFound}
+              alt="404"
+              objectFit="cover"
+              css={{
+                marginTop: '20px',
+              }}
+            />
+            <Text
+              h1
+              size={20}
+              css={{
+                textAlign: 'center',
+              }}
+              weight="bold"
+            >
+              <Link href="/">Go Back</Link>
+            </Text>
+          </>
+        </NextUIProvider>
+      </RemixThemesProvider>
     </Document>
   );
 };

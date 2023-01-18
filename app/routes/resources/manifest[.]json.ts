@@ -1,15 +1,15 @@
 import { json } from '@remix-run/node';
-// import type { LoaderArgs } from '@remix-run/node';
+import type { LoaderArgs } from '@remix-run/node';
 
-// import i18next from '~/i18n/i18next.server';
+import i18next from '~/i18n/i18next.server';
 
 // eslint-disable-next-line import/prefer-default-export, arrow-body-style
-export const loader = async () => {
-  // const locale = await i18next.getLocale(request);
+export const loader = async ({ request }: LoaderArgs) => {
+  const locale = await i18next.getLocale(request);
   return json(
     {
       short_name: 'Sora',
-      name: 'Sora | Explore Movies, Tv Shows And More',
+      name: 'Sora',
       theme_color: '#0072F5',
       background_color: '#000000',
       display: 'standalone',
@@ -18,8 +18,8 @@ export const loader = async () => {
       start_url: '/',
       dir: 'ltr',
       scope: '/',
-      lang: 'en',
-      orientation: 'any',
+      lang: locale,
+      orientation: 'natural',
       categories: ['books', 'entertainment', 'music', 'news', 'personalization', 'photo'],
       shortcuts: [
         {
@@ -62,12 +62,21 @@ export const loader = async () => {
           type: 'image/png',
           sizes: '1901x959',
           platform: 'wide',
+          label: 'Homescreen of Sora in darkmode',
         },
         {
           src: '/images/screenshot_2.png',
           type: 'image/png',
           sizes: '1280x800',
           platform: 'wide',
+          label: 'Homescreen of Sora in lightmode',
+        },
+        {
+          src: '/images/screenshot_3.png',
+          type: 'image/png',
+          sizes: '482x995',
+          platform: 'narrow',
+          label: 'Homescreen of Sora in mobile',
         },
       ],
       icons: [
@@ -505,6 +514,7 @@ export const loader = async () => {
           src: '/favicons/ios/16.png',
           sizes: '16x16',
           type: 'image/png',
+          purpose: 'any',
         },
         {
           src: '/favicons/ios/20.png',
@@ -610,11 +620,13 @@ export const loader = async () => {
           src: '/favicons/ios/180.png',
           sizes: '180x180',
           type: 'image/png',
+          purpose: 'any',
         },
         {
           src: '/favicons/ios/192.png',
           sizes: '192x192',
           type: 'image/png',
+          purpose: 'maskable',
         },
         {
           src: '/favicons/ios/256.png',
@@ -625,6 +637,7 @@ export const loader = async () => {
           src: '/favicons/ios/512.png',
           sizes: '512x512',
           type: 'image/png',
+          purpose: 'maskable',
         },
         {
           src: '/favicons/ios/1024.png',
