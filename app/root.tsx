@@ -78,7 +78,7 @@ interface DocumentProps {
 }
 
 export const links: LinksFunction = () => [
-  { rel: 'manifest', href: '/resources/manifest.json' },
+  { rel: 'manifest', href: '/resources/manifest-v0.0.1.json' },
   { rel: 'icon', href: '/favicon.ico' },
   {
     rel: 'preload',
