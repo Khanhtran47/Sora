@@ -261,6 +261,7 @@ export const meta: MetaFunction = () => {
       'og:image:height': '630',
       'og:description':
         'Watch Sora Online For Free! Sora is a multinational website for movies, series and anime fans - Very fast streaming - Click NOW',
+      'msvalidate.01': '1445DD7580898781011249BF246A21AD',
     };
   }
   return {
@@ -281,6 +282,7 @@ export const meta: MetaFunction = () => {
     'og:image:height': '630',
     'og:description':
       'Watch Sora Online For Free! Sora is a multinational website for movies, series and anime fans - Very fast streaming - Click NOW',
+    'msvalidate.01': '1445DD7580898781011249BF246A21AD',
   };
 };
 
