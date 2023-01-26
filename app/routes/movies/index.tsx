@@ -3,8 +3,8 @@ import * as React from 'react';
 import { json } from '@remix-run/node';
 import type { LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useLocation, useNavigate, useFetcher } from '@remix-run/react';
-import { Container, Spacer } from '@nextui-org/react';
-import { motion } from 'framer-motion';
+import { Container, Spacer, Loading } from '@nextui-org/react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useRouteData } from 'remix-utils';
 import type { User } from '@supabase/supabase-js';
 import NProgress from 'nprogress';
@@ -19,7 +19,6 @@ import { IMedia } from '~/types/media';
 import useSize from '~/hooks/useSize';
 
 import MediaList from '~/src/components/media/MediaList';
-import SkeletonItem from '~/src/components/elements/skeleton/Item';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
@@ -217,18 +216,22 @@ const MoviesIndexPage = () => {
               );
             return null;
           })}
-        {fetcher.type === 'normalLoad' && (
-          <div className="animate-pulse">
-            <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-32 mb-2.5" />
-            <div className="mb-10 w-48 h-2 bg-gray-200 rounded-full dark:bg-gray-700" />
-            <div className="flex justify-start flex-row">
-              <SkeletonItem />
-              <SkeletonItem />
-              <SkeletonItem />
-            </div>
-            <span className="sr-only">Loading...</span>
-          </div>
-        )}
+        <AnimatePresence>
+          {fetcher.type === 'normalLoad' ? (
+            <Loading
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+              as={motion.div}
+              type="gradient"
+              size="lg"
+              css={{ my: '$17' }}
+              initial={{ y: -40, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -40, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            />
+          ) : null}
+        </AnimatePresence>
       </Container>
     </motion.main>
   );

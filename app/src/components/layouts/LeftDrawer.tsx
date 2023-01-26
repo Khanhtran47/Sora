@@ -3,8 +3,7 @@ import { NavLink as RemixNavLink } from '@remix-run/react';
 import { Spacer, Grid, Row, Button, Tooltip } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
-
-import useMediaQuery from '~/hooks/useMediaQuery';
+import { isMobile } from 'react-device-detect';
 
 import { leftDrawerPages } from '~/src/constants/navPages';
 
@@ -59,7 +58,6 @@ const iconItem = (index: number, filled: boolean) => {
 
 const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
   const { t } = useTranslation('left-drawer');
-  const isSm = useMediaQuery('(max-width: 650px)');
   const wrapperRef = React.useRef<HTMLDivElement>(null);
   const { open, setOpen } = props;
 
@@ -119,7 +117,8 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
           {leftDrawerPages.map((page, index: number) => (
             <Grid key={page.pageName} css={{ marginTop: '10px' }} xs={12}>
               <Tooltip
-                content={open || isSm ? null : t(page.pageName)}
+                content={open ? null : t(page.pageName)}
+                isDisabled={isMobile}
                 placement="right"
                 color="primary"
                 offset={10}

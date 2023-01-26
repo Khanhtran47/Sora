@@ -333,7 +333,7 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
             <SwiperReact
               grabCursor
               cssMode
-              spaceBetween={20}
+              spaceBetween={15}
               slidesPerView="auto"
               slidesPerGroup={1}
               slidesPerGroupAuto

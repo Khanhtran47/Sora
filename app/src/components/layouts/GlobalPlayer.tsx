@@ -800,9 +800,6 @@ const GlobalPlayer = () => {
                       setIsVideoEnded(true);
                       setIsPlayerPlaying(false);
                     });
-                    art.on('subtitleUpdate', (text) => {
-                      art.template.$subtitle.innerHTML = text;
-                    });
                     art.on('destroy', () => {
                       setIsVideoEnded(false);
                       setIsPlayerPlaying(false);

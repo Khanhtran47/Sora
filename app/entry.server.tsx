@@ -3,13 +3,11 @@
 import type { EntryContext } from '@remix-run/node';
 import { RemixServer } from '@remix-run/react';
 import { renderToString } from 'react-dom/server';
-import { CssBaseline } from '@nextui-org/react';
+import { getCssText } from '@nextui-org/react';
 import { createInstance } from 'i18next';
 import Backend from 'i18next-fs-backend';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { resolve } from 'node:path';
-import postCss, { AcceptedPlugin } from 'postcss';
-import postCssPresetEnv from 'postcss-preset-env';
 import { etag } from 'remix-etag';
 
 import { otherRootRouteHandlers } from '~/services/other-root-routes.server';
@@ -46,31 +44,26 @@ export default async function handleRequest(
 
   // Then you can render your app wrapped in the I18nextProvider as in the
   // entry.client file
-  const styles = CssBaseline.flush();
-  const { css } = await postCss([
-    postCssPresetEnv({
-      browsers: 'last 2 versions',
-      stage: 2,
-      autoprefixer: {},
-    }) as AcceptedPlugin,
-  ]).process(styles.props.dangerouslySetInnerHTML.__html, {
-    from: undefined,
-  });
 
   for (const handler of otherRootRouteHandlers) {
     const otherRouteResponse = await handler(request, remixContext);
     if (otherRouteResponse) return otherRouteResponse;
   }
 
-  const html = renderToString(
+  let markup = renderToString(
     <I18nextProvider i18n={instance}>
       <RemixServer context={remixContext} url={request.url} />
     </I18nextProvider>,
-  ).replace(/<\/head>/, `<style id="stitches" suppressHydrationWarning>${css}</style></head>`);
+  );
+
+  markup = markup.replace(
+    /<style id="stitches">.*<\/style>/g,
+    `<style id="stitches">${getCssText()}</style>`,
+  );
 
   responseHeaders.set('Content-Type', 'text/html');
 
-  const response = new Response(`<!DOCTYPE html>${html}`, {
+  const response = new Response(`<!DOCTYPE html>${markup}`, {
     status: responseStatusCode,
     headers: responseHeaders,
   });

@@ -3,7 +3,7 @@
 /* eslint-disable no-nested-ternary */
 import { useMemo, useState } from 'react';
 import type { MetaFunction } from '@remix-run/node';
-import { NavLink, useLocation } from '@remix-run/react';
+import { NavLink, useLocation, useNavigate } from '@remix-run/react';
 import { Container, Spacer, Badge, Popover, Button, Divider } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 
@@ -55,6 +55,7 @@ export const handle = {
 
 const DesignSystem = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [isSettingsOpen, setSettingsOpen] = useState(false);
   const [dropdownLevelKey, setDropdownLevelKey] = useState('general');
   const [currentPlaySpeed, setCurrentPlaySpeed] = useState('Normal');
@@ -435,7 +436,7 @@ const DesignSystem = () => {
             <Button auto light aria-label="dropdown" icon={<Settings />} />
           </Popover.Trigger>
           <Popover.Content>
-            <ResizablePanel>
+            <ResizablePanel contentWidth="fit">
               {currentDropdownLevel ? (
                 <Flex
                   direction="column"
@@ -582,7 +583,7 @@ const DesignSystem = () => {
               </Button>
             </SheetTrigger>
             <SheetContent side="bottom" hideCloseButton>
-              <ResizablePanel>
+              <ResizablePanel contentWidth="full">
                 {currentDropdownLevel ? (
                   <Flex
                     direction="column"
@@ -708,6 +709,10 @@ const DesignSystem = () => {
             </SheetContent>
           </Sheet>
         </Flex>
+        <Spacer y={1} />
+        <Button auto light onClick={() => navigate('/test/gesg')}>
+          test catch boundary
+        </Button>
       </Container>
     </motion.main>
   );

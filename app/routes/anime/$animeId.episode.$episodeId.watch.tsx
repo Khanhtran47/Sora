@@ -596,7 +596,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     };
   }
   const { detail, episodeInfo } = data;
-  const { title } = detail || {};
+  const { title, color } = detail || {};
   return {
     title: `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
@@ -617,6 +617,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     } episode ${episodeInfo?.number || ''}, English, Subtitle ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     } episode ${episodeInfo?.number || ''}, English Subtitle`,
+    ...(color ? { 'theme-color': color } : null),
     'og:url': `https://sora-anime.vercel.app/anime/${params.animeId}/episode/${params.episodeId}`,
     'og:title': `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''

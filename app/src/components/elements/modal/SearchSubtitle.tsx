@@ -15,7 +15,7 @@ import {
   Pagination,
 } from '@nextui-org/react';
 import { useFetcher } from '@remix-run/react';
-import { ClientOnly, useRouteData } from 'remix-utils';
+import { useRouteData } from 'remix-utils';
 import type { User } from '@supabase/supabase-js';
 
 import usePlayerState from '~/store/player/usePlayerState';
@@ -209,132 +209,128 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
   }, [fetcher.data]);
 
   return (
-    <ClientOnly fallback={<Loading type="default" />}>
-      {() => (
-        <Modal
-          closeButton
-          blur
-          scroll
-          aria-labelledby="Search Subtitles"
-          open={visible}
-          onClose={closeHandler}
-          width={width && width < 960 ? `${width}px` : '960px'}
-        >
-          <Modal.Header css={{ display: 'flex', flexFlow: 'row wrap' }}>
-            <H3 h3 id="Search Subtitles" css={{ margin: '0 0 $8 0' }}>
-              Search Subtitles
-            </H3>
-            <Row fluid justify="flex-start" align="center" css={{ margin: '0 0 $8 0' }}>
-              <Input
-                {...bindings}
-                size="sm"
-                placeholder="Search Subtitle"
-                clearable
-                bordered
-                color="primary"
-                type="text"
-              />
-              <Spacer x={1} />
-              <Select value={language} onValueChange={(value: string) => setLanguage(value)}>
-                <SelectTrigger aria-label="Language">
-                  <SelectValue placeholder="Select language" />
-                  <SelectIcon>
-                    <ChevronDownIcon />
-                  </SelectIcon>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectScrollUpButton>
-                    <ChevronUpIcon />
-                  </SelectScrollUpButton>
-                  <SelectViewport>
-                    {rootData?.languages
-                      .sort((a, b) => {
-                        const textA = a.english_name.toUpperCase();
-                        const textB = b.english_name.toUpperCase();
-                        return textA < textB ? -1 : textA > textB ? 1 : 0;
-                      })
-                      .map((lang) => (
-                        <SelectItem value={lang.iso_639_1} key={`SelectItem${lang.iso_639_1}`}>
-                          <SelectItemText>{lang.english_name}</SelectItemText>
-                          <SelectItemIndicator>
-                            <TickIcon />
-                          </SelectItemIndicator>
-                        </SelectItem>
-                      ))}
-                  </SelectViewport>
-                  <SelectScrollDownButton>
-                    <ChevronDownIcon />
-                  </SelectScrollDownButton>
-                </SelectContent>
-              </Select>
-              <Spacer x={1} />
-              <Button
-                auto
-                size="sm"
-                onClick={searchSubtitles}
-                disabled={fetcher.type === 'normalLoad' && !isGetSubtitleLink}
-              >
-                {fetcher.type === 'normalLoad' && !isGetSubtitleLink ? (
-                  <Loading type="points" color="currentColor" size="sm" />
-                ) : (
-                  'Search'
-                )}
-              </Button>
-            </Row>
-          </Modal.Header>
-          <Modal.Body
-            // @ts-ignore
-            as={Container}
-            fluid
-            responsive
+    <Modal
+      closeButton
+      blur
+      scroll
+      aria-labelledby="Search Subtitles"
+      open={visible}
+      onClose={closeHandler}
+      width={width && width < 960 ? `${width}px` : '960px'}
+    >
+      <Modal.Header css={{ display: 'flex', flexFlow: 'row wrap' }}>
+        <H3 h3 id="Search Subtitles" css={{ margin: '0 0 $8 0' }}>
+          Search Subtitles
+        </H3>
+        <Row fluid justify="flex-start" align="center" css={{ margin: '0 0 $8 0' }}>
+          <Input
+            {...bindings}
+            size="sm"
+            placeholder="Search Subtitle"
+            clearable
+            bordered
+            color="primary"
+            type="text"
+          />
+          <Spacer x={1} />
+          <Select value={language} onValueChange={(value: string) => setLanguage(value)}>
+            <SelectTrigger aria-label="Language">
+              <SelectValue placeholder="Select language" />
+              <SelectIcon>
+                <ChevronDownIcon />
+              </SelectIcon>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectScrollUpButton>
+                <ChevronUpIcon />
+              </SelectScrollUpButton>
+              <SelectViewport>
+                {rootData?.languages
+                  .sort((a, b) => {
+                    const textA = a.english_name.toUpperCase();
+                    const textB = b.english_name.toUpperCase();
+                    return textA < textB ? -1 : textA > textB ? 1 : 0;
+                  })
+                  .map((lang) => (
+                    <SelectItem value={lang.iso_639_1} key={`SelectItem${lang.iso_639_1}`}>
+                      <SelectItemText>{lang.english_name}</SelectItemText>
+                      <SelectItemIndicator>
+                        <TickIcon />
+                      </SelectItemIndicator>
+                    </SelectItem>
+                  ))}
+              </SelectViewport>
+              <SelectScrollDownButton>
+                <ChevronDownIcon />
+              </SelectScrollDownButton>
+            </SelectContent>
+          </Select>
+          <Spacer x={1} />
+          <Button
+            auto
+            size="sm"
+            onClick={searchSubtitles}
+            disabled={fetcher.type === 'normalLoad' && !isGetSubtitleLink}
           >
-            {fetcher.type === 'normalLoad' && !isGetSubtitleLink && (
-              <div role="status" className="max-w-sm animate-pulse">
-                <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4" />
-                <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px] mb-4" />
-                <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-4" />
-                <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[330px] mb-4" />
-                <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[300px] mb-4" />
-                <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]" />
-                <span className="sr-only">Loading...</span>
-              </div>
+            {fetcher.type === 'normalLoad' && !isGetSubtitleLink ? (
+              <Loading type="points" color="currentColor" size="sm" />
+            ) : (
+              'Search'
             )}
-            {subtitlesSearch &&
-              subtitlesSearch.data.map((subtitle) => (
-                <ToastProvider swipeDirection="right" key={subtitle.id}>
-                  <Button
-                    light
-                    css={{ '@hover': { color: '$primaryLightContrast' } }}
-                    onClick={() => handleSubtitleClick(subtitle)}
-                  >
-                    {subtitle.attributes.release} ({subtitle.attributes.language})
-                  </Button>
-                  <Toast open={open} onOpenChange={setOpen} duration={3000}>
-                    <ToastTitle>Open Subtitle</ToastTitle>
-                    <ToastDescription asChild>
-                      <H6 h6 color="success">
-                        Subtitle added successfully
-                      </H6>
-                    </ToastDescription>
-                  </Toast>
-                  <ToastViewport />
-                </ToastProvider>
-              ))}
-            {totalPages > 1 && (
-              <Row fluid justify="center" align="center" css={{ margin: '0 0 $8 0' }}>
-                <Pagination
-                  total={totalPages}
-                  initialPage={page}
-                  // shadow
-                  onChange={handlePageChange}
-                  {...(isSm && { size: 'xs' })}
-                />
-              </Row>
-            )}
-          </Modal.Body>
-        </Modal>
-      )}
-    </ClientOnly>
+          </Button>
+        </Row>
+      </Modal.Header>
+      <Modal.Body
+        // @ts-ignore
+        as={Container}
+        fluid
+        responsive
+      >
+        {fetcher.type === 'normalLoad' && !isGetSubtitleLink && (
+          <div role="status" className="max-w-sm animate-pulse">
+            <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4" />
+            <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px] mb-4" />
+            <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-4" />
+            <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[330px] mb-4" />
+            <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[300px] mb-4" />
+            <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]" />
+            <span className="sr-only">Loading...</span>
+          </div>
+        )}
+        {subtitlesSearch &&
+          subtitlesSearch.data.map((subtitle) => (
+            <ToastProvider swipeDirection="right" key={subtitle.id}>
+              <Button
+                light
+                css={{ '@hover': { color: '$primaryLightContrast' } }}
+                onClick={() => handleSubtitleClick(subtitle)}
+              >
+                {subtitle.attributes.release} ({subtitle.attributes.language})
+              </Button>
+              <Toast open={open} onOpenChange={setOpen} duration={3000}>
+                <ToastTitle>Open Subtitle</ToastTitle>
+                <ToastDescription asChild>
+                  <H6 h6 color="success">
+                    Subtitle added successfully
+                  </H6>
+                </ToastDescription>
+              </Toast>
+              <ToastViewport />
+            </ToastProvider>
+          ))}
+        {totalPages > 1 && (
+          <Row fluid justify="center" align="center" css={{ margin: '0 0 $8 0' }}>
+            <Pagination
+              total={totalPages}
+              initialPage={page}
+              // shadow
+              onChange={handlePageChange}
+              {...(isSm && { size: 'xs' })}
+            />
+          </Row>
+        )}
+      </Modal.Body>
+    </Modal>
   );
 };
 

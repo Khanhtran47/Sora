@@ -2,24 +2,13 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { useRef, useEffect, useState, useCallback, Suspense } from 'react';
-import {
-  Button,
-  Card,
-  Col,
-  Row,
-  Spacer,
-  Loading,
-  Text,
-  Badge,
-  Image as NextImage,
-} from '@nextui-org/react';
+import { useRef, useEffect, useState, useCallback } from 'react';
+import { Button, Card, Col, Row, Spacer, Text, Badge, Image as NextImage } from '@nextui-org/react';
 import { useFetcher, useNavigate } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 import Image, { MimeType } from 'remix-image';
 import { motion, AnimatePresence } from 'framer-motion';
 import YouTube from 'react-youtube';
-import { ClientOnly } from 'remix-utils';
 import { useInView } from 'react-intersection-observer';
 
 import useCardHoverStore from '~/store/card/useCardHoverStore';
@@ -547,126 +536,116 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
               </motion.div>
             ) : null}
           </AnimatePresence>
-          <ClientOnly fallback={<Loading type="default" />}>
-            {() => {
-              if (trailerBanner?.key && !isSm && isPlayTrailer && active)
-                return (
-                  <Suspense fallback={<Loading type="default" />}>
-                    <YouTube
-                      videoId={trailerBanner.key}
-                      opts={{
-                        height: '100%',
-                        width: '100%',
-                        playerVars: {
-                          // https://developers.google.com/youtube/player_parameters
-                          autoplay: 0,
-                          modestbranding: 1,
-                          controls: 0,
-                          disablekb: 1,
-                          showinfo: 0,
-                          branding: 0,
-                          rel: 0,
-                          autohide: 0,
-                          iv_load_policy: 3,
-                          cc_load_policy: 0,
-                          playsinline: 1,
-                          mute: 1,
-                          origin: 'https://sora-anime.vercel.app',
-                        },
-                      }}
-                      onReady={({ target }) => {
-                        if (active && inView) target.playVideo();
-                        setPlayer(target);
-                        if (!isMuted) target.unMute();
-                      }}
-                      onPlay={() => {
-                        setIsPlayed(true);
-                        if (active && inView) setShowTrailer(true);
-                      }}
-                      onPause={() => {
-                        setShowTrailer(false);
-                      }}
-                      onEnd={() => {
-                        setShowTrailer(false);
-                      }}
-                      onError={() => {
-                        setShowTrailer(false);
-                      }}
-                      style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: '100%',
-                      }}
-                      className={
-                        showTrailer
-                          ? 'relative !w-full overflow-hidden !h-[300%] !-top-[100%] opacity-80'
-                          : 'hidden'
-                      }
-                    />
-                  </Suspense>
-                );
-              if (trailer?.id && trailer?.site === 'youtube' && isPlayTrailer && !isSm && active)
-                return (
-                  <Suspense fallback={<Loading type="default" />}>
-                    <YouTube
-                      videoId={trailer?.id}
-                      opts={{
-                        height: '100%',
-                        width: '100%',
-                        playerVars: {
-                          // https://developers.google.com/youtube/player_parameters
-                          autoplay: 0,
-                          modestbranding: 1,
-                          controls: 0,
-                          disablekb: 1,
-                          showinfo: 0,
-                          branding: 0,
-                          rel: 0,
-                          autohide: 0,
-                          iv_load_policy: 3,
-                          cc_load_policy: 0,
-                          playsinline: 1,
-                          mute: 1,
-                          origin: 'https://sora-anime.vercel.app',
-                        },
-                      }}
-                      onReady={({ target }) => {
-                        if (active && inView) target.playVideo();
-                        setPlayer(target);
-                        if (!isMuted) target.unMute();
-                      }}
-                      onPlay={() => {
-                        setIsPlayed(true);
-                        setShowTrailer(true);
-                      }}
-                      onPause={() => {
-                        setShowTrailer(false);
-                      }}
-                      onEnd={() => {
-                        setShowTrailer(false);
-                      }}
-                      onError={() => {
-                        setShowTrailer(false);
-                      }}
-                      style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: '100%',
-                      }}
-                      className={
-                        showTrailer
-                          ? 'relative !w-full overflow-hidden !h-[300%] !-top-[100%] opacity-80'
-                          : 'hidden'
-                      }
-                    />
-                  </Suspense>
-                );
-            }}
-          </ClientOnly>
+          {trailerBanner?.key && !isSm && isPlayTrailer && active ? (
+            <YouTube
+              videoId={trailerBanner.key}
+              opts={{
+                height: '100%',
+                width: '100%',
+                playerVars: {
+                  // https://developers.google.com/youtube/player_parameters
+                  autoplay: 0,
+                  modestbranding: 1,
+                  controls: 0,
+                  disablekb: 1,
+                  showinfo: 0,
+                  branding: 0,
+                  rel: 0,
+                  autohide: 0,
+                  iv_load_policy: 3,
+                  cc_load_policy: 0,
+                  playsinline: 1,
+                  mute: 1,
+                  origin: 'https://sora-anime.vercel.app',
+                },
+              }}
+              onReady={({ target }) => {
+                if (active && inView) target.playVideo();
+                setPlayer(target);
+                if (!isMuted) target.unMute();
+              }}
+              onPlay={() => {
+                setIsPlayed(true);
+                if (active && inView) setShowTrailer(true);
+              }}
+              onPause={() => {
+                setShowTrailer(false);
+              }}
+              onEnd={() => {
+                setShowTrailer(false);
+              }}
+              onError={() => {
+                setShowTrailer(false);
+              }}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+              }}
+              className={
+                showTrailer
+                  ? 'relative !w-full overflow-hidden !h-[300%] !-top-[100%] opacity-80'
+                  : 'hidden'
+              }
+            />
+          ) : null}
+          {trailer?.id && trailer?.site === 'youtube' && isPlayTrailer && !isSm && active ? (
+            <YouTube
+              videoId={trailer?.id}
+              opts={{
+                height: '100%',
+                width: '100%',
+                playerVars: {
+                  // https://developers.google.com/youtube/player_parameters
+                  autoplay: 0,
+                  modestbranding: 1,
+                  controls: 0,
+                  disablekb: 1,
+                  showinfo: 0,
+                  branding: 0,
+                  rel: 0,
+                  autohide: 0,
+                  iv_load_policy: 3,
+                  cc_load_policy: 0,
+                  playsinline: 1,
+                  mute: 1,
+                  origin: 'https://sora-anime.vercel.app',
+                },
+              }}
+              onReady={({ target }) => {
+                if (active && inView) target.playVideo();
+                setPlayer(target);
+                if (!isMuted) target.unMute();
+              }}
+              onPlay={() => {
+                setIsPlayed(true);
+                setShowTrailer(true);
+              }}
+              onPause={() => {
+                setShowTrailer(false);
+              }}
+              onEnd={() => {
+                setShowTrailer(false);
+              }}
+              onError={() => {
+                setShowTrailer(false);
+              }}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+              }}
+              className={
+                showTrailer
+                  ? 'relative !w-full overflow-hidden !h-[300%] !-top-[100%] opacity-80'
+                  : 'hidden'
+              }
+            />
+          ) : null}
         </Card.Body>
         {!isSm && showTrailer && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>

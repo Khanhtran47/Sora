@@ -1,6 +1,8 @@
 import { Text, Image } from '@nextui-org/react';
 import { ThrownResponse } from '@remix-run/react';
 
+import Flex from '~/src/components/styles/Flex.styles';
+
 import pageNotFound from '../assets/images/404.gif';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -19,10 +21,7 @@ const CatchBoundaryView = ({ caught }: { caught: ThrownResponse<number, any> }) 
   }
 
   return (
-    <>
-      <Text h1 color="warning" css={{ textAlign: 'center', pt: '88px' }}>
-        {caught.status} {caught.statusText} {message}
-      </Text>
+    <Flex direction="column" justify="center" align="center" className="space-y-4">
       <Image
         autoResize
         width={480}
@@ -33,7 +32,10 @@ const CatchBoundaryView = ({ caught }: { caught: ThrownResponse<number, any> }) 
           marginTop: '20px',
         }}
       />
-    </>
+      <Text h1 color="warning" css={{ textAlign: 'center', pt: '88px' }}>
+        {caught.status} {caught.statusText} {message}
+      </Text>
+    </Flex>
   );
 };
 
