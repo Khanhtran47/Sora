@@ -16,7 +16,7 @@ export const otherRootRoutes: Record<string, Handler> = {
   '/robots.txt': async () => {
     return generateRobotsTxt(
       [
-        { type: 'userAgent', value: '*' },
+        { type: 'userAgent', value: 'Bingbot' },
         { type: 'allow', value: '/$' },
         { type: 'allow', value: '/movies$' },
         { type: 'allow', value: '/tv-shows$' },
@@ -26,6 +26,10 @@ export const otherRootRoutes: Record<string, Handler> = {
         { type: 'allow', value: '/sign-up$' },
         { type: 'disallow', value: '/' },
         { type: 'crawlDelay', value: '10' },
+        { type: 'userAgent', value: 'SemrushBot' },
+        { type: 'disallow', value: '/' },
+        { type: 'userAgent', value: '*' },
+        { type: 'disallow', value: '' },
         { type: 'sitemap', value: 'https://sora-anime.vercel.app/sitemap.xml' },
       ],
       {
