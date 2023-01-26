@@ -25,7 +25,7 @@ export const otherRootRoutes: Record<string, Handler> = {
         { type: 'allow', value: '/sign-in$' },
         { type: 'allow', value: '/sign-up$' },
         { type: 'disallow', value: '/' },
-        { type: 'crawlDelay', value: '100' },
+        { type: 'crawlDelay', value: '10' },
         { type: 'sitemap', value: 'https://sora-anime.vercel.app/sitemap.xml' },
       ],
       {
