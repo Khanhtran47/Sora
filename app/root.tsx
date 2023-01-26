@@ -19,7 +19,7 @@ import {
   RouteMatch,
   useLocation,
 } from '@remix-run/react';
-import { NextUIProvider, Text, Image as NextImage, Link, Badge, useSSR } from '@nextui-org/react';
+import { NextUIProvider, Text, Image as NextImage, Badge, useSSR, Button } from '@nextui-org/react';
 import { ThemeProvider as RemixThemesProvider } from 'next-themes';
 // @ts-ignore
 import swiperStyles from 'swiper/css';
@@ -47,7 +47,10 @@ import FontStyles700 from '@fontsource/inter/700.css';
 import FontStyles800 from '@fontsource/inter/800.css';
 import FontStyles900 from '@fontsource/inter/900.css';
 
+import i18next, { i18nCookie } from '~/i18n/i18next.server';
 import * as gtag from '~/utils/client/gtags.client';
+import { getListGenre, getListLanguages } from '~/services/tmdb/tmdb.server';
+
 import globalStyles from '~/styles/global.stitches';
 import {
   lightTheme,
@@ -59,14 +62,17 @@ import {
   nightTheme,
   draculaTheme,
 } from '~/styles/nextui.config';
-import { getListGenre, getListLanguages } from '~/services/tmdb/tmdb.server';
-import Layout from '~/src/components/layouts/Layout';
-import Home from '~/src/assets/icons/HomeIcon.js';
+import ClientStyleContext from '~/styles/client.context';
 import styles from '~/styles/tailwind.css';
 import nProgressStyles from '~/src/components/styles/nprogress.css';
+
+import Layout from '~/src/components/layouts/Layout';
+import Flex from '~/src/components/styles/Flex.styles';
+
+import Home from '~/src/assets/icons/HomeIcon.js';
+import Refresh from '~/src/assets/icons/RefreshIcon.js';
 import { getUserFromCookie } from './services/supabase';
 import pageNotFound from './src/assets/images/404.gif';
-import i18next, { i18nCookie } from './i18n/i18next.server';
 import logoLoading from './src/assets/images/logo_loading.png';
 
 interface DocumentProps {
@@ -286,11 +292,54 @@ export const meta: MetaFunction = () => {
   };
 };
 
+export const loader = async ({ request }: LoaderArgs) => {
+  const locale = await i18next.getLocale(request);
+  const gaTrackingId = process.env.GA_TRACKING_ID;
+  const user = await getUserFromCookie(request.headers.get('Cookie') || '');
+
+  const headers = new Headers({
+    'Set-Cookie': await i18nCookie.serialize(locale),
+  });
+
+  return json(
+    {
+      user: user || undefined,
+      locale,
+      genresMovie: await getListGenre('movie', locale),
+      genresTv: await getListGenre('tv', locale),
+      languages: await getListLanguages(),
+      gaTrackingId,
+    },
+    { headers },
+  );
+};
+
+export const handle = {
+  breadcrumb: () => (
+    <NavLink to="/" aria-label="Home Page">
+      {({ isActive }) => (
+        <Badge
+          color="primary"
+          variant="flat"
+          css={{
+            opacity: isActive ? 1 : 0.7,
+            transition: 'opacity 0.25s ease 0s',
+            '&:hover': { opacity: 0.8 },
+          }}
+        >
+          <Home width={16} height={16} />
+        </Badge>
+      )}
+    </NavLink>
+  ),
+};
+
 let isMount = true;
 
 const Document = ({ children, title, lang, dir, gaTrackingId }: DocumentProps) => {
   const location = useLocation();
   const matches = useMatches();
+  const clientStyleData = React.useContext(ClientStyleContext);
 
   /**
    * It takes an object and returns a clone of that object, using for deleting handlers in matches.
@@ -312,6 +361,12 @@ const Document = ({ children, title, lang, dir, gaTrackingId }: DocumentProps) =
     }
     return clone;
   }
+
+  // Only executed on client
+  React.useEffect(() => {
+    // reset cache to re-apply global styles
+    clientStyleData.reset();
+  }, [clientStyleData]);
 
   React.useEffect(() => {
     if (gaTrackingId?.length) {
@@ -365,6 +420,11 @@ const Document = ({ children, title, lang, dir, gaTrackingId }: DocumentProps) =
         {title ? <title>{title}</title> : null}
         <Meta />
         <Links />
+        <style
+          id="stitches"
+          dangerouslySetInnerHTML={{ __html: clientStyleData.sheet }}
+          suppressHydrationWarning
+        />
         {process.env.NODE_ENV === 'production' ? <MetronomeLinks /> : null}
       </head>
       <body>
@@ -397,50 +457,6 @@ const Document = ({ children, title, lang, dir, gaTrackingId }: DocumentProps) =
   );
 };
 
-export const loader = async ({ request }: LoaderArgs) => {
-  const locale = await i18next.getLocale(request);
-  const gaTrackingId = process.env.GA_TRACKING_ID;
-  const user = await getUserFromCookie(request.headers.get('Cookie') || '');
-
-  const headers = new Headers({
-    'Set-Cookie': await i18nCookie.serialize(locale),
-  });
-
-  return json(
-    {
-      user: user || undefined,
-      locale,
-      genresMovie: await getListGenre('movie', locale),
-      genresTv: await getListGenre('tv', locale),
-      languages: await getListLanguages(),
-      gaTrackingId,
-    },
-    { headers },
-  );
-};
-
-export const handle = {
-  breadcrumb: () => (
-    <NavLink to="/" aria-label="Home Page">
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          <Home width={16} height={16} />
-        </Badge>
-      )}
-    </NavLink>
-  ),
-};
-
-// https://remix.run/api/conventions#default-export
-// https://remix.run/api/conventions#route-filenames
 const App = () => {
   globalStyles();
   const outlet = useOutlet();
@@ -509,7 +525,7 @@ const App = () => {
         }}
       >
         <AnimatePresence>
-          {isLoading && (
+          {isLoading && process.env.NODE_ENV !== 'development' ? (
             <div
               className="w-full h-full fixed block top-0 left-0"
               style={{ zIndex: '9999', backgroundColor: 'var(--nextui-colors-background)' }}
@@ -566,7 +582,7 @@ const App = () => {
                 </div>
               </motion.div>
             </div>
-          )}
+          ) : null}
         </AnimatePresence>
         <NextUIProvider>
           <Layout user={user} matches={matches}>
@@ -580,8 +596,6 @@ const App = () => {
   );
 };
 
-// How NextUIProvider should be used on CatchBoundary
-// https://remix.run/docs/en/v1/api/conventions#catchboundary
 export const CatchBoundary = () => {
   const caught = useCatch();
 
@@ -603,16 +617,28 @@ export const CatchBoundary = () => {
       <RemixThemesProvider
         defaultTheme="system"
         attribute="class"
+        enableColorScheme
+        enableSystem
+        themes={['light', 'dark', 'bumblebee', 'synthwave', 'retro', 'dracula', 'autumn', 'night']}
         value={{
           light: lightTheme.className,
           dark: darkTheme.className,
+          bumblebee: bumblebeeTheme.className,
+          synthwave: synthwaveTheme.className,
+          retro: retroTheme.className,
+          dracula: draculaTheme.className,
+          autumn: autumnTheme.className,
+          night: nightTheme.className,
         }}
       >
         <NextUIProvider>
-          <>
-            <Text h1 color="warning" css={{ textAlign: 'center' }}>
-              {caught.status} {caught.statusText} {message}
-            </Text>
+          <Flex
+            direction="column"
+            justify="center"
+            align="center"
+            className="space-y-4"
+            css={{ height: '100vh' }}
+          >
             <NextImage
               autoResize
               width={480}
@@ -623,54 +649,110 @@ export const CatchBoundary = () => {
                 marginTop: '20px',
               }}
             />
-            <Text
-              h1
-              size={20}
-              css={{
-                textAlign: 'center',
-              }}
-              weight="bold"
-            >
-              <Link href="/">Go Back</Link>
+            <Text h1 color="warning" css={{ textAlign: 'center' }}>
+              {caught.status} {caught.statusText} {message}
             </Text>
-          </>
+            <Flex direction="row" align="center" justify="center" className="w-full space-x-4">
+              <Button
+                auto
+                ghost
+                onClick={() => {
+                  window.location.href = '/';
+                }}
+                color="success"
+                icon={<Home />}
+              >
+                Back to Home
+              </Button>
+              <Button
+                auto
+                ghost
+                onClick={() => {
+                  window.location.reload();
+                }}
+                color="warning"
+                icon={<Refresh filled />}
+              >
+                Reload Page
+              </Button>
+            </Flex>
+          </Flex>
         </NextUIProvider>
       </RemixThemesProvider>
     </Document>
   );
 };
 
-// How NextUIProvider should be used on ErrorBoundary
-// https://remix.run/docs/en/v1/api/conventions#errorboundary
 export const ErrorBoundary = ({ error }: { error: Error }) => {
-  console.error(error);
   const isProd = process.env.NODE_ENV === 'production';
+  console.log(error);
   return (
     <Document title="Error!">
       <RemixThemesProvider
         defaultTheme="system"
         attribute="class"
+        enableColorScheme
+        enableSystem
+        themes={['light', 'dark', 'bumblebee', 'synthwave', 'retro', 'dracula', 'autumn', 'night']}
         value={{
           light: lightTheme.className,
           dark: darkTheme.className,
+          bumblebee: bumblebeeTheme.className,
+          synthwave: synthwaveTheme.className,
+          retro: retroTheme.className,
+          dracula: draculaTheme.className,
+          autumn: autumnTheme.className,
+          night: nightTheme.className,
         }}
       >
         <NextUIProvider>
-          <Text h1 color="error" css={{ textAlign: 'center' }}>
-            {isProd
-              ? 'Some thing went wrong'
-              : `[ErrorBoundary]: There was an error: ${error.message}`}
-          </Text>
-          <Text
-            h1
-            size={20}
-            css={{
-              textAlign: 'center',
-            }}
-            weight="bold"
+          <Flex
+            direction="column"
+            justify="center"
+            align="center"
+            className="space-y-4"
+            css={{ height: '100vh' }}
           >
-            <Link href="/">Go Back</Link>
-          </Text>
+            <NextImage
+              autoResize
+              width={480}
+              src={pageNotFound}
+              alt="404"
+              objectFit="cover"
+              css={{
+                marginTop: '20px',
+              }}
+            />
+            <Text h1 color="error" css={{ textAlign: 'center' }}>
+              {isProd
+                ? 'Some thing went wrong'
+                : `[ErrorBoundary]: There was an error: ${error.message}`}
+            </Text>
+            <Flex direction="row" align="center" justify="center" className="w-full space-x-4">
+              <Button
+                auto
+                ghost
+                onClick={() => {
+                  window.location.href = '/';
+                }}
+                color="success"
+                icon={<Home />}
+              >
+                Back to Home
+              </Button>
+              <Button
+                auto
+                ghost
+                onClick={() => {
+                  window.location.reload();
+                }}
+                color="warning"
+                icon={<Refresh filled />}
+              >
+                Reload Page
+              </Button>
+            </Flex>
+          </Flex>
         </NextUIProvider>
       </RemixThemesProvider>
     </Document>

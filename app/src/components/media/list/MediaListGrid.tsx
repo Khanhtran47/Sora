@@ -247,7 +247,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
               setShouldFetch(true);
               bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
             }}
-            css={{ marginTop: '$xl' }}
+            css={{ marginTop: '$32' }}
           >
             Load More
           </Button>

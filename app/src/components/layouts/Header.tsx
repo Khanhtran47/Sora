@@ -5,6 +5,7 @@ import { Button, Grid, Row, Tooltip, Popover, Spacer } from '@nextui-org/react';
 import type { User } from '@supabase/supabase-js';
 import type { AnimationItem } from 'lottie-web';
 import { useTranslation } from 'react-i18next';
+import { isMobile } from 'react-device-detect';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
 import useScrollDirection from '~/hooks/useScrollDirection';
@@ -141,6 +142,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
               key={page.pageName}
               hideArrow
               placement="bottom"
+              isDisabled={isMobile}
               content={<DropdownPage pagesDropdown={page?.pageDropdown || []} />}
             >
               <NavLink
@@ -156,6 +158,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
         {/* Search */}
         <Tooltip
           hideArrow
+          isDisabled={isMobile}
           placement="bottomEnd"
           content={<DropdownPage pagesDropdown={searchDropdown || []} />}
         >

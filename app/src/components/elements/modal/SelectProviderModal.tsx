@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
 import { useEffect, useState } from 'react';
 import { useFetcher, useNavigate } from '@remix-run/react';
-import { Modal, Loading, Button } from '@nextui-org/react';
-import { ClientOnly } from 'remix-utils';
+import { Modal, Button } from '@nextui-org/react';
 
 import useWindowSize from '~/hooks/useWindowSize';
 import { IMovieTranslations } from '~/services/tmdb/tmdb.types';
@@ -46,11 +45,11 @@ const SelectProviderModal = (props: SelectProviderModalProps) => {
     if (type === 'movie') navigate(`/movies/${id}/watch?provider=${item.provider}&id=${item.id}`);
     else if (type === 'tv')
       navigate(
-        `/tv-shows/${id}/season/${season}/episode/${episode}?provider=${item.provider}&id=${item.id}`,
+        `/tv-shows/${id}/season/${season}/episode/${episode}/watch?provider=${item.provider}&id=${item.id}`,
       );
     else if (type === 'anime')
       navigate(
-        `/anime/${id}/episode/${episodeId}?provider=${item.provider}&id=${item.id}&episode=${episode}`,
+        `/anime/${id}/episode/${episodeId}/watch?provider=${item.provider}&id=${item.id}&episode=${episode}`,
       );
   };
   useEffect(() => {
@@ -83,54 +82,50 @@ const SelectProviderModal = (props: SelectProviderModalProps) => {
   }, [fetcher.data]);
 
   return (
-    <ClientOnly fallback={<Loading type="default" />}>
-      {() => (
-        <Modal
-          closeButton
-          blur
-          scroll
-          aria-labelledby="Select Provider"
-          open={visible}
-          onClose={closeHandler}
-          width={width && width < 720 ? `${width}px` : '720px'}
-        >
-          <Modal.Header css={{ display: 'flex', flexFlow: 'row wrap' }}>
-            <H3 h3 css={{ margin: '0 0 $8 0' }}>
-              Select Provider
-            </H3>
-          </Modal.Header>
-          <Modal.Body
-            css={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            {provider && Array.isArray(provider)
-              ? provider.map((item) => (
-                  <Button
-                    key={item.id}
-                    light
-                    css={{ '@hover': { color: '$primaryLightContrast' } }}
-                    onClick={() => handleProvider(item)}
-                  >
-                    {item.provider}
-                  </Button>
-                ))
-              : null}
-            {fetcher.type === 'normalLoad' && (
-              <div role="status" className="max-w-sm animate-pulse">
-                <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4" />
-                <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4" />
-                <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4" />
-                <span className="sr-only">Loading...</span>
-              </div>
-            )}
-          </Modal.Body>
-        </Modal>
-      )}
-    </ClientOnly>
+    <Modal
+      closeButton
+      blur
+      scroll
+      aria-labelledby="Select Provider"
+      open={visible}
+      onClose={closeHandler}
+      width={width && width < 720 ? `${width}px` : '720px'}
+    >
+      <Modal.Header css={{ display: 'flex', flexFlow: 'row wrap' }}>
+        <H3 h3 css={{ margin: '0 0 $8 0' }}>
+          Select Provider
+        </H3>
+      </Modal.Header>
+      <Modal.Body
+        css={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        {provider && Array.isArray(provider)
+          ? provider.map((item) => (
+              <Button
+                key={item.id}
+                light
+                css={{ '@hover': { color: '$primaryLightContrast' } }}
+                onClick={() => handleProvider(item)}
+              >
+                {item.provider}
+              </Button>
+            ))
+          : null}
+        {fetcher.type === 'normalLoad' && (
+          <div role="status" className="max-w-sm animate-pulse">
+            <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4" />
+            <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4" />
+            <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4" />
+            <span className="sr-only">Loading...</span>
+          </div>
+        )}
+      </Modal.Body>
+    </Modal>
   );
 };
 

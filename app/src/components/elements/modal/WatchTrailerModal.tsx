@@ -1,6 +1,5 @@
-import { Modal, Loading } from '@nextui-org/react';
+import { Modal } from '@nextui-org/react';
 import YouTube, { YouTubeProps } from 'react-youtube';
-import { ClientOnly } from 'remix-utils';
 
 import useWindowSize from '~/hooks/useWindowSize';
 import { ITrailer } from '~/services/consumet/anilist/anilist.types';
@@ -45,33 +44,29 @@ const WatchTrailerModal = ({
   };
 
   return (
-    <ClientOnly fallback={<Loading type="default" />}>
-      {() => (
-        <Modal
-          closeButton
-          blur
-          aria-labelledby="Watch Trailer"
-          open={visible}
-          onClose={closeHandler}
-          className="!max-w-fit"
-          noPadding
-          autoMargin={false}
-          width={width && width < 720 ? `${width}px` : '720px'}
-        >
-          <Modal.Body>
-            {trailer && (
-              <YouTube
-                videoId={(trailer as Trailer).key || (trailer as ITrailer).id}
-                opts={opts}
-                onReady={({ target }) => {
-                  target.playVideo();
-                }}
-              />
-            )}
-          </Modal.Body>
-        </Modal>
-      )}
-    </ClientOnly>
+    <Modal
+      closeButton
+      blur
+      aria-labelledby="Watch Trailer"
+      open={visible}
+      onClose={closeHandler}
+      className="!max-w-fit"
+      noPadding
+      autoMargin={false}
+      width={width && width < 720 ? `${width}px` : '720px'}
+    >
+      <Modal.Body>
+        {trailer && (
+          <YouTube
+            videoId={(trailer as Trailer).key || (trailer as ITrailer).id}
+            opts={opts}
+            onReady={({ target }) => {
+              target.playVideo();
+            }}
+          />
+        )}
+      </Modal.Body>
+    </Modal>
   );
 };
 

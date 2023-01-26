@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
 import { json } from '@remix-run/node';
@@ -62,11 +63,11 @@ export const meta: MetaFunction = ({ data, params }) => {
     title: `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     } HD online Free - Sora`,
-    description:
-      description.replace(/<\/?[^>]+(>|$)/g, '') ||
-      `Watch ${
-        title?.userPreferred || title?.english || title?.romaji || title?.native || ''
-      } in full HD online with Subtitle`,
+    description: description
+      ? description?.replace(/<\/?[^>]+(>|$)/g, '')
+      : `Watch ${
+          title?.userPreferred || title?.english || title?.romaji || title?.native || ''
+        } in full HD online with Subtitle`,
     keywords: `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     }, Stream ${
@@ -85,11 +86,11 @@ export const meta: MetaFunction = ({ data, params }) => {
     'og:title': `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     } HD online Free - Sora`,
-    'og:description':
-      description.replace(/<\/?[^>]+(>|$)/g, '') ||
-      `Watch ${
-        title?.userPreferred || title?.english || title?.romaji || title?.native || ''
-      } in full HD online with Subtitle`,
+    'og:description': description
+      ? description?.replace(/<\/?[^>]+(>|$)/g, '')
+      : `Watch ${
+          title?.userPreferred || title?.english || title?.romaji || title?.native || ''
+        } in full HD online with Subtitle`,
     'og:image': `https://img.anili.st/media/${params.animeId}`,
     'twitter:card': 'summary_large_image',
     'twitter:site': '@sora_anime',
@@ -98,11 +99,11 @@ export const meta: MetaFunction = ({ data, params }) => {
     'twitter:title': `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     } HD online Free - Sora`,
-    'twitter:description':
-      description.replace(/<\/?[^>]+(>|$)/g, '') ||
-      `Watch ${
-        title?.userPreferred || title?.english || title?.romaji || title?.native || ''
-      } in full HD online with Subtitle`,
+    'twitter:description': description
+      ? description?.replace(/<\/?[^>]+(>|$)/g, '')
+      : `Watch ${
+          title?.userPreferred || title?.english || title?.romaji || title?.native || ''
+        } in full HD online with Subtitle`,
     'twitter:image': `https://img.anili.st/media/${params.animeId}`,
   };
 };

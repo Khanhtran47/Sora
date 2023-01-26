@@ -8,6 +8,7 @@ import Image, { MimeType } from 'remix-image';
 import { useInView } from 'react-intersection-observer';
 import { ClientOnly } from 'remix-utils';
 import { motion } from 'framer-motion';
+import { isMobile } from 'react-device-detect';
 
 import useCardHoverStore from '~/store/card/useCardHoverStore';
 
@@ -309,6 +310,7 @@ const CardItem = (props: ICardItemProps) => {
           </ClientOnly>
         }
         rounded
+        isDisabled={isMobile}
         // shadow
         hideArrow
         offset={0}
