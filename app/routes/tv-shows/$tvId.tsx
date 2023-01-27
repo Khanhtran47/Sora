@@ -182,6 +182,7 @@ const TvShowDetail = () => {
         handler={Handler}
         translations={translations}
         imdbRating={imdbRating}
+        color={detail.color}
       />
       <Container
         as="div"

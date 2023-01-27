@@ -406,7 +406,7 @@ export const handle = {
 };
 
 const EpisodeWatch = () => {
-  const { detail, recommendations, imdbRating, seasonDetail, providers } =
+  const { detail, recommendations, imdbRating, seasonDetail, providers, color } =
     useLoaderData<typeof loader>();
   const rootData:
     | {
@@ -450,6 +450,7 @@ const EpisodeWatch = () => {
         recommendationsMovies={recommendations?.items}
         season={seasonDetail?.season_number}
         providers={providers}
+        color={color}
       />
     </Container>
   );

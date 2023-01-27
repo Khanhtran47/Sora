@@ -302,7 +302,7 @@ export const handle = {
 };
 
 const MovieWatch = () => {
-  const { detail, recommendations, imdbRating } = useLoaderData<typeof loader>();
+  const { detail, recommendations, imdbRating, color } = useLoaderData<typeof loader>();
   const rootData:
     | {
         locale: string;
@@ -343,6 +343,7 @@ const MovieWatch = () => {
         genresMovie={rootData?.genresMovie}
         genresTv={rootData?.genresTv}
         recommendationsMovies={recommendations?.items}
+        color={color}
       />
     </Container>
   );
