@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
 import { json } from '@remix-run/node';
@@ -12,13 +13,15 @@ import {
   useLocation,
 } from '@remix-run/react';
 import { Container, Badge } from '@nextui-org/react';
+import ColorThief from 'colorthief';
 
 import { getMovieDetail, getTranslations, getImdbRating } from '~/services/tmdb/tmdb.server';
 import i18next from '~/i18n/i18next.server';
 import { authenticate } from '~/services/supabase';
-import { CACHE_CONTROL } from '~/utils/server/http';
 
+import { CACHE_CONTROL } from '~/utils/server/http';
 import TMDB from '~/utils/media';
+import { RGBToHex } from '~/utils/server/colors';
 
 import MediaDetail from '~/src/components/media/MediaDetail';
 import WatchTrailerModal, { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
@@ -34,13 +37,26 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
   const detail = await getMovieDetail(mid, locale);
   if (!detail) throw new Response('Not Found', { status: 404 });
+  const extractColorImage = `https://corsproxy.io/?${encodeURIComponent(
+    TMDB.backdropUrl(detail?.backdrop_path || detail?.poster_path || '', 'w300'),
+  )}`;
   if ((detail && detail.original_language !== 'en') || locale !== 'en') {
-    const [translations, imdbRating] = await Promise.all([
+    const [translations, imdbRating, color] = await Promise.all([
       getTranslations('movie', mid),
       detail?.imdb_id ? getImdbRating(detail?.imdb_id) : undefined,
+      detail?.backdrop_path || detail?.poster_path
+        ? ColorThief.getColor(extractColorImage)
+        : undefined,
     ]);
     return json(
-      { detail, imdbRating, translations },
+      {
+        detail: {
+          ...detail,
+          color: color ? RGBToHex(color[0], color[1], color[2]) : undefined,
+        },
+        imdbRating,
+        translations,
+      },
       {
         headers: {
           'Cache-Control': CACHE_CONTROL.movie,
@@ -48,9 +64,21 @@ export const loader = async ({ request, params }: LoaderArgs) => {
       },
     );
   }
-  const imdbRating = detail?.imdb_id ? await getImdbRating(detail?.imdb_id) : undefined;
+  const [imdbRating, color] = await Promise.all([
+    detail?.imdb_id ? getImdbRating(detail?.imdb_id) : undefined,
+    detail?.backdrop_path || detail?.poster_path
+      ? ColorThief.getColor(extractColorImage)
+      : undefined,
+  ]);
   return json(
-    { detail, imdbRating, translations: undefined },
+    {
+      detail: {
+        ...detail,
+        color: color ? RGBToHex(color[0], color[1], color[2]) : undefined,
+      },
+      imdbRating,
+      translations: undefined,
+    },
     {
       headers: {
         'Cache-Control': CACHE_CONTROL.movie,
@@ -67,6 +95,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     };
   }
   const { detail } = data;
+  const { color } = detail || {};
   return {
     title: `Watch ${detail?.title || ''} HD online Free - Sora`,
     description: detail?.overview || `Watch ${detail?.title || ''} in full HD online with Subtitle`,
@@ -82,6 +111,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     'og:image': detail?.backdrop_path
       ? TMDB.backdropUrl(detail?.backdrop_path, 'w1280')
       : undefined,
+    ...(color ? { 'theme-color': color } : null),
     'twitter:card': 'summary_large_image',
     'twitter:site': '@sora_anime',
     'twitter:domain': 'sora-anime.vercel.app',

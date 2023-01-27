@@ -6,6 +6,7 @@ import type { MetaFunction, LoaderArgs } from '@remix-run/node';
 import { useCatch, useLoaderData, NavLink, RouteMatch } from '@remix-run/react';
 import { Container, Spacer, Badge } from '@nextui-org/react';
 import { useRouteData } from 'remix-utils';
+import ColorThief from 'colorthief';
 
 import { authenticate, insertHistory } from '~/services/supabase';
 import {
@@ -24,10 +25,11 @@ import {
 import { loklokGetTvEpInfo } from '~/services/loklok';
 import getProviderList from '~/services/provider.server';
 import { LOKLOK_URL } from '~/services/loklok/utils.server';
-import { CACHE_CONTROL } from '~/utils/server/http';
-
-import TMDB from '~/utils/media';
 import { TMDB as TmdbUtils } from '~/services/tmdb/utils.server';
+
+import { CACHE_CONTROL } from '~/utils/server/http';
+import TMDB from '~/utils/media';
+import { RGBToHex } from '~/utils/server/colors';
 
 import WatchDetail from '~/src/components/elements/shared/WatchDetail';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
@@ -40,7 +42,7 @@ export const meta: MetaFunction = ({ data, params }) => {
       description: `This season of tv show doesn't have episode ${params.episodeId || ''}`,
     };
   }
-  const { detail } = data || {};
+  const { detail, color } = data || {};
   return {
     title: `Watch ${detail?.name || ''} season ${params.seasonId || ''} episode ${
       params.episodeId || ''
@@ -61,6 +63,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     }, English, Subtitle ${detail?.name || ''} season ${params.seasonId || ''} episode ${
       params.episodeId || ''
     }, English Subtitle`,
+    ...(color ? { 'theme-color': color } : null),
     'og:url': `https://sora-anime.vercel.app/tv-shows/${params.tvId}/season/${
       params.seasonId
     }/episode/${params.episodeId || ''}`,
@@ -125,6 +128,9 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     sub_format: provider === 'KissKh' ? 'srt' : 'webvtt',
   };
   const overview = detail?.overview || undefined;
+  const extractColorImage = `https://corsproxy.io/?${encodeURIComponent(
+    TMDB.backdropUrl(detail?.backdrop_path || detail?.poster_path || '', 'w300'),
+  )}`;
 
   if (user) {
     insertHistory({
@@ -145,10 +151,13 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   if (provider === 'Loklok') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
 
-    const [tvDetail, imdbRating, providers] = await Promise.all([
+    const [tvDetail, imdbRating, providers, color] = await Promise.all([
       loklokGetTvEpInfo(idProvider, Number(episodeId) - 1),
       imdbId ? getImdbRating(imdbId) : undefined,
       getProviderList('tv', title, orgTitle, year, season),
+      detail?.backdrop_path || detail?.poster_path
+        ? ColorThief.getColor(extractColorImage)
+        : undefined,
     ]);
     const totalProviderEpisodes = Number(tvDetail?.data?.episodeCount);
     const hasNextEpisode = checkHasNextEpisode(eid, totalEpisodes, totalProviderEpisodes);
@@ -176,6 +185,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         typeVideo: 'tv',
         subtitleOptions,
         overview,
+        color: color ? RGBToHex(color[0], color[1], color[2]) : undefined,
       },
       {
         headers: {
@@ -187,10 +197,13 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
   if (provider === 'Flixhq') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
-    const [tvDetail, imdbRating, providers] = await Promise.all([
+    const [tvDetail, imdbRating, providers, color] = await Promise.all([
       getMovieInfo(idProvider),
       imdbId ? getImdbRating(imdbId) : undefined,
       getProviderList('tv', title, orgTitle, year, season),
+      detail?.backdrop_path || detail?.poster_path
+        ? ColorThief.getColor(extractColorImage)
+        : undefined,
     ]);
     const totalProviderEpisodes = Number(tvDetail?.episodes?.length);
     const hasNextEpisode = checkHasNextEpisode(eid, totalEpisodes, totalProviderEpisodes);
@@ -224,6 +237,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
           typeVideo: 'tv',
           subtitleOptions,
           overview,
+          color: color ? RGBToHex(color[0], color[1], color[2]) : undefined,
         },
         {
           headers: {
@@ -237,10 +251,13 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   if (provider === 'KissKh') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
 
-    const [episodeDetail, imdbRating, providers] = await Promise.all([
+    const [episodeDetail, imdbRating, providers, color] = await Promise.all([
       getKissKhInfo(Number(idProvider)),
       imdbId ? getImdbRating(imdbId) : undefined,
       getProviderList('tv', title, orgTitle, year, season),
+      detail?.backdrop_path || detail?.poster_path
+        ? ColorThief.getColor(extractColorImage)
+        : undefined,
     ]);
     const totalProviderEpisodes = Number(episodeDetail?.episodes?.length);
     const hasNextEpisode = checkHasNextEpisode(eid, totalEpisodes, totalProviderEpisodes);
@@ -277,6 +294,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         typeVideo: 'tv',
         subtitleOptions,
         overview,
+        color: color ? RGBToHex(color[0], color[1], color[2]) : undefined,
       },
       {
         headers: {
@@ -286,9 +304,12 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     );
   }
 
-  const [imdbRating, providers] = await Promise.all([
+  const [imdbRating, providers, color] = await Promise.all([
     imdbId ? getImdbRating(imdbId) : undefined,
     getProviderList('tv', title, orgTitle, year, season),
+    detail?.backdrop_path || detail?.poster_path
+      ? ColorThief.getColor(extractColorImage)
+      : undefined,
   ]);
   return json({
     idProvider,
@@ -307,6 +328,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     typeVideo: 'tv',
     subtitleOptions,
     overview,
+    color: color ? RGBToHex(color[0], color[1], color[2]) : undefined,
   });
 };
 
