@@ -12,21 +12,29 @@ export default function updateHistory(
   season?: string,
   episode?: string,
 ) {
+  let played = false;
+
+  art.on('play', () => {
+    played = true;
+  });
+
   art.on('destroy', () => {
-    fetcher.submit(
-      {
-        user_id: id,
-        duration: art.duration.toString(),
-        watched: art.currentTime.toString(),
-        route,
-        media_type,
-        poster: art.poster,
-        title,
-        overview,
-        season: season ?? '',
-        episode: episode ?? '',
-      },
-      { method: 'post', action: '/api/history' },
-    );
+    if (played) {
+      fetcher.submit(
+        {
+          user_id: id,
+          duration: art.duration.toString(),
+          watched: art.currentTime.toString(),
+          route,
+          media_type,
+          poster: art.poster,
+          title,
+          overview,
+          season: season ?? '',
+          episode: episode ?? '',
+        },
+        { method: 'post', action: '/api/history' },
+      );
+    }
   });
 }
