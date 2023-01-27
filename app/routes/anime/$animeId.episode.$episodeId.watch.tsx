@@ -725,8 +725,4 @@ export const CatchBoundary = () => {
   return <CatchBoundaryView caught={caught} />;
 };
 
-export const ErrorBoundary = ({ error }: { error: Error }) => {
-  const isProd = process.env.NODE_ENV === 'production';
-
-  return <ErrorBoundaryView error={error} isProd={isProd} />;
-};
+export const ErrorBoundary = ({ error }: { error: Error }) => <ErrorBoundaryView error={error} />;

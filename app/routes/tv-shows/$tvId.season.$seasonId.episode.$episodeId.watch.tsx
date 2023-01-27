@@ -456,16 +456,12 @@ const EpisodeWatch = () => {
   );
 };
 
-export default EpisodeWatch;
-
 export const CatchBoundary = () => {
   const caught = useCatch();
 
   return <CatchBoundaryView caught={caught} />;
 };
 
-export const ErrorBoundary = ({ error }: { error: Error }) => {
-  const isProd = process.env.NODE_ENV === 'production';
+export const ErrorBoundary = ({ error }: { error: Error }) => <ErrorBoundaryView error={error} />;
 
-  return <ErrorBoundaryView error={error} isProd={isProd} />;
-};
+export default EpisodeWatch;
