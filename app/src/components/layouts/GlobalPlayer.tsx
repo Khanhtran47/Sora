@@ -245,6 +245,50 @@ const GlobalPlayer = () => {
     setSearchModalVisible(false);
   };
 
+  const savePlayProgress = (art: Artplayer) => {
+    if (userId && playerData?.titlePlayer) {
+      switch (typeVideo) {
+        case 'movie':
+          updateHistory(
+            art,
+            fetcher,
+            userId,
+            location.pathname + location.search,
+            'movie',
+            playerData?.titlePlayer,
+            playerData?.overview || '',
+          );
+          break;
+        case 'tv':
+          updateHistory(
+            art,
+            fetcher,
+            userId,
+            location.pathname + location.search,
+            'tv',
+            playerData?.titlePlayer,
+            playerData?.overview || '',
+            seasonId,
+            episodeId,
+          );
+          break;
+        case 'anime':
+          updateHistory(
+            art,
+            fetcher,
+            userId,
+            location.pathname + location.search,
+            'anime',
+            playerData?.titlePlayer,
+            playerData?.overview || '',
+            episodeId,
+          );
+          break;
+        default:
+      }
+    }
+  };
+
   useEffect(() => {
     setIsMini(shouldPlayInBackground);
   }, [shouldPlayInBackground]);
@@ -700,47 +744,7 @@ const GlobalPlayer = () => {
                         art.subtitle.show = autoShowSubtitle;
                       }
                     });
-                    if (userId) {
-                      switch (typeVideo) {
-                        case 'movie':
-                          updateHistory(
-                            art,
-                            fetcher,
-                            userId,
-                            location.pathname + location.search,
-                            'movie',
-                            playerData?.titlePlayer,
-                            playerData?.overview,
-                          );
-                          break;
-                        case 'tv':
-                          updateHistory(
-                            art,
-                            fetcher,
-                            userId,
-                            location.pathname + location.search,
-                            'tv',
-                            playerData?.titlePlayer,
-                            playerData?.overview,
-                            seasonId,
-                            episodeId,
-                          );
-                          break;
-                        case 'anime':
-                          updateHistory(
-                            art,
-                            fetcher,
-                            userId,
-                            location.pathname + location.search,
-                            'anime',
-                            playerData?.titlePlayer,
-                            playerData?.overview,
-                            episodeId,
-                          );
-                          break;
-                        default:
-                      }
-                    }
+                    savePlayProgress(art);
                     art.on('play', () => {
                       setIsVideoEnded(false);
                       setIsPlayerPlaying(true);
@@ -996,6 +1000,7 @@ const GlobalPlayer = () => {
                       auto
                       light
                       onClick={() => {
+                        if (artplayer) artplayer.destroy();
                         setShouldShowPlayer(false);
                         setPlayerData(undefined);
                         setIsMini(false);
