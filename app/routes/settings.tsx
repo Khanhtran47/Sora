@@ -13,7 +13,6 @@ import {
   Radio,
   Tooltip,
   Badge,
-  styled,
   Loading,
 } from '@nextui-org/react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -31,7 +30,13 @@ import languages from '~/src/constants/languages';
 import AboutLogo from '~/src/components/elements/NavLink';
 import { H2, H6 } from '~/src/components/styles/Text.styles';
 import Flex from '~/src/components/styles/Flex.styles';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '~/src/components/elements/tab/Tabs';
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+  Underline,
+} from '~/src/components/elements/tab/Tabs';
 
 import LogoFooter from '~/src/assets/images/logo_footer.png';
 import SettingsIcon from '~/src/assets/icons/SettingsIcon.js';
@@ -66,11 +71,6 @@ export const handle = {
     </NavLink>
   ),
 };
-
-const Underline = styled(motion.div, {
-  position: 'absolute',
-  backgroundColor: '$primary',
-});
 
 const settingsIcon = (id: string, filled: boolean) => {
   let icon;
@@ -158,16 +158,18 @@ const Settings = () => {
                       '&[data-state="active"]': {
                         [`& ${Underline}`]: {
                           height: 3,
-                          width: '100%',
+                          width: '50%',
                           bottom: 0,
+                          right: 'unset',
                         },
                       },
                       '&[data-orientation="vertical"]': {
                         '&[data-state="active"]': {
                           [`& ${Underline}`]: {
                             width: 3,
-                            height: 49,
+                            height: '50%',
                             right: 0,
+                            bottom: 'unset',
                           },
                         },
                       },
@@ -313,28 +315,28 @@ const Settings = () => {
                         >
                           <Flex
                             direction="row"
-                            justify="start"
+                            justify="between"
                             align="center"
                             className="space-x-2"
                           >
+                            <H6>{t('play-trailer')}</H6>
                             <Switch
                               checked={isPlayTrailer}
                               onChange={(e) => setIsPlayTrailer(e.target.checked)}
                             />
-                            <H6>{t('play-trailer')}</H6>
                           </Flex>
                           <Spacer y={1} />
                           <Flex
                             direction="row"
-                            justify="start"
+                            justify="between"
                             align="center"
                             className="space-x-2"
                           >
+                            <H6>{t('mute-trailer')}</H6>
                             <Switch
                               checked={isMuted}
                               onChange={(e) => setIsMuted(e.target.checked)}
                             />
-                            <H6>{t('mute-trailer')}</H6>
                           </Flex>
                         </Collapse>
                       </Collapse.Group>
@@ -373,7 +375,275 @@ const Settings = () => {
                       direction="column"
                       css={{ '@smMax': { px: '$sm' } }}
                     >
-                      <H6>Panel 4</H6>
+                      <Collapse.Group splitted accordion={false}>
+                        <Collapse
+                          title={t('defaults')}
+                          subtitle={t('defaults-subtitle')}
+                          css={{
+                            background: '$backgroundAlpha !important',
+                            borderRadius: '$xs !important',
+                          }}
+                        >
+                          <H6>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+                            veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+                            commodo consequat.
+                          </H6>
+                        </Collapse>
+                        <Collapse
+                          title={t('subtitles')}
+                          subtitle={t('subtitles-subtitle')}
+                          css={{
+                            background: '$backgroundAlpha !important',
+                            borderRadius: '$xs !important',
+                          }}
+                        >
+                          <H6>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+                            veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+                            commodo consequat.
+                          </H6>
+                        </Collapse>
+                        <Collapse
+                          title={t('player-features')}
+                          subtitle={t('player-features-subtitle')}
+                          css={{
+                            background: '$backgroundAlpha !important',
+                            borderRadius: '$xs !important',
+                          }}
+                        >
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="space-x-2"
+                          >
+                            <H6>{t('auto-size')}</H6>
+                            <Switch
+                            // checked={isPlayTrailer}
+                            // onChange={(e) => setIsPlayTrailer(e.target.checked)}
+                            />
+                          </Flex>
+                          <Spacer y={1} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="space-x-2"
+                          >
+                            <H6>{t('pic-in-pic')}</H6>
+                            <Switch
+                            // checked={isPlayTrailer}
+                            // onChange={(e) => setIsPlayTrailer(e.target.checked)}
+                            />
+                          </Flex>
+                          <Spacer y={1} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="space-x-2"
+                          >
+                            <H6>{t('muted')}</H6>
+                            <Switch
+                            // checked={isPlayTrailer}
+                            // onChange={(e) => setIsPlayTrailer(e.target.checked)}
+                            />
+                          </Flex>
+                          <Spacer y={1} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="space-x-2"
+                          >
+                            <H6>{t('autoplay')}</H6>
+                            <Switch
+                            // checked={isPlayTrailer}
+                            // onChange={(e) => setIsPlayTrailer(e.target.checked)}
+                            />
+                          </Flex>
+                          <Spacer y={1} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="space-x-2"
+                          >
+                            <H6>{t('auto-mini')}</H6>
+                            <Switch
+                            // checked={isPlayTrailer}
+                            // onChange={(e) => setIsPlayTrailer(e.target.checked)}
+                            />
+                          </Flex>
+                          <Spacer y={1} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="space-x-2"
+                          >
+                            <H6>{t('loop')}</H6>
+                            <Switch
+                            // checked={isPlayTrailer}
+                            // onChange={(e) => setIsPlayTrailer(e.target.checked)}
+                            />
+                          </Flex>
+                          <Spacer y={1} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="space-x-2"
+                          >
+                            <H6>{t('flip')}</H6>
+                            <Switch
+                            // checked={isPlayTrailer}
+                            // onChange={(e) => setIsPlayTrailer(e.target.checked)}
+                            />
+                          </Flex>
+                          <Spacer y={1} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="space-x-2"
+                          >
+                            <H6>{t('playback-rate')}</H6>
+                            <Switch
+                            // checked={isPlayTrailer}
+                            // onChange={(e) => setIsPlayTrailer(e.target.checked)}
+                            />
+                          </Flex>
+                          <Spacer y={1} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="space-x-2"
+                          >
+                            <H6>{t('aspect-ratio')}</H6>
+                            <Switch
+                            // checked={isPlayTrailer}
+                            // onChange={(e) => setIsPlayTrailer(e.target.checked)}
+                            />
+                          </Flex>
+                          <Spacer y={1} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="space-x-2"
+                          >
+                            <H6>{t('screenshot')}</H6>
+                            <Switch
+                            // checked={isPlayTrailer}
+                            // onChange={(e) => setIsPlayTrailer(e.target.checked)}
+                            />
+                          </Flex>
+                          <Spacer y={1} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="space-x-2"
+                          >
+                            <H6>{t('subtitle-offset')}</H6>
+                            <Switch
+                            // checked={isPlayTrailer}
+                            // onChange={(e) => setIsPlayTrailer(e.target.checked)}
+                            />
+                          </Flex>
+                          <Spacer y={1} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="space-x-2"
+                          >
+                            <H6>{t('mini-progressbar')}</H6>
+                            <Switch
+                            // checked={isPlayTrailer}
+                            // onChange={(e) => setIsPlayTrailer(e.target.checked)}
+                            />
+                          </Flex>
+                          <Spacer y={1} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="space-x-2"
+                          >
+                            <H6>{t('auto-playback')}</H6>
+                            <Switch
+                            // checked={isPlayTrailer}
+                            // onChange={(e) => setIsPlayTrailer(e.target.checked)}
+                            />
+                          </Flex>
+                          <Spacer y={1} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="space-x-2"
+                          >
+                            <H6>{t('auto-play-next-episode')}</H6>
+                            <Switch
+                            // checked={isPlayTrailer}
+                            // onChange={(e) => setIsPlayTrailer(e.target.checked)}
+                            />
+                          </Flex>
+                          <Spacer y={1} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="space-x-2"
+                          >
+                            <H6>{t('auto-skip-op-ed')}</H6>
+                            <Switch
+                            // checked={isPlayTrailer}
+                            // onChange={(e) => setIsPlayTrailer(e.target.checked)}
+                            />
+                          </Flex>
+                        </Collapse>
+                        <Collapse
+                          title={t('gestures')}
+                          subtitle={t('gestures-subtitle')}
+                          css={{
+                            background: '$backgroundAlpha !important',
+                            borderRadius: '$xs !important',
+                          }}
+                        >
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="space-x-2"
+                          >
+                            <H6>{t('swipe-to-seek')}</H6>
+                            <Switch
+                            // checked={isPlayTrailer}
+                            // onChange={(e) => setIsPlayTrailer(e.target.checked)}
+                            />
+                          </Flex>
+                          <Spacer y={1} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="space-x-2"
+                          >
+                            <H6>{t('swipe-up-to-fullscreen')}</H6>
+                            <Switch
+                            // checked={isPlayTrailer}
+                            // onChange={(e) => setIsPlayTrailer(e.target.checked)}
+                            />
+                          </Flex>
+                        </Collapse>
+                      </Collapse.Group>
                     </Container>
                   </motion.div>
                 </TabsContent>

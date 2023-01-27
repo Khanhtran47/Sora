@@ -9,15 +9,15 @@ export const settingsTab = [
     title: 'appearance',
     disabled: false,
   },
-  {
-    id: 'account-tab',
-    title: 'account',
-    disabled: true,
-  },
+  // {
+  //   id: 'account-tab',
+  //   title: 'account',
+  //   disabled: true,
+  // },
   {
     id: 'player-tab',
     title: 'player',
-    disabled: true,
+    disabled: false,
   },
   {
     id: 'about-tab',

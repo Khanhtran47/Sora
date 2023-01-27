@@ -1,6 +1,8 @@
 import React from 'react';
 import { styled, CSS } from '@nextui-org/react';
 import * as TabsPrimitive from '@radix-ui/react-tabs';
+import { motion } from 'framer-motion';
+
 import {
   ScrollArea,
   ScrollAreaViewport,
@@ -33,11 +35,8 @@ export const TabsTrigger = styled(TabsPrimitive.Trigger, {
   justifyContent: 'center',
   color: '$slate11',
   border: '1px solid transparent',
-  borderTopLeftRadius: '$xs',
-  borderTopRightRadius: '$xs',
+  borderRadius: '$xs',
   zIndex: '10',
-  '&:first-child': { borderTopLeftRadius: '$xs' },
-  '&:last-child': { borderTopRightRadius: '$xs' },
   '&:hover': {
     opacity: '0.8',
     color: '$primarySolidHover',
@@ -52,8 +51,6 @@ export const TabsTrigger = styled(TabsPrimitive.Trigger, {
   },
   '&[data-orientation="vertical"]': {
     justifyContent: 'flex-start',
-    borderTopRightRadius: 0,
-    borderBottomLeftRadius: '$xs',
     borderBottomColor: 'transparent',
     '&:hover': {
       opacity: '0.8',
@@ -73,11 +70,11 @@ const StyledTabsList = styled(TabsPrimitive.List, {
     outline: 'none',
   },
   '&[data-orientation="horizontal"]': {
-    padding: '5px 5px 0 5px',
+    padding: '5px',
   },
   '&[data-orientation="vertical"]': {
     flexDirection: 'column',
-    padding: '5px 0 5px 5px',
+    padding: '5px',
   },
 });
 
@@ -96,7 +93,7 @@ export const TabsList = React.forwardRef<React.ElementRef<typeof StyledTabsList>
         borderRight: '1px solid $border',
         '@xsMax': {
           width: '100%',
-          height: 55,
+          height: 61,
           maxWidth: 'calc(100vw - 1.5rem)',
           borderBottom: '1px solid $border',
           borderRight: 'none',
@@ -130,4 +127,10 @@ export const TabsContent = styled(TabsPrimitive.Content, {
   '&:focus': {
     borderColor: '$primaryLightActive',
   },
+});
+
+export const Underline = styled(motion.div, {
+  position: 'absolute',
+  backgroundColor: '$primary',
+  borderRadius: '5px',
 });
