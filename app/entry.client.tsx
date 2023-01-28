@@ -1,31 +1,13 @@
 import { hydrate } from 'react-dom';
-import { useCallback, useState, useMemo } from 'react';
 import { RemixBrowser } from '@remix-run/react';
 import i18next from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import Backend from 'i18next-http-backend';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { getInitialNamespaces } from 'remix-i18next';
-import { getCssText } from '@nextui-org/react';
 
 import i18n from './i18n/i18n.config';
-import ClientStyleContext from './styles/client.context';
-
-interface ClientCacheProviderProps {
-  children: React.ReactNode;
-}
-
-const ClientCacheProvider = ({ children }: ClientCacheProviderProps) => {
-  const [sheet, setSheet] = useState(getCssText());
-
-  const reset = useCallback(() => {
-    setSheet(getCssText());
-  }, []);
-
-  const styleValue = useMemo(() => ({ reset, sheet }), [reset, sheet]);
-
-  return <ClientStyleContext.Provider value={styleValue}>{children}</ClientStyleContext.Provider>;
-};
+import { ClientCacheProvider } from './context/client.context';
 
 i18next
   .use(initReactI18next) // Tell i18next to use the react-i18next plugin
