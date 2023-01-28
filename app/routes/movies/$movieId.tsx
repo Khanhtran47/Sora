@@ -13,7 +13,8 @@ import {
   useLocation,
 } from '@remix-run/react';
 import { Container, Badge } from '@nextui-org/react';
-import ColorThief from 'colorthief';
+// import ColorThief from 'colorthief';
+import Vibrant from 'node-vibrant';
 
 import { getMovieDetail, getTranslations, getImdbRating } from '~/services/tmdb/tmdb.server';
 import i18next from '~/i18n/i18next.server';
@@ -41,13 +42,17 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     TMDB.backdropUrl(detail?.backdrop_path || detail?.poster_path || '', 'w300'),
   )}`;
   if ((detail && detail.original_language !== 'en') || locale !== 'en') {
-    const [translations, imdbRating, color] = await Promise.all([
+    const [translations, imdbRating, testColor] = await Promise.all([
       getTranslations('movie', mid),
       detail?.imdb_id ? getImdbRating(detail?.imdb_id) : undefined,
+      // detail?.backdrop_path || detail?.poster_path
+      //   ? ColorThief.getColor(extractColorImage)
+      //   : undefined,
       detail?.backdrop_path || detail?.poster_path
-        ? ColorThief.getColor(extractColorImage)
+        ? Vibrant.from(extractColorImage).getPalette()
         : undefined,
     ]);
+    const color = testColor?.Vibrant?.rgb;
     return json(
       {
         detail: {
@@ -56,6 +61,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         },
         imdbRating,
         translations,
+        testColor,
       },
       {
         headers: {
@@ -64,12 +70,17 @@ export const loader = async ({ request, params }: LoaderArgs) => {
       },
     );
   }
-  const [imdbRating, color] = await Promise.all([
+  const [imdbRating, testColor] = await Promise.all([
     detail?.imdb_id ? getImdbRating(detail?.imdb_id) : undefined,
+    // detail?.backdrop_path || detail?.poster_path
+    //   ? ColorThief.getColor(extractColorImage)
+    //   : undefined,
     detail?.backdrop_path || detail?.poster_path
-      ? ColorThief.getColor(extractColorImage)
+      ? Vibrant.from(extractColorImage).getPalette()
       : undefined,
   ]);
+  console.log('🚀 ~ file: $movieId.tsx:69 ~ loader ~ testColor', testColor);
+  const color = testColor?.Vibrant?.rgb;
   return json(
     {
       detail: {
@@ -78,6 +89,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
       },
       imdbRating,
       translations: undefined,
+      testColor,
     },
     {
       headers: {
@@ -149,7 +161,8 @@ export const handle = {
 };
 
 const MovieDetail = () => {
-  const { detail, imdbRating, translations } = useLoaderData<typeof loader>();
+  const { detail, imdbRating, translations, testColor } = useLoaderData<typeof loader>();
+  console.log('🚀 ~ file: $movieId.tsx:159 ~ MovieDetail ~ testColor', testColor);
   const fetcher = useFetcher();
   const { state } = useLocation();
   const currentTime = state && (state as { currentTime: number }).currentTime;
