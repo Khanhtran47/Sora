@@ -143,7 +143,13 @@ const MediaListGrid = (props: IMediaListCardProps) => {
           coverItem.map((item, index) => {
             const href = `/collections/${item.id}`;
             return (
-              <Grid xs={12} md={6} xl={4} key={item.id} justify="center">
+              <Grid
+                xs={12}
+                md={6}
+                xl={4}
+                key={`${item.id}-${index}-covercard-grid`}
+                justify="center"
+              >
                 <motion.div
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -153,7 +159,6 @@ const MediaListGrid = (props: IMediaListCardProps) => {
                     <MediaItem
                       backdropPath={item?.backdropPath}
                       isCoverCard={isCoverCard}
-                      key={item.id}
                       title={item?.name}
                       type="card"
                     />
@@ -194,7 +199,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
               md={isMd ? 4 : 3}
               lg={isLg ? 3 : 2.4}
               xl={2}
-              key={item.id}
+              key={`${item.id}-${index}-card-grid`}
               justify="center"
             >
               <motion.div

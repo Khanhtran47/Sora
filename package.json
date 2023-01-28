@@ -60,6 +60,7 @@
     "lru-cache": "^7.14.0",
     "next-themes": "^0.2.1",
     "node-persist": "^3.1.0",
+    "node-vibrant": "^3.2.1-alpha.1",
     "nprogress": "^0.2.0",
     "photoswipe": "^5.3.4",
     "postcss": "^8.4.18",

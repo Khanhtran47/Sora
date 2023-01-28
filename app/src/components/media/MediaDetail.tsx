@@ -7,6 +7,7 @@ import { useRef, useState, useEffect } from 'react';
 import { useNavigate, useLocation } from '@remix-run/react';
 import { Card, Col, Row, Button, Spacer, Avatar } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
+import tinycolor from 'tinycolor2';
 
 // import { useTranslation } from 'react-i18next';
 
@@ -29,6 +30,7 @@ interface IMediaDetail {
   handler?: (id: number) => void;
   translations?: IMovieTranslations | undefined;
   imdbRating: { count: number; star: number } | undefined;
+  color: string | undefined;
 }
 
 const detailTab = [
@@ -43,7 +45,7 @@ const detailTab = [
 
 const MediaDetail = (props: IMediaDetail) => {
   // const { t } = useTranslation();
-  const { type, item, handler, translations, imdbRating } = props;
+  const { type, item, handler, translations, imdbRating, color } = props;
   const ref = useRef<HTMLDivElement>(null);
   const size: IUseSize = useSize(ref);
   const navigate = useNavigate();
@@ -81,6 +83,10 @@ const MediaDetail = (props: IMediaDetail) => {
   const releaseDate = new Date(
     (item as IMovieDetail)?.release_date || (item as ITvShowDetail)?.first_air_date || '',
   ).toLocaleDateString('fr-FR');
+
+  const colorBackground = tinycolor(color).isDark()
+    ? tinycolor(color).brighten(40).saturate(70).spin(180).toString()
+    : tinycolor(color).darken(40).saturate(70).spin(180).toString();
 
   useEffect(() => {
     if (ref.current) {
@@ -480,11 +486,18 @@ const MediaDetail = (props: IMediaDetail) => {
                       <Button
                         color="primary"
                         auto
-                        ghost
                         // shadow
                         key={genre?.id}
                         size={isSm ? 'sm' : 'md'}
-                        css={{ marginBottom: '0.125rem' }}
+                        css={{
+                          marginBottom: '0.125rem',
+                          background: color,
+                          color: colorBackground,
+                          '&:hover': {
+                            background: colorBackground,
+                            color,
+                          },
+                        }}
                         onClick={() =>
                           navigate(
                             `/${type === 'movie' ? 'movies/' : 'tv-shows/'}discover?with_genres=${
