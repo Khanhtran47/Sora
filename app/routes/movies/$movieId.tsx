@@ -41,6 +41,8 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const extractColorImage = `https://corsproxy.io/?${encodeURIComponent(
     TMDB.backdropUrl(detail?.backdrop_path || detail?.poster_path || '', 'w300'),
   )}`;
+  const fimg = await fetch(extractColorImage);
+  const fimgb = Buffer.from(await fimg.arrayBuffer());
   if ((detail && detail.original_language !== 'en') || locale !== 'en') {
     const [translations, imdbRating, testColor] = await Promise.all([
       getTranslations('movie', mid),
@@ -48,9 +50,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
       // detail?.backdrop_path || detail?.poster_path
       //   ? ColorThief.getColor(extractColorImage)
       //   : undefined,
-      detail?.backdrop_path || detail?.poster_path
-        ? Vibrant.from(extractColorImage).getPalette()
-        : undefined,
+      detail?.backdrop_path || detail?.poster_path ? Vibrant.from(fimgb).getPalette() : undefined,
     ]);
     const color = testColor?.Vibrant?.rgb;
     return json(
@@ -75,9 +75,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     // detail?.backdrop_path || detail?.poster_path
     //   ? ColorThief.getColor(extractColorImage)
     //   : undefined,
-    detail?.backdrop_path || detail?.poster_path
-      ? Vibrant.from(extractColorImage).getPalette()
-      : undefined,
+    detail?.backdrop_path || detail?.poster_path ? Vibrant.from(fimgb).getPalette() : undefined,
   ]);
   console.log('🚀 ~ file: $movieId.tsx:69 ~ loader ~ testColor', testColor);
   const color = testColor?.Vibrant?.rgb;
