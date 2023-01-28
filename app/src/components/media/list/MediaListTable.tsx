@@ -53,7 +53,7 @@ const MediaListTable = (props: IProps) => {
           <>
             {arr.map((item) => (
               <RowItem
-                key={item.id}
+                key={`${item.id}-${index}-card-row`}
                 item={item}
                 containerWidth={size.width}
                 simplified={simplified}

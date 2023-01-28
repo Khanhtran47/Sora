@@ -6,6 +6,7 @@ import type { MetaFunction, LoaderArgs } from '@remix-run/node';
 import { useCatch, useLoaderData, NavLink, RouteMatch } from '@remix-run/react';
 import { Container, Spacer, Badge } from '@nextui-org/react';
 import { useRouteData } from 'remix-utils';
+import Vibrant from 'node-vibrant';
 
 import { authenticate, insertHistory } from '~/services/supabase';
 import {
@@ -24,10 +25,10 @@ import {
 import { loklokGetTvEpInfo } from '~/services/loklok';
 import getProviderList from '~/services/provider.server';
 import { LOKLOK_URL } from '~/services/loklok/utils.server';
-import { CACHE_CONTROL } from '~/utils/server/http';
-
-import TMDB from '~/utils/media';
 import { TMDB as TmdbUtils } from '~/services/tmdb/utils.server';
+
+import { CACHE_CONTROL } from '~/utils/server/http';
+import TMDB from '~/utils/media';
 
 import WatchDetail from '~/src/components/elements/shared/WatchDetail';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
@@ -40,7 +41,7 @@ export const meta: MetaFunction = ({ data, params }) => {
       description: `This season of tv show doesn't have episode ${params.episodeId || ''}`,
     };
   }
-  const { detail } = data || {};
+  const { detail, color } = data || {};
   return {
     title: `Watch ${detail?.name || ''} season ${params.seasonId || ''} episode ${
       params.episodeId || ''
@@ -61,6 +62,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     }, English, Subtitle ${detail?.name || ''} season ${params.seasonId || ''} episode ${
       params.episodeId || ''
     }, English Subtitle`,
+    ...(color ? { 'theme-color': color } : null),
     'og:url': `https://sora-anime.vercel.app/tv-shows/${params.tvId}/season/${
       params.seasonId
     }/episode/${params.episodeId || ''}`,
@@ -125,6 +127,9 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     sub_format: provider === 'KissKh' ? 'srt' : 'webvtt',
   };
   const overview = detail?.overview || undefined;
+  const extractColorImage = `https://corsproxy.io/?${encodeURIComponent(
+    TMDB.backdropUrl(detail?.backdrop_path || detail?.poster_path || '', 'w300'),
+  )}`;
 
   if (user) {
     insertHistory({
@@ -145,13 +150,19 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   if (provider === 'Loklok') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
 
-    const [tvDetail, imdbRating, providers] = await Promise.all([
+    const [tvDetail, imdbRating, providers, fimg] = await Promise.all([
       loklokGetTvEpInfo(idProvider, Number(episodeId) - 1),
       imdbId ? getImdbRating(imdbId) : undefined,
       getProviderList('tv', title, orgTitle, year, season),
+      fetch(extractColorImage),
     ]);
     const totalProviderEpisodes = Number(tvDetail?.data?.episodeCount);
     const hasNextEpisode = checkHasNextEpisode(eid, totalEpisodes, totalProviderEpisodes);
+    const fimgb = Buffer.from(await fimg.arrayBuffer());
+    const palette =
+      detail?.backdrop_path || detail?.poster_path
+        ? await Vibrant.from(fimgb).getPalette()
+        : undefined;
     return json(
       {
         idProvider,
@@ -176,6 +187,13 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         typeVideo: 'tv',
         subtitleOptions,
         overview,
+        color: palette
+          ? Object.values(palette).sort((a, b) =>
+              a?.population === undefined || b?.population === undefined
+                ? 0
+                : b.population - a.population,
+            )[0]?.hex
+          : undefined,
       },
       {
         headers: {
@@ -187,21 +205,25 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
   if (provider === 'Flixhq') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
-    const [tvDetail, imdbRating, providers] = await Promise.all([
+    const [tvDetail, imdbRating, providers, fimg] = await Promise.all([
       getMovieInfo(idProvider),
       imdbId ? getImdbRating(imdbId) : undefined,
       getProviderList('tv', title, orgTitle, year, season),
+      fetch(extractColorImage),
     ]);
     const totalProviderEpisodes = Number(tvDetail?.episodes?.length);
     const hasNextEpisode = checkHasNextEpisode(eid, totalEpisodes, totalProviderEpisodes);
     const tvEpisodeDetail = tvDetail?.episodes?.find(
       (episode) => episode.season === Number(seasonId) && episode.number === Number(episodeId),
     );
+    const fimgb = Buffer.from(await fimg.arrayBuffer());
     if (tvEpisodeDetail) {
-      const tvEpisodeStreamLink = await getMovieEpisodeStreamLink(
-        tvEpisodeDetail?.id || '',
-        tvDetail?.id || '',
-      );
+      const [tvEpisodeStreamLink, palette] = await Promise.all([
+        getMovieEpisodeStreamLink(tvEpisodeDetail?.id || '', tvDetail?.id || ''),
+        detail?.backdrop_path || detail?.poster_path
+          ? await Vibrant.from(fimgb).getPalette()
+          : undefined,
+      ]);
       return json(
         {
           provider,
@@ -224,6 +246,13 @@ export const loader = async ({ request, params }: LoaderArgs) => {
           typeVideo: 'tv',
           subtitleOptions,
           overview,
+          color: palette
+            ? Object.values(palette).sort((a, b) =>
+                a?.population === undefined || b?.population === undefined
+                  ? 0
+                  : b.population - a.population,
+              )[0]?.hex
+            : undefined,
         },
         {
           headers: {
@@ -237,18 +266,23 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   if (provider === 'KissKh') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
 
-    const [episodeDetail, imdbRating, providers] = await Promise.all([
+    const [episodeDetail, imdbRating, providers, fimg] = await Promise.all([
       getKissKhInfo(Number(idProvider)),
       imdbId ? getImdbRating(imdbId) : undefined,
       getProviderList('tv', title, orgTitle, year, season),
+      fetch(extractColorImage),
     ]);
     const totalProviderEpisodes = Number(episodeDetail?.episodes?.length);
     const hasNextEpisode = checkHasNextEpisode(eid, totalEpisodes, totalProviderEpisodes);
     const episodeSearch = episodeDetail?.episodes?.find((e) => e?.number === Number(episodeId));
-    const [episodeStream, episodeSubtitle] = await Promise.all([
+    const fimgb = Buffer.from(await fimg.arrayBuffer());
+    const [episodeStream, episodeSubtitle, palette] = await Promise.all([
       getKissKhEpisodeStream(Number(episodeSearch?.id)),
       episodeSearch && episodeSearch.sub > 0
         ? getKissKhEpisodeSubtitle(Number(episodeSearch?.id))
+        : undefined,
+      detail?.backdrop_path || detail?.poster_path
+        ? await Vibrant.from(fimgb).getPalette()
         : undefined,
     ]);
 
@@ -277,6 +311,13 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         typeVideo: 'tv',
         subtitleOptions,
         overview,
+        color: palette
+          ? Object.values(palette).sort((a, b) =>
+              a?.population === undefined || b?.population === undefined
+                ? 0
+                : b.population - a.population,
+            )[0]?.hex
+          : undefined,
       },
       {
         headers: {
@@ -286,10 +327,17 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     );
   }
 
-  const [imdbRating, providers] = await Promise.all([
+  const [imdbRating, providers, fimg] = await Promise.all([
     imdbId ? getImdbRating(imdbId) : undefined,
     getProviderList('tv', title, orgTitle, year, season),
+    fetch(extractColorImage),
   ]);
+
+  const fimgb = Buffer.from(await fimg.arrayBuffer());
+  const palette =
+    detail?.backdrop_path || detail?.poster_path
+      ? await Vibrant.from(fimgb).getPalette()
+      : undefined;
   return json({
     idProvider,
     provider,
@@ -307,6 +355,13 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     typeVideo: 'tv',
     subtitleOptions,
     overview,
+    color: palette
+      ? Object.values(palette).sort((a, b) =>
+          a?.population === undefined || b?.population === undefined
+            ? 0
+            : b.population - a.population,
+        )[0]?.hex
+      : undefined,
   });
 };
 
@@ -384,7 +439,7 @@ export const handle = {
 };
 
 const EpisodeWatch = () => {
-  const { detail, recommendations, imdbRating, seasonDetail, providers } =
+  const { detail, recommendations, imdbRating, seasonDetail, providers, color } =
     useLoaderData<typeof loader>();
   const rootData:
     | {
@@ -428,12 +483,11 @@ const EpisodeWatch = () => {
         recommendationsMovies={recommendations?.items}
         season={seasonDetail?.season_number}
         providers={providers}
+        color={color}
       />
     </Container>
   );
 };
-
-export default EpisodeWatch;
 
 export const CatchBoundary = () => {
   const caught = useCatch();
@@ -441,8 +495,6 @@ export const CatchBoundary = () => {
   return <CatchBoundaryView caught={caught} />;
 };
 
-export const ErrorBoundary = ({ error }: { error: Error }) => {
-  const isProd = process.env.NODE_ENV === 'production';
+export const ErrorBoundary = ({ error }: { error: Error }) => <ErrorBoundaryView error={error} />;
 
-  return <ErrorBoundaryView error={error} isProd={isProd} />;
-};
+export default EpisodeWatch;
