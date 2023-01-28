@@ -302,7 +302,7 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
           >
             {items.map((item, index) => (
               <SwiperSlide
-                key={`${item.id}-${index}`}
+                key={`${item.id}-${index}-banner`}
                 virtualIndex={index}
                 style={{ width: '100%' }}
               >
@@ -350,7 +350,7 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
               }}
             >
               {items.map((item, index) => (
-                <SwiperSlideStyled key={index}>
+                <SwiperSlideStyled key={`${item.id}-${index}-banner-thumb`}>
                   <BannerItemCompact
                     backdropPath={item?.backdropPath || ''}
                     title={item?.title || ''}

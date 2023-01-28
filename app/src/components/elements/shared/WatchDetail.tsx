@@ -246,10 +246,17 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
                   <Button
                     color="primary"
                     auto
-                    ghost
                     key={genre?.id}
                     size={isSm ? 'sm' : 'md'}
-                    css={{ marginBottom: '0.125rem' }}
+                    css={{
+                      marginBottom: '0.125rem',
+                      background: color,
+                      color: colorBackground,
+                      '&:hover': {
+                        background: colorBackground,
+                        color,
+                      },
+                    }}
                     onClick={() =>
                       navigate(
                         `/${type === 'movie' ? 'movies' : 'tv-shows'}/discover?with_genres=${

@@ -5,6 +5,7 @@ import type { LoaderArgs } from '@remix-run/node';
 import { useCatch, useLoaderData, NavLink, RouteMatch } from '@remix-run/react';
 import { Container, Spacer, Badge } from '@nextui-org/react';
 import { useRouteData } from 'remix-utils';
+import Vibrant from 'node-vibrant';
 
 import { authenticate, insertHistory } from '~/services/supabase';
 import {
@@ -37,7 +38,7 @@ export const meta: MetaFunction = ({ data, params }) => {
       description: `There is no movie with the ID: ${params.movieId}`,
     };
   }
-  const { detail } = data || {};
+  const { detail, color } = data || {};
   return {
     title: `Watch ${detail?.title || ''} HD online Free - Sora`,
     description: `Watch ${detail?.title || ''} in full HD online with Subtitle`,
@@ -46,6 +47,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     } HD, Online ${detail?.title || ''}, Streaming ${detail?.title || ''}, English, Subtitle ${
       detail?.title || ''
     }, English Subtitle`,
+    ...(color ? { 'theme-color': color } : null),
     'og:url': `https://sora-anime.vercel.app/movies/${params.movieId}/watch`,
     'og:title': `Watch ${detail?.title || ''} HD online Free - Sora`,
     'og:description': `Watch ${detail?.title || ''} in full HD online with Subtitle`,
@@ -81,6 +83,9 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     sub_format: provider === 'KissKh' ? 'srt' : 'webvtt',
   };
   const overview = detail?.overview || undefined;
+  const extractColorImage = `https://corsproxy.io/?${encodeURIComponent(
+    TMDB.backdropUrl(detail?.backdrop_path || detail?.poster_path || '', 'w300'),
+  )}`;
 
   if (user) {
     insertHistory({
@@ -98,10 +103,16 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
   if (provider === 'Loklok') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
-    const [movieDetail, imdbRating] = await Promise.all([
+    const [movieDetail, imdbRating, fimg] = await Promise.all([
       loklokGetMovieInfo(idProvider),
       detail?.imdb_id ? getImdbRating(detail?.imdb_id) : undefined,
+      fetch(extractColorImage),
     ]);
+    const fimgb = Buffer.from(await fimg.arrayBuffer());
+    const palette =
+      detail?.backdrop_path || detail?.poster_path
+        ? await Vibrant.from(fimgb).getPalette()
+        : undefined;
     return json(
       {
         provider,
@@ -121,6 +132,13 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         typeVideo: 'movie',
         subtitleOptions,
         overview,
+        color: palette
+          ? Object.values(palette).sort((a, b) =>
+              a?.population === undefined || b?.population === undefined
+                ? 0
+                : b.population - a.population,
+            )[0]?.hex
+          : undefined,
       },
       {
         headers: {
@@ -132,14 +150,18 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
   if (provider === 'Flixhq') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
-    const [movieDetail, imdbRating] = await Promise.all([
+    const [movieDetail, imdbRating, fimg] = await Promise.all([
       getMovieInfo(idProvider),
       detail?.imdb_id ? getImdbRating(detail?.imdb_id) : undefined,
+      fetch(extractColorImage),
     ]);
-    const movieStreamLink = await getMovieEpisodeStreamLink(
-      movieDetail?.episodes[0].id || '',
-      movieDetail?.id || '',
-    );
+    const fimgb = Buffer.from(await fimg.arrayBuffer());
+    const [movieStreamLink, palette] = await Promise.all([
+      getMovieEpisodeStreamLink(movieDetail?.episodes[0].id || '', movieDetail?.id || ''),
+      detail?.backdrop_path || detail?.poster_path
+        ? await Vibrant.from(fimgb).getPalette()
+        : undefined,
+    ]);
     return json(
       {
         provider,
@@ -157,6 +179,13 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         typeVideo: 'movie',
         subtitleOptions,
         overview,
+        color: palette
+          ? Object.values(palette).sort((a, b) =>
+              a?.population === undefined || b?.population === undefined
+                ? 0
+                : b.population - a.population,
+            )[0]?.hex
+          : undefined,
       },
       {
         headers: {
@@ -168,14 +197,19 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
   if (provider === 'KissKh') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
-    const [episodeDetail, imdbRating] = await Promise.all([
+    const [episodeDetail, imdbRating, fimg] = await Promise.all([
       getKissKhInfo(Number(idProvider)),
       detail?.imdb_id ? getImdbRating(detail?.imdb_id) : undefined,
+      fetch(extractColorImage),
     ]);
-    const [episodeStream, episodeSubtitle] = await Promise.all([
+    const fimgb = Buffer.from(await fimg.arrayBuffer());
+    const [episodeStream, episodeSubtitle, palette] = await Promise.all([
       getKissKhEpisodeStream(Number(episodeDetail?.episodes[0]?.id)),
       episodeDetail?.episodes[0] && episodeDetail?.episodes[0].sub > 0
         ? getKissKhEpisodeSubtitle(Number(episodeDetail?.episodes[0]?.id))
+        : undefined,
+      detail?.backdrop_path || detail?.poster_path
+        ? await Vibrant.from(fimgb).getPalette()
         : undefined,
     ]);
 
@@ -199,6 +233,13 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         typeVideo: 'movie',
         subtitleOptions,
         overview,
+        color: palette
+          ? Object.values(palette).sort((a, b) =>
+              a?.population === undefined || b?.population === undefined
+                ? 0
+                : b.population - a.population,
+            )[0]?.hex
+          : undefined,
       },
       {
         headers: {
@@ -207,7 +248,15 @@ export const loader = async ({ request, params }: LoaderArgs) => {
       },
     );
   }
-  const imdbRating = detail?.imdb_id ? await getImdbRating(detail?.imdb_id) : undefined;
+  const [imdbRating, fimg] = await Promise.all([
+    detail?.imdb_id ? getImdbRating(detail?.imdb_id) : undefined,
+    fetch(extractColorImage),
+  ]);
+  const fimgb = Buffer.from(await fimg.arrayBuffer());
+  const palette =
+    detail?.backdrop_path || detail?.poster_path
+      ? await Vibrant.from(fimgb).getPalette()
+      : undefined;
   return json(
     {
       detail,
@@ -221,6 +270,13 @@ export const loader = async ({ request, params }: LoaderArgs) => {
       typeVideo: 'movie',
       subtitleOptions,
       overview,
+      color: palette
+        ? Object.values(palette).sort((a, b) =>
+            a?.population === undefined || b?.population === undefined
+              ? 0
+              : b.population - a.population,
+          )[0]?.hex
+        : undefined,
     },
     {
       headers: {
@@ -278,7 +334,7 @@ export const handle = {
 };
 
 const MovieWatch = () => {
-  const { detail, recommendations, imdbRating } = useLoaderData<typeof loader>();
+  const { detail, recommendations, imdbRating, color } = useLoaderData<typeof loader>();
   const rootData:
     | {
         locale: string;
@@ -319,12 +375,11 @@ const MovieWatch = () => {
         genresMovie={rootData?.genresMovie}
         genresTv={rootData?.genresTv}
         recommendationsMovies={recommendations?.items}
+        color={color}
       />
     </Container>
   );
 };
-
-export default MovieWatch;
 
 export const CatchBoundary = () => {
   const caught = useCatch();
@@ -332,8 +387,6 @@ export const CatchBoundary = () => {
   return <CatchBoundaryView caught={caught} />;
 };
 
-export const ErrorBoundary = ({ error }: { error: Error }) => {
-  const isProd = process.env.NODE_ENV === 'production';
+export const ErrorBoundary = ({ error }: { error: Error }) => <ErrorBoundaryView error={error} />;
 
-  return <ErrorBoundaryView error={error} isProd={isProd} />;
-};
+export default MovieWatch;

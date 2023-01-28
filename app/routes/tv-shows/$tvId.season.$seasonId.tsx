@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
@@ -6,20 +7,23 @@ import type { LoaderArgs, MetaFunction } from '@remix-run/node';
 import { useCatch, useLoaderData, Outlet, NavLink, RouteMatch, useParams } from '@remix-run/react';
 import { Container, Spacer, Card, Col, Row, Avatar, Badge } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
+import Vibrant from 'node-vibrant';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
 import useSize, { IUseSize } from '~/hooks/useSize';
 import i18next from '~/i18n/i18next.server';
-import TMDB from '~/utils/media';
 import { getTvShowDetail, getTvSeasonDetail } from '~/services/tmdb/tmdb.server';
 import { authenticate } from '~/services/supabase';
 import getProviderList from '~/services/provider.server';
+
 import { CACHE_CONTROL } from '~/utils/server/http';
+import TMDB from '~/utils/media';
 
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
 import TabLink from '~/src/components/elements/tab/TabLink';
 import { H2, H5, H6 } from '~/src/components/styles/Text.styles';
+
 import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
 import BackgroundDefault from '~/src/assets/images/background-default.jpg';
 
@@ -42,8 +46,18 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const orgTitle = detail?.original_name || '';
   const year = new Date(seasonDetail?.air_date || '').getFullYear();
   const season = seasonDetail?.season_number;
+  const extractColorImage = `https://corsproxy.io/?${encodeURIComponent(
+    TMDB.backdropUrl(seasonDetail?.poster_path || '', 'w300'),
+  )}`;
 
-  const providers = await getProviderList('tv', title, orgTitle, year, season);
+  const [providers, fimg] = await Promise.all([
+    getProviderList('tv', title, orgTitle, year, season),
+    fetch(extractColorImage),
+    // seasonDetail?.poster_path ? ColorThief.getColor(extractColorImage) : undefined,
+  ]);
+
+  const fimgb = Buffer.from(await fimg.arrayBuffer());
+  const palette = seasonDetail?.poster_path ? await Vibrant.from(fimgb).getPalette() : undefined;
 
   if (providers && providers.length > 0)
     return json(
@@ -51,11 +65,31 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         detail,
         seasonDetail,
         providers,
+        color: palette
+          ? Object.values(palette).sort((a, b) =>
+              a?.population === undefined || b?.population === undefined
+                ? 0
+                : b.population - a.population,
+            )[0]?.hex
+          : undefined,
       },
       { headers: { 'Cache-Control': CACHE_CONTROL.season } },
     );
 
-  return json({ detail, seasonDetail }, { headers: { 'Cache-Control': CACHE_CONTROL.season } });
+  return json(
+    {
+      detail,
+      seasonDetail,
+      color: palette
+        ? Object.values(palette).sort((a, b) =>
+            a?.population === undefined || b?.population === undefined
+              ? 0
+              : b.population - a.population,
+          )[0]?.hex
+        : undefined,
+    },
+    { headers: { 'Cache-Control': CACHE_CONTROL.season } },
+  );
 };
 
 export const meta: MetaFunction = ({ data, params }) => {
@@ -65,7 +99,7 @@ export const meta: MetaFunction = ({ data, params }) => {
       description: `This Tv show doesn't have season ${params.seasonId}`,
     };
   }
-  const { detail, seasonDetail } = data;
+  const { detail, seasonDetail, color } = data;
   return {
     title: `Watch ${detail?.name || ''} ${seasonDetail?.name || ''} HD online Free - Sora`,
     description: `Watch ${detail?.name || ''} ${
@@ -76,6 +110,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     } HD, Online ${detail?.name || ''}, Streaming ${detail?.name || ''}, English, Subtitle ${
       detail?.name || ''
     }, English Subtitle`,
+    ...(color ? { 'theme-color': color } : null),
     'og:url': `https://sora-anime.vercel.app/tv-shows/${params.tvId}/season/${params.seasonId}`,
     'og:title': `Watch ${detail?.name || ''} ${seasonDetail?.name || ''} HD online Free - Sora`,
     'og:description': `Watch ${detail?.name || ''} ${
@@ -396,10 +431,6 @@ export const CatchBoundary = () => {
   return <CatchBoundaryView caught={caught} />;
 };
 
-export const ErrorBoundary = ({ error }: { error: Error }) => {
-  const isProd = process.env.NODE_ENV === 'production';
-
-  return <ErrorBoundaryView error={error} isProd={isProd} />;
-};
+export const ErrorBoundary = ({ error }: { error: Error }) => <ErrorBoundaryView error={error} />;
 
 export default SeasonDetail;
