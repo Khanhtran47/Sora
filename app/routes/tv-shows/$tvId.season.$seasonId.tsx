@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
@@ -6,7 +7,7 @@ import type { LoaderArgs, MetaFunction } from '@remix-run/node';
 import { useCatch, useLoaderData, Outlet, NavLink, RouteMatch, useParams } from '@remix-run/react';
 import { Container, Spacer, Card, Col, Row, Avatar, Badge } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
-import ColorThief from 'colorthief';
+import Vibrant from 'node-vibrant';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
 import useSize, { IUseSize } from '~/hooks/useSize';
@@ -17,7 +18,6 @@ import getProviderList from '~/services/provider.server';
 
 import { CACHE_CONTROL } from '~/utils/server/http';
 import TMDB from '~/utils/media';
-import { RGBToHex } from '~/utils/server/colors';
 
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
@@ -50,10 +50,14 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     TMDB.backdropUrl(seasonDetail?.poster_path || '', 'w300'),
   )}`;
 
-  const [providers, color] = await Promise.all([
+  const [providers, fimg] = await Promise.all([
     getProviderList('tv', title, orgTitle, year, season),
-    seasonDetail?.poster_path ? ColorThief.getColor(extractColorImage) : undefined,
+    fetch(extractColorImage),
+    // seasonDetail?.poster_path ? ColorThief.getColor(extractColorImage) : undefined,
   ]);
+
+  const fimgb = Buffer.from(await fimg.arrayBuffer());
+  const palette = seasonDetail?.poster_path ? await Vibrant.from(fimgb).getPalette() : undefined;
 
   if (providers && providers.length > 0)
     return json(
@@ -61,13 +65,29 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         detail,
         seasonDetail,
         providers,
-        color: color ? RGBToHex(color[0], color[1], color[2]) : undefined,
+        color: palette
+          ? Object.values(palette).sort((a, b) =>
+              a?.population === undefined || b?.population === undefined
+                ? 0
+                : b.population - a.population,
+            )[0]?.hex
+          : undefined,
       },
       { headers: { 'Cache-Control': CACHE_CONTROL.season } },
     );
 
   return json(
-    { detail, seasonDetail, color: color ? RGBToHex(color[0], color[1], color[2]) : undefined },
+    {
+      detail,
+      seasonDetail,
+      color: palette
+        ? Object.values(palette).sort((a, b) =>
+            a?.population === undefined || b?.population === undefined
+              ? 0
+              : b.population - a.population,
+          )[0]?.hex
+        : undefined,
+    },
     { headers: { 'Cache-Control': CACHE_CONTROL.season } },
   );
 };

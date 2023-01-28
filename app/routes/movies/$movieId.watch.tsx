@@ -5,7 +5,7 @@ import type { LoaderArgs } from '@remix-run/node';
 import { useCatch, useLoaderData, NavLink, RouteMatch } from '@remix-run/react';
 import { Container, Spacer, Badge } from '@nextui-org/react';
 import { useRouteData } from 'remix-utils';
-import ColorThief from 'colorthief';
+import Vibrant from 'node-vibrant';
 
 import { authenticate, insertHistory } from '~/services/supabase';
 import {
@@ -26,7 +26,6 @@ import { LOKLOK_URL } from '~/services/loklok/utils.server';
 import TMDB from '~/utils/media';
 import { TMDB as TmdbUtils } from '~/services/tmdb/utils.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
-import { RGBToHex } from '~/utils/server/colors';
 
 import WatchDetail from '~/src/components/elements/shared/WatchDetail';
 import CatchBoundaryView from '~/src/components/CatchBoundaryView';
@@ -104,13 +103,16 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
   if (provider === 'Loklok') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
-    const [movieDetail, imdbRating, color] = await Promise.all([
+    const [movieDetail, imdbRating, fimg] = await Promise.all([
       loklokGetMovieInfo(idProvider),
       detail?.imdb_id ? getImdbRating(detail?.imdb_id) : undefined,
-      detail?.backdrop_path || detail?.poster_path
-        ? ColorThief.getColor(extractColorImage)
-        : undefined,
+      fetch(extractColorImage),
     ]);
+    const fimgb = Buffer.from(await fimg.arrayBuffer());
+    const palette =
+      detail?.backdrop_path || detail?.poster_path
+        ? await Vibrant.from(fimgb).getPalette()
+        : undefined;
     return json(
       {
         provider,
@@ -130,7 +132,13 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         typeVideo: 'movie',
         subtitleOptions,
         overview,
-        color: color ? RGBToHex(color[0], color[1], color[2]) : undefined,
+        color: palette
+          ? Object.values(palette).sort((a, b) =>
+              a?.population === undefined || b?.population === undefined
+                ? 0
+                : b.population - a.population,
+            )[0]?.hex
+          : undefined,
       },
       {
         headers: {
@@ -142,17 +150,18 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
   if (provider === 'Flixhq') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
-    const [movieDetail, imdbRating, color] = await Promise.all([
+    const [movieDetail, imdbRating, fimg] = await Promise.all([
       getMovieInfo(idProvider),
       detail?.imdb_id ? getImdbRating(detail?.imdb_id) : undefined,
+      fetch(extractColorImage),
+    ]);
+    const fimgb = Buffer.from(await fimg.arrayBuffer());
+    const [movieStreamLink, palette] = await Promise.all([
+      getMovieEpisodeStreamLink(movieDetail?.episodes[0].id || '', movieDetail?.id || ''),
       detail?.backdrop_path || detail?.poster_path
-        ? ColorThief.getColor(extractColorImage)
+        ? await Vibrant.from(fimgb).getPalette()
         : undefined,
     ]);
-    const movieStreamLink = await getMovieEpisodeStreamLink(
-      movieDetail?.episodes[0].id || '',
-      movieDetail?.id || '',
-    );
     return json(
       {
         provider,
@@ -170,7 +179,13 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         typeVideo: 'movie',
         subtitleOptions,
         overview,
-        color: color ? RGBToHex(color[0], color[1], color[2]) : undefined,
+        color: palette
+          ? Object.values(palette).sort((a, b) =>
+              a?.population === undefined || b?.population === undefined
+                ? 0
+                : b.population - a.population,
+            )[0]?.hex
+          : undefined,
       },
       {
         headers: {
@@ -182,17 +197,19 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
   if (provider === 'KissKh') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
-    const [episodeDetail, imdbRating, color] = await Promise.all([
+    const [episodeDetail, imdbRating, fimg] = await Promise.all([
       getKissKhInfo(Number(idProvider)),
       detail?.imdb_id ? getImdbRating(detail?.imdb_id) : undefined,
-      detail?.backdrop_path || detail?.poster_path
-        ? ColorThief.getColor(extractColorImage)
-        : undefined,
+      fetch(extractColorImage),
     ]);
-    const [episodeStream, episodeSubtitle] = await Promise.all([
+    const fimgb = Buffer.from(await fimg.arrayBuffer());
+    const [episodeStream, episodeSubtitle, palette] = await Promise.all([
       getKissKhEpisodeStream(Number(episodeDetail?.episodes[0]?.id)),
       episodeDetail?.episodes[0] && episodeDetail?.episodes[0].sub > 0
         ? getKissKhEpisodeSubtitle(Number(episodeDetail?.episodes[0]?.id))
+        : undefined,
+      detail?.backdrop_path || detail?.poster_path
+        ? await Vibrant.from(fimgb).getPalette()
         : undefined,
     ]);
 
@@ -216,7 +233,13 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         typeVideo: 'movie',
         subtitleOptions,
         overview,
-        color: color ? RGBToHex(color[0], color[1], color[2]) : undefined,
+        color: palette
+          ? Object.values(palette).sort((a, b) =>
+              a?.population === undefined || b?.population === undefined
+                ? 0
+                : b.population - a.population,
+            )[0]?.hex
+          : undefined,
       },
       {
         headers: {
@@ -225,12 +248,15 @@ export const loader = async ({ request, params }: LoaderArgs) => {
       },
     );
   }
-  const [imdbRating, color] = await Promise.all([
+  const [imdbRating, fimg] = await Promise.all([
     detail?.imdb_id ? getImdbRating(detail?.imdb_id) : undefined,
-    detail?.backdrop_path || detail?.poster_path
-      ? ColorThief.getColor(extractColorImage)
-      : undefined,
+    fetch(extractColorImage),
   ]);
+  const fimgb = Buffer.from(await fimg.arrayBuffer());
+  const palette =
+    detail?.backdrop_path || detail?.poster_path
+      ? await Vibrant.from(fimgb).getPalette()
+      : undefined;
   return json(
     {
       detail,
@@ -244,7 +270,13 @@ export const loader = async ({ request, params }: LoaderArgs) => {
       typeVideo: 'movie',
       subtitleOptions,
       overview,
-      color: color ? RGBToHex(color[0], color[1], color[2]) : undefined,
+      color: palette
+        ? Object.values(palette).sort((a, b) =>
+            a?.population === undefined || b?.population === undefined
+              ? 0
+              : b.population - a.population,
+          )[0]?.hex
+        : undefined,
     },
     {
       headers: {

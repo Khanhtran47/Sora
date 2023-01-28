@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
 import { json } from '@remix-run/node';
@@ -12,7 +13,7 @@ import {
   useLocation,
 } from '@remix-run/react';
 import { Container, Badge } from '@nextui-org/react';
-import ColorThief from 'colorthief';
+import Vibrant from 'node-vibrant';
 
 import {
   getTvShowDetail,
@@ -25,7 +26,6 @@ import i18next from '~/i18n/i18next.server';
 
 import { CACHE_CONTROL } from '~/utils/server/http';
 import TMDB from '~/utils/media';
-import { RGBToHex } from '~/utils/server/colors';
 
 import MediaDetail from '~/src/components/media/MediaDetail';
 import WatchTrailerModal, { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
@@ -45,18 +45,27 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     TMDB.backdropUrl(detail?.backdrop_path || detail?.poster_path || '', 'w300'),
   )}`;
   if ((detail && detail?.original_language !== 'en') || locale !== 'en') {
-    const [translations, imdbRating, color] = await Promise.all([
+    const [translations, imdbRating, fimg] = await Promise.all([
       getTranslations('tv', tid),
       imdbId ? getImdbRating(imdbId) : undefined,
-      detail?.backdrop_path || detail?.poster_path
-        ? ColorThief.getColor(extractColorImage)
-        : undefined,
+      fetch(extractColorImage),
     ]);
+    const fimgb = Buffer.from(await fimg.arrayBuffer());
+    const palette =
+      detail?.backdrop_path || detail?.poster_path
+        ? await Vibrant.from(fimgb).getPalette()
+        : undefined;
     return json(
       {
         detail: {
           ...detail,
-          color: color ? RGBToHex(color[0], color[1], color[2]) : undefined,
+          color: palette
+            ? Object.values(palette).sort((a, b) =>
+                a?.population === undefined || b?.population === undefined
+                  ? 0
+                  : b.population - a.population,
+              )[0]?.hex
+            : undefined,
         },
         translations,
         imdbRating,
@@ -67,17 +76,26 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     );
   }
 
-  const [imdbRating, color] = await Promise.all([
+  const [imdbRating, fimg] = await Promise.all([
     imdbId ? getImdbRating(imdbId) : undefined,
-    detail?.backdrop_path || detail?.poster_path
-      ? ColorThief.getColor(extractColorImage)
-      : undefined,
+    fetch(extractColorImage),
   ]);
+  const fimgb = Buffer.from(await fimg.arrayBuffer());
+  const palette =
+    detail?.backdrop_path || detail?.poster_path
+      ? await Vibrant.from(fimgb).getPalette()
+      : undefined;
   return json(
     {
       detail: {
         ...detail,
-        color: color ? RGBToHex(color[0], color[1], color[2]) : undefined,
+        color: palette
+          ? Object.values(palette).sort((a, b) =>
+              a?.population === undefined || b?.population === undefined
+                ? 0
+                : b.population - a.population,
+            )[0]?.hex
+          : undefined,
       },
       imdbRating,
       translations: undefined,

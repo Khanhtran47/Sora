@@ -13,7 +13,6 @@ import {
   useLocation,
 } from '@remix-run/react';
 import { Container, Badge } from '@nextui-org/react';
-// import ColorThief from 'colorthief';
 import Vibrant from 'node-vibrant';
 
 import { getMovieDetail, getTranslations, getImdbRating } from '~/services/tmdb/tmdb.server';
@@ -22,7 +21,6 @@ import { authenticate } from '~/services/supabase';
 
 import { CACHE_CONTROL } from '~/utils/server/http';
 import TMDB from '~/utils/media';
-import { RGBToHex } from '~/utils/server/colors';
 
 import MediaDetail from '~/src/components/media/MediaDetail';
 import WatchTrailerModal, { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
@@ -41,27 +39,32 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const extractColorImage = `https://corsproxy.io/?${encodeURIComponent(
     TMDB.backdropUrl(detail?.backdrop_path || detail?.poster_path || '', 'w300'),
   )}`;
-  const fimg = await fetch(extractColorImage);
-  const fimgb = Buffer.from(await fimg.arrayBuffer());
   if ((detail && detail.original_language !== 'en') || locale !== 'en') {
-    const [translations, imdbRating, testColor] = await Promise.all([
+    const [translations, imdbRating, fimg] = await Promise.all([
       getTranslations('movie', mid),
       detail?.imdb_id ? getImdbRating(detail?.imdb_id) : undefined,
-      // detail?.backdrop_path || detail?.poster_path
-      //   ? ColorThief.getColor(extractColorImage)
-      //   : undefined,
-      detail?.backdrop_path || detail?.poster_path ? Vibrant.from(fimgb).getPalette() : undefined,
+      fetch(extractColorImage),
     ]);
-    const color = testColor?.Vibrant?.rgb;
+    const fimgb = Buffer.from(await fimg.arrayBuffer());
+    const palette =
+      detail?.backdrop_path || detail?.poster_path
+        ? await Vibrant.from(fimgb).getPalette()
+        : undefined;
     return json(
       {
         detail: {
           ...detail,
-          color: color ? RGBToHex(color[0], color[1], color[2]) : undefined,
+          color: palette
+            ? Object.values(palette).sort((a, b) =>
+                a?.population === undefined || b?.population === undefined
+                  ? 0
+                  : b.population - a.population,
+              )[0]?.hex
+            : undefined,
         },
         imdbRating,
         translations,
-        testColor,
+        palette,
       },
       {
         headers: {
@@ -70,24 +73,30 @@ export const loader = async ({ request, params }: LoaderArgs) => {
       },
     );
   }
-  const [imdbRating, testColor] = await Promise.all([
+  const [imdbRating, fimg] = await Promise.all([
     detail?.imdb_id ? getImdbRating(detail?.imdb_id) : undefined,
-    // detail?.backdrop_path || detail?.poster_path
-    //   ? ColorThief.getColor(extractColorImage)
-    //   : undefined,
-    detail?.backdrop_path || detail?.poster_path ? Vibrant.from(fimgb).getPalette() : undefined,
+    fetch(extractColorImage),
   ]);
-  console.log('🚀 ~ file: $movieId.tsx:69 ~ loader ~ testColor', testColor);
-  const color = testColor?.Vibrant?.rgb;
+  const fimgb = Buffer.from(await fimg.arrayBuffer());
+  const palette =
+    detail?.backdrop_path || detail?.poster_path
+      ? await Vibrant.from(fimgb).getPalette()
+      : undefined;
   return json(
     {
       detail: {
         ...detail,
-        color: color ? RGBToHex(color[0], color[1], color[2]) : undefined,
+        color: palette
+          ? Object.values(palette).sort((a, b) =>
+              a?.population === undefined || b?.population === undefined
+                ? 0
+                : b.population - a.population,
+            )[0]?.hex
+          : undefined,
       },
       imdbRating,
       translations: undefined,
-      testColor,
+      palette,
     },
     {
       headers: {
@@ -159,8 +168,7 @@ export const handle = {
 };
 
 const MovieDetail = () => {
-  const { detail, imdbRating, translations, testColor } = useLoaderData<typeof loader>();
-  console.log('🚀 ~ file: $movieId.tsx:159 ~ MovieDetail ~ testColor', testColor);
+  const { detail, imdbRating, translations } = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
   const { state } = useLocation();
   const currentTime = state && (state as { currentTime: number }).currentTime;

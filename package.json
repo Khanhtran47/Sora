@@ -44,7 +44,6 @@
     "artplayer": "^4.6.2",
     "autoprefixer": "^10.4.13",
     "color-thief-react": "^2.1.0",
-    "colorthief": "^2.3.2",
     "concurrently": "^7.6.0",
     "cross-env": "^7.0.3",
     "dashjs": "^4.5.1",
