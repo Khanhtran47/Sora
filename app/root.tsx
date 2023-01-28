@@ -51,6 +51,9 @@ import i18next, { i18nCookie } from '~/i18n/i18next.server';
 import * as gtag from '~/utils/client/gtags.client';
 import { getListGenre, getListLanguages } from '~/services/tmdb/tmdb.server';
 
+import { ClientStyleContext } from '~/context/client.context';
+import { useIsBot } from '~/context/isbot.context';
+
 import globalStyles from '~/styles/global.stitches';
 import {
   lightTheme,
@@ -62,7 +65,6 @@ import {
   nightTheme,
   draculaTheme,
 } from '~/styles/nextui.config';
-import ClientStyleContext from '~/styles/client.context';
 import styles from '~/styles/tailwind.css';
 import nProgressStyles from '~/src/components/styles/nprogress.css';
 
@@ -340,6 +342,7 @@ const Document = ({ children, title, lang, dir, gaTrackingId }: DocumentProps) =
   const location = useLocation();
   const matches = useMatches();
   const clientStyleData = React.useContext(ClientStyleContext);
+  const isBot = useIsBot();
 
   /**
    * It takes an object and returns a clone of that object, using for deleting handlers in matches.
@@ -425,10 +428,10 @@ const Document = ({ children, title, lang, dir, gaTrackingId }: DocumentProps) =
           dangerouslySetInnerHTML={{ __html: clientStyleData.sheet }}
           suppressHydrationWarning
         />
-        {process.env.NODE_ENV === 'production' ? <MetronomeLinks /> : null}
+        {process.env.NODE_ENV === 'production' && !isBot ? <MetronomeLinks /> : null}
       </head>
       <body>
-        {process.env.NODE_ENV === 'development' || !gaTrackingId ? null : (
+        {process.env.NODE_ENV === 'development' || !gaTrackingId || isBot ? null : (
           <>
             <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaTrackingId}`} />
             <script
@@ -450,7 +453,7 @@ const Document = ({ children, title, lang, dir, gaTrackingId }: DocumentProps) =
         )}
         {children}
         <ScrollRestoration />
-        <Scripts />
+        {isBot ? null : <Scripts />}
         {process.env.NODE_ENV === 'development' ? <LiveReload /> : null}
       </body>
     </html>

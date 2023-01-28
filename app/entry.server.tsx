@@ -9,7 +9,9 @@ import Backend from 'i18next-fs-backend';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { resolve } from 'node:path';
 import { etag } from 'remix-etag';
+import isbot from 'isbot';
 
+import { IsBotProvider } from '~/context/isbot.context';
 import { otherRootRouteHandlers } from '~/services/other-root-routes.server';
 
 import i18next from './i18n/i18next.server';
@@ -50,10 +52,18 @@ export default async function handleRequest(
     if (otherRouteResponse) return otherRouteResponse;
   }
 
+  isbot.exclude([
+    'Checkly',
+    'Checkly, https://www.checklyhq.com',
+    'Checkly/1.0 (https://www.checklyhq.com)',
+  ]);
+
   let markup = renderToString(
-    <I18nextProvider i18n={instance}>
-      <RemixServer context={remixContext} url={request.url} />
-    </I18nextProvider>,
+    <IsBotProvider isBot={isbot(request.headers.get('User-Agent') ?? '')}>
+      <I18nextProvider i18n={instance}>
+        <RemixServer context={remixContext} url={request.url} />
+      </I18nextProvider>
+    </IsBotProvider>,
   );
 
   markup = markup.replace(
