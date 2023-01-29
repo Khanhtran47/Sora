@@ -27,10 +27,10 @@ import i18next from '~/i18n/i18next.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import TMDB from '~/utils/media';
 
-import MediaDetail from '~/src/components/media/MediaDetail';
-import WatchTrailerModal, { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
-import CatchBoundaryView from '~/src/components/CatchBoundaryView';
-import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
+import MediaDetail from '~/components/media/MediaDetail';
+import WatchTrailerModal, { Trailer } from '~/components/elements/modal/WatchTrailerModal';
+import CatchBoundaryView from '~/components/CatchBoundaryView';
+import ErrorBoundaryView from '~/components/ErrorBoundaryView';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);

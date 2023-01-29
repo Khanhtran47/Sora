@@ -8,7 +8,7 @@ import {
   commitAuthCookie,
   requestPayload,
 } from '~/services/supabase';
-import AuthForm from '~/src/components/AuthForm';
+import AuthForm from '~/components/AuthForm';
 
 type ActionData = {
   error: string | null;

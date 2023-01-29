@@ -7,24 +7,24 @@ import { NavLink, useLocation, useNavigate } from '@remix-run/react';
 import { Container, Spacer, Badge, Popover, Button, Divider } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 
-import { H2, H4, H6 } from '~/src/components/styles/Text.styles';
-import ResizablePanel from '~/src/components/elements/shared/ResizablePanel';
-import Flex from '~/src/components/styles/Flex.styles';
+import { H2, H4, H6 } from '~/components/styles/Text.styles';
+import ResizablePanel from '~/components/elements/shared/ResizablePanel';
+import Flex from '~/components/styles/Flex.styles';
 import {
   Sheet,
   SheetTrigger,
   SheetContent,
   SheetTitle,
   SheetDescription,
-} from '~/src/components/elements/shared/Sheet';
+} from '~/components/elements/shared/Sheet';
 
-import Settings from '~/src/assets/icons/SettingsIcon.js';
-import Arrow from '~/src/assets/icons/ArrowIcon.js';
-import Tick from '~/src/assets/icons/TickIcon.js';
-import Play from '~/src/assets/icons/PlayIcon.js';
-import Flip from '~/src/assets/icons/FlipIcon.js';
-import Ratio from '~/src/assets/icons/RatioIcon.js';
-import Subtitle from '~/src/assets/icons/SubtitleIcon.js';
+import Settings from '~/assets/icons/SettingsIcon';
+import Arrow from '~/assets/icons/ArrowIcon';
+import Tick from '~/assets/icons/TickIcon';
+import Play from '~/assets/icons/PlayIcon';
+import Flip from '~/assets/icons/FlipIcon';
+import Ratio from '~/assets/icons/RatioIcon';
+import Subtitle from '~/assets/icons/SubtitleIcon';
 
 export const meta: MetaFunction = () => ({
   title: 'Design System',

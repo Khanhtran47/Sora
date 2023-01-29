@@ -21,8 +21,8 @@ import { CACHE_CONTROL } from '~/utils/server/http';
 
 import { IMedia } from '~/types/media';
 
-import MediaList from '~/src/components/media/MediaList';
-import featuredList from '~/src/constants/featuredList';
+import MediaList from '~/components/media/MediaList';
+import featuredList from '~/constants/featuredList';
 
 export const handle = {
   i18n: 'home',

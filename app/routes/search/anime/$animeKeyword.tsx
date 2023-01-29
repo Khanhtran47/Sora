@@ -10,8 +10,8 @@ import { CACHE_CONTROL } from '~/utils/server/http';
 
 import { IMedia } from '~/types/media';
 
-import MediaList from '~/src/components/media/MediaList';
-import SearchForm from '~/src/components/elements/SearchForm';
+import MediaList from '~/components/media/MediaList';
+import SearchForm from '~/components/elements/SearchForm';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   await authenticate(request);

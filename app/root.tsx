@@ -16,7 +16,6 @@ import {
   useFetchers,
   useNavigation,
   useMatches,
-  RouteMatch,
   useLocation,
 } from '@remix-run/react';
 import { NextUIProvider, Text, Image as NextImage, Badge, useSSR, Button } from '@nextui-org/react';
@@ -50,6 +49,7 @@ import FontStyles900 from '@fontsource/inter/900.css';
 import i18next, { i18nCookie } from '~/i18n/i18next.server';
 import * as gtag from '~/utils/client/gtags.client';
 import { getListGenre, getListLanguages } from '~/services/tmdb/tmdb.server';
+import { getUserFromCookie } from '~/services/supabase';
 
 import { ClientStyleContext } from '~/context/client.context';
 import { useIsBot } from '~/context/isbot.context';
@@ -66,16 +66,15 @@ import {
   draculaTheme,
 } from '~/styles/nextui.config';
 import styles from '~/styles/tailwind.css';
-import nProgressStyles from '~/src/components/styles/nprogress.css';
+import nProgressStyles from '~/components/styles/nprogress.css';
 
-import Layout from '~/src/components/layouts/Layout';
-import Flex from '~/src/components/styles/Flex.styles';
+import Layout from '~/components/layouts/Layout';
+import Flex from '~/components/styles/Flex.styles';
 
-import Home from '~/src/assets/icons/HomeIcon.js';
-import Refresh from '~/src/assets/icons/RefreshIcon.js';
-import { getUserFromCookie } from './services/supabase';
-import pageNotFound from './src/assets/images/404.gif';
-import logoLoading from './src/assets/images/logo_loading.png';
+import Home from '~/assets/icons/HomeIcon';
+import Refresh from '~/assets/icons/RefreshIcon';
+import pageNotFound from '~/assets/images/404.gif';
+import logoLoading from '~/assets/images/logo_loading.png';
 
 interface DocumentProps {
   children: React.ReactNode;
@@ -465,7 +464,6 @@ const App = () => {
   const outlet = useOutlet();
   const fetchers = useFetchers();
   const navigation = useNavigation();
-  const matches: RouteMatch[] = useMatches();
   const { user, locale, gaTrackingId } = useLoaderData<typeof loader>();
 
   const { i18n } = useTranslation();
@@ -588,7 +586,7 @@ const App = () => {
           ) : null}
         </AnimatePresence>
         <NextUIProvider>
-          <Layout user={user} matches={matches}>
+          <Layout user={user}>
             <AnimatePresence exitBeforeEnter initial={false}>
               {outlet}
             </AnimatePresence>

@@ -3,7 +3,7 @@ import { redirect } from '@remix-run/node';
 import { NavLink, useLocation, Outlet } from '@remix-run/react';
 import { Container, Badge } from '@nextui-org/react';
 
-import TabLink from '~/src/components/elements/tab/TabLink';
+import TabLink from '~/components/elements/tab/TabLink';
 
 export const meta: MetaFunction = () => ({
   title: 'Test Route',

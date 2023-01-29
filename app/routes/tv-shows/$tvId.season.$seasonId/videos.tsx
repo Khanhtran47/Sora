@@ -15,8 +15,8 @@ import { CACHE_CONTROL } from '~/utils/server/http';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
 
-import WatchTrailerModal, { Trailer } from '~/src/components/elements/modal/WatchTrailerModal';
-import { H5, H6 } from '~/src/components/styles/Text.styles';
+import WatchTrailerModal, { Trailer } from '~/components/elements/modal/WatchTrailerModal';
+import { H5, H6 } from '~/components/styles/Text.styles';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);

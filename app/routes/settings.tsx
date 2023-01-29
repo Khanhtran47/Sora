@@ -24,26 +24,26 @@ import { useTheme } from 'next-themes';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import useLocalStorage from '~/hooks/useLocalStorage';
 
-import { settingsTab, listThemes } from '~/src/constants/settings';
-import languages from '~/src/constants/languages';
+import { settingsTab, listThemes } from '~/constants/settings';
+import languages from '~/constants/languages';
 
-import AboutLogo from '~/src/components/elements/NavLink';
-import { H2, H6 } from '~/src/components/styles/Text.styles';
-import Flex from '~/src/components/styles/Flex.styles';
+import AboutLogo from '~/components/elements/NavLink';
+import { H2, H6 } from '~/components/styles/Text.styles';
+import Flex from '~/components/styles/Flex.styles';
 import {
   Tabs,
   TabsList,
   TabsTrigger,
   TabsContent,
   Underline,
-} from '~/src/components/elements/tab/Tabs';
+} from '~/components/elements/tab/Tabs';
 
-import LogoFooter from '~/src/assets/images/logo_footer.png';
-import SettingsIcon from '~/src/assets/icons/SettingsIcon.js';
-import Brush from '~/src/assets/icons/BrushIcon.js';
-import User from '~/src/assets/icons/UserIcon.js';
-import Play from '~/src/assets/icons/PlayIcon.js';
-import Info from '~/src/assets/icons/InfoIcon.js';
+import LogoFooter from '~/assets/images/logo_footer.png';
+import SettingsIcon from '~/assets/icons/SettingsIcon';
+import Brush from '~/assets/icons/BrushIcon';
+import User from '~/assets/icons/UserIcon';
+import Play from '~/assets/icons/PlayIcon';
+import Info from '~/assets/icons/InfoIcon';
 
 export const meta: MetaFunction = () => ({
   title: 'Settings',

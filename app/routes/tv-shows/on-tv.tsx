@@ -14,7 +14,7 @@ import { getListDiscover } from '~/services/tmdb/tmdb.server';
 import i18next from '~/i18n/i18next.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
 
-import MediaList from '~/src/components/media/MediaList';
+import MediaList from '~/components/media/MediaList';
 
 export const meta: MetaFunction = () => ({
   title: 'Watch On TV movies and tv shows free | Sora',

@@ -25,9 +25,9 @@ import { CACHE_CONTROL } from '~/utils/server/http';
 
 import { IMedia } from '~/types/media';
 
-import WatchDetail from '~/src/components/elements/shared/WatchDetail';
-import CatchBoundaryView from '~/src/components/CatchBoundaryView';
-import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
+import WatchDetail from '~/components/elements/shared/WatchDetail';
+import CatchBoundaryView from '~/components/CatchBoundaryView';
+import ErrorBoundaryView from '~/components/ErrorBoundaryView';
 
 const checkHasNextEpisode = (
   provider: string,

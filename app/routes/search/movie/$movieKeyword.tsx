@@ -9,11 +9,11 @@ import type { User } from '@supabase/supabase-js';
 
 import { authenticate } from '~/services/supabase';
 import { getSearchMovies } from '~/services/tmdb/tmdb.server';
-import MediaList from '~/src/components/media/MediaList';
+import MediaList from '~/components/media/MediaList';
 import i18next from '~/i18n/i18next.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
 
-import SearchForm from '~/src/components/elements/SearchForm';
+import SearchForm from '~/components/elements/SearchForm';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);

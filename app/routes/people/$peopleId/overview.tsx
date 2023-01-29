@@ -12,8 +12,8 @@ import type { User } from '@supabase/supabase-js';
 import { IPeopleDetail, IPeople } from '~/services/tmdb/tmdb.types';
 import { IMedia } from '~/types/media';
 import TMDB from '~/utils/media';
-import MediaList from '~/src/components/media/MediaList';
-import { H6 } from '~/src/components/styles/Text.styles';
+import MediaList from '~/components/media/MediaList';
+import { H6 } from '~/components/styles/Text.styles';
 
 export const meta: MetaFunction = ({ params }) => ({
   'og:url': `https://sora-anime.vercel.app/people/${params.peopleId}/overview`,

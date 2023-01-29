@@ -18,11 +18,11 @@ import { CACHE_CONTROL } from '~/utils/server/http';
 import TMDB from '~/utils/media';
 import useMediaQuery from '~/hooks/useMediaQuery';
 
-import { H3, H4, H5, H6 } from '~/src/components/styles/Text.styles';
-import Flex from '~/src/components/styles/Flex.styles';
-import MediaList from '~/src/components/media/MediaList';
+import { H3, H4, H5, H6 } from '~/components/styles/Text.styles';
+import Flex from '~/components/styles/Flex.styles';
+import MediaList from '~/components/media/MediaList';
 
-import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
+import PhotoIcon from '~/assets/icons/PhotoIcon';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   await authenticate(request);

@@ -7,7 +7,7 @@ import i18next from '~/i18n/i18next.server';
 import { getPeopleCredits } from '~/services/tmdb/tmdb.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
 
-import { MediaListTable } from '~/src/components/media/list';
+import { MediaListTable } from '~/components/media/list';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const locale = await i18next.getLocale(request);

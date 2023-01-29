@@ -27,9 +27,9 @@ import TMDB from '~/utils/media';
 import { TMDB as TmdbUtils } from '~/services/tmdb/utils.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
 
-import WatchDetail from '~/src/components/elements/shared/WatchDetail';
-import CatchBoundaryView from '~/src/components/CatchBoundaryView';
-import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
+import WatchDetail from '~/components/elements/shared/WatchDetail';
+import CatchBoundaryView from '~/components/CatchBoundaryView';
+import ErrorBoundaryView from '~/components/ErrorBoundaryView';
 
 export const meta: MetaFunction = ({ data, params }) => {
   if (!data) {

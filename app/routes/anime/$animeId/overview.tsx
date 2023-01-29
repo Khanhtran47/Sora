@@ -11,11 +11,11 @@ import { IAnimeInfo } from '~/services/consumet/anilist/anilist.types';
 
 import { IMedia } from '~/types/media';
 
-import MediaList from '~/src/components/media/MediaList';
-import { H2, H5, H6 } from '~/src/components/styles/Text.styles';
-import Flex from '~/src/components/styles/Flex.styles';
+import MediaList from '~/components/media/MediaList';
+import { H2, H5, H6 } from '~/components/styles/Text.styles';
+import Flex from '~/components/styles/Flex.styles';
 
-import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
+import PhotoIcon from '~/assets/icons/PhotoIcon';
 
 export const meta: MetaFunction = ({ params }) => ({
   'og:url': `https://sora-anime.vercel.app/anime/${params.animeId}/overview`,

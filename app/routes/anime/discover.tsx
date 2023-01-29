@@ -8,7 +8,7 @@ import { IMedia } from '~/types/media';
 import { authenticate } from '~/services/supabase';
 import { getAnimeAdvancedSearch } from '~/services/consumet/anilist/anilist.server';
 
-import MediaList from '~/src/components/media/MediaList';
+import MediaList from '~/components/media/MediaList';
 
 export const meta: MetaFunction = () => ({
   title: 'Discover and watch anime for free | Sora',

@@ -18,10 +18,10 @@ import { authenticate } from '~/services/supabase';
 import getProviderList from '~/services/provider.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
 
-import AnimeDetail from '~/src/components/media/AnimeDetail';
-import WatchTrailerModal from '~/src/components/elements/modal/WatchTrailerModal';
-import CatchBoundaryView from '~/src/components/CatchBoundaryView';
-import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
+import AnimeDetail from '~/components/media/AnimeDetail';
+import WatchTrailerModal from '~/components/elements/modal/WatchTrailerModal';
+import CatchBoundaryView from '~/components/CatchBoundaryView';
+import ErrorBoundaryView from '~/components/ErrorBoundaryView';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { animeId } = params;

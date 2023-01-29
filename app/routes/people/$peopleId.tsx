@@ -12,10 +12,10 @@ import { CACHE_CONTROL } from '~/utils/server/http';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import TMDB from '~/utils/media';
 
-import PeopleDetail from '~/src/components/media/PeopleDetail';
-import TabLink from '~/src/components/elements/tab/TabLink';
-import CatchBoundaryView from '~/src/components/CatchBoundaryView';
-import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
+import PeopleDetail from '~/components/media/PeopleDetail';
+import TabLink from '~/components/elements/tab/TabLink';
+import CatchBoundaryView from '~/components/CatchBoundaryView';
+import ErrorBoundaryView from '~/components/ErrorBoundaryView';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
