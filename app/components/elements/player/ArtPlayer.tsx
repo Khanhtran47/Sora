@@ -27,10 +27,10 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
 
   const handleDragEnd = (event: any, info: PanInfo) => {
     if (artplayer) {
-      if (!artplayer.fullscreen && info.offset.y < -150) {
+      if (!artplayer.fullscreen && info.offset.y < -100) {
         artplayer.fullscreen = true;
       }
-      if (artplayer.fullscreen && info.offset.y > 150) {
+      if (artplayer.fullscreen && info.offset.y > 100) {
         artplayer.fullscreen = false;
       }
     }
@@ -62,6 +62,7 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
         drag={isMobile ? 'y' : false}
         whileDrag={{ scale: 1.2 }}
         dragConstraints={{ top: 0, bottom: 0 }}
+        dragSnapToOrigin
         dragElastic={0.8}
         onDragEnd={handleDragEnd}
         {...rest}
