@@ -9,7 +9,7 @@ import type { Swiper } from 'swiper';
 
 import { IMedia } from '~/types/media';
 import useMediaQuery from '~/hooks/useMediaQuery';
-import useLocalStorage from '~/hooks/useLocalStorage';
+import { useSoraSettings } from '~/hooks/useLocalStorage';
 
 import PlayIcon from '~/assets/icons/PlayIcon';
 import StopIcon from '~/assets/icons/StopIcon';
@@ -25,7 +25,7 @@ const CustomNavigation = ({ slot }: { slot: 'container-end' }) => {
   const swiper = useSwiper();
   const isXl = useMediaQuery('(max-width: 1400px)');
   const [slideProgress, setSlideProgress] = useState<number>(0);
-  const [isPlayTrailer, setIsPlayTrailer] = useLocalStorage('playTrailer', false);
+  const { isPlayTrailer, setIsPlayTrailer } = useSoraSettings();
 
   swiper.on('slideChange', (e) => {
     setSlideProgress(e.progress);

@@ -465,8 +465,8 @@ const App = () => {
   const fetchers = useFetchers();
   const navigation = useNavigation();
   const { user, locale, gaTrackingId } = useLoaderData<typeof loader>();
-
   const { i18n } = useTranslation();
+  const isBot = useIsBot();
   useChangeLanguage(locale);
   const [isLoading, setIsLoading] = React.useState(true);
 
@@ -526,7 +526,7 @@ const App = () => {
         }}
       >
         <AnimatePresence>
-          {isLoading && process.env.NODE_ENV !== 'development' ? (
+          {isLoading && process.env.NODE_ENV !== 'development' && !isBot ? (
             <div
               className="w-full h-full fixed block top-0 left-0"
               style={{ zIndex: '9999', backgroundColor: 'var(--nextui-colors-background)' }}

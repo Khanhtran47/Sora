@@ -22,7 +22,7 @@ import Image, { MimeType } from 'remix-image';
 import { useTheme } from 'next-themes';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
-import useLocalStorage from '~/hooks/useLocalStorage';
+import { useSoraSettings } from '~/hooks/useLocalStorage';
 
 import { settingsTab, listThemes } from '~/constants/settings';
 import languages from '~/constants/languages';
@@ -105,9 +105,58 @@ const Settings = () => {
   const isXs = useMediaQuery('(max-width: 450px)');
   const isSm = useMediaQuery('(max-width: 650px)');
   const [activeTab, setActiveTab] = useState('general-tab');
-  const [isMuted, setIsMuted] = useLocalStorage('muteTrailer', true);
-  const [isPlayTrailer, setIsPlayTrailer] = useLocalStorage('playTrailer', false);
   const [selectedLang, setSelectedLang] = useState(new Set([locale]));
+
+  const {
+    // currentSubtitleFontColor,
+    // setCurrentSubtitleFontColor,
+    // currentSubtitleFontSize,
+    // setCurrentSubtitleFontSize,
+    // currentSubtitleBackgroundColor,
+    // setCurrentSubtitleBackgroundColor,
+    // currentSubtitleBackgroundOpacity,
+    // setCurrentSubtitleBackgroundOpacity,
+    // currentSubtitleWindowColor,
+    // setCurrentSubtitleWindowColor,
+    // currentSubtitleWindowOpacity,
+    // setCurrentSubtitleWindowOpacity,
+    // autoShowSubtitle,
+    // setAutoShowSubtitle,
+    // playNextEpisode,
+    // setPlayNextEpisode,
+    // showFilter,
+    // setShowFilter,
+    isMutedTrailer,
+    setIsMutedTrailer,
+    isPlayTrailer,
+    setIsPlayTrailer,
+    isAutoSize,
+    setIsAutoSize,
+    isPicInPic,
+    setIsPicInPic,
+    isMuted,
+    setIsMuted,
+    isAutoPlay,
+    setIsAutoPlay,
+    isAutoMini,
+    setIsAutoMini,
+    isLoop,
+    setIsLoop,
+    isScreenshot,
+    setIsScreenshot,
+    isMiniProgressbar,
+    setIsMiniProgressbar,
+    isAutoPlayback,
+    setIsAutoPlayback,
+    isAutoPlayNextEpisode,
+    setIsAutoPlayNextEpisode,
+    isAutoSkipOpEd,
+    setIsAutoSkipOpEd,
+    isFastForward,
+    setIsFastForward,
+    isSwipeFullscreen,
+    setIsSwipeFullscreen,
+  } = useSoraSettings();
 
   const selectedLangValue = useMemo(
     () => Array.from(selectedLang).join(', ').replaceAll('_', ' '),
@@ -138,7 +187,6 @@ const Settings = () => {
         <H2 h2 css={{ '@xsMax': { fontSize: '1.75rem !important' } }}>
           {t('settings')}
         </H2>
-        <Spacer y={1} />
         <ClientOnly fallback={<Loading type="default" />}>
           {() => (
             <Tabs
@@ -157,8 +205,8 @@ const Settings = () => {
                       position: 'relative',
                       '&[data-state="active"]': {
                         [`& ${Underline}`]: {
-                          height: 3,
-                          width: '50%',
+                          height: 4,
+                          width: '60%',
                           bottom: 0,
                           right: 'unset',
                         },
@@ -166,8 +214,8 @@ const Settings = () => {
                       '&[data-orientation="vertical"]': {
                         '&[data-state="active"]': {
                           [`& ${Underline}`]: {
-                            width: 3,
-                            height: '50%',
+                            width: 4,
+                            height: '60%',
                             right: 0,
                             bottom: 'unset',
                           },
@@ -200,7 +248,16 @@ const Settings = () => {
                       direction="column"
                       css={{ '@smMax': { px: '$sm' } }}
                     >
-                      <Flex direction="column" justify="start" align="start" className="space-y-2">
+                      <Flex
+                        direction="row"
+                        justify="between"
+                        align="center"
+                        css={{
+                          backgroundColor: '$background',
+                          borderRadius: '$xs',
+                          padding: '$sm',
+                        }}
+                      >
                         <H6>{t('language')}</H6>
                         <Dropdown isBordered>
                           <Dropdown.Button color="primary">{t(selectedLangValue)}</Dropdown.Button>
@@ -318,6 +375,11 @@ const Settings = () => {
                             justify="between"
                             align="center"
                             className="space-x-2"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
                           >
                             <H6>{t('play-trailer')}</H6>
                             <Switch
@@ -325,17 +387,22 @@ const Settings = () => {
                               onChange={(e) => setIsPlayTrailer(e.target.checked)}
                             />
                           </Flex>
-                          <Spacer y={1} />
+                          <Spacer y={0.25} />
                           <Flex
                             direction="row"
                             justify="between"
                             align="center"
                             className="space-x-2"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
                           >
                             <H6>{t('mute-trailer')}</H6>
                             <Switch
-                              checked={isMuted}
-                              onChange={(e) => setIsMuted(e.target.checked)}
+                              checked={isMutedTrailer}
+                              onChange={(e) => setIsMutedTrailer(e.target.checked)}
                             />
                           </Flex>
                         </Collapse>
@@ -419,193 +486,196 @@ const Settings = () => {
                             justify="between"
                             align="center"
                             className="space-x-2"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
                           >
                             <H6>{t('auto-size')}</H6>
                             <Switch
-                            // checked={isPlayTrailer}
-                            // onChange={(e) => setIsPlayTrailer(e.target.checked)}
+                              checked={isAutoSize}
+                              onChange={(e) => setIsAutoSize(e.target.checked)}
                             />
                           </Flex>
-                          <Spacer y={1} />
+                          <Spacer y={0.25} />
                           <Flex
                             direction="row"
                             justify="between"
                             align="center"
                             className="space-x-2"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
                           >
                             <H6>{t('pic-in-pic')}</H6>
                             <Switch
-                            // checked={isPlayTrailer}
-                            // onChange={(e) => setIsPlayTrailer(e.target.checked)}
+                              checked={isPicInPic}
+                              onChange={(e) => setIsPicInPic(e.target.checked)}
                             />
                           </Flex>
-                          <Spacer y={1} />
+                          <Spacer y={0.25} />
                           <Flex
                             direction="row"
                             justify="between"
                             align="center"
                             className="space-x-2"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
                           >
                             <H6>{t('muted')}</H6>
                             <Switch
-                            // checked={isPlayTrailer}
-                            // onChange={(e) => setIsPlayTrailer(e.target.checked)}
+                              checked={isMuted}
+                              onChange={(e) => setIsMuted(e.target.checked)}
                             />
                           </Flex>
-                          <Spacer y={1} />
+                          <Spacer y={0.25} />
                           <Flex
                             direction="row"
                             justify="between"
                             align="center"
                             className="space-x-2"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
                           >
                             <H6>{t('autoplay')}</H6>
                             <Switch
-                            // checked={isPlayTrailer}
-                            // onChange={(e) => setIsPlayTrailer(e.target.checked)}
+                              checked={isAutoPlay}
+                              onChange={(e) => setIsAutoPlay(e.target.checked)}
                             />
                           </Flex>
-                          <Spacer y={1} />
+                          <Spacer y={0.25} />
                           <Flex
                             direction="row"
                             justify="between"
                             align="center"
                             className="space-x-2"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
                           >
                             <H6>{t('auto-mini')}</H6>
                             <Switch
-                            // checked={isPlayTrailer}
-                            // onChange={(e) => setIsPlayTrailer(e.target.checked)}
+                              checked={isAutoMini}
+                              onChange={(e) => setIsAutoMini(e.target.checked)}
                             />
                           </Flex>
-                          <Spacer y={1} />
+                          <Spacer y={0.25} />
                           <Flex
                             direction="row"
                             justify="between"
                             align="center"
                             className="space-x-2"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
                           >
                             <H6>{t('loop')}</H6>
                             <Switch
-                            // checked={isPlayTrailer}
-                            // onChange={(e) => setIsPlayTrailer(e.target.checked)}
+                              checked={isLoop}
+                              onChange={(e) => setIsLoop(e.target.checked)}
                             />
                           </Flex>
-                          <Spacer y={1} />
+                          <Spacer y={0.25} />
                           <Flex
                             direction="row"
                             justify="between"
                             align="center"
                             className="space-x-2"
-                          >
-                            <H6>{t('flip')}</H6>
-                            <Switch
-                            // checked={isPlayTrailer}
-                            // onChange={(e) => setIsPlayTrailer(e.target.checked)}
-                            />
-                          </Flex>
-                          <Spacer y={1} />
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="space-x-2"
-                          >
-                            <H6>{t('playback-rate')}</H6>
-                            <Switch
-                            // checked={isPlayTrailer}
-                            // onChange={(e) => setIsPlayTrailer(e.target.checked)}
-                            />
-                          </Flex>
-                          <Spacer y={1} />
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="space-x-2"
-                          >
-                            <H6>{t('aspect-ratio')}</H6>
-                            <Switch
-                            // checked={isPlayTrailer}
-                            // onChange={(e) => setIsPlayTrailer(e.target.checked)}
-                            />
-                          </Flex>
-                          <Spacer y={1} />
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="space-x-2"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
                           >
                             <H6>{t('screenshot')}</H6>
                             <Switch
-                            // checked={isPlayTrailer}
-                            // onChange={(e) => setIsPlayTrailer(e.target.checked)}
+                              checked={isScreenshot}
+                              onChange={(e) => setIsScreenshot(e.target.checked)}
                             />
                           </Flex>
-                          <Spacer y={1} />
+                          <Spacer y={0.25} />
                           <Flex
                             direction="row"
                             justify="between"
                             align="center"
                             className="space-x-2"
-                          >
-                            <H6>{t('subtitle-offset')}</H6>
-                            <Switch
-                            // checked={isPlayTrailer}
-                            // onChange={(e) => setIsPlayTrailer(e.target.checked)}
-                            />
-                          </Flex>
-                          <Spacer y={1} />
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="space-x-2"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
                           >
                             <H6>{t('mini-progressbar')}</H6>
                             <Switch
-                            // checked={isPlayTrailer}
-                            // onChange={(e) => setIsPlayTrailer(e.target.checked)}
+                              checked={isMiniProgressbar}
+                              onChange={(e) => setIsMiniProgressbar(e.target.checked)}
                             />
                           </Flex>
-                          <Spacer y={1} />
+                          <Spacer y={0.25} />
                           <Flex
                             direction="row"
                             justify="between"
                             align="center"
                             className="space-x-2"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
                           >
                             <H6>{t('auto-playback')}</H6>
                             <Switch
-                            // checked={isPlayTrailer}
-                            // onChange={(e) => setIsPlayTrailer(e.target.checked)}
+                              checked={isAutoPlayback}
+                              onChange={(e) => setIsAutoPlayback(e.target.checked)}
                             />
                           </Flex>
-                          <Spacer y={1} />
+                          <Spacer y={0.25} />
                           <Flex
                             direction="row"
                             justify="between"
                             align="center"
                             className="space-x-2"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
                           >
                             <H6>{t('auto-play-next-episode')}</H6>
                             <Switch
-                            // checked={isPlayTrailer}
-                            // onChange={(e) => setIsPlayTrailer(e.target.checked)}
+                              checked={isAutoPlayNextEpisode}
+                              onChange={(e) => setIsAutoPlayNextEpisode(e.target.checked)}
                             />
                           </Flex>
-                          <Spacer y={1} />
+                          <Spacer y={0.25} />
                           <Flex
                             direction="row"
                             justify="between"
                             align="center"
                             className="space-x-2"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
                           >
                             <H6>{t('auto-skip-op-ed')}</H6>
                             <Switch
-                            // checked={isPlayTrailer}
-                            // onChange={(e) => setIsPlayTrailer(e.target.checked)}
+                              checked={isAutoSkipOpEd}
+                              onChange={(e) => setIsAutoSkipOpEd(e.target.checked)}
                             />
                           </Flex>
                         </Collapse>
@@ -622,24 +692,34 @@ const Settings = () => {
                             justify="between"
                             align="center"
                             className="space-x-2"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
                           >
                             <H6>{t('swipe-to-seek')}</H6>
                             <Switch
-                            // checked={isPlayTrailer}
-                            // onChange={(e) => setIsPlayTrailer(e.target.checked)}
+                              checked={isFastForward}
+                              onChange={(e) => setIsFastForward(e.target.checked)}
                             />
                           </Flex>
-                          <Spacer y={1} />
+                          <Spacer y={0.25} />
                           <Flex
                             direction="row"
                             justify="between"
                             align="center"
                             className="space-x-2"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
                           >
-                            <H6>{t('swipe-up-to-fullscreen')}</H6>
+                            <H6>{t('swipe-to-fullscreen')}</H6>
                             <Switch
-                            // checked={isPlayTrailer}
-                            // onChange={(e) => setIsPlayTrailer(e.target.checked)}
+                              checked={isSwipeFullscreen}
+                              onChange={(e) => setIsSwipeFullscreen(e.target.checked)}
                             />
                           </Flex>
                         </Collapse>

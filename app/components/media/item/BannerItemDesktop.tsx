@@ -13,7 +13,7 @@ import { useInView } from 'react-intersection-observer';
 
 import useCardHoverStore from '~/store/card/useCardHoverStore';
 
-import useLocalStorage from '~/hooks/useLocalStorage';
+import { useSoraSettings } from '~/hooks/useLocalStorage';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import useSize from '~/hooks/useSize';
 import { IImage } from '~/services/tmdb/tmdb.types';
@@ -86,8 +86,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
 
   const isCardPlaying = useCardHoverStore((state) => state.isCardPlaying);
 
-  const [isMuted, setIsMuted] = useLocalStorage('muteTrailer', true);
-  const [isPlayTrailer] = useLocalStorage('playTrailer', false);
+  const { isMutedTrailer, setIsMutedTrailer, isPlayTrailer } = useSoraSettings();
   const titleItem =
     typeof title === 'string'
       ? title
@@ -96,13 +95,13 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
   const mute = useCallback(() => {
     if (!player) return;
     player.mute();
-    setIsMuted(true);
+    setIsMutedTrailer(true);
   }, [player]);
 
   const unMute = useCallback(() => {
     if (!player) return;
     player.unMute();
-    setIsMuted(false);
+    setIsMutedTrailer(false);
   }, [player]);
 
   const play = useCallback(() => {
@@ -562,7 +561,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
               onReady={({ target }) => {
                 if (active && inView) target.playVideo();
                 setPlayer(target);
-                if (!isMuted) target.unMute();
+                if (!isMutedTrailer) target.unMute();
               }}
               onPlay={() => {
                 setIsPlayed(true);
@@ -617,7 +616,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
               onReady={({ target }) => {
                 if (active && inView) target.playVideo();
                 setPlayer(target);
-                if (!isMuted) target.unMute();
+                if (!isMutedTrailer) target.unMute();
               }}
               onPlay={() => {
                 setIsPlayed(true);
@@ -654,7 +653,13 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
               color="primary"
               rounded
               ghost
-              icon={isMuted ? <VolumeOff fill="currentColor" /> : <VolumeUp fill="currentColor" />}
+              icon={
+                isMutedTrailer ? (
+                  <VolumeOff fill="currentColor" />
+                ) : (
+                  <VolumeUp fill="currentColor" />
+                )
+              }
               css={{
                 width: '44px',
                 height: '44px',
@@ -669,7 +674,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                 '@lgMin': { bottom: '200px' },
               }}
               aria-label="Toggle Mute"
-              onClick={isMuted ? unMute : mute}
+              onClick={isMutedTrailer ? unMute : mute}
             />
           </motion.div>
         )}

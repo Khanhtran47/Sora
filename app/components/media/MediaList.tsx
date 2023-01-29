@@ -7,7 +7,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { IMedia } from '~/types/media';
 import { ILanguage } from '~/services/tmdb/tmdb.types';
 import useMediaQuery from '~/hooks/useMediaQuery';
-import useLocalStorage from '~/hooks/useLocalStorage';
+import { useSoraSettings } from '~/hooks/useLocalStorage';
 
 import FilterIcon from '~/assets/icons/FilterIcon';
 import ChevronRightIcon from '~/assets/icons/ChevronRightIcon';
@@ -315,7 +315,7 @@ const MediaList = (props: IMediaListProps) => {
   const [nextEl, setNextEl] = useState<HTMLElement | null>(null);
   const [slideProgress, setSlideProgress] = useState<number>(0);
   const [displayType, setDisplayType] = useState<string>(listType as string);
-  const [showFilter, setShowFilter] = useLocalStorage('showFilter', false);
+  const { showFilter, setShowFilter } = useSoraSettings();
   const isSm = useMediaQuery('(max-width: 650px)');
 
   if (!listType && typeof window !== 'undefined') {

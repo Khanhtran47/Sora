@@ -11,7 +11,7 @@ import { ClientOnly } from 'remix-utils';
 import useCardHoverStore from '~/store/card/useCardHoverStore';
 
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
-import useLocalStorage from '~/hooks/useLocalStorage';
+import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { Trailer } from '~/components/elements/modal/WatchTrailerModal';
 import { ITrailer } from '~/services/consumet/anilist/anilist.types';
 
@@ -56,19 +56,18 @@ const CardItemHover = (props: ICardItemHoverProps) => {
   const [player, setPlayer] = useState<ReturnType<YouTube['getInternalPlayer']>>();
   const [showTrailer, setShowTrailer] = useState<boolean>(false);
   const setIsCardPlaying = useCardHoverStore((state) => state.setIsCardPlaying);
-  const [isMuted, setIsMuted] = useLocalStorage('muteTrailer', true);
-  const [isPlayTrailer] = useLocalStorage('playTrailer', false);
+  const { isMutedTrailer, setIsMutedTrailer, isPlayTrailer } = useSoraSettings();
 
   const mute = useCallback(() => {
     if (!player) return;
     player.mute();
-    setIsMuted(true);
+    setIsMutedTrailer(true);
   }, [player]);
 
   const unMute = useCallback(() => {
     if (!player) return;
     player.unMute();
-    setIsMuted(false);
+    setIsMutedTrailer(false);
   }, [player]);
 
   useEffect(() => {
@@ -168,7 +167,7 @@ const CardItemHover = (props: ICardItemHoverProps) => {
                     onReady={({ target }) => {
                       setPlayer(target);
                       setIsCardPlaying(true);
-                      if (!isMuted) target.unMute();
+                      if (!isMutedTrailer) target.unMute();
                     }}
                     onPlay={() => {
                       if (setShowTrailer) {
@@ -303,7 +302,11 @@ const CardItemHover = (props: ICardItemHoverProps) => {
                 rounded
                 ghost
                 icon={
-                  isMuted ? <VolumeOff fill="currentColor" /> : <VolumeUp fill="currentColor" />
+                  isMutedTrailer ? (
+                    <VolumeOff fill="currentColor" />
+                  ) : (
+                    <VolumeUp fill="currentColor" />
+                  )
                 }
                 css={{
                   width: '42px',
@@ -318,7 +321,7 @@ const CardItemHover = (props: ICardItemHoverProps) => {
                   },
                 }}
                 aria-label="Toggle Mute"
-                onClick={isMuted ? unMute : mute}
+                onClick={isMutedTrailer ? unMute : mute}
               />
             </motion.div>
           )}

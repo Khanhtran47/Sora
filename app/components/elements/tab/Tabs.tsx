@@ -132,5 +132,6 @@ export const TabsContent = styled(TabsPrimitive.Content, {
 export const Underline = styled(motion.div, {
   position: 'absolute',
   backgroundColor: '$primary',
-  borderRadius: '5px',
+  borderRadius: '4px',
+  overflow: 'hidden',
 });

@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import { Spacer, Button, Divider, Switch, SwitchEvent } from '@nextui-org/react';
 import { isMobileOnly } from 'react-device-detect';
 
-import useLocalStorage from '~/hooks/useLocalStorage';
+import { useSoraSettings } from '~/hooks/useLocalStorage';
 
 import { H6 } from '~/components/styles/Text.styles';
 import ResizablePanel from '~/components/elements/shared/ResizablePanel';
@@ -66,30 +66,20 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
   );
   const [currentSubtitleOffset, setCurrentSubtitleOffset] = useState('Normal');
 
-  const [currentSubtitleFontColor, setCurrentSubtitleFontColor] = useLocalStorage(
-    'sora-settings_subtitle_font-color',
-    'White',
-  );
-  const [currentSubtitleFontSize, setCurrentSubtitleFontSize] = useLocalStorage(
-    'sora-settings_subtitle_font-size',
-    '100%',
-  );
-  const [currentSubtitleBackgroundColor, setCurrentSubtitleBackgroundColor] = useLocalStorage(
-    'sora-settings_subtitle_background-color',
-    'Black',
-  );
-  const [currentSubtitleBackgroundOpacity, setCurrentSubtitleBackgroundOpacity] = useLocalStorage(
-    'sora-settings_subtitle_background-opacity',
-    '0%',
-  );
-  const [currentSubtitleWindowColor, setCurrentSubtitleWindowColor] = useLocalStorage(
-    'sora-settings_subtitle_window-color',
-    'Black',
-  );
-  const [currentSubtitleWindowOpacity, setCurrentSubtitleWindowOpacity] = useLocalStorage(
-    'sora-settings_subtitle_window-opacity',
-    '0%',
-  );
+  const {
+    currentSubtitleFontColor,
+    setCurrentSubtitleFontColor,
+    currentSubtitleFontSize,
+    setCurrentSubtitleFontSize,
+    currentSubtitleBackgroundColor,
+    setCurrentSubtitleBackgroundColor,
+    currentSubtitleBackgroundOpacity,
+    setCurrentSubtitleBackgroundOpacity,
+    currentSubtitleWindowColor,
+    setCurrentSubtitleWindowColor,
+    currentSubtitleWindowOpacity,
+    setCurrentSubtitleWindowOpacity,
+  } = useSoraSettings();
 
   const dropdownLevel = useMemo(
     () => {

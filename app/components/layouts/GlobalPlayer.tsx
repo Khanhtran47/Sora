@@ -16,7 +16,7 @@ import { useRouteData } from 'remix-utils';
 import usePlayerState from '~/store/player/usePlayerState';
 import type { PlayerData } from '~/store/player/usePlayerState';
 
-import useLocalStorage from '~/hooks/useLocalStorage';
+import { useSoraSettings } from '~/hooks/useLocalStorage';
 import useMeasure from '~/hooks/useMeasure';
 
 import updateHistory from '~/utils/client/update-history';
@@ -123,10 +123,31 @@ const GlobalPlayer = () => {
     () => !(location?.pathname.includes('player') || location?.pathname.includes('watch')),
     [location?.pathname],
   );
+  const {
+    autoShowSubtitle,
+    currentSubtitleFontColor,
+    currentSubtitleFontSize,
+    currentSubtitleBackgroundColor,
+    currentSubtitleBackgroundOpacity,
+    currentSubtitleWindowColor,
+    currentSubtitleWindowOpacity,
+    playNextEpisode,
+    isAutoSize,
+    isPicInPic,
+    isMuted,
+    isAutoPlay,
+    isAutoMini,
+    isLoop,
+    isScreenshot,
+    isMiniProgressbar,
+    isAutoPlayback,
+    // isAutoPlayNextEpisode,
+    // isAutoSkipOpEd,
+    isFastForward,
+  } = useSoraSettings();
   const currentEpisode = useMemo(() => Number(episodeId), [episodeId]);
   const [ref, { height }] = useMeasure<HTMLDivElement>();
   const constraintsRef = useRef<HTMLDivElement>(null);
-  const [autoShowSubtitle] = useLocalStorage('sora-settings_subtitle_auto-show', false);
   const [artplayer, setArtplayer] = useState<Artplayer | null>(null);
   const [isPlayerPlaying, setIsPlayerPlaying] = useState(false);
   const [isVideoEnded, setIsVideoEnded] = useState(false);
@@ -136,26 +157,6 @@ const GlobalPlayer = () => {
   const [showSubtitle, setShowSubtitle] = useState(autoShowSubtitle);
   const [showSkipButton, setShowSkipButton] = useState(false);
   const [currentHighlight, setCurrentHighlight] = useState<Highlight | null>(null);
-
-  const [currentSubtitleFontColor] = useLocalStorage('sora-settings_subtitle_font-color', 'White');
-  const [currentSubtitleFontSize] = useLocalStorage('sora-settings_subtitle_font-size', '100%');
-  const [currentSubtitleBackgroundColor] = useLocalStorage(
-    'sora-settings_subtitle_background-color',
-    'Black',
-  );
-  const [currentSubtitleBackgroundOpacity] = useLocalStorage(
-    'sora-settings_subtitle_background-opacity',
-    '0%',
-  );
-  const [currentSubtitleWindowColor] = useLocalStorage(
-    'sora-settings_subtitle_window-color',
-    'Black',
-  );
-  const [currentSubtitleWindowOpacity] = useLocalStorage(
-    'sora-settings_subtitle_window-opacity',
-    '0%',
-  );
-  const [playNextEpisode] = useLocalStorage('sora-settings_play-next-episode', true);
   const subtitleBackgroundColor = useMemo(() => {
     switch (currentSubtitleBackgroundColor) {
       case 'Black':
@@ -479,8 +480,9 @@ const GlobalPlayer = () => {
                   option={{
                     id: `${id}-${routePlayer}-${titlePlayer}-${provider}`,
                     type: provider === 'Bilibili' ? 'mpd' : provider === 'test' ? 'mp4' : 'm3u8',
-                    autoSize: false,
-                    loop: false,
+                    autoSize: isAutoSize,
+                    loop: isLoop,
+                    muted: isMuted,
                     mutex: true,
                     setting: false,
                     flip: true,
@@ -489,20 +491,20 @@ const GlobalPlayer = () => {
                     fullscreen: true,
                     fullscreenWeb: false,
                     airplay: true,
-                    pip: true,
-                    autoplay: false,
-                    screenshot: isDesktop,
+                    pip: isPicInPic,
+                    autoplay: isAutoPlay,
+                    screenshot: isDesktop && isScreenshot,
                     subtitleOffset: true,
-                    fastForward: isMobile,
+                    fastForward: isMobile && isFastForward,
                     lock: isMobile,
-                    miniProgressBar: true,
+                    miniProgressBar: isMiniProgressbar,
                     autoOrientation: isMobile,
                     isLive: false,
                     playsInline: true,
-                    autoPlayback: true,
+                    autoPlayback: isAutoPlayback,
                     whitelist: ['*'],
                     theme: 'var(--nextui-colors-primary)',
-                    autoMini: false,
+                    autoMini: isAutoMini,
                     hotkey: true,
                     useSSR: false,
                     moreVideoAttr: isDesktop
@@ -512,7 +514,7 @@ const GlobalPlayer = () => {
                       : {
                           'x5-video-player-type': 'h5',
                           'x5-video-player-fullscreen': false,
-                          'x5-video-orientation': 'portraint',
+                          'x5-video-orientation': 'portrait',
                           preload: 'metadata',
                         },
                     url:

@@ -7,6 +7,8 @@ import { isMobile } from 'react-device-detect';
 import { motion } from 'framer-motion';
 import type { PanInfo } from 'framer-motion';
 
+import { useSoraSettings } from '~/hooks/useLocalStorage';
+
 import usePlayerState from '~/store/player/usePlayerState';
 
 import AspectRatio from '~/components/elements/aspect-ratio/AspectRatio';
@@ -22,11 +24,11 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
   const { option, getInstance, style, ...rest } = props;
   const isMini = usePlayerState((state) => state.isMini);
   const [artplayer, setArtplayer] = useState<Artplayer | null>(null);
-
+  const { isSwipeFullscreen } = useSoraSettings();
   const artRef = useRef<HTMLDivElement>(null);
 
-  const handleDragEnd = (event: any, info: PanInfo) => {
-    if (artplayer) {
+  const handleDragEnd = (event: MouseEvent | PointerEvent | TouchEvent, info: PanInfo) => {
+    if (artplayer && !isSwipeFullscreen) {
       if (!artplayer.fullscreen && info.offset.y < -100) {
         artplayer.fullscreen = true;
       }
@@ -59,7 +61,7 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
       <motion.div
         ref={artRef}
         style={style}
-        drag={isMobile ? 'y' : false}
+        drag={isMobile && isSwipeFullscreen ? 'y' : false}
         whileDrag={{ scale: 1.2 }}
         dragConstraints={{ top: 0, bottom: 0 }}
         dragSnapToOrigin

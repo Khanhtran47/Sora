@@ -13,7 +13,7 @@ import { isMobile } from 'react-device-detect';
 import useCardHoverStore from '~/store/card/useCardHoverStore';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
-import useLocalStorage from '~/hooks/useLocalStorage';
+import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { IMedia, Title } from '~/types/media';
 import { ITrailer } from '~/services/consumet/anilist/anilist.types';
 
@@ -83,7 +83,7 @@ const CardItem = (props: ICardItemProps) => {
   const fetcher = useFetcher();
   const setIsCardPlaying = useCardHoverStore((state) => state.setIsCardPlaying);
   const [trailerCard, setTrailerCard] = React.useState<Trailer>({});
-  const [isPlayTrailer] = useLocalStorage('playTrailer', false);
+  const { isPlayTrailer } = useSoraSettings();
   const titleItem =
     typeof title === 'string'
       ? title
