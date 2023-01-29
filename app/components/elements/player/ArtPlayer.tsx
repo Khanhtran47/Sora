@@ -1,9 +1,11 @@
 /* eslint-disable no-nested-ternary */
-import { useEffect, useRef, memo } from 'react';
+import { useEffect, useRef, useState, memo } from 'react';
 import type { CSSProperties } from 'react';
 import { styled } from '@nextui-org/react';
 import Artplayer from 'artplayer';
 import { isMobile } from 'react-device-detect';
+import { motion } from 'framer-motion';
+import type { PanInfo } from 'framer-motion';
 
 import usePlayerState from '~/store/player/usePlayerState';
 
@@ -19,14 +21,27 @@ interface IPlayerProps {
 const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
   const { option, getInstance, style, ...rest } = props;
   const isMini = usePlayerState((state) => state.isMini);
+  const [artplayer, setArtplayer] = useState<Artplayer | null>(null);
 
   const artRef = useRef<HTMLDivElement>(null);
+
+  const handleDragEnd = (event: any, info: PanInfo) => {
+    if (artplayer) {
+      if (!artplayer.fullscreen && info.offset.y < -150) {
+        artplayer.fullscreen = true;
+      }
+      if (artplayer.fullscreen && info.offset.y > 150) {
+        artplayer.fullscreen = false;
+      }
+    }
+  };
   useEffect(
     () => {
       const art = new Artplayer({
         container: artRef.current,
         ...option,
       });
+      setArtplayer(art);
       if (getInstance && typeof getInstance === 'function') {
         getInstance(art);
       }
@@ -41,7 +56,16 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
   );
   return (
     <AspectRatio.Root ratio={isMini ? undefined : isMobile ? 16 / 9 : 7 / 3}>
-      <div ref={artRef} style={style} {...rest} />
+      <motion.div
+        ref={artRef}
+        style={style}
+        drag={isMobile ? 'y' : false}
+        whileDrag={{ scale: 1.2 }}
+        dragConstraints={{ top: 0, bottom: 0 }}
+        dragElastic={0.8}
+        onDragEnd={handleDragEnd}
+        {...rest}
+      />
     </AspectRatio.Root>
   );
 };
