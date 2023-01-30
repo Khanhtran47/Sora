@@ -15,11 +15,12 @@ import {
   Badge,
   Loading,
 } from '@nextui-org/react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useRouteData, ClientOnly } from 'remix-utils';
 import Image, { MimeType } from 'remix-image';
 import { useTheme } from 'next-themes';
+import { isMobile } from 'react-device-detect';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
@@ -163,6 +164,28 @@ const Settings = () => {
     [selectedLang],
   );
 
+  const handleDragEnd = (event: MouseEvent | PointerEvent | TouchEvent, info: PanInfo) => {
+    const currentTab = settingsTab.find((tab) => tab.id === activeTab);
+    if (info.offset.x > 100) {
+      // swipe right
+      if (currentTab?.id === 'general-tab') {
+        setActiveTab('about-tab');
+      } else {
+        const index = settingsTab.findIndex((tab) => tab.id === activeTab);
+        setActiveTab(settingsTab[index - 1].id);
+      }
+    }
+    if (info.offset.x < -100) {
+      // swipe left
+      if (currentTab?.id === 'about-tab') {
+        setActiveTab('general-tab');
+      } else {
+        const index = settingsTab.findIndex((tab) => tab.id === activeTab);
+        setActiveTab(settingsTab[index + 1].id);
+      }
+    }
+  };
+
   return (
     <motion.main
       key={location.key}
@@ -236,10 +259,14 @@ const Settings = () => {
               <AnimatePresence exitBeforeEnter>
                 <TabsContent value="general-tab" asChild>
                   <motion.div
-                    initial={{ y: 10, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: -10, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    drag={isMobile ? 'x' : false}
+                    dragConstraints={{ left: 0, right: 0 }}
+                    dragElastic={0.4}
+                    onDragEnd={handleDragEnd}
                   >
                     <Container
                       fluid
@@ -284,10 +311,14 @@ const Settings = () => {
                 </TabsContent>
                 <TabsContent value="appearance-tab" asChild>
                   <motion.div
-                    initial={{ y: 10, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: -10, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    drag={isMobile ? 'x' : false}
+                    dragConstraints={{ left: 0, right: 0 }}
+                    dragElastic={0.4}
+                    onDragEnd={handleDragEnd}
                   >
                     <Container
                       fluid
@@ -412,10 +443,14 @@ const Settings = () => {
                 </TabsContent>
                 <TabsContent value="account-tab" asChild>
                   <motion.div
-                    initial={{ y: 10, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: -10, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    drag={isMobile ? 'x' : false}
+                    dragConstraints={{ left: 0, right: 0 }}
+                    dragElastic={0.4}
+                    onDragEnd={handleDragEnd}
                   >
                     <Container
                       fluid
@@ -430,10 +465,14 @@ const Settings = () => {
                 </TabsContent>
                 <TabsContent value="player-tab" asChild>
                   <motion.div
-                    initial={{ y: 10, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: -10, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    drag={isMobile ? 'x' : false}
+                    dragConstraints={{ left: 0, right: 0 }}
+                    dragElastic={0.4}
+                    onDragEnd={handleDragEnd}
                   >
                     <Container
                       fluid
@@ -729,10 +768,14 @@ const Settings = () => {
                 </TabsContent>
                 <TabsContent value="about-tab" asChild>
                   <motion.div
-                    initial={{ y: 10, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: -10, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    drag={isMobile ? 'x' : false}
+                    dragConstraints={{ left: 0, right: 0 }}
+                    dragElastic={0.4}
+                    onDragEnd={handleDragEnd}
                   >
                     <Container
                       fluid
