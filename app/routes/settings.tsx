@@ -206,17 +206,17 @@ const Settings = () => {
                       '&[data-state="active"]': {
                         [`& ${Underline}`]: {
                           height: 4,
-                          width: '60%',
+                          width: '50%',
                           bottom: 0,
-                          right: 'unset',
+                          left: 'unset',
                         },
                       },
                       '&[data-orientation="vertical"]': {
                         '&[data-state="active"]': {
                           [`& ${Underline}`]: {
                             width: 4,
-                            height: '60%',
-                            right: 0,
+                            height: '50%',
+                            left: 0,
                             bottom: 'unset',
                           },
                         },

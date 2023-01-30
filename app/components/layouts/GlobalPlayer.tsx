@@ -889,14 +889,17 @@ const GlobalPlayer = () => {
                       //   display: isMobile && 'none !important',
                       // },
                       '&.art-control-topControlButtons': {
+                        opacity: '1 !important',
+                        display: isPlayerFullScreen ? 'block' : 'none',
                         '&::before': {
+                          display: isPlayerFullScreen ? 'block' : 'none',
                           content: '',
                           position: 'absolute',
                           top: 0,
                           left: 0,
                           width: '100%',
                           height: '100px',
-                          backgroundImage: 'linear-gradient(#000,#00000099,#0000)',
+                          backgroundImage: 'linear-gradient(#000,#0006,#0000)',
                           backgroundPosition: 'top',
                           backgroundRepeat: 'repeat-x',
                         },
