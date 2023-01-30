@@ -563,7 +563,10 @@ const Settings = () => {
                               padding: '$sm',
                             }}
                           >
-                            <H6>{t('pic-in-pic')}</H6>
+                            <Flex direction="column" justify="center" align="start">
+                              <H6>{t('pic-in-pic')}</H6>
+                              <H6 css={{ color: '$accents8' }}>{t('pic-in-pic-subtitle')}</H6>
+                            </Flex>
                             <Switch
                               checked={isPicInPic}
                               onChange={(e) => setIsPicInPic(e.target.checked)}
@@ -581,7 +584,10 @@ const Settings = () => {
                               padding: '$sm',
                             }}
                           >
-                            <H6>{t('muted')}</H6>
+                            <Flex direction="column" justify="center" align="start">
+                              <H6>{t('muted')}</H6>
+                              <H6 css={{ color: '$accents8' }}>{t('muted-subtitle')}</H6>
+                            </Flex>
                             <Switch
                               checked={isMuted}
                               onChange={(e) => setIsMuted(e.target.checked)}
@@ -599,7 +605,10 @@ const Settings = () => {
                               padding: '$sm',
                             }}
                           >
-                            <H6>{t('autoplay')}</H6>
+                            <Flex direction="column" justify="center" align="start">
+                              <H6>{t('autoplay')}</H6>
+                              <H6 css={{ color: '$accents8' }}>{t('autoplay-subtitle')}</H6>
+                            </Flex>
                             <Switch
                               checked={isAutoPlay}
                               onChange={(e) => setIsAutoPlay(e.target.checked)}
@@ -617,7 +626,10 @@ const Settings = () => {
                               padding: '$sm',
                             }}
                           >
-                            <H6>{t('loop')}</H6>
+                            <Flex direction="column" justify="center" align="start">
+                              <H6>{t('loop')}</H6>
+                              <H6 css={{ color: '$accents8' }}>{t('loop-subtitle')}</H6>
+                            </Flex>
                             <Switch
                               checked={isLoop}
                               onChange={(e) => setIsLoop(e.target.checked)}
@@ -889,7 +901,10 @@ const Settings = () => {
                               padding: '$sm',
                             }}
                           >
-                            <H6>{t('auto-size')}</H6>
+                            <Flex direction="column" justify="center" align="start">
+                              <H6>{t('auto-size')}</H6>
+                              <H6 css={{ color: '$accents8' }}>{t('auto-size-subtitle')}</H6>
+                            </Flex>
                             <Switch
                               checked={isAutoSize}
                               onChange={(e) => setIsAutoSize(e.target.checked)}
@@ -907,7 +922,10 @@ const Settings = () => {
                               padding: '$sm',
                             }}
                           >
-                            <H6>{t('auto-mini')}</H6>
+                            <Flex direction="column" justify="center" align="start">
+                              <H6>{t('auto-mini')}</H6>
+                              <H6 css={{ color: '$accents8' }}>{t('auto-mini-subtitle')}</H6>
+                            </Flex>
                             <Switch
                               checked={isAutoMini}
                               onChange={(e) => setIsAutoMini(e.target.checked)}
@@ -925,7 +943,10 @@ const Settings = () => {
                               padding: '$sm',
                             }}
                           >
-                            <H6>{t('screenshot')}</H6>
+                            <Flex direction="column" justify="center" align="start">
+                              <H6>{t('screenshot')}</H6>
+                              <H6 css={{ color: '$accents8' }}>{t('screenshot-subtitle')}</H6>
+                            </Flex>
                             <Switch
                               checked={isScreenshot}
                               onChange={(e) => setIsScreenshot(e.target.checked)}
@@ -943,7 +964,10 @@ const Settings = () => {
                               padding: '$sm',
                             }}
                           >
-                            <H6>{t('mini-progressbar')}</H6>
+                            <Flex direction="column" justify="center" align="start">
+                              <H6>{t('mini-progressbar')}</H6>
+                              <H6 css={{ color: '$accents8' }}>{t('mini-progressbar-subtitle')}</H6>
+                            </Flex>
                             <Switch
                               checked={isMiniProgressbar}
                               onChange={(e) => setIsMiniProgressbar(e.target.checked)}
@@ -961,7 +985,10 @@ const Settings = () => {
                               padding: '$sm',
                             }}
                           >
-                            <H6>{t('auto-playback')}</H6>
+                            <Flex direction="column" justify="center" align="start">
+                              <H6>{t('auto-playback')}</H6>
+                              <H6 css={{ color: '$accents8' }}>{t('auto-playback-subtitle')}</H6>
+                            </Flex>
                             <Switch
                               checked={isAutoPlayback}
                               onChange={(e) => setIsAutoPlayback(e.target.checked)}
@@ -979,7 +1006,12 @@ const Settings = () => {
                               padding: '$sm',
                             }}
                           >
-                            <H6>{t('auto-play-next-episode')}</H6>
+                            <Flex direction="column" justify="center" align="start">
+                              <H6>{t('auto-play-next-episode')}</H6>
+                              <H6 css={{ color: '$accents8' }}>
+                                {t('auto-play-next-episode-subtitle')}
+                              </H6>
+                            </Flex>
                             <Switch
                               checked={isAutoPlayNextEpisode}
                               onChange={(e) => setIsAutoPlayNextEpisode(e.target.checked)}
@@ -997,7 +1029,10 @@ const Settings = () => {
                               padding: '$sm',
                             }}
                           >
-                            <H6>{t('auto-skip-op-ed')}</H6>
+                            <Flex direction="column" justify="center" align="start">
+                              <H6>{t('auto-skip-op-ed')}</H6>
+                              <H6 css={{ color: '$accents8' }}>{t('auto-skip-op-ed-subtitle')}</H6>
+                            </Flex>
                             <Switch
                               checked={isAutoSkipOpEd}
                               onChange={(e) => setIsAutoSkipOpEd(e.target.checked)}
@@ -1023,7 +1058,10 @@ const Settings = () => {
                               padding: '$sm',
                             }}
                           >
-                            <H6>{t('swipe-to-seek')}</H6>
+                            <Flex direction="column" justify="center" align="start">
+                              <H6>{t('swipe-to-seek')}</H6>
+                              <H6 css={{ color: '$accents8' }}>{t('swipe-to-seek-subtitle')}</H6>
+                            </Flex>
                             <Switch
                               checked={isFastForward}
                               onChange={(e) => setIsFastForward(e.target.checked)}
@@ -1041,7 +1079,12 @@ const Settings = () => {
                               padding: '$sm',
                             }}
                           >
-                            <H6>{t('swipe-to-fullscreen')}</H6>
+                            <Flex direction="column" justify="center" align="start">
+                              <H6>{t('swipe-to-fullscreen')}</H6>
+                              <H6 css={{ color: '$accents8' }}>
+                                {t('swipe-to-fullscreen-subtitle')}
+                              </H6>
+                            </Flex>
                             <Switch
                               checked={isSwipeFullscreen}
                               onChange={(e) => setIsSwipeFullscreen(e.target.checked)}
