@@ -42,10 +42,10 @@ const ResizablePanel = ({
   const screen = useScreen();
   const panelHeight = useMemo(() => {
     if (height && screen?.height) {
-      if (height > 400) {
-        return screen?.height > 400 ? 400 : screen.height - 24;
+      if (height + 10 > 400) {
+        return screen?.height > 400 ? 386 : screen.height - 36;
       }
-      return height > screen?.height ? screen.height - 24 : height;
+      return height + 10 > screen?.height ? screen.height - 36 : height;
     }
     return 'auto';
   }, [screen?.height, height]);

@@ -2,6 +2,7 @@
 import React from 'react';
 import { styled, keyframes, VariantProps, CSS, css, Button } from '@nextui-org/react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
+import { motion, PanInfo } from 'framer-motion';
 
 import Close from '~/assets/icons/CloseIcon';
 
@@ -127,25 +128,74 @@ const StyledCloseButton = styled(DialogPrimitive.Close, {
   right: '$2',
 });
 
+const Handle = styled('div', {
+  width: '60px',
+  height: '6px',
+  backgroundColor: '$border',
+  borderRadius: '$sm',
+  margin: '0.75rem auto 0.5rem !important',
+});
+
 type SheetContentVariants = VariantProps<typeof StyledContent>;
 type DialogContentPrimitiveProps = React.ComponentProps<typeof DialogPrimitive.Content>;
 type SheetContentProps = DialogContentPrimitiveProps &
-  SheetContentVariants & { css?: CSS; hideCloseButton?: boolean; container?: HTMLElement };
+  SheetContentVariants & {
+    css?: CSS;
+    hideCloseButton?: boolean;
+    swipeDownToClose?: boolean;
+    open?: boolean;
+    onOpenChange?: () => void;
+    container?: HTMLElement;
+  };
 
 const SheetContent = React.forwardRef<React.ElementRef<typeof StyledContent>, SheetContentProps>(
-  ({ children, hideCloseButton, container = document.body, ...props }, forwardedRef) => (
-    <DialogPrimitive.Portal container={container}>
-      <StyledOverlay />
-      <StyledContent {...props} ref={forwardedRef}>
-        {children}
-        {!hideCloseButton ? (
-          <StyledCloseButton asChild>
-            <Button auto light icon={<Close />} />
-          </StyledCloseButton>
-        ) : null}
-      </StyledContent>
-    </DialogPrimitive.Portal>
-  ),
+  (
+    {
+      children,
+      hideCloseButton,
+      swipeDownToClose,
+      open,
+      onOpenChange,
+      container = document.body,
+      ...props
+    },
+    forwardedRef,
+  ) => {
+    const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+      if (info.offset.y > 150 && open && onOpenChange && swipeDownToClose) {
+        onOpenChange();
+      }
+    };
+    return (
+      <DialogPrimitive.Portal container={container}>
+        <StyledOverlay />
+        <StyledContent {...props} ref={forwardedRef} asChild>
+          <motion.div
+            drag={swipeDownToClose ? 'y' : false}
+            dragConstraints={{ top: 0, bottom: 0 }}
+            dragElastic={{ top: 0, bottom: 0.8 }}
+            dragMomentum={false}
+            onDragEnd={handleDragEnd}
+          >
+            {swipeDownToClose ? <Handle /> : null}
+            {!hideCloseButton ? (
+              <StyledCloseButton asChild>
+                <Button auto light icon={<Close />} />
+              </StyledCloseButton>
+            ) : null}
+            <motion.div
+              drag="y"
+              dragConstraints={{ top: 0, bottom: 0 }}
+              dragElastic={0}
+              dragMomentum={false}
+            >
+              {children}
+            </motion.div>
+          </motion.div>
+        </StyledContent>
+      </DialogPrimitive.Portal>
+    );
+  },
 );
 
 SheetContent.displayName = 'SheetContent';

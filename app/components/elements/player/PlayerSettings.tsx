@@ -1285,13 +1285,16 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [dropdownLevelKey],
   );
+
+  const handleOpenChange = (open: boolean) => {
+    console.log('test');
+    setSettingsOpen(open);
+    if (!open) setDropdownLevelKey('general');
+  };
+
   if (isMobileOnly) {
     return (
-      <Sheet
-        onOpenChange={(open) => {
-          if (!open) setDropdownLevelKey('general');
-        }}
-      >
+      <Sheet open={isSettingsOpen} onOpenChange={(open) => handleOpenChange(open)}>
         <SheetTrigger asChild>
           <Button
             auto
@@ -1304,6 +1307,9 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
         <SheetContent
           side="bottom"
           hideCloseButton
+          swipeDownToClose
+          open={isSettingsOpen}
+          onOpenChange={() => handleOpenChange(!isSettingsOpen)}
           // portals overlay and content parts into the player when fullscreen is enabled
           container={isPlayerFullScreen ? artplayer?.template?.$player : document.body}
           css={{ padding: '$2 !important' }}
@@ -1436,13 +1442,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
     );
   }
   return (
-    <Popover
-      open={isSettingsOpen}
-      onOpenChange={(open) => {
-        setSettingsOpen(open);
-        if (!open) setDropdownLevelKey('general');
-      }}
-    >
+    <Popover open={isSettingsOpen} onOpenChange={(open) => handleOpenChange(open)}>
       <PopoverTrigger asChild>
         <Button
           auto
