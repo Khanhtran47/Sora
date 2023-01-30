@@ -131,6 +131,7 @@ const GlobalPlayer = () => {
     currentSubtitleBackgroundOpacity,
     currentSubtitleWindowColor,
     currentSubtitleWindowOpacity,
+    currentSubtitleTextEffects,
     playNextEpisode,
     isAutoSize,
     isPicInPic,
@@ -241,6 +242,22 @@ const GlobalPlayer = () => {
         break;
     }
   }, [currentSubtitleWindowColor, currentSubtitleWindowOpacity]);
+  const subtitleTextEffects = useMemo(() => {
+    switch (currentSubtitleTextEffects) {
+      case 'None':
+        return 'none';
+      case 'Drop Shadow':
+        return 'rgb(34 34 34) 2.2px 2.2px 3.3px, rgb(34 34 34) 2.2px 2.2px 4.4px, rgb(34 34 34) 2.2px 2.2px 5.5px';
+      case 'Raised':
+        return 'rgb(34 34 34) 1.1px 1.1px, rgb(34 34 34) 2.1px 2.1px, rgb(34 34 34) 3.1px 3.1px';
+      case 'Depressed':
+        return 'rgb(204 204 204) 1.1px 1.1px, rgb(34 34 34) -1.1px -1.1px';
+      case 'Outline':
+        return 'rgb(34 34 34) 0px 0px 2.2px, rgb(34 34 34) 0px 0px 2.2px, rgb(34 34 34) 0px 0px 2.2px, rgb(34 34 34) 0px 0px 2.2px, rgb(34 34 34) 0px 0px 2.2px';
+      default:
+        break;
+    }
+  }, [currentSubtitleTextEffects]);
 
   const closeSearchModalHandler = () => {
     setSearchModalVisible(false);
@@ -951,6 +968,7 @@ const GlobalPlayer = () => {
                             : currentSubtitleFontSize === '300%'
                             ? `${height * 0.05 * 3}px`
                             : `${height * 0.05 * 4}px`,
+                        textShadow: subtitleTextEffects,
                         '& p': {
                           p: '$2',
                           backgroundColor: subtitleBackgroundColor,

@@ -119,6 +119,8 @@ const listSubtitleWindowColor = [
 
 const listSubtitleWindowOpacity = ['0%', '25%', '50%', '75%', '100%'];
 
+const listSubtitleTextEffects = ['None', 'Drop Shadow', 'Raised', 'Depressed', 'Outline'];
+
 export {
   settingsTab,
   listThemes,
@@ -128,4 +130,5 @@ export {
   listSubtitleBackgroundOpacity,
   listSubtitleWindowColor,
   listSubtitleWindowOpacity,
+  listSubtitleTextEffects,
 };

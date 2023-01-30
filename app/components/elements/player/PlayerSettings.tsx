@@ -79,6 +79,8 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
     setCurrentSubtitleWindowColor,
     currentSubtitleWindowOpacity,
     setCurrentSubtitleWindowOpacity,
+    currentSubtitleTextEffects,
+    setCurrentSubtitleTextEffects,
   } = useSoraSettings();
 
   const dropdownLevel = useMemo(
@@ -478,6 +480,14 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
               showIcon: true,
               action: () => setDropdownLevelKey('subtitle-window-opacity'),
               currentValue: currentSubtitleWindowOpacity,
+            },
+            {
+              id: 'subtitle-text-effects',
+              title: 'Text Effects',
+              description: 'Change the subtitle text effects',
+              showIcon: true,
+              action: () => setDropdownLevelKey('subtitle-text-effects'),
+              currentValue: currentSubtitleTextEffects,
             },
             {
               id: 'subtitle-reset',
@@ -1266,6 +1276,66 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
             },
           ],
         },
+        {
+          id: 'subtitle-text-effects',
+          key: 'subtitle-text-effects',
+          showTitle: true,
+          showBackButton: true,
+          backButtonAction: () => setDropdownLevelKey('subtitle-settings'),
+          title: 'Text Effects',
+          listItems: [
+            {
+              id: 'none',
+              title: 'None',
+              showIcon: false,
+              action: () => {
+                setCurrentSubtitleTextEffects('None');
+                setDropdownLevelKey('subtitle-settings');
+              },
+              isCurrent: currentSubtitleTextEffects === 'None',
+            },
+            {
+              id: 'drop-shadow',
+              title: 'Drop Shadow',
+              showIcon: false,
+              action: () => {
+                setCurrentSubtitleTextEffects('Drop Shadow');
+                setDropdownLevelKey('subtitle-settings');
+              },
+              isCurrent: currentSubtitleTextEffects === 'Drop Shadow',
+            },
+            {
+              id: 'raised',
+              title: 'Raised',
+              showIcon: false,
+              action: () => {
+                setCurrentSubtitleTextEffects('Raised');
+                setDropdownLevelKey('subtitle-settings');
+              },
+              isCurrent: currentSubtitleTextEffects === 'Raised',
+            },
+            {
+              id: 'depressed',
+              title: 'Depressed',
+              showIcon: false,
+              action: () => {
+                setCurrentSubtitleTextEffects('Depressed');
+                setDropdownLevelKey('subtitle-settings');
+              },
+              isCurrent: currentSubtitleTextEffects === 'Depressed',
+            },
+            {
+              id: 'outline',
+              title: 'Outline',
+              showIcon: false,
+              action: () => {
+                setCurrentSubtitleTextEffects('Outline');
+                setDropdownLevelKey('subtitle-settings');
+              },
+              isCurrent: currentSubtitleTextEffects === 'Outline',
+            },
+          ],
+        },
       ];
       if (qualitySelector) {
         level.push({
@@ -1308,6 +1378,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
       currentSubtitleBackgroundOpacity,
       currentSubtitleWindowColor,
       currentSubtitleWindowOpacity,
+      currentSubtitleTextEffects,
     ],
   );
   const currentDropdownLevel = useMemo(

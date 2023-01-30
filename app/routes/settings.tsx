@@ -34,6 +34,7 @@ import {
   listSubtitleBackgroundOpacity,
   listSubtitleWindowColor,
   listSubtitleWindowOpacity,
+  listSubtitleTextEffects,
 } from '~/constants/settings';
 import languages from '~/constants/languages';
 
@@ -128,6 +129,8 @@ const Settings = () => {
     setCurrentSubtitleWindowColor,
     currentSubtitleWindowOpacity,
     setCurrentSubtitleWindowOpacity,
+    currentSubtitleTextEffects,
+    setCurrentSubtitleTextEffects,
     // autoShowSubtitle,
     // setAutoShowSubtitle,
     // playNextEpisode,
@@ -186,6 +189,9 @@ const Settings = () => {
   const [selectedSubtitleWindowOpacity, setSelectedSubtitleWindowOpacity] = useState(
     new Set([currentSubtitleWindowOpacity]),
   );
+  const [selectedSubtitleTextEffects, setSelectedSubtitleTextEffects] = useState(
+    new Set([currentSubtitleTextEffects]),
+  );
 
   const selectedLangValue = useMemo(
     () => Array.from(selectedLang).join(', ').replaceAll('_', ' '),
@@ -214,6 +220,10 @@ const Settings = () => {
   const selectedSubtitleWindowOpacityValue = useMemo(
     () => Array.from(selectedSubtitleWindowOpacity).join(', '),
     [selectedSubtitleWindowOpacity],
+  );
+  const selectedSubtitleTextEffectsValue = useMemo(
+    () => Array.from(selectedSubtitleTextEffects).join(', '),
+    [selectedSubtitleTextEffects],
   );
 
   const handleDragEnd = (event: MouseEvent | PointerEvent | TouchEvent, info: PanInfo) => {
@@ -542,12 +552,77 @@ const Settings = () => {
                             borderRadius: '$xs !important',
                           }}
                         >
-                          <H6>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                            veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                            commodo consequat.
-                          </H6>
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="space-x-2"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
+                          >
+                            <H6>{t('pic-in-pic')}</H6>
+                            <Switch
+                              checked={isPicInPic}
+                              onChange={(e) => setIsPicInPic(e.target.checked)}
+                            />
+                          </Flex>
+                          <Spacer y={0.25} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="space-x-2"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
+                          >
+                            <H6>{t('muted')}</H6>
+                            <Switch
+                              checked={isMuted}
+                              onChange={(e) => setIsMuted(e.target.checked)}
+                            />
+                          </Flex>
+                          <Spacer y={0.25} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="space-x-2"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
+                          >
+                            <H6>{t('autoplay')}</H6>
+                            <Switch
+                              checked={isAutoPlay}
+                              onChange={(e) => setIsAutoPlay(e.target.checked)}
+                            />
+                          </Flex>
+                          <Spacer y={0.25} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="space-x-2"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
+                          >
+                            <H6>{t('loop')}</H6>
+                            <Switch
+                              checked={isLoop}
+                              onChange={(e) => setIsLoop(e.target.checked)}
+                            />
+                          </Flex>
                         </Collapse>
                         <Collapse
                           title={t('subtitles')}
@@ -760,6 +835,40 @@ const Settings = () => {
                               </Dropdown.Menu>
                             </Dropdown>
                           </Flex>
+                          <Spacer y={0.25} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
+                          >
+                            <H6>{t('subtitle-text-effects')}</H6>
+                            <Dropdown isBordered>
+                              <Dropdown.Button color="primary">
+                                {selectedSubtitleTextEffectsValue}
+                              </Dropdown.Button>
+                              <Dropdown.Menu
+                                aria-label="Select subtitle text effects"
+                                color="primary"
+                                selectionMode="single"
+                                disallowEmptySelection
+                                selectedKeys={selectedSubtitleTextEffects}
+                                onSelectionChange={(keys: any) => {
+                                  const effect = Array.from(keys).join(', ');
+                                  setSelectedSubtitleTextEffects(keys);
+                                  setCurrentSubtitleTextEffects(effect);
+                                }}
+                              >
+                                {listSubtitleTextEffects.map((effect) => (
+                                  <Dropdown.Item key={effect}>{t(effect)}</Dropdown.Item>
+                                ))}
+                              </Dropdown.Menu>
+                            </Dropdown>
+                          </Flex>
                         </Collapse>
                         <Collapse
                           title={t('player-features')}
@@ -798,82 +907,10 @@ const Settings = () => {
                               padding: '$sm',
                             }}
                           >
-                            <H6>{t('pic-in-pic')}</H6>
-                            <Switch
-                              checked={isPicInPic}
-                              onChange={(e) => setIsPicInPic(e.target.checked)}
-                            />
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="space-x-2"
-                            css={{
-                              backgroundColor: '$background',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <H6>{t('muted')}</H6>
-                            <Switch
-                              checked={isMuted}
-                              onChange={(e) => setIsMuted(e.target.checked)}
-                            />
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="space-x-2"
-                            css={{
-                              backgroundColor: '$background',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <H6>{t('autoplay')}</H6>
-                            <Switch
-                              checked={isAutoPlay}
-                              onChange={(e) => setIsAutoPlay(e.target.checked)}
-                            />
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="space-x-2"
-                            css={{
-                              backgroundColor: '$background',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
                             <H6>{t('auto-mini')}</H6>
                             <Switch
                               checked={isAutoMini}
                               onChange={(e) => setIsAutoMini(e.target.checked)}
-                            />
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="space-x-2"
-                            css={{
-                              backgroundColor: '$background',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <H6>{t('loop')}</H6>
-                            <Switch
-                              checked={isLoop}
-                              onChange={(e) => setIsLoop(e.target.checked)}
                             />
                           </Flex>
                           <Spacer y={0.25} />

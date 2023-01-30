@@ -119,6 +119,10 @@ function useSoraSettings() {
     'sora-settings_subtitle_window-opacity',
     '0%',
   );
+  const [currentSubtitleTextEffects, setCurrentSubtitleTextEffects] = useLocalStorage(
+    'sora-settings_subtitle_text-effect',
+    'None',
+  );
   const [autoShowSubtitle, setAutoShowSubtitle] = useLocalStorage(
     'sora-settings_subtitle_auto-show',
     false,
@@ -217,6 +221,8 @@ function useSoraSettings() {
     setIsFastForward,
     isSwipeFullscreen,
     setIsSwipeFullscreen,
+    currentSubtitleTextEffects,
+    setCurrentSubtitleTextEffects,
   };
 }
 
