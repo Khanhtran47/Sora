@@ -1,4 +1,4 @@
-export const settingsTab = [
+const settingsTab = [
   {
     id: 'general-tab',
     title: 'general',
@@ -26,7 +26,7 @@ export const settingsTab = [
   },
 ];
 
-export const listThemes = [
+const listThemes = [
   {
     id: 'light',
     title: 'Light',
@@ -76,3 +76,56 @@ export const listThemes = [
     colorHover: '#1C70B2',
   },
 ];
+
+const listSubtitleFontColor = [
+  'White',
+  'Blue',
+  'Purple',
+  'Green',
+  'Yellow',
+  'Red',
+  'Cyan',
+  'Pink',
+  'Black',
+];
+
+const listSubtitleFontSize = ['50%', '75%', '100%', '125%', '150%', '175%', '200%', '300%'];
+
+const listSubtitleBackgroundColor = [
+  'White',
+  'Blue',
+  'Purple',
+  'Green',
+  'Yellow',
+  'Red',
+  'Cyan',
+  'Pink',
+  'Black',
+];
+
+const listSubtitleBackgroundOpacity = ['0%', '25%', '50%', '75%', '100%'];
+
+const listSubtitleWindowColor = [
+  'White',
+  'Blue',
+  'Purple',
+  'Green',
+  'Yellow',
+  'Red',
+  'Cyan',
+  'Pink',
+  'Black',
+];
+
+const listSubtitleWindowOpacity = ['0%', '25%', '50%', '75%', '100%'];
+
+export {
+  settingsTab,
+  listThemes,
+  listSubtitleFontColor,
+  listSubtitleFontSize,
+  listSubtitleBackgroundColor,
+  listSubtitleBackgroundOpacity,
+  listSubtitleWindowColor,
+  listSubtitleWindowOpacity,
+};

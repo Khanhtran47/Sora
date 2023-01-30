@@ -165,7 +165,7 @@ function useSoraSettings() {
   );
   const [isSwipeFullscreen, setIsSwipeFullscreen] = useLocalStorage(
     'sora-settings_player-gestures_swipe-fullscreen',
-    true,
+    false,
   );
 
   return {

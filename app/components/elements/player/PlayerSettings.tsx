@@ -855,6 +855,21 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
               isCurrent: currentSubtitleFontSize === '100%',
             },
             {
+              id: '125%',
+              title: '125%',
+              showIcon: false,
+              action: () => {
+                if (artplayer) {
+                  artplayer.subtitle.style({
+                    fontSize: `${artplayer.height * 0.05 * 1.25}px`,
+                  });
+                  setCurrentSubtitleFontSize('125%');
+                  setDropdownLevelKey('subtitle-settings');
+                }
+              },
+              isCurrent: currentSubtitleFontSize === '125%',
+            },
+            {
               id: '150%',
               title: '150%',
               showIcon: false,
@@ -868,6 +883,21 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                 }
               },
               isCurrent: currentSubtitleFontSize === '150%',
+            },
+            {
+              id: '175%',
+              title: '175%',
+              showIcon: false,
+              action: () => {
+                if (artplayer) {
+                  artplayer.subtitle.style({
+                    fontSize: `${artplayer.height * 0.05 * 1.75}px`,
+                  });
+                  setCurrentSubtitleFontSize('175%');
+                  setDropdownLevelKey('subtitle-settings');
+                }
+              },
+              isCurrent: currentSubtitleFontSize === '175%',
             },
             {
               id: '200%',

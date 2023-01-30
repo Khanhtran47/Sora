@@ -1067,7 +1067,7 @@ const GlobalPlayer = () => {
                     >
                       Watch Trailer
                     </Button>
-                    <Tooltip content="In development">
+                    {/* <Tooltip content="In development">
                       <Button
                         size="sm"
                         color="primary"
@@ -1077,7 +1077,7 @@ const GlobalPlayer = () => {
                       >
                         Add to My List
                       </Button>
-                    </Tooltip>
+                    </Tooltip> */}
                   </Flex>
                 ) : null}
               </>

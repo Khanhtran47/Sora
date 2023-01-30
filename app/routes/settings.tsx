@@ -25,7 +25,16 @@ import { isMobile } from 'react-device-detect';
 import useMediaQuery from '~/hooks/useMediaQuery';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 
-import { settingsTab, listThemes } from '~/constants/settings';
+import {
+  settingsTab,
+  listThemes,
+  listSubtitleFontColor,
+  listSubtitleFontSize,
+  listSubtitleBackgroundColor,
+  listSubtitleBackgroundOpacity,
+  listSubtitleWindowColor,
+  listSubtitleWindowOpacity,
+} from '~/constants/settings';
 import languages from '~/constants/languages';
 
 import AboutLogo from '~/components/elements/NavLink';
@@ -105,22 +114,20 @@ const Settings = () => {
   const { theme, setTheme } = useTheme();
   const isXs = useMediaQuery('(max-width: 450px)');
   const isSm = useMediaQuery('(max-width: 650px)');
-  const [activeTab, setActiveTab] = useState('general-tab');
-  const [selectedLang, setSelectedLang] = useState(new Set([locale]));
 
   const {
-    // currentSubtitleFontColor,
-    // setCurrentSubtitleFontColor,
-    // currentSubtitleFontSize,
-    // setCurrentSubtitleFontSize,
-    // currentSubtitleBackgroundColor,
-    // setCurrentSubtitleBackgroundColor,
-    // currentSubtitleBackgroundOpacity,
-    // setCurrentSubtitleBackgroundOpacity,
-    // currentSubtitleWindowColor,
-    // setCurrentSubtitleWindowColor,
-    // currentSubtitleWindowOpacity,
-    // setCurrentSubtitleWindowOpacity,
+    currentSubtitleFontColor,
+    setCurrentSubtitleFontColor,
+    currentSubtitleFontSize,
+    setCurrentSubtitleFontSize,
+    currentSubtitleBackgroundColor,
+    setCurrentSubtitleBackgroundColor,
+    currentSubtitleBackgroundOpacity,
+    setCurrentSubtitleBackgroundOpacity,
+    currentSubtitleWindowColor,
+    setCurrentSubtitleWindowColor,
+    currentSubtitleWindowOpacity,
+    setCurrentSubtitleWindowOpacity,
     // autoShowSubtitle,
     // setAutoShowSubtitle,
     // playNextEpisode,
@@ -159,9 +166,54 @@ const Settings = () => {
     setIsSwipeFullscreen,
   } = useSoraSettings();
 
+  const [activeTab, setActiveTab] = useState('general-tab');
+  const [selectedLang, setSelectedLang] = useState(new Set([locale]));
+  const [selectedSubtitleFontColor, setSelectedSubtitleFontColor] = useState(
+    new Set([currentSubtitleFontColor]),
+  );
+  const [selectedSubtitleFontSize, setSelectedSubtitleFontSize] = useState(
+    new Set([currentSubtitleFontSize]),
+  );
+  const [selectedSubtitleBackgroundColor, setSelectedSubtitleBackgroundColor] = useState(
+    new Set([currentSubtitleBackgroundColor]),
+  );
+  const [selectedSubtitleBackgroundOpacity, setSelectedSubtitleBackgroundOpacity] = useState(
+    new Set([currentSubtitleBackgroundOpacity]),
+  );
+  const [selectedSubtitleWindowColor, setSelectedSubtitleWindowColor] = useState(
+    new Set([currentSubtitleWindowColor]),
+  );
+  const [selectedSubtitleWindowOpacity, setSelectedSubtitleWindowOpacity] = useState(
+    new Set([currentSubtitleWindowOpacity]),
+  );
+
   const selectedLangValue = useMemo(
     () => Array.from(selectedLang).join(', ').replaceAll('_', ' '),
     [selectedLang],
+  );
+  const selectedSubtitleFontColorValue = useMemo(
+    () => Array.from(selectedSubtitleFontColor).join(', '),
+    [selectedSubtitleFontColor],
+  );
+  const selectedSubtitleFontSizeValue = useMemo(
+    () => Array.from(selectedSubtitleFontSize).join(', '),
+    [selectedSubtitleFontSize],
+  );
+  const selectedSubtitleBackgroundColorValue = useMemo(
+    () => Array.from(selectedSubtitleBackgroundColor).join(', '),
+    [selectedSubtitleBackgroundColor],
+  );
+  const selectedSubtitleBackgroundOpacityValue = useMemo(
+    () => Array.from(selectedSubtitleBackgroundOpacity).join(', '),
+    [selectedSubtitleBackgroundOpacity],
+  );
+  const selectedSubtitleWindowColorValue = useMemo(
+    () => Array.from(selectedSubtitleWindowColor).join(', '),
+    [selectedSubtitleWindowColor],
+  );
+  const selectedSubtitleWindowOpacityValue = useMemo(
+    () => Array.from(selectedSubtitleWindowOpacity).join(', '),
+    [selectedSubtitleWindowOpacity],
   );
 
   const handleDragEnd = (event: MouseEvent | PointerEvent | TouchEvent, info: PanInfo) => {
@@ -505,12 +557,209 @@ const Settings = () => {
                             borderRadius: '$xs !important',
                           }}
                         >
-                          <H6>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                            veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                            commodo consequat.
-                          </H6>
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
+                          >
+                            <H6>{t('subtitle-font-color')}</H6>
+                            <Dropdown isBordered>
+                              <Dropdown.Button color="primary">
+                                {t(selectedSubtitleFontColorValue)}
+                              </Dropdown.Button>
+                              <Dropdown.Menu
+                                aria-label="Select subtitle font color"
+                                color="primary"
+                                selectionMode="single"
+                                disallowEmptySelection
+                                selectedKeys={selectedSubtitleFontColor}
+                                onSelectionChange={(keys: any) => {
+                                  const color = Array.from(keys).join(', ');
+                                  setSelectedSubtitleFontColor(keys);
+                                  setCurrentSubtitleFontColor(color);
+                                }}
+                              >
+                                {listSubtitleFontColor.map((color) => (
+                                  <Dropdown.Item key={color}>{t(color)}</Dropdown.Item>
+                                ))}
+                              </Dropdown.Menu>
+                            </Dropdown>
+                          </Flex>
+                          <Spacer y={0.25} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
+                          >
+                            <H6>{t('subtitle-font-size')}</H6>
+                            <Dropdown isBordered>
+                              <Dropdown.Button color="primary">
+                                {selectedSubtitleFontSizeValue}
+                              </Dropdown.Button>
+                              <Dropdown.Menu
+                                aria-label="Select subtitle font size"
+                                color="primary"
+                                selectionMode="single"
+                                disallowEmptySelection
+                                selectedKeys={selectedSubtitleFontSize}
+                                onSelectionChange={(keys: any) => {
+                                  const size = Array.from(keys).join(', ');
+                                  setSelectedSubtitleFontSize(keys);
+                                  setCurrentSubtitleFontSize(size);
+                                }}
+                              >
+                                {listSubtitleFontSize.map((size) => (
+                                  <Dropdown.Item key={size}>{size}</Dropdown.Item>
+                                ))}
+                              </Dropdown.Menu>
+                            </Dropdown>
+                          </Flex>
+                          <Spacer y={0.25} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
+                          >
+                            <H6>{t('subtitle-background-color')}</H6>
+                            <Dropdown isBordered>
+                              <Dropdown.Button color="primary">
+                                {t(selectedSubtitleBackgroundColorValue)}
+                              </Dropdown.Button>
+                              <Dropdown.Menu
+                                aria-label="Select subtitle background color"
+                                color="primary"
+                                selectionMode="single"
+                                disallowEmptySelection
+                                selectedKeys={selectedSubtitleBackgroundColor}
+                                onSelectionChange={(keys: any) => {
+                                  const color = Array.from(keys).join(', ');
+                                  setSelectedSubtitleBackgroundColor(keys);
+                                  setCurrentSubtitleBackgroundColor(color);
+                                }}
+                              >
+                                {listSubtitleBackgroundColor.map((color) => (
+                                  <Dropdown.Item key={color}>{t(color)}</Dropdown.Item>
+                                ))}
+                              </Dropdown.Menu>
+                            </Dropdown>
+                          </Flex>
+                          <Spacer y={0.25} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
+                          >
+                            <H6>{t('subtitle-background-opacity')}</H6>
+                            <Dropdown isBordered>
+                              <Dropdown.Button color="primary">
+                                {selectedSubtitleBackgroundOpacityValue}
+                              </Dropdown.Button>
+                              <Dropdown.Menu
+                                aria-label="Select subtitle background opacity"
+                                color="primary"
+                                selectionMode="single"
+                                disallowEmptySelection
+                                selectedKeys={selectedSubtitleBackgroundOpacity}
+                                onSelectionChange={(keys: any) => {
+                                  const opacity = Array.from(keys).join(', ');
+                                  setSelectedSubtitleBackgroundOpacity(keys);
+                                  setCurrentSubtitleBackgroundOpacity(opacity);
+                                }}
+                              >
+                                {listSubtitleBackgroundOpacity.map((opacity) => (
+                                  <Dropdown.Item key={opacity}>{opacity}</Dropdown.Item>
+                                ))}
+                              </Dropdown.Menu>
+                            </Dropdown>
+                          </Flex>
+                          <Spacer y={0.25} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
+                          >
+                            <H6>{t('subtitle-window-color')}</H6>
+                            <Dropdown isBordered>
+                              <Dropdown.Button color="primary">
+                                {t(selectedSubtitleWindowColorValue)}
+                              </Dropdown.Button>
+                              <Dropdown.Menu
+                                aria-label="Select subtitle window color"
+                                color="primary"
+                                selectionMode="single"
+                                disallowEmptySelection
+                                selectedKeys={selectedSubtitleWindowColor}
+                                onSelectionChange={(keys: any) => {
+                                  const color = Array.from(keys).join(', ');
+                                  setSelectedSubtitleWindowColor(keys);
+                                  setCurrentSubtitleWindowColor(color);
+                                }}
+                              >
+                                {listSubtitleWindowColor.map((color) => (
+                                  <Dropdown.Item key={color}>{t(color)}</Dropdown.Item>
+                                ))}
+                              </Dropdown.Menu>
+                            </Dropdown>
+                          </Flex>
+                          <Spacer y={0.25} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
+                          >
+                            <H6>{t('subtitle-window-opacity')}</H6>
+                            <Dropdown isBordered>
+                              <Dropdown.Button color="primary">
+                                {selectedSubtitleWindowOpacityValue}
+                              </Dropdown.Button>
+                              <Dropdown.Menu
+                                aria-label="Select subtitle window opacity"
+                                color="primary"
+                                selectionMode="single"
+                                disallowEmptySelection
+                                selectedKeys={selectedSubtitleWindowOpacity}
+                                onSelectionChange={(keys: any) => {
+                                  const opacity = Array.from(keys).join(', ');
+                                  setSelectedSubtitleWindowOpacity(keys);
+                                  setCurrentSubtitleWindowOpacity(opacity);
+                                }}
+                              >
+                                {listSubtitleWindowOpacity.map((opacity) => (
+                                  <Dropdown.Item key={opacity}>{t(opacity)}</Dropdown.Item>
+                                ))}
+                              </Dropdown.Menu>
+                            </Dropdown>
+                          </Flex>
                         </Collapse>
                         <Collapse
                           title={t('player-features')}
