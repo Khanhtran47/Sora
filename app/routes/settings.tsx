@@ -14,6 +14,7 @@ import {
   Tooltip,
   Badge,
   Loading,
+  Link,
 } from '@nextui-org/react';
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -48,6 +49,7 @@ import {
   TabsContent,
   Underline,
 } from '~/components/elements/tab/Tabs';
+import Balancer from '~/components/elements/shared/Balancer';
 
 import LogoFooter from '~/assets/images/logo_footer.png';
 import SettingsIcon from '~/assets/icons/SettingsIcon';
@@ -228,7 +230,7 @@ const Settings = () => {
 
   const handleDragEnd = (event: MouseEvent | PointerEvent | TouchEvent, info: PanInfo) => {
     const currentTab = settingsTab.find((tab) => tab.id === activeTab);
-    if (info.offset.x > 100) {
+    if (info.offset?.x > 100) {
       // swipe right
       if (currentTab?.id === 'general-tab') {
         setActiveTab('about-tab');
@@ -237,7 +239,7 @@ const Settings = () => {
         setActiveTab(settingsTab[index - 1].id);
       }
     }
-    if (info.offset.x < -100) {
+    if (info.offset?.x < -100 && info.offset?.y > -50) {
       // swipe left
       if (currentTab?.id === 'about-tab') {
         setActiveTab('general-tab');
@@ -329,13 +331,15 @@ const Settings = () => {
                     dragConstraints={{ left: 0, right: 0 }}
                     dragElastic={0.4}
                     onDragEnd={handleDragEnd}
+                    dragDirectionLock
+                    onDirectionLock={(axis) => console.log(axis)}
                   >
                     <Container
                       fluid
                       display="flex"
                       justify="flex-start"
                       direction="column"
-                      css={{ '@smMax': { px: '$sm' } }}
+                      css={{ padding: 0 }}
                     >
                       <Flex
                         direction="row"
@@ -387,7 +391,7 @@ const Settings = () => {
                       display="flex"
                       justify="flex-start"
                       direction="column"
-                      css={{ '@smMax': { px: '$sm' } }}
+                      css={{ padding: 0 }}
                     >
                       <Collapse.Group splitted accordion={false}>
                         <Collapse
@@ -519,7 +523,7 @@ const Settings = () => {
                       display="flex"
                       justify="flex-start"
                       direction="column"
-                      css={{ '@smMax': { px: '$sm' } }}
+                      css={{ padding: 0 }}
                     >
                       <H6>Panel 3</H6>
                     </Container>
@@ -541,7 +545,7 @@ const Settings = () => {
                       display="flex"
                       justify="flex-start"
                       direction="column"
-                      css={{ '@smMax': { px: '$sm' } }}
+                      css={{ padding: 0 }}
                     >
                       <Collapse.Group splitted accordion={false}>
                         <Collapse
@@ -645,9 +649,9 @@ const Settings = () => {
                           }}
                         >
                           <Flex
-                            direction="row"
+                            direction={isXs ? 'column' : 'row'}
                             justify="between"
-                            align="center"
+                            align={isXs ? 'start' : 'center'}
                             css={{
                               backgroundColor: '$background',
                               borderRadius: '$xs',
@@ -679,9 +683,9 @@ const Settings = () => {
                           </Flex>
                           <Spacer y={0.25} />
                           <Flex
-                            direction="row"
+                            direction={isXs ? 'column' : 'row'}
                             justify="between"
-                            align="center"
+                            align={isXs ? 'start' : 'center'}
                             css={{
                               backgroundColor: '$background',
                               borderRadius: '$xs',
@@ -713,9 +717,9 @@ const Settings = () => {
                           </Flex>
                           <Spacer y={0.25} />
                           <Flex
-                            direction="row"
+                            direction={isXs ? 'column' : 'row'}
                             justify="between"
-                            align="center"
+                            align={isXs ? 'start' : 'center'}
                             css={{
                               backgroundColor: '$background',
                               borderRadius: '$xs',
@@ -747,9 +751,9 @@ const Settings = () => {
                           </Flex>
                           <Spacer y={0.25} />
                           <Flex
-                            direction="row"
+                            direction={isXs ? 'column' : 'row'}
                             justify="between"
-                            align="center"
+                            align={isXs ? 'start' : 'center'}
                             css={{
                               backgroundColor: '$background',
                               borderRadius: '$xs',
@@ -781,9 +785,9 @@ const Settings = () => {
                           </Flex>
                           <Spacer y={0.25} />
                           <Flex
-                            direction="row"
+                            direction={isXs ? 'column' : 'row'}
                             justify="between"
-                            align="center"
+                            align={isXs ? 'start' : 'center'}
                             css={{
                               backgroundColor: '$background',
                               borderRadius: '$xs',
@@ -815,9 +819,9 @@ const Settings = () => {
                           </Flex>
                           <Spacer y={0.25} />
                           <Flex
-                            direction="row"
+                            direction={isXs ? 'column' : 'row'}
                             justify="between"
-                            align="center"
+                            align={isXs ? 'start' : 'center'}
                             css={{
                               backgroundColor: '$background',
                               borderRadius: '$xs',
@@ -849,9 +853,9 @@ const Settings = () => {
                           </Flex>
                           <Spacer y={0.25} />
                           <Flex
-                            direction="row"
+                            direction={isXs ? 'column' : 'row'}
                             justify="between"
-                            align="center"
+                            align={isXs ? 'start' : 'center'}
                             css={{
                               backgroundColor: '$background',
                               borderRadius: '$xs',
@@ -1109,38 +1113,53 @@ const Settings = () => {
                     <Container
                       fluid
                       display="flex"
-                      justify="center"
-                      alignItems="center"
-                      direction="row"
-                      className="space-x-4"
+                      justify="flex-start"
+                      direction="column"
+                      css={{ padding: 0 }}
                     >
-                      <NextImage
-                        // @ts-ignore
-                        as={Image}
-                        alt="About Logo"
-                        title="About Logo"
-                        src={LogoFooter}
-                        width="76px"
-                        height="76px"
-                        containerCss={{ margin: 0 }}
-                        css={{
-                          borderRadius: '50%',
-                        }}
-                        loaderUrl="/api/image"
-                        placeholder="empty"
-                        responsive={[
-                          {
-                            size: {
-                              width: 76,
-                              height: 76,
+                      <Flex direction="column" justify="center" align="center">
+                        <NextImage
+                          // @ts-ignore
+                          as={Image}
+                          alt="About Logo"
+                          title="About Logo"
+                          src={LogoFooter}
+                          width="76px"
+                          height="76px"
+                          containerCss={{ margin: 0 }}
+                          css={{
+                            borderRadius: '50%',
+                          }}
+                          loaderUrl="/api/image"
+                          placeholder="empty"
+                          responsive={[
+                            {
+                              size: {
+                                width: 76,
+                                height: 76,
+                              },
                             },
-                          },
-                        ]}
-                        options={{
-                          contentType: MimeType.WEBP,
-                        }}
-                      />
-                      <AboutLogo linkTo="/" isLogo />
+                          ]}
+                          options={{
+                            contentType: MimeType.WEBP,
+                          }}
+                        />
+                        <AboutLogo linkTo="/" isLogo />
+                      </Flex>
+                      <Spacer y={1} />
+                      <Flex direction="row" justify="around" align="center" className="space-x-2">
+                        <Link href="https://raw.githubusercontent.com/Khanhtran47/Sora/master/LICENSE.txt">
+                          License 📜
+                        </Link>
+                        <Link href="#">Contact ✉️</Link>
+                      </Flex>
+                      <Spacer y={1} />
+                      <H6 weight="semibold" css={{ textAlign: 'center' }}>
+                        <Balancer>
+                          This site does not store any files on its server. All contents are
+                          provided by non-affiliated third parties.
+                        </Balancer>
+                      </H6>
                     </Container>
                   </motion.div>
                 </TabsContent>
