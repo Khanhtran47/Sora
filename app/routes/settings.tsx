@@ -133,10 +133,8 @@ const Settings = () => {
     setCurrentSubtitleWindowOpacity,
     currentSubtitleTextEffects,
     setCurrentSubtitleTextEffects,
-    // autoShowSubtitle,
-    // setAutoShowSubtitle,
-    // playNextEpisode,
-    // setPlayNextEpisode,
+    autoShowSubtitle,
+    setAutoShowSubtitle,
     // showFilter,
     // setShowFilter,
     isMutedTrailer,
@@ -163,6 +161,8 @@ const Settings = () => {
     setIsAutoPlayback,
     isAutoPlayNextEpisode,
     setIsAutoPlayNextEpisode,
+    isShowSkipOpEdButton,
+    setIsShowSkipOpEdButton,
     isAutoSkipOpEd,
     setIsAutoSkipOpEd,
     isFastForward,
@@ -649,6 +649,27 @@ const Settings = () => {
                           }}
                         >
                           <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="space-x-2"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
+                          >
+                            <Flex direction="column" justify="center" align="start">
+                              <H6>{t('show-subtitle')}</H6>
+                              <H6 css={{ color: '$accents8' }}>{t('show-subtitle-subtitle')}</H6>
+                            </Flex>
+                            <Switch
+                              checked={autoShowSubtitle}
+                              onChange={(e) => setAutoShowSubtitle(e.target.checked)}
+                            />
+                          </Flex>
+                          <Spacer y={0.25} />
+                          <Flex
                             direction={isXs ? 'column' : 'row'}
                             justify="between"
                             align={isXs ? 'start' : 'center'}
@@ -1034,14 +1055,55 @@ const Settings = () => {
                             }}
                           >
                             <Flex direction="column" justify="center" align="start">
-                              <H6>{t('auto-skip-op-ed')}</H6>
-                              <H6 css={{ color: '$accents8' }}>{t('auto-skip-op-ed-subtitle')}</H6>
+                              <H6>{t('show-skip-op-ed-button')}</H6>
+                              <H6 css={{ color: '$accents8' }}>
+                                {t('show-skip-op-ed-button-subtitle')}
+                              </H6>
                             </Flex>
                             <Switch
-                              checked={isAutoSkipOpEd}
-                              onChange={(e) => setIsAutoSkipOpEd(e.target.checked)}
+                              checked={isShowSkipOpEdButton}
+                              onChange={(e) => {
+                                setIsShowSkipOpEdButton(e.target.checked);
+                                if (!isShowSkipOpEdButton) {
+                                  setIsAutoSkipOpEd(false);
+                                }
+                              }}
                             />
                           </Flex>
+                          <AnimatePresence>
+                            {isShowSkipOpEdButton ? (
+                              <motion.div
+                                initial={{ y: -20, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                exit={{ y: -20, opacity: 0 }}
+                                transition={{ duration: 0.3 }}
+                              >
+                                <Spacer y={0.25} />
+                                <Flex
+                                  direction="row"
+                                  justify="between"
+                                  align="center"
+                                  className="space-x-2"
+                                  css={{
+                                    backgroundColor: '$background',
+                                    borderRadius: '$xs',
+                                    padding: '$sm',
+                                  }}
+                                >
+                                  <Flex direction="column" justify="center" align="start">
+                                    <H6>{t('auto-skip-op-ed')}</H6>
+                                    <H6 css={{ color: '$accents8' }}>
+                                      {t('auto-skip-op-ed-subtitle')}
+                                    </H6>
+                                  </Flex>
+                                  <Switch
+                                    checked={isAutoSkipOpEd}
+                                    onChange={(e) => setIsAutoSkipOpEd(e.target.checked)}
+                                  />
+                                </Flex>
+                              </motion.div>
+                            ) : null}
+                          </AnimatePresence>
                         </Collapse>
                         <Collapse
                           title={t('gestures')}
@@ -1147,7 +1209,7 @@ const Settings = () => {
                         <AboutLogo linkTo="/" isLogo />
                       </Flex>
                       <Spacer y={1} />
-                      <Flex direction="row" justify="around" align="center" className="space-x-2">
+                      <Flex direction="row" justify="center" align="center" className="space-x-4">
                         <Link href="https://raw.githubusercontent.com/Khanhtran47/Sora/master/LICENSE.txt">
                           License 📜
                         </Link>

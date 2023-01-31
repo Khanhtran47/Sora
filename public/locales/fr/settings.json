@@ -57,5 +57,9 @@
   "subtitle-background-opacity": "Opacité du fond du sous-titre",
   "subtitle-window-color": "Couleur de fenêtre sous-titre",
   "subtitle-window-opacity": "Opacité de la fenêtre de sous-titre",
-  "subtitle-text-effects": "Effet de texte sous-titre"
+  "subtitle-text-effects": "Effet de texte sous-titre",
+  "show-skip-op-ed-button": "Afficher le bouton de saut op / ed (anime uniquement)",
+  "show-skip-op-ed-button-subtitle": "S'il faut afficher le bouton de saut des crédits d'ouverture et de fin.",
+  "show-subtitle": "Afficher le sous-titre",
+  "show-subtitle-subtitle": "S'il faut afficher le sous-titre par défaut."
 }

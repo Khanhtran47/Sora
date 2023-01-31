@@ -9,9 +9,13 @@ import Image, { MimeType } from 'remix-image';
 
 import { IEpisode } from '~/services/tmdb/tmdb.types';
 import { IEpisodeInfo } from '~/services/consumet/anilist/anilist.types';
+
 import useMediaQuery from '~/hooks/useMediaQuery';
 import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
+import { useSoraSettings } from '~/hooks/useLocalStorage';
+
 import TMDB from '~/utils/media';
+
 import episodeTypes from '~/constants/episodeTypes';
 
 import { H3, H5, H6 } from '~/components/styles/Text.styles';
@@ -35,6 +39,7 @@ interface IListEpisodesProps {
 const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) => {
   const { type, id, episodes, season, providers } = props;
   const navigate = useNavigate();
+  const { isShowSkipOpEdButton } = useSoraSettings();
   const episodesCountAvailable = useMemo(() => episodes && episodes.length, [episodes]);
   const isSm = useMediaQuery('(max-width: 650px)');
   const [selectedProvider, setSelectedProvider] = useState<Set<string>>(
@@ -93,7 +98,9 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
       );
     else if (type === 'anime') {
       navigate(
-        `/anime/${id}/episode/${index + 1}/watch?provider=${provider}&id=${providerData?.id}`,
+        `/anime/${id}/episode/${index + 1}/watch?provider=${provider}&id=${
+          providerData?.id
+        }&skipOpEd=${isShowSkipOpEdButton}`,
       );
     }
   };

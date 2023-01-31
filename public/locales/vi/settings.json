@@ -57,5 +57,9 @@
   "subtitle-background-opacity": "Độ mờ nền phụ đề",
   "subtitle-window-color": "Màu cửa sổ phụ đề",
   "subtitle-window-opacity": "Độ mờ cửa sổ phụ đề",
-  "subtitle-text-effects": "Hiệu ứng chữ phụ đề"
+  "subtitle-text-effects": "Hiệu ứng chữ phụ đề",
+  "show-skip-op-ed-button": "Hiển thị nút bỏ qua OP/ED",
+  "show-skip-op-ed-button-subtitle": "Hiển thị nút bỏ qua OP/ED trong thanh điều khiển dưới cùng.",
+  "show-subtitle": "Hiển thị phụ đề",
+  "show-subtitle-subtitle": "Mặc định hiển thị phụ đề trong trình phát."
 }

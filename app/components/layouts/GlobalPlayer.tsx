@@ -132,7 +132,6 @@ const GlobalPlayer = () => {
     currentSubtitleWindowColor,
     currentSubtitleWindowOpacity,
     currentSubtitleTextEffects,
-    playNextEpisode,
     isAutoSize,
     isPicInPic,
     isMuted,
@@ -142,8 +141,8 @@ const GlobalPlayer = () => {
     isScreenshot,
     isMiniProgressbar,
     isAutoPlayback,
-    // isAutoPlayNextEpisode,
-    // isAutoSkipOpEd,
+    isAutoPlayNextEpisode,
+    isAutoSkipOpEd,
     isFastForward,
   } = useSoraSettings();
   const currentEpisode = useMemo(() => Number(episodeId), [episodeId]);
@@ -365,12 +364,12 @@ const GlobalPlayer = () => {
   useEffect(() => {
     if (
       isVideoEnded &&
-      playNextEpisode &&
       provider &&
       idProvider &&
       hasNextEpisode &&
       nextEpisodeUrl &&
-      typeVideo !== 'movie'
+      typeVideo !== 'movie' &&
+      isAutoPlayNextEpisode
     ) {
       navigate(nextEpisodeUrl);
     }
@@ -804,12 +803,17 @@ const GlobalPlayer = () => {
                     art.on('video:timeupdate', () => {
                       /* Finding the current highlight and show skip button */
                       if (highlights) {
-                        const fintCurrentHighlight = highlights.find(
+                        const findCurrentHighlight = highlights.find(
                           (item) => art.currentTime >= item.start && art.currentTime <= item.end,
                         );
-                        if (fintCurrentHighlight) {
-                          setShowSkipButton(true);
-                          setCurrentHighlight(fintCurrentHighlight);
+                        if (findCurrentHighlight) {
+                          if (isAutoSkipOpEd) {
+                            art.currentTime = findCurrentHighlight.end;
+                            art.notice.show = `Skipped ${findCurrentHighlight.text}`;
+                          } else {
+                            setShowSkipButton(true);
+                            setCurrentHighlight(findCurrentHighlight);
+                          }
                         } else {
                           setShowSkipButton(false);
                           setCurrentHighlight(null);
@@ -822,6 +826,8 @@ const GlobalPlayer = () => {
                     art.on('video:ended', () => {
                       setIsVideoEnded(true);
                       setIsPlayerPlaying(false);
+                      setShowSkipButton(false);
+                      art.fullscreen = false;
                     });
                     art.on('destroy', () => {
                       setIsVideoEnded(false);

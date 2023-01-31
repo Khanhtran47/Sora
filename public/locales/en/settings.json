@@ -57,5 +57,9 @@
   "subtitle-background-opacity": "Subtitle background opacity",
   "subtitle-window-color": "Subtitle window color",
   "subtitle-window-opacity": "Subtitle window opacity",
-  "subtitle-text-effects": "Subtitle text effect"
+  "subtitle-text-effects": "Subtitle text effect",
+  "show-skip-op-ed-button": "Show skip OP/ED button (Anime only)",
+  "show-skip-op-ed-button-subtitle": "Whether to display the skip OP/ED button.",
+  "show-subtitle": "Show subtitle",
+  "show-subtitle-subtitle": "Whether to display the subtitle by default."
 }

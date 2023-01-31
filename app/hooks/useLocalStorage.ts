@@ -127,10 +127,6 @@ function useSoraSettings() {
     'sora-settings_subtitle_auto-show',
     false,
   );
-  const [playNextEpisode, setPlayNextEpisode] = useLocalStorage(
-    'sora-settings_play-next-episode',
-    true,
-  );
   const [showFilter, setShowFilter] = useLocalStorage('sora-settings_layout_show-filter', false);
   const [isMutedTrailer, setIsMutedTrailer] = useLocalStorage(
     'sora-settings_experiments_mute-trailer',
@@ -157,6 +153,10 @@ function useSoraSettings() {
   );
   const [isAutoPlayNextEpisode, setIsAutoPlayNextEpisode] = useLocalStorage(
     'sora-settings_player_auto-play-next-episode',
+    true,
+  );
+  const [isShowSkipOpEdButton, setIsShowSkipOpEdButton] = useLocalStorage(
+    'sora-settings_player_show-skip-op-ed-button',
     true,
   );
   const [isAutoSkipOpEd, setIsAutoSkipOpEd] = useLocalStorage(
@@ -187,8 +187,6 @@ function useSoraSettings() {
     setCurrentSubtitleWindowOpacity,
     autoShowSubtitle,
     setAutoShowSubtitle,
-    playNextEpisode,
-    setPlayNextEpisode,
     showFilter,
     setShowFilter,
     isMutedTrailer,
@@ -215,6 +213,8 @@ function useSoraSettings() {
     setIsAutoPlayback,
     isAutoPlayNextEpisode,
     setIsAutoPlayNextEpisode,
+    isShowSkipOpEdButton,
+    setIsShowSkipOpEdButton,
     isAutoSkipOpEd,
     setIsAutoSkipOpEd,
     isFastForward,
