@@ -18,9 +18,9 @@ import { CACHE_CONTROL } from '~/utils/server/http';
 
 import TMDB from '~/utils/media';
 
-import MediaList from '~/src/components/media/MediaList';
-import { H6 } from '~/src/components/styles/Text.styles';
-import Flex from '~/src/components/styles/Flex.styles';
+import MediaList from '~/components/media/MediaList';
+import { H6 } from '~/components/styles/Text.styles';
+import Flex from '~/components/styles/Flex.styles';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   await authenticate(request);

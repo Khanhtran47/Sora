@@ -10,7 +10,7 @@ import { CACHE_CONTROL } from '~/utils/server/http';
 import { authenticate } from '~/services/supabase';
 import { getAnimePopular } from '~/services/consumet/anilist/anilist.server';
 
-import MediaList from '~/src/components/media/MediaList';
+import MediaList from '~/components/media/MediaList';
 
 export const meta: MetaFunction = () => ({
   title: 'Watch Popular anime free | Sora',

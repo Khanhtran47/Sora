@@ -19,9 +19,9 @@ import { IMedia } from '~/types/media';
 
 import useSize from '~/hooks/useSize';
 
-import { animeGenres } from '~/src/constants/filterItems';
+import { animeGenres } from '~/constants/filterItems';
 
-import MediaList from '~/src/components/media/MediaList';
+import MediaList from '~/components/media/MediaList';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await authenticate(request);

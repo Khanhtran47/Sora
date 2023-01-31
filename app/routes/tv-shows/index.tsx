@@ -17,7 +17,7 @@ import { CACHE_CONTROL } from '~/utils/server/http';
 
 import { IMedia } from '~/types/media';
 
-import MediaList from '~/src/components/media/MediaList';
+import MediaList from '~/components/media/MediaList';
 import useSize from '~/hooks/useSize';
 
 export const loader = async ({ request }: LoaderArgs) => {

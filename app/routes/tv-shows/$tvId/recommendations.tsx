@@ -12,7 +12,7 @@ import i18next from '~/i18n/i18next.server';
 import { authenticate } from '~/services/supabase';
 import { CACHE_CONTROL } from '~/utils/server/http';
 
-import MediaList from '~/src/components/media/MediaList';
+import MediaList from '~/components/media/MediaList';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   await authenticate(request);

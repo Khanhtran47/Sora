@@ -13,7 +13,7 @@ import { CACHE_CONTROL } from '~/utils/server/http';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
 
-import ListEpisodes from '~/src/components/elements/shared/ListEpisodes';
+import ListEpisodes from '~/components/elements/shared/ListEpisodes';
 
 export const loader = async ({ params, request }: LoaderArgs) => {
   await authenticate(request);

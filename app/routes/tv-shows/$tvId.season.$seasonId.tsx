@@ -19,13 +19,13 @@ import getProviderList from '~/services/provider.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import TMDB from '~/utils/media';
 
-import CatchBoundaryView from '~/src/components/CatchBoundaryView';
-import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
-import TabLink from '~/src/components/elements/tab/TabLink';
-import { H2, H5, H6 } from '~/src/components/styles/Text.styles';
+import CatchBoundaryView from '~/components/CatchBoundaryView';
+import ErrorBoundaryView from '~/components/ErrorBoundaryView';
+import TabLink from '~/components/elements/tab/TabLink';
+import { H2, H5, H6 } from '~/components/styles/Text.styles';
 
-import PhotoIcon from '~/src/assets/icons/PhotoIcon.js';
-import BackgroundDefault from '~/src/assets/images/background-default.jpg';
+import PhotoIcon from '~/assets/icons/PhotoIcon';
+import BackgroundDefault from '~/assets/images/background-default.jpg';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);

@@ -10,7 +10,7 @@ import { CACHE_CONTROL } from '~/utils/server/http';
 
 import { IMedia } from '~/types/media';
 
-import MediaList from '~/src/components/media/MediaList';
+import MediaList from '~/components/media/MediaList';
 
 export const meta: MetaFunction = () => ({
   title: 'Watch Top Trending anime free | Sora',

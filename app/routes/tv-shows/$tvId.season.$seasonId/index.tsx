@@ -5,7 +5,7 @@ import { useRouteData } from 'remix-utils';
 import { ISeasonDetail, ITvShowDetail } from '~/services/tmdb/tmdb.types';
 import useMediaQuery from '~/hooks/useMediaQuery';
 
-import ListEpisodes from '~/src/components/elements/shared/ListEpisodes';
+import ListEpisodes from '~/components/elements/shared/ListEpisodes';
 
 const Episodes = () => {
   const seasonData:

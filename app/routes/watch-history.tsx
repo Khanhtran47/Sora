@@ -18,7 +18,7 @@ import useMediaQuery from '~/hooks/useMediaQuery';
 
 import { CACHE_CONTROL } from '~/utils/server/http';
 
-import HistoryItem from '~/src/components/media/item/HistoryItem';
+import HistoryItem from '~/components/media/item/HistoryItem';
 
 export const handle = {
   breadcrumb: () => (

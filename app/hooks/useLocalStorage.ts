@@ -94,4 +94,136 @@ function useLocalStorage<T>(key: string, initialValue: T): [T, SetValue<T>] {
   return [storedValue, setValue];
 }
 
-export default useLocalStorage;
+function useSoraSettings() {
+  const [currentSubtitleFontColor, setCurrentSubtitleFontColor] = useLocalStorage(
+    'sora-settings_subtitle_font-color',
+    'White',
+  );
+  const [currentSubtitleFontSize, setCurrentSubtitleFontSize] = useLocalStorage(
+    'sora-settings_subtitle_font-size',
+    '100%',
+  );
+  const [currentSubtitleBackgroundColor, setCurrentSubtitleBackgroundColor] = useLocalStorage(
+    'sora-settings_subtitle_background-color',
+    'Black',
+  );
+  const [currentSubtitleBackgroundOpacity, setCurrentSubtitleBackgroundOpacity] = useLocalStorage(
+    'sora-settings_subtitle_background-opacity',
+    '0%',
+  );
+  const [currentSubtitleWindowColor, setCurrentSubtitleWindowColor] = useLocalStorage(
+    'sora-settings_subtitle_window-color',
+    'Black',
+  );
+  const [currentSubtitleWindowOpacity, setCurrentSubtitleWindowOpacity] = useLocalStorage(
+    'sora-settings_subtitle_window-opacity',
+    '0%',
+  );
+  const [currentSubtitleTextEffects, setCurrentSubtitleTextEffects] = useLocalStorage(
+    'sora-settings_subtitle_text-effect',
+    'None',
+  );
+  const [autoShowSubtitle, setAutoShowSubtitle] = useLocalStorage(
+    'sora-settings_subtitle_auto-show',
+    false,
+  );
+  const [showFilter, setShowFilter] = useLocalStorage('sora-settings_layout_show-filter', false);
+  const [isMutedTrailer, setIsMutedTrailer] = useLocalStorage(
+    'sora-settings_experiments_mute-trailer',
+    true,
+  );
+  const [isPlayTrailer, setIsPlayTrailer] = useLocalStorage(
+    'sora-settings_experiments_play-trailer',
+    false,
+  );
+  const [isAutoSize, setIsAutoSize] = useLocalStorage('sora-settings_player_auto-size', false);
+  const [isPicInPic, setIsPicInPic] = useLocalStorage('sora-settings_player_pic-in-pic', true);
+  const [isMuted, setIsMuted] = useLocalStorage('sora-settings_player_mute', false);
+  const [isAutoPlay, setIsAutoPlay] = useLocalStorage('sora-settings_player_auto-play', false);
+  const [isAutoMini, setIsAutoMini] = useLocalStorage('sora-settings_player_auto-mini', false);
+  const [isLoop, setIsLoop] = useLocalStorage('sora-settings_player_loop', false);
+  const [isScreenshot, setIsScreenshot] = useLocalStorage('sora-settings_player_screenshot', true);
+  const [isMiniProgressbar, setIsMiniProgressbar] = useLocalStorage(
+    'sora-settings_player_mini-progressbar',
+    true,
+  );
+  const [isAutoPlayback, setIsAutoPlayback] = useLocalStorage(
+    'sora-settings_player_auto-playback',
+    true,
+  );
+  const [isAutoPlayNextEpisode, setIsAutoPlayNextEpisode] = useLocalStorage(
+    'sora-settings_player_auto-play-next-episode',
+    true,
+  );
+  const [isShowSkipOpEdButton, setIsShowSkipOpEdButton] = useLocalStorage(
+    'sora-settings_player_show-skip-op-ed-button',
+    true,
+  );
+  const [isAutoSkipOpEd, setIsAutoSkipOpEd] = useLocalStorage(
+    'sora-settings_player_auto-skip-op-ed',
+    false,
+  );
+  const [isFastForward, setIsFastForward] = useLocalStorage(
+    'sora-settings_player-gestures_fast-forward',
+    true,
+  );
+  const [isSwipeFullscreen, setIsSwipeFullscreen] = useLocalStorage(
+    'sora-settings_player-gestures_swipe-fullscreen',
+    false,
+  );
+
+  return {
+    currentSubtitleFontColor,
+    setCurrentSubtitleFontColor,
+    currentSubtitleFontSize,
+    setCurrentSubtitleFontSize,
+    currentSubtitleBackgroundColor,
+    setCurrentSubtitleBackgroundColor,
+    currentSubtitleBackgroundOpacity,
+    setCurrentSubtitleBackgroundOpacity,
+    currentSubtitleWindowColor,
+    setCurrentSubtitleWindowColor,
+    currentSubtitleWindowOpacity,
+    setCurrentSubtitleWindowOpacity,
+    autoShowSubtitle,
+    setAutoShowSubtitle,
+    showFilter,
+    setShowFilter,
+    isMutedTrailer,
+    setIsMutedTrailer,
+    isPlayTrailer,
+    setIsPlayTrailer,
+    isAutoSize,
+    setIsAutoSize,
+    isPicInPic,
+    setIsPicInPic,
+    isMuted,
+    setIsMuted,
+    isAutoPlay,
+    setIsAutoPlay,
+    isAutoMini,
+    setIsAutoMini,
+    isLoop,
+    setIsLoop,
+    isScreenshot,
+    setIsScreenshot,
+    isMiniProgressbar,
+    setIsMiniProgressbar,
+    isAutoPlayback,
+    setIsAutoPlayback,
+    isAutoPlayNextEpisode,
+    setIsAutoPlayNextEpisode,
+    isShowSkipOpEdButton,
+    setIsShowSkipOpEdButton,
+    isAutoSkipOpEd,
+    setIsAutoSkipOpEd,
+    isFastForward,
+    setIsFastForward,
+    isSwipeFullscreen,
+    setIsSwipeFullscreen,
+    currentSubtitleTextEffects,
+    setCurrentSubtitleTextEffects,
+  };
+}
+
+export { useLocalStorage, useSoraSettings };

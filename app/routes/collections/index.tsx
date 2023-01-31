@@ -4,8 +4,8 @@ import { useLocation, NavLink } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import { Container, Badge } from '@nextui-org/react';
 
-import MediaList from '~/src/components/media/MediaList';
-import featuredList from '~/src/constants/featuredList';
+import MediaList from '~/components/media/MediaList';
+import featuredList from '~/constants/featuredList';
 
 export const meta: MetaFunction = () => ({
   title: 'Movies and tv shows Collections | Sora',

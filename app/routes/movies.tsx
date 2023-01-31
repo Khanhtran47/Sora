@@ -2,7 +2,7 @@ import { MetaFunction } from '@remix-run/node';
 import { NavLink, Outlet, useLocation } from '@remix-run/react';
 import { Container, Badge } from '@nextui-org/react';
 
-import TabLink from '~/src/components/elements/tab/TabLink';
+import TabLink from '~/components/elements/tab/TabLink';
 
 export const meta: MetaFunction = () => ({
   title: 'Free Movies HD - Watch Movies and Tv Series HD Online on Sora',

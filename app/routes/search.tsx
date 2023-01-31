@@ -2,7 +2,7 @@ import { MetaFunction } from '@remix-run/node';
 import { NavLink, Outlet } from '@remix-run/react';
 import { Container, Badge } from '@nextui-org/react';
 
-import TabLink from '~/src/components/elements/tab/TabLink';
+import TabLink from '~/components/elements/tab/TabLink';
 
 const searchPage = [
   { pageName: 'search.title.movie', pageLink: 'movie' },

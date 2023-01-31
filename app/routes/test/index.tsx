@@ -1,4 +1,4 @@
-import { H2, H6 } from '~/src/components/styles/Text.styles';
+import { H2, H6 } from '~/components/styles/Text.styles';
 
 const testIndex = () => (
   <>

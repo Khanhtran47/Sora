@@ -14,8 +14,8 @@ import { CACHE_CONTROL } from '~/utils/server/http';
 import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
 import useMediaQuery from '~/hooks/useMediaQuery';
 
-import MediaList from '~/src/components/media/MediaList';
-import Flex from '~/src/components/styles/Flex.styles';
+import MediaList from '~/components/media/MediaList';
+import Flex from '~/components/styles/Flex.styles';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);

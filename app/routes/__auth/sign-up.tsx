@@ -8,7 +8,7 @@ import {
   signUp,
   requestPayload,
 } from '~/services/supabase';
-import AuthForm from '~/src/components/AuthForm';
+import AuthForm from '~/components/AuthForm';
 import sgConfigs from '~/services/configs.server';
 import encode from '~/utils/encode';
 

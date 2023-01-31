@@ -25,9 +25,9 @@ import { CACHE_CONTROL } from '~/utils/server/http';
 
 import { IMedia } from '~/types/media';
 
-import WatchDetail from '~/src/components/elements/shared/WatchDetail';
-import CatchBoundaryView from '~/src/components/CatchBoundaryView';
-import ErrorBoundaryView from '~/src/components/ErrorBoundaryView';
+import WatchDetail from '~/components/elements/shared/WatchDetail';
+import CatchBoundaryView from '~/components/CatchBoundaryView';
+import ErrorBoundaryView from '~/components/ErrorBoundaryView';
 
 const checkHasNextEpisode = (
   provider: string,
@@ -49,6 +49,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const url = new URL(request.url);
   const provider = url.searchParams.get('provider');
   const idProvider = url.searchParams.get('id');
+  const isGetSkipOpEd = url.searchParams.get('skipOpEd') === 'true';
   const routePlayer = `${url.pathname}${url.search}`;
   const { animeId, episodeId } = params;
   const aid = Number(animeId);
@@ -129,7 +130,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         ? loklokGetMovieInfo(idProvider)
         : loklokGetTvEpInfo(idProvider, Number(episodeId) - 1),
       getProviderList('anime', title, orgTitle, year, undefined, aid),
-      malId ? getAniskip(malId, Number(episodeId)) : undefined,
+      malId && isGetSkipOpEd ? getAniskip(malId, Number(episodeId)) : undefined,
     ]);
     const totalProviderEpisodes = Number(tvDetail?.data?.episodeCount);
     const hasNextEpisode = checkHasNextEpisode(
@@ -208,7 +209,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     const [episodeDetail, providers, aniskip] = await Promise.all([
       getAnimeEpisodeStream(episodeIndex, 'gogoanime'),
       getProviderList('anime', title, orgTitle, year, undefined, aid),
-      malId ? getAniskip(malId, Number(episodeId)) : undefined,
+      malId && isGetSkipOpEd ? getAniskip(malId, Number(episodeId)) : undefined,
     ]);
     const hasNextEpisode = checkHasNextEpisode(
       provider,
@@ -275,7 +276,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     const [episodeDetail, providers, aniskip] = await Promise.all([
       getAnimeEpisodeStream(episodeIndex, 'zoro'),
       getProviderList('anime', title, orgTitle, year, undefined, aid),
-      malId ? getAniskip(malId, Number(episodeId)) : undefined,
+      malId && isGetSkipOpEd ? getAniskip(malId, Number(episodeId)) : undefined,
     ]);
     const hasNextEpisode = checkHasNextEpisode(
       provider,
@@ -345,7 +346,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     const [animeInfo, providers, aniskip] = await Promise.all([
       getBilibiliInfo(Number(idProvider)),
       getProviderList('anime', title, orgTitle, year, undefined, aid),
-      malId ? getAniskip(malId, Number(episodeId)) : undefined,
+      malId && isGetSkipOpEd ? getAniskip(malId, Number(episodeId)) : undefined,
     ]);
     const episodeSearch = animeInfo?.episodes?.find((e) => e?.number === Number(episodeId));
     const episodeDetail = await getBilibiliEpisode(Number(episodeSearch?.id));
@@ -441,7 +442,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     const [episodeDetail, providers, aniskip] = await Promise.all([
       getKissKhInfo(Number(idProvider)),
       getProviderList('anime', title, orgTitle, year, undefined, aid),
-      malId ? getAniskip(malId, Number(episodeId)) : undefined,
+      malId && isGetSkipOpEd ? getAniskip(malId, Number(episodeId)) : undefined,
     ]);
 
     const totalProviderEpisodes = Number(episodeDetail?.episodes?.length);
@@ -531,7 +532,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const [sources, providers, aniskip] = await Promise.all([
     getAnimeEpisodeStream(episodeIndex),
     getProviderList('anime', title, orgTitle, year, undefined, aid),
-    malId ? getAniskip(malId, Number(episodeId)) : undefined,
+    malId && isGetSkipOpEd ? getAniskip(malId, Number(episodeId)) : undefined,
   ]);
 
   if (!detail || !sources) throw new Response('Not Found', { status: 404 });
