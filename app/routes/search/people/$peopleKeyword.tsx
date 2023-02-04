@@ -13,7 +13,10 @@ import MediaList from '~/components/media/MediaList';
 import SearchForm from '~/components/elements/SearchForm';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
+  const [, locale] = await Promise.all([
+    authenticate(request, undefined, true),
+    i18next.getLocale(request),
+  ]);
 
   const keyword = params?.peopleKeyword || '';
   const url = new URL(request.url);

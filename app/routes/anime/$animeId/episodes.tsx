@@ -16,7 +16,7 @@ import useMediaQuery from '~/hooks/useMediaQuery';
 import ListEpisodes from '~/components/elements/shared/ListEpisodes';
 
 export const loader = async ({ params, request }: LoaderArgs) => {
-  await authenticate(request);
+  await authenticate(request, undefined, true);
 
   const { animeId } = params;
   const aid = Number(animeId);

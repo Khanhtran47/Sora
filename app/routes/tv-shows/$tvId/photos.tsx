@@ -22,7 +22,10 @@ import TMDB from '~/utils/media';
 import { H6 } from '~/components/styles/Text.styles';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
+  const [, locale] = await Promise.all([
+    authenticate(request, undefined, true),
+    i18next.getLocale(request),
+  ]);
 
   const { tvId } = params;
   const mid = Number(tvId);

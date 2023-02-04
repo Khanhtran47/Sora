@@ -144,6 +144,7 @@ const GlobalPlayer = () => {
     isAutoPlayNextEpisode,
     isAutoSkipOpEd,
     isFastForward,
+    isShowSkipOpEdButton,
   } = useSoraSettings();
   const currentEpisode = useMemo(() => Number(episodeId), [episodeId]);
   const [ref, { height }] = useMeasure<HTMLDivElement>();
@@ -342,9 +343,9 @@ const GlobalPlayer = () => {
     if (typeVideo === 'anime') {
       return `/anime/${id}/episode/${
         currentEpisode + 1
-      }/watch?provider=${provider}&id=${idProvider}`;
+      }/watch?provider=${provider}&id=${idProvider}&skipOpEd=${isShowSkipOpEdButton}`;
     }
-  }, [typeVideo, id, seasonId, currentEpisode, provider, idProvider]);
+  }, [typeVideo, id, seasonId, currentEpisode, provider, idProvider, isShowSkipOpEdButton]);
 
   const prevEpisodeUrl = useMemo(() => {
     if (currentEpisode > 1) {
@@ -356,10 +357,10 @@ const GlobalPlayer = () => {
       if (typeVideo === 'anime') {
         return `/anime/${id}/episode/${
           currentEpisode - 1
-        }/watch?provider=${provider}&id=${idProvider}`;
+        }/watch?provider=${provider}&id=${idProvider}&skipOpEd=${isShowSkipOpEdButton}`;
       }
     }
-  }, [typeVideo, id, seasonId, currentEpisode, provider, idProvider]);
+  }, [typeVideo, id, seasonId, currentEpisode, provider, idProvider, isShowSkipOpEdButton]);
 
   useEffect(() => {
     if (
@@ -757,6 +758,7 @@ const GlobalPlayer = () => {
                         });
                       }
                       setIsVideoEnded(false);
+                      setShowSkipButton(false);
                       setArtplayer(art);
                       if (autoShowSubtitle && art.subtitle) {
                         art.subtitle.show = autoShowSubtitle;

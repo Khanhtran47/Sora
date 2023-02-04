@@ -18,7 +18,10 @@ import CatchBoundaryView from '~/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/components/ErrorBoundaryView';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
+  const [, locale] = await Promise.all([
+    authenticate(request, undefined, true),
+    i18next.getLocale(request),
+  ]);
 
   const { peopleId } = params;
   const pid = Number(peopleId);

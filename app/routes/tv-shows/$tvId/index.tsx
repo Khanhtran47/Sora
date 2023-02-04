@@ -25,7 +25,7 @@ import MediaList from '~/components/media/MediaList';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  await authenticate(request);
+  await authenticate(request, undefined, true);
 
   const { tvId } = params;
   const tid = Number(tvId);

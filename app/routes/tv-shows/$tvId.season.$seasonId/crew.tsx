@@ -18,7 +18,10 @@ import MediaList from '~/components/media/MediaList';
 import Flex from '~/components/styles/Flex.styles';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
+  const [, locale] = await Promise.all([
+    authenticate(request, undefined, true),
+    i18next.getLocale(request),
+  ]);
 
   const { tvId, seasonId } = params;
   const tid = Number(tvId);

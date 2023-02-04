@@ -15,7 +15,7 @@ import { CACHE_CONTROL } from '~/utils/server/http';
 import MediaList from '~/components/media/MediaList';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  await authenticate(request);
+  await authenticate(request, undefined, true);
 
   const { tvId } = params;
   const mid = Number(tvId);

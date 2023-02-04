@@ -21,7 +21,10 @@ import MediaList from '~/components/media/MediaList';
 import useSize from '~/hooks/useSize';
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
+  const [, locale] = await Promise.all([
+    authenticate(request, undefined, true),
+    i18next.getLocale(request),
+  ]);
 
   const page = 1;
   const today = dayjs();

@@ -27,7 +27,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const { animeId } = params;
   const aid = Number(animeId);
   if (!animeId) throw new Response('Not Found', { status: 404 });
-  await authenticate(request);
+  await authenticate(request, undefined, true);
   const detail = await getAnimeInfo(aid);
   if (!detail) throw new Response('Not Found', { status: 404 });
   const title = detail.title?.english || detail.title?.userPreferred || detail.title?.romaji || '';

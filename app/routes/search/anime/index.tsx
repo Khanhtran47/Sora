@@ -14,7 +14,7 @@ import MediaList from '~/components/media/MediaList';
 import SearchForm from '~/components/elements/SearchForm';
 
 export const loader = async ({ request }: LoaderArgs) => {
-  await authenticate(request);
+  await authenticate(request, undefined, true);
 
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page'));
