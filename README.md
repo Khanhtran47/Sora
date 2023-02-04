@@ -4,7 +4,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/Khanhtran47/remix-movie">
-    <img src="app/src/assets/images/logo_loading.png" alt="Logo" width="80" height="80">
+    <img src="app/assets/images/logo_loading.png" alt="Logo" width="80" height="80">
   </a>
 
 <h3 align="center">Remix Movie</h3>

@@ -59,6 +59,7 @@ export async function authenticate(
   ]);
 
   if (botcheck && botcheckRequired && userAgentBlock.includes(request.headers.get('User-Agent')!)) {
+    console.log('bot detected', request.headers.get('User-Agent'));
     throw new Response(null, { status: 500 });
   } else if (!session.has('auth_token')) {
     // there is no token, no signed-in or expired cookie

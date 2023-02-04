@@ -82,6 +82,7 @@ export const handle = {
     isMini: false,
     shouldShowPlayer: true,
   },
+  getSitemapEntries: () => null,
 };
 
 const Player = () => null;
