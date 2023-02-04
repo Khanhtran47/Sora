@@ -7,6 +7,11 @@ import sgConfigs from '../configs.server';
 import supabase from './client.server';
 import { commitAuthCookie, getSessionFromCookie } from './cookie.server';
 
+const userAgentBlock = [
+  'Mozilla/5.0 (compatible; SemrushBot/7~bl; +http://www.semrush.com/bot.html)',
+  'Mozilla/4.5 (compatible; HTTrack 3.0x; Windows 98)',
+];
+
 export const signUp = async (email: string, password: string) =>
   supabase.auth.signUp({
     email,
@@ -53,12 +58,7 @@ export async function authenticate(
     isbot(request.headers.get('User-Agent')),
   ]);
 
-  if (
-    botcheck &&
-    botcheckRequired &&
-    request.headers.get('User-Agent') ===
-      'Mozilla/5.0 (compatible; SemrushBot/7~bl; +http://www.semrush.com/bot.html)'
-  ) {
+  if (botcheck && botcheckRequired && userAgentBlock.includes(request.headers.get('User-Agent')!)) {
     throw new Response(null, { status: 500 });
   } else if (!session.has('auth_token')) {
     // there is no token, no signed-in or expired cookie
