@@ -7,7 +7,7 @@ import { getImages, getVideos } from '~/services/tmdb/tmdb.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
+  const [, locale] = await Promise.all([authenticate(request, undefined, true), i18next.getLocale(request)]);
 
   const url = new URL(request.url);
   const id = Number(url.searchParams.get('id'));

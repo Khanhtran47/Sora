@@ -3,9 +3,12 @@ import { json } from '@remix-run/node';
 import type { LoaderArgs } from '@remix-run/node';
 
 import { getYoutubeVideo } from '~/services/youtube/youtube.server';
+import { authenticate } from '~/services/supabase';
+
 import { CACHE_CONTROL } from '~/utils/server/http';
 
 export const loader = async ({ request }: LoaderArgs) => {
+  await authenticate(request, undefined, true);
   const url = new URL(request.url);
   const id = url.searchParams.get('id');
   if (!id) throw new Response('No id', { status: 400 });

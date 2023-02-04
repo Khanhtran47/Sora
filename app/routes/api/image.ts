@@ -6,6 +6,8 @@ import BaseCache from "@next-boost/hybrid-disk-cache";
 import { imageLoader, fsResolver, fetchResolver, Cache, CacheStatus  } from 'remix-image/server';
 import { sharpTransformer } from 'remix-image-sharp';
 
+import { authenticate } from '~/services/supabase';
+
 export const fetchImage: Resolver = async (asset, url, options, basePath) => {
   if (url.startsWith('/') && (url.length === 1 || url[1] !== '/')) {
     return fsResolver(asset, url, options, basePath);
@@ -82,6 +84,7 @@ const config = {
   verbose: false,
 };
 
-export const loader: LoaderFunction = ({ request }) => {
+export const loader: LoaderFunction = async ({ request }) => {
+  await authenticate(request, undefined, true);
   return imageLoader(config, request);
 };

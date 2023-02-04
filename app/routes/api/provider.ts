@@ -7,7 +7,7 @@ import { authenticate } from '~/services/supabase';
 import { CACHE_CONTROL } from '~/utils/server/http';
 
 export const loader = async ({ request }: LoaderArgs) => {
-  await authenticate(request);
+  await authenticate(request, undefined, true);
 
   const url = new URL(request.url);
   const type = url.searchParams.get('type');
