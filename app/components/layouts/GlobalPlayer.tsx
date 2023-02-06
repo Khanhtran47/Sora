@@ -403,7 +403,7 @@ const GlobalPlayer = () => {
                 html: quality.toString(),
                 url:
                   url.toString().startsWith('http:') || provider === 'Gogo' || provider === 'Zoro'
-                    ? `https://cors.proxy.consumet.org/${url.toString()}`
+                    ? `https://cors.consumet.stream/${url.toString()}`
                     : url.toString(),
                 isM3U8: true,
                 isDASH: false,
@@ -423,7 +423,7 @@ const GlobalPlayer = () => {
             : provider === 'KissKh'
             ? sources?.map(({ quality, url }: { quality: number | string; url: string }) => ({
                 html: quality.toString(),
-                url: `https://cors.proxy.consumet.org/${url.toString()}`,
+                url: `https://cors.consumet.stream/${url.toString()}`,
                 isM3U8: false,
                 isDASH: true,
                 ...(quality === 'auto' && { default: true }),
@@ -548,17 +548,17 @@ const GlobalPlayer = () => {
                           )?.url ||
                           (sources && sources[0]?.url)
                         : provider === 'Gogo' || provider === 'Zoro'
-                        ? `https://cors.proxy.consumet.org/${
+                        ? `https://cors.consumet.stream/${
                             sources?.find(
                               (item: { quality: number | string; url: string }) =>
                                 item.quality === 'default',
                             )?.url
                           }` ||
-                          (sources && `https://cors.proxy.consumet.org/${sources[0]?.url}`)
+                          (sources && `https://cors.consumet.stream/${sources[0]?.url}`)
                         : provider === 'Bilibili'
                         ? sources && sources[0]?.url
                         : provider === 'KissKh'
-                        ? sources && `https://cors.proxy.consumet.org/${sources[0]?.url}`
+                        ? sources && `https://cors.consumet.stream/${sources[0]?.url}`
                         : provider === 'test'
                         ? sources?.find((source) => Number(source.quality) === 720)?.url
                         : sources?.find(
