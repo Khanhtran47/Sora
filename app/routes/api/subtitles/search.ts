@@ -3,9 +3,12 @@ import { json } from '@remix-run/node';
 import { LoaderArgs } from '@remix-run/node';
 
 import { getSubtitlesSearch } from '~/services/open-subtitles/open-subtitles.server';
+import { authenticate } from '~/services/supabase';
+
 import {CACHE_CONTROL} from '~/utils/server/http';
 
 export const loader = async ({ request }: LoaderArgs) => {
+  await authenticate(request, undefined, true);
   const url = new URL(request.url);
   const tmdb_id = url.searchParams.get('tmdb_id');
   const parent_tmdb_id = url.searchParams.get('parent_tmdb_id');

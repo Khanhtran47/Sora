@@ -1,5 +1,9 @@
 import { H2, H6 } from '~/components/styles/Text.styles';
 
+export const handle = {
+  getSitemapEntries: () => null,
+};
+
 const testIndex = () => (
   <>
     <H2>Testing</H2>

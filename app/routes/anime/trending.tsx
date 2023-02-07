@@ -25,7 +25,7 @@ export const meta: MetaFunction = () => ({
 });
 
 export const loader = async ({ request }: LoaderArgs) => {
-  await authenticate(request);
+  await authenticate(request, undefined, true);
 
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page'));

@@ -17,7 +17,7 @@ import WatchTrailerModal, { Trailer } from '~/components/elements/modal/WatchTra
 import { H5, H6 } from '~/components/styles/Text.styles';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  await authenticate(request);
+  await authenticate(request, undefined, true);
 
   const { movieId } = params;
   const mid = Number(movieId);

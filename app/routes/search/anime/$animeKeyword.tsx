@@ -14,7 +14,7 @@ import MediaList from '~/components/media/MediaList';
 import SearchForm from '~/components/elements/SearchForm';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  await authenticate(request);
+  await authenticate(request, undefined, true);
 
   const keyword = params?.animeKeyword || '';
   const url = new URL(request.url);

@@ -1,11 +1,15 @@
 import { json } from '@remix-run/node';
 import type { LoaderArgs } from '@remix-run/node';
 
+import { authenticate } from '~/services/supabase';
 import i18next from '~/i18n/i18next.server';
 
 // eslint-disable-next-line import/prefer-default-export, arrow-body-style
 export const loader = async ({ request }: LoaderArgs) => {
-  const locale = await i18next.getLocale(request);
+  const [, locale] = await Promise.all([
+    authenticate(request, undefined, true),
+    i18next.getLocale(request),
+  ]);
   return json(
     {
       short_name: 'Sora',

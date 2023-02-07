@@ -144,6 +144,7 @@ const GlobalPlayer = () => {
     isAutoPlayNextEpisode,
     isAutoSkipOpEd,
     isFastForward,
+    isShowSkipOpEdButton,
   } = useSoraSettings();
   const currentEpisode = useMemo(() => Number(episodeId), [episodeId]);
   const [ref, { height }] = useMeasure<HTMLDivElement>();
@@ -342,9 +343,9 @@ const GlobalPlayer = () => {
     if (typeVideo === 'anime') {
       return `/anime/${id}/episode/${
         currentEpisode + 1
-      }/watch?provider=${provider}&id=${idProvider}`;
+      }/watch?provider=${provider}&id=${idProvider}&skipOpEd=${isShowSkipOpEdButton}`;
     }
-  }, [typeVideo, id, seasonId, currentEpisode, provider, idProvider]);
+  }, [typeVideo, id, seasonId, currentEpisode, provider, idProvider, isShowSkipOpEdButton]);
 
   const prevEpisodeUrl = useMemo(() => {
     if (currentEpisode > 1) {
@@ -356,10 +357,10 @@ const GlobalPlayer = () => {
       if (typeVideo === 'anime') {
         return `/anime/${id}/episode/${
           currentEpisode - 1
-        }/watch?provider=${provider}&id=${idProvider}`;
+        }/watch?provider=${provider}&id=${idProvider}&skipOpEd=${isShowSkipOpEdButton}`;
       }
     }
-  }, [typeVideo, id, seasonId, currentEpisode, provider, idProvider]);
+  }, [typeVideo, id, seasonId, currentEpisode, provider, idProvider, isShowSkipOpEdButton]);
 
   useEffect(() => {
     if (
@@ -402,7 +403,7 @@ const GlobalPlayer = () => {
                 html: quality.toString(),
                 url:
                   url.toString().startsWith('http:') || provider === 'Gogo' || provider === 'Zoro'
-                    ? `https://cors.proxy.consumet.org/${url.toString()}`
+                    ? `https://cors.consumet.stream/${url.toString()}`
                     : url.toString(),
                 isM3U8: true,
                 isDASH: false,
@@ -422,7 +423,7 @@ const GlobalPlayer = () => {
             : provider === 'KissKh'
             ? sources?.map(({ quality, url }: { quality: number | string; url: string }) => ({
                 html: quality.toString(),
-                url: `https://cors.proxy.consumet.org/${url.toString()}`,
+                url: `https://cors.consumet.stream/${url.toString()}`,
                 isM3U8: false,
                 isDASH: true,
                 ...(quality === 'auto' && { default: true }),
@@ -547,17 +548,17 @@ const GlobalPlayer = () => {
                           )?.url ||
                           (sources && sources[0]?.url)
                         : provider === 'Gogo' || provider === 'Zoro'
-                        ? `https://cors.proxy.consumet.org/${
+                        ? `https://cors.consumet.stream/${
                             sources?.find(
                               (item: { quality: number | string; url: string }) =>
                                 item.quality === 'default',
                             )?.url
                           }` ||
-                          (sources && `https://cors.proxy.consumet.org/${sources[0]?.url}`)
+                          (sources && `https://cors.consumet.stream/${sources[0]?.url}`)
                         : provider === 'Bilibili'
                         ? sources && sources[0]?.url
                         : provider === 'KissKh'
-                        ? sources && `https://cors.proxy.consumet.org/${sources[0]?.url}`
+                        ? sources && `https://cors.consumet.stream/${sources[0]?.url}`
                         : provider === 'test'
                         ? sources?.find((source) => Number(source.quality) === 720)?.url
                         : sources?.find(
@@ -757,6 +758,7 @@ const GlobalPlayer = () => {
                         });
                       }
                       setIsVideoEnded(false);
+                      setShowSkipButton(false);
                       setArtplayer(art);
                       if (autoShowSubtitle && art.subtitle) {
                         art.subtitle.show = autoShowSubtitle;

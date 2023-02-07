@@ -6,6 +6,7 @@ import * as React from 'react';
 import { Row, Grid, Button, Dropdown, Tooltip, Input, useInput } from '@nextui-org/react';
 import { useLocation, useNavigate, Form } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
+import { ClientOnly } from 'remix-utils';
 
 import { ILanguage } from '~/services/tmdb/tmdb.types';
 
@@ -516,15 +517,19 @@ const Filter = (props: IFilterProps) => {
               <H6 h6> {t('minimum-user-votes')} </H6>
             </Row>
             <Row css={{ marginTop: '6px' }}>
-              <Slider
-                defaultValue={voteCount}
-                value={voteCount}
-                name="Minimum User Votes"
-                min={0}
-                max={500}
-                step={50}
-                onValueChange={(value: number[]) => setVoteCount(value)}
-              />
+              <ClientOnly>
+                {() => (
+                  <Slider
+                    defaultValue={voteCount}
+                    value={voteCount}
+                    name="Minimum User Votes"
+                    min={0}
+                    max={500}
+                    step={50}
+                    onValueChange={(value: number[]) => setVoteCount(value)}
+                  />
+                )}
+              </ClientOnly>
             </Row>
             <Row justify="center">
               <H6 h6>{voteCount[0]}</H6>
@@ -558,15 +563,19 @@ const Filter = (props: IFilterProps) => {
               <H6 h6> {t('runtime')} </H6>
             </Row>
             <Row css={{ marginTop: '6px' }}>
-              <Slider
-                defaultValue={runtime}
-                value={runtime}
-                name="Runtime"
-                min={0}
-                max={400}
-                step={15}
-                onValueChange={(value: number[]) => setRuntime(value)}
-              />
+              <ClientOnly>
+                {() => (
+                  <Slider
+                    defaultValue={runtime}
+                    value={runtime}
+                    name="Runtime"
+                    min={0}
+                    max={400}
+                    step={15}
+                    onValueChange={(value: number[]) => setRuntime(value)}
+                  />
+                )}
+              </ClientOnly>
             </Row>
             {runtime ? (
               <Row justify="center">

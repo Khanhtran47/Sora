@@ -4,7 +4,7 @@ import { authenticate, getUserFromCookie, insertHistory } from '~/services/supab
 
 export const action = async ({ request }: ActionArgs) => {
   let headers = new Headers();
-  const user = await authenticate(request, true);
+  const user = await authenticate(request, true, true);
 
   if (!user) return new Response(null, { headers, status: 401 });
 

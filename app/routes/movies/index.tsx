@@ -21,7 +21,10 @@ import useSize from '~/hooks/useSize';
 import MediaList from '~/components/media/MediaList';
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const [, locale] = await Promise.all([authenticate(request), i18next.getLocale(request)]);
+  const [, locale] = await Promise.all([
+    authenticate(request, undefined, true),
+    i18next.getLocale(request),
+  ]);
 
   const page = 1;
   const [popular, topRated, upcoming] = await Promise.all([

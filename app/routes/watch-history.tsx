@@ -38,10 +38,11 @@ export const handle = {
       )}
     </NavLink>
   ),
+  getSitemapEntries: () => null,
 };
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const user = await authenticate(request, true);
+  const user = await authenticate(request, true, true);
 
   const { searchParams } = new URL(request.url);
   const page = Number(searchParams.get('page')) || 1;

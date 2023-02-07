@@ -38,6 +38,7 @@ export const handle = {
       )}
     </NavLink>
   ),
+  getSitemapEntries: () => null,
 };
 
 const testingPage = [
