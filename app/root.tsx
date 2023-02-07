@@ -487,10 +487,16 @@ const App = () => {
         navigator.serviceWorker.getRegistration(),
         navigator.serviceWorker.ready,
       ]);
+      console.log('🚀 ~ file: root.tsx:490 ~ detectSWUpdate ~ registration', registration);
+      console.log('🚀 ~ file: root.tsx:487 ~ detectSWUpdate ~ registerSW', registerSW);
       if (registration) {
         registration.addEventListener('updatefound', () => {
           const newWorker = registration.installing;
           if (newWorker) {
+            console.log(
+              '🚀 ~ file: root.tsx:496 ~ registration.addEventListener ~ newWorker',
+              newWorker,
+            );
             newWorker.addEventListener('statechange', () => {
               if (newWorker.state === 'installed' && registerSW.active) {
                 setWaitingWorker(newWorker);
