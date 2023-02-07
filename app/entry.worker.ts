@@ -103,6 +103,11 @@ async function handleMessage(event: ExtendableMessageEvent) {
     }
   }
 
+  if (event.data.type === 'SKIP_WAITING') {
+    debug('Skipping waiting');
+    self.skipWaiting();
+  }
+
   await Promise.all(cachePromises.values());
 }
 
