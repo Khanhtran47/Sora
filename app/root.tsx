@@ -45,6 +45,7 @@ import FontStyles600 from '@fontsource/inter/600.css';
 import FontStyles700 from '@fontsource/inter/700.css';
 import FontStyles800 from '@fontsource/inter/800.css';
 import FontStyles900 from '@fontsource/inter/900.css';
+import { env } from 'process';
 
 import i18next, { i18nCookie } from '~/i18n/i18next.server';
 import * as gtag from '~/utils/client/gtags.client';
@@ -483,28 +484,28 @@ const App = () => {
 
   const detectSWUpdate = async () => {
     if ('serviceWorker' in navigator) {
-      const [registration, registerSW] = await Promise.all([
-        navigator.serviceWorker.getRegistration(),
-        navigator.serviceWorker.ready,
-      ]);
-      console.log('🚀 ~ file: root.tsx:490 ~ detectSWUpdate ~ registration', registration);
-      console.log('🚀 ~ file: root.tsx:487 ~ detectSWUpdate ~ registerSW', registerSW);
+      const registration = await navigator.serviceWorker.getRegistration(
+        `/entry.worker.js${
+          env.NODE_ENV === 'production' ? `?version=${env.VERCEL_GIT_COMMIT_SHA}` : ''
+        }`,
+      );
+      console.log('🚀 ~ file: root.tsx:492 ~ detectSWUpdate ~ registration', registration);
       if (registration) {
         registration.addEventListener('updatefound', () => {
           const newWorker = registration.installing;
           if (newWorker) {
-            console.log(
-              '🚀 ~ file: root.tsx:496 ~ registration.addEventListener ~ newWorker',
-              newWorker,
-            );
             newWorker.addEventListener('statechange', () => {
-              if (newWorker.state === 'installed' && registerSW.active) {
+              if (newWorker.state === 'installed') {
                 setWaitingWorker(newWorker);
                 setIsUpdateAvailable(true);
               }
             });
           }
         });
+        if (registration.waiting) {
+          setWaitingWorker(registration.waiting);
+          setIsUpdateAvailable(true);
+        }
       }
     }
   };
