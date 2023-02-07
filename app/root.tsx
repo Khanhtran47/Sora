@@ -483,18 +483,23 @@ const App = () => {
 
   const detectSWUpdate = async () => {
     if ('serviceWorker' in navigator) {
-      const registration = await navigator.serviceWorker.ready;
-      registration.addEventListener('updatefound', () => {
-        const newWorker = registration.installing;
-        if (newWorker) {
-          newWorker.addEventListener('statechange', () => {
-            if (newWorker.state === 'installed') {
-              setWaitingWorker(newWorker);
-              setIsUpdateAvailable(true);
-            }
-          });
-        }
-      });
+      const [registration, registerSW] = await Promise.all([
+        navigator.serviceWorker.getRegistration(),
+        navigator.serviceWorker.ready,
+      ]);
+      if (registration) {
+        registration.addEventListener('updatefound', () => {
+          const newWorker = registration.installing;
+          if (newWorker) {
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && registerSW.active) {
+                setWaitingWorker(newWorker);
+                setIsUpdateAvailable(true);
+              }
+            });
+          }
+        });
+      }
     }
   };
 
