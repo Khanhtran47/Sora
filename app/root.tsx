@@ -483,7 +483,7 @@ const App = () => {
 
   const detectSWUpdate = async () => {
     if ('serviceWorker' in navigator) {
-      const registration = await navigator.serviceWorker.getRegistration();
+      const registration = await navigator.serviceWorker.ready;
       if (registration) {
         registration.addEventListener('updatefound', () => {
           const newWorker = registration.installing;
@@ -642,7 +642,7 @@ const App = () => {
                   <ToastDescription asChild>
                     <H6 h6>A new version of Sora is available.</H6>
                   </ToastDescription>
-                  <ToastAction asChild altText="Goto schedule to undo">
+                  <ToastAction asChild altText="Update Action">
                     <Button auto flat onClick={() => reloadPage()} color="success">
                       Update
                     </Button>
