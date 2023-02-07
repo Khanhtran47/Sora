@@ -489,7 +489,6 @@ const App = () => {
           env.NODE_ENV === 'production' ? `?version=${env.VERCEL_GIT_COMMIT_SHA}` : ''
         }`,
       );
-      console.log('🚀 ~ file: root.tsx:492 ~ detectSWUpdate ~ registration', registration);
       if (registration) {
         registration.addEventListener('updatefound', () => {
           const newWorker = registration.installing;
