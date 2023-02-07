@@ -18,7 +18,15 @@ import {
   useMatches,
   useLocation,
 } from '@remix-run/react';
-import { NextUIProvider, Text, Image as NextImage, Badge, useSSR, Button } from '@nextui-org/react';
+import {
+  NextUIProvider,
+  Text,
+  Image as NextImage,
+  Badge,
+  useSSR,
+  Button,
+  useTheme,
+} from '@nextui-org/react';
 import { ThemeProvider as RemixThemesProvider } from 'next-themes';
 // @ts-ignore
 import swiperStyles from 'swiper/css';
@@ -45,6 +53,8 @@ import FontStyles600 from '@fontsource/inter/600.css';
 import FontStyles700 from '@fontsource/inter/700.css';
 import FontStyles800 from '@fontsource/inter/800.css';
 import FontStyles900 from '@fontsource/inter/900.css';
+import { toast, ToastContainer } from 'react-toastify';
+import reactToastifyStyles from 'react-toastify/dist/ReactToastify.css';
 
 import i18next, { i18nCookie } from '~/i18n/i18next.server';
 import * as gtag from '~/utils/client/gtags.client';
@@ -173,6 +183,11 @@ export const links: LinksFunction = () => [
     href: FontStyles900,
   },
   {
+    rel: 'preload',
+    as: 'style',
+    href: reactToastifyStyles,
+  },
+  {
     rel: 'stylesheet',
     href: styles,
   },
@@ -239,6 +254,10 @@ export const links: LinksFunction = () => [
   {
     rel: 'stylesheet',
     href: FontStyles900,
+  },
+  {
+    rel: 'stylesheet',
+    href: reactToastifyStyles,
   },
 ];
 
@@ -469,6 +488,64 @@ const App = () => {
   const isBot = useIsBot();
   useChangeLanguage(locale);
   const [isLoading, setIsLoading] = React.useState(true);
+  const [isUpdateAvailable, setIsUpdateAvailable] = React.useState(false);
+  const [waitingWorker, setWaitingWorker] = React.useState<ServiceWorker | null>(null);
+
+  const detectSWUpdate = async () => {
+    if ('serviceWorker' in navigator) {
+      const registration = await navigator.serviceWorker.getRegistration();
+      if (registration) {
+        registration.addEventListener('updatefound', (event) => {
+          const newWorker = registration.installing;
+          if (newWorker) {
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed') {
+                setWaitingWorker(newWorker);
+                setIsUpdateAvailable(true);
+              }
+            });
+          }
+        });
+      }
+    }
+  };
+
+  React.useEffect(() => {
+    detectSWUpdate();
+  }, []);
+
+  const reloadPage = () => {
+    waitingWorker?.postMessage({ type: 'SKIP_WAITING' });
+    setIsUpdateAvailable(false);
+    window.location.reload();
+  };
+
+  // React.useEffect(() => {
+  //   if ('serviceWorker' in navigator) {
+  //     const onControllerChange = () => {
+  //       const registrationWaiting = navigator.serviceWorker.controller;
+  //       if (registrationWaiting) {
+  //         setWaitingWorker(registrationWaiting);
+  //         setIsUpdateAvailable(true);
+  //       }
+  //     };
+  //     navigator.serviceWorker.addEventListener('controllerchange', onControllerChange);
+  //     return () => {
+  //       navigator.serviceWorker.removeEventListener('controllerchange', onControllerChange);
+  //     };
+  //   }
+  // }, []);
+
+  // React.useEffect(() => {
+  //   if (waitingWorker) {
+  //     waitingWorker.postMessage({ type: 'SKIP_WAITING' });
+  //     waitingWorker.addEventListener('statechange', (event) => {
+  //       if ((event.target as ServiceWorker).state === 'activated') {
+  //         window.location.reload();
+  //       }
+  //     });
+  //   }
+  // }, [waitingWorker]);
 
   /**
    * This gets the state of every fetcher active on the app and combine it with
@@ -587,6 +664,7 @@ const App = () => {
         </AnimatePresence>
         <NextUIProvider>
           <Layout user={user}>
+            <ToastContainer position="bottom-right" />
             <AnimatePresence exitBeforeEnter initial={false}>
               {outlet}
             </AnimatePresence>

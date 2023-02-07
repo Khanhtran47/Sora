@@ -5,6 +5,7 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import Backend from 'i18next-http-backend';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { getInitialNamespaces } from 'remix-i18next';
+import { env } from 'process';
 
 import i18n from './i18n/i18n.config';
 import { ClientCacheProvider } from './context/client.context';
@@ -78,7 +79,11 @@ async function loadSW() {
   console.log('loaded');
 
   return navigator.serviceWorker
-    .register('/entry.worker.js')
+    .register(
+      `/entry.worker.js${
+        env.NODE_ENV === 'production' ? `?version=${env.VERCEL_GIT_COMMIT_SHA}` : ''
+      }`,
+    )
     .then(() => navigator.serviceWorker.ready)
     .then(() => {
       if (navigator.serviceWorker.controller) {

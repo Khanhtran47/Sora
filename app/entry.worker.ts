@@ -192,13 +192,13 @@ const handlePush = async (event: PushEvent) => {
   });
 };
 
-self.addEventListener('install', (event) => {
-  event.waitUntil(handleInstall(event).then(() => self.skipWaiting()));
-});
+// self.addEventListener('install', (event) => {
+//   event.waitUntil(handleInstall(event).then(() => self.skipWaiting()));
+// });
 
-self.addEventListener('activate', (event) => {
-  event.waitUntil(handleActivate(event).then(() => self.clients.claim()));
-});
+// self.addEventListener('activate', (event) => {
+//   event.waitUntil(handleActivate(event).then(() => self.clients.claim()));
+// });
 
 self.addEventListener('message', (event) => {
   event.waitUntil(handleMessage(event));
