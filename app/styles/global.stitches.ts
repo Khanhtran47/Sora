@@ -28,9 +28,23 @@ const globalStyles = globalCss({
     '--swiper-theme-color': 'var(--nextui-colors-primary)',
     '--swiper-pagination-bullet-inactive-color': 'var(--nextui-colors-primarySolidHover)',
   },
+  '::-webkit-scrollbar': {
+    userSelect: 'none',
+    touchAction: 'none',
+    transition: 'background 160ms ease-out',
+    backgroundColor: '$accents5',
+    '&:hover': {
+      backgroundColor: '$accents4',
+    },
+  },
+  '::-webkit-scrollbar-corner': {
+    backgroundColor: '$accents4',
+  },
+  '::-webkit-scrollbar-thumb': {
+    backgroundColor: '$accents1',
+  },
   'body::-webkit-scrollbar': {
     width: '0.55rem',
-    backgroundColor: '$backgroundContrast',
   },
   'body::-webkit-scrollbar-thumb': {
     borderRadius: '0.55rem',
