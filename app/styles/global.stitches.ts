@@ -28,6 +28,19 @@ const globalStyles = globalCss({
     '--swiper-theme-color': 'var(--nextui-colors-primary)',
     '--swiper-pagination-bullet-inactive-color': 'var(--nextui-colors-primarySolidHover)',
   },
+  'body::-webkit-scrollbar': {
+    width: '0.55rem',
+    backgroundColor: '$backgroundContrast',
+  },
+  'body::-webkit-scrollbar-thumb': {
+    borderRadius: '0.55rem',
+    boxShadow: 'inset 0 0 0.5rem rgba(0, 0, 0, 0.3)',
+    backgroundImage:
+      'linear-gradient(-45deg, var(--nextui-colors-primary), var(--nextui-colors-secondary))',
+  },
+  'body::-webkit-scrollbar-track': {
+    boxShadow: 'inset 0 0 0.5rem rgba(0, 0, 0, 0.3)',
+  },
 });
 
 export default globalStyles;
