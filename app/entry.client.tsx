@@ -77,13 +77,10 @@ function cloneObject<T>(obj: T): T {
 // Use the window load event to keep the page load performant
 async function loadSW() {
   console.log('loaded');
+  const version = `v${new Date().getTime()}`;
 
   return navigator.serviceWorker
-    .register(
-      `/entry.worker.js${
-        env.NODE_ENV === 'production' ? `?version=${env.VERCEL_GIT_COMMIT_SHA}` : ''
-      }`,
-    )
+    .register(`/entry.worker.js${env.NODE_ENV === 'production' ? `?version=${version}` : ''}`)
     .then(() => navigator.serviceWorker.ready)
     .then(() => {
       if (navigator.serviceWorker.controller) {
