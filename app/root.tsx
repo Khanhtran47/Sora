@@ -45,7 +45,6 @@ import FontStyles600 from '@fontsource/inter/600.css';
 import FontStyles700 from '@fontsource/inter/700.css';
 import FontStyles800 from '@fontsource/inter/800.css';
 import FontStyles900 from '@fontsource/inter/900.css';
-import { env } from 'process';
 
 import i18next, { i18nCookie } from '~/i18n/i18next.server';
 import * as gtag from '~/utils/client/gtags.client';
@@ -486,9 +485,12 @@ const App = () => {
     if ('serviceWorker' in navigator) {
       const registration = await navigator.serviceWorker.getRegistration();
       console.log('🚀 ~ file: root.tsx:488 ~ detectSWUpdate ~ registration', registration);
-      const activeWorker = registration?.active;
-      console.log('🚀 ~ file: root.tsx:490 ~ detectSWUpdate ~ activeWorker', activeWorker);
-      if (registration && activeWorker?.state === 'activated') {
+      // const activeWorker = registration?.active;
+      // console.log('🚀 ~ file: root.tsx:490 ~ detectSWUpdate ~ activeWorker', activeWorker);
+      if (
+        registration
+        // && activeWorker?.state === 'activated'
+      ) {
         registration.addEventListener('updatefound', () => {
           const newWorker = registration.installing;
           if (newWorker) {
