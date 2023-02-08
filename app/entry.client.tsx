@@ -78,7 +78,11 @@ function cloneObject<T>(obj: T): T {
 async function loadSW() {
   console.log('loaded');
   const version = `v${new Date().getTime()}`;
-  console.log('🚀 ~ file: entry.client.tsx:85 ~ loadSW ~ env.NODE_ENV', env.NODE_ENV);
+  console.log(env.NODE_ENV);
+  console.log(env.VERCEL_GIT_COMMIT_SHA);
+  console.log(env.VERCEL_GIT_COMMIT_MESSAGE);
+  console.log(env.VERCEL_GIT_COMMIT_AUTHOR_LOGIN);
+  console.log(env.VERCEL_GIT_COMMIT_AUTHOR_NAME);
 
   return navigator.serviceWorker
     .register(`/entry.worker.js?version=${version}`)
