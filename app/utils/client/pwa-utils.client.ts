@@ -6,7 +6,7 @@
 */
 
 /*
-  ⚠ Except you understand & know the implication of what you're what you are doing, don't modify this file! ⚠
+  ⚠ Except you understand & know the implication of what you're doing, don't modify this file! ⚠
 */
 
 /**
@@ -237,17 +237,15 @@ interface NotificationOptions {
  *
  * @param {string} title - The main title (header) of the notification
  * @param {NotificationOptions} options - An object consisting of the notification's body, badge, icon, image, and silent options. Refer to https://github.com/ShafSpecs/remix-pwa#client-notification-api for additional info.
- * @return {Promise<ResponseObject | undefined>} An object consisting of two properties: A status to indicate the status of the invocation and also an accompanying message.
+ * @return {Promise<ResponseObject>} An object consisting of two properties: A status to indicate the status of the invocation and also an accompanying message.
  */
 export async function SendNotification(
   title: string,
   options: NotificationOptions,
-): Promise<ResponseObject | undefined> {
+): Promise<ResponseObject> {
   try {
     if ('Notification' in window) {
-      const permissions = await (
-        await navigator.permissions.query({ name: 'notifications' })
-      ).state;
+      const permissions = (await navigator.permissions.query({ name: 'notifications' })).state;
       navigator.permissions.query({ name: 'notifications' }).then((permissionStatus) => {
         if (permissionStatus.state === 'granted') {
           return;
@@ -256,25 +254,22 @@ export async function SendNotification(
       });
 
       if (permissions === 'granted') {
-        await navigator.serviceWorker.ready.then((registration) => {
-          registration.showNotification(title, options);
-          return {
-            status: 'success',
-            message: 'Sent Notification to user successfully',
-          };
-        });
-      } else {
+        const registration = await navigator.serviceWorker.ready;
+        await registration.showNotification(title, options);
         return {
-          status: 'bad',
-          message: 'Denied access to sending notifications!',
+          status: 'success',
+          message: 'Sent Notification to user successfully',
         };
       }
-    } else {
       return {
         status: 'bad',
-        message: 'Notification API not supported',
+        message: 'Denied access to sending notifications!',
       };
     }
+    return {
+      status: 'bad',
+      message: 'Notification API not supported',
+    };
   } catch (error) {
     console.debug(error);
     throw new Error('Error sending notification!');
@@ -342,7 +337,7 @@ export async function copyImage(url: string): Promise<ResponseObject> {
       ]);
       return {
         status: 'success',
-        message: 'Image copied successfully successfully!',
+        message: 'Image copied successfully!',
       };
     }
     return {

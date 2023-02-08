@@ -73,9 +73,18 @@ function cloneObject<T>(obj: T): T {
   return clone;
 }
 
-async function doStuffs() {
+// Use the window load event to keep the page load performant
+async function loadSW() {
+  console.log('loaded');
+
   return navigator.serviceWorker
-    .register('/entry.worker.js') // , {scope: '/'}
+    .register(
+      `/entry.worker.js${
+        window.process.env.NODE_ENV === 'production'
+          ? `?version=${window.process.env.VERCEL_GIT_COMMIT_SHA}`
+          : ''
+      }`,
+    )
     .then(() => navigator.serviceWorker.ready)
     .then(() => {
       if (navigator.serviceWorker.controller) {
@@ -106,11 +115,9 @@ async function doStuffs() {
 }
 if ('serviceWorker' in navigator) {
   if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    doStuffs();
+    loadSW();
   } else {
-    window.addEventListener('load', () => {
-      doStuffs();
-    });
+    window.addEventListener('load', loadSW);
   }
 }
 

@@ -103,6 +103,11 @@ async function handleMessage(event: ExtendableMessageEvent) {
     }
   }
 
+  if (event.data.type === 'SKIP_WAITING') {
+    debug('Skipping waiting');
+    self.skipWaiting();
+  }
+
   await Promise.all(cachePromises.values());
 }
 
@@ -192,13 +197,13 @@ const handlePush = async (event: PushEvent) => {
   });
 };
 
-self.addEventListener('install', (event) => {
-  event.waitUntil(handleInstall(event).then(() => self.skipWaiting()));
-});
+// self.addEventListener('install', (event) => {
+//   event.waitUntil(handleInstall(event).then(() => self.skipWaiting()));
+// });
 
-self.addEventListener('activate', (event) => {
-  event.waitUntil(handleActivate(event).then(() => self.clients.claim()));
-});
+// self.addEventListener('activate', (event) => {
+//   event.waitUntil(handleActivate(event).then(() => self.clients.claim()));
+// });
 
 self.addEventListener('message', (event) => {
   event.waitUntil(handleMessage(event));

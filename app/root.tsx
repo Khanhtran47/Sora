@@ -70,6 +70,15 @@ import nProgressStyles from '~/components/styles/nprogress.css';
 
 import Layout from '~/components/layouts/Layout';
 import Flex from '~/components/styles/Flex.styles';
+import {
+  Toast,
+  ToastDescription,
+  ToastTitle,
+  ToastProvider,
+  ToastAction,
+  ToastViewport,
+} from '~/components/elements/toast/Toast';
+import { H5, H6 } from '~/components/styles/Text.styles';
 
 import Home from '~/assets/icons/HomeIcon';
 import Refresh from '~/assets/icons/RefreshIcon';
@@ -82,6 +91,7 @@ interface DocumentProps {
   lang?: string;
   dir?: 'ltr' | 'rtl';
   gaTrackingId?: string;
+  ENV?: any;
 }
 
 export const links: LinksFunction = () => [
@@ -310,6 +320,10 @@ export const loader = async ({ request }: LoaderArgs) => {
       genresTv: await getListGenre('tv', locale),
       languages: await getListLanguages(),
       gaTrackingId,
+      ENV: {
+        NODE_ENV: process.env.NODE_ENV,
+        VERCEL_GIT_COMMIT_SHA: process.env.VERCEL_GIT_COMMIT_SHA,
+      },
     },
     { headers },
   );
@@ -337,7 +351,7 @@ export const handle = {
 
 let isMount = true;
 
-const Document = ({ children, title, lang, dir, gaTrackingId }: DocumentProps) => {
+const Document = ({ children, title, lang, dir, gaTrackingId, ENV }: DocumentProps) => {
   const location = useLocation();
   const matches = useMatches();
   const clientStyleData = React.useContext(ClientStyleContext);
@@ -450,6 +464,13 @@ const Document = ({ children, title, lang, dir, gaTrackingId }: DocumentProps) =
             />
           </>
         )}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.process = ${JSON.stringify({
+              env: ENV,
+            })}`,
+          }}
+        />
         {children}
         <ScrollRestoration />
         {isBot ? null : <Scripts />}
@@ -464,11 +485,46 @@ const App = () => {
   const outlet = useOutlet();
   const fetchers = useFetchers();
   const navigation = useNavigation();
-  const { user, locale, gaTrackingId } = useLoaderData<typeof loader>();
+  const { user, locale, gaTrackingId, ENV } = useLoaderData<typeof loader>();
   const { i18n } = useTranslation();
   const isBot = useIsBot();
   useChangeLanguage(locale);
   const [isLoading, setIsLoading] = React.useState(true);
+  const [isUpdateAvailable, setIsUpdateAvailable] = React.useState(false);
+  const [waitingWorker, setWaitingWorker] = React.useState<ServiceWorker | null>(null);
+
+  const detectSWUpdate = async () => {
+    if ('serviceWorker' in navigator) {
+      const registration = await navigator.serviceWorker.ready;
+      if (registration) {
+        registration.addEventListener('updatefound', () => {
+          const newWorker = registration.installing;
+          if (newWorker) {
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed') {
+                setWaitingWorker(newWorker);
+                setIsUpdateAvailable(true);
+              }
+            });
+          }
+        });
+        if (registration.waiting) {
+          setWaitingWorker(registration.waiting);
+          setIsUpdateAvailable(true);
+        }
+      }
+    }
+  };
+
+  React.useEffect(() => {
+    detectSWUpdate();
+  }, []);
+
+  const reloadPage = () => {
+    waitingWorker?.postMessage({ type: 'SKIP_WAITING' });
+    setIsUpdateAvailable(false);
+    window.location.reload();
+  };
 
   /**
    * This gets the state of every fetcher active on the app and combine it with
@@ -507,7 +563,7 @@ const App = () => {
   const size = 35;
 
   return (
-    <Document lang={locale} dir={i18n.dir()} gaTrackingId={gaTrackingId}>
+    <Document lang={locale} dir={i18n.dir()} gaTrackingId={gaTrackingId} ENV={ENV}>
       <RemixThemesProvider
         defaultTheme="system"
         attribute="class"
@@ -587,6 +643,30 @@ const App = () => {
         </AnimatePresence>
         <NextUIProvider>
           <Layout user={user}>
+            {isUpdateAvailable ? (
+              <ToastProvider swipeDirection="right">
+                <Toast
+                  open={isUpdateAvailable}
+                  onOpenChange={setIsUpdateAvailable}
+                  duration={60000}
+                >
+                  <ToastTitle>
+                    <H5 h5 color="success">
+                      Update Available
+                    </H5>
+                  </ToastTitle>
+                  <ToastDescription asChild>
+                    <H6 as="p">A new version of Sora is available.</H6>
+                  </ToastDescription>
+                  <ToastAction asChild altText="Update Action">
+                    <Button auto flat onClick={() => reloadPage()} color="success">
+                      Update
+                    </Button>
+                  </ToastAction>
+                </Toast>
+                <ToastViewport />
+              </ToastProvider>
+            ) : null}
             <AnimatePresence exitBeforeEnter initial={false}>
               {outlet}
             </AnimatePresence>
