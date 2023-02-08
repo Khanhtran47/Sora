@@ -5,7 +5,6 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import Backend from 'i18next-http-backend';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { getInitialNamespaces } from 'remix-i18next';
-import { env } from 'process';
 
 import i18n from './i18n/i18n.config';
 import { ClientCacheProvider } from './context/client.context';
@@ -77,15 +76,17 @@ function cloneObject<T>(obj: T): T {
 // Use the window load event to keep the page load performant
 async function loadSW() {
   console.log('loaded');
-  const version = `v${new Date().getTime()}`;
-  console.log(env.NODE_ENV);
-  console.log(env.VERCEL_GIT_COMMIT_SHA);
-  console.log(env.VERCEL_GIT_COMMIT_MESSAGE);
-  console.log(env.VERCEL_GIT_COMMIT_AUTHOR_LOGIN);
-  console.log(env.VERCEL_GIT_COMMIT_AUTHOR_NAME);
+  console.log(window.process.env.NODE_ENV);
+  console.log(window.process.env.VERCEL_GIT_COMMIT_SHA);
 
   return navigator.serviceWorker
-    .register(`/entry.worker.js?version=${version}`)
+    .register(
+      `/entry.worker.js${
+        window.process.env.NODE_ENV === 'production'
+          ? `?version=${window.process.env.VERCEL_GIT_COMMIT_SHA}`
+          : ''
+      }`,
+    )
     .then(() => navigator.serviceWorker.ready)
     .then(() => {
       if (navigator.serviceWorker.controller) {

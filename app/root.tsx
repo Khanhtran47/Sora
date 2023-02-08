@@ -91,6 +91,7 @@ interface DocumentProps {
   lang?: string;
   dir?: 'ltr' | 'rtl';
   gaTrackingId?: string;
+  ENV?: any;
 }
 
 export const links: LinksFunction = () => [
@@ -319,6 +320,10 @@ export const loader = async ({ request }: LoaderArgs) => {
       genresTv: await getListGenre('tv', locale),
       languages: await getListLanguages(),
       gaTrackingId,
+      ENV: {
+        NODE_ENV: process.env.NODE_ENV,
+        VERCEL_GIT_COMMIT_SHA: process.env.VERCEL_GIT_COMMIT_SHA,
+      },
     },
     { headers },
   );
@@ -346,7 +351,7 @@ export const handle = {
 
 let isMount = true;
 
-const Document = ({ children, title, lang, dir, gaTrackingId }: DocumentProps) => {
+const Document = ({ children, title, lang, dir, gaTrackingId, ENV }: DocumentProps) => {
   const location = useLocation();
   const matches = useMatches();
   const clientStyleData = React.useContext(ClientStyleContext);
@@ -459,6 +464,13 @@ const Document = ({ children, title, lang, dir, gaTrackingId }: DocumentProps) =
             />
           </>
         )}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.process = ${JSON.stringify({
+              env: ENV,
+            })}`,
+          }}
+        />
         {children}
         <ScrollRestoration />
         {isBot ? null : <Scripts />}
@@ -473,7 +485,7 @@ const App = () => {
   const outlet = useOutlet();
   const fetchers = useFetchers();
   const navigation = useNavigation();
-  const { user, locale, gaTrackingId } = useLoaderData<typeof loader>();
+  const { user, locale, gaTrackingId, ENV } = useLoaderData<typeof loader>();
   const { i18n } = useTranslation();
   const isBot = useIsBot();
   useChangeLanguage(locale);
@@ -483,14 +495,9 @@ const App = () => {
 
   const detectSWUpdate = async () => {
     if ('serviceWorker' in navigator) {
-      const registration = await navigator.serviceWorker.getRegistration();
+      const registration = await navigator.serviceWorker.ready;
       console.log('🚀 ~ file: root.tsx:488 ~ detectSWUpdate ~ registration', registration);
-      // const activeWorker = registration?.active;
-      // console.log('🚀 ~ file: root.tsx:490 ~ detectSWUpdate ~ activeWorker', activeWorker);
-      if (
-        registration
-        // && activeWorker?.state === 'activated'
-      ) {
+      if (registration) {
         registration.addEventListener('updatefound', () => {
           const newWorker = registration.installing;
           if (newWorker) {
@@ -557,7 +564,7 @@ const App = () => {
   const size = 35;
 
   return (
-    <Document lang={locale} dir={i18n.dir()} gaTrackingId={gaTrackingId}>
+    <Document lang={locale} dir={i18n.dir()} gaTrackingId={gaTrackingId} ENV={ENV}>
       <RemixThemesProvider
         defaultTheme="system"
         attribute="class"

@@ -12,9 +12,6 @@ const STATIC_ASSETS = ['/build/', '/icons/', '/favicons/', '/images/', '/locales
 const ASSET_CACHE = 'asset-cache';
 const DATA_CACHE = 'data-cache';
 const DOCUMENT_CACHE = 'document-cache';
-// eslint-disable-next-line no-restricted-globals
-const version = new URL(location.toString()).searchParams.get('version');
-console.log('🚀 ~ file: entry.worker.ts:16 ~ version', version);
 
 function debug(...messages: any[]) {
   if (process.env.NODE_ENV === 'development') {
