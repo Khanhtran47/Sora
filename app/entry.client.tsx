@@ -76,8 +76,6 @@ function cloneObject<T>(obj: T): T {
 // Use the window load event to keep the page load performant
 async function loadSW() {
   console.log('loaded');
-  console.log(window.process.env.NODE_ENV);
-  console.log(window.process.env.VERCEL_GIT_COMMIT_SHA);
 
   return navigator.serviceWorker
     .register(

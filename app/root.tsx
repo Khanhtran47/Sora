@@ -496,7 +496,6 @@ const App = () => {
   const detectSWUpdate = async () => {
     if ('serviceWorker' in navigator) {
       const registration = await navigator.serviceWorker.ready;
-      console.log('🚀 ~ file: root.tsx:488 ~ detectSWUpdate ~ registration', registration);
       if (registration) {
         registration.addEventListener('updatefound', () => {
           const newWorker = registration.installing;
