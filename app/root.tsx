@@ -650,7 +650,7 @@ const App = () => {
                     </H5>
                   </ToastTitle>
                   <ToastDescription asChild>
-                    <H6 h6>A new version of Sora is available.</H6>
+                    <H6 as="p">A new version of Sora is available.</H6>
                   </ToastDescription>
                   <ToastAction asChild altText="Update Action">
                     <Button auto flat onClick={() => reloadPage()} color="success">
