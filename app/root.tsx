@@ -484,12 +484,8 @@ const App = () => {
 
   const detectSWUpdate = async () => {
     if ('serviceWorker' in navigator) {
-      const registration = await navigator.serviceWorker.getRegistration(
-        `/entry.worker.js${
-          env.NODE_ENV === 'production' ? `?version=${env.VERCEL_GIT_COMMIT_SHA}` : ''
-        }`,
-      );
-      if (registration) {
+      const registration = await navigator.serviceWorker.getRegistration();
+      if (registration && registration.active) {
         registration.addEventListener('updatefound', () => {
           const newWorker = registration.installing;
           if (newWorker) {
