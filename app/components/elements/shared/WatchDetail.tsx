@@ -244,9 +244,10 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
               genresMedia.map((genre) => (
                 <>
                   <Button
+                    key={genre?.id}
+                    type="button"
                     color="primary"
                     auto
-                    key={genre?.id}
                     size={isSm ? 'sm' : 'md'}
                     css={{
                       marginBottom: '0.125rem',
@@ -257,7 +258,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
                         color,
                       },
                     }}
-                    onClick={() =>
+                    onPress={() =>
                       navigate(
                         `/${type === 'movie' ? 'movies' : 'tv-shows'}/discover?with_genres=${
                           genre?.id
@@ -275,10 +276,11 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
               genresAnime.map((genre, index) => (
                 <>
                   <Button
-                    auto
                     key={index}
+                    type="button"
+                    auto
                     size={isSm ? 'sm' : 'md'}
-                    onClick={() => navigate(`/anime/discover?genres=${genre}`)}
+                    onPress={() => navigate(`/anime/discover?genres=${genre}`)}
                     css={{
                       marginBottom: '0.125rem',
                       background: color,

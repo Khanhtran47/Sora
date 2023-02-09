@@ -133,7 +133,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                 <Button
                   key={`button-item-${episodeType.activeType}`}
                   type="button"
-                  onClick={() => setActiveType(episodeType.activeType)}
+                  onPress={() => setActiveType(episodeType.activeType)}
                   {...(activeType === episodeType.activeType ? {} : { ghost: true })}
                   css={{
                     '@xsMax': {
@@ -172,7 +172,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                 key={episode.id}
                 auto
                 type="button"
-                onClick={() => handleSelectEpisode(index)}
+                onPress={() => handleSelectEpisode(index)}
                 css={{
                   padding: 0,
                   minWidth: '40px',

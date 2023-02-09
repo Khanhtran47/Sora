@@ -434,7 +434,7 @@ const DesignSystem = () => {
           onClose={() => setDropdownLevelKey('general')}
         >
           <Popover.Trigger>
-            <Button auto light aria-label="dropdown" icon={<Settings />} />
+            <Button type="button" auto light aria-label="dropdown" icon={<Settings />} />
           </Popover.Trigger>
           <Popover.Content>
             <ResizablePanel contentWidth="fit">
@@ -450,9 +450,10 @@ const DesignSystem = () => {
                       <Flex direction="row" align="center" justify="between">
                         {currentDropdownLevel?.showBackButton ? (
                           <Button
+                            type="button"
                             auto
                             light
-                            onClick={currentDropdownLevel?.backButtonAction}
+                            onPress={currentDropdownLevel?.backButtonAction}
                             icon={<Arrow direction="left" />}
                           />
                         ) : null}
@@ -473,10 +474,11 @@ const DesignSystem = () => {
                   >
                     {currentDropdownLevel?.listItems.map((item) => (
                       <Button
+                        type="button"
                         key={item.id}
                         auto
                         light
-                        onClick={item.action}
+                        onPress={item.action}
                         css={{
                           p: 0,
                           width: '100%',
@@ -553,7 +555,7 @@ const DesignSystem = () => {
         <Flex direction="row" className="space-x-2">
           <Sheet>
             <SheetTrigger asChild>
-              <Button auto ghost aria-label="dropdown">
+              <Button type="button" auto ghost aria-label="dropdown">
                 Top
               </Button>
             </SheetTrigger>
@@ -566,7 +568,7 @@ const DesignSystem = () => {
           </Sheet>
           <Sheet>
             <SheetTrigger asChild>
-              <Button auto ghost aria-label="dropdown">
+              <Button type="button" auto ghost aria-label="dropdown">
                 Right
               </Button>
             </SheetTrigger>
@@ -579,7 +581,7 @@ const DesignSystem = () => {
           </Sheet>
           <Sheet>
             <SheetTrigger asChild>
-              <Button auto ghost aria-label="dropdown">
+              <Button type="button" auto ghost aria-label="dropdown">
                 Bottom
               </Button>
             </SheetTrigger>
@@ -598,8 +600,9 @@ const DesignSystem = () => {
                           {currentDropdownLevel?.showBackButton ? (
                             <Button
                               auto
+                              type="button"
                               light
-                              onClick={currentDropdownLevel?.backButtonAction}
+                              onPress={currentDropdownLevel?.backButtonAction}
                               icon={<Arrow direction="left" />}
                             />
                           ) : null}
@@ -620,10 +623,11 @@ const DesignSystem = () => {
                     >
                       {currentDropdownLevel?.listItems.map((item) => (
                         <Button
+                          type="button"
                           key={item.id}
                           auto
                           light
-                          onClick={item.action}
+                          onPress={item.action}
                           css={{
                             p: 0,
                             width: '100%',
@@ -698,7 +702,7 @@ const DesignSystem = () => {
           </Sheet>
           <Sheet>
             <SheetTrigger asChild>
-              <Button auto ghost aria-label="dropdown">
+              <Button type="button" auto ghost aria-label="dropdown">
                 Left
               </Button>
             </SheetTrigger>
@@ -711,7 +715,7 @@ const DesignSystem = () => {
           </Sheet>
         </Flex>
         <Spacer y={1} />
-        <Button auto light onClick={() => navigate('/test/gesg')}>
+        <Button type="button" auto light onPress={() => navigate('/test/gesg')}>
           test catch boundary
         </Button>
       </Container>

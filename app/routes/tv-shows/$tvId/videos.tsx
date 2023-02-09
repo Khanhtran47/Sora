@@ -140,7 +140,7 @@ const TvVideosPage = () => {
             <Button
               key={`button-item-${item.activeVideo}`}
               type="button"
-              onClick={() => setActiveType(index)}
+              onPress={() => setActiveType(index)}
               {...(activeType === item.activeType ? {} : { ghost: true })}
               css={{
                 '@xsMax': {

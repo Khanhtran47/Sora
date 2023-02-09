@@ -350,10 +350,11 @@ const AnimeDetail = (props: IAnimeDetail) => {
             {trailer && trailer.site === 'youtube' && (
               <Row>
                 <Button
+                  type="button"
                   auto
                   // shadow
                   size={isSm ? 'sm' : 'md'}
-                  onClick={() => handler && handler(Number(id))}
+                  onPress={() => handler && handler(Number(id))}
                 >
                   <H5 h5 transform="uppercase">
                     Watch Trailer
@@ -375,10 +376,11 @@ const AnimeDetail = (props: IAnimeDetail) => {
                 genres?.map((genre, index) => (
                   <>
                     <Button
+                      type="button"
                       auto
                       key={index}
                       size={isSm ? 'sm' : 'md'}
-                      onClick={() => navigate(`/anime/discover?genres=${genre}`)}
+                      onPress={() => navigate(`/anime/discover?genres=${genre}`)}
                       css={{
                         marginBottom: '0.125rem',
                         background: color,

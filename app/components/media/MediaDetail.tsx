@@ -444,6 +444,7 @@ const MediaDetail = (props: IMediaDetail) => {
                     genres?.map((genre) => (
                       <>
                         <Button
+                          type="button"
                           color="primary"
                           auto
                           // shadow
@@ -458,7 +459,7 @@ const MediaDetail = (props: IMediaDetail) => {
                               color,
                             },
                           }}
-                          onClick={() =>
+                          onPress={() =>
                             navigate(
                               `/${type === 'movie' ? 'movies/' : 'tv-shows/'}discover?with_genres=${
                                 genre?.id
@@ -482,10 +483,11 @@ const MediaDetail = (props: IMediaDetail) => {
               >
                 {(status === 'Released' || status === 'Ended' || status === 'Returning Series') && (
                   <Button
+                    type="button"
                     auto
                     // shadow
                     color="gradient"
-                    onClick={() => setVisible(true)}
+                    onPress={() => setVisible(true)}
                     css={{
                       '@xsMax': {
                         width: '100%',
@@ -499,10 +501,11 @@ const MediaDetail = (props: IMediaDetail) => {
                 )}
                 <Flex direction="row" align="center" justify="start" wrap="wrap">
                   <Button
+                    type="button"
                     auto
                     // shadow
                     flat
-                    onClick={() => handler && handler(Number(id))}
+                    onPress={() => handler && handler(Number(id))}
                     css={{ margin: '0.5rem 0' }}
                   >
                     Watch Trailer
@@ -510,9 +513,10 @@ const MediaDetail = (props: IMediaDetail) => {
                   <Spacer x={0.5} />
                   <Tooltip content="Share" placement="top" isDisabled={isSm}>
                     <Button
+                      type="button"
                       auto
                       flat
-                      onClick={() =>
+                      onPress={() =>
                         WebShareLink(window.location.href, `${title}`, `${description}`)
                       }
                       icon={<ShareIcon />}

@@ -110,10 +110,10 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
         }}
       >
         {isMd ? (
-          <button
+          <Button
             type="button"
             aria-label="Menu Icon"
-            onClick={() => setOpen(!open)}
+            onPress={() => setOpen(!open)}
             style={{
               paddingRight: 8,
               paddingLeft: 8,
@@ -121,7 +121,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
             }}
           >
             <MenuIcon />
-          </button>
+          </Button>
         ) : null}
         <NavLink linkTo="/" isLogo />
       </Grid>
@@ -178,7 +178,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
           onOpenChange={setIsDropdownOpen}
         >
           <Popover.Trigger>
-            <Button auto light aria-label="dropdown" css={{ padding: '0 $xs' }}>
+            <Button type="button" auto light aria-label="dropdown" css={{ padding: '0 $xs' }}>
               <PlayerStyled
                 lottieRef={(instance) => {
                   setLottie(instance);

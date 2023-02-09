@@ -757,7 +757,7 @@ const Filter = (props: IFilterProps) => {
             <Button
               auto
               type="button"
-              onClick={() => {
+              onPress={() => {
                 setReleaseDateFrom(preDateGte || '');
                 setReleaseDateTo(preDateLte || '');
                 setGenre(preGenresSet);

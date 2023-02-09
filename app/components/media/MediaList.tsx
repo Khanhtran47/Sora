@@ -403,11 +403,12 @@ const MediaList = (props: IMediaListProps) => {
               {showFilterButton ? (
                 <Tooltip content={t('show-hide-filter')}>
                   <Button
+                    type="button"
                     auto
                     color="primary"
                     bordered={!showFilter}
                     icon={<FilterIcon />}
-                    onClick={() => setShowFilter(!showFilter)}
+                    onPress={() => setShowFilter(!showFilter)}
                   />
                 </Tooltip>
               ) : null}
@@ -415,13 +416,13 @@ const MediaList = (props: IMediaListProps) => {
                 <Button.Group css={{ margin: 0 }}>
                   <Button
                     type="button"
-                    onClick={() => filterChangeHandler('grid')}
+                    onPress={() => filterChangeHandler('grid')}
                     icon={<ViewGridIcon width={40} height={40} />}
                     {...(displayType === 'grid' ? {} : { ghost: true })}
                   />
                   <Button
                     type="button"
-                    onClick={() => filterChangeHandler('table')}
+                    onPress={() => filterChangeHandler('table')}
                     icon={<ViewTableIcon width={40} height={40} />}
                     {...(displayType === 'table' ? {} : { ghost: true })}
                   />
@@ -434,11 +435,12 @@ const MediaList = (props: IMediaListProps) => {
       {showMoreList && (
         <Row fluid justify="space-between" wrap="nowrap" align="center">
           <Button
+            type="button"
             auto
             size={isSm ? 'sm' : 'md'}
             rounded
             ghost
-            onClick={onClickViewMore}
+            onPress={onClickViewMore}
             css={{
               maxWidth: '$8',
               marginBottom: '$12',
@@ -455,6 +457,7 @@ const MediaList = (props: IMediaListProps) => {
               }}
             >
               <Button
+                type="button"
                 auto
                 color="primary"
                 rounded
@@ -475,6 +478,7 @@ const MediaList = (props: IMediaListProps) => {
               />
               <Spacer x={0.25} />
               <Button
+                type="button"
                 auto
                 color="primary"
                 rounded

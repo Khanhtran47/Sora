@@ -107,10 +107,11 @@ const SelectProviderModal = (props: SelectProviderModalProps) => {
         {provider && Array.isArray(provider)
           ? provider.map((item) => (
               <Button
+                type="button"
                 key={item.id}
                 light
                 css={{ '@hover': { color: '$primaryLightContrast' } }}
-                onClick={() => handleProvider(item)}
+                onPress={() => handleProvider(item)}
               >
                 {item.provider}
               </Button>

@@ -1028,9 +1028,10 @@ const GlobalPlayer = () => {
                       {titlePlayer}
                     </H5>
                     <Button
+                      type="button"
                       auto
                       light
-                      onClick={() => {
+                      onPress={() => {
                         if (artplayer) artplayer.destroy();
                         setShouldShowPlayer(false);
                         setPlayerData(undefined);
@@ -1067,6 +1068,7 @@ const GlobalPlayer = () => {
                   >
                     <Tooltip content="In development">
                       <Button
+                        type="button"
                         size="sm"
                         color="primary"
                         auto
@@ -1077,11 +1079,12 @@ const GlobalPlayer = () => {
                       </Button>
                     </Tooltip>
                     <Button
+                      type="button"
                       size="sm"
                       color="primary"
                       auto
                       ghost
-                      onClick={() => {
+                      onPress={() => {
                         artplayer?.pause();
                         setWatchTrailerModalVisible(true);
                         if (typeVideo === 'movie' || typeVideo === 'tv')
@@ -1142,9 +1145,10 @@ const GlobalPlayer = () => {
             >
               <Tooltip content={isPlayerPlaying ? 'Pause' : 'Play'}>
                 <Button
+                  type="button"
                   auto
                   light
-                  onClick={() => {
+                  onPress={() => {
                     if (isPlayerPlaying) {
                       artplayer.pause();
                     } else {
@@ -1171,17 +1175,19 @@ const GlobalPlayer = () => {
               <Flex direction="row" align="center" justify="center" className="space-x-1">
                 <Tooltip content="Expand">
                   <Button
+                    type="button"
                     auto
                     light
-                    onClick={() => navigate(routePlayer)}
+                    onPress={() => navigate(routePlayer)}
                     icon={<Expand filled />}
                   />
                 </Tooltip>
                 {/* <Tooltip content="Close">
                   <Button
+                    type="button"
                     auto
                     light
-                    onClick={() => {
+                    onPress={() => {
                       setShouldShowPlayer(false);
                       setPlayerData(undefined);
                       setIsMini(false);
@@ -1218,9 +1224,10 @@ const GlobalPlayer = () => {
               transition={{ duration: 0.4 }}
             >
               <Button
+                type="button"
                 auto
                 css={{ px: '$md !important' }}
-                onClick={() => {
+                onPress={() => {
                   if (currentHighlight?.end) {
                     artplayer.currentTime = currentHighlight?.end;
                   }
@@ -1252,9 +1259,10 @@ const GlobalPlayer = () => {
       {artplayer?.controls.prev && !isMini && currentEpisode > 1 && isDesktop
         ? createPortal(
             <Button
+              type="button"
               auto
               light
-              onClick={() => prevEpisodeUrl && navigate(prevEpisodeUrl)}
+              onPress={() => prevEpisodeUrl && navigate(prevEpisodeUrl)}
               icon={<Previous filled />}
               css={{ color: '#eee' }}
             />,
@@ -1264,9 +1272,10 @@ const GlobalPlayer = () => {
       {artplayer?.controls.next && !isMini && hasNextEpisode && isDesktop
         ? createPortal(
             <Button
+              type="button"
               auto
               light
-              onClick={() => nextEpisodeUrl && navigate(nextEpisodeUrl)}
+              onPress={() => nextEpisodeUrl && navigate(nextEpisodeUrl)}
               icon={<Next filled />}
               css={{ color: '#eee' }}
             />,

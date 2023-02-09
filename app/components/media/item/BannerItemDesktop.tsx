@@ -384,12 +384,13 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                 variants={variants}
               >
                 <Button
+                  type="button"
                   auto
                   // shadow
                   css={{
                     marginTop: '1.125rem',
                   }}
-                  onClick={() =>
+                  onPress={() =>
                     navigate(
                       `/${
                         mediaType === 'movie'
@@ -649,6 +650,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
         {!isSm && showTrailer && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <Button
+              type="button"
               auto
               color="primary"
               rounded
@@ -674,7 +676,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                 '@lgMin': { bottom: '200px' },
               }}
               aria-label="Toggle Mute"
-              onClick={isMutedTrailer ? unMute : mute}
+              onPress={isMutedTrailer ? unMute : mute}
             />
           </motion.div>
         )}

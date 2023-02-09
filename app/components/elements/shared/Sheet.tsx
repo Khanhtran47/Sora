@@ -180,7 +180,7 @@ const SheetContent = React.forwardRef<React.ElementRef<typeof StyledContent>, Sh
             {swipeDownToClose ? <Handle /> : null}
             {!hideCloseButton ? (
               <StyledCloseButton asChild>
-                <Button auto light icon={<Close />} />
+                <Button type="button" auto light icon={<Close />} />
               </StyledCloseButton>
             ) : null}
             <motion.div
