@@ -110,10 +110,10 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
         }}
       >
         {isMd ? (
-          <Button
+          <button
             type="button"
             aria-label="Menu Icon"
-            onPress={() => setOpen(!open)}
+            onClick={() => setOpen(!open)}
             style={{
               paddingRight: 8,
               paddingLeft: 8,
@@ -121,7 +121,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
             }}
           >
             <MenuIcon />
-          </Button>
+          </button>
         ) : null}
         <NavLink linkTo="/" isLogo />
       </Grid>
