@@ -76,6 +76,7 @@ const AnimeDetail = (props: IAnimeDetail) => {
   const colorBackground = tinycolor(color).isDark()
     ? tinycolor(color).brighten(40).saturate(70).spin(180).toString()
     : tinycolor(color).darken(40).saturate(70).spin(180).toString();
+  const decreaseBrightColor = tinycolor(color).darken(15).toString();
 
   useEffect(() => {
     if (ref.current) {
@@ -93,7 +94,7 @@ const AnimeDetail = (props: IAnimeDetail) => {
           width: '100%',
           height: `calc(${JSON.stringify(size?.height)}px + ${backgroundImageHeight}px - 2rem)`,
           borderWidth: 0,
-          backgroundColor: color,
+          backgroundColor: decreaseBrightColor,
         }}
       >
         <Card.Body
@@ -108,7 +109,9 @@ const AnimeDetail = (props: IAnimeDetail) => {
               left: 0,
               width: '100%',
               height: `${backgroundGradientHeight}px`,
-              backgroundImage: `linear-gradient(to top, ${color}, ${tinycolor(color).setAlpha(0)})`,
+              backgroundImage: `linear-gradient(to top, ${decreaseBrightColor}, ${tinycolor(
+                decreaseBrightColor,
+              ).setAlpha(0)})`,
             },
           }}
         >
@@ -469,7 +472,7 @@ const AnimeDetail = (props: IAnimeDetail) => {
             }}
             justify="center"
           >
-            <BackgroundTabLink css={{ backgroundColor: color }} />
+            <BackgroundTabLink css={{ backgroundColor: decreaseBrightColor }} />
             <TabLink pages={detailTab} linkTo={`/anime/${id}`} />
           </Row>
         </Card.Footer>
