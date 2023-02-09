@@ -297,6 +297,7 @@ const CardItemHover = (props: ICardItemHoverProps) => {
           {showTrailer && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
               <Button
+                type="button"
                 auto
                 color="primary"
                 rounded
@@ -321,7 +322,7 @@ const CardItemHover = (props: ICardItemHoverProps) => {
                   },
                 }}
                 aria-label="Toggle Mute"
-                onClick={isMutedTrailer ? unMute : mute}
+                onPress={isMutedTrailer ? unMute : mute}
               />
             </motion.div>
           )}

@@ -1,10 +1,17 @@
-import { Row, Col } from '@nextui-org/react';
+import { Loading, styled } from '@nextui-org/react';
 import { NavLink } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
+import { ClientOnly } from 'remix-utils';
 
 import { H5 } from '~/components/styles/Text.styles';
-
-// import useMediaQuery from '~/hooks/useMediaQuery';
+import {
+  ScrollArea,
+  ScrollAreaViewport,
+  ScrollAreaScrollbar,
+  ScrollAreaThumb,
+  ScrollAreaCorner,
+} from '~/components/elements/scroll-area/ScrollArea';
+import { Underline } from './Tabs';
 
 interface ITabProps {
   pages?: {
@@ -14,72 +21,94 @@ interface ITabProps {
   linkTo?: string;
 }
 
+const TabList = styled('div', {
+  display: 'flex',
+  flexShrink: 0,
+  padding: '5px',
+  '&:focus': {
+    outline: 'none',
+  },
+});
+
+const TabsTrigger = styled(NavLink, {
+  flexShrink: 0,
+  display: 'flex',
+  lineHeight: 1,
+  fontSize: '$md',
+  fontWeight: '$semibold',
+  height: 50,
+  p: '$md',
+  userSelect: 'none',
+  outline: 'none',
+  alignItems: 'center',
+  justifyContent: 'center',
+  borderRadius: '$sm',
+  color: '$slate11',
+  zIndex: '10',
+  '&:hover': {
+    opacity: '0.8',
+    color: '$primarySolidHover',
+  },
+  '&:focus': { backgroundColor: '$backgroundContrast' },
+});
+
 const TabLink = (props: ITabProps) => {
   const { pages, linkTo } = props;
   const { t } = useTranslation();
-  // const isMd = useMediaQuery('(max-width: 960px)');
   return (
-    <Row
-      className="border-b"
-      align="center"
-      justify="flex-start"
-      css={{
-        p: 0,
-        gap: '$lg',
-        overflowX: 'auto',
-        flexFlow: 'row nowrap',
-        width: '100%',
-        margin: 'auto 0 0 0',
-        borderColor: '$primaryLightActive',
-      }}
-    >
-      {pages?.map((page, index) => (
-        <Col
-          key={`row-item-${index}`}
+    <ClientOnly fallback={<Loading type="default" />}>
+      {() => (
+        <ScrollArea
+          type="scroll"
+          scrollHideDelay={100}
           css={{
-            flexGrow: '1',
-            flexShrink: '0',
-            dflex: 'center',
-            width: 'max-content',
+            height: 55,
+            width: '100%',
+            maxWidth: 'calc(100% - 2rem)',
+            borderBottom: '1px solid $border',
+            boxShadow: 'unset',
           }}
         >
-          <NavLink
-            to={`${linkTo}${page.pageLink}`}
-            className={({ isActive }) => `${isActive ? 'border-b-2 border-solid' : ''}`}
-            style={({ isActive }) =>
-              isActive
-                ? { borderColor: 'var(--nextui-colors-primary)', height: '50px' }
-                : { height: '50px' }
-            }
-          >
-            {({ isActive }) => (
-              <H5
-                h5
-                weight="bold"
-                transform="uppercase"
-                color="primary"
-                css={{
-                  height: '40px',
-                  padding: '0.25rem 0.5rem',
-                  borderRadius: '14px',
-                  alignItems: 'center',
-                  transition: 'opacity 0.25s ease 0s, background 0.25s ease 0s',
-                  ...(isActive && {
-                    background: '$primaryLightActive',
-                  }),
-                  '&:hover': {
-                    opacity: '0.8',
-                    backgroundColor: '$primaryLightHover',
-                  },
-                }}
-              >
-                {t(page.pageName)}
-              </H5>
-            )}
-          </NavLink>
-        </Col>
-      ))}
-    </Row>
+          <ScrollAreaViewport>
+            <TabList>
+              {pages?.map((page) => (
+                <TabsTrigger
+                  key={page.pageLink}
+                  to={`${linkTo}${page.pageLink}`}
+                  css={{ position: 'relative' }}
+                >
+                  {({ isActive }) => (
+                    <>
+                      <H5
+                        h5
+                        weight="bold"
+                        // transform="uppercase"
+                      >
+                        {t(page.pageName)}
+                      </H5>
+                      {isActive && (
+                        <Underline
+                          layoutId="underline"
+                          css={{
+                            height: 4,
+                            width: '50%',
+                            bottom: 0,
+                          }}
+                        />
+                      )}
+                    </>
+                  )}
+                </TabsTrigger>
+              ))}
+            </TabList>
+          </ScrollAreaViewport>
+          <ScrollAreaScrollbar orientation="horizontal">
+            <ScrollAreaThumb />
+          </ScrollAreaScrollbar>
+          <ScrollAreaCorner />
+        </ScrollArea>
+      )}
+    </ClientOnly>
   );
 };
 

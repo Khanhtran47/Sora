@@ -4,7 +4,10 @@ import { useFetcher, useNavigate } from '@remix-run/react';
 import { Modal, Button } from '@nextui-org/react';
 
 import useWindowSize from '~/hooks/useWindowSize';
+import { useSoraSettings } from '~/hooks/useLocalStorage';
+
 import { IMovieTranslations } from '~/services/tmdb/tmdb.types';
+
 import { H3 } from '~/components/styles/Text.styles';
 
 type SelectProviderModalProps = {
@@ -18,7 +21,7 @@ type SelectProviderModalProps = {
   translations?: IMovieTranslations;
   season?: number;
   episode?: number;
-  episodeId?: string;
+  animeType?: string;
 };
 
 const SelectProviderModal = (props: SelectProviderModalProps) => {
@@ -33,10 +36,11 @@ const SelectProviderModal = (props: SelectProviderModalProps) => {
     translations,
     season,
     episode,
-    episodeId,
+    animeType,
   } = props;
   const fetcher = useFetcher();
   const navigate = useNavigate();
+  const { isShowSkipOpEdButton } = useSoraSettings();
   const [provider, setProvider] = useState<{ id: string | number; provider: string }[]>();
   const { width } = useWindowSize();
   const findTranslation = translations?.translations.find((item) => item.iso_639_1 === 'en');
@@ -49,7 +53,7 @@ const SelectProviderModal = (props: SelectProviderModalProps) => {
       );
     else if (type === 'anime')
       navigate(
-        `/anime/${id}/episode/${episodeId}/watch?provider=${item.provider}&id=${item.id}&episode=${episode}`,
+        `/anime/${id}/episode/${episode}/watch?provider=${item.provider}&id=${item.id}&episode=${episode}&skipOpEd=${isShowSkipOpEdButton}`,
       );
   };
   useEffect(() => {
@@ -69,7 +73,7 @@ const SelectProviderModal = (props: SelectProviderModalProps) => {
         );
       else if (type === 'anime')
         fetcher.load(
-          `/api/provider?title=${title}&type=${type}&origTitle=${origTitle}&year=${year}&episodeId=${episodeId}`,
+          `/api/provider?title=${title}&type=${type}&origTitle=${origTitle}&year=${year}&aid=${id}&animeType=${animeType}`,
         );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -107,10 +111,11 @@ const SelectProviderModal = (props: SelectProviderModalProps) => {
         {provider && Array.isArray(provider)
           ? provider.map((item) => (
               <Button
+                type="button"
                 key={item.id}
                 light
                 css={{ '@hover': { color: '$primaryLightContrast' } }}
-                onClick={() => handleProvider(item)}
+                onPress={() => handleProvider(item)}
               >
                 {item.provider}
               </Button>

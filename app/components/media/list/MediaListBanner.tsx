@@ -34,6 +34,7 @@ const CustomNavigation = ({ slot }: { slot: 'container-end' }) => {
   return (
     <div slot={slot}>
       <Button
+        type="button"
         auto
         color="primary"
         rounded
@@ -41,7 +42,7 @@ const CustomNavigation = ({ slot }: { slot: 'container-end' }) => {
         icon={
           isPlayTrailer ? <StopIcon fill="currentColor" /> : <PlayIcon fill="currentColor" filled />
         }
-        onClick={() => setIsPlayTrailer(!isPlayTrailer)}
+        onPress={() => setIsPlayTrailer(!isPlayTrailer)}
         css={{
           width: '44px',
           height: '44px',
@@ -60,12 +61,13 @@ const CustomNavigation = ({ slot }: { slot: 'container-end' }) => {
       {isXl ? (
         <>
           <Button
+            type="button"
             auto
             color="primary"
             rounded
             ghost
             icon={<ChevronLeftIcon fill="currentColor" />}
-            onClick={() => swiper.slidePrev()}
+            onPress={() => swiper.slidePrev()}
             css={{
               width: '44px',
               height: '44px',
@@ -83,12 +85,13 @@ const CustomNavigation = ({ slot }: { slot: 'container-end' }) => {
             disabled={slideProgress === 0}
           />
           <Button
+            type="button"
             auto
             color="primary"
             rounded
             ghost
             icon={<ChevronRightIcon fill="currentColor" />}
-            onClick={() => swiper.slideNext()}
+            onPress={() => swiper.slideNext()}
             css={{
               width: '44px',
               height: '44px',
@@ -116,12 +119,13 @@ const CustomNavigationThumbs = ({ slot }: { slot: 'container-end' }) => {
   return (
     <div slot={slot}>
       <Button
+        type="button"
         auto
         color="primary"
         flat
         className="backdrop-blur-md"
         icon={<ChevronLeftIcon fill="currentColor" filled />}
-        onClick={() => swiper.slidePrev()}
+        onPress={() => swiper.slidePrev()}
         css={{
           p: 0,
           m: 0,
@@ -148,12 +152,13 @@ const CustomNavigationThumbs = ({ slot }: { slot: 'container-end' }) => {
         aria-label="Previous"
       />
       <Button
+        type="button"
         auto
         color="primary"
         flat
         className="backdrop-blur-md"
         icon={<ChevronRightIcon fill="currentColor" filled />}
-        onClick={() => swiper.slideNext()}
+        onPress={() => swiper.slideNext()}
         css={{
           p: 0,
           m: 0,

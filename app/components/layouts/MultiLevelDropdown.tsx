@@ -79,6 +79,7 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
         <Grid.Container css={{ flexDirection: 'column' }}>
           <Grid css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}>
             <Button
+              type="button"
               light
               color="primary"
               size="md"
@@ -93,7 +94,7 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
                   css={{ cursor: 'pointer' }}
                 />
               }
-              onClick={() => {
+              onPress={() => {
                 if (!user) navigate(`/sign-in?ref=${ref}`);
               }}
             >
@@ -117,10 +118,11 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
           </Grid>
           <Grid css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}>
             <Button
+              type="button"
               flat
               color="primary"
               size="md"
-              onClick={() => {
+              onPress={() => {
                 setIsLanguageTab(true);
                 setIsLeftMenu(false);
               }}
@@ -134,10 +136,11 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
           </Grid>
           <Grid css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}>
             <Button
+              type="button"
               flat
               color="primary"
               size="md"
-              onClick={() => {
+              onPress={() => {
                 setIsDisplayTab(true);
                 setIsLeftMenu(false);
               }}
@@ -151,10 +154,11 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
           <Grid css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}>
             {user ? (
               <Button
+                type="button"
                 flat
                 color="error"
                 size="md"
-                onClick={() => {
+                onPress={() => {
                   navigate(`/sign-out?ref=${ref}`);
                 }}
                 css={{ w: 220, h: 50 }}
@@ -165,10 +169,11 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
               </Button>
             ) : (
               <Button
+                type="button"
                 flat
                 color="primary"
                 size="md"
-                onClick={() => {
+                onPress={() => {
                   navigate(`/sign-up?ref=${ref}`);
                 }}
                 css={{ w: 220, h: 50 }}
@@ -185,10 +190,11 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
             <>
               <Grid css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}>
                 <Button
+                  type="button"
                   light
                   color="primary"
                   size="md"
-                  onClick={() => {
+                  onPress={() => {
                     setIsLanguageTab(false);
                     setIsLeftMenu(true);
                   }}
@@ -216,10 +222,11 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
                   css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}
                 >
                   <Button
+                    type="button"
                     flat
                     color="primary"
                     size="md"
-                    onClick={() => {
+                    onPress={() => {
                       setIsLanguageTab(false);
                       setIsLeftMenu(true);
                       navigate(`${location.pathname}?lng=${lng}`);
@@ -238,10 +245,11 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
             <>
               <Grid css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}>
                 <Button
+                  type="button"
                   light
                   color="primary"
                   size="md"
-                  onClick={() => {
+                  onPress={() => {
                     setIsDisplayTab(false);
                     setIsLeftMenu(true);
                   }}
@@ -286,9 +294,10 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
               </Grid>
               <Grid css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}>
                 <Button
+                  type="button"
                   flat
                   size="md"
-                  onClick={() => {
+                  onPress={() => {
                     setTheme('light');
                     setTheme('bumblebee');
                   }}
@@ -304,9 +313,10 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
               </Grid>
               <Grid css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}>
                 <Button
+                  type="button"
                   flat
                   size="md"
-                  onClick={() => {
+                  onPress={() => {
                     setTheme('dark');
                     setTheme('synthwave');
                   }}
@@ -322,9 +332,10 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
               </Grid>
               <Grid css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}>
                 <Button
+                  type="button"
                   flat
                   size="md"
-                  onClick={() => {
+                  onPress={() => {
                     setTheme('light');
                     setTheme('retro');
                   }}
@@ -340,9 +351,10 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
               </Grid>
               <Grid css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}>
                 <Button
+                  type="button"
                   flat
                   size="md"
-                  onClick={() => {
+                  onPress={() => {
                     setTheme('dark');
                     setTheme('dracula');
                   }}
@@ -358,9 +370,10 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
               </Grid>
               <Grid css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}>
                 <Button
+                  type="button"
                   flat
                   size="md"
-                  onClick={() => {
+                  onPress={() => {
                     setTheme('light');
                     setTheme('autumn');
                   }}
@@ -376,9 +389,10 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
               </Grid>
               <Grid css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}>
                 <Button
+                  type="button"
                   flat
                   size="md"
-                  onClick={() => {
+                  onPress={() => {
                     setTheme('dark');
                     setTheme('night');
                   }}

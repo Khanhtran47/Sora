@@ -1,28 +1,30 @@
-/* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/indent */
-/* eslint-disable no-unused-expressions */
-/* eslint-disable @typescript-eslint/no-unused-expressions */
+/* eslint-disable no-nested-ternary */
 import { useRef, useState, useEffect } from 'react';
 import { useNavigate, useLocation } from '@remix-run/react';
-import { Card, Col, Row, Button, Spacer, Avatar } from '@nextui-org/react';
+import { Card, Col, Row, Button, Spacer, Avatar, Tooltip } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
 import tinycolor from 'tinycolor2';
-
 // import { useTranslation } from 'react-i18next';
 
 import { IMovieDetail, ITvShowDetail, IMovieTranslations } from '~/services/tmdb/tmdb.types';
+
 import TMDB from '~/utils/media';
+import { WebShareLink } from '~/utils/client/pwa-utils.client';
+
 import useMediaQuery from '~/hooks/useMediaQuery';
 import useSize, { IUseSize } from '~/hooks/useSize';
 
 import TabLink from '~/components/elements/tab/TabLink';
 import Flex from '~/components/styles/Flex.styles';
-import { H2, H5 } from '~/components/styles/Text.styles';
+import { H2, H5, H6 } from '~/components/styles/Text.styles';
 import SelectProviderModal from '~/components/elements/modal/SelectProviderModal';
 
 import PhotoIcon from '~/assets/icons/PhotoIcon';
+import ShareIcon from '~/assets/icons/ShareIcon';
 import BackgroundDefault from '~/assets/images/background-default.jpg';
+
+import { BackgroundContent, BackgroundTabLink } from './Media.styles';
 
 interface IMediaDetail {
   type: 'movie' | 'tv';
@@ -83,6 +85,7 @@ const MediaDetail = (props: IMediaDetail) => {
   const releaseDate = new Date(
     (item as IMovieDetail)?.release_date || (item as ITvShowDetail)?.first_air_date || '',
   ).toLocaleDateString('fr-FR');
+  const description = (item as IMovieDetail)?.overview || (item as ITvShowDetail)?.overview || '';
 
   const colorBackground = tinycolor(color).isDark()
     ? tinycolor(color).brighten(40).saturate(70).spin(180).toString()
@@ -104,7 +107,7 @@ const MediaDetail = (props: IMediaDetail) => {
           width: '100%',
           height: `calc(${JSON.stringify(size?.height)}px + ${backgroundImageHeight}px - 10rem)`,
           borderWidth: 0,
-          backgroundColor: '$background',
+          backgroundColor: color,
         }}
       >
         <Card.Body
@@ -119,7 +122,7 @@ const MediaDetail = (props: IMediaDetail) => {
               left: 0,
               width: '100%',
               height: `${backgroundGradientHeight}px`,
-              backgroundImage: 'linear-gradient(to top, $background, $backgroundTransparent)',
+              backgroundImage: `linear-gradient(to top, ${color}, ${tinycolor(color).setAlpha(0)})`,
             },
           }}
         >
@@ -193,6 +196,8 @@ const MediaDetail = (props: IMediaDetail) => {
             display: 'flex',
             flexGrow: 1,
             justifyContent: 'center',
+            flexDirection: 'column',
+            padding: 0,
           }}
         >
           <Row
@@ -216,6 +221,7 @@ const MediaDetail = (props: IMediaDetail) => {
               maxWidth: '1920px',
             }}
           >
+            <BackgroundContent />
             {!isSm && (
               <Col span={4}>
                 {posterPath ? (
@@ -281,32 +287,7 @@ const MediaDetail = (props: IMediaDetail) => {
                     />
                   </Row>
                 )}
-                {(status === 'Released' || status === 'Ended' || status === 'Returning Series') &&
-                  !isSm && (
-                    <Row align="center" justify="center">
-                      <Button
-                        auto
-                        // shadow
-                        rounded
-                        color="gradient"
-                        css={{
-                          width: `${isLg ? '75%' : isMd ? '100%' : '50%'}`,
-                          margin: '0.5rem 0 0.5rem 0',
-                          '@xs': {
-                            marginTop: '4vh',
-                          },
-                          '@sm': {
-                            marginTop: '2vh',
-                          },
-                        }}
-                        onClick={() => setVisible(true)}
-                      >
-                        <H5 h5 weight="bold" transform="uppercase">
-                          Watch now
-                        </H5>
-                      </Button>
-                    </Row>
-                  )}
+                <Spacer y={2} />
               </Col>
             )}
             <Col
@@ -314,209 +295,227 @@ const MediaDetail = (props: IMediaDetail) => {
               css={{
                 display: 'flex',
                 flexFlow: 'column',
-                justifyContent: 'flex-start',
+                justifyContent: 'space-between',
               }}
             >
-              {(status === 'Released' || status === 'Ended' || status === 'Returning Series') &&
-                isSm && (
+              <Flex direction="column" justify="center" align="start">
+                {isSm && (
                   <>
                     {posterPath ? (
-                      <>
-                        <Row>
-                          <Card.Image
-                            // @ts-ignore
-                            as={Image}
-                            src={posterPath}
-                            alt={title}
-                            objectFit="cover"
-                            width={isXs ? '70%' : '40%'}
-                            css={{
-                              minWidth: 'auto !important',
-                              marginTop: '2rem',
-                              borderRadius: '24px',
-                              minHeight: '205px !important',
-                            }}
-                            showSkeleton
-                            loaderUrl="/api/image"
-                            placeholder="empty"
-                            options={{
-                              contentType: MimeType.WEBP,
-                            }}
-                            responsive={[
-                              {
-                                size: {
-                                  width: 246,
-                                  height: 369,
-                                },
-                                maxWidth: 375,
-                              },
-                              {
-                                size: {
-                                  width: 235,
-                                  height: 352,
-                                },
-                              },
-                            ]}
-                          />
-                        </Row>
-                        <Spacer y={1} />
-                      </>
-                    ) : (
-                      <>
-                        <Row align="center" justify="center">
-                          <Avatar
-                            icon={<PhotoIcon width={48} height={48} />}
-                            css={{
-                              width: `${isXs ? '70%' : '40%'} !important`,
-                              size: '$20',
-                              minWidth: 'auto !important',
-                              minHeight: '205px !important',
-                              marginTop: '2rem',
-                              borderRadius: '24px !important',
-                            }}
-                          />
-                        </Row>
-                        <Spacer y={1} />
-                      </>
-                    )}
-                    <Row>
-                      <Button
-                        auto
-                        // shadow
-                        rounded
-                        color="gradient"
-                        size="sm"
-                        css={{
-                          width: '100%',
-                          minHeight: '36px',
-                          margin: '0.5rem 0 0.5rem 0',
-                          '@xs': {
-                            marginTop: '4vh',
-                          },
-                          '@sm': {
-                            marginTop: '2vh',
-                          },
+                      <Card.Image
+                        // @ts-ignore
+                        as={Image}
+                        src={posterPath}
+                        alt={title}
+                        objectFit="cover"
+                        width={isXs ? '70%' : '40%'}
+                        containerCss={{
+                          borderRadius: '24px',
                         }}
-                        onClick={() => setVisible(true)}
-                      >
-                        <H5 h5 weight="bold" transform="uppercase">
-                          Watch now
-                        </H5>
-                      </Button>
-                    </Row>
+                        css={{
+                          minWidth: 'auto !important',
+                          marginTop: '2rem',
+                          borderRadius: '24px',
+                          minHeight: '205px !important',
+                        }}
+                        showSkeleton
+                        loaderUrl="/api/image"
+                        placeholder="empty"
+                        options={{
+                          contentType: MimeType.WEBP,
+                        }}
+                        responsive={[
+                          {
+                            size: {
+                              width: 246,
+                              height: 369,
+                            },
+                            maxWidth: 375,
+                          },
+                          {
+                            size: {
+                              width: 235,
+                              height: 352,
+                            },
+                          },
+                        ]}
+                      />
+                    ) : (
+                      <Row align="center" justify="center">
+                        <Avatar
+                          icon={<PhotoIcon width={48} height={48} />}
+                          css={{
+                            width: `${isXs ? '70%' : '40%'} !important`,
+                            size: '$20',
+                            minWidth: 'auto !important',
+                            minHeight: '205px !important',
+                            marginTop: '2rem',
+                            borderRadius: '24px !important',
+                          }}
+                        />
+                      </Row>
+                    )}
+                    <Spacer y={1} />
                   </>
                 )}
-              <Row>
                 <H2 h2 weight="bold">
                   {`${title} (${releaseYear})`}
                 </H2>
-              </Row>
-              <Row>
-                <H5 h5>
-                  {releaseDate}
-                  {runtime ? ` • ${Math.floor(runtime / 60)}h ${runtime % 60}m` : null}
-                </H5>
-              </Row>
-              {tagline && (
-                <Row>
-                  <H5 h5 css={{ fontStyle: 'italic', marginTop: '10px' }}>
+                <Spacer y={0.5} />
+                {tagline && (
+                  <H5 h5 css={{ fontStyle: 'italic' }}>
                     {tagline}
                   </H5>
-                </Row>
-              )}
-              <Spacer y={0.5} />
-              <Flex direction="row">
-                <H5
-                  h5
-                  css={{
-                    backgroundColor: '#3ec2c2',
-                    borderRadius: '$xs',
-                    padding: '0 0.25rem 0 0.25rem',
-                    marginRight: '0.5rem',
-                  }}
-                >
-                  TMDb
-                </H5>
-                <H5 h5>{item?.vote_average?.toFixed(1)}</H5>
-                {imdbRating && (
-                  <>
-                    <Spacer x={1.25} />
-                    <H5
-                      h5
+                )}
+                <Spacer y={0.5} />
+                <Row fluid wrap="wrap">
+                  <Flex direction="row">
+                    <H6
+                      h6
                       css={{
-                        backgroundColor: '#ddb600',
-                        color: '#000',
+                        backgroundColor: '#3ec2c2',
                         borderRadius: '$xs',
                         padding: '0 0.25rem 0 0.25rem',
                         marginRight: '0.5rem',
                       }}
                     >
-                      IMDb
-                    </H5>
-                    <H5 h5>{imdbRating?.star}</H5>
-                  </>
-                )}
-              </Flex>
-              <Spacer y={1} />
-              <Row>
-                <Button
-                  auto
-                  // shadow
-                  size={isSm ? 'sm' : 'md'}
-                  onClick={() => handler && handler(Number(id))}
+                      TMDb
+                    </H6>
+                    <H6 h6>{item?.vote_average?.toFixed(1)}</H6>
+                    {imdbRating && (
+                      <>
+                        <Spacer x={0.5} />
+                        <H5
+                          h5
+                          css={{
+                            backgroundColor: '#ddb600',
+                            color: '#000',
+                            borderRadius: '$xs',
+                            padding: '0 0.25rem 0 0.25rem',
+                            marginRight: '0.5rem',
+                          }}
+                        >
+                          IMDb
+                        </H5>
+                        <H6 h6>{imdbRating?.star}</H6>
+                      </>
+                    )}
+                  </Flex>
+                  <Spacer x={0.5} />
+                  <H6 h6>
+                    {releaseDate}
+                    {runtime ? ` • ${Math.floor(runtime / 60)}h ${runtime % 60}m` : null}
+                  </H6>
+                </Row>
+                <Row
+                  fluid
+                  align="center"
+                  wrap="wrap"
+                  justify="flex-start"
+                  css={{
+                    width: '100%',
+                    margin: '1.25rem 0 1.25rem 0',
+                  }}
                 >
-                  <H5 h5 transform="uppercase">
-                    Watch Trailer
-                  </H5>
-                </Button>
-              </Row>
+                  {genres &&
+                    genres?.map((genre) => (
+                      <>
+                        <Button
+                          type="button"
+                          color="primary"
+                          auto
+                          // shadow
+                          key={genre?.id}
+                          size={isSm ? 'sm' : 'md'}
+                          css={{
+                            marginBottom: '0.4rem',
+                            background: color,
+                            color: colorBackground,
+                            '&:hover': {
+                              background: colorBackground,
+                              color,
+                            },
+                          }}
+                          onPress={() =>
+                            navigate(
+                              `/${type === 'movie' ? 'movies/' : 'tv-shows/'}discover?with_genres=${
+                                genre?.id
+                              }`,
+                            )
+                          }
+                        >
+                          {genre?.name}
+                        </Button>
+                        <Spacer x={0.25} />
+                      </>
+                    ))}
+                </Row>
+              </Flex>
               <Row
                 fluid
+                justify="space-between"
                 align="center"
                 wrap="wrap"
-                justify="flex-start"
-                css={{
-                  width: '100%',
-                  margin: '1.25rem 0 1.25rem 0',
-                }}
+                css={{ marginBottom: '2.55rem' }}
               >
-                {genres &&
-                  genres?.map((genre) => (
-                    <>
-                      <Button
-                        color="primary"
-                        auto
-                        // shadow
-                        key={genre?.id}
-                        size={isSm ? 'sm' : 'md'}
-                        css={{
-                          marginBottom: '0.125rem',
-                          background: color,
-                          color: colorBackground,
-                          '&:hover': {
-                            background: colorBackground,
-                            color,
-                          },
-                        }}
-                        onClick={() =>
-                          navigate(
-                            `/${type === 'movie' ? 'movies/' : 'tv-shows/'}discover?with_genres=${
-                              genre?.id
-                            }`,
-                          )
-                        }
-                      >
-                        {genre?.name}
-                      </Button>
-                      <Spacer x={1} />
-                    </>
-                  ))}
+                {(status === 'Released' || status === 'Ended' || status === 'Returning Series') && (
+                  <Button
+                    type="button"
+                    auto
+                    // shadow
+                    color="gradient"
+                    onPress={() => setVisible(true)}
+                    css={{
+                      '@xsMax': {
+                        width: '100%',
+                      },
+                    }}
+                  >
+                    <H5 h5 weight="bold" transform="uppercase">
+                      Watch now
+                    </H5>
+                  </Button>
+                )}
+                <Flex direction="row" align="center" justify="start" wrap="wrap">
+                  <Button
+                    type="button"
+                    auto
+                    // shadow
+                    flat
+                    onPress={() => handler && handler(Number(id))}
+                    css={{ margin: '0.5rem 0' }}
+                  >
+                    Watch Trailer
+                  </Button>
+                  <Spacer x={0.5} />
+                  <Tooltip content="Share" placement="top" isDisabled={isSm}>
+                    <Button
+                      type="button"
+                      auto
+                      flat
+                      onPress={() =>
+                        WebShareLink(window.location.href, `${title}`, `${description}`)
+                      }
+                      icon={<ShareIcon />}
+                    />
+                  </Tooltip>
+                </Flex>
               </Row>
-              <TabLink
-                pages={detailTab}
-                linkTo={`/${type === 'movie' ? 'movies' : 'tv-shows'}/${id}`}
-              />
             </Col>
+          </Row>
+          <Row
+            fluid
+            css={{
+              paddingTop: '1rem',
+              paddingBottom: '2rem',
+            }}
+            justify="center"
+          >
+            <BackgroundTabLink css={{ backgroundColor: color }} />
+            <TabLink
+              pages={detailTab}
+              linkTo={`/${type === 'movie' ? 'movies' : 'tv-shows'}/${id}`}
+            />
           </Row>
         </Card.Footer>
       </Card>

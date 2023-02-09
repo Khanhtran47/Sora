@@ -659,7 +659,7 @@ const App = () => {
                     <H6 as="p">A new version of Sora is available.</H6>
                   </ToastDescription>
                   <ToastAction asChild altText="Update Action">
-                    <Button auto flat onClick={() => reloadPage()} color="success">
+                    <Button auto flat onPress={() => reloadPage()} color="success" type="button">
                       Update
                     </Button>
                   </ToastAction>
@@ -737,22 +737,24 @@ export const CatchBoundary = () => {
               <Button
                 auto
                 ghost
-                onClick={() => {
+                onPress={() => {
                   window.location.href = '/';
                 }}
                 color="success"
                 icon={<Home />}
+                type="button"
               >
                 Back to Home
               </Button>
               <Button
                 auto
                 ghost
-                onClick={() => {
+                onPress={() => {
                   window.location.reload();
                 }}
                 color="warning"
                 icon={<Refresh filled />}
+                type="button"
               >
                 Reload Page
               </Button>
@@ -813,22 +815,24 @@ export const ErrorBoundary = ({ error }: { error: Error }) => {
               <Button
                 auto
                 ghost
-                onClick={() => {
+                onPress={() => {
                   window.location.href = '/';
                 }}
                 color="success"
                 icon={<Home />}
+                type="button"
               >
                 Back to Home
               </Button>
               <Button
                 auto
                 ghost
-                onClick={() => {
+                onPress={() => {
                   window.location.reload();
                 }}
                 color="warning"
                 icon={<Refresh filled />}
+                type="button"
               >
                 Reload Page
               </Button>

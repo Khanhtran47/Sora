@@ -130,10 +130,11 @@ const History = () => {
               </Grid>
               <Grid xs={12}>
                 <Button
+                  type="button"
                   // shadow
                   color="primary"
                   auto
-                  onClick={searchHistoryHandler}
+                  onPress={searchHistoryHandler}
                 >
                   Search History
                 </Button>

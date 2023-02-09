@@ -15,8 +15,10 @@ export const loader = async ({ request }: LoaderArgs) => {
   const orgTitle = url.searchParams.get('orgTitle');
   const year = url.searchParams.get('year');
   const season = url.searchParams.get('season');
+  const aid = url.searchParams.get('aid');
+  const animeType = url.searchParams.get('animeType');
   if (!title || !type) throw new Response('Missing params', { status: 400 });
-  const provider = await getProviderList(type, title, orgTitle, year, season);
+  const provider = await getProviderList(type, title, orgTitle, year, season, Number(aid), animeType);
   if (provider && provider.length > 0) return json({ provider }, { status: 200, headers: { 'Cache-Control': CACHE_CONTROL.default } });
 
   return json({

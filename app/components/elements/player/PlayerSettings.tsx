@@ -1398,6 +1398,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
       <Sheet open={isSettingsOpen} onOpenChange={(open) => handleOpenChange(open)}>
         <SheetTrigger asChild>
           <Button
+            type="button"
             auto
             light
             aria-label="dropdown"
@@ -1429,9 +1430,10 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                       <Flex direction="row" align="center" justify="start">
                         {currentDropdownLevel?.showBackButton ? (
                           <Button
+                            type="button"
                             auto
                             light
-                            onClick={currentDropdownLevel?.backButtonAction}
+                            onPress={currentDropdownLevel?.backButtonAction}
                             icon={<Arrow direction="left" />}
                           />
                         ) : null}
@@ -1443,9 +1445,10 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                       </Flex>
                       {currentDropdownLevel?.showExtraButton ? (
                         <Button
+                          type="button"
                           auto
                           light
-                          onClick={currentDropdownLevel?.extraButtonAction}
+                          onPress={currentDropdownLevel?.extraButtonAction}
                           css={{ fontWeight: '$bold', textDecoration: 'underline', p: 0, m: 0 }}
                         >
                           {currentDropdownLevel?.extraButtonTitle}
@@ -1463,10 +1466,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                 >
                   {currentDropdownLevel?.listItems.map((item) => (
                     <Button
+                      type="button"
                       key={item.id}
                       auto
                       light
-                      onClick={item.action}
+                      onPress={item.action}
                       css={{
                         p: 0,
                         width: '100%',
@@ -1546,6 +1550,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
     <Popover open={isSettingsOpen} onOpenChange={(open) => handleOpenChange(open)}>
       <PopoverTrigger asChild>
         <Button
+          type="button"
           auto
           light
           aria-label="dropdown"
@@ -1579,9 +1584,10 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                     <Flex direction="row" align="center" justify="start">
                       {currentDropdownLevel?.showBackButton ? (
                         <Button
+                          type="button"
                           auto
                           light
-                          onClick={currentDropdownLevel?.backButtonAction}
+                          onPress={currentDropdownLevel?.backButtonAction}
                           icon={<Arrow direction="left" />}
                         />
                       ) : null}
@@ -1593,9 +1599,10 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                     </Flex>
                     {currentDropdownLevel?.showExtraButton ? (
                       <Button
+                        type="button"
                         auto
                         light
-                        onClick={currentDropdownLevel?.extraButtonAction}
+                        onPress={currentDropdownLevel?.extraButtonAction}
                         css={{ fontWeight: '$bold', textDecoration: 'underline', p: 0, m: 0 }}
                       >
                         {currentDropdownLevel?.extraButtonTitle}
@@ -1609,9 +1616,10 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                 {currentDropdownLevel?.listItems.map((item) => (
                   <Button
                     key={item.id}
+                    type="button"
                     auto
                     light
-                    onClick={item.action}
+                    onPress={item.action}
                     css={{
                       p: '$4 !important',
                       height: 'auto',

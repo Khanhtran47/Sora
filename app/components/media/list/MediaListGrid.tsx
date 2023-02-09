@@ -245,9 +245,10 @@ const MediaListGrid = (props: IMediaListCardProps) => {
         <Grid xs={12} justify="center">
           <div ref={bottomRef} />
           <Button
+            type="button"
             // shadow
             color="primary"
-            onClick={() => {
+            onPress={() => {
               setShowLoadMore(false);
               setShouldFetch(true);
               bottomRef.current?.scrollIntoView({ behavior: 'smooth' });

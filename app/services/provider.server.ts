@@ -17,7 +17,7 @@ const getProviderList = async (
   year?: number | string | null,
   season?: number | string | null,
   animeId?: number,
-  animeType?: string,
+  animeType?: string | null,
 ): Promise<
   | {
       id?: string | number | null;

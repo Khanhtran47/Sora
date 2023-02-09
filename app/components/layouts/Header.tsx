@@ -178,7 +178,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
           onOpenChange={setIsDropdownOpen}
         >
           <Popover.Trigger>
-            <Button auto light aria-label="dropdown" css={{ padding: '0 $xs' }}>
+            <Button type="button" auto light aria-label="dropdown" css={{ padding: '0 $xs' }}>
               <PlayerStyled
                 lottieRef={(instance) => {
                   setLottie(instance);

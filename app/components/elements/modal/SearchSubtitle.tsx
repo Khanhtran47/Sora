@@ -267,9 +267,10 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
           </Select>
           <Spacer x={1} />
           <Button
+            type="button"
             auto
             size="sm"
-            onClick={searchSubtitles}
+            onPress={searchSubtitles}
             disabled={fetcher.type === 'normalLoad' && !isGetSubtitleLink}
           >
             {fetcher.type === 'normalLoad' && !isGetSubtitleLink ? (
@@ -301,9 +302,10 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
           subtitlesSearch.data.map((subtitle) => (
             <ToastProvider swipeDirection="right" key={subtitle.id}>
               <Button
+                type="button"
                 light
                 css={{ '@hover': { color: '$primaryLightContrast' } }}
-                onClick={() => handleSubtitleClick(subtitle)}
+                onPress={() => handleSubtitleClick(subtitle)}
               >
                 {subtitle.attributes.release} ({subtitle.attributes.language})
               </Button>

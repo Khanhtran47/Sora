@@ -99,11 +99,12 @@ const LeftDrawer: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
     >
       <Row justify="flex-start" align="center" css={{ height: '65px' }}>
         <Button
+          type="button"
           light
           auto
           aria-label="Menu Icon"
           icon={open ? <Arrow direction="left" /> : <MenuIcon />}
-          onClick={() => setOpen(!open)}
+          onPress={() => setOpen(!open)}
           css={{
             marginLeft: 12.5,
             marginRight: open ? 10 : 0,
