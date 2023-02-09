@@ -1,11 +1,8 @@
-/* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/indent */
-/* eslint-disable no-unused-expressions */
-/* eslint-disable @typescript-eslint/no-unused-expressions */
+/* eslint-disable no-nested-ternary */
 import { useRef, useState, useEffect } from 'react';
 import { useNavigate, useLocation } from '@remix-run/react';
-import { Card, Col, Row, Button, Spacer, Avatar, Tooltip, styled } from '@nextui-org/react';
+import { Card, Col, Row, Button, Spacer, Avatar, Tooltip } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
 import tinycolor from 'tinycolor2';
 // import { useTranslation } from 'react-i18next';
@@ -27,6 +24,8 @@ import PhotoIcon from '~/assets/icons/PhotoIcon';
 import ShareIcon from '~/assets/icons/ShareIcon';
 import BackgroundDefault from '~/assets/images/background-default.jpg';
 
+import { BackgroundContent, BackgroundTabLink } from './Media.styles';
+
 interface IMediaDetail {
   type: 'movie' | 'tv';
   item: IMovieDetail | ITvShowDetail | undefined;
@@ -45,28 +44,6 @@ const detailTab = [
   { pageName: 'Recommendations', pageLink: '/recommendations' },
   { pageName: 'Similar', pageLink: '/similar' },
 ];
-
-const BackgroundTabLink = styled('div', {
-  position: 'absolute',
-  top: 0,
-  width: '100%',
-  zIndex: -2,
-  height: '100%',
-  backgroundImage:
-    'linear-gradient(var(--nextui-colors-backgroundAlpha) 0%, var(--nextui-colors-background) 100%)',
-  borderRadius: '$lg',
-});
-
-const BackgroundContent = styled('div', {
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  width: '100%',
-  zIndex: -1,
-  display: 'block',
-  height: 'calc(100% + 8rem)',
-  background: 'linear-gradient(transparent 0%, var(--nextui-colors-backgroundAlpha) 100%)',
-});
 
 const MediaDetail = (props: IMediaDetail) => {
   // const { t } = useTranslation();
@@ -228,7 +205,6 @@ const MediaDetail = (props: IMediaDetail) => {
             align="stretch"
             justify="center"
             css={{
-              // backgroundColor: color,
               px: '0.75rem',
               '@xs': {
                 px: '3vw',
