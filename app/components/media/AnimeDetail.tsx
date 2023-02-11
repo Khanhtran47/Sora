@@ -80,7 +80,7 @@ const AnimeDetail = (props: IAnimeDetail) => {
 
   useEffect(() => {
     if (ref.current) {
-      ref.current.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+      ref.current.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });
     }
   }, [ref, location.pathname]);
 
