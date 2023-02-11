@@ -358,7 +358,7 @@ const MediaDetail = (props: IMediaDetail) => {
                     <Spacer y={1} />
                   </>
                 )}
-                <H2 h2 weight="bold">
+                <H2 h1 weight="bold">
                   {`${title} (${releaseYear})`}
                 </H2>
                 <Spacer y={0.5} />

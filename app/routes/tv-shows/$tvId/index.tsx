@@ -18,7 +18,7 @@ import { CACHE_CONTROL } from '~/utils/server/http';
 import TMDB from '~/utils/media';
 import useMediaQuery from '~/hooks/useMediaQuery';
 
-import { H3, H4, H5, H6 } from '~/components/styles/Text.styles';
+import { H2, H4, H5, H6 } from '~/components/styles/Text.styles';
 import Flex from '~/components/styles/Flex.styles';
 import MediaList from '~/components/media/MediaList';
 
@@ -233,9 +233,17 @@ const TvOverview = () => {
         )}
         {detail?.seasons && detail?.seasons.length > 0 && (
           <>
-            <H3 h3 css={{ margin: '20px 0 20px 0' }}>
+            <H2
+              h2
+              css={{
+                margin: '20px 0 5px 0',
+                '@xsMax': {
+                  fontSize: '1.75rem !important',
+                },
+              }}
+            >
               Seasons
-            </H3>
+            </H2>
             {detail.seasons
               .filter((season) => !season.name?.includes('Specials'))
               .map((season) => (

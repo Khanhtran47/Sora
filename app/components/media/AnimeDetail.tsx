@@ -354,7 +354,7 @@ const AnimeDetail = (props: IAnimeDetail) => {
                     <Spacer y={1} />
                   </>
                 )}
-                <H2 h2 weight="bold">
+                <H2 h1 weight="bold">
                   {`${title?.userPreferred || title?.english || title?.romaji || title?.native}`}
                 </H2>
                 <Row justify="flex-start" align="center">

@@ -389,7 +389,7 @@ const MediaList = (props: IMediaListProps) => {
             <H2
               h2
               css={{
-                margin: '20px 0 20px 0',
+                margin: '20px 0 5px 0',
                 '@xsMax': {
                   fontSize: '1.75rem !important',
                 },
@@ -443,7 +443,7 @@ const MediaList = (props: IMediaListProps) => {
             onPress={onClickViewMore}
             css={{
               maxWidth: '$8',
-              marginBottom: '$12',
+              marginBottom: '$5',
             }}
           >
             {t('viewMore')}
@@ -453,7 +453,7 @@ const MediaList = (props: IMediaListProps) => {
               style={{
                 display: 'flex',
                 flexDirection: 'row',
-                marginBottom: 'var(--nextui-space-12)',
+                marginBottom: 'var(--nextui-space-5)',
               }}
             >
               <Button
