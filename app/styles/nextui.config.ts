@@ -6,7 +6,9 @@ export const lightTheme = createTheme({
     colors: {
       backgroundContrast: '#f6f7ff',
       backgroundTransparent: 'rgba(0, 0, 0, 0)',
-      backgroundAlpha: 'rgba(255, 255, 255, 0.4)',
+      backgroundAlpha: 'rgba(255, 255, 255, 0.5)',
+      backgroundLight: 'rgba(255, 255, 255, 0.2)',
+      textAlpha: 'rgba(17, 24, 28, 0.6)',
     },
   },
 });
@@ -16,7 +18,9 @@ export const darkTheme = createTheme({
   theme: {
     colors: {
       backgroundTransparent: 'rgba(0, 0, 0, 0)',
-      backgroundAlpha: 'rgba(0, 0, 0, 0.4)',
+      backgroundAlpha: 'rgba(0, 0, 0, 0.6)',
+      backgroundLight: 'rgba(0, 0, 0, 0.2)',
+      textAlpha: 'rgba(236, 237, 238, 0.6)',
     },
   },
 });
@@ -27,10 +31,12 @@ export const bumblebeeTheme = createTheme({
     colors: {
       // background colors
       background: '#FEFAEA',
-      backgroundAlpha: 'rgb(254, 250, 234, 0.4)',
+      backgroundAlpha: 'rgb(254, 250, 234, 0.5)',
       foreground: '$black',
       backgroundContrast: '#fffdf4',
       backgroundTransparent: 'rgba(0, 0, 0, 0)',
+      backgroundLight: 'rgb(254, 250, 234, 0.2)',
+      textAlpha: 'rgba(17, 24, 28, 0.6)',
 
       // brand colors
       primaryLight: '#FBEAAB',
@@ -68,10 +74,12 @@ export const autumnTheme = createTheme({
     colors: {
       // background colors
       background: '#FCE6E3',
-      backgroundAlpha: 'rgba(252, 230, 227, 0.4)',
+      backgroundAlpha: 'rgba(252, 230, 227, 0.5)',
       foreground: '$black',
       backgroundContrast: '#fff2f2',
       backgroundTransparent: 'rgba(0, 0, 0, 0)',
+      backgroundLight: 'rgba(252, 230, 227, 0.2)',
+      textAlpha: 'rgba(17, 24, 28, 0.6)',
 
       // brand colors
       primaryLight: '#F39694',
@@ -112,10 +120,12 @@ export const retroTheme = createTheme({
     colors: {
       // background colors
       background: '#e2d8b3',
-      backgroundAlpha: 'rgb(226, 216, 179, 0.4)',
+      backgroundAlpha: 'rgb(226, 216, 179, 0.5)',
       foreground: '$black',
       backgroundContrast: '#c8bb9e',
       backgroundTransparent: 'rgba(0, 0, 0, 0)',
+      backgroundLight: 'rgb(226, 216, 179, 0.2)',
+      textAlpha: 'rgba(17, 24, 28, 0.6)',
 
       // brand colors
       primaryLight: '#FDE2D7',
@@ -156,10 +166,12 @@ export const synthwaveTheme = createTheme({
     colors: {
       // background
       background: '#2d365f',
-      backgroundAlpha: 'rgb(45, 54, 95, 0.4)',
+      backgroundAlpha: 'rgb(45, 54, 95, 0.6)',
+      backgroundLight: 'rgb(45, 54, 95, 0.2)',
       foreground: '#d1c7db',
       backgroundContrast: '#1F1A23',
       backgroundTransparent: 'rgba(255, 255, 255, 0)',
+      textAlpha: 'rgba(236, 237, 238, 0.6)',
 
       // brand colors
       primaryLight: '#FEAEC9',
@@ -200,10 +212,13 @@ export const nightTheme = createTheme({
     colors: {
       // background
       background: '#101729',
-      backgroundAlpha: 'rgb(16, 23, 41, 0.4)',
+      backgroundAlpha: 'rgb(16, 23, 41, 0.6)',
+      backgroundLight: 'rgb(16, 23, 41, 0.2)',
       foreground: '$white',
       backgroundContrast: '#1E293B',
       backgroundTransparent: 'rgba(255, 255, 255, 0)',
+      text: '#b6c5f0',
+      textAlpha: 'rgba(182, 197, 240, 0.6)',
 
       // brand colors
       primaryLight: '#AFF5FE',
@@ -231,7 +246,6 @@ export const nightTheme = createTheme({
       success: '#2DB4A4',
       warning: '#DAA507',
       error: '#FA1B0F',
-      text: '#b6c5f0',
       gradient: 'linear-gradient(112deg,#5E68D5 -20.3%, #2894D5 70.46%)',
       link: '#1C70B2',
     },
@@ -245,10 +259,12 @@ export const draculaTheme = createTheme({
     colors: {
       // background
       background: '#272935',
-      backgroundAlpha: 'rgb(39, 41, 53, 0.4)',
+      backgroundAlpha: 'rgb(39, 41, 53, 0.6)',
+      backgroundLight: 'rgb(39, 41, 53, 0.2)',
       foreground: '#f8f8f2',
       backgroundContrast: '#414558',
       backgroundTransparent: 'rgba(255, 255, 255, 0)',
+      textAlpha: 'rgba(236, 237, 238, 0.6)',
 
       // brand colors
       primaryLight: '#FFC9D8',
