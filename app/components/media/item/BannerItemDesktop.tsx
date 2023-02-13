@@ -436,6 +436,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                   containerCss={{
                     display: 'flex',
                     justifyContent: 'center',
+                    overflow: 'visible',
                   }}
                   showSkeleton
                   css={{
@@ -444,6 +445,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                     maxWidth: '270px',
                     maxHeight: '390px',
                     borderRadius: '24px',
+                    boxShadow: '12px 12px 30px 10px rgb(104 112 118 / 0.18)',
                     '@lg': {
                       maxWidth: '318px',
                       maxHeight: '477px',
