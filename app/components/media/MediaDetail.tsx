@@ -206,6 +206,7 @@ const MediaDetail = (props: IMediaDetail) => {
             justify="center"
             css={{
               px: '0.75rem',
+              paddingTop: '1.25rem',
               '@xs': {
                 px: '3vw',
               },
@@ -236,7 +237,9 @@ const MediaDetail = (props: IMediaDetail) => {
                       minWidth: 'auto !important',
                       minHeight: '205px !important',
                       borderRadius: '24px',
+                      boxShadow: '12px 12px 30px 10px rgb(104 112 118 / 0.35)',
                     }}
+                    containerCss={{ overflow: 'visible' }}
                     showSkeleton
                     loaderUrl="/api/image"
                     placeholder="empty"
@@ -301,6 +304,7 @@ const MediaDetail = (props: IMediaDetail) => {
               <Flex direction="column" justify="center" align="start">
                 {isSm && (
                   <>
+                    <Spacer y={1} />
                     {posterPath ? (
                       <Card.Image
                         // @ts-ignore
@@ -311,12 +315,13 @@ const MediaDetail = (props: IMediaDetail) => {
                         width={isXs ? '70%' : '40%'}
                         containerCss={{
                           borderRadius: '24px',
+                          overflow: 'visible',
                         }}
                         css={{
                           minWidth: 'auto !important',
-                          marginTop: '2rem',
                           borderRadius: '24px',
                           minHeight: '205px !important',
+                          boxShadow: '12px 12px 30px 10px rgb(104 112 118 / 0.35)',
                         }}
                         showSkeleton
                         loaderUrl="/api/image"
@@ -349,13 +354,12 @@ const MediaDetail = (props: IMediaDetail) => {
                             size: '$20',
                             minWidth: 'auto !important',
                             minHeight: '205px !important',
-                            marginTop: '2rem',
                             borderRadius: '24px !important',
                           }}
                         />
                       </Row>
                     )}
-                    <Spacer y={1} />
+                    <Spacer y={1.5} />
                   </>
                 )}
                 <H2 h1 weight="bold">

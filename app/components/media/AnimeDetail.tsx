@@ -196,6 +196,7 @@ const AnimeDetail = (props: IAnimeDetail) => {
             justify="center"
             css={{
               px: '0.75rem',
+              paddingTop: '1.25rem',
               '@xs': {
                 px: '3vw',
               },
@@ -224,10 +225,12 @@ const AnimeDetail = (props: IAnimeDetail) => {
                     objectFit="cover"
                     width={isLg ? '75%' : isMd ? '100%' : '50%'}
                     showSkeleton
+                    containerCss={{ overflow: 'visible' }}
                     css={{
                       minWidth: 'auto !important',
                       minHeight: '205px !important',
                       borderRadius: '24px',
+                      boxShadow: '12px 12px 30px 10px rgb(104 112 118 / 0.35)',
                     }}
                     loaderUrl="/api/image"
                     placeholder="empty"
@@ -292,6 +295,7 @@ const AnimeDetail = (props: IAnimeDetail) => {
               <Flex direction="column" justify="center" align="start">
                 {isSm && (
                   <>
+                    <Spacer y={1.5} />
                     {image ? (
                       <Card.Image
                         // @ts-ignore
@@ -307,13 +311,14 @@ const AnimeDetail = (props: IAnimeDetail) => {
                         width={isXs ? '70%' : '40%'}
                         containerCss={{
                           borderRadius: '24px',
+                          overflow: 'visible',
                         }}
                         showSkeleton
                         css={{
                           minWidth: 'auto !important',
                           minHeight: '205px !important',
-                          marginTop: '2rem',
                           borderRadius: '24px',
+                          boxShadow: '12px 12px 30px 10px rgb(104 112 118 / 0.35)',
                         }}
                         loaderUrl="/api/image"
                         placeholder="empty"
@@ -345,13 +350,12 @@ const AnimeDetail = (props: IAnimeDetail) => {
                             size: '$20',
                             minWidth: 'auto !important',
                             minHeight: '205px !important',
-                            marginTop: '2rem',
                             borderRadius: '24px !important',
                           }}
                         />
                       </Row>
                     )}
-                    <Spacer y={1} />
+                    <Spacer y={1.25} />
                   </>
                 )}
                 <H2 h1 weight="bold">
