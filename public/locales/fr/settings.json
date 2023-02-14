@@ -61,5 +61,21 @@
   "show-skip-op-ed-button": "Afficher le bouton de saut op / ed (anime uniquement)",
   "show-skip-op-ed-button-subtitle": "S'il faut afficher le bouton de saut des crédits d'ouverture et de fin.",
   "show-subtitle": "Afficher le sous-titre",
-  "show-subtitle-subtitle": "S'il faut afficher le sous-titre par défaut."
+  "show-subtitle-subtitle": "Whether to display the subtitle by default.",
+  "keyboard": "Clavier",
+  "keyboard-subtitle": "Paramètres pour le clavier",
+  "volume-up": "Monter le son",
+  "volume-down": "Baisser le son",
+  "fast-forward-5s": "Avance rapide de 5s",
+  "fast-rewind-5s": "Retour rapide de 5s",
+  "toggle-play-pause": "Basculer lecture/pause",
+  "seek-to-start": "Rechercher le début de la vidéo.",
+  "seek-to-end": "Rechercher la fin de la vidéo.",
+  "or": "ou",
+  "seek-to-percent": "Rechercher entre 10% et 90% de la vidéo.",
+  "toggle-subtitle": "Activez les sous-titres et les sous-titres si disponibles. Pour masquer les sous-titres, activez à nouveau C.",
+  "toggle-fullscreen": "Activer le plein écran. Si le mode plein écran est activé, activez à nouveau F ou appuyez sur Échap pour quitter le mode plein écran.",
+  "fast-rewind-10s": "Retour rapide de 10s",
+  "fast-forward-10s": "Avance rapide de 10s",
+  "mute-unmute": "Activer le mode muet. Si le mode muet est activé, activez à nouveau M."
 }
