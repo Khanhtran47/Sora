@@ -37,6 +37,8 @@ import Pause from '~/assets/icons/PauseIcon';
 import Next from '~/assets/icons/NextIcon';
 import Previous from '~/assets/icons/PreviousIcon';
 
+import { PlayerHotKey } from '../elements/player/PlayerHotkey';
+
 const jumpAnimation = keyframes({
   '15%': {
     borderBottomRightRadius: '3px',
@@ -763,6 +765,7 @@ const GlobalPlayer = () => {
                       if (autoShowSubtitle && art.subtitle) {
                         art.subtitle.show = autoShowSubtitle;
                       }
+                      PlayerHotKey(art, setShowSubtitle);
                     });
                     savePlayProgress(art);
                     art.on('play', () => {
@@ -1014,14 +1017,39 @@ const GlobalPlayer = () => {
                       '&.art-layer-autoPlayback': {
                         background: '$backgroundAlpha !important',
                         color: '$text !important',
+                        backdropFilter: 'saturate(180%) blur(20px)',
+                        borderRadius: '$md',
+                        border: '1px solid $border',
+                        boxShadow: '$lg',
                       },
                       '&.art-contextmenus': {
                         background: '$backgroundAlpha !important',
+                        borderRadius: '$md',
+                        border: '1px solid $border',
+                        boxShadow: '$lg',
                       },
                       '&.art-contextmenu': {
                         color: '$text !important',
+                        textShadow: 'none !important',
+                        borderBottomColor: '$border !important',
                         '& a': {
                           color: '$text !important',
+                        },
+                      },
+                      '&.art-info': {
+                        color: '$text !important',
+                        background: '$backgroundAlpha !important',
+                        borderRadius: '$md',
+                        border: '1px solid $border',
+                        boxShadow: '$lg',
+                      },
+                      '&.art-volume-slider-handle': {
+                        background: '$text !important',
+                        '&::before': {
+                          background: '$text !important',
+                        },
+                        '&::after': {
+                          background: '$textLight !important',
                         },
                       },
                     },

@@ -50,6 +50,7 @@ import {
   Underline,
 } from '~/components/elements/tab/Tabs';
 import Balancer from '~/components/elements/shared/Balancer';
+import Kbd from '~/components/elements/Kbd';
 
 import LogoFooter from '~/assets/images/logo_footer.png';
 import SettingsIcon from '~/assets/icons/SettingsIcon';
@@ -1155,6 +1156,221 @@ const Settings = () => {
                               checked={isSwipeFullscreen}
                               onChange={(e) => setIsSwipeFullscreen(e.target.checked)}
                             />
+                          </Flex>
+                        </Collapse>
+                        <Collapse
+                          title={t('keyboard')}
+                          subtitle={t('keyboard-subtitle')}
+                          css={{
+                            background: '$backgroundAlpha !important',
+                            borderRadius: '$xs !important',
+                          }}
+                        >
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="space-x-2"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
+                          >
+                            <H6>{t('volume-up')}</H6>
+                            <Kbd>↑</Kbd>
+                          </Flex>
+                          <Spacer y={0.25} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="space-x-2"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
+                          >
+                            <H6>{t('volume-down')}</H6>
+                            <Kbd>↓</Kbd>
+                          </Flex>
+                          <Spacer y={0.25} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="space-x-2"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
+                          >
+                            <H6>{t('fast-rewind-5s')}</H6>
+                            <Kbd>←</Kbd>
+                          </Flex>
+                          <Spacer y={0.25} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="space-x-2"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
+                          >
+                            <H6>{t('fast-forward-5s')}</H6>
+                            <Kbd>→</Kbd>
+                          </Flex>
+                          <Spacer y={0.25} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="space-x-2"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
+                          >
+                            <H6>{t('toggle-play-pause')}</H6>
+                            <Flex direction="row" className="space-x-2" align="center">
+                              <Kbd width="space">space</Kbd>
+                              <div>{t('or')}</div>
+                              <Kbd>K</Kbd>
+                            </Flex>
+                          </Flex>
+                          <Spacer y={0.25} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="space-x-2"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
+                          >
+                            <H6>{t('seek-to-start')}</H6>
+                            <Flex direction="row" className="space-x-2" align="center">
+                              <Kbd>home</Kbd>
+                              <div>{t('or')}</div>
+                              <Kbd>0</Kbd>
+                            </Flex>
+                          </Flex>
+                          <Spacer y={0.25} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="space-x-2"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
+                          >
+                            <H6>{t('seek-to-end')}</H6>
+                            <Kbd>end</Kbd>
+                          </Flex>
+                          <Spacer y={0.25} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="space-x-2"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
+                          >
+                            <H6>{t('seek-to-percent')}</H6>
+                            <Flex direction="row" className="space-x-2" align="center">
+                              <Kbd>1</Kbd>
+                              <div>...</div>
+                              <Kbd>9</Kbd>
+                            </Flex>
+                          </Flex>
+                          <Spacer y={0.25} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="space-x-2"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
+                          >
+                            <H6>{t('toggle-subtitle')}</H6>
+                            <Kbd>C</Kbd>
+                          </Flex>
+                          <Spacer y={0.25} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="space-x-2"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
+                          >
+                            <H6>{t('toggle-fullscreen')}</H6>
+                            <Kbd>F</Kbd>
+                          </Flex>
+                          <Spacer y={0.25} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="space-x-2"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
+                          >
+                            <H6>{t('fast-rewind-10s')}</H6>
+                            <Kbd>J</Kbd>
+                          </Flex>
+                          <Spacer y={0.25} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="space-x-2"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
+                          >
+                            <H6>{t('fast-forward-10s')}</H6>
+                            <Kbd>L</Kbd>
+                          </Flex>
+                          <Spacer y={0.25} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="space-x-2"
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
+                          >
+                            <H6>{t('mute-unmute')}</H6>
+                            <Kbd>M</Kbd>
                           </Flex>
                         </Collapse>
                       </Collapse.Group>

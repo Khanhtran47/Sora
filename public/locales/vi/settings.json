@@ -61,5 +61,21 @@
   "show-skip-op-ed-button": "Hiển thị nút bỏ qua OP/ED",
   "show-skip-op-ed-button-subtitle": "Hiển thị nút bỏ qua OP/ED trong thanh điều khiển dưới cùng.",
   "show-subtitle": "Hiển thị phụ đề",
-  "show-subtitle-subtitle": "Mặc định hiển thị phụ đề trong trình phát."
+  "show-subtitle-subtitle": "Mặc định hiển thị phụ đề trong trình phát.",
+  "keyboard": "Phím tắt bàn phím",
+  "keyboard-subtitle": "Các phím tắt bàn phím cho trình phát.",
+  "volume-up": "Tăng âm lượng",
+  "volume-down": "Giảm âm lượng",
+  "fast-forward-5s": "Tua nhanh 5 giây",
+  "fast-rewind-5s": "Tua lại 5 giây",
+  "toggle-play-pause": "Chơi/tạm dừng",
+  "seek-to-start": "Tua về đầu video.",
+  "seek-to-end": "Tua về cuối video.",
+  "or": "hoặc",
+  "seek-to-percent": "Tua đến từ 10% đến 90% phần trăm của video.",
+  "toggle-subtitle": "Hiển thị phụ đề nếu có. Để ẩn phụ đề, nhấn lại C.",
+  "toggle-fullscreen": "Chuyển đổi toàn màn hình. Nếu đang ở sẵn toàn màn hình, nhấn lại F hoặc escape để thoát",
+  "fast-rewind-10s": "Tua lại 10 giây",
+  "fast-forward-10s": "Tua nhanh 10 giây",
+  "mute-unmute": "Tắt tiếng/ Bật tiếng"
 }

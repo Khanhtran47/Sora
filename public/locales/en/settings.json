@@ -61,5 +61,21 @@
   "show-skip-op-ed-button": "Show skip OP/ED button (Anime only)",
   "show-skip-op-ed-button-subtitle": "Whether to display the skip OP/ED button.",
   "show-subtitle": "Show subtitle",
-  "show-subtitle-subtitle": "Whether to display the subtitle by default."
+  "show-subtitle-subtitle": "Whether to display the subtitle by default.",
+  "keyboard": "Keyboard Shortcuts",
+  "keyboard-subtitle": "Keyboard shortcuts for the player.",
+  "volume-up": "Volume up",
+  "volume-down": "Volume down",
+  "fast-forward-5s": "Fast forward 5s",
+  "fast-rewind-5s": "Fast backward 5s",
+  "toggle-play-pause": "Toggle play/pause",
+  "seek-to-start": "Seek to the beginning of the video.",
+  "seek-to-end": "Seek to the last seconds of the video.",
+  "or": "or",
+  "seek-to-percent": "Seek to the 10% to 90% of the video.",
+  "toggle-subtitle": "Activate subtitles if available. To hide subtitles, activate C again.",
+  "toggle-fullscreen": "Activate full screen. If full screen mode is enabled, activate F again or press escape to exit full screen mode.",
+  "fast-rewind-10s": "Fast backward 10s",
+  "fast-forward-10s": "Fast forward 10s",
+  "mute-unmute": "Mute/unmute the video."
 }
