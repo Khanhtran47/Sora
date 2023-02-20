@@ -2,10 +2,11 @@
 import { Spacer } from '@nextui-org/react';
 import AnilistStatIcon from '~/assets/icons/AnilistStatIcon';
 
-import { H5 } from '~/components/styles/Text.styles';
+import { H6 } from '~/components/styles/Text.styles';
+import Flex from '~/components/styles/Flex.styles';
 
 interface IRatingProps {
-  rating: number;
+  rating: number | string | undefined;
   ratingType?: 'movie' | 'tv' | 'anime' | 'people';
 }
 
@@ -13,10 +14,10 @@ const Rating = (props: IRatingProps) => {
   const { rating, ratingType } = props;
   if (ratingType === 'movie' || ratingType === 'tv') {
     return (
-      <>
-        <H5
-          h5
-          weight="bold"
+      <Flex direction="row" align="center">
+        <H6
+          h6
+          weight="semibold"
           css={{
             backgroundColor: '#3ec2c2',
             borderRadius: '$xs',
@@ -26,15 +27,15 @@ const Rating = (props: IRatingProps) => {
           }}
         >
           TMDb
-        </H5>
-        <H5 h5 weight="bold">
+        </H6>
+        <H6 h6 weight="semibold">
           {rating}
-        </H5>
-      </>
+        </H6>
+      </Flex>
     );
   }
   return (
-    <>
+    <Flex direction="row" align="center">
       {Number(rating) > 75 ? (
         <AnilistStatIcon stat="good" />
       ) : Number(rating) > 60 ? (
@@ -43,8 +44,8 @@ const Rating = (props: IRatingProps) => {
         <AnilistStatIcon stat="bad" />
       )}
       <Spacer x={0.25} />
-      <H5 weight="bold">{rating}%</H5>
-    </>
+      <H6 weight="semibold">{rating}%</H6>
+    </Flex>
   );
 };
 

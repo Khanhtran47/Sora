@@ -16,9 +16,9 @@ import useMediaQuery from '~/hooks/useMediaQuery';
 import MediaList from '~/components/media/MediaList';
 import ListEpisodes from '~/components/elements/shared/ListEpisodes';
 import Flex from '~/components/styles/Flex.styles';
-import { H2, H5, H6 } from '~/components/styles/Text.styles';
+import { H2, H6 } from '~/components/styles/Text.styles';
+import Rating from '~/components/elements/shared/Rating';
 
-import AnilistStatIcon from '~/assets/icons/AnilistStatIcon';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 
 interface IWatchDetailProps {
@@ -188,24 +188,13 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
           {type === 'movie' || type === 'tv' ? (
             <>
               <Flex direction="row">
-                <H5
-                  h5
-                  css={{
-                    backgroundColor: '#3ec2c2',
-                    borderRadius: '$xs',
-                    padding: '0 0.25rem 0 0.25rem',
-                    marginRight: '0.5rem',
-                    color: '#fff',
-                  }}
-                >
-                  TMDb
-                </H5>
-                <H5 h5>{tmdbRating && tmdbRating.toFixed(1)}</H5>
+                <Rating rating={tmdbRating?.toFixed(1)} ratingType="movie" />
                 {imdbRating && (
                   <>
                     <Spacer x={1.25} />
-                    <H5
-                      h5
+                    <H6
+                      h6
+                      weight="semibold"
                       css={{
                         backgroundColor: '#ddb600',
                         color: '#000',
@@ -215,8 +204,10 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
                       }}
                     >
                       IMDb
-                    </H5>
-                    <H5 h5>{imdbRating}</H5>
+                    </H6>
+                    <H6 h6 weight="semibold">
+                      {imdbRating}
+                    </H6>
                   </>
                 )}
               </Flex>
@@ -225,17 +216,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
           ) : null}
           {type === 'anime' && anilistRating ? (
             <>
-              <Flex direction="row" align="center">
-                {anilistRating > 75 ? (
-                  <AnilistStatIcon stat="good" />
-                ) : anilistRating > 60 ? (
-                  <AnilistStatIcon stat="average" />
-                ) : (
-                  <AnilistStatIcon stat="bad" />
-                )}
-                <Spacer x={0.25} />
-                <H5 weight="bold">{anilistRating}%</H5>
-              </Flex>
+              <Rating rating={anilistRating} ratingType="anime" />
               <Spacer y={1} />
             </>
           ) : null}

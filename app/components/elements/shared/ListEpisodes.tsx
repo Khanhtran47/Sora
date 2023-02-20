@@ -20,6 +20,7 @@ import episodeTypes from '~/constants/episodeTypes';
 
 import { H3, H5, H6 } from '~/components/styles/Text.styles';
 import Flex from '~/components/styles/Flex.styles';
+import Rating from '~/components/elements/shared/Rating';
 
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 import ViewGrid from '~/assets/icons/ViewGridIcon';
@@ -308,22 +309,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                         <>
                           <Spacer y={0.25} />
                           <Row align="center">
-                            <H5
-                              h5
-                              weight="semibold"
-                              css={{
-                                backgroundColor: '#3ec2c2',
-                                borderRadius: '$xs',
-                                padding: '0 0.25rem 0 0.25rem',
-                                marginRight: '0.5rem',
-                                color: '#fff',
-                              }}
-                            >
-                              TMDb
-                            </H5>
-                            <H5 h5 weight="semibold">
-                              {episode?.vote_average.toFixed(1)}
-                            </H5>
+                            <Rating rating={episode?.vote_average.toFixed(1)} ratingType="tv" />
                             <Spacer x={0.5} />
                             <H5 h5>
                               {episode.air_date} | {episode?.runtime} min

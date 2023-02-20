@@ -20,10 +20,10 @@ import TabLink from '~/components/elements/tab/TabLink';
 import { H2, H5, H6 } from '~/components/styles/Text.styles';
 import Flex from '~/components/styles/Flex.styles';
 import SelectProviderModal from '~/components/elements/modal/SelectProviderModal';
+import Rating from '~/components/elements/shared/Rating';
 
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 import ShareIcon from '~/assets/icons/ShareIcon';
-import AnilistStatIcon from '~/assets/icons/AnilistStatIcon';
 import BackgroundDefault from '~/assets/images/background-default.jpg';
 
 import { BackgroundContent, BackgroundTabLink } from './Media.styles';
@@ -377,15 +377,7 @@ const AnimeDetail = (props: IAnimeDetail) => {
                 <Row justify="flex-start" align="center">
                   {rating ? (
                     <Flex direction="row" justify="center" align="center">
-                      {Number(rating) > 75 ? (
-                        <AnilistStatIcon stat="good" />
-                      ) : Number(rating) > 60 ? (
-                        <AnilistStatIcon stat="average" />
-                      ) : (
-                        <AnilistStatIcon stat="bad" />
-                      )}
-                      <Spacer x={0.25} />
-                      <H6 weight="bold">{rating}%</H6>
+                      <Rating rating={rating} ratingType="anime" />
                       <Spacer x={0.5} />
                     </Flex>
                   ) : null}

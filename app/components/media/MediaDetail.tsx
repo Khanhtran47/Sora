@@ -21,6 +21,7 @@ import TabLink from '~/components/elements/tab/TabLink';
 import Flex from '~/components/styles/Flex.styles';
 import { H2, H5, H6 } from '~/components/styles/Text.styles';
 import SelectProviderModal from '~/components/elements/modal/SelectProviderModal';
+import Rating from '~/components/elements/shared/Rating';
 
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 import ShareIcon from '~/assets/icons/ShareIcon';
@@ -390,24 +391,13 @@ const MediaDetail = (props: IMediaDetail) => {
                 <Spacer y={0.5} />
                 <Row fluid wrap="wrap">
                   <Flex direction="row">
-                    <H6
-                      h6
-                      css={{
-                        backgroundColor: '#3ec2c2',
-                        borderRadius: '$xs',
-                        padding: '0 0.25rem 0 0.25rem',
-                        marginRight: '0.5rem',
-                        color: '#fff',
-                      }}
-                    >
-                      TMDb
-                    </H6>
-                    <H6 h6>{item?.vote_average?.toFixed(1)}</H6>
+                    <Rating rating={item?.vote_average?.toFixed(1)} ratingType="movie" />
                     {imdbRating && (
                       <>
                         <Spacer x={0.75} />
-                        <H5
-                          h5
+                        <H6
+                          h6
+                          weight="semibold"
                           css={{
                             backgroundColor: '#ddb600',
                             color: '#000',
@@ -417,8 +407,10 @@ const MediaDetail = (props: IMediaDetail) => {
                           }}
                         >
                           IMDb
-                        </H5>
-                        <H6 h6>{imdbRating?.star}</H6>
+                        </H6>
+                        <H6 h6 weight="semibold">
+                          {imdbRating?.star}
+                        </H6>
                       </>
                     )}
                   </Flex>

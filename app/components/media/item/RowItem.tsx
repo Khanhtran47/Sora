@@ -1,6 +1,8 @@
 /* eslint-disable no-nested-ternary */
 import { Grid, Image, Text, useTheme } from '@nextui-org/react';
 import { Link } from '@remix-run/react';
+
+import Rating from '~/components/elements/shared/Rating';
 import { IMedia } from '~/types/media';
 
 interface IRowItem {
@@ -91,22 +93,7 @@ const RowItem = ({ item, containerWidth, simplified }: IRowItem) => {
             </Text>
           </Grid>
           <Grid xs={6} css={{ alignItems: 'center', marginTop: '0.1rem' }}>
-            <Text
-              weight="bold"
-              size="$xs"
-              css={{
-                backgroundColor: '#3ec2c2',
-                borderRadius: '$xs',
-                padding: '0 0.25rem 0 0.25rem',
-                marginRight: '0.5rem',
-                color: '#fff',
-              }}
-            >
-              TMDb
-            </Text>
-            <Text size="$sm" weight="bold">
-              {item.voteAverage}
-            </Text>
+            <Rating rating={item.voteAverage?.toFixed(1)} ratingType={item.mediaType} />
           </Grid>
         </Grid.Container>
       </Grid>
