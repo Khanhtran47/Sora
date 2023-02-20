@@ -850,9 +850,6 @@ const GlobalPlayer = () => {
                     borderTopLeftRadius: isMini ? '$sm' : 0,
                     borderTopRightRadius: isMini ? '$sm' : 0,
                     overflow: 'hidden',
-                    '& video': {
-                      backgroundColor: '$backgroundContrast !important',
-                    },
                     '& svg': {
                       fill: '$text !important',
                       '& path': {
