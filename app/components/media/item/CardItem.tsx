@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent */
 /* eslint-disable no-unsafe-optional-chaining */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
@@ -12,7 +13,6 @@ import { isMobile } from 'react-device-detect';
 
 import useCardHoverStore from '~/store/card/useCardHoverStore';
 
-import useMediaQuery from '~/hooks/useMediaQuery';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { IMedia, Title } from '~/types/media';
 import { ITrailer } from '~/services/consumet/anilist/anilist.types';
@@ -77,9 +77,6 @@ const CardItem = (props: ICardItemProps) => {
     rootMargin: '3000px 1000px',
     triggerOnce: !virtual,
   });
-  const isSm = useMediaQuery('(max-width: 650px)');
-  const isMd = useMediaQuery('(max-width: 960px)');
-  const isLg = useMediaQuery('(max-width: 1400px)');
   const fetcher = useFetcher();
   const setIsCardPlaying = useCardHoverStore((state) => state.setIsCardPlaying);
   const [trailerCard, setTrailerCard] = React.useState<Trailer>({});
@@ -96,21 +93,6 @@ const CardItem = (props: ICardItemProps) => {
       setTrailerCard(officialTrailer);
     }
   }, [fetcher.data]);
-  let cardWidth;
-  let cardHeight;
-  let cardBodyHeight;
-  switch (mediaType) {
-    case 'people':
-      cardWidth = 160;
-      cardHeight = 324;
-      cardBodyHeight = 240;
-      break;
-    default:
-      cardWidth = isSm ? 164 : isMd ? 210 : isLg ? 244 : 280;
-      cardHeight = isSm ? 318 : isMd ? 386 : isLg ? 435 : 488;
-      cardBodyHeight = isSm ? 240 : isMd ? 308 : isLg ? 357 : 410;
-      break;
-  }
 
   if (isCoverCard) {
     return (
@@ -119,12 +101,16 @@ const CardItem = (props: ICardItemProps) => {
         isHoverable
         isPressable
         css={{
-          minWidth: `${isSm ? '280px' : '480px'} !important`,
-          minHeight: `${isSm ? '158px' : '270px'} !important`,
+          minWidth: '280px !important',
+          maxWidth: '158px !important',
           borderWidth: 0,
           filter: 'var(--nextui-dropShadows-md)',
           '&:hover': {
             boxShadow: '0 0 0 1px var(--nextui-colors-primarySolidHover)',
+          },
+          '@xs': {
+            minWidth: '480px !important',
+            minHeight: '270px !important',
           },
         }}
         role="figure"
@@ -142,8 +128,12 @@ const CardItem = (props: ICardItemProps) => {
               alt={titleItem}
               title={titleItem}
               css={{
-                minWidth: `${isSm ? '280px' : '480px'} !important`,
-                minHeight: `${isSm ? '158px' : '270px'} !important`,
+                minWidth: '280px !important',
+                minHeight: '158px !important',
+                '@xs': {
+                  minWidth: '480px !important',
+                  minHeight: '270px !important',
+                },
               }}
               showSkeleton
               loaderUrl="/api/image"
@@ -194,13 +184,29 @@ const CardItem = (props: ICardItemProps) => {
       isHoverable
       isPressable
       css={{
-        minWidth: `${cardWidth}px !important`,
-        minHeight: `${cardHeight}px !important`,
+        minWidth: `${mediaType === 'people' ? '160px' : '164px'} !important`,
+        minHeight: `${mediaType === 'people' ? '324px' : '318px'} !important`,
         borderWidth: 0,
         filter: 'var(--nextui-dropShadows-md)',
         '&:hover': {
           boxShadow: '0 0 0 1px var(--nextui-colors-primarySolidHover)',
         },
+        ...(mediaType !== 'people'
+          ? {
+              '@xs': {
+                minWidth: '210px !important',
+                minHeight: '386px !important',
+              },
+              '@sm': {
+                minWidth: '244px !important',
+                minHeight: '435px !important',
+              },
+              '@lg': {
+                minWidth: '280px !important',
+                minHeight: '488px !important',
+              },
+            }
+          : {}),
       }}
       role="figure"
       ref={ref}
@@ -209,7 +215,14 @@ const CardItem = (props: ICardItemProps) => {
         <Card.Body
           css={{
             p: 0,
-            minHeight: `${cardBodyHeight}px`,
+            minHeight: '240px',
+            ...(mediaType !== 'people'
+              ? {
+                  '@xs': { minHeight: '308px' },
+                  '@sm': { minHeight: '357px' },
+                  '@lg': { minHeight: '410px' },
+                }
+              : {}),
           }}
         >
           {posterPath ? (
@@ -223,8 +236,24 @@ const CardItem = (props: ICardItemProps) => {
               alt={titleItem}
               title={titleItem}
               css={{
-                minWidth: `${cardWidth}px !important`,
-                minHeight: `${cardBodyHeight}px !important`,
+                minWidth: `${mediaType === 'people' ? '160px' : '164px'} !important`,
+                minHeight: '240px !important',
+                ...(mediaType !== 'people'
+                  ? {
+                      '@xs': {
+                        minWidth: '210px !important',
+                        minHeight: '308px !important',
+                      },
+                      '@sm': {
+                        minWidth: '244px !important',
+                        minHeight: '357px !important',
+                      },
+                      '@lg': {
+                        minWidth: '280px !important',
+                        minHeight: '410px !important',
+                      },
+                    }
+                  : {}),
               }}
               showSkeleton
               loaderUrl="/api/image"
@@ -267,10 +296,26 @@ const CardItem = (props: ICardItemProps) => {
               icon={<PhotoIcon width={48} height={48} />}
               pointer
               css={{
-                minWidth: `${cardWidth}px !important`,
-                minHeight: `${cardBodyHeight}px !important`,
                 size: '$20',
                 borderRadius: '0 !important',
+                minWidth: `${mediaType === 'people' ? '160px' : '164px'} !important`,
+                minHeight: '240px !important',
+                ...(mediaType !== 'people'
+                  ? {
+                      '@xs': {
+                        minWidth: '210px !important',
+                        minHeight: '308px !important',
+                      },
+                      '@sm': {
+                        minWidth: '244px !important',
+                        minHeight: '357px !important',
+                      },
+                      '@lg': {
+                        minWidth: '280px !important',
+                        minHeight: '410px !important',
+                      },
+                    }
+                  : {}),
               }}
             />
           )}
@@ -332,7 +377,14 @@ const CardItem = (props: ICardItemProps) => {
             flexDirection: 'column',
             alignItems: 'flex-start',
             minHeight: mediaType === 'people' ? '5.25rem' : '4.875rem',
-            maxWidth: `${cardWidth}px`,
+            maxWidth: mediaType === 'people' ? '160px' : '164px',
+            ...(mediaType !== 'people'
+              ? {
+                  '@xs': { maxWidth: '210px' },
+                  '@sm': { maxWidth: '244px' },
+                  '@lg': { maxWidth: '280px' },
+                }
+              : {}),
           }}
         >
           <H5
@@ -340,8 +392,9 @@ const CardItem = (props: ICardItemProps) => {
             weight="bold"
             css={{
               ...(color ? { color } : null),
-              minWidth: `${mediaType === 'people' ? '100px' : isSm ? '150px' : '240px'}`,
+              minWidth: `${mediaType === 'people' ? '100px' : '150px'}`,
               padding: '0 0.25rem',
+              ...(mediaType !== 'people' ? { '@xs': { minWidth: '240px' } } : {}),
             }}
           >
             {titleItem}

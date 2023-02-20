@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable no-nested-ternary */
-import { Grid } from '@nextui-org/react';
+import { Container, styled } from '@nextui-org/react';
 import { Link } from '@remix-run/react';
 import { Navigation } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
-import useMediaQuery from '~/hooks/useMediaQuery';
 import { IMedia } from '~/types/media';
+
 import MediaItem from '../item';
 
 interface IMediaListCardProps {
@@ -22,6 +22,26 @@ interface IMediaListCardProps {
   virtual?: boolean;
 }
 
+const SwiperSlideStyled = styled(SwiperSlide, {
+  variants: {
+    cardType: {
+      coverCard: {
+        width: '280px',
+        '@xs': { width: '480px' },
+      },
+      card: {
+        width: '164px',
+        '@xs': { width: '210px' },
+        '@sm': { width: '244px' },
+        '@lg': { width: '280px' },
+      },
+      peopleCard: {
+        width: '160px',
+      },
+    },
+  },
+});
+
 const MediaListCard = (props: IMediaListCardProps) => {
   const {
     coverItem,
@@ -35,14 +55,10 @@ const MediaListCard = (props: IMediaListCardProps) => {
     setSlideProgress,
     virtual,
   } = props;
-  const isSm = useMediaQuery('(max-width: 650px)');
-  const isMd = useMediaQuery('(max-width: 960px)');
-  const isLg = useMediaQuery('(max-width: 1400px)');
-  const gap = isSm ? 1 : 2;
 
   if (isCoverCard) {
     return (
-      <Grid.Container gap={gap} justify="flex-start" alignItems="center">
+      <Container justify="flex-start" alignItems="center" css={{ m: 0, p: 0 }}>
         {coverItem && coverItem?.length > 0 && (
           <Swiper
             modules={[Navigation]}
@@ -62,12 +78,7 @@ const MediaListCard = (props: IMediaListCardProps) => {
               coverItem.map((item, index) => {
                 const href = `/collections/${item.id}`;
                 return (
-                  <SwiperSlide
-                    key={`${item.id}-${index}-card`}
-                    style={{
-                      width: isSm ? '280px' : '480px',
-                    }}
-                  >
+                  <SwiperSlideStyled key={`${item.id}-${index}-card`} cardType="coverCard">
                     <Link to={href} style={{ display: 'flex', padding: '0.5rem 0' }}>
                       <MediaItem
                         backdropPath={item?.backdropPath}
@@ -78,17 +89,17 @@ const MediaListCard = (props: IMediaListCardProps) => {
                         virtual={virtual}
                       />
                     </Link>
-                  </SwiperSlide>
+                  </SwiperSlideStyled>
                 );
               })}
           </Swiper>
         )}
-      </Grid.Container>
+      </Container>
     );
   }
 
   return (
-    <Grid.Container gap={gap} justify="flex-start" alignItems="center">
+    <Container justify="flex-start" alignItems="center" css={{ m: 0, p: 0 }}>
       {items && items?.length > 0 && (
         <Swiper
           modules={[Navigation]}
@@ -105,7 +116,7 @@ const MediaListCard = (props: IMediaListCardProps) => {
           }}
         >
           {items &&
-            items.map((item, i) => {
+            items.map((item, index) => {
               const href =
                 itemsType && itemsType === 'episode'
                   ? `/anime/${item.id}/episode/${item.episodeNumber}/watch?provider=${provider}`
@@ -117,21 +128,9 @@ const MediaListCard = (props: IMediaListCardProps) => {
                   ? `/movies/${item.id}/`
                   : `/tv-shows/${item.id}/`;
               return (
-                <SwiperSlide
-                  key={i}
-                  style={{
-                    width: `${
-                      item?.mediaType === 'people'
-                        ? '160px'
-                        : isSm
-                        ? '164px'
-                        : isMd
-                        ? '210px'
-                        : isLg
-                        ? '244px'
-                        : '280px'
-                    }`,
-                  }}
+                <SwiperSlideStyled
+                  key={`${item.id}-${index}-card`}
+                  cardType={item?.mediaType === 'people' ? 'peopleCard' : 'card'}
                 >
                   <Link to={href} style={{ display: 'flex', padding: '0.5rem 0' }}>
                     <MediaItem
@@ -159,12 +158,12 @@ const MediaListCard = (props: IMediaListCardProps) => {
                       voteAverage={item?.voteAverage}
                     />
                   </Link>
-                </SwiperSlide>
+                </SwiperSlideStyled>
               );
             })}
         </Swiper>
       )}
-    </Grid.Container>
+    </Container>
   );
 };
 
