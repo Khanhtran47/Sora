@@ -767,7 +767,7 @@ export const CatchBoundary = () => {
 };
 
 export const ErrorBoundary = ({ error }: { error: Error }) => {
-  const isProd = process.env.NODE_ENV === 'production';
+  const isProd = process.env.NODE_ENV === 'production' && process.env.DEPLOY_ENV === 'production';
   console.log(error);
   return (
     <Document title="Error!">

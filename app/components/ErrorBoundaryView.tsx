@@ -9,7 +9,7 @@ interface IErrorBoundary {
 }
 
 const ErrorBoundary = ({ error }: IErrorBoundary) => {
-  const isProd = process.env.NODE_ENV === 'production';
+  const isProd = process.env.NODE_ENV === 'production' && process.env.DEPLOY_ENV === 'production';
   return (
     <Flex direction="column" justify="center" align="center" className="space-y-4">
       <Image
