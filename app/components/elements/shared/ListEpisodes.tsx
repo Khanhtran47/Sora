@@ -316,6 +316,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                                 borderRadius: '$xs',
                                 padding: '0 0.25rem 0 0.25rem',
                                 marginRight: '0.5rem',
+                                color: '#fff',
                               }}
                             >
                               TMDb

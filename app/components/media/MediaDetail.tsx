@@ -1,19 +1,21 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable no-nested-ternary */
 import { useRef, useState, useEffect } from 'react';
-import { useNavigate, useLocation } from '@remix-run/react';
+import { useNavigate, useLocation, useFetcher } from '@remix-run/react';
 import { Card, Col, Row, Button, Spacer, Avatar, Tooltip } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
 import tinycolor from 'tinycolor2';
 // import { useTranslation } from 'react-i18next';
 
 import { IMovieDetail, ITvShowDetail, IMovieTranslations } from '~/services/tmdb/tmdb.types';
+import { ColorPalette } from '~/routes/api/color-palette';
 
 import TMDB from '~/utils/media';
 import { WebShareLink } from '~/utils/client/pwa-utils.client';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
 import useSize, { IUseSize } from '~/hooks/useSize';
+import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 
 import TabLink from '~/components/elements/tab/TabLink';
 import Flex from '~/components/styles/Flex.styles';
@@ -52,20 +54,19 @@ const MediaDetail = (props: IMediaDetail) => {
   const size: IUseSize = useSize(ref);
   const navigate = useNavigate();
   const location = useLocation();
-
+  const fetcher = useFetcher();
+  const { backgroundColor } = useColorDarkenLighten(color);
   const isXs = useMediaQuery('(max-width: 425px)');
   const isSm = useMediaQuery('(max-width: 650px)');
   const isMd = useMediaQuery('(max-width: 960px)');
   const isLg = useMediaQuery('(max-width: 1280px)');
-
-  const backgroundImageHeight = isXs ? 240 : isSm ? 360 : isMd ? 480 : isLg ? 720 : 787.5;
-  const backgroundGradientHeight = isXs ? 100 : isSm ? 150 : isMd ? 200 : isLg ? 250 : 300;
-
   const [visible, setVisible] = useState(false);
+  const [colorPalette, setColorPalette] = useState<ColorPalette>();
   const closeHandler = () => {
     setVisible(false);
   };
-
+  const backgroundImageHeight = isXs ? 240 : isSm ? 360 : isMd ? 480 : isLg ? 720 : 787.5;
+  const backgroundGradientHeight = isXs ? 100 : isSm ? 150 : isMd ? 200 : isLg ? 250 : 300;
   const { id, tagline, genres, status } = item || {};
   const title = (item as IMovieDetail)?.title || (item as ITvShowDetail)?.name || '';
   const orgTitle =
@@ -87,15 +88,24 @@ const MediaDetail = (props: IMediaDetail) => {
   ).toLocaleDateString('fr-FR');
   const description = (item as IMovieDetail)?.overview || (item as ITvShowDetail)?.overview || '';
 
-  const colorBackground = tinycolor(color).isDark()
-    ? tinycolor(color).brighten(40).saturate(70).spin(180).toString()
-    : tinycolor(color).darken(40).saturate(70).spin(180).toString();
-
   useEffect(() => {
     if (ref.current) {
       ref.current.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });
     }
   }, [ref, location.pathname]);
+
+  useEffect(() => {
+    if (color?.startsWith('#')) {
+      fetcher.load(`/api/color-palette?color=${color.replace('#', '')}`);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [color]);
+
+  useEffect(() => {
+    if (fetcher.data && fetcher.data.color) {
+      setColorPalette(fetcher.data.color);
+    }
+  }, [fetcher.data]);
 
   return (
     <>
@@ -107,7 +117,9 @@ const MediaDetail = (props: IMediaDetail) => {
           width: '100%',
           height: `calc(${JSON.stringify(size?.height)}px + ${backgroundImageHeight}px - 10rem)`,
           borderWidth: 0,
-          backgroundColor: color,
+          backgroundColor,
+          borderBottomLeftRadius: 0,
+          borderBottomRightRadius: 0,
         }}
       >
         <Card.Body
@@ -122,7 +134,9 @@ const MediaDetail = (props: IMediaDetail) => {
               left: 0,
               width: '100%',
               height: `${backgroundGradientHeight}px`,
-              backgroundImage: `linear-gradient(to top, ${color}, ${tinycolor(color).setAlpha(0)})`,
+              backgroundImage: `linear-gradient(to top, ${backgroundColor}, ${tinycolor(
+                backgroundColor,
+              ).setAlpha(0)})`,
             },
           }}
         >
@@ -198,6 +212,8 @@ const MediaDetail = (props: IMediaDetail) => {
             justifyContent: 'center',
             flexDirection: 'column',
             padding: 0,
+            borderBottomLeftRadius: 0,
+            borderBottomRightRadius: 0,
           }}
         >
           <Row
@@ -381,6 +397,7 @@ const MediaDetail = (props: IMediaDetail) => {
                         borderRadius: '$xs',
                         padding: '0 0.25rem 0 0.25rem',
                         marginRight: '0.5rem',
+                        color: '#fff',
                       }}
                     >
                       TMDb
@@ -388,7 +405,7 @@ const MediaDetail = (props: IMediaDetail) => {
                     <H6 h6>{item?.vote_average?.toFixed(1)}</H6>
                     {imdbRating && (
                       <>
-                        <Spacer x={0.5} />
+                        <Spacer x={0.75} />
                         <H5
                           h5
                           css={{
@@ -405,7 +422,7 @@ const MediaDetail = (props: IMediaDetail) => {
                       </>
                     )}
                   </Flex>
-                  <Spacer x={0.5} />
+                  <Spacer x={1} />
                   <H6 h6>
                     {releaseDate}
                     {runtime ? ` • ${Math.floor(runtime / 60)}h ${runtime % 60}m` : null}
@@ -427,18 +444,20 @@ const MediaDetail = (props: IMediaDetail) => {
                         <Button
                           type="button"
                           color="primary"
+                          flat
                           auto
                           // shadow
                           key={genre?.id}
                           size={isSm ? 'sm' : 'md'}
                           css={{
                             marginBottom: '0.4rem',
-                            background: color,
-                            color: colorBackground,
-                            '&:hover': {
-                              background: colorBackground,
-                              color,
-                            },
+                            ...(colorPalette && {
+                              color: colorPalette[600],
+                              backgroundColor: colorPalette[200],
+                              '&:hover': {
+                                backgroundColor: colorPalette[300],
+                              },
+                            }),
                           }}
                           onPress={() =>
                             navigate(
@@ -512,10 +531,11 @@ const MediaDetail = (props: IMediaDetail) => {
             css={{
               paddingTop: '1rem',
               paddingBottom: '2rem',
+              borderRadius: 0,
             }}
             justify="center"
           >
-            <BackgroundTabLink css={{ backgroundColor: color }} />
+            <BackgroundTabLink css={{ backgroundColor }} />
             <TabLink
               pages={detailTab}
               linkTo={`/${type === 'movie' ? 'movies' : 'tv-shows'}/${id}`}

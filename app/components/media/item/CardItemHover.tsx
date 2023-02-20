@@ -7,6 +7,7 @@ import Image, { MimeType } from 'remix-image';
 import { motion, AnimatePresence } from 'framer-motion';
 import YouTube from 'react-youtube';
 import { ClientOnly } from 'remix-utils';
+import { useColor } from 'color-thief-react';
 
 import useCardHoverStore from '~/store/card/useCardHoverStore';
 
@@ -52,7 +53,14 @@ const CardItemHover = (props: ICardItemHoverProps) => {
     voteAverage,
     genresAnime,
   } = props;
-  const { loading, colorDarkenLighten, colorBackground } = useColorDarkenLighten(posterPath);
+  const { data, loading } = useColor(
+    `https://corsproxy.io/?${encodeURIComponent(posterPath || '')}`,
+    'hex',
+    {
+      crossOrigin: 'anonymous',
+    },
+  );
+  const { saturatedColor, backgroundInvertColor } = useColorDarkenLighten(data);
   const [player, setPlayer] = useState<ReturnType<YouTube['getInternalPlayer']>>();
   const [showTrailer, setShowTrailer] = useState<boolean>(false);
   const setIsCardPlaying = useCardHoverStore((state) => state.setIsCardPlaying);
@@ -203,7 +211,7 @@ const CardItemHover = (props: ICardItemHoverProps) => {
           </ClientOnly>
           <Spacer y={0.5} />
           <Row justify="center" align="center">
-            <H4 h4 weight="bold" color={colorDarkenLighten}>
+            <H4 h4 weight="bold" color={saturatedColor}>
               {title}
             </H4>
           </Row>
@@ -217,9 +225,9 @@ const CardItemHover = (props: ICardItemHoverProps) => {
                         <H5
                           key={index}
                           h5
-                          color={colorDarkenLighten}
+                          color={saturatedColor}
                           css={{
-                            backgroundColor: colorBackground,
+                            backgroundColor: backgroundInvertColor,
                             borderRadius: '$md',
                             padding: '0 0.5rem 0 0.5rem',
                           }}
@@ -236,9 +244,9 @@ const CardItemHover = (props: ICardItemHoverProps) => {
                             <H5
                               key={genreId}
                               h5
-                              color={colorDarkenLighten}
+                              color={saturatedColor}
                               css={{
-                                backgroundColor: colorBackground,
+                                backgroundColor: backgroundInvertColor,
                                 borderRadius: '$md',
                                 padding: '0 0.5rem 0 0.5rem',
                               }}
@@ -254,9 +262,9 @@ const CardItemHover = (props: ICardItemHoverProps) => {
                           <H5
                             key={genreId}
                             h5
-                            color={colorDarkenLighten}
+                            color={saturatedColor}
                             css={{
-                              backgroundColor: colorBackground,
+                              backgroundColor: backgroundInvertColor,
                               borderRadius: '$md',
                               padding: '0 0.25rem 0 0.25rem',
                             }}

@@ -99,6 +99,7 @@ const RowItem = ({ item, containerWidth, simplified }: IRowItem) => {
                 borderRadius: '$xs',
                 padding: '0 0.25rem 0 0.25rem',
                 marginRight: '0.5rem',
+                color: '#fff',
               }}
             >
               TMDb

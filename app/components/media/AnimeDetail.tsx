@@ -2,17 +2,19 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useEffect, useRef, useState } from 'react';
 import { Card, Col, Row, Button, Spacer, Avatar, Tooltip } from '@nextui-org/react';
-import { useNavigate, useLocation } from '@remix-run/react';
+import { useNavigate, useLocation, useFetcher } from '@remix-run/react';
 import Image, { MimeType } from 'remix-image';
 import tinycolor from 'tinycolor2';
 // import { useTranslation } from 'react-i18next';
 
 import { IAnimeInfo } from '~/services/consumet/anilist/anilist.types';
+import { ColorPalette } from '~/routes/api/color-palette';
 
 import { WebShareLink } from '~/utils/client/pwa-utils.client';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
 import useSize, { IUseSize } from '~/hooks/useSize';
+import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 
 import TabLink from '~/components/elements/tab/TabLink';
 import { H2, H5, H6 } from '~/components/styles/Text.styles';
@@ -41,24 +43,6 @@ const detailTab = [
 const AnimeDetail = (props: IAnimeDetail) => {
   // const { t } = useTranslation();
   const { item, handler } = props;
-  const navigate = useNavigate();
-  const location = useLocation();
-  const ref = useRef<HTMLDivElement>(null);
-  const size: IUseSize = useSize(ref);
-
-  const isXs = useMediaQuery('(max-width: 425px)');
-  const isSm = useMediaQuery('(max-width: 650px)');
-  const isMd = useMediaQuery('(max-width: 960px)');
-  const isLg = useMediaQuery('(max-width: 1280px)');
-
-  const backgroundImageHeight = isXs ? 80 : isSm ? 119 : isMd ? 178 : isLg ? 267 : 400;
-  const backgroundGradientHeight = isXs ? 30 : isSm ? 50 : isMd ? 70 : isLg ? 90 : 110;
-
-  const [visible, setVisible] = useState(false);
-  const closeHandler = () => {
-    setVisible(false);
-  };
-
   const {
     id,
     genres,
@@ -72,17 +56,42 @@ const AnimeDetail = (props: IAnimeDetail) => {
     color,
     description,
   } = item || {};
-
-  const colorBackground = tinycolor(color).isDark()
-    ? tinycolor(color).brighten(40).saturate(70).spin(180).toString()
-    : tinycolor(color).darken(40).saturate(70).spin(180).toString();
-  const decreaseBrightColor = tinycolor(color).darken(15).toString();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const fetcher = useFetcher();
+  const ref = useRef<HTMLDivElement>(null);
+  const size: IUseSize = useSize(ref);
+  const { backgroundColor } = useColorDarkenLighten(color);
+  const isXs = useMediaQuery('(max-width: 425px)');
+  const isSm = useMediaQuery('(max-width: 650px)');
+  const isMd = useMediaQuery('(max-width: 960px)');
+  const isLg = useMediaQuery('(max-width: 1280px)');
+  const [visible, setVisible] = useState(false);
+  const [colorPalette, setColorPalette] = useState<ColorPalette>();
+  const closeHandler = () => {
+    setVisible(false);
+  };
+  const backgroundImageHeight = isXs ? 80 : isSm ? 119 : isMd ? 178 : isLg ? 267 : 400;
+  const backgroundGradientHeight = isXs ? 30 : isSm ? 50 : isMd ? 70 : isLg ? 90 : 110;
 
   useEffect(() => {
     if (ref.current) {
       ref.current.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });
     }
   }, [ref, location.pathname]);
+
+  useEffect(() => {
+    if (color?.startsWith('#')) {
+      fetcher.load(`/api/color-palette?color=${color.replace('#', '')}`);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [color]);
+
+  useEffect(() => {
+    if (fetcher.data && fetcher.data.color) {
+      setColorPalette(fetcher.data.color);
+    }
+  }, [fetcher.data]);
 
   return (
     <>
@@ -94,7 +103,9 @@ const AnimeDetail = (props: IAnimeDetail) => {
           width: '100%',
           height: `calc(${JSON.stringify(size?.height)}px + ${backgroundImageHeight}px - 2rem)`,
           borderWidth: 0,
-          backgroundColor: decreaseBrightColor,
+          backgroundColor,
+          borderBottomLeftRadius: 0,
+          borderBottomRightRadius: 0,
         }}
       >
         <Card.Body
@@ -109,8 +120,8 @@ const AnimeDetail = (props: IAnimeDetail) => {
               left: 0,
               width: '100%',
               height: `${backgroundGradientHeight}px`,
-              backgroundImage: `linear-gradient(to top, ${decreaseBrightColor}, ${tinycolor(
-                decreaseBrightColor,
+              backgroundImage: `linear-gradient(to top, ${backgroundColor}, ${tinycolor(
+                backgroundColor,
               ).setAlpha(0)})`,
             },
           }}
@@ -188,6 +199,8 @@ const AnimeDetail = (props: IAnimeDetail) => {
             justifyContent: 'center',
             flexDirection: 'column',
             padding: 0,
+            borderBottomLeftRadius: 0,
+            borderBottomRightRadius: 0,
           }}
         >
           <Row
@@ -394,17 +407,20 @@ const AnimeDetail = (props: IAnimeDetail) => {
                         <Button
                           type="button"
                           auto
+                          flat
                           key={index}
                           size={isSm ? 'sm' : 'md'}
                           onPress={() => navigate(`/anime/discover?genres=${genre}`)}
                           css={{
                             marginBottom: '0.125rem',
-                            background: color,
-                            color: colorBackground,
-                            '&:hover': {
-                              background: colorBackground,
-                              color,
-                            },
+                            transition: 'all 0.3s ease-in-out',
+                            ...(colorPalette && {
+                              color: colorPalette[600],
+                              backgroundColor: colorPalette[200],
+                              '&:hover': {
+                                backgroundColor: colorPalette[300],
+                              },
+                            }),
                           }}
                         >
                           {genre}
@@ -473,10 +489,11 @@ const AnimeDetail = (props: IAnimeDetail) => {
             css={{
               paddingTop: '1rem',
               paddingBottom: '2rem',
+              borderRadius: 0,
             }}
             justify="center"
           >
-            <BackgroundTabLink css={{ backgroundColor: decreaseBrightColor }} />
+            <BackgroundTabLink css={{ backgroundColor }} />
             <TabLink pages={detailTab} linkTo={`/anime/${id}`} />
           </Row>
         </Card.Footer>
