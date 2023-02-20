@@ -5,6 +5,8 @@ const globalStyles = globalCss({
     margin: 0,
     padding: 0,
     boxSizing: 'border-box',
+    // scrollbarWidth: 'thin',
+    scrollbarColor: 'var(--nextui-colors-primary) var(--nextui-colors-accents5)',
   },
   'html, body': {
     height: '100%',
