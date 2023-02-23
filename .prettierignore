@@ -1,5 +1,5 @@
 public
-api
+/api
 .env-example
 node_modules
 build
