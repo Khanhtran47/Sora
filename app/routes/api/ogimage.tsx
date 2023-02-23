@@ -1,9 +1,8 @@
 import type { MetaFunction, LoaderArgs, HeadersFunction } from '@remix-run/node';
-import { renderAsync } from '@resvg/resvg-js';
 
 import { getMovieDetail, getTvShowDetail } from '~/services/tmdb/tmdb.server';
 import { IMovieDetail, ITvShowDetail } from '~/services/tmdb/tmdb.types';
-import { generateSvg } from '~/utils/server/og.server';
+import { generateSvg, generateMovieSvg, generateResponse } from '~/utils/server/og.server';
 import TMDB from '~/utils/media';
 
 export let headers: HeadersFunction = () => {
@@ -28,61 +27,33 @@ export async function loader({ request }: LoaderArgs) {
     const backdropPath = movieDetail?.backdrop_path
       ? TMDB?.backdropUrl(movieDetail?.backdrop_path || '', 'w1280')
       : undefined;
+    const releaseYear = new Date(
+      (movieDetail as IMovieDetail)?.release_date ||
+        (movieDetail as ITvShowDetail)?.first_air_date ||
+        '',
+    ).getFullYear();
 
-    const svg = await generateSvg({
+    const svg = await generateMovieSvg({
       title,
+      cover: backdropPath,
+      poster: posterPath,
+      voteAverage: movieDetail?.vote_average?.toFixed(1),
+      genres: movieDetail?.genres?.splice(0, 4),
+      releaseYear,
+      numberOfEpisodes: (movieDetail as ITvShowDetail)?.number_of_episodes,
+      numberOfSeasons: (movieDetail as ITvShowDetail)?.number_of_seasons,
+      runtime: (movieDetail as IMovieDetail)?.runtime,
+      productionCompany:
+        (movieDetail as IMovieDetail)?.production_companies![0]?.name ||
+        (movieDetail as ITvShowDetail)?.production_companies![0]?.name,
     });
-    if (imageType === 'svg') {
-      return new Response(svg, {
-        headers: {
-          'Content-Type': 'image/svg+xml',
-          'Cache-Control': 'public, max-age=31536000, immutable',
-        },
-      });
-    }
-    // otherwise, generate a png file
-    const data = await renderAsync(svg, {
-      fitTo: {
-        mode: 'width',
-        value: 1200,
-      },
-      font: {
-        loadSystemFonts: false,
-      },
-    });
-    return new Response(data.asPng(), {
-      headers: {
-        'Content-Type': 'image/png',
-      },
-    });
+
+    return generateResponse({ imageType, svg });
   }
 
   const svg = await generateSvg({
     title: 'Test',
-    subtitle: 'Test',
   });
 
-  if (imageType === 'svg') {
-    return new Response(svg, {
-      headers: {
-        'Content-Type': 'image/svg+xml',
-        'Cache-Control': 'public, max-age=31536000, immutable',
-      },
-    });
-  }
-  // otherwise, generate a png file
-  const data = await renderAsync(svg, {
-    fitTo: {
-      mode: 'width',
-      value: 1200,
-    },
-    font: {
-      loadSystemFonts: false,
-    },
-  });
-  return new Response(data.asPng(), {
-    headers: {
-      'Content-Type': 'image/png',
-    },
-  });
+  return generateResponse({ imageType, svg });
 }
