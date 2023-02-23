@@ -80,6 +80,9 @@ export async function loader({ request }: LoaderArgs) {
           mode: 'width',
           value: 1200,
         },
+        font: {
+          loadSystemFonts: false,
+        },
       });
       controller.enqueue(image.asPng());
       controller.close();

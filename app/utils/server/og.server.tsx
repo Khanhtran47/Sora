@@ -115,7 +115,7 @@ const generateMovieSvg = async ({
           zIndex: '1',
           top: 0,
           left: 0,
-          padding: '30px 0 80px 50px',
+          padding: '30px 0 50px 50px',
           display: 'flex',
           flexDirection: 'column',
         }}
@@ -128,12 +128,12 @@ const generateMovieSvg = async ({
           }}
         >
           {releaseYear ? `${releaseYear}` : null}
-          <div style={{ marginRight: 15 }} />
+          <div style={{ marginRight: 10 }} />
           {runtime ? `• ${runtime} min` : null}
           {numberOfEpisodes && numberOfSeasons ? (
             <>
               {`• ${numberOfSeasons} seasons`}
-              <div style={{ marginRight: 15 }} />
+              <div style={{ marginRight: 10 }} />
               {`• ${numberOfEpisodes} episodes`}
             </>
           ) : null}
@@ -222,6 +222,7 @@ const generateMovieSvg = async ({
           zIndex: '1',
           top: 0,
           right: 0,
+          boxShadow: '-10px 5px 20px 0px rgba(0,0,0,0.75)',
         }}
       />
     </div>,
