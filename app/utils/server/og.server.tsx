@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/indent */
-import { renderAsync } from '@resvg/resvg-js';
 
 const generateSvg = async ({ title = '' }) => {
   const res = await fetch(
@@ -87,9 +86,11 @@ const generateMovieSvg = async ({
     >
       <div
         style={{
-          width: '100%',
-          height: '100%',
+          width: '1200px',
+          height: '620px',
           backgroundImage: `url(${cover})`,
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
           position: 'absolute',
           top: -10,
           left: -200,
@@ -240,27 +241,4 @@ const generateMovieSvg = async ({
   );
 };
 
-const generateResponse = async ({ imageType = 'svg', svg = '' }) => {
-  if (imageType === 'svg') {
-    return new Response(svg, {
-      headers: {
-        'Content-Type': 'image/svg+xml',
-        'Cache-Control': 'public, max-age=31536000, immutable',
-      },
-    });
-  }
-  // otherwise, generate a png file
-  const data = await renderAsync(svg, {
-    fitTo: {
-      mode: 'width',
-      value: 1200,
-    },
-  });
-  return new Response(data.asPng(), {
-    headers: {
-      'Content-Type': 'image/png',
-    },
-  });
-};
-
-export { generateSvg, generateMovieSvg, generateResponse };
+export { generateSvg, generateMovieSvg };

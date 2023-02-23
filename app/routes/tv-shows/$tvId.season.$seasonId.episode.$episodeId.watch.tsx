@@ -72,7 +72,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     'og:description': `Watch ${detail?.name || ''} season ${params.seasonId || ''} episode ${
       params.episodeId
     } in full HD online with Subtitle`,
-    'og:image': `https://sora-git-feature-ogimage-khanhtran47.vercel.app/api/ogimage?m=${params.tvId}&mt=tv&it=png`,
+    'og:image': `https://sora-git-feature-ogimage-khanhtran47.vercel.app/api/ogimage?m=${params.tvId}&mt=tv`,
   };
 };
 

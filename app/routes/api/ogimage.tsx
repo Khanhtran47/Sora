@@ -1,8 +1,9 @@
-import type { MetaFunction, LoaderArgs, HeadersFunction } from '@remix-run/node';
+import type { LoaderArgs, HeadersFunction } from '@remix-run/node';
+import { renderAsync } from '@resvg/resvg-js';
 
 import { getMovieDetail, getTvShowDetail } from '~/services/tmdb/tmdb.server';
 import { IMovieDetail, ITvShowDetail } from '~/services/tmdb/tmdb.types';
-import { generateSvg, generateMovieSvg, generateResponse } from '~/utils/server/og.server';
+import { generateSvg, generateMovieSvg } from '~/utils/server/og.server';
 import TMDB from '~/utils/media';
 
 export let headers: HeadersFunction = () => {
@@ -32,28 +33,65 @@ export async function loader({ request }: LoaderArgs) {
         (movieDetail as ITvShowDetail)?.first_air_date ||
         '',
     ).getFullYear();
-
-    const svg = await generateMovieSvg({
-      title,
-      cover: backdropPath,
-      poster: posterPath,
-      voteAverage: movieDetail?.vote_average?.toFixed(1),
-      genres: movieDetail?.genres?.splice(0, 4),
-      releaseYear,
-      numberOfEpisodes: (movieDetail as ITvShowDetail)?.number_of_episodes,
-      numberOfSeasons: (movieDetail as ITvShowDetail)?.number_of_seasons,
-      runtime: (movieDetail as IMovieDetail)?.runtime,
-      productionCompany:
-        (movieDetail as IMovieDetail)?.production_companies![0]?.name ||
-        (movieDetail as ITvShowDetail)?.production_companies![0]?.name,
+    const stream = new ReadableStream({
+      async start(controller) {
+        const svg = await generateMovieSvg({
+          title,
+          cover: backdropPath,
+          poster: posterPath,
+          voteAverage: movieDetail?.vote_average?.toFixed(1),
+          genres: movieDetail?.genres?.splice(0, 4),
+          releaseYear,
+          numberOfEpisodes: (movieDetail as ITvShowDetail)?.number_of_episodes,
+          numberOfSeasons: (movieDetail as ITvShowDetail)?.number_of_seasons,
+          runtime: (movieDetail as IMovieDetail)?.runtime,
+          productionCompany:
+            (movieDetail as IMovieDetail)?.production_companies![0]?.name ||
+            (movieDetail as ITvShowDetail)?.production_companies![0]?.name,
+        });
+        const image = await renderAsync(svg, {
+          fitTo: {
+            mode: 'width',
+            value: 1200,
+          },
+        });
+        controller.enqueue(image.asPng());
+        controller.close();
+      },
     });
-
-    return generateResponse({ imageType, svg });
+    return new Response(stream, {
+      headers: {
+        'content-type': 'image/png',
+        'cache-control':
+          process.env.NODE_ENV === 'development'
+            ? 'no-cache, no-store'
+            : 'public, immutable, no-transform, max-age=31536000',
+      },
+    });
   }
 
-  const svg = await generateSvg({
-    title: 'Test',
+  const stream = new ReadableStream({
+    async start(controller) {
+      const svg = await generateSvg({
+        title: 'Test',
+      });
+      const image = await renderAsync(svg, {
+        fitTo: {
+          mode: 'width',
+          value: 1200,
+        },
+      });
+      controller.enqueue(image.asPng());
+      controller.close();
+    },
   });
-
-  return generateResponse({ imageType, svg });
+  return new Response(stream, {
+    headers: {
+      'content-type': 'image/png',
+      'cache-control':
+        process.env.NODE_ENV === 'development'
+          ? 'no-cache, no-store'
+          : 'public, immutable, no-transform, max-age=31536000',
+    },
+  });
 }
