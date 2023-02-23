@@ -255,9 +255,6 @@ const generateResponse = async ({ imageType = 'svg', svg = '' }) => {
       mode: 'width',
       value: 1200,
     },
-    font: {
-      loadSystemFonts: false,
-    },
   });
   return new Response(data.asPng(), {
     headers: {

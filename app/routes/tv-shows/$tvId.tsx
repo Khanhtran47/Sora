@@ -130,7 +130,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     'og:title': `Watch ${detail?.name || ''} HD online Free - Sora`,
     'og:description':
       detail?.overview || `Watch ${detail?.name || ''} in full HD online with Subtitle`,
-    'og:image': `https://sora-git-feature-ogimage-khanhtran47.vercel.app/api/ogimage?m=${params.tvId}&mt=tv`,
+    'og:image': `https://sora-git-feature-ogimage-khanhtran47.vercel.app/api/ogimage?m=${params.tvId}&mt=tv&it=png`,
     ...(color ? { 'theme-color': color } : null),
     'twitter:card': 'summary_large_image',
     'twitter:site': '@sora_anime',
@@ -139,7 +139,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     'twitter:title': `Watch ${detail?.name || ''} HD online Free - Sora`,
     'twitter:description':
       detail?.overview || `Watch ${detail?.name || ''} in full HD online with Subtitle`,
-    'twitter:image': `https://sora-git-feature-ogimage-khanhtran47.vercel.app/api/ogimage?m=${params.tvId}&mt=tv`,
+    'twitter:image': `https://sora-git-feature-ogimage-khanhtran47.vercel.app/api/ogimage?m=${params.tvId}&mt=tv&it=png`,
   };
 };
 
