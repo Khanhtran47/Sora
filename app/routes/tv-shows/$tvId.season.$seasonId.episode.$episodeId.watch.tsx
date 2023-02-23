@@ -72,11 +72,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     'og:description': `Watch ${detail?.name || ''} season ${params.seasonId || ''} episode ${
       params.episodeId
     } in full HD online with Subtitle`,
-    'og:image': TMDB.backdropUrl(detail?.backdrop_path || '', 'w780'),
-    refresh: {
-      httpEquiv: 'Content-Security-Policy',
-      content: 'upgrade-insecure-requests',
-    },
+    'og:image': `https://sora-git-feature-ogimage-khanhtran47.vercel.app/api/ogimage?m=${params.tvId}&mt=tv`,
   };
 };
 
