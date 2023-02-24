@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
 
+import { renderAsync } from '@resvg/resvg-js';
+
 const generateSvg = async ({ title = '' }) => {
   const res = await fetch(
     'https://github.com/rsms/inter/raw/master/docs/font-files/Inter-Regular.woff',
@@ -245,4 +247,25 @@ const generateMovieSvg = async ({
   );
 };
 
-export { generateSvg, generateMovieSvg };
+const generatePng = async (svg: string) => {
+  const image = await renderAsync(svg, {
+    fitTo: {
+      mode: 'width',
+      value: 1200,
+    },
+    font: {
+      loadSystemFonts: false,
+    },
+  });
+  return new Response(image.asPng(), {
+    headers: {
+      'content-type': 'image/png',
+      'cache-control':
+        process.env.NODE_ENV === 'development'
+          ? 'no-cache, no-store'
+          : 'public, immutable, no-transform, max-age=31536000',
+    },
+  });
+};
+
+export { generateSvg, generateMovieSvg, generatePng };

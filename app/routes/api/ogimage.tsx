@@ -1,10 +1,8 @@
 import type { LoaderArgs, HeadersFunction } from '@remix-run/node';
-import { renderAsync } from '@resvg/resvg-js';
-import { join, resolve } from 'path';
 
 import { getMovieDetail, getTvShowDetail } from '~/services/tmdb/tmdb.server';
 import { IMovieDetail, ITvShowDetail } from '~/services/tmdb/tmdb.types';
-import { generateSvg, generateMovieSvg } from '~/utils/server/og.server';
+import { generateSvg, generateMovieSvg, generatePng } from '~/utils/server/og.server';
 import TMDB from '~/utils/media';
 
 export let headers: HeadersFunction = () => {
@@ -16,9 +14,9 @@ export async function loader({ request }: LoaderArgs) {
 
   let mid = url.searchParams.get('m') ?? null;
   let mType = url.searchParams.get('mt') ?? null;
-  let imageType = url.searchParams.get('it') || 'svg';
+  let imageType = url.searchParams.get('it') ?? null;
 
-  if (mid && mType) {
+  if (mid && mType && !imageType) {
     const movieDetail =
       mType === 'movie' ? await getMovieDetail(Number(mid)) : await getTvShowDetail(Number(mid));
     const title =
@@ -48,44 +46,11 @@ export async function loader({ request }: LoaderArgs) {
         (movieDetail as IMovieDetail)?.production_companies![0]?.name ||
         (movieDetail as ITvShowDetail)?.production_companies![0]?.name,
     });
-    const image = await renderAsync(svg, {
-      fitTo: {
-        mode: 'width',
-        value: 1200,
-      },
-      font: {
-        loadSystemFonts: false,
-      },
-    });
-    return new Response(image.asPng(), {
-      headers: {
-        'content-type': 'image/png',
-        'cache-control':
-          process.env.NODE_ENV === 'development'
-            ? 'no-cache, no-store'
-            : 'public, immutable, no-transform, max-age=31536000',
-      },
-    });
+    return generatePng(svg);
   }
+
   const svg = await generateSvg({
     title: 'Test',
   });
-  const image = await renderAsync(svg, {
-    fitTo: {
-      mode: 'width',
-      value: 1200,
-    },
-    font: {
-      loadSystemFonts: false,
-    },
-  });
-  return new Response(image.asPng(), {
-    headers: {
-      'content-type': 'image/png',
-      'cache-control':
-        process.env.NODE_ENV === 'development'
-          ? 'no-cache, no-store'
-          : 'public, immutable, no-transform, max-age=31536000',
-    },
-  });
+  return generatePng(svg);
 }
