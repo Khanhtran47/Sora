@@ -1,5 +1,6 @@
 import type { LoaderArgs, HeadersFunction } from '@remix-run/node';
 import { renderAsync } from '@resvg/resvg-js';
+import { join, resolve } from 'path';
 
 import { getMovieDetail, getTvShowDetail } from '~/services/tmdb/tmdb.server';
 import { IMovieDetail, ITvShowDetail } from '~/services/tmdb/tmdb.types';
@@ -54,6 +55,15 @@ export async function loader({ request }: LoaderArgs) {
             mode: 'width',
             value: 1200,
           },
+          ...(process.env.NODE_ENV === 'development'
+            ? {}
+            : {
+                font: {
+                  loadSystemFonts: false,
+                  defaultFontFamily: 'Inter',
+                  fontFiles: [join(resolve('.'), 'fonts', 'Inter-Regular.woff')],
+                },
+              }),
         });
         controller.enqueue(image.asPng());
         controller.close();

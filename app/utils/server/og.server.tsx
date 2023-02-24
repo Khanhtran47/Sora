@@ -125,6 +125,7 @@ const generateMovieSvg = async ({
             color: 'rgba(236,237,238,0.6)',
             fontSize: 20,
             marginBottom: 0,
+            fontFamily: 'Inter',
           }}
         >
           {releaseYear ? `${releaseYear}` : null}
@@ -144,6 +145,7 @@ const generateMovieSvg = async ({
             fontSize: 50,
             width: '90%',
             marginBottom: 0,
+            fontFamily: 'Inter',
           }}
         >
           {title.length > 80 ? `${title.substring(0, 80)}...` : title}
@@ -155,6 +157,7 @@ const generateMovieSvg = async ({
             fontSize: 24,
             marginBottom: 0,
             marginTop: 10,
+            fontFamily: 'Inter',
           }}
         >
           {productionCompany}
@@ -170,6 +173,7 @@ const generateMovieSvg = async ({
             fontWeight: 600,
             color: 'white',
             fill: color,
+            fontFamily: 'Inter',
           }}
         >
           <svg
@@ -203,6 +207,7 @@ const generateMovieSvg = async ({
                 borderRadius: 50,
                 color: 'white',
                 fontWeight: 200,
+                fontFamily: 'Inter',
               }}
               key={genre.id}
             >
