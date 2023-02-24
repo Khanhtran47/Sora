@@ -34,42 +34,30 @@ export async function loader({ request }: LoaderArgs) {
         (movieDetail as ITvShowDetail)?.first_air_date ||
         '',
     ).getFullYear();
-    const stream = new ReadableStream({
-      async start(controller) {
-        const svg = await generateMovieSvg({
-          title,
-          cover: backdropPath,
-          poster: posterPath,
-          voteAverage: movieDetail?.vote_average?.toFixed(1),
-          genres: movieDetail?.genres?.splice(0, 4),
-          releaseYear,
-          numberOfEpisodes: (movieDetail as ITvShowDetail)?.number_of_episodes,
-          numberOfSeasons: (movieDetail as ITvShowDetail)?.number_of_seasons,
-          runtime: (movieDetail as IMovieDetail)?.runtime,
-          productionCompany:
-            (movieDetail as IMovieDetail)?.production_companies![0]?.name ||
-            (movieDetail as ITvShowDetail)?.production_companies![0]?.name,
-        });
-        const image = await renderAsync(svg, {
-          fitTo: {
-            mode: 'width',
-            value: 1200,
-          },
-          ...(process.env.NODE_ENV === 'development'
-            ? {}
-            : {
-                font: {
-                  loadSystemFonts: false,
-                  defaultFontFamily: 'Inter',
-                  fontFiles: [join(resolve('.'), 'fonts', 'Inter-Regular.woff')],
-                },
-              }),
-        });
-        controller.enqueue(image.asPng());
-        controller.close();
+    const svg = await generateMovieSvg({
+      title,
+      cover: backdropPath,
+      poster: posterPath,
+      voteAverage: movieDetail?.vote_average?.toFixed(1),
+      genres: movieDetail?.genres?.splice(0, 4),
+      releaseYear,
+      numberOfEpisodes: (movieDetail as ITvShowDetail)?.number_of_episodes,
+      numberOfSeasons: (movieDetail as ITvShowDetail)?.number_of_seasons,
+      runtime: (movieDetail as IMovieDetail)?.runtime,
+      productionCompany:
+        (movieDetail as IMovieDetail)?.production_companies![0]?.name ||
+        (movieDetail as ITvShowDetail)?.production_companies![0]?.name,
+    });
+    const image = await renderAsync(svg, {
+      fitTo: {
+        mode: 'width',
+        value: 1200,
+      },
+      font: {
+        loadSystemFonts: false,
       },
     });
-    return new Response(stream, {
+    return new Response(image.asPng(), {
       headers: {
         'content-type': 'image/png',
         'cache-control':
@@ -79,26 +67,19 @@ export async function loader({ request }: LoaderArgs) {
       },
     });
   }
-
-  const stream = new ReadableStream({
-    async start(controller) {
-      const svg = await generateSvg({
-        title: 'Test',
-      });
-      const image = await renderAsync(svg, {
-        fitTo: {
-          mode: 'width',
-          value: 1200,
-        },
-        font: {
-          loadSystemFonts: false,
-        },
-      });
-      controller.enqueue(image.asPng());
-      controller.close();
+  const svg = await generateSvg({
+    title: 'Test',
+  });
+  const image = await renderAsync(svg, {
+    fitTo: {
+      mode: 'width',
+      value: 1200,
+    },
+    font: {
+      loadSystemFonts: false,
     },
   });
-  return new Response(stream, {
+  return new Response(image.asPng(), {
     headers: {
       'content-type': 'image/png',
       'cache-control':

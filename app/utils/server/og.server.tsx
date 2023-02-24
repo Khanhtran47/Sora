@@ -26,7 +26,6 @@ const generateSvg = async ({ title = '' }) => {
     {
       width: 1200,
       height: 600,
-      embedFont: false,
       fonts: [
         {
           name: 'Inter',
@@ -234,7 +233,6 @@ const generateMovieSvg = async ({
     {
       width: 1200,
       height: 600,
-      embedFont: false,
       fonts: [
         {
           name: 'Inter',
