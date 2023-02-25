@@ -30,7 +30,12 @@ const BannerItemCompact = (props: IBannerItemCompactProps) => {
           minHeight: '135px !important',
           overflow: 'hidden',
           borderWidth: 0,
-          filter: 'var(--nextui-dropShadows-md)',
+          filter: 'unset',
+          '&:hover': {
+            boxShadow: '0 0 0 1px var(--nextui-colors-primarySolidHover)',
+            filter:
+              'drop-shadow(0 4px 12px rgb(104 112 118 / 0.15)) drop-shadow(0 20px 8px rgb(104 112 118 / 0.1))',
+          },
         }}
         role="figure"
       >

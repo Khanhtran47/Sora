@@ -222,7 +222,12 @@ const Overview = () => {
                       maxWidth: '120px !important',
                       maxHeight: '187px !important',
                       borderWidth: 0,
-                      filter: 'var(--nextui-dropShadows-md)',
+                      filter: 'unset',
+                      '&:hover': {
+                        boxShadow: '0 0 0 1px var(--nextui-colors-primarySolidHover)',
+                        filter:
+                          'drop-shadow(0 4px 12px rgb(104 112 118 / 0.15)) drop-shadow(0 20px 8px rgb(104 112 118 / 0.1))',
+                      },
                     }}
                     role="figure"
                   >
@@ -335,7 +340,12 @@ const Overview = () => {
                     css={{
                       maxHeight: '80px !important',
                       borderWidth: 0,
-                      filter: 'var(--nextui-dropShadows-md)',
+                      filter: 'unset',
+                      '&:hover': {
+                        boxShadow: '0 0 0 1px var(--nextui-colors-primarySolidHover)',
+                        filter:
+                          'drop-shadow(0 4px 12px rgb(104 112 118 / 0.15)) drop-shadow(0 20px 8px rgb(104 112 118 / 0.1))',
+                      },
                     }}
                     role="figure"
                   >
