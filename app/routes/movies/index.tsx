@@ -5,8 +5,6 @@ import type { LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useLocation, useNavigate, useFetcher } from '@remix-run/react';
 import { Container, Spacer, Loading } from '@nextui-org/react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useRouteData } from 'remix-utils';
-import type { User } from '@supabase/supabase-js';
 import NProgress from 'nprogress';
 
 import i18next from '~/i18n/i18next.server';
@@ -17,6 +15,7 @@ import { CACHE_CONTROL } from '~/utils/server/http';
 import { IMedia } from '~/types/media';
 
 import useSize from '~/hooks/useSize';
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 
 import MediaList from '~/components/media/MediaList';
 
@@ -48,14 +47,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 const MoviesIndexPage = () => {
   const { popular, topRated, upcoming } = useLoaderData<typeof loader>();
-  const rootData:
-    | {
-        user?: User;
-        locale: string;
-        genresMovie: { [id: string]: string };
-        genresTv: { [id: string]: string };
-      }
-    | undefined = useRouteData('root');
+  const rootData = useTypedRouteLoaderData('root');
   const location = useLocation();
   const navigate = useNavigate();
   const fetcher = useFetcher();

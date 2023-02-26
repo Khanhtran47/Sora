@@ -10,13 +10,12 @@ import { json } from '@remix-run/node';
 import type { MetaFunction, LoaderArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { Gallery, Item, GalleryProps } from 'react-photoswipe-gallery';
-import { useRouteData } from 'remix-utils';
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import Image, { MimeType } from 'remix-image';
 import { InView } from 'react-intersection-observer';
 
 import i18next from '~/i18n/i18next.server';
 import { getPeopleImages } from '~/services/tmdb/tmdb.server';
-import { IPeopleDetail } from '~/services/tmdb/tmdb.types';
 import { CACHE_CONTROL } from '~/utils/server/http';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
@@ -46,16 +45,7 @@ export const meta: MetaFunction = ({ params }) => ({
 
 const MediaPage = () => {
   const { images } = useLoaderData<typeof loader>();
-  const peopleData:
-    | {
-        detail: IPeopleDetail;
-        externalIds: {
-          facebookId: null | string;
-          instagramId: string | null;
-          twitterId: null | string;
-        };
-      }
-    | undefined = useRouteData('routes/people/$peopleId');
+  const peopleData = useTypedRouteLoaderData('routes/people/$peopleId');
   const isLg = useMediaQuery('(max-width: 1280px)');
   const isXs = useMediaQuery('(max-width: 375px)');
   const smallItemStyles: React.CSSProperties = {

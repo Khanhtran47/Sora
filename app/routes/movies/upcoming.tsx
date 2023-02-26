@@ -5,8 +5,8 @@ import type { LoaderArgs, MetaFunction } from '@remix-run/node';
 import { Container, Badge } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { useRouteData } from 'remix-utils';
-import type { User } from '@supabase/supabase-js';
+
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 
 import { authenticate } from '~/services/supabase';
 import { getListMovies } from '~/services/tmdb/tmdb.server';
@@ -71,14 +71,7 @@ export const handle = {
 
 const ListMovies = () => {
   const { movies } = useLoaderData<typeof loader>();
-  const rootData:
-    | {
-        user?: User;
-        locale: string;
-        genresMovie: { [id: string]: string };
-        genresTv: { [id: string]: string };
-      }
-    | undefined = useRouteData('root');
+  const rootData = useTypedRouteLoaderData('root');
   const location = useLocation();
   const navigate = useNavigate();
   const { t } = useTranslation();

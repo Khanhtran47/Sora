@@ -4,8 +4,8 @@ import type { LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useNavigate, NavLink } from '@remix-run/react';
 import { Container, Badge } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
-import { useRouteData } from 'remix-utils';
-import type { User } from '@supabase/supabase-js';
+
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 
 import { getTrending } from '~/services/tmdb/tmdb.server';
 import i18next from '~/i18n/i18next.server';
@@ -57,14 +57,7 @@ export const handle = {
 
 const SearchRoute = () => {
   const { todayTrending } = useLoaderData<typeof loader>() || {};
-  const rootData:
-    | {
-        user?: User;
-        locale: string;
-        genresMovie: { [id: string]: string };
-        genresTv: { [id: string]: string };
-      }
-    | undefined = useRouteData('root');
+  const rootData = useTypedRouteLoaderData('root');
   const navigate = useNavigate();
   const { t } = useTranslation();
 

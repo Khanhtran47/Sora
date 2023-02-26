@@ -254,6 +254,18 @@ const SwiperSlideStyled = styled(SwiperSlide, {
   },
 });
 
+const SwiperReactStyled = styled(SwiperReact, {
+  position: 'absolute',
+  bottom: '15px',
+  left: '0',
+  width: '100%',
+  minHeight: '150px',
+  display: 'none',
+  '@lg': {
+    display: 'block',
+  },
+});
+
 interface IMediaListBannerProps {
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
@@ -334,37 +346,30 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
             ))}
             {!isSm && <CustomNavigation slot="container-end" />}
           </SwiperReact>
-          {!isXl ? (
-            <SwiperReact
-              grabCursor
-              cssMode
-              spaceBetween={15}
-              slidesPerView="auto"
-              slidesPerGroup={1}
-              slidesPerGroupAuto
-              watchSlidesProgress
-              modules={[Thumbs]}
-              onSwiper={setThumbsSwiper}
-              loop
-              style={{
-                position: 'absolute',
-                bottom: '15px',
-                left: '0',
-                width: '100%',
-                minHeight: '150px',
-              }}
-            >
-              {items.map((item, index) => (
-                <SwiperSlideStyled key={`${item.id}-${index}-banner-thumb`}>
-                  <BannerItemCompact
-                    backdropPath={item?.backdropPath || ''}
-                    title={item?.title || ''}
-                  />
-                </SwiperSlideStyled>
-              ))}
-              {!isSm && <CustomNavigationThumbs slot="container-end" />}
-            </SwiperReact>
-          ) : null}
+          {/* {!isXl ? ( */}
+          <SwiperReactStyled
+            grabCursor
+            cssMode
+            spaceBetween={15}
+            slidesPerView="auto"
+            slidesPerGroup={1}
+            slidesPerGroupAuto
+            watchSlidesProgress
+            modules={[Thumbs]}
+            onSwiper={setThumbsSwiper}
+            loop
+          >
+            {items.map((item, index) => (
+              <SwiperSlideStyled key={`${item.id}-${index}-banner-thumb`}>
+                <BannerItemCompact
+                  backdropPath={item?.backdropPath || ''}
+                  title={item?.title || ''}
+                />
+              </SwiperSlideStyled>
+            ))}
+            {!isSm && <CustomNavigationThumbs slot="container-end" />}
+          </SwiperReactStyled>
+          {/* ) : null} */}
         </>
       )}
     </Grid.Container>

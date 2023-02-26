@@ -4,8 +4,9 @@ import { MetaFunction, json } from '@remix-run/node';
 import type { LoaderArgs } from '@remix-run/node';
 import { useCatch, useLoaderData, NavLink, RouteMatch } from '@remix-run/react';
 import { Container, Spacer, Badge } from '@nextui-org/react';
-import { useRouteData } from 'remix-utils';
 import Vibrant from 'node-vibrant';
+
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 
 import { authenticate, insertHistory } from '~/services/supabase';
 import {
@@ -335,13 +336,7 @@ export const handle = {
 
 const MovieWatch = () => {
   const { detail, recommendations, imdbRating, color } = useLoaderData<typeof loader>();
-  const rootData:
-    | {
-        locale: string;
-        genresMovie: { [id: string]: string };
-        genresTv: { [id: string]: string };
-      }
-    | undefined = useRouteData('root');
+  const rootData = useTypedRouteLoaderData('root');
   const id = detail && detail.id;
   const releaseYear = new Date(detail?.release_date || '').getFullYear();
   return (

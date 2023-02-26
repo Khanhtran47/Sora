@@ -6,19 +6,18 @@ import { json } from '@remix-run/node';
 import type { MetaFunction, LoaderArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { Gallery, Item, GalleryProps } from 'react-photoswipe-gallery';
-import { useRouteData } from 'remix-utils';
 import Image, { MimeType } from 'remix-image';
 import { InView } from 'react-intersection-observer';
 
 import i18next from '~/i18n/i18next.server';
 import { authenticate } from '~/services/supabase';
 import { getTvSeasonImages } from '~/services/tmdb/tmdb.server';
-import { ITvShowDetail } from '~/services/tmdb/tmdb.types';
-import { CACHE_CONTROL } from '~/utils/server/http';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 
 import TMDB from '~/utils/media';
+import { CACHE_CONTROL } from '~/utils/server/http';
 
 import { H6 } from '~/components/styles/Text.styles';
 
@@ -44,7 +43,7 @@ export const meta: MetaFunction = ({ params }) => ({
 
 const PhotosPage = () => {
   const { images } = useLoaderData<typeof loader>();
-  const tvData: { detail: ITvShowDetail } | undefined = useRouteData('routes/movies/$movieId');
+  const tvData = useTypedRouteLoaderData('routes/tv-shows/$tvId.season.$seasonId');
   const isLg = useMediaQuery('(max-width: 1280px)');
   const isXs = useMediaQuery('(max-width: 375px)');
   const smallItemStyles: React.CSSProperties = {

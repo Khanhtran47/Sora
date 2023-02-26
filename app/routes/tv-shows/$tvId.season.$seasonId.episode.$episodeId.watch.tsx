@@ -5,8 +5,9 @@ import { json } from '@remix-run/node';
 import type { MetaFunction, LoaderArgs } from '@remix-run/node';
 import { useCatch, useLoaderData, NavLink, RouteMatch } from '@remix-run/react';
 import { Container, Spacer, Badge } from '@nextui-org/react';
-import { useRouteData } from 'remix-utils';
 import Vibrant from 'node-vibrant';
+
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 
 import { authenticate, insertHistory } from '~/services/supabase';
 import {
@@ -441,12 +442,7 @@ export const handle = {
 const EpisodeWatch = () => {
   const { detail, recommendations, imdbRating, seasonDetail, providers, color } =
     useLoaderData<typeof loader>();
-  const rootData:
-    | {
-        genresMovie: { [id: string]: string };
-        genresTv: { [id: string]: string };
-      }
-    | undefined = useRouteData('root');
+  const rootData = useTypedRouteLoaderData('root');
   const id = detail && detail.id;
   return (
     <Container

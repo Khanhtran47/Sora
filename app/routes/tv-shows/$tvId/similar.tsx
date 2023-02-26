@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { json } from '@remix-run/node';
 import type { MetaFunction, LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useNavigate, NavLink, RouteMatch, useParams } from '@remix-run/react';
 import { Row, Badge } from '@nextui-org/react';
-import { useRouteData } from 'remix-utils';
-import type { User } from '@supabase/supabase-js';
+
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 
 import { authenticate } from '~/services/supabase';
 import { getSimilar } from '~/services/tmdb/tmdb.server';
@@ -68,14 +67,7 @@ export const handle = {
 const TvSimilarPage = () => {
   const { tvId } = useParams();
   const { similar } = useLoaderData<typeof loader>();
-  const rootData:
-    | {
-        user?: User;
-        locale: string;
-        genresMovie: { [id: string]: string };
-        genresTv: { [id: string]: string };
-      }
-    | undefined = useRouteData('root');
+  const rootData = useTypedRouteLoaderData('root');
   const navigate = useNavigate();
   const paginationChangeHandler = (page: number) =>
     navigate(`/tv-shows/${tvId}/similar?page=${page}`);

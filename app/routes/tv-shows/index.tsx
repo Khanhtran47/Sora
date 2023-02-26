@@ -5,8 +5,6 @@ import type { LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useLocation, useNavigate, useFetcher } from '@remix-run/react';
 import { Container, Spacer, Loading } from '@nextui-org/react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useRouteData } from 'remix-utils';
-import type { User } from '@supabase/supabase-js';
 import NProgress from 'nprogress';
 import dayjs from 'dayjs';
 
@@ -18,7 +16,9 @@ import { CACHE_CONTROL } from '~/utils/server/http';
 import { IMedia } from '~/types/media';
 
 import MediaList from '~/components/media/MediaList';
+
 import useSize from '~/hooks/useSize';
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const [, locale] = await Promise.all([
@@ -91,14 +91,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 const TvIndexPage = () => {
   const { popular, topRated, onTheAir } = useLoaderData<typeof loader>();
-  const rootData:
-    | {
-        user?: User;
-        locale: string;
-        genresMovie: { [id: string]: string };
-        genresTv: { [id: string]: string };
-      }
-    | undefined = useRouteData('root');
+  const rootData = useTypedRouteLoaderData('root');
   const location = useLocation();
   const navigate = useNavigate();
   const fetcher = useFetcher();
