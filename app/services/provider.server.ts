@@ -47,7 +47,7 @@ const getProviderList = async (
       sgConfigs.__loklokProvider
         ? loklokSearchMovie(title, orgTitle || '', Number(year))
         : undefined,
-      getKissKhSearch(title),
+      sgConfigs.__kisskhProvider ? getKissKhSearch(title) : undefined,
     ]);
     const provider = [];
     const findFlixhq: IMovieResult | undefined = search?.results.find(
@@ -90,7 +90,7 @@ const getProviderList = async (
             Number(season),
           )
         : undefined,
-      getKissKhSearch(title),
+      sgConfigs.__kisskhProvider ? getKissKhSearch(title) : undefined,
     ]);
     const provider = [];
     const findFlixhq: IMovieResult | undefined = search?.results.find(
@@ -141,7 +141,7 @@ const getProviderList = async (
       sgConfigs.__loklokProvider
         ? loklokSearchOneTv(title, orgTitle || '', Number(year))
         : undefined,
-      getKissKhSearch(title, 3),
+      sgConfigs.__kisskhProvider ? getKissKhSearch(title, 3) : undefined,
       getAnimeEpisodeInfo(animeId),
     ]);
     const provider: {
