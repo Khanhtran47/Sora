@@ -90,6 +90,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
               : b.population - a.population,
           )[0]?.hex
         : undefined,
+      providers: [],
     },
     { headers: { 'Cache-Control': CACHE_CONTROL.season } },
   );

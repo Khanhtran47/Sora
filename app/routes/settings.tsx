@@ -18,13 +18,14 @@ import {
 } from '@nextui-org/react';
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { useRouteData, ClientOnly } from 'remix-utils';
+import { ClientOnly } from 'remix-utils';
 import Image, { MimeType } from 'remix-image';
 import { useTheme } from 'next-themes';
 import { isMobile } from 'react-device-detect';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 
 import {
   settingsTab,
@@ -112,7 +113,7 @@ const settingsIcon = (id: string, filled: boolean) => {
 const Settings = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const rootData: { locale: string } | undefined = useRouteData('root');
+  const rootData = useTypedRouteLoaderData('root');
   const { locale } = rootData || { locale: 'en' };
   const { t } = useTranslation('settings');
   const { theme, setTheme } = useTheme();

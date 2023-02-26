@@ -3,11 +3,10 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { MetaFunction } from '@remix-run/node';
 import { Row, Col, Card, Avatar, Grid } from '@nextui-org/react';
-import { useRouteData } from 'remix-utils';
 import Image, { MimeType } from 'remix-image';
 
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import useMediaQuery from '~/hooks/useMediaQuery';
-import { IAnimeInfo } from '~/services/consumet/anilist/anilist.types';
 
 import { IMedia } from '~/types/media';
 
@@ -22,7 +21,7 @@ export const meta: MetaFunction = ({ params }) => ({
 });
 
 const Overview = () => {
-  const animeData: { detail: IAnimeInfo } | undefined = useRouteData('routes/anime/$animeId');
+  const animeData = useTypedRouteLoaderData('routes/anime/$animeId');
   const detail = animeData && animeData.detail;
   const isSm = useMediaQuery('(max-width: 650px)');
   return (

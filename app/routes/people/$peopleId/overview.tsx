@@ -6,10 +6,10 @@ import * as React from 'react';
 import { MetaFunction } from '@remix-run/node';
 import { Row, Spacer } from '@nextui-org/react';
 import { useFetcher } from '@remix-run/react';
-import { useRouteData } from 'remix-utils';
-import type { User } from '@supabase/supabase-js';
 
-import { IPeopleDetail, IPeople } from '~/services/tmdb/tmdb.types';
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
+
+import { IPeople } from '~/services/tmdb/tmdb.types';
 import { IMedia } from '~/types/media';
 import TMDB from '~/utils/media';
 import MediaList from '~/components/media/MediaList';
@@ -20,24 +20,8 @@ export const meta: MetaFunction = ({ params }) => ({
 });
 
 const OverviewPage = () => {
-  const peopleData:
-    | {
-        detail: IPeopleDetail;
-        externalIds: {
-          facebookId: null | string;
-          instagramId: string | null;
-          twitterId: null | string;
-        };
-      }
-    | undefined = useRouteData('routes/people/$peopleId');
-  const rootData:
-    | {
-        user?: User;
-        locale: string;
-        genresMovie: { [id: string]: string };
-        genresTv: { [id: string]: string };
-      }
-    | undefined = useRouteData('root');
+  const peopleData = useTypedRouteLoaderData('routes/people/$peopleId');
+  const rootData = useTypedRouteLoaderData('root');
   const fetcher = useFetcher();
   const [knownFor, setKnownFor] = React.useState<IMedia[]>();
   React.useEffect(() => {

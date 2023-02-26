@@ -1,24 +1,13 @@
-/* eslint-disable @typescript-eslint/indent */
 import { Row, Col } from '@nextui-org/react';
-import { useRouteData } from 'remix-utils';
 
-import { ISeasonDetail, ITvShowDetail } from '~/services/tmdb/tmdb.types';
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import useMediaQuery from '~/hooks/useMediaQuery';
 
 import ListEpisodes from '~/components/elements/shared/ListEpisodes';
+import { IEpisode } from '~/services/tmdb/tmdb.types';
 
 const Episodes = () => {
-  const seasonData:
-    | {
-        detail: ITvShowDetail;
-        seasonDetail: ISeasonDetail;
-        providers: {
-          id?: string | number | null;
-          provider: string;
-          episodesCount?: number;
-        }[];
-      }
-    | undefined = useRouteData('routes/tv-shows/$tvId.season.$seasonId');
+  const seasonData = useTypedRouteLoaderData('routes/tv-shows/$tvId.season.$seasonId');
   const seasonDetail = seasonData && seasonData.seasonDetail;
   const detail = seasonData && seasonData.detail;
   const isSm = useMediaQuery('(max-width: 650px)');
@@ -45,7 +34,7 @@ const Episodes = () => {
         <ListEpisodes
           type="tv"
           id={detail?.id}
-          episodes={seasonDetail?.episodes}
+          episodes={seasonDetail?.episodes as unknown as IEpisode[]}
           season={seasonDetail?.season_number}
           providers={seasonData?.providers || [{ provider: 'Embed' }]}
         />

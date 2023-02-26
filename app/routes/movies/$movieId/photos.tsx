@@ -6,18 +6,19 @@ import { json } from '@remix-run/node';
 import type { MetaFunction, LoaderArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { Gallery, Item, GalleryProps } from 'react-photoswipe-gallery';
-import { useRouteData } from 'remix-utils';
 import Image, { MimeType } from 'remix-image';
 import { InView } from 'react-intersection-observer';
 
 import { authenticate } from '~/services/supabase';
 import i18next from '~/i18n/i18next.server';
 import { getImages } from '~/services/tmdb/tmdb.server';
-import { IMovieDetail } from '~/services/tmdb/tmdb.types';
+
 import { CACHE_CONTROL } from '~/utils/server/http';
+import TMDB from '~/utils/media';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
-import TMDB from '~/utils/media';
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
+
 import { H6 } from '~/components/styles/Text.styles';
 
 export const meta: MetaFunction = ({ params }) => ({
@@ -83,7 +84,7 @@ const uiElements: GalleryProps['uiElements'] = [
 
 const MoviePhotosPage = () => {
   const { images } = useLoaderData<typeof loader>();
-  const movieData: { detail: IMovieDetail } | undefined = useRouteData('routes/movies/$movieId');
+  const movieData = useTypedRouteLoaderData('routes/movies/$movieId');
   const isLg = useMediaQuery('(max-width: 1280px)');
   const isXs = useMediaQuery('(max-width: 375px)');
   const smallItemStyles: React.CSSProperties = {

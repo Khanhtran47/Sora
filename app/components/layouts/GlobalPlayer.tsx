@@ -4,14 +4,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { useLocation, useNavigate, useFetcher, useMatches, useParams } from '@remix-run/react';
+import {
+  useLocation,
+  useNavigate,
+  useFetcher,
+  useMatches,
+  useParams,
+  useRouteLoaderData,
+} from '@remix-run/react';
 import { Container, Button, Tooltip, keyframes } from '@nextui-org/react';
 import Artplayer from 'artplayer';
 import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
 import Hls from 'hls.js';
 import { isDesktop, isMobile, isMobileOnly } from 'react-device-detect';
 import tinycolor from 'tinycolor2';
-import { useRouteData } from 'remix-utils';
 
 import usePlayerState from '~/store/player/usePlayerState';
 import type { PlayerData } from '~/store/player/usePlayerState';
@@ -329,7 +335,7 @@ const GlobalPlayer = () => {
     y.set(0);
   }, [x, y, shouldPlayInBackground]);
 
-  const RouteData: PlayerData = useRouteData(matchesFiltered?.id as string);
+  const RouteData: PlayerData = useRouteLoaderData(matchesFiltered?.id as string) as PlayerData;
   useEffect(() => {
     if (RouteData) {
       setPlayerData(RouteData);

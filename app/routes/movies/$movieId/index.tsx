@@ -5,17 +5,16 @@ import { json } from '@remix-run/node';
 import type { LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useNavigate, Link } from '@remix-run/react';
 import { Row, Col, Image as NextImage } from '@nextui-org/react';
-import type { User } from '@supabase/supabase-js';
-import { useRouteData } from 'remix-utils';
 import Image, { MimeType } from 'remix-image';
 
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import useMediaQuery from '~/hooks/useMediaQuery';
+
 import { authenticate } from '~/services/supabase';
 import { getSimilar, getVideos, getCredits, getRecommendation } from '~/services/tmdb/tmdb.server';
-import { IMovieDetail, ILanguage } from '~/services/tmdb/tmdb.types';
 import { postFetchDataHandler } from '~/services/tmdb/utils.server';
-import { CACHE_CONTROL } from '~/utils/server/http';
 
+import { CACHE_CONTROL } from '~/utils/server/http';
 import TMDB from '~/utils/media';
 
 import MediaList from '~/components/media/MediaList';
@@ -59,16 +58,8 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
 const MovieOverview = () => {
   const { similar, recommendations, topBilledCast, directors } = useLoaderData<typeof loader>();
-  const movieData: { detail: IMovieDetail } | undefined = useRouteData('routes/movies/$movieId');
-  const rootData:
-    | {
-        user?: User;
-        locale: string;
-        languages: ILanguage[];
-        genresMovie: { [id: string]: string };
-        genresTv: { [id: string]: string };
-      }
-    | undefined = useRouteData('root');
+  const movieData = useTypedRouteLoaderData('routes/movies/$movieId');
+  const rootData = useTypedRouteLoaderData('root');
   const detail = movieData && movieData.detail;
   const navigate = useNavigate();
 

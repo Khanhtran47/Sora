@@ -5,12 +5,11 @@ import type { MetaFunction, LoaderArgs } from '@remix-run/node';
 import { Container, Badge } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { useRouteData } from 'remix-utils';
-import type { User } from '@supabase/supabase-js';
+
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 
 import { authenticate } from '~/services/supabase';
 import { getListDiscover } from '~/services/tmdb/tmdb.server';
-import { ILanguage } from '~/services/tmdb/tmdb.types';
 import i18next from '~/i18n/i18next.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
 
@@ -136,15 +135,7 @@ const ListTvShows = () => {
     withRuntimeLte,
     voteCountGte,
   } = useLoaderData<typeof loader>();
-  const rootData:
-    | {
-        user?: User;
-        locale: string;
-        languages: ILanguage[];
-        genresMovie: { [id: string]: string };
-        genresTv: { [id: string]: string };
-      }
-    | undefined = useRouteData('root');
+  const rootData = useTypedRouteLoaderData('root');
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();

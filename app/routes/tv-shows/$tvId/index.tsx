@@ -1,22 +1,20 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { json } from '@remix-run/node';
 import type { LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useNavigate, Link } from '@remix-run/react';
 import { Row, Col, Spacer, Image as NextImage, Card, Avatar } from '@nextui-org/react';
-import type { User } from '@supabase/supabase-js';
-import { useRouteData } from 'remix-utils';
 import Image, { MimeType } from 'remix-image';
 
 import { authenticate } from '~/services/supabase';
 import { getSimilar, getCredits, getRecommendation } from '~/services/tmdb/tmdb.server';
-import { ITvShowDetail, ILanguage } from '~/services/tmdb/tmdb.types';
 import { postFetchDataHandler } from '~/services/tmdb/utils.server';
-import { CACHE_CONTROL } from '~/utils/server/http';
 
+import { CACHE_CONTROL } from '~/utils/server/http';
 import TMDB from '~/utils/media';
+
 import useMediaQuery from '~/hooks/useMediaQuery';
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 
 import { H2, H4, H5, H6 } from '~/components/styles/Text.styles';
 import Flex from '~/components/styles/Flex.styles';
@@ -57,16 +55,8 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
 const TvOverview = () => {
   const { similar, recommendations, topBilledCast } = useLoaderData<typeof loader>();
-  const tvData: { detail: ITvShowDetail } | undefined = useRouteData('routes/tv-shows/$tvId');
-  const rootData:
-    | {
-        user?: User;
-        locale: string;
-        languages: ILanguage[];
-        genresMovie: { [id: string]: string };
-        genresTv: { [id: string]: string };
-      }
-    | undefined = useRouteData('root');
+  const tvData = useTypedRouteLoaderData('routes/tv-shows/$tvId');
+  const rootData = useTypedRouteLoaderData('root');
   const detail = tvData && tvData.detail;
   const navigate = useNavigate();
 

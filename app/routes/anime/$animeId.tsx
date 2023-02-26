@@ -47,7 +47,13 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   if (providers && providers.length > 0) {
     return json({ detail, providers });
   }
-  return json({ detail }, { headers: { 'Cache-Control': CACHE_CONTROL.detail } });
+  return json(
+    {
+      detail,
+      providers: [],
+    },
+    { headers: { 'Cache-Control': CACHE_CONTROL.detail } },
+  );
 };
 
 export const meta: MetaFunction = ({ data, params }) => {
