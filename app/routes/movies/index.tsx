@@ -3,7 +3,7 @@ import * as React from 'react';
 import { json } from '@remix-run/node';
 import type { LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useLocation, useNavigate, useFetcher } from '@remix-run/react';
-import { Container, Spacer, Loading } from '@nextui-org/react';
+import { Container, Loading } from '@nextui-org/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import NProgress from 'nprogress';
 
@@ -156,58 +156,49 @@ const MoviesIndexPage = () => {
         }}
       >
         {topRated?.items && topRated?.items?.length > 0 ? (
-          <>
-            <MediaList
-              listType="slider-card"
-              items={topRated.items}
-              listName="Top Rated Movies"
-              showMoreList
-              onClickViewMore={() => navigate('/movies/top-rated')}
-              navigationButtons
-              genresMovie={rootData?.genresMovie}
-              genresTv={rootData?.genresTv}
-            />
-            <Spacer y={1.5} />
-          </>
+          <MediaList
+            listType="slider-card"
+            items={topRated.items}
+            listName="Top Rated Movies"
+            showMoreList
+            onClickViewMore={() => navigate('/movies/top-rated')}
+            navigationButtons
+            genresMovie={rootData?.genresMovie}
+            genresTv={rootData?.genresTv}
+          />
         ) : null}
         {upcoming?.items && upcoming.items?.length > 0 ? (
-          <>
-            <MediaList
-              listType="slider-card"
-              items={upcoming.items}
-              listName="Upcoming Movies"
-              showMoreList
-              onClickViewMore={() => navigate('/movies/upcoming')}
-              navigationButtons
-              genresMovie={rootData?.genresMovie}
-              genresTv={rootData?.genresTv}
-            />
-            <Spacer y={1.5} />
-          </>
+          <MediaList
+            listType="slider-card"
+            items={upcoming.items}
+            listName="Upcoming Movies"
+            showMoreList
+            onClickViewMore={() => navigate('/movies/upcoming')}
+            navigationButtons
+            genresMovie={rootData?.genresMovie}
+            genresTv={rootData?.genresTv}
+          />
         ) : null}
         {listItems &&
           listItems.length > 0 &&
           listItems.map((items, index) => {
             if (items && items.length > 0)
               return (
-                <>
-                  <MediaList
-                    key={index}
-                    listType="slider-card"
-                    items={items}
-                    listName={Object.values(listGenresMovie[index])[0]}
-                    showMoreList
-                    onClickViewMore={() =>
-                      navigate(
-                        `/movies/discover?with_genres=${Object.keys(listGenresMovie[index])[0]}`,
-                      )
-                    }
-                    navigationButtons
-                    genresMovie={rootData?.genresMovie}
-                    genresTv={rootData?.genresTv}
-                  />
-                  <Spacer y={1.5} />
-                </>
+                <MediaList
+                  key={index}
+                  listType="slider-card"
+                  items={items}
+                  listName={Object.values(listGenresMovie[index])[0]}
+                  showMoreList
+                  onClickViewMore={() =>
+                    navigate(
+                      `/movies/discover?with_genres=${Object.keys(listGenresMovie[index])[0]}`,
+                    )
+                  }
+                  navigationButtons
+                  genresMovie={rootData?.genresMovie}
+                  genresTv={rootData?.genresTv}
+                />
               );
             return null;
           })}

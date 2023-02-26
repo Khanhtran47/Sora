@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { json } from '@remix-run/node';
 import type { LoaderArgs } from '@remix-run/node';
 import { useFetcher, useNavigate, useLoaderData, useLocation } from '@remix-run/react';
-import { Container, Spacer, Loading } from '@nextui-org/react';
+import { Container, Loading } from '@nextui-org/react';
 import { AnimatePresence, motion } from 'framer-motion';
 // import { useTranslation } from 'react-i18next';
 import NProgress from 'nprogress';
@@ -178,19 +178,16 @@ const AnimePage = () => {
           listItems.map((items, index) => {
             if (items && items.length > 0)
               return (
-                <>
-                  <MediaList
-                    items={items}
-                    itemsType="anime"
-                    key={index}
-                    listName={animeGenres[index]}
-                    listType="slider-card"
-                    navigationButtons
-                    onClickViewMore={() => navigate(`/anime/discover?genres=${animeGenres[index]}`)}
-                    showMoreList
-                  />
-                  <Spacer y={1.5} />
-                </>
+                <MediaList
+                  items={items}
+                  itemsType="anime"
+                  key={index}
+                  listName={animeGenres[index]}
+                  listType="slider-card"
+                  navigationButtons
+                  onClickViewMore={() => navigate(`/anime/discover?genres=${animeGenres[index]}`)}
+                  showMoreList
+                />
               );
             return null;
           })}

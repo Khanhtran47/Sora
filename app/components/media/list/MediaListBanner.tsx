@@ -198,8 +198,9 @@ const SwiperSlideStyled = styled(SwiperSlide, {
   width: '240px',
   height: 'auto',
   margin: '8px 4px',
+  border: '4px solid transparent',
   '&:hover': {
-    boxShadow: '0 0 0 4px var(--nextui-colors-primarySolidHover)',
+    border: '4px solid var(--nextui-colors-primarySolidHover)',
   },
   [`& ${Card}`]: {
     transition: 'all 0.4s ease',
@@ -234,7 +235,7 @@ const SwiperSlideStyled = styled(SwiperSlide, {
     },
   },
   '&.swiper-slide-thumb-active': {
-    boxShadow: '0 0 0 4px var(--nextui-colors-primary)',
+    border: '4px solid var(--nextui-colors-primary)',
     [`& ${Card}`]: {
       transform: 'scale(1) translateX(0)',
       [`& ${H5}`]: {

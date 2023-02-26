@@ -3,7 +3,7 @@ import * as React from 'react';
 import { json } from '@remix-run/node';
 import type { LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useLocation, useNavigate, useFetcher } from '@remix-run/react';
-import { Container, Spacer, Loading } from '@nextui-org/react';
+import { Container, Loading } from '@nextui-org/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import NProgress from 'nprogress';
 import dayjs from 'dayjs';
@@ -200,57 +200,48 @@ const TvIndexPage = () => {
         }}
       >
         {topRated?.items && topRated.items.length > 0 && (
-          <>
-            <MediaList
-              listType="slider-card"
-              items={topRated.items}
-              listName="Top Rated Tv"
-              showMoreList
-              onClickViewMore={() => navigate('/tv-shows/top-rated')}
-              navigationButtons
-              genresMovie={rootData?.genresMovie}
-              genresTv={rootData?.genresTv}
-            />
-            <Spacer y={1.5} />
-          </>
+          <MediaList
+            listType="slider-card"
+            items={topRated.items}
+            listName="Top Rated Tv"
+            showMoreList
+            onClickViewMore={() => navigate('/tv-shows/top-rated')}
+            navigationButtons
+            genresMovie={rootData?.genresMovie}
+            genresTv={rootData?.genresTv}
+          />
         )}
         {onTheAir?.items && onTheAir.items.length > 0 && (
-          <>
-            <MediaList
-              listType="slider-card"
-              items={onTheAir.items}
-              listName="On the air Tv"
-              showMoreList
-              onClickViewMore={() => navigate('/tv-shows/on-tv')}
-              navigationButtons
-              genresMovie={rootData?.genresMovie}
-              genresTv={rootData?.genresTv}
-            />
-            <Spacer y={1.5} />
-          </>
+          <MediaList
+            listType="slider-card"
+            items={onTheAir.items}
+            listName="On the air Tv"
+            showMoreList
+            onClickViewMore={() => navigate('/tv-shows/on-tv')}
+            navigationButtons
+            genresMovie={rootData?.genresMovie}
+            genresTv={rootData?.genresTv}
+          />
         )}
         {listItems &&
           listItems.length > 0 &&
           listItems.map((items, index) => {
             if (items && items.length > 0)
               return (
-                <>
-                  <MediaList
-                    listType="slider-card"
-                    items={items}
-                    listName={Object.values(listGenresTv[index])[0]}
-                    showMoreList
-                    onClickViewMore={() =>
-                      navigate(
-                        `/tv-shows/discover?with_genres=${Object.keys(listGenresTv[index])[0]}`,
-                      )
-                    }
-                    navigationButtons
-                    genresMovie={rootData?.genresMovie}
-                    genresTv={rootData?.genresTv}
-                  />
-                  <Spacer y={1.5} />
-                </>
+                <MediaList
+                  listType="slider-card"
+                  items={items}
+                  listName={Object.values(listGenresTv[index])[0]}
+                  showMoreList
+                  onClickViewMore={() =>
+                    navigate(
+                      `/tv-shows/discover?with_genres=${Object.keys(listGenresTv[index])[0]}`,
+                    )
+                  }
+                  navigationButtons
+                  genresMovie={rootData?.genresMovie}
+                  genresTv={rootData?.genresTv}
+                />
               );
             return null;
           })}
