@@ -42,6 +42,14 @@ const SwiperSlideStyled = styled(SwiperSlide, {
   },
 });
 
+const SwiperStyled = styled(Swiper, {
+  '& div': {
+    '&.swiper-wrapper': {
+      margin: '0 0 1.5rem 5px',
+    },
+  },
+});
+
 const MediaListCard = (props: IMediaListCardProps) => {
   const {
     coverItem,
@@ -60,7 +68,7 @@ const MediaListCard = (props: IMediaListCardProps) => {
     return (
       <Container justify="flex-start" alignItems="center" css={{ m: 0, p: 0 }}>
         {coverItem && coverItem?.length > 0 && (
-          <Swiper
+          <SwiperStyled
             modules={[Navigation]}
             grabCursor
             spaceBetween={10}
@@ -92,7 +100,7 @@ const MediaListCard = (props: IMediaListCardProps) => {
                   </SwiperSlideStyled>
                 );
               })}
-          </Swiper>
+          </SwiperStyled>
         )}
       </Container>
     );
@@ -101,7 +109,7 @@ const MediaListCard = (props: IMediaListCardProps) => {
   return (
     <Container justify="flex-start" alignItems="center" css={{ m: 0, p: 0 }}>
       {items && items?.length > 0 && (
-        <Swiper
+        <SwiperStyled
           modules={[Navigation]}
           grabCursor
           spaceBetween={10}
@@ -161,7 +169,7 @@ const MediaListCard = (props: IMediaListCardProps) => {
                 </SwiperSlideStyled>
               );
             })}
-        </Swiper>
+        </SwiperStyled>
       )}
     </Container>
   );

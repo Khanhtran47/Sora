@@ -3,8 +3,8 @@ import { json } from '@remix-run/node';
 import type { MetaFunction, LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useNavigate, useParams, NavLink, RouteMatch } from '@remix-run/react';
 import { Container, Badge } from '@nextui-org/react';
-import { useRouteData } from 'remix-utils';
-import type { User } from '@supabase/supabase-js';
+
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 
 import { getSearchTvShows } from '~/services/tmdb/tmdb.server';
 import { useTranslation } from 'react-i18next';
@@ -75,14 +75,7 @@ export const handle = {
 
 const SearchRoute = () => {
   const { searchResults } = useLoaderData<typeof loader>() || {};
-  const rootData:
-    | {
-        user?: User;
-        locale: string;
-        genresMovie: { [id: string]: string };
-        genresTv: { [id: string]: string };
-      }
-    | undefined = useRouteData('root');
+  const rootData = useTypedRouteLoaderData('root');
   const navigate = useNavigate();
   const { tvKeyword } = useParams();
   const { t } = useTranslation();

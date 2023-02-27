@@ -15,15 +15,15 @@ import {
   Pagination,
 } from '@nextui-org/react';
 import { useFetcher } from '@remix-run/react';
-import { useRouteData } from 'remix-utils';
-import type { User } from '@supabase/supabase-js';
 
 import usePlayerState from '~/store/player/usePlayerState';
 
 import useWindowSize from '~/hooks/useWindowSize';
 import useMediaQuery from '~/hooks/useMediaQuery';
-import { ILanguage } from '~/services/tmdb/tmdb.types';
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
+
 import { ISubtitlesSearch, ISubtitle } from '~/services/open-subtitles/open-subtitles.types';
+
 import {
   Select,
   SelectContent,
@@ -45,6 +45,7 @@ import {
   ToastViewport,
 } from '~/components/elements/toast/Toast';
 import { H3, H6 } from '~/components/styles/Text.styles';
+
 import ChevronDownIcon from '~/assets/icons/ChevronDownIcon';
 import ChevronUpIcon from '~/assets/icons/ChevronUpIcon';
 import TickIcon from '~/assets/icons/TickIcon';
@@ -68,15 +69,7 @@ interface ISearchSubtitlesProps {
 
 const SearchSubtitles = (props: ISearchSubtitlesProps) => {
   const { visible, closeHandler, subtitleOptions } = props;
-  const rootData:
-    | {
-        user?: User;
-        locale: string;
-        genresMovie: { [id: string]: string };
-        genresTv: { [id: string]: string };
-        languages: ILanguage[];
-      }
-    | undefined = useRouteData('root');
+  const rootData = useTypedRouteLoaderData('root');
   const isSm = useMediaQuery('(max-width: 650px)');
   const fetcher = useFetcher();
   const { width } = useWindowSize();
@@ -245,20 +238,21 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
                 <ChevronUpIcon />
               </SelectScrollUpButton>
               <SelectViewport>
-                {rootData?.languages
-                  .sort((a, b) => {
-                    const textA = a.english_name.toUpperCase();
-                    const textB = b.english_name.toUpperCase();
-                    return textA < textB ? -1 : textA > textB ? 1 : 0;
-                  })
-                  .map((lang) => (
-                    <SelectItem value={lang.iso_639_1} key={`SelectItem${lang.iso_639_1}`}>
-                      <SelectItemText>{lang.english_name}</SelectItemText>
-                      <SelectItemIndicator>
-                        <TickIcon />
-                      </SelectItemIndicator>
-                    </SelectItem>
-                  ))}
+                {rootData?.languages &&
+                  rootData?.languages
+                    .sort((a, b) => {
+                      const textA = a.english_name.toUpperCase();
+                      const textB = b.english_name.toUpperCase();
+                      return textA < textB ? -1 : textA > textB ? 1 : 0;
+                    })
+                    .map((lang) => (
+                      <SelectItem value={lang.iso_639_1} key={`SelectItem${lang.iso_639_1}`}>
+                        <SelectItemText>{lang.english_name}</SelectItemText>
+                        <SelectItemIndicator>
+                          <TickIcon />
+                        </SelectItemIndicator>
+                      </SelectItem>
+                    ))}
               </SelectViewport>
               <SelectScrollDownButton>
                 <ChevronDownIcon />

@@ -3,6 +3,7 @@ import { json } from '@remix-run/node';
 import type { LoaderArgs, MetaFunction } from '@remix-run/node';
 import { useCatch, useLoaderData, NavLink, RouteMatch } from '@remix-run/react';
 import { Container, Spacer, Badge } from '@nextui-org/react';
+import { env } from 'process';
 
 import { authenticate, insertHistory } from '~/services/supabase';
 import getProviderList from '~/services/provider.server';
@@ -291,7 +292,10 @@ export const loader = async ({ request, params }: LoaderArgs) => {
           detail,
           episodes,
           hasNextEpisode,
-          sources: episodeDetail?.sources,
+          sources: episodeDetail?.sources.map((source) => ({
+            ...source,
+            url: `${env.CORS_PROXY_URL}${source.url}`,
+          })),
           userId: user?.id,
           episodeInfo,
           providers,

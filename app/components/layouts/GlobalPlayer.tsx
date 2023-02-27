@@ -4,14 +4,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { useLocation, useNavigate, useFetcher, useMatches, useParams } from '@remix-run/react';
+import {
+  useLocation,
+  useNavigate,
+  useFetcher,
+  useMatches,
+  useParams,
+  useRouteLoaderData,
+} from '@remix-run/react';
 import { Container, Button, Tooltip, keyframes } from '@nextui-org/react';
 import Artplayer from 'artplayer';
 import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
 import Hls from 'hls.js';
 import { isDesktop, isMobile, isMobileOnly } from 'react-device-detect';
 import tinycolor from 'tinycolor2';
-import { useRouteData } from 'remix-utils';
 
 import usePlayerState from '~/store/player/usePlayerState';
 import type { PlayerData } from '~/store/player/usePlayerState';
@@ -329,7 +335,7 @@ const GlobalPlayer = () => {
     y.set(0);
   }, [x, y, shouldPlayInBackground]);
 
-  const RouteData: PlayerData = useRouteData(matchesFiltered?.id as string);
+  const RouteData: PlayerData = useRouteLoaderData(matchesFiltered?.id as string) as PlayerData;
   useEffect(() => {
     if (RouteData) {
       setPlayerData(RouteData);
@@ -403,10 +409,7 @@ const GlobalPlayer = () => {
             provider === 'Flixhq'
             ? sources?.map(({ quality, url }: { quality: number | string; url: string }) => ({
                 html: quality.toString(),
-                url:
-                  url.toString().startsWith('http:') || provider === 'Gogo' || provider === 'Zoro'
-                    ? `https://cors.consumet.stream/${url.toString()}`
-                    : url.toString(),
+                url,
                 isM3U8: true,
                 isDASH: false,
                 ...(provider === 'Flixhq' && quality === 'auto' && { default: true }),
@@ -425,7 +428,7 @@ const GlobalPlayer = () => {
             : provider === 'KissKh'
             ? sources?.map(({ quality, url }: { quality: number | string; url: string }) => ({
                 html: quality.toString(),
-                url: `https://cors.consumet.stream/${url.toString()}`,
+                url,
                 isM3U8: false,
                 isDASH: true,
                 ...(quality === 'auto' && { default: true }),
@@ -550,17 +553,15 @@ const GlobalPlayer = () => {
                           )?.url ||
                           (sources && sources[0]?.url)
                         : provider === 'Gogo' || provider === 'Zoro'
-                        ? `https://cors.consumet.stream/${
-                            sources?.find(
-                              (item: { quality: number | string; url: string }) =>
-                                item.quality === 'default',
-                            )?.url
-                          }` ||
-                          (sources && `https://cors.consumet.stream/${sources[0]?.url}`)
+                        ? sources?.find(
+                            (item: { quality: number | string; url: string }) =>
+                              item.quality === 'default',
+                          )?.url ||
+                          (sources && sources[0]?.url)
                         : provider === 'Bilibili'
                         ? sources && sources[0]?.url
                         : provider === 'KissKh'
-                        ? sources && `https://cors.consumet.stream/${sources[0]?.url}`
+                        ? sources && sources[0]?.url
                         : provider === 'test'
                         ? sources?.find((source) => Number(source.quality) === 720)?.url
                         : sources?.find(

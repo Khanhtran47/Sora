@@ -36,6 +36,7 @@ import photoSwipeStyles from 'photoswipe/dist/photoswipe.css';
 import remixImageStyles from 'remix-image/remix-image.css';
 import { MetronomeLinks } from '@metronome-sh/react';
 import Image, { MimeType } from 'remix-image';
+import { getSelectorsByUserAgent } from 'react-device-detect';
 import FontStyles100 from '@fontsource/inter/100.css';
 import FontStyles200 from '@fontsource/inter/200.css';
 import FontStyles300 from '@fontsource/inter/300.css';
@@ -94,7 +95,7 @@ interface DocumentProps {
   ENV?: any;
 }
 
-export const links: LinksFunction = () => [
+const links: LinksFunction = () => [
   { rel: 'manifest', href: '/resources/manifest-v0.0.1.json' },
   { rel: 'icon', href: '/favicon.ico' },
   {
@@ -252,7 +253,7 @@ export const links: LinksFunction = () => [
   },
 ];
 
-export const meta: MetaFunction = () => {
+const meta: MetaFunction = () => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const { isBrowser } = useSSR();
   if (isBrowser) {
@@ -303,10 +304,11 @@ export const meta: MetaFunction = () => {
   };
 };
 
-export const loader = async ({ request }: LoaderArgs) => {
+const loader = async ({ request }: LoaderArgs) => {
   const locale = await i18next.getLocale(request);
   const gaTrackingId = process.env.GA_TRACKING_ID;
   const user = await getUserFromCookie(request.headers.get('Cookie') || '');
+  const deviceDetect = getSelectorsByUserAgent(request.headers.get('User-Agent') || '');
 
   const headers = new Headers({
     'Set-Cookie': await i18nCookie.serialize(locale),
@@ -320,6 +322,7 @@ export const loader = async ({ request }: LoaderArgs) => {
       genresTv: await getListGenre('tv', locale),
       languages: await getListLanguages(),
       gaTrackingId,
+      deviceDetect,
       ENV: {
         NODE_ENV: process.env.NODE_ENV,
         VERCEL_GIT_COMMIT_SHA: process.env.VERCEL_GIT_COMMIT_SHA,
@@ -329,7 +332,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   );
 };
 
-export const handle = {
+const handle = {
   breadcrumb: () => (
     <NavLink to="/" aria-label="Home Page">
       {({ isActive }) => (
@@ -677,7 +680,7 @@ const App = () => {
   );
 };
 
-export const CatchBoundary = () => {
+const CatchBoundary = () => {
   const caught = useCatch();
 
   let message;
@@ -766,7 +769,7 @@ export const CatchBoundary = () => {
   );
 };
 
-export const ErrorBoundary = ({ error }: { error: Error }) => {
+const ErrorBoundary = ({ error }: { error: Error }) => {
   const isProd = process.env.NODE_ENV === 'production' && process.env.DEPLOY_ENV === 'production';
   console.log(error);
   return (
@@ -845,3 +848,4 @@ export const ErrorBoundary = ({ error }: { error: Error }) => {
 };
 
 export default App;
+export { links, meta, loader, handle, CatchBoundary, ErrorBoundary };

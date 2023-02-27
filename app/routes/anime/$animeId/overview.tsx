@@ -3,11 +3,10 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { MetaFunction } from '@remix-run/node';
 import { Row, Col, Card, Avatar, Grid } from '@nextui-org/react';
-import { useRouteData } from 'remix-utils';
 import Image, { MimeType } from 'remix-image';
 
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import useMediaQuery from '~/hooks/useMediaQuery';
-import { IAnimeInfo } from '~/services/consumet/anilist/anilist.types';
 
 import { IMedia } from '~/types/media';
 
@@ -22,7 +21,7 @@ export const meta: MetaFunction = ({ params }) => ({
 });
 
 const Overview = () => {
-  const animeData: { detail: IAnimeInfo } | undefined = useRouteData('routes/anime/$animeId');
+  const animeData = useTypedRouteLoaderData('routes/anime/$animeId');
   const detail = animeData && animeData.detail;
   const isSm = useMediaQuery('(max-width: 650px)');
   return (
@@ -222,7 +221,12 @@ const Overview = () => {
                       maxWidth: '120px !important',
                       maxHeight: '187px !important',
                       borderWidth: 0,
-                      filter: 'var(--nextui-dropShadows-md)',
+                      filter: 'unset',
+                      '&:hover': {
+                        boxShadow: '0 0 0 1px var(--nextui-colors-primarySolidHover)',
+                        filter:
+                          'drop-shadow(0 4px 12px rgb(104 112 118 / 0.15)) drop-shadow(0 20px 8px rgb(104 112 118 / 0.1))',
+                      },
                     }}
                     role="figure"
                   >
@@ -335,7 +339,12 @@ const Overview = () => {
                     css={{
                       maxHeight: '80px !important',
                       borderWidth: 0,
-                      filter: 'var(--nextui-dropShadows-md)',
+                      filter: 'unset',
+                      '&:hover': {
+                        boxShadow: '0 0 0 1px var(--nextui-colors-primarySolidHover)',
+                        filter:
+                          'drop-shadow(0 4px 12px rgb(104 112 118 / 0.15)) drop-shadow(0 20px 8px rgb(104 112 118 / 0.1))',
+                      },
                     }}
                     role="figure"
                   >

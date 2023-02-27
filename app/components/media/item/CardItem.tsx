@@ -104,9 +104,11 @@ const CardItem = (props: ICardItemProps) => {
           minWidth: '280px !important',
           maxWidth: '158px !important',
           borderWidth: 0,
-          filter: 'var(--nextui-dropShadows-md)',
+          filter: 'unset',
           '&:hover': {
             boxShadow: '0 0 0 1px var(--nextui-colors-primarySolidHover)',
+            filter:
+              'drop-shadow(0 4px 12px rgb(104 112 118 / 0.15)) drop-shadow(0 20px 8px rgb(104 112 118 / 0.1))',
           },
           '@xs': {
             minWidth: '480px !important',
@@ -187,9 +189,11 @@ const CardItem = (props: ICardItemProps) => {
         minWidth: `${mediaType === 'people' ? '160px' : '164px'} !important`,
         minHeight: `${mediaType === 'people' ? '324px' : '318px'} !important`,
         borderWidth: 0,
-        filter: 'var(--nextui-dropShadows-md)',
+        filter: 'unset',
         '&:hover': {
           boxShadow: '0 0 0 1px var(--nextui-colors-primarySolidHover)',
+          filter:
+            'drop-shadow(0 4px 12px rgb(104 112 118 / 0.15)) drop-shadow(0 20px 8px rgb(104 112 118 / 0.1))',
         },
         ...(mediaType !== 'people'
           ? {

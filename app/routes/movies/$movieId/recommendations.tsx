@@ -4,8 +4,8 @@ import { json } from '@remix-run/node';
 import type { MetaFunction, LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useNavigate, NavLink, RouteMatch, useParams } from '@remix-run/react';
 import { Row, Badge } from '@nextui-org/react';
-import { useRouteData } from 'remix-utils';
-import type { User } from '@supabase/supabase-js';
+
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 
 import { authenticate } from '~/services/supabase';
 import { getRecommendation } from '~/services/tmdb/tmdb.server';
@@ -66,14 +66,7 @@ export const handle = {
 const MovieRecommendationsPage = () => {
   const { movieId } = useParams();
   const { recommendations } = useLoaderData<typeof loader>();
-  const rootData:
-    | {
-        user?: User;
-        locale: string;
-        genresMovie: { [id: string]: string };
-        genresTv: { [id: string]: string };
-      }
-    | undefined = useRouteData('root');
+  const rootData = useTypedRouteLoaderData('root');
   const navigate = useNavigate();
   const paginationChangeHandler = (page: number) =>
     navigate(`/movies/${movieId}/recommendations?page=${page}`);

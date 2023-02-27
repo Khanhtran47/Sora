@@ -4,11 +4,11 @@ import { json, MetaFunction } from '@remix-run/node';
 import type { LoaderArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { Row, Col } from '@nextui-org/react';
-import { useRouteData } from 'remix-utils';
+
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 
 import { authenticate } from '~/services/supabase';
 import { getAnimeEpisodeInfo } from '~/services/consumet/anilist/anilist.server';
-import { IAnimeInfo } from '~/services/consumet/anilist/anilist.types';
 import { CACHE_CONTROL } from '~/utils/server/http';
 
 import useMediaQuery from '~/hooks/useMediaQuery';
@@ -33,16 +33,7 @@ export const meta: MetaFunction = ({ params }) => ({
 
 const EpisodesPage = () => {
   const { episodes } = useLoaderData<typeof loader>();
-  const animeData:
-    | {
-        detail: IAnimeInfo;
-        providers: {
-          id?: string | number | null;
-          provider: string;
-          episodesCount?: number;
-        }[];
-      }
-    | undefined = useRouteData('routes/anime/$animeId');
+  const animeData = useTypedRouteLoaderData('routes/anime/$animeId');
   const detail = animeData && animeData.detail;
   const isSm = useMediaQuery('(max-width: 650px)');
 

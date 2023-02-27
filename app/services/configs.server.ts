@@ -32,6 +32,11 @@ interface ISGConfigs {
    * default false for development
    */
   __bilibiliProvider: boolean;
+  /**
+   * turn on/off kisskh provider
+   * default false for development
+   */
+  __kisskhProvider: boolean;
 }
 
 const sgConfigs: ISGConfigs = {
@@ -41,6 +46,7 @@ const sgConfigs: ISGConfigs = {
   __invitedSignUpKey: env.INVITED_SIGNUP_KEY || '',
   __loklokProvider: env.LOKLOK_PROVIDER === 'ON',
   __bilibiliProvider: env.BILIBILI_PROVIDER === 'ON',
+  __kisskhProvider: env.KISSKH_PROVIDER === 'ON',
 };
 
 if (sgConfigs.__invitedSignUpOnly && !sgConfigs.__invitedSignUpKey) {
