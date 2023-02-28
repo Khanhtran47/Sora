@@ -1,7 +1,7 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable arrow-body-style */
-import { useState, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { Grid, Button, Card, styled } from '@nextui-org/react';
 import { Thumbs, Pagination, EffectFade, Autoplay } from 'swiper';
 import { Swiper as SwiperReact, SwiperSlide, useSwiper } from 'swiper/react';
@@ -18,7 +18,7 @@ import ChevronLeftIcon from '~/assets/icons/ChevronLeftIcon';
 
 import { H5 } from '~/components/styles/Text.styles';
 import Svg from '~/components/styles/Svg.styles';
-import BannerItemCompact, { ProgressBar } from '../item/BannerItemCompact';
+import BannerItemCompact from '../item/BannerItemCompact';
 import MediaItem from '../item';
 
 const CustomNavigation = ({ slot }: { slot: 'container-end' }) => {
@@ -30,8 +30,6 @@ const CustomNavigation = ({ slot }: { slot: 'container-end' }) => {
   swiper.on('slideChange', (e) => {
     setSlideProgress(e.progress);
   });
-
-  useEffect(() => {}, [isPlayTrailer, swiper.autoplay]);
 
   return (
     <div slot={slot}>
@@ -48,6 +46,7 @@ const CustomNavigation = ({ slot }: { slot: 'container-end' }) => {
           setIsPlayTrailer(!isPlayTrailer);
           if (isPlayTrailer && !swiper.autoplay.running) {
             swiper.autoplay.start();
+            swiper.autoplay.resume();
           } else if (!isPlayTrailer && swiper.autoplay.running) {
             swiper.autoplay.stop();
           }
@@ -261,9 +260,6 @@ const SwiperSlideStyled = styled(SwiperSlide, {
         backgroundImage: 'linear-gradient(90deg, $background, $backgroundTransparent)',
       },
     },
-    [`& ${ProgressBar}`]: {
-      display: 'block',
-    },
   },
 });
 
@@ -295,10 +291,9 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
   const isSm = useMediaQuery('(max-width: 650px)');
   const isXl = useMediaQuery('(max-width: 1400px)');
   const [thumbsSwiper, setThumbsSwiper] = useState<Swiper | null>(null);
-  const [progress, setProgress] = useState(0);
-
+  const [activeIndex, setActiveIndex] = useState(0);
+  const progressRef = useRef<HTMLDivElement>(null);
   const { isPlayTrailer } = useSoraSettings();
-  useEffect(() => setProgress(0), [isPlayTrailer]);
 
   return (
     <Grid.Container
@@ -321,7 +316,7 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
             spaceBetween={isSm ? 20 : 0}
             slidesPerView={isSm ? 1.15 : 1}
             centeredSlides={isSm}
-            thumbs={isXl ? undefined : { swiper: thumbsSwiper }}
+            thumbs={isXl ? undefined : { swiper: thumbsSwiper, multipleActiveThumbs: false }}
             loop
             effect="fade"
             pagination={
@@ -340,8 +335,8 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
             }
             autoplay={{
               delay: 10000,
-              disableOnInteraction: false,
-              pauseOnMouseEnter: isPlayTrailer,
+              // disableOnInteraction: false,
+              // pauseOnMouseEnter: isPlayTrailer,
             }}
             style={{ width: '100%' }}
             onAutoplayStart={(swiper) => {
@@ -349,10 +344,16 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
                 swiper.autoplay.stop();
               }
             }}
-            onAutoplayTimeLeft={(swiper, timeLeft, percentage) => {
-              // console.log(percentage);
-              // console.log(timeLeft);
-              setProgress(Math.abs(percentage) % 1);
+            onAutoplayTimeLeft={(s, t, percentage) => {
+              if (progressRef.current) {
+                progressRef.current.style.setProperty(
+                  'width',
+                  `${(Math.abs(percentage) % 1) * 100}%`,
+                );
+              }
+            }}
+            onActiveIndexChange={(swiper) => {
+              setActiveIndex(swiper.activeIndex);
             }}
           >
             {items.map((item, index) => (
@@ -384,7 +385,6 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
             ))}
             {!isSm && <CustomNavigation slot="container-end" />}
           </SwiperReact>
-          {/* {!isXl ? ( */}
           <SwiperReactStyled
             grabCursor
             cssMode
@@ -399,15 +399,15 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
             {items.map((item, index) => (
               <SwiperSlideStyled key={`${item.id}-${index}-banner-thumb`}>
                 <BannerItemCompact
+                  ref={progressRef}
                   backdropPath={item?.backdropPath || ''}
                   title={item?.title || ''}
-                  progress={progress}
+                  active={activeIndex === index}
                 />
               </SwiperSlideStyled>
             ))}
             {!isSm && <CustomNavigationThumbs slot="container-end" />}
           </SwiperReactStyled>
-          {/* ) : null} */}
         </>
       )}
     </Grid.Container>
