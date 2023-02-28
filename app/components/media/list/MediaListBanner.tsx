@@ -335,8 +335,7 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
             }
             autoplay={{
               delay: 10000,
-              // disableOnInteraction: false,
-              // pauseOnMouseEnter: isPlayTrailer,
+              disableOnInteraction: false,
             }}
             style={{ width: '100%' }}
             onAutoplayStart={(swiper) => {
