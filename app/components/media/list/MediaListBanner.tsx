@@ -1,7 +1,7 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable arrow-body-style */
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Grid, Button, Card, styled } from '@nextui-org/react';
 import { Thumbs, Pagination, EffectFade, Autoplay } from 'swiper';
 import { Swiper as SwiperReact, SwiperSlide, useSwiper } from 'swiper/react';
@@ -295,6 +295,12 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
   const progressRef = useRef<HTMLDivElement>(null);
   const { isPlayTrailer } = useSoraSettings();
 
+  useEffect(() => {
+    if (progressRef.current) {
+      progressRef.current.style.setProperty('width', '0%');
+    }
+  }, [isPlayTrailer]);
+
   return (
     <Grid.Container
       gap={1}
@@ -352,7 +358,7 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
               }
             }}
             onActiveIndexChange={(swiper) => {
-              setActiveIndex(swiper.activeIndex);
+              setActiveIndex(swiper.realIndex);
             }}
           >
             {items.map((item, index) => (

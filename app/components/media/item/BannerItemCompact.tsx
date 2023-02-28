@@ -40,6 +40,8 @@ const Progress = styled('div', {
   transition: 'width 0.05s ease',
   animation: `${progressBarStripes} 2s linear infinite`,
   backgroundColor: '$primary',
+  borderTopRightRadius: 3,
+  borderBottomRightRadius: 3,
 });
 
 const BannerItemCompact = forwardRef<HTMLDivElement, IBannerItemCompactProps>(
