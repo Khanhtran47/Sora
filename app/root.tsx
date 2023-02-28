@@ -28,6 +28,10 @@ import swiperPaginationStyles from 'swiper/css/navigation';
 import swiperNavigationStyles from 'swiper/css/pagination';
 // @ts-ignore
 import swiperThumbsStyles from 'swiper/css/thumbs';
+// @ts-ignore
+import swiperFadeEffectStyles from 'swiper/css/effect-fade';
+// @ts-ignore
+import swiperAutoPlayStyles from 'swiper/css/autoplay';
 import { AnimatePresence, motion } from 'framer-motion';
 import NProgress from 'nprogress';
 import { useChangeLanguage } from 'remix-i18next';
@@ -126,6 +130,16 @@ const links: LinksFunction = () => [
   {
     rel: 'preload',
     as: 'style',
+    href: swiperFadeEffectStyles,
+  },
+  {
+    rel: 'preload',
+    as: 'style',
+    href: swiperAutoPlayStyles,
+  },
+  {
+    rel: 'preload',
+    as: 'style',
     href: nProgressStyles,
   },
   {
@@ -202,6 +216,14 @@ const links: LinksFunction = () => [
   {
     rel: 'stylesheet',
     href: swiperThumbsStyles,
+  },
+  {
+    rel: 'stylesheet',
+    href: swiperFadeEffectStyles,
+  },
+  {
+    rel: 'stylesheet',
+    href: swiperAutoPlayStyles,
   },
   {
     rel: 'stylesheet',

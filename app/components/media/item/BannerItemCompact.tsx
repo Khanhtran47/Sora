@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { Card } from '@nextui-org/react';
+import { Card, styled, keyframes } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
 
 import { Title } from '~/types/media';
@@ -10,10 +10,41 @@ import { H5 } from '~/components/styles/Text.styles';
 interface IBannerItemCompactProps {
   backdropPath: string;
   title: string | Title;
+  progress: number;
 }
 
+export const ProgressBar = styled('div', {
+  overflow: 'hidden',
+  display: 'none',
+  position: 'absolute',
+  bottom: 0,
+  zIndex: 1,
+  width: '100%',
+  height: 6,
+});
+
+const progressBarStripes = keyframes({
+  '0%': { backgroundPosition: '40px 0' },
+  '100%': { backgroundPosition: '0 0' },
+});
+
+const Progress = styled('div', {
+  backgroundImage:
+    'linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent)',
+  backgroundSize: '40px 40px',
+  float: 'left',
+  width: 0,
+  height: '100%',
+  '-webkit-transition': 'width 0.3s ease',
+  '-moz-transition': 'width 0.3s ease',
+  '-o-transition': 'width 0.3s ease',
+  transition: 'width 0.3s ease',
+  animation: `${progressBarStripes} 2s linear infinite`,
+  backgroundColor: '$primary',
+});
+
 const BannerItemCompact = (props: IBannerItemCompactProps) => {
-  const { backdropPath, title } = props;
+  const { backdropPath, title, progress } = props;
   const titleItem =
     typeof title === 'string'
       ? title
@@ -31,11 +62,6 @@ const BannerItemCompact = (props: IBannerItemCompactProps) => {
           overflow: 'hidden',
           borderWidth: 0,
           filter: 'unset',
-          '&:hover': {
-            boxShadow: '0 0 0 1px var(--nextui-colors-primarySolidHover)',
-            filter:
-              'drop-shadow(0 4px 12px rgb(104 112 118 / 0.15)) drop-shadow(0 20px 8px rgb(104 112 118 / 0.1))',
-          },
         }}
         role="figure"
       >
@@ -87,6 +113,9 @@ const BannerItemCompact = (props: IBannerItemCompactProps) => {
           </H5>
         </Card.Footer>
       </Card>
+      <ProgressBar className="progress">
+        <Progress css={{ width: `${progress * 100}%` }} />
+      </ProgressBar>
     </AspectRatio.Root>
   );
 };
