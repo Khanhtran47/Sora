@@ -96,6 +96,8 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
             borderWidth: 0,
             transition: 'all 0.5s ease',
             marginTop: !active ? '1.5rem' : 0,
+            borderBottomLeftRadius: 0,
+            borderBottomRightRadius: 0,
           }}
           role="figure"
         >

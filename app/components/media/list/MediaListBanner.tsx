@@ -3,7 +3,7 @@
 /* eslint-disable arrow-body-style */
 import { useState, useRef, useEffect } from 'react';
 import { Grid, Button, Card, styled } from '@nextui-org/react';
-import { Thumbs, Pagination, EffectFade, Autoplay } from 'swiper';
+import { Thumbs, Pagination, Autoplay } from 'swiper';
 import { Swiper as SwiperReact, SwiperSlide, useSwiper } from 'swiper/react';
 import type { Swiper } from 'swiper';
 
@@ -317,14 +317,13 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
       {items && items?.length > 0 && (
         <>
           <SwiperReact
-            modules={[Thumbs, Pagination, EffectFade, Autoplay]}
+            modules={[Thumbs, Pagination, Autoplay]}
             grabCursor
             spaceBetween={isSm ? 20 : 0}
             slidesPerView={isSm ? 1.15 : 1}
             centeredSlides={isSm}
             thumbs={isXl ? undefined : { swiper: thumbsSwiper, multipleActiveThumbs: false }}
             loop
-            effect="fade"
             pagination={
               isSm
                 ? { dynamicBullets: true }
@@ -340,7 +339,7 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
                 : false
             }
             autoplay={{
-              delay: 10000,
+              delay: 8000,
               disableOnInteraction: false,
             }}
             style={{ width: '100%' }}
