@@ -36,7 +36,6 @@ import { useChangeLanguage } from 'remix-i18next';
 import { useTranslation } from 'react-i18next';
 import photoSwipeStyles from 'photoswipe/dist/photoswipe.css';
 import remixImageStyles from 'remix-image/remix-image.css';
-import { MetronomeLinks } from '@metronome-sh/react';
 import Image, { MimeType } from 'remix-image';
 import { getSelectorsByUserAgent } from 'react-device-detect';
 import FontStyles100 from '@fontsource/inter/100.css';
@@ -455,7 +454,6 @@ const Document = ({ children, title, lang, dir, gaTrackingId, ENV }: DocumentPro
           dangerouslySetInnerHTML={{ __html: clientStyleData.sheet }}
           suppressHydrationWarning
         />
-        {process.env.NODE_ENV === 'production' && !isBot ? <MetronomeLinks /> : null}
       </head>
       <body>
         {process.env.NODE_ENV === 'development' || !gaTrackingId || isBot ? null : (
