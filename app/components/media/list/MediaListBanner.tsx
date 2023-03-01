@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable arrow-body-style */
-import { useState } from 'react';
+import { useState, useRef, useEffect, forwardRef } from 'react';
 import { Grid, Button, Card, styled } from '@nextui-org/react';
-import { Thumbs, Pagination } from 'swiper';
+import { Thumbs, Pagination, Autoplay } from 'swiper';
 import { Swiper as SwiperReact, SwiperSlide, useSwiper } from 'swiper/react';
 import type { Swiper } from 'swiper';
 
@@ -21,98 +22,150 @@ import Svg from '~/components/styles/Svg.styles';
 import BannerItemCompact from '../item/BannerItemCompact';
 import MediaItem from '../item';
 
-const CustomNavigation = ({ slot }: { slot: 'container-end' }) => {
-  const swiper = useSwiper();
-  const isXl = useMediaQuery('(max-width: 1400px)');
-  const [slideProgress, setSlideProgress] = useState<number>(0);
-  const { isPlayTrailer, setIsPlayTrailer } = useSoraSettings();
+const AutoplayProgressStyled = styled('div', {
+  position: 'absolute',
+  width: '48px',
+  height: '48px',
+  bottom: '150px',
+  right: '35px',
+  zIndex: '90',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: '$primary',
+  '@lgMin': { bottom: '270px' },
+  '& svg': {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    zIndex: 10,
+    width: '100%',
+    height: '100%',
+    strokeWidth: 2,
+    stroke: '$primary',
+    fill: 'none',
+    strokeDashoffset: 'calc(125.6 * (var(--progress)))',
+    strokeDasharray: '125.6',
+    transform: 'rotate(-90deg)',
+  },
+});
 
-  swiper.on('slideChange', (e) => {
-    setSlideProgress(e.progress);
-  });
+const CustomNavigation = forwardRef<HTMLDivElement, { slot: 'container-end' }>(
+  (props, forwardedRef) => {
+    const { slot } = props;
+    const swiper = useSwiper();
+    const isXl = useMediaQuery('(max-width: 1400px)');
+    const [slideProgress, setSlideProgress] = useState<number>(0);
+    const { isPlayTrailer, setIsPlayTrailer } = useSoraSettings();
 
-  return (
-    <div slot={slot}>
-      <Button
-        type="button"
-        auto
-        color="primary"
-        rounded
-        ghost
-        icon={
-          isPlayTrailer ? <StopIcon fill="currentColor" /> : <PlayIcon fill="currentColor" filled />
-        }
-        onPress={() => setIsPlayTrailer(!isPlayTrailer)}
-        css={{
-          width: '44px',
-          height: '44px',
-          cursor: 'pointer',
-          position: 'absolute',
-          bottom: '80px',
-          right: '35px',
-          zIndex: '90',
-          '&:hover': {
-            opacity: '0.8',
-          },
-          '@lgMin': { bottom: '200px' },
-        }}
-        aria-label="Play Trailer"
-      />
-      {isXl ? (
-        <>
-          <Button
-            type="button"
-            auto
-            color="primary"
-            rounded
-            ghost
-            icon={<ChevronLeftIcon fill="currentColor" />}
-            onPress={() => swiper.slidePrev()}
-            css={{
-              width: '44px',
-              height: '44px',
-              cursor: 'pointer',
-              position: 'absolute',
-              bottom: '10px',
-              right: '85px',
-              zIndex: '90',
-              '&:hover': {
-                opacity: '0.8',
-              },
-              '@lgMin': { bottom: '200px' },
-            }}
-            aria-label="Previous"
-            disabled={slideProgress === 0}
-          />
-          <Button
-            type="button"
-            auto
-            color="primary"
-            rounded
-            ghost
-            icon={<ChevronRightIcon fill="currentColor" />}
-            onPress={() => swiper.slideNext()}
-            css={{
-              width: '44px',
-              height: '44px',
-              cursor: 'pointer',
-              position: 'absolute',
-              bottom: '10px',
-              right: '35px',
-              zIndex: '90',
-              '&:hover': {
-                opacity: '0.8',
-              },
-              '@lgMin': { bottom: '200px' },
-            }}
-            aria-label="Next"
-            disabled={slideProgress === 1}
-          />
-        </>
-      ) : null}
-    </div>
-  );
-};
+    swiper.on('slideChange', (e) => {
+      setSlideProgress(e.progress);
+    });
+
+    return (
+      <div slot={slot}>
+        <Button
+          type="button"
+          auto
+          color="primary"
+          rounded
+          ghost
+          icon={
+            isPlayTrailer ? (
+              <StopIcon fill="currentColor" />
+            ) : (
+              <PlayIcon fill="currentColor" filled />
+            )
+          }
+          onPress={() => {
+            setIsPlayTrailer(!isPlayTrailer);
+            if (isPlayTrailer && !swiper.autoplay.running) {
+              swiper.autoplay.start();
+              swiper.autoplay.resume();
+            } else if (!isPlayTrailer && swiper.autoplay.running) {
+              swiper.autoplay.stop();
+            }
+          }}
+          css={{
+            width: '44px',
+            height: '44px',
+            cursor: 'pointer',
+            position: 'absolute',
+            bottom: '80px',
+            right: '35px',
+            zIndex: '90',
+            '&:hover': {
+              opacity: '0.8',
+            },
+            '@lgMin': { bottom: '200px' },
+          }}
+          aria-label="Play Trailer"
+        />
+        {isXl ? (
+          <>
+            <Button
+              type="button"
+              auto
+              color="primary"
+              rounded
+              ghost
+              icon={<ChevronLeftIcon fill="currentColor" />}
+              onPress={() => swiper.slidePrev()}
+              css={{
+                width: '44px',
+                height: '44px',
+                cursor: 'pointer',
+                position: 'absolute',
+                bottom: '10px',
+                right: '85px',
+                zIndex: '90',
+                '&:hover': {
+                  opacity: '0.8',
+                },
+                '@lgMin': { bottom: '200px' },
+              }}
+              aria-label="Previous"
+              disabled={slideProgress === 0}
+            />
+            <Button
+              type="button"
+              auto
+              color="primary"
+              rounded
+              ghost
+              icon={<ChevronRightIcon fill="currentColor" />}
+              onPress={() => swiper.slideNext()}
+              css={{
+                width: '44px',
+                height: '44px',
+                cursor: 'pointer',
+                position: 'absolute',
+                bottom: '10px',
+                right: '35px',
+                zIndex: '90',
+                '&:hover': {
+                  opacity: '0.8',
+                },
+                '@lgMin': { bottom: '200px' },
+              }}
+              aria-label="Next"
+              disabled={slideProgress === 1}
+            />
+            <AutoplayProgressStyled className="autoplay-progress" ref={forwardedRef}>
+              {/* @ts-ignore */}
+              <svg viewBox="0 0 48 48" style={{ '--progress': 1 }}>
+                <circle cx="24" cy="24" r="20" />
+              </svg>
+              <span />
+            </AutoplayProgressStyled>
+          </>
+        ) : null}
+      </div>
+    );
+  },
+);
+
+CustomNavigation.displayName = 'CustomNavigation';
 
 const CustomNavigationThumbs = ({ slot }: { slot: 'container-end' }) => {
   const swiper = useSwiper();
@@ -265,6 +318,11 @@ const SwiperReactStyled = styled(SwiperReact, {
   '@lg': {
     display: 'block',
   },
+  '& div': {
+    '&.swiper-wrapper': {
+      marginLeft: 7,
+    },
+  },
 });
 
 interface IMediaListBannerProps {
@@ -278,6 +336,23 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
   const isSm = useMediaQuery('(max-width: 650px)');
   const isXl = useMediaQuery('(max-width: 1400px)');
   const [thumbsSwiper, setThumbsSwiper] = useState<Swiper | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const progressRef = useRef<HTMLDivElement>(null);
+  const autoplayProgressRef = useRef<HTMLDivElement>(null);
+  const { isPlayTrailer } = useSoraSettings();
+
+  useEffect(() => {
+    if (
+      autoplayProgressRef.current &&
+      autoplayProgressRef.current.firstChild &&
+      autoplayProgressRef.current.lastChild
+    ) {
+      // @ts-ignore
+      autoplayProgressRef.current.firstChild.style.setProperty('--progress', 1);
+      autoplayProgressRef.current.lastChild.textContent = '';
+    }
+    if (progressRef.current) progressRef.current.style.setProperty('width', '0%');
+  }, [isPlayTrailer, isXl]);
 
   return (
     <Grid.Container
@@ -295,12 +370,12 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
       {items && items?.length > 0 && (
         <>
           <SwiperReact
-            modules={[Thumbs, Pagination]}
+            modules={[Thumbs, Pagination, Autoplay]}
             grabCursor
             spaceBetween={isSm ? 20 : 0}
             slidesPerView={isSm ? 1.15 : 1}
             centeredSlides={isSm}
-            thumbs={isXl ? undefined : { swiper: thumbsSwiper }}
+            thumbs={isXl ? undefined : { swiper: thumbsSwiper, multipleActiveThumbs: false }}
             loop
             pagination={
               isSm
@@ -316,7 +391,39 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
                   }
                 : false
             }
+            autoplay={{
+              delay: 8000,
+              disableOnInteraction: false,
+            }}
             style={{ width: '100%' }}
+            onAutoplayStart={(swiper) => {
+              if (isPlayTrailer && swiper.autoplay.running) {
+                swiper.autoplay.stop();
+              }
+            }}
+            onAutoplayTimeLeft={(s, timeLeft, percentage) => {
+              if (
+                autoplayProgressRef.current &&
+                autoplayProgressRef.current.firstChild &&
+                autoplayProgressRef.current.lastChild
+              ) {
+                // @ts-ignore
+                autoplayProgressRef.current.firstChild.style.setProperty(
+                  '--progress',
+                  1 - percentage,
+                );
+                autoplayProgressRef.current.lastChild.textContent = `${Math.ceil(timeLeft / 1000)}`;
+              }
+              if (progressRef.current) {
+                progressRef.current.style.setProperty(
+                  'width',
+                  `${(Math.abs(percentage) % 1) * 100}%`,
+                );
+              }
+            }}
+            onActiveIndexChange={(swiper) => {
+              setActiveIndex(swiper.realIndex);
+            }}
           >
             {items.map((item, index) => (
               <SwiperSlide
@@ -345,9 +452,8 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
                 )}
               </SwiperSlide>
             ))}
-            {!isSm && <CustomNavigation slot="container-end" />}
+            {!isSm && <CustomNavigation slot="container-end" ref={autoplayProgressRef} />}
           </SwiperReact>
-          {/* {!isXl ? ( */}
           <SwiperReactStyled
             grabCursor
             cssMode
@@ -358,19 +464,19 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
             watchSlidesProgress
             modules={[Thumbs]}
             onSwiper={setThumbsSwiper}
-            loop
           >
             {items.map((item, index) => (
               <SwiperSlideStyled key={`${item.id}-${index}-banner-thumb`}>
                 <BannerItemCompact
+                  ref={progressRef}
                   backdropPath={item?.backdropPath || ''}
                   title={item?.title || ''}
+                  active={activeIndex === index}
                 />
               </SwiperSlideStyled>
             ))}
             {!isSm && <CustomNavigationThumbs slot="container-end" />}
           </SwiperReactStyled>
-          {/* ) : null} */}
         </>
       )}
     </Grid.Container>
