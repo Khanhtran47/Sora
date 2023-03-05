@@ -2431,6 +2431,18 @@
     "@swc/helpers" "^0.4.14"
     clsx "^1.1.1"
 
+"@react-hookz/deep-equal@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@react-hookz/deep-equal/-/deep-equal-1.0.4.tgz#68a71f36cbc88724b3ce6f4036183778b6e7f282"
+  integrity sha512-N56fTrAPUDz/R423pag+n6TXWbvlBZDtTehaGFjK0InmN+V2OFWLE/WmORhmn6Ce7dlwH5+tQN1LJFw3ngTJVg==
+
+"@react-hookz/web@^22.0.0":
+  version "22.0.0"
+  resolved "https://registry.yarnpkg.com/@react-hookz/web/-/web-22.0.0.tgz#e3f44f63adeaa9043ec18c5d19a9e6da14730b2f"
+  integrity sha512-jl4JgUXaiSvvDVQD2z/rq2/RaykjjLrAZxHOEQj2H38j4UFWIVhv5oKUH8yrKF4wX6tMX9gdrj62f9yGq/nSaQ==
+  dependencies:
+    "@react-hookz/deep-equal" "^1.0.4"
+
 "@react-stately/checkbox@3.3.0":
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/@react-stately/checkbox/-/checkbox-3.3.0.tgz#31cb5dedbb10b9ab7358f79228f34d09e0f1bf5f"

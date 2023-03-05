@@ -8,7 +8,7 @@ import { Row, Col, Image as NextImage } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
 
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
-import useMediaQuery from '~/hooks/useMediaQuery';
+import { useMediaQuery } from '@react-hookz/web';
 
 import { authenticate } from '~/services/supabase';
 import { getSimilar, getVideos, getCredits, getRecommendation } from '~/services/tmdb/tmdb.server';
@@ -63,7 +63,7 @@ const MovieOverview = () => {
   const detail = movieData && movieData.detail;
   const navigate = useNavigate();
 
-  const isSm = useMediaQuery('(max-width: 650px)');
+  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const onClickViewMore = (type: 'cast' | 'similar' | 'recommendations') => {
     navigate(`/movies/${detail?.id}/${type}`);
   };

@@ -13,7 +13,7 @@ import { ColorPalette } from '~/routes/api/color-palette';
 import TMDB from '~/utils/media';
 import { WebShareLink } from '~/utils/client/pwa-utils.client';
 
-import useMediaQuery from '~/hooks/useMediaQuery';
+import { useMediaQuery } from '@react-hookz/web';
 import useSize, { IUseSize } from '~/hooks/useSize';
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 
@@ -57,10 +57,10 @@ const MediaDetail = (props: IMediaDetail) => {
   const location = useLocation();
   const fetcher = useFetcher();
   const { backgroundColor } = useColorDarkenLighten(color);
-  const isXs = useMediaQuery('(max-width: 425px)');
-  const isSm = useMediaQuery('(max-width: 650px)');
-  const isMd = useMediaQuery('(max-width: 960px)');
-  const isLg = useMediaQuery('(max-width: 1280px)');
+  const isXs = useMediaQuery('(max-width: 425px)', { initializeWithValue: false });
+  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
+  const isMd = useMediaQuery('(max-width: 960px)', { initializeWithValue: false });
+  const isLg = useMediaQuery('(max-width: 1280px)', { initializeWithValue: false });
   const [visible, setVisible] = useState(false);
   const [colorPalette, setColorPalette] = useState<ColorPalette>();
   const closeHandler = () => {
@@ -217,6 +217,7 @@ const MediaDetail = (props: IMediaDetail) => {
             borderBottomRightRadius: 0,
           }}
         >
+          <BackgroundContent />
           <Row
             fluid
             align="stretch"
@@ -239,7 +240,6 @@ const MediaDetail = (props: IMediaDetail) => {
               maxWidth: '1920px',
             }}
           >
-            <BackgroundContent />
             {!isSm && (
               <Col span={4}>
                 {posterPath ? (

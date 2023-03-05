@@ -13,7 +13,7 @@ import { Player } from '@lottiefiles/react-lottie-player';
 import Image, { MimeType } from 'remix-image';
 import { IPeopleDetail } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
-import useMediaQuery from '~/hooks/useMediaQuery';
+import { useMediaQuery } from '@react-hookz/web';
 
 import Flex from '~/components/styles/Flex.styles';
 import { H3, H4, H5, H6 } from '~/components/styles/Text.styles';
@@ -43,7 +43,7 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
   const profilePath = detail?.profile_path
     ? TMDB?.profileUrl(detail?.profile_path || '', 'h632')
     : undefined;
-  const isSm = useMediaQuery('(max-width: 650px)');
+  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   let gender = '';
   switch (detail?.gender) {
     case 0:

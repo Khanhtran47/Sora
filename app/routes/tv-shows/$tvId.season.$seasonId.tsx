@@ -9,7 +9,7 @@ import { Container, Spacer, Card, Col, Row, Avatar, Badge } from '@nextui-org/re
 import Image, { MimeType } from 'remix-image';
 import Vibrant from 'node-vibrant';
 
-import useMediaQuery from '~/hooks/useMediaQuery';
+import { useMediaQuery } from '@react-hookz/web';
 import useSize, { IUseSize } from '~/hooks/useSize';
 import i18next from '~/i18n/i18next.server';
 import { getTvShowDetail, getTvSeasonDetail } from '~/services/tmdb/tmdb.server';
@@ -185,8 +185,8 @@ const SeasonDetail = () => {
   const { tvId, seasonId } = useParams();
   const ref = React.useRef<HTMLDivElement>(null);
   const size: IUseSize = useSize(ref);
-  const isXs = useMediaQuery('(max-width: 425px)');
-  const isSm = useMediaQuery('(max-width: 650px)');
+  const isXs = useMediaQuery('(max-width: 425px)', { initializeWithValue: false });
+  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
 
   return (
     <>

@@ -18,7 +18,7 @@ import i18next from '~/i18n/i18next.server';
 import { getPeopleImages } from '~/services/tmdb/tmdb.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
 
-import useMediaQuery from '~/hooks/useMediaQuery';
+import { useMediaQuery } from '@react-hookz/web';
 import TMDB from '~/utils/media';
 import { H6 } from '~/components/styles/Text.styles';
 
@@ -46,8 +46,8 @@ export const meta: MetaFunction = ({ params }) => ({
 const MediaPage = () => {
   const { images } = useLoaderData<typeof loader>();
   const peopleData = useTypedRouteLoaderData('routes/people/$peopleId');
-  const isLg = useMediaQuery('(max-width: 1280px)');
-  const isXs = useMediaQuery('(max-width: 375px)');
+  const isLg = useMediaQuery('(max-width: 1280px)', { initializeWithValue: false });
+  const isXs = useMediaQuery('(max-width: 375px)', { initializeWithValue: false });
   const smallItemStyles: React.CSSProperties = {
     cursor: 'pointer',
     objectFit: 'cover',

@@ -1,7 +1,7 @@
 import { Row, Col } from '@nextui-org/react';
 
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
-import useMediaQuery from '~/hooks/useMediaQuery';
+import { useMediaQuery } from '@react-hookz/web';
 
 import ListEpisodes from '~/components/elements/shared/ListEpisodes';
 import { IEpisode } from '~/services/tmdb/tmdb.types';
@@ -10,7 +10,7 @@ const Episodes = () => {
   const seasonData = useTypedRouteLoaderData('routes/tv-shows/$tvId.season.$seasonId');
   const seasonDetail = seasonData && seasonData.seasonDetail;
   const detail = seasonData && seasonData.detail;
-  const isSm = useMediaQuery('(max-width: 650px)');
+  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   return (
     <Row
       fluid

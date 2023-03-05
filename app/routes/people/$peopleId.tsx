@@ -9,7 +9,7 @@ import i18next from '~/i18n/i18next.server';
 import { authenticate } from '~/services/supabase';
 import { CACHE_CONTROL } from '~/utils/server/http';
 
-import useMediaQuery from '~/hooks/useMediaQuery';
+import { useMediaQuery } from '@react-hookz/web';
 import TMDB from '~/utils/media';
 
 import PeopleDetail from '~/components/media/PeopleDetail';
@@ -120,7 +120,7 @@ const detailTab = [
 
 const PeopleDetailPage = () => {
   const { detail, externalIds } = useLoaderData<typeof loader>();
-  const isSm = useMediaQuery('(max-width: 650px)');
+  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   return (
     <Container
       as="div"

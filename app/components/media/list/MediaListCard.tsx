@@ -66,7 +66,7 @@ const MediaListCard = (props: IMediaListCardProps) => {
 
   if (isCoverCard) {
     return (
-      <Container justify="flex-start" alignItems="center" css={{ m: 0, p: 0 }}>
+      <Container fluid justify="flex-start" alignItems="center" css={{ m: 0, p: 0 }}>
         {coverItem && coverItem?.length > 0 && (
           <SwiperStyled
             modules={[Navigation]}
@@ -107,7 +107,7 @@ const MediaListCard = (props: IMediaListCardProps) => {
   }
 
   return (
-    <Container justify="flex-start" alignItems="center" css={{ m: 0, p: 0 }}>
+    <Container fluid justify="flex-start" alignItems="center" css={{ m: 0, p: 0 }}>
       {items && items?.length > 0 && (
         <SwiperStyled
           modules={[Navigation]}

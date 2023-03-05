@@ -13,7 +13,7 @@ import { postFetchDataHandler } from '~/services/tmdb/utils.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import TMDB from '~/utils/media';
 
-import useMediaQuery from '~/hooks/useMediaQuery';
+import { useMediaQuery } from '@react-hookz/web';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 
 import { H2, H4, H5, H6 } from '~/components/styles/Text.styles';
@@ -60,7 +60,7 @@ const TvOverview = () => {
   const detail = tvData && tvData.detail;
   const navigate = useNavigate();
 
-  const isSm = useMediaQuery('(max-width: 650px)');
+  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const onClickViewMore = (type: 'cast' | 'similar' | 'recommendations') => {
     navigate(`/tv-shows/${detail?.id}/${type}`);
   };

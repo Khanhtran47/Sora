@@ -14,7 +14,7 @@ import {
   Badge,
 } from '@nextui-org/react';
 
-import useMediaQuery from '~/hooks/useMediaQuery';
+import { useMediaQuery } from '@react-hookz/web';
 
 import { CACHE_CONTROL } from '~/utils/server/http';
 
@@ -66,7 +66,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 const History = () => {
   const { histories, page, totalPage } = useLoaderData<typeof loader>();
-  const isXs = useMediaQuery('(max-width: 650px)');
+  const isXs = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const navigate = useNavigate();
   const location = useLocation();
   const ref = useRef<HTMLDivElement>(null);

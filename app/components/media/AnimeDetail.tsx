@@ -12,7 +12,7 @@ import { ColorPalette } from '~/routes/api/color-palette';
 
 import { WebShareLink } from '~/utils/client/pwa-utils.client';
 
-import useMediaQuery from '~/hooks/useMediaQuery';
+import { useMediaQuery } from '@react-hookz/web';
 import useSize, { IUseSize } from '~/hooks/useSize';
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 
@@ -62,10 +62,10 @@ const AnimeDetail = (props: IAnimeDetail) => {
   const ref = useRef<HTMLDivElement>(null);
   const size: IUseSize = useSize(ref);
   const { backgroundColor } = useColorDarkenLighten(color);
-  const isXs = useMediaQuery('(max-width: 425px)');
-  const isSm = useMediaQuery('(max-width: 650px)');
-  const isMd = useMediaQuery('(max-width: 960px)');
-  const isLg = useMediaQuery('(max-width: 1280px)');
+  const isXs = useMediaQuery('(max-width: 425px)', { initializeWithValue: false });
+  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
+  const isMd = useMediaQuery('(max-width: 960px)', { initializeWithValue: false });
+  const isLg = useMediaQuery('(max-width: 1280px)', { initializeWithValue: false });
   const [visible, setVisible] = useState(false);
   const [colorPalette, setColorPalette] = useState<ColorPalette>();
   const closeHandler = () => {
@@ -203,6 +203,7 @@ const AnimeDetail = (props: IAnimeDetail) => {
             borderBottomRightRadius: 0,
           }}
         >
+          <BackgroundContent />
           <Row
             fluid
             align="stretch"
@@ -225,7 +226,6 @@ const AnimeDetail = (props: IAnimeDetail) => {
               maxWidth: '1920px',
             }}
           >
-            <BackgroundContent />
             {!isSm && (
               <Col span={4}>
                 {image ? (

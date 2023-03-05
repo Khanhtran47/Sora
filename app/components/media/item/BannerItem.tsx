@@ -1,4 +1,4 @@
-import useMediaQuery from '~/hooks/useMediaQuery';
+import { useMediaQuery } from '@react-hookz/web';
 import { Title } from '~/types/media';
 import { ITrailer } from '~/services/consumet/anilist/anilist.types';
 
@@ -37,7 +37,7 @@ const BannerItem = (props: IBannerItemProps) => {
     trailer,
     voteAverage,
   } = props;
-  const isSm = useMediaQuery('(max-width: 650px)');
+  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   if (isSm) {
     return (
       <BannerItemMobile

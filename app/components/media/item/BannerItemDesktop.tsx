@@ -14,7 +14,7 @@ import { useInView } from 'react-intersection-observer';
 import useCardHoverStore from '~/store/card/useCardHoverStore';
 
 import { useSoraSettings } from '~/hooks/useLocalStorage';
-import useMediaQuery from '~/hooks/useMediaQuery';
+import { useMediaQuery } from '@react-hookz/web';
 import useSize from '~/hooks/useSize';
 import { IImage } from '~/services/tmdb/tmdb.types';
 import { ITrailer } from '~/services/consumet/anilist/anilist.types';
@@ -75,9 +75,9 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
   const [isPlayed, setIsPlayed] = useState<boolean>(false);
   const [showTrailer, setShowTrailer] = useState<boolean>(false);
   const [trailerBanner, setTrailerBanner] = useState<Trailer>({});
-  const isSm = useMediaQuery('(max-width: 650px)');
-  const isMd = useMediaQuery('(max-width: 960px)');
-  const isLg = useMediaQuery('(max-width: 1280px)');
+  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
+  const isMd = useMediaQuery('(max-width: 960px)', { initializeWithValue: false });
+  const isLg = useMediaQuery('(max-width: 1280px)', { initializeWithValue: false });
   const { ref, inView } = useInView({
     threshold: 0,
   });

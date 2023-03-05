@@ -12,7 +12,7 @@ import { getVideos } from '~/services/tmdb/tmdb.server';
 import { Item } from '~/services/youtube/youtube.types';
 import { CACHE_CONTROL } from '~/utils/server/http';
 
-import useMediaQuery from '~/hooks/useMediaQuery';
+import { useMediaQuery } from '@react-hookz/web';
 import WatchTrailerModal, { Trailer } from '~/components/elements/modal/WatchTrailerModal';
 import { H5, H6 } from '~/components/styles/Text.styles';
 
@@ -35,7 +35,7 @@ export const meta: MetaFunction = ({ params }) => ({
 const MovieVideosPage = () => {
   const { videos } = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
-  const isSm = useMediaQuery('(max-width: 650px)');
+  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const [activeType, setActiveType] = useState<number>(0);
   const [activeTypeVideos, setActiveTypeVideos] = useState<Item[] | []>([]);
   const [visible, setVisible] = useState(false);

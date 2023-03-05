@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable react-hooks/exhaustive-deps */
 import * as React from 'react';
-import { Button, Grid, Row, Tooltip, Popover, Spacer } from '@nextui-org/react';
+import { Button, Grid, Row, Tooltip, Popover, Spacer, styled } from '@nextui-org/react';
 import type { User } from '@supabase/supabase-js';
 import type { AnimationItem } from 'lottie-web';
 import { useTranslation } from 'react-i18next';
 import { isMobile } from 'react-device-detect';
 
-import useMediaQuery from '~/hooks/useMediaQuery';
+import { useMediaQuery } from '@react-hookz/web';
 import useScrollDirection from '~/hooks/useScrollDirection';
 
 import { pages, searchDropdown } from '~/constants/navPages';
@@ -65,13 +65,22 @@ const DropdownPage = ({
   );
 };
 
+const ButtonStyled = styled('button', {
+  paddingRight: 8,
+  paddingLeft: 8,
+  marginRight: 12,
+  display: 'block',
+  '@sm': {
+    display: 'none',
+  },
+});
+
 const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   const { t } = useTranslation('header');
   const { open, user, setOpen } = props;
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
   const [lottie, setLottie] = React.useState<AnimationItem>();
   const isSm = useMediaQuery('(max-width: 650px)');
-  const isMd = useMediaQuery('(max-width: 960px)');
   const scrollDirection = useScrollDirection();
 
   React.useEffect(() => {
@@ -109,20 +118,18 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
           },
         }}
       >
-        {isMd ? (
-          <button
-            type="button"
-            aria-label="Menu Icon"
-            onClick={() => setOpen(!open)}
-            style={{
-              paddingRight: 8,
-              paddingLeft: 8,
-              marginRight: 12,
-            }}
-          >
-            <MenuIcon />
-          </button>
-        ) : null}
+        <ButtonStyled
+          type="button"
+          aria-label="Menu Icon"
+          onClick={() => setOpen(!open)}
+          style={{
+            paddingRight: 8,
+            paddingLeft: 8,
+            marginRight: 12,
+          }}
+        >
+          <MenuIcon />
+        </ButtonStyled>
         <NavLink linkTo="/" isLogo />
       </Grid>
 
@@ -133,7 +140,10 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
         direction="row"
         justify="center"
         css={{
-          display: 'flex',
+          display: 'none',
+          '@xs': {
+            display: 'flex',
+          },
         }}
       >
         {!isSm &&

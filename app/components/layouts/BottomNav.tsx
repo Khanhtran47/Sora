@@ -1,6 +1,6 @@
 import { Container } from '@nextui-org/react';
 
-import useMediaQuery from '~/hooks/useMediaQuery';
+import { useMediaQuery } from '@react-hookz/web';
 import useScrollDirection from '~/hooks/useScrollDirection';
 
 import { bottomNavPages } from '~/constants/navPages';
@@ -9,7 +9,7 @@ import NavLink from '~/components/elements/NavLink';
 
 const BottomNav = () => {
   const scrollDirection = useScrollDirection();
-  const isSm = useMediaQuery('(max-width: 650px)');
+  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
 
   return (
     <Container

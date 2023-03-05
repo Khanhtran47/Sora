@@ -11,7 +11,7 @@ import { authenticate } from '~/services/supabase';
 import { getAnimeEpisodeInfo } from '~/services/consumet/anilist/anilist.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
 
-import useMediaQuery from '~/hooks/useMediaQuery';
+import { useMediaQuery } from '@react-hookz/web';
 
 import ListEpisodes from '~/components/elements/shared/ListEpisodes';
 
@@ -35,7 +35,7 @@ const EpisodesPage = () => {
   const { episodes } = useLoaderData<typeof loader>();
   const animeData = useTypedRouteLoaderData('routes/anime/$animeId');
   const detail = animeData && animeData.detail;
-  const isSm = useMediaQuery('(max-width: 650px)');
+  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
 
   return (
     <Row

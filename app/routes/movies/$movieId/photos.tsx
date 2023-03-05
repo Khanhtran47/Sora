@@ -16,7 +16,7 @@ import { getImages } from '~/services/tmdb/tmdb.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import TMDB from '~/utils/media';
 
-import useMediaQuery from '~/hooks/useMediaQuery';
+import { useMediaQuery } from '@react-hookz/web';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 
 import { H6 } from '~/components/styles/Text.styles';
@@ -85,8 +85,8 @@ const uiElements: GalleryProps['uiElements'] = [
 const MoviePhotosPage = () => {
   const { images } = useLoaderData<typeof loader>();
   const movieData = useTypedRouteLoaderData('routes/movies/$movieId');
-  const isLg = useMediaQuery('(max-width: 1280px)');
-  const isXs = useMediaQuery('(max-width: 375px)');
+  const isLg = useMediaQuery('(max-width: 1280px)', { initializeWithValue: false });
+  const isXs = useMediaQuery('(max-width: 375px)', { initializeWithValue: false });
   const smallItemStyles: React.CSSProperties = {
     cursor: 'pointer',
     objectFit: 'cover',

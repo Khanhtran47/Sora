@@ -13,7 +13,7 @@ import i18next from '~/i18n/i18next.server';
 import { authenticate } from '~/services/supabase';
 import { getTvSeasonImages } from '~/services/tmdb/tmdb.server';
 
-import useMediaQuery from '~/hooks/useMediaQuery';
+import { useMediaQuery } from '@react-hookz/web';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 
 import TMDB from '~/utils/media';
@@ -44,8 +44,8 @@ export const meta: MetaFunction = ({ params }) => ({
 const PhotosPage = () => {
   const { images } = useLoaderData<typeof loader>();
   const tvData = useTypedRouteLoaderData('routes/tv-shows/$tvId.season.$seasonId');
-  const isLg = useMediaQuery('(max-width: 1280px)');
-  const isXs = useMediaQuery('(max-width: 375px)');
+  const isLg = useMediaQuery('(max-width: 1280px)', { initializeWithValue: false });
+  const isXs = useMediaQuery('(max-width: 375px)', { initializeWithValue: false });
   const smallItemStyles: React.CSSProperties = {
     cursor: 'pointer',
     objectFit: 'cover',

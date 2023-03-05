@@ -9,7 +9,7 @@ import { Swiper as SwiperReact, SwiperSlide, useSwiper } from 'swiper/react';
 import type { Swiper } from 'swiper';
 
 import { IMedia } from '~/types/media';
-import useMediaQuery from '~/hooks/useMediaQuery';
+import { useMediaQuery } from '@react-hookz/web';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 
 import PlayIcon from '~/assets/icons/PlayIcon';
@@ -54,7 +54,7 @@ const CustomNavigation = forwardRef<HTMLDivElement, { slot: 'container-end' }>(
   (props, forwardedRef) => {
     const { slot } = props;
     const swiper = useSwiper();
-    const isXl = useMediaQuery('(max-width: 1400px)');
+    const isXl = useMediaQuery('(max-width: 1400px)', { initializeWithValue: false });
     const [slideProgress, setSlideProgress] = useState<number>(0);
     const { isPlayTrailer, setIsPlayTrailer } = useSoraSettings();
 
@@ -372,25 +372,36 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
           <SwiperReact
             modules={[Thumbs, Pagination, Autoplay]}
             grabCursor
-            spaceBetween={isSm ? 20 : 0}
-            slidesPerView={isSm ? 1.15 : 1}
-            centeredSlides={isSm}
+            spaceBetween={20}
+            slidesPerView={1.15}
+            centeredSlides
             thumbs={isXl ? undefined : { swiper: thumbsSwiper, multipleActiveThumbs: false }}
             loop
-            pagination={
-              isSm
-                ? { dynamicBullets: true }
-                : isXl
-                ? {
-                    type: 'bullets',
-                    clickable: true,
-                    bulletClass: 'swiper-pagination-bullet !bg-primary !w-7 !h-7 !mt-2',
-                    renderBullet: (index, className) => {
-                      return `<span class="${className}">${index + 1}</span>`;
-                    },
-                  }
-                : false
-            }
+            pagination={{
+              enabled: true,
+              dynamicBullets: true,
+              dynamicMainBullets: 3,
+            }}
+            breakpoints={{
+              650: {
+                spaceBetween: 0,
+                slidesPerView: 1,
+                pagination: {
+                  enabled: true,
+                  dynamicBullets: true,
+                  dynamicMainBullets: 4,
+                },
+              },
+              1400: {
+                spaceBetween: 0,
+                slidesPerView: 1,
+                pagination: {
+                  enabled: false,
+                  dynamicBullets: true,
+                  dynamicMainBullets: 4,
+                },
+              },
+            }}
             autoplay={{
               delay: 8000,
               disableOnInteraction: false,

@@ -10,7 +10,7 @@ import { useInView } from 'react-intersection-observer';
 
 import { Title } from '~/types/media';
 
-import useMediaQuery from '~/hooks/useMediaQuery';
+import { useMediaQuery } from '@react-hookz/web';
 import useSize from '~/hooks/useSize';
 
 import AspectRatio from '~/components/elements/aspect-ratio/AspectRatio';
@@ -45,7 +45,7 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
     voteAverage,
     genresAnime,
   } = props;
-  const isXs = useMediaQuery('(max-width: 375px)');
+  const isXs = useMediaQuery('(max-width: 375px)', { initializeWithValue: false });
 
   const { ref, inView } = useInView({
     threshold: 0,
