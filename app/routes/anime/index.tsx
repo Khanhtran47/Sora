@@ -131,6 +131,13 @@ const AnimePage = () => {
       exit={{ y: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
       ref={parentRef}
+      style={{
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
     >
       {trending && trending.results && trending.results.length > 0 && (
         <MediaList listType="slider-banner" items={trending?.results as IMedia[]} />
@@ -140,6 +147,7 @@ const AnimePage = () => {
         display="flex"
         justify="flex-start"
         direction="column"
+        alignItems="center"
         css={{
           padding: 0,
           marginTop: '48px',

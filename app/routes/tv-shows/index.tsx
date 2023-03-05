@@ -177,6 +177,13 @@ const TvIndexPage = () => {
       exit={{ y: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
       ref={parentRef}
+      style={{
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
     >
       <MediaList
         listType="slider-banner"
@@ -188,6 +195,7 @@ const TvIndexPage = () => {
         fluid
         display="flex"
         justify="flex-start"
+        alignItems="center"
         direction="column"
         css={{
           padding: 0,

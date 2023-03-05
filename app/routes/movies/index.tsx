@@ -133,6 +133,13 @@ const MoviesIndexPage = () => {
       exit={{ y: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
       ref={parentRef}
+      style={{
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
     >
       <MediaList
         listType="slider-banner"
@@ -145,6 +152,7 @@ const MoviesIndexPage = () => {
         display="flex"
         justify="flex-start"
         direction="column"
+        alignItems="center"
         css={{
           padding: 0,
           marginTop: '48px',
