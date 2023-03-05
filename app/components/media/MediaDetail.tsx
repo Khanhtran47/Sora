@@ -59,15 +59,11 @@ const MediaDetail = (props: IMediaDetail) => {
   const { backgroundColor } = useColorDarkenLighten(color);
   const isXs = useMediaQuery('(max-width: 425px)', { initializeWithValue: false });
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
-  const isMd = useMediaQuery('(max-width: 960px)', { initializeWithValue: false });
-  const isLg = useMediaQuery('(max-width: 1280px)', { initializeWithValue: false });
   const [visible, setVisible] = useState(false);
   const [colorPalette, setColorPalette] = useState<ColorPalette>();
   const closeHandler = () => {
     setVisible(false);
   };
-  const backgroundImageHeight = isXs ? 240 : isSm ? 360 : isMd ? 480 : isLg ? 720 : 787.5;
-  const backgroundGradientHeight = isXs ? 100 : isSm ? 150 : isMd ? 200 : isLg ? 250 : 300;
   const { id, tagline, genres, status } = item || {};
   const title = (item as IMovieDetail)?.title || (item as ITvShowDetail)?.name || '';
   const orgTitle =
@@ -116,11 +112,26 @@ const MediaDetail = (props: IMediaDetail) => {
           display: 'flex',
           flexFlow: 'column',
           width: '100%',
-          height: `calc(${JSON.stringify(size?.height)}px + ${backgroundImageHeight}px - 10rem)`,
           borderWidth: 0,
           backgroundColor,
           borderBottomLeftRadius: 0,
           borderBottomRightRadius: 0,
+          minHeight: '1050px',
+          height: isXs
+            ? `calc(${JSON.stringify(size?.height)}px + 240px - 10rem)`
+            : `calc(${JSON.stringify(size?.height)}px + 360px - 10rem)`,
+          '@xs': {
+            minHeight: '1075px',
+            height: `calc(${JSON.stringify(size?.height)}px + 480px - 10rem)`,
+          },
+          '@sm': {
+            minHeight: '1100px',
+            height: `calc(${JSON.stringify(size?.height)}px + 720px - 10rem)`,
+          },
+          '@md': {
+            minHeight: '1125px',
+            height: `calc(${JSON.stringify(size?.height)}px + 787.5px - 10rem)`,
+          },
         }}
       >
         <Card.Body
@@ -131,13 +142,25 @@ const MediaDetail = (props: IMediaDetail) => {
             '&::after': {
               content: '',
               position: 'absolute',
-              top: `calc(${backgroundImageHeight}px - ${backgroundGradientHeight}px)`,
               left: 0,
               width: '100%',
-              height: `${backgroundGradientHeight}px`,
               backgroundImage: `linear-gradient(to top, ${backgroundColor}, ${tinycolor(
                 backgroundColor,
               ).setAlpha(0)})`,
+              top: isXs ? '140px' : '210px',
+              height: isXs ? '100px' : '150px',
+              '@xs': {
+                top: '280px',
+                height: '200px',
+              },
+              '@sm': {
+                top: '470px',
+                height: '250px',
+              },
+              '@md': {
+                top: '487.5px',
+                height: '300px',
+              },
             },
           }}
         >
@@ -146,14 +169,26 @@ const MediaDetail = (props: IMediaDetail) => {
             as={Image}
             src={backdropPath || BackgroundDefault}
             css={{
-              minHeight: `${backgroundImageHeight}px !important`,
               minWidth: '100% !important',
               width: '100%',
-              height: `${backgroundImageHeight}px !important`,
               top: 0,
               left: 0,
               objectFit: 'cover',
               opacity: 0.8,
+              minHeight: isXs ? '240px !important' : '360px !important',
+              height: isXs ? '240px !important' : '360px !important',
+              '@xs': {
+                minHeight: '480px !important',
+                height: '480px !important',
+              },
+              '@sm': {
+                minHeight: '720px !important',
+                height: '720px !important',
+              },
+              '@md': {
+                minHeight: '787.5px !important',
+                height: '787.5px !important',
+              },
             }}
             title={title}
             alt={title}
@@ -241,7 +276,15 @@ const MediaDetail = (props: IMediaDetail) => {
             }}
           >
             {!isSm && (
-              <Col span={4}>
+              <Col
+                span={4}
+                css={{
+                  display: 'none',
+                  '@xs': {
+                    display: 'block',
+                  },
+                }}
+              >
                 {posterPath ? (
                   <Card.Image
                     // @ts-ignore
@@ -249,14 +292,19 @@ const MediaDetail = (props: IMediaDetail) => {
                     src={posterPath}
                     alt={title}
                     objectFit="cover"
-                    width={isLg ? '75%' : isMd ? '100%' : '50%'}
                     css={{
                       minWidth: 'auto !important',
                       minHeight: '205px !important',
                       borderRadius: '24px',
                       boxShadow: '12px 12px 30px 10px rgb(104 112 118 / 0.35)',
                     }}
-                    containerCss={{ overflow: 'visible' }}
+                    containerCss={{
+                      overflow: 'visible',
+                      width: '75% !important',
+                      '@md': {
+                        width: '50% !important',
+                      },
+                    }}
                     showSkeleton
                     loaderUrl="/api/image"
                     placeholder="empty"
@@ -298,11 +346,14 @@ const MediaDetail = (props: IMediaDetail) => {
                     <Avatar
                       icon={<PhotoIcon width={48} height={48} />}
                       css={{
-                        width: `${isLg ? '75%' : isMd ? '100%' : '50%'} !important`,
+                        width: '75% !important',
                         size: '$20',
                         minWidth: 'auto !important',
                         minHeight: '205px !important',
                         borderRadius: '24px !important',
+                        '@md': {
+                          width: '50% !important',
+                        },
                       }}
                     />
                   </Row>
@@ -311,11 +362,14 @@ const MediaDetail = (props: IMediaDetail) => {
               </Col>
             )}
             <Col
-              span={isSm ? 12 : 8}
               css={{
                 display: 'flex',
                 flexFlow: 'column',
                 justifyContent: 'space-between',
+                width: '100%',
+                '@xs': {
+                  width: '66.6667%',
+                },
               }}
             >
               <Flex direction="column" justify="center" align="start">
@@ -333,6 +387,9 @@ const MediaDetail = (props: IMediaDetail) => {
                         containerCss={{
                           borderRadius: '24px',
                           overflow: 'visible',
+                          '@xs': {
+                            display: 'none',
+                          },
                         }}
                         css={{
                           minWidth: 'auto !important',

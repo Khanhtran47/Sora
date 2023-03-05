@@ -64,15 +64,11 @@ const AnimeDetail = (props: IAnimeDetail) => {
   const { backgroundColor } = useColorDarkenLighten(color);
   const isXs = useMediaQuery('(max-width: 425px)', { initializeWithValue: false });
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
-  const isMd = useMediaQuery('(max-width: 960px)', { initializeWithValue: false });
-  const isLg = useMediaQuery('(max-width: 1280px)', { initializeWithValue: false });
   const [visible, setVisible] = useState(false);
   const [colorPalette, setColorPalette] = useState<ColorPalette>();
   const closeHandler = () => {
     setVisible(false);
   };
-  const backgroundImageHeight = isXs ? 80 : isSm ? 119 : isMd ? 178 : isLg ? 267 : 400;
-  const backgroundGradientHeight = isXs ? 30 : isSm ? 50 : isMd ? 70 : isLg ? 90 : 110;
 
   useEffect(() => {
     if (ref.current) {
@@ -101,11 +97,26 @@ const AnimeDetail = (props: IAnimeDetail) => {
           display: 'flex',
           flexFlow: 'column',
           width: '100%',
-          height: `calc(${JSON.stringify(size?.height)}px + ${backgroundImageHeight}px - 2rem)`,
           borderWidth: 0,
           backgroundColor,
           borderBottomLeftRadius: 0,
           borderBottomRightRadius: 0,
+          minHeight: '825px',
+          height: isXs
+            ? `calc(${JSON.stringify(size?.height)}px + 80px - 2rem)`
+            : `calc(${JSON.stringify(size?.height)}px + 119px - 2rem)`,
+          '@xs': {
+            minHeight: '850px',
+            height: `calc(${JSON.stringify(size?.height)}px + 178px - 2rem)`,
+          },
+          '@sm': {
+            minHeight: '875px',
+            height: `calc(${JSON.stringify(size?.height)}px + 267px - 2rem)`,
+          },
+          '@md': {
+            minHeight: '900px',
+            height: `calc(${JSON.stringify(size?.height)}px + 400px - 2rem)`,
+          },
         }}
       >
         <Card.Body
@@ -116,13 +127,25 @@ const AnimeDetail = (props: IAnimeDetail) => {
             '&::after': {
               content: '',
               position: 'absolute',
-              top: `calc(${backgroundImageHeight}px - ${backgroundGradientHeight}px)`,
               left: 0,
               width: '100%',
-              height: `${backgroundGradientHeight}px`,
               backgroundImage: `linear-gradient(to top, ${backgroundColor}, ${tinycolor(
                 backgroundColor,
               ).setAlpha(0)})`,
+              top: isXs ? '50px' : '69px',
+              height: isXs ? '30px' : '50px',
+              '@xs': {
+                top: '108px',
+                height: '70px',
+              },
+              '@sm': {
+                top: '177px',
+                height: '90px',
+              },
+              '@md': {
+                top: '290px',
+                height: '110px',
+              },
             },
           }}
         >
@@ -131,15 +154,27 @@ const AnimeDetail = (props: IAnimeDetail) => {
             as={Image}
             src={cover || BackgroundDefault}
             css={{
-              minHeight: `${backgroundImageHeight}px !important`,
               minWidth: '100% !important',
               width: '100%',
-              height: `${backgroundImageHeight}px !important`,
               top: 0,
               left: 0,
               objectFit: 'cover',
               objectPosition: 'center',
               opacity: 0.8,
+              minHeight: isXs ? '80px !important' : '119px !important',
+              height: isXs ? '80px !important' : '119px !important',
+              '@xs': {
+                minHeight: '178px !important',
+                height: '178px !important',
+              },
+              '@sm': {
+                minHeight: '267px !important',
+                height: '267px !important',
+              },
+              '@md': {
+                minHeight: '400px !important',
+                height: '400px !important',
+              },
             }}
             title={title?.userPreferred || title?.english || title?.romaji || title?.native}
             alt={title?.userPreferred || title?.english || title?.romaji || title?.native}
@@ -227,7 +262,15 @@ const AnimeDetail = (props: IAnimeDetail) => {
             }}
           >
             {!isSm && (
-              <Col span={4}>
+              <Col
+                span={4}
+                css={{
+                  display: 'none',
+                  '@xs': {
+                    display: 'block',
+                  },
+                }}
+              >
                 {image ? (
                   <Card.Image
                     // @ts-ignore
@@ -236,9 +279,14 @@ const AnimeDetail = (props: IAnimeDetail) => {
                     title={title?.userPreferred || title?.english || title?.romaji || title?.native}
                     alt={title?.userPreferred || title?.english || title?.romaji || title?.native}
                     objectFit="cover"
-                    width={isLg ? '75%' : isMd ? '100%' : '50%'}
                     showSkeleton
-                    containerCss={{ overflow: 'visible' }}
+                    containerCss={{
+                      overflow: 'visible',
+                      width: '75% !important',
+                      '@md': {
+                        width: '50% !important',
+                      },
+                    }}
                     css={{
                       minWidth: 'auto !important',
                       minHeight: '205px !important',
@@ -285,11 +333,14 @@ const AnimeDetail = (props: IAnimeDetail) => {
                     <Avatar
                       icon={<PhotoIcon width={48} height={48} />}
                       css={{
-                        width: `${isLg ? '75%' : isMd ? '100%' : '50%'} !important`,
+                        width: '75% !important',
                         size: '$20',
                         minWidth: 'auto !important',
                         minHeight: '205px !important',
                         borderRadius: '24px !important',
+                        '@md': {
+                          width: '50% !important',
+                        },
                       }}
                     />
                   </Row>
@@ -298,11 +349,14 @@ const AnimeDetail = (props: IAnimeDetail) => {
               </Col>
             )}
             <Col
-              span={isSm ? 12 : 8}
               css={{
                 display: 'flex',
                 flexFlow: 'column',
                 justifyContent: 'space-between',
+                width: '100%',
+                '@xs': {
+                  width: '66.6667%',
+                },
               }}
             >
               <Flex direction="column" justify="center" align="start">
@@ -325,6 +379,9 @@ const AnimeDetail = (props: IAnimeDetail) => {
                         containerCss={{
                           borderRadius: '24px',
                           overflow: 'visible',
+                          '@xs': {
+                            display: 'none',
+                          },
                         }}
                         showSkeleton
                         css={{
