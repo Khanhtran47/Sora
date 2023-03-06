@@ -13,7 +13,7 @@ import { postFetchDataHandler } from '~/services/tmdb/utils.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import TMDB from '~/utils/media';
 
-import useMediaQuery from '~/hooks/useMediaQuery';
+import { useMediaQuery } from '@react-hookz/web';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 
 import { H2, H4, H5, H6 } from '~/components/styles/Text.styles';
@@ -60,7 +60,7 @@ const TvOverview = () => {
   const detail = tvData && tvData.detail;
   const navigate = useNavigate();
 
-  const isSm = useMediaQuery('(max-width: 650px)');
+  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const onClickViewMore = (type: 'cast' | 'similar' | 'recommendations') => {
     navigate(`/tv-shows/${detail?.id}/${type}`);
   };
@@ -149,7 +149,12 @@ const TvOverview = () => {
           </Flex>
         </Col>
       )}
-      <Col span={isSm ? 12 : 8}>
+      <Col
+        css={{
+          width: '100%',
+          '@xs': { width: '66.6667%' },
+        }}
+      >
         <Flex
           direction="column"
           align="start"
@@ -168,9 +173,13 @@ const TvOverview = () => {
             </H6>
           </Row>
           <Flex
-            direction={isSm ? 'column' : 'row'}
             wrap="wrap"
-            className={`${isSm ? 'space-y-4' : 'space-x-8'}`}
+            css={{
+              flexDirection: 'column',
+              rowGap: '1rem',
+              columnGap: 0,
+              '@xs': { flexDirection: 'row', rowGap: '1rem', columnGap: '2rem' },
+            }}
           >
             {detail?.created_by && detail?.created_by.length > 0 && (
               <H6 h6>

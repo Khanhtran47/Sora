@@ -17,7 +17,7 @@ import { IMedia } from '~/types/media';
 
 import MediaList from '~/components/media/MediaList';
 
-import useSize from '~/hooks/useSize';
+import { useMeasure } from '@react-hookz/web';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -105,9 +105,7 @@ const TvIndexPage = () => {
   const [clientHeight, setClientHeight] = React.useState(0);
   const [shouldFetch, setShouldFetch] = React.useState(true);
   const [order, setOrder] = React.useState(0);
-
-  const parentRef = React.useRef<HTMLElement>(null);
-  const { height } = useSize(parentRef);
+  const [size, parentRef] = useMeasure<HTMLDivElement>();
 
   React.useEffect(() => {
     const scrollListener = () => {
@@ -130,13 +128,13 @@ const TvIndexPage = () => {
 
   // Listen on scrolls. Fire on some self-described breakpoint
   React.useEffect(() => {
-    if (!shouldFetch || !height) return;
-    if (clientHeight + scrollPosition - 200 < height) return;
+    if (!shouldFetch || !size?.height) return;
+    if (clientHeight + scrollPosition - 200 < size?.height) return;
 
     fetcher.load(`/tv-shows/discover?with_genres=${Object.keys(listGenresTv[order])[0]}`);
     setShouldFetch(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scrollPosition, clientHeight, height]);
+  }, [scrollPosition, clientHeight, size?.height]);
 
   React.useEffect(() => {
     if (fetcher.data && fetcher.data.length === 0) {

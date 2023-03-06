@@ -12,7 +12,7 @@ import { getVideos } from '~/services/tmdb/tmdb.server';
 import { Item } from '~/services/youtube/youtube.types';
 import { CACHE_CONTROL } from '~/utils/server/http';
 
-import useMediaQuery from '~/hooks/useMediaQuery';
+import { useMediaQuery } from '@react-hookz/web';
 
 import WatchTrailerModal, { Trailer } from '~/components/elements/modal/WatchTrailerModal';
 import { H5, H6 } from '~/components/styles/Text.styles';
@@ -41,7 +41,7 @@ export const meta: MetaFunction = ({ params }) => ({
 const TvVideosPage = () => {
   const { videos } = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
-  const isSm = useMediaQuery('(max-width: 650px)');
+  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const [activeType, setActiveType] = useState<number>(0);
   const [activeTypeVideos, setActiveTypeVideos] = useState<Item[] | []>([]);
   const [visible, setVisible] = useState(false);
@@ -105,9 +105,10 @@ const TvVideosPage = () => {
       css={{
         marginTop: '0.75rem',
         maxWidth: '1920px',
-        flexDirection: isSm ? 'column' : 'row',
+        flexDirection: 'column',
         px: '0.75rem',
         '@xs': {
+          flexDirection: 'row',
           px: '3vw',
         },
         '@sm': {
@@ -122,9 +123,15 @@ const TvVideosPage = () => {
       }}
     >
       <Col
-        span={isSm ? 12 : 4}
-        offset={isSm ? 0 : 0.125}
-        css={{ display: 'flex', justifyContent: isSm ? 'flex-start' : 'center' }}
+        css={{
+          display: 'flex',
+          justifyContent: 'flex-start',
+          width: '100%',
+          '@xs': {
+            justifyContent: 'center',
+            width: '33.3333%',
+          },
+        }}
       >
         <Button.Group
           {...(isSm ? { vertical: false } : { vertical: true })}
@@ -155,7 +162,7 @@ const TvVideosPage = () => {
           ))}
         </Button.Group>
       </Col>
-      <Col span={isSm ? 12 : 8}>
+      <Col css={{ width: '100%', '@xs': { width: '66.6667%' } }}>
         <Grid.Container gap={1} justify="flex-start">
           {activeTypeVideos &&
             activeTypeVideos.map((video) => (

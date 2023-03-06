@@ -1,6 +1,5 @@
 import { Divider } from '@nextui-org/react';
-import { useRef } from 'react';
-import useSize, { IUseSize } from '~/hooks/useSize';
+import { useMeasure } from '@react-hookz/web';
 import { IMedia } from '~/types/media';
 import { RowItem } from '../item';
 
@@ -12,8 +11,7 @@ type IProps = {
 
 const MediaListTable = (props: IProps) => {
   const { items, simplified, sorted } = props;
-  const ref = useRef<HTMLDivElement>(null);
-  const size: IUseSize = useSize(ref);
+  const [size, ref] = useMeasure<HTMLDivElement>();
 
   if (items && simplified && sorted) {
     items.sort((a, b) => {
@@ -55,7 +53,7 @@ const MediaListTable = (props: IProps) => {
               <RowItem
                 key={`${item.id}-${index}-card-row`}
                 item={item}
-                containerWidth={size.width}
+                containerWidth={size?.width || 0}
                 simplified={simplified}
               />
             ))}
@@ -72,7 +70,12 @@ const MediaListTable = (props: IProps) => {
     <div ref={ref} style={{ padding: '1rem 0.5rem' }}>
       {items &&
         items.map((item) => (
-          <RowItem key={item.id} item={item} containerWidth={size.width} simplified={simplified} />
+          <RowItem
+            key={item.id}
+            item={item}
+            containerWidth={size?.width || 0}
+            simplified={simplified}
+          />
         ))}
     </div>
   );

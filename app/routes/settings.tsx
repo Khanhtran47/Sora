@@ -23,7 +23,7 @@ import Image, { MimeType } from 'remix-image';
 import { useTheme } from 'next-themes';
 import { isMobile } from 'react-device-detect';
 
-import useMediaQuery from '~/hooks/useMediaQuery';
+import { useMediaQuery } from '@react-hookz/web';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 
@@ -117,8 +117,8 @@ const Settings = () => {
   const { locale } = rootData || { locale: 'en' };
   const { t } = useTranslation('settings');
   const { theme, setTheme } = useTheme();
-  const isXs = useMediaQuery('(max-width: 450px)');
-  const isSm = useMediaQuery('(max-width: 650px)');
+  const isXs = useMediaQuery('(max-width: 450px)', { initializeWithValue: false });
+  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
 
   const {
     currentSubtitleFontColor,

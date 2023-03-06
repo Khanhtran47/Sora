@@ -6,7 +6,7 @@ import { Row, Col, Card, Avatar, Grid } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
 
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
-import useMediaQuery from '~/hooks/useMediaQuery';
+import { useMediaQuery } from '@react-hookz/web';
 
 import { IMedia } from '~/types/media';
 
@@ -23,7 +23,7 @@ export const meta: MetaFunction = ({ params }) => ({
 const Overview = () => {
   const animeData = useTypedRouteLoaderData('routes/anime/$animeId');
   const detail = animeData && animeData.detail;
-  const isSm = useMediaQuery('(max-width: 650px)');
+  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   return (
     <Row
       fluid

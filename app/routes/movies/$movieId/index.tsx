@@ -8,7 +8,7 @@ import { Row, Col, Image as NextImage } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
 
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
-import useMediaQuery from '~/hooks/useMediaQuery';
+import { useMediaQuery } from '@react-hookz/web';
 
 import { authenticate } from '~/services/supabase';
 import { getSimilar, getVideos, getCredits, getRecommendation } from '~/services/tmdb/tmdb.server';
@@ -63,7 +63,7 @@ const MovieOverview = () => {
   const detail = movieData && movieData.detail;
   const navigate = useNavigate();
 
-  const isSm = useMediaQuery('(max-width: 650px)');
+  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const onClickViewMore = (type: 'cast' | 'similar' | 'recommendations') => {
     navigate(`/movies/${detail?.id}/${type}`);
   };
@@ -155,7 +155,12 @@ const MovieOverview = () => {
           </Flex>
         </Col>
       )}
-      <Col span={isSm ? 12 : 8}>
+      <Col
+        css={{
+          width: '100%',
+          '@xs': { width: '66.6667%' },
+        }}
+      >
         <Flex
           direction="column"
           align="start"
@@ -173,11 +178,14 @@ const MovieOverview = () => {
               {detail?.overview}
             </H6>
           </Row>
-
           <Flex
-            direction={isSm ? 'column' : 'row'}
             wrap="wrap"
-            className={`${isSm ? 'space-y-4' : 'space-x-8'}`}
+            css={{
+              flexDirection: 'column',
+              rowGap: '1rem',
+              columnGap: 0,
+              '@xs': { flexDirection: 'row', rowGap: '1rem', columnGap: '2rem' },
+            }}
           >
             {directors && directors.length > 0 && (
               <H6 h6>

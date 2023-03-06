@@ -11,7 +11,7 @@ import { IEpisode } from '~/services/tmdb/tmdb.types';
 import { IEpisodeInfo } from '~/services/consumet/anilist/anilist.types';
 import { IMedia } from '~/types/media';
 
-import useMediaQuery from '~/hooks/useMediaQuery';
+import { useMediaQuery } from '@react-hookz/web';
 
 import MediaList from '~/components/media/MediaList';
 import ListEpisodes from '~/components/elements/shared/ListEpisodes';
@@ -71,7 +71,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
     providers,
   } = props;
   const navigate = useNavigate();
-  const isSm = useMediaQuery('(max-width: 650px)');
+  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const colorBackground = tinycolor(color).isDark()
     ? tinycolor(color).brighten(40).saturate(70).spin(180).toString()
     : tinycolor(color).darken(40).saturate(70).spin(180).toString();
@@ -178,7 +178,12 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
             )}
           </Col>
         )}
-        <Col span={isSm ? 12 : 8}>
+        <Col
+          css={{
+            width: '100%',
+            '@xs': { width: '66.6667%' },
+          }}
+        >
           <Row>
             <H2 h2 weight="bold">
               {title}

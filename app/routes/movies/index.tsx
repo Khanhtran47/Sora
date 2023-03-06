@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/indent */
-import * as React from 'react';
+import { useState, useEffect } from 'react';
 import { json } from '@remix-run/node';
 import type { LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useLocation, useNavigate, useFetcher } from '@remix-run/react';
 import { Container, Loading } from '@nextui-org/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import NProgress from 'nprogress';
+import { useMeasure } from '@react-hookz/web';
 
 import i18next from '~/i18n/i18next.server';
 import { getListMovies } from '~/services/tmdb/tmdb.server';
@@ -14,7 +15,6 @@ import { CACHE_CONTROL } from '~/utils/server/http';
 
 import { IMedia } from '~/types/media';
 
-import useSize from '~/hooks/useSize';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 
 import MediaList from '~/components/media/MediaList';
@@ -56,16 +56,14 @@ const MoviesIndexPage = () => {
     [entry[0]]: entry[1],
   }));
 
-  const [listItems, setListItems] = React.useState<IMedia[][] | undefined>([]);
-  const [scrollPosition, setScrollPosition] = React.useState(0);
-  const [clientHeight, setClientHeight] = React.useState(0);
-  const [shouldFetch, setShouldFetch] = React.useState(true);
-  const [order, setOrder] = React.useState(0);
+  const [listItems, setListItems] = useState<IMedia[][] | undefined>([]);
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const [clientHeight, setClientHeight] = useState(0);
+  const [shouldFetch, setShouldFetch] = useState(true);
+  const [order, setOrder] = useState(0);
+  const [size, parentRef] = useMeasure<HTMLElement>();
 
-  const parentRef = React.useRef<HTMLElement>(null);
-  const { height } = useSize(parentRef);
-
-  React.useEffect(() => {
+  useEffect(() => {
     const scrollListener = () => {
       setClientHeight(window.innerHeight);
       setScrollPosition(window.scrollY);
@@ -85,16 +83,16 @@ const MoviesIndexPage = () => {
   }, []);
 
   // Listen on scrolls. Fire on some self-described breakpoint
-  React.useEffect(() => {
-    if (!shouldFetch || !height) return;
-    if (clientHeight + scrollPosition - 200 < height) return;
+  useEffect(() => {
+    if (!shouldFetch || !size?.height) return;
+    if (clientHeight + scrollPosition - 200 < size?.height) return;
 
     fetcher.load(`/movies/discover?with_genres=${Object.keys(listGenresMovie[order])[0]}`);
     setShouldFetch(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scrollPosition, clientHeight, height]);
+  }, [scrollPosition, clientHeight, size?.height]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (fetcher.data && fetcher.data.length === 0) {
       setShouldFetch(false);
       return;
@@ -116,7 +114,7 @@ const MoviesIndexPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetcher.data]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (fetcher.type === 'normalLoad') {
       NProgress.configure({ showSpinner: false }).start();
     }

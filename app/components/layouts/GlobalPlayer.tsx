@@ -23,7 +23,7 @@ import usePlayerState from '~/store/player/usePlayerState';
 import type { PlayerData } from '~/store/player/usePlayerState';
 
 import { useSoraSettings } from '~/hooks/useLocalStorage';
-import useMeasure from '~/hooks/useMeasure';
+import { useMeasure } from '@react-hookz/web';
 
 import updateHistory from '~/utils/client/update-history';
 
@@ -155,7 +155,7 @@ const GlobalPlayer = () => {
     isShowSkipOpEdButton,
   } = useSoraSettings();
   const currentEpisode = useMemo(() => Number(episodeId), [episodeId]);
-  const [ref, { height }] = useMeasure<HTMLDivElement>();
+  const [size, ref] = useMeasure<HTMLDivElement>();
   const constraintsRef = useRef<HTMLDivElement>(null);
   const [artplayer, setArtplayer] = useState<Artplayer | null>(null);
   const [isPlayerPlaying, setIsPlayerPlaying] = useState(false);
@@ -984,18 +984,18 @@ const GlobalPlayer = () => {
                             : '#000',
                         fontSize:
                           currentSubtitleFontSize === '50%'
-                            ? `${height * 0.05 * 0.5}px`
+                            ? `${(size?.height || 0) * 0.05 * 0.5}px`
                             : currentSubtitleFontSize === '75%'
-                            ? `${height * 0.05 * 0.75}px`
+                            ? `${(size?.height || 0) * 0.05 * 0.75}px`
                             : currentSubtitleFontSize === '100%'
-                            ? `${height * 0.05}px`
+                            ? `${(size?.height || 0) * 0.05}px`
                             : currentSubtitleFontSize === '150%'
-                            ? `${height * 0.05 * 1.5}px`
+                            ? `${(size?.height || 0) * 0.05 * 1.5}px`
                             : currentSubtitleFontSize === '200%'
-                            ? `${height * 0.05 * 2}px`
+                            ? `${(size?.height || 0) * 0.05 * 2}px`
                             : currentSubtitleFontSize === '300%'
-                            ? `${height * 0.05 * 3}px`
-                            : `${height * 0.05 * 4}px`,
+                            ? `${(size?.height || 0) * 0.05 * 3}px`
+                            : `${(size?.height || 0) * 0.05 * 4}px`,
                         textShadow: subtitleTextEffects,
                         '& p': {
                           p: '$2',

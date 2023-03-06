@@ -1,7 +1,6 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { useRef } from 'react';
 import { Card, Row, Col, Spacer, Badge, Text } from '@nextui-org/react';
 import { Link } from '@remix-run/react';
 import Image, { MimeType } from 'remix-image';
@@ -10,8 +9,7 @@ import { useInView } from 'react-intersection-observer';
 
 import { Title } from '~/types/media';
 
-import useMediaQuery from '~/hooks/useMediaQuery';
-import useSize from '~/hooks/useSize';
+import { useMediaQuery, useMeasure } from '@react-hookz/web';
 
 import AspectRatio from '~/components/elements/aspect-ratio/AspectRatio';
 import { H5 } from '~/components/styles/Text.styles';
@@ -45,13 +43,12 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
     voteAverage,
     genresAnime,
   } = props;
-  const isXs = useMediaQuery('(max-width: 375px)');
+  const isXs = useMediaQuery('(max-width: 375px)', { initializeWithValue: false });
 
   const { ref, inView } = useInView({
     threshold: 0,
   });
-  const bannerRef = useRef<HTMLDivElement>(null);
-  const { width, height } = useSize(bannerRef);
+  const [size, bannerRef] = useMeasure<HTMLDivElement>();
 
   const titleItem =
     typeof title === 'string'
@@ -71,8 +68,8 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
           ref={ref}
           isPressable
           css={{
-            w: width,
-            h: height,
+            w: size?.width,
+            h: size?.height,
             borderWidth: 0,
             transition: 'all 0.5s ease',
             marginTop: !active ? '1.5rem' : 0,
@@ -92,7 +89,7 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
                 bottom: 0,
                 left: 0,
                 width: '100%',
-                height: `${height / 2}px`,
+                height: `${(size?.height || 0) / 2}px`,
                 backgroundImage: 'linear-gradient(0deg, $background, $backgroundTransparent)',
                 '@lgMin': {
                   height: '250px',
@@ -101,7 +98,7 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
             }}
           >
             <AnimatePresence>
-              {inView ? (
+              {inView && size ? (
                 <motion.div
                   initial={{ opacity: 0, scale: 1.2, y: 40 }}
                   animate={active && { opacity: 1, scale: 1, y: 0 }}
@@ -130,8 +127,8 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
                     responsive={[
                       {
                         size: {
-                          width,
-                          height: width * (5 / 4),
+                          width: size?.width,
+                          height: (size?.width || 0) * (5 / 4),
                         },
                       },
                     ]}

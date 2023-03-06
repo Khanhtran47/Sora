@@ -12,7 +12,7 @@ import { postFetchDataHandler } from '~/services/tmdb/utils.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
 
 import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
-import useMediaQuery from '~/hooks/useMediaQuery';
+import { useMediaQuery } from '@react-hookz/web';
 
 import MediaList from '~/components/media/MediaList';
 import Flex from '~/components/styles/Flex.styles';
@@ -43,7 +43,7 @@ export const meta: MetaFunction = ({ params }) => ({
 
 const TvSeasonCrewPage = () => {
   const { crew } = useLoaderData<typeof loader>();
-  const isSm = useMediaQuery('(max-width: 650px)');
+  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const ref = useRef<HTMLDivElement>(null);
   const { gotoPage, currentPage, maxPage, currentData } = useSplitArrayIntoPage(crew || [], 20);
 

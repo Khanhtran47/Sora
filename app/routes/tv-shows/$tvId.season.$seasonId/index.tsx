@@ -1,7 +1,6 @@
 import { Row, Col } from '@nextui-org/react';
 
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
-import useMediaQuery from '~/hooks/useMediaQuery';
 
 import ListEpisodes from '~/components/elements/shared/ListEpisodes';
 import { IEpisode } from '~/services/tmdb/tmdb.types';
@@ -10,7 +9,6 @@ const Episodes = () => {
   const seasonData = useTypedRouteLoaderData('routes/tv-shows/$tvId.season.$seasonId');
   const seasonDetail = seasonData && seasonData.seasonDetail;
   const detail = seasonData && seasonData.detail;
-  const isSm = useMediaQuery('(max-width: 650px)');
   return (
     <Row
       fluid
@@ -30,7 +28,7 @@ const Episodes = () => {
         },
       }}
     >
-      <Col span={isSm ? 12 : 8}>
+      <Col css={{ width: '100%', '@xs': { width: '66.6667%' } }}>
         <ListEpisodes
           type="tv"
           id={detail?.id}

@@ -9,7 +9,6 @@ import i18next from '~/i18n/i18next.server';
 import { authenticate } from '~/services/supabase';
 import { CACHE_CONTROL } from '~/utils/server/http';
 
-import useMediaQuery from '~/hooks/useMediaQuery';
 import TMDB from '~/utils/media';
 
 import PeopleDetail from '~/components/media/PeopleDetail';
@@ -120,7 +119,6 @@ const detailTab = [
 
 const PeopleDetailPage = () => {
   const { detail, externalIds } = useLoaderData<typeof loader>();
-  const isSm = useMediaQuery('(max-width: 650px)');
   return (
     <Container
       as="div"
@@ -151,11 +149,21 @@ const PeopleDetailPage = () => {
           },
         }}
       >
-        <Col span={isSm ? 12 : 4}>
+        <Col
+          css={{
+            width: '100%',
+            '@xs': { width: '33.3333%' },
+          }}
+        >
           <PeopleDetail detail={detail} externalIds={externalIds} />
           <Spacer y={1} />
         </Col>
-        <Col span={isSm ? 12 : 8}>
+        <Col
+          css={{
+            width: '100%',
+            '@xs': { width: '66.6667%' },
+          }}
+        >
           <Outlet />
         </Col>
       </Row>
