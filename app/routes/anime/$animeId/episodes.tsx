@@ -11,8 +11,6 @@ import { authenticate } from '~/services/supabase';
 import { getAnimeEpisodeInfo } from '~/services/consumet/anilist/anilist.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
 
-import { useMediaQuery } from '@react-hookz/web';
-
 import ListEpisodes from '~/components/elements/shared/ListEpisodes';
 
 export const loader = async ({ params, request }: LoaderArgs) => {
@@ -35,7 +33,6 @@ const EpisodesPage = () => {
   const { episodes } = useLoaderData<typeof loader>();
   const animeData = useTypedRouteLoaderData('routes/anime/$animeId');
   const detail = animeData && animeData.detail;
-  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
 
   return (
     <Row
@@ -56,7 +53,12 @@ const EpisodesPage = () => {
         },
       }}
     >
-      <Col span={isSm ? 12 : 8}>
+      <Col
+        css={{
+          width: '100%',
+          '@xs': { width: '66.6667%' },
+        }}
+      >
         <ListEpisodes
           type="anime"
           id={detail?.id}

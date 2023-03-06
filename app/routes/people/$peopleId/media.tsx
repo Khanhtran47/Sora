@@ -1,8 +1,4 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable no-nested-ternary */
-/* eslint-disable @typescript-eslint/indent */
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
 import { Image as NextImage, Row, Spacer } from '@nextui-org/react';
@@ -12,15 +8,13 @@ import { useLoaderData } from '@remix-run/react';
 import { Gallery, Item, GalleryProps } from 'react-photoswipe-gallery';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import Image, { MimeType } from 'remix-image';
-import { InView } from 'react-intersection-observer';
 
 import i18next from '~/i18n/i18next.server';
 import { getPeopleImages } from '~/services/tmdb/tmdb.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
-
-import { useMediaQuery } from '@react-hookz/web';
 import TMDB from '~/utils/media';
-import { H6 } from '~/components/styles/Text.styles';
+
+import { H5 } from '~/components/styles/Text.styles';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const locale = await i18next.getLocale(request);
@@ -46,14 +40,6 @@ export const meta: MetaFunction = ({ params }) => ({
 const MediaPage = () => {
   const { images } = useLoaderData<typeof loader>();
   const peopleData = useTypedRouteLoaderData('routes/people/$peopleId');
-  const isLg = useMediaQuery('(max-width: 1280px)', { initializeWithValue: false });
-  const isXs = useMediaQuery('(max-width: 375px)', { initializeWithValue: false });
-  const smallItemStyles: React.CSSProperties = {
-    cursor: 'pointer',
-    objectFit: 'cover',
-    minWidth: isXs ? '120px' : '185px',
-    height: 'auto',
-  };
 
   const uiElements: GalleryProps['uiElements'] = [
     {
@@ -98,64 +84,49 @@ const MediaPage = () => {
   return (
     <>
       <Row justify="flex-start" fluid>
-        <H6 h6>
+        <H5 h5>
           <strong>Profiles</strong>
-        </H6>
+        </H5>
       </Row>
       <Spacer y={0.5} />
       <Gallery withCaption withDownloadButton uiElements={uiElements}>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: `repeat(${isLg ? 2 : 3}, 0fr)`,
-            gridGap: 12,
-          }}
-        >
-          {images?.profiles?.map((image, index) => (
-            <InView
-              key={index}
-              rootMargin="500px 0px 500px 0px"
-              threshold={[0, 0.25, 0.5, 0.75, 1]}
+        <div className="grid grid-cols-1 xs:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 5xl:grid-cols-5 gap-3">
+          {images?.profiles?.map((image) => (
+            <Item
+              key={image.file_path}
+              cropped
+              original={TMDB.profileUrl(image?.file_path, 'original')}
+              thumbnail={TMDB.profileUrl(image?.file_path, 'w185')}
+              alt={`Photo of ${peopleData?.detail?.name} size ${image.width}x${image.height}`}
+              caption={`Photo of ${peopleData?.detail?.name} size ${image.width}x${image.height}`}
+              width={image.width}
+              height={image.height}
             >
-              {({ inView, ref: InViewRef }) => (
-                <div ref={InViewRef}>
-                  {inView && (
-                    <Item
-                      key={index}
-                      cropped
-                      original={TMDB.profileUrl(image?.file_path, 'original')}
-                      thumbnail={TMDB.profileUrl(image?.file_path, 'w185')}
-                      alt={`Photo of ${peopleData?.detail?.name} size ${image.width}x${image.height}`}
-                      caption={`Photo of ${peopleData?.detail?.name} size ${image.width}x${image.height}`}
-                      width={image.width}
-                      height={image.height}
-                    >
-                      {({ ref, open }) => (
-                        <NextImage
-                          // @ts-ignore
-                          as={Image}
-                          style={smallItemStyles}
-                          src={TMDB.profileUrl(image?.file_path, 'w185')}
-                          ref={ref as React.MutableRefObject<HTMLImageElement>}
-                          onClick={open}
-                          alt={`Photo of ${peopleData?.detail?.name} image size ${image.width}x${image.height}`}
-                          containerCss={{
-                            borderRadius: 10,
-                            minWidth: isXs ? '120px' : '185px',
-                          }}
-                          title={peopleData?.detail?.name}
-                          loaderUrl="/api/image"
-                          placeholder="blur"
-                          options={{
-                            contentType: MimeType.WEBP,
-                          }}
-                        />
-                      )}
-                    </Item>
-                  )}
-                </div>
+              {({ ref, open }) => (
+                <NextImage
+                  // @ts-ignore
+                  as={Image}
+                  src={TMDB.profileUrl(image?.file_path, 'w185')}
+                  ref={ref as React.MutableRefObject<HTMLImageElement>}
+                  onClick={open}
+                  alt={`Photo of ${peopleData?.detail?.name} image size ${image.width}x${image.height}`}
+                  containerCss={{ borderRadius: 10 }}
+                  className="min-w-[120px] 2xs:min-w-[185px]"
+                  css={{
+                    cursor: 'pointer',
+                    objectFit: 'cover',
+                    height: 'auto',
+                  }}
+                  loading="lazy"
+                  title={peopleData?.detail?.name}
+                  loaderUrl="/api/image"
+                  placeholder="blur"
+                  options={{
+                    contentType: MimeType.WEBP,
+                  }}
+                />
               )}
-            </InView>
+            </Item>
           ))}
         </div>
       </Gallery>

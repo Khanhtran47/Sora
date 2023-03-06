@@ -7,13 +7,11 @@ import type { MetaFunction, LoaderArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { Gallery, Item, GalleryProps } from 'react-photoswipe-gallery';
 import Image, { MimeType } from 'remix-image';
-import { InView } from 'react-intersection-observer';
 
 import i18next from '~/i18n/i18next.server';
 import { authenticate } from '~/services/supabase';
 import { getTvSeasonImages } from '~/services/tmdb/tmdb.server';
 
-import { useMediaQuery } from '@react-hookz/web';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 
 import TMDB from '~/utils/media';
@@ -44,14 +42,6 @@ export const meta: MetaFunction = ({ params }) => ({
 const PhotosPage = () => {
   const { images } = useLoaderData<typeof loader>();
   const tvData = useTypedRouteLoaderData('routes/tv-shows/$tvId.season.$seasonId');
-  const isLg = useMediaQuery('(max-width: 1280px)', { initializeWithValue: false });
-  const isXs = useMediaQuery('(max-width: 375px)', { initializeWithValue: false });
-  const smallItemStyles: React.CSSProperties = {
-    cursor: 'pointer',
-    objectFit: 'cover',
-    minWidth: isXs ? '120px' : '185px',
-    height: 'auto',
-  };
 
   const uiElements: GalleryProps['uiElements'] = [
     {
@@ -115,54 +105,42 @@ const PhotosPage = () => {
       </Row>
       <Spacer y={0.5} />
       <Gallery withCaption withDownloadButton uiElements={uiElements}>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: `repeat(${isLg ? 2 : 4}, 0fr)`,
-            gridGap: 12,
-          }}
-        >
-          {images?.posters?.map((image, index) => (
-            <InView key={index} rootMargin="500px 200px" threshold={[0, 0.25, 0.5, 0.75, 1]}>
-              {({ inView, ref: InViewRef }) => (
-                <div ref={InViewRef}>
-                  {inView && (
-                    <Item
-                      key={index}
-                      cropped
-                      original={TMDB.profileUrl(image?.file_path, 'original')}
-                      thumbnail={TMDB.profileUrl(image?.file_path, 'w185')}
-                      alt={`Photo of ${tvData?.detail?.name} image size ${image.width}x${image.height}`}
-                      caption={`Photo of ${tvData?.detail?.name} size ${image.width}x${image.height}`}
-                      width={image.width}
-                      height={image.height}
-                    >
-                      {({ ref, open }) => (
-                        <NextImage
-                          // @ts-ignore
-                          as={Image}
-                          style={smallItemStyles}
-                          src={TMDB.profileUrl(image?.file_path, 'w185')}
-                          ref={ref as React.MutableRefObject<HTMLImageElement>}
-                          onClick={open}
-                          alt={`Photo of ${tvData?.detail?.name} image size ${image.width}x${image.height}`}
-                          containerCss={{
-                            borderRadius: 10,
-                            minWidth: isXs ? '120px' : '185px',
-                          }}
-                          title={tvData?.detail?.name}
-                          loaderUrl="/api/image"
-                          placeholder="blur"
-                          options={{
-                            contentType: MimeType.WEBP,
-                          }}
-                        />
-                      )}
-                    </Item>
-                  )}
-                </div>
+        <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 justify-center">
+          {images?.posters?.map((image) => (
+            <Item
+              key={image.file_path}
+              cropped
+              original={TMDB.profileUrl(image?.file_path, 'original')}
+              thumbnail={TMDB.profileUrl(image?.file_path, 'w185')}
+              alt={`Photo of ${tvData?.detail?.name} image size ${image.width}x${image.height}`}
+              caption={`Photo of ${tvData?.detail?.name} size ${image.width}x${image.height}`}
+              width={image.width}
+              height={image.height}
+            >
+              {({ ref, open }) => (
+                <NextImage
+                  // @ts-ignore
+                  as={Image}
+                  src={TMDB.profileUrl(image?.file_path, 'w185')}
+                  ref={ref as React.MutableRefObject<HTMLImageElement>}
+                  onClick={open}
+                  alt={`Photo of ${tvData?.detail?.name} image size ${image.width}x${image.height}`}
+                  containerCss={{ borderRadius: 10 }}
+                  className="min-w-[120px] 2xs:min-w-[185px]"
+                  css={{
+                    cursor: 'pointer',
+                    objectFit: 'cover',
+                    height: 'auto',
+                  }}
+                  title={tvData?.detail?.name}
+                  loaderUrl="/api/image"
+                  placeholder="blur"
+                  options={{
+                    contentType: MimeType.WEBP,
+                  }}
+                />
               )}
-            </InView>
+            </Item>
           ))}
         </div>
       </Gallery>

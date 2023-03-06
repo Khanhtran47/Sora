@@ -185,7 +185,6 @@ const SeasonDetail = () => {
   const { tvId, seasonId } = useParams();
   const ref = React.useRef<HTMLDivElement>(null);
   const size: IUseSize = useSize(ref);
-  const isXs = useMediaQuery('(max-width: 425px)', { initializeWithValue: false });
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
 
   return (
@@ -219,80 +218,79 @@ const SeasonDetail = () => {
               maxWidth: '1920px',
             }}
           >
-            {!isSm && (
-              <Col span={4}>
-                {seasonDetail?.poster_path ? (
-                  <Card.Image
-                    // @ts-ignore
-                    as={Image}
-                    src={TMDB.posterUrl(seasonDetail?.poster_path)}
-                    alt={seasonDetail?.name}
-                    title={seasonDetail?.name}
-                    objectFit="cover"
-                    width="50%"
-                    showSkeleton
+            <Col span={4} css={{ display: 'none', '@xs': { display: 'flex' } }}>
+              {seasonDetail?.poster_path ? (
+                <Card.Image
+                  // @ts-ignore
+                  as={Image}
+                  src={TMDB.posterUrl(seasonDetail?.poster_path)}
+                  alt={seasonDetail?.name}
+                  title={seasonDetail?.name}
+                  objectFit="cover"
+                  width="50%"
+                  showSkeleton
+                  css={{
+                    minWidth: 'auto !important',
+                    borderRadius: '24px',
+                  }}
+                  loaderUrl="/api/image"
+                  placeholder="empty"
+                  responsive={[
+                    {
+                      size: {
+                        width: 137,
+                        height: 205,
+                      },
+                      maxWidth: 960,
+                    },
+                    {
+                      size: {
+                        width: 158,
+                        height: 237,
+                      },
+                      maxWidth: 1280,
+                    },
+                    {
+                      size: {
+                        width: 173,
+                        height: 260,
+                      },
+                      maxWidth: 1400,
+                    },
+                    {
+                      size: {
+                        width: 239,
+                        height: 359,
+                      },
+                    },
+                  ]}
+                  options={{
+                    contentType: MimeType.WEBP,
+                  }}
+                />
+              ) : (
+                <Row align="center" justify="center">
+                  <Avatar
+                    icon={<PhotoIcon width={48} height={48} />}
                     css={{
+                      width: '50% !important',
+                      size: '$20',
                       minWidth: 'auto !important',
-                      borderRadius: '24px',
-                    }}
-                    loaderUrl="/api/image"
-                    placeholder="empty"
-                    responsive={[
-                      {
-                        size: {
-                          width: 137,
-                          height: 205,
-                        },
-                        maxWidth: 960,
-                      },
-                      {
-                        size: {
-                          width: 158,
-                          height: 237,
-                        },
-                        maxWidth: 1280,
-                      },
-                      {
-                        size: {
-                          width: 173,
-                          height: 260,
-                        },
-                        maxWidth: 1400,
-                      },
-                      {
-                        size: {
-                          width: 239,
-                          height: 359,
-                        },
-                      },
-                    ]}
-                    options={{
-                      contentType: MimeType.WEBP,
+                      minHeight: '205px !important',
+                      marginTop: '10vh',
+                      borderRadius: '24px !important',
                     }}
                   />
-                ) : (
-                  <Row align="center" justify="center">
-                    <Avatar
-                      icon={<PhotoIcon width={48} height={48} />}
-                      css={{
-                        width: '50% !important',
-                        size: '$20',
-                        minWidth: 'auto !important',
-                        minHeight: '205px !important',
-                        marginTop: '10vh',
-                        borderRadius: '24px !important',
-                      }}
-                    />
-                  </Row>
-                )}
-              </Col>
-            )}
+                </Row>
+              )}
+            </Col>
             <Col
-              span={isSm ? 12 : 8}
               css={{
+                width: '100%',
                 display: 'flex',
                 flexFlow: 'column',
                 justifyContent: 'flex-start',
+                '@xs': { width: '66.6667%' },
               }}
             >
               {isSm &&
@@ -306,7 +304,6 @@ const SeasonDetail = () => {
                         alt={seasonDetail?.name}
                         title={seasonDetail?.name}
                         objectFit="cover"
-                        width={isXs ? '70%' : '40%'}
                         css={{
                           minWidth: 'auto !important',
                           marginTop: '2rem',
@@ -343,7 +340,7 @@ const SeasonDetail = () => {
                       <Avatar
                         icon={<PhotoIcon width={48} height={48} />}
                         css={{
-                          width: `${isXs ? '70%' : '40%'} !important`,
+                          width: 'auto !important',
                           size: '$20',
                           minWidth: 'auto !important',
                           minHeight: '205px !important',

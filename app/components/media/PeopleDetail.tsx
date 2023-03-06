@@ -13,7 +13,6 @@ import { Player } from '@lottiefiles/react-lottie-player';
 import Image, { MimeType } from 'remix-image';
 import { IPeopleDetail } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
-import { useMediaQuery } from '@react-hookz/web';
 
 import Flex from '~/components/styles/Flex.styles';
 import { H3, H4, H5, H6 } from '~/components/styles/Text.styles';
@@ -43,7 +42,6 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
   const profilePath = detail?.profile_path
     ? TMDB?.profileUrl(detail?.profile_path || '', 'h632')
     : undefined;
-  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   let gender = '';
   switch (detail?.gender) {
     case 0:
@@ -68,7 +66,6 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
           as={Image}
           src={profilePath}
           objectFit="cover"
-          width={isSm ? '50%' : '70%'}
           height="auto"
           alt={detail?.name}
           maxDelay={10000}
@@ -79,6 +76,8 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
           }}
           containerCss={{
             borderRadius: '0.75rem',
+            width: '50% !important',
+            '@xs': { width: '70% !important' },
           }}
           loaderUrl="/api/image"
           placeholder="empty"
@@ -135,11 +134,12 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
             icon={<PhotoIcon width={48} height={48} />}
             pointer
             css={{
-              width: `${isSm ? '50%' : '70%'} !important`,
+              width: '50% !important',
               minWidth: 'auto !important',
               minHeight: '250px !important',
               size: '$20',
               borderRadius: '0.75rem !important',
+              '@xs': { width: '70% !important' },
             }}
           />
         </Row>
@@ -341,33 +341,33 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
           <H6 h6>{detail?.place_of_birth}</H6>
         </Flex>
         <Spacer y={1} />
-        {!isSm && (
-          <Flex
-            direction="column"
-            justify="start"
-            css={{
-              marginBottom: '0.5rem !important',
-              '@xs': {
-                margin: 0,
-                width: '70%',
-              },
-            }}
-          >
-            <H5 h5>
-              <strong>Also Known As</strong>
-              <br />
-            </H5>
-            <H6 h6>
-              {detail?.also_known_as?.map((name) => (
-                <>
-                  <span key={name}>{name}</span>
-                  <br />
-                </>
-              ))}
-            </H6>
-            <Spacer y={1} />
-          </Flex>
-        )}
+        <Flex
+          direction="column"
+          justify="start"
+          css={{
+            marginBottom: '0.5rem !important',
+            display: 'none',
+            '@xs': {
+              display: 'flex',
+              margin: 0,
+              width: '70%',
+            },
+          }}
+        >
+          <H5 h5>
+            <strong>Also Known As</strong>
+            <br />
+          </H5>
+          <H6 h6>
+            {detail?.also_known_as?.map((name) => (
+              <>
+                <span key={name}>{name}</span>
+                <br />
+              </>
+            ))}
+          </H6>
+          <Spacer y={1} />
+        </Flex>
       </Row>
     </>
   );

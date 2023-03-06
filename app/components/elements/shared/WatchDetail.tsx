@@ -178,7 +178,12 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
             )}
           </Col>
         )}
-        <Col span={isSm ? 12 : 8}>
+        <Col
+          css={{
+            width: '100%',
+            '@xs': { width: '66.6667%' },
+          }}
+        >
           <Row>
             <H2 h2 weight="bold">
               {title}

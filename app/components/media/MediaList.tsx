@@ -464,17 +464,16 @@ const MediaList = (props: IMediaListProps) => {
                 ghost
                 ref={(node) => setPrevEl(node)}
                 css={{
-                  width: isSm ? '32px' : '44px',
-                  height: isSm ? '32px' : '44px',
+                  width: '32px',
+                  height: '32px',
                   padding: 0,
                   cursor: 'pointer',
-                  '&:hover': {
-                    opacity: '0.8',
-                  },
+                  '&:hover': { opacity: '0.8' },
+                  '@xs': { width: '44px', height: '44px' },
                 }}
                 aria-label="Previous"
                 disabled={slideProgress === 0}
-                icon={<ChevronLeftIcon />}
+                icon={<ChevronLeftIcon height={isSm ? 18 : 24} width={isSm ? 18 : 24} />}
               />
               <Spacer x={0.25} />
               <Button
@@ -485,17 +484,16 @@ const MediaList = (props: IMediaListProps) => {
                 ghost
                 ref={(node) => setNextEl(node)}
                 css={{
-                  width: isSm ? '32px' : '44px',
-                  height: isSm ? '32px' : '44px',
+                  width: '32px',
+                  height: '32px',
                   padding: 0,
                   cursor: 'pointer',
-                  '&:hover': {
-                    opacity: '0.8',
-                  },
+                  '&:hover': { opacity: '0.8' },
+                  '@xs': { width: '44px', height: '44px' },
                 }}
                 aria-label="Next"
                 disabled={slideProgress === 1}
-                icon={<ChevronRightIcon />}
+                icon={<ChevronRightIcon height={isSm ? 18 : 24} width={isSm ? 18 : 24} />}
               />
             </div>
           )}

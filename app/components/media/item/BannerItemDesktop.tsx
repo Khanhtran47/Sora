@@ -203,13 +203,14 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
             css={{ h: height, display: 'flex', justifyContent: 'center', alignItems: 'center' }}
           >
             <Col
-              span={isLg ? 10 : 8}
               css={{
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'flex-start',
                 transition: 'all 0.5s ease',
+                width: '83.3333%',
+                '@sm': { width: '66.6667%' },
               }}
             >
               {logo ? (
@@ -242,18 +243,22 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                     loading="eager"
                     showSkeleton
                     containerCss={{
-                      minWidth: isLg ? '185px !important' : '300px !important',
-                      minHeight: `${
-                        isLg ? 185 / Number(logo.aspect_ratio) : 300 / Number(logo.aspect_ratio)
-                      }px !important`,
+                      minWidth: '185px !important',
+                      minHeight: `${185 / Number(logo.aspect_ratio)}px !important`,
+                      '@sm': {
+                        minWidth: '300px !important',
+                        minHeight: `${300 / Number(logo.aspect_ratio)}px !important`,
+                      },
                     }}
                     css={{
                       minWidth: 'auto !important',
                       minHeight: 'auto !important',
-                      maxWidth: isLg ? '185px' : '300px',
-                      maxHeight: `${
-                        isLg ? 185 / Number(logo.aspect_ratio) : 300 / Number(logo.aspect_ratio)
-                      }px`,
+                      maxWidth: '185px',
+                      maxHeight: `${300 / Number(logo.aspect_ratio)}px`,
+                      '@sm': {
+                        maxWidth: '300px',
+                        maxHeight: `${300 / Number(logo.aspect_ratio)}px`,
+                      },
                     }}
                     loaderUrl="/api/image"
                     placeholder="empty"

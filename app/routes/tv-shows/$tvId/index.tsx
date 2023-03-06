@@ -149,7 +149,12 @@ const TvOverview = () => {
           </Flex>
         </Col>
       )}
-      <Col span={isSm ? 12 : 8}>
+      <Col
+        css={{
+          width: '100%',
+          '@xs': { width: '66.6667%' },
+        }}
+      >
         <Flex
           direction="column"
           align="start"
@@ -168,9 +173,13 @@ const TvOverview = () => {
             </H6>
           </Row>
           <Flex
-            direction={isSm ? 'column' : 'row'}
             wrap="wrap"
-            className={`${isSm ? 'space-y-4' : 'space-x-8'}`}
+            css={{
+              flexDirection: 'column',
+              rowGap: '1rem',
+              columnGap: 0,
+              '@xs': { flexDirection: 'row', rowGap: '1rem', columnGap: '2rem' },
+            }}
           >
             {detail?.created_by && detail?.created_by.length > 0 && (
               <H6 h6>

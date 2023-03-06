@@ -54,7 +54,6 @@ const CustomNavigation = forwardRef<HTMLDivElement, { slot: 'container-end' }>(
   (props, forwardedRef) => {
     const { slot } = props;
     const swiper = useSwiper();
-    const isXl = useMediaQuery('(max-width: 1400px)', { initializeWithValue: false });
     const [slideProgress, setSlideProgress] = useState<number>(0);
     const { isPlayTrailer, setIsPlayTrailer } = useSoraSettings();
 
@@ -63,7 +62,7 @@ const CustomNavigation = forwardRef<HTMLDivElement, { slot: 'container-end' }>(
     });
 
     return (
-      <div slot={slot}>
+      <div slot={slot} className="hidden sm:block">
         <Button
           type="button"
           auto
@@ -101,65 +100,63 @@ const CustomNavigation = forwardRef<HTMLDivElement, { slot: 'container-end' }>(
           }}
           aria-label="Play Trailer"
         />
-        {isXl ? (
-          <>
-            <Button
-              type="button"
-              auto
-              color="primary"
-              rounded
-              ghost
-              icon={<ChevronLeftIcon fill="currentColor" />}
-              onPress={() => swiper.slidePrev()}
-              css={{
-                width: '44px',
-                height: '44px',
-                cursor: 'pointer',
-                position: 'absolute',
-                bottom: '10px',
-                right: '85px',
-                zIndex: '90',
-                '&:hover': {
-                  opacity: '0.8',
-                },
-                '@lgMin': { bottom: '200px' },
-              }}
-              aria-label="Previous"
-              disabled={slideProgress === 0}
-            />
-            <Button
-              type="button"
-              auto
-              color="primary"
-              rounded
-              ghost
-              icon={<ChevronRightIcon fill="currentColor" />}
-              onPress={() => swiper.slideNext()}
-              css={{
-                width: '44px',
-                height: '44px',
-                cursor: 'pointer',
-                position: 'absolute',
-                bottom: '10px',
-                right: '35px',
-                zIndex: '90',
-                '&:hover': {
-                  opacity: '0.8',
-                },
-                '@lgMin': { bottom: '200px' },
-              }}
-              aria-label="Next"
-              disabled={slideProgress === 1}
-            />
-            <AutoplayProgressStyled className="autoplay-progress" ref={forwardedRef}>
-              {/* @ts-ignore */}
-              <svg viewBox="0 0 48 48" style={{ '--progress': 1 }}>
-                <circle cx="24" cy="24" r="20" />
-              </svg>
-              <span />
-            </AutoplayProgressStyled>
-          </>
-        ) : null}
+        <div className="hidden sm:block 2xl:hidden">
+          <Button
+            type="button"
+            auto
+            color="primary"
+            rounded
+            ghost
+            icon={<ChevronLeftIcon fill="currentColor" />}
+            onPress={() => swiper.slidePrev()}
+            css={{
+              width: '44px',
+              height: '44px',
+              cursor: 'pointer',
+              position: 'absolute',
+              bottom: '10px',
+              right: '85px',
+              zIndex: '90',
+              '&:hover': {
+                opacity: '0.8',
+              },
+              '@lgMin': { bottom: '200px' },
+            }}
+            aria-label="Previous"
+            disabled={slideProgress === 0}
+          />
+          <Button
+            type="button"
+            auto
+            color="primary"
+            rounded
+            ghost
+            icon={<ChevronRightIcon fill="currentColor" />}
+            onPress={() => swiper.slideNext()}
+            css={{
+              width: '44px',
+              height: '44px',
+              cursor: 'pointer',
+              position: 'absolute',
+              bottom: '10px',
+              right: '35px',
+              zIndex: '90',
+              '&:hover': {
+                opacity: '0.8',
+              },
+              '@lgMin': { bottom: '200px' },
+            }}
+            aria-label="Next"
+            disabled={slideProgress === 1}
+          />
+          <AutoplayProgressStyled className="autoplay-progress" ref={forwardedRef}>
+            {/* @ts-ignore */}
+            <svg viewBox="0 0 48 48" style={{ '--progress': 1 }}>
+              <circle cx="24" cy="24" r="20" />
+            </svg>
+            <span />
+          </AutoplayProgressStyled>
+        </div>
       </div>
     );
   },
@@ -170,7 +167,7 @@ CustomNavigation.displayName = 'CustomNavigation';
 const CustomNavigationThumbs = ({ slot }: { slot: 'container-end' }) => {
   const swiper = useSwiper();
   return (
-    <div slot={slot}>
+    <div slot={slot} className="hidden sm:block">
       <Button
         type="button"
         auto
@@ -333,7 +330,6 @@ interface IMediaListBannerProps {
 
 const MediaListBanner = (props: IMediaListBannerProps) => {
   const { genresMovie, genresTv, items } = props;
-  const isSm = useMediaQuery('(max-width: 650px)');
   const isXl = useMediaQuery('(max-width: 1400px)');
   const [thumbsSwiper, setThumbsSwiper] = useState<Swiper | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -463,7 +459,7 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
                 )}
               </SwiperSlide>
             ))}
-            {!isSm && <CustomNavigation slot="container-end" ref={autoplayProgressRef} />}
+            <CustomNavigation slot="container-end" ref={autoplayProgressRef} />
           </SwiperReact>
           <SwiperReactStyled
             grabCursor
@@ -486,7 +482,7 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
                 />
               </SwiperSlideStyled>
             ))}
-            {!isSm && <CustomNavigationThumbs slot="container-end" />}
+            <CustomNavigationThumbs slot="container-end" />
           </SwiperReactStyled>
         </>
       )}

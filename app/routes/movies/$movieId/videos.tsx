@@ -95,9 +95,10 @@ const MovieVideosPage = () => {
       css={{
         marginTop: '0.75rem',
         maxWidth: '1920px',
-        flexDirection: isSm ? 'column' : 'row',
+        flexDirection: 'column',
         px: '0.75rem',
         '@xs': {
+          flexDirection: 'row',
           px: '3vw',
         },
         '@sm': {
@@ -112,8 +113,15 @@ const MovieVideosPage = () => {
       }}
     >
       <Col
-        span={isSm ? 12 : 4}
-        css={{ display: 'flex', justifyContent: isSm ? 'flex-start' : 'center' }}
+        css={{
+          display: 'flex',
+          justifyContent: 'flex-start',
+          width: '100%',
+          '@xs': {
+            justifyContent: 'center',
+            width: '33.3333%',
+          },
+        }}
       >
         <Button.Group
           {...(isSm ? { vertical: false } : { vertical: true })}
@@ -144,7 +152,7 @@ const MovieVideosPage = () => {
           ))}
         </Button.Group>
       </Col>
-      <Col span={isSm ? 12 : 8}>
+      <Col css={{ width: '100%', '@xs': { width: '66.6667%' } }}>
         <Grid.Container gap={1} justify="flex-start">
           {activeTypeVideos &&
             activeTypeVideos.map((video) => (

@@ -7,7 +7,6 @@ import type { MetaFunction, LoaderArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { Gallery, Item, GalleryProps } from 'react-photoswipe-gallery';
 import Image, { MimeType } from 'remix-image';
-import { InView } from 'react-intersection-observer';
 
 import { authenticate } from '~/services/supabase';
 import i18next from '~/i18n/i18next.server';
@@ -16,10 +15,9 @@ import { getImages } from '~/services/tmdb/tmdb.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import TMDB from '~/utils/media';
 
-import { useMediaQuery } from '@react-hookz/web';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 
-import { H6 } from '~/components/styles/Text.styles';
+import { H5 } from '~/components/styles/Text.styles';
 
 export const meta: MetaFunction = ({ params }) => ({
   'og:url': `https://sora-anime.vercel.app/movies/${params.movieId}/photos`,
@@ -85,14 +83,6 @@ const uiElements: GalleryProps['uiElements'] = [
 const MoviePhotosPage = () => {
   const { images } = useLoaderData<typeof loader>();
   const movieData = useTypedRouteLoaderData('routes/movies/$movieId');
-  const isLg = useMediaQuery('(max-width: 1280px)', { initializeWithValue: false });
-  const isXs = useMediaQuery('(max-width: 375px)', { initializeWithValue: false });
-  const smallItemStyles: React.CSSProperties = {
-    cursor: 'pointer',
-    objectFit: 'cover',
-    minWidth: isXs ? '120px' : '185px',
-    height: 'auto',
-  };
   return (
     <Row
       fluid
@@ -111,59 +101,48 @@ const MoviePhotosPage = () => {
       {images?.backdrops && images.backdrops.length > 0 && (
         <>
           <Row justify="center" fluid>
-            <H6 h6>
+            <H5 h5>
               <strong>Backdrops</strong>
-            </H6>
+            </H5>
           </Row>
           <Spacer y={0.5} />
           <Gallery withCaption withDownloadButton uiElements={uiElements}>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: `repeat(${isLg ? 2 : 4}, 0fr)`,
-                gridGap: 12,
-              }}
-            >
-              {images?.backdrops?.map((image, index) => (
-                <InView key={index} rootMargin="500px 200px" threshold={[0, 0.25, 0.5, 0.75, 1]}>
-                  {({ inView, ref: InViewRef }) => (
-                    <div ref={InViewRef}>
-                      {inView && (
-                        <Item
-                          cropped
-                          original={TMDB.profileUrl(image?.file_path, 'original')}
-                          thumbnail={TMDB.profileUrl(image?.file_path, 'w185')}
-                          alt={`Backdrop of ${movieData?.detail?.title} image size ${image.width}x${image.height}`}
-                          caption={`Backdrop of ${movieData?.detail?.title} size ${image.width}x${image.height}`}
-                          width={image.width}
-                          height={image.height}
-                        >
-                          {({ ref, open }) => (
-                            <NextImage
-                              // @ts-ignore
-                              as={Image}
-                              style={smallItemStyles}
-                              src={TMDB.profileUrl(image?.file_path, 'w185')}
-                              ref={ref as React.MutableRefObject<HTMLImageElement>}
-                              onClick={open}
-                              alt={`Backdrop of ${movieData?.detail?.title} image size ${image.width}x${image.height}`}
-                              containerCss={{
-                                borderRadius: 10,
-                                minWidth: isXs ? '120px' : '185px',
-                              }}
-                              title={movieData?.detail?.title}
-                              loaderUrl="/api/image"
-                              placeholder="blur"
-                              options={{
-                                contentType: MimeType.WEBP,
-                              }}
-                            />
-                          )}
-                        </Item>
-                      )}
-                    </div>
+            <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 justify-center">
+              {images?.backdrops?.map((image) => (
+                <Item
+                  key={image.file_path}
+                  cropped
+                  original={TMDB.profileUrl(image?.file_path, 'original')}
+                  thumbnail={TMDB.profileUrl(image?.file_path, 'w185')}
+                  alt={`Backdrop of ${movieData?.detail?.title} image size ${image.width}x${image.height}`}
+                  caption={`Backdrop of ${movieData?.detail?.title} size ${image.width}x${image.height}`}
+                  width={image.width}
+                  height={image.height}
+                >
+                  {({ ref, open }) => (
+                    <NextImage
+                      // @ts-ignore
+                      as={Image}
+                      src={TMDB.profileUrl(image?.file_path, 'w185')}
+                      ref={ref as React.MutableRefObject<HTMLImageElement>}
+                      onClick={open}
+                      alt={`Backdrop of ${movieData?.detail?.title} image size ${image.width}x${image.height}`}
+                      containerCss={{ borderRadius: 10 }}
+                      className="min-w-[120px] 2xs:min-w-[185px]"
+                      css={{
+                        cursor: 'pointer',
+                        objectFit: 'cover',
+                        height: 'auto',
+                      }}
+                      title={movieData?.detail?.title}
+                      loaderUrl="/api/image"
+                      placeholder="blur"
+                      options={{
+                        contentType: MimeType.WEBP,
+                      }}
+                    />
                   )}
-                </InView>
+                </Item>
               ))}
             </div>
           </Gallery>
@@ -173,59 +152,48 @@ const MoviePhotosPage = () => {
       {images?.logos && images.logos.length > 0 && (
         <>
           <Row justify="center" fluid>
-            <H6 h6>
+            <H5 h5>
               <strong>Logos</strong>
-            </H6>
+            </H5>
           </Row>
           <Spacer y={0.5} />
           <Gallery withCaption withDownloadButton uiElements={uiElements}>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: `repeat(${isLg ? 2 : 4}, 0fr)`,
-                gridGap: 12,
-              }}
-            >
-              {images?.logos?.map((image, index) => (
-                <InView key={index} rootMargin="500px 200px" threshold={[0, 0.25, 0.5, 0.75, 1]}>
-                  {({ inView, ref: InViewRef }) => (
-                    <div ref={InViewRef}>
-                      {inView && (
-                        <Item
-                          cropped
-                          original={TMDB.logoUrl(image?.file_path, 'original')}
-                          thumbnail={TMDB.logoUrl(image?.file_path, 'w185')}
-                          alt={`Logo of ${movieData?.detail?.title} image size ${image.width}x${image.height}`}
-                          caption={`Logo of ${movieData?.detail?.title} size ${image.width}x${image.height}`}
-                          width={image.width}
-                          height={image.height}
-                        >
-                          {({ ref, open }) => (
-                            <NextImage
-                              // @ts-ignore
-                              as={Image}
-                              style={smallItemStyles}
-                              src={TMDB.logoUrl(image?.file_path, 'w185')}
-                              ref={ref as React.MutableRefObject<HTMLImageElement>}
-                              onClick={open}
-                              alt={`Logo of ${movieData?.detail?.title} image size ${image.width}x${image.height}`}
-                              containerCss={{
-                                borderRadius: 10,
-                                minWidth: isXs ? '120px' : '185px',
-                              }}
-                              title={movieData?.detail?.title}
-                              loaderUrl="/api/image"
-                              placeholder="blur"
-                              options={{
-                                contentType: MimeType.WEBP,
-                              }}
-                            />
-                          )}
-                        </Item>
-                      )}
-                    </div>
+            <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3">
+              {images?.logos?.map((image) => (
+                <Item
+                  key={image.file_path}
+                  cropped
+                  original={TMDB.logoUrl(image?.file_path, 'original')}
+                  thumbnail={TMDB.logoUrl(image?.file_path, 'w185')}
+                  alt={`Logo of ${movieData?.detail?.title} image size ${image.width}x${image.height}`}
+                  caption={`Logo of ${movieData?.detail?.title} size ${image.width}x${image.height}`}
+                  width={image.width}
+                  height={image.height}
+                >
+                  {({ ref, open }) => (
+                    <NextImage
+                      // @ts-ignore
+                      as={Image}
+                      src={TMDB.logoUrl(image?.file_path, 'w185')}
+                      ref={ref as React.MutableRefObject<HTMLImageElement>}
+                      onClick={open}
+                      alt={`Logo of ${movieData?.detail?.title} image size ${image.width}x${image.height}`}
+                      containerCss={{ borderRadius: 10 }}
+                      className="min-w-[120px] 2xs:min-w-[185px]"
+                      css={{
+                        cursor: 'pointer',
+                        objectFit: 'cover',
+                        height: 'auto',
+                      }}
+                      title={movieData?.detail?.title}
+                      loaderUrl="/api/image"
+                      placeholder="blur"
+                      options={{
+                        contentType: MimeType.WEBP,
+                      }}
+                    />
                   )}
-                </InView>
+                </Item>
               ))}
             </div>
           </Gallery>
@@ -235,60 +203,49 @@ const MoviePhotosPage = () => {
       {images?.posters && images.posters.length > 0 && (
         <>
           <Row justify="center" fluid>
-            <H6 h6>
+            <H5 h5>
               <strong>Posters</strong>
-            </H6>
+            </H5>
           </Row>
           <Spacer y={0.5} />
           <Gallery withCaption withDownloadButton uiElements={uiElements}>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: `repeat(${isLg ? 2 : 4}, 0fr)`,
-                gridGap: 12,
-              }}
-            >
-              {images?.posters?.map((image, index) => (
-                <InView key={index} rootMargin="500px 200px" threshold={[0, 0.25, 0.5, 0.75, 1]}>
-                  {({ inView, ref: InViewRef }) => (
-                    <div ref={InViewRef}>
-                      {inView && (
-                        <Item
-                          key={index}
-                          cropped
-                          original={TMDB.profileUrl(image?.file_path, 'original')}
-                          thumbnail={TMDB.profileUrl(image?.file_path, 'w185')}
-                          alt={`Poster of ${movieData?.detail?.title} image size ${image.width}x${image.height}`}
-                          caption={`Poster of ${movieData?.detail?.title} size ${image.width}x${image.height}`}
-                          width={image.width}
-                          height={image.height}
-                        >
-                          {({ ref, open }) => (
-                            <NextImage
-                              // @ts-ignore
-                              as={Image}
-                              style={smallItemStyles}
-                              src={TMDB.profileUrl(image?.file_path, 'w185')}
-                              ref={ref as React.MutableRefObject<HTMLImageElement>}
-                              onClick={open}
-                              alt={`Poster of ${movieData?.detail?.title} image size ${image.width}x${image.height}`}
-                              containerCss={{
-                                borderRadius: 10,
-                                minWidth: isXs ? '120px' : '185px',
-                              }}
-                              title={movieData?.detail?.title}
-                              loaderUrl="/api/image"
-                              placeholder="blur"
-                              options={{
-                                contentType: MimeType.WEBP,
-                              }}
-                            />
-                          )}
-                        </Item>
-                      )}
-                    </div>
+            <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3">
+              {images?.posters?.map((image) => (
+                <Item
+                  key={image.file_path}
+                  cropped
+                  original={TMDB.profileUrl(image?.file_path, 'original')}
+                  thumbnail={TMDB.profileUrl(image?.file_path, 'w185')}
+                  alt={`Poster of ${movieData?.detail?.title} image size ${image.width}x${image.height}`}
+                  caption={`Poster of ${movieData?.detail?.title} size ${image.width}x${image.height}`}
+                  width={image.width}
+                  height={image.height}
+                >
+                  {({ ref, open }) => (
+                    <NextImage
+                      // @ts-ignore
+                      as={Image}
+                      src={TMDB.profileUrl(image?.file_path, 'w185')}
+                      ref={ref as React.MutableRefObject<HTMLImageElement>}
+                      onClick={open}
+                      alt={`Poster of ${movieData?.detail?.title} image size ${image.width}x${image.height}`}
+                      containerCss={{ borderRadius: 10 }}
+                      className="min-w-[120px] 2xs:min-w-[185px]"
+                      css={{
+                        cursor: 'pointer',
+                        objectFit: 'cover',
+                        height: 'auto',
+                      }}
+                      loading="lazy"
+                      title={movieData?.detail?.title}
+                      loaderUrl="/api/image"
+                      placeholder="blur"
+                      options={{
+                        contentType: MimeType.WEBP,
+                      }}
+                    />
                   )}
-                </InView>
+                </Item>
               ))}
             </div>
           </Gallery>
