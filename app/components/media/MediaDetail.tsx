@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable no-nested-ternary */
-import { useRef, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useLocation, useFetcher } from '@remix-run/react';
 import { Card, Col, Row, Button, Spacer, Avatar, Tooltip } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
@@ -13,8 +13,7 @@ import { ColorPalette } from '~/routes/api/color-palette';
 import TMDB from '~/utils/media';
 import { WebShareLink } from '~/utils/client/pwa-utils.client';
 
-import { useMediaQuery } from '@react-hookz/web';
-import useSize, { IUseSize } from '~/hooks/useSize';
+import { useMediaQuery, useMeasure } from '@react-hookz/web';
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 
 import TabLink from '~/components/elements/tab/TabLink';
@@ -51,8 +50,7 @@ const detailTab = [
 const MediaDetail = (props: IMediaDetail) => {
   // const { t } = useTranslation();
   const { type, item, handler, translations, imdbRating, color } = props;
-  const ref = useRef<HTMLDivElement>(null);
-  const size: IUseSize = useSize(ref);
+  const [size, ref] = useMeasure<HTMLDivElement>();
   const navigate = useNavigate();
   const location = useLocation();
   const fetcher = useFetcher();

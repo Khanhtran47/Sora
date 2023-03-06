@@ -18,8 +18,7 @@ import { useFetcher } from '@remix-run/react';
 
 import usePlayerState from '~/store/player/usePlayerState';
 
-import useWindowSize from '~/hooks/useWindowSize';
-import { useMediaQuery } from '@react-hookz/web';
+import { useMediaQuery, useWindowSize } from '@react-hookz/web';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 
 import { ISubtitlesSearch, ISubtitle } from '~/services/open-subtitles/open-subtitles.types';

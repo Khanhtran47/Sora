@@ -2,7 +2,7 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { useRef, useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Button, Card, Col, Row, Spacer, Text, Badge, Image as NextImage } from '@nextui-org/react';
 import { useFetcher, useNavigate } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
@@ -14,8 +14,7 @@ import { useInView } from 'react-intersection-observer';
 import useCardHoverStore from '~/store/card/useCardHoverStore';
 
 import { useSoraSettings } from '~/hooks/useLocalStorage';
-import { useMediaQuery } from '@react-hookz/web';
-import useSize from '~/hooks/useSize';
+import { useMediaQuery, useMeasure } from '@react-hookz/web';
 import { IImage } from '~/services/tmdb/tmdb.types';
 import { ITrailer } from '~/services/consumet/anilist/anilist.types';
 import { Title } from '~/types/media';
@@ -81,8 +80,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
   const { ref, inView } = useInView({
     threshold: 0,
   });
-  const bannerRef = useRef<HTMLDivElement>(null);
-  const { width, height } = useSize(bannerRef);
+  const [size, bannerRef] = useMeasure<HTMLDivElement>();
 
   const isCardPlaying = useCardHoverStore((state) => state.isCardPlaying);
 
@@ -194,13 +192,28 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
 
   return (
     <AspectRatio.Root ratio={16 / 8} ref={bannerRef}>
-      <Card ref={ref} variant="flat" css={{ w: width, h: height, borderWidth: 0 }} role="figure">
+      <Card
+        ref={ref}
+        variant="flat"
+        css={{ w: size?.width, h: size?.height, borderWidth: 0 }}
+        role="figure"
+      >
         <Card.Header
-          css={{ position: 'absolute', zIndex: 1, h: height, '@lgMin': { h: height - 160 } }}
+          css={{
+            position: 'absolute',
+            zIndex: 1,
+            h: size?.height,
+            '@lgMin': { h: (size?.height || 0) - 160 },
+          }}
         >
           <Row
             gap={isMd ? 0.5 : 3}
-            css={{ h: height, display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+            css={{
+              h: size?.height,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
           >
             <Col
               css={{
@@ -502,7 +515,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
           }}
         >
           <AnimatePresence>
-            {!showTrailer && active ? (
+            {!showTrailer && active && size ? (
               <motion.div
                 initial={{ opacity: 0, scale: 1.2, y: 40 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -531,8 +544,8 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                   responsive={[
                     {
                       size: {
-                        width,
-                        height,
+                        width: size?.width,
+                        height: size?.height,
                       },
                     },
                   ]}

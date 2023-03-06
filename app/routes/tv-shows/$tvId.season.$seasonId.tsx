@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import * as React from 'react';
 import { json } from '@remix-run/node';
 import type { LoaderArgs, MetaFunction } from '@remix-run/node';
 import { useCatch, useLoaderData, Outlet, NavLink, RouteMatch, useParams } from '@remix-run/react';
@@ -9,8 +8,7 @@ import { Container, Spacer, Card, Col, Row, Avatar, Badge } from '@nextui-org/re
 import Image, { MimeType } from 'remix-image';
 import Vibrant from 'node-vibrant';
 
-import { useMediaQuery } from '@react-hookz/web';
-import useSize, { IUseSize } from '~/hooks/useSize';
+import { useMediaQuery, useMeasure } from '@react-hookz/web';
 import i18next from '~/i18n/i18next.server';
 import { getTvShowDetail, getTvSeasonDetail } from '~/services/tmdb/tmdb.server';
 import { authenticate } from '~/services/supabase';
@@ -183,8 +181,7 @@ const detailTab = [
 const SeasonDetail = () => {
   const { seasonDetail } = useLoaderData<typeof loader>();
   const { tvId, seasonId } = useParams();
-  const ref = React.useRef<HTMLDivElement>(null);
-  const size: IUseSize = useSize(ref);
+  const [size, ref] = useMeasure<HTMLDivElement>();
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
 
   return (

@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Card, Col, Row, Button, Spacer, Avatar, Tooltip } from '@nextui-org/react';
 import { useNavigate, useLocation, useFetcher } from '@remix-run/react';
 import Image, { MimeType } from 'remix-image';
@@ -12,8 +12,7 @@ import { ColorPalette } from '~/routes/api/color-palette';
 
 import { WebShareLink } from '~/utils/client/pwa-utils.client';
 
-import { useMediaQuery } from '@react-hookz/web';
-import useSize, { IUseSize } from '~/hooks/useSize';
+import { useMediaQuery, useMeasure } from '@react-hookz/web';
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 
 import TabLink from '~/components/elements/tab/TabLink';
@@ -59,8 +58,7 @@ const AnimeDetail = (props: IAnimeDetail) => {
   const navigate = useNavigate();
   const location = useLocation();
   const fetcher = useFetcher();
-  const ref = useRef<HTMLDivElement>(null);
-  const size: IUseSize = useSize(ref);
+  const [size, ref] = useMeasure<HTMLDivElement>();
   const { backgroundColor } = useColorDarkenLighten(color);
   const isXs = useMediaQuery('(max-width: 425px)', { initializeWithValue: false });
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });

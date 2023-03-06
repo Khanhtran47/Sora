@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { json } from '@remix-run/node';
 import type { LoaderArgs } from '@remix-run/node';
 import { useFetcher, useNavigate, useLoaderData, useLocation } from '@remix-run/react';
@@ -6,6 +6,7 @@ import { Container, Loading } from '@nextui-org/react';
 import { AnimatePresence, motion } from 'framer-motion';
 // import { useTranslation } from 'react-i18next';
 import NProgress from 'nprogress';
+import { useMeasure } from '@react-hookz/web';
 
 import {
   getAnimeTrending,
@@ -16,8 +17,6 @@ import { authenticate } from '~/services/supabase';
 import { CACHE_CONTROL } from '~/utils/server/http';
 
 import { IMedia } from '~/types/media';
-
-import useSize from '~/hooks/useSize';
 
 import { animeGenres } from '~/constants/filterItems';
 
@@ -59,9 +58,7 @@ const AnimePage = () => {
   const [clientHeight, setClientHeight] = useState(0);
   const [shouldFetch, setShouldFetch] = useState(true);
   const [order, setOrder] = useState(0);
-
-  const parentRef = useRef<HTMLElement>(null);
-  const { height } = useSize(parentRef);
+  const [size, parentRef] = useMeasure<HTMLDivElement>();
 
   useEffect(() => {
     const scrollListener = () => {
@@ -84,13 +81,13 @@ const AnimePage = () => {
 
   // Listen on scrolls. Fire on some self-described breakpoint
   useEffect(() => {
-    if (!shouldFetch || !height) return;
-    if (clientHeight + scrollPosition - 200 < height) return;
+    if (!shouldFetch || !size?.height) return;
+    if (clientHeight + scrollPosition - 200 < size?.height) return;
 
     fetcher.load(`/anime/discover?genres=${animeGenres[order]}`);
     setShouldFetch(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scrollPosition, clientHeight, height]);
+  }, [scrollPosition, clientHeight, size?.height]);
 
   useEffect(() => {
     if (fetcher.data && fetcher.data.length === 0) {

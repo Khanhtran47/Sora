@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useFetcher, useNavigate } from '@remix-run/react';
 import { Modal, Button } from '@nextui-org/react';
 
-import useWindowSize from '~/hooks/useWindowSize';
+import { useWindowSize } from '@react-hookz/web';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 
 import { IMovieTranslations } from '~/services/tmdb/tmdb.types';
