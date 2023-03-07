@@ -237,40 +237,28 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                   }
                   transition={{ duration: 0.5 }}
                   variants={variants}
-                  style={{
-                    minWidth: isLg ? '185px' : '300px',
-                    minHeight: `${
-                      isLg ? 185 / Number(logo.aspect_ratio) : 300 / Number(logo.aspect_ratio)
-                    }px`,
-                  }}
                 >
                   <NextImage
                     // @ts-ignore
                     as={Image}
-                    src={TMDB.logoUrl(logo.file_path, isLg ? 'w185' : 'w300')}
+                    src={TMDB.logoUrl(logo.file_path, isMd ? 'w185' : 'w300')}
                     alt={titleItem}
                     title={titleItem}
-                    objectFit="cover"
-                    width="100%"
-                    height="auto"
+                    objectFit="contain"
                     loading="eager"
                     showSkeleton
-                    containerCss={{
-                      minWidth: '185px !important',
-                      minHeight: `${185 / Number(logo.aspect_ratio)}px !important`,
-                      '@sm': {
-                        minWidth: '300px !important',
-                        minHeight: `${300 / Number(logo.aspect_ratio)}px !important`,
-                      },
-                    }}
                     css={{
-                      minWidth: 'auto !important',
-                      minHeight: 'auto !important',
-                      maxWidth: '185px',
-                      maxHeight: `${300 / Number(logo.aspect_ratio)}px`,
+                      aspectRatio: logo.aspect_ratio,
+                      mixBlendMode: 'color-burn',
+                      width:
+                        logo?.aspect_ratio && 185 / logo.aspect_ratio > 85
+                          ? `${85 * Number(logo.aspect_ratio)}px !important`
+                          : '185px !important',
                       '@sm': {
-                        maxWidth: '300px',
-                        maxHeight: `${300 / Number(logo.aspect_ratio)}px`,
+                        width:
+                          logo?.aspect_ratio && 300 / logo.aspect_ratio > 100
+                            ? `${100 * Number(logo.aspect_ratio)}px !important`
+                            : '300px !important',
                       },
                     }}
                     loaderUrl="/api/image"
