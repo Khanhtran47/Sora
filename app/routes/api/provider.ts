@@ -17,8 +17,9 @@ export const loader = async ({ request }: LoaderArgs) => {
   const season = url.searchParams.get('season');
   const aid = url.searchParams.get('aid');
   const animeType = url.searchParams.get('animeType');
+  const isEnded = url.searchParams.get('isEnded');
   if (!title || !type) throw new Response('Missing params', { status: 400 });
-  const provider = await getProviderList(type, title, orgTitle, year, season, Number(aid), animeType);
+  const provider = await getProviderList(type, title, orgTitle, year, season, Number(aid), animeType, isEnded === 'true');
   if (provider && provider.length > 0) return json({ provider }, { status: 200, headers: { 'Cache-Control': CACHE_CONTROL.default } });
 
   return json({

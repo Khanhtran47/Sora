@@ -54,6 +54,7 @@ const AnimeDetail = (props: IAnimeDetail) => {
     trailer,
     color,
     description,
+    status,
   } = item || {};
   const navigate = useNavigate();
   const location = useLocation();
@@ -556,6 +557,7 @@ const AnimeDetail = (props: IAnimeDetail) => {
         episode={1}
         season={undefined}
         animeType={type?.toLowerCase() || 'tv'}
+        isEnded={status === 'FINISHED'}
       />
     </>
   );

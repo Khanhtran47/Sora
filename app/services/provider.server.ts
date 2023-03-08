@@ -11,13 +11,39 @@ import { IMovieResult } from '~/services/consumet/flixhq/flixhq.types';
 import { getAnimeEpisodeInfo } from '~/services/consumet/anilist/anilist.server';
 
 const getProviderList = async (
+  /**
+   * @param {string} type - movie, tv, anime
+   */
   type: string,
+  /**
+   * @param {string} title - title of movie, tv, anime
+   */
   title: string,
+  /**
+   * @param {string} orgTitle - original title of movie, tv, anime
+   */
   orgTitle?: string | null,
+  /**
+   * @param {number} year - year of movie, tv, anime
+   */
   year?: number | string | null,
+  /**
+   * @param {number} season - season of tv
+   */
   season?: number | string | null,
+  /**
+   * @param {number} animeId - id of anime
+   */
   animeId?: number,
+  /**
+   * @param {string} animeType - type of anime
+   * @example 'tv', 'movie'
+   */
   animeType?: string | null,
+  /**
+   * @param {boolean} isEnded - is movie, tv, anime ended or canceled
+   */
+  isEnded?: boolean,
 ): Promise<
   | {
       id?: string | number | null;
@@ -76,7 +102,7 @@ const getProviderList = async (
         id: loklokSearch.data.id,
         provider: 'Loklok',
       });
-    if (lruCache) lruCache.set(cacheKey, provider);
+    if (lruCache && isEnded && provider?.length > 0) lruCache.set(cacheKey, provider);
     return provider;
   }
   if (type === 'tv') {
@@ -132,7 +158,7 @@ const getProviderList = async (
         provider: 'Loklok',
         episodesCount: loklokDetail?.episodeVo ? loklokDetail.episodeVo.length : 0,
       });
-    if (lruCache) lruCache.set(cacheKey, provider);
+    if (lruCache && isEnded && provider?.length > 0) lruCache.set(cacheKey, provider);
     return provider;
   }
   if (type === 'anime') {
@@ -197,7 +223,7 @@ const getProviderList = async (
         provider: 'Loklok',
         episodesCount: loklokDetail?.episodeVo ? loklokDetail.episodeVo.length : 0,
       });
-    if (lruCache) lruCache.set(cacheKey, provider);
+    if (lruCache && isEnded && provider?.length > 0) lruCache.set(cacheKey, provider);
     return provider;
   }
 };

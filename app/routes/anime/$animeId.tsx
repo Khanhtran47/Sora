@@ -34,6 +34,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const orgTitle = detail.title?.native;
   const year = detail.releaseDate;
   const animeType = detail?.type?.toLowerCase() || 'tv';
+  const isEnded = detail?.status === 'FINISHED';
   const providers = await getProviderList(
     'anime',
     title,
@@ -42,6 +43,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     undefined,
     aid,
     animeType,
+    isEnded,
   );
 
   if (providers && providers.length > 0) {

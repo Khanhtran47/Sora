@@ -50,11 +50,11 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const extractColorImage = `https://corsproxy.io/?${encodeURIComponent(
     TMDB.backdropUrl(seasonDetail?.poster_path || '', 'w300'),
   )}`;
+  const isEnded = detail?.status === 'Ended' || detail?.status === 'Canceled';
 
   const [providers, fimg] = await Promise.all([
-    getProviderList('tv', title, orgTitle, year, season),
+    getProviderList('tv', title, orgTitle, year, season, undefined, undefined, isEnded),
     fetch(extractColorImage),
-    // seasonDetail?.poster_path ? ColorThief.getColor(extractColorImage) : undefined,
   ]);
 
   const fimgb = Buffer.from(await fimg.arrayBuffer());
