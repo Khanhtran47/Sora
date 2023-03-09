@@ -3,7 +3,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { env } from 'process';
 import { IMedia } from '~/types/media';
-import { lruCache } from '../lru-cache';
 import {
   BackdropSize,
   ProfileSize,
@@ -397,26 +396,6 @@ export class TMDB {
 
   static imdbDetailUrl = (id: string) => `${this.IMDB_API_BASE_URl}title/${id}`;
 }
-
-export const fetcher = async <T = any>(url: string): Promise<T> => {
-  if (lruCache) {
-    const cached = lruCache.get<T>(url);
-    if (cached) {
-      console.info('\x1b[32m%s\x1b[0m', '[cached]', url);
-      return cached;
-    }
-  }
-
-  const res = await fetch(url);
-
-  // throw error here
-  if (!res.ok) throw new Error(JSON.stringify(await res.json()));
-  const data = await res.json();
-
-  if (lruCache) lruCache.set(url, data);
-
-  return data;
-};
 
 export const postFetchDataHandler = (
   data: any,

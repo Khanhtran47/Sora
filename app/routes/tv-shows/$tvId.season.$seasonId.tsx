@@ -53,7 +53,16 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const isEnded = detail?.status === 'Ended' || detail?.status === 'Canceled';
 
   const [providers, fimg] = await Promise.all([
-    getProviderList('tv', title, orgTitle, year, season, undefined, undefined, isEnded),
+    getProviderList({
+      type: 'tv',
+      title,
+      orgTitle,
+      year,
+      season,
+      animeId: undefined,
+      animeType: undefined,
+      isEnded,
+    }),
     fetch(extractColorImage),
   ]);
 

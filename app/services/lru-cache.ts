@@ -1,18 +1,16 @@
 import LRU from 'lru-cache';
-import { env } from 'process';
-import sgConfigs from './configs.server';
+import type { CacheEntry } from 'cachified';
+import { verboseReporter, lruCacheAdapter } from 'cachified';
+import * as C from 'cachified';
 
 // https://www.npmjs.com/package/lru-cache
 
-// eslint-disable-next-line import/no-mutable-exports
-let lruCache: LRU<string, unknown> | undefined;
-
 declare global {
   // eslint-disable-next-line vars-on-top, no-var
-  var cache: LRU<string, unknown> | undefined;
+  var cache: LRU<string, CacheEntry<unknown>> | undefined;
 }
 
-const options = {
+const lruOptions = {
   // let just say 1kb is an object which after being stringified having length of 1000
   // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
   sizeCalculation: (_value: unknown, _key: string) =>
@@ -23,19 +21,80 @@ const options = {
 
   // max nb of objects, less than 250mb
   max: 5000,
-
-  // how long to live in ms
-  ttl: 1000 * 60 * 60 * 24, // one day
 };
 
-if (env.NODE_ENV === 'production') {
-  lruCache = new LRU(options);
-} else if (sgConfigs.__lruCache) {
-  if (!global.cache) {
-    global.cache = new LRU(options);
-  }
-  lruCache = global.cache;
+const lru = global.cache || new LRU<string, CacheEntry<unknown>>(lruOptions);
+const lruCache = lruCacheAdapter(lru);
+
+const getAllCacheKeys = async () => [...lru.keys()];
+const searchCacheKeys = async (search: string) =>
+  [...lru.keys()].filter((key) => key.includes(search));
+
+async function shouldForceFresh({
+  forceFresh,
+  request,
+  key,
+}: {
+  forceFresh?: boolean | string;
+  request?: Request;
+  key: string;
+}) {
+  if (typeof forceFresh === 'boolean') return forceFresh;
+  if (typeof forceFresh === 'string') return forceFresh.split(',').includes(key);
+  if (!request) return false;
+  const fresh = new URL(request.url).searchParams.get('fresh');
+  if (typeof fresh !== 'string') return false;
+  if (fresh === '') return true;
+  return fresh.split(',').includes(key);
 }
 
-// eslint-disable-next-line import/prefer-default-export
-export { lruCache };
+async function cachified<Value>({
+  request,
+  ...options
+}: Omit<C.CachifiedOptions<Value>, 'forceFresh'> & {
+  request?: Request;
+  forceFresh?: boolean | string;
+}): Promise<Value> {
+  let cachifiedResolved = false;
+  const cachifiedPromise = C.cachified({
+    reporter: verboseReporter(),
+    ...options,
+    forceFresh: await shouldForceFresh({
+      forceFresh: options.forceFresh,
+      request,
+      key: options.key,
+    }),
+    getFreshValue: async (context) => {
+      if (!cachifiedResolved) {
+        const freshValue = await options.getFreshValue(context);
+        return freshValue;
+      }
+      return options.getFreshValue(context);
+    },
+  });
+  cachifiedResolved = true;
+  return cachifiedPromise;
+}
+
+async function fetcher<Value>({
+  url,
+  ...options
+}: Omit<C.CachifiedOptions<Value>, 'getFreshValue' | 'forceFresh'> & {
+  url: string;
+  forceFresh?: boolean | string;
+  getFreshValue?: undefined;
+}): Promise<Value> {
+  const results = await cachified({
+    ...options,
+    request: undefined,
+    getFreshValue: async () => {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(JSON.stringify(await res.json()));
+      const data = (await res.json()) as Value;
+      return data;
+    },
+  });
+  return results;
+}
+
+export { lruCache, getAllCacheKeys, searchCacheKeys, shouldForceFresh, cachified, fetcher };

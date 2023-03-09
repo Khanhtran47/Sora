@@ -155,7 +155,16 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     const [tvDetail, imdbRating, providers, fimg] = await Promise.all([
       loklokGetTvEpInfo(idProvider, Number(episodeId) - 1),
       imdbId ? getImdbRating(imdbId) : undefined,
-      getProviderList('tv', title, orgTitle, year, season, undefined, undefined, isEnded),
+      getProviderList({
+        type: 'tv',
+        title,
+        orgTitle,
+        year,
+        season,
+        animeId: undefined,
+        animeType: undefined,
+        isEnded,
+      }),
       fetch(extractColorImage),
     ]);
     const totalProviderEpisodes = Number(tvDetail?.data?.episodeCount);
@@ -210,7 +219,16 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     const [tvDetail, imdbRating, providers, fimg] = await Promise.all([
       getMovieInfo(idProvider),
       imdbId ? getImdbRating(imdbId) : undefined,
-      getProviderList('tv', title, orgTitle, year, season, undefined, undefined, isEnded),
+      getProviderList({
+        type: 'tv',
+        title,
+        orgTitle,
+        year,
+        season,
+        animeId: undefined,
+        animeType: undefined,
+        isEnded,
+      }),
       fetch(extractColorImage),
     ]);
     const totalProviderEpisodes = Number(tvDetail?.episodes?.length);
@@ -271,7 +289,16 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     const [episodeDetail, imdbRating, providers, fimg] = await Promise.all([
       getKissKhInfo(Number(idProvider)),
       imdbId ? getImdbRating(imdbId) : undefined,
-      getProviderList('tv', title, orgTitle, year, season, undefined, undefined, isEnded),
+      getProviderList({
+        type: 'tv',
+        title,
+        orgTitle,
+        year,
+        season,
+        animeId: undefined,
+        animeType: undefined,
+        isEnded,
+      }),
       fetch(extractColorImage),
     ]);
     const totalProviderEpisodes = Number(episodeDetail?.episodes?.length);
@@ -331,7 +358,16 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
   const [imdbRating, providers, fimg] = await Promise.all([
     imdbId ? getImdbRating(imdbId) : undefined,
-    getProviderList('tv', title, orgTitle, year, season, undefined, undefined, isEnded),
+    getProviderList({
+      type: 'tv',
+      title,
+      orgTitle,
+      year,
+      season,
+      animeId: undefined,
+      animeType: undefined,
+      isEnded,
+    }),
     fetch(extractColorImage),
   ]);
 

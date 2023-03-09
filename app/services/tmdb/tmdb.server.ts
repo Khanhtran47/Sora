@@ -1,3 +1,4 @@
+import { IMedia } from '~/types/media';
 import {
   ICredit,
   IMediaList,
@@ -20,7 +21,8 @@ import {
   ISeasonDetail,
   IList,
 } from './tmdb.types';
-import { fetcher, postFetchDataHandler, TMDB } from './utils.server';
+import { postFetchDataHandler, TMDB } from './utils.server';
+import { fetcher, lruCache } from '../lru-cache';
 
 // reusable function
 const getListFromTMDB = async (
@@ -28,8 +30,18 @@ const getListFromTMDB = async (
   type?: 'movie' | 'tv' | 'people',
 ): Promise<IMediaList> => {
   try {
-    const fetched = await fetcher(url);
-
+    const fetched = await fetcher<{
+      items?: IMedia[];
+      page: number;
+      total_pages: number;
+      total_results: number;
+    }>({
+      url,
+      key: `tmdb-list-${url}-${type}`,
+      ttl: 1000 * 60 * 60 * 24,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 7,
+      cache: lruCache,
+    });
     return {
       page: fetched.page,
       totalPages: fetched.total_pages,
@@ -46,7 +58,13 @@ const getListFromTMDB = async (
 
 export const getListLanguages = async (): Promise<ILanguage[] | undefined> => {
   try {
-    const fetched = await fetcher<ILanguage[]>(TMDB.languagesUrl());
+    const fetched = await fetcher<ILanguage[]>({
+      url: TMDB.languagesUrl(),
+      key: 'tmdb-languages',
+      ttl: 1000 * 60 * 60 * 24 * 30,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 365,
+      cache: lruCache,
+    });
     return fetched;
   } catch (error) {
     console.error(error);
@@ -101,7 +119,13 @@ export const getMovieDetail = async (
   language?: string,
 ): Promise<IMovieDetail | undefined> => {
   try {
-    const fetched = await fetcher<IMovieDetail>(TMDB.movieDetailUrl(id, language));
+    const fetched = await fetcher<IMovieDetail>({
+      url: TMDB.movieDetailUrl(id, language),
+      key: `tmdb-movie-detail-${id}-${language}`,
+      ttl: 1000 * 60 * 60 * 24,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 7,
+      cache: lruCache,
+    });
     return fetched;
   } catch (error) {
     console.error(error);
@@ -134,7 +158,13 @@ export const getTvShowDetail = async (
   language?: string,
 ): Promise<ITvShowDetail | undefined> => {
   try {
-    const fetched = await fetcher<ITvShowDetail>(TMDB.tvShowDetailUrl(id, language));
+    const fetched = await fetcher<ITvShowDetail>({
+      url: TMDB.tvShowDetailUrl(id, language),
+      key: `tmdb-tv-show-detail-${id}-${language}`,
+      ttl: 1000 * 60 * 60 * 24,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 7,
+      cache: lruCache,
+    });
     return fetched;
   } catch (error) {
     console.error(error);
@@ -148,7 +178,13 @@ export const getTvShowDetail = async (
  */
 export const getTvShowIMDBId = async (id: number): Promise<string | undefined> => {
   try {
-    const fetched = await fetcher<{ imdb_id: string | undefined }>(TMDB.tvExternalIds(id));
+    const fetched = await fetcher<{ imdb_id: string | undefined }>({
+      url: TMDB.tvExternalIds(id),
+      key: `tmdb-tv-show-imdb-id-${id}`,
+      ttl: 1000 * 60 * 60 * 24,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 7,
+      cache: lruCache,
+    });
 
     if (!fetched?.imdb_id) throw new Error('This TV show does not have IMDB ID');
 
@@ -166,9 +202,13 @@ export const getTvSeasonDetail = async (
   language?: string,
 ): Promise<ISeasonDetail | undefined> => {
   try {
-    const fetched = await fetcher<ISeasonDetail>(
-      TMDB.tvSeasonDetailUrl(tv_id, season_number, language),
-    );
+    const fetched = await fetcher<ISeasonDetail>({
+      url: TMDB.tvSeasonDetailUrl(tv_id, season_number, language),
+      key: `tmdb-tv-season-detail-${tv_id}-${season_number}-${language}`,
+      ttl: 1000 * 60 * 60,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24,
+      cache: lruCache,
+    });
     return fetched;
   } catch (error) {
     console.error(error);
@@ -181,7 +221,13 @@ export const getTvSeasonCredits = async (
   language?: string,
 ): Promise<ICredit | undefined> => {
   try {
-    const fetched = await fetcher<ICredit>(TMDB.tvSeasonCreditsUrl(tv_id, season_number, language));
+    const fetched = await fetcher<ICredit>({
+      url: TMDB.tvSeasonCreditsUrl(tv_id, season_number, language),
+      key: `tmdb-tv-season-credits-${tv_id}-${season_number}-${language}`,
+      ttl: 1000 * 60 * 60 * 24 * 7,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 30,
+      cache: lruCache,
+    });
     return fetched;
   } catch (error) {
     console.error(error);
@@ -194,7 +240,13 @@ export const getTvSeasonVideos = async (
   language?: string,
 ): Promise<IVideos | undefined> => {
   try {
-    const fetched = await fetcher<IVideos>(TMDB.tvSeasonVideosUrl(tv_id, season_number, language));
+    const fetched = await fetcher<IVideos>({
+      url: TMDB.tvSeasonVideosUrl(tv_id, season_number, language),
+      key: `tmdb-tv-season-videos-${tv_id}-${season_number}-${language}`,
+      ttl: 1000 * 60 * 60 * 24 * 7,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 30,
+      cache: lruCache,
+    });
     return fetched;
   } catch (error) {
     console.error(error);
@@ -207,9 +259,13 @@ export const getTvSeasonImages = async (
   language?: string,
 ): Promise<IDetailImages | undefined> => {
   try {
-    const fetched = await fetcher<IDetailImages>(
-      TMDB.tvSeasonImagesUrl(tv_id, season_number, language),
-    );
+    const fetched = await fetcher<IDetailImages>({
+      url: TMDB.tvSeasonImagesUrl(tv_id, season_number, language),
+      key: `tmdb-tv-season-images-${tv_id}-${season_number}-${language}`,
+      ttl: 1000 * 60 * 60 * 24 * 7,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 30,
+      cache: lruCache,
+    });
     return fetched;
   } catch (error) {
     console.error(error);
@@ -233,7 +289,13 @@ export const getPeopleDetail = async (
   language?: string,
 ): Promise<IPeopleDetail | undefined> => {
   try {
-    const fetched = await fetcher<IPeopleDetail>(TMDB.personDetail(person_id, language));
+    const fetched = await fetcher<IPeopleDetail>({
+      url: TMDB.personDetail(person_id, language),
+      key: `tmdb-people-detail-${person_id}-${language}`,
+      ttl: 1000 * 60 * 60 * 24,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 7,
+      cache: lruCache,
+    });
     if (!fetched) throw new Error('Dont have result');
     return fetched;
   } catch (error) {
@@ -246,7 +308,13 @@ export const getPeopleExternalIds = async (
   language?: string,
 ): Promise<IPeopleExternalIds | undefined> => {
   try {
-    const fetched = await fetcher<IPeopleExternalIds>(TMDB.peopleExternalIds(person_id, language));
+    const fetched = await fetcher<IPeopleExternalIds>({
+      url: TMDB.peopleExternalIds(person_id, language),
+      key: `tmdb-people-external-ids-${person_id}-${language}`,
+      ttl: 1000 * 60 * 60 * 24 * 7,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 30,
+      cache: lruCache,
+    });
     if (!fetched) throw new Error('Dont have result');
     return fetched;
   } catch (error) {
@@ -259,7 +327,13 @@ export const getPeopleImages = async (
   language?: string,
 ): Promise<IPeopleImages | undefined> => {
   try {
-    const fetched = await fetcher<IPeopleImages>(TMDB.peopleImages(person_id, language));
+    const fetched = await fetcher<IPeopleImages>({
+      url: TMDB.peopleImages(person_id, language),
+      key: `tmdb-people-images-${person_id}-${language}`,
+      ttl: 1000 * 60 * 60 * 24 * 7,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 30,
+      cache: lruCache,
+    });
     if (!fetched) throw new Error('Dont have result');
     return fetched;
   } catch (error) {
@@ -273,7 +347,13 @@ export const getPeopleCredits = async (
   language?: string,
 ): Promise<IPeopleCredits | undefined> => {
   try {
-    const fetched = await fetcher(TMDB.peopleCredits(id, type, language));
+    const fetched = await fetcher<IPeopleCredits>({
+      url: TMDB.peopleCredits(id, type, language),
+      key: `tmdb-people-credits-${id}-${type}-${language}`,
+      ttl: 1000 * 60 * 60 * 24,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 7,
+      cache: lruCache,
+    });
     return {
       cast: fetched?.cast ? postFetchDataHandler(fetched.cast) : [],
       id: fetched?.id || undefined,
@@ -333,7 +413,13 @@ export const getSearchPerson = async (
  */
 export const getVideos = async (type: 'movie' | 'tv', id: number): Promise<IVideos | undefined> => {
   try {
-    const fetched = await fetcher<IVideos>(TMDB.videoUrl(type, id));
+    const fetched = await fetcher<IVideos>({
+      url: TMDB.videoUrl(type, id),
+      key: `tmdb-video-${type}-${id}`,
+      ttl: 1000 * 60 * 60 * 24 * 7,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 30,
+      cache: lruCache,
+    });
     return fetched;
   } catch (error) {
     console.error(error);
@@ -351,7 +437,13 @@ export const getCredits = async (
   id: number,
 ): Promise<ICredit | undefined> => {
   try {
-    const fetched = await fetcher<ICredit>(TMDB.creditUrl(type, id));
+    const fetched = await fetcher<ICredit>({
+      url: TMDB.creditUrl(type, id),
+      key: `tmdb-credit-${type}-${id}`,
+      ttl: 1000 * 60 * 60 * 24 * 7,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 30,
+      cache: lruCache,
+    });
     return fetched;
   } catch (error) {
     console.error(error);
@@ -364,7 +456,13 @@ export const getImages = async (
   language?: string,
 ): Promise<IDetailImages | undefined> => {
   try {
-    const fetched = await fetcher<IDetailImages>(TMDB.imagesUrl(type, id, language));
+    const fetched = await fetcher<IDetailImages>({
+      url: TMDB.imagesUrl(type, id, language),
+      key: `tmdb-images-${type}-${id}-${language}`,
+      ttl: 1000 * 60 * 60 * 24 * 7,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 30,
+      cache: lruCache,
+    });
     return fetched;
   } catch (error) {
     console.error(error);
@@ -403,7 +501,13 @@ export const getListGenre = async (
 ): Promise<{ [id: string]: string }> => {
   const url = TMDB.listGenre(type, language);
   try {
-    const fetched = await fetcher<IListGenre>(url);
+    const fetched = await fetcher<IListGenre>({
+      url,
+      key: `tmdb-genre-${type}-${language}`,
+      ttl: 1000 * 60 * 60 * 24 * 30,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 365,
+      cache: lruCache,
+    });
     const result: { [key: string]: string } = {};
 
     for (let i = 0; i < fetched.genres.length; i += 1) {
@@ -480,7 +584,13 @@ export const getTranslations = async (
   id: number,
 ): Promise<IMovieTranslations | undefined> => {
   try {
-    const fetched = await fetcher<IMovieTranslations>(TMDB.translationsUrl(type, id));
+    const fetched = await fetcher<IMovieTranslations>({
+      url: TMDB.translationsUrl(type, id),
+      key: `tmdb-translations-${type}-${id}`,
+      ttl: 1000 * 60 * 60 * 24,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 7,
+      cache: lruCache,
+    });
     return fetched;
   } catch (error) {
     console.error(error);
@@ -492,7 +602,13 @@ export const getListDetail = async (
   language?: string,
 ): Promise<IList | undefined> => {
   try {
-    const fetched = await fetcher<IList>(TMDB.listUrl(listId, language));
+    const fetched = await fetcher<IList>({
+      url: TMDB.listUrl(listId, language),
+      key: `tmdb-list-${listId}-${language}`,
+      ttl: 1000 * 60 * 60 * 24,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 7,
+      cache: lruCache,
+    });
     return {
       ...fetched,
       items: [...postFetchDataHandler(fetched.items)],
@@ -506,7 +622,15 @@ export const getImdbRating = async (
   id: string,
 ): Promise<{ count: number; star: number } | undefined> => {
   try {
-    const fetched = await fetcher(TMDB.imdbDetailUrl(id));
+    const fetched = await fetcher<{
+      rating: { count: number; star: number };
+    }>({
+      url: TMDB.imdbDetailUrl(id),
+      key: `tmdb-imdb-${id}`,
+      ttl: 1000 * 60 * 60 * 24,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 7,
+      cache: lruCache,
+    });
     if (fetched && fetched.rating) {
       return fetched.rating;
     }

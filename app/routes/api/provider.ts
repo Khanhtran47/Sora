@@ -19,7 +19,16 @@ export const loader = async ({ request }: LoaderArgs) => {
   const animeType = url.searchParams.get('animeType');
   const isEnded = url.searchParams.get('isEnded');
   if (!title || !type) throw new Response('Missing params', { status: 400 });
-  const provider = await getProviderList(type, title, orgTitle, year, season, Number(aid), animeType, isEnded === 'true');
+  const provider = await getProviderList({
+    type,
+    title,
+    orgTitle,
+    year,
+    season,
+    animeId: Number(aid),
+    animeType,
+    isEnded: isEnded === 'true'
+  });
   if (provider && provider.length > 0) return json({ provider }, { status: 200, headers: { 'Cache-Control': CACHE_CONTROL.default } });
 
   return json({

@@ -1,7 +1,7 @@
 import { json } from '@remix-run/node'
 import type { LoaderArgs } from '@remix-run/node'
 
-import { lruCache } from '~/services/lru-cache';
+import { lruCache, cachified } from '~/services/lru-cache';
 import { authenticate } from '~/services/supabase';
 
 interface Result {
@@ -25,25 +25,32 @@ export const loader = async ({ request }: LoaderArgs) => {
   await authenticate(request, undefined, true)
   const url = new URL(request.url)
   const color = url.searchParams.get('color')
-
-  const cacheKey = `color-${color}`
-  if (lruCache) {
-    const cacheColor = lruCache.get<ColorPalette | undefined>(cacheKey)
-    if (cacheColor) {
-      console.info('Cache color', cacheKey)
-      return json(cacheColor, { status: 200, headers: { 'Cache-Control': 'max-age=31536000' } })
-    }
+  const colorData = await cachified({
+    key: `color-${color}`,
+    ttl: 1000 * 60 * 60 * 24,
+    staleWhileRevalidate: 1000 * 60 * 60 * 24 * 30,
+    cache: lruCache,
+    request,
+    getFreshValue: async () => {
+      try {
+        const res = await fetch(`${process.env.COLOR_PALETTE_API}/color/${color}`);
+        if (!res.ok) throw new Error(JSON.stringify(await res.json()));
+        const data = await res.json() as Result;
+        return data;
+      } catch (error) {
+        console.error(error)
+        return { error: 'Something went wrong' }
+      }
+    },
+    checkValue: (value: unknown) => {
+      if (typeof value === 'object' && value !== null) {
+        return Object.keys(value).length > 0;
+      }
+      return false;
+    },
+  });
+  if ((colorData as {error: string})?.error) {
+    return json(colorData, { status: 500 })
   }
-  try {
-    const res = await fetch(`${process.env.COLOR_PALETTE_API}/color/${color}`);
-    if (!res.ok) throw new Error(JSON.stringify(await res.json()));
-    const data = await res.json() as Result;
-
-    if (lruCache) lruCache.set(cacheKey, data)
-
-    return json(data, { status: 200, headers: { 'Cache-Control': 'max-age=31536000' } })
-  } catch (error) {
-    console.error(error)
-  }
-  return json({ error: 'Something went wrong' }, { status: 500 })
+  return json(colorData, { status: 200, headers: { 'Cache-Control': 'max-age=31536000' } })
 }

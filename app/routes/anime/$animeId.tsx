@@ -35,16 +35,16 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const year = detail.releaseDate;
   const animeType = detail?.type?.toLowerCase() || 'tv';
   const isEnded = detail?.status === 'FINISHED';
-  const providers = await getProviderList(
-    'anime',
+  const providers = await getProviderList({
+    type: 'anime',
     title,
     orgTitle,
     year,
-    undefined,
-    aid,
+    season: undefined,
+    animeId: aid,
     animeType,
     isEnded,
-  );
+  });
 
   if (providers && providers.length > 0) {
     return json({ detail, providers });
