@@ -23,12 +23,20 @@ const lruOptions = {
   max: 5000,
 };
 
-const lru = global.cache || new LRU<string, CacheEntry<unknown>>(lruOptions);
+// eslint-disable-next-line no-multi-assign
+const lru = (global.cache = global.cache
+  ? global.cache
+  : new LRU<string, CacheEntry<unknown>>(lruOptions));
 const lruCache = lruCacheAdapter(lru);
 
-const getAllCacheKeys = async () => [...lru.keys()];
+const getAllCacheKeys = async () => {
+  console.log([...lru.entries()]);
+  console.log([...lru.keys()]);
+  console.log([...lru.values()]);
+  return [...lru.entries()].map(([key, data]) => ({ key, data }));
+};
 const searchCacheKeys = async (search: string) =>
-  [...lru.keys()].filter((key) => key.includes(search));
+  [...lru.entries()].filter(([key]) => key.includes(search)).map(([key, data]) => ({ key, data }));
 
 async function shouldForceFresh({
   forceFresh,
@@ -97,4 +105,4 @@ async function fetcher<Value>({
   return results;
 }
 
-export { lruCache, getAllCacheKeys, searchCacheKeys, shouldForceFresh, cachified, fetcher };
+export { lru, lruCache, getAllCacheKeys, searchCacheKeys, shouldForceFresh, cachified, fetcher };

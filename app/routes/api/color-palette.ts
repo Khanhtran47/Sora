@@ -27,8 +27,8 @@ export const loader = async ({ request }: LoaderArgs) => {
   const color = url.searchParams.get('color')
   const colorData = await cachified({
     key: `color-${color}`,
-    ttl: 1000 * 60 * 60 * 24,
-    staleWhileRevalidate: 1000 * 60 * 60 * 24 * 30,
+    ttl: 1000 * 60 * 60 * 24 * 30,
+    staleWhileRevalidate: 1000 * 60 * 60 * 24 * 365,
     cache: lruCache,
     request,
     getFreshValue: async () => {

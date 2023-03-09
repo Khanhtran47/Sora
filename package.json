@@ -57,7 +57,7 @@
     "i18next-http-backend": "^1.4.1",
     "isbot": "^3.6.5",
     "lottie-web": "^5.9.6",
-    "lru-cache": "^7.14.0",
+    "lru-cache": "^7.18.3",
     "next-themes": "^0.2.1",
     "node-persist": "^3.1.0",
     "node-vibrant": "^3.2.1-alpha.1",

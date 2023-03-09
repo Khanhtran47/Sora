@@ -103,7 +103,9 @@
       {
         "namedComponents": "arrow-function"
       }
-    ]
+    ],
+    "no-throw-literal": "off",
+    "@typescript-eslint/no-throw-literal": "off"
   },
   "ignorePatterns": [
     "node_modules",
