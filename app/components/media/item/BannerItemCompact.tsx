@@ -111,7 +111,9 @@ const BannerItemCompact = forwardRef<HTMLDivElement, IBannerItemCompactProps>(
             }}
           >
             <H5 h5 weight="bold" className="line-clamp-3" css={{ display: 'none' }}>
-              {titleItem}
+              {titleItem?.length && titleItem.length > 40
+                ? `${titleItem?.slice(0, 40)}...`
+                : titleItem}
             </H5>
           </Card.Footer>
         </Card>
