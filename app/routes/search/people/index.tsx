@@ -64,40 +64,38 @@ const SearchRoute = () => {
   };
 
   return (
-    <>
+    <Container
+      fluid
+      display="flex"
+      justify="center"
+      direction="column"
+      alignItems="center"
+      css={{
+        '@xsMax': {
+          paddingLeft: '$sm',
+          paddingRight: '$sm',
+        },
+      }}
+    >
       <SearchForm
         onSubmit={onSubmit}
         textOnButton={t('search.action')}
         textHelper={t('search.helper.people')}
         textPlaceHolder={t('search.placeHolder.people')}
       />
-      <Container
-        fluid
-        display="flex"
-        justify="center"
-        direction="column"
-        alignItems="center"
-        css={{
-          '@xsMax': {
-            paddingLeft: '$sm',
-            paddingRight: '$sm',
-          },
-        }}
-      >
-        {people && people.items && people.items.length > 0 && (
-          <MediaList
-            currentPage={people.page}
-            items={people.items}
-            listName={t('popularPeople')}
-            listType="grid"
-            onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
-            showPagination
-            totalPages={people.totalPages}
-            itemsType="people"
-          />
-        )}
-      </Container>
-    </>
+      {people && people.items && people.items.length > 0 && (
+        <MediaList
+          currentPage={people.page}
+          items={people.items}
+          listName={t('popularPeople')}
+          listType="grid"
+          onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
+          showPagination
+          totalPages={people.totalPages}
+          itemsType="people"
+        />
+      )}
+    </Container>
   );
 };
 

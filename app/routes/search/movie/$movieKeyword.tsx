@@ -87,42 +87,40 @@ const SearchRoute = () => {
   };
 
   return (
-    <>
+    <Container
+      fluid
+      display="flex"
+      justify="center"
+      direction="column"
+      alignItems="center"
+      css={{
+        '@xsMax': {
+          paddingLeft: '$sm',
+          paddingRight: '$sm',
+        },
+      }}
+    >
       <SearchForm
         onSubmit={onSubmit}
         textOnButton={t('search.action')}
         textHelper={t('search.helper.movie')}
         textPlaceHolder={t('search.placeHolder.movie')}
       />
-      <Container
-        fluid
-        display="flex"
-        justify="center"
-        direction="column"
-        alignItems="center"
-        css={{
-          '@xsMax': {
-            paddingLeft: '$sm',
-            paddingRight: '$sm',
-          },
-        }}
-      >
-        {searchResults && searchResults.items && searchResults.items.length > 0 && (
-          <MediaList
-            listType="grid"
-            showListTypeChangeButton
-            items={searchResults?.items}
-            listName={t('search.searchResults')}
-            genresMovie={rootData?.genresMovie}
-            genresTv={rootData?.genresTv}
-            showPagination
-            totalPages={searchResults?.totalPages}
-            currentPage={searchResults?.page}
-            onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
-          />
-        )}
-      </Container>
-    </>
+      {searchResults && searchResults.items && searchResults.items.length > 0 && (
+        <MediaList
+          listType="grid"
+          showListTypeChangeButton
+          items={searchResults?.items}
+          listName={t('search.searchResults')}
+          genresMovie={rootData?.genresMovie}
+          genresTv={rootData?.genresTv}
+          showPagination
+          totalPages={searchResults?.totalPages}
+          currentPage={searchResults?.page}
+          onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
+        />
+      )}
+    </Container>
   );
 };
 

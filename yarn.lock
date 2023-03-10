@@ -4138,6 +4138,11 @@ cacheable-request@^7.0.2:
     normalize-url "^6.0.1"
     responselike "^2.0.0"
 
+cachified@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/cachified/-/cachified-3.1.0.tgz#622d0ddddd08a0a0725add572f0d7d8838a512c4"
+  integrity sha512-5yyRHcGF2DY+ZQ8zVw+Ge3rTHI+EbPXsrE1ZybQ2P8Nh/hqQLDPz/89j/ZuFggRy0aDLYPhuQ/QdTFtHgd/2Xw==
+
 call-bind@^1.0.0, call-bind@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/call-bind/-/call-bind-1.0.2.tgz#b1d4e89e688119c3c9a903ad30abb2f6a919be3c"
@@ -7680,6 +7685,11 @@ lru-cache@^7.14.0, lru-cache@^7.14.1:
   version "7.14.1"
   resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-7.14.1.tgz#8da8d2f5f59827edb388e63e459ac23d6d408fea"
   integrity sha512-ysxwsnTKdAx96aTRdhDOCQfDgbHnt8SK0KY8SEjO0wHinhWOFTESbjVCMPbU1uGXg/ch4lifqx0wfjOawU2+WA==
+
+lru-cache@^7.18.3:
+  version "7.18.3"
+  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-7.18.3.tgz#f793896e0fd0e954a59dfdd82f0773808df6aa89"
+  integrity sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==
 
 lz-string@^1.4.4:
   version "1.4.4"

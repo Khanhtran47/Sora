@@ -3,11 +3,6 @@ import { env, exit } from 'process';
 // server global config
 interface ISGConfigs {
   /**
-   * see if lru-caching is turned ON(true)/OFF(false)
-   * default ON (true)
-   */
-  __lruCache: boolean;
-  /**
    * required login for every routes in app
    * default true
    */
@@ -40,7 +35,6 @@ interface ISGConfigs {
 }
 
 const sgConfigs: ISGConfigs = {
-  __lruCache: env.NODE_ENV === 'production' || env.LRU_CACHE !== 'OFF',
   __globalAuthRequired: !(env.GLOBAL_AUTH_REQUIRED === 'OFF'),
   __invitedSignUpOnly: !(env.INVITED_SIGNUP_ONLY === 'OFF'),
   __invitedSignUpKey: env.INVITED_SIGNUP_KEY || '',

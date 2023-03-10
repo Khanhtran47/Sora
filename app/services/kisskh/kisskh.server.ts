@@ -1,32 +1,19 @@
-import { lruCache } from '~/services/lru-cache';
+import { lruCache, fetcher } from '~/services/lru-cache';
 import KissKh from './utils.server';
 import { ISearchItem, IItemInfo, IEpisodeVideo, IVideoSubtitle } from './kisskh.types';
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const fetcher = async <T = any>(url: string): Promise<T> => {
-  if (lruCache) {
-    const cached = lruCache.get<T>(url);
-    if (cached) {
-      console.info('\x1b[32m%s\x1b[0m', '[cached]', url);
-      return cached;
-    }
-  }
-
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(JSON.stringify(await res.json()));
-  const data = await res.json();
-
-  if (lruCache) lruCache.set(url, data);
-
-  return data;
-};
 
 export const getKissKhSearch = async (
   query: string,
   type?: number,
 ): Promise<ISearchItem[] | undefined> => {
   try {
-    const fetched = await fetcher<ISearchItem[]>(KissKh.searchUrl(query, type));
+    const fetched = await fetcher<ISearchItem[]>({
+      url: KissKh.searchUrl(query, type),
+      key: `kisskh-search-${query}-${type}`,
+      ttl: 1000 * 60 * 60 * 24,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 7,
+      cache: lruCache,
+    });
     return fetched;
   } catch (error) {
     console.log(error);
@@ -35,7 +22,13 @@ export const getKissKhSearch = async (
 
 export const getKissKhInfo = async (id: number): Promise<IItemInfo | undefined> => {
   try {
-    const fetched = await fetcher<IItemInfo>(KissKh.infoUrl(id));
+    const fetched = await fetcher<IItemInfo>({
+      url: KissKh.infoUrl(id),
+      key: `kisskh-info-${id}`,
+      ttl: 1000 * 60 * 60 * 24,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 7,
+      cache: lruCache,
+    });
     return fetched;
   } catch (error) {
     console.log(error);
@@ -46,7 +39,13 @@ export const getKissKhEpisodeStream = async (
   episodeId: number,
 ): Promise<IEpisodeVideo | undefined> => {
   try {
-    const fetched = await fetcher<IEpisodeVideo>(KissKh.episodeUrl(episodeId));
+    const fetched = await fetcher<IEpisodeVideo>({
+      url: KissKh.episodeUrl(episodeId),
+      key: `kisskh-episode-${episodeId}`,
+      ttl: 1000 * 60 * 60,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24,
+      cache: lruCache,
+    });
     return fetched;
   } catch (error) {
     console.log(error);
@@ -57,7 +56,13 @@ export const getKissKhEpisodeSubtitle = async (
   episodeId: number,
 ): Promise<IVideoSubtitle[] | undefined> => {
   try {
-    const fetched = await fetcher<IVideoSubtitle[]>(KissKh.subUrl(episodeId));
+    const fetched = await fetcher<IVideoSubtitle[]>({
+      url: KissKh.subUrl(episodeId),
+      key: `kisskh-subtitle-${episodeId}`,
+      ttl: 1000 * 60 * 60,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24,
+      cache: lruCache,
+    });
     return fetched;
   } catch (error) {
     console.log(error);

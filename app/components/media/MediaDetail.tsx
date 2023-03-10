@@ -68,7 +68,7 @@ const MediaDetail = (props: IMediaDetail) => {
     (item as IMovieDetail)?.original_title || (item as ITvShowDetail)?.original_name || '';
   const runtime =
     // @ts-ignore
-    Number((item as IMovieDetail)?.runtime) || Number((item as ITvShowDetail)?.episode_run_time[0]);
+    Number((item as IMovieDetail)?.runtime) ?? Number((item as ITvShowDetail)?.episode_run_time[0]);
   const posterPath = item?.poster_path
     ? TMDB?.posterUrl(item?.poster_path || '', 'w342')
     : undefined;
@@ -76,10 +76,10 @@ const MediaDetail = (props: IMediaDetail) => {
     ? TMDB?.backdropUrl(item?.backdrop_path || '', 'w1280')
     : undefined;
   const releaseYear = new Date(
-    (item as IMovieDetail)?.release_date || (item as ITvShowDetail)?.first_air_date || '',
+    (item as IMovieDetail)?.release_date ?? ((item as ITvShowDetail)?.first_air_date || ''),
   ).getFullYear();
   const releaseDate = new Date(
-    (item as IMovieDetail)?.release_date || (item as ITvShowDetail)?.first_air_date || '',
+    (item as IMovieDetail)?.release_date ?? ((item as ITvShowDetail)?.first_air_date || ''),
   ).toLocaleDateString('fr-FR');
   const description = (item as IMovieDetail)?.overview || (item as ITvShowDetail)?.overview || '';
 
@@ -599,7 +599,8 @@ const MediaDetail = (props: IMediaDetail) => {
         year={releaseYear}
         translations={translations}
         id={item?.id}
-        {...(type === 'tv' && { season: 1, episode: 1 })}
+        {...(type === 'tv' && { season: 1, episode: 1, isEnded: status === 'Ended' })}
+        {...(type === 'movie' && { isEnded: status === 'Released' })}
       />
     </>
   );

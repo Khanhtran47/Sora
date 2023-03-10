@@ -338,7 +338,7 @@ const MovieWatch = () => {
   const { detail, recommendations, imdbRating, color } = useLoaderData<typeof loader>();
   const rootData = useTypedRouteLoaderData('root');
   const id = detail && detail.id;
-  const releaseYear = new Date(detail?.release_date || '').getFullYear();
+  const releaseYear = new Date(detail?.release_date ?? '').getFullYear();
   return (
     <Container
       fluid

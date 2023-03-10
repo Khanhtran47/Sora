@@ -1,5 +1,5 @@
 /* eslint-disable import/prefer-default-export */
-import { lruCache } from '~/services/lru-cache';
+import { fetcher, lruCache } from '~/services/lru-cache';
 import { env } from 'process';
 
 export interface IAniSkipResponse {
@@ -21,25 +21,6 @@ interface IInterval {
   endTime: number;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const fetcher = async <T = any>(url: string): Promise<T> => {
-  if (lruCache) {
-    const cached = lruCache.get<T>(url);
-    if (cached) {
-      console.info('\x1b[32m%s\x1b[0m', '[cached]', url);
-      return cached;
-    }
-  }
-
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(JSON.stringify(await res.json()));
-  const data = await res.json();
-
-  if (lruCache) lruCache.set(url, data);
-
-  return data;
-};
-
 export const getAniskip = async (
   id: number,
   episodeNumber: number,
@@ -51,7 +32,13 @@ export const getAniskip = async (
     }/skip-times/${id}/${episodeNumber}?types[]=ed&types[]=mixed-ed&types[]=mixed-op&types[]=op&types[]=recap&episodeLength=${
       episodeLength || 0
     }`;
-    const fetched = await fetcher<IAniSkipResponse>(url);
+    const fetched = await fetcher<IAniSkipResponse>({
+      url,
+      key: `aniskip-${id}-${episodeNumber}`,
+      ttl: 1000 * 60 * 60 * 24 * 7,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 30,
+      cache: lruCache,
+    });
     return fetched;
   } catch (error) {
     console.log(error);

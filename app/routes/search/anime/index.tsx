@@ -59,40 +59,38 @@ const SearchRoute = () => {
     navigate(`/search/anime/${value}`);
   };
   return (
-    <>
+    <Container
+      fluid
+      display="flex"
+      justify="center"
+      direction="column"
+      alignItems="center"
+      css={{
+        '@xsMax': {
+          paddingLeft: '$sm',
+          paddingRight: '$sm',
+        },
+      }}
+    >
       <SearchForm
         onSubmit={onSubmit}
         textOnButton={t('search.action')}
         textHelper={t('search.helper.anime')}
         textPlaceHolder={t('search.placeHolder.anime')}
       />
-      <Container
-        fluid
-        display="flex"
-        justify="center"
-        direction="column"
-        alignItems="center"
-        css={{
-          '@xsMax': {
-            paddingLeft: '$sm',
-            paddingRight: '$sm',
-          },
-        }}
-      >
-        {items && items.results && items.results.length > 0 && (
-          <MediaList
-            hasNextPage={items.hasNextPage || false}
-            items={items.results as IMedia[]}
-            itemsType="anime"
-            listName="Trending Anime"
-            listType="grid"
-            loadingType="scroll"
-            routeName="/anime/trending"
-            virtual
-          />
-        )}
-      </Container>
-    </>
+      {items && items.results && items.results.length > 0 && (
+        <MediaList
+          hasNextPage={items.hasNextPage || false}
+          items={items.results as IMedia[]}
+          itemsType="anime"
+          listName="Trending Anime"
+          listType="grid"
+          loadingType="scroll"
+          routeName="/anime/trending"
+          virtual
+        />
+      )}
+    </Container>
   );
 };
 
