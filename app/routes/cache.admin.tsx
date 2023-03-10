@@ -20,8 +20,6 @@ import { badRequest } from 'remix-utils';
 import { getAllCacheKeys, lruCache, searchCacheKeys } from '~/services/lru-cache';
 import { getUserFromCookie } from '~/services/supabase';
 
-import { useDoubleCheck } from '~/hooks/useDoubleCheck';
-
 import ErrorBoundaryView from '~/components/ErrorBoundaryView';
 import { H2, H3, H5 } from '~/components/styles/Text.styles';
 import SearchForm from '~/components/elements/SearchForm';
@@ -93,14 +91,27 @@ const CacheKeyRow = ({
   handleOpenDetailCache: (cacheKey: string) => void;
 }) => {
   const fetcher = useFetcher();
-  const dc = useDoubleCheck();
+  const [doubleCheck, setDoubleCheck] = useState(false);
   return (
     <div className="flex items-center gap-2 font-mono">
       <fetcher.Form method="post">
         <input type="hidden" name="cacheKey" value={cacheKey} />
         {/* @ts-ignore */}
-        <Button ghost color="error" auto {...dc.getButtonProps({ type: 'submit' })}>
-          {fetcher.state === 'idle' ? (dc.doubleCheck ? 'You sure?' : 'Delete') : 'Deleting...'}
+        <Button
+          ghost
+          color="error"
+          auto
+          onBlur={() => setDoubleCheck(false)}
+          onPress={(e) => {
+            const target = e.target as HTMLFormElement;
+            if (doubleCheck) {
+              fetcher.submit(target?.form);
+            } else {
+              setDoubleCheck(true);
+            }
+          }}
+        >
+          {fetcher.state === 'idle' ? (doubleCheck ? 'You sure?' : 'Delete') : 'Deleting...'}
         </Button>
       </fetcher.Form>
       <Button auto light onPress={() => handleOpenDetailCache(cacheKey)}>
