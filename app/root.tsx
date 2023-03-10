@@ -283,7 +283,7 @@ const meta: MetaFunction = () => {
       'og:site_name': 'Sora',
       'og:url': 'https://sora-anime.vercel.app',
       'og:title': 'Sora - Free Movies and Free Series',
-      'og:image': 'https://sora-git-feature-ogimage-khanhtran47.vercel.app/api/ogimage?it=home',
+      'og:image': 'https://sora-anime.vercel.app/api/ogimage?it=home',
       'og:image:width': '1200',
       'og:image:height': '630',
       'og:description':
@@ -303,7 +303,7 @@ const meta: MetaFunction = () => {
     'og:site_name': 'Sora',
     'og:url': 'https://sora-anime.vercel.app',
     'og:title': 'Sora - Free Movies and Free Series',
-    'og:image': 'https://sora-git-feature-ogimage-khanhtran47.vercel.app/api/ogimage?it=home',
+    'og:image': 'https://sora-anime.vercel.app/api/ogimage?it=home',
     'og:image:width': '1200',
     'og:image:height': '630',
     'og:description':

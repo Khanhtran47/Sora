@@ -52,7 +52,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     'og:url': `https://sora-anime.vercel.app/movies/${params.movieId}/watch`,
     'og:title': `Watch ${detail?.title || ''} HD online Free - Sora`,
     'og:description': `Watch ${detail?.title || ''} in full HD online with Subtitle`,
-    'og:image': `https://sora-git-feature-ogimage-khanhtran47.vercel.app/api/ogimage?m=${params.movieId}&mt=movie`,
+    'og:image': `https://sora-anime.vercel.app/api/ogimage?m=${params.movieId}&mt=movie`,
   };
 };
 
