@@ -130,9 +130,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     'og:title': `Watch ${detail?.title || ''} HD online Free - Sora`,
     'og:description':
       detail?.overview || `Watch ${detail?.title || ''} in full HD online with Subtitle`,
-    'og:image': detail?.backdrop_path
-      ? TMDB.backdropUrl(detail?.backdrop_path, 'w1280')
-      : undefined,
+    'og:image': `https://sora-anime.vercel.app/api/ogimage?m=${params.movieId}&mt=movie`,
     ...(color ? { 'theme-color': color } : null),
     'twitter:card': 'summary_large_image',
     'twitter:site': '@sora_anime',
@@ -141,9 +139,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     'twitter:title': `Watch ${detail?.title || ''} HD online Free - Sora`,
     'twitter:description':
       detail?.overview || `Watch ${detail?.title || ''} in full HD online with Subtitle`,
-    'twitter:image': detail?.backdrop_path
-      ? TMDB.backdropUrl(detail?.backdrop_path, 'w1280')
-      : undefined,
+    'twitter:image': `https://sora-anime.vercel.app/api/ogimage?m=${params.movieId}&mt=movie`,
   };
 };
 

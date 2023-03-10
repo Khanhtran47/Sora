@@ -19,7 +19,7 @@ export const meta: MetaFunction = () => ({
     'popular celebrities, popular celebrity, top celebrities, top celebrity, people celebrity, celebrity people, best celebrity, best celebrities, famous celebrity, famous people, celebrity movies, movies by celebrity, celebrity tv shows, tv show celebrities, celebrity television shows, celebrity tv series',
   'og:url': 'https://sora-anime.vercel.app/people',
   'og:title': 'Discover most popular celebs on Sora',
-  'og:image': 'https://static.alphacoders.com/thumbs_categories/20.jpg',
+  'og:image': 'https://sora-anime.vercel.app/api/ogimage?it=people',
   'og:description': 'Discover the most popular celebrities right now on Sora.',
 });
 

@@ -52,11 +52,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     'og:url': `https://sora-anime.vercel.app/movies/${params.movieId}/watch`,
     'og:title': `Watch ${detail?.title || ''} HD online Free - Sora`,
     'og:description': `Watch ${detail?.title || ''} in full HD online with Subtitle`,
-    'og:image': detail?.backdrop_path ? TMDB.backdropUrl(detail?.backdrop_path, 'w780') : undefined,
-    refresh: {
-      httpEquiv: 'Content-Security-Policy',
-      content: 'upgrade-insecure-requests',
-    },
+    'og:image': `https://sora-anime.vercel.app/api/ogimage?m=${params.movieId}&mt=movie`,
   };
 };
 

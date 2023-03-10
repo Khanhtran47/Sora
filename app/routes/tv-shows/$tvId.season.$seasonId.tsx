@@ -127,7 +127,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     'og:description': `Watch ${detail?.name || ''} ${
       seasonDetail?.name || ''
     } in full HD online with Subtitle`,
-    'og:image': detail?.poster_path ? TMDB.posterUrl(detail?.poster_path, 'w185') : undefined,
+    'og:image': `https://sora-anime.vercel.app/api/ogimage?m=${params.tvId}&mt=tv`,
   };
 };
 

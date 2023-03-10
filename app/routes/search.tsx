@@ -21,7 +21,7 @@ export const meta: MetaFunction = () => ({
   'og:url': 'https://sora-anime.vercel.app/search',
   'og:title':
     'Search Movies, Tv Series and Anime HD - Watch Movies, Tv Series and Anime HD Online on Sora',
-  'og:image': 'https://static.alphacoders.com/thumbs_categories/20.jpg',
+  'og:image': 'https://sora-anime.vercel.app/api/ogimage?it=search',
   'og:description':
     "Sora's advanced search allows you to run extremely powerful queries over all people and titles. Find exactly what you're looking for!",
 });
