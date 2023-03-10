@@ -1,4 +1,4 @@
-import { lruCache } from '~/services/lru-cache';
+import { fetcher, lruCache } from '~/services/lru-cache';
 import { Anilist, fetchAnimeEpisodeHandler, fetchAnimeResultsHandler } from './utils.server';
 import {
   IAnimeList,
@@ -8,35 +8,22 @@ import {
   IAnimeResult,
 } from './anilist.types';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const fetcher = async <T = any>(url: string): Promise<T> => {
-  if (lruCache) {
-    const cached = lruCache.get<T>(url);
-    if (cached) {
-      console.info('\x1b[32m%s\x1b[0m', '[cached]', url);
-      return cached;
-    }
-  }
-
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(JSON.stringify(await res.json()));
-  const data = await res.json();
-
-  if (lruCache) lruCache.set(url, data);
-
-  return data;
-};
-
 const getListFromAnilist = async (url: string, type: 'result' | 'episode'): Promise<IAnimeList> => {
   try {
-    const fetched = await fetcher(url);
+    const fetched = await fetcher<IAnimeList>({
+      url,
+      key: `anilist-list-${url}-${type}`,
+      ttl: 1000 * 60 * 60 * 24,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 7,
+      cache: lruCache,
+    });
     return {
       currentPage: fetched.currentPage,
       hasNextPage: fetched.hasNextPage,
       results:
         type === 'result'
-          ? [...fetchAnimeResultsHandler(fetched.results)]
-          : [...fetchAnimeEpisodeHandler(fetched.results)],
+          ? [...fetchAnimeResultsHandler(fetched.results as IAnimeResult[])]
+          : [...fetchAnimeEpisodeHandler(fetched.results as IAnimeResult[])],
       ...(fetched.totalPages && { totalPages: fetched.totalPages }),
       ...(fetched.totalResults && { totalResults: fetched.totalResults }),
     } as IAnimeList;
@@ -95,7 +82,15 @@ export const getAnimeAdvancedSearch = async (
 
 export const getAnimeRandom = async (): Promise<IAnimeInfo | undefined> => {
   try {
-    const fetched = await fetcher<IAnimeInfo>(Anilist.animeRandomUrl());
+    const fetched = await fetcher<IAnimeInfo>({
+      url: Anilist.animeRandomUrl(),
+      key: `anilist-random-${Anilist.animeRandomUrl()}`,
+      forceFresh: true,
+      ttl: 1000 * 60,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24,
+      cache: lruCache,
+      fallbackToCache: true,
+    });
     return {
       ...fetched,
       recommendations: [...fetchAnimeResultsHandler(fetched.recommendations as IAnimeResult[])],
@@ -144,7 +139,13 @@ export const getAnimeInfo = async (
   provider?: string,
 ): Promise<IAnimeInfo | undefined> => {
   try {
-    const fetched = await fetcher<IAnimeInfo>(Anilist.animeInfoUrl(id, dub, provider));
+    const fetched = await fetcher<IAnimeInfo>({
+      url: Anilist.animeInfoUrl(id, dub, provider),
+      key: `anilist-info-${Anilist.animeInfoUrl(id, dub, provider)}`,
+      ttl: 1000 * 60 * 60 * 24,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 7,
+      cache: lruCache,
+    });
     return {
       ...fetched,
       recommendations: [...fetchAnimeResultsHandler(fetched.recommendations as IAnimeResult[])],
@@ -161,7 +162,13 @@ export const getAnimeEpisodeInfo = async (
   provider?: string,
 ): Promise<IEpisodeInfo[] | undefined> => {
   try {
-    const fetched = await fetcher<IEpisodeInfo[]>(Anilist.animeEpisodeUrl(id, dub, provider));
+    const fetched = await fetcher<IEpisodeInfo[]>({
+      url: Anilist.animeEpisodeUrl(id, dub, provider),
+      key: `anilist-episode-${Anilist.animeEpisodeUrl(id, dub, provider)}`,
+      ttl: 1000 * 60 * 60 * 24,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 7,
+      cache: lruCache,
+    });
     return fetched;
   } catch (error) {
     console.log(error);
@@ -174,9 +181,13 @@ export const getAnimeEpisodeStream = async (
   provider?: string,
 ): Promise<IAnimeEpisodeStream | undefined> => {
   try {
-    const fetched = await fetcher<IAnimeEpisodeStream>(
-      Anilist.animeEpisodeStreamUrl(episodeId, provider),
-    );
+    const fetched = await fetcher<IAnimeEpisodeStream>({
+      url: Anilist.animeEpisodeStreamUrl(episodeId, provider),
+      key: `anilist-episode-stream-${Anilist.animeEpisodeStreamUrl(episodeId, provider)}`,
+      ttl: 1000 * 60 * 60,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24,
+      cache: lruCache,
+    });
     return fetched;
   } catch (error) {
     console.log(error);

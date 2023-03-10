@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useFetcher, useNavigate } from '@remix-run/react';
 import { Modal, Button } from '@nextui-org/react';
 
-import useWindowSize from '~/hooks/useWindowSize';
+import { useWindowSize } from '@react-hookz/web';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 
 import { IMovieTranslations } from '~/services/tmdb/tmdb.types';
@@ -22,6 +22,7 @@ type SelectProviderModalProps = {
   season?: number;
   episode?: number;
   animeType?: string;
+  isEnded?: boolean;
 };
 
 const SelectProviderModal = (props: SelectProviderModalProps) => {
@@ -37,6 +38,7 @@ const SelectProviderModal = (props: SelectProviderModalProps) => {
     season,
     episode,
     animeType,
+    isEnded,
   } = props;
   const fetcher = useFetcher();
   const navigate = useNavigate();
@@ -63,17 +65,17 @@ const SelectProviderModal = (props: SelectProviderModalProps) => {
         fetcher.load(
           `/api/provider?title=${
             findTranslation ? findTranslation.data?.title : title
-          }&type=${type}&origTitle=${origTitle}&year=${year}`,
+          }&type=${type}&origTitle=${origTitle}&year=${year}&isEnded=${isEnded}`,
         );
       else if (type === 'tv')
         fetcher.load(
           `/api/provider?title=${
             findTranslation ? findTranslation.data?.name : title
-          }&type=${type}&origTitle=${origTitle}&year=${year}&season=${season}`,
+          }&type=${type}&origTitle=${origTitle}&year=${year}&season=${season}&isEnded=${isEnded}`,
         );
       else if (type === 'anime')
         fetcher.load(
-          `/api/provider?title=${title}&type=${type}&origTitle=${origTitle}&year=${year}&aid=${id}&animeType=${animeType}`,
+          `/api/provider?title=${title}&type=${type}&origTitle=${origTitle}&year=${year}&aid=${id}&animeType=${animeType}&isEnded=${isEnded}`,
         );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

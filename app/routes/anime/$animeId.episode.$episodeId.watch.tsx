@@ -75,9 +75,11 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     title: detail?.title?.userPreferred || detail?.title?.english || '',
     sub_format: provider === 'KissKh' ? 'srt' : 'webvtt',
   };
+  const animeType = detail?.type?.toLowerCase() || 'tv';
   const overview = detail?.description;
   const malId = detail?.malId;
   const skipTypes = ['op', 'ed', 'mixed-ed', 'mixed-op', 'recap'];
+  const isEnded = detail?.status === 'FINISHED';
 
   if (user) {
     insertHistory({
@@ -130,7 +132,16 @@ export const loader = async ({ request, params }: LoaderArgs) => {
       detail?.type === 'MOVIE'
         ? loklokGetMovieInfo(idProvider)
         : loklokGetTvEpInfo(idProvider, Number(episodeId) - 1),
-      getProviderList('anime', title, orgTitle, year, undefined, aid),
+      getProviderList({
+        type: 'anime',
+        title,
+        orgTitle,
+        year,
+        season: undefined,
+        animeId: aid,
+        animeType,
+        isEnded,
+      }),
       malId && isGetSkipOpEd ? getAniskip(malId, Number(episodeId)) : undefined,
     ]);
     const totalProviderEpisodes = Number(tvDetail?.data?.episodeCount);
@@ -209,7 +220,16 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   if (provider === 'Gogo') {
     const [episodeDetail, providers, aniskip] = await Promise.all([
       getAnimeEpisodeStream(episodeIndex, 'gogoanime'),
-      getProviderList('anime', title, orgTitle, year, undefined, aid),
+      getProviderList({
+        type: 'anime',
+        title,
+        orgTitle,
+        year,
+        season: undefined,
+        animeId: aid,
+        animeType,
+        isEnded,
+      }),
       malId && isGetSkipOpEd ? getAniskip(malId, Number(episodeId)) : undefined,
     ]);
     const hasNextEpisode = checkHasNextEpisode(
@@ -276,7 +296,16 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   if (provider === 'Zoro') {
     const [episodeDetail, providers, aniskip] = await Promise.all([
       getAnimeEpisodeStream(episodeIndex, 'zoro'),
-      getProviderList('anime', title, orgTitle, year, undefined, aid),
+      getProviderList({
+        type: 'anime',
+        title,
+        orgTitle,
+        year,
+        season: undefined,
+        animeId: aid,
+        animeType,
+        isEnded,
+      }),
       malId && isGetSkipOpEd ? getAniskip(malId, Number(episodeId)) : undefined,
     ]);
     const hasNextEpisode = checkHasNextEpisode(
@@ -349,7 +378,16 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
     const [animeInfo, providers, aniskip] = await Promise.all([
       getBilibiliInfo(Number(idProvider)),
-      getProviderList('anime', title, orgTitle, year, undefined, aid),
+      getProviderList({
+        type: 'anime',
+        title,
+        orgTitle,
+        year,
+        season: undefined,
+        animeId: aid,
+        animeType,
+        isEnded,
+      }),
       malId && isGetSkipOpEd ? getAniskip(malId, Number(episodeId)) : undefined,
     ]);
     const episodeSearch = animeInfo?.episodes?.find((e) => e?.number === Number(episodeId));
@@ -445,7 +483,16 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
     const [episodeDetail, providers, aniskip] = await Promise.all([
       getKissKhInfo(Number(idProvider)),
-      getProviderList('anime', title, orgTitle, year, undefined, aid),
+      getProviderList({
+        type: 'anime',
+        title,
+        orgTitle,
+        year,
+        season: undefined,
+        animeId: aid,
+        animeType,
+        isEnded,
+      }),
       malId && isGetSkipOpEd ? getAniskip(malId, Number(episodeId)) : undefined,
     ]);
 
@@ -535,7 +582,16 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   }
   const [sources, providers, aniskip] = await Promise.all([
     getAnimeEpisodeStream(episodeIndex),
-    getProviderList('anime', title, orgTitle, year, undefined, aid),
+    getProviderList({
+      type: 'anime',
+      title,
+      orgTitle,
+      year,
+      season: undefined,
+      animeId: aid,
+      animeType,
+      isEnded,
+    }),
     malId && isGetSkipOpEd ? getAniskip(malId, Number(episodeId)) : undefined,
   ]);
 

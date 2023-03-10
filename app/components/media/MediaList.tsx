@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 import { IMedia } from '~/types/media';
 import { ILanguage } from '~/services/tmdb/tmdb.types';
-import useMediaQuery from '~/hooks/useMediaQuery';
+import { useMediaQuery } from '@react-hookz/web';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 
 import FilterIcon from '~/assets/icons/FilterIcon';
@@ -316,7 +316,7 @@ const MediaList = (props: IMediaListProps) => {
   const [slideProgress, setSlideProgress] = useState<number>(0);
   const [displayType, setDisplayType] = useState<string>(listType as string);
   const { showFilter, setShowFilter } = useSoraSettings();
-  const isSm = useMediaQuery('(max-width: 650px)');
+  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
 
   if (!listType && typeof window !== 'undefined') {
     listType =
@@ -464,17 +464,16 @@ const MediaList = (props: IMediaListProps) => {
                 ghost
                 ref={(node) => setPrevEl(node)}
                 css={{
-                  width: isSm ? '32px' : '44px',
-                  height: isSm ? '32px' : '44px',
+                  width: '32px',
+                  height: '32px',
                   padding: 0,
                   cursor: 'pointer',
-                  '&:hover': {
-                    opacity: '0.8',
-                  },
+                  '&:hover': { opacity: '0.8' },
+                  '@xs': { width: '44px', height: '44px' },
                 }}
                 aria-label="Previous"
                 disabled={slideProgress === 0}
-                icon={<ChevronLeftIcon />}
+                icon={<ChevronLeftIcon height={isSm ? 18 : 24} width={isSm ? 18 : 24} />}
               />
               <Spacer x={0.25} />
               <Button
@@ -485,17 +484,16 @@ const MediaList = (props: IMediaListProps) => {
                 ghost
                 ref={(node) => setNextEl(node)}
                 css={{
-                  width: isSm ? '32px' : '44px',
-                  height: isSm ? '32px' : '44px',
+                  width: '32px',
+                  height: '32px',
                   padding: 0,
                   cursor: 'pointer',
-                  '&:hover': {
-                    opacity: '0.8',
-                  },
+                  '&:hover': { opacity: '0.8' },
+                  '@xs': { width: '44px', height: '44px' },
                 }}
                 aria-label="Next"
                 disabled={slideProgress === 1}
-                icon={<ChevronRightIcon />}
+                icon={<ChevronRightIcon height={isSm ? 18 : 24} width={isSm ? 18 : 24} />}
               />
             </div>
           )}

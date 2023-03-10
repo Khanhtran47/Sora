@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Container } from '@nextui-org/react';
 import type { User } from '@supabase/supabase-js';
 
-import useMediaQuery from '~/hooks/useMediaQuery';
+import { useMediaQuery } from '@react-hookz/web';
 
 /* Components */
 import Flex from '../styles/Flex.styles';
@@ -22,7 +22,7 @@ interface ILayout {
 const Layout = (props: ILayout) => {
   const { children, user } = props;
   const [open, setOpen] = React.useState(false);
-  const isSm = useMediaQuery('(max-width: 650px)');
+  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
 
   return (
     <Container

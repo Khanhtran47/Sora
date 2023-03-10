@@ -1,5 +1,6 @@
 import type { ILoklokMediaInfo, ILoklokSearchData, ILoklokInfoData } from './loklok.type';
-import { fetcher, LOKLOK_URL } from './utils.server';
+import { LOKLOK_URL } from './utils.server';
+import { fetcher, lruCache } from '../lru-cache';
 
 /**
  * It takes a string as an argument, and returns a promise that resolves to an array of objects
@@ -15,7 +16,13 @@ export const loklokSearchOneTv = async (
   try {
     let url = `${LOKLOK_URL}/search/one?title=${title}&orgTitle=${orgTitle}&year=${year}`;
     if (season) url += `&season=${season}`;
-    const res = await fetcher<{ data: ILoklokSearchData }>(url);
+    const res = await fetcher<{ data: ILoklokSearchData }>({
+      url,
+      key: `loklok-search-one-tv-${title}-${orgTitle}-${year}-${season}`,
+      ttl: 1000 * 60 * 60 * 24,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 7,
+      cache: lruCache,
+    });
     if (res) return res;
     return undefined;
   } catch (e) {
@@ -31,9 +38,13 @@ export const loklokSearchOneTv = async (
  */
 export const loklokGetTvEpInfo = async (id: string, episodeIndex = 0) => {
   try {
-    const info = await fetcher<ILoklokMediaInfo>(
-      `${LOKLOK_URL}/tv/detail?id=${id}&episodeIndex=${episodeIndex}`,
-    );
+    const info = await fetcher<ILoklokMediaInfo>({
+      url: `${LOKLOK_URL}/tv/detail?id=${id}&episodeIndex=${episodeIndex}`,
+      key: `loklok-tv-ep-info-${id}-${episodeIndex}`,
+      ttl: 1000 * 60 * 60 * 24,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 7,
+      cache: lruCache,
+    });
 
     if (info && info.data) return info;
     return undefined;
@@ -47,7 +58,13 @@ export const getLoklokOrgDetail = async (
   type: string,
 ): Promise<ILoklokInfoData | undefined> => {
   try {
-    const info = await fetcher<ILoklokMediaInfo>(`${LOKLOK_URL}/${type}/orgDetail?id=${id}`);
+    const info = await fetcher<ILoklokMediaInfo>({
+      url: `${LOKLOK_URL}/${type}/orgDetail?id=${id}`,
+      key: `loklok-org-detail-${id}-${type}`,
+      ttl: 1000 * 60 * 60 * 24,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 7,
+      cache: lruCache,
+    });
 
     if (info && info.data) return info.data;
     return undefined;
@@ -73,15 +90,23 @@ export const loklokSearchTvEpInfo = async (
   episodeIndex = 0,
 ) => {
   try {
-    const res = await fetcher<{ data: ILoklokSearchData }>(
-      `${LOKLOK_URL}/search/one?title=${title}&orgTitle=${orgTitle}&year=${year}&season=${season}`,
-    );
+    const res = await fetcher<{ data: ILoklokSearchData }>({
+      url: `${LOKLOK_URL}/search/one?title=${title}&orgTitle=${orgTitle}&year=${year}&season=${season}`,
+      key: `loklok-search-one-tv-${title}-${orgTitle}-${year}-${season}`,
+      ttl: 1000 * 60 * 60 * 24,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 7,
+      cache: lruCache,
+    });
 
     if (!res || !res.data) return;
 
-    const info = await fetcher<ILoklokMediaInfo>(
-      `${LOKLOK_URL}/tv/detail?id=${res.data.id}&episodeIndex=${episodeIndex}`,
-    );
+    const info = await fetcher<ILoklokMediaInfo>({
+      url: `${LOKLOK_URL}/tv/detail?id=${res.data.id}&episodeIndex=${episodeIndex}`,
+      key: `loklok-tv-ep-info-${res.data.id}-${episodeIndex}`,
+      ttl: 1000 * 60 * 60 * 24,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 7,
+      cache: lruCache,
+    });
 
     if (info && info.data) return info;
   } catch (e) {
@@ -97,9 +122,13 @@ export const loklokSearchTvEpInfo = async (
  */
 export const loklokGetTvEpSub = async (id: string, episodeIndex = 0) => {
   try {
-    const info = await fetcher<ILoklokMediaInfo>(
-      `${LOKLOK_URL}/tv/detail?id=${id}&episodeIndex=${episodeIndex}`,
-    );
+    const info = await fetcher<ILoklokMediaInfo>({
+      url: `${LOKLOK_URL}/tv/detail?id=${id}&episodeIndex=${episodeIndex}`,
+      key: `loklok-tv-ep-info-${id}-${episodeIndex}`,
+      ttl: 1000 * 60 * 60 * 24,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 7,
+      cache: lruCache,
+    });
 
     if (info && info.data) {
       return info.subtitles.map((sub) => ({
@@ -131,15 +160,23 @@ export const loklokSearchTvEpSub = async (
   episodeIndex = 0,
 ) => {
   try {
-    const res = await fetcher<{ data: ILoklokSearchData }>(
-      `${LOKLOK_URL}/search/one?title=${title}&orgTitle=${orgTitle}&year=${year}&season=${season}`,
-    );
+    const res = await fetcher<{ data: ILoklokSearchData }>({
+      url: `${LOKLOK_URL}/search/one?title=${title}&orgTitle=${orgTitle}&year=${year}&season=${season}`,
+      key: `loklok-search-one-tv-${title}-${orgTitle}-${year}-${season}`,
+      ttl: 1000 * 60 * 60 * 24,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 7,
+      cache: lruCache,
+    });
 
     if (!res || !res.data) return [];
 
-    const info = await fetcher<ILoklokMediaInfo>(
-      `${LOKLOK_URL}/tv/detail?id=${res.data.id}&episodeIndex=${episodeIndex}`,
-    );
+    const info = await fetcher<ILoklokMediaInfo>({
+      url: `${LOKLOK_URL}/tv/detail?id=${res.data.id}&episodeIndex=${episodeIndex}`,
+      key: `loklok-tv-ep-info-${res.data.id}-${episodeIndex}`,
+      ttl: 1000 * 60 * 60 * 24,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 7,
+      cache: lruCache,
+    });
 
     if (info && info.data) {
       return info.subtitles.map((sub) => ({

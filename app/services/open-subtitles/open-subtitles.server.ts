@@ -1,37 +1,39 @@
+import * as C from 'cachified';
 import Opensubtitles from './utils.server';
 import { ISubtitlesSearch, ISubtitleDownload } from './open-subtitles.types';
-import { lruCache } from '../lru-cache';
+import { cachified, lruCache } from '../lru-cache';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const fetcher = async <T = any>(
-  url: string,
-  method: string,
-  body?: { file_id: number; sub_format: string },
-): Promise<T> => {
-  if (lruCache) {
-    const cached = lruCache.get<T>(url);
-    if (cached) {
-      console.info('\x1b[32m%s\x1b[0m', '[cached]', url);
-      return cached;
-    }
-  }
-
-  const myHeaders = new Headers();
-  myHeaders.append('Api-Key', `${process.env.OPEN_SUBTITLES_API_KEY}`);
-  myHeaders.append('Content-Type', 'application/json');
-
-  const init = {
-    method,
-    headers: myHeaders,
-    ...(body && { body: JSON.stringify(body) }),
-  };
-  const res = await fetch(url, init);
-  if (!res.ok) throw new Error(JSON.stringify(await res.json()));
-  const data = await res.json();
-
-  if (lruCache) lruCache.set(url, data);
-
-  return data;
+const fetcher = async <Value>({
+  url,
+  method,
+  body,
+  ...options
+}: Omit<C.CachifiedOptions<Value>, 'getFreshValue' | 'forceFresh'> & {
+  url: string;
+  method: string;
+  body?: { file_id: number; sub_format: string };
+  forceFresh?: boolean | string;
+  getFreshValue?: undefined;
+}): Promise<Value> => {
+  const results = await cachified({
+    ...options,
+    request: undefined,
+    getFreshValue: async () => {
+      const myHeaders = new Headers();
+      myHeaders.append('Api-Key', `${process.env.OPEN_SUBTITLES_API_KEY}`);
+      myHeaders.append('Content-Type', 'application/json');
+      const init = {
+        method,
+        headers: myHeaders,
+        ...(body && { body: JSON.stringify(body) }),
+      };
+      const res = await fetch(url, init);
+      if (!res.ok) throw new Error(JSON.stringify(await res.json()));
+      const data = (await res.json()) as Value;
+      return data;
+    },
+  });
+  return results;
 };
 
 export const getSubtitlesSearch = async (
@@ -60,8 +62,8 @@ export const getSubtitlesSearch = async (
   year?: number,
 ): Promise<ISubtitlesSearch | undefined> => {
   try {
-    const fetched = await fetcher<ISubtitlesSearch>(
-      Opensubtitles.subtitlesSearchUrl(
+    const fetched = await fetcher<ISubtitlesSearch>({
+      url: Opensubtitles.subtitlesSearchUrl(
         id,
         imdb_id,
         tmdb_id,
@@ -86,8 +88,12 @@ export const getSubtitlesSearch = async (
         user_id,
         year,
       ),
-      'GET',
-    );
+      method: 'GET',
+      key: `subtitles-search-${id}-${imdb_id}-${tmdb_id}-${parent_feature_id}-${parent_imdb_id}-${parent_tmdb_id}-${query}-${ai_translated}-${episode_number}-${foreign_parts_only}-${hearing_impaired}-${languages}-${machine_translated}-${moviehash}-${moviehash_match}-${order_by}-${order_direction}-${page}-${season_number}-${trusted_sources}-${type}-${user_id}-${year}`,
+      ttl: 1000 * 60 * 60 * 24,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 7,
+      cache: lruCache,
+    });
     return fetched;
   } catch (error) {
     console.error(error);
@@ -99,9 +105,17 @@ export const getSubtitleDownload = async (
   sub_format: 'srt' | 'webvtt',
 ): Promise<ISubtitleDownload | undefined> => {
   try {
-    const fetched = await fetcher<ISubtitleDownload>(Opensubtitles.subtitleDownloadUrl(), 'POST', {
-      file_id: id,
-      sub_format,
+    const fetched = await fetcher<ISubtitleDownload>({
+      url: Opensubtitles.subtitleDownloadUrl(),
+      method: 'POST',
+      body: {
+        file_id: id,
+        sub_format,
+      },
+      key: `subtitle-download-${id}-${sub_format}`,
+      ttl: 1000 * 60 * 60 * 24,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 7,
+      cache: lruCache,
     });
     return fetched;
   } catch (error) {

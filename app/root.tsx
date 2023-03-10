@@ -28,13 +28,14 @@ import swiperPaginationStyles from 'swiper/css/navigation';
 import swiperNavigationStyles from 'swiper/css/pagination';
 // @ts-ignore
 import swiperThumbsStyles from 'swiper/css/thumbs';
+// @ts-ignore
+import swiperAutoPlayStyles from 'swiper/css/autoplay';
 import { AnimatePresence, motion } from 'framer-motion';
 import NProgress from 'nprogress';
 import { useChangeLanguage } from 'remix-i18next';
 import { useTranslation } from 'react-i18next';
 import photoSwipeStyles from 'photoswipe/dist/photoswipe.css';
 import remixImageStyles from 'remix-image/remix-image.css';
-import { MetronomeLinks } from '@metronome-sh/react';
 import Image, { MimeType } from 'remix-image';
 import { getSelectorsByUserAgent } from 'react-device-detect';
 import FontStyles100 from '@fontsource/inter/100.css';
@@ -126,6 +127,11 @@ const links: LinksFunction = () => [
   {
     rel: 'preload',
     as: 'style',
+    href: swiperAutoPlayStyles,
+  },
+  {
+    rel: 'preload',
+    as: 'style',
     href: nProgressStyles,
   },
   {
@@ -202,6 +208,10 @@ const links: LinksFunction = () => [
   {
     rel: 'stylesheet',
     href: swiperThumbsStyles,
+  },
+  {
+    rel: 'stylesheet',
+    href: swiperAutoPlayStyles,
   },
   {
     rel: 'stylesheet',
@@ -444,7 +454,6 @@ const Document = ({ children, title, lang, dir, gaTrackingId, ENV }: DocumentPro
           dangerouslySetInnerHTML={{ __html: clientStyleData.sheet }}
           suppressHydrationWarning
         />
-        {process.env.NODE_ENV === 'production' && !isBot ? <MetronomeLinks /> : null}
       </head>
       <body>
         {process.env.NODE_ENV === 'development' || !gaTrackingId || isBot ? null : (

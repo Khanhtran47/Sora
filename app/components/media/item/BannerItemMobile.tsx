@@ -1,19 +1,15 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { useState, useEffect, useRef } from 'react';
-import { Card, Row, Col, Spacer, Badge, Text, Image as NextImage } from '@nextui-org/react';
-import { Link, useFetcher } from '@remix-run/react';
+import { Card, Row, Col, Spacer, Badge, Text } from '@nextui-org/react';
+import { Link } from '@remix-run/react';
 import Image, { MimeType } from 'remix-image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 
 import { Title } from '~/types/media';
-import { IImage } from '~/services/tmdb/tmdb.types';
 
-import useMediaQuery from '~/hooks/useMediaQuery';
-import useSize from '~/hooks/useSize';
-import TMDB from '~/utils/media';
+import { useMediaQuery, useMeasure } from '@react-hookz/web';
 
 import AspectRatio from '~/components/elements/aspect-ratio/AspectRatio';
 import { H5 } from '~/components/styles/Text.styles';
@@ -47,36 +43,17 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
     voteAverage,
     genresAnime,
   } = props;
-  const fetcher = useFetcher();
-
-  const [logo, setLogo] = useState<IImage>();
-  const isXs = useMediaQuery('(max-width: 375px)');
+  const isXs = useMediaQuery('(max-width: 375px)', { initializeWithValue: false });
 
   const { ref, inView } = useInView({
     threshold: 0,
   });
-  const bannerRef = useRef<HTMLDivElement>(null);
-  const { width, height } = useSize(bannerRef);
+  const [size, bannerRef] = useMeasure<HTMLDivElement>();
 
   const titleItem =
     typeof title === 'string'
       ? title
       : title?.userPreferred || title?.english || title?.romaji || title?.native;
-
-  useEffect(() => {
-    if (active && mediaType !== 'anime') {
-      fetcher.load(`/api/media?id=${id}&type=${mediaType}`);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [active]);
-
-  useEffect(() => {
-    if (mediaType !== 'anime' && active && fetcher.data && fetcher.data.images && inView) {
-      const { logos } = fetcher.data.images;
-      if (logos && logos.length > 0) setLogo(logos[0]);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetcher.data]);
 
   return (
     <AspectRatio.Root ratio={4 / 5} ref={bannerRef}>
@@ -91,11 +68,13 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
           ref={ref}
           isPressable
           css={{
-            w: width,
-            h: height,
+            w: size?.width,
+            h: size?.height,
             borderWidth: 0,
             transition: 'all 0.5s ease',
             marginTop: !active ? '1.5rem' : 0,
+            borderBottomLeftRadius: 0,
+            borderBottomRightRadius: 0,
           }}
           role="figure"
         >
@@ -110,7 +89,7 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
                 bottom: 0,
                 left: 0,
                 width: '100%',
-                height: `${height / 2}px`,
+                height: `${(size?.height || 0) / 2}px`,
                 backgroundImage: 'linear-gradient(0deg, $background, $backgroundTransparent)',
                 '@lgMin': {
                   height: '250px',
@@ -119,7 +98,7 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
             }}
           >
             <AnimatePresence>
-              {inView ? (
+              {inView && size ? (
                 <motion.div
                   initial={{ opacity: 0, scale: 1.2, y: 40 }}
                   animate={active && { opacity: 1, scale: 1, y: 0 }}
@@ -148,8 +127,8 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
                     responsive={[
                       {
                         size: {
-                          width,
-                          height: width * (5 / 4),
+                          width: size?.width,
+                          height: (size?.width || 0) * (5 / 4),
                         },
                       },
                     ]}
@@ -163,41 +142,19 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
           </Card.Body>
           <Card.Footer css={{ position: 'absolute', zIndex: 1, bottom: 5 }}>
             <Col css={{ py: '1rem' }}>
-              {logo ? (
-                <NextImage
-                  src={TMDB.logoUrl(logo.file_path, 'w154')}
-                  alt={titleItem}
-                  title={titleItem}
-                  objectFit="cover"
-                  width="154px"
-                  height="auto"
-                  showSkeleton
-                  containerCss={{
-                    minWidth: '154px !important',
-                    minHeight: `${154 / Number(logo.aspect_ratio)}px !important`,
-                  }}
-                  css={{
-                    minWidth: 'auto !important',
-                    minHeight: 'auto !important',
-                    maxWidth: '154px !important',
-                    maxHeight: `${154 / Number(logo.aspect_ratio)}px !important`,
-                  }}
-                />
-              ) : (
-                <Text
-                  h4
-                  weight="bold"
-                  css={{
-                    fontSize: isXs ? '1.5rem' : '1.75rem',
-                    marginBottom: 0,
-                    fontWeight: 600,
-                    lineHeight: 'var(--nextui-lineHeights-base)',
-                    textAlign: 'center',
-                  }}
-                >
-                  <Balancer>{titleItem}</Balancer>
-                </Text>
-              )}
+              <Text
+                h4
+                weight="bold"
+                css={{
+                  fontSize: isXs ? '1.5rem' : '1.75rem',
+                  marginBottom: 0,
+                  fontWeight: 600,
+                  lineHeight: 'var(--nextui-lineHeights-base)',
+                  textAlign: 'center',
+                }}
+              >
+                <Balancer>{titleItem}</Balancer>
+              </Text>
               <Row css={{ marginTop: '1.25rem' }} align="center">
                 <H5
                   h5

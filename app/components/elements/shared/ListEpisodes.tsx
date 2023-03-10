@@ -10,7 +10,7 @@ import Image, { MimeType } from 'remix-image';
 import { IEpisode } from '~/services/tmdb/tmdb.types';
 import { IEpisodeInfo } from '~/services/consumet/anilist/anilist.types';
 
-import useMediaQuery from '~/hooks/useMediaQuery';
+import { useMediaQuery } from '@react-hookz/web';
 import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 
@@ -42,7 +42,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
   const navigate = useNavigate();
   const { isShowSkipOpEdButton } = useSoraSettings();
   const episodesCountAvailable = useMemo(() => episodes && episodes.length, [episodes]);
-  const isSm = useMediaQuery('(max-width: 650px)');
+  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const [selectedProvider, setSelectedProvider] = useState<Set<string>>(
     new Set([providers[0].provider]),
   );

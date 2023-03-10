@@ -1,7 +1,7 @@
 import { Modal } from '@nextui-org/react';
 import YouTube, { YouTubeProps } from 'react-youtube';
 
-import useWindowSize from '~/hooks/useWindowSize';
+import { useWindowSize } from '@react-hookz/web';
 import { ITrailer } from '~/services/consumet/anilist/anilist.types';
 
 export type Trailer = {

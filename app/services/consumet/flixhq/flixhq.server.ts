@@ -1,32 +1,19 @@
-import { lruCache } from '~/services/lru-cache';
+import { lruCache, fetcher } from '~/services/lru-cache';
 import Flixhq from './utils.server';
 import { IMovieSearch, IMovieInfo, IMovieEpisodeStreamLink } from './flixhq.types';
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const fetcher = async <T = any>(url: string): Promise<T> => {
-  if (lruCache) {
-    const cached = lruCache.get<T>(url);
-    if (cached) {
-      console.info('\x1b[32m%s\x1b[0m', '[cached]', url);
-      return cached;
-    }
-  }
-
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(JSON.stringify(await res.json()));
-  const data = await res.json();
-
-  if (lruCache) lruCache.set(url, data);
-
-  return data;
-};
 
 export const getMovieSearch = async (
   query: string,
   page?: number,
 ): Promise<IMovieSearch | undefined> => {
   try {
-    const fetched = await fetcher<IMovieSearch>(Flixhq.movieSearchUrl(query, page));
+    const fetched = await fetcher<IMovieSearch>({
+      url: Flixhq.movieSearchUrl(query, page),
+      key: `flixhq-search-${query}-${page}`,
+      ttl: 1000 * 60 * 60 * 24,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 7,
+      cache: lruCache,
+    });
     return fetched;
   } catch (error) {
     console.log(error);
@@ -35,7 +22,13 @@ export const getMovieSearch = async (
 
 export const getMovieInfo = async (id: string): Promise<IMovieInfo | undefined> => {
   try {
-    const fetched = await fetcher<IMovieInfo>(Flixhq.movieInfoUrl(id));
+    const fetched = await fetcher<IMovieInfo>({
+      url: Flixhq.movieInfoUrl(id),
+      key: `flixhq-info-${id}`,
+      ttl: 1000 * 60 * 60 * 24,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24 * 7,
+      cache: lruCache,
+    });
     return fetched;
   } catch (error) {
     console.log(error);
@@ -48,9 +41,13 @@ export const getMovieEpisodeStreamLink = async (
   server?: string,
 ): Promise<IMovieEpisodeStreamLink | undefined> => {
   try {
-    const fetched = await fetcher<IMovieEpisodeStreamLink>(
-      Flixhq.movieEpisodeStreamUrl(episodeId, mediaId, server),
-    );
+    const fetched = await fetcher<IMovieEpisodeStreamLink>({
+      url: Flixhq.movieEpisodeStreamUrl(episodeId, mediaId, server),
+      key: `flixhq-episode-${episodeId}-${mediaId}-${server}`,
+      ttl: 1000 * 60 * 60,
+      staleWhileRevalidate: 1000 * 60 * 60 * 24,
+      cache: lruCache,
+    });
     return fetched;
   } catch (error) {
     console.log(error);

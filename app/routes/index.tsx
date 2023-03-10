@@ -93,7 +93,13 @@ const Index = () => {
       animate={{ x: '0', opacity: 1 }}
       exit={{ y: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
-      style={{ width: '100%' }}
+      style={{
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
     >
       <MediaList
         genresMovie={rootData?.genresMovie}
@@ -105,6 +111,7 @@ const Index = () => {
         fluid
         display="flex"
         justify="flex-start"
+        alignItems="center"
         direction="column"
         css={{
           marginTop: '48px',

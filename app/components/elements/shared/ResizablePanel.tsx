@@ -3,8 +3,7 @@
 import { useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-import useMeasure from '~/hooks/useMeasure';
-import useScreen from '~/hooks/useScreen';
+import { useMeasure, useWindowSize } from '@react-hookz/web';
 
 import {
   ScrollArea,
@@ -38,24 +37,24 @@ const ResizablePanel = ({
   children: React.ReactNode;
   contentWidth: 'full' | 'fit';
 }) => {
-  const [ref, { height, width }] = useMeasure<HTMLDivElement>();
-  const screen = useScreen();
+  const [size, ref] = useMeasure<HTMLDivElement>();
+  const screen = useWindowSize();
   const panelHeight = useMemo(() => {
-    if (height && screen?.height) {
-      if (height + 10 > 400) {
+    if (size?.height && screen?.height) {
+      if ((size?.height || 0) + 10 > 400) {
         return screen?.height > 400 ? 386 : screen.height - 36;
       }
-      return height + 10 > screen?.height ? screen.height - 36 : height;
+      return (size?.height || 0) + 10 > screen?.height ? screen.height - 36 : size?.height;
     }
     return 'auto';
-  }, [screen?.height, height]);
+  }, [screen?.height, size?.height]);
 
   return (
     <motion.div
       className="relative overflow-hidden"
       animate={{
         height: panelHeight,
-        width: width || 'auto',
+        width: size?.width || 'auto',
       }}
       transition={{ duration: 0.25 }}
     >
@@ -66,13 +65,13 @@ const ResizablePanel = ({
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: -382, opacity: 0 }}
           transition={{ duration: 0.25 }}
-          className={height ? 'absolute' : 'relative'}
+          className={size?.height ? 'absolute' : 'relative'}
         >
           <ScrollArea
             type="auto"
             css={{
               height: panelHeight,
-              width: width || 'auto',
+              width: size?.width || 'auto',
             }}
           >
             <ScrollAreaViewport>

@@ -18,8 +18,7 @@ import { useFetcher } from '@remix-run/react';
 
 import usePlayerState from '~/store/player/usePlayerState';
 
-import useWindowSize from '~/hooks/useWindowSize';
-import useMediaQuery from '~/hooks/useMediaQuery';
+import { useMediaQuery, useWindowSize } from '@react-hookz/web';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 
 import { ISubtitlesSearch, ISubtitle } from '~/services/open-subtitles/open-subtitles.types';
@@ -70,7 +69,7 @@ interface ISearchSubtitlesProps {
 const SearchSubtitles = (props: ISearchSubtitlesProps) => {
   const { visible, closeHandler, subtitleOptions } = props;
   const rootData = useTypedRouteLoaderData('root');
-  const isSm = useMediaQuery('(max-width: 650px)');
+  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const fetcher = useFetcher();
   const { width } = useWindowSize();
   const { updateSubtitleSelector } = usePlayerState((state) => state);

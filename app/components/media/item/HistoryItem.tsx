@@ -1,8 +1,9 @@
 import { Card, Col, Grid, Image, Progress, Text } from '@nextui-org/react';
 import { Link } from '@remix-run/react';
-import { useRef } from 'react';
-import useSize, { IUseSize } from '~/hooks/useSize';
+import { useMeasure } from '@react-hookz/web';
+
 import { IHistory } from '~/services/supabase';
+
 import notFound from '~/assets/images/404.gif';
 
 interface IHistoryItem {
@@ -10,8 +11,7 @@ interface IHistoryItem {
 }
 
 const HistoryItem = ({ item }: IHistoryItem) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const size: IUseSize = useSize(ref);
+  const [size, ref] = useMeasure<HTMLDivElement>();
   const watched = Math.round((item.watched / item.duration) * 100);
 
   const url = new URL(`http://abc${item.route}`);
@@ -42,7 +42,7 @@ const HistoryItem = ({ item }: IHistoryItem) => {
           <Grid xs={6}>
             <Grid.Container
               alignContent="flex-start"
-              css={size.width > 350 ? { marginTop: '1rem' } : {}}
+              css={size?.width && size.width > 350 ? { marginTop: '1rem' } : {}}
             >
               {/* title */}
               <Grid xs={12}>
