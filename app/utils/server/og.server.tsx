@@ -1,29 +1,73 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/indent */
 
 import { renderAsync } from '@resvg/resvg-js';
 
-const generateSvg = async ({ title = '' }) => {
+const generateSvg = async ({ title, cover }: { title: string; cover: string }) => {
   const res = await fetch(
     'https://github.com/rsms/inter/raw/master/docs/font-files/Inter-Regular.woff',
   );
   const font = await res.arrayBuffer();
-
   const { default: satori } = await import('satori');
   return satori(
     <div
       style={{
-        fontSize: 128,
-        fontFamily: 'Inter',
-        background: 'white',
-        width: '100%',
-        height: '100%',
         display: 'flex',
-        textAlign: 'center',
+        height: '100%',
+        width: '100%',
         alignItems: 'center',
         justifyContent: 'center',
+        flexDirection: 'row',
+        fontSize: 96,
+        letterSpacing: -2,
+        fontWeight: 700,
+        textAlign: 'center',
+        gap: 36,
       }}
     >
-      {title}
+      <div
+        style={{
+          width: '1200px',
+          height: '600px',
+          backgroundImage: `url(${cover})`,
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+          position: 'absolute',
+          zIndex: '0',
+          filter: 'blur(14px) saturate(120%) brightness(120%)',
+        }}
+      />
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          position: 'absolute',
+          zIndex: '0',
+          backgroundColor: 'rgba(0,0,0,0.7)',
+        }}
+      />
+      <img
+        src="https://raw.githubusercontent.com/Khanhtran47/Sora/master/app/assets/images/logo_loading.png"
+        height={150}
+        width={150}
+        alt="logo"
+        style={{
+          borderRadius: '50%',
+        }}
+      />
+      <div
+        style={{
+          backgroundImage:
+            'linear-gradient(112deg, rgb(6,183,219) -63.59%, rgb(255,78,205) -20.3%, rgb(0,114,245) 70.46%)',
+          backgroundClip: 'text',
+          // @ts-ignore
+          '-webkit-background-clip': 'text',
+          color: 'transparent',
+          fontFamily: 'Inter',
+        }}
+      >
+        {title}
+      </div>
     </div>,
     {
       width: 1200,
@@ -121,6 +165,21 @@ const generateMovieSvg = async ({
           flexDirection: 'column',
         }}
       >
+        <h3
+          style={{
+            backgroundImage:
+              'linear-gradient(112deg, rgb(6,183,219) -63.59%, rgb(255,78,205) -20.3%, rgb(0,114,245) 70.46%)',
+            backgroundClip: 'text',
+            // @ts-ignore
+            '-webkit-background-clip': 'text',
+            color: 'transparent',
+            fontFamily: 'Inter',
+            fontSize: 28,
+            marginBottom: 0,
+          }}
+        >
+          SORA
+        </h3>
         <h4
           style={{
             color: 'rgba(236,237,238,0.6)',
