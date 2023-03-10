@@ -83,40 +83,38 @@ const SearchRoute = () => {
   };
 
   return (
-    <>
+    <Container
+      fluid
+      display="flex"
+      justify="center"
+      direction="column"
+      alignItems="center"
+      css={{
+        '@xsMax': {
+          paddingLeft: '$sm',
+          paddingRight: '$sm',
+        },
+      }}
+    >
       <SearchForm
         onSubmit={onSubmit}
         textOnButton={t('search.action')}
         textHelper={t('search.helper.people')}
         textPlaceHolder={t('search.placeHolder.people')}
       />
-      <Container
-        fluid
-        display="flex"
-        justify="center"
-        direction="column"
-        alignItems="center"
-        css={{
-          '@xsMax': {
-            paddingLeft: '$sm',
-            paddingRight: '$sm',
-          },
-        }}
-      >
-        {searchResults && searchResults.items && searchResults.items?.length > 0 && (
-          <MediaList
-            currentPage={searchResults.page}
-            items={searchResults.items}
-            listName={t('search.searchResults')}
-            listType="grid"
-            onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
-            showPagination
-            totalPages={searchResults.totalPages}
-            itemsType="people"
-          />
-        )}
-      </Container>
-    </>
+      {searchResults && searchResults.items && searchResults.items?.length > 0 && (
+        <MediaList
+          currentPage={searchResults.page}
+          items={searchResults.items}
+          listName={t('search.searchResults')}
+          listType="grid"
+          onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
+          showPagination
+          totalPages={searchResults.totalPages}
+          itemsType="people"
+        />
+      )}
+    </Container>
   );
 };
 

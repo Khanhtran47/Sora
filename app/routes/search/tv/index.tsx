@@ -68,42 +68,40 @@ const SearchRoute = () => {
   };
 
   return (
-    <>
+    <Container
+      fluid
+      display="flex"
+      justify="center"
+      direction="column"
+      alignItems="center"
+      css={{
+        '@xsMax': {
+          paddingLeft: '$sm',
+          paddingRight: '$sm',
+        },
+      }}
+    >
       <SearchForm
         onSubmit={onSubmit}
         textOnButton={t('search.action')}
         textHelper={t('search.helper.tv')}
         textPlaceHolder={t('search.placeHolder.tv')}
       />
-      <Container
-        fluid
-        display="flex"
-        justify="center"
-        direction="column"
-        alignItems="center"
-        css={{
-          '@xsMax': {
-            paddingLeft: '$sm',
-            paddingRight: '$sm',
-          },
-        }}
-      >
-        {todayTrending && todayTrending.items && todayTrending?.items.length > 0 && (
-          <MediaList
-            listType="grid"
-            showListTypeChangeButton
-            items={todayTrending && todayTrending.items}
-            listName={t('todayTrending')}
-            genresMovie={rootData?.genresMovie}
-            genresTv={rootData?.genresTv}
-            showPagination
-            totalPages={todayTrending?.totalPages}
-            currentPage={todayTrending?.page}
-            onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
-          />
-        )}
-      </Container>
-    </>
+      {todayTrending && todayTrending.items && todayTrending?.items.length > 0 && (
+        <MediaList
+          listType="grid"
+          showListTypeChangeButton
+          items={todayTrending && todayTrending.items}
+          listName={t('todayTrending')}
+          genresMovie={rootData?.genresMovie}
+          genresTv={rootData?.genresTv}
+          showPagination
+          totalPages={todayTrending?.totalPages}
+          currentPage={todayTrending?.page}
+          onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
+        />
+      )}
+    </Container>
   );
 };
 

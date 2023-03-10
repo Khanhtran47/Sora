@@ -1,30 +1,44 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable no-nested-ternary */
-import { json } from '@remix-run/node';
+import { useState, useMemo } from 'react';
+import { json, redirect } from '@remix-run/node';
 import type { LoaderArgs, ActionArgs, MetaFunction } from '@remix-run/node';
 import {
-  // Form,
   NavLink,
   useFetcher,
   useLoaderData,
-  // useSearchParams,
-  // useSubmit,
+  useSearchParams,
   useLocation,
+  useNavigate,
 } from '@remix-run/react';
-// import { useDebouncedCallback } from '@react-hookz/web';
+import { useWindowSize } from '@react-hookz/web';
 import { motion } from 'framer-motion';
-import { Badge, Container, Spacer, Button } from '@nextui-org/react';
+import { Badge, Container, Spacer, Button, Modal } from '@nextui-org/react';
 import type { CacheEntry } from 'cachified';
 import { badRequest } from 'remix-utils';
 
 import { getAllCacheKeys, lruCache, searchCacheKeys } from '~/services/lru-cache';
+import { getUserFromCookie } from '~/services/supabase';
 
 import { useDoubleCheck } from '~/hooks/useDoubleCheck';
 
 import ErrorBoundaryView from '~/components/ErrorBoundaryView';
-import { H2, H3 } from '~/components/styles/Text.styles';
+import { H2, H3, H5 } from '~/components/styles/Text.styles';
+import SearchForm from '~/components/elements/SearchForm';
 
 const loader = async ({ request }: LoaderArgs) => {
+  const cookie = request.headers.get('Cookie');
+  if (!cookie) {
+    throw redirect('/sign-in');
+  }
+  const user = await getUserFromCookie(cookie as string);
+  if (!user) {
+    throw redirect('/sign-in');
+  }
+  const admin = process.env.ADMIN_ID?.split(',');
+  if (user && !admin?.includes(user.id)) {
+    throw redirect('/');
+  }
   const url = new URL(request.url);
   const query = url.searchParams.get('query');
   let cacheKeys: { key: string; data: CacheEntry<unknown> }[];
@@ -71,7 +85,13 @@ const handle = {
   ),
 };
 
-const CacheKeyRow = ({ cacheKey }: { cacheKey: string }) => {
+const CacheKeyRow = ({
+  cacheKey,
+  handleOpenDetailCache,
+}: {
+  cacheKey: string;
+  handleOpenDetailCache: (cacheKey: string) => void;
+}) => {
   const fetcher = useFetcher();
   const dc = useDoubleCheck();
   return (
@@ -83,24 +103,38 @@ const CacheKeyRow = ({ cacheKey }: { cacheKey: string }) => {
           {fetcher.state === 'idle' ? (dc.doubleCheck ? 'You sure?' : 'Delete') : 'Deleting...'}
         </Button>
       </fetcher.Form>
-      {cacheKey}
+      <Button auto light onPress={() => handleOpenDetailCache(cacheKey)}>
+        {cacheKey}
+      </Button>
     </div>
   );
 };
 
 const CacheAdminRoute = () => {
   const { cacheKeys } = useLoaderData<typeof loader>();
-  console.log('🚀 ~ file: cache.admin.tsx:92 ~ CacheAdminRoute ~ cacheKeys:', cacheKeys);
-  // const [searchParams] = useSearchParams();
-  // const submit = useSubmit();
+  const [showDetailCache, setShowDetailCache] = useState(false);
+  const [currentCacheKey, setCurrentCacheKey] = useState<string | null>(null);
+  const [searchParams] = useSearchParams();
   const location = useLocation();
-  // const query = searchParams.get('query') ?? '';
-  // const handleFormChange = useDebouncedCallback(
-  //   (form: HTMLFormElement) => submit(form),
-  //   [],
-  //   400,
-  //   600,
-  // );
+  const navigate = useNavigate();
+  const { width } = useWindowSize();
+  const query = searchParams.get('query') ?? '';
+  const currentCache = useMemo(() => {
+    if (currentCacheKey) {
+      return cacheKeys.find((cacheKey) => cacheKey.key === currentCacheKey);
+    }
+    return null;
+  }, [currentCacheKey, cacheKeys]);
+  const handleShowDetailCache = (cacheKey: string) => {
+    setCurrentCacheKey(cacheKey);
+    setShowDetailCache(true);
+  };
+  const closeHandler = () => {
+    setShowDetailCache(false);
+  };
+  const onSubmit = (value: string) => {
+    navigate(`/cache/admin?query=${value}`);
+  };
 
   return (
     <motion.main
@@ -124,14 +158,68 @@ const CacheAdminRoute = () => {
         <H2 h2 css={{ '@xsMax': { fontSize: '1.75rem !important' } }}>
           Cache Admin
         </H2>
+        <SearchForm
+          onSubmit={onSubmit}
+          textOnButton="Search"
+          textPlaceHolder="Search cache key"
+          defaultValue={query}
+        />
         <Spacer x={1} />
         <div className="flex flex-col gap-4">
-          <H3>LRU Cache:</H3>
           {cacheKeys.map((cacheKey) => (
-            <CacheKeyRow key={cacheKey.key} cacheKey={cacheKey.key} />
+            <CacheKeyRow
+              key={cacheKey.key}
+              cacheKey={cacheKey.key}
+              handleOpenDetailCache={(key) => handleShowDetailCache(key)}
+            />
           ))}
         </div>
       </Container>
+      <Modal
+        closeButton
+        scroll
+        blur
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
+        open={showDetailCache}
+        onClose={closeHandler}
+        className="!max-w-fit"
+        // noPadding
+        // autoMargin={false}
+        width={width && width < 720 ? `${width}px` : '720px'}
+      >
+        <Modal.Header css={{ display: 'flex', flexFlow: 'row wrap' }}>
+          <H3 h3 id="modal-title">
+            Cache detail
+          </H3>
+        </Modal.Header>
+        <Modal.Body>
+          {currentCache ? (
+            <div className="flex flex-col gap-4" id="modal-description">
+              <H5>
+                Cache Key: <span>{currentCache.key}</span>
+              </H5>
+              <H5>
+                Cache TTL: <span>{currentCache.data.metadata.ttl}</span>
+              </H5>
+              <H5>
+                Cache Stale While Revalidate: <span>{currentCache.data.metadata.swr}</span>
+              </H5>
+              <H5>
+                Cache Created At: <span>{currentCache.data.metadata.createdTime}</span>
+              </H5>
+              <H5>
+                Cache Data: <span>{JSON.stringify(currentCache.data.value)}</span>
+              </H5>
+            </div>
+          ) : null}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button auto flat color="error" onPress={closeHandler}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </motion.main>
   );
 };

@@ -77,40 +77,38 @@ const SearchRoute = () => {
     navigate(`/search/anime/${value}`);
   };
   return (
-    <>
+    <Container
+      fluid
+      display="flex"
+      justify="center"
+      direction="column"
+      alignItems="center"
+      css={{
+        '@xsMax': {
+          paddingLeft: '$sm',
+          paddingRight: '$sm',
+        },
+      }}
+    >
       <SearchForm
         onSubmit={onSubmit}
         textOnButton={t('search.action')}
         textHelper={t('search.helper.anime')}
         textPlaceHolder={t('search.placeHolder.anime')}
       />
-      <Container
-        fluid
-        display="flex"
-        justify="center"
-        direction="column"
-        alignItems="center"
-        css={{
-          '@xsMax': {
-            paddingLeft: '$sm',
-            paddingRight: '$sm',
-          },
-        }}
-      >
-        {searchResults && searchResults.results && searchResults.results.length > 0 && (
-          <MediaList
-            hasNextPage={searchResults.hasNextPage || false}
-            items={searchResults.results as IMedia[]}
-            itemsType="anime"
-            listName={t('search.searchResults')}
-            listType="grid"
-            loadingType="scroll"
-            routeName={location.pathname}
-            virtual
-          />
-        )}
-      </Container>
-    </>
+      {searchResults && searchResults.results && searchResults.results.length > 0 && (
+        <MediaList
+          hasNextPage={searchResults.hasNextPage || false}
+          items={searchResults.results as IMedia[]}
+          itemsType="anime"
+          listName={t('search.searchResults')}
+          listType="grid"
+          loadingType="scroll"
+          routeName={location.pathname}
+          virtual
+        />
+      )}
+    </Container>
   );
 };
 

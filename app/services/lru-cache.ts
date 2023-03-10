@@ -29,12 +29,7 @@ const lru = (global.cache = global.cache
   : new LRU<string, CacheEntry<unknown>>(lruOptions));
 const lruCache = lruCacheAdapter(lru);
 
-const getAllCacheKeys = async () => {
-  console.log([...lru.entries()]);
-  console.log([...lru.keys()]);
-  console.log([...lru.values()]);
-  return [...lru.entries()].map(([key, data]) => ({ key, data }));
-};
+const getAllCacheKeys = async () => [...lru.entries()].map(([key, data]) => ({ key, data }));
 const searchCacheKeys = async (search: string) =>
   [...lru.entries()].filter(([key]) => key.includes(search)).map(([key, data]) => ({ key, data }));
 
