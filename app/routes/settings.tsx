@@ -122,79 +122,54 @@ const Settings = () => {
 
   const {
     currentSubtitleFontColor,
-    setCurrentSubtitleFontColor,
     currentSubtitleFontSize,
-    setCurrentSubtitleFontSize,
     currentSubtitleBackgroundColor,
-    setCurrentSubtitleBackgroundColor,
     currentSubtitleBackgroundOpacity,
-    setCurrentSubtitleBackgroundOpacity,
     currentSubtitleWindowColor,
-    setCurrentSubtitleWindowColor,
     currentSubtitleWindowOpacity,
-    setCurrentSubtitleWindowOpacity,
     currentSubtitleTextEffects,
-    setCurrentSubtitleTextEffects,
     autoShowSubtitle,
-    setAutoShowSubtitle,
     // showFilter,
-    // setShowFilter,
     isMutedTrailer,
-    setIsMutedTrailer,
     isPlayTrailer,
-    setIsPlayTrailer,
     isAutoSize,
-    setIsAutoSize,
     isPicInPic,
-    setIsPicInPic,
     isMuted,
-    setIsMuted,
     isAutoPlay,
-    setIsAutoPlay,
     isAutoMini,
-    setIsAutoMini,
     isLoop,
-    setIsLoop,
     isScreenshot,
-    setIsScreenshot,
     isMiniProgressbar,
-    setIsMiniProgressbar,
     isAutoPlayback,
-    setIsAutoPlayback,
     isAutoPlayNextEpisode,
-    setIsAutoPlayNextEpisode,
     isShowSkipOpEdButton,
-    setIsShowSkipOpEdButton,
     isAutoSkipOpEd,
-    setIsAutoSkipOpEd,
     isFastForward,
-    setIsFastForward,
     isSwipeFullscreen,
-    setIsSwipeFullscreen,
   } = useSoraSettings();
 
   const [activeTab, setActiveTab] = useState('general-tab');
   const [selectedLang, setSelectedLang] = useState(new Set([locale]));
   const [selectedSubtitleFontColor, setSelectedSubtitleFontColor] = useState(
-    new Set([currentSubtitleFontColor]),
+    new Set([currentSubtitleFontColor.value!]),
   );
   const [selectedSubtitleFontSize, setSelectedSubtitleFontSize] = useState(
-    new Set([currentSubtitleFontSize]),
+    new Set([currentSubtitleFontSize.value!]),
   );
   const [selectedSubtitleBackgroundColor, setSelectedSubtitleBackgroundColor] = useState(
-    new Set([currentSubtitleBackgroundColor]),
+    new Set([currentSubtitleBackgroundColor.value!]),
   );
   const [selectedSubtitleBackgroundOpacity, setSelectedSubtitleBackgroundOpacity] = useState(
-    new Set([currentSubtitleBackgroundOpacity]),
+    new Set([currentSubtitleBackgroundOpacity.value!]),
   );
   const [selectedSubtitleWindowColor, setSelectedSubtitleWindowColor] = useState(
-    new Set([currentSubtitleWindowColor]),
+    new Set([currentSubtitleWindowColor.value!]),
   );
   const [selectedSubtitleWindowOpacity, setSelectedSubtitleWindowOpacity] = useState(
-    new Set([currentSubtitleWindowOpacity]),
+    new Set([currentSubtitleWindowOpacity.value!]),
   );
   const [selectedSubtitleTextEffects, setSelectedSubtitleTextEffects] = useState(
-    new Set([currentSubtitleTextEffects]),
+    new Set([currentSubtitleTextEffects.value!]),
   );
 
   const selectedLangValue = useMemo(
@@ -482,8 +457,8 @@ const Settings = () => {
                           >
                             <H6>{t('play-trailer')}</H6>
                             <Switch
-                              checked={isPlayTrailer}
-                              onChange={(e) => setIsPlayTrailer(e.target.checked)}
+                              checked={isPlayTrailer.value}
+                              onChange={(e) => isPlayTrailer.set(e.target.checked)}
                             />
                           </Flex>
                           <Spacer y={0.25} />
@@ -500,8 +475,8 @@ const Settings = () => {
                           >
                             <H6>{t('mute-trailer')}</H6>
                             <Switch
-                              checked={isMutedTrailer}
-                              onChange={(e) => setIsMutedTrailer(e.target.checked)}
+                              checked={isMutedTrailer.value}
+                              onChange={(e) => isMutedTrailer.set(e.target.checked)}
                             />
                           </Flex>
                         </Collapse>
@@ -574,8 +549,8 @@ const Settings = () => {
                               <H6 css={{ color: '$accents8' }}>{t('pic-in-pic-subtitle')}</H6>
                             </Flex>
                             <Switch
-                              checked={isPicInPic}
-                              onChange={(e) => setIsPicInPic(e.target.checked)}
+                              checked={isPicInPic.value}
+                              onChange={(e) => isPicInPic.set(e.target.checked)}
                             />
                           </Flex>
                           <Spacer y={0.25} />
@@ -595,8 +570,8 @@ const Settings = () => {
                               <H6 css={{ color: '$accents8' }}>{t('muted-subtitle')}</H6>
                             </Flex>
                             <Switch
-                              checked={isMuted}
-                              onChange={(e) => setIsMuted(e.target.checked)}
+                              checked={isMuted.value}
+                              onChange={(e) => isMuted.set(e.target.checked)}
                             />
                           </Flex>
                           <Spacer y={0.25} />
@@ -616,8 +591,8 @@ const Settings = () => {
                               <H6 css={{ color: '$accents8' }}>{t('autoplay-subtitle')}</H6>
                             </Flex>
                             <Switch
-                              checked={isAutoPlay}
-                              onChange={(e) => setIsAutoPlay(e.target.checked)}
+                              checked={isAutoPlay.value}
+                              onChange={(e) => isAutoPlay.set(e.target.checked)}
                             />
                           </Flex>
                           <Spacer y={0.25} />
@@ -637,8 +612,8 @@ const Settings = () => {
                               <H6 css={{ color: '$accents8' }}>{t('loop-subtitle')}</H6>
                             </Flex>
                             <Switch
-                              checked={isLoop}
-                              onChange={(e) => setIsLoop(e.target.checked)}
+                              checked={isLoop.value}
+                              onChange={(e) => isLoop.set(e.target.checked)}
                             />
                           </Flex>
                         </Collapse>
@@ -666,8 +641,8 @@ const Settings = () => {
                               <H6 css={{ color: '$accents8' }}>{t('show-subtitle-subtitle')}</H6>
                             </Flex>
                             <Switch
-                              checked={autoShowSubtitle}
-                              onChange={(e) => setAutoShowSubtitle(e.target.checked)}
+                              checked={autoShowSubtitle.value}
+                              onChange={(e) => autoShowSubtitle.set(e.target.checked)}
                             />
                           </Flex>
                           <Spacer y={0.25} />
@@ -695,7 +670,7 @@ const Settings = () => {
                                 onSelectionChange={(keys: any) => {
                                   const color = Array.from(keys).join(', ');
                                   setSelectedSubtitleFontColor(keys);
-                                  setCurrentSubtitleFontColor(color);
+                                  currentSubtitleFontColor.set(color);
                                 }}
                               >
                                 {listSubtitleFontColor.map((color) => (
@@ -729,7 +704,7 @@ const Settings = () => {
                                 onSelectionChange={(keys: any) => {
                                   const size = Array.from(keys).join(', ');
                                   setSelectedSubtitleFontSize(keys);
-                                  setCurrentSubtitleFontSize(size);
+                                  currentSubtitleFontSize.set(size);
                                 }}
                               >
                                 {listSubtitleFontSize.map((size) => (
@@ -763,7 +738,7 @@ const Settings = () => {
                                 onSelectionChange={(keys: any) => {
                                   const color = Array.from(keys).join(', ');
                                   setSelectedSubtitleBackgroundColor(keys);
-                                  setCurrentSubtitleBackgroundColor(color);
+                                  currentSubtitleBackgroundColor.set(color);
                                 }}
                               >
                                 {listSubtitleBackgroundColor.map((color) => (
@@ -797,7 +772,7 @@ const Settings = () => {
                                 onSelectionChange={(keys: any) => {
                                   const opacity = Array.from(keys).join(', ');
                                   setSelectedSubtitleBackgroundOpacity(keys);
-                                  setCurrentSubtitleBackgroundOpacity(opacity);
+                                  currentSubtitleBackgroundOpacity.set(opacity);
                                 }}
                               >
                                 {listSubtitleBackgroundOpacity.map((opacity) => (
@@ -831,7 +806,7 @@ const Settings = () => {
                                 onSelectionChange={(keys: any) => {
                                   const color = Array.from(keys).join(', ');
                                   setSelectedSubtitleWindowColor(keys);
-                                  setCurrentSubtitleWindowColor(color);
+                                  currentSubtitleWindowColor.set(color);
                                 }}
                               >
                                 {listSubtitleWindowColor.map((color) => (
@@ -865,7 +840,7 @@ const Settings = () => {
                                 onSelectionChange={(keys: any) => {
                                   const opacity = Array.from(keys).join(', ');
                                   setSelectedSubtitleWindowOpacity(keys);
-                                  setCurrentSubtitleWindowOpacity(opacity);
+                                  currentSubtitleWindowOpacity.set(opacity);
                                 }}
                               >
                                 {listSubtitleWindowOpacity.map((opacity) => (
@@ -899,7 +874,7 @@ const Settings = () => {
                                 onSelectionChange={(keys: any) => {
                                   const effect = Array.from(keys).join(', ');
                                   setSelectedSubtitleTextEffects(keys);
-                                  setCurrentSubtitleTextEffects(effect);
+                                  currentSubtitleTextEffects.set(effect);
                                 }}
                               >
                                 {listSubtitleTextEffects.map((effect) => (
@@ -933,8 +908,8 @@ const Settings = () => {
                               <H6 css={{ color: '$accents8' }}>{t('auto-size-subtitle')}</H6>
                             </Flex>
                             <Switch
-                              checked={isAutoSize}
-                              onChange={(e) => setIsAutoSize(e.target.checked)}
+                              checked={isAutoSize.value}
+                              onChange={(e) => isAutoSize.set(e.target.checked)}
                             />
                           </Flex>
                           <Spacer y={0.25} />
@@ -954,8 +929,8 @@ const Settings = () => {
                               <H6 css={{ color: '$accents8' }}>{t('auto-mini-subtitle')}</H6>
                             </Flex>
                             <Switch
-                              checked={isAutoMini}
-                              onChange={(e) => setIsAutoMini(e.target.checked)}
+                              checked={isAutoMini.value}
+                              onChange={(e) => isAutoMini.set(e.target.checked)}
                             />
                           </Flex>
                           <Spacer y={0.25} />
@@ -975,8 +950,8 @@ const Settings = () => {
                               <H6 css={{ color: '$accents8' }}>{t('screenshot-subtitle')}</H6>
                             </Flex>
                             <Switch
-                              checked={isScreenshot}
-                              onChange={(e) => setIsScreenshot(e.target.checked)}
+                              checked={isScreenshot.value}
+                              onChange={(e) => isScreenshot.set(e.target.checked)}
                             />
                           </Flex>
                           <Spacer y={0.25} />
@@ -996,8 +971,8 @@ const Settings = () => {
                               <H6 css={{ color: '$accents8' }}>{t('mini-progressbar-subtitle')}</H6>
                             </Flex>
                             <Switch
-                              checked={isMiniProgressbar}
-                              onChange={(e) => setIsMiniProgressbar(e.target.checked)}
+                              checked={isMiniProgressbar.value}
+                              onChange={(e) => isMiniProgressbar.set(e.target.checked)}
                             />
                           </Flex>
                           <Spacer y={0.25} />
@@ -1017,8 +992,8 @@ const Settings = () => {
                               <H6 css={{ color: '$accents8' }}>{t('auto-playback-subtitle')}</H6>
                             </Flex>
                             <Switch
-                              checked={isAutoPlayback}
-                              onChange={(e) => setIsAutoPlayback(e.target.checked)}
+                              checked={isAutoPlayback.value}
+                              onChange={(e) => isAutoPlayback.set(e.target.checked)}
                             />
                           </Flex>
                           <Spacer y={0.25} />
@@ -1040,8 +1015,8 @@ const Settings = () => {
                               </H6>
                             </Flex>
                             <Switch
-                              checked={isAutoPlayNextEpisode}
-                              onChange={(e) => setIsAutoPlayNextEpisode(e.target.checked)}
+                              checked={isAutoPlayNextEpisode.value}
+                              onChange={(e) => isAutoPlayNextEpisode.set(e.target.checked)}
                             />
                           </Flex>
                           <Spacer y={0.25} />
@@ -1063,11 +1038,11 @@ const Settings = () => {
                               </H6>
                             </Flex>
                             <Switch
-                              checked={isShowSkipOpEdButton}
+                              checked={isShowSkipOpEdButton.value}
                               onChange={(e) => {
-                                setIsShowSkipOpEdButton(e.target.checked);
-                                if (!isShowSkipOpEdButton) {
-                                  setIsAutoSkipOpEd(false);
+                                isShowSkipOpEdButton.set(e.target.checked);
+                                if (!isShowSkipOpEdButton.value) {
+                                  isAutoSkipOpEd.set(false);
                                 }
                               }}
                             />
@@ -1099,8 +1074,8 @@ const Settings = () => {
                                     </H6>
                                   </Flex>
                                   <Switch
-                                    checked={isAutoSkipOpEd}
-                                    onChange={(e) => setIsAutoSkipOpEd(e.target.checked)}
+                                    checked={isAutoSkipOpEd.value}
+                                    onChange={(e) => isAutoSkipOpEd.set(e.target.checked)}
                                   />
                                 </Flex>
                               </motion.div>
@@ -1131,8 +1106,8 @@ const Settings = () => {
                               <H6 css={{ color: '$accents8' }}>{t('swipe-to-seek-subtitle')}</H6>
                             </Flex>
                             <Switch
-                              checked={isFastForward}
-                              onChange={(e) => setIsFastForward(e.target.checked)}
+                              checked={isFastForward.value}
+                              onChange={(e) => isFastForward.set(e.target.checked)}
                             />
                           </Flex>
                           <Spacer y={0.25} />
@@ -1154,8 +1129,8 @@ const Settings = () => {
                               </H6>
                             </Flex>
                             <Switch
-                              checked={isSwipeFullscreen}
-                              onChange={(e) => setIsSwipeFullscreen(e.target.checked)}
+                              checked={isSwipeFullscreen.value}
+                              onChange={(e) => isSwipeFullscreen.set(e.target.checked)}
                             />
                           </Flex>
                         </Collapse>

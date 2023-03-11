@@ -163,95 +163,113 @@ const GlobalPlayer = () => {
   const [isPlayerFullScreen, setIsPlayerFullScreen] = useState(false);
   const [isSettingsOpen, setSettingsOpen] = useState(false);
   const [isSearchModalVisible, setSearchModalVisible] = useState(false);
-  const [showSubtitle, setShowSubtitle] = useState(autoShowSubtitle);
+  const [showSubtitle, setShowSubtitle] = useState(autoShowSubtitle.value!);
   const [showSkipButton, setShowSkipButton] = useState(false);
   const [currentHighlight, setCurrentHighlight] = useState<Highlight | null>(null);
   const subtitleBackgroundColor = useMemo(() => {
-    switch (currentSubtitleBackgroundColor) {
+    switch (currentSubtitleBackgroundColor.value) {
       case 'Black':
         backgroundColor = tinycolor('#000000');
-        backgroundColor.setAlpha(Number(currentSubtitleBackgroundOpacity.replace(/%/g, '')) / 100);
+        backgroundColor.setAlpha(
+          Number(currentSubtitleBackgroundOpacity.value?.replace(/%/g, '')) / 100,
+        );
         return backgroundColor.toHslString();
       case 'Blue':
         backgroundColor = tinycolor('#0072F5');
-        backgroundColor.setAlpha(Number(currentSubtitleBackgroundOpacity.replace(/%/g, '')) / 100);
+        backgroundColor.setAlpha(
+          Number(currentSubtitleBackgroundOpacity.value?.replace(/%/g, '')) / 100,
+        );
         return backgroundColor.toHslString();
       case 'Purple':
         backgroundColor = tinycolor('#7828C8');
-        backgroundColor.setAlpha(Number(currentSubtitleBackgroundOpacity.replace(/%/g, '')) / 100);
+        backgroundColor.setAlpha(
+          Number(currentSubtitleBackgroundOpacity.value?.replace(/%/g, '')) / 100,
+        );
         return backgroundColor.toHslString();
       case 'Green':
         backgroundColor = tinycolor('#17C964');
-        backgroundColor.setAlpha(Number(currentSubtitleBackgroundOpacity.replace(/%/g, '')) / 100);
+        backgroundColor.setAlpha(
+          Number(currentSubtitleBackgroundOpacity.value?.replace(/%/g, '')) / 100,
+        );
         return backgroundColor.toHslString();
       case 'Yellow':
         backgroundColor = tinycolor('#F5A524');
-        backgroundColor.setAlpha(Number(currentSubtitleBackgroundOpacity.replace(/%/g, '')) / 100);
+        backgroundColor.setAlpha(
+          Number(currentSubtitleBackgroundOpacity.value?.replace(/%/g, '')) / 100,
+        );
         return backgroundColor.toHslString();
       case 'Red':
         backgroundColor = tinycolor('#F31260');
-        backgroundColor.setAlpha(Number(currentSubtitleBackgroundOpacity.replace(/%/g, '')) / 100);
+        backgroundColor.setAlpha(
+          Number(currentSubtitleBackgroundOpacity.value?.replace(/%/g, '')) / 100,
+        );
         return backgroundColor.toHslString();
       case 'Cyan':
         backgroundColor = tinycolor('#06B7DB');
-        backgroundColor.setAlpha(Number(currentSubtitleBackgroundOpacity.replace(/%/g, '')) / 100);
+        backgroundColor.setAlpha(
+          Number(currentSubtitleBackgroundOpacity.value?.replace(/%/g, '')) / 100,
+        );
         return backgroundColor.toHslString();
       case 'Pink':
         backgroundColor = tinycolor('#FF4ECD');
-        backgroundColor.setAlpha(Number(currentSubtitleBackgroundOpacity.replace(/%/g, '')) / 100);
+        backgroundColor.setAlpha(
+          Number(currentSubtitleBackgroundOpacity.value?.replace(/%/g, '')) / 100,
+        );
         return backgroundColor.toHslString();
       case 'White':
         backgroundColor = tinycolor('#FFFFFF');
-        backgroundColor.setAlpha(Number(currentSubtitleBackgroundOpacity.replace(/%/g, '')) / 100);
+        backgroundColor.setAlpha(
+          Number(currentSubtitleBackgroundOpacity.value?.replace(/%/g, '')) / 100,
+        );
         return backgroundColor.toHslString();
       default:
         break;
     }
-  }, [currentSubtitleBackgroundColor, currentSubtitleBackgroundOpacity]);
+  }, [currentSubtitleBackgroundColor.value, currentSubtitleBackgroundOpacity.value]);
   const subtitleWindowColor = useMemo(() => {
-    switch (currentSubtitleWindowColor) {
+    switch (currentSubtitleWindowColor.value) {
       case 'Black':
         windowColor = tinycolor('#000000');
-        windowColor.setAlpha(Number(currentSubtitleWindowOpacity.replace(/%/g, '')) / 100);
+        windowColor.setAlpha(Number(currentSubtitleWindowOpacity.value?.replace(/%/g, '')) / 100);
         return windowColor.toHslString();
       case 'Blue':
         windowColor = tinycolor('#0072F5');
-        windowColor.setAlpha(Number(currentSubtitleWindowOpacity.replace(/%/g, '')) / 100);
+        windowColor.setAlpha(Number(currentSubtitleWindowOpacity.value?.replace(/%/g, '')) / 100);
         return windowColor.toHslString();
       case 'Purple':
         windowColor = tinycolor('#7828C8');
-        windowColor.setAlpha(Number(currentSubtitleWindowOpacity.replace(/%/g, '')) / 100);
+        windowColor.setAlpha(Number(currentSubtitleWindowOpacity.value?.replace(/%/g, '')) / 100);
         return windowColor.toHslString();
       case 'Green':
         windowColor = tinycolor('#17C964');
-        windowColor.setAlpha(Number(currentSubtitleWindowOpacity.replace(/%/g, '')) / 100);
+        windowColor.setAlpha(Number(currentSubtitleWindowOpacity.value?.replace(/%/g, '')) / 100);
         return windowColor.toHslString();
       case 'Yellow':
         windowColor = tinycolor('#F5A524');
-        windowColor.setAlpha(Number(currentSubtitleWindowOpacity.replace(/%/g, '')) / 100);
+        windowColor.setAlpha(Number(currentSubtitleWindowOpacity.value?.replace(/%/g, '')) / 100);
         return windowColor.toHslString();
       case 'Red':
         windowColor = tinycolor('#F31260');
-        windowColor.setAlpha(Number(currentSubtitleWindowOpacity.replace(/%/g, '')) / 100);
+        windowColor.setAlpha(Number(currentSubtitleWindowOpacity.value?.replace(/%/g, '')) / 100);
         return windowColor.toHslString();
       case 'Cyan':
         windowColor = tinycolor('#06B7DB');
-        windowColor.setAlpha(Number(currentSubtitleWindowOpacity.replace(/%/g, '')) / 100);
+        windowColor.setAlpha(Number(currentSubtitleWindowOpacity.value?.replace(/%/g, '')) / 100);
         return windowColor.toHslString();
       case 'Pink':
         windowColor = tinycolor('#FF4ECD');
-        windowColor.setAlpha(Number(currentSubtitleWindowOpacity.replace(/%/g, '')) / 100);
+        windowColor.setAlpha(Number(currentSubtitleWindowOpacity.value?.replace(/%/g, '')) / 100);
         return windowColor.toHslString();
       case 'White':
         windowColor = tinycolor('#FFFFFF');
-        windowColor.setAlpha(Number(currentSubtitleWindowOpacity.replace(/%/g, '')) / 100);
+        windowColor.setAlpha(Number(currentSubtitleWindowOpacity.value?.replace(/%/g, '')) / 100);
         return windowColor.toHslString();
       default:
         break;
     }
-  }, [currentSubtitleWindowColor, currentSubtitleWindowOpacity]);
+  }, [currentSubtitleWindowColor.value, currentSubtitleWindowOpacity.value]);
   const subtitleTextEffects = useMemo(() => {
-    switch (currentSubtitleTextEffects) {
+    switch (currentSubtitleTextEffects.value) {
       case 'None':
         return 'none';
       case 'Drop Shadow':
@@ -265,7 +283,7 @@ const GlobalPlayer = () => {
       default:
         break;
     }
-  }, [currentSubtitleTextEffects]);
+  }, [currentSubtitleTextEffects.value]);
 
   const closeSearchModalHandler = () => {
     setSearchModalVisible(false);
@@ -351,9 +369,9 @@ const GlobalPlayer = () => {
     if (typeVideo === 'anime') {
       return `/anime/${id}/episode/${
         currentEpisode + 1
-      }/watch?provider=${provider}&id=${idProvider}&skipOpEd=${isShowSkipOpEdButton}`;
+      }/watch?provider=${provider}&id=${idProvider}&skipOpEd=${isShowSkipOpEdButton.value}`;
     }
-  }, [typeVideo, id, seasonId, currentEpisode, provider, idProvider, isShowSkipOpEdButton]);
+  }, [typeVideo, id, seasonId, currentEpisode, provider, idProvider, isShowSkipOpEdButton.value]);
 
   const prevEpisodeUrl = useMemo(() => {
     if (currentEpisode > 1) {
@@ -365,10 +383,10 @@ const GlobalPlayer = () => {
       if (typeVideo === 'anime') {
         return `/anime/${id}/episode/${
           currentEpisode - 1
-        }/watch?provider=${provider}&id=${idProvider}&skipOpEd=${isShowSkipOpEdButton}`;
+        }/watch?provider=${provider}&id=${idProvider}&skipOpEd=${isShowSkipOpEdButton.value}`;
       }
     }
-  }, [typeVideo, id, seasonId, currentEpisode, provider, idProvider, isShowSkipOpEdButton]);
+  }, [typeVideo, id, seasonId, currentEpisode, provider, idProvider, isShowSkipOpEdButton.value]);
 
   useEffect(() => {
     if (
@@ -378,7 +396,7 @@ const GlobalPlayer = () => {
       hasNextEpisode &&
       nextEpisodeUrl &&
       typeVideo !== 'movie' &&
-      isAutoPlayNextEpisode
+      isAutoPlayNextEpisode.value
     ) {
       navigate(nextEpisodeUrl);
     }
@@ -502,9 +520,9 @@ const GlobalPlayer = () => {
                   option={{
                     id: `${id}-${routePlayer}-${titlePlayer}-${provider}`,
                     type: provider === 'Bilibili' ? 'mpd' : provider === 'test' ? 'mp4' : 'm3u8',
-                    autoSize: isAutoSize,
-                    loop: isLoop,
-                    muted: isMuted,
+                    autoSize: isAutoSize.value,
+                    loop: isLoop.value,
+                    muted: isMuted.value,
                     mutex: true,
                     setting: false,
                     flip: true,
@@ -513,20 +531,20 @@ const GlobalPlayer = () => {
                     fullscreen: true,
                     fullscreenWeb: false,
                     airplay: true,
-                    pip: isPicInPic,
-                    autoplay: isAutoPlay,
-                    screenshot: isDesktop && isScreenshot,
+                    pip: isPicInPic.value,
+                    autoplay: isAutoPlay.value,
+                    screenshot: isDesktop && isScreenshot.value,
                     subtitleOffset: true,
-                    fastForward: isMobile && isFastForward,
+                    fastForward: isMobile && isFastForward.value,
                     lock: isMobile,
-                    miniProgressBar: isMiniProgressbar,
+                    miniProgressBar: isMiniProgressbar.value,
                     autoOrientation: isMobile,
                     isLive: false,
                     playsInline: true,
-                    autoPlayback: isAutoPlayback,
+                    autoPlayback: isAutoPlayback.value,
                     whitelist: ['*'],
                     theme: 'var(--nextui-colors-primary)',
-                    autoMini: isAutoMini,
+                    autoMini: isAutoMini.value,
                     hotkey: true,
                     useSSR: false,
                     moreVideoAttr: isDesktop
@@ -763,8 +781,8 @@ const GlobalPlayer = () => {
                       setIsVideoEnded(false);
                       setShowSkipButton(false);
                       setArtplayer(art);
-                      if (autoShowSubtitle && art.subtitle) {
-                        art.subtitle.show = autoShowSubtitle;
+                      if (autoShowSubtitle.value && art.subtitle) {
+                        art.subtitle.show = autoShowSubtitle.value;
                       }
                       PlayerHotKey(art, setShowSubtitle);
                     });
@@ -813,7 +831,7 @@ const GlobalPlayer = () => {
                           (item) => art.currentTime >= item.start && art.currentTime <= item.end,
                         );
                         if (findCurrentHighlight) {
-                          if (isAutoSkipOpEd) {
+                          if (isAutoSkipOpEd.value) {
                             art.currentTime = findCurrentHighlight.end;
                             art.notice.show = `Skipped ${findCurrentHighlight.text}`;
                           } else {
@@ -963,37 +981,37 @@ const GlobalPlayer = () => {
                         flexDirection: 'column',
                         backgroundColor: subtitleWindowColor,
                         color:
-                          currentSubtitleFontColor === 'White'
+                          currentSubtitleFontColor.value === 'White'
                             ? '#fff'
-                            : currentSubtitleFontColor === 'Blue'
+                            : currentSubtitleFontColor.value === 'Blue'
                             ? '#0072F5'
-                            : currentSubtitleFontColor === 'Purple'
+                            : currentSubtitleFontColor.value === 'Purple'
                             ? '#7828C8'
-                            : currentSubtitleFontColor === 'Green'
+                            : currentSubtitleFontColor.value === 'Green'
                             ? '#17C964'
-                            : currentSubtitleFontColor === 'Yellow'
+                            : currentSubtitleFontColor.value === 'Yellow'
                             ? '#F5A524'
-                            : currentSubtitleFontColor === 'Red'
+                            : currentSubtitleFontColor.value === 'Red'
                             ? '#F31260'
-                            : currentSubtitleFontColor === 'Cyan'
+                            : currentSubtitleFontColor.value === 'Cyan'
                             ? '#06B7DB'
-                            : currentSubtitleFontColor === 'Pink'
+                            : currentSubtitleFontColor.value === 'Pink'
                             ? '#FF4ECD'
-                            : currentSubtitleFontColor === 'White'
+                            : currentSubtitleFontColor.value === 'White'
                             ? '#7828C8'
                             : '#000',
                         fontSize:
-                          currentSubtitleFontSize === '50%'
+                          currentSubtitleFontSize.value === '50%'
                             ? `${(size?.height || 0) * 0.05 * 0.5}px`
-                            : currentSubtitleFontSize === '75%'
+                            : currentSubtitleFontSize.value === '75%'
                             ? `${(size?.height || 0) * 0.05 * 0.75}px`
-                            : currentSubtitleFontSize === '100%'
+                            : currentSubtitleFontSize.value === '100%'
                             ? `${(size?.height || 0) * 0.05}px`
-                            : currentSubtitleFontSize === '150%'
+                            : currentSubtitleFontSize.value === '150%'
                             ? `${(size?.height || 0) * 0.05 * 1.5}px`
-                            : currentSubtitleFontSize === '200%'
+                            : currentSubtitleFontSize.value === '200%'
                             ? `${(size?.height || 0) * 0.05 * 2}px`
-                            : currentSubtitleFontSize === '300%'
+                            : currentSubtitleFontSize.value === '300%'
                             ? `${(size?.height || 0) * 0.05 * 3}px`
                             : `${(size?.height || 0) * 0.05 * 4}px`,
                         textShadow: subtitleTextEffects,

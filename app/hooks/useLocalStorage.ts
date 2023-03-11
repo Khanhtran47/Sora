@@ -1,229 +1,125 @@
-import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
-import useEventCallback from './useEventCallback';
-import useEventListener from './useEventListener';
-
-declare global {
-  interface WindowEventMap {
-    'local-storage': CustomEvent;
-  }
-}
-
-type SetValue<T> = Dispatch<SetStateAction<T>>;
-
-// A wrapper for "JSON.parse()"" to support "undefined" value
-function parseJSON<T>(value: string | null): T | undefined {
-  try {
-    return value === 'undefined' ? undefined : JSON.parse(value ?? '');
-  } catch {
-    console.log('parsing error on', { value });
-    return undefined;
-  }
-}
-
-function useLocalStorage<T>(key: string, initialValue: T): [T, SetValue<T>] {
-  // Get from local storage then
-  // parse stored json or return initialValue
-  const readValue = useCallback((): T => {
-    // Prevent build error "window is undefined" but keeps working
-    if (typeof window === 'undefined') {
-      return initialValue;
-    }
-
-    try {
-      const item = window.localStorage.getItem(key);
-      return item ? (parseJSON(item) as T) : initialValue;
-    } catch (error) {
-      console.warn(`Error reading localStorage key “${key}”:`, error);
-      return initialValue;
-    }
-  }, [initialValue, key]);
-
-  // State to store our value
-  // Pass initial state function to useState so logic is only executed once
-  const [storedValue, setStoredValue] = useState<T>(readValue);
-
-  // Return a wrapped version of useState's setter function that ...
-  // ... persists the new value to localStorage.
-  const setValue: SetValue<T> = useEventCallback((value) => {
-    // Prevent build error "window is undefined" but keeps working
-    if (typeof window === 'undefined') {
-      console.warn(
-        `Tried setting localStorage key “${key}” even though environment is not a client`,
-      );
-    }
-
-    try {
-      // Allow value to be a function so we have the same API as useState
-      const newValue = value instanceof Function ? value(storedValue) : value;
-
-      // Save to local storage
-      window.localStorage.setItem(key, JSON.stringify(newValue));
-
-      // Save state
-      setStoredValue(newValue);
-
-      // We dispatch a custom event so every useLocalStorage hook are notified
-      window.dispatchEvent(new Event('local-storage'));
-    } catch (error) {
-      console.warn(`Error setting localStorage key “${key}”:`, error);
-    }
-  });
-
-  useEffect(() => {
-    setStoredValue(readValue());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const handleStorageChange = useCallback(
-    (event: StorageEvent | CustomEvent) => {
-      if ((event as StorageEvent)?.key && (event as StorageEvent).key !== key) {
-        return;
-      }
-      setStoredValue(readValue());
-    },
-    [key, readValue],
-  );
-
-  // this only works for other documents, not the current one
-  useEventListener('storage', handleStorageChange);
-
-  // this is a custom event, triggered in writeValueToLocalStorage
-  // See: useLocalStorage()
-  useEventListener('local-storage', handleStorageChange);
-
-  return [storedValue, setValue];
-}
+import { useLocalStorageValue } from '@react-hookz/web';
 
 function useSoraSettings() {
-  const [currentSubtitleFontColor, setCurrentSubtitleFontColor] = useLocalStorage(
-    'sora-settings_subtitle_font-color',
-    'White',
-  );
-  const [currentSubtitleFontSize, setCurrentSubtitleFontSize] = useLocalStorage(
-    'sora-settings_subtitle_font-size',
-    '100%',
-  );
-  const [currentSubtitleBackgroundColor, setCurrentSubtitleBackgroundColor] = useLocalStorage(
+  const currentSubtitleFontColor = useLocalStorageValue('sora-settings_subtitle_font-color', {
+    defaultValue: 'White',
+  });
+  const currentSubtitleFontSize = useLocalStorageValue('sora-settings_subtitle_font-size', {
+    defaultValue: '100%',
+  });
+  const currentSubtitleBackgroundColor = useLocalStorageValue(
     'sora-settings_subtitle_background-color',
-    'Black',
+    {
+      defaultValue: 'Black',
+    },
   );
-  const [currentSubtitleBackgroundOpacity, setCurrentSubtitleBackgroundOpacity] = useLocalStorage(
+  const currentSubtitleBackgroundOpacity = useLocalStorageValue(
     'sora-settings_subtitle_background-opacity',
-    '0%',
+    {
+      defaultValue: '0%',
+    },
   );
-  const [currentSubtitleWindowColor, setCurrentSubtitleWindowColor] = useLocalStorage(
-    'sora-settings_subtitle_window-color',
-    'Black',
-  );
-  const [currentSubtitleWindowOpacity, setCurrentSubtitleWindowOpacity] = useLocalStorage(
+  const currentSubtitleWindowColor = useLocalStorageValue('sora-settings_subtitle_window-color', {
+    defaultValue: 'Black',
+  });
+  const currentSubtitleWindowOpacity = useLocalStorageValue(
     'sora-settings_subtitle_window-opacity',
-    '0%',
+    {
+      defaultValue: '0%',
+    },
   );
-  const [currentSubtitleTextEffects, setCurrentSubtitleTextEffects] = useLocalStorage(
-    'sora-settings_subtitle_text-effect',
-    'None',
-  );
-  const [autoShowSubtitle, setAutoShowSubtitle] = useLocalStorage(
-    'sora-settings_subtitle_auto-show',
-    false,
-  );
-  const [showFilter, setShowFilter] = useLocalStorage('sora-settings_layout_show-filter', false);
-  const [isMutedTrailer, setIsMutedTrailer] = useLocalStorage(
-    'sora-settings_experiments_mute-trailer',
-    true,
-  );
-  const [isPlayTrailer, setIsPlayTrailer] = useLocalStorage(
-    'sora-settings_experiments_play-trailer',
-    false,
-  );
-  const [isAutoSize, setIsAutoSize] = useLocalStorage('sora-settings_player_auto-size', false);
-  const [isPicInPic, setIsPicInPic] = useLocalStorage('sora-settings_player_pic-in-pic', true);
-  const [isMuted, setIsMuted] = useLocalStorage('sora-settings_player_mute', false);
-  const [isAutoPlay, setIsAutoPlay] = useLocalStorage('sora-settings_player_auto-play', false);
-  const [isAutoMini, setIsAutoMini] = useLocalStorage('sora-settings_player_auto-mini', false);
-  const [isLoop, setIsLoop] = useLocalStorage('sora-settings_player_loop', false);
-  const [isScreenshot, setIsScreenshot] = useLocalStorage('sora-settings_player_screenshot', true);
-  const [isMiniProgressbar, setIsMiniProgressbar] = useLocalStorage(
-    'sora-settings_player_mini-progressbar',
-    true,
-  );
-  const [isAutoPlayback, setIsAutoPlayback] = useLocalStorage(
-    'sora-settings_player_auto-playback',
-    true,
-  );
-  const [isAutoPlayNextEpisode, setIsAutoPlayNextEpisode] = useLocalStorage(
+  const currentSubtitleTextEffects = useLocalStorageValue('sora-settings_subtitle_text-effect', {
+    defaultValue: 'Outline',
+  });
+  const autoShowSubtitle = useLocalStorageValue('sora-settings_subtitle_auto-show', {
+    defaultValue: false,
+  });
+  const showFilter = useLocalStorageValue('sora-settings_layout_show-filter', {
+    defaultValue: false,
+    initializeWithValue: false,
+  });
+  const isMutedTrailer = useLocalStorageValue('sora-settings_experiments_mute-trailer', {
+    defaultValue: true,
+    initializeWithValue: false,
+  });
+  const isPlayTrailer = useLocalStorageValue('sora-settings_experiments_play-trailer', {
+    defaultValue: false,
+    initializeWithValue: false,
+  });
+  const isAutoSize = useLocalStorageValue('sora-settings_player_auto-size', {
+    defaultValue: false,
+  });
+  const isPicInPic = useLocalStorageValue('sora-settings_player_pic-in-pic', {
+    defaultValue: true,
+  });
+  const isMuted = useLocalStorageValue('sora-settings_player_mute', {
+    defaultValue: false,
+  });
+  const isAutoPlay = useLocalStorageValue('sora-settings_player_auto-play', {
+    defaultValue: false,
+  });
+  const isAutoMini = useLocalStorageValue('sora-settings_player_auto-mini', {
+    defaultValue: false,
+  });
+  const isLoop = useLocalStorageValue('sora-settings_player_loop', {
+    defaultValue: false,
+  });
+  const isScreenshot = useLocalStorageValue('sora-settings_player_screenshot', {
+    defaultValue: true,
+  });
+  const isMiniProgressbar = useLocalStorageValue('sora-settings_player_mini-progressbar', {
+    defaultValue: true,
+  });
+  const isAutoPlayback = useLocalStorageValue('sora-settings_player_auto-playback', {
+    defaultValue: true,
+  });
+  const isAutoPlayNextEpisode = useLocalStorageValue(
     'sora-settings_player_auto-play-next-episode',
-    true,
+    {
+      defaultValue: true,
+    },
   );
-  const [isShowSkipOpEdButton, setIsShowSkipOpEdButton] = useLocalStorage(
-    'sora-settings_player_show-skip-op-ed-button',
-    true,
-  );
-  const [isAutoSkipOpEd, setIsAutoSkipOpEd] = useLocalStorage(
-    'sora-settings_player_auto-skip-op-ed',
-    false,
-  );
-  const [isFastForward, setIsFastForward] = useLocalStorage(
-    'sora-settings_player-gestures_fast-forward',
-    true,
-  );
-  const [isSwipeFullscreen, setIsSwipeFullscreen] = useLocalStorage(
-    'sora-settings_player-gestures_swipe-fullscreen',
-    false,
-  );
+  const isShowSkipOpEdButton = useLocalStorageValue('sora-settings_player_show-skip-op-ed-button', {
+    defaultValue: true,
+  });
+  const isAutoSkipOpEd = useLocalStorageValue('sora-settings_player_auto-skip-op-ed', {
+    defaultValue: false,
+  });
+  const isFastForward = useLocalStorageValue('sora-settings_player-gestures_fast-forward', {
+    defaultValue: true,
+  });
+  const isSwipeFullscreen = useLocalStorageValue('sora-settings_player-gestures_swipe-fullscreen', {
+    defaultValue: false,
+  });
 
   return {
     currentSubtitleFontColor,
-    setCurrentSubtitleFontColor,
     currentSubtitleFontSize,
-    setCurrentSubtitleFontSize,
     currentSubtitleBackgroundColor,
-    setCurrentSubtitleBackgroundColor,
     currentSubtitleBackgroundOpacity,
-    setCurrentSubtitleBackgroundOpacity,
     currentSubtitleWindowColor,
-    setCurrentSubtitleWindowColor,
     currentSubtitleWindowOpacity,
-    setCurrentSubtitleWindowOpacity,
     autoShowSubtitle,
-    setAutoShowSubtitle,
     showFilter,
-    setShowFilter,
     isMutedTrailer,
-    setIsMutedTrailer,
     isPlayTrailer,
-    setIsPlayTrailer,
     isAutoSize,
-    setIsAutoSize,
     isPicInPic,
-    setIsPicInPic,
     isMuted,
-    setIsMuted,
     isAutoPlay,
-    setIsAutoPlay,
     isAutoMini,
-    setIsAutoMini,
     isLoop,
-    setIsLoop,
     isScreenshot,
-    setIsScreenshot,
     isMiniProgressbar,
-    setIsMiniProgressbar,
     isAutoPlayback,
-    setIsAutoPlayback,
     isAutoPlayNextEpisode,
-    setIsAutoPlayNextEpisode,
     isShowSkipOpEdButton,
-    setIsShowSkipOpEdButton,
     isAutoSkipOpEd,
-    setIsAutoSkipOpEd,
     isFastForward,
-    setIsFastForward,
     isSwipeFullscreen,
-    setIsSwipeFullscreen,
     currentSubtitleTextEffects,
-    setCurrentSubtitleTextEffects,
   };
 }
 
-export { useLocalStorage, useSoraSettings };
+// eslint-disable-next-line import/prefer-default-export
+export { useSoraSettings };

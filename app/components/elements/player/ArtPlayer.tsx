@@ -28,7 +28,7 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
   const artRef = useRef<HTMLDivElement>(null);
 
   const handleDragEnd = (event: MouseEvent | PointerEvent | TouchEvent, info: PanInfo) => {
-    if (artplayer && isSwipeFullscreen) {
+    if (artplayer && isSwipeFullscreen.value) {
       if (!artplayer.fullscreen && info.offset.y < -100) {
         artplayer.fullscreen = true;
       }

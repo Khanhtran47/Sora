@@ -315,7 +315,7 @@ const MediaList = (props: IMediaListProps) => {
   const [nextEl, setNextEl] = useState<HTMLElement | null>(null);
   const [slideProgress, setSlideProgress] = useState<number>(0);
   const [displayType, setDisplayType] = useState<string>(listType as string);
-  const { showFilter, setShowFilter } = useSoraSettings();
+  const { showFilter } = useSoraSettings();
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
 
   if (!listType && typeof window !== 'undefined') {
@@ -406,9 +406,9 @@ const MediaList = (props: IMediaListProps) => {
                     type="button"
                     auto
                     color="primary"
-                    bordered={!showFilter}
+                    bordered={!showFilter.value}
                     icon={<FilterIcon />}
-                    onPress={() => setShowFilter(!showFilter)}
+                    onPress={() => showFilter.set(!showFilter.value)}
                   />
                 </Tooltip>
               ) : null}
@@ -500,7 +500,7 @@ const MediaList = (props: IMediaListProps) => {
         </Row>
       )}
       <AnimatePresence>
-        {showFilter && mediaType && (
+        {showFilter.value && mediaType && (
           <ClientOnly fallback={<Loading type="default" />}>
             {() => (
               <Suspense fallback={<Loading type="default" />}>

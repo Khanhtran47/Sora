@@ -55,7 +55,8 @@ const CustomNavigation = forwardRef<HTMLDivElement, { slot: 'container-end' }>(
     const { slot } = props;
     const swiper = useSwiper();
     const [slideProgress, setSlideProgress] = useState<number>(0);
-    const { isPlayTrailer, setIsPlayTrailer } = useSoraSettings();
+
+    const { isPlayTrailer } = useSoraSettings();
 
     swiper.on('slideChange', (e) => {
       setSlideProgress(e.progress);
@@ -70,18 +71,18 @@ const CustomNavigation = forwardRef<HTMLDivElement, { slot: 'container-end' }>(
           rounded
           ghost
           icon={
-            isPlayTrailer ? (
+            isPlayTrailer.value ? (
               <StopIcon fill="currentColor" />
             ) : (
               <PlayIcon fill="currentColor" filled />
             )
           }
           onPress={() => {
-            setIsPlayTrailer(!isPlayTrailer);
-            if (isPlayTrailer && !swiper.autoplay.running) {
+            isPlayTrailer.set(!isPlayTrailer.value);
+            if (isPlayTrailer.value && !swiper.autoplay.running) {
               swiper.autoplay.start();
               swiper.autoplay.resume();
-            } else if (!isPlayTrailer && swiper.autoplay.running) {
+            } else if (!isPlayTrailer.value && swiper.autoplay.running) {
               swiper.autoplay.stop();
             }
           }}
@@ -348,7 +349,7 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
       autoplayProgressRef.current.lastChild.textContent = '';
     }
     if (progressRef.current) progressRef.current.style.setProperty('width', '0%');
-  }, [isPlayTrailer, isXl]);
+  }, [isPlayTrailer.value, isXl]);
 
   return (
     <Grid.Container
@@ -403,11 +404,6 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
               disableOnInteraction: false,
             }}
             style={{ width: '100%' }}
-            onAutoplayStart={(swiper) => {
-              if (isPlayTrailer && swiper.autoplay.running) {
-                swiper.autoplay.stop();
-              }
-            }}
             onAutoplayTimeLeft={(s, timeLeft, percentage) => {
               if (
                 autoplayProgressRef.current &&

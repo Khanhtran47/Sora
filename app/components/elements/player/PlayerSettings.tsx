@@ -68,19 +68,12 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
 
   const {
     currentSubtitleFontColor,
-    setCurrentSubtitleFontColor,
     currentSubtitleFontSize,
-    setCurrentSubtitleFontSize,
     currentSubtitleBackgroundColor,
-    setCurrentSubtitleBackgroundColor,
     currentSubtitleBackgroundOpacity,
-    setCurrentSubtitleBackgroundOpacity,
     currentSubtitleWindowColor,
-    setCurrentSubtitleWindowColor,
     currentSubtitleWindowOpacity,
-    setCurrentSubtitleWindowOpacity,
     currentSubtitleTextEffects,
-    setCurrentSubtitleTextEffects,
   } = useSoraSettings();
 
   const dropdownLevel = useMemo(
@@ -439,7 +432,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
               description: 'Change the subtitle font color',
               showIcon: true,
               action: () => setDropdownLevelKey('subtitle-font-color'),
-              currentValue: currentSubtitleFontColor,
+              currentValue: currentSubtitleFontColor.value,
             },
             {
               id: 'subtitle-font-size',
@@ -447,7 +440,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
               description: 'Change the subtitle font size',
               showIcon: true,
               action: () => setDropdownLevelKey('subtitle-font-size'),
-              currentValue: currentSubtitleFontSize,
+              currentValue: currentSubtitleFontSize.value,
             },
             {
               id: 'subtitle-background-color',
@@ -455,7 +448,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
               description: 'Change the subtitle background color',
               showIcon: true,
               action: () => setDropdownLevelKey('subtitle-background-color'),
-              currentValue: currentSubtitleBackgroundColor,
+              currentValue: currentSubtitleBackgroundColor.value,
             },
             {
               id: 'subtitle-background-opacity',
@@ -463,7 +456,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
               description: 'Change the subtitle background opacity',
               showIcon: true,
               action: () => setDropdownLevelKey('subtitle-background-opacity'),
-              currentValue: currentSubtitleBackgroundOpacity,
+              currentValue: currentSubtitleBackgroundOpacity.value,
             },
             {
               id: 'subtitle-window-color',
@@ -471,7 +464,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
               description: 'Change the subtitle window color',
               showIcon: true,
               action: () => setDropdownLevelKey('subtitle-window-color'),
-              currentValue: currentSubtitleWindowColor,
+              currentValue: currentSubtitleWindowColor.value,
             },
             {
               id: 'subtitle-window-opacity',
@@ -479,7 +472,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
               description: 'Change the subtitle window opacity',
               showIcon: true,
               action: () => setDropdownLevelKey('subtitle-window-opacity'),
-              currentValue: currentSubtitleWindowOpacity,
+              currentValue: currentSubtitleWindowOpacity.value,
             },
             {
               id: 'subtitle-text-effects',
@@ -487,7 +480,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
               description: 'Change the subtitle text effects',
               showIcon: true,
               action: () => setDropdownLevelKey('subtitle-text-effects'),
-              currentValue: currentSubtitleTextEffects,
+              currentValue: currentSubtitleTextEffects.value,
             },
             {
               id: 'subtitle-reset',
@@ -502,12 +495,12 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                     fontSize: `${artplayer.height * 0.05}px`,
                   });
                   setCurrentSubtitleOffset('Normal');
-                  setCurrentSubtitleFontColor('White');
-                  setCurrentSubtitleFontSize('100%');
-                  setCurrentSubtitleBackgroundColor('Black');
-                  setCurrentSubtitleBackgroundOpacity('0%');
-                  setCurrentSubtitleWindowColor('Black');
-                  setCurrentSubtitleWindowOpacity('0%');
+                  currentSubtitleFontColor.set('White');
+                  currentSubtitleFontSize.set('100%');
+                  currentSubtitleBackgroundColor.set('Black');
+                  currentSubtitleBackgroundOpacity.set('0%');
+                  currentSubtitleWindowColor.set('Black');
+                  currentSubtitleWindowOpacity.set('0%');
                   setDropdownLevelKey('subtitle');
                 }
               },
@@ -683,11 +676,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                   artplayer.subtitle.style({
                     color: '#fff',
                   });
-                  setCurrentSubtitleFontColor('White');
+                  currentSubtitleFontColor.set('White');
                   setDropdownLevelKey('subtitle-settings');
                 }
               },
-              isCurrent: currentSubtitleFontColor === 'White',
+              isCurrent: currentSubtitleFontColor.value === 'White',
             },
             {
               id: 'blue',
@@ -698,11 +691,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                   artplayer.subtitle.style({
                     color: '#0072F5',
                   });
-                  setCurrentSubtitleFontColor('Blue');
+                  currentSubtitleFontColor.set('Blue');
                   setDropdownLevelKey('subtitle-settings');
                 }
               },
-              isCurrent: currentSubtitleFontColor === 'Blue',
+              isCurrent: currentSubtitleFontColor.value === 'Blue',
             },
             {
               id: 'purple',
@@ -713,11 +706,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                   artplayer.subtitle.style({
                     color: '#7828C8',
                   });
-                  setCurrentSubtitleFontColor('Purple');
+                  currentSubtitleFontColor.set('Purple');
                   setDropdownLevelKey('subtitle-settings');
                 }
               },
-              isCurrent: currentSubtitleFontColor === 'Purple',
+              isCurrent: currentSubtitleFontColor.value === 'Purple',
             },
             {
               id: 'green',
@@ -728,11 +721,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                   artplayer.subtitle.style({
                     color: '#17C964',
                   });
-                  setCurrentSubtitleFontColor('Green');
+                  currentSubtitleFontColor.set('Green');
                   setDropdownLevelKey('subtitle-settings');
                 }
               },
-              isCurrent: currentSubtitleFontColor === 'Green',
+              isCurrent: currentSubtitleFontColor.value === 'Green',
             },
             {
               id: 'yellow',
@@ -743,11 +736,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                   artplayer.subtitle.style({
                     color: '#F5A524',
                   });
-                  setCurrentSubtitleFontColor('Yellow');
+                  currentSubtitleFontColor.set('Yellow');
                   setDropdownLevelKey('subtitle-settings');
                 }
               },
-              isCurrent: currentSubtitleFontColor === 'Yellow',
+              isCurrent: currentSubtitleFontColor.value === 'Yellow',
             },
             {
               id: 'red',
@@ -758,11 +751,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                   artplayer.subtitle.style({
                     color: '#F31260',
                   });
-                  setCurrentSubtitleFontColor('Red');
+                  currentSubtitleFontColor.set('Red');
                   setDropdownLevelKey('subtitle-settings');
                 }
               },
-              isCurrent: currentSubtitleFontColor === 'Red',
+              isCurrent: currentSubtitleFontColor.value === 'Red',
             },
             {
               id: 'cyan',
@@ -773,11 +766,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                   artplayer.subtitle.style({
                     color: '#06B7DB',
                   });
-                  setCurrentSubtitleFontColor('Cyan');
+                  currentSubtitleFontColor.set('Cyan');
                   setDropdownLevelKey('subtitle-settings');
                 }
               },
-              isCurrent: currentSubtitleFontColor === 'Cyan',
+              isCurrent: currentSubtitleFontColor.value === 'Cyan',
             },
             {
               id: 'pink',
@@ -788,11 +781,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                   artplayer.subtitle.style({
                     color: '#FF4ECD',
                   });
-                  setCurrentSubtitleFontColor('Pink');
+                  currentSubtitleFontColor.set('Pink');
                   setDropdownLevelKey('subtitle-settings');
                 }
               },
-              isCurrent: currentSubtitleFontColor === 'Pink',
+              isCurrent: currentSubtitleFontColor.value === 'Pink',
             },
             {
               id: 'black',
@@ -803,11 +796,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                   artplayer.subtitle.style({
                     color: '#000',
                   });
-                  setCurrentSubtitleFontColor('Black');
+                  currentSubtitleFontColor.set('Black');
                   setDropdownLevelKey('subtitle-settings');
                 }
               },
-              isCurrent: currentSubtitleFontColor === 'Black',
+              isCurrent: currentSubtitleFontColor.value === 'Black',
             },
           ],
         },
@@ -828,11 +821,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                   artplayer.subtitle.style({
                     fontSize: `${artplayer.height * 0.05 * 0.5}px`,
                   });
-                  setCurrentSubtitleFontSize('50%');
+                  currentSubtitleFontSize.set('50%');
                   setDropdownLevelKey('subtitle-settings');
                 }
               },
-              isCurrent: currentSubtitleFontSize === '50%',
+              isCurrent: currentSubtitleFontSize.value === '50%',
             },
             {
               id: '75%',
@@ -843,11 +836,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                   artplayer.subtitle.style({
                     fontSize: `${artplayer.height * 0.05 * 0.75}px`,
                   });
-                  setCurrentSubtitleFontSize('75%');
+                  currentSubtitleFontSize.set('75%');
                   setDropdownLevelKey('subtitle-settings');
                 }
               },
-              isCurrent: currentSubtitleFontSize === '75%',
+              isCurrent: currentSubtitleFontSize.value === '75%',
             },
             {
               id: '100%',
@@ -858,11 +851,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                   artplayer.subtitle.style({
                     fontSize: `${artplayer.height * 0.05}px`,
                   });
-                  setCurrentSubtitleFontSize('100%');
+                  currentSubtitleFontSize.set('100%');
                   setDropdownLevelKey('subtitle-settings');
                 }
               },
-              isCurrent: currentSubtitleFontSize === '100%',
+              isCurrent: currentSubtitleFontSize.value === '100%',
             },
             {
               id: '125%',
@@ -873,11 +866,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                   artplayer.subtitle.style({
                     fontSize: `${artplayer.height * 0.05 * 1.25}px`,
                   });
-                  setCurrentSubtitleFontSize('125%');
+                  currentSubtitleFontSize.set('125%');
                   setDropdownLevelKey('subtitle-settings');
                 }
               },
-              isCurrent: currentSubtitleFontSize === '125%',
+              isCurrent: currentSubtitleFontSize.value === '125%',
             },
             {
               id: '150%',
@@ -888,11 +881,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                   artplayer.subtitle.style({
                     fontSize: `${artplayer.height * 0.05 * 1.5}px`,
                   });
-                  setCurrentSubtitleFontSize('150%');
+                  currentSubtitleFontSize.set('150%');
                   setDropdownLevelKey('subtitle-settings');
                 }
               },
-              isCurrent: currentSubtitleFontSize === '150%',
+              isCurrent: currentSubtitleFontSize.value === '150%',
             },
             {
               id: '175%',
@@ -903,11 +896,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                   artplayer.subtitle.style({
                     fontSize: `${artplayer.height * 0.05 * 1.75}px`,
                   });
-                  setCurrentSubtitleFontSize('175%');
+                  currentSubtitleFontSize.set('175%');
                   setDropdownLevelKey('subtitle-settings');
                 }
               },
-              isCurrent: currentSubtitleFontSize === '175%',
+              isCurrent: currentSubtitleFontSize.value === '175%',
             },
             {
               id: '200%',
@@ -918,11 +911,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                   artplayer.subtitle.style({
                     fontSize: `${artplayer.height * 0.05 * 2.0}px`,
                   });
-                  setCurrentSubtitleFontSize('200%');
+                  currentSubtitleFontSize.set('200%');
                   setDropdownLevelKey('subtitle-settings');
                 }
               },
-              isCurrent: currentSubtitleFontSize === '200%',
+              isCurrent: currentSubtitleFontSize.value === '200%',
             },
             {
               id: '300%',
@@ -933,11 +926,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                   artplayer.subtitle.style({
                     fontSize: `${artplayer.height * 0.05 * 3.0}px`,
                   });
-                  setCurrentSubtitleFontSize('300%');
+                  currentSubtitleFontSize.set('300%');
                   setDropdownLevelKey('subtitle-settings');
                 }
               },
-              isCurrent: currentSubtitleFontSize === '300%',
+              isCurrent: currentSubtitleFontSize.value === '300%',
             },
             {
               id: '400%',
@@ -948,11 +941,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                   artplayer.subtitle.style({
                     fontSize: `${artplayer.height * 0.05 * 4.0}px`,
                   });
-                  setCurrentSubtitleFontSize('400%');
+                  currentSubtitleFontSize.set('400%');
                   setDropdownLevelKey('subtitle-settings');
                 }
               },
-              isCurrent: currentSubtitleFontSize === '400%',
+              isCurrent: currentSubtitleFontSize.value === '400%',
             },
           ],
         },
@@ -969,90 +962,90 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
               title: 'Black',
               showIcon: false,
               action: () => {
-                setCurrentSubtitleBackgroundColor('Black');
+                currentSubtitleBackgroundColor.set('Black');
                 setDropdownLevelKey('subtitle-settings');
               },
-              isCurrent: currentSubtitleBackgroundColor === 'Black',
+              isCurrent: currentSubtitleBackgroundColor.value === 'Black',
             },
             {
               id: 'blue',
               title: 'Blue',
               showIcon: false,
               action: () => {
-                setCurrentSubtitleBackgroundColor('Blue');
+                currentSubtitleBackgroundColor.set('Blue');
                 setDropdownLevelKey('subtitle-settings');
               },
-              isCurrent: currentSubtitleBackgroundColor === 'Blue',
+              isCurrent: currentSubtitleBackgroundColor.value === 'Blue',
             },
             {
               id: 'purple',
               title: 'Purple',
               showIcon: false,
               action: () => {
-                setCurrentSubtitleBackgroundColor('Purple');
+                currentSubtitleBackgroundColor.set('Purple');
                 setDropdownLevelKey('subtitle-settings');
               },
-              isCurrent: currentSubtitleBackgroundColor === 'Purple',
+              isCurrent: currentSubtitleBackgroundColor.value === 'Purple',
             },
             {
               id: 'green',
               title: 'Green',
               showIcon: false,
               action: () => {
-                setCurrentSubtitleBackgroundColor('Green');
+                currentSubtitleBackgroundColor.set('Green');
                 setDropdownLevelKey('subtitle-settings');
               },
-              isCurrent: currentSubtitleBackgroundColor === 'Green',
+              isCurrent: currentSubtitleBackgroundColor.value === 'Green',
             },
             {
               id: 'yellow',
               title: 'Yellow',
               showIcon: false,
               action: () => {
-                setCurrentSubtitleBackgroundColor('Yellow');
+                currentSubtitleBackgroundColor.set('Yellow');
                 setDropdownLevelKey('subtitle-settings');
               },
-              isCurrent: currentSubtitleBackgroundColor === 'Yellow',
+              isCurrent: currentSubtitleBackgroundColor.value === 'Yellow',
             },
             {
               id: 'red',
               title: 'Red',
               showIcon: false,
               action: () => {
-                setCurrentSubtitleBackgroundColor('Red');
+                currentSubtitleBackgroundColor.set('Red');
                 setDropdownLevelKey('subtitle-settings');
               },
-              isCurrent: currentSubtitleBackgroundColor === 'Red',
+              isCurrent: currentSubtitleBackgroundColor.value === 'Red',
             },
             {
               id: 'cyan',
               title: 'Cyan',
               showIcon: false,
               action: () => {
-                setCurrentSubtitleBackgroundColor('Cyan');
+                currentSubtitleBackgroundColor.set('Cyan');
                 setDropdownLevelKey('subtitle-settings');
               },
-              isCurrent: currentSubtitleBackgroundColor === 'Cyan',
+              isCurrent: currentSubtitleBackgroundColor.value === 'Cyan',
             },
             {
               id: 'pink',
               title: 'Pink',
               showIcon: false,
               action: () => {
-                setCurrentSubtitleBackgroundColor('Pink');
+                currentSubtitleBackgroundColor.set('Pink');
                 setDropdownLevelKey('subtitle-settings');
               },
-              isCurrent: currentSubtitleBackgroundColor === 'Pink',
+              isCurrent: currentSubtitleBackgroundColor.value === 'Pink',
             },
             {
               id: 'white',
               title: 'White',
               showIcon: false,
               action: () => {
-                setCurrentSubtitleBackgroundColor('White');
+                currentSubtitleBackgroundColor.set('White');
                 setDropdownLevelKey('subtitle-settings');
               },
-              isCurrent: currentSubtitleBackgroundColor === 'White',
+              isCurrent: currentSubtitleBackgroundColor.value === 'White',
             },
           ],
         },
@@ -1069,50 +1062,50 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
               title: '0%',
               showIcon: false,
               action: () => {
-                setCurrentSubtitleBackgroundOpacity('0%');
+                currentSubtitleBackgroundOpacity.set('0%');
                 setDropdownLevelKey('subtitle-settings');
               },
-              isCurrent: currentSubtitleBackgroundOpacity === '0%',
+              isCurrent: currentSubtitleBackgroundOpacity.value === '0%',
             },
             {
               id: '25%',
               title: '25%',
               showIcon: false,
               action: () => {
-                setCurrentSubtitleBackgroundOpacity('25%');
+                currentSubtitleBackgroundOpacity.set('25%');
                 setDropdownLevelKey('subtitle-settings');
               },
-              isCurrent: currentSubtitleBackgroundOpacity === '25%',
+              isCurrent: currentSubtitleBackgroundOpacity.value === '25%',
             },
             {
               id: '50%',
               title: '50%',
               showIcon: false,
               action: () => {
-                setCurrentSubtitleBackgroundOpacity('50%');
+                currentSubtitleBackgroundOpacity.set('50%');
                 setDropdownLevelKey('subtitle-settings');
               },
-              isCurrent: currentSubtitleBackgroundOpacity === '50%',
+              isCurrent: currentSubtitleBackgroundOpacity.value === '50%',
             },
             {
               id: '75%',
               title: '75%',
               showIcon: false,
               action: () => {
-                setCurrentSubtitleBackgroundOpacity('75%');
+                currentSubtitleBackgroundOpacity.set('75%');
                 setDropdownLevelKey('subtitle-settings');
               },
-              isCurrent: currentSubtitleBackgroundOpacity === '75%',
+              isCurrent: currentSubtitleBackgroundOpacity.value === '75%',
             },
             {
               id: '100%',
               title: '100%',
               showIcon: false,
               action: () => {
-                setCurrentSubtitleBackgroundOpacity('100%');
+                currentSubtitleBackgroundOpacity.set('100%');
                 setDropdownLevelKey('subtitle-settings');
               },
-              isCurrent: currentSubtitleBackgroundOpacity === '100%',
+              isCurrent: currentSubtitleBackgroundOpacity.value === '100%',
             },
           ],
         },
@@ -1129,90 +1122,90 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
               title: 'Black',
               showIcon: false,
               action: () => {
-                setCurrentSubtitleWindowColor('Black');
+                currentSubtitleWindowColor.set('Black');
                 setDropdownLevelKey('subtitle-settings');
               },
-              isCurrent: currentSubtitleWindowColor === 'Black',
+              isCurrent: currentSubtitleWindowColor.value === 'Black',
             },
             {
               id: 'blue',
               title: 'Blue',
               showIcon: false,
               action: () => {
-                setCurrentSubtitleWindowColor('Blue');
+                currentSubtitleWindowColor.set('Blue');
                 setDropdownLevelKey('subtitle-settings');
               },
-              isCurrent: currentSubtitleWindowColor === 'Blue',
+              isCurrent: currentSubtitleWindowColor.value === 'Blue',
             },
             {
               id: 'purple',
               title: 'Purple',
               showIcon: false,
               action: () => {
-                setCurrentSubtitleWindowColor('Purple');
+                currentSubtitleWindowColor.set('Purple');
                 setDropdownLevelKey('subtitle-settings');
               },
-              isCurrent: currentSubtitleWindowColor === 'Purple',
+              isCurrent: currentSubtitleWindowColor.value === 'Purple',
             },
             {
               id: 'green',
               title: 'Green',
               showIcon: false,
               action: () => {
-                setCurrentSubtitleWindowColor('Green');
+                currentSubtitleWindowColor.set('Green');
                 setDropdownLevelKey('subtitle-settings');
               },
-              isCurrent: currentSubtitleWindowColor === 'Green',
+              isCurrent: currentSubtitleWindowColor.value === 'Green',
             },
             {
               id: 'yellow',
               title: 'Yellow',
               showIcon: false,
               action: () => {
-                setCurrentSubtitleWindowColor('Yellow');
+                currentSubtitleWindowColor.set('Yellow');
                 setDropdownLevelKey('subtitle-settings');
               },
-              isCurrent: currentSubtitleWindowColor === 'Yellow',
+              isCurrent: currentSubtitleWindowColor.value === 'Yellow',
             },
             {
               id: 'red',
               title: 'Red',
               showIcon: false,
               action: () => {
-                setCurrentSubtitleWindowColor('Red');
+                currentSubtitleWindowColor.set('Red');
                 setDropdownLevelKey('subtitle-settings');
               },
-              isCurrent: currentSubtitleWindowColor === 'Red',
+              isCurrent: currentSubtitleWindowColor.value === 'Red',
             },
             {
               id: 'cyan',
               title: 'Cyan',
               showIcon: false,
               action: () => {
-                setCurrentSubtitleWindowColor('Cyan');
+                currentSubtitleWindowColor.set('Cyan');
                 setDropdownLevelKey('subtitle-settings');
               },
-              isCurrent: currentSubtitleWindowColor === 'Cyan',
+              isCurrent: currentSubtitleWindowColor.value === 'Cyan',
             },
             {
               id: 'pink',
               title: 'Pink',
               showIcon: false,
               action: () => {
-                setCurrentSubtitleWindowColor('Pink');
+                currentSubtitleWindowColor.set('Pink');
                 setDropdownLevelKey('subtitle-settings');
               },
-              isCurrent: currentSubtitleWindowColor === 'Pink',
+              isCurrent: currentSubtitleWindowColor.value === 'Pink',
             },
             {
               id: 'white',
               title: 'White',
               showIcon: false,
               action: () => {
-                setCurrentSubtitleWindowColor('White');
+                currentSubtitleWindowColor.set('White');
                 setDropdownLevelKey('subtitle-settings');
               },
-              isCurrent: currentSubtitleWindowColor === 'White',
+              isCurrent: currentSubtitleWindowColor.value === 'White',
             },
           ],
         },
@@ -1229,50 +1222,50 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
               title: '0%',
               showIcon: false,
               action: () => {
-                setCurrentSubtitleWindowOpacity('0%');
+                currentSubtitleWindowOpacity.set('0%');
                 setDropdownLevelKey('subtitle-settings');
               },
-              isCurrent: currentSubtitleWindowOpacity === '0%',
+              isCurrent: currentSubtitleWindowOpacity.value === '0%',
             },
             {
               id: '25%',
               title: '25%',
               showIcon: false,
               action: () => {
-                setCurrentSubtitleWindowOpacity('25%');
+                currentSubtitleWindowOpacity.set('25%');
                 setDropdownLevelKey('subtitle-settings');
               },
-              isCurrent: currentSubtitleWindowOpacity === '25%',
+              isCurrent: currentSubtitleWindowOpacity.value === '25%',
             },
             {
               id: '50%',
               title: '50%',
               showIcon: false,
               action: () => {
-                setCurrentSubtitleWindowOpacity('50%');
+                currentSubtitleWindowOpacity.set('50%');
                 setDropdownLevelKey('subtitle-settings');
               },
-              isCurrent: currentSubtitleWindowOpacity === '50%',
+              isCurrent: currentSubtitleWindowOpacity.value === '50%',
             },
             {
               id: '75%',
               title: '75%',
               showIcon: false,
               action: () => {
-                setCurrentSubtitleWindowOpacity('75%');
+                currentSubtitleWindowOpacity.set('75%');
                 setDropdownLevelKey('subtitle-settings');
               },
-              isCurrent: currentSubtitleWindowOpacity === '75%',
+              isCurrent: currentSubtitleWindowOpacity.value === '75%',
             },
             {
               id: '100%',
               title: '100%',
               showIcon: false,
               action: () => {
-                setCurrentSubtitleWindowOpacity('100%');
+                currentSubtitleWindowOpacity.set('100%');
                 setDropdownLevelKey('subtitle-settings');
               },
-              isCurrent: currentSubtitleWindowOpacity === '100%',
+              isCurrent: currentSubtitleWindowOpacity.value === '100%',
             },
           ],
         },
@@ -1289,50 +1282,50 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
               title: 'None',
               showIcon: false,
               action: () => {
-                setCurrentSubtitleTextEffects('None');
+                currentSubtitleTextEffects.set('None');
                 setDropdownLevelKey('subtitle-settings');
               },
-              isCurrent: currentSubtitleTextEffects === 'None',
+              isCurrent: currentSubtitleTextEffects.value === 'None',
             },
             {
               id: 'drop-shadow',
               title: 'Drop Shadow',
               showIcon: false,
               action: () => {
-                setCurrentSubtitleTextEffects('Drop Shadow');
+                currentSubtitleTextEffects.set('Drop Shadow');
                 setDropdownLevelKey('subtitle-settings');
               },
-              isCurrent: currentSubtitleTextEffects === 'Drop Shadow',
+              isCurrent: currentSubtitleTextEffects.value === 'Drop Shadow',
             },
             {
               id: 'raised',
               title: 'Raised',
               showIcon: false,
               action: () => {
-                setCurrentSubtitleTextEffects('Raised');
+                currentSubtitleTextEffects.set('Raised');
                 setDropdownLevelKey('subtitle-settings');
               },
-              isCurrent: currentSubtitleTextEffects === 'Raised',
+              isCurrent: currentSubtitleTextEffects.value === 'Raised',
             },
             {
               id: 'depressed',
               title: 'Depressed',
               showIcon: false,
               action: () => {
-                setCurrentSubtitleTextEffects('Depressed');
+                currentSubtitleTextEffects.set('Depressed');
                 setDropdownLevelKey('subtitle-settings');
               },
-              isCurrent: currentSubtitleTextEffects === 'Depressed',
+              isCurrent: currentSubtitleTextEffects.value === 'Depressed',
             },
             {
               id: 'outline',
               title: 'Outline',
               showIcon: false,
               action: () => {
-                setCurrentSubtitleTextEffects('Outline');
+                currentSubtitleTextEffects.set('Outline');
                 setDropdownLevelKey('subtitle-settings');
               },
-              isCurrent: currentSubtitleTextEffects === 'Outline',
+              isCurrent: currentSubtitleTextEffects.value === 'Outline',
             },
           ],
         },
@@ -1372,13 +1365,13 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
       currentAspectRatio,
       currentVideoFlip,
       currentSubtitleOffset,
-      currentSubtitleFontColor,
-      currentSubtitleFontSize,
-      currentSubtitleBackgroundColor,
-      currentSubtitleBackgroundOpacity,
-      currentSubtitleWindowColor,
-      currentSubtitleWindowOpacity,
-      currentSubtitleTextEffects,
+      currentSubtitleFontColor.value,
+      currentSubtitleFontSize.value,
+      currentSubtitleBackgroundColor.value,
+      currentSubtitleBackgroundOpacity.value,
+      currentSubtitleWindowColor.value,
+      currentSubtitleWindowOpacity.value,
+      currentSubtitleTextEffects.value,
     ],
   );
   const currentDropdownLevel = useMemo(

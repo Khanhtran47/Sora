@@ -101,7 +101,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
       navigate(
         `/anime/${id}/episode/${index + 1}/watch?provider=${provider}&id=${
           providerData?.id
-        }&skipOpEd=${isShowSkipOpEdButton}`,
+        }&skipOpEd=${isShowSkipOpEdButton.value}`,
       );
     }
   };

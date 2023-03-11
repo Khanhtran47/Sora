@@ -55,7 +55,7 @@ const SelectProviderModal = (props: SelectProviderModalProps) => {
       );
     else if (type === 'anime')
       navigate(
-        `/anime/${id}/episode/${episode}/watch?provider=${item.provider}&id=${item.id}&episode=${episode}&skipOpEd=${isShowSkipOpEdButton}`,
+        `/anime/${id}/episode/${episode}/watch?provider=${item.provider}&id=${item.id}&episode=${episode}&skipOpEd=${isShowSkipOpEdButton.value}`,
       );
   };
   useEffect(() => {

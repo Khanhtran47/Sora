@@ -10,6 +10,7 @@ import Image, { MimeType } from 'remix-image';
 import { motion, AnimatePresence } from 'framer-motion';
 import YouTube from 'react-youtube';
 import { useInView } from 'react-intersection-observer';
+import { useSwiper } from 'swiper/react';
 
 import useCardHoverStore from '~/store/card/useCardHoverStore';
 
@@ -74,6 +75,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
   const [isPlayed, setIsPlayed] = useState<boolean>(false);
   const [showTrailer, setShowTrailer] = useState<boolean>(false);
   const [trailerBanner, setTrailerBanner] = useState<Trailer>({});
+  const swiper = useSwiper();
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const isMd = useMediaQuery('(max-width: 960px)', { initializeWithValue: false });
   const isLg = useMediaQuery('(max-width: 1280px)', { initializeWithValue: false });
@@ -84,7 +86,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
 
   const isCardPlaying = useCardHoverStore((state) => state.isCardPlaying);
 
-  const { isMutedTrailer, setIsMutedTrailer, isPlayTrailer } = useSoraSettings();
+  const { isMutedTrailer, isPlayTrailer } = useSoraSettings();
   const titleItem =
     typeof title === 'string'
       ? title
@@ -93,13 +95,13 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
   const mute = useCallback(() => {
     if (!player) return;
     player.mute();
-    setIsMutedTrailer(true);
+    isMutedTrailer.set(true);
   }, [player]);
 
   const unMute = useCallback(() => {
     if (!player) return;
     player.unMute();
-    setIsMutedTrailer(false);
+    isMutedTrailer.set(false);
   }, [player]);
 
   const play = useCallback(() => {
@@ -142,14 +144,14 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
   useEffect(() => {
     // fetch logo and youtube trailer key from tmdb
     if (active === true && mediaType !== 'anime') {
-      if (isPlayTrailer === true) {
+      if (isPlayTrailer.value === true) {
         fetcher.load(`/api/media?id=${id}&type=${mediaType}&video=true`);
       } else {
         fetcher.load(`/api/media?id=${id}&type=${mediaType}`);
         setTrailerBanner({});
       }
     }
-  }, [active, isPlayTrailer]);
+  }, [active, isPlayTrailer.value]);
 
   useEffect(() => {
     if (active === true && fetcher.data && fetcher.data.videos && inView && mediaType !== 'anime') {
@@ -164,10 +166,13 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
   }, [fetcher.data]);
 
   useEffect(() => {
-    if (!isPlayTrailer === true) {
+    if (!isPlayTrailer.value === true) {
       setShowTrailer(false);
     }
-  }, [isPlayTrailer]);
+    if (isPlayTrailer.value && swiper.autoplay.running) {
+      swiper.autoplay.stop();
+    }
+  }, [isPlayTrailer.value]);
 
   useEffect(() => {
     const watchScroll = () => {
@@ -544,7 +549,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
               </motion.div>
             ) : null}
           </AnimatePresence>
-          {trailerBanner?.key && !isSm && isPlayTrailer && active ? (
+          {trailerBanner?.key && !isSm && isPlayTrailer.value && active ? (
             <YouTube
               videoId={trailerBanner.key}
               opts={{
@@ -570,7 +575,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
               onReady={({ target }) => {
                 if (active && inView) target.playVideo();
                 setPlayer(target);
-                if (!isMutedTrailer) target.unMute();
+                if (!isMutedTrailer.value) target.unMute();
               }}
               onPlay={() => {
                 setIsPlayed(true);
@@ -599,7 +604,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
               }
             />
           ) : null}
-          {trailer?.id && trailer?.site === 'youtube' && isPlayTrailer && !isSm && active ? (
+          {trailer?.id && trailer?.site === 'youtube' && isPlayTrailer.value && !isSm && active ? (
             <YouTube
               videoId={trailer?.id}
               opts={{
@@ -625,7 +630,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
               onReady={({ target }) => {
                 if (active && inView) target.playVideo();
                 setPlayer(target);
-                if (!isMutedTrailer) target.unMute();
+                if (!isMutedTrailer.value) target.unMute();
               }}
               onPlay={() => {
                 setIsPlayed(true);
@@ -664,7 +669,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
               rounded
               ghost
               icon={
-                isMutedTrailer ? (
+                isMutedTrailer.value ? (
                   <VolumeOff fill="currentColor" />
                 ) : (
                   <VolumeUp fill="currentColor" />
@@ -684,7 +689,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                 '@lgMin': { bottom: '200px' },
               }}
               aria-label="Toggle Mute"
-              onPress={isMutedTrailer ? unMute : mute}
+              onPress={isMutedTrailer.value ? unMute : mute}
             />
           </motion.div>
         )}

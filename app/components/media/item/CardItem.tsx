@@ -368,7 +368,7 @@ const CardItem = (props: ICardItemProps) => {
         css={isEpisodeCard || mediaType === 'people' ? { p: 0 } : {}}
         onVisibleChange={(visible) => {
           if (visible) {
-            if (mediaType !== 'anime' && mediaType !== 'people' && isPlayTrailer)
+            if (mediaType !== 'anime' && mediaType !== 'people' && isPlayTrailer.value)
               fetcher.load(`/${mediaType === 'movie' ? 'movies' : 'tv-shows'}/${id}/videos`);
           } else {
             setIsCardPlaying(false);
