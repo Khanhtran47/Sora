@@ -469,7 +469,19 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
             onSwiper={setThumbsSwiper}
           >
             {items.map((item, index) => (
-              <SwiperSlideStyled key={`${item.id}-${index}-banner-thumb`}>
+              <SwiperSlideStyled
+                key={`${item.id}-${index}-banner-thumb`}
+                {...(isPlayTrailer
+                  ? {
+                      css: {
+                        opacity: isPlayTrailer.value ? 0.2 : 1,
+                        '&:hover': { opacity: isPlayTrailer.value ? 0.7 : 1 },
+                        '&.swiper-slide-thumb-active': { opacity: isPlayTrailer.value ? 0.9 : 1 },
+                        transition: 'opacity 0.3s ease',
+                      },
+                    }
+                  : {})}
+              >
                 <BannerItemCompact
                   ref={progressRef}
                   backdropPath={item?.backdropPath || ''}
