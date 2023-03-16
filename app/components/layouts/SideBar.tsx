@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
 import * as React from 'react';
 import { NavLink } from '@remix-run/react';
-import { Spacer, Grid, Row, Button, Tooltip, Loading } from '@nextui-org/react';
+import { Spacer, Grid, Row, Button, Tooltip, Loading, Card, Link } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
@@ -45,32 +45,6 @@ export const handle = {
   i18n: 'left-drawer',
 };
 
-const iconItem = (index: number, filled: boolean) => {
-  let icon;
-  switch (index) {
-    case 0:
-      icon = <TrendingUp filled={filled} />;
-      break;
-    case 1:
-      icon = <TwoUsers filled={filled} />;
-      break;
-    case 2:
-      icon = <CategoryIcon filled={filled} />;
-      break;
-    case 3:
-      icon = <Library filled={filled} />;
-      break;
-    case 4:
-      icon = <History filled={filled} />;
-      break;
-    case 5:
-      icon = <Settings filled={filled} />;
-      break;
-    default:
-  }
-  return icon;
-};
-
 const sidebarStyles = tv({
   base: 'grow-0 shrink-0 box-border h-screen fixed top-0 left-0 z-[999]',
   variants: {
@@ -104,8 +78,8 @@ const sidebarActiveStyles = tv({
 
 const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
   const { t } = useTranslation('left-drawer');
-  const wrapperRef = React.useRef<HTMLDivElement>(null);
-  const { open, setOpen } = props;
+  // const wrapperRef = React.useRef<HTMLDivElement>(null);
+  // const { open, setOpen } = props;
 
   /**
    * If the drawer is open and the user clicks outside of the drawer, close the drawer.
@@ -113,128 +87,21 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
    * drawer.
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleClickOutside = (event: any) => {
-    if (open && wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-      setOpen(false);
-    }
-  };
+  // const handleClickOutside = (event: any) => {
+  //   if (open && wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+  //     setOpen(false);
+  //   }
+  // };
 
-  /* Adding an event listener to the document for handling click outside drawer */
-  React.useEffect(() => {
-    document.addEventListener('click', handleClickOutside, true);
-    return () => {
-      document.removeEventListener('click', handleClickOutside, true);
-    };
-  });
+  // /* Adding an event listener to the document for handling click outside drawer */
+  // React.useEffect(() => {
+  //   document.addEventListener('click', handleClickOutside, true);
+  //   return () => {
+  //     document.removeEventListener('click', handleClickOutside, true);
+  //   };
+  // });
 
   return (
-    // <Drawer
-    //   css={{
-    //     backgroundColor: '$backgroundContrast',
-    //     ...(open && {
-    //       ...openedMixin(),
-    //     }),
-    //     ...(!open && {
-    //       ...closedMixin(),
-    //     }),
-    //     paddingLeft: 0,
-    //     paddingRight: 0,
-    //   }}
-    //   as="nav"
-    //   ref={wrapperRef}
-    // >
-    //   <Row justify="flex-start" align="center" css={{ height: '65px' }}>
-    //     <Button
-    //       type="button"
-    //       light
-    //       auto
-    //       aria-label="Menu Icon"
-    //       icon={open ? <Arrow direction="left" /> : <MenuIcon />}
-    //       onPress={() => setOpen(!open)}
-    //       css={{
-    //         marginLeft: 12.5,
-    //         marginRight: open ? 10 : 0,
-    //         transition: 'all 0.3s ease',
-    //       }}
-    //     />
-    //     {open ? <NavLink linkTo="/" isLogo /> : null}
-    //   </Row>
-    //   <Row>
-    //     <Grid.Container>
-    //       {leftDrawerPages.map((page, index: number) => (
-    //         <Grid key={page.pageName} css={{ marginTop: '10px' }} xs={12}>
-    //           <Tooltip
-    //             content={open ? null : t(page.pageName)}
-    //             isDisabled={isMobile}
-    //             placement="right"
-    //             color="primary"
-    //             offset={10}
-    //             hideArrow={open}
-    //           >
-    //             <RemixNavLink
-    //               to={`/${page.pageLink}`}
-    //               className="flex flex-row"
-    //               onClick={() => setOpen(false)}
-    //               style={{
-    //                 display: 'block',
-    //                 minHeight: 65,
-    //                 minWidth: 65,
-    //                 justifyContent: open ? 'initial' : 'center',
-    //                 alignItems: 'center',
-    //               }}
-    //               aria-label={page.pageName}
-    //             >
-    //               {({ isActive }) => (
-    //                 <AnimatePresence>
-    //                   <H5
-    //                     h5
-    //                     color="primary"
-    //                     css={{
-    //                       margin: 0,
-    //                       display: 'flex',
-    //                       minHeight: 65,
-    //                       minWidth: 65,
-    //                       alignItems: 'center',
-    //                       justifyContent: 'flex-start',
-    //                       borderRadius: '14px',
-    //                       transition: 'opacity 0.25s ease 0s, background 0.25s ease 0s',
-    //                       '&:hover': {
-    //                         opacity: '0.8',
-    //                         backgroundColor: '$primaryLightHover',
-    //                       },
-    //                       ...(open && {
-    //                         width: drawerWidth,
-    //                       }),
-    //                       ...(isActive && {
-    //                         background: '$primaryLightActive',
-    //                       }),
-    //                       paddingLeft: 20,
-    //                     }}
-    //                   >
-    //                     {isActive ? iconItem(index, true) : iconItem(index, false)}
-    //                     {open && (
-    //                       <>
-    //                         <Spacer />
-    //                         <motion.div
-    //                           initial={{ opacity: 0, x: '-20%' }}
-    //                           animate={{ opacity: 1, x: '0' }}
-    //                           exit={{ opacity: 0, x: '-20%' }}
-    //                           transition={{ duration: 0.225, ease: 'easeOut' }}
-    //                         >
-    //                           {t(page.pageName)}
-    //                         </motion.div>
-    //                       </>
-    //                     )}
-    //                   </H5>
-    //                 </AnimatePresence>
-    //               )}
-    //             </RemixNavLink>
-    //           </Tooltip>
-    //         </Grid>
-    //       ))}
-    //     </Grid.Container>
-    //   </Row>
-    // </Drawer>
     <aside className={sidebarStyles()}>
       <div className="flex flex-row justify-start w-full h-[65px] items-center mb-3 ml-4">
         <div className="basis-[65px] grow-0 shrink-0 flex justify-center">
@@ -275,212 +142,682 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
         </NavLink>
       </div>
       <NavigationMenu orientation="vertical">
-        <NavigationMenuList orientation="vertical" className="m-0">
-          <NavigationMenuItem className="w-[215px] text-left">
-            <NavLink to="/">
-              {({ isActive, isPending }) => (
-                <NavigationMenuLink
-                  className={navigationMenuTriggerStyle({
-                    class: 'w-[215px] h-[50px] justify-start',
-                    active: isActive,
-                  })}
-                >
-                  <Home className="mr-4" />
-                  Home
-                  <Loading className={isPending ? 'ml-auto' : '!hidden'} type="points-opacity" />
-                </NavigationMenuLink>
-              )}
-            </NavLink>
+        <NavigationMenuList
+          orientation="vertical"
+          className="m-0 [&_.active]:bg-primary-light-active [&_.active]:text-primary"
+        >
+          <NavigationMenuItem className="w-[215px] text-left" value="home">
+            <NavigationMenuLink asChild>
+              <NavLink
+                to="/"
+                className={navigationMenuTriggerStyle({
+                  class: 'w-[215px] h-[50px] justify-start',
+                })}
+              >
+                {({ isActive, isPending }) => (
+                  <>
+                    <Home className="mr-4" filled={isActive} />
+                    Home
+                    <Loading className={isPending ? 'ml-auto' : '!hidden'} type="points-opacity" />
+                  </>
+                )}
+              </NavLink>
+            </NavigationMenuLink>
           </NavigationMenuItem>
-          <NavigationMenuItem className="w-[215px] text-left">
-            <NavLink to="/trending">
-              {({ isActive, isPending }) => (
-                <NavigationMenuLink
-                  className={navigationMenuTriggerStyle({
-                    class: 'w-[215px] h-[50px] justify-start',
-                    active: isActive,
-                  })}
-                >
-                  <TrendingUp className="mr-4" />
-                  Trending
-                  <Loading className={isPending ? 'ml-auto' : '!hidden'} type="points-opacity" />
-                </NavigationMenuLink>
-              )}
-            </NavLink>
+          <NavigationMenuItem className="w-[215px] text-left" value="trending">
+            <NavigationMenuLink asChild>
+              <NavLink
+                to="/trending"
+                className={navigationMenuTriggerStyle({
+                  class: 'w-[215px] h-[50px] justify-start',
+                })}
+              >
+                {({ isActive, isPending }) => (
+                  <>
+                    <TrendingUp className="mr-4" filled={isActive} />
+                    Trending
+                    <Loading className={isPending ? 'ml-auto' : '!hidden'} type="points-opacity" />
+                  </>
+                )}
+              </NavLink>
+            </NavigationMenuLink>
           </NavigationMenuItem>
-          <NavigationMenuItem className="w-[215px] text-left">
-            <NavLink to="/search">
-              {({ isActive, isPending }) => (
-                <NavigationMenuLink
-                  className={navigationMenuTriggerStyle({
-                    class: 'w-[215px] h-[50px] justify-start',
-                    active: isActive,
-                  })}
-                >
-                  <Search className="mr-4" />
-                  Search
-                  <Loading className={isPending ? 'ml-auto' : '!hidden'} type="points-opacity" />
-                </NavigationMenuLink>
-              )}
-            </NavLink>
+          <NavigationMenuItem className="w-[215px] text-left" value="search">
+            <NavigationMenuLink asChild>
+              <NavLink
+                to="/search"
+                className={navigationMenuTriggerStyle({
+                  class: 'w-[215px] h-[50px] justify-start',
+                })}
+              >
+                {({ isActive, isPending }) => (
+                  <>
+                    <Search className="mr-4" filled={isActive} />
+                    Search
+                    <Loading className={isPending ? 'ml-auto' : '!hidden'} type="points-opacity" />
+                  </>
+                )}
+              </NavLink>
+            </NavigationMenuLink>
           </NavigationMenuItem>
-          <NavigationMenuItem>
+          <NavigationMenuItem value="movies">
             <NavigationMenuTrigger className={sidebarActiveStyles()}>
               <TrendingUp className="mr-4" />
               Movies
             </NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul className="m-0">
-                <li>
-                  <NavigationMenuLink>Link</NavigationMenuLink>
+              <ul className="m-0 flex flex-row gap-x-[6px] p-[6px] w-fit">
+                <li className="m-0 basis-[215px] grow-0 shrink-0">
+                  <NavLink to="/movies/discover">
+                    <Card
+                      as="div"
+                      isPressable
+                      css={{ w: '100%', borderWidth: 0, filter: 'unset', borderRadius: 6 }}
+                    >
+                      <Card.Header css={{ position: 'absolute', zIndex: 1 }}>
+                        <Link
+                          as={H6}
+                          isExternal
+                          className="text-text !max-w-none !w-full [&_.nextui-link-icon]:ml-auto"
+                        >
+                          Start Discover
+                        </Link>
+                      </Card.Header>
+                      <Card.Body css={{ p: 0, w: '100%', aspectRatio: '2/3' }}>
+                        <Card.Image
+                          // @ts-ignore
+                          as={Image}
+                          width="215px"
+                          height="auto"
+                          objectFit="cover"
+                          css={{
+                            aspectRatio: '2/3',
+                            filter: 'brightness(0.5)',
+                          }}
+                          showSkeleton
+                          loaderUrl="/api/image"
+                          alt="Discover movies"
+                          src="https://image.tmdb.org/t/p/w342_filter(duotone,190235,ad47dd)/wNB551TsEb7KFU3an5LwOrgvUpn.jpg"
+                          loading="lazy"
+                          placeholder="empty"
+                          responsive={[
+                            {
+                              size: {
+                                width: 215,
+                                height: (215 / 2) * 3,
+                              },
+                            },
+                          ]}
+                          dprVariants={[1, 3]}
+                          options={{
+                            contentType: MimeType.WEBP,
+                          }}
+                        />
+                      </Card.Body>
+                      <Card.Footer
+                        isBlurred
+                        className="absolute b-0 z-[1] backdrop-blur-sm bg-background-contrast-alpha"
+                        css={{
+                          position: 'absolute',
+                          zIndex: 1,
+                          bottom: 0,
+                          backgroundColor: '$backgroundAlpha',
+                          justifyContent: 'flex-start',
+                          borderBottomLeftRadius: 6,
+                          borderBottomRightRadius: 6,
+                        }}
+                      >
+                        <H4 className="text-white">Movies</H4>
+                      </Card.Footer>
+                    </Card>
+                  </NavLink>
                 </li>
-                <li>
-                  <NavigationMenuLink>Link</NavigationMenuLink>
-                </li>
-                <li>
-                  <NavigationMenuLink>Link</NavigationMenuLink>
-                </li>
-                <li>
-                  <NavigationMenuLink>Link</NavigationMenuLink>
-                </li>
-                <li>
-                  <NavigationMenuLink>Link</NavigationMenuLink>
+                <li className="flex flex-col gap-y-[6px] m-0 justify-between [&_.active]:bg-background [&_.active]:text-primary">
+                  <NavigationMenuLink asChild>
+                    <NavLink
+                      to="/movies/popular"
+                      className={navigationMenuTriggerStyle({
+                        class:
+                          'w-[215px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
+                      })}
+                    >
+                      {({ isPending }) => (
+                        <>
+                          <div className="flex flex-row justify-start items-center w-full mb-2">
+                            <Search className="mr-2 w-5 h-5" />
+                            Popular
+                            <Loading
+                              className={isPending ? 'ml-auto' : '!hidden'}
+                              type="points-opacity"
+                            />
+                          </div>
+                          <p className="text-text text-xs w-full">
+                            Widely watched and buzzed-about films.
+                          </p>
+                        </>
+                      )}
+                    </NavLink>
+                  </NavigationMenuLink>
+                  <NavigationMenuLink asChild>
+                    <NavLink
+                      to="/movies/now-playing"
+                      className={navigationMenuTriggerStyle({
+                        class:
+                          'w-[215px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
+                      })}
+                    >
+                      {({ isPending }) => (
+                        <>
+                          <div className="flex flex-row justify-start items-center w-full mb-2">
+                            <Search className="mr-2 w-5 h-5" />
+                            Now Playing
+                            <Loading
+                              className={isPending ? 'ml-auto' : '!hidden'}
+                              type="points-opacity"
+                            />
+                          </div>
+                          <p className="text-text text-xs w-full">Currently showing in theaters.</p>
+                        </>
+                      )}
+                    </NavLink>
+                  </NavigationMenuLink>
+                  <NavigationMenuLink asChild>
+                    <NavLink
+                      to="/movies/upcoming"
+                      className={navigationMenuTriggerStyle({
+                        class:
+                          'w-[215px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
+                      })}
+                    >
+                      {({ isPending }) => (
+                        <>
+                          <div className="flex flex-row justify-start items-center w-full mb-2">
+                            <Search className="mr-2 w-5 h-5" />
+                            Upcoming
+                            <Loading
+                              className={isPending ? 'ml-auto' : '!hidden'}
+                              type="points-opacity"
+                            />
+                          </div>
+                          <p className="text-text text-xs w-full">
+                            Releases coming soon, generating excitement.
+                          </p>
+                        </>
+                      )}
+                    </NavLink>
+                  </NavigationMenuLink>
+                  <NavigationMenuLink asChild>
+                    <NavLink
+                      to="/movies/top-rated"
+                      className={navigationMenuTriggerStyle({
+                        class:
+                          'w-[215px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
+                      })}
+                    >
+                      {({ isPending }) => (
+                        <>
+                          <div className="flex flex-row justify-start items-center w-full mb-2">
+                            <Search className="mr-2 w-5 h-5" />
+                            Top Rated
+                            <Loading
+                              className={isPending ? 'ml-auto' : '!hidden'}
+                              type="points-opacity"
+                            />
+                          </div>
+                          <p className="text-text text-xs w-full">
+                            Critically acclaimed, award-winning, or fan-favorites.
+                          </p>
+                        </>
+                      )}
+                    </NavLink>
+                  </NavigationMenuLink>
                 </li>
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
-          <NavigationMenuItem>
+          <NavigationMenuItem value="tv-shows">
             <NavigationMenuTrigger className={sidebarActiveStyles()}>
               <Settings className="mr-4" />
               Tv Shows
             </NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul>
-                <li>
-                  <NavigationMenuLink>LinkLinkLinkLinkLink</NavigationMenuLink>
+              <ul className="m-0 flex flex-row gap-x-[6px] p-[6px] w-fit">
+                <li className="m-0 basis-[215px] grow-0 shrink-0">
+                  <NavLink to="/tv-shows/discover">
+                    <Card
+                      as="div"
+                      isPressable
+                      css={{ w: '100%', borderWidth: 0, filter: 'unset', borderRadius: 6 }}
+                    >
+                      <Card.Header css={{ position: 'absolute', zIndex: 1 }}>
+                        <Link
+                          as={H6}
+                          isExternal
+                          className="text-text !max-w-none !w-full [&_.nextui-link-icon]:ml-auto"
+                        >
+                          Start Discover
+                        </Link>
+                      </Card.Header>
+                      <Card.Body css={{ p: 0, w: '100%', aspectRatio: '2/3' }}>
+                        <Card.Image
+                          // @ts-ignore
+                          as={Image}
+                          width="215px"
+                          height="auto"
+                          objectFit="cover"
+                          css={{
+                            aspectRatio: '2/3',
+                            filter: 'brightness(0.5)',
+                          }}
+                          showSkeleton
+                          loaderUrl="/api/image"
+                          alt="Discover tv shows"
+                          src="https://image.tmdb.org/t/p/w342_filter(duotone,352302,ddd147)/ggFHVNu6YYI5L9pCfOacjizRGt.jpg"
+                          loading="lazy"
+                          placeholder="empty"
+                          responsive={[
+                            {
+                              size: {
+                                width: 215,
+                                height: (215 / 2) * 3,
+                              },
+                            },
+                          ]}
+                          dprVariants={[1, 3]}
+                          options={{
+                            contentType: MimeType.WEBP,
+                          }}
+                        />
+                      </Card.Body>
+                      <Card.Footer
+                        isBlurred
+                        className="absolute b-0 z-[1] backdrop-blur-sm bg-background-contrast-alpha"
+                        css={{
+                          position: 'absolute',
+                          zIndex: 1,
+                          bottom: 0,
+                          backgroundColor: '$backgroundAlpha',
+                          justifyContent: 'flex-start',
+                          borderBottomLeftRadius: 6,
+                          borderBottomRightRadius: 6,
+                        }}
+                      >
+                        <H4 className="text-white">Tv Shows</H4>
+                      </Card.Footer>
+                    </Card>
+                  </NavLink>
                 </li>
-                <li>
-                  <NavigationMenuLink>Link</NavigationMenuLink>
+                <li className="flex flex-col gap-y-[6px] m-0 justify-between [&_.active]:bg-background [&_.active]:text-primary">
+                  <NavigationMenuLink asChild>
+                    <NavLink
+                      to="/tv-shows/popular"
+                      className={navigationMenuTriggerStyle({
+                        class:
+                          'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
+                      })}
+                    >
+                      {({ isPending }) => (
+                        <>
+                          <div className="flex flex-row justify-start items-center w-full mb-2">
+                            <Search className="mr-2 w-5 h-5" />
+                            Popular
+                            <Loading
+                              className={isPending ? 'ml-auto' : '!hidden'}
+                              type="points-opacity"
+                            />
+                          </div>
+                          <p className="text-text text-xs w-full">
+                            Widely watched and buzzed-about shows.
+                          </p>
+                        </>
+                      )}
+                    </NavLink>
+                  </NavigationMenuLink>
+                  <NavigationMenuLink asChild>
+                    <NavLink
+                      to="/tv-shows/airing-today"
+                      className={navigationMenuTriggerStyle({
+                        class:
+                          'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
+                      })}
+                    >
+                      {({ isPending }) => (
+                        <>
+                          <div className="flex flex-row justify-start items-center w-full mb-2">
+                            <Search className="mr-2 w-5 h-5" />
+                            Airing Today
+                            <Loading
+                              className={isPending ? 'ml-auto' : '!hidden'}
+                              type="points-opacity"
+                            />
+                          </div>
+                          <p className="text-text text-xs w-full">
+                            Currently playing on TV networks or streaming services.
+                          </p>
+                        </>
+                      )}
+                    </NavLink>
+                  </NavigationMenuLink>
+                  <NavigationMenuLink asChild>
+                    <NavLink
+                      to="/tv-shows/on-tv"
+                      className={navigationMenuTriggerStyle({
+                        class:
+                          'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
+                      })}
+                    >
+                      {({ isPending }) => (
+                        <>
+                          <div className="flex flex-row justify-start items-center w-full mb-2">
+                            <Search className="mr-2 w-5 h-5" />
+                            On Tv
+                            <Loading
+                              className={isPending ? 'ml-auto' : '!hidden'}
+                              type="points-opacity"
+                            />
+                          </div>
+                          <p className="text-text text-xs w-full">
+                            Tv shows currently available to watch.
+                          </p>
+                        </>
+                      )}
+                    </NavLink>
+                  </NavigationMenuLink>
+                  <NavigationMenuLink asChild>
+                    <NavLink
+                      to="/tv-shows/top-rated"
+                      className={navigationMenuTriggerStyle({
+                        class:
+                          'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
+                      })}
+                    >
+                      {({ isPending }) => (
+                        <>
+                          <div className="flex flex-row justify-start items-center w-full mb-2">
+                            <Search className="mr-2 w-5 h-5" />
+                            Top Rated
+                            <Loading
+                              className={isPending ? 'ml-auto' : '!hidden'}
+                              type="points-opacity"
+                            />
+                          </div>
+                          <p className="text-text text-xs w-full">
+                            Critically acclaimed, award-winning, or fan-favorites.
+                          </p>
+                        </>
+                      )}
+                    </NavLink>
+                  </NavigationMenuLink>
                 </li>
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
-          <NavigationMenuItem>
+          <NavigationMenuItem value="anime">
             <NavigationMenuTrigger className={sidebarActiveStyles()}>
               <Library className="mr-4" />
               Anime
             </NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul>
-                <li>
-                  <NavigationMenuLink>LinkLinkLink</NavigationMenuLink>
+              <ul className="m-0 flex flex-row gap-x-[6px] p-[6px] w-fit">
+                <li className="m-0 basis-[215px] grow-0 shrink-0">
+                  <NavLink to="/anime/discover">
+                    <Card
+                      as="div"
+                      isPressable
+                      css={{ w: '100%', borderWidth: 0, filter: 'unset', borderRadius: 6 }}
+                    >
+                      <Card.Header css={{ position: 'absolute', zIndex: 1 }}>
+                        <Link
+                          as={H6}
+                          isExternal
+                          className="text-text !max-w-none !w-full [&_.nextui-link-icon]:ml-auto"
+                        >
+                          Start Discover
+                        </Link>
+                      </Card.Header>
+                      <Card.Body css={{ p: 0, w: '100%', aspectRatio: '2/3' }}>
+                        <Card.Image
+                          // @ts-ignore
+                          as={Image}
+                          width="215px"
+                          height="auto"
+                          objectFit="cover"
+                          css={{
+                            aspectRatio: '2/3',
+                            filter: 'brightness(0.5)',
+                          }}
+                          showSkeleton
+                          loaderUrl="/api/image"
+                          alt="Discover anime"
+                          src="https://image.tmdb.org/t/p/w342_filter(duotone,070235,dd4749)/iAld03IP69UEpqQbVWoRBvjqkqX.jpg"
+                          loading="lazy"
+                          placeholder="empty"
+                          responsive={[
+                            {
+                              size: {
+                                width: 215,
+                                height: (215 / 2) * 3,
+                              },
+                            },
+                          ]}
+                          dprVariants={[1, 3]}
+                          options={{
+                            contentType: MimeType.WEBP,
+                          }}
+                        />
+                      </Card.Body>
+                      <Card.Footer
+                        isBlurred
+                        className="absolute b-0 z-[1] backdrop-blur-sm bg-background-contrast-alpha"
+                        css={{
+                          position: 'absolute',
+                          zIndex: 1,
+                          bottom: 0,
+                          backgroundColor: '$backgroundAlpha',
+                          justifyContent: 'flex-start',
+                          borderBottomLeftRadius: 6,
+                          borderBottomRightRadius: 6,
+                        }}
+                      >
+                        <H4 className="text-white">Anime</H4>
+                      </Card.Footer>
+                    </Card>
+                  </NavLink>
                 </li>
-                <li>
-                  <NavigationMenuLink>Link</NavigationMenuLink>
-                </li>
-                <li>
-                  <NavigationMenuLink>Link</NavigationMenuLink>
-                </li>
-                <li>
-                  <NavigationMenuLink>Link</NavigationMenuLink>
-                </li>
-                <li>
-                  <NavigationMenuLink>Link</NavigationMenuLink>
-                </li>
-                <li>
-                  <NavigationMenuLink>Link</NavigationMenuLink>
-                </li>
-                <li>
-                  <NavigationMenuLink>Link</NavigationMenuLink>
-                </li>
-                <li>
-                  <NavigationMenuLink>Link</NavigationMenuLink>
-                </li>
-                <li>
-                  <NavigationMenuLink>Link</NavigationMenuLink>
+                <li className="flex flex-col gap-y-[6px] m-0 justify-between [&_.active]:bg-background [&_.active]:text-primary">
+                  <NavigationMenuLink asChild>
+                    <NavLink
+                      to="/anime/popular"
+                      className={navigationMenuTriggerStyle({
+                        class:
+                          'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
+                      })}
+                    >
+                      {({ isPending }) => (
+                        <>
+                          <div className="flex flex-row justify-start items-center w-full mb-2">
+                            <Search className="mr-2 w-5 h-5" />
+                            Popular
+                            <Loading
+                              className={isPending ? 'ml-auto' : '!hidden'}
+                              type="points-opacity"
+                            />
+                          </div>
+                          <p className="text-text text-xs w-full">
+                            Widely watched and buzzed-about anime.
+                          </p>
+                        </>
+                      )}
+                    </NavLink>
+                  </NavigationMenuLink>
+                  <NavigationMenuLink asChild>
+                    <NavLink
+                      to="/anime/trending"
+                      className={navigationMenuTriggerStyle({
+                        class:
+                          'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
+                      })}
+                    >
+                      {({ isPending }) => (
+                        <>
+                          <div className="flex flex-row justify-start items-center w-full mb-2">
+                            <Search className="mr-2 w-5 h-5" />
+                            Trending
+                            <Loading
+                              className={isPending ? 'ml-auto' : '!hidden'}
+                              type="points-opacity"
+                            />
+                          </div>
+                          <p className="text-text text-xs w-full">
+                            Currently gaining popularity and attention among viewers.
+                          </p>
+                        </>
+                      )}
+                    </NavLink>
+                  </NavigationMenuLink>
+                  <NavigationMenuLink asChild>
+                    <NavLink
+                      to="/anime/recent-episodes"
+                      className={navigationMenuTriggerStyle({
+                        class:
+                          'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
+                      })}
+                    >
+                      {({ isPending }) => (
+                        <>
+                          <div className="flex flex-row justify-start items-center w-full mb-2">
+                            <Search className="mr-2 w-5 h-5" />
+                            Recent Episodes
+                            <Loading
+                              className={isPending ? 'ml-auto' : '!hidden'}
+                              type="points-opacity"
+                            />
+                          </div>
+                          <p className="text-text text-xs w-full">
+                            Latest episodes of ongoing anime series.
+                          </p>
+                        </>
+                      )}
+                    </NavLink>
+                  </NavigationMenuLink>
+                  <NavigationMenuLink asChild>
+                    <NavLink
+                      to="/anime/random"
+                      className={navigationMenuTriggerStyle({
+                        class:
+                          'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
+                      })}
+                    >
+                      {({ isPending }) => (
+                        <>
+                          <div className="flex flex-row justify-start items-center w-full mb-2">
+                            <Search className="mr-2 w-5 h-5" />
+                            Random Anime
+                            <Loading
+                              className={isPending ? 'ml-auto' : '!hidden'}
+                              type="points-opacity"
+                            />
+                          </div>
+                          <p className="text-text text-xs w-full">
+                            Anime is selected at random, without a specific theme.
+                          </p>
+                        </>
+                      )}
+                    </NavLink>
+                  </NavigationMenuLink>
                 </li>
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
-          <NavigationMenuItem className="w-[215px] text-left">
-            <NavLink to="/people">
-              {({ isActive, isPending }) => (
-                <NavigationMenuLink
-                  className={navigationMenuTriggerStyle({
-                    class: 'w-[215px] h-[50px] justify-start',
-                    active: isActive,
-                  })}
-                >
-                  <TwoUsers className="mr-4" />
-                  People
-                  <Loading className={isPending ? 'ml-auto' : '!hidden'} type="points-opacity" />
-                </NavigationMenuLink>
-              )}
-            </NavLink>
+          <NavigationMenuItem className="w-[215px] text-left" value="people">
+            <NavigationMenuLink asChild>
+              <NavLink
+                to="/people"
+                className={navigationMenuTriggerStyle({
+                  class: 'w-[215px] h-[50px] justify-start',
+                })}
+              >
+                {({ isActive, isPending }) => (
+                  <>
+                    <TwoUsers className="mr-4" filled={isActive} />
+                    People
+                    <Loading className={isPending ? 'ml-auto' : '!hidden'} type="points-opacity" />
+                  </>
+                )}
+              </NavLink>
+            </NavigationMenuLink>
           </NavigationMenuItem>
-          <NavigationMenuItem className="w-[215px] text-left">
-            <NavLink to="/collections">
-              {({ isActive, isPending }) => (
-                <NavigationMenuLink
-                  className={navigationMenuTriggerStyle({
-                    class: 'w-[215px] h-[50px] justify-start',
-                    active: isActive,
-                  })}
-                >
-                  <CategoryIcon className="mr-4" />
-                  Collections
-                  <Loading className={isPending ? 'ml-auto' : '!hidden'} type="points-opacity" />
-                </NavigationMenuLink>
-              )}
-            </NavLink>
+          <NavigationMenuItem className="w-[215px] text-left" value="collections">
+            <NavigationMenuLink asChild>
+              <NavLink
+                to="/collections"
+                className={navigationMenuTriggerStyle({
+                  class: 'w-[215px] h-[50px] justify-start',
+                })}
+              >
+                {({ isActive, isPending }) => (
+                  <>
+                    <CategoryIcon className="mr-4" filled={isActive} />
+                    Collections
+                    <Loading className={isPending ? 'ml-auto' : '!hidden'} type="points-opacity" />
+                  </>
+                )}
+              </NavLink>
+            </NavigationMenuLink>
           </NavigationMenuItem>
-          <NavigationMenuItem className="w-[215px] text-left">
-            <NavLink to="/list">
-              {({ isActive, isPending }) => (
-                <NavigationMenuLink
-                  className={navigationMenuTriggerStyle({
-                    class: 'w-[215px] h-[50px] justify-start',
-                    active: isActive,
-                  })}
-                >
-                  <Library className="mr-4" />
-                  My List
-                  <Loading className={isPending ? 'ml-auto' : '!hidden'} type="points-opacity" />
-                </NavigationMenuLink>
-              )}
-            </NavLink>
+          <NavigationMenuItem className="w-[215px] text-left" value="my-list">
+            <NavigationMenuLink asChild>
+              <NavLink
+                to="/list"
+                className={navigationMenuTriggerStyle({
+                  class: 'w-[215px] h-[50px] justify-start',
+                })}
+              >
+                {({ isActive, isPending }) => (
+                  <>
+                    <Library className="mr-4" filled={isActive} />
+                    My List
+                    <Loading className={isPending ? 'ml-auto' : '!hidden'} type="points-opacity" />
+                  </>
+                )}
+              </NavLink>
+            </NavigationMenuLink>
           </NavigationMenuItem>
-          <NavigationMenuItem className="w-[215px] text-left">
-            <NavLink to="/watch-history">
-              {({ isActive, isPending }) => (
-                <NavigationMenuLink
-                  className={navigationMenuTriggerStyle({
-                    class: 'w-[215px] h-[50px] justify-start',
-                    active: isActive,
-                  })}
-                >
-                  <History className="mr-4" />
-                  History
-                  <Loading className={isPending ? 'ml-auto' : '!hidden'} type="points-opacity" />
-                </NavigationMenuLink>
-              )}
-            </NavLink>
+          <NavigationMenuItem className="w-[215px] text-left" value="history">
+            <NavigationMenuLink asChild>
+              <NavLink
+                to="/watch-history"
+                className={navigationMenuTriggerStyle({
+                  class: 'w-[215px] h-[50px] justify-start',
+                })}
+              >
+                {({ isActive, isPending }) => (
+                  <>
+                    <History className="mr-4" filled={isActive} />
+                    History
+                    <Loading className={isPending ? 'ml-auto' : '!hidden'} type="points-opacity" />
+                  </>
+                )}
+              </NavLink>
+            </NavigationMenuLink>
           </NavigationMenuItem>
-          <NavigationMenuItem className="w-[215px] text-left">
-            <NavLink to="/settings">
-              {({ isActive, isPending }) => (
-                <NavigationMenuLink
-                  className={navigationMenuTriggerStyle({
-                    class: 'w-[215px] h-[50px] justify-start',
-                    active: isActive,
-                  })}
-                >
-                  <Settings className="mr-4" />
-                  Settings
-                  <Loading className={isPending ? 'ml-auto' : '!hidden'} type="points-opacity" />
-                </NavigationMenuLink>
-              )}
-            </NavLink>
+          <NavigationMenuItem className="w-[215px] text-left" value="settings">
+            <NavigationMenuLink asChild>
+              <NavLink
+                to="/settings"
+                className={navigationMenuTriggerStyle({
+                  class: 'w-[215px] h-[50px] justify-start',
+                })}
+              >
+                {({ isActive, isPending }) => (
+                  <>
+                    <Settings className="mr-4" filled={isActive} />
+                    Settings
+                    <Loading className={isPending ? 'ml-auto' : '!hidden'} type="points-opacity" />
+                  </>
+                )}
+              </NavLink>
+            </NavigationMenuLink>
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>

@@ -14,11 +14,11 @@ import { tv } from 'tailwind-variants';
 import ChevronRight from '~/assets/icons/ChevronRightIcon';
 
 const navigationMenuViewportStyle = tv({
-  base: `origin-[top_center] data-[state=open]:animate-in data-[state=closed]:animate-out
-  data-[state=open]:zoom-in-90 data-[state=closed]:zoom-out-95 relative data-[orientation=horizontal]:mt-1.5
+  base: `origin-[top_center] data-[state=open]:animate-scaleIn data-[state=closed]:animate-scaleOut
+  data-[state=open]:fadeIn data-[state=closed]:fadeOut relative data-[orientation=horizontal]:mt-1.5
   data-[orientation=vertical]:ml-[-8px] h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden
-  rounded-md border border-slate-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-800
-  md:w-[var(--radix-navigation-menu-viewport-width)]`,
+  rounded-[12px] border border-border shadow-lg transition-[width,_height] duration-300 bg-background-contrast-alpha
+  sm:w-[var(--radix-navigation-menu-viewport-width)] backdrop-blur-md`,
 });
 const NavigationMenuViewport = forwardRef<
   ElementRef<typeof NavigationMenuPrimitive.Viewport>,
@@ -91,7 +91,7 @@ const navigationMenuTriggerStyle = tv({
   focus:outline-none focus:bg-primary-light-hover disabled:opacity-50 disabled:pointer-events-none
   bg-transparent hover:bg-primary-light-hover text-text data-[state=open]:bg-primary-light-active
   data-[active]:bg-primary-light-active h-10 group w-max hover:text-primary data-[active]:text-primary
-  hover:opacity-80 focus:text-primary px-4 py-2`,
+  hover:opacity-80 focus:text-primary px-4 py-2 data-[state=open]:text-primary`,
   variants: {
     active: {
       true: 'bg-primary-light-active text-primary',
