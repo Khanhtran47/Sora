@@ -66,6 +66,12 @@ interface ISettingsProps {
    * @type number
    * */
   width?: number;
+  /**
+   * The className of the icon
+   * @default ''
+   * @type string
+   * */
+  className?: string;
 }
 
 const Settings = ({
@@ -74,13 +80,14 @@ const Settings = ({
   size = 24,
   height = 24,
   width = 24,
+  className = '',
   ...props
 }: ISettingsProps) => {
   switch (filled) {
     case false:
       return (
         <Svg
-          className=""
+          className={className}
           width={width || size}
           height={height || size}
           viewBox="0 0 22 22"
@@ -96,7 +103,7 @@ const Settings = ({
     default:
       return (
         <Svg
-          className=""
+          className={className}
           width={width || size}
           height={height || size}
           viewBox="0 0 22 22"

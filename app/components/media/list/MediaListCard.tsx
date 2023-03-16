@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/indent */
-/* eslint-disable no-nested-ternary */
 import { Container, styled } from '@nextui-org/react';
 import { Link } from '@remix-run/react';
 import { Navigation } from 'swiper';
@@ -66,7 +65,13 @@ const MediaListCard = (props: IMediaListCardProps) => {
 
   if (isCoverCard) {
     return (
-      <Container fluid justify="flex-start" alignItems="center" css={{ m: 0, p: 0 }}>
+      <Container
+        fluid
+        responsive={false}
+        justify="flex-start"
+        alignItems="center"
+        css={{ m: 0, p: 0 }}
+      >
         {coverItem && coverItem?.length > 0 && (
           <SwiperStyled
             modules={[Navigation]}
@@ -107,7 +112,13 @@ const MediaListCard = (props: IMediaListCardProps) => {
   }
 
   return (
-    <Container fluid justify="flex-start" alignItems="center" css={{ m: 0, p: 0 }}>
+    <Container
+      fluid
+      responsive={false}
+      justify="flex-start"
+      alignItems="center"
+      css={{ m: 0, p: 0 }}
+    >
       {items && items?.length > 0 && (
         <SwiperStyled
           modules={[Navigation]}

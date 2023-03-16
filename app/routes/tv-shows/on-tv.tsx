@@ -121,6 +121,7 @@ const ListTvShows = () => {
     >
       <Container
         fluid
+        responsive={false}
         display="flex"
         justify="center"
         css={{

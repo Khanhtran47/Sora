@@ -47,7 +47,7 @@ export const handle = {
 };
 
 const SearchPage = () => (
-  <Container fluid css={{ m: 0, p: 0 }}>
+  <Container fluid responsive={false} css={{ m: 0, p: 0 }}>
     <TabLink pages={searchPage} linkTo="/search/" />
 
     <Outlet />

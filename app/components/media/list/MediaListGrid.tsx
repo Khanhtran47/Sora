@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/indent */
-/* eslint-disable no-nested-ternary */
 import { useEffect, useState, useRef } from 'react';
 import { Grid, Button } from '@nextui-org/react';
 import { useFetcher, Link } from '@remix-run/react';
@@ -152,6 +151,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.05 * index }}
+                  style={{ width: '100%' }}
                 >
                   <Link to={href}>
                     <MediaItem
@@ -208,6 +208,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
                     ? { x: { type: 'spring', stiffness: 100 }, duration: 0.1 }
                     : { duration: 0.05 * index }
                 }
+                style={{ width: '100%' }}
               >
                 <Link to={href}>
                   <MediaItem

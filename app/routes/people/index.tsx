@@ -81,6 +81,7 @@ const ListPeoplePopular = () => {
     >
       <Container
         fluid
+        responsive={false}
         display="flex"
         justify="center"
         css={{

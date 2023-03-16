@@ -104,6 +104,7 @@ const DiscoverAnime = () => {
     >
       <Container
         fluid
+        responsive={false}
         display="flex"
         justify="center"
         direction="column"

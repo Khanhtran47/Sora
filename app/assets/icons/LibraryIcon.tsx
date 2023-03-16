@@ -44,6 +44,12 @@ interface ILibraryProps {
    * @type number
    * */
   width?: number;
+  /**
+   * The className of the icon
+   * @default ''
+   * @type string
+   * */
+  className?: string;
 }
 
 const Library = ({
@@ -52,13 +58,14 @@ const Library = ({
   size = 24,
   height = 24,
   width = 24,
+  className = '',
   ...props
 }: ILibraryProps) => {
   switch (filled) {
     case false:
       return (
         <Svg
-          className=""
+          className={className}
           width={width || size}
           height={height || size}
           viewBox="0 0 22 22"
@@ -74,7 +81,7 @@ const Library = ({
     default:
       return (
         <Svg
-          className=""
+          className={className}
           width={width || size}
           height={height || size}
           viewBox="0 0 22 22"

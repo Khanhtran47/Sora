@@ -105,7 +105,9 @@
       }
     ],
     "no-throw-literal": "off",
-    "@typescript-eslint/no-throw-literal": "off"
+    "@typescript-eslint/no-throw-literal": "off",
+    "no-nested-ternary": "off",
+    "@typescript-eslint/ban-ts-comment": "off"
   },
   "ignorePatterns": [
     "node_modules",

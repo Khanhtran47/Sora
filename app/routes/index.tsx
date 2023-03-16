@@ -87,19 +87,12 @@ const Index = () => {
   };
 
   return (
-    <motion.main
+    <motion.div
       key={location.key}
       initial={{ x: '-10%', opacity: 0 }}
       animate={{ x: '0', opacity: 1 }}
       exit={{ y: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
-      style={{
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        flexDirection: 'column',
-        alignItems: 'center',
-      }}
     >
       <MediaList
         genresMovie={rootData?.genresMovie}
@@ -109,6 +102,7 @@ const Index = () => {
       />
       <Container
         fluid
+        responsive={false}
         display="flex"
         justify="flex-start"
         alignItems="center"
@@ -181,7 +175,7 @@ const Index = () => {
           />
         )}
       </Container>
-    </motion.main>
+    </motion.div>
   );
 };
 

@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/indent */
-/* eslint-disable no-nested-ternary */
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useEffect, useState, useCallback } from 'react';
 import { Button, Card, Col, Row, Spacer, Text, Badge, Image as NextImage } from '@nextui-org/react';
 import { useFetcher, useNavigate } from '@remix-run/react';
@@ -508,11 +506,13 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
           }}
         >
           <AnimatePresence>
-            {!showTrailer && active && size ? (
+            {!showTrailer && size ? (
               <motion.div
                 initial={{ opacity: 0, scale: 1.2, y: 40 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0 }}
+                animate={
+                  active ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0.3, scale: 1.2, y: 40 }
+                }
+                exit={{ opacity: 0, scale: 1.2, y: 40 }}
                 transition={{ duration: 0.5 }}
                 style={{ overflow: 'hidden' }}
               >
@@ -520,7 +520,6 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                   // @ts-ignore
                   as={Image}
                   src={backdropPath || ''}
-                  loading="eager"
                   width="100%"
                   height="auto"
                   css={{
@@ -528,7 +527,10 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                     left: 0,
                     objectFit: 'cover',
                     opacity: 0.3,
+                    aspectRatio: '2 / 1',
                   }}
+                  decoding={active ? 'auto' : 'async'}
+                  loading="lazy"
                   showSkeleton
                   alt={titleItem}
                   title={titleItem}

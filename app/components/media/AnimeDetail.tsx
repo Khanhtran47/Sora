@@ -1,5 +1,4 @@
 /* eslint-disable no-nested-ternary */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useEffect, useState } from 'react';
 import { Card, Col, Row, Button, Spacer, Avatar, Tooltip } from '@nextui-org/react';
 import { useNavigate, useLocation, useFetcher } from '@remix-run/react';

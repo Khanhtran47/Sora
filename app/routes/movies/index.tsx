@@ -124,7 +124,7 @@ const MoviesIndexPage = () => {
   }, [fetcher.type]);
 
   return (
-    <motion.main
+    <motion.div
       key={location.key}
       initial={{ x: '-10%', opacity: 0 }}
       animate={{ x: '0', opacity: 1 }}
@@ -147,6 +147,7 @@ const MoviesIndexPage = () => {
       />
       <Container
         fluid
+        responsive={false}
         display="flex"
         justify="flex-start"
         direction="column"
@@ -225,7 +226,7 @@ const MoviesIndexPage = () => {
           ) : null}
         </AnimatePresence>
       </Container>
-    </motion.main>
+    </motion.div>
   );
 };
 

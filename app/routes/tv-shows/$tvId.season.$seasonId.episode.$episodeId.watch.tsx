@@ -480,6 +480,7 @@ const EpisodeWatch = () => {
   return (
     <Container
       fluid
+      responsive={false}
       alignItems="stretch"
       justify="center"
       css={{

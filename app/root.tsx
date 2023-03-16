@@ -1,5 +1,4 @@
 /* eslint-disable react/no-danger */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import * as React from 'react';
 import type { LinksFunction, MetaFunction, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
@@ -96,7 +95,7 @@ interface DocumentProps {
   ENV?: any;
 }
 
-const links: LinksFunction = () => [
+export const links: LinksFunction = () => [
   { rel: 'manifest', href: '/resources/manifest-v0.0.1.json' },
   { rel: 'icon', href: '/favicon.ico' },
   {
@@ -263,7 +262,7 @@ const links: LinksFunction = () => [
   },
 ];
 
-const meta: MetaFunction = () => {
+export const meta: MetaFunction = () => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const { isBrowser } = useSSR();
   if (isBrowser) {
@@ -312,7 +311,7 @@ const meta: MetaFunction = () => {
   };
 };
 
-const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const locale = await i18next.getLocale(request);
   const gaTrackingId = process.env.GA_TRACKING_ID;
   const user = await getUserFromCookie(request.headers.get('Cookie') || '');
@@ -340,7 +339,7 @@ const loader = async ({ request }: LoaderArgs) => {
   );
 };
 
-const handle = {
+export const handle = {
   breadcrumb: () => (
     <NavLink to="/" aria-label="Home Page">
       {({ isActive }) => (
@@ -687,7 +686,7 @@ const App = () => {
   );
 };
 
-const CatchBoundary = () => {
+export const CatchBoundary = () => {
   const caught = useCatch();
 
   let message;
@@ -776,7 +775,7 @@ const CatchBoundary = () => {
   );
 };
 
-const ErrorBoundary = ({ error }: { error: Error }) => {
+export const ErrorBoundary = ({ error }: { error: Error }) => {
   const isProd = process.env.NODE_ENV === 'production' && process.env.DEPLOY_ENV === 'production';
   console.log(error);
   return (
@@ -855,4 +854,3 @@ const ErrorBoundary = ({ error }: { error: Error }) => {
 };
 
 export default App;
-export { links, meta, loader, handle, CatchBoundary, ErrorBoundary };

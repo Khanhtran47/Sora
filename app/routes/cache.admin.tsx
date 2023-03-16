@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable no-nested-ternary */
 import { useState, useMemo } from 'react';
 import { json, redirect } from '@remix-run/node';
 import type { LoaderArgs, ActionArgs, MetaFunction } from '@remix-run/node';
@@ -148,7 +147,7 @@ const CacheAdminRoute = () => {
   };
 
   return (
-    <motion.main
+    <motion.div
       key={location.key}
       initial={{ x: '-10%', opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
@@ -157,6 +156,7 @@ const CacheAdminRoute = () => {
     >
       <Container
         fluid
+        responsive={false}
         display="flex"
         justify="flex-start"
         direction="column"
@@ -231,7 +231,7 @@ const CacheAdminRoute = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-    </motion.main>
+    </motion.div>
   );
 };
 

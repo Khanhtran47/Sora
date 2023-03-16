@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/indent */
-/* eslint-disable no-nested-ternary */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useState, useMemo } from 'react';
 import { Row, Spacer, Card, Avatar, Button, Pagination, Dropdown } from '@nextui-org/react';
 import { useNavigate } from '@remix-run/react';
@@ -220,6 +218,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                           width="227px"
                           height="100%"
                           showSkeleton
+                          loading="lazy"
                           alt={episode?.name || ''}
                           title={episode?.name || ''}
                           css={{
@@ -265,6 +264,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                           alt={episode?.title || ''}
                           title={episode?.title || ''}
                           showSkeleton
+                          loading="lazy"
                           css={{
                             minWidth: '227px !important',
                             minHeight: '127px !important',

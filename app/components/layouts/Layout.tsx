@@ -1,14 +1,21 @@
 /* eslint-disable @typescript-eslint/indent */
-import * as React from 'react';
+import { useState } from 'react';
 import { Container } from '@nextui-org/react';
 import type { User } from '@supabase/supabase-js';
-
 import { useMediaQuery } from '@react-hookz/web';
+
+import {
+  ScrollArea,
+  ScrollAreaViewport,
+  ScrollAreaScrollbar,
+  ScrollAreaThumb,
+  ScrollAreaCorner,
+} from '~/components/elements/scroll-area/ScrollArea';
 
 /* Components */
 import Flex from '../styles/Flex.styles';
 import Header from './Header';
-import LeftDrawer from './LeftDrawer';
+import SideBar from './SideBar';
 import Footer from './Footer';
 import BottomNav from './BottomNav';
 import BreadCrumb from './BreadCrumb';
@@ -21,60 +28,52 @@ interface ILayout {
 
 const Layout = (props: ILayout) => {
   const { children, user } = props;
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
 
   return (
-    <Container
-      justify="flex-end"
-      className="!max-w-full"
-      css={{
-        display: 'flex',
-        margin: 0,
-        padding: 0,
-        backgroundColor: '$backgroundContrast',
-      }}
-    >
-      <LeftDrawer open={open} setOpen={setOpen} />
-      <Flex
-        direction="column"
-        justify="center"
-        align="center"
-        className="w-full"
+    <div className="flex flex-nowrap justify-start max-w-full max-h-full min-h-screen bg-background">
+      <SideBar open={open} setOpen={setOpen} />
+      <ScrollArea
+        type="always"
+        className="grow bg-background-contrast-alpha ml-[250px] !rounded-tl-xl !rounded-r-none !rounded-bl-none overflow-hidden"
         css={{
-          backgroundColor: '$background',
-          margin: 0,
-          width: '100%',
-          '@sm': {
-            borderTopLeftRadius: '$xl',
-            borderBottomLeftRadius: '$xl',
-            width: 'calc(100% - 65px)',
-          },
+          maxWidth: '100%',
+          height: '100vh',
         }}
       >
-        <Header open={open} user={user} setOpen={setOpen} />
-        <Container
-          as="main"
-          fluid
-          css={{
-            zIndex: 0,
-            minHeight: '100vh',
-            padding: 0,
-            margin: 0,
-            '@xs': {
-              paddingLeft: '20px',
-              paddingRight: '20px',
-            },
-          }}
-        >
-          <BreadCrumb />
-          <GlobalPlayer />
-          {children}
-        </Container>
-        <Footer />
-        {isSm ? <BottomNav /> : null}
-      </Flex>
-    </Container>
+        <ScrollAreaViewport>
+          <div className="flex flex-col justify-center items-center max-w-[calc(100vw_-_250px)]">
+            {/* <Header open={open} user={user} setOpen={setOpen} /> */}
+            <Container
+              as="main"
+              fluid
+              responsive
+              css={{
+                zIndex: 0,
+                minHeight: '100vh',
+                padding: 0,
+                margin: '0 0 200px 0',
+                '@xs': {
+                  paddingLeft: '20px',
+                  paddingRight: '20px',
+                },
+              }}
+            >
+              {/* <BreadCrumb /> */}
+              <GlobalPlayer />
+              {children}
+            </Container>
+            {/* <Footer /> */}
+            {isSm ? <BottomNav /> : null}
+          </div>
+        </ScrollAreaViewport>
+        <ScrollAreaScrollbar orientation="vertical">
+          <ScrollAreaThumb />
+        </ScrollAreaScrollbar>
+        <ScrollAreaCorner />
+      </ScrollArea>
+    </div>
   );
 };
 

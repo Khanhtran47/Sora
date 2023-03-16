@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/indent */
-/* eslint-disable no-nested-ternary */
 import { useMemo, useState } from 'react';
 import { Spacer, Button, Divider, Switch, SwitchEvent } from '@nextui-org/react';
 import { isMobileOnly } from 'react-device-detect';

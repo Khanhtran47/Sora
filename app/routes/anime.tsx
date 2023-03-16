@@ -47,12 +47,12 @@ const AnimeIndexPage = () => {
   const location = useLocation();
   if (location.pathname.split('/')[2]?.match(/^\d+$/) || location.pathname === '/anime')
     return (
-      <Container fluid css={{ m: 0, p: 0 }}>
+      <Container fluid responsive={false} css={{ m: 0, p: 0 }}>
         <Outlet />
       </Container>
     );
   return (
-    <Container fluid css={{ m: 0, p: 0 }}>
+    <Container fluid responsive={false} css={{ m: 0, p: 0 }}>
       <TabLink pages={animePage} linkTo="/anime" />
       <Outlet />
     </Container>

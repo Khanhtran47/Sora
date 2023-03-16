@@ -14,6 +14,7 @@ const BottomNav = () => {
   return (
     <Container
       fluid
+      responsive={false}
       display="flex"
       justify="space-around"
       alignItems="center"

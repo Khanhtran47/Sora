@@ -52,6 +52,7 @@ const TestRoute = () => {
     return (
       <Container
         fluid
+        responsive={false}
         display="flex"
         justify="flex-start"
         direction="column"
@@ -68,6 +69,7 @@ const TestRoute = () => {
   return (
     <Container
       fluid
+      responsive={false}
       display="flex"
       justify="flex-start"
       direction="column"

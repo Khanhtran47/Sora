@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable no-nested-ternary */
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation, useFetcher } from '@remix-run/react';
 import { Card, Col, Row, Button, Spacer, Avatar, Tooltip } from '@nextui-org/react';
@@ -51,6 +50,7 @@ const MediaDetail = (props: IMediaDetail) => {
   // const { t } = useTranslation();
   const { type, item, handler, translations, imdbRating, color } = props;
   const [size, ref] = useMeasure<HTMLDivElement>();
+  console.log('🚀 ~ file: MediaDetail.tsx:53 ~ MediaDetail ~ size:', size);
   const navigate = useNavigate();
   const location = useLocation();
   const fetcher = useFetcher();
@@ -114,22 +114,17 @@ const MediaDetail = (props: IMediaDetail) => {
           backgroundColor,
           borderBottomLeftRadius: 0,
           borderBottomRightRadius: 0,
-          minHeight: '1050px',
-          height: isXs
-            ? `calc(${JSON.stringify(size?.height)}px + 240px - 10rem)`
-            : `calc(${JSON.stringify(size?.height)}px + 360px - 10rem)`,
-          '@xs': {
-            minHeight: '1075px',
-            height: `calc(${JSON.stringify(size?.height)}px + 480px - 10rem)`,
-          },
-          '@sm': {
-            minHeight: '1100px',
-            height: `calc(${JSON.stringify(size?.height)}px + 720px - 10rem)`,
-          },
-          '@md': {
-            minHeight: '1125px',
-            height: `calc(${JSON.stringify(size?.height)}px + 787.5px - 10rem)`,
-          },
+          // minHeight: '900px',
+          // '@xs': {
+          //   minHeight: '1075px',
+          // },
+          // '@sm': {
+          //   minHeight: '1100px',
+          // },
+          // '@md': {
+          //   minHeight: '1125px',
+          // },
+          height: `calc(${size?.height}px + ${(size?.width || 0) / 2}px - 10rem)`,
         }}
       >
         <Card.Body
@@ -145,18 +140,15 @@ const MediaDetail = (props: IMediaDetail) => {
               backgroundImage: `linear-gradient(to top, ${backgroundColor}, ${tinycolor(
                 backgroundColor,
               ).setAlpha(0)})`,
-              top: isXs ? '140px' : '210px',
+              bottom: `calc(${size?.height}px - 10rem)`,
               height: isXs ? '100px' : '150px',
               '@xs': {
-                top: '280px',
                 height: '200px',
               },
               '@sm': {
-                top: '470px',
                 height: '250px',
               },
               '@md': {
-                top: '487.5px',
                 height: '300px',
               },
             },
@@ -173,20 +165,7 @@ const MediaDetail = (props: IMediaDetail) => {
               left: 0,
               objectFit: 'cover',
               opacity: 0.8,
-              minHeight: isXs ? '240px !important' : '360px !important',
-              height: isXs ? '240px !important' : '360px !important',
-              '@xs': {
-                minHeight: '480px !important',
-                height: '480px !important',
-              },
-              '@sm': {
-                minHeight: '720px !important',
-                height: '720px !important',
-              },
-              '@md': {
-                minHeight: '787.5px !important',
-                height: '787.5px !important',
-              },
+              aspectRatio: '2 / 1',
             }}
             title={title}
             alt={title}
@@ -197,36 +176,8 @@ const MediaDetail = (props: IMediaDetail) => {
             responsive={[
               {
                 size: {
-                  width: 426,
-                  height: 240,
-                },
-                maxWidth: 375,
-              },
-              {
-                size: {
-                  width: 640,
-                  height: 360,
-                },
-                maxWidth: 650,
-              },
-              {
-                size: {
-                  width: 854,
-                  height: 480,
-                },
-                maxWidth: 960,
-              },
-              {
-                size: {
-                  width: 1280,
-                  height: 720,
-                },
-                maxWidth: 1280,
-              },
-              {
-                size: {
-                  width: 1400,
-                  height: 787.5,
+                  width: Math.round(size?.width || 0),
+                  height: Math.round((size?.width || 0) / 2),
                 },
               },
             ]}
@@ -449,7 +400,7 @@ const MediaDetail = (props: IMediaDetail) => {
                     <Rating rating={item?.vote_average?.toFixed(1)} ratingType="movie" />
                     {imdbRating && (
                       <>
-                        <Spacer x={0.75} />
+                        <Spacer x={0.5} />
                         <H6
                           h6
                           weight="semibold"
@@ -469,22 +420,14 @@ const MediaDetail = (props: IMediaDetail) => {
                       </>
                     )}
                   </Flex>
-                  <Spacer x={1} />
+                  <Spacer x={0.5} />
                   <H6 h6>
                     {releaseDate}
                     {runtime ? ` • ${Math.floor(runtime / 60)}h ${runtime % 60}m` : null}
                   </H6>
                 </Row>
-                <Row
-                  fluid
-                  align="center"
-                  wrap="wrap"
-                  justify="flex-start"
-                  css={{
-                    width: '100%',
-                    margin: '1.25rem 0 1.25rem 0',
-                  }}
-                >
+                <Spacer y={0.5} />
+                <Row fluid align="center" wrap="wrap" justify="flex-start">
                   {genres &&
                     genres?.map((genre) => (
                       <>
@@ -520,13 +463,14 @@ const MediaDetail = (props: IMediaDetail) => {
                       </>
                     ))}
                 </Row>
+                <Spacer y={0.5} />
               </Flex>
               <Row
                 fluid
                 justify="space-between"
                 align="center"
                 wrap="wrap"
-                css={{ marginBottom: '2.55rem' }}
+                css={{ marginBottom: '2rem' }}
               >
                 {(status === 'Released' || status === 'Ended' || status === 'Returning Series') && (
                   <Button

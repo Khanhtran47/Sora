@@ -85,6 +85,7 @@ const SearchRoute = () => {
   return (
     <Container
       fluid
+      responsive={false}
       display="flex"
       justify="center"
       direction="column"

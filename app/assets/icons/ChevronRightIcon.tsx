@@ -52,6 +52,12 @@ interface IChevronRightProps {
    * @type number
    * */
   width?: number;
+  /**
+   * The className of the icon
+   * @default ''
+   * @type string
+   * */
+  className?: string;
 }
 
 const ChevronRight = ({
@@ -60,13 +66,14 @@ const ChevronRight = ({
   size = 24,
   height = 24,
   width = 24,
+  className = '',
   ...props
 }: IChevronRightProps) => {
   switch (filled) {
     case false:
       return (
         <Svg
-          className=""
+          className={className}
           width={width || size}
           height={height || size}
           viewBox="0 0 24 24"
@@ -82,7 +89,7 @@ const ChevronRight = ({
     default:
       return (
         <Svg
-          className=""
+          className={className}
           width={width || size}
           height={height || size}
           viewBox="0 0 24 24"

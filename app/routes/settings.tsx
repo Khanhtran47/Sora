@@ -228,7 +228,7 @@ const Settings = () => {
   };
 
   return (
-    <motion.main
+    <motion.div
       key={location.key}
       initial={{ x: '-10%', opacity: 0 }}
       animate={{ x: '0', opacity: 1 }}
@@ -237,6 +237,7 @@ const Settings = () => {
     >
       <Container
         fluid
+        responsive={false}
         display="flex"
         justify="flex-start"
         direction="column"
@@ -313,6 +314,7 @@ const Settings = () => {
                   >
                     <Container
                       fluid
+                      responsive={false}
                       display="flex"
                       justify="flex-start"
                       direction="column"
@@ -365,6 +367,7 @@ const Settings = () => {
                   >
                     <Container
                       fluid
+                      responsive={false}
                       display="flex"
                       justify="flex-start"
                       direction="column"
@@ -497,6 +500,7 @@ const Settings = () => {
                   >
                     <Container
                       fluid
+                      responsive={false}
                       display="flex"
                       justify="flex-start"
                       direction="column"
@@ -519,6 +523,7 @@ const Settings = () => {
                   >
                     <Container
                       fluid
+                      responsive={false}
                       display="flex"
                       justify="flex-start"
                       direction="column"
@@ -1366,6 +1371,7 @@ const Settings = () => {
                   >
                     <Container
                       fluid
+                      responsive={false}
                       display="flex"
                       justify="flex-start"
                       direction="column"
@@ -1422,7 +1428,7 @@ const Settings = () => {
           )}
         </ClientOnly>
       </Container>
-    </motion.main>
+    </motion.div>
   );
 };
 

@@ -7,6 +7,7 @@ import LogoFooter from '~/assets/images/logo_footer.png';
 const Footer = () => (
   <Container
     fluid
+    responsive={false}
     display="flex"
     justify="center"
     direction="column"
@@ -29,6 +30,7 @@ const Footer = () => (
       css={{
         borderRadius: '50%',
       }}
+      loading="lazy"
       loaderUrl="/api/image"
       placeholder="empty"
       responsive={[

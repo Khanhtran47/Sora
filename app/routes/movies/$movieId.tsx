@@ -202,7 +202,7 @@ const MovieDetail = () => {
       <Container
         as="div"
         fluid
-        responsive
+        responsive={false}
         justify="center"
         css={{
           display: 'flex',
