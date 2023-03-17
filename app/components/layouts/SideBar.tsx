@@ -35,6 +35,7 @@ import Arrow from '~/assets/icons/ArrowIcon';
 import Logo from '~/assets/images/logo_loading.png';
 import Home from '~/assets/icons/HomeIcon';
 import Search from '~/assets/icons/SearchIcon';
+import Discover from '~/assets/icons/DiscoverIcon';
 
 interface ILeftDrawerProps {
   open: boolean;
@@ -183,22 +184,96 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
             </NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem className="w-[215px] text-left" value="search">
-            <NavigationMenuLink asChild>
-              <NavLink
-                to="/search"
-                className={navigationMenuTriggerStyle({
-                  class: 'w-[215px] h-[50px] justify-start',
-                })}
-              >
-                {({ isActive, isPending }) => (
-                  <>
-                    <Search className="mr-4" filled={isActive} />
-                    Search
-                    <Loading className={isPending ? 'ml-auto' : '!hidden'} type="points-opacity" />
-                  </>
-                )}
-              </NavLink>
-            </NavigationMenuLink>
+            <NavigationMenuTrigger className={sidebarActiveStyles()}>
+              <Search className="mr-4" />
+              Search
+            </NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <ul className="m-0 flex flex-row gap-x-[6px] p-[6px] w-fit">
+                <li className="flex flex-col gap-y-[6px] m-0 justify-between [&_.active]:bg-background [&_.active]:text-primary">
+                  <NavigationMenuLink asChild>
+                    <NavLink
+                      to="/search/movie"
+                      className={navigationMenuTriggerStyle({
+                        class:
+                          'w-[215px] h-auto flex flex-row px-2 justify-start items-center focus:bg-background-alpha hover:bg-background-alpha',
+                      })}
+                    >
+                      {({ isActive, isPending }) => (
+                        <>
+                          <Search className="mr-2 w-5 h-5" filled={isActive} />
+                          Search Movies
+                          <Loading
+                            className={isPending ? 'ml-auto' : '!hidden'}
+                            type="points-opacity"
+                          />
+                        </>
+                      )}
+                    </NavLink>
+                  </NavigationMenuLink>
+                  <NavigationMenuLink asChild>
+                    <NavLink
+                      to="/search/tv"
+                      className={navigationMenuTriggerStyle({
+                        class:
+                          'w-[215px] h-auto flex flex-row px-2 justify-start items-center focus:bg-background-alpha hover:bg-background-alpha',
+                      })}
+                    >
+                      {({ isActive, isPending }) => (
+                        <>
+                          <Search className="mr-2 w-5 h-5" filled={isActive} />
+                          Search Tv shows
+                          <Loading
+                            className={isPending ? 'ml-auto' : '!hidden'}
+                            type="points-opacity"
+                          />
+                        </>
+                      )}
+                    </NavLink>
+                  </NavigationMenuLink>
+                  <NavigationMenuLink asChild>
+                    <NavLink
+                      to="/search/anime"
+                      className={navigationMenuTriggerStyle({
+                        class:
+                          'w-[215px] h-auto  flex flex-row px-2 justify-start items-center focus:bg-background-alpha hover:bg-background-alpha',
+                      })}
+                    >
+                      {({ isActive, isPending }) => (
+                        <>
+                          <Search className="mr-2 w-5 h-5" filled={isActive} />
+                          Search Anime
+                          <Loading
+                            className={isPending ? 'ml-auto' : '!hidden'}
+                            type="points-opacity"
+                          />
+                        </>
+                      )}
+                    </NavLink>
+                  </NavigationMenuLink>
+                  <NavigationMenuLink asChild>
+                    <NavLink
+                      to="/search/people"
+                      className={navigationMenuTriggerStyle({
+                        class:
+                          'w-[215px] h-auto flex flex-row px-2 justify-start items-center focus:bg-background-alpha hover:bg-background-alpha',
+                      })}
+                    >
+                      {({ isActive, isPending }) => (
+                        <>
+                          <Search className="mr-2 w-5 h-5" filled={isActive} />
+                          Popular
+                          <Loading
+                            className={isPending ? 'ml-auto' : '!hidden'}
+                            type="points-opacity"
+                          />
+                        </>
+                      )}
+                    </NavLink>
+                  </NavigationMenuLink>
+                </li>
+              </ul>
+            </NavigationMenuContent>
           </NavigationMenuItem>
           <NavigationMenuItem value="movies">
             <NavigationMenuTrigger className={sidebarActiveStyles()}>
@@ -281,10 +356,10 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                           'w-[215px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
                       })}
                     >
-                      {({ isPending }) => (
+                      {({ isActive, isPending }) => (
                         <>
                           <div className="flex flex-row justify-start items-center w-full mb-2">
-                            <Search className="mr-2 w-5 h-5" />
+                            <Discover className="mr-2 w-5 h-5" filled={isActive} />
                             Popular
                             <Loading
                               className={isPending ? 'ml-auto' : '!hidden'}
@@ -306,10 +381,10 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                           'w-[215px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
                       })}
                     >
-                      {({ isPending }) => (
+                      {({ isActive, isPending }) => (
                         <>
                           <div className="flex flex-row justify-start items-center w-full mb-2">
-                            <Search className="mr-2 w-5 h-5" />
+                            <Discover className="mr-2 w-5 h-5" filled={isActive} />
                             Now Playing
                             <Loading
                               className={isPending ? 'ml-auto' : '!hidden'}
@@ -329,10 +404,10 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                           'w-[215px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
                       })}
                     >
-                      {({ isPending }) => (
+                      {({ isActive, isPending }) => (
                         <>
                           <div className="flex flex-row justify-start items-center w-full mb-2">
-                            <Search className="mr-2 w-5 h-5" />
+                            <Discover className="mr-2 w-5 h-5" filled={isActive} />
                             Upcoming
                             <Loading
                               className={isPending ? 'ml-auto' : '!hidden'}
@@ -354,10 +429,10 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                           'w-[215px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
                       })}
                     >
-                      {({ isPending }) => (
+                      {({ isActive, isPending }) => (
                         <>
                           <div className="flex flex-row justify-start items-center w-full mb-2">
-                            <Search className="mr-2 w-5 h-5" />
+                            <Discover className="mr-2 w-5 h-5" filled={isActive} />
                             Top Rated
                             <Loading
                               className={isPending ? 'ml-auto' : '!hidden'}
@@ -456,10 +531,10 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                           'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
                       })}
                     >
-                      {({ isPending }) => (
+                      {({ isActive, isPending }) => (
                         <>
                           <div className="flex flex-row justify-start items-center w-full mb-2">
-                            <Search className="mr-2 w-5 h-5" />
+                            <Discover className="mr-2 w-5 h-5" filled={isActive} />
                             Popular
                             <Loading
                               className={isPending ? 'ml-auto' : '!hidden'}
@@ -481,10 +556,10 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                           'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
                       })}
                     >
-                      {({ isPending }) => (
+                      {({ isActive, isPending }) => (
                         <>
                           <div className="flex flex-row justify-start items-center w-full mb-2">
-                            <Search className="mr-2 w-5 h-5" />
+                            <Discover className="mr-2 w-5 h-5" filled={isActive} />
                             Airing Today
                             <Loading
                               className={isPending ? 'ml-auto' : '!hidden'}
@@ -506,10 +581,10 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                           'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
                       })}
                     >
-                      {({ isPending }) => (
+                      {({ isActive, isPending }) => (
                         <>
                           <div className="flex flex-row justify-start items-center w-full mb-2">
-                            <Search className="mr-2 w-5 h-5" />
+                            <Discover className="mr-2 w-5 h-5" filled={isActive} />
                             On Tv
                             <Loading
                               className={isPending ? 'ml-auto' : '!hidden'}
@@ -531,10 +606,10 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                           'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
                       })}
                     >
-                      {({ isPending }) => (
+                      {({ isActive, isPending }) => (
                         <>
                           <div className="flex flex-row justify-start items-center w-full mb-2">
-                            <Search className="mr-2 w-5 h-5" />
+                            <Discover className="mr-2 w-5 h-5" filled={isActive} />
                             Top Rated
                             <Loading
                               className={isPending ? 'ml-auto' : '!hidden'}
@@ -633,10 +708,10 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                           'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
                       })}
                     >
-                      {({ isPending }) => (
+                      {({ isActive, isPending }) => (
                         <>
                           <div className="flex flex-row justify-start items-center w-full mb-2">
-                            <Search className="mr-2 w-5 h-5" />
+                            <Discover className="mr-2 w-5 h-5" filled={isActive} />
                             Popular
                             <Loading
                               className={isPending ? 'ml-auto' : '!hidden'}
@@ -658,10 +733,10 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                           'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
                       })}
                     >
-                      {({ isPending }) => (
+                      {({ isActive, isPending }) => (
                         <>
                           <div className="flex flex-row justify-start items-center w-full mb-2">
-                            <Search className="mr-2 w-5 h-5" />
+                            <Discover className="mr-2 w-5 h-5" filled={isActive} />
                             Trending
                             <Loading
                               className={isPending ? 'ml-auto' : '!hidden'}
@@ -683,10 +758,10 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                           'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
                       })}
                     >
-                      {({ isPending }) => (
+                      {({ isActive, isPending }) => (
                         <>
                           <div className="flex flex-row justify-start items-center w-full mb-2">
-                            <Search className="mr-2 w-5 h-5" />
+                            <Discover className="mr-2 w-5 h-5" filled={isActive} />
                             Recent Episodes
                             <Loading
                               className={isPending ? 'ml-auto' : '!hidden'}
@@ -711,7 +786,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                       {({ isPending }) => (
                         <>
                           <div className="flex flex-row justify-start items-center w-full mb-2">
-                            <Search className="mr-2 w-5 h-5" />
+                            <Discover className="mr-2 w-5 h-5" />
                             Random Anime
                             <Loading
                               className={isPending ? 'ml-auto' : '!hidden'}
