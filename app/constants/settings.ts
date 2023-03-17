@@ -121,6 +121,8 @@ const listSubtitleWindowOpacity = ['0%', '25%', '50%', '75%', '100%'];
 
 const listSubtitleTextEffects = ['None', 'Drop Shadow', 'Raised', 'Depressed', 'Outline'];
 
+const listSidebarActiveStyleMode = ['rounded-all', 'rounded-one-side', 'pill-all', 'pill-one-side'];
+
 export {
   settingsTab,
   listThemes,
@@ -131,4 +133,5 @@ export {
   listSubtitleWindowColor,
   listSubtitleWindowOpacity,
   listSubtitleTextEffects,
+  listSidebarActiveStyleMode,
 };
