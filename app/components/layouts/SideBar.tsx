@@ -8,6 +8,8 @@ import { isMobile } from 'react-device-detect';
 import { tv, type VariantProps } from 'tailwind-variants';
 import Image, { MimeType } from 'remix-image';
 
+import { useSoraSettings } from '~/hooks/useLocalStorage';
+
 import { leftDrawerPages } from '~/constants/navPages';
 
 import { H2, H4, H5, H6 } from '~/components/styles/Text.styles';
@@ -50,7 +52,7 @@ const sidebarStyles = tv({
   base: 'grow-0 shrink-0 box-border h-screen fixed top-0 left-0 z-[999] hidden sm:block',
   variants: {
     sidebarMiniMode: {
-      true: 'basis-[65px] max-w-[65px] w-full',
+      true: 'basis-[80px] max-w-[80px] w-full',
       false: 'basis-[250px] max-w-[250px] w-full',
     },
     // sidebarBoxedMode: {}
@@ -61,18 +63,23 @@ const sidebarStyles = tv({
 });
 
 const sidebarActiveStyles = tv({
-  base: 'w-[215px] h-[50px] justify-start',
+  base: 'h-[56px] justify-start',
   variants: {
+    sidebarMiniMode: {
+      true: 'w-[56px]',
+      false: 'w-[215px]',
+    },
     sidebarRoundedAll: {
       true: 'rounded-md',
       false: 'rounded-r-md',
     },
     sidebarPillAll: {
-      true: 'rounded-[50px]',
-      false: 'rounded-r-[50px]',
+      true: 'rounded-[56px]',
+      false: 'rounded-r-[56px]',
     },
   },
   defaultVariants: {
+    sidebarMiniMode: false,
     sidebarRoundedAll: true,
   },
 });
@@ -102,10 +109,21 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
   //   };
   // });
 
+  const { sidebarMiniMode } = useSoraSettings();
+  const navigationItemWidthStyle = sidebarMiniMode.value ? 'w-[56px]' : 'w-[215px]';
+
   return (
-    <aside className={sidebarStyles()}>
+    <aside
+      className={sidebarStyles({
+        sidebarMiniMode: sidebarMiniMode.value,
+      })}
+    >
       <div className="flex flex-row justify-start w-full h-[65px] items-center mb-3 ml-4">
-        <div className="basis-[65px] grow-0 shrink-0 flex justify-center">
+        <div
+          className={`${
+            sidebarMiniMode.value ? 'basis-[50px]' : 'basis-[65px]'
+          } grow-0 shrink-0 flex justify-center`}
+        >
           <Image
             width="30px"
             height="30px"
@@ -128,65 +146,88 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
             }}
           />
         </div>
-        <NavLink to="/" arial-label="home-page">
-          <H2
-            h2
-            css={{
-              textGradient: '45deg, $primary, $secondary 50%',
-              fontFamily: 'monospace',
-              letterSpacing: '0.3rem',
-              textDecoration: 'none',
-            }}
-          >
-            SORA
-          </H2>
-        </NavLink>
+        {!sidebarMiniMode.value ? (
+          <NavLink to="/" arial-label="home-page">
+            <H2
+              h2
+              css={{
+                textGradient: '45deg, $primary, $secondary 50%',
+                fontFamily: 'monospace',
+                letterSpacing: '0.3rem',
+                textDecoration: 'none',
+              }}
+            >
+              SORA
+            </H2>
+          </NavLink>
+        ) : null}
       </div>
       <NavigationMenu orientation="vertical">
         <NavigationMenuList
           orientation="vertical"
           className="m-0 [&_.active]:bg-primary-light-active [&_.active]:text-primary"
         >
-          <NavigationMenuItem className="w-[215px] text-left" value="home">
+          <NavigationMenuItem
+            className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
+            value="home"
+          >
             <NavigationMenuLink asChild>
               <NavLink
                 to="/"
                 className={navigationMenuTriggerStyle({
-                  class: 'w-[215px] h-[50px] justify-start',
+                  class: `${navigationItemWidthStyle} h-[56px] justify-start transition-[width] duration-200`,
                 })}
               >
                 {({ isActive, isPending }) => (
                   <>
-                    <Home className="mr-4" filled={isActive} />
-                    Home
-                    <Loading className={isPending ? 'ml-auto' : '!hidden'} type="points-opacity" />
+                    <Home className={!sidebarMiniMode.value ? 'mr-4' : ''} filled={isActive} />
+                    {!sidebarMiniMode.value ? 'Home' : null}
+                    <Loading
+                      className={isPending && !sidebarMiniMode.value ? 'ml-auto' : '!hidden'}
+                      type="points-opacity"
+                    />
                   </>
                 )}
               </NavLink>
             </NavigationMenuLink>
           </NavigationMenuItem>
-          <NavigationMenuItem className="w-[215px] text-left" value="trending">
+          <NavigationMenuItem
+            className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
+            value="trending"
+          >
             <NavigationMenuLink asChild>
               <NavLink
                 to="/trending"
                 className={navigationMenuTriggerStyle({
-                  class: 'w-[215px] h-[50px] justify-start',
+                  class: `${navigationItemWidthStyle} h-[56px] justify-start transition-[width] duration-200`,
                 })}
               >
                 {({ isActive, isPending }) => (
                   <>
-                    <TrendingUp className="mr-4" filled={isActive} />
-                    Trending
-                    <Loading className={isPending ? 'ml-auto' : '!hidden'} type="points-opacity" />
+                    <TrendingUp
+                      className={!sidebarMiniMode.value ? 'mr-4' : ''}
+                      filled={isActive}
+                    />
+                    {!sidebarMiniMode.value ? 'Trending' : null}
+                    <Loading
+                      className={isPending && !sidebarMiniMode.value ? 'ml-auto' : '!hidden'}
+                      type="points-opacity"
+                    />
                   </>
                 )}
               </NavLink>
             </NavigationMenuLink>
           </NavigationMenuItem>
-          <NavigationMenuItem className="w-[215px] text-left" value="search">
-            <NavigationMenuTrigger className={sidebarActiveStyles()}>
-              <Search className="mr-4" />
-              Search
+          <NavigationMenuItem
+            className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
+            value="search"
+          >
+            <NavigationMenuTrigger
+              className={sidebarActiveStyles({ sidebarMiniMode: sidebarMiniMode.value })}
+              showArrow={!sidebarMiniMode.value}
+            >
+              <Search className={!sidebarMiniMode.value ? 'mr-4' : ''} />
+              {!sidebarMiniMode.value ? 'Search' : null}
             </NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="m-0 flex flex-row gap-x-[6px] p-[6px] w-fit">
@@ -275,10 +316,16 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
-          <NavigationMenuItem value="movies">
-            <NavigationMenuTrigger className={sidebarActiveStyles()}>
-              <TrendingUp className="mr-4" />
-              Movies
+          <NavigationMenuItem
+            className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
+            value="movies"
+          >
+            <NavigationMenuTrigger
+              className={sidebarActiveStyles({ sidebarMiniMode: sidebarMiniMode.value })}
+              showArrow={!sidebarMiniMode.value}
+            >
+              <TrendingUp className={!sidebarMiniMode.value ? 'mr-4' : ''} />
+              {!sidebarMiniMode.value ? 'Movies' : null}
             </NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="m-0 flex flex-row gap-x-[6px] p-[6px] w-fit">
@@ -450,10 +497,16 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
-          <NavigationMenuItem value="tv-shows">
-            <NavigationMenuTrigger className={sidebarActiveStyles()}>
-              <Settings className="mr-4" />
-              Tv Shows
+          <NavigationMenuItem
+            className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
+            value="tv-shows"
+          >
+            <NavigationMenuTrigger
+              className={sidebarActiveStyles({ sidebarMiniMode: sidebarMiniMode.value })}
+              showArrow={!sidebarMiniMode.value}
+            >
+              <Settings className={!sidebarMiniMode.value ? 'mr-4' : ''} />
+              {!sidebarMiniMode.value ? 'Tv Shows' : null}
             </NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="m-0 flex flex-row gap-x-[6px] p-[6px] w-fit">
@@ -627,10 +680,16 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
-          <NavigationMenuItem value="anime">
-            <NavigationMenuTrigger className={sidebarActiveStyles()}>
-              <Library className="mr-4" />
-              Anime
+          <NavigationMenuItem
+            className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
+            value="anime"
+          >
+            <NavigationMenuTrigger
+              className={sidebarActiveStyles({ sidebarMiniMode: sidebarMiniMode.value })}
+              showArrow={!sidebarMiniMode.value}
+            >
+              <Library className={!sidebarMiniMode.value ? 'mr-4' : ''} />
+              {!sidebarMiniMode.value ? 'Anime' : null}
             </NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="m-0 flex flex-row gap-x-[6px] p-[6px] w-fit">
@@ -804,91 +863,124 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
-          <NavigationMenuItem className="w-[215px] text-left" value="people">
+          <NavigationMenuItem
+            className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
+            value="people"
+          >
             <NavigationMenuLink asChild>
               <NavLink
                 to="/people"
                 className={navigationMenuTriggerStyle({
-                  class: 'w-[215px] h-[50px] justify-start',
+                  class: `${navigationItemWidthStyle} h-[56px] justify-start transition-[width] duration-200`,
                 })}
               >
                 {({ isActive, isPending }) => (
                   <>
-                    <TwoUsers className="mr-4" filled={isActive} />
-                    People
-                    <Loading className={isPending ? 'ml-auto' : '!hidden'} type="points-opacity" />
+                    <TwoUsers className={!sidebarMiniMode.value ? 'mr-4' : ''} filled={isActive} />
+                    {!sidebarMiniMode.value ? 'People' : null}
+                    <Loading
+                      className={isPending && !sidebarMiniMode.value ? 'ml-auto' : '!hidden'}
+                      type="points-opacity"
+                    />
                   </>
                 )}
               </NavLink>
             </NavigationMenuLink>
           </NavigationMenuItem>
-          <NavigationMenuItem className="w-[215px] text-left" value="collections">
+          <NavigationMenuItem
+            className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
+            value="collections"
+          >
             <NavigationMenuLink asChild>
               <NavLink
                 to="/collections"
                 className={navigationMenuTriggerStyle({
-                  class: 'w-[215px] h-[50px] justify-start',
+                  class: `${navigationItemWidthStyle} h-[56px] justify-start transition-[width] duration-200`,
                 })}
               >
                 {({ isActive, isPending }) => (
                   <>
-                    <CategoryIcon className="mr-4" filled={isActive} />
-                    Collections
-                    <Loading className={isPending ? 'ml-auto' : '!hidden'} type="points-opacity" />
+                    <CategoryIcon
+                      className={!sidebarMiniMode.value ? 'mr-4' : ''}
+                      filled={isActive}
+                    />
+                    {!sidebarMiniMode.value ? 'Collections' : null}
+                    <Loading
+                      className={isPending && !sidebarMiniMode.value ? 'ml-auto' : '!hidden'}
+                      type="points-opacity"
+                    />
                   </>
                 )}
               </NavLink>
             </NavigationMenuLink>
           </NavigationMenuItem>
-          <NavigationMenuItem className="w-[215px] text-left" value="my-list">
+          <NavigationMenuItem
+            className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
+            value="my-list"
+          >
             <NavigationMenuLink asChild>
               <NavLink
                 to="/list"
                 className={navigationMenuTriggerStyle({
-                  class: 'w-[215px] h-[50px] justify-start',
+                  class: `${navigationItemWidthStyle} h-[56px] justify-start transition-[width] duration-200`,
                 })}
               >
                 {({ isActive, isPending }) => (
                   <>
-                    <Library className="mr-4" filled={isActive} />
-                    My List
-                    <Loading className={isPending ? 'ml-auto' : '!hidden'} type="points-opacity" />
+                    <Library className={!sidebarMiniMode.value ? 'mr-4' : ''} filled={isActive} />
+                    {!sidebarMiniMode.value ? 'My List' : null}
+                    <Loading
+                      className={isPending && !sidebarMiniMode.value ? 'ml-auto' : '!hidden'}
+                      type="points-opacity"
+                    />
                   </>
                 )}
               </NavLink>
             </NavigationMenuLink>
           </NavigationMenuItem>
-          <NavigationMenuItem className="w-[215px] text-left" value="history">
+          <NavigationMenuItem
+            className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
+            value="history"
+          >
             <NavigationMenuLink asChild>
               <NavLink
                 to="/watch-history"
                 className={navigationMenuTriggerStyle({
-                  class: 'w-[215px] h-[50px] justify-start',
+                  class: `${navigationItemWidthStyle} h-[56px] justify-start transition-[width] duration-200`,
                 })}
               >
                 {({ isActive, isPending }) => (
                   <>
-                    <History className="mr-4" filled={isActive} />
-                    History
-                    <Loading className={isPending ? 'ml-auto' : '!hidden'} type="points-opacity" />
+                    <History className={!sidebarMiniMode.value ? 'mr-4' : ''} filled={isActive} />
+                    {!sidebarMiniMode.value ? 'History' : null}
+                    <Loading
+                      className={isPending && !sidebarMiniMode.value ? 'ml-auto' : '!hidden'}
+                      type="points-opacity"
+                    />
                   </>
                 )}
               </NavLink>
             </NavigationMenuLink>
           </NavigationMenuItem>
-          <NavigationMenuItem className="w-[215px] text-left" value="settings">
+          <NavigationMenuItem
+            className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
+            value="settings"
+          >
             <NavigationMenuLink asChild>
               <NavLink
                 to="/settings"
                 className={navigationMenuTriggerStyle({
-                  class: 'w-[215px] h-[50px] justify-start',
+                  class: `${navigationItemWidthStyle} h-[56px] justify-start transition-[width] duration-200`,
                 })}
               >
                 {({ isActive, isPending }) => (
                   <>
-                    <Settings className="mr-4" filled={isActive} />
-                    Settings
-                    <Loading className={isPending ? 'ml-auto' : '!hidden'} type="points-opacity" />
+                    <Settings className={!sidebarMiniMode.value ? 'mr-4' : ''} filled={isActive} />
+                    {!sidebarMiniMode.value ? 'Settings' : null}
+                    <Loading
+                      className={isPending && !sidebarMiniMode.value ? 'ml-auto' : '!hidden'}
+                      type="points-opacity"
+                    />
                   </>
                 )}
               </NavLink>

@@ -102,18 +102,22 @@ const navigationMenuTriggerStyle = tv({
 
 const NavigationMenuTrigger = forwardRef<
   ElementRef<typeof NavigationMenuPrimitive.Trigger>,
-  ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Trigger>
->(({ className = '', children, ...props }, ref) => (
+  ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Trigger> & {
+    showArrow?: boolean;
+  }
+>(({ className = '', children, showArrow, ...props }, ref) => (
   <NavigationMenuPrimitive.Trigger
     ref={ref}
     className={navigationMenuTriggerStyle({ class: `group ${className}` })}
     {...props}
   >
     {children}{' '}
-    <ChevronRight
-      className="relative top-[1px] ml-auto h-5 w-5 transition duration-400 group-data-[state=open]:rotate-180"
-      aria-hidden="true"
-    />
+    {showArrow ? (
+      <ChevronRight
+        className="relative top-[1px] ml-auto h-5 w-5 transition duration-400 group-data-[state=open]:rotate-180"
+        aria-hidden="true"
+      />
+    ) : null}
   </NavigationMenuPrimitive.Trigger>
 ));
 NavigationMenuTrigger.displayName = NavigationMenuPrimitive.Trigger.displayName;

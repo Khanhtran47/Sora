@@ -96,15 +96,19 @@ function useSoraSettings() {
   });
   const sidebarMiniMode = useLocalStorageValue('sora-settings_layout_sidebar-mini-mode', {
     defaultValue: false,
+    initializeWithValue: false,
   });
   const sidebarHoverMode = useLocalStorageValue('sora-settings_layout_sidebar-hover-mode', {
     defaultValue: false,
+    initializeWithValue: false,
   });
   const sidebarBoxedMode = useLocalStorageValue('sora-settings_layout_sidebar-boxed-mode', {
     defaultValue: false,
+    initializeWithValue: false,
   });
   const sidebarSheetMode = useLocalStorageValue('sora-settings_layout_sidebar-sheet-mode', {
     defaultValue: false,
+    initializeWithValue: false,
   });
 
   return {

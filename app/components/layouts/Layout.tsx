@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { Container } from '@nextui-org/react';
 import type { User } from '@supabase/supabase-js';
+import { tv } from 'tailwind-variants';
 import { useMediaQuery } from '@react-hookz/web';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 
@@ -27,24 +28,51 @@ interface ILayout {
   user?: User;
 }
 
+const scrollAreaStyles = tv({
+  base: 'grow bg-background-contrast-alpha ml-0 !rounded-tl-xl !rounded-r-none !rounded-bl-none overflow-hidden transition-[margin] transition-200',
+  variants: {
+    mini: {
+      true: 'sm:ml-[80px]',
+      false: 'sm:ml-[250px]',
+    },
+  },
+  defaultVariants: {
+    mini: false,
+  },
+});
+
+const scrollAreaViewportStyles = tv({
+  base: 'flex flex-col justify-center items-center transition-[width,_height] transition-200',
+  variants: {
+    mini: {
+      true: 'sm:max-w-[calc(100vw_-_80px)]',
+      false: 'sm:max-w-[calc(100vw_-_250px)]',
+    },
+  },
+  defaultVariants: {
+    mini: false,
+  },
+});
+
 const Layout = (props: ILayout) => {
   const { children, user } = props;
   const [open, setOpen] = useState(false);
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
+  const { sidebarMiniMode } = useSoraSettings();
 
   return (
     <div className="flex flex-nowrap justify-start max-w-full max-h-full min-h-screen bg-background">
       {isSm ? null : <SideBar open={open} setOpen={setOpen} />}
       <ScrollArea
         type="always"
-        className="grow bg-background-contrast-alpha ml-0 sm:ml-[250px] !rounded-tl-xl !rounded-r-none !rounded-bl-none overflow-hidden"
+        className={scrollAreaStyles({ mini: sidebarMiniMode.value })}
         css={{
           maxWidth: '100%',
           height: '100vh',
         }}
       >
         <ScrollAreaViewport>
-          <div className="flex flex-col justify-center items-center sm:max-w-[calc(100vw_-_250px)]">
+          <div className={scrollAreaViewportStyles({ mini: sidebarMiniMode.value })}>
             {/* <Header open={open} user={user} setOpen={setOpen} /> */}
             <Container
               as="main"
