@@ -171,52 +171,68 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
             className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
             value="home"
           >
-            <NavigationMenuLink asChild>
-              <NavLink
-                to="/"
-                className={navigationMenuTriggerStyle({
-                  class: `${navigationItemWidthStyle} h-[56px] justify-start transition-[width] duration-200`,
-                })}
-              >
-                {({ isActive, isPending }) => (
-                  <>
-                    <Home className={!sidebarMiniMode.value ? 'mr-4' : ''} filled={isActive} />
-                    {!sidebarMiniMode.value ? 'Home' : null}
-                    <Loading
-                      className={isPending && !sidebarMiniMode.value ? 'ml-auto' : '!hidden'}
-                      type="points-opacity"
-                    />
-                  </>
-                )}
-              </NavLink>
-            </NavigationMenuLink>
+            <Tooltip
+              content="Home"
+              isDisabled={!sidebarMiniMode.value}
+              placement="right"
+              color="primary"
+              offset={10}
+            >
+              <NavigationMenuLink asChild>
+                <NavLink
+                  to="/"
+                  className={navigationMenuTriggerStyle({
+                    class: `${navigationItemWidthStyle} h-[56px] justify-start transition-[width] duration-200`,
+                  })}
+                >
+                  {({ isActive, isPending }) => (
+                    <>
+                      <Home className={!sidebarMiniMode.value ? 'mr-4' : ''} filled={isActive} />
+                      {!sidebarMiniMode.value ? 'Home' : null}
+                      <Loading
+                        className={isPending && !sidebarMiniMode.value ? 'ml-auto' : '!hidden'}
+                        type="points-opacity"
+                      />
+                    </>
+                  )}
+                </NavLink>
+              </NavigationMenuLink>
+            </Tooltip>
           </NavigationMenuItem>
           <NavigationMenuItem
             className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
             value="trending"
           >
-            <NavigationMenuLink asChild>
-              <NavLink
-                to="/trending"
-                className={navigationMenuTriggerStyle({
-                  class: `${navigationItemWidthStyle} h-[56px] justify-start transition-[width] duration-200`,
-                })}
-              >
-                {({ isActive, isPending }) => (
-                  <>
-                    <TrendingUp
-                      className={!sidebarMiniMode.value ? 'mr-4' : ''}
-                      filled={isActive}
-                    />
-                    {!sidebarMiniMode.value ? 'Trending' : null}
-                    <Loading
-                      className={isPending && !sidebarMiniMode.value ? 'ml-auto' : '!hidden'}
-                      type="points-opacity"
-                    />
-                  </>
-                )}
-              </NavLink>
-            </NavigationMenuLink>
+            <Tooltip
+              content="Trending"
+              isDisabled={!sidebarMiniMode.value}
+              placement="right"
+              color="primary"
+              offset={10}
+            >
+              <NavigationMenuLink asChild>
+                <NavLink
+                  to="/trending"
+                  className={navigationMenuTriggerStyle({
+                    class: `${navigationItemWidthStyle} h-[56px] justify-start transition-[width] duration-200`,
+                  })}
+                >
+                  {({ isActive, isPending }) => (
+                    <>
+                      <TrendingUp
+                        className={!sidebarMiniMode.value ? 'mr-4' : ''}
+                        filled={isActive}
+                      />
+                      {!sidebarMiniMode.value ? 'Trending' : null}
+                      <Loading
+                        className={isPending && !sidebarMiniMode.value ? 'ml-auto' : '!hidden'}
+                        type="points-opacity"
+                      />
+                    </>
+                  )}
+                </NavLink>
+              </NavigationMenuLink>
+            </Tooltip>
           </NavigationMenuItem>
           <NavigationMenuItem
             className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
@@ -867,124 +883,170 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
             className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
             value="people"
           >
-            <NavigationMenuLink asChild>
-              <NavLink
-                to="/people"
-                className={navigationMenuTriggerStyle({
-                  class: `${navigationItemWidthStyle} h-[56px] justify-start transition-[width] duration-200`,
-                })}
-              >
-                {({ isActive, isPending }) => (
-                  <>
-                    <TwoUsers className={!sidebarMiniMode.value ? 'mr-4' : ''} filled={isActive} />
-                    {!sidebarMiniMode.value ? 'People' : null}
-                    <Loading
-                      className={isPending && !sidebarMiniMode.value ? 'ml-auto' : '!hidden'}
-                      type="points-opacity"
-                    />
-                  </>
-                )}
-              </NavLink>
-            </NavigationMenuLink>
+            <Tooltip
+              content="People"
+              isDisabled={!sidebarMiniMode.value}
+              placement="right"
+              color="primary"
+              offset={10}
+            >
+              <NavigationMenuLink asChild>
+                <NavLink
+                  to="/people"
+                  className={navigationMenuTriggerStyle({
+                    class: `${navigationItemWidthStyle} h-[56px] justify-start transition-[width] duration-200`,
+                  })}
+                >
+                  {({ isActive, isPending }) => (
+                    <>
+                      <TwoUsers
+                        className={!sidebarMiniMode.value ? 'mr-4' : ''}
+                        filled={isActive}
+                      />
+                      {!sidebarMiniMode.value ? 'People' : null}
+                      <Loading
+                        className={isPending && !sidebarMiniMode.value ? 'ml-auto' : '!hidden'}
+                        type="points-opacity"
+                      />
+                    </>
+                  )}
+                </NavLink>
+              </NavigationMenuLink>
+            </Tooltip>
           </NavigationMenuItem>
           <NavigationMenuItem
             className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
             value="collections"
           >
-            <NavigationMenuLink asChild>
-              <NavLink
-                to="/collections"
-                className={navigationMenuTriggerStyle({
-                  class: `${navigationItemWidthStyle} h-[56px] justify-start transition-[width] duration-200`,
-                })}
-              >
-                {({ isActive, isPending }) => (
-                  <>
-                    <CategoryIcon
-                      className={!sidebarMiniMode.value ? 'mr-4' : ''}
-                      filled={isActive}
-                    />
-                    {!sidebarMiniMode.value ? 'Collections' : null}
-                    <Loading
-                      className={isPending && !sidebarMiniMode.value ? 'ml-auto' : '!hidden'}
-                      type="points-opacity"
-                    />
-                  </>
-                )}
-              </NavLink>
-            </NavigationMenuLink>
+            <Tooltip
+              content="Collections"
+              isDisabled={!sidebarMiniMode.value}
+              placement="right"
+              color="primary"
+              offset={10}
+            >
+              <NavigationMenuLink asChild>
+                <NavLink
+                  to="/collections"
+                  className={navigationMenuTriggerStyle({
+                    class: `${navigationItemWidthStyle} h-[56px] justify-start transition-[width] duration-200`,
+                  })}
+                >
+                  {({ isActive, isPending }) => (
+                    <>
+                      <CategoryIcon
+                        className={!sidebarMiniMode.value ? 'mr-4' : ''}
+                        filled={isActive}
+                      />
+                      {!sidebarMiniMode.value ? 'Collections' : null}
+                      <Loading
+                        className={isPending && !sidebarMiniMode.value ? 'ml-auto' : '!hidden'}
+                        type="points-opacity"
+                      />
+                    </>
+                  )}
+                </NavLink>
+              </NavigationMenuLink>
+            </Tooltip>
           </NavigationMenuItem>
           <NavigationMenuItem
             className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
             value="my-list"
           >
-            <NavigationMenuLink asChild>
-              <NavLink
-                to="/list"
-                className={navigationMenuTriggerStyle({
-                  class: `${navigationItemWidthStyle} h-[56px] justify-start transition-[width] duration-200`,
-                })}
-              >
-                {({ isActive, isPending }) => (
-                  <>
-                    <Library className={!sidebarMiniMode.value ? 'mr-4' : ''} filled={isActive} />
-                    {!sidebarMiniMode.value ? 'My List' : null}
-                    <Loading
-                      className={isPending && !sidebarMiniMode.value ? 'ml-auto' : '!hidden'}
-                      type="points-opacity"
-                    />
-                  </>
-                )}
-              </NavLink>
-            </NavigationMenuLink>
+            <Tooltip
+              content="My List"
+              isDisabled={!sidebarMiniMode.value}
+              placement="right"
+              color="primary"
+              offset={10}
+            >
+              <NavigationMenuLink asChild>
+                <NavLink
+                  to="/list"
+                  className={navigationMenuTriggerStyle({
+                    class: `${navigationItemWidthStyle} h-[56px] justify-start transition-[width] duration-200`,
+                  })}
+                >
+                  {({ isActive, isPending }) => (
+                    <>
+                      <Library className={!sidebarMiniMode.value ? 'mr-4' : ''} filled={isActive} />
+                      {!sidebarMiniMode.value ? 'My List' : null}
+                      <Loading
+                        className={isPending && !sidebarMiniMode.value ? 'ml-auto' : '!hidden'}
+                        type="points-opacity"
+                      />
+                    </>
+                  )}
+                </NavLink>
+              </NavigationMenuLink>
+            </Tooltip>
           </NavigationMenuItem>
           <NavigationMenuItem
             className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
             value="history"
           >
-            <NavigationMenuLink asChild>
-              <NavLink
-                to="/watch-history"
-                className={navigationMenuTriggerStyle({
-                  class: `${navigationItemWidthStyle} h-[56px] justify-start transition-[width] duration-200`,
-                })}
-              >
-                {({ isActive, isPending }) => (
-                  <>
-                    <History className={!sidebarMiniMode.value ? 'mr-4' : ''} filled={isActive} />
-                    {!sidebarMiniMode.value ? 'History' : null}
-                    <Loading
-                      className={isPending && !sidebarMiniMode.value ? 'ml-auto' : '!hidden'}
-                      type="points-opacity"
-                    />
-                  </>
-                )}
-              </NavLink>
-            </NavigationMenuLink>
+            <Tooltip
+              content="History"
+              isDisabled={!sidebarMiniMode.value}
+              placement="right"
+              color="primary"
+              offset={10}
+            >
+              <NavigationMenuLink asChild>
+                <NavLink
+                  to="/watch-history"
+                  className={navigationMenuTriggerStyle({
+                    class: `${navigationItemWidthStyle} h-[56px] justify-start transition-[width] duration-200`,
+                  })}
+                >
+                  {({ isActive, isPending }) => (
+                    <>
+                      <History className={!sidebarMiniMode.value ? 'mr-4' : ''} filled={isActive} />
+                      {!sidebarMiniMode.value ? 'History' : null}
+                      <Loading
+                        className={isPending && !sidebarMiniMode.value ? 'ml-auto' : '!hidden'}
+                        type="points-opacity"
+                      />
+                    </>
+                  )}
+                </NavLink>
+              </NavigationMenuLink>
+            </Tooltip>
           </NavigationMenuItem>
           <NavigationMenuItem
             className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
             value="settings"
           >
-            <NavigationMenuLink asChild>
-              <NavLink
-                to="/settings"
-                className={navigationMenuTriggerStyle({
-                  class: `${navigationItemWidthStyle} h-[56px] justify-start transition-[width] duration-200`,
-                })}
-              >
-                {({ isActive, isPending }) => (
-                  <>
-                    <Settings className={!sidebarMiniMode.value ? 'mr-4' : ''} filled={isActive} />
-                    {!sidebarMiniMode.value ? 'Settings' : null}
-                    <Loading
-                      className={isPending && !sidebarMiniMode.value ? 'ml-auto' : '!hidden'}
-                      type="points-opacity"
-                    />
-                  </>
-                )}
-              </NavLink>
-            </NavigationMenuLink>
+            <Tooltip
+              content="Settings"
+              isDisabled={!sidebarMiniMode.value}
+              placement="right"
+              color="primary"
+              offset={10}
+            >
+              <NavigationMenuLink asChild>
+                <NavLink
+                  to="/settings"
+                  className={navigationMenuTriggerStyle({
+                    class: `${navigationItemWidthStyle} h-[56px] justify-start transition-[width] duration-200`,
+                  })}
+                >
+                  {({ isActive, isPending }) => (
+                    <>
+                      <Settings
+                        className={!sidebarMiniMode.value ? 'mr-4' : ''}
+                        filled={isActive}
+                      />
+                      {!sidebarMiniMode.value ? 'Settings' : null}
+                      <Loading
+                        className={isPending && !sidebarMiniMode.value ? 'ml-auto' : '!hidden'}
+                        type="points-opacity"
+                      />
+                    </>
+                  )}
+                </NavLink>
+              </NavigationMenuLink>
+            </Tooltip>
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
