@@ -47,7 +47,7 @@ export const handle = {
 };
 
 const sidebarStyles = tv({
-  base: 'grow-0 shrink-0 box-border h-screen fixed top-0 left-0 z-[999]',
+  base: 'grow-0 shrink-0 box-border h-screen fixed top-0 left-0 z-[999] hidden sm:block',
   variants: {
     sidebarMiniMode: {
       true: 'basis-[65px] max-w-[65px] w-full',

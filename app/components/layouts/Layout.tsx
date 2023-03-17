@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Container } from '@nextui-org/react';
 import type { User } from '@supabase/supabase-js';
 import { useMediaQuery } from '@react-hookz/web';
+import { useSoraSettings } from '~/hooks/useLocalStorage';
 
 import {
   ScrollArea,
@@ -33,17 +34,17 @@ const Layout = (props: ILayout) => {
 
   return (
     <div className="flex flex-nowrap justify-start max-w-full max-h-full min-h-screen bg-background">
-      <SideBar open={open} setOpen={setOpen} />
+      {isSm ? null : <SideBar open={open} setOpen={setOpen} />}
       <ScrollArea
         type="always"
-        className="grow bg-background-contrast-alpha ml-[250px] !rounded-tl-xl !rounded-r-none !rounded-bl-none overflow-hidden"
+        className="grow bg-background-contrast-alpha ml-0 sm:ml-[250px] !rounded-tl-xl !rounded-r-none !rounded-bl-none overflow-hidden"
         css={{
           maxWidth: '100%',
           height: '100vh',
         }}
       >
         <ScrollAreaViewport>
-          <div className="flex flex-col justify-center items-center max-w-[calc(100vw_-_250px)]">
+          <div className="flex flex-col justify-center items-center sm:max-w-[calc(100vw_-_250px)]">
             {/* <Header open={open} user={user} setOpen={setOpen} /> */}
             <Container
               as="main"
