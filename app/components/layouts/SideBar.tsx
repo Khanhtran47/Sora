@@ -50,7 +50,7 @@ export const handle = {
 };
 
 const sidebarStyles = tv({
-  base: 'grow-0 shrink-0 box-border fixed z-[999] hidden sm:block',
+  base: 'grow-0 shrink-0 box-border fixed z-[999] hidden sm:block transition-[max-width] duration-400',
   variants: {
     sidebarMiniMode: {
       true: 'basis-[80px] max-w-[80px] w-full',
@@ -72,7 +72,7 @@ const sidebarStyles = tv({
 });
 
 const sidebarActiveStyles = tv({
-  base: 'h-[56px] justify-start',
+  base: 'h-[56px] justify-start transition-[width] duration-400',
   variants: {
     sidebarMiniMode: {
       true: 'w-[56px]',
@@ -1025,7 +1025,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
           >
             <Tooltip
               content="My List"
-              isDisabled={!sidebarMiniMode.value}
+              isDisabled={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
               placement="right"
               color="primary"
               offset={10}
