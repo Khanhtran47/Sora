@@ -462,14 +462,24 @@ const Settings = () => {
                               <H6>{t('sidebar-mini-mode')}</H6>
                               <Switch
                                 checked={sidebarMiniMode.value}
-                                onChange={(e) => sidebarMiniMode.set(e.target.checked)}
+                                onChange={(e) => {
+                                  sidebarMiniMode.set(e.target.checked);
+                                  if (sidebarMiniMode.value) {
+                                    sidebarHoverMode.set(false);
+                                  }
+                                }}
                               />
                             </div>
                             <div className="flex flex-row justify-between items-center gap-x-2 w-full">
                               <H6>{t('sidebar-hover-mode')}</H6>
                               <Switch
                                 checked={sidebarHoverMode.value}
-                                onChange={(e) => sidebarHoverMode.set(e.target.checked)}
+                                onChange={(e) => {
+                                  sidebarHoverMode.set(e.target.checked);
+                                  if (!sidebarHoverMode.value) {
+                                    sidebarMiniMode.set(true);
+                                  }
+                                }}
                               />
                             </div>
                             <div className="flex flex-row justify-between items-center gap-x-2 w-full">

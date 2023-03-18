@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
 import { tv, type VariantProps } from 'tailwind-variants';
 import Image, { MimeType } from 'remix-image';
+import { useHover } from '@react-aria/interactions';
 
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 
@@ -59,7 +60,11 @@ const sidebarStyles = tv({
       true: 'top-[15px] left-[15px] bg-background-contrast-alpha rounded-xl h-[calc(100vh_-_30px)]',
       false: 'top-0 left-0 h-screen',
     },
+    sidebarHoverMode: {
+      true: 'basis-[250px] max-w-[250px] w-full bg-background-contrast rounded-r-xl border border-border shadow-2xl',
+    },
   },
+  compoundVariants: [{}],
   defaultVariants: {
     sidebarMiniMode: false,
     sidebarBoxedMode: false,
@@ -72,6 +77,9 @@ const sidebarActiveStyles = tv({
     sidebarMiniMode: {
       true: 'w-[56px]',
       false: 'w-[215px]',
+    },
+    sidebarHoverMode: {
+      true: 'w-[215px]',
     },
     sidebarRoundedAll: {
       true: 'rounded-md',
@@ -115,19 +123,24 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
 
   const { sidebarMiniMode, sidebarHoverMode, sidebarBoxedMode, sidebarSheetMode } =
     useSoraSettings();
-  const navigationItemWidthStyle = sidebarMiniMode.value ? 'w-[56px]' : 'w-[215px]';
+  const { hoverProps: sidebarHoverProps, isHovered } = useHover({
+    isDisabled: !sidebarHoverMode.value,
+  });
+  const navigationItemWidthStyle = sidebarMiniMode.value && !isHovered ? 'w-[56px]' : 'w-[215px]';
 
   return (
     <aside
+      {...sidebarHoverProps}
       className={sidebarStyles({
         sidebarMiniMode: sidebarMiniMode.value,
         sidebarBoxedMode: sidebarBoxedMode.value,
+        sidebarHoverMode: isHovered,
       })}
     >
       <div className="flex flex-row justify-start w-full h-[65px] items-center mb-3 ml-4">
         <div
           className={`${
-            sidebarMiniMode.value ? 'basis-[50px]' : 'basis-[65px]'
+            sidebarMiniMode.value && !isHovered ? 'basis-[50px]' : 'basis-[65px]'
           } grow-0 shrink-0 flex justify-center`}
         >
           <Image
@@ -152,7 +165,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
             }}
           />
         </div>
-        {!sidebarMiniMode.value ? (
+        {sidebarMiniMode.value && !isHovered ? null : (
           <NavLink to="/" arial-label="home-page">
             <H2
               h2
@@ -166,7 +179,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
               SORA
             </H2>
           </NavLink>
-        ) : null}
+        )}
       </div>
       <NavigationMenu orientation="vertical">
         <NavigationMenuList
@@ -179,7 +192,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
           >
             <Tooltip
               content="Home"
-              isDisabled={!sidebarMiniMode.value}
+              isDisabled={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
               placement="right"
               color="primary"
               offset={10}
@@ -193,10 +206,19 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                 >
                   {({ isActive, isPending }) => (
                     <>
-                      <Home className={!sidebarMiniMode.value ? 'mr-4' : ''} filled={isActive} />
-                      {!sidebarMiniMode.value ? 'Home' : null}
+                      <Home
+                        className={
+                          !sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'mr-4' : ''
+                        }
+                        filled={isActive}
+                      />
+                      {!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'Home' : null}
                       <Loading
-                        className={isPending && !sidebarMiniMode.value ? 'ml-auto' : '!hidden'}
+                        className={
+                          isPending && (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))
+                            ? 'ml-auto'
+                            : '!hidden'
+                        }
                         type="points-opacity"
                       />
                     </>
@@ -211,7 +233,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
           >
             <Tooltip
               content="Trending"
-              isDisabled={!sidebarMiniMode.value}
+              isDisabled={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
               placement="right"
               color="primary"
               offset={10}
@@ -226,12 +248,20 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                   {({ isActive, isPending }) => (
                     <>
                       <TrendingUp
-                        className={!sidebarMiniMode.value ? 'mr-4' : ''}
+                        className={
+                          !sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'mr-4' : ''
+                        }
                         filled={isActive}
                       />
-                      {!sidebarMiniMode.value ? 'Trending' : null}
+                      {!sidebarMiniMode.value || (sidebarHoverMode && isHovered)
+                        ? 'Trending'
+                        : null}
                       <Loading
-                        className={isPending && !sidebarMiniMode.value ? 'ml-auto' : '!hidden'}
+                        className={
+                          isPending && (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))
+                            ? 'ml-auto'
+                            : '!hidden'
+                        }
                         type="points-opacity"
                       />
                     </>
@@ -245,11 +275,16 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
             value="search"
           >
             <NavigationMenuTrigger
-              className={sidebarActiveStyles({ sidebarMiniMode: sidebarMiniMode.value })}
-              showArrow={!sidebarMiniMode.value}
+              className={sidebarActiveStyles({
+                sidebarMiniMode: sidebarMiniMode.value,
+                sidebarHoverMode: isHovered,
+              })}
+              showArrow={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
             >
-              <Search className={!sidebarMiniMode.value ? 'mr-4' : ''} />
-              {!sidebarMiniMode.value ? 'Search' : null}
+              <Search
+                className={!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'mr-4' : ''}
+              />
+              {!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'Search' : null}
             </NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="m-0 flex flex-row gap-x-[6px] p-[6px] w-fit">
@@ -343,11 +378,16 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
             value="movies"
           >
             <NavigationMenuTrigger
-              className={sidebarActiveStyles({ sidebarMiniMode: sidebarMiniMode.value })}
-              showArrow={!sidebarMiniMode.value}
+              className={sidebarActiveStyles({
+                sidebarMiniMode: sidebarMiniMode.value,
+                sidebarHoverMode: isHovered,
+              })}
+              showArrow={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
             >
-              <TrendingUp className={!sidebarMiniMode.value ? 'mr-4' : ''} />
-              {!sidebarMiniMode.value ? 'Movies' : null}
+              <TrendingUp
+                className={!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'mr-4' : ''}
+              />
+              {!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'Movies' : null}
             </NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="m-0 flex flex-row gap-x-[6px] p-[6px] w-fit">
@@ -524,11 +564,16 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
             value="tv-shows"
           >
             <NavigationMenuTrigger
-              className={sidebarActiveStyles({ sidebarMiniMode: sidebarMiniMode.value })}
-              showArrow={!sidebarMiniMode.value}
+              className={sidebarActiveStyles({
+                sidebarMiniMode: sidebarMiniMode.value,
+                sidebarHoverMode: isHovered,
+              })}
+              showArrow={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
             >
-              <Settings className={!sidebarMiniMode.value ? 'mr-4' : ''} />
-              {!sidebarMiniMode.value ? 'Tv Shows' : null}
+              <Settings
+                className={!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'mr-4' : ''}
+              />
+              {!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'Tv Shows' : null}
             </NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="m-0 flex flex-row gap-x-[6px] p-[6px] w-fit">
@@ -707,11 +752,16 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
             value="anime"
           >
             <NavigationMenuTrigger
-              className={sidebarActiveStyles({ sidebarMiniMode: sidebarMiniMode.value })}
-              showArrow={!sidebarMiniMode.value}
+              className={sidebarActiveStyles({
+                sidebarMiniMode: sidebarMiniMode.value,
+                sidebarHoverMode: isHovered,
+              })}
+              showArrow={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
             >
-              <Library className={!sidebarMiniMode.value ? 'mr-4' : ''} />
-              {!sidebarMiniMode.value ? 'Anime' : null}
+              <Library
+                className={!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'mr-4' : ''}
+              />
+              {!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'Anime' : null}
             </NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="m-0 flex flex-row gap-x-[6px] p-[6px] w-fit">
@@ -891,7 +941,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
           >
             <Tooltip
               content="People"
-              isDisabled={!sidebarMiniMode.value}
+              isDisabled={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
               placement="right"
               color="primary"
               offset={10}
@@ -906,12 +956,18 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                   {({ isActive, isPending }) => (
                     <>
                       <TwoUsers
-                        className={!sidebarMiniMode.value ? 'mr-4' : ''}
+                        className={
+                          !sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'mr-4' : ''
+                        }
                         filled={isActive}
                       />
-                      {!sidebarMiniMode.value ? 'People' : null}
+                      {!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'People' : null}
                       <Loading
-                        className={isPending && !sidebarMiniMode.value ? 'ml-auto' : '!hidden'}
+                        className={
+                          isPending && (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))
+                            ? 'ml-auto'
+                            : '!hidden'
+                        }
                         type="points-opacity"
                       />
                     </>
@@ -926,7 +982,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
           >
             <Tooltip
               content="Collections"
-              isDisabled={!sidebarMiniMode.value}
+              isDisabled={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
               placement="right"
               color="primary"
               offset={10}
@@ -941,12 +997,20 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                   {({ isActive, isPending }) => (
                     <>
                       <CategoryIcon
-                        className={!sidebarMiniMode.value ? 'mr-4' : ''}
+                        className={
+                          !sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'mr-4' : ''
+                        }
                         filled={isActive}
                       />
-                      {!sidebarMiniMode.value ? 'Collections' : null}
+                      {!sidebarMiniMode.value || (sidebarHoverMode && isHovered)
+                        ? 'Collections'
+                        : null}
                       <Loading
-                        className={isPending && !sidebarMiniMode.value ? 'ml-auto' : '!hidden'}
+                        className={
+                          isPending && (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))
+                            ? 'ml-auto'
+                            : '!hidden'
+                        }
                         type="points-opacity"
                       />
                     </>
@@ -975,10 +1039,19 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                 >
                   {({ isActive, isPending }) => (
                     <>
-                      <Library className={!sidebarMiniMode.value ? 'mr-4' : ''} filled={isActive} />
-                      {!sidebarMiniMode.value ? 'My List' : null}
+                      <Library
+                        className={
+                          !sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'mr-4' : ''
+                        }
+                        filled={isActive}
+                      />
+                      {!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'My List' : null}
                       <Loading
-                        className={isPending && !sidebarMiniMode.value ? 'ml-auto' : '!hidden'}
+                        className={
+                          isPending && (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))
+                            ? 'ml-auto'
+                            : '!hidden'
+                        }
                         type="points-opacity"
                       />
                     </>
@@ -993,7 +1066,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
           >
             <Tooltip
               content="History"
-              isDisabled={!sidebarMiniMode.value}
+              isDisabled={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
               placement="right"
               color="primary"
               offset={10}
@@ -1007,10 +1080,19 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                 >
                   {({ isActive, isPending }) => (
                     <>
-                      <History className={!sidebarMiniMode.value ? 'mr-4' : ''} filled={isActive} />
-                      {!sidebarMiniMode.value ? 'History' : null}
+                      <History
+                        className={
+                          !sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'mr-4' : ''
+                        }
+                        filled={isActive}
+                      />
+                      {!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'History' : null}
                       <Loading
-                        className={isPending && !sidebarMiniMode.value ? 'ml-auto' : '!hidden'}
+                        className={
+                          isPending && (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))
+                            ? 'ml-auto'
+                            : '!hidden'
+                        }
                         type="points-opacity"
                       />
                     </>
@@ -1025,7 +1107,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
           >
             <Tooltip
               content="Settings"
-              isDisabled={!sidebarMiniMode.value}
+              isDisabled={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
               placement="right"
               color="primary"
               offset={10}
@@ -1040,12 +1122,20 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                   {({ isActive, isPending }) => (
                     <>
                       <Settings
-                        className={!sidebarMiniMode.value ? 'mr-4' : ''}
+                        className={
+                          !sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'mr-4' : ''
+                        }
                         filled={isActive}
                       />
-                      {!sidebarMiniMode.value ? 'Settings' : null}
+                      {!sidebarMiniMode.value || (sidebarHoverMode && isHovered)
+                        ? 'Settings'
+                        : null}
                       <Loading
-                        className={isPending && !sidebarMiniMode.value ? 'ml-auto' : '!hidden'}
+                        className={
+                          isPending && (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))
+                            ? 'ml-auto'
+                            : '!hidden'
+                        }
                         type="points-opacity"
                       />
                     </>
