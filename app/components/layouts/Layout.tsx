@@ -28,29 +28,73 @@ interface ILayout {
   user?: User;
 }
 
+const layoutStyles = tv({
+  base: 'flex flex-nowrap justify-start max-w-full max-h-full min-h-screen bg-background transition-[padding] duration-200',
+  variants: {
+    boxed: {
+      true: 'pt-[15px] min-h-[calc(100vh_-_115px)]',
+      false: 'p-0',
+    },
+  },
+});
+
 const scrollAreaStyles = tv({
-  base: 'grow bg-background-contrast-alpha ml-0 !rounded-tl-xl !rounded-r-none !rounded-bl-none overflow-hidden transition-[margin] transition-200',
+  base: 'grow bg-background-contrast-alpha ml-0 !rounded-tl-xl !rounded-r-none !rounded-bl-none overflow-hidden transition-[margin] duration-200',
   variants: {
     mini: {
       true: 'sm:ml-[80px]',
-      false: 'sm:ml-[250px]',
+      // false: 'sm:ml-[250px]',
+    },
+    boxed: {
+      true: 'sm:ml-[280px]',
+      // false: 'sm:ml-[250px]',
     },
   },
+  compoundVariants: [
+    {
+      mini: true,
+      boxed: true,
+      class: 'sm:ml-[110px]',
+    },
+    {
+      mini: false,
+      boxed: false,
+      class: 'sm:ml-[250px]',
+    },
+  ],
   defaultVariants: {
     mini: false,
+    boxed: false,
   },
 });
 
 const scrollAreaViewportStyles = tv({
-  base: 'flex flex-col justify-center items-center transition-[width,_height] transition-200',
+  base: 'flex flex-col justify-center items-center transition-[width,_height] duration-200',
   variants: {
     mini: {
       true: 'sm:max-w-[calc(100vw_-_80px)]',
-      false: 'sm:max-w-[calc(100vw_-_250px)]',
+      // false: 'sm:max-w-[calc(100vw_-_250px)]',
+    },
+    boxed: {
+      true: 'sm:max-w-[calc(100vw_-_280px)]',
+      // false: 'sm:max-w-[calc(100vw_-_250px)]',
     },
   },
+  compoundVariants: [
+    {
+      mini: true,
+      boxed: true,
+      class: 'sm:max-w-[calc(100vw_-_110px)]',
+    },
+    {
+      mini: false,
+      boxed: false,
+      class: 'sm:max-w-[calc(100vw_-_250px)]',
+    },
+  ],
   defaultVariants: {
     mini: false,
+    boxed: false,
   },
 });
 
@@ -58,21 +102,27 @@ const Layout = (props: ILayout) => {
   const { children, user } = props;
   const [open, setOpen] = useState(false);
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
-  const { sidebarMiniMode } = useSoraSettings();
+  const { sidebarMiniMode, sidebarHoverMode, sidebarBoxedMode, sidebarSheetMode } =
+    useSoraSettings();
 
   return (
-    <div className="flex flex-nowrap justify-start max-w-full max-h-full min-h-screen bg-background">
+    <div className={layoutStyles({ boxed: sidebarBoxedMode.value })}>
       {isSm ? null : <SideBar open={open} setOpen={setOpen} />}
       <ScrollArea
         type="always"
-        className={scrollAreaStyles({ mini: sidebarMiniMode.value })}
+        className={scrollAreaStyles({ mini: sidebarMiniMode.value, boxed: sidebarBoxedMode.value })}
         css={{
           maxWidth: '100%',
-          height: '100vh',
+          height: sidebarBoxedMode.value ? 'calc(100vh - 15px)' : '100vh',
         }}
       >
         <ScrollAreaViewport>
-          <div className={scrollAreaViewportStyles({ mini: sidebarMiniMode.value })}>
+          <div
+            className={scrollAreaViewportStyles({
+              mini: sidebarMiniMode.value,
+              boxed: sidebarBoxedMode.value,
+            })}
+          >
             {/* <Header open={open} user={user} setOpen={setOpen} /> */}
             <Container
               as="main"

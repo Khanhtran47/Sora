@@ -49,16 +49,20 @@ export const handle = {
 };
 
 const sidebarStyles = tv({
-  base: 'grow-0 shrink-0 box-border h-screen fixed top-0 left-0 z-[999] hidden sm:block',
+  base: 'grow-0 shrink-0 box-border fixed z-[999] hidden sm:block',
   variants: {
     sidebarMiniMode: {
       true: 'basis-[80px] max-w-[80px] w-full',
       false: 'basis-[250px] max-w-[250px] w-full',
     },
-    // sidebarBoxedMode: {}
+    sidebarBoxedMode: {
+      true: 'top-[15px] left-[15px] bg-background-contrast-alpha rounded-xl h-[calc(100vh_-_30px)]',
+      false: 'top-0 left-0 h-screen',
+    },
   },
   defaultVariants: {
     sidebarMiniMode: false,
+    sidebarBoxedMode: false,
   },
 });
 
@@ -109,13 +113,15 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
   //   };
   // });
 
-  const { sidebarMiniMode } = useSoraSettings();
+  const { sidebarMiniMode, sidebarHoverMode, sidebarBoxedMode, sidebarSheetMode } =
+    useSoraSettings();
   const navigationItemWidthStyle = sidebarMiniMode.value ? 'w-[56px]' : 'w-[215px]';
 
   return (
     <aside
       className={sidebarStyles({
         sidebarMiniMode: sidebarMiniMode.value,
+        sidebarBoxedMode: sidebarBoxedMode.value,
       })}
     >
       <div className="flex flex-row justify-start w-full h-[65px] items-center mb-3 ml-4">
