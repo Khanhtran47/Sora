@@ -415,7 +415,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                   }
                 >
                   <H6 h6 weight="bold" transform="uppercase">
-                    {t('watchNow')}
+                    {t('moreDetails')}
                   </H6>
                 </Button>
               </Row>
