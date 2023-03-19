@@ -3,14 +3,6 @@ import { forwardRef, type ElementRef, type ComponentPropsWithoutRef } from 'reac
 import * as NavigationMenuPrimitive from '@radix-ui/react-navigation-menu';
 import { tv } from 'tailwind-variants';
 
-// import {
-//   ScrollArea,
-//   ScrollAreaViewport,
-//   ScrollAreaScrollbar,
-//   ScrollAreaThumb,
-//   ScrollAreaCorner,
-// } from '~/components/elements/scroll-area/ScrollArea';
-
 import ChevronRight from '~/assets/icons/ChevronRightIcon';
 
 const navigationMenuViewportStyle = tv({
@@ -68,19 +60,11 @@ const NavigationMenuList = forwardRef<
     orientation: NavigationMenuPrimitive.Orientation | undefined;
   }
 >(({ className = '', orientation, ...props }, ref) => (
-  // <ScrollArea>
-  //   <ScrollAreaViewport>
   <NavigationMenuPrimitive.List
     ref={ref}
     className={navigationMenuListStyles({ class: className })}
     {...props}
   />
-  //   </ScrollAreaViewport>
-  //   <ScrollAreaScrollbar orientation={orientation}>
-  //     <ScrollAreaThumb />
-  //   </ScrollAreaScrollbar>
-  //   <ScrollAreaCorner />
-  // </ScrollArea>
 ));
 NavigationMenuList.displayName = NavigationMenuPrimitive.List.displayName;
 

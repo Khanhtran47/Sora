@@ -25,6 +25,13 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from '~/components/elements/NavigationMenu';
+// import {
+//   ScrollArea,
+//   ScrollAreaViewport,
+//   ScrollAreaScrollbar,
+//   ScrollAreaThumb,
+//   ScrollAreaCorner,
+// } from '~/components/elements/scroll-area/ScrollArea';
 
 /* icons */
 import MenuIcon from '~/assets/icons/MenuIcon';
@@ -360,7 +367,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                       {({ isActive, isPending }) => (
                         <>
                           <Search className="mr-2 w-5 h-5" filled={isActive} />
-                          Popular
+                          Search People
                           <Loading
                             className={isPending ? 'ml-auto' : '!hidden'}
                             type="points-opacity"
@@ -1019,7 +1026,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
               </NavigationMenuLink>
             </Tooltip>
           </NavigationMenuItem>
-          <NavigationMenuItem
+          {/* <NavigationMenuItem
             className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
             value="my-list"
           >
@@ -1059,7 +1066,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                 </NavLink>
               </NavigationMenuLink>
             </Tooltip>
-          </NavigationMenuItem>
+          </NavigationMenuItem> */}
           <NavigationMenuItem
             className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
             value="history"

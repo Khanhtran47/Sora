@@ -23,7 +23,7 @@ export const StyledScrollbar = styled(ScrollAreaPrimitive.Scrollbar, {
   // disable browser handling of all panning and zooming gestures on touch devices
   touchAction: 'none',
   padding: 2,
-  zIndex: 99,
+  zIndex: 9999,
   background: '$accents8',
   transition: 'background 160ms ease-out',
   '&:hover': { background: '$accents5' },
