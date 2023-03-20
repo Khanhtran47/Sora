@@ -282,6 +282,49 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
           </NavigationMenuItem>
           <NavigationMenuItem
             className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
+            value="collections"
+          >
+            <Tooltip
+              content="Collections"
+              isDisabled={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
+              placement="right"
+              color="primary"
+              offset={10}
+            >
+              <NavigationMenuLink asChild>
+                <NavLink
+                  to="/collections"
+                  className={navigationMenuTriggerStyle({
+                    class: `${navigationItemWidthStyle} h-[56px] justify-start transition-[width] duration-200`,
+                  })}
+                >
+                  {({ isActive, isPending }) => (
+                    <>
+                      <CategoryIcon
+                        className={
+                          !sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'mr-4' : ''
+                        }
+                        filled={isActive}
+                      />
+                      {!sidebarMiniMode.value || (sidebarHoverMode && isHovered)
+                        ? 'Collections'
+                        : null}
+                      <Loading
+                        className={
+                          isPending && (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))
+                            ? 'ml-auto'
+                            : '!hidden'
+                        }
+                        type="points-opacity"
+                      />
+                    </>
+                  )}
+                </NavLink>
+              </NavigationMenuLink>
+            </Tooltip>
+          </NavigationMenuItem>
+          <NavigationMenuItem
+            className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
             value="search"
           >
             <NavigationMenuTrigger
@@ -972,49 +1015,6 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                         filled={isActive}
                       />
                       {!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'People' : null}
-                      <Loading
-                        className={
-                          isPending && (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))
-                            ? 'ml-auto'
-                            : '!hidden'
-                        }
-                        type="points-opacity"
-                      />
-                    </>
-                  )}
-                </NavLink>
-              </NavigationMenuLink>
-            </Tooltip>
-          </NavigationMenuItem>
-          <NavigationMenuItem
-            className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
-            value="collections"
-          >
-            <Tooltip
-              content="Collections"
-              isDisabled={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
-              placement="right"
-              color="primary"
-              offset={10}
-            >
-              <NavigationMenuLink asChild>
-                <NavLink
-                  to="/collections"
-                  className={navigationMenuTriggerStyle({
-                    class: `${navigationItemWidthStyle} h-[56px] justify-start transition-[width] duration-200`,
-                  })}
-                >
-                  {({ isActive, isPending }) => (
-                    <>
-                      <CategoryIcon
-                        className={
-                          !sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'mr-4' : ''
-                        }
-                        filled={isActive}
-                      />
-                      {!sidebarMiniMode.value || (sidebarHoverMode && isHovered)
-                        ? 'Collections'
-                        : null}
                       <Loading
                         className={
                           isPending && (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))

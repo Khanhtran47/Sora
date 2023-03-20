@@ -112,14 +112,8 @@ const MediaListCard = (props: IMediaListCardProps) => {
   }
 
   return (
-    <Container
-      fluid
-      responsive={false}
-      justify="flex-start"
-      alignItems="center"
-      css={{ m: 0, p: 0 }}
-    >
-      {items && items?.length > 0 && (
+    <div className="flex justify-start items-center">
+      {items && items?.length > 0 ? (
         <SwiperStyled
           modules={[Navigation]}
           grabCursor
@@ -181,8 +175,8 @@ const MediaListCard = (props: IMediaListCardProps) => {
               );
             })}
         </SwiperStyled>
-      )}
-    </Container>
+      ) : null}
+    </div>
   );
 };
 

@@ -99,65 +99,61 @@ const Index = () => {
         genresTv={rootData?.genresTv}
         items={todayTrending}
         listType="slider-banner"
+        key="slider-banner-home"
       />
       <div className="w-full flex flex-col justify-start items-center mt-9 px-3 sm:px-0">
-        {movies && movies.length > 0 && (
-          <MediaList
-            genresMovie={rootData?.genresMovie}
-            genresTv={rootData?.genresTv}
-            items={movies}
-            listName={t('popularMovies')}
-            listType="slider-card"
-            navigationButtons
-            onClickViewMore={() => onClickViewMore('movies')}
-            showMoreList
-          />
-        )}
-        {shows && shows.length > 0 && (
-          <MediaList
-            genresMovie={rootData?.genresMovie}
-            genresTv={rootData?.genresTv}
-            items={shows}
-            listName={t('popularTv')}
-            listType="slider-card"
-            navigationButtons
-            onClickViewMore={() => onClickViewMore('tv-shows')}
-            showMoreList
-          />
-        )}
-        {popularAnime && popularAnime && popularAnime.length > 0 && (
-          <MediaList
-            items={popularAnime}
-            itemsType="anime"
-            listName="Popular Anime"
-            listType="slider-card"
-            navigationButtons
-            onClickViewMore={() => navigate('/anime/popular')}
-            showMoreList
-          />
-        )}
-        {featuredList && (
-          <MediaList
-            coverItem={featuredList}
-            isCoverCard
-            listName="Featured Collections"
-            listType="slider-card"
-            navigationButtons
-            onClickViewMore={() => navigate('/collections')}
-            showMoreList
-          />
-        )}
-        {people && people.length > 0 && (
-          <MediaList
-            items={people}
-            listName={t('popularPeople')}
-            listType="slider-card"
-            navigationButtons
-            onClickViewMore={() => onClickViewMore('people')}
-            showMoreList
-            itemsType="people"
-          />
-        )}
+        <MediaList
+          genresMovie={rootData?.genresMovie}
+          genresTv={rootData?.genresTv}
+          items={movies}
+          listName={t('popularMovies')}
+          listType="slider-card"
+          navigationButtons
+          onClickViewMore={() => onClickViewMore('movies')}
+          showMoreList
+          key="slider-card-popular-movies"
+        />
+        <MediaList
+          genresMovie={rootData?.genresMovie}
+          genresTv={rootData?.genresTv}
+          items={shows}
+          listName={t('popularTv')}
+          listType="slider-card"
+          navigationButtons
+          onClickViewMore={() => onClickViewMore('tv-shows')}
+          showMoreList
+          key="slider-card-popular-tv"
+        />
+        <MediaList
+          items={popularAnime}
+          itemsType="anime"
+          listName="Popular Anime"
+          listType="slider-card"
+          navigationButtons
+          onClickViewMore={() => navigate('/anime/popular')}
+          showMoreList
+          key="slider-card-popular-anime"
+        />
+        <MediaList
+          coverItem={featuredList}
+          isCoverCard
+          listName="Featured Collections"
+          listType="slider-card"
+          navigationButtons
+          onClickViewMore={() => navigate('/collections')}
+          showMoreList
+          key="slider-card-featured-collections"
+        />
+        <MediaList
+          items={people}
+          listName={t('popularPeople')}
+          listType="slider-card"
+          navigationButtons
+          onClickViewMore={() => onClickViewMore('people')}
+          showMoreList
+          itemsType="people"
+          key="slider-card-popular-people"
+        />
       </div>
     </motion.div>
   );
