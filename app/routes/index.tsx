@@ -2,7 +2,6 @@
 import { json } from '@remix-run/node';
 import type { LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
-import { Container } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { authenticate } from '~/services/supabase';
@@ -101,23 +100,7 @@ const Index = () => {
         items={todayTrending}
         listType="slider-banner"
       />
-      <Container
-        fluid
-        responsive={false}
-        display="flex"
-        justify="flex-start"
-        alignItems="center"
-        direction="column"
-        css={{
-          marginTop: '48px',
-          minHeight: '564px',
-          padding: 0,
-          '@xsMax': {
-            paddingLeft: '$sm',
-            paddingRight: '$sm',
-          },
-        }}
-      >
+      <div className="w-full flex flex-col justify-start items-center mt-9 px-3 sm:px-0">
         {movies && movies.length > 0 && (
           <MediaList
             genresMovie={rootData?.genresMovie}
@@ -175,7 +158,7 @@ const Index = () => {
             itemsType="people"
           />
         )}
-      </Container>
+      </div>
     </motion.div>
   );
 };
