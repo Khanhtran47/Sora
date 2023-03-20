@@ -46,6 +46,9 @@ import Logo from '~/assets/images/logo_loading.png';
 import Home from '~/assets/icons/HomeIcon';
 import Search from '~/assets/icons/SearchIcon';
 import Discover from '~/assets/icons/DiscoverIcon';
+import Movie from '~/assets/icons/MovieIcon';
+import Tv from '~/assets/icons/TvIcon';
+import Anime from '~/assets/icons/AnimeIcon';
 
 interface ILeftDrawerProps {
   open: boolean;
@@ -391,7 +394,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
               })}
               showArrow={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
             >
-              <TrendingUp
+              <Movie
                 className={!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'mr-4' : ''}
               />
               {!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'Movies' : null}
@@ -577,7 +580,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
               })}
               showArrow={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
             >
-              <Settings
+              <Tv
                 className={!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'mr-4' : ''}
               />
               {!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'Tv Shows' : null}
@@ -765,7 +768,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
               })}
               showArrow={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
             >
-              <Library
+              <Anime
                 className={!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'mr-4' : ''}
               />
               {!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'Anime' : null}
