@@ -1,7 +1,7 @@
 import { json } from '@remix-run/node';
 import type { LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useNavigate, NavLink } from '@remix-run/react';
-import { Container, Badge } from '@nextui-org/react';
+import { Badge } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 
 import { getListPeople } from '~/services/tmdb/tmdb.server';
@@ -64,20 +64,7 @@ const SearchRoute = () => {
   };
 
   return (
-    <Container
-      fluid
-      responsive={false}
-      display="flex"
-      justify="center"
-      direction="column"
-      alignItems="center"
-      css={{
-        '@xsMax': {
-          paddingLeft: '$sm',
-          paddingRight: '$sm',
-        },
-      }}
-    >
+    <div className="w-full flex justify-center flex-col items-center px-3 sm:px-0">
       <SearchForm
         onSubmit={onSubmit}
         textOnButton={t('search.action')}
@@ -96,7 +83,7 @@ const SearchRoute = () => {
           itemsType="people"
         />
       )}
-    </Container>
+    </div>
   );
 };
 

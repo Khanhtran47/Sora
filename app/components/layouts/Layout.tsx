@@ -68,7 +68,7 @@ const contentAreaStyles = tv({
 });
 
 const scrollAreaViewportStyles = tv({
-  base: 'flex flex-col justify-start items-center w-[100vw] transition-[width,_height] duration-200 p-0 sm:px-5 mt-[72px] min-h-screen',
+  base: 'flex flex-col justify-start items-center w-[100vw] transition-[width,_height] duration-200 p-0 sm:px-5 mt-[72px] mb-[70px] min-h-screen',
   variants: {
     mini: {
       true: 'sm:w-[calc(100vw_-_80px)]',

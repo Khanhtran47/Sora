@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/indent */
-import { Container, styled } from '@nextui-org/react';
 import { Link } from '@remix-run/react';
 import { Navigation } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { tv } from 'tailwind-variants';
 
 import { IMedia } from '~/types/media';
 
@@ -21,33 +21,18 @@ interface IMediaListCardProps {
   virtual?: boolean;
 }
 
-const SwiperSlideStyled = styled(SwiperSlide, {
+const swiperSlideStyles = tv({
   variants: {
     cardType: {
-      coverCard: {
-        width: '280px',
-        '@xs': { width: '480px' },
-      },
-      card: {
-        width: '164px',
-        '@xs': { width: '210px' },
-        '@sm': { width: '244px' },
-        '@lg': { width: '280px' },
-      },
-      peopleCard: {
-        width: '160px',
-      },
+      coverCard: '!w-[280px] sm:!w-[480px]',
+      card: '!w-[164px] sm:!w-[210px] nextui-sm:!w-[244px] 2xl:!w-[280px]',
+      peopleCard: '!w-[160px]',
     },
   },
 });
 
-const SwiperStyled = styled(Swiper, {
-  width: '100%',
-  '& div': {
-    '&.swiper-wrapper': {
-      margin: '0 0 1.5rem 5px',
-    },
-  },
+const swiperStyles = tv({
+  base: 'w-full [&_.swiper-wrapper]:m-[0_0_1.5rem_1px]',
 });
 
 const MediaListCard = (props: IMediaListCardProps) => {
@@ -66,15 +51,10 @@ const MediaListCard = (props: IMediaListCardProps) => {
 
   if (isCoverCard) {
     return (
-      <Container
-        fluid
-        responsive={false}
-        justify="flex-start"
-        alignItems="center"
-        css={{ m: 0, p: 0 }}
-      >
+      <div className="flex justify-start items-center w-full">
         {coverItem && coverItem?.length > 0 && (
-          <SwiperStyled
+          <Swiper
+            className={swiperStyles()}
             modules={[Navigation]}
             grabCursor
             spaceBetween={10}
@@ -92,7 +72,12 @@ const MediaListCard = (props: IMediaListCardProps) => {
               coverItem.map((item, index) => {
                 const href = `/collections/${item.id}`;
                 return (
-                  <SwiperSlideStyled key={`${item.id}-${index}-card`} cardType="coverCard">
+                  <SwiperSlide
+                    className={swiperSlideStyles({
+                      cardType: 'coverCard',
+                    })}
+                    key={`${item.id}-${index}-card`}
+                  >
                     <Link to={href} style={{ display: 'flex', padding: '0.5rem 0' }}>
                       <MediaItem
                         backdropPath={item?.backdropPath}
@@ -103,19 +88,20 @@ const MediaListCard = (props: IMediaListCardProps) => {
                         virtual={virtual}
                       />
                     </Link>
-                  </SwiperSlideStyled>
+                  </SwiperSlide>
                 );
               })}
-          </SwiperStyled>
+          </Swiper>
         )}
-      </Container>
+      </div>
     );
   }
 
   return (
     <div className="flex justify-start items-center w-full">
       {items && items?.length > 0 ? (
-        <SwiperStyled
+        <Swiper
+          className={swiperStyles()}
           modules={[Navigation]}
           grabCursor
           spaceBetween={10}
@@ -142,9 +128,11 @@ const MediaListCard = (props: IMediaListCardProps) => {
                   ? `/movies/${item.id}/`
                   : `/tv-shows/${item.id}/`;
               return (
-                <SwiperSlideStyled
+                <SwiperSlide
                   key={`${item.id}-${index}-card`}
-                  cardType={item?.mediaType === 'people' ? 'peopleCard' : 'card'}
+                  className={swiperSlideStyles({
+                    cardType: item?.mediaType === 'people' ? 'peopleCard' : 'card',
+                  })}
                 >
                   <Link to={href} style={{ display: 'flex', padding: '0.5rem 0' }}>
                     <MediaItem
@@ -172,10 +160,10 @@ const MediaListCard = (props: IMediaListCardProps) => {
                       voteAverage={item?.voteAverage}
                     />
                   </Link>
-                </SwiperSlideStyled>
+                </SwiperSlide>
               );
             })}
-        </SwiperStyled>
+        </Swiper>
       ) : null}
     </div>
   );

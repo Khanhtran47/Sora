@@ -1,7 +1,7 @@
 import { useLoaderData, useLocation, NavLink } from '@remix-run/react';
 import { json, MetaFunction } from '@remix-run/node';
 import type { LoaderArgs } from '@remix-run/node';
-import { Container, Badge } from '@nextui-org/react';
+import { Badge } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 
 import { getAnimeTrending } from '~/services/consumet/anilist/anilist.server';
@@ -72,34 +72,20 @@ const TrendingAnime = () => {
       animate={{ x: '0', opacity: 1 }}
       exit={{ y: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
+      className="w-full flex justify-center flex-col items-center px-3 sm:px-0"
     >
-      <Container
-        fluid
-        responsive={false}
-        display="flex"
-        justify="center"
-        direction="column"
-        alignItems="center"
-        css={{
-          '@xsMax': {
-            paddingLeft: '$sm',
-            paddingRight: '$sm',
-          },
-        }}
-      >
-        {items && items.results && items.results.length > 0 && (
-          <MediaList
-            hasNextPage={items.hasNextPage || false}
-            items={items.results as IMedia[]}
-            itemsType="anime"
-            listName="Trending Anime"
-            listType="grid"
-            loadingType="scroll"
-            routeName="/anime/trending"
-            virtual
-          />
-        )}
-      </Container>
+      {items && items.results && items.results.length > 0 && (
+        <MediaList
+          hasNextPage={items.hasNextPage || false}
+          items={items.results as IMedia[]}
+          itemsType="anime"
+          listName="Trending Anime"
+          listType="grid"
+          loadingType="scroll"
+          routeName="/anime/trending"
+          virtual
+        />
+      )}
     </motion.div>
   );
 };
