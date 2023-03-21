@@ -6,7 +6,9 @@ import { tv } from 'tailwind-variants';
 import { useLocation, useMatches } from '@remix-run/react';
 import { useMediaQuery } from '@react-hookz/web';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
-// import { useElementScroll } from 'framer-motion';
+import { useElementScroll } from 'framer-motion';
+
+import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
 
 import {
   ScrollArea,
@@ -111,16 +113,30 @@ const Layout = (props: ILayout) => {
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const { sidebarMiniMode, sidebarBoxedMode } = useSoraSettings();
   const viewportRef = useRef<HTMLDivElement>(null);
+  const { setScrollPosition, setScrollHeight } = useLayoutScrollPosition((state) => state);
+  const { scrollYProgress } = useElementScroll(viewportRef);
 
   useEffect(() => {
     const preventScrollToTopRoute = matches.some(
       (match) => match.handle && match.handle.preventScrollToTop,
     );
+    setScrollHeight(viewportRef.current?.scrollHeight || 0);
     if (preventScrollToTopRoute) {
       return;
     }
     viewportRef.current?.scrollTo(0, 0);
   }, [location.key]);
+
+  useEffect(() => {
+    if (viewportRef.current) {
+      scrollYProgress.onChange((value) => {
+        setScrollPosition({
+          x: 0,
+          y: value,
+        });
+      });
+    }
+  }, [scrollYProgress]);
 
   return (
     <div className={layoutStyles({ boxed: sidebarBoxedMode.value })}>

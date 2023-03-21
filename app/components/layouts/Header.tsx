@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   Button,
   // Tooltip,
@@ -14,6 +14,8 @@ import { tv } from 'tailwind-variants';
 // import { useMediaQuery } from '@react-hookz/web';
 
 import { useSoraSettings } from '~/hooks/useLocalStorage';
+
+import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
 
 /* Components */
 import MultiLevelDropdown from '~/components/layouts/MultiLevelDropdown';
@@ -82,7 +84,11 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   } = useSoraSettings();
   const [historyBack, setHistoryBack] = useState<string[]>([]);
   const [historyForward, setHistoryForward] = useState<string[]>([]);
-
+  const { scrollPosition, scrollHeight } = useLayoutScrollPosition((state) => state);
+  const currentScrollYHeight = useMemo(
+    () => scrollPosition.y * scrollHeight,
+    [scrollPosition, scrollHeight],
+  );
   const handleNavigationBackForward = (direction: 'back' | 'forward') => {
     if (direction === 'back') {
       navigate(-1);
@@ -126,6 +132,10 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
         boxedSidebar: sidebarBoxedMode.value,
       })}
     >
+      <div
+        className="absolute top-0 left-0 w-full h-full z-[-1] bg-background-contrast-alpha backdrop-blur-md rounded-tl-xl"
+        style={{ opacity: currentScrollYHeight < 80 ? currentScrollYHeight / 80 : 1 }}
+      />
       <div className="flex flex-row justify-center items-center gap-x-2">
         <Button
           auto
@@ -134,6 +144,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
           icon={<ChevronLeft />}
           onPress={() => handleNavigationBackForward('back')}
           disabled={historyBack.length === 0}
+          css={{ w: 36, h: 36 }}
         />
         <Button
           auto
@@ -142,6 +153,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
           icon={<ChevronRight />}
           onPress={() => handleNavigationBackForward('forward')}
           disabled={historyForward.length === 0}
+          css={{ w: 36, h: 36 }}
         />
       </div>
       <div />
@@ -159,7 +171,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
             flat
             rounded
             aria-label="dropdown"
-            css={{ padding: 0, width: 40 }}
+            css={{ padding: 0, w: 36, h: 36 }}
           >
             <PlayerStyled
               lottieRef={(instance) => {
