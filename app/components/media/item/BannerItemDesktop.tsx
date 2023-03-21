@@ -414,7 +414,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                     )
                   }
                 >
-                  <H6 h6 weight="bold" transform="uppercase">
+                  <H6 h6 weight="bold">
                     {t('moreDetails')}
                   </H6>
                 </Button>
