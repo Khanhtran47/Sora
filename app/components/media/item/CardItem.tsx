@@ -89,7 +89,7 @@ const CardItem = (props: ICardItemProps) => {
   const isMd = useMediaQuery('(min-width: 768px)', { initializeWithValue: false });
   const isLg = useMediaQuery('(min-width: 1024px)', { initializeWithValue: false });
   const isXl = useMediaQuery('(min-width: 1280px)', { initializeWithValue: false });
-  const cardMaxWidth = isXl ? '280px' : isLg ? '244px' : isMd ? '210px' : isSm ? '180px' : '164px';
+  const cardMaxWidth = isXl ? '264px' : isLg ? '244px' : isMd ? '200px' : isSm ? '180px' : '164px';
 
   React.useEffect(() => {
     if (fetcher.data && fetcher.data.videos) {
@@ -107,6 +107,7 @@ const CardItem = (props: ICardItemProps) => {
         isPressable
         css={{
           width: '100%',
+          minWidth: isSm ? '480px' : '280px',
           borderWidth: 0,
           filter: 'unset',
           '&:hover': {
@@ -176,8 +177,7 @@ const CardItem = (props: ICardItemProps) => {
       isHoverable
       isPressable
       css={{
-        width: '100%',
-        maxWidth: mediaType === 'people' ? '164px' : cardMaxWidth,
+        width: mediaType === 'people' ? '164px' : cardMaxWidth,
         minHeight: `${mediaType === 'people' ? '324px' : '318px'} !important`,
         borderWidth: 0,
         filter: 'unset',
