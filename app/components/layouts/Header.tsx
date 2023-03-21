@@ -117,7 +117,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       <div className="flex flex-row justify-center items-center gap-x-2">
         <Button
           auto
-          ghost
+          flat
           rounded
           icon={<ChevronLeft />}
           onPress={() => handleNavigationBackForward('back')}
@@ -125,14 +125,14 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
         />
         <Button
           auto
-          ghost
+          flat
           rounded
           icon={<ChevronRight />}
           onPress={() => handleNavigationBackForward('forward')}
           disabled={historyForward.length === 0}
         />
       </div>
-      <div>dynamic content</div>
+      <div />
       <Popover
         shouldFlip
         triggerType="menu"

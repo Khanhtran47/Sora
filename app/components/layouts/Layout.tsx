@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import type { User } from '@supabase/supabase-js';
 import { tv } from 'tailwind-variants';
-import { useLocation } from '@remix-run/react';
+import { useLocation, useMatches } from '@remix-run/react';
 import { useMediaQuery, useSessionStorageValue } from '@react-hookz/web';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { useElementScroll } from 'framer-motion';
@@ -99,11 +99,20 @@ const Layout = (props: ILayout) => {
   const { children, user } = props;
   const [open, setOpen] = useState(false);
   const location = useLocation();
+  const matches = useMatches();
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const { sidebarMiniMode, sidebarBoxedMode } = useSoraSettings();
   const viewportRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => viewportRef.current?.scrollTo(0, 0), [location.key]);
+  useEffect(() => {
+    const preventScrollToTopRoute = matches.some(
+      (match) => match.handle && match.handle.preventScrollToTop,
+    );
+    if (preventScrollToTopRoute) {
+      return;
+    }
+    viewportRef.current?.scrollTo(0, 0);
+  }, [location.key]);
 
   return (
     <div className={layoutStyles({ boxed: sidebarBoxedMode.value })}>

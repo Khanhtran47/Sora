@@ -166,6 +166,7 @@ export const handle = {
       )}
     </NavLink>
   ),
+  preventScrollToTop: true,
 };
 
 const TvShowDetail = () => {

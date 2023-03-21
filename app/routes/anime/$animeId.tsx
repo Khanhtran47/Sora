@@ -137,6 +137,7 @@ export const handle = {
       )}
     </NavLink>
   ),
+  preventScrollToTop: true,
 };
 
 const AnimeDetailPage = () => {

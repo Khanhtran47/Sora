@@ -50,7 +50,6 @@ const MediaDetail = (props: IMediaDetail) => {
   // const { t } = useTranslation();
   const { type, item, handler, translations, imdbRating, color } = props;
   const [size, ref] = useMeasure<HTMLDivElement>();
-  console.log('🚀 ~ file: MediaDetail.tsx:53 ~ MediaDetail ~ size:', size);
   const navigate = useNavigate();
   const location = useLocation();
   const fetcher = useFetcher();
