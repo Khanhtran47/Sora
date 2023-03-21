@@ -1,13 +1,17 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react';
-import { Button, Grid, Row, Tooltip, Popover, Spacer, styled } from '@nextui-org/react';
+import {
+  Button,
+  // Tooltip,
+  Popover,
+} from '@nextui-org/react';
 import { useNavigate, useLocation, useNavigationType } from '@remix-run/react';
 import type { User } from '@supabase/supabase-js';
 import type { AnimationItem } from 'lottie-web';
-import { useTranslation } from 'react-i18next';
+// import { useTranslation } from 'react-i18next';
 import { tv } from 'tailwind-variants';
-import { useMediaQuery } from '@react-hookz/web';
+// import { useMediaQuery } from '@react-hookz/web';
 
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 
@@ -22,9 +26,9 @@ import ChevronRight from '~/assets/icons/ChevronRightIcon';
 import dropdown from '~/assets/lotties/lottieflow-dropdown-03-0072F5-easey.json';
 
 interface IHeaderProps {
-  open: boolean;
+  // open: boolean;
   user?: User;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  // setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const handle = {
@@ -32,7 +36,7 @@ export const handle = {
 };
 
 const headerStyles = tv({
-  base: 'h-[64px] w-[100vw] fixed z-50 py-3 px-5 flex flex-row justify-between items-center',
+  base: 'h-[64px] w-[100vw] fixed z-50 py-3 px-5 flex-row justify-between items-center hidden sm:flex',
   variants: {
     miniSidebar: {
       true: 'sm:w-[calc(100vw_-_80px)] top-0',
@@ -60,14 +64,22 @@ const headerStyles = tv({
 });
 
 const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
-  const { t } = useTranslation('header');
-  const { open, user, setOpen } = props;
+  // const { t } = useTranslation('header');
+  const {
+    // open,
+    user,
+    // setOpen
+  } = props;
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [lottie, setLottie] = useState<AnimationItem>();
   const navigate = useNavigate();
   const location = useLocation();
   const navigationType = useNavigationType();
-  const { sidebarMiniMode, sidebarBoxedMode, sidebarSheetMode } = useSoraSettings();
+  const {
+    sidebarMiniMode,
+    sidebarBoxedMode,
+    // sidebarSheetMode
+  } = useSoraSettings();
   const [historyBack, setHistoryBack] = useState<string[]>([]);
   const [historyForward, setHistoryForward] = useState<string[]>([]);
 
@@ -141,7 +153,14 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
         onOpenChange={setIsDropdownOpen}
       >
         <Popover.Trigger>
-          <Button type="button" auto light aria-label="dropdown" css={{ padding: '0 $xs' }}>
+          <Button
+            type="button"
+            auto
+            flat
+            rounded
+            aria-label="dropdown"
+            css={{ padding: 0, width: 40 }}
+          >
             <PlayerStyled
               lottieRef={(instance) => {
                 setLottie(instance);

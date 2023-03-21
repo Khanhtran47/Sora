@@ -113,6 +113,7 @@ const MediaDetail = (props: IMediaDetail) => {
           backgroundColor,
           borderBottomLeftRadius: 0,
           borderBottomRightRadius: 0,
+          borderTopRightRadius: 0,
           // minHeight: '900px',
           // '@xs': {
           //   minHeight: '1075px',

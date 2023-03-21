@@ -165,6 +165,7 @@ export const handle = {
     </NavLink>
   ),
   preventScrollToTop: true,
+  disableLayoutPadding: true,
 };
 
 const MovieDetail = () => {

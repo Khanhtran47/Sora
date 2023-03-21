@@ -4,9 +4,9 @@ import { useState, useRef, useEffect } from 'react';
 import type { User } from '@supabase/supabase-js';
 import { tv } from 'tailwind-variants';
 import { useLocation, useMatches } from '@remix-run/react';
-import { useMediaQuery, useSessionStorageValue } from '@react-hookz/web';
+import { useMediaQuery } from '@react-hookz/web';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
-import { useElementScroll } from 'framer-motion';
+// import { useElementScroll } from 'framer-motion';
 
 import {
   ScrollArea,
@@ -36,6 +36,9 @@ const layoutStyles = tv({
       true: 'pt-[15px] min-h-[calc(100vh_-_115px)]',
       false: 'p-0',
     },
+  },
+  defaultVariants: {
+    boxed: false,
   },
 });
 
@@ -68,13 +71,17 @@ const contentAreaStyles = tv({
 });
 
 const scrollAreaViewportStyles = tv({
-  base: 'flex flex-col justify-start items-center w-[100vw] transition-[width,_height] duration-200 p-0 sm:px-5 mt-[72px] mb-[70px] min-h-screen',
+  base: 'flex flex-col justify-start items-center w-[100vw] transition-[width,_height] duration-200 min-h-screen',
   variants: {
     mini: {
       true: 'sm:w-[calc(100vw_-_80px)]',
     },
     boxed: {
       true: 'sm:w-[calc(100vw_-_280px)]',
+    },
+    layoutPadding: {
+      true: 'p-0 sm:px-5 mt-[72px] mb-[70px]',
+      false: 'p-0 mt-[72px] sm:mt-0 mb-[70px]',
     },
   },
   compoundVariants: [
@@ -92,6 +99,7 @@ const scrollAreaViewportStyles = tv({
   defaultVariants: {
     mini: false,
     boxed: false,
+    layoutPadding: true,
   },
 });
 
@@ -123,13 +131,20 @@ const Layout = (props: ILayout) => {
           boxed: sidebarBoxedMode.value,
         })}
       >
-        <Header open={open} user={user} setOpen={setOpen} />
+        {isSm ? null : (
+          <Header
+            // open={open}
+            user={user}
+            // setOpen={setOpen}
+          />
+        )}
         <ScrollArea
           type="always"
           scrollHideDelay={1000}
           css={{
             width: '100%',
             height: sidebarBoxedMode.value ? 'calc(100vh - 15px)' : '100vh',
+            borderRadius: 0,
           }}
         >
           <ScrollAreaViewport ref={viewportRef}>
@@ -137,6 +152,7 @@ const Layout = (props: ILayout) => {
               className={scrollAreaViewportStyles({
                 mini: sidebarMiniMode.value,
                 boxed: sidebarBoxedMode.value,
+                layoutPadding: !matches.some((match) => match.handle?.disableLayoutPadding),
               })}
             >
               {/* <BreadCrumb /> */}

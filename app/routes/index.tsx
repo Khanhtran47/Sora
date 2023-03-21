@@ -25,6 +25,7 @@ import featuredList from '~/constants/featuredList';
 
 export const handle = {
   i18n: 'home',
+  disableLayoutPadding: true,
 };
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -101,7 +102,7 @@ const Index = () => {
         listType="slider-banner"
         key="slider-banner-home"
       />
-      <div className="w-full flex flex-col justify-start items-center mt-9 px-3 sm:px-0">
+      <div className="w-full flex flex-col justify-start items-center mt-9 px-3 sm:px-5">
         <MediaList
           genresMovie={rootData?.genresMovie}
           genresTv={rootData?.genresTv}

@@ -99,6 +99,7 @@ const AnimeDetail = (props: IAnimeDetail) => {
           backgroundColor,
           borderBottomLeftRadius: 0,
           borderBottomRightRadius: 0,
+          borderTopRightRadius: 0,
           minHeight: '825px',
           height: isXs
             ? `calc(${JSON.stringify(size?.height)}px + 80px - 2rem)`
