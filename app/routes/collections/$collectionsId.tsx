@@ -3,7 +3,7 @@ import { json, MetaFunction } from '@remix-run/node';
 import type { LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useLocation, NavLink, RouteMatch } from '@remix-run/react';
 import { motion } from 'framer-motion';
-import { Container, Spacer, Badge } from '@nextui-org/react';
+import { Spacer, Badge } from '@nextui-org/react';
 
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 
@@ -98,34 +98,19 @@ const CollectionDetail = () => {
       animate={{ x: '0', opacity: 1 }}
       exit={{ y: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
+      className="w-full flex justify-center flex-col items-center px-3 sm:px-0 pb-16"
     >
-      <Container
-        fluid
-        responsive={false}
-        display="flex"
-        justify="center"
-        direction="column"
-        alignItems="center"
-        css={{
-          '@xsMax': {
-            paddingLeft: '$sm',
-            paddingRight: '$sm',
-            paddingBottom: '65px',
-          },
-        }}
-      >
-        {detail && detail.items && detail.items.length > 0 && (
-          <MediaList
-            listType="grid"
-            showListTypeChangeButton
-            items={detail?.items}
-            listName={detail?.name}
-            genresMovie={rootData?.genresMovie}
-            genresTv={rootData?.genresTv}
-            virtual
-          />
-        )}
-      </Container>
+      {detail && detail.items && detail.items.length > 0 && (
+        <MediaList
+          listType="grid"
+          showListTypeChangeButton
+          items={detail?.items}
+          listName={detail?.name}
+          genresMovie={rootData?.genresMovie}
+          genresTv={rootData?.genresTv}
+          virtual
+        />
+      )}
     </motion.div>
   );
 };

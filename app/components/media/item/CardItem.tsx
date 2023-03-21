@@ -8,7 +8,7 @@ import { useInView } from 'react-intersection-observer';
 import { ClientOnly } from 'remix-utils';
 import { motion } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
-import { useMeasure } from '@react-hookz/web';
+import { useMeasure, useMediaQuery } from '@react-hookz/web';
 
 import useCardHoverStore from '~/store/card/useCardHoverStore';
 
@@ -85,6 +85,11 @@ const CardItem = (props: ICardItemProps) => {
     typeof title === 'string'
       ? title
       : title?.userPreferred || title?.english || title?.romaji || title?.native;
+  const isSm = useMediaQuery('(min-width: 650px)', { initializeWithValue: false });
+  const isMd = useMediaQuery('(min-width: 768px)', { initializeWithValue: false });
+  const isLg = useMediaQuery('(min-width: 1024px)', { initializeWithValue: false });
+  const isXl = useMediaQuery('(min-width: 1280px)', { initializeWithValue: false });
+  const cardMaxWidth = isXl ? '280px' : isLg ? '244px' : isMd ? '210px' : isSm ? '180px' : '164px';
 
   React.useEffect(() => {
     if (fetcher.data && fetcher.data.videos) {
@@ -172,7 +177,7 @@ const CardItem = (props: ICardItemProps) => {
       isPressable
       css={{
         width: '100%',
-        maxWidth: mediaType === 'people' ? '164px' : 'unset',
+        maxWidth: mediaType === 'people' ? '164px' : cardMaxWidth,
         minHeight: `${mediaType === 'people' ? '324px' : '318px'} !important`,
         borderWidth: 0,
         filter: 'unset',
