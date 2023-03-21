@@ -107,7 +107,7 @@ const sidebarActiveStyles = tv({
 });
 
 const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
-  const { t } = useTranslation('left-drawer');
+  const { t } = useTranslation('sidebar');
   // const wrapperRef = React.useRef<HTMLDivElement>(null);
   // const { open, setOpen } = props;
 
@@ -222,7 +222,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                         }
                         filled={isActive}
                       />
-                      {!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'Home' : null}
+                      {!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? t('home') : null}
                       <Loading
                         className={
                           isPending && (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))
@@ -264,7 +264,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                         filled={isActive}
                       />
                       {!sidebarMiniMode.value || (sidebarHoverMode && isHovered)
-                        ? 'Trending'
+                        ? t('trending')
                         : null}
                       <Loading
                         className={
@@ -307,7 +307,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                         filled={isActive}
                       />
                       {!sidebarMiniMode.value || (sidebarHoverMode && isHovered)
-                        ? 'Collections'
+                        ? t('collections')
                         : null}
                       <Loading
                         className={
@@ -337,7 +337,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
               <Search
                 className={!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'mr-4' : ''}
               />
-              {!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'Search' : null}
+              {!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? t('search') : null}
             </NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="m-0 flex flex-row gap-x-[6px] p-[6px] w-fit">
@@ -353,7 +353,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                       {({ isActive, isPending }) => (
                         <>
                           <Search className="mr-2 w-5 h-5" filled={isActive} />
-                          Search Movies
+                          {t('search-movies')}
                           <Loading
                             className={isPending ? 'ml-auto' : '!hidden'}
                             type="points-opacity"
@@ -373,7 +373,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                       {({ isActive, isPending }) => (
                         <>
                           <Search className="mr-2 w-5 h-5" filled={isActive} />
-                          Search Tv shows
+                          {t('search-tv-shows')}
                           <Loading
                             className={isPending ? 'ml-auto' : '!hidden'}
                             type="points-opacity"
@@ -393,7 +393,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                       {({ isActive, isPending }) => (
                         <>
                           <Search className="mr-2 w-5 h-5" filled={isActive} />
-                          Search Anime
+                          {t('search-anime')}
                           <Loading
                             className={isPending ? 'ml-auto' : '!hidden'}
                             type="points-opacity"
@@ -413,7 +413,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                       {({ isActive, isPending }) => (
                         <>
                           <Search className="mr-2 w-5 h-5" filled={isActive} />
-                          Search People
+                          {t('search-people')}
                           <Loading
                             className={isPending ? 'ml-auto' : '!hidden'}
                             type="points-opacity"
@@ -440,7 +440,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
               <Movie
                 className={!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'mr-4' : ''}
               />
-              {!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'Movies' : null}
+              {!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? t('movies') : null}
             </NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="m-0 flex flex-row gap-x-[6px] p-[6px] w-fit">
@@ -457,7 +457,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                           isExternal
                           className="text-text !max-w-none !w-full [&_.nextui-link-icon]:ml-auto"
                         >
-                          Start Discover
+                          {t('movies-discover')}
                         </Link>
                       </Card.Header>
                       <Card.Body css={{ p: 0, w: '100%', aspectRatio: '2/3' }}>
@@ -504,7 +504,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                           borderBottomRightRadius: 6,
                         }}
                       >
-                        <H4 className="text-white">Movies</H4>
+                        <H4 className="text-white">{t('movies-footer')}</H4>
                       </Card.Footer>
                     </Card>
                   </NavLink>
@@ -522,15 +522,13 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                         <>
                           <div className="flex flex-row justify-start items-center w-full mb-2">
                             <Discover className="mr-2 w-5 h-5" filled={isActive} />
-                            Popular
+                            {t('movies-popular')}
                             <Loading
                               className={isPending ? 'ml-auto' : '!hidden'}
                               type="points-opacity"
                             />
                           </div>
-                          <p className="text-text text-xs w-full">
-                            Widely watched and buzzed-about films.
-                          </p>
+                          <p className="text-text text-xs w-full">{t('movies-popular-subtitle')}</p>
                         </>
                       )}
                     </NavLink>
@@ -547,13 +545,15 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                         <>
                           <div className="flex flex-row justify-start items-center w-full mb-2">
                             <Discover className="mr-2 w-5 h-5" filled={isActive} />
-                            Now Playing
+                            {t('movies-now-playing')}
                             <Loading
                               className={isPending ? 'ml-auto' : '!hidden'}
                               type="points-opacity"
                             />
                           </div>
-                          <p className="text-text text-xs w-full">Currently showing in theaters.</p>
+                          <p className="text-text text-xs w-full">
+                            {t('movies-now-playing-subtitle')}
+                          </p>
                         </>
                       )}
                     </NavLink>
@@ -570,14 +570,14 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                         <>
                           <div className="flex flex-row justify-start items-center w-full mb-2">
                             <Discover className="mr-2 w-5 h-5" filled={isActive} />
-                            Upcoming
+                            {t('movies-upcoming')}
                             <Loading
                               className={isPending ? 'ml-auto' : '!hidden'}
                               type="points-opacity"
                             />
                           </div>
                           <p className="text-text text-xs w-full">
-                            Releases coming soon, generating excitement.
+                            {t('movies-upcoming-subtitle')}
                           </p>
                         </>
                       )}
@@ -595,14 +595,14 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                         <>
                           <div className="flex flex-row justify-start items-center w-full mb-2">
                             <Discover className="mr-2 w-5 h-5" filled={isActive} />
-                            Top Rated
+                            {t('movies-top-rated')}
                             <Loading
                               className={isPending ? 'ml-auto' : '!hidden'}
                               type="points-opacity"
                             />
                           </div>
                           <p className="text-text text-xs w-full">
-                            Critically acclaimed, award-winning, or fan-favorites.
+                            {t('movies-top-rated-subtitle')}
                           </p>
                         </>
                       )}
@@ -626,7 +626,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
               <Tv
                 className={!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'mr-4' : ''}
               />
-              {!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'Tv Shows' : null}
+              {!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? t('tv-shows') : null}
             </NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="m-0 flex flex-row gap-x-[6px] p-[6px] w-fit">
@@ -643,7 +643,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                           isExternal
                           className="text-text !max-w-none !w-full [&_.nextui-link-icon]:ml-auto"
                         >
-                          Start Discover
+                          {t('tv-shows-discover')}
                         </Link>
                       </Card.Header>
                       <Card.Body css={{ p: 0, w: '100%', aspectRatio: '2/3' }}>
@@ -690,7 +690,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                           borderBottomRightRadius: 6,
                         }}
                       >
-                        <H4 className="text-white">Tv Shows</H4>
+                        <H4 className="text-white">{t('tv-shows-footer')}</H4>
                       </Card.Footer>
                     </Card>
                   </NavLink>
@@ -708,14 +708,14 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                         <>
                           <div className="flex flex-row justify-start items-center w-full mb-2">
                             <Discover className="mr-2 w-5 h-5" filled={isActive} />
-                            Popular
+                            {t('tv-shows-popular')}
                             <Loading
                               className={isPending ? 'ml-auto' : '!hidden'}
                               type="points-opacity"
                             />
                           </div>
                           <p className="text-text text-xs w-full">
-                            Widely watched and buzzed-about shows.
+                            {t('tv-shows-popular-subtitle')}
                           </p>
                         </>
                       )}
@@ -733,14 +733,14 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                         <>
                           <div className="flex flex-row justify-start items-center w-full mb-2">
                             <Discover className="mr-2 w-5 h-5" filled={isActive} />
-                            Airing Today
+                            {t('tv-shows-airing-today')}
                             <Loading
                               className={isPending ? 'ml-auto' : '!hidden'}
                               type="points-opacity"
                             />
                           </div>
                           <p className="text-text text-xs w-full">
-                            Currently playing on TV networks or streaming services.
+                            {t('tv-shows-airing-today-subtitle')}
                           </p>
                         </>
                       )}
@@ -758,15 +758,13 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                         <>
                           <div className="flex flex-row justify-start items-center w-full mb-2">
                             <Discover className="mr-2 w-5 h-5" filled={isActive} />
-                            On Tv
+                            {t('tv-shows-on-tv')}
                             <Loading
                               className={isPending ? 'ml-auto' : '!hidden'}
                               type="points-opacity"
                             />
                           </div>
-                          <p className="text-text text-xs w-full">
-                            Tv shows currently available to watch.
-                          </p>
+                          <p className="text-text text-xs w-full">{t('tv-shows-on-tv-subtitle')}</p>
                         </>
                       )}
                     </NavLink>
@@ -783,14 +781,14 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                         <>
                           <div className="flex flex-row justify-start items-center w-full mb-2">
                             <Discover className="mr-2 w-5 h-5" filled={isActive} />
-                            Top Rated
+                            {t('tv-shows-top-rated')}
                             <Loading
                               className={isPending ? 'ml-auto' : '!hidden'}
                               type="points-opacity"
                             />
                           </div>
                           <p className="text-text text-xs w-full">
-                            Critically acclaimed, award-winning, or fan-favorites.
+                            {t('tv-shows-top-rated-subtitle')}
                           </p>
                         </>
                       )}
@@ -814,7 +812,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
               <Anime
                 className={!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'mr-4' : ''}
               />
-              {!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'Anime' : null}
+              {!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? t('anime') : null}
             </NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="m-0 flex flex-row gap-x-[6px] p-[6px] w-fit">
@@ -831,7 +829,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                           isExternal
                           className="text-text !max-w-none !w-full [&_.nextui-link-icon]:ml-auto"
                         >
-                          Start Discover
+                          {t('anime-discover')}
                         </Link>
                       </Card.Header>
                       <Card.Body css={{ p: 0, w: '100%', aspectRatio: '2/3' }}>
@@ -878,7 +876,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                           borderBottomRightRadius: 6,
                         }}
                       >
-                        <H4 className="text-white">Anime</H4>
+                        <H4 className="text-white">{t('anime-footer')}</H4>
                       </Card.Footer>
                     </Card>
                   </NavLink>
@@ -896,15 +894,13 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                         <>
                           <div className="flex flex-row justify-start items-center w-full mb-2">
                             <Discover className="mr-2 w-5 h-5" filled={isActive} />
-                            Popular
+                            {t('anime-popular')}
                             <Loading
                               className={isPending ? 'ml-auto' : '!hidden'}
                               type="points-opacity"
                             />
                           </div>
-                          <p className="text-text text-xs w-full">
-                            Widely watched and buzzed-about anime.
-                          </p>
+                          <p className="text-text text-xs w-full">{t('anime-popular-subtitle')}</p>
                         </>
                       )}
                     </NavLink>
@@ -921,15 +917,13 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                         <>
                           <div className="flex flex-row justify-start items-center w-full mb-2">
                             <Discover className="mr-2 w-5 h-5" filled={isActive} />
-                            Trending
+                            {t('anime-trending')}
                             <Loading
                               className={isPending ? 'ml-auto' : '!hidden'}
                               type="points-opacity"
                             />
                           </div>
-                          <p className="text-text text-xs w-full">
-                            Currently gaining popularity and attention among viewers.
-                          </p>
+                          <p className="text-text text-xs w-full">{t('anime-trending-subtitle')}</p>
                         </>
                       )}
                     </NavLink>
@@ -946,14 +940,14 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                         <>
                           <div className="flex flex-row justify-start items-center w-full mb-2">
                             <Discover className="mr-2 w-5 h-5" filled={isActive} />
-                            Recent Episodes
+                            {t('anime-recent-episodes')}
                             <Loading
                               className={isPending ? 'ml-auto' : '!hidden'}
                               type="points-opacity"
                             />
                           </div>
                           <p className="text-text text-xs w-full">
-                            Latest episodes of ongoing anime series.
+                            {t('anime-recent-episodes-subtitle')}
                           </p>
                         </>
                       )}
@@ -971,15 +965,13 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                         <>
                           <div className="flex flex-row justify-start items-center w-full mb-2">
                             <Discover className="mr-2 w-5 h-5" />
-                            Random Anime
+                            {t('anime-random')}
                             <Loading
                               className={isPending ? 'ml-auto' : '!hidden'}
                               type="points-opacity"
                             />
                           </div>
-                          <p className="text-text text-xs w-full">
-                            Anime is selected at random, without a specific theme.
-                          </p>
+                          <p className="text-text text-xs w-full">{t('anime-random-subtitle')}</p>
                         </>
                       )}
                     </NavLink>
@@ -1014,7 +1006,9 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                         }
                         filled={isActive}
                       />
-                      {!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'People' : null}
+                      {!sidebarMiniMode.value || (sidebarHoverMode && isHovered)
+                        ? t('people')
+                        : null}
                       <Loading
                         className={
                           isPending && (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))
@@ -1096,7 +1090,9 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                         }
                         filled={isActive}
                       />
-                      {!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'History' : null}
+                      {!sidebarMiniMode.value || (sidebarHoverMode && isHovered)
+                        ? t('history')
+                        : null}
                       <Loading
                         className={
                           isPending && (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))
@@ -1138,7 +1134,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
                         filled={isActive}
                       />
                       {!sidebarMiniMode.value || (sidebarHoverMode && isHovered)
-                        ? 'Settings'
+                        ? t('settings')
                         : null}
                       <Loading
                         className={
