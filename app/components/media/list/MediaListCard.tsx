@@ -42,6 +42,7 @@ const SwiperSlideStyled = styled(SwiperSlide, {
 });
 
 const SwiperStyled = styled(Swiper, {
+  width: '100%',
   '& div': {
     '&.swiper-wrapper': {
       margin: '0 0 1.5rem 5px',
@@ -112,7 +113,7 @@ const MediaListCard = (props: IMediaListCardProps) => {
   }
 
   return (
-    <div className="flex justify-start items-center">
+    <div className="flex justify-start items-center w-full">
       {items && items?.length > 0 ? (
         <SwiperStyled
           modules={[Navigation]}

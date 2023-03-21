@@ -8,7 +8,6 @@ import {
   LiveReload,
   Meta,
   Scripts,
-  ScrollRestoration,
   useCatch,
   useLoaderData,
   useOutlet,
@@ -481,7 +480,6 @@ const Document = ({ children, title, lang, dir, gaTrackingId, ENV }: DocumentPro
           }}
         />
         {children}
-        <ScrollRestoration />
         {isBot ? null : <Scripts />}
         {process.env.NODE_ENV === 'development' ? <LiveReload /> : null}
       </body>

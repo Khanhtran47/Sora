@@ -1,10 +1,12 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/indent */
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import type { User } from '@supabase/supabase-js';
 import { tv } from 'tailwind-variants';
-import { useMediaQuery } from '@react-hookz/web';
+import { useLocation } from '@remix-run/react';
+import { useMediaQuery, useSessionStorageValue } from '@react-hookz/web';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
-// import { useScroll } from 'framer-motion';
+import { useElementScroll } from 'framer-motion';
 
 import {
   ScrollArea,
@@ -66,7 +68,7 @@ const contentAreaStyles = tv({
 });
 
 const scrollAreaViewportStyles = tv({
-  base: 'flex flex-col justify-start items-center w-[100vw] transition-[width,_height] duration-200 p-0 sm:px-5 mt-[80px] min-h-screen',
+  base: 'flex flex-col justify-start items-center w-[100vw] transition-[width,_height] duration-200 p-0 sm:px-5 mt-[72px] min-h-screen',
   variants: {
     mini: {
       true: 'sm:w-[calc(100vw_-_80px)]',
@@ -96,10 +98,12 @@ const scrollAreaViewportStyles = tv({
 const Layout = (props: ILayout) => {
   const { children, user } = props;
   const [open, setOpen] = useState(false);
+  const location = useLocation();
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const { sidebarMiniMode, sidebarBoxedMode } = useSoraSettings();
   const viewportRef = useRef<HTMLDivElement>(null);
-  // const { scrollYProgress } = useScroll({ container: viewportRef, axis: 'y' });
+
+  useEffect(() => viewportRef.current?.scrollTo(0, 0), [location.key]);
 
   return (
     <div className={layoutStyles({ boxed: sidebarBoxedMode.value })}>

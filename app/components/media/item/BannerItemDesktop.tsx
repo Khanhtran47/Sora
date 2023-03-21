@@ -498,7 +498,10 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
               left: 0,
               width: '100%',
               height: '100px',
-              backgroundImage: 'linear-gradient(0deg, $background, $backgroundTransparent)',
+              backgroundImage:
+                'linear-gradient(0deg, $background, $backgroundTransparent), linear-gradient(0deg, $backgroundContrastAlpha, $backgroundTransparent)',
+              backgroundRepeat: 'no-repeat',
+              backgroundBlendMode: 'color',
               '@lgMin': {
                 height: '250px',
               },

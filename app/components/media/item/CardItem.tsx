@@ -172,6 +172,7 @@ const CardItem = (props: ICardItemProps) => {
       isPressable
       css={{
         width: '100%',
+        maxWidth: mediaType === 'people' ? '164px' : 'unset',
         minHeight: `${mediaType === 'people' ? '324px' : '318px'} !important`,
         borderWidth: 0,
         filter: 'unset',

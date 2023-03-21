@@ -2,31 +2,23 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react';
 import { Button, Grid, Row, Tooltip, Popover, Spacer, styled } from '@nextui-org/react';
+import { useNavigate, useLocation, useNavigationType } from '@remix-run/react';
 import type { User } from '@supabase/supabase-js';
 import type { AnimationItem } from 'lottie-web';
 import { useTranslation } from 'react-i18next';
-import { isMobile } from 'react-device-detect';
 import { tv } from 'tailwind-variants';
 import { useMediaQuery } from '@react-hookz/web';
-import { useScroll } from 'framer-motion';
-
-import { pages, searchDropdown } from '~/constants/navPages';
 
 import { useSoraSettings } from '~/hooks/useLocalStorage';
-import useScrollDirection from '~/hooks/useScrollDirection';
 
 /* Components */
-import NavLink from '~/components/elements/NavLink';
 import MultiLevelDropdown from '~/components/layouts/MultiLevelDropdown';
-import { AppBar, PlayerStyled } from '~/components/layouts/Layout.styles';
+import { PlayerStyled } from '~/components/layouts/Layout.styles';
 
 /* Assets */
-import MenuIcon from '~/assets/icons/MenuIcon';
-import SearchIcon from '~/assets/icons/SearchIcon';
-// import menuNavBlack from '~/assets/lotties/lottieflow-menu-nav-11-6-000000-easey.json';
-// import menuNavWhite from '~/assets/lotties/lottieflow-menu-nav-11-6-FFFFFF-easey.json';
-// import arrowLeftBlack from '~/assets/lotties/lottieflow-arrow-08-1-000000-easey.json';
-// import arrowLeftWhite from '~/assets/lotties/lottieflow-arrow-08-1-FFFFFF-easey.json';
+// import MenuIcon from '~/assets/icons/MenuIcon';
+import ChevronLeft from '~/assets/icons/ChevronLeftIcon';
+import ChevronRight from '~/assets/icons/ChevronRightIcon';
 import dropdown from '~/assets/lotties/lottieflow-dropdown-03-0072F5-easey.json';
 
 interface IHeaderProps {
@@ -38,45 +30,6 @@ interface IHeaderProps {
 export const handle = {
   i18n: 'header',
 };
-
-const DropdownPage = ({
-  pagesDropdown,
-}: {
-  pagesDropdown: {
-    pageName: string;
-    pageLink: string;
-  }[];
-}) => {
-  const { t } = useTranslation('header');
-
-  return (
-    <Grid.Container
-      css={{
-        padding: '0.75rem',
-        width: '200px',
-      }}
-    >
-      {pagesDropdown.map((page) => (
-        <>
-          <Row key={page.pageName}>
-            <NavLink linkTo={`/${page.pageLink}`} linkName={t(page.pageName)} />
-          </Row>
-          <Spacer y={0.5} />
-        </>
-      ))}
-    </Grid.Container>
-  );
-};
-
-const ButtonStyled = styled('button', {
-  paddingRight: 8,
-  paddingLeft: 8,
-  marginRight: 12,
-  display: 'block',
-  '@sm': {
-    display: 'none',
-  },
-});
 
 const headerStyles = tv({
   base: 'h-[64px] w-[100vw] fixed z-50 py-3 px-5 flex flex-row justify-between items-center',
@@ -111,9 +64,40 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   const { open, user, setOpen } = props;
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [lottie, setLottie] = useState<AnimationItem>();
-  const isSm = useMediaQuery('(max-width: 650px)');
-  const scrollDirection = useScrollDirection();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const navigationType = useNavigationType();
   const { sidebarMiniMode, sidebarBoxedMode, sidebarSheetMode } = useSoraSettings();
+  const [historyBack, setHistoryBack] = useState<string[]>([]);
+  const [historyForward, setHistoryForward] = useState<string[]>([]);
+
+  const handleNavigationBackForward = (direction: 'back' | 'forward') => {
+    if (direction === 'back') {
+      navigate(-1);
+      setHistoryBack((prev) => [...prev.slice(0, prev.length - 1)]);
+      setHistoryForward((prev) =>
+        historyBack.length > 0 ? [...prev, historyBack[historyBack.length - 1]] : [...prev],
+      );
+    } else if (direction === 'forward') {
+      navigate(1);
+      setHistoryForward((prev) => [...prev.slice(0, prev.length - 1)]);
+      setHistoryBack((prev) =>
+        historyForward.length > 0
+          ? [...prev, historyForward[historyForward.length - 1]]
+          : [...prev],
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (navigationType === 'PUSH') {
+      setHistoryBack((prev) => [...prev, location.pathname]);
+      setHistoryForward((prev) => [...prev.slice(0, prev.length - 1)]);
+    } else if (navigationType === 'REPLACE') {
+      setHistoryBack((prev) => [...prev.slice(0, prev.length - 1), location.pathname]);
+      setHistoryForward((prev) => [...prev.slice(0, prev.length - 1)]);
+    }
+  }, [location.key, navigationType]);
 
   useEffect(() => {
     if (isDropdownOpen) {
@@ -130,7 +114,24 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
         boxedSidebar: sidebarBoxedMode.value,
       })}
     >
-      <div>nav button</div>
+      <div className="flex flex-row justify-center items-center gap-x-2">
+        <Button
+          auto
+          ghost
+          rounded
+          icon={<ChevronLeft />}
+          onPress={() => handleNavigationBackForward('back')}
+          disabled={historyBack.length === 0}
+        />
+        <Button
+          auto
+          ghost
+          rounded
+          icon={<ChevronRight />}
+          onPress={() => handleNavigationBackForward('forward')}
+          disabled={historyForward.length === 0}
+        />
+      </div>
       <div>dynamic content</div>
       <Popover
         shouldFlip
