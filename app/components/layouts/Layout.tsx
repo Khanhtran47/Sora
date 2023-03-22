@@ -113,7 +113,8 @@ const Layout = (props: ILayout) => {
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const { sidebarMiniMode, sidebarBoxedMode } = useSoraSettings();
   const viewportRef = useRef<HTMLDivElement>(null);
-  const { setScrollPosition, setScrollHeight } = useLayoutScrollPosition((state) => state);
+  const { setScrollPosition, setScrollHeight, scrollDirection, setScrollDirection, scrollHeight } =
+    useLayoutScrollPosition((state) => state);
   const { scrollYProgress } = useElementScroll(viewportRef);
 
   useEffect(() => {
@@ -130,6 +131,12 @@ const Layout = (props: ILayout) => {
   useEffect(() => {
     if (viewportRef.current) {
       scrollYProgress.onChange((value) => {
+        const lastScrollPosition = scrollYProgress.getPrevious();
+        const scrollVelocity = scrollYProgress.getVelocity();
+        const direction = value > lastScrollPosition ? 'down' : 'up';
+        if (direction !== scrollDirection && (scrollVelocity > 0.5 || scrollVelocity < -0.5)) {
+          setScrollDirection(direction);
+        }
         setScrollPosition({
           x: 0,
           y: value,

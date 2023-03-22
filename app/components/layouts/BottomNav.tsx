@@ -1,41 +1,69 @@
-import { Container } from '@nextui-org/react';
+import { NavLink } from '@remix-run/react';
+// import { Button } from '@nextui-org/react';
+import { tv } from 'tailwind-variants';
+import { motion } from 'framer-motion';
 
-import { useMediaQuery } from '@react-hookz/web';
-import useScrollDirection from '~/hooks/useScrollDirection';
+// import { useMediaQuery } from '@react-hookz/web';
+import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
 
-import { bottomNavPages } from '~/constants/navPages';
-
-import NavLink from '~/components/elements/NavLink';
+import Home from '~/assets/icons/HomeIcon';
+import Discover from '~/assets/icons/DiscoverIcon';
+import Menu from '~/assets/icons/MenuIcon';
 
 const BottomNav = () => {
-  const scrollDirection = useScrollDirection();
-  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
+  const scrollDirection = useLayoutScrollPosition((state) => state.scrollDirection);
+  const bottomNavItemStyles = tv({
+    base: 'flex flex-col justify-center items-center gap-y-2 text-xs font-medium rounded-md bg-transparent text-text',
+    variants: {
+      active: {
+        true: 'text-primary',
+        false: '',
+      },
+    },
+  });
 
   return (
-    <Container
-      fluid
-      responsive={false}
-      display="flex"
-      justify="space-around"
-      alignItems="center"
-      wrap="nowrap"
-      className="backdrop-blur-md transition-all duration-500"
-      css={{
-        backgroundColor: '$backgroundAlpha',
-        position: 'fixed',
-        bottom: isSm && scrollDirection === 'down' ? -64 : 10,
-        height: 64,
-        padding: 0,
-        margin: 0,
-        zIndex: 990,
-        borderRadius: '$xl',
-        width: 'calc(100% - 1rem)',
-      }}
+    <motion.div
+      initial={{ y: 0 }}
+      animate={{ y: scrollDirection === 'down' ? 65 : 0 }}
+      transition={{ duration: 0.5 }}
+      className="w-full fixed bottom-0 flex flex-row justify-around items-center flex-nowrap py-2 bg-background-alpha h-16 backdrop-blur-md sm:hidden border-t border-border drop-shadow-md"
     >
-      {bottomNavPages.map((page) => (
-        <NavLink linkTo={`/${page.pageLink}`} linkName={page.pageName} key={page.pageName} />
-      ))}
-    </Container>
+      <NavLink
+        to="/"
+        className={({ isActive }) =>
+          bottomNavItemStyles({
+            active: isActive,
+          })
+        }
+      >
+        {({ isActive }) => (
+          <>
+            <Home filled={isActive} />
+            Home
+          </>
+        )}
+      </NavLink>
+      <NavLink
+        to="/discover"
+        className={({ isActive }) =>
+          bottomNavItemStyles({
+            active: isActive,
+          })
+        }
+      >
+        {({ isActive }) => (
+          <>
+            <Discover filled={isActive} />
+            Discover
+          </>
+        )}
+      </NavLink>
+      <button type="button" className={bottomNavItemStyles()}>
+        <Menu />
+        More
+      </button>
+    </motion.div>
   );
 };
 
