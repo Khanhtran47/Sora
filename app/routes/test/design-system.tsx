@@ -14,7 +14,7 @@ import {
   SheetContent,
   SheetTitle,
   SheetDescription,
-} from '~/components/elements/shared/Sheet';
+} from '~/components/elements/Sheet';
 
 import Settings from '~/assets/icons/SettingsIcon';
 import Arrow from '~/assets/icons/ArrowIcon';

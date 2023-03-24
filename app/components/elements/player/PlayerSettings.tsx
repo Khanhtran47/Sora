@@ -10,7 +10,7 @@ import ResizablePanel from '~/components/elements/shared/ResizablePanel';
 import Flex from '~/components/styles/Flex.styles';
 import Box from '~/components/styles/Box.styles';
 import { Popover, PopoverTrigger, PopoverContent } from '~/components/elements/shared/Popover';
-import { Sheet, SheetTrigger, SheetContent } from '~/components/elements/shared/Sheet';
+import { Sheet, SheetTrigger, SheetContent } from '~/components/elements/Sheet';
 
 import Settings from '~/assets/icons/SettingsIcon';
 import Arrow from '~/assets/icons/ArrowIcon';
@@ -1380,7 +1380,6 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
   );
 
   const handleOpenChange = (open: boolean) => {
-    console.log('test');
     setSettingsOpen(open);
     if (!open) setDropdownLevelKey('general');
   };
@@ -1399,7 +1398,6 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           onOpenChange={() => handleOpenChange(!isSettingsOpen)}
           // portals overlay and content parts into the player when fullscreen is enabled
           container={isPlayerFullScreen ? artplayer?.template?.$player : document.body}
-          css={{ padding: '$2 !important' }}
         >
           <ResizablePanel contentWidth="full">
             {currentDropdownLevel ? (

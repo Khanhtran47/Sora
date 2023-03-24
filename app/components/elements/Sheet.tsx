@@ -58,7 +58,7 @@ const StyledContent = styled(DialogPrimitive.Content, {
   bottom: 0,
   width: 250,
   zIndex: 9999,
-  padding: '$2',
+  padding: '$4',
   outline: 'none',
 
   // Among other things, prevents text alignment inconsistencies when dialog can't be centered in the viewport evenly.
@@ -70,11 +70,11 @@ const StyledContent = styled(DialogPrimitive.Content, {
   // },
 
   '&[data-state="open"]': {
-    animation: `${slideIn} 150ms cubic-bezier(0.22, 1, 0.36, 1)`,
+    animation: `${slideIn} 300ms cubic-bezier(0.22, 1, 0.36, 1)`,
   },
 
   '&[data-state="closed"]': {
-    animation: `${slideOut} 150ms cubic-bezier(0.22, 1, 0.36, 1)`,
+    animation: `${slideOut} 300ms cubic-bezier(0.22, 1, 0.36, 1)`,
   },
 
   variants: {
@@ -129,11 +129,11 @@ const StyledCloseButton = styled(DialogPrimitive.Close, {
 });
 
 const Handle = styled('div', {
-  width: '60px',
-  height: '6px',
+  width: '75px',
+  height: '4px',
   backgroundColor: '$border',
   borderRadius: '$sm',
-  margin: '0.75rem auto 0.5rem !important',
+  margin: '1rem auto 0 !important',
 });
 
 type SheetContentVariants = VariantProps<typeof StyledContent>;
@@ -162,7 +162,7 @@ const SheetContent = React.forwardRef<React.ElementRef<typeof StyledContent>, Sh
     forwardedRef,
   ) => {
     const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
-      if (info.offset.y > 150 && open && onOpenChange && swipeDownToClose) {
+      if (info.offset.y > 100 && open && onOpenChange && swipeDownToClose) {
         onOpenChange();
       }
     };

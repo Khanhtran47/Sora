@@ -113,7 +113,7 @@ const Layout = (props: ILayout) => {
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const { sidebarMiniMode, sidebarBoxedMode } = useSoraSettings();
   const viewportRef = useRef<HTMLDivElement>(null);
-  const { setScrollPosition, setScrollHeight, scrollDirection, setScrollDirection, scrollHeight } =
+  const { setScrollPosition, setScrollHeight, scrollDirection, setScrollDirection } =
     useLayoutScrollPosition((state) => state);
   const { scrollYProgress } = useElementScroll(viewportRef);
 
@@ -162,8 +162,8 @@ const Layout = (props: ILayout) => {
           />
         )}
         <ScrollArea
-          type="always"
-          scrollHideDelay={1000}
+          type={isSm ? 'scroll' : 'always'}
+          scrollHideDelay={500}
           css={{
             width: '100%',
             height: sidebarBoxedMode.value ? 'calc(100vh - 15px)' : '100vh',

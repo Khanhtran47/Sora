@@ -324,7 +324,7 @@ const Settings = () => {
                     dragElastic={0.4}
                     onDragEnd={handleDragEnd}
                     dragDirectionLock
-                    onDirectionLock={(axis) => console.log(axis)}
+                    // onDirectionLock={(axis) => console.log(axis)}
                   >
                     <Container
                       fluid
