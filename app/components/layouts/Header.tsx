@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Button,
   // Tooltip,
   Popover,
 } from '@nextui-org/react';
-import { useNavigate, useLocation, useNavigationType } from '@remix-run/react';
+import { useNavigate } from '@remix-run/react';
 import type { User } from '@supabase/supabase-js';
 import type { AnimationItem } from 'lottie-web';
 // import { useTranslation } from 'react-i18next';
@@ -14,8 +14,8 @@ import { tv } from 'tailwind-variants';
 // import { useMediaQuery } from '@react-hookz/web';
 
 import { useSoraSettings } from '~/hooks/useLocalStorage';
-
 import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
+import { useHistoryStack } from '~/store/layout/useHistoryStack';
 
 /* Components */
 import MultiLevelDropdown from '~/components/layouts/MultiLevelDropdown';
@@ -75,47 +75,20 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [lottie, setLottie] = useState<AnimationItem>();
   const navigate = useNavigate();
-  const location = useLocation();
-  const navigationType = useNavigationType();
   const {
     sidebarMiniMode,
     sidebarBoxedMode,
     // sidebarSheetMode
   } = useSoraSettings();
-  const [historyBack, setHistoryBack] = useState<string[]>([]);
-  const [historyForward, setHistoryForward] = useState<string[]>([]);
-  const { scrollPosition, scrollHeight } = useLayoutScrollPosition((state) => state);
-  const currentScrollYHeight = useMemo(
-    () => scrollPosition.y * scrollHeight,
-    [scrollPosition, scrollHeight],
-  );
+  const { scrollPosition } = useLayoutScrollPosition((state) => state);
+  const { historyBack, historyForward } = useHistoryStack((state) => state);
   const handleNavigationBackForward = (direction: 'back' | 'forward') => {
     if (direction === 'back') {
       navigate(-1);
-      setHistoryBack((prev) => [...prev.slice(0, prev.length - 1)]);
-      setHistoryForward((prev) =>
-        historyBack.length > 0 ? [...prev, historyBack[historyBack.length - 1]] : [...prev],
-      );
     } else if (direction === 'forward') {
       navigate(1);
-      setHistoryForward((prev) => [...prev.slice(0, prev.length - 1)]);
-      setHistoryBack((prev) =>
-        historyForward.length > 0
-          ? [...prev, historyForward[historyForward.length - 1]]
-          : [...prev],
-      );
     }
   };
-
-  useEffect(() => {
-    if (navigationType === 'PUSH') {
-      setHistoryBack((prev) => [...prev, location.pathname]);
-      setHistoryForward((prev) => [...prev.slice(0, prev.length - 1)]);
-    } else if (navigationType === 'REPLACE') {
-      setHistoryBack((prev) => [...prev.slice(0, prev.length - 1), location.pathname]);
-      setHistoryForward((prev) => [...prev.slice(0, prev.length - 1)]);
-    }
-  }, [location.key, navigationType]);
 
   useEffect(() => {
     if (isDropdownOpen) {
@@ -134,7 +107,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
     >
       <div
         className="absolute top-0 left-0 w-full h-full z-[-1] bg-background-contrast-alpha backdrop-blur-md rounded-tl-xl"
-        style={{ opacity: currentScrollYHeight < 80 ? currentScrollYHeight / 80 : 1 }}
+        style={{ opacity: scrollPosition.y < 80 ? scrollPosition.y / 80 : 1 }}
       />
       <div className="flex flex-row justify-center items-center gap-x-2">
         <Button
@@ -143,7 +116,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
           rounded
           icon={<ChevronLeft />}
           onPress={() => handleNavigationBackForward('back')}
-          disabled={historyBack.length === 0}
+          disabled={historyBack.length <= 1}
           css={{ w: 36, h: 36 }}
         />
         <Button
@@ -152,7 +125,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
           rounded
           icon={<ChevronRight />}
           onPress={() => handleNavigationBackForward('forward')}
-          disabled={historyForward.length === 0}
+          disabled={historyForward.length <= 1}
           css={{ w: 36, h: 36 }}
         />
       </div>

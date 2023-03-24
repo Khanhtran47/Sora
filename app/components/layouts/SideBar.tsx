@@ -41,7 +41,6 @@ import Library from '~/assets/icons/LibraryIcon';
 import History from '~/assets/icons/HistoryIcon';
 import TwoUsers from '~/assets/icons/TwoUsersIcon';
 import CategoryIcon from '~/assets/icons/CategoryIcon';
-import Arrow from '~/assets/icons/ArrowIcon';
 import Logo from '~/assets/images/logo_loading.png';
 import Home from '~/assets/icons/HomeIcon';
 import Search from '~/assets/icons/SearchIcon';

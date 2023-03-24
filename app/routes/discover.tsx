@@ -63,7 +63,7 @@ const DiscoverPage = () => {
   const navigate = useNavigate();
   return (
     <div className="flex flex-col w-full px-3 justify-center items-start">
-      <H1>{t('discover')}</H1>
+      <H1 h1>{t('discover')}</H1>
       <Spacer y={0.5} />
       <Button
         icon={<Search fill="currentColor" />}

@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/indent */
 import { useState } from 'react';
-import { NavLink } from '@remix-run/react';
+import { NavLink, useLocation, useSearchParams } from '@remix-run/react';
 import { tv } from 'tailwind-variants';
 import { motion } from 'framer-motion';
+import type { User } from '@supabase/supabase-js';
 
 import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
 
@@ -13,27 +15,18 @@ import Menu from '~/assets/icons/MenuIcon';
 import Settings from '~/assets/icons/SettingsIcon';
 import History from '~/assets/icons/HistoryIcon';
 import Category from '~/assets/icons/CategoryIcon';
+import LogIn from '~/assets/icons/LogInIcon';
+import LogOut from '~/assets/icons/LogOutIcon';
 
-const moreNavItems = [
-  {
-    name: 'Collections',
-    icon: Category,
-    path: '/collections',
-  },
-  {
-    name: 'History',
-    icon: History,
-    path: '/watch-history',
-  },
-  {
-    name: 'Settings',
-    icon: Settings,
-    path: '/settings',
-  },
-];
+interface IBottomNavProps {
+  user?: User | undefined;
+}
 
-const BottomNav = () => {
+const BottomNav = (props: IBottomNavProps) => {
+  const { user } = props;
   const [openMore, setOpenMore] = useState(false);
+  const location = useLocation();
+  const [search] = useSearchParams();
   const scrollDirection = useLayoutScrollPosition((state) => state.scrollDirection);
   const bottomNavItemStyles = tv({
     base: 'flex flex-col justify-center items-center gap-y-2 text-xs font-medium rounded-md bg-transparent text-text',
@@ -44,6 +37,42 @@ const BottomNav = () => {
       },
     },
   });
+  const ref = (search.get('ref') || location.pathname + location.search)
+    .replace('?', '_0x3F_')
+    .replace('&', '_0x26');
+
+  const moreNavItems = [
+    {
+      name: 'Collections',
+      icon: Category,
+      path: '/collections',
+    },
+    {
+      name: 'History',
+      icon: History,
+      path: '/watch-history',
+    },
+    ...(user
+      ? [
+          {
+            name: 'Logout',
+            icon: LogOut,
+            path: `/sign-out?ref=${ref}`,
+          },
+        ]
+      : [
+          {
+            name: 'Login',
+            icon: LogIn,
+            path: `/sign-in?ref=${ref}`,
+          },
+        ]),
+    {
+      name: 'Settings',
+      icon: Settings,
+      path: '/settings',
+    },
+  ];
 
   return (
     <motion.div

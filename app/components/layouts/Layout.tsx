@@ -3,12 +3,15 @@
 import { useState, useRef, useEffect } from 'react';
 import type { User } from '@supabase/supabase-js';
 import { tv } from 'tailwind-variants';
-import { useLocation, useMatches } from '@remix-run/react';
+import { useLocation, useMatches, useNavigationType } from '@remix-run/react';
 import { useMediaQuery } from '@react-hookz/web';
-import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { useElementScroll } from 'framer-motion';
 
+import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
+import { useHistoryStack } from '~/store/layout/useHistoryStack';
+
+import { throttle } from '~/utils/function';
 
 import {
   ScrollArea,
@@ -25,6 +28,7 @@ import SideBar from './SideBar';
 import BottomNav from './BottomNav';
 // import BreadCrumb from './BreadCrumb';
 import GlobalPlayer from './GlobalPlayer';
+import MobileHeader from './MobileHeader';
 
 interface ILayout {
   children: React.ReactNode;
@@ -32,7 +36,7 @@ interface ILayout {
 }
 
 const layoutStyles = tv({
-  base: 'flex flex-nowrap justify-start max-w-full max-h-full min-h-screen bg-background transition-[padding] duration-200',
+  base: 'flex flex-nowrap justify-start max-w-full max-h-full min-h-screen bg-background transition-[padding] duration-200 font-[Inter]',
   variants: {
     boxed: {
       true: 'pt-[15px] min-h-[calc(100vh_-_115px)]',
@@ -110,12 +114,21 @@ const Layout = (props: ILayout) => {
   const [open, setOpen] = useState(false);
   const location = useLocation();
   const matches = useMatches();
+  const navigationType = useNavigationType();
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const { sidebarMiniMode, sidebarBoxedMode } = useSoraSettings();
   const viewportRef = useRef<HTMLDivElement>(null);
   const { setScrollPosition, setScrollHeight, scrollDirection, setScrollDirection } =
     useLayoutScrollPosition((state) => state);
-  const { scrollYProgress } = useElementScroll(viewportRef);
+  const { scrollY } = useElementScroll(viewportRef);
+  const { historyBack, historyForward, setHistoryBack, setHistoryForward } = useHistoryStack(
+    (state) => state,
+  );
+
+  useEffect(() => {
+    setHistoryBack([location.key]);
+    setHistoryForward([location.key]);
+  }, []);
 
   useEffect(() => {
     const preventScrollToTopRoute = matches.some(
@@ -129,21 +142,53 @@ const Layout = (props: ILayout) => {
   }, [location.key]);
 
   useEffect(() => {
-    if (viewportRef.current) {
-      scrollYProgress.onChange((value) => {
-        const lastScrollPosition = scrollYProgress.getPrevious();
-        const scrollVelocity = scrollYProgress.getVelocity();
-        const direction = value > lastScrollPosition ? 'down' : 'up';
-        if (direction !== scrollDirection && (scrollVelocity > 0.5 || scrollVelocity < -0.5)) {
-          setScrollDirection(direction);
-        }
-        setScrollPosition({
-          x: 0,
-          y: value,
-        });
-      });
+    if (navigationType === 'PUSH') {
+      setHistoryBack([...historyBack, location.key]);
+      setHistoryForward([location.key]);
+    } else if (navigationType === 'POP') {
+      // detect if user is going back or forward
+      if (historyBack.length > 0 && historyBack[historyBack.length - 2] === location.key) {
+        // going back
+        setHistoryBack([...historyBack.slice(0, historyBack.length - 1)]);
+        setHistoryForward([...historyForward, location.key]);
+      } else if (
+        historyForward.length > 0 &&
+        historyForward[historyForward.length - 2] === location.key
+      ) {
+        // going forward
+        setHistoryForward([...historyForward.slice(0, historyForward.length - 1)]);
+        setHistoryBack([...historyBack, location.key]);
+      }
+    } else if (navigationType === 'REPLACE') {
+      setHistoryBack([...historyBack.slice(0, historyBack.length - 1), location.key]);
+      setHistoryForward([...historyForward.slice(0, historyForward.length - 1)]);
     }
-  }, [scrollYProgress]);
+  }, [location.key, navigationType]);
+
+  useEffect(() => {
+    let lastScrollPosition = viewportRef.current?.scrollTop || 0;
+
+    const updateAtScroll = () => {
+      const currentScrollPosition = scrollY.get();
+      const direction = currentScrollPosition > lastScrollPosition ? 'down' : 'up';
+      if (
+        direction !== scrollDirection &&
+        (currentScrollPosition - lastScrollPosition > 20 ||
+          currentScrollPosition - lastScrollPosition < -20)
+      ) {
+        setScrollDirection(direction);
+      }
+      setScrollPosition({
+        x: 0,
+        y: currentScrollPosition,
+      });
+      lastScrollPosition = currentScrollPosition > 0 ? currentScrollPosition : 0;
+    };
+    const removeScrollYProgress = scrollY.onChange(throttle(updateAtScroll, 80));
+    return () => {
+      removeScrollYProgress();
+    };
+  }, []);
 
   return (
     <div className={layoutStyles({ boxed: sidebarBoxedMode.value })}>
@@ -154,7 +199,9 @@ const Layout = (props: ILayout) => {
           boxed: sidebarBoxedMode.value,
         })}
       >
-        {isSm ? null : (
+        {isSm ? (
+          <MobileHeader />
+        ) : (
           <Header
             // open={open}
             user={user}
@@ -183,7 +230,7 @@ const Layout = (props: ILayout) => {
               {children}
             </main>
             {/* <Footer /> */}
-            {isSm ? <BottomNav /> : null}
+            {isSm ? <BottomNav user={user} /> : null}
           </ScrollAreaViewport>
           <ScrollAreaScrollbar
             orientation="vertical"

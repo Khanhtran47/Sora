@@ -52,7 +52,7 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
       : title?.userPreferred || title?.english || title?.romaji || title?.native;
 
   return (
-    <AspectRatio.Root ratio={4 / 5} ref={bannerRef}>
+    <AspectRatio.Root ratio={4 / 5} ref={bannerRef} className="mt-8">
       <Link
         to={`/${
           mediaType === 'movie' ? 'movies/' : mediaType === 'tv' ? 'tv-shows/' : 'anime/'
