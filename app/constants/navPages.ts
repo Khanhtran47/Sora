@@ -3,7 +3,7 @@ export const pages = [
     pageName: 'movies',
     pageLink: 'movies',
     pageDropdown: [
-      { pageName: 'Discover', pageLink: 'movies/discover' },
+      { pageName: 'Discover', pageLink: 'discover/movies' },
       { pageName: 'popular', pageLink: 'movies/popular' },
       { pageName: 'topRated', pageLink: 'movies/top-rated' },
       { pageName: 'upcoming', pageLink: 'movies/upcoming' },
@@ -13,7 +13,7 @@ export const pages = [
     pageName: 'tv',
     pageLink: 'tv-shows',
     pageDropdown: [
-      { pageName: 'Discover', pageLink: 'tv-shows/discover' },
+      { pageName: 'Discover', pageLink: 'discover/tv-shows' },
       { pageName: 'popular', pageLink: 'tv-shows/popular' },
       { pageName: 'topRated', pageLink: 'tv-shows/top-rated' },
       { pageName: 'onTv', pageLink: 'tv-shows/on-tv' },
@@ -23,7 +23,7 @@ export const pages = [
     pageName: 'Anime',
     pageLink: 'anime',
     pageDropdown: [
-      { pageName: 'Discover', pageLink: 'anime/discover' },
+      { pageName: 'Discover', pageLink: 'discover/anime' },
       { pageName: 'Recent Episodes', pageLink: 'anime/recent-episodes' },
       { pageName: 'Popular Anime', pageLink: 'anime/popular' },
       { pageName: 'Trending Anime', pageLink: 'anime/trending' },

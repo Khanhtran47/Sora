@@ -21,7 +21,7 @@ export const meta: MetaFunction = () => ({
     'Official Sora website to watch movies online HD for free, Watch TV show & TV series and Download all movies and series FREE',
   keywords:
     'watch free movies, free movies to watch online, watch movies online free, free movies streaming, free movies full, free movies download, watch movies hd, movies to watch',
-  'og:url': 'https://sora-anime.vercel.app/movies/discover',
+  'og:url': 'https://sora-anime.vercel.app/discover/movies',
   'og:title': 'Discover and watch movies and tv shows for free | Sora',
   'og:description':
     'Official Sora website to watch movies online HD for free, Watch TV show & TV series and Download all movies and series FREE',
@@ -115,7 +115,7 @@ export const handle = {
   ),
 };
 
-const ListMovies = () => {
+const DiscoverMovies = () => {
   const {
     movies,
     withGenres,
@@ -181,4 +181,4 @@ const ListMovies = () => {
   );
 };
 
-export default ListMovies;
+export default DiscoverMovies;

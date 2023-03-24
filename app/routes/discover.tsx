@@ -1,131 +1,56 @@
-import { Button, Spacer } from '@nextui-org/react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from '@remix-run/react';
+import { MetaFunction } from '@remix-run/node';
+import { NavLink, Outlet, useLocation } from '@remix-run/react';
+import { Badge } from '@nextui-org/react';
 
-import { H1, H4 } from '~/components/styles/Text.styles';
+import TabLink from '~/components/elements/tab/TabLink';
 
-import Search from '~/assets/icons/SearchIcon';
-import Filter from '~/assets/icons/FilterIcon';
-import Movie from '~/assets/icons/MovieIcon';
-import TvShows from '~/assets/icons/TvIcon';
-import Anime from '~/assets/icons/AnimeIcon';
-import TwoUsers from '~/assets/icons/TwoUsersIcon';
-import Category from '~/assets/icons/CategoryIcon';
+export const meta: MetaFunction = () => ({
+  title: 'Discover Movies, TV Shows, Anime, People and More - Sora',
+  description: 'Discover Movies, TV Shows, Anime, People and More',
+  'og:url': 'https://sora-anime.vercel.app/discover',
+  'og:title': 'Discover Movies, TV Shows, Anime, People and More - Sora',
+  'og:image': 'https://sora-anime.vercel.app/api/ogimage?it=discover',
+  'og:description': 'Discover Movies, TV Shows, Anime, People and More',
+});
 
-const categoryPages = [
-  {
-    name: 'movies',
-    icon: <Movie fill="currentColor" />,
-    path: '/movies/popular',
-  },
-  {
-    name: 'tv-shows',
-    icon: <TvShows fill="currentColor" />,
-    path: '/tv-shows/popular',
-  },
-  {
-    name: 'anime',
-    icon: <Anime fill="currentColor" />,
-    path: '/anime/popular',
-  },
-  {
-    name: 'people',
-    icon: <TwoUsers fill="currentColor" />,
-    path: '/people',
-  },
+const discoverPages = [
+  { pageName: 'Discover Movies', pageLink: '/movies' },
+  { pageName: 'Discover TV Shows', pageLink: '/tv-shows' },
+  { pageName: 'Discover Anime', pageLink: '/anime' },
 ];
 
-const generalPages = [
-  {
-    name: 'movies-genres',
-    path: '/movies/genres',
-    icon: false,
-  },
-  {
-    name: 'tv-shows-genres',
-    path: '/tv/genres',
-    icon: false,
-  },
-  {
-    name: 'anime-genres',
-    path: '/anime/genres',
-    icon: false,
-  },
-  {
-    name: 'collections',
-    path: '/collections',
-    icon: <Category fill="currentColor" />,
-  },
-];
+export const handle = {
+  breadcrumb: () => (
+    <NavLink to="/discover" aria-label="Discover Page">
+      {({ isActive }) => (
+        <Badge
+          color="primary"
+          variant="flat"
+          css={{
+            opacity: isActive ? 1 : 0.7,
+            transition: 'opacity 0.25s ease 0s',
+            '&:hover': { opacity: 0.8 },
+          }}
+        >
+          Discover
+        </Badge>
+      )}
+    </NavLink>
+  ),
+};
 
 const DiscoverPage = () => {
-  const { t } = useTranslation('discover');
-  const navigate = useNavigate();
+  const location = useLocation();
+  if (location.pathname === '/discover')
+    return (
+      <div className="w-full">
+        <Outlet />
+      </div>
+    );
   return (
-    <div className="flex flex-col w-full px-3 justify-center items-start">
-      <H1 h1>{t('discover')}</H1>
-      <Spacer y={0.5} />
-      <Button
-        icon={<Search fill="currentColor" />}
-        type="button"
-        css={{ width: '100%' }}
-        onPress={() => {
-          navigate('/search/movie');
-        }}
-      >
-        {t('search')}
-      </Button>
-      <Spacer y={0.75} />
-      <Button
-        icon={<Filter fill="currentColor" />}
-        type="button"
-        auto
-        onPress={() => {
-          navigate('/discover/movies');
-        }}
-      >
-        {t('filter')}
-      </Button>
-      <Spacer y={1.5} />
-      <div className="flex flex-col w-full justify-center items-start">
-        <H4>{t('categories')}</H4>
-        <Spacer y={0.5} />
-        <div className="flex flex-wrap w-full gap-x-2 gap-y-4">
-          {categoryPages.map((page) => (
-            <Button
-              key={page.name}
-              icon={page.icon}
-              type="button"
-              auto
-              onPress={() => {
-                navigate(page.path);
-              }}
-            >
-              {t(page.name)}
-            </Button>
-          ))}
-        </div>
-      </div>
-      <Spacer y={1.5} />
-      <div className="flex flex-col w-full justify-center items-start">
-        <H4>{t('general')}</H4>
-        <Spacer y={0.5} />
-        <div className="flex flex-wrap w-full gap-x-2 gap-y-4">
-          {generalPages.map((page) => (
-            <Button
-              key={page.name}
-              icon={page.icon}
-              type="button"
-              auto
-              onPress={() => {
-                navigate(page.path);
-              }}
-            >
-              {t(page.name)}
-            </Button>
-          ))}
-        </div>
-      </div>
+    <div className="w-full">
+      <TabLink pages={discoverPages} linkTo="/discover" />
+      <Outlet />
     </div>
   );
 };

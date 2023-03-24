@@ -444,7 +444,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
             <NavigationMenuContent>
               <ul className="m-0 flex flex-row gap-x-[6px] p-[6px] w-fit">
                 <li className="m-0 basis-[215px] grow-0 shrink-0">
-                  <NavLink to="/movies/discover">
+                  <NavLink to="/discover/movies">
                     <Card
                       as="div"
                       isPressable
@@ -630,7 +630,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
             <NavigationMenuContent>
               <ul className="m-0 flex flex-row gap-x-[6px] p-[6px] w-fit">
                 <li className="m-0 basis-[215px] grow-0 shrink-0">
-                  <NavLink to="/tv-shows/discover">
+                  <NavLink to="/discover/tv-shows">
                     <Card
                       as="div"
                       isPressable
@@ -816,7 +816,7 @@ const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
             <NavigationMenuContent>
               <ul className="m-0 flex flex-row gap-x-[6px] p-[6px] w-fit">
                 <li className="m-0 basis-[215px] grow-0 shrink-0">
-                  <NavLink to="/anime/discover">
+                  <NavLink to="/discover/anime">
                     <Card
                       as="div"
                       isPressable

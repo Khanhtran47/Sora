@@ -131,7 +131,7 @@ const TvIndexPage = () => {
     if (!shouldFetch || !size?.height) return;
     if (clientHeight + scrollPosition - 200 < size?.height) return;
 
-    fetcher.load(`/tv-shows/discover?with_genres=${Object.keys(listGenresTv[order])[0]}`);
+    fetcher.load(`/discover/tv-shows?with_genres=${Object.keys(listGenresTv[order])[0]}`);
     setShouldFetch(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scrollPosition, clientHeight, size?.height]);
@@ -242,7 +242,7 @@ const TvIndexPage = () => {
                   showMoreList
                   onClickViewMore={() =>
                     navigate(
-                      `/tv-shows/discover?with_genres=${Object.keys(listGenresTv[index])[0]}`,
+                      `/discover/tv-shows?with_genres=${Object.keys(listGenresTv[index])[0]}`,
                     )
                   }
                   navigationButtons

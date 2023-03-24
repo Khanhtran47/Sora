@@ -16,7 +16,7 @@ export const meta: MetaFunction = () => ({
     'Official Sora website to watch anime online HD for free, Watch TV show & TV series and Download all anime FREE',
   keywords:
     'watch free anime, free anime to watch online, watch anime online free, free anime streaming, free anime full, free anime download, watch anime hd, anime to watch',
-  'og:url': 'https://sora-anime.vercel.app/anime/discover',
+  'og:url': 'https://sora-anime.vercel.app/discover/anime',
   'og:title': 'Discover and watch anime for free | Sora',
   'og:description':
     'Official Sora website to watch anime online HD for free, Watch TV show & TV series and Download all anime FREE',
@@ -72,7 +72,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export const handle = {
   breadcrumb: () => (
-    <NavLink to="/anime/discover" aria-label="Discover Anime">
+    <NavLink to="/discover/anime" aria-label="Discover Anime">
       {({ isActive }) => (
         <Badge
           color="primary"

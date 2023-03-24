@@ -458,7 +458,7 @@ const AnimeDetail = (props: IAnimeDetail) => {
                           flat
                           key={index}
                           size={isSm ? 'sm' : 'md'}
-                          onPress={() => navigate(`/anime/discover?genres=${genre}`)}
+                          onPress={() => navigate(`/discover/anime?genres=${genre}`)}
                           css={{
                             marginBottom: '0.125rem',
                             transition: 'all 0.3s ease-in-out',

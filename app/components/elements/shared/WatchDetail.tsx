@@ -258,7 +258,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
                     }}
                     onPress={() =>
                       navigate(
-                        `/${type === 'movie' ? 'movies' : 'tv-shows'}/discover?with_genres=${
+                        `/discover/${type === 'movie' ? 'movies' : 'tv-shows'}?with_genres=${
                           genre?.id
                         }`,
                       )
@@ -278,7 +278,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
                     type="button"
                     auto
                     size={isSm ? 'sm' : 'md'}
-                    onPress={() => navigate(`/anime/discover?genres=${genre}`)}
+                    onPress={() => navigate(`/discover/anime?genres=${genre}`)}
                     css={{
                       marginBottom: '0.125rem',
                       background: color,

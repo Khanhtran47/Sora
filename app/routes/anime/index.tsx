@@ -84,7 +84,7 @@ const AnimePage = () => {
     if (!shouldFetch || !size?.height) return;
     if (clientHeight + scrollPosition - 200 < size?.height) return;
 
-    fetcher.load(`/anime/discover?genres=${animeGenres[order]}`);
+    fetcher.load(`/discover/anime?genres=${animeGenres[order]}`);
     setShouldFetch(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scrollPosition, clientHeight, size?.height]);
@@ -191,7 +191,7 @@ const AnimePage = () => {
                   listName={animeGenres[index]}
                   listType="slider-card"
                   navigationButtons
-                  onClickViewMore={() => navigate(`/anime/discover?genres=${animeGenres[index]}`)}
+                  onClickViewMore={() => navigate(`/discover/anime?genres=${animeGenres[index]}`)}
                   showMoreList
                 />
               );
