@@ -116,7 +116,8 @@ const Layout = (props: ILayout) => {
   const matches = useMatches();
   const navigationType = useNavigationType();
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
-  const { sidebarMiniMode, sidebarBoxedMode } = useSoraSettings();
+  const isMd = useMediaQuery('(max-width: 1280px)', { initializeWithValue: false });
+  const { sidebarMiniMode, sidebarBoxedMode, sidebarHoverMode } = useSoraSettings();
   const viewportRef = useRef<HTMLDivElement>(null);
   const { setScrollPosition, setScrollHeight, scrollDirection, setScrollDirection } =
     useLayoutScrollPosition((state) => state);
@@ -184,11 +185,19 @@ const Layout = (props: ILayout) => {
       });
       lastScrollPosition = currentScrollPosition > 0 ? currentScrollPosition : 0;
     };
-    const removeScrollYProgress = scrollY.onChange(throttle(updateAtScroll, 80));
+    const removeScrollYProgress = scrollY.onChange(throttle(updateAtScroll, 120));
     return () => {
       removeScrollYProgress();
     };
   }, []);
+
+  useEffect(() => {
+    if (isMd && !sidebarMiniMode.value) {
+      sidebarMiniMode.set(true);
+      if (!sidebarHoverMode.value) sidebarHoverMode.set(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isMd, sidebarMiniMode.value, sidebarHoverMode.value]);
 
   return (
     <div className={layoutStyles({ boxed: sidebarBoxedMode.value })}>
@@ -199,15 +208,7 @@ const Layout = (props: ILayout) => {
           boxed: sidebarBoxedMode.value,
         })}
       >
-        {isSm ? (
-          <MobileHeader />
-        ) : (
-          <Header
-            // open={open}
-            user={user}
-            // setOpen={setOpen}
-          />
-        )}
+        {isSm ? <MobileHeader /> : <Header user={user} />}
         <ScrollArea
           type={isSm ? 'scroll' : 'always'}
           scrollHideDelay={500}

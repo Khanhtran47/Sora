@@ -37,7 +37,7 @@ import {
   listSubtitleWindowColor,
   listSubtitleWindowOpacity,
   listSubtitleTextEffects,
-  listSidebarActiveStyleMode,
+  // listSidebarActiveStyleMode,
 } from '~/constants/settings';
 import languages from '~/constants/languages';
 
@@ -120,6 +120,7 @@ const Settings = () => {
   const { theme, setTheme } = useTheme();
   const isXs = useMediaQuery('(max-width: 450px)', { initializeWithValue: false });
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
+  const isMd = useMediaQuery('(max-width: 1280px)', { initializeWithValue: false });
 
   const {
     currentSubtitleFontColor,
@@ -147,11 +148,11 @@ const Settings = () => {
     isAutoSkipOpEd,
     isFastForward,
     isSwipeFullscreen,
-    sidebarStyleMode,
+    // sidebarStyleMode,
     sidebarMiniMode,
     sidebarHoverMode,
     sidebarBoxedMode,
-    sidebarSheetMode,
+    // sidebarSheetMode,
   } = useSoraSettings();
 
   const [activeTab, setActiveTab] = useState('general-tab');
@@ -177,9 +178,9 @@ const Settings = () => {
   const [selectedSubtitleTextEffects, setSelectedSubtitleTextEffects] = useState(
     new Set([currentSubtitleTextEffects.value!]),
   );
-  const [selectedSidebarStyleMode, setSelectedSidebarStyleMode] = useState(
-    new Set([sidebarStyleMode.value!]),
-  );
+  // const [selectedSidebarStyleMode, setSelectedSidebarStyleMode] = useState(
+  //   new Set([sidebarStyleMode.value!]),
+  // );
 
   const selectedLangValue = useMemo(
     () => Array.from(selectedLang).join(', ').replaceAll('_', ' '),
@@ -213,10 +214,10 @@ const Settings = () => {
     () => Array.from(selectedSubtitleTextEffects).join(', '),
     [selectedSubtitleTextEffects],
   );
-  const selectedSidebarStyleModeValue = useMemo(
-    () => Array.from(selectedSidebarStyleMode).join(', '),
-    [selectedSidebarStyleMode],
-  );
+  // const selectedSidebarStyleModeValue = useMemo(
+  //   () => Array.from(selectedSidebarStyleMode).join(', '),
+  //   [selectedSidebarStyleMode],
+  // );
 
   const handleDragEnd = (event: MouseEvent | PointerEvent | TouchEvent, info: PanInfo) => {
     const currentTab = settingsTab.find((tab) => tab.id === activeTab);
@@ -437,68 +438,76 @@ const Settings = () => {
                             ))}
                           </Radio.Group>
                         </Collapse>
-                        <Collapse
-                          title={t('sidebar')}
-                          subtitle={t('sidebar-subtitle')}
-                          css={{
-                            background: '$backgroundAlpha !important',
-                            borderRadius: '$xs !important',
-                          }}
-                        >
-                          <Flex
-                            direction="column"
-                            justify="center"
-                            align="start"
-                            className="gap-y-4"
+                        {isSm ? null : (
+                          <Collapse
+                            title={t('sidebar')}
+                            subtitle={t('sidebar-subtitle')}
                             css={{
-                              backgroundColor: '$background',
-                              borderRadius: '$xs',
-                              padding: '$sm',
+                              background: '$backgroundAlpha !important',
+                              borderRadius: '$xs !important',
                             }}
                           >
-                            <H5 weight="medium" css={{ color: '$foreground', margin: '0.25rem 0' }}>
-                              {t('sidebar-mode')}
-                            </H5>
-                            <div className="flex flex-row justify-between items-center gap-x-2 w-full">
-                              <H6>{t('sidebar-mini-mode')}</H6>
-                              <Switch
-                                checked={sidebarMiniMode.value}
-                                onChange={(e) => {
-                                  sidebarMiniMode.set(e.target.checked);
-                                  if (sidebarMiniMode.value) {
-                                    sidebarHoverMode.set(false);
-                                  }
-                                }}
-                              />
-                            </div>
-                            <div className="flex flex-row justify-between items-center gap-x-2 w-full">
-                              <H6>{t('sidebar-hover-mode')}</H6>
-                              <Switch
-                                checked={sidebarHoverMode.value}
-                                onChange={(e) => {
-                                  sidebarHoverMode.set(e.target.checked);
-                                  if (!sidebarHoverMode.value) {
-                                    sidebarMiniMode.set(true);
-                                  }
-                                }}
-                              />
-                            </div>
-                            <div className="flex flex-row justify-between items-center gap-x-2 w-full">
-                              <H6>{t('sidebar-boxed-mode')}</H6>
-                              <Switch
-                                checked={sidebarBoxedMode.value}
-                                onChange={(e) => sidebarBoxedMode.set(e.target.checked)}
-                              />
-                            </div>
-                            <div className="flex flex-row justify-between items-center gap-x-2 w-full">
-                              <H6>{t('sidebar-sheet-mode')}</H6>
-                              <Switch
-                                checked={sidebarSheetMode.value}
-                                onChange={(e) => sidebarSheetMode.set(e.target.checked)}
-                              />
-                            </div>
-                          </Flex>
-                          <Spacer y={0.25} />
+                            <Flex
+                              direction="column"
+                              justify="center"
+                              align="start"
+                              className="gap-y-4"
+                              css={{
+                                backgroundColor: '$background',
+                                borderRadius: '$xs',
+                                padding: '$sm',
+                              }}
+                            >
+                              <H5
+                                weight="medium"
+                                css={{ color: '$foreground', margin: '0.25rem 0' }}
+                              >
+                                {t('sidebar-mode')}
+                              </H5>
+                              {isMd ? null : (
+                                <>
+                                  <div className="flex flex-row justify-between items-center gap-x-2 w-full">
+                                    <H6>{t('sidebar-mini-mode')}</H6>
+                                    <Switch
+                                      checked={sidebarMiniMode.value}
+                                      onChange={(e) => {
+                                        sidebarMiniMode.set(e.target.checked);
+                                        if (sidebarMiniMode.value) {
+                                          sidebarHoverMode.set(false);
+                                        }
+                                      }}
+                                    />
+                                  </div>
+                                  <div className="flex flex-row justify-between items-center gap-x-2 w-full">
+                                    <H6>{t('sidebar-hover-mode')}</H6>
+                                    <Switch
+                                      checked={sidebarHoverMode.value}
+                                      onChange={(e) => {
+                                        sidebarHoverMode.set(e.target.checked);
+                                        if (!sidebarHoverMode.value) {
+                                          sidebarMiniMode.set(true);
+                                        }
+                                      }}
+                                    />
+                                  </div>
+                                </>
+                              )}
+                              <div className="flex flex-row justify-between items-center gap-x-2 w-full">
+                                <H6>{t('sidebar-boxed-mode')}</H6>
+                                <Switch
+                                  checked={sidebarBoxedMode.value}
+                                  onChange={(e) => sidebarBoxedMode.set(e.target.checked)}
+                                />
+                              </div>
+                              {/* <div className="flex flex-row justify-between items-center gap-x-2 w-full">
+                                <H6>{t('sidebar-sheet-mode')}</H6>
+                                <Switch
+                                  checked={sidebarSheetMode.value}
+                                  onChange={(e) => sidebarSheetMode.set(e.target.checked)}
+                                />
+                              </div> */}
+                            </Flex>
+                            {/* <Spacer y={0.25} />
                           <Flex
                             direction={isXs ? 'column' : 'row'}
                             justify="between"
@@ -531,8 +540,9 @@ const Settings = () => {
                                 ))}
                               </Dropdown.Menu>
                             </Dropdown>
-                          </Flex>
-                        </Collapse>
+                          </Flex> */}
+                          </Collapse>
+                        )}
                         <Collapse
                           title={t('experiments')}
                           subtitle={t('experiments-subtitle')}
