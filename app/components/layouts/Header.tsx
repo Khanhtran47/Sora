@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   Button,
   // Tooltip,
   Popover,
 } from '@nextui-org/react';
-import { useNavigate } from '@remix-run/react';
+import { useNavigate, useMatches, useLocation } from '@remix-run/react';
 import type { User } from '@supabase/supabase-js';
 import type { AnimationItem } from 'lottie-web';
 // import { useTranslation } from 'react-i18next';
@@ -38,7 +38,7 @@ export const handle = {
 };
 
 const headerStyles = tv({
-  base: 'h-[64px] w-[100vw] fixed z-50 py-3 px-5 flex-row justify-between items-center hidden sm:flex',
+  base: 'h-[64px] w-[100vw] fixed z-[1000] py-3 px-5 flex-row justify-between items-center hidden sm:flex',
   variants: {
     miniSidebar: {
       true: 'sm:w-[calc(100vw_-_80px)] top-0',
@@ -75,11 +75,23 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [lottie, setLottie] = useState<AnimationItem>();
   const navigate = useNavigate();
+  const matches = useMatches();
+  const location = useLocation();
   const {
     sidebarMiniMode,
     sidebarBoxedMode,
     // sidebarSheetMode
   } = useSoraSettings();
+  const isShowTabLink = useMemo(
+    () => matches.some((match) => match.handle?.showTabLink === true),
+    [matches],
+  );
+  const hideTabLinkWithLocation: boolean = useMemo(() => {
+    const currentMatch = matches.find((match) => match.handle?.showTabLink);
+    if (currentMatch?.handle?.hideTabLinkWithLocation)
+      return currentMatch?.handle?.hideTabLinkWithLocation(location.pathname);
+    return false;
+  }, [location.pathname]);
   const { scrollPosition } = useLayoutScrollPosition((state) => state);
   const { historyBack, historyForward } = useHistoryStack((state) => state);
   const handleNavigationBackForward = (direction: 'back' | 'forward') => {
@@ -106,8 +118,11 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       })}
     >
       <div
-        className="absolute top-0 left-0 w-full h-full z-[-1] bg-background-contrast-alpha backdrop-blur-md rounded-tl-xl"
-        style={{ opacity: scrollPosition.y < 80 ? scrollPosition.y / 80 : 1 }}
+        className="absolute top-0 left-0 w-full z-[-1] bg-background-contrast-alpha backdrop-blur-md rounded-tl-xl"
+        style={{
+          opacity: scrollPosition.y < 80 ? scrollPosition.y / 80 : 1,
+          height: isShowTabLink && !hideTabLinkWithLocation ? 112 : 64,
+        }}
       />
       <div className="flex flex-row justify-center items-center gap-x-2">
         <Button

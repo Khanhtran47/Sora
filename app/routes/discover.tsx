@@ -1,8 +1,6 @@
 import { MetaFunction } from '@remix-run/node';
-import { NavLink, Outlet, useLocation } from '@remix-run/react';
+import { NavLink, Outlet } from '@remix-run/react';
 import { Badge } from '@nextui-org/react';
-
-import TabLink from '~/components/elements/tab/TabLink';
 
 export const meta: MetaFunction = () => ({
   title: 'Discover Movies, TV Shows, Anime, People and More - Sora',
@@ -37,22 +35,21 @@ export const handle = {
       )}
     </NavLink>
   ),
+  showTabLink: true,
+  tabLinkPages: discoverPages,
+  tabLinkTo: '/discover',
+  hideTabLinkWithLocation: (locationPathname: string) => {
+    if (locationPathname === '/discover') {
+      return true;
+    }
+    return false;
+  },
 };
 
-const DiscoverPage = () => {
-  const location = useLocation();
-  if (location.pathname === '/discover')
-    return (
-      <div className="w-full">
-        <Outlet />
-      </div>
-    );
-  return (
-    <div className="w-full">
-      <TabLink pages={discoverPages} linkTo="/discover" />
-      <Outlet />
-    </div>
-  );
-};
+const DiscoverPage = () => (
+  <div className="w-full">
+    <Outlet />
+  </div>
+);
 
 export default DiscoverPage;

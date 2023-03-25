@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useMatches, useLocation, NavLink, useNavigate } from '@remix-run/react';
 import { Button } from '@nextui-org/react';
 import { motion } from 'framer-motion';
@@ -15,7 +16,17 @@ const MobileHeader = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { historyBack } = useHistoryStack((state) => state);
-  const isShowMobileHeader = !matches.some((match) => match.handle?.hideMobileHeader);
+  const isShowMobileHeader = !matches.some((match) => match.handle?.hideMobileHeader === true);
+  const isShowTabLink = useMemo(
+    () => matches.some((match) => match.handle?.showTabLink === true),
+    [matches],
+  );
+  const hideTabLinkWithLocation: boolean = useMemo(() => {
+    const currentMatch = matches.find((match) => match.handle?.showTabLink);
+    if (currentMatch?.handle?.hideTabLinkWithLocation)
+      return currentMatch?.handle?.hideTabLinkWithLocation(location.pathname);
+    return false;
+  }, [matches, location.pathname]);
   const handleBackButton = () => {
     if (historyBack.length > 1) {
       navigate(-1);
@@ -60,7 +71,13 @@ const MobileHeader = () => {
     );
   }
   return (
-    <div className="h-[64px] w-[100vw] fixed top-0 z-[1000] px-3 py-2 flex flex-row justify-between items-center bg-background-contrast backdrop-blur-md sm:hidden shadow-lg">
+    <div className="h-[64px] w-[100vw] fixed top-0 z-[1000] px-3 py-2 flex flex-row justify-between items-center sm:hidden shadow-lg">
+      <div
+        className="absolute top-0 left-0 w-full z-[-1] bg-background-contrast"
+        style={{
+          height: isShowTabLink && !hideTabLinkWithLocation ? 112 : 64,
+        }}
+      />
       <Button auto light icon={<Arrow direction="left" />} onPress={() => handleBackButton()} />
     </div>
   );

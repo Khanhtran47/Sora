@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/indent */
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import type { User } from '@supabase/supabase-js';
 import { tv } from 'tailwind-variants';
 import { useLocation, useMatches, useNavigationType } from '@remix-run/react';
@@ -20,8 +20,7 @@ import {
   ScrollAreaThumb,
   ScrollAreaCorner,
 } from '~/components/elements/scroll-area/ScrollArea';
-
-/* Components */
+import TabLink from '~/components/elements/tab/TabLink';
 import Header from './Header';
 import SideBar from './SideBar';
 // import Footer from './Footer';
@@ -86,8 +85,12 @@ const scrollAreaViewportStyles = tv({
       true: 'sm:w-[calc(100vw_-_280px)]',
     },
     layoutPadding: {
-      true: 'p-0 sm:px-5 mt-[72px] mb-[70px]',
-      false: 'p-0 mt-[72px] sm:mt-0 mb-[70px]',
+      true: 'p-0 sm:px-5 mb-[70px]',
+      false: 'p-0 sm:mt-0 mb-[70px]',
+    },
+    isShowTabLink: {
+      true: 'mt-[128px]',
+      false: 'mt-[72px]',
     },
   },
   compoundVariants: [
@@ -106,6 +109,35 @@ const scrollAreaViewportStyles = tv({
     mini: false,
     boxed: false,
     layoutPadding: true,
+    isShowTabLink: false,
+  },
+});
+
+const tabLinkWrapperStyles = tv({
+  base: 'h-[56px] w-[100vw] fixed z-[1000] flex items-end shadow-lg',
+  variants: {
+    miniSidebar: {
+      true: 'sm:w-[calc(100vw_-_80px)] top-[56px]',
+    },
+    boxedSidebar: {
+      true: 'sm:w-[calc(100vw_-_280px)] top-[71px]',
+    },
+  },
+  compoundVariants: [
+    {
+      miniSidebar: true,
+      boxedSidebar: true,
+      class: 'sm:w-[calc(100vw_-_110px)] top-[79px]',
+    },
+    {
+      miniSidebar: false,
+      boxedSidebar: false,
+      class: 'sm:w-[calc(100vw_-_250px)] top-[56px]',
+    },
+  ],
+  defaultVariants: {
+    miniSidebar: false,
+    boxedSidebar: false,
   },
 });
 
@@ -125,6 +157,24 @@ const Layout = (props: ILayout) => {
   const { historyBack, historyForward, setHistoryBack, setHistoryForward } = useHistoryStack(
     (state) => state,
   );
+  const isShowTabLink = useMemo(
+    () => matches.some((match) => match.handle?.showTabLink === true),
+    [location.pathname],
+  );
+  const currentTabLinkPages = useMemo(
+    () => matches.find((match) => match.handle?.showTabLink)?.handle?.tabLinkPages,
+    [location.pathname],
+  );
+  const currentTabLinkTo = useMemo(
+    () => matches.find((match) => match.handle?.showTabLink)?.handle?.tabLinkTo,
+    [location.pathname],
+  );
+  const hideTabLinkWithLocation: boolean = useMemo(() => {
+    const currentMatch = matches.find((match) => match.handle?.showTabLink);
+    if (currentMatch?.handle?.hideTabLinkWithLocation)
+      return currentMatch?.handle?.hideTabLinkWithLocation(location.pathname);
+    return false;
+  }, [location.pathname]);
 
   useEffect(() => {
     setHistoryBack([location.key]);
@@ -133,7 +183,7 @@ const Layout = (props: ILayout) => {
 
   useEffect(() => {
     const preventScrollToTopRoute = matches.some(
-      (match) => match.handle && match.handle.preventScrollToTop,
+      (match) => match.handle && match.handle.preventScrollToTop === true,
     );
     setScrollHeight(viewportRef.current?.scrollHeight || 0);
     if (preventScrollToTopRoute) {
@@ -209,6 +259,16 @@ const Layout = (props: ILayout) => {
         })}
       >
         {isSm ? <MobileHeader /> : <Header user={user} />}
+        {isShowTabLink && !hideTabLinkWithLocation ? (
+          <div
+            className={tabLinkWrapperStyles({
+              miniSidebar: sidebarMiniMode.value,
+              boxedSidebar: sidebarBoxedMode.value,
+            })}
+          >
+            <TabLink pages={currentTabLinkPages} linkTo={currentTabLinkTo} />
+          </div>
+        ) : null}
         <ScrollArea
           type={isSm ? 'scroll' : 'always'}
           scrollHideDelay={500}
@@ -223,7 +283,10 @@ const Layout = (props: ILayout) => {
               className={scrollAreaViewportStyles({
                 mini: sidebarMiniMode.value,
                 boxed: sidebarBoxedMode.value,
-                layoutPadding: !matches.some((match) => match.handle?.disableLayoutPadding),
+                layoutPadding: !matches.some(
+                  (match) => match.handle?.disableLayoutPadding === true,
+                ),
+                isShowTabLink: isShowTabLink && !hideTabLinkWithLocation,
               })}
             >
               {/* <BreadCrumb /> */}

@@ -1,7 +1,5 @@
-import { Loading, styled } from '@nextui-org/react';
 import { NavLink } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
-import { ClientOnly } from 'remix-utils';
 
 import { H5 } from '~/components/styles/Text.styles';
 import {
@@ -21,94 +19,69 @@ interface ITabProps {
   linkTo?: string;
 }
 
-const TabList = styled('div', {
-  display: 'flex',
-  flexShrink: 0,
-  padding: '5px',
-  '&:focus': {
-    outline: 'none',
-  },
-});
-
-const TabsTrigger = styled(NavLink, {
-  flexShrink: 0,
-  display: 'flex',
-  lineHeight: 1,
-  fontSize: '$md',
-  fontWeight: '$semibold',
-  height: 50,
-  p: '$md',
-  userSelect: 'none',
-  outline: 'none',
-  alignItems: 'center',
-  justifyContent: 'center',
-  borderRadius: '$sm',
-  color: '$slate11',
-  zIndex: '10',
-  '&:hover': {
-    opacity: '0.8',
-    color: '$primarySolidHover',
-  },
-  '&:focus': { backgroundColor: '$backgroundContrast' },
-});
-
 const TabLink = (props: ITabProps) => {
   const { pages, linkTo } = props;
   const { t } = useTranslation();
   return (
-    <ClientOnly fallback={<Loading type="default" />}>
-      {() => (
-        <ScrollArea
-          type="scroll"
-          scrollHideDelay={100}
-          css={{
-            height: 55,
-            width: '100%',
-            maxWidth: 'calc(100% - 2rem)',
-            borderBottom: '1px solid $border',
-            boxShadow: 'unset',
-          }}
-        >
-          <ScrollAreaViewport>
-            <TabList>
-              {pages?.map((page) => (
-                <TabsTrigger
-                  key={page.pageLink}
-                  to={`${linkTo}${page.pageLink}`}
-                  css={{ position: 'relative' }}
-                >
-                  {({ isActive }) => (
-                    <>
-                      <H5
-                        h5
-                        weight="bold"
-                        // transform="uppercase"
-                      >
-                        {t(page.pageName)}
-                      </H5>
-                      {isActive && (
-                        <Underline
-                          layoutId="underline"
-                          css={{
-                            height: 4,
-                            width: '50%',
-                            bottom: 0,
-                          }}
-                        />
-                      )}
-                    </>
+    <ScrollArea
+      type="scroll"
+      scrollHideDelay={100}
+      css={{
+        height: 55,
+        width: '100%',
+        borderBottom: '1px solid $border',
+        boxShadow: 'unset',
+        borderRadius: 0,
+      }}
+    >
+      <ScrollAreaViewport>
+        <div className="flex shrink-0 p-[6px] focus:outline-none">
+          {pages?.map((page) => (
+            <NavLink
+              key={page.pageLink}
+              to={`${linkTo}${page.pageLink}`}
+              className="flex shrink-0 relative text-sm font-semibold h-12 p-4 outline-none items-center justify-center rounded-xl z-10 text-text hover:opacity-80 hover:text-primary-solid-hover focus:bg-background-contrast"
+            >
+              {({ isActive }) => (
+                <>
+                  <H5
+                    h5
+                    weight="bold"
+                    // transform="uppercase"
+                  >
+                    {t(page.pageName)}
+                  </H5>
+                  {isActive && (
+                    <Underline
+                      layoutId="underline"
+                      css={{
+                        height: 4,
+                        width: '50%',
+                        bottom: 0,
+                      }}
+                    />
                   )}
-                </TabsTrigger>
-              ))}
-            </TabList>
-          </ScrollAreaViewport>
-          <ScrollAreaScrollbar orientation="horizontal">
-            <ScrollAreaThumb />
-          </ScrollAreaScrollbar>
-          <ScrollAreaCorner />
-        </ScrollArea>
-      )}
-    </ClientOnly>
+                </>
+              )}
+            </NavLink>
+          ))}
+        </div>
+      </ScrollAreaViewport>
+      <ScrollAreaScrollbar
+        orientation="horizontal"
+        css={{
+          padding: 0,
+          margin: 2,
+          backgroundColor: 'transparent',
+          '&:hover': { backgroundColor: 'transparent' },
+        }}
+      >
+        <ScrollAreaThumb
+          css={{ backgroundColor: '$accents8', '&:hover': { background: '$accents6' } }}
+        />
+      </ScrollAreaScrollbar>
+      <ScrollAreaCorner />
+    </ScrollArea>
   );
 };
 
