@@ -385,7 +385,6 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
                 pagination: {
                   enabled: true,
                   dynamicBullets: true,
-                  dynamicMainBullets: 4,
                 },
               },
               1400: {
@@ -394,7 +393,6 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
                 pagination: {
                   enabled: false,
                   dynamicBullets: true,
-                  dynamicMainBullets: 4,
                 },
               },
             }}
