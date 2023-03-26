@@ -37,11 +37,12 @@ import {
   listSubtitleWindowColor,
   listSubtitleWindowOpacity,
   listSubtitleTextEffects,
+  // listSidebarActiveStyleMode,
 } from '~/constants/settings';
 import languages from '~/constants/languages';
 
 import AboutLogo from '~/components/elements/NavLink';
-import { H2, H6 } from '~/components/styles/Text.styles';
+import { H2, H5, H6 } from '~/components/styles/Text.styles';
 import Flex from '~/components/styles/Flex.styles';
 import {
   Tabs,
@@ -119,6 +120,7 @@ const Settings = () => {
   const { theme, setTheme } = useTheme();
   const isXs = useMediaQuery('(max-width: 450px)', { initializeWithValue: false });
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
+  const isMd = useMediaQuery('(max-width: 1280px)', { initializeWithValue: false });
 
   const {
     currentSubtitleFontColor,
@@ -146,6 +148,11 @@ const Settings = () => {
     isAutoSkipOpEd,
     isFastForward,
     isSwipeFullscreen,
+    // sidebarStyleMode,
+    sidebarMiniMode,
+    sidebarHoverMode,
+    sidebarBoxedMode,
+    // sidebarSheetMode,
   } = useSoraSettings();
 
   const [activeTab, setActiveTab] = useState('general-tab');
@@ -171,6 +178,9 @@ const Settings = () => {
   const [selectedSubtitleTextEffects, setSelectedSubtitleTextEffects] = useState(
     new Set([currentSubtitleTextEffects.value!]),
   );
+  // const [selectedSidebarStyleMode, setSelectedSidebarStyleMode] = useState(
+  //   new Set([sidebarStyleMode.value!]),
+  // );
 
   const selectedLangValue = useMemo(
     () => Array.from(selectedLang).join(', ').replaceAll('_', ' '),
@@ -204,6 +214,10 @@ const Settings = () => {
     () => Array.from(selectedSubtitleTextEffects).join(', '),
     [selectedSubtitleTextEffects],
   );
+  // const selectedSidebarStyleModeValue = useMemo(
+  //   () => Array.from(selectedSidebarStyleMode).join(', '),
+  //   [selectedSidebarStyleMode],
+  // );
 
   const handleDragEnd = (event: MouseEvent | PointerEvent | TouchEvent, info: PanInfo) => {
     const currentTab = settingsTab.find((tab) => tab.id === activeTab);
@@ -228,15 +242,17 @@ const Settings = () => {
   };
 
   return (
-    <motion.main
+    <motion.div
       key={location.key}
       initial={{ x: '-10%', opacity: 0 }}
       animate={{ x: '0', opacity: 1 }}
       exit={{ y: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
+      className="w-full"
     >
       <Container
         fluid
+        responsive={false}
         display="flex"
         justify="flex-start"
         direction="column"
@@ -309,10 +325,11 @@ const Settings = () => {
                     dragElastic={0.4}
                     onDragEnd={handleDragEnd}
                     dragDirectionLock
-                    onDirectionLock={(axis) => console.log(axis)}
+                    // onDirectionLock={(axis) => console.log(axis)}
                   >
                     <Container
                       fluid
+                      responsive={false}
                       display="flex"
                       justify="flex-start"
                       direction="column"
@@ -365,6 +382,7 @@ const Settings = () => {
                   >
                     <Container
                       fluid
+                      responsive={false}
                       display="flex"
                       justify="flex-start"
                       direction="column"
@@ -420,22 +438,111 @@ const Settings = () => {
                             ))}
                           </Radio.Group>
                         </Collapse>
-                        <Collapse
-                          title={t('layout')}
-                          subtitle={t('layout-subtitle')}
-                          disabled
-                          css={{
-                            background: '$backgroundAlpha !important',
-                            borderRadius: '$xs !important',
-                          }}
-                        >
-                          <H6>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                            veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                            commodo consequat.
-                          </H6>
-                        </Collapse>
+                        {isSm ? null : (
+                          <Collapse
+                            title={t('sidebar')}
+                            subtitle={t('sidebar-subtitle')}
+                            css={{
+                              background: '$backgroundAlpha !important',
+                              borderRadius: '$xs !important',
+                            }}
+                          >
+                            <Flex
+                              direction="column"
+                              justify="center"
+                              align="start"
+                              className="gap-y-4"
+                              css={{
+                                backgroundColor: '$background',
+                                borderRadius: '$xs',
+                                padding: '$sm',
+                              }}
+                            >
+                              <H5
+                                weight="medium"
+                                css={{ color: '$foreground', margin: '0.25rem 0' }}
+                              >
+                                {t('sidebar-mode')}
+                              </H5>
+                              {isMd ? null : (
+                                <>
+                                  <div className="flex flex-row justify-between items-center gap-x-2 w-full">
+                                    <H6>{t('sidebar-mini-mode')}</H6>
+                                    <Switch
+                                      checked={sidebarMiniMode.value}
+                                      onChange={(e) => {
+                                        sidebarMiniMode.set(e.target.checked);
+                                        if (sidebarMiniMode.value) {
+                                          sidebarHoverMode.set(false);
+                                        }
+                                      }}
+                                    />
+                                  </div>
+                                  <div className="flex flex-row justify-between items-center gap-x-2 w-full">
+                                    <H6>{t('sidebar-hover-mode')}</H6>
+                                    <Switch
+                                      checked={sidebarHoverMode.value}
+                                      onChange={(e) => {
+                                        sidebarHoverMode.set(e.target.checked);
+                                        if (!sidebarHoverMode.value) {
+                                          sidebarMiniMode.set(true);
+                                        }
+                                      }}
+                                    />
+                                  </div>
+                                </>
+                              )}
+                              <div className="flex flex-row justify-between items-center gap-x-2 w-full">
+                                <H6>{t('sidebar-boxed-mode')}</H6>
+                                <Switch
+                                  checked={sidebarBoxedMode.value}
+                                  onChange={(e) => sidebarBoxedMode.set(e.target.checked)}
+                                />
+                              </div>
+                              {/* <div className="flex flex-row justify-between items-center gap-x-2 w-full">
+                                <H6>{t('sidebar-sheet-mode')}</H6>
+                                <Switch
+                                  checked={sidebarSheetMode.value}
+                                  onChange={(e) => sidebarSheetMode.set(e.target.checked)}
+                                />
+                              </div> */}
+                            </Flex>
+                            {/* <Spacer y={0.25} />
+                          <Flex
+                            direction={isXs ? 'column' : 'row'}
+                            justify="between"
+                            align={isXs ? 'start' : 'center'}
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
+                          >
+                            <H6>{t('sidebar-active-style-mode')}</H6>
+                            <Dropdown isBordered>
+                              <Dropdown.Button color="primary">
+                                {selectedSidebarStyleModeValue}
+                              </Dropdown.Button>
+                              <Dropdown.Menu
+                                aria-label="Select sidebar active style mode"
+                                color="primary"
+                                selectionMode="single"
+                                disallowEmptySelection
+                                selectedKeys={selectedSidebarStyleMode}
+                                onSelectionChange={(keys: any) => {
+                                  const mode = Array.from(keys).join(', ');
+                                  setSelectedSidebarStyleMode(keys);
+                                  sidebarStyleMode.set(mode);
+                                }}
+                              >
+                                {listSidebarActiveStyleMode.map((mode) => (
+                                  <Dropdown.Item key={mode}>{t(mode)}</Dropdown.Item>
+                                ))}
+                              </Dropdown.Menu>
+                            </Dropdown>
+                          </Flex> */}
+                          </Collapse>
+                        )}
                         <Collapse
                           title={t('experiments')}
                           subtitle={t('experiments-subtitle')}
@@ -448,7 +555,7 @@ const Settings = () => {
                             direction="row"
                             justify="between"
                             align="center"
-                            className="space-x-2"
+                            className="gap-x-2"
                             css={{
                               backgroundColor: '$background',
                               borderRadius: '$xs',
@@ -466,7 +573,7 @@ const Settings = () => {
                             direction="row"
                             justify="between"
                             align="center"
-                            className="space-x-2"
+                            className="gap-x-2"
                             css={{
                               backgroundColor: '$background',
                               borderRadius: '$xs',
@@ -497,6 +604,7 @@ const Settings = () => {
                   >
                     <Container
                       fluid
+                      responsive={false}
                       display="flex"
                       justify="flex-start"
                       direction="column"
@@ -519,6 +627,7 @@ const Settings = () => {
                   >
                     <Container
                       fluid
+                      responsive={false}
                       display="flex"
                       justify="flex-start"
                       direction="column"
@@ -537,7 +646,7 @@ const Settings = () => {
                             direction="row"
                             justify="between"
                             align="center"
-                            className="space-x-2"
+                            className="gap-x-2"
                             css={{
                               backgroundColor: '$background',
                               borderRadius: '$xs',
@@ -558,7 +667,7 @@ const Settings = () => {
                             direction="row"
                             justify="between"
                             align="center"
-                            className="space-x-2"
+                            className="gap-x-2"
                             css={{
                               backgroundColor: '$background',
                               borderRadius: '$xs',
@@ -579,7 +688,7 @@ const Settings = () => {
                             direction="row"
                             justify="between"
                             align="center"
-                            className="space-x-2"
+                            className="gap-x-2"
                             css={{
                               backgroundColor: '$background',
                               borderRadius: '$xs',
@@ -600,7 +709,7 @@ const Settings = () => {
                             direction="row"
                             justify="between"
                             align="center"
-                            className="space-x-2"
+                            className="gap-x-2"
                             css={{
                               backgroundColor: '$background',
                               borderRadius: '$xs',
@@ -629,7 +738,7 @@ const Settings = () => {
                             direction="row"
                             justify="between"
                             align="center"
-                            className="space-x-2"
+                            className="gap-x-2"
                             css={{
                               backgroundColor: '$background',
                               borderRadius: '$xs',
@@ -896,7 +1005,7 @@ const Settings = () => {
                             direction="row"
                             justify="between"
                             align="center"
-                            className="space-x-2"
+                            className="gap-x-2"
                             css={{
                               backgroundColor: '$background',
                               borderRadius: '$xs',
@@ -917,7 +1026,7 @@ const Settings = () => {
                             direction="row"
                             justify="between"
                             align="center"
-                            className="space-x-2"
+                            className="gap-x-2"
                             css={{
                               backgroundColor: '$background',
                               borderRadius: '$xs',
@@ -938,7 +1047,7 @@ const Settings = () => {
                             direction="row"
                             justify="between"
                             align="center"
-                            className="space-x-2"
+                            className="gap-x-2"
                             css={{
                               backgroundColor: '$background',
                               borderRadius: '$xs',
@@ -959,7 +1068,7 @@ const Settings = () => {
                             direction="row"
                             justify="between"
                             align="center"
-                            className="space-x-2"
+                            className="gap-x-2"
                             css={{
                               backgroundColor: '$background',
                               borderRadius: '$xs',
@@ -980,7 +1089,7 @@ const Settings = () => {
                             direction="row"
                             justify="between"
                             align="center"
-                            className="space-x-2"
+                            className="gap-x-2"
                             css={{
                               backgroundColor: '$background',
                               borderRadius: '$xs',
@@ -1001,7 +1110,7 @@ const Settings = () => {
                             direction="row"
                             justify="between"
                             align="center"
-                            className="space-x-2"
+                            className="gap-x-2"
                             css={{
                               backgroundColor: '$background',
                               borderRadius: '$xs',
@@ -1024,7 +1133,7 @@ const Settings = () => {
                             direction="row"
                             justify="between"
                             align="center"
-                            className="space-x-2"
+                            className="gap-x-2"
                             css={{
                               backgroundColor: '$background',
                               borderRadius: '$xs',
@@ -1060,7 +1169,7 @@ const Settings = () => {
                                   direction="row"
                                   justify="between"
                                   align="center"
-                                  className="space-x-2"
+                                  className="gap-x-2"
                                   css={{
                                     backgroundColor: '$background',
                                     borderRadius: '$xs',
@@ -1094,7 +1203,7 @@ const Settings = () => {
                             direction="row"
                             justify="between"
                             align="center"
-                            className="space-x-2"
+                            className="gap-x-2"
                             css={{
                               backgroundColor: '$background',
                               borderRadius: '$xs',
@@ -1115,7 +1224,7 @@ const Settings = () => {
                             direction="row"
                             justify="between"
                             align="center"
-                            className="space-x-2"
+                            className="gap-x-2"
                             css={{
                               backgroundColor: '$background',
                               borderRadius: '$xs',
@@ -1146,7 +1255,7 @@ const Settings = () => {
                             direction="row"
                             justify="between"
                             align="center"
-                            className="space-x-2"
+                            className="gap-x-2"
                             css={{
                               backgroundColor: '$background',
                               borderRadius: '$xs',
@@ -1161,7 +1270,7 @@ const Settings = () => {
                             direction="row"
                             justify="between"
                             align="center"
-                            className="space-x-2"
+                            className="gap-x-2"
                             css={{
                               backgroundColor: '$background',
                               borderRadius: '$xs',
@@ -1176,7 +1285,7 @@ const Settings = () => {
                             direction="row"
                             justify="between"
                             align="center"
-                            className="space-x-2"
+                            className="gap-x-2"
                             css={{
                               backgroundColor: '$background',
                               borderRadius: '$xs',
@@ -1191,7 +1300,7 @@ const Settings = () => {
                             direction="row"
                             justify="between"
                             align="center"
-                            className="space-x-2"
+                            className="gap-x-2"
                             css={{
                               backgroundColor: '$background',
                               borderRadius: '$xs',
@@ -1206,7 +1315,7 @@ const Settings = () => {
                             direction="row"
                             justify="between"
                             align="center"
-                            className="space-x-2"
+                            className="gap-x-2"
                             css={{
                               backgroundColor: '$background',
                               borderRadius: '$xs',
@@ -1214,7 +1323,7 @@ const Settings = () => {
                             }}
                           >
                             <H6>{t('toggle-play-pause')}</H6>
-                            <Flex direction="row" className="space-x-2" align="center">
+                            <Flex direction="row" className="gap-x-2" align="center">
                               <Kbd width="space">space</Kbd>
                               <div>{t('or')}</div>
                               <Kbd>K</Kbd>
@@ -1225,7 +1334,7 @@ const Settings = () => {
                             direction="row"
                             justify="between"
                             align="center"
-                            className="space-x-2"
+                            className="gap-x-2"
                             css={{
                               backgroundColor: '$background',
                               borderRadius: '$xs',
@@ -1233,7 +1342,7 @@ const Settings = () => {
                             }}
                           >
                             <H6>{t('seek-to-start')}</H6>
-                            <Flex direction="row" className="space-x-2" align="center">
+                            <Flex direction="row" className="gap-x-2" align="center">
                               <Kbd>home</Kbd>
                               <div>{t('or')}</div>
                               <Kbd>0</Kbd>
@@ -1244,7 +1353,7 @@ const Settings = () => {
                             direction="row"
                             justify="between"
                             align="center"
-                            className="space-x-2"
+                            className="gap-x-2"
                             css={{
                               backgroundColor: '$background',
                               borderRadius: '$xs',
@@ -1259,7 +1368,7 @@ const Settings = () => {
                             direction="row"
                             justify="between"
                             align="center"
-                            className="space-x-2"
+                            className="gap-x-2"
                             css={{
                               backgroundColor: '$background',
                               borderRadius: '$xs',
@@ -1267,7 +1376,7 @@ const Settings = () => {
                             }}
                           >
                             <H6>{t('seek-to-percent')}</H6>
-                            <Flex direction="row" className="space-x-2" align="center">
+                            <Flex direction="row" className="gap-x-2" align="center">
                               <Kbd>1</Kbd>
                               <div>...</div>
                               <Kbd>9</Kbd>
@@ -1278,7 +1387,7 @@ const Settings = () => {
                             direction="row"
                             justify="between"
                             align="center"
-                            className="space-x-2"
+                            className="gap-x-2"
                             css={{
                               backgroundColor: '$background',
                               borderRadius: '$xs',
@@ -1293,7 +1402,7 @@ const Settings = () => {
                             direction="row"
                             justify="between"
                             align="center"
-                            className="space-x-2"
+                            className="gap-x-2"
                             css={{
                               backgroundColor: '$background',
                               borderRadius: '$xs',
@@ -1308,7 +1417,7 @@ const Settings = () => {
                             direction="row"
                             justify="between"
                             align="center"
-                            className="space-x-2"
+                            className="gap-x-2"
                             css={{
                               backgroundColor: '$background',
                               borderRadius: '$xs',
@@ -1323,7 +1432,7 @@ const Settings = () => {
                             direction="row"
                             justify="between"
                             align="center"
-                            className="space-x-2"
+                            className="gap-x-2"
                             css={{
                               backgroundColor: '$background',
                               borderRadius: '$xs',
@@ -1338,7 +1447,7 @@ const Settings = () => {
                             direction="row"
                             justify="between"
                             align="center"
-                            className="space-x-2"
+                            className="gap-x-2"
                             css={{
                               backgroundColor: '$background',
                               borderRadius: '$xs',
@@ -1366,6 +1475,7 @@ const Settings = () => {
                   >
                     <Container
                       fluid
+                      responsive={false}
                       display="flex"
                       justify="flex-start"
                       direction="column"
@@ -1422,7 +1532,7 @@ const Settings = () => {
           )}
         </ClientOnly>
       </Container>
-    </motion.main>
+    </motion.div>
   );
 };
 

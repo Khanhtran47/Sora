@@ -91,6 +91,25 @@ function useSoraSettings() {
   const isSwipeFullscreen = useLocalStorageValue('sora-settings_player-gestures_swipe-fullscreen', {
     defaultValue: false,
   });
+  const sidebarStyleMode = useLocalStorageValue('sora-settings_layout_sidebar-style-mode', {
+    defaultValue: 'rounded-all',
+  });
+  const sidebarMiniMode = useLocalStorageValue('sora-settings_layout_sidebar-mini-mode', {
+    defaultValue: false,
+    initializeWithValue: false,
+  });
+  const sidebarHoverMode = useLocalStorageValue('sora-settings_layout_sidebar-hover-mode', {
+    defaultValue: false,
+    initializeWithValue: false,
+  });
+  const sidebarBoxedMode = useLocalStorageValue('sora-settings_layout_sidebar-boxed-mode', {
+    defaultValue: false,
+    initializeWithValue: false,
+  });
+  const sidebarSheetMode = useLocalStorageValue('sora-settings_layout_sidebar-sheet-mode', {
+    defaultValue: false,
+    initializeWithValue: false,
+  });
 
   return {
     currentSubtitleFontColor,
@@ -118,6 +137,11 @@ function useSoraSettings() {
     isFastForward,
     isSwipeFullscreen,
     currentSubtitleTextEffects,
+    sidebarStyleMode,
+    sidebarMiniMode,
+    sidebarHoverMode,
+    sidebarBoxedMode,
+    sidebarSheetMode,
   };
 }
 

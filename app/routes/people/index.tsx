@@ -1,7 +1,7 @@
 import { useLoaderData, useNavigate, useLocation, NavLink } from '@remix-run/react';
 import { json } from '@remix-run/node';
 import type { MetaFunction, LoaderArgs } from '@remix-run/node';
-import { Container, Badge } from '@nextui-org/react';
+import { Badge } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
@@ -78,31 +78,20 @@ const ListPeoplePopular = () => {
       animate={{ x: '0', opacity: 1 }}
       exit={{ y: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
+      className="w-full flex justify-center flex-col items-center px-3 sm:px-0"
     >
-      <Container
-        fluid
-        display="flex"
-        justify="center"
-        css={{
-          '@xsMax': {
-            paddingLeft: '$sm',
-            paddingRight: '$sm',
-          },
-        }}
-      >
-        {people && people.items && people.items.length > 0 && (
-          <MediaList
-            currentPage={people.page}
-            items={people.items}
-            listName={t('popularPeople')}
-            listType="grid"
-            onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
-            showPagination
-            totalPages={people.totalPages}
-            itemsType="people"
-          />
-        )}
-      </Container>
+      {people && people.items && people.items.length > 0 && (
+        <MediaList
+          currentPage={people.page}
+          items={people.items}
+          listName={t('popularPeople')}
+          listType="grid"
+          onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
+          showPagination
+          totalPages={people.totalPages}
+          itemsType="people"
+        />
+      )}
     </motion.div>
   );
 };

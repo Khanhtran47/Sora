@@ -3,7 +3,7 @@ import { json } from '@remix-run/node';
 import type { LoaderArgs, MetaFunction } from '@remix-run/node';
 import { useLoaderData, useNavigate, useLocation, NavLink } from '@remix-run/react';
 import { motion } from 'framer-motion';
-import { Container, Badge } from '@nextui-org/react';
+import { Badge } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
@@ -99,36 +99,23 @@ const Trending = () => {
       animate={{ x: '0', opacity: 1 }}
       exit={{ y: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
+      className="w-full flex justify-center flex-col items-center px-3 sm:px-0"
     >
-      <Container
-        fluid
-        display="flex"
-        justify="center"
-        direction="column"
-        alignItems="center"
-        css={{
-          '@xsMax': {
-            paddingLeft: '$sm',
-            paddingRight: '$sm',
-          },
-        }}
-      >
-        {todayTrending && todayTrending.items && todayTrending.items.length > 0 && (
-          <MediaList
-            currentPage={todayTrending?.page}
-            genresMovie={rootData?.genresMovie}
-            genresTv={rootData?.genresTv}
-            items={todayTrending?.items}
-            listName={t('todayTrending')}
-            listType="grid"
-            loadingType="page"
-            onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
-            showListTypeChangeButton
-            showPagination
-            totalPages={todayTrending?.totalPages}
-          />
-        )}
-      </Container>
+      {todayTrending && todayTrending.items && todayTrending.items.length > 0 && (
+        <MediaList
+          currentPage={todayTrending?.page}
+          genresMovie={rootData?.genresMovie}
+          genresTv={rootData?.genresTv}
+          items={todayTrending?.items}
+          listName={t('todayTrending')}
+          listType="grid"
+          loadingType="page"
+          onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
+          showListTypeChangeButton
+          showPagination
+          totalPages={todayTrending?.totalPages}
+        />
+      )}
     </motion.div>
   );
 };

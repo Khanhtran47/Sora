@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable arrow-body-style */
 import { useState, useRef, useEffect, forwardRef } from 'react';
@@ -386,7 +385,6 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
                 pagination: {
                   enabled: true,
                   dynamicBullets: true,
-                  dynamicMainBullets: 4,
                 },
               },
               1400: {
@@ -395,7 +393,6 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
                 pagination: {
                   enabled: false,
                   dynamicBullets: true,
-                  dynamicMainBullets: 4,
                 },
               },
             }}

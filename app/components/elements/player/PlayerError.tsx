@@ -14,6 +14,7 @@ const PlayerError = (props: IPlayerErrorProps) => {
     <AspectRatio.Root ratio={7 / 3}>
       <Container
         fluid
+        responsive={false}
         direction="column"
         display="flex"
         alignItems="center"

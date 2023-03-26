@@ -123,7 +123,7 @@ const PeopleDetailPage = () => {
     <Container
       as="div"
       fluid
-      responsive
+      responsive={false}
       css={{
         margin: 0,
         padding: 0,

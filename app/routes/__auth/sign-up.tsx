@@ -115,7 +115,7 @@ const SignUpPage = () => {
   const actionData = useActionData<ActionData>();
 
   return (
-    <Container fluid justify="center" display="flex">
+    <Container fluid responsive={false} justify="center" display="flex">
       <AuthForm type="sign-up" error={actionData?.error} errorCode={actionData?.errorCode} />
     </Container>
   );

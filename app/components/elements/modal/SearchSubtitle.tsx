@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-shadow */
-/* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/indent */
 import { useState, useEffect } from 'react';
 import {

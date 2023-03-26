@@ -39,7 +39,7 @@
   "table": "Table",
   "userScore": "User Score",
   "duration": "Duration",
-  "watchNow": "Watch Now",
+  "moreDetails": "More Details",
   "watchTrailer": "Watch Trailer",
   "popularity": "Popularity",
   "title-english": "Title (English)",
@@ -53,6 +53,9 @@
   "original_title": "Name",
   "vote_average": "Vote Average",
   "first_air_date": "First Air Date",
+  "movie-genres": "Movie Genres",
+  "tv-show-genres": "TV Show Genres",
+  "anime-genres": "Anime Genres",
   "search": {
     "title": {
       "movie": "Search Movies",

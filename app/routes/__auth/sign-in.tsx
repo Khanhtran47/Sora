@@ -103,7 +103,7 @@ const SignInPage = () => {
   const location = useLocation();
   const code = new URLSearchParams(location.search).get('code');
   return (
-    <Container fluid justify="center" display="flex">
+    <Container fluid responsive={false} justify="center" display="flex">
       <AuthForm type="sign-in" error={actionData?.error} code={code} />
     </Container>
   );

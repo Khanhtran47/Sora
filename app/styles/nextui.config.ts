@@ -4,10 +4,12 @@ export const lightTheme = createTheme({
   type: 'light',
   theme: {
     colors: {
-      backgroundContrast: '#f6f7ff',
       backgroundTransparent: 'rgba(0, 0, 0, 0)',
       backgroundAlpha: 'rgba(255, 255, 255, 0.5)',
       backgroundLight: 'rgba(255, 255, 255, 0.2)',
+      backgroundContrast: '#f6f7ff',
+      backgroundContrastAlpha: 'rgba(246, 247, 255, 0.6)',
+      backgroundContrastLight: 'rgba(246, 247, 255, 0.2)',
       textAlpha: 'rgba(17, 24, 28, 0.6)',
     },
   },
@@ -20,6 +22,8 @@ export const darkTheme = createTheme({
       backgroundTransparent: 'rgba(0, 0, 0, 0)',
       backgroundAlpha: 'rgba(0, 0, 0, 0.6)',
       backgroundLight: 'rgba(0, 0, 0, 0.2)',
+      backgroundContrastAlpha: 'rgba(22, 24, 26, 0.6)',
+      backgroundContrastLight: 'rgba(22, 24, 26, 0.2)',
       textAlpha: 'rgba(236, 237, 238, 0.6)',
     },
   },
@@ -32,10 +36,12 @@ export const bumblebeeTheme = createTheme({
       // background colors
       background: '#FEFAEA',
       backgroundAlpha: 'rgb(254, 250, 234, 0.5)',
-      foreground: '$black',
-      backgroundContrast: '#fffdf4',
-      backgroundTransparent: 'rgba(0, 0, 0, 0)',
       backgroundLight: 'rgb(254, 250, 234, 0.2)',
+      backgroundContrast: '#fffdf4',
+      backgroundContrastAlpha: 'rgba(255,253,244, 0.6)',
+      backgroundContrastLight: 'rgba(255,253,244, 0.2)',
+      foreground: '$black',
+      backgroundTransparent: 'rgba(0, 0, 0, 0)',
       textAlpha: 'rgba(17, 24, 28, 0.6)',
 
       // brand colors
@@ -75,10 +81,12 @@ export const autumnTheme = createTheme({
       // background colors
       background: '#FCE6E3',
       backgroundAlpha: 'rgba(252, 230, 227, 0.5)',
+      backgroundLight: 'rgba(252, 230, 227, 0.2)',
       foreground: '$black',
       backgroundContrast: '#fff2f2',
+      backgroundContrastAlpha: 'rgba(255,242,242, 0.6)',
+      backgroundContrastLight: 'rgba(255,242,242, 0.2)',
       backgroundTransparent: 'rgba(0, 0, 0, 0)',
-      backgroundLight: 'rgba(252, 230, 227, 0.2)',
       textAlpha: 'rgba(17, 24, 28, 0.6)',
 
       // brand colors
@@ -121,10 +129,12 @@ export const retroTheme = createTheme({
       // background colors
       background: '#e2d8b3',
       backgroundAlpha: 'rgb(226, 216, 179, 0.5)',
+      backgroundLight: 'rgb(226, 216, 179, 0.2)',
       foreground: '$black',
       backgroundContrast: '#c8bb9e',
+      backgroundContrastAlpha: 'rgba(200,187,158, 0.6)',
+      backgroundContrastLight: 'rgba(200,187,158, 0.2)',
       backgroundTransparent: 'rgba(0, 0, 0, 0)',
-      backgroundLight: 'rgb(226, 216, 179, 0.2)',
       textAlpha: 'rgba(17, 24, 28, 0.6)',
 
       // brand colors
@@ -170,6 +180,8 @@ export const synthwaveTheme = createTheme({
       backgroundLight: 'rgb(45, 54, 95, 0.2)',
       foreground: '#d1c7db',
       backgroundContrast: '#1F1A23',
+      backgroundContrastAlpha: 'rgba(31,26,35, 0.6)',
+      backgroundContrastLight: 'rgba(31,26,35, 0.2)',
       backgroundTransparent: 'rgba(255, 255, 255, 0)',
       textAlpha: 'rgba(236, 237, 238, 0.6)',
 
@@ -216,6 +228,8 @@ export const nightTheme = createTheme({
       backgroundLight: 'rgb(16, 23, 41, 0.2)',
       foreground: '$white',
       backgroundContrast: '#1E293B',
+      backgroundContrastAlpha: 'rgba(30,41,59, 0.6)',
+      backgroundContrastLight: 'rgba(30,41,59, 0.2)',
       backgroundTransparent: 'rgba(255, 255, 255, 0)',
       text: '#b6c5f0',
       textAlpha: 'rgba(182, 197, 240, 0.6)',
@@ -263,6 +277,8 @@ export const draculaTheme = createTheme({
       backgroundLight: 'rgb(39, 41, 53, 0.2)',
       foreground: '#f8f8f2',
       backgroundContrast: '#414558',
+      backgroundContrastAlpha: 'rgba(65,69,88, 0.6)',
+      backgroundContrastLight: 'rgba(65,69,88, 0.2)',
       backgroundTransparent: 'rgba(255, 255, 255, 0)',
       textAlpha: 'rgba(236, 237, 238, 0.6)',
 

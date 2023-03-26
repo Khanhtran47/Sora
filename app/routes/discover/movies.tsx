@@ -2,7 +2,7 @@
 import { useLoaderData, useNavigate, useLocation, NavLink } from '@remix-run/react';
 import { json } from '@remix-run/node';
 import type { LoaderArgs, MetaFunction } from '@remix-run/node';
-import { Container, Badge } from '@nextui-org/react';
+import { Badge } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
@@ -21,7 +21,7 @@ export const meta: MetaFunction = () => ({
     'Official Sora website to watch movies online HD for free, Watch TV show & TV series and Download all movies and series FREE',
   keywords:
     'watch free movies, free movies to watch online, watch movies online free, free movies streaming, free movies full, free movies download, watch movies hd, movies to watch',
-  'og:url': 'https://sora-anime.vercel.app/movies/discover',
+  'og:url': 'https://sora-anime.vercel.app/discover/movies',
   'og:title': 'Discover and watch movies and tv shows for free | Sora',
   'og:description':
     'Official Sora website to watch movies online HD for free, Watch TV show & TV series and Download all movies and series FREE',
@@ -115,7 +115,7 @@ export const handle = {
   ),
 };
 
-const ListMovies = () => {
+const DiscoverMovies = () => {
   const {
     movies,
     withGenres,
@@ -158,40 +158,27 @@ const ListMovies = () => {
       animate={{ x: '0', opacity: 1 }}
       exit={{ y: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
+      className="w-full flex justify-center flex-col items-center px-3 sm:px-0"
     >
-      <Container
-        fluid
-        display="flex"
-        justify="center"
-        direction="column"
-        alignItems="center"
-        css={{
-          '@xsMax': {
-            paddingLeft: '$sm',
-            paddingRight: '$sm',
-          },
-        }}
-      >
-        {movies && movies.items && movies.items.length > 0 && (
-          <MediaList
-            listType="grid"
-            showListTypeChangeButton
-            items={movies.items}
-            listName={t('discoverMovies')}
-            showFilterButton
-            genresMovie={rootData?.genresMovie}
-            genresTv={rootData?.genresTv}
-            mediaType="movie"
-            languages={rootData?.languages}
-            showPagination
-            totalPages={movies.totalPages}
-            currentPage={movies.page}
-            onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
-          />
-        )}
-      </Container>
+      {movies && movies.items && movies.items.length > 0 && (
+        <MediaList
+          listType="grid"
+          showListTypeChangeButton
+          items={movies.items}
+          listName={t('discoverMovies')}
+          showFilterButton
+          genresMovie={rootData?.genresMovie}
+          genresTv={rootData?.genresTv}
+          mediaType="movie"
+          languages={rootData?.languages}
+          showPagination
+          totalPages={movies.totalPages}
+          currentPage={movies.page}
+          onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
+        />
+      )}
     </motion.div>
   );
 };
 
-export default ListMovies;
+export default DiscoverMovies;

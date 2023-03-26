@@ -1,89 +1,111 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable react-hooks/exhaustive-deps */
-import * as React from 'react';
-import { Button, Grid, Row, Tooltip, Popover, Spacer, styled } from '@nextui-org/react';
+import { useState, useEffect, useMemo } from 'react';
+import {
+  Button,
+  // Tooltip,
+  Popover,
+  styled,
+} from '@nextui-org/react';
+import { useNavigate, useMatches, useLocation } from '@remix-run/react';
 import type { User } from '@supabase/supabase-js';
 import type { AnimationItem } from 'lottie-web';
-import { useTranslation } from 'react-i18next';
-import { isMobile } from 'react-device-detect';
+// import { useTranslation } from 'react-i18next';
+import { tv } from 'tailwind-variants';
+// import { useMediaQuery } from '@react-hookz/web';
+import { Player } from '@lottiefiles/react-lottie-player';
 
-import { useMediaQuery } from '@react-hookz/web';
-import useScrollDirection from '~/hooks/useScrollDirection';
-
-import { pages, searchDropdown } from '~/constants/navPages';
+import { useSoraSettings } from '~/hooks/useLocalStorage';
+import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
+import { useHistoryStack } from '~/store/layout/useHistoryStack';
 
 /* Components */
-import NavLink from '~/components/elements/NavLink';
 import MultiLevelDropdown from '~/components/layouts/MultiLevelDropdown';
-import { AppBar, PlayerStyled } from '~/components/layouts/Layout.styles';
 
 /* Assets */
-import MenuIcon from '~/assets/icons/MenuIcon';
-import SearchIcon from '~/assets/icons/SearchIcon';
-// import menuNavBlack from '~/assets/lotties/lottieflow-menu-nav-11-6-000000-easey.json';
-// import menuNavWhite from '~/assets/lotties/lottieflow-menu-nav-11-6-FFFFFF-easey.json';
-// import arrowLeftBlack from '~/assets/lotties/lottieflow-arrow-08-1-000000-easey.json';
-// import arrowLeftWhite from '~/assets/lotties/lottieflow-arrow-08-1-FFFFFF-easey.json';
+// import MenuIcon from '~/assets/icons/MenuIcon';
+import ChevronLeft from '~/assets/icons/ChevronLeftIcon';
+import ChevronRight from '~/assets/icons/ChevronRightIcon';
 import dropdown from '~/assets/lotties/lottieflow-dropdown-03-0072F5-easey.json';
 
 interface IHeaderProps {
-  open: boolean;
+  // open: boolean;
   user?: User;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  // setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const handle = {
   i18n: 'header',
 };
 
-const DropdownPage = ({
-  pagesDropdown,
-}: {
-  pagesDropdown: {
-    pageName: string;
-    pageLink: string;
-  }[];
-}) => {
-  const { t } = useTranslation('header');
+const headerStyles = tv({
+  base: 'h-[64px] w-[100vw] fixed z-[1000] py-3 px-5 flex-row justify-between items-center hidden sm:flex',
+  variants: {
+    miniSidebar: {
+      true: 'sm:w-[calc(100vw_-_80px)] top-0',
+    },
+    boxedSidebar: {
+      true: 'sm:w-[calc(100vw_-_280px)] top-[15px]',
+    },
+  },
+  compoundVariants: [
+    {
+      miniSidebar: true,
+      boxedSidebar: true,
+      class: 'sm:w-[calc(100vw_-_110px)] top-[15px]',
+    },
+    {
+      miniSidebar: false,
+      boxedSidebar: false,
+      class: 'sm:w-[calc(100vw_-_250px)] top-0',
+    },
+  ],
+  defaultVariants: {
+    miniSidebar: false,
+    boxedSidebar: false,
+  },
+});
 
-  return (
-    <Grid.Container
-      css={{
-        padding: '0.75rem',
-        width: '200px',
-      }}
-    >
-      {pagesDropdown.map((page) => (
-        <>
-          <Row key={page.pageName}>
-            <NavLink linkTo={`/${page.pageLink}`} linkName={t(page.pageName)} />
-          </Row>
-          <Spacer y={0.5} />
-        </>
-      ))}
-    </Grid.Container>
-  );
-};
-
-const ButtonStyled = styled('button', {
-  paddingRight: 8,
-  paddingLeft: 8,
-  marginRight: 12,
-  display: 'block',
-  '@sm': {
-    display: 'none',
+const PlayerStyled = styled(Player, {
+  '& path': {
+    stroke: '$primary',
   },
 });
 
 const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
-  const { t } = useTranslation('header');
-  const { open, user, setOpen } = props;
-  const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
-  const [lottie, setLottie] = React.useState<AnimationItem>();
-  const isSm = useMediaQuery('(max-width: 650px)');
-  const scrollDirection = useScrollDirection();
+  // const { t } = useTranslation('header');
+  const { user } = props;
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [lottie, setLottie] = useState<AnimationItem>();
+  const navigate = useNavigate();
+  const matches = useMatches();
+  const location = useLocation();
+  const {
+    sidebarMiniMode,
+    sidebarBoxedMode,
+    // sidebarSheetMode
+  } = useSoraSettings();
+  const isShowTabLink = useMemo(
+    () => matches.some((match) => match.handle?.showTabLink === true),
+    [matches],
+  );
+  const hideTabLinkWithLocation: boolean = useMemo(() => {
+    const currentMatch = matches.find((match) => match.handle?.showTabLink);
+    if (currentMatch?.handle?.hideTabLinkWithLocation)
+      return currentMatch?.handle?.hideTabLinkWithLocation(location.pathname);
+    return false;
+  }, [location.pathname]);
+  const { scrollPosition } = useLayoutScrollPosition((state) => state);
+  const { historyBack, historyForward } = useHistoryStack((state) => state);
+  const handleNavigationBackForward = (direction: 'back' | 'forward') => {
+    if (direction === 'back') {
+      navigate(-1);
+    } else if (direction === 'forward') {
+      navigate(1);
+    }
+  };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isDropdownOpen) {
       lottie?.playSegments([0, 50], true);
     } else {
@@ -92,132 +114,84 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   }, [isDropdownOpen]);
 
   return (
-    <AppBar
-      justify="space-between"
-      alignItems="center"
-      color="inherit"
-      className="flex backdrop-blur-md transition-all duration-500"
-      gap={2}
-      wrap="nowrap"
-      css={{
-        backgroundColor: '$backgroundAlpha',
-        width: '100%',
-        top: isSm && scrollDirection === 'down' ? -64 : 0,
-        height: 64,
-        padding: 0,
-        margin: 0,
-      }}
+    <div
+      className={headerStyles({
+        miniSidebar: sidebarMiniMode.value,
+        boxedSidebar: sidebarBoxedMode.value,
+      })}
     >
-      {/* button and logo */}
-      <Grid
-        xs={3}
-        alignItems="center"
-        css={{
-          '@xsMax': {
-            justifyContent: 'space-between',
-          },
+      <div
+        className="absolute top-0 left-0 w-full z-[-1] bg-background-contrast-alpha backdrop-blur-md rounded-tl-xl"
+        style={{
+          opacity: scrollPosition.y < 80 ? scrollPosition.y / 80 : 1,
+          height: isShowTabLink && !hideTabLinkWithLocation ? 112 : 64,
         }}
+      />
+      <div className="flex flex-row justify-center items-center gap-x-2">
+        <Button
+          auto
+          flat
+          rounded
+          icon={<ChevronLeft />}
+          onPress={() => handleNavigationBackForward('back')}
+          disabled={historyBack.length <= 1}
+          css={{ w: 36, h: 36 }}
+        />
+        <Button
+          auto
+          flat
+          rounded
+          icon={<ChevronRight />}
+          onPress={() => handleNavigationBackForward('forward')}
+          disabled={historyForward.length <= 1}
+          css={{ w: 36, h: 36 }}
+        />
+      </div>
+      <div />
+      <Popover
+        shouldFlip
+        triggerType="menu"
+        placement="bottom-right"
+        isOpen={isDropdownOpen}
+        onOpenChange={setIsDropdownOpen}
       >
-        <ButtonStyled
-          type="button"
-          aria-label="Menu Icon"
-          onClick={() => setOpen(!open)}
-          style={{
-            paddingRight: 8,
-            paddingLeft: 8,
-            marginRight: 12,
+        <Popover.Trigger>
+          <Button
+            type="button"
+            auto
+            flat
+            rounded
+            aria-label="dropdown"
+            css={{ padding: 0, w: 36, h: 36 }}
+          >
+            <PlayerStyled
+              lottieRef={(instance) => {
+                setLottie(instance);
+              }}
+              src={dropdown}
+              autoplay={false}
+              keepLastFrame
+              speed={2.7}
+              className="w-8 h-8"
+            />
+          </Button>
+        </Popover.Trigger>
+        <Popover.Content
+          css={{
+            display: 'block',
+            opacity: 1,
+            transform: 'none',
+            overflow: 'hidden',
+            transition: 'height 0.5s',
+            width: 240,
+            zIndex: 999,
+            borderWidth: 0,
           }}
         >
-          <MenuIcon />
-        </ButtonStyled>
-        <NavLink linkTo="/" isLogo />
-      </Grid>
-
-      {/* link page */}
-      <Grid
-        sm={6}
-        alignItems="center"
-        direction="row"
-        justify="center"
-        css={{
-          display: 'none',
-          '@xs': {
-            display: 'flex',
-          },
-        }}
-      >
-        {!isSm &&
-          pages.map((page) => (
-            <Tooltip
-              key={page.pageName}
-              hideArrow
-              placement="bottom"
-              isDisabled={isMobile}
-              content={<DropdownPage pagesDropdown={page?.pageDropdown || []} />}
-            >
-              <NavLink
-                linkTo={`/${page.pageLink}`}
-                linkName={t(page.pageName)}
-                style={{ marginRight: '10px' }}
-              />
-            </Tooltip>
-          ))}
-      </Grid>
-
-      <Grid xs={6} sm={3} justify="flex-end" alignItems="center">
-        {/* Search */}
-        <Tooltip
-          hideArrow
-          isDisabled={isMobile}
-          placement="bottomEnd"
-          content={<DropdownPage pagesDropdown={searchDropdown || []} />}
-        >
-          <NavLink
-            linkTo="/search"
-            isIcon
-            style={{ marginTop: '3px', color: 'var(--nextui-colors-primary)' }}
-            icon={<SearchIcon fill="currentColor" filled />}
-          />
-        </Tooltip>
-        {/* Dropdown setting */}
-        <Popover
-          shouldFlip
-          triggerType="menu"
-          placement="bottom-right"
-          isOpen={isDropdownOpen}
-          onOpenChange={setIsDropdownOpen}
-        >
-          <Popover.Trigger>
-            <Button type="button" auto light aria-label="dropdown" css={{ padding: '0 $xs' }}>
-              <PlayerStyled
-                lottieRef={(instance) => {
-                  setLottie(instance);
-                }}
-                src={dropdown}
-                autoplay={false}
-                keepLastFrame
-                speed={2.7}
-                className="w-8 h-8"
-              />
-            </Button>
-          </Popover.Trigger>
-          <Popover.Content
-            css={{
-              display: 'block',
-              opacity: 1,
-              transform: 'none',
-              overflow: 'hidden',
-              transition: 'height 0.5s',
-              width: 240,
-              zIndex: 999,
-              borderWidth: 0,
-            }}
-          >
-            <MultiLevelDropdown user={user} />
-          </Popover.Content>
-        </Popover>
-      </Grid>
-    </AppBar>
+          <MultiLevelDropdown user={user} />
+        </Popover.Content>
+      </Popover>
+    </div>
   );
 };
 

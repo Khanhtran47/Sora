@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/indent */
-/* eslint-disable no-nested-ternary */
 import { useEffect, useState, useRef } from 'react';
 import { Grid, Button } from '@nextui-org/react';
 import { useFetcher, Link } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import NProgress from 'nprogress';
 import { useMediaQuery, useMeasure } from '@react-hookz/web';
+
+import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
 
 import { IMedia } from '~/types/media';
 import MediaItem from '../item';
@@ -42,11 +43,8 @@ const MediaListGrid = (props: IMediaListCardProps) => {
   const isMd = useMediaQuery('(max-width: 1340px)', { initializeWithValue: false });
   const isLg = useMediaQuery('(max-width: 1660px)', { initializeWithValue: false });
   const fetcher = useFetcher();
+  const { scrollHeight, scrollPosition } = useLayoutScrollPosition((state) => state);
   const [listItems, setListItems] = useState<IMedia[]>(items || []);
-
-  const [scrollPosition, setScrollPosition] = useState(0);
-  const [clientHeight, setClientHeight] = useState(0);
-
   const [shouldFetch, setShouldFetch] = useState(false);
   const [showLoadMore, setShowLoadMore] = useState(true);
   const [page, setPage] = useState(2);
@@ -60,29 +58,10 @@ const MediaListGrid = (props: IMediaListCardProps) => {
     setShowLoadMore(true);
   }, [items]);
 
-  useEffect(() => {
-    const scrollListener = () => {
-      setClientHeight(window.innerHeight);
-      setScrollPosition(window.scrollY);
-    };
-
-    // Avoid running during SSR
-    if (typeof window !== 'undefined') {
-      window.addEventListener('scroll', scrollListener);
-    }
-
-    // Clean up
-    return () => {
-      if (typeof window !== 'undefined') {
-        window.removeEventListener('scroll', scrollListener);
-      }
-    };
-  }, []);
-
   // Listen on scrolls. Fire on some self-described breakpoint
   useEffect(() => {
     if (!shouldFetch || !size?.height) return;
-    if (clientHeight + scrollPosition + 100 < size?.height) return;
+    if (scrollHeight + scrollPosition.y + 100 < size?.height) return;
 
     fetcher.load(
       `${routeName}${routeName?.includes('?') ? '&' : '?'}page=${page}${
@@ -91,7 +70,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
     );
     setShouldFetch(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scrollPosition, clientHeight, size?.height]);
+  }, [scrollPosition, scrollHeight, size?.height]);
 
   // Merge items, increment page, and allow fetching again
   useEffect(() => {

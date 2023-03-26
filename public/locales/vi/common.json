@@ -39,7 +39,7 @@
   "table": "Bảng",
   "userScore": "Người xem xếp hạng",
   "duration": "Thời lượng",
-  "watchNow": "Xem ngay",
+  "moreDetails": "Xem chi tiết",
   "watchTrailer": "Xem Trailer",
   "popularity": "Độ phổ biến",
   "title-english": "Tiêu đề tiếng Anh",
@@ -53,6 +53,9 @@
   "original_title": "Tên",
   "vote_average": "Điểm",
   "first_air_date": "Ngày công chiếu",
+  "movie-genres": "Thể loại phim lẻ",
+  "tv-show-genres": "Thể loại phim bộ",
+  "anime-genres": "Thể loại anime",
   "search": {
     "title": {
       "movie": "Tìm kiếm phim lẻ",

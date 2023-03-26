@@ -61,7 +61,7 @@ const MoviesIndexPage = () => {
   const [clientHeight, setClientHeight] = useState(0);
   const [shouldFetch, setShouldFetch] = useState(true);
   const [order, setOrder] = useState(0);
-  const [size, parentRef] = useMeasure<HTMLElement>();
+  const [size, parentRef] = useMeasure<HTMLDivElement>();
 
   useEffect(() => {
     const scrollListener = () => {
@@ -87,7 +87,7 @@ const MoviesIndexPage = () => {
     if (!shouldFetch || !size?.height) return;
     if (clientHeight + scrollPosition - 200 < size?.height) return;
 
-    fetcher.load(`/movies/discover?with_genres=${Object.keys(listGenresMovie[order])[0]}`);
+    fetcher.load(`/discover/movies?with_genres=${Object.keys(listGenresMovie[order])[0]}`);
     setShouldFetch(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scrollPosition, clientHeight, size?.height]);
@@ -124,7 +124,7 @@ const MoviesIndexPage = () => {
   }, [fetcher.type]);
 
   return (
-    <motion.main
+    <motion.div
       key={location.key}
       initial={{ x: '-10%', opacity: 0 }}
       animate={{ x: '0', opacity: 1 }}
@@ -147,6 +147,7 @@ const MoviesIndexPage = () => {
       />
       <Container
         fluid
+        responsive={false}
         display="flex"
         justify="flex-start"
         direction="column"
@@ -198,7 +199,7 @@ const MoviesIndexPage = () => {
                   showMoreList
                   onClickViewMore={() =>
                     navigate(
-                      `/movies/discover?with_genres=${Object.keys(listGenresMovie[index])[0]}`,
+                      `/discover/movies?with_genres=${Object.keys(listGenresMovie[index])[0]}`,
                     )
                   }
                   navigationButtons
@@ -225,7 +226,7 @@ const MoviesIndexPage = () => {
           ) : null}
         </AnimatePresence>
       </Container>
-    </motion.main>
+    </motion.div>
   );
 };
 

@@ -2,7 +2,7 @@
 import { useLoaderData, useNavigate, useLocation, NavLink } from '@remix-run/react';
 import { json } from '@remix-run/node';
 import type { MetaFunction, LoaderArgs } from '@remix-run/node';
-import { Container, Badge } from '@nextui-org/react';
+import { Badge } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
@@ -118,33 +118,22 @@ const ListTvShows = () => {
       animate={{ x: '0', opacity: 1 }}
       exit={{ y: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
+      className="w-full flex justify-center flex-col items-center px-3 sm:px-0"
     >
-      <Container
-        fluid
-        display="flex"
-        justify="center"
-        css={{
-          '@xsMax': {
-            paddingLeft: '$sm',
-            paddingRight: '$sm',
-          },
-        }}
-      >
-        {shows && shows.items && shows.items.length > 0 && (
-          <MediaList
-            listType="grid"
-            showListTypeChangeButton
-            items={shows.items}
-            listName={t('onTv')}
-            genresMovie={rootData?.genresMovie}
-            genresTv={rootData?.genresTv}
-            showPagination
-            totalPages={shows.totalPages}
-            currentPage={shows.page}
-            onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
-          />
-        )}
-      </Container>
+      {shows && shows.items && shows.items.length > 0 && (
+        <MediaList
+          listType="grid"
+          showListTypeChangeButton
+          items={shows.items}
+          listName={t('onTv')}
+          genresMovie={rootData?.genresMovie}
+          genresTv={rootData?.genresTv}
+          showPagination
+          totalPages={shows.totalPages}
+          currentPage={shows.page}
+          onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
+        />
+      )}
     </motion.div>
   );
 };

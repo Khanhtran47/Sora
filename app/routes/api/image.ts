@@ -2,8 +2,8 @@ import os from 'os';
 import path from 'path';
 import type { LoaderFunction } from '@remix-run/node';
 import type { Resolver, CacheConfig } from 'remix-image/server';
-import BaseCache from "@next-boost/hybrid-disk-cache";
-import { imageLoader, fsResolver, fetchResolver, Cache, CacheStatus  } from 'remix-image/server';
+import BaseCache from '@next-boost/hybrid-disk-cache';
+import { imageLoader, fsResolver, fetchResolver, Cache, CacheStatus } from 'remix-image/server';
 import { sharpTransformer } from 'remix-image-sharp';
 
 import { authenticate } from '~/services/supabase';
@@ -31,7 +31,7 @@ export class CustomDiskCache extends Cache {
     super();
 
     this.config = {
-      path: config?.path ?? "tmp/img",
+      path: config?.path ?? 'tmp/img',
       ttl: config?.ttl ?? 24 * 60 * 60 * 30,
       tbd: config?.tbd ?? 365 * 24 * 60 * 60,
     };
@@ -75,7 +75,6 @@ const config = {
   selfUrl: process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : fixedVercelUrl,
   cache: new CustomDiskCache({
     path: path.join(os.tmpdir(), 'img'),
-
   }),
   redirectOnFail: true,
   resolver: fetchImage,

@@ -53,6 +53,12 @@ interface IHomeProps {
    * @type number
    * */
   width?: number;
+  /**
+   * The className of the icon
+   * @default ''
+   * @type string
+   * */
+  className?: string;
 }
 
 const Home = ({
@@ -61,13 +67,14 @@ const Home = ({
   size = 24,
   height = 24,
   width = 24,
+  className = '',
   ...props
 }: IHomeProps) => {
   switch (filled) {
     case false:
       return (
         <Svg
-          className=""
+          className={className}
           width={width || size}
           height={height || size}
           viewBox="0 0 24 24"
@@ -83,7 +90,7 @@ const Home = ({
     default:
       return (
         <Svg
-          className=""
+          className={className}
           width={width || size}
           height={height || size}
           viewBox="0 0 24 24"

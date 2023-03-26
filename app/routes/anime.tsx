@@ -1,8 +1,6 @@
 import { MetaFunction } from '@remix-run/node';
-import { NavLink, Outlet, useLocation } from '@remix-run/react';
+import { NavLink, Outlet } from '@remix-run/react';
 import { Container, Badge } from '@nextui-org/react';
-
-import TabLink from '~/components/elements/tab/TabLink';
 
 const animePage = [
   { pageName: 'Discover Anime', pageLink: '/discover' },
@@ -41,22 +39,20 @@ export const handle = {
       )}
     </NavLink>
   ),
+  showTabLink: true,
+  tabLinkPages: animePage,
+  tabLinkTo: '/anime',
+  hideTabLinkWithLocation: (locationPathname: string) => {
+    if (locationPathname.split('/')[2]?.match(/^\d+$/) || locationPathname === '/anime')
+      return true;
+    return false;
+  },
 };
 
-const AnimeIndexPage = () => {
-  const location = useLocation();
-  if (location.pathname.split('/')[2]?.match(/^\d+$/) || location.pathname === '/anime')
-    return (
-      <Container fluid css={{ m: 0, p: 0 }}>
-        <Outlet />
-      </Container>
-    );
-  return (
-    <Container fluid css={{ m: 0, p: 0 }}>
-      <TabLink pages={animePage} linkTo="/anime" />
-      <Outlet />
-    </Container>
-  );
-};
+const AnimeIndexPage = () => (
+  <Container fluid responsive={false} css={{ m: 0, p: 0 }}>
+    <Outlet />
+  </Container>
+);
 
 export default AnimeIndexPage;

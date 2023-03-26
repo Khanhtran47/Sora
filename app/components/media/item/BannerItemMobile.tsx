@@ -1,6 +1,4 @@
-/* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/indent */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Card, Row, Col, Spacer, Badge, Text } from '@nextui-org/react';
 import { Link } from '@remix-run/react';
 import Image, { MimeType } from 'remix-image';
@@ -44,19 +42,17 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
     genresAnime,
   } = props;
   const isXs = useMediaQuery('(max-width: 375px)', { initializeWithValue: false });
-
   const { ref, inView } = useInView({
     threshold: 0,
   });
   const [size, bannerRef] = useMeasure<HTMLDivElement>();
-
   const titleItem =
     typeof title === 'string'
       ? title
       : title?.userPreferred || title?.english || title?.romaji || title?.native;
 
   return (
-    <AspectRatio.Root ratio={4 / 5} ref={bannerRef}>
+    <AspectRatio.Root ratio={4 / 5} ref={bannerRef} className="mt-8">
       <Link
         to={`/${
           mediaType === 'movie' ? 'movies/' : mediaType === 'tv' ? 'tv-shows/' : 'anime/'
@@ -90,7 +86,10 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
                 left: 0,
                 width: '100%',
                 height: `${(size?.height || 0) / 2}px`,
-                backgroundImage: 'linear-gradient(0deg, $background, $backgroundTransparent)',
+                backgroundImage:
+                  'linear-gradient(0deg, $background, $backgroundTransparent), linear-gradient(0deg, $backgroundContrastAlpha, $backgroundTransparent)',
+                backgroundRepeat: 'no-repeat',
+                backgroundBlendMode: 'color',
                 '@lgMin': {
                   height: '250px',
                 },
@@ -98,10 +97,12 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
             }}
           >
             <AnimatePresence>
-              {inView && size ? (
+              {size ? (
                 <motion.div
                   initial={{ opacity: 0, scale: 1.2, y: 40 }}
-                  animate={active && { opacity: 1, scale: 1, y: 0 }}
+                  animate={
+                    active ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0.3, scale: 1.2, y: 40 }
+                  }
                   exit={{ opacity: 0, scale: 1.2, y: 40 }}
                   transition={{ duration: 0.5 }}
                   style={{ overflow: 'hidden' }}
@@ -110,13 +111,13 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
                     // @ts-ignore
                     as={Image}
                     src={posterPath || ''}
-                    loading="eager"
+                    loading="lazy"
+                    decoding={inView ? 'auto' : 'async'}
                     width="100%"
                     height="auto"
                     css={{
                       opacity: 0.8,
-                      top: 0,
-                      left: 0,
+                      aspectRatio: '4/5',
                     }}
                     showSkeleton
                     objectFit="cover"

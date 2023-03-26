@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useState, useEffect, useCallback } from 'react';
 import { Container, Loading, Row, Spacer, Image as NextImage, Button } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
@@ -86,6 +85,7 @@ const CardItemHover = (props: ICardItemHoverProps) => {
 
   return (
     <Container
+      responsive={false}
       justify="center"
       alignItems="center"
       css={{
@@ -115,16 +115,13 @@ const CardItemHover = (props: ICardItemHoverProps) => {
                   src={backdropPath || ''}
                   objectFit="cover"
                   width="100%"
-                  height="218px"
+                  height="auto"
                   alt={title}
                   title={title}
-                  containerCss={{
-                    borderRadius: '0.5rem',
-                  }}
-                  css={{
-                    minWidth: '388px !important',
-                    minHeight: 'auto !important',
-                  }}
+                  loading="lazy"
+                  decoding="async"
+                  containerCss={{ borderRadius: '0.5rem' }}
+                  css={{ aspectRatio: '16/9' }}
                   loaderUrl="/api/image"
                   placeholder="empty"
                   options={{

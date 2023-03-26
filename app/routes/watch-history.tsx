@@ -92,9 +92,9 @@ const History = () => {
   };
 
   return (
-    <Container fluid css={{ margin: 0, padding: 0, textAlign: 'center' }}>
+    <Container fluid responsive={false} css={{ margin: 0, padding: 0, textAlign: 'center' }}>
       <Text h2>Your watch history</Text>
-      <Container fluid>
+      <Container fluid responsive={false}>
         <Grid.Container gap={2} justify="center" ref={ref}>
           <Grid xs={12}>
             <Grid.Container gap={2}>

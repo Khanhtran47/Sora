@@ -2,7 +2,6 @@
 import { json } from '@remix-run/node';
 import type { LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
-import { Container } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { authenticate } from '~/services/supabase';
@@ -26,6 +25,7 @@ import featuredList from '~/constants/featuredList';
 
 export const handle = {
   i18n: 'home',
+  disableLayoutPadding: true,
 };
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -87,101 +87,76 @@ const Index = () => {
   };
 
   return (
-    <motion.main
+    <motion.div
       key={location.key}
       initial={{ x: '-10%', opacity: 0 }}
       animate={{ x: '0', opacity: 1 }}
       exit={{ y: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
-      style={{
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        flexDirection: 'column',
-        alignItems: 'center',
-      }}
+      className="w-full flex flex-col justify-center items-center"
     >
       <MediaList
         genresMovie={rootData?.genresMovie}
         genresTv={rootData?.genresTv}
         items={todayTrending}
         listType="slider-banner"
+        key="slider-banner-home"
       />
-      <Container
-        fluid
-        display="flex"
-        justify="flex-start"
-        alignItems="center"
-        direction="column"
-        css={{
-          marginTop: '48px',
-          minHeight: '564px',
-          padding: 0,
-          '@xsMax': {
-            paddingLeft: '$sm',
-            paddingRight: '$sm',
-          },
-        }}
-      >
-        {movies && movies.length > 0 && (
-          <MediaList
-            genresMovie={rootData?.genresMovie}
-            genresTv={rootData?.genresTv}
-            items={movies}
-            listName={t('popularMovies')}
-            listType="slider-card"
-            navigationButtons
-            onClickViewMore={() => onClickViewMore('movies')}
-            showMoreList
-          />
-        )}
-        {shows && shows.length > 0 && (
-          <MediaList
-            genresMovie={rootData?.genresMovie}
-            genresTv={rootData?.genresTv}
-            items={shows}
-            listName={t('popularTv')}
-            listType="slider-card"
-            navigationButtons
-            onClickViewMore={() => onClickViewMore('tv-shows')}
-            showMoreList
-          />
-        )}
-        {popularAnime && popularAnime && popularAnime.length > 0 && (
-          <MediaList
-            items={popularAnime}
-            itemsType="anime"
-            listName="Popular Anime"
-            listType="slider-card"
-            navigationButtons
-            onClickViewMore={() => navigate('/anime/popular')}
-            showMoreList
-          />
-        )}
-        {featuredList && (
-          <MediaList
-            coverItem={featuredList}
-            isCoverCard
-            listName="Featured Collections"
-            listType="slider-card"
-            navigationButtons
-            onClickViewMore={() => navigate('/collections')}
-            showMoreList
-          />
-        )}
-        {people && people.length > 0 && (
-          <MediaList
-            items={people}
-            listName={t('popularPeople')}
-            listType="slider-card"
-            navigationButtons
-            onClickViewMore={() => onClickViewMore('people')}
-            showMoreList
-            itemsType="people"
-          />
-        )}
-      </Container>
-    </motion.main>
+      <div className="w-full flex flex-col justify-start items-center mt-9 px-3 sm:px-5">
+        <MediaList
+          genresMovie={rootData?.genresMovie}
+          genresTv={rootData?.genresTv}
+          items={movies}
+          listName={t('popularMovies')}
+          listType="slider-card"
+          navigationButtons
+          onClickViewMore={() => onClickViewMore('movies')}
+          showMoreList
+          key="slider-card-popular-movies"
+        />
+        <MediaList
+          genresMovie={rootData?.genresMovie}
+          genresTv={rootData?.genresTv}
+          items={shows}
+          listName={t('popularTv')}
+          listType="slider-card"
+          navigationButtons
+          onClickViewMore={() => onClickViewMore('tv-shows')}
+          showMoreList
+          key="slider-card-popular-tv"
+        />
+        <MediaList
+          items={popularAnime}
+          itemsType="anime"
+          listName="Popular Anime"
+          listType="slider-card"
+          navigationButtons
+          onClickViewMore={() => navigate('/anime/popular')}
+          showMoreList
+          key="slider-card-popular-anime"
+        />
+        <MediaList
+          coverItem={featuredList}
+          isCoverCard
+          listName="Featured Collections"
+          listType="slider-card"
+          navigationButtons
+          onClickViewMore={() => navigate('/collections')}
+          showMoreList
+          key="slider-card-featured-collections"
+        />
+        <MediaList
+          items={people}
+          listName={t('popularPeople')}
+          listType="slider-card"
+          navigationButtons
+          onClickViewMore={() => onClickViewMore('people')}
+          showMoreList
+          itemsType="people"
+          key="slider-card-popular-people"
+        />
+      </div>
+    </motion.div>
   );
 };
 

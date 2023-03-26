@@ -56,6 +56,12 @@ interface ITrendingUpProps {
    * @type number
    * */
   width?: number;
+  /**
+   * The className of the icon
+   * @default ''
+   * @type string
+   * */
+  className?: string;
 }
 
 const TrendingUp = ({
@@ -64,13 +70,14 @@ const TrendingUp = ({
   size = 24,
   height = 24,
   width = 24,
+  className = '',
   ...props
 }: ITrendingUpProps) => {
   switch (filled) {
     case false:
       return (
         <Svg
-          className=""
+          className={className}
           width={width || size}
           height={height || size}
           viewBox="0 0 24 24"
@@ -86,7 +93,7 @@ const TrendingUp = ({
     default:
       return (
         <Svg
-          className=""
+          className={className}
           width={width || size}
           height={height || size}
           viewBox="0 0 24 24"

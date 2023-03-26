@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/indent */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable no-nested-ternary */
 import { useMemo, useState } from 'react';
 import type { MetaFunction } from '@remix-run/node';
 import { NavLink, useLocation, useNavigate } from '@remix-run/react';
@@ -16,7 +14,7 @@ import {
   SheetContent,
   SheetTitle,
   SheetDescription,
-} from '~/components/elements/shared/Sheet';
+} from '~/components/elements/Sheet';
 
 import Settings from '~/assets/icons/SettingsIcon';
 import Arrow from '~/assets/icons/ArrowIcon';
@@ -403,7 +401,7 @@ const DesignSystem = () => {
     [dropdownLevelKey],
   );
   return (
-    <motion.main
+    <motion.div
       key={location.key}
       initial={{ x: '-10%', opacity: 0 }}
       animate={{ x: '0', opacity: 1 }}
@@ -412,6 +410,7 @@ const DesignSystem = () => {
     >
       <Container
         fluid
+        responsive={false}
         display="flex"
         justify="flex-start"
         direction="column"
@@ -719,7 +718,7 @@ const DesignSystem = () => {
           test catch boundary
         </Button>
       </Container>
-    </motion.main>
+    </motion.div>
   );
 };
 

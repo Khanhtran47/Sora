@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect, useRef, useMemo } from 'react';
@@ -489,7 +488,11 @@ const GlobalPlayer = () => {
   }, [playerData]);
 
   return (
-    <Container fluid css={{ margin: 0, padding: 0, width: isMini ? '20rem' : '100%' }}>
+    <Container
+      fluid
+      responsive={false}
+      css={{ margin: 0, padding: 0, width: isMini ? '20rem' : '100%' }}
+    >
       <div className="fixed inset-0 pointer-events-none" ref={constraintsRef} />
       <AnimatePresence initial={false}>
         {shouldShowPlayer ? (

@@ -1,17 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from '@remix-run/react';
-import { Avatar, Button, Grid, Switch, useTheme, Divider } from '@nextui-org/react';
+import { Avatar, Button, Grid, Switch, useTheme, Divider, styled } from '@nextui-org/react';
 import { useTheme as useRemixTheme } from 'next-themes';
 import { motion } from 'framer-motion';
 import type { User } from '@supabase/supabase-js';
 import { useTranslation } from 'react-i18next';
+import { Player } from '@lottiefiles/react-lottie-player';
 
 import languages from '~/constants/languages';
 
 /* Components */
 import { H5, H6 } from '~/components/styles/Text.styles';
-import { PlayerStyled } from '~/components/layouts/Layout.styles';
 
 /* Assets */
 import kleeCute from '~/assets/images/avatar.png';
@@ -38,6 +38,12 @@ const slideHorizontalAnimation = {
 interface IMultiLevelDropdownProps {
   user?: User | undefined;
 }
+
+const PlayerStyled = styled(Player, {
+  '& path': {
+    stroke: '$primary',
+  },
+});
 
 const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
   const { user } = props;

@@ -137,6 +137,8 @@ export const handle = {
       )}
     </NavLink>
   ),
+  preventScrollToTop: true,
+  disableLayoutPadding: true,
 };
 
 const AnimeDetailPage = () => {
@@ -157,7 +159,7 @@ const AnimeDetailPage = () => {
       <Container
         as="div"
         fluid
-        responsive
+        responsive={false}
         justify="center"
         css={{
           display: 'flex',

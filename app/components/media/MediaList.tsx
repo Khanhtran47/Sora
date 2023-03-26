@@ -529,7 +529,7 @@ const MediaList = (props: IMediaListProps) => {
           initialPage={currentPage}
           // shadow
           onChange={onPageChangeHandler}
-          css={{ marginTop: '30px' }}
+          css={{ marginTop: '50px' }}
           {...(isSm && { size: 'xs' })}
         />
       ) : null}

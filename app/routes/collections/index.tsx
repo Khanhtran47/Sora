@@ -2,7 +2,7 @@
 import { MetaFunction } from '@remix-run/node';
 import { useLocation, NavLink } from '@remix-run/react';
 import { motion } from 'framer-motion';
-import { Container, Badge } from '@nextui-org/react';
+import { Badge } from '@nextui-org/react';
 
 import MediaList from '~/components/media/MediaList';
 import featuredList from '~/constants/featuredList';
@@ -48,29 +48,16 @@ const Collections = () => {
       animate={{ x: '0', opacity: 1 }}
       exit={{ y: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
+      className="w-full flex justify-center flex-col items-center px-3 sm:px-0"
     >
-      <Container
-        fluid
-        display="flex"
-        justify="center"
-        direction="column"
-        alignItems="center"
-        css={{
-          '@xsMax': {
-            paddingLeft: '$sm',
-            paddingRight: '$sm',
-          },
-        }}
-      >
-        {featuredList && featuredList.length > 0 && (
-          <MediaList
-            listType="grid"
-            listName="Featured Collections"
-            isCoverCard
-            coverItem={featuredList}
-          />
-        )}
-      </Container>
+      {featuredList && featuredList.length > 0 && (
+        <MediaList
+          listType="grid"
+          listName="Featured Collections"
+          isCoverCard
+          coverItem={featuredList}
+        />
+      )}
     </motion.div>
   );
 };

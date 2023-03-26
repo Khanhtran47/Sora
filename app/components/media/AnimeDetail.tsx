@@ -1,5 +1,4 @@
 /* eslint-disable no-nested-ternary */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useEffect, useState } from 'react';
 import { Card, Col, Row, Button, Spacer, Avatar, Tooltip } from '@nextui-org/react';
 import { useNavigate, useLocation, useFetcher } from '@remix-run/react';
@@ -100,6 +99,7 @@ const AnimeDetail = (props: IAnimeDetail) => {
           backgroundColor,
           borderBottomLeftRadius: 0,
           borderBottomRightRadius: 0,
+          borderTopRightRadius: 0,
           minHeight: '825px',
           height: isXs
             ? `calc(${JSON.stringify(size?.height)}px + 80px - 2rem)`
@@ -458,7 +458,7 @@ const AnimeDetail = (props: IAnimeDetail) => {
                           flat
                           key={index}
                           size={isSm ? 'sm' : 'md'}
-                          onPress={() => navigate(`/anime/discover?genres=${genre}`)}
+                          onPress={() => navigate(`/discover/anime?genres=${genre}`)}
                           css={{
                             marginBottom: '0.125rem',
                             transition: 'all 0.3s ease-in-out',

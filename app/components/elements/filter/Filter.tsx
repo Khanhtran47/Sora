@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/indent */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react';
 import { Row, Grid, Button, Dropdown, Tooltip, Input, useInput } from '@nextui-org/react';

@@ -83,6 +83,12 @@ interface ITwoUsersProps {
    * @type number
    * */
   width?: number;
+  /**
+   * The class name of the icon
+   * @default ''
+   * @type string
+   * */
+  className?: string;
 }
 
 const TwoUsers = ({
@@ -91,13 +97,14 @@ const TwoUsers = ({
   size = 24,
   height = 24,
   width = 24,
+  className = '',
   ...props
 }: ITwoUsersProps) => {
   switch (filled) {
     case false:
       return (
         <Svg
-          className=""
+          className={className}
           width={width || size}
           height={height || size}
           viewBox="0 0 24 24"
@@ -113,7 +120,7 @@ const TwoUsers = ({
     default:
       return (
         <Svg
-          className=""
+          className={className}
           width={width || size}
           height={height || size}
           viewBox="0 0 24 24"

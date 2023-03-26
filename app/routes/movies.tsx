@@ -1,8 +1,6 @@
 import { MetaFunction } from '@remix-run/node';
-import { NavLink, Outlet, useLocation } from '@remix-run/react';
+import { NavLink, Outlet } from '@remix-run/react';
 import { Container, Badge } from '@nextui-org/react';
-
-import TabLink from '~/components/elements/tab/TabLink';
 
 export const meta: MetaFunction = () => ({
   title: 'Free Movies HD - Watch Movies and Tv Series HD Online on Sora',
@@ -17,7 +15,6 @@ export const meta: MetaFunction = () => ({
 });
 
 const moviePage = [
-  { pageName: 'Discover Movies', pageLink: '/discover' },
   { pageName: 'Popular Movies', pageLink: '/popular' },
   { pageName: 'Top Rated Movies', pageLink: '/top-rated' },
   { pageName: 'Upcoming Movies', pageLink: '/upcoming' },
@@ -41,22 +38,20 @@ export const handle = {
       )}
     </NavLink>
   ),
+  showTabLink: true,
+  tabLinkPages: moviePage,
+  tabLinkTo: '/movies',
+  hideTabLinkWithLocation: (locationPathname: string) => {
+    if (locationPathname.split('/')[2]?.match(/^\d+$/) || locationPathname === '/movies')
+      return true;
+    return false;
+  },
 };
 
-const MoviePage = () => {
-  const location = useLocation();
-  if (location.pathname.split('/')[2]?.match(/^\d+$/) || location.pathname === '/movies')
-    return (
-      <Container fluid css={{ m: 0, p: 0 }}>
-        <Outlet />
-      </Container>
-    );
-  return (
-    <Container fluid css={{ m: 0, p: 0 }}>
-      <TabLink pages={moviePage} linkTo="/movies" />
-      <Outlet />
-    </Container>
-  );
-};
+const MoviePage = () => (
+  <Container fluid responsive={false} css={{ m: 0, p: 0 }}>
+    <Outlet />
+  </Container>
+);
 
 export default MoviePage;

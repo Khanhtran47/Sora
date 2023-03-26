@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/indent */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { json } from '@remix-run/node';
 import type { LoaderArgs, MetaFunction } from '@remix-run/node';
@@ -420,6 +419,7 @@ const SeasonDetail = () => {
       </Card>
       <Container
         as="div"
+        responsive={false}
         xl
         css={{
           margin: '0.75rem 0 0 0',

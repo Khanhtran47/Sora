@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable no-unsafe-optional-chaining */
-/* eslint-disable no-nested-ternary */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import * as React from 'react';
 import { Card, Loading, Tooltip, Avatar } from '@nextui-org/react';
 import { useFetcher } from '@remix-run/react';
@@ -10,6 +8,7 @@ import { useInView } from 'react-intersection-observer';
 import { ClientOnly } from 'remix-utils';
 import { motion } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
+import { useMeasure, useMediaQuery } from '@react-hookz/web';
 
 import useCardHoverStore from '~/store/card/useCardHoverStore';
 
@@ -81,10 +80,16 @@ const CardItem = (props: ICardItemProps) => {
   const setIsCardPlaying = useCardHoverStore((state) => state.setIsCardPlaying);
   const [trailerCard, setTrailerCard] = React.useState<Trailer>({});
   const { isPlayTrailer } = useSoraSettings();
+  const [size, imageRef] = useMeasure<HTMLDivElement>();
   const titleItem =
     typeof title === 'string'
       ? title
       : title?.userPreferred || title?.english || title?.romaji || title?.native;
+  const isSm = useMediaQuery('(min-width: 650px)', { initializeWithValue: false });
+  const isMd = useMediaQuery('(min-width: 768px)', { initializeWithValue: false });
+  const isLg = useMediaQuery('(min-width: 1024px)', { initializeWithValue: false });
+  const isXl = useMediaQuery('(min-width: 1280px)', { initializeWithValue: false });
+  const cardMaxWidth = isXl ? '264px' : isLg ? '244px' : isMd ? '200px' : isSm ? '180px' : '164px';
 
   React.useEffect(() => {
     if (fetcher.data && fetcher.data.videos) {
@@ -101,8 +106,8 @@ const CardItem = (props: ICardItemProps) => {
         isHoverable
         isPressable
         css={{
-          minWidth: '280px !important',
-          maxWidth: '158px !important',
+          width: '100%',
+          minWidth: isSm ? '480px' : '280px',
           borderWidth: 0,
           filter: 'unset',
           '&:hover': {
@@ -110,16 +115,12 @@ const CardItem = (props: ICardItemProps) => {
             filter:
               'drop-shadow(0 4px 12px rgb(104 112 118 / 0.15)) drop-shadow(0 20px 8px rgb(104 112 118 / 0.1))',
           },
-          '@xs': {
-            minWidth: '480px !important',
-            minHeight: '270px !important',
-          },
         }}
         role="figure"
         ref={ref}
       >
-        {inView ? (
-          <Card.Body css={{ p: 0 }}>
+        <Card.Body ref={imageRef} css={{ p: 0, width: '100%', aspectRatio: '16 / 9' }}>
+          {size ? (
             <Card.Image
               // @ts-ignore
               as={Image}
@@ -130,37 +131,27 @@ const CardItem = (props: ICardItemProps) => {
               alt={titleItem}
               title={titleItem}
               css={{
-                minWidth: '280px !important',
-                minHeight: '158px !important',
-                '@xs': {
-                  minWidth: '480px !important',
-                  minHeight: '270px !important',
-                },
+                aspectRatio: '16 / 9',
               }}
               showSkeleton
               loaderUrl="/api/image"
               placeholder="empty"
+              loading="lazy"
+              decoding={inView ? 'async' : 'auto'}
               options={{
                 contentType: MimeType.WEBP,
               }}
               responsive={[
                 {
                   size: {
-                    width: 280,
-                    height: 158,
-                  },
-                  maxWidth: 650,
-                },
-                {
-                  size: {
-                    width: 480,
-                    height: 270,
+                    width: Math.round(size?.width),
+                    height: Math.round(size?.height),
                   },
                 },
               ]}
             />
-          </Card.Body>
-        ) : null}
+          ) : null}
+        </Card.Body>
         <Card.Footer
           className="backdrop-blur-md"
           css={{
@@ -186,7 +177,7 @@ const CardItem = (props: ICardItemProps) => {
       isHoverable
       isPressable
       css={{
-        minWidth: `${mediaType === 'people' ? '160px' : '164px'} !important`,
+        width: mediaType === 'people' ? '164px' : cardMaxWidth,
         minHeight: `${mediaType === 'people' ? '324px' : '318px'} !important`,
         borderWidth: 0,
         filter: 'unset',
@@ -195,136 +186,58 @@ const CardItem = (props: ICardItemProps) => {
           filter:
             'drop-shadow(0 4px 12px rgb(104 112 118 / 0.15)) drop-shadow(0 20px 8px rgb(104 112 118 / 0.1))',
         },
-        ...(mediaType !== 'people'
-          ? {
-              '@xs': {
-                minWidth: '210px !important',
-                minHeight: '386px !important',
-              },
-              '@sm': {
-                minWidth: '244px !important',
-                minHeight: '435px !important',
-              },
-              '@lg': {
-                minWidth: '280px !important',
-                minHeight: '488px !important',
-              },
-            }
-          : {}),
       }}
       role="figure"
       ref={ref}
     >
-      {inView ? (
-        <Card.Body
-          css={{
-            p: 0,
-            minHeight: '240px',
-            ...(mediaType !== 'people'
-              ? {
-                  '@xs': { minHeight: '308px' },
-                  '@sm': { minHeight: '357px' },
-                  '@lg': { minHeight: '410px' },
-                }
-              : {}),
-          }}
-        >
-          {posterPath ? (
-            <Card.Image
-              // @ts-ignore
-              as={Image}
-              src={posterPath || ''}
-              objectFit="cover"
-              width="100%"
-              height="auto"
-              alt={titleItem}
-              title={titleItem}
-              css={{
-                minWidth: `${mediaType === 'people' ? '160px' : '164px'} !important`,
-                minHeight: '240px !important',
-                ...(mediaType !== 'people'
-                  ? {
-                      '@xs': {
-                        minWidth: '210px !important',
-                        minHeight: '308px !important',
-                      },
-                      '@sm': {
-                        minWidth: '244px !important',
-                        minHeight: '357px !important',
-                      },
-                      '@lg': {
-                        minWidth: '280px !important',
-                        minHeight: '410px !important',
-                      },
-                    }
-                  : {}),
-              }}
-              showSkeleton
-              loaderUrl="/api/image"
-              placeholder="empty"
-              options={{
-                contentType: MimeType.WEBP,
-              }}
-              responsive={[
-                {
-                  size: {
-                    width: mediaType === 'people' ? 160 : 164,
-                    height: mediaType === 'people' ? 240 : 240,
+      <Card.Body ref={imageRef} css={{ p: 0, width: '100%', aspectRatio: '2 / 3' }}>
+        {size ? (
+          // eslint-disable-next-line react/jsx-no-useless-fragment
+          <>
+            {posterPath ? (
+              <Card.Image
+                // @ts-ignore
+                as={Image}
+                src={posterPath || ''}
+                objectFit="cover"
+                width="100%"
+                height="auto"
+                alt={titleItem}
+                title={titleItem}
+                loading="lazy"
+                decoding={inView ? 'async' : 'auto'}
+                css={{ aspectRatio: '2 / 3' }}
+                showSkeleton
+                loaderUrl="/api/image"
+                placeholder="empty"
+                options={{
+                  contentType: MimeType.WEBP,
+                }}
+                responsive={[
+                  {
+                    size: {
+                      width: Math.round(size?.width),
+                      height: Math.round(size?.height),
+                    },
                   },
-                  maxWidth: 650,
-                },
-                {
-                  size: {
-                    width: mediaType === 'people' ? 160 : 210,
-                    height: mediaType === 'people' ? 240 : 308,
-                  },
-                  maxWidth: 960,
-                },
-                {
-                  size: {
-                    width: mediaType === 'people' ? 160 : 244,
-                    height: mediaType === 'people' ? 240 : 435,
-                  },
-                  maxWidth: 1400,
-                },
-                {
-                  size: {
-                    width: mediaType === 'people' ? 160 : 280,
-                    height: mediaType === 'people' ? 240 : 410,
-                  },
-                },
-              ]}
-            />
-          ) : (
-            <Avatar
-              icon={<PhotoIcon width={48} height={48} />}
-              pointer
-              css={{
-                size: '$20',
-                borderRadius: '0 !important',
-                minWidth: `${mediaType === 'people' ? '160px' : '164px'} !important`,
-                minHeight: '240px !important',
-                ...(mediaType !== 'people'
-                  ? {
-                      '@xs': {
-                        minWidth: '210px !important',
-                        minHeight: '308px !important',
-                      },
-                      '@sm': {
-                        minWidth: '244px !important',
-                        minHeight: '357px !important',
-                      },
-                      '@lg': {
-                        minWidth: '280px !important',
-                        minHeight: '410px !important',
-                      },
-                    }
-                  : {}),
-              }}
-            />
-          )}
-        </Card.Body>
-      ) : null}
+                ]}
+              />
+            ) : (
+              <Avatar
+                icon={<PhotoIcon width={48} height={48} />}
+                pointer
+                css={{
+                  size: '$20',
+                  borderRadius: '0 !important',
+                  width: '100%',
+                  height: 'auto',
+                  aspectRatio: '2 / 3',
+                }}
+              />
+            )}
+          </>
+        ) : null}
+      </Card.Body>
       <Tooltip
         placement="top"
         content={

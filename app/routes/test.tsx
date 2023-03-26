@@ -1,9 +1,12 @@
 import type { MetaFunction } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
-import { NavLink, useLocation, Outlet } from '@remix-run/react';
+import { NavLink, Outlet } from '@remix-run/react';
 import { Container, Badge } from '@nextui-org/react';
 
-import TabLink from '~/components/elements/tab/TabLink';
+const testingPage = [
+  { pageName: 'Design System', pageLink: '/design-system' },
+  { pageName: 'Player', pageLink: '/player' },
+];
 
 export const meta: MetaFunction = () => ({
   title: 'Test Route',
@@ -39,49 +42,33 @@ export const handle = {
     </NavLink>
   ),
   getSitemapEntries: () => null,
+  showTabLink: true,
+  tabLinkPages: testingPage,
+  tabLinkTo: '/test',
+  hideTabLinkWithLocation: (locationPathname: string) => {
+    if (locationPathname === '/test/player') {
+      return true;
+    }
+    return false;
+  },
 };
 
-const testingPage = [
-  { pageName: 'Design System', pageLink: '/design-system' },
-  { pageName: 'Player', pageLink: '/player' },
-];
-
-const TestRoute = () => {
-  const location = useLocation();
-  if (location.pathname === '/test/player')
-    return (
-      <Container
-        fluid
-        display="flex"
-        justify="flex-start"
-        direction="column"
-        css={{
-          padding: '0 $sm',
-          '@xs': {
-            padding: 0,
-          },
-        }}
-      >
-        <Outlet />
-      </Container>
-    );
-  return (
-    <Container
-      fluid
-      display="flex"
-      justify="flex-start"
-      direction="column"
-      css={{
-        padding: '0 $sm',
-        '@xs': {
-          padding: 0,
-        },
-      }}
-    >
-      <TabLink pages={testingPage} linkTo="/test" />
-      <Outlet />
-    </Container>
-  );
-};
+const TestRoute = () => (
+  <Container
+    fluid
+    responsive={false}
+    display="flex"
+    justify="flex-start"
+    direction="column"
+    css={{
+      padding: '0 $sm',
+      '@xs': {
+        padding: 0,
+      },
+    }}
+  >
+    <Outlet />
+  </Container>
+);
 
 export default TestRoute;

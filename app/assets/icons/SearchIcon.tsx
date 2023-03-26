@@ -54,6 +54,12 @@ interface ISearchProps {
    * @type number
    * */
   width?: number;
+  /**
+   * The className of the icon
+   * @default ''
+   * @type string
+   * */
+  className?: string;
 }
 
 const Search = ({
@@ -62,13 +68,14 @@ const Search = ({
   size = 24,
   height = 24,
   width = 24,
+  className = '',
   ...props
 }: ISearchProps) => {
   switch (filled) {
     case false:
       return (
         <Svg
-          className=""
+          className={className}
           width={width || size}
           height={height || size}
           viewBox="0 0 24 24"
@@ -84,7 +91,7 @@ const Search = ({
     default:
       return (
         <Svg
-          className=""
+          className={className}
           width={width || size}
           height={height || size}
           viewBox="0 0 24 24"

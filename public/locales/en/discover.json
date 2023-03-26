@@ -1,0 +1,16 @@
+{
+  "discover": "Discover",
+  "search": "Search",
+  "filter": "Filter",
+  "categories": "Categories",
+  "movies": "Movies",
+  "tv-shows": "TV Shows",
+  "anime": "Anime",
+  "people": "People",
+  "trending": "Trending",
+  "general": "General",
+  "movies-genres": "Movies Genres",
+  "tv-show-genres": "TV Shows Genres",
+  "anime-genres": "Anime Genres",
+  "collections": "Collections"
+}
