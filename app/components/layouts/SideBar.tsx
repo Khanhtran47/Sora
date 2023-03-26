@@ -48,7 +48,7 @@ export const handle = {
 };
 
 const sidebarStyles = tv({
-  base: 'grow-0 shrink-0 box-border fixed z-[999] hidden sm:block transition-[max-width] duration-400',
+  base: 'grow-0 shrink-0 box-border fixed z-[1999] hidden sm:block transition-[max-width] duration-400',
   variants: {
     sidebarMiniMode: {
       true: 'basis-[80px] max-w-[80px] w-full',
@@ -165,7 +165,7 @@ const SideBar = () => {
             value="home"
           >
             <Tooltip
-              content="Home"
+              content={t('home')}
               isDisabled={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
               placement="right"
               color="primary"
@@ -201,12 +201,13 @@ const SideBar = () => {
               </NavigationMenuLink>
             </Tooltip>
           </NavigationMenuItem>
+
           <NavigationMenuItem
             className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
             value="trending"
           >
             <Tooltip
-              content="Trending"
+              content={t('trending')}
               isDisabled={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
               placement="right"
               color="primary"
@@ -244,12 +245,13 @@ const SideBar = () => {
               </NavigationMenuLink>
             </Tooltip>
           </NavigationMenuItem>
+
           <NavigationMenuItem
             className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
-            value="collections"
+            value="discover"
           >
             <Tooltip
-              content="Collections"
+              content={t('discover')}
               isDisabled={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
               placement="right"
               color="primary"
@@ -257,21 +259,21 @@ const SideBar = () => {
             >
               <NavigationMenuLink asChild>
                 <NavLink
-                  to="/collections"
+                  to="/discover"
                   className={navigationMenuTriggerStyle({
                     class: `${navigationItemWidthStyle} h-[56px] justify-start transition-[width] duration-200`,
                   })}
                 >
                   {({ isActive, isPending }) => (
                     <>
-                      <CategoryIcon
+                      <Discover
                         className={
                           !sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'mr-4' : ''
                         }
                         filled={isActive}
                       />
                       {!sidebarMiniMode.value || (sidebarHoverMode && isHovered)
-                        ? t('collections')
+                        ? t('discover')
                         : null}
                       <Loading
                         className={
@@ -287,6 +289,7 @@ const SideBar = () => {
               </NavigationMenuLink>
             </Tooltip>
           </NavigationMenuItem>
+
           <NavigationMenuItem
             className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
             value="search"
@@ -390,6 +393,7 @@ const SideBar = () => {
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
+
           <NavigationMenuItem
             className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
             value="movies"
@@ -576,6 +580,7 @@ const SideBar = () => {
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
+
           <NavigationMenuItem
             className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
             value="tv-shows"
@@ -762,6 +767,7 @@ const SideBar = () => {
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
+
           <NavigationMenuItem
             className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
             value="anime"
@@ -944,12 +950,57 @@ const SideBar = () => {
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
+
+          <NavigationMenuItem
+            className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
+            value="collections"
+          >
+            <Tooltip
+              content={t('collections')}
+              isDisabled={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
+              placement="right"
+              color="primary"
+              offset={10}
+            >
+              <NavigationMenuLink asChild>
+                <NavLink
+                  to="/collections"
+                  className={navigationMenuTriggerStyle({
+                    class: `${navigationItemWidthStyle} h-[56px] justify-start transition-[width] duration-200`,
+                  })}
+                >
+                  {({ isActive, isPending }) => (
+                    <>
+                      <CategoryIcon
+                        className={
+                          !sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'mr-4' : ''
+                        }
+                        filled={isActive}
+                      />
+                      {!sidebarMiniMode.value || (sidebarHoverMode && isHovered)
+                        ? t('collections')
+                        : null}
+                      <Loading
+                        className={
+                          isPending && (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))
+                            ? 'ml-auto'
+                            : '!hidden'
+                        }
+                        type="points-opacity"
+                      />
+                    </>
+                  )}
+                </NavLink>
+              </NavigationMenuLink>
+            </Tooltip>
+          </NavigationMenuItem>
+
           <NavigationMenuItem
             className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
             value="people"
           >
             <Tooltip
-              content="People"
+              content={t('people')}
               isDisabled={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
               placement="right"
               color="primary"
@@ -1033,7 +1084,7 @@ const SideBar = () => {
             value="history"
           >
             <Tooltip
-              content="History"
+              content={t('history')}
               isDisabled={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
               placement="right"
               color="primary"
@@ -1071,12 +1122,13 @@ const SideBar = () => {
               </NavigationMenuLink>
             </Tooltip>
           </NavigationMenuItem>
+
           <NavigationMenuItem
             className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
             value="settings"
           >
             <Tooltip
-              content="Settings"
+              content={t('settings')}
               isDisabled={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
               placement="right"
               color="primary"
