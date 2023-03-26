@@ -5,6 +5,7 @@ import {
   Button,
   // Tooltip,
   Popover,
+  styled,
 } from '@nextui-org/react';
 import { useNavigate, useMatches, useLocation } from '@remix-run/react';
 import type { User } from '@supabase/supabase-js';
@@ -12,6 +13,7 @@ import type { AnimationItem } from 'lottie-web';
 // import { useTranslation } from 'react-i18next';
 import { tv } from 'tailwind-variants';
 // import { useMediaQuery } from '@react-hookz/web';
+import { Player } from '@lottiefiles/react-lottie-player';
 
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
@@ -19,7 +21,6 @@ import { useHistoryStack } from '~/store/layout/useHistoryStack';
 
 /* Components */
 import MultiLevelDropdown from '~/components/layouts/MultiLevelDropdown';
-import { PlayerStyled } from '~/components/layouts/Layout.styles';
 
 /* Assets */
 // import MenuIcon from '~/assets/icons/MenuIcon';
@@ -65,13 +66,15 @@ const headerStyles = tv({
   },
 });
 
+const PlayerStyled = styled(Player, {
+  '& path': {
+    stroke: '$primary',
+  },
+});
+
 const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   // const { t } = useTranslation('header');
-  const {
-    // open,
-    user,
-    // setOpen
-  } = props;
+  const { user } = props;
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [lottie, setLottie] = useState<AnimationItem>();
   const navigate = useNavigate();

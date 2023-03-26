@@ -143,7 +143,6 @@ const tabLinkWrapperStyles = tv({
 
 const Layout = (props: ILayout) => {
   const { children, user } = props;
-  const [open, setOpen] = useState(false);
   const location = useLocation();
   const matches = useMatches();
   const navigationType = useNavigationType();
@@ -251,7 +250,7 @@ const Layout = (props: ILayout) => {
 
   return (
     <div className={layoutStyles({ boxed: sidebarBoxedMode.value })}>
-      {isSm ? null : <SideBar open={open} setOpen={setOpen} />}
+      {isSm ? null : <SideBar />}
       <div
         className={contentAreaStyles({
           mini: sidebarMiniMode.value,

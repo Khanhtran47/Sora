@@ -1,21 +1,16 @@
 /* eslint-disable @typescript-eslint/indent */
 import * as React from 'react';
 import { NavLink } from '@remix-run/react';
-import { Spacer, Grid, Row, Button, Tooltip, Loading, Card, Link } from '@nextui-org/react';
+import { Tooltip, Loading, Card, Link } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
-import { AnimatePresence, motion } from 'framer-motion';
-import { isMobile } from 'react-device-detect';
-import { tv, type VariantProps } from 'tailwind-variants';
+import { tv } from 'tailwind-variants';
 import Image, { MimeType } from 'remix-image';
 import { useHover } from '@react-aria/interactions';
 
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 
-import { leftDrawerPages } from '~/constants/navPages';
-
-import { H2, H4, H5, H6 } from '~/components/styles/Text.styles';
+import { H2, H4, H6 } from '~/components/styles/Text.styles';
 // import NavLink from '~/components/elements/NavLink';
-import { drawerWidth, openedMixin, closedMixin, Drawer } from '~/components/layouts/Layout.styles';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -34,10 +29,9 @@ import {
 // } from '~/components/elements/scroll-area/ScrollArea';
 
 /* icons */
-import MenuIcon from '~/assets/icons/MenuIcon';
 import TrendingUp from '~/assets/icons/TrendingUpIcon';
 import Settings from '~/assets/icons/SettingsIcon';
-import Library from '~/assets/icons/LibraryIcon';
+// import Library from '~/assets/icons/LibraryIcon';
 import History from '~/assets/icons/HistoryIcon';
 import TwoUsers from '~/assets/icons/TwoUsersIcon';
 import CategoryIcon from '~/assets/icons/CategoryIcon';
@@ -48,11 +42,6 @@ import Discover from '~/assets/icons/DiscoverIcon';
 import Movie from '~/assets/icons/MovieIcon';
 import Tv from '~/assets/icons/TvIcon';
 import Anime from '~/assets/icons/AnimeIcon';
-
-interface ILeftDrawerProps {
-  open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
 
 export const handle = {
   i18n: 'left-drawer',
@@ -105,33 +94,9 @@ const sidebarActiveStyles = tv({
   },
 });
 
-const SideBar: React.FC<ILeftDrawerProps> = (props: ILeftDrawerProps) => {
+const SideBar = () => {
   const { t } = useTranslation('sidebar');
-  // const wrapperRef = React.useRef<HTMLDivElement>(null);
-  // const { open, setOpen } = props;
-
-  /**
-   * If the drawer is open and the user clicks outside of the drawer, close the drawer.
-   * @param {any} event - any - this is the event that is triggered when the user clicks outside of the
-   * drawer.
-   */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  // const handleClickOutside = (event: any) => {
-  //   if (open && wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-  //     setOpen(false);
-  //   }
-  // };
-
-  // /* Adding an event listener to the document for handling click outside drawer */
-  // React.useEffect(() => {
-  //   document.addEventListener('click', handleClickOutside, true);
-  //   return () => {
-  //     document.removeEventListener('click', handleClickOutside, true);
-  //   };
-  // });
-
-  const { sidebarMiniMode, sidebarHoverMode, sidebarBoxedMode, sidebarSheetMode } =
-    useSoraSettings();
+  const { sidebarMiniMode, sidebarHoverMode, sidebarBoxedMode } = useSoraSettings();
   const { hoverProps: sidebarHoverProps, isHovered } = useHover({
     isDisabled: !sidebarHoverMode.value,
   });
