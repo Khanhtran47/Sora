@@ -7,9 +7,10 @@
   "tv-shows": "Séries TV",
   "anime": "Anime",
   "people": "Célébrités",
+  "trending": "Tendances",
   "general": "Général",
-  "movies-genres": "Genres de films",
-  "tv-shows-genres": "Genres de séries TV",
+  "movie-genres": "Genres de films",
+  "tv-show-genres": "Genres de séries TV",
   "anime-genres": "Genres d'anime",
   "collections": "Collections"
 }

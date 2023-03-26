@@ -53,6 +53,9 @@
   "original_title": "Nom",
   "vote_average": "Vote moyen",
   "first_air_date": "Première diffusion",
+  "movie-genres": "Genres de films",
+  "tv-show-genres": "Genres de séries TV",
+  "anime-genres": "Genres d'anime",
   "search": {
     "title": {
       "movie": "Recherche de films",

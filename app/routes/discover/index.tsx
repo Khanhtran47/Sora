@@ -11,6 +11,7 @@ import Movie from '~/assets/icons/MovieIcon';
 import TvShows from '~/assets/icons/TvIcon';
 import Anime from '~/assets/icons/AnimeIcon';
 import TwoUsers from '~/assets/icons/TwoUsersIcon';
+import TrendingUp from '~/assets/icons/TrendingUpIcon';
 import Category from '~/assets/icons/CategoryIcon';
 
 const categoryPages = [
@@ -34,22 +35,27 @@ const categoryPages = [
     icon: <TwoUsers fill="currentColor" />,
     path: '/people',
   },
+  {
+    name: 'trending',
+    icon: <TrendingUp fill="currentColor" />,
+    path: '/trending',
+  },
 ];
 
 const generalPages = [
   {
-    name: 'movies-genres',
-    path: '/movies/genres',
+    name: 'movie-genres',
+    path: '/genres/movie',
     icon: false,
   },
   {
-    name: 'tv-shows-genres',
-    path: '/tv/genres',
+    name: 'tv-show-genres',
+    path: '/genres/tv',
     icon: false,
   },
   {
     name: 'anime-genres',
-    path: '/anime/genres',
+    path: '/genres/anime',
     icon: false,
   },
   {
@@ -95,7 +101,7 @@ const DiscoverPage = () => {
       >
         {t('filter')}
       </Button>
-      <Spacer y={1.5} />
+
       <div className="flex flex-col w-full justify-center items-start">
         <H4>{t('categories')}</H4>
         <Spacer y={0.5} />

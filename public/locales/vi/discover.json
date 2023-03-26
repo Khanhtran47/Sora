@@ -7,9 +7,10 @@
   "tv-shows": "Phim bộ",
   "anime": "Anime",
   "people": "Người nổi tiếng",
+  "trending": "Xu hướng",
   "general": "Tổng quan",
-  "movies-genres": "Thể loại phim lẻ",
-  "tv-shows-genres": "Thể loại phim bộ",
+  "movie-genres": "Thể loại phim lẻ",
+  "tv-show-genres": "Thể loại phim bộ",
   "anime-genres": "Thể loại anime",
   "collections": "Bộ sưu tập"
 }
