@@ -234,7 +234,7 @@ const Layout = (props: ILayout) => {
       });
       lastScrollPosition = currentScrollPosition > 0 ? currentScrollPosition : 0;
     };
-    const removeScrollYProgress = scrollY.onChange(throttle(updateAtScroll, 120));
+    const removeScrollYProgress = scrollY.onChange(throttle(updateAtScroll, 200));
     return () => {
       removeScrollYProgress();
     };
@@ -276,6 +276,7 @@ const Layout = (props: ILayout) => {
             height: sidebarBoxedMode.value ? 'calc(100vh - 15px)' : '100vh',
             borderRadius: 0,
           }}
+          key="scroll-area-main"
         >
           <ScrollAreaViewport ref={viewportRef}>
             <main

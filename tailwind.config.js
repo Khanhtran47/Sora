@@ -98,5 +98,5 @@ module.exports = withTV({
       'nextui-xl': '1920px',
     },
   },
-  plugins: [require('@tailwindcss/line-clamp')],
+  plugins: [require('@tailwindcss/line-clamp'), require('tailwind-scrollbar-hide')],
 });
