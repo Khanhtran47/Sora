@@ -83,7 +83,7 @@ const TvSeasonCastPage = () => {
               // scroll to top after changing page
               ref.current?.scrollIntoView({
                 behavior: 'smooth',
-                block: 'center',
+                block: 'start',
                 inline: 'center',
               });
             }}

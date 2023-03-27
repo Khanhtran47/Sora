@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
+import { useRef } from 'react';
 import { json } from '@remix-run/node';
 import type { MetaFunction, LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useNavigate, NavLink, RouteMatch, useParams } from '@remix-run/react';
@@ -66,9 +67,16 @@ const MovieSimilarPage = () => {
   const { movieId } = useParams();
   const { similar } = useLoaderData<typeof loader>();
   const rootData = useTypedRouteLoaderData('root');
+  const ref = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  const paginationChangeHandler = (page: number) =>
+  const paginationChangeHandler = (page: number) => {
     navigate(`/movies/${movieId}/similar?page=${page}`);
+    ref.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+      inline: 'center',
+    });
+  };
 
   return (
     <Row
@@ -84,6 +92,7 @@ const MovieSimilarPage = () => {
         },
       }}
     >
+      <div ref={ref} />
       {similar && similar.items && similar.items.length > 0 && (
         <MediaList
           listType="grid"
