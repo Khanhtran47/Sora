@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/indent */
+import { useRef } from 'react';
 import { json, MetaFunction } from '@remix-run/node';
 import type { LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useLocation, NavLink, RouteMatch } from '@remix-run/react';
@@ -99,6 +100,7 @@ const CollectionDetail = () => {
   const { detail } = useLoaderData<typeof loader>();
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const rootData = useTypedRouteLoaderData('root');
+  const ref = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const { gotoPage, currentPage, maxPage, currentData } = useSplitArrayIntoPage(
     detail?.items || [],
@@ -114,6 +116,7 @@ const CollectionDetail = () => {
       transition={{ duration: 0.3 }}
       className="w-full flex justify-center flex-col items-center px-3 sm:px-0 pb-16"
     >
+      <div ref={ref} />
       {detail && detail.items && detail.items.length > 0 && (
         <MediaList
           listType="grid"
@@ -134,6 +137,11 @@ const CollectionDetail = () => {
             // shadow
             onChange={(page) => {
               gotoPage(page);
+              ref.current?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start',
+                inline: 'center',
+              });
             }}
             css={{ marginTop: '2rem' }}
             {...(isSm && { size: 'xs' })}
