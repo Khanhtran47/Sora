@@ -1,52 +1,50 @@
 /* eslint-disable @typescript-eslint/indent */
 import { forwardRef, type ElementRef, type ComponentPropsWithoutRef } from 'react';
 import * as NavigationMenuPrimitive from '@radix-ui/react-navigation-menu';
-import { tv } from 'tailwind-variants';
+import { tv, cnBase } from 'tailwind-variants';
 
 import ChevronRight from '~/assets/icons/ChevronRightIcon';
 
-const navigationMenuViewportStyle = tv({
-  base: `origin-[top_center] data-[state=open]:animate-scaleIn data-[state=closed]:animate-scaleOut
-  data-[state=open]:fadeIn data-[state=closed]:fadeOut relative data-[orientation=horizontal]:mt-1.5
-  data-[orientation=vertical]:ml-[-8px] h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden
-  rounded-[12px] border border-border shadow-lg transition-[width,_height] duration-300 bg-background-contrast-alpha
-  sm:w-[var(--radix-navigation-menu-viewport-width)] backdrop-blur-md`,
-});
 const NavigationMenuViewport = forwardRef<
   ElementRef<typeof NavigationMenuPrimitive.Viewport>,
   ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Viewport> & {
     orientation: NavigationMenuPrimitive.Orientation | undefined;
   }
 >(({ className = '', orientation, ...props }, ref) => (
-  <div
-    data-orientation={orientation}
-    className={`absolute flex justify-center data-[orientation=vertical]:left-full
-      data-[orientation=horizontal]:top-full data-[orientation=horizontal]:left-0`}
-  >
-    <NavigationMenuPrimitive.Viewport
-      className={navigationMenuViewportStyle({ class: className })}
-      ref={ref}
-      {...props}
-    />
-  </div>
+  <NavigationMenuPrimitive.Viewport
+    className={cnBase(
+      'origin-[top_center] data-[state=open]:animate-scaleIn data-[state=closed]:animate-scaleOut data-[state=open]:fadeIn data-[state=closed]:fadeOut relative data-[orientation=horizontal]:mt-1.5 data-[orientation=vertical]:ml-[-8px] h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden rounded-[12px] border border-border shadow-lg transition-[width,_height] duration-300 bg-background-contrast-alpha sm:w-[var(--radix-navigation-menu-viewport-width)] backdrop-blur-md',
+      className,
+    )}
+    ref={ref}
+    {...props}
+  />
 ));
 NavigationMenuViewport.displayName = NavigationMenuPrimitive.Viewport.displayName;
 
-const navigationMenuStyles = tv({
-  base: 'relative z-10 flex flex-1 items-center justify-center',
-});
 const NavigationMenu = forwardRef<
   ElementRef<typeof NavigationMenuPrimitive.Root>,
-  ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Root>
->(({ className = '', children, orientation, ...props }, ref) => (
+  ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Root> & {
+    viewportPositionClassName?: string;
+  }
+>(({ className = '', children, viewportPositionClassName, orientation, ...props }, ref) => (
   <NavigationMenuPrimitive.Root
     ref={ref}
     orientation={orientation}
-    className={navigationMenuStyles({ class: className })}
+    className={cnBase('relative z-10 flex flex-1 items-center justify-center', className)}
     {...props}
   >
     {children}
-    <NavigationMenuViewport orientation={orientation} />
+    <div
+      data-orientation={orientation}
+      className={cnBase(
+        `absolute flex justify-center data-[orientation=vertical]:left-full
+      data-[orientation=horizontal]:top-full data-[orientation=horizontal]:left-0`,
+        viewportPositionClassName,
+      )}
+    >
+      <NavigationMenuViewport orientation={orientation} />
+    </div>
   </NavigationMenuPrimitive.Root>
 ));
 NavigationMenu.displayName = NavigationMenuPrimitive.Root.displayName;
