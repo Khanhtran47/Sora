@@ -150,15 +150,7 @@ type SheetContentProps = DialogContentPrimitiveProps &
 
 const SheetContent = React.forwardRef<React.ElementRef<typeof StyledContent>, SheetContentProps>(
   (
-    {
-      children,
-      hideCloseButton,
-      swipeDownToClose,
-      open,
-      onOpenChange,
-      container = document.body,
-      ...props
-    },
+    { children, hideCloseButton, swipeDownToClose, open, onOpenChange, container, ...props },
     forwardedRef,
   ) => {
     const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {

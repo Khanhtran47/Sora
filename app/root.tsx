@@ -45,6 +45,7 @@ import FontStyles600 from '@fontsource/inter/600.css';
 import FontStyles700 from '@fontsource/inter/700.css';
 import FontStyles800 from '@fontsource/inter/800.css';
 import FontStyles900 from '@fontsource/inter/900.css';
+import { Toaster, toast } from 'sonner';
 
 import i18next, { i18nCookie } from '~/i18n/i18next.server';
 import * as gtag from '~/utils/client/gtags.client';
@@ -70,15 +71,6 @@ import nProgressStyles from '~/components/styles/nprogress.css';
 
 import Layout from '~/components/layouts/Layout';
 import Flex from '~/components/styles/Flex.styles';
-import {
-  Toast,
-  ToastDescription,
-  ToastTitle,
-  ToastProvider,
-  ToastAction,
-  ToastViewport,
-} from '~/components/elements/toast/Toast';
-import { H5, H6 } from '~/components/styles/Text.styles';
 
 import Home from '~/assets/icons/HomeIcon';
 import Refresh from '~/assets/icons/RefreshIcon';
@@ -497,9 +489,12 @@ const App = () => {
   const isBot = useIsBot();
   useChangeLanguage(locale);
   const [isLoading, setIsLoading] = React.useState(true);
-  const [isUpdateAvailable, setIsUpdateAvailable] = React.useState(false);
   const [waitingWorker, setWaitingWorker] = React.useState<ServiceWorker | null>(null);
 
+  const reloadPage = () => {
+    waitingWorker?.postMessage({ type: 'SKIP_WAITING' });
+    window.location.reload();
+  };
   const detectSWUpdate = async () => {
     if ('serviceWorker' in navigator) {
       const registration = await navigator.serviceWorker.ready;
@@ -510,14 +505,28 @@ const App = () => {
             newWorker.addEventListener('statechange', () => {
               if (newWorker.state === 'installed') {
                 setWaitingWorker(newWorker);
-                setIsUpdateAvailable(true);
+                toast.success('Update Available', {
+                  description: 'A new version of Sora is available.',
+                  action: {
+                    label: 'Update',
+                    onClick: () => reloadPage(),
+                  },
+                  duration: Infinity,
+                });
               }
             });
           }
         });
         if (registration.waiting) {
           setWaitingWorker(registration.waiting);
-          setIsUpdateAvailable(true);
+          toast.success('Update Available', {
+            description: 'A new version of Sora is available.',
+            action: {
+              label: 'Update',
+              onClick: () => reloadPage(),
+            },
+            duration: Infinity,
+          });
         }
       }
     }
@@ -526,12 +535,6 @@ const App = () => {
   React.useEffect(() => {
     detectSWUpdate();
   }, []);
-
-  const reloadPage = () => {
-    waitingWorker?.postMessage({ type: 'SKIP_WAITING' });
-    setIsUpdateAvailable(false);
-    window.location.reload();
-  };
 
   /**
    * This gets the state of every fetcher active on the app and combine it with
@@ -650,30 +653,30 @@ const App = () => {
         </AnimatePresence>
         <NextUIProvider>
           <Layout user={user}>
-            {isUpdateAvailable ? (
-              <ToastProvider swipeDirection="right">
-                <Toast
-                  open={isUpdateAvailable}
-                  onOpenChange={setIsUpdateAvailable}
-                  duration={60000}
-                >
-                  <ToastTitle>
-                    <H5 h5 color="success">
-                      Update Available
-                    </H5>
-                  </ToastTitle>
-                  <ToastDescription asChild>
-                    <H6 as="p">A new version of Sora is available.</H6>
-                  </ToastDescription>
-                  <ToastAction asChild altText="Update Action">
-                    <Button auto flat onPress={() => reloadPage()} color="success" type="button">
-                      Update
-                    </Button>
-                  </ToastAction>
-                </Toast>
-                <ToastViewport />
-              </ToastProvider>
-            ) : null}
+            <Toaster
+              position="bottom-right"
+              richColors
+              closeButton
+              toastOptions={{
+                style: {
+                  // @ts-ignore
+                  '--normal-bg': 'var(--nextui-colors-backgroundContrast)',
+                  '--normal-text': 'var(--nextui-colors-text)',
+                  '--normal-border': 'var(--nextui-colors-border)',
+                  '--success-bg': 'var(--nextui-colors-backgroundContrast)',
+                  '--success-border': 'var(--nextui-colors-border)',
+                  '--success-text': 'var(--nextui-colors-success)',
+                  '--error-bg': 'var(--nextui-colors-backgroundContrast)',
+                  '--error-border': 'var(--nextui-colors-border)',
+                  '--error-text': 'var(--nextui-colors-error)',
+                  '--gray1': 'var(--nextui-colors-accents0)',
+                  '--gray2': 'var(--nextui-colors-accents1)',
+                  '--gray4': 'var(--nextui-colors-accents3)',
+                  '--gray5': 'var(--nextui-colors-accents4)',
+                  '--gray12': 'var(--nextui-colors-accents9)',
+                },
+              }}
+            />
             <AnimatePresence exitBeforeEnter initial={false}>
               {outlet}
             </AnimatePresence>

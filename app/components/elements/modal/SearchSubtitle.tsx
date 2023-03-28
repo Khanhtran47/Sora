@@ -14,6 +14,7 @@ import {
   Pagination,
 } from '@nextui-org/react';
 import { useFetcher } from '@remix-run/react';
+import { toast } from 'sonner';
 
 import usePlayerState from '~/store/player/usePlayerState';
 
@@ -35,14 +36,7 @@ import {
   SelectScrollUpButton,
   SelectScrollDownButton,
 } from '~/components/elements/select/Select';
-import {
-  Toast,
-  ToastDescription,
-  ToastTitle,
-  ToastProvider,
-  ToastViewport,
-} from '~/components/elements/toast/Toast';
-import { H3, H6 } from '~/components/styles/Text.styles';
+import { H3 } from '~/components/styles/Text.styles';
 
 import ChevronDownIcon from '~/assets/icons/ChevronDownIcon';
 import ChevronUpIcon from '~/assets/icons/ChevronUpIcon';
@@ -89,7 +83,6 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
   const [subtitle, setSubtitle] = useState<ISubtitle>();
   const [subtitlesSearch, setSubtitlesSearch] = useState<ISubtitlesSearch>();
   const [isGetSubtitleLink, setIsGetSubtitleLink] = useState<boolean>(false);
-  const [open, setOpen] = useState(false);
 
   const handlePageChange = (page: number) => {
     setSubtitlesSearch(undefined);
@@ -193,7 +186,10 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
       ];
       // @ts-ignore
       updateSubtitleSelector(newSubtitle);
-      setOpen(true);
+      toast.success('Open Subtitle', {
+        description: 'Subtitle added successfully',
+        duration: 3000,
+      });
       setIsGetSubtitleLink(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -292,25 +288,15 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
         )}
         {subtitlesSearch &&
           subtitlesSearch.data.map((subtitle) => (
-            <ToastProvider swipeDirection="right" key={subtitle.id}>
-              <Button
-                type="button"
-                light
-                css={{ '@hover': { color: '$primaryLightContrast' } }}
-                onPress={() => handleSubtitleClick(subtitle)}
-              >
-                {subtitle.attributes.release} ({subtitle.attributes.language})
-              </Button>
-              <Toast open={open} onOpenChange={setOpen} duration={3000}>
-                <ToastTitle>Open Subtitle</ToastTitle>
-                <ToastDescription asChild>
-                  <H6 h6 color="success">
-                    Subtitle added successfully
-                  </H6>
-                </ToastDescription>
-              </Toast>
-              <ToastViewport />
-            </ToastProvider>
+            <Button
+              key={subtitle.id}
+              type="button"
+              light
+              css={{ '@hover': { color: '$primaryLightContrast' } }}
+              onPress={() => handleSubtitleClick(subtitle)}
+            >
+              {subtitle.attributes.release} ({subtitle.attributes.language})
+            </Button>
           ))}
         {totalPages > 1 && (
           <Row fluid justify="center" align="center" css={{ margin: '0 0 $8 0' }}>

@@ -74,6 +74,12 @@ interface IInfoProps {
    * @type number
    * */
   width?: number;
+  /**
+   * The className of the icon
+   * @default ''
+   * @type string
+   * */
+  className?: string;
 }
 
 const Info = ({
@@ -82,13 +88,14 @@ const Info = ({
   size = 24,
   height = 24,
   width = 24,
+  className = '',
   ...props
 }: IInfoProps) => {
   switch (filled) {
     case false:
       return (
         <Svg
-          className=""
+          className={className}
           width={width || size}
           height={height || size}
           viewBox="0 0 24 24"
@@ -104,7 +111,7 @@ const Info = ({
     default:
       return (
         <Svg
-          className=""
+          className={className}
           width={width || size}
           height={height || size}
           viewBox="0 0 24 24"

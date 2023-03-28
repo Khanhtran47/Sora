@@ -75,8 +75,6 @@ function cloneObject<T>(obj: T): T {
 
 // Use the window load event to keep the page load performant
 async function loadSW() {
-  console.log('loaded');
-
   return navigator.serviceWorker
     .register(
       `/entry.worker.js${
