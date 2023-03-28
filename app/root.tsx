@@ -76,6 +76,7 @@ import Home from '~/assets/icons/HomeIcon';
 import Refresh from '~/assets/icons/RefreshIcon';
 import pageNotFound from '~/assets/images/404.gif';
 import logoLoading from '~/assets/images/logo_loading.png';
+import { getClientIPAddress, getClientLocales } from 'remix-utils';
 
 interface DocumentProps {
   children: React.ReactNode;
@@ -307,6 +308,14 @@ export const loader = async ({ request }: LoaderArgs) => {
   const gaTrackingId = process.env.GA_TRACKING_ID;
   const user = await getUserFromCookie(request.headers.get('Cookie') || '');
   const deviceDetect = getSelectorsByUserAgent(request.headers.get('User-Agent') || '');
+  const ipAddress = getClientIPAddress(request);
+  const locales = getClientLocales(request);
+  const nowDate = new Date();
+  const formatter = new Intl.DateTimeFormat(locale, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
 
   const headers = new Headers({
     'Set-Cookie': await i18nCookie.serialize(locale),
@@ -325,6 +334,9 @@ export const loader = async ({ request }: LoaderArgs) => {
         NODE_ENV: process.env.NODE_ENV,
         VERCEL_GIT_COMMIT_SHA: process.env.VERCEL_GIT_COMMIT_SHA,
       },
+      ipAddress,
+      locales,
+      nowDate: formatter.format(nowDate),
     },
     { headers },
   );
@@ -490,9 +502,11 @@ const App = () => {
   useChangeLanguage(locale);
   const [isLoading, setIsLoading] = React.useState(true);
   const [waitingWorker, setWaitingWorker] = React.useState<ServiceWorker | null>(null);
+  const [isUpdateAvailable, setIsUpdateAvailable] = React.useState(false);
 
   const reloadPage = () => {
     waitingWorker?.postMessage({ type: 'SKIP_WAITING' });
+    setIsUpdateAvailable(false);
     window.location.reload();
   };
   const detectSWUpdate = async () => {
@@ -505,28 +519,14 @@ const App = () => {
             newWorker.addEventListener('statechange', () => {
               if (newWorker.state === 'installed') {
                 setWaitingWorker(newWorker);
-                toast.success('Update Available', {
-                  description: 'A new version of Sora is available.',
-                  action: {
-                    label: 'Update',
-                    onClick: () => reloadPage(),
-                  },
-                  duration: Infinity,
-                });
+                setIsUpdateAvailable(true);
               }
             });
           }
         });
         if (registration.waiting) {
           setWaitingWorker(registration.waiting);
-          toast.success('Update Available', {
-            description: 'A new version of Sora is available.',
-            action: {
-              label: 'Update',
-              onClick: () => reloadPage(),
-            },
-            duration: Infinity,
-          });
+          setIsUpdateAvailable(true);
         }
       }
     }
@@ -535,6 +535,20 @@ const App = () => {
   React.useEffect(() => {
     detectSWUpdate();
   }, []);
+
+  React.useEffect(() => {
+    if (isUpdateAvailable) {
+      toast.success('Update Available', {
+        description: 'A new version of Sora is available.',
+        action: {
+          label: 'Update',
+          onClick: () => reloadPage(),
+        },
+        duration: Infinity,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isUpdateAvailable]);
 
   /**
    * This gets the state of every fetcher active on the app and combine it with
