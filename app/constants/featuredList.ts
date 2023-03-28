@@ -6,16 +6,64 @@ const featuredList = [
       'https://www.themoviedb.org/t/p/w500_and_h282_multi_faces/1Ep6YHL5QcrNC1JN6RYalWRPopi.jpg',
   },
   {
+    id: 1,
+    name: 'The Marvel Universe',
+    backdropPath:
+      'https://www.themoviedb.org/t/p/w500_and_h282_multi_faces/kaIfm5ryEOwYg8mLbq8HkPuM1Fo.jpg',
+  },
+  {
     id: 146572,
     name: 'Korean Drama & Movies',
     backdropPath:
       'https://www.themoviedb.org/t/p/w500_and_h282_multi_faces/9iypSe1gvjExzZJL0JNR80x5OTS.jpg',
   },
   {
+    id: 3,
+    name: 'The DC Universe',
+    backdropPath:
+      'https://www.themoviedb.org/t/p/w500_and_h282_multi_faces/m6MYSifkYciC4hpjG96zBe39cHR.jpg',
+  },
+  {
+    id: 3945,
+    name: 'Good Science Fiction Flicks',
+    backdropPath:
+      'https://www.themoviedb.org/t/p/w500_and_h282_multi_faces/mZSAu5acXueGC4Z3S5iLSWx8AEp.jpg',
+  },
+  {
+    id: 3321,
+    name: 'Anime Movies',
+    backdropPath:
+      'https://www.themoviedb.org/t/p/w500_and_h282_multi_faces/shqLeIkqPAAXM8iT6wVDiXUYz1p.jpg',
+  },
+  {
+    id: 43372,
+    name: 'Golden Globe Winners',
+    backdropPath:
+      'https://www.themoviedb.org/t/p/w500_and_h282_multi_faces/8wYluVq5AVXhnFFMhUYD9D4rTz5.jpg',
+  },
+  {
+    id: 3700,
+    name: 'Films by Pixar Animation Studios',
+    backdropPath:
+      'https://www.themoviedb.org/t/p/w500_and_h282_multi_faces/lxD5ak7BOoinRNehOCA85CQ8ubr.jpg',
+  },
+  {
+    id: 28,
+    name: 'Best Picture Winners - The Academy Awards',
+    backdropPath:
+      'https://www.themoviedb.org/t/p/w500_and_h282_multi_faces/rgyhSn3mINvkuy9iswZK0VLqQO3.jpg',
+  },
+  {
     id: 83082,
     name: 'Mafia & Gangster',
     backdropPath:
       'https://www.themoviedb.org/t/p/w500_and_h282_multi_faces/rSPw7tgCH9c6NqICZef4kZjFOQ5.jpg',
+  },
+  {
+    id: 43,
+    name: "AFI's 100 Most Thrilling American Films",
+    backdropPath:
+      'https://www.themoviedb.org/t/p/w500_and_h282_multi_faces/xcjJ5khg2yzOa282mza39Lbrm7j.jpg',
   },
   {
     id: 82976,
@@ -36,10 +84,28 @@ const featuredList = [
       'https://www.themoviedb.org/t/p/w500_and_h282_multi_faces/auZIuHEUec5tBTns3tCRXfayxZq.jpg',
   },
   {
+    id: 70091,
+    name: 'Emmys: Outstanding Comedy Series Winners',
+    backdropPath:
+      'https://www.themoviedb.org/t/p/w500_and_h282_multi_faces/wImNeqxKsqmJ5OBw8j3I37GNFN3.jpg',
+  },
+  {
+    id: 68104,
+    name: 'Emmys: Outstanding Drama Series Winners',
+    backdropPath:
+      'https://www.themoviedb.org/t/p/w500_and_h282_multi_faces/4InrdamBEM31unNiuEHGYTPX1e2.jpg',
+  },
+  {
     id: 132862,
     name: 'Creepy Series',
     backdropPath:
       'https://www.themoviedb.org/t/p/w500_and_h282_multi_faces/ssyZgYScV9eClakZDwu4sPrgMmy.jpg',
+  },
+  {
+    id: 37375,
+    name: 'Good RomCom Flicks',
+    backdropPath:
+      'https://www.themoviedb.org/t/p/w500_and_h282_multi_faces/gyWE2qIMux06FTgA06CV97ngbEM.jpg',
   },
   {
     id: 132861,
@@ -48,16 +114,28 @@ const featuredList = [
       'https://www.themoviedb.org/t/p/w500_and_h282_multi_faces/kysKBF2CJG9qfQDSCDaboJrkZy1.jpg',
   },
   {
+    id: 338,
+    name: 'Disney Classic Collection',
+    backdropPath:
+      'https://www.themoviedb.org/t/p/w500_and_h282_multi_faces/jsgRkhPxYtzAhDFCUyNbvlX63tY.jpg',
+  },
+  {
     id: 132860,
     name: 'Golden Globe Winners 2020',
     backdropPath:
       'https://www.themoviedb.org/t/p/w500_and_h282_multi_faces/2WgieNR1tGHlpJUsolbVzbUbE1O.jpg',
   },
   {
-    id: 44676,
-    name: 'TOP 10 TV Shows 2017 (TMDb)',
+    id: 1131,
+    name: 'Greatest Twist Ending',
     backdropPath:
-      'https://www.themoviedb.org/t/p/w500_and_h282_multi_faces/oFvjxSIPYv5YXspDlnWeDJhnPHI.jpg',
+      'https://www.themoviedb.org/t/p/w500_and_h282_multi_faces/2nqsOT2AqPkTW81bWaLRtjgjqVM.jpg',
+  },
+  {
+    id: 10,
+    name: 'Top 50 Grossing Films of All Time (Worldwide)',
+    backdropPath:
+      'https://www.themoviedb.org/t/p/w500_and_h282_multi_faces/rzdPqYx7Um4FUZeD8wpXqjAUcEm.jpg',
   },
   {
     id: 132859,
@@ -90,10 +168,10 @@ const featuredList = [
       'https://www.themoviedb.org/t/p/w500_and_h282_multi_faces/xcaSYLBhmDzJ6P14bcKe0KTh3QV.jpg',
   },
   {
-    id: 118239,
-    name: 'Top 10 Movies 2018 (TMDb)',
+    id: 112870,
+    name: 'Cannes 2019',
     backdropPath:
-      'https://www.themoviedb.org/t/p/w500_and_h282_multi_faces/bOGkgRGdhrBYJSLpXaxhXVstddV.jpg',
+      'https://www.themoviedb.org/t/p/w500_and_h282_multi_faces/cXyfAViYly0Lk2CVpEKgYbt9wKQ.jpg',
   },
   {
     id: 43921,
@@ -120,16 +198,40 @@ const featuredList = [
       'https://www.themoviedb.org/t/p/w500_and_h282_multi_faces/xaSQ4Ngs0mhYPS25c2a5MHDf883.jpg',
   },
   {
+    id: 63978,
+    name: 'Oscars 2018',
+    backdropPath:
+      'https://www.themoviedb.org/t/p/w500_and_h282_multi_faces/rgyhSn3mINvkuy9iswZK0VLqQO3.jpg',
+  },
+  {
+    id: 118239,
+    name: 'Top 10 Movies 2018 (TMDb)',
+    backdropPath:
+      'https://www.themoviedb.org/t/p/w500_and_h282_multi_faces/bOGkgRGdhrBYJSLpXaxhXVstddV.jpg',
+  },
+  {
+    id: 17445,
+    name: '2017 Oscar Nominations for Best Picture - 89th Academy Awards',
+    backdropPath:
+      'https://www.themoviedb.org/t/p/w500_and_h282_multi_faces/A9KPbYTQvWsp51Lgz85ukVkFrKf.jpg',
+  },
+  {
     id: 44677,
     name: 'TOP 10 Movies 2017 (TMDb)',
     backdropPath:
       'https://www.themoviedb.org/t/p/w500_and_h282_multi_faces/adFgBkl35kdI0bSrWZO2xury1JB.jpg',
   },
   {
-    id: 63978,
-    name: 'Oscars 2018',
+    id: 44676,
+    name: 'TOP 10 TV Shows 2017 (TMDb)',
     backdropPath:
-      'https://www.themoviedb.org/t/p/w500_and_h282_multi_faces/rgyhSn3mINvkuy9iswZK0VLqQO3.jpg',
+      'https://www.themoviedb.org/t/p/w500_and_h282_multi_faces/oFvjxSIPYv5YXspDlnWeDJhnPHI.jpg',
+  },
+  {
+    id: 24335,
+    name: 'Cannes 2017 Complete Lineup',
+    backdropPath:
+      'https://www.themoviedb.org/t/p/w500_and_h282_multi_faces/velMcFG0eIv0MBARstwM42j8UVj.jpg',
   },
 ];
 
