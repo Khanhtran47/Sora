@@ -51,6 +51,8 @@ import i18next, { i18nCookie } from '~/i18n/i18next.server';
 import * as gtag from '~/utils/client/gtags.client';
 import { getListGenre, getListLanguages } from '~/services/tmdb/tmdb.server';
 import { getUserFromCookie } from '~/services/supabase';
+import type { ToastMessage } from '~/services/message.server';
+import { commitSession, getSession } from '~/services/message.server';
 
 import { ClientStyleContext } from '~/context/client.context';
 import { useIsBot } from '~/context/isbot.context';
@@ -303,14 +305,22 @@ export const meta: MetaFunction = () => {
 };
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const locale = await i18next.getLocale(request);
+  const [locale, session] = await Promise.all([
+    i18next.getLocale(request),
+    getSession(request.headers.get('cookie') || ''),
+  ]);
   const gaTrackingId = process.env.GA_TRACKING_ID;
   const user = await getUserFromCookie(request.headers.get('Cookie') || '');
   const deviceDetect = getSelectorsByUserAgent(request.headers.get('User-Agent') || '');
+  const toastMessage = session.get('toastMessage') as ToastMessage;
 
-  const headers = new Headers({
-    'Set-Cookie': await i18nCookie.serialize(locale),
-  });
+  if (toastMessage && !toastMessage.type) {
+    throw new Error('Message should have a type');
+  }
+
+  const headers = new Headers();
+  headers.append('Set-Cookie', await i18nCookie.serialize(locale));
+  headers.append('Set-Cookie', await commitSession(session));
 
   return json(
     {
@@ -325,6 +335,7 @@ export const loader = async ({ request }: LoaderArgs) => {
         NODE_ENV: process.env.NODE_ENV,
         VERCEL_GIT_COMMIT_SHA: process.env.VERCEL_GIT_COMMIT_SHA,
       },
+      toastMessage: toastMessage || null,
     },
     { headers },
   );
@@ -484,7 +495,7 @@ const App = () => {
   const outlet = useOutlet();
   const fetchers = useFetchers();
   const navigation = useNavigation();
-  const { user, locale, gaTrackingId, ENV } = useLoaderData<typeof loader>();
+  const { user, locale, gaTrackingId, ENV, toastMessage } = useLoaderData<typeof loader>();
   const { i18n } = useTranslation();
   const isBot = useIsBot();
   useChangeLanguage(locale);
@@ -571,6 +582,22 @@ const App = () => {
     if (state === 'idle') setIsLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  React.useEffect(() => {
+    if (!toastMessage) return;
+    const { message, type } = toastMessage;
+
+    switch (type) {
+      case 'success':
+        toast.success(message);
+        break;
+      case 'error':
+        toast.error(message);
+        break;
+      default:
+        throw new Error(`Unknown toast type: ${type}`);
+    }
+  }, [toastMessage]);
 
   const size = 35;
 
