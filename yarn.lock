@@ -1039,10 +1039,10 @@
   dependencies:
     lodash "^4.17.21"
 
-"@consumet/extensions@^1.4.16":
-  version "1.4.16"
-  resolved "https://registry.yarnpkg.com/@consumet/extensions/-/extensions-1.4.16.tgz#224962c036cca7a2b1e3dcf7a665dfbe736b3e00"
-  integrity sha512-ZTM4WAlANSfG4bn8OR/I6vsn9+SWTfpAXoAT0sAIc3LHhHYvPhOsTkQF48MK5wSnN43GdHBdq0Q//9qT1cqtdQ==
+"@consumet/extensions@^1.4.17":
+  version "1.4.17"
+  resolved "https://registry.yarnpkg.com/@consumet/extensions/-/extensions-1.4.17.tgz#00b09402139afac45ae1de5da96c9746f520435c"
+  integrity sha512-+9in9uYsqlUPvAOLNjyNSXld4w1i974V9l1h0vGgT30/HzYkE5VvowxdkK8XMpTfm213CBZO8LwM+rUWxL63WQ==
   dependencies:
     ascii-url-encoder "^1.2.0"
     axios "^0.27.2"

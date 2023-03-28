@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@balavishnuvj/remix-seo": "^1.0.2",
-    "@consumet/extensions": "^1.4.16",
+    "@consumet/extensions": "^1.4.17",
     "@fontsource/inter": "^4.5.14",
     "@lottiefiles/react-lottie-player": "^3.4.9",
     "@next-boost/hybrid-disk-cache": "^0.3.0",

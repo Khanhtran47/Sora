@@ -43,10 +43,20 @@ const SelectProviderModal = (props: SelectProviderModalProps) => {
   const fetcher = useFetcher();
   const navigate = useNavigate();
   const { isShowSkipOpEdButton } = useSoraSettings();
-  const [provider, setProvider] = useState<{ id: string | number; provider: string }[]>();
+  const [provider, setProvider] = useState<
+    {
+      id?: string | number | null;
+      provider: string;
+      episodesCount?: number;
+    }[]
+  >();
   const { width } = useWindowSize();
   const findTranslation = translations?.translations.find((item) => item.iso_639_1 === 'en');
-  const handleProvider = (item: { id: string | number; provider: string }) => {
+  const handleProvider = (item: {
+    id?: string | number | null;
+    provider: string;
+    episodesCount?: number;
+  }) => {
     closeHandler();
     if (type === 'movie') navigate(`/movies/${id}/watch?provider=${item.provider}&id=${item.id}`);
     else if (type === 'tv')
@@ -65,13 +75,13 @@ const SelectProviderModal = (props: SelectProviderModalProps) => {
         fetcher.load(
           `/api/provider?title=${
             findTranslation ? findTranslation.data?.title : title
-          }&type=${type}&origTitle=${origTitle}&year=${year}&isEnded=${isEnded}`,
+          }&type=${type}&origTitle=${origTitle}&year=${year}&isEnded=${isEnded}&tmdbId=${id}`,
         );
       else if (type === 'tv')
         fetcher.load(
           `/api/provider?title=${
             findTranslation ? findTranslation.data?.name : title
-          }&type=${type}&origTitle=${origTitle}&year=${year}&season=${season}&isEnded=${isEnded}`,
+          }&type=${type}&origTitle=${origTitle}&year=${year}&season=${season}&isEnded=${isEnded}&tmdbId=${id}`,
         );
       else if (type === 'anime')
         fetcher.load(

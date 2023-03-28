@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/indent */
+import { type IMovieInfo } from '@consumet/extensions';
 import { lruCache, cachified } from '~/services/lru-cache';
 import sgConfigs from '~/services/configs.server';
-import { getMovieSearch, getMovieInfo } from '~/services/consumet/flixhq/flixhq.server';
 import { loklokSearchMovie, loklokSearchOneTv, getLoklokOrgDetail } from '~/services/loklok';
 import { getBilibiliSearch, getBilibiliInfo } from '~/services/consumet/bilibili/bilibili.server';
 import { IBilibiliResult } from '~/services/consumet/bilibili/bilibili.types';
 import { getKissKhSearch, getKissKhInfo } from '~/services/kisskh/kisskh.server';
 import { ISearchItem } from '~/services/kisskh/kisskh.types';
-import { IMovieResult } from '~/services/consumet/flixhq/flixhq.types';
 import { getAnimeEpisodeInfo } from '~/services/consumet/anilist/anilist.server';
+import { getInfoWithProvider } from '~/services/tmdb/tmdb.server';
 
 const getProviderList = async ({
   type,
@@ -19,6 +19,7 @@ const getProviderList = async ({
   animeId,
   animeType,
   isEnded,
+  tmdbId,
 }: {
   /**
    * @param {string} type - movie, tv, anime
@@ -53,6 +54,13 @@ const getProviderList = async ({
    * @param {boolean} isEnded - is movie, tv, anime ended or canceled
    */
   isEnded?: boolean;
+  /**
+   * @param {number} tmdbId - tmdb id of movie, tv
+   * @description if tmdbId is provided, it will be used to get provider list
+   * @example 123456
+   * @default undefined
+   */
+  tmdbId?: number;
 }): Promise<
   | {
       id?: string | number | null;
@@ -63,25 +71,25 @@ const getProviderList = async ({
 > => {
   const getProviders = async () => {
     if (type === 'movie') {
-      const [search, loklokSearch, kisskhSearch] = await Promise.all([
-        getMovieSearch(title),
+      const [infoWithProvider, loklokSearch, kisskhSearch] = await Promise.all([
+        tmdbId ? getInfoWithProvider(tmdbId.toString(), 'movie') : undefined,
         sgConfigs.__loklokProvider
           ? loklokSearchMovie(title, orgTitle || '', Number(year))
           : undefined,
         sgConfigs.__kisskhProvider ? getKissKhSearch(title) : undefined,
       ]);
-      const provider = [];
-      const findFlixhq: IMovieResult | undefined = search?.results.find(
-        (movie) =>
-          movie.title.toLowerCase() === title.toLowerCase() &&
-          movie?.releaseDate === year &&
-          movie?.type === 'Movie',
-      );
-      if (findFlixhq && findFlixhq.id)
-        provider.push({
-          id: findFlixhq.id,
-          provider: 'Flixhq',
-        });
+      const provider: {
+        id?: string | number | null;
+        provider: string;
+        episodesCount?: number;
+      }[] = (infoWithProvider as IMovieInfo)?.episodeId
+        ? [
+            {
+              id: (infoWithProvider as IMovieInfo).id,
+              provider: 'Flixhq',
+            },
+          ]
+        : [];
       const findKissKh: ISearchItem | undefined = kisskhSearch?.find((item) =>
         item.title.includes(' (')
           ? item.title.replace(/ *\([^)]*\) */g, '').toLowerCase() === title.toLowerCase()
@@ -100,8 +108,8 @@ const getProviderList = async ({
       return provider;
     }
     if (type === 'tv') {
-      const [search, loklokSearch, kisskhSearch] = await Promise.all([
-        getMovieSearch(title),
+      const [infoWithProvider, loklokSearch, kisskhSearch] = await Promise.all([
+        tmdbId ? getInfoWithProvider(tmdbId.toString(), 'tv') : undefined,
         sgConfigs.__loklokProvider
           ? loklokSearchOneTv(
               `${title} ${Number(season) > 1 ? `Season ${season}` : ''}`,
@@ -112,10 +120,23 @@ const getProviderList = async ({
           : undefined,
         sgConfigs.__kisskhProvider ? getKissKhSearch(title) : undefined,
       ]);
-      const provider = [];
-      const findFlixhq: IMovieResult | undefined = search?.results.find(
-        (movie) => movie.title.toLowerCase() === title.toLowerCase() && movie?.type === 'TV Series',
+      const findTvSeason = (infoWithProvider as IMovieInfo)?.seasons?.find(
+        (s) => s.season === Number(season),
       );
+      const provider: {
+        id?: string | number | null;
+        provider: string;
+        episodesCount?: number;
+        episodeId?: string;
+      }[] = findTvSeason?.episodes.some((e) => e.id)
+        ? [
+            {
+              id: (infoWithProvider as IMovieInfo).id,
+              provider: 'Flixhq',
+              episodesCount: findTvSeason?.episodes.filter((e) => e.id).length,
+            },
+          ]
+        : [];
       const findKissKh: ISearchItem | undefined = kisskhSearch?.find((item) => {
         if (item && item.title && item.title.includes('Season')) {
           const [itemTitle, seasonNumber] = item.title.split(' - Season ');
@@ -126,21 +147,12 @@ const getProviderList = async ({
         }
         return item?.title.toLowerCase() === title.toLowerCase();
       });
-      const [flixhqDetail, loklokDetail, kissKhDetail] = await Promise.all([
-        findFlixhq && findFlixhq.id ? getMovieInfo(findFlixhq.id) : undefined,
+      const [loklokDetail, kissKhDetail] = await Promise.all([
         loklokSearch && loklokSearch.data?.id
           ? getLoklokOrgDetail(loklokSearch.data.id, 'tv')
           : undefined,
         findKissKh && findKissKh.id ? getKissKhInfo(findKissKh.id) : undefined,
       ]);
-      if (findFlixhq && findFlixhq.id)
-        provider.push({
-          id: findFlixhq.id,
-          provider: 'Flixhq',
-          episodesCount: flixhqDetail?.episodes
-            ? flixhqDetail.episodes.filter((episode) => episode.season === Number(season)).length
-            : 0,
-        });
       if (findKissKh && findKissKh.id)
         provider.push({
           id: findKissKh.id,

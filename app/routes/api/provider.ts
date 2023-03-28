@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { json } from '@remix-run/node';
-import type {LoaderArgs} from '@remix-run/node';
+import type { LoaderArgs } from '@remix-run/node';
 
 import getProviderList from '~/services/provider.server';
 import { authenticate } from '~/services/supabase';
@@ -18,6 +18,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   const aid = url.searchParams.get('aid');
   const animeType = url.searchParams.get('animeType');
   const isEnded = url.searchParams.get('isEnded');
+  const tmdbId = url.searchParams.get('tmdbId');
   if (!title || !type) throw new Response('Missing params', { status: 400 });
   const provider = await getProviderList({
     type,
@@ -27,15 +28,20 @@ export const loader = async ({ request }: LoaderArgs) => {
     season,
     animeId: Number(aid),
     animeType,
-    isEnded: isEnded === 'true'
+    isEnded: isEnded === 'true',
+    tmdbId: Number(tmdbId),
   });
-  if (provider && provider.length > 0) return json({ provider }, { status: 200, headers: { 'Cache-Control': CACHE_CONTROL.default } });
+  if (provider && provider.length > 0)
+    return json({ provider }, { status: 200, headers: { 'Cache-Control': CACHE_CONTROL.default } });
 
-  return json({
-    provider: undefined,
-  }, {
-    headers: {
-      'Cache-Control': CACHE_CONTROL.default,
-    }
-  });
+  return json(
+    {
+      provider: undefined,
+    },
+    {
+      headers: {
+        'Cache-Control': CACHE_CONTROL.default,
+      },
+    },
+  );
 };

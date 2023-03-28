@@ -61,6 +61,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
       animeId: undefined,
       animeType: undefined,
       isEnded,
+      tmdbId: tid,
     }),
     fetch(extractColorImage),
   ]);
