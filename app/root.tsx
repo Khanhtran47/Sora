@@ -489,10 +489,12 @@ const App = () => {
   const isBot = useIsBot();
   useChangeLanguage(locale);
   const [isLoading, setIsLoading] = React.useState(true);
+  const [isUpdateAvailable, setIsUpdateAvailable] = React.useState(false);
   const [waitingWorker, setWaitingWorker] = React.useState<ServiceWorker | null>(null);
 
   const reloadPage = () => {
     waitingWorker?.postMessage({ type: 'SKIP_WAITING' });
+    setIsUpdateAvailable(false);
     window.location.reload();
   };
   const detectSWUpdate = async () => {
@@ -505,28 +507,14 @@ const App = () => {
             newWorker.addEventListener('statechange', () => {
               if (newWorker.state === 'installed') {
                 setWaitingWorker(newWorker);
-                toast.success('Update Available', {
-                  description: 'A new version of Sora is available.',
-                  action: {
-                    label: 'Update',
-                    onClick: () => reloadPage(),
-                  },
-                  duration: Infinity,
-                });
+                setIsUpdateAvailable(true);
               }
             });
           }
         });
         if (registration.waiting) {
           setWaitingWorker(registration.waiting);
-          toast.success('Update Available', {
-            description: 'A new version of Sora is available.',
-            action: {
-              label: 'Update',
-              onClick: () => reloadPage(),
-            },
-            duration: Infinity,
-          });
+          setIsUpdateAvailable(true);
         }
       }
     }
@@ -535,6 +523,20 @@ const App = () => {
   React.useEffect(() => {
     detectSWUpdate();
   }, []);
+
+  React.useEffect(() => {
+    if (isUpdateAvailable) {
+      toast.success('Update Available', {
+        description: 'A new version of Sora is available.',
+        action: {
+          label: 'Update',
+          onClick: () => reloadPage(),
+        },
+        duration: Infinity,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isUpdateAvailable]);
 
   /**
    * This gets the state of every fetcher active on the app and combine it with
