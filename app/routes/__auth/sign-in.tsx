@@ -9,6 +9,13 @@ import {
   commitAuthCookie,
   requestPayload,
 } from '~/services/supabase';
+import {
+  commitSession,
+  getSession,
+  setErrorMessage,
+  setSuccessMessage,
+} from '~/services/message.server';
+
 import AuthForm from '~/components/AuthForm';
 
 type ActionData = {
@@ -17,17 +24,32 @@ type ActionData = {
 
 export const action = async ({ request }: ActionArgs) => {
   const { searchParams } = new URL(request.url);
-  const data = await request.clone().formData();
+  const [data, messageSession] = await Promise.all([
+    request.clone().formData(),
+    getSession(request.headers.get('cookie')),
+  ]);
 
   const email = data.get('email')?.toString();
   const password = data.get('password')?.toString();
 
   if (!email || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i.test(email)) {
-    return json<ActionData>({ error: 'Please enter a valid email!' });
+    setErrorMessage(messageSession, 'Please enter a valid email!');
+    return json<ActionData>(
+      { error: 'Please enter a valid email!' },
+      {
+        headers: { 'Set-Cookie': await commitSession(messageSession) },
+      },
+    );
   }
 
   if (!password) {
-    return json<ActionData>({ error: 'Password is required!' });
+    setErrorMessage(messageSession, 'Password is required!');
+    return json<ActionData>(
+      { error: 'Password is required!' },
+      {
+        headers: { 'Set-Cookie': await commitSession(messageSession) },
+      },
+    );
   }
 
   const {
@@ -36,18 +58,35 @@ export const action = async ({ request }: ActionArgs) => {
   } = await signInWithPassword(email, password);
 
   if (error) {
-    return json<ActionData>({ error: error.message });
+    setErrorMessage(messageSession, error.message);
+    return json<ActionData>(
+      { error: error.message },
+      {
+        headers: { 'Set-Cookie': await commitSession(messageSession) },
+      },
+    );
   }
 
   if (!session) {
-    return json<ActionData>({ error: 'Something went wrong. Please sign in again!' });
+    setErrorMessage(messageSession, 'Something went wrong. Please sign in again!');
+    return json<ActionData>(
+      { error: 'Something went wrong. Please sign in again!' },
+      {
+        headers: { 'Set-Cookie': await commitSession(messageSession) },
+      },
+    );
   }
 
   const authCookie = await getSessionFromCookie(request.headers.get('Cookie'));
 
   if (authCookie.has('auth_token')) {
-    return redirect(searchParams.get('ref') || '/');
+    setSuccessMessage(messageSession, 'You are already signed in!');
+    return redirect(searchParams.get('ref') || '/', {
+      headers: { 'Set-Cookie': await commitSession(messageSession) },
+    });
   }
+
+  setSuccessMessage(messageSession, 'You are signed in!');
   const payload = await requestPayload(request);
 
   authCookie.set('auth_token', {
@@ -58,12 +97,10 @@ export const action = async ({ request }: ActionArgs) => {
   });
 
   const ref = (searchParams.get('ref') || '/').replace('_0x3F_', '?').replace('_0x26', '&');
-
-  return redirect(ref, {
-    headers: {
-      'Set-Cookie': await commitAuthCookie(authCookie),
-    },
-  });
+  const headers = new Headers();
+  headers.set('Set-Cookie', await commitSession(messageSession));
+  headers.set('Set-Cookie', await commitAuthCookie(authCookie));
+  return redirect(ref, { headers });
 };
 
 export const loader = async ({ request }: LoaderArgs) => {

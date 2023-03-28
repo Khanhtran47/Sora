@@ -78,6 +78,7 @@ import Home from '~/assets/icons/HomeIcon';
 import Refresh from '~/assets/icons/RefreshIcon';
 import pageNotFound from '~/assets/images/404.gif';
 import logoLoading from '~/assets/images/logo_loading.png';
+import { getClientIPAddress, getClientLocales } from 'remix-utils';
 
 interface DocumentProps {
   children: React.ReactNode;
@@ -309,10 +310,18 @@ export const loader = async ({ request }: LoaderArgs) => {
     i18next.getLocale(request),
     getSession(request.headers.get('cookie') || ''),
   ]);
+  const ipAddress = getClientIPAddress(request);
+  const locales = getClientLocales(request);
   const gaTrackingId = process.env.GA_TRACKING_ID;
   const user = await getUserFromCookie(request.headers.get('Cookie') || '');
   const deviceDetect = getSelectorsByUserAgent(request.headers.get('User-Agent') || '');
   const toastMessage = session.get('toastMessage') as ToastMessage;
+  const nowDate = new Date();
+  const formatter = new Intl.DateTimeFormat(locales, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
 
   if (toastMessage && !toastMessage.type) {
     throw new Error('Message should have a type');
@@ -336,6 +345,9 @@ export const loader = async ({ request }: LoaderArgs) => {
         VERCEL_GIT_COMMIT_SHA: process.env.VERCEL_GIT_COMMIT_SHA,
       },
       toastMessage: toastMessage || null,
+      ipAddress,
+      locales,
+      now: formatter.format(nowDate),
     },
     { headers },
   );
