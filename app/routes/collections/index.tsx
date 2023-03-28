@@ -1,11 +1,16 @@
 /* eslint-disable @typescript-eslint/indent */
+import { useRef } from 'react';
 import { MetaFunction } from '@remix-run/node';
 import { useLocation, NavLink } from '@remix-run/react';
 import { motion } from 'framer-motion';
-import { Badge } from '@nextui-org/react';
+import { Badge, Spacer, Pagination } from '@nextui-org/react';
 
 import MediaList from '~/components/media/MediaList';
 import featuredList from '~/constants/featuredList';
+import Flex from '~/components/styles/Flex.styles';
+import { useMediaQuery } from '@react-hookz/web';
+
+import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
 
 export const meta: MetaFunction = () => ({
   title: 'Movies and tv shows Collections | Sora',
@@ -41,6 +46,9 @@ export const handle = {
 
 const Collections = () => {
   const location = useLocation();
+  const ref = useRef<HTMLDivElement>(null);
+  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
+  const { gotoPage, currentPage, maxPage, currentData } = useSplitArrayIntoPage(featuredList, 12);
   return (
     <motion.div
       key={location.key}
@@ -50,13 +58,34 @@ const Collections = () => {
       transition={{ duration: 0.3 }}
       className="w-full flex justify-center flex-col items-center px-3 sm:px-0"
     >
+      <div ref={ref} />
       {featuredList && featuredList.length > 0 && (
         <MediaList
           listType="grid"
           listName="Featured Collections"
           isCoverCard
-          coverItem={featuredList}
+          coverItem={currentData}
         />
+      )}
+      <Spacer y={1} />
+      {maxPage > 1 && (
+        <Flex direction="row" justify="center">
+          <Pagination
+            total={maxPage}
+            initialPage={currentPage}
+            // shadow
+            onChange={(page) => {
+              gotoPage(page);
+              ref.current?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start',
+                inline: 'center',
+              });
+            }}
+            css={{ marginTop: '2rem' }}
+            {...(isSm && { size: 'xs' })}
+          />
+        </Flex>
       )}
     </motion.div>
   );
