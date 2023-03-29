@@ -101,7 +101,7 @@ const DiscoverPage = () => {
       >
         {t('filter')}
       </Button>
-
+      <Spacer y={1.5} />
       <div className="flex flex-col w-full justify-center items-start">
         <H4>{t('categories')}</H4>
         <Spacer y={0.5} />

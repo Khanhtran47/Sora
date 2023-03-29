@@ -1,31 +1,29 @@
-/* eslint-disable @typescript-eslint/indent */
-import { useLoaderData, useNavigate, useLocation, NavLink } from '@remix-run/react';
-import { json } from '@remix-run/node';
 import type { MetaFunction, LoaderArgs } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { Badge } from '@nextui-org/react';
-import { motion } from 'framer-motion';
+import { useLoaderData, useNavigate, useLocation, NavLink } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
-import dayjs from 'dayjs';
+import { motion } from 'framer-motion';
 
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 
 import { authenticate } from '~/services/supabase';
-import { getListDiscover } from '~/services/tmdb/tmdb.server';
 import i18next from '~/i18n/i18next.server';
+import { getListTvShows } from '~/services/tmdb/tmdb.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
 
 import MediaList from '~/components/media/MediaList';
 
 export const meta: MetaFunction = () => ({
-  title: 'Watch On TV movies and tv shows free | Sora',
+  title: 'Airing today Tv Shows | Sora',
   description:
-    'Official Sora website to watch movies online HD for free, Watch TV show & TV series and Download all movies and series FREE',
+    'Watch latest Tv series online in HD Quality. Unlimited streaming series for free now',
   keywords:
-    'watch free movies, free movies to watch online, watch movies online free, free movies streaming, free movies full, free movies download, watch movies hd, movies to watch',
-  'og:url': 'https://sora-anime.vercel.app/tv-shows/on-tv',
-  'og:title': 'Watch On TV movies and tv shows free | Sora',
+    'watch free movies, free movies to watch online, watch movies online free, free movies streaming, free movies full, free movies download, watch movies hd, movies to watch, hd movies, stream movies, movies to stream, watch movies free',
+  'og:url': 'https://sora-anime.vercel.app/tv-shows/airing-today',
+  'og:title': 'Airing today Tv Shows | Sora',
   'og:description':
-    'Official Sora website to watch movies online HD for free, Watch TV show & TV series and Download all movies and series FREE',
+    'Watch latest Tv series online in HD Quality. Unlimited streaming series for free now',
 });
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -38,45 +36,13 @@ export const loader = async ({ request }: LoaderArgs) => {
   let page = Number(url.searchParams.get('page')) || undefined;
   if (page && (page < 1 || page > 1000)) page = 1;
 
-  const today = dayjs();
-  // get next 7 days
-  const next7Days = today.add(7, 'day');
-  const formattedToday = today.format('YYYY-MM-DD');
-  const formattedNext7Days = next7Days.format('YYYY-MM-DD');
-
   return json(
     {
-      shows: await getListDiscover(
-        'tv',
-        undefined,
-        undefined,
-        locale,
-        page,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        50,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        formattedToday,
-        formattedNext7Days,
-      ),
+      shows: await getListTvShows('airing_today', locale, page),
     },
     {
       headers: {
-        'Cache-Control': CACHE_CONTROL.trending,
+        'Cache-Control': CACHE_CONTROL.airingToday,
       },
     },
   );
@@ -84,7 +50,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export const handle = {
   breadcrumb: () => (
-    <NavLink to="/tv-shows/on-tv" aria-label="On the air Tv">
+    <NavLink to="/tv-shows/airing-today" aria-label="Airing today Tv">
       {({ isActive }) => (
         <Badge
           color="primary"
@@ -95,21 +61,21 @@ export const handle = {
             '&:hover': { opacity: 0.8 },
           }}
         >
-          On the air Tv
+          Airing today Tv
         </Badge>
       )}
     </NavLink>
   ),
 };
 
-const ListTvShows = () => {
+const ListAiringTodayTvShows = () => {
   const { shows } = useLoaderData<typeof loader>();
   const rootData = useTypedRouteLoaderData('root');
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
 
-  const paginationChangeHandler = (page: number) => navigate(`/tv-shows/on-tv?page=${page}`);
+  const paginationChangeHandler = (page: number) => navigate(`/tv-shows/airing-today?page=${page}`);
 
   return (
     <motion.div
@@ -125,12 +91,12 @@ const ListTvShows = () => {
           listType="grid"
           showListTypeChangeButton
           items={shows.items}
-          listName={t('onTv')}
+          listName={t('airing-today-tv-shows')}
           genresMovie={rootData?.genresMovie}
           genresTv={rootData?.genresTv}
           showPagination
-          totalPages={shows.totalPages}
-          currentPage={shows.page}
+          totalPages={shows?.totalPages}
+          currentPage={shows?.page}
           onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
         />
       )}
@@ -138,4 +104,4 @@ const ListTvShows = () => {
   );
 };
 
-export default ListTvShows;
+export default ListAiringTodayTvShows;

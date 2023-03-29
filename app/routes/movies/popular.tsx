@@ -16,7 +16,7 @@ import { CACHE_CONTROL } from '~/utils/server/http';
 import MediaList from '~/components/media/MediaList';
 
 export const meta: MetaFunction = () => ({
-  title: 'Watch Popular movies and tv shows free | Sora',
+  title: 'Popular movies | Sora',
   description:
     'Official Sora website to watch movies online HD for free, Watch TV show & TV series and Download all movies and series FREE',
   keywords:
@@ -92,7 +92,7 @@ const ListMovies = () => {
           listType="grid"
           showListTypeChangeButton
           items={movies.items}
-          listName={t('popularMovies')}
+          listName={t('popular-movies')}
           genresMovie={rootData?.genresMovie}
           genresTv={rootData?.genresTv}
           showPagination
