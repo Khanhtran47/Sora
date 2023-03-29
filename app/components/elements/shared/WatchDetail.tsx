@@ -98,7 +98,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
                   id={id}
                   episodes={episodes}
                   season={season}
-                  providers={providers || [{ provider: 'Embed' }]}
+                  providers={providers || []}
                 />
               </Col>
             ) : null}

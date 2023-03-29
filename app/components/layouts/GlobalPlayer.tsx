@@ -1270,24 +1270,6 @@ const GlobalPlayer = () => {
                     icon={<Expand filled />}
                   />
                 </Tooltip>
-                {/* <Tooltip content="Close">
-                  <Button
-                    type="button"
-                    auto
-                    light
-                    onPress={() => {
-                      setShouldShowPlayer(false);
-                      setPlayerData(undefined);
-                      setIsMini(false);
-                      setRoutePlayer('');
-                      setTitlePlayer('');
-                      setQualitySelector([]);
-                      setSubtitleSelector([]);
-                      setIsPlayerPlaying(false);
-                    }}
-                    icon={<Close />}
-                  />
-                </Tooltip> */}
               </Flex>
               <PlayerSettings
                 artplayer={artplayer}

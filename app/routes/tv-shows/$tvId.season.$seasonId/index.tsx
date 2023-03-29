@@ -34,7 +34,7 @@ const Episodes = () => {
           id={detail?.id}
           episodes={seasonDetail?.episodes as unknown as IEpisode[]}
           season={seasonDetail?.season_number}
-          providers={seasonData?.providers || [{ provider: 'Embed' }]}
+          providers={seasonData?.providers || []}
         />
       </Col>
     </Row>

@@ -61,6 +61,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
       animeId: undefined,
       animeType: undefined,
       isEnded,
+      tmdbId: tid,
     }),
     fetch(extractColorImage),
   ]);
@@ -109,7 +110,7 @@ export const meta: MetaFunction = ({ data, params }) => {
       description: `This Tv show doesn't have season ${params.seasonId}`,
     };
   }
-  const { detail, seasonDetail, color } = data;
+  const { detail, seasonDetail } = data;
   return {
     title: `Watch ${detail?.name || ''} ${seasonDetail?.name || ''} HD online Free - Sora`,
     description: `Watch ${detail?.name || ''} ${
@@ -120,7 +121,6 @@ export const meta: MetaFunction = ({ data, params }) => {
     } HD, Online ${detail?.name || ''}, Streaming ${detail?.name || ''}, English, Subtitle ${
       detail?.name || ''
     }, English Subtitle`,
-    ...(color ? { 'theme-color': color } : null),
     'og:url': `https://sora-anime.vercel.app/tv-shows/${params.tvId}/season/${params.seasonId}`,
     'og:title': `Watch ${detail?.name || ''} ${seasonDetail?.name || ''} HD online Free - Sora`,
     'og:description': `Watch ${detail?.name || ''} ${

@@ -117,7 +117,6 @@ export const meta: MetaFunction = ({ data, params }) => {
     };
   }
   const { detail } = data;
-  const { color } = detail || {};
   return {
     title: `Watch ${detail?.name || ''} HD online Free - Sora`,
     description: detail?.overview || `Watch ${detail?.name || ''} full HD online with Subtitle`,
@@ -131,7 +130,6 @@ export const meta: MetaFunction = ({ data, params }) => {
     'og:description':
       detail?.overview || `Watch ${detail?.name || ''} in full HD online with Subtitle`,
     'og:image': `https://sora-anime.vercel.app/api/ogimage?m=${params.tvId}&mt=tv`,
-    ...(color ? { 'theme-color': color } : null),
     'twitter:card': 'summary_large_image',
     'twitter:site': '@sora_anime',
     'twitter:domain': 'sora-anime.vercel.app',

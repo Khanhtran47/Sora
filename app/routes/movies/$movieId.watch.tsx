@@ -5,6 +5,7 @@ import type { LoaderArgs } from '@remix-run/node';
 import { useCatch, useLoaderData, NavLink, RouteMatch } from '@remix-run/react';
 import { Container, Spacer, Badge } from '@nextui-org/react';
 import Vibrant from 'node-vibrant';
+import { ISource } from '@consumet/extensions';
 
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 
@@ -14,8 +15,8 @@ import {
   getRecommendation,
   // getTranslations,
   getImdbRating,
+  getWatchEpisode,
 } from '~/services/tmdb/tmdb.server';
-import { getMovieInfo, getMovieEpisodeStreamLink } from '~/services/consumet/flixhq/flixhq.server';
 import {
   getKissKhInfo,
   getKissKhEpisodeStream,
@@ -39,7 +40,7 @@ export const meta: MetaFunction = ({ data, params }) => {
       description: `There is no movie with the ID: ${params.movieId}`,
     };
   }
-  const { detail, color } = data || {};
+  const { detail } = data || {};
   return {
     title: `Watch ${detail?.title || ''} HD online Free - Sora`,
     description: `Watch ${detail?.title || ''} in full HD online with Subtitle`,
@@ -48,7 +49,6 @@ export const meta: MetaFunction = ({ data, params }) => {
     } HD, Online ${detail?.title || ''}, Streaming ${detail?.title || ''}, English, Subtitle ${
       detail?.title || ''
     }, English Subtitle`,
-    ...(color ? { 'theme-color': color } : null),
     'og:url': `https://sora-anime.vercel.app/movies/${params.movieId}/watch`,
     'og:title': `Watch ${detail?.title || ''} HD online Free - Sora`,
     'og:description': `Watch ${detail?.title || ''} in full HD online with Subtitle`,
@@ -147,27 +147,28 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
   if (provider === 'Flixhq') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
-    const [movieDetail, imdbRating, fimg] = await Promise.all([
-      getMovieInfo(idProvider),
+    const getId = (id: string) => {
+      const idArr = id.split('-');
+      return idArr[idArr.length - 1];
+    };
+    const [movieStreamLink, imdbRating, fimg] = await Promise.all([
+      getWatchEpisode(idProvider, getId(idProvider)),
       detail?.imdb_id ? getImdbRating(detail?.imdb_id) : undefined,
       fetch(extractColorImage),
     ]);
     const fimgb = Buffer.from(await fimg.arrayBuffer());
-    const [movieStreamLink, palette] = await Promise.all([
-      getMovieEpisodeStreamLink(movieDetail?.episodes[0].id || '', movieDetail?.id || ''),
+    const palette =
       detail?.backdrop_path || detail?.poster_path
         ? await Vibrant.from(fimgb).getPalette()
-        : undefined,
-    ]);
+        : undefined;
     return json(
       {
         provider,
         detail,
         recommendations,
         imdbRating,
-        data: movieDetail,
-        sources: movieStreamLink?.sources,
-        subtitles: movieStreamLink?.subtitles,
+        sources: (movieStreamLink as ISource)?.sources,
+        subtitles: (movieStreamLink as ISource)?.subtitles,
         userId: user?.id,
         routePlayer,
         titlePlayer,

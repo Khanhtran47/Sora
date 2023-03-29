@@ -6,6 +6,7 @@ import type { MetaFunction, LoaderArgs } from '@remix-run/node';
 import { useCatch, useLoaderData, NavLink, RouteMatch } from '@remix-run/react';
 import { Container, Spacer, Badge } from '@nextui-org/react';
 import Vibrant from 'node-vibrant';
+import { ISource, IMovieInfo } from '@consumet/extensions';
 
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 
@@ -16,8 +17,9 @@ import {
   getRecommendation,
   getImdbRating,
   getTvSeasonDetail,
+  getInfoWithProvider,
+  getWatchEpisode,
 } from '~/services/tmdb/tmdb.server';
-import { getMovieInfo, getMovieEpisodeStreamLink } from '~/services/consumet/flixhq/flixhq.server';
 import {
   getKissKhInfo,
   getKissKhEpisodeStream,
@@ -42,7 +44,7 @@ export const meta: MetaFunction = ({ data, params }) => {
       description: `This season of tv show doesn't have episode ${params.episodeId || ''}`,
     };
   }
-  const { detail, color } = data || {};
+  const { detail } = data || {};
   return {
     title: `Watch ${detail?.name || ''} season ${params.seasonId || ''} episode ${
       params.episodeId || ''
@@ -63,7 +65,6 @@ export const meta: MetaFunction = ({ data, params }) => {
     }, English, Subtitle ${detail?.name || ''} season ${params.seasonId || ''} episode ${
       params.episodeId || ''
     }, English Subtitle`,
-    ...(color ? { 'theme-color': color } : null),
     'og:url': `https://sora-anime.vercel.app/tv-shows/${params.tvId}/season/${
       params.seasonId
     }/episode/${params.episodeId || ''}`,
@@ -160,6 +161,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         animeId: undefined,
         animeType: undefined,
         isEnded,
+        tmdbId: detail?.id,
       }),
       fetch(extractColorImage),
     ]);
@@ -213,7 +215,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   if (provider === 'Flixhq') {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
     const [tvDetail, imdbRating, providers, fimg] = await Promise.all([
-      getMovieInfo(idProvider),
+      getInfoWithProvider(tid.toString(), 'tv'),
       imdbId ? getImdbRating(imdbId) : undefined,
       getProviderList({
         type: 'tv',
@@ -224,18 +226,22 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         animeId: undefined,
         animeType: undefined,
         isEnded,
+        tmdbId: detail?.id,
       }),
       fetch(extractColorImage),
     ]);
-    const totalProviderEpisodes = Number(tvDetail?.episodes?.length);
-    const hasNextEpisode = checkHasNextEpisode(eid, totalEpisodes, totalProviderEpisodes);
-    const tvEpisodeDetail = tvDetail?.episodes?.find(
-      (episode) => episode.season === Number(seasonId) && episode.number === Number(episodeId),
+    const findTvSeason = (tvDetail as IMovieInfo)?.seasons?.find(
+      (s) => s.season === Number(season),
+    );
+    const totalProviderEpisodes = findTvSeason?.episodes.filter((e) => e.id).length;
+    const hasNextEpisode = checkHasNextEpisode(eid, totalEpisodes, totalProviderEpisodes || 0);
+    const tvEpisodeDetail = findTvSeason?.episodes?.find(
+      (episode) => episode.season === Number(seasonId) && episode.episode === Number(episodeId),
     );
     const fimgb = Buffer.from(await fimg.arrayBuffer());
     if (tvEpisodeDetail) {
       const [tvEpisodeStreamLink, palette] = await Promise.all([
-        getMovieEpisodeStreamLink(tvEpisodeDetail?.id || '', tvDetail?.id || ''),
+        getWatchEpisode(tid.toString(), tvEpisodeDetail.id),
         detail?.backdrop_path || detail?.poster_path
           ? await Vibrant.from(fimgb).getPalette()
           : undefined,
@@ -251,8 +257,8 @@ export const loader = async ({ request, params }: LoaderArgs) => {
           seasonDetail,
           hasNextEpisode,
           data: tvDetail,
-          sources: tvEpisodeStreamLink?.sources,
-          subtitles: tvEpisodeStreamLink?.subtitles,
+          sources: (tvEpisodeStreamLink as ISource)?.sources,
+          subtitles: (tvEpisodeStreamLink as ISource)?.subtitles,
           userId: user?.id,
           providers,
           routePlayer,
@@ -294,6 +300,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         animeId: undefined,
         animeType: undefined,
         isEnded,
+        tmdbId: detail?.id,
       }),
       fetch(extractColorImage),
     ]);
@@ -363,6 +370,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
       animeId: undefined,
       animeType: undefined,
       isEnded,
+      tmdbId: detail?.id,
     }),
     fetch(extractColorImage),
   ]);

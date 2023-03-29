@@ -29,7 +29,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 
   const url = new URL(request.url);
   let page = Number(url.searchParams.get('page'));
-  let provider = url.searchParams.get('provider');
+  let provider = url.searchParams.get('provider') as 'gogoanime' | 'zoro' | undefined;
   if (!page && (page < 1 || page > 1000)) page = 1;
   if (!provider) provider = 'gogoanime';
 

@@ -1,3 +1,4 @@
+import { META, PROVIDERS_LIST } from '@consumet/extensions';
 import { IMedia } from '~/types/media';
 import {
   ICredit,
@@ -22,7 +23,7 @@ import {
   IList,
 } from './tmdb.types';
 import { postFetchDataHandler, TMDB } from './utils.server';
-import { fetcher, lruCache } from '../lru-cache';
+import { fetcher, lruCache, cachified } from '../lru-cache';
 
 // reusable function
 const getListFromTMDB = async (
@@ -637,4 +638,59 @@ export const getImdbRating = async (
   } catch (error) {
     console.error(error);
   }
+};
+
+export const getInfoWithProvider = async (id: string, type: 'movie' | 'tv', provider?: string) => {
+  let tmdb = new META.TMDB(TMDB.key);
+
+  if (provider) {
+    const possibleProvider = PROVIDERS_LIST.MOVIES.find(
+      (p) => p.name.toLowerCase() === provider.toLowerCase(),
+    );
+    if (!possibleProvider) {
+      throw new Error(`Provider ${provider} not found`);
+    }
+    tmdb = new META.TMDB(TMDB.key, possibleProvider);
+  }
+
+  const info = await cachified({
+    key: `tmdb-${type}-${id}-info`,
+    ttl: 1000 * 60 * 60 * 24,
+    staleWhileRevalidate: 1000 * 60 * 60 * 24 * 7,
+    cache: lruCache,
+    request: undefined,
+    getFreshValue: async () => {
+      try {
+        const res = await tmdb.fetchMediaInfo(id, type);
+        return res;
+      } catch (error) {
+        console.error(error);
+        return undefined;
+      }
+    },
+  });
+
+  return info;
+};
+
+export const getWatchEpisode = async (id: string, episodeId: string) => {
+  const tmdb = new META.TMDB(TMDB.key);
+
+  const data = await cachified({
+    key: `tmdb-${id}-episode-${episodeId}-watch`,
+    ttl: 1000 * 60 * 60,
+    staleWhileRevalidate: 1000 * 60 * 60 * 3,
+    cache: lruCache,
+    request: undefined,
+    getFreshValue: async () => {
+      try {
+        const res = await tmdb.fetchEpisodeSources(episodeId, id);
+        return res;
+      } catch (error) {
+        console.error(error);
+        return undefined;
+      }
+    },
+  });
+  return data;
 };

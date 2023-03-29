@@ -17,10 +17,9 @@ export const loader = async ({ params, request }: LoaderArgs) => {
   await authenticate(request, undefined, true);
 
   const { animeId } = params;
-  const aid = Number(animeId);
-  if (!aid) throw new Response('Not Found', { status: 404 });
+  if (!animeId) throw new Response('Not Found', { status: 404 });
 
-  const episodes = await getAnimeEpisodeInfo(aid);
+  const episodes = await getAnimeEpisodeInfo(animeId);
   if (!episodes) throw new Response('Not Found', { status: 404 });
   return json({ episodes }, { headers: { 'Cache-Control': CACHE_CONTROL.episode } });
 };
