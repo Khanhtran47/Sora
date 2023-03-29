@@ -782,7 +782,7 @@ const SideBar = () => {
                     </NavigationMenuLink>
                     <NavigationMenuLink asChild>
                       <NavLink
-                        to="/tv-shows/on-tv"
+                        to="/tv-shows/on-the-air"
                         className={navigationMenuTriggerStyle({
                           class:
                             'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
@@ -792,14 +792,14 @@ const SideBar = () => {
                           <>
                             <div className="flex flex-row justify-start items-center w-full mb-2">
                               <Discover className="mr-2 w-5 h-5" filled={isActive} />
-                              {t('tv-shows-on-tv')}
+                              {t('tv-shows-on-the-air')}
                               <Loading
                                 className={isPending ? 'ml-auto' : '!hidden'}
                                 type="points-opacity"
                               />
                             </div>
                             <p className="text-text text-xs w-full">
-                              {t('tv-shows-on-tv-subtitle')}
+                              {t('tv-shows-on-the-air-subtitle')}
                             </p>
                           </>
                         )}

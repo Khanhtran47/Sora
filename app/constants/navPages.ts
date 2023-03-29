@@ -16,7 +16,7 @@ export const pages = [
       { pageName: 'Discover', pageLink: 'discover/tv-shows' },
       { pageName: 'popular', pageLink: 'tv-shows/popular' },
       { pageName: 'topRated', pageLink: 'tv-shows/top-rated' },
-      { pageName: 'onTv', pageLink: 'tv-shows/on-tv' },
+      { pageName: 'on-the-air', pageLink: 'tv-shows/on-the-air' },
     ],
   },
   {

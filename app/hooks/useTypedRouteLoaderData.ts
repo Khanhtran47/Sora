@@ -47,7 +47,7 @@ import type { loader as RoutesTvLoader } from '~/routes/tv-shows/$tvId';
 import type { loader as RoutesDiscoverTvsLoader } from '~/routes/discover/tv-shows';
 import type { loader as RoutesTvsIndexLoader } from '~/routes/tv-shows/index';
 import type { loader as RoutesPopularTvsLoader } from '~/routes/tv-shows/popular';
-import type { loader as RoutesOnTvLoader } from '~/routes/tv-shows/on-tv';
+import type { loader as RoutesOnTvLoader } from '~/routes/tv-shows/on-the-air';
 import type { loader as RoutesTopRatedTvsLoader } from '~/routes/tv-shows/top-rated';
 import type { loader as RoutesTvCastsLoader } from '~/routes/tv-shows/$tvId/cast';
 import type { loader as RoutesTvCrewsLoader } from '~/routes/tv-shows/$tvId/crew';
@@ -109,7 +109,7 @@ type Loaders = {
   'routes/discover/tv-shows': typeof RoutesDiscoverTvsLoader;
   'routes/tv-shows/index': typeof RoutesTvsIndexLoader;
   'routes/tv-shows/popular': typeof RoutesPopularTvsLoader;
-  'routes/tv-shows/on-tv': typeof RoutesOnTvLoader;
+  'routes/tv-shows/on-the-air': typeof RoutesOnTvLoader;
   'routes/tv-shows/top-rated': typeof RoutesTopRatedTvsLoader;
   'routes/tv-shows/$tvId/cast': typeof RoutesTvCastsLoader;
   'routes/tv-shows/$tvId/crew': typeof RoutesTvCrewsLoader;

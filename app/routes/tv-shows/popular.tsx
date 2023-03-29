@@ -16,13 +16,13 @@ import { CACHE_CONTROL } from '~/utils/server/http';
 import MediaList from '~/components/media/MediaList';
 
 export const meta: MetaFunction = () => ({
-  title: 'Watch Popular movies and tv shows free | Sora',
+  title: 'Popular TV shows | Sora',
   description:
     'Official Sora website to watch movies online HD for free, Watch TV show & TV series and Download all movies and series FREE',
   keywords:
     'watch free movies, free movies to watch online, watch movies online free, free movies streaming, free movies full, free movies download, watch movies hd, movies to watch',
   'og:url': 'https://sora-anime.vercel.app/tv-shows/popular',
-  'og:title': 'Watch Popular movies and tv shows free | Sora',
+  'og:title': 'Popular TV shows | Sora',
   'og:description':
     'Official Sora website to watch movies online HD for free, Watch TV show & TV series and Download all movies and series FREE',
 });
@@ -104,7 +104,7 @@ const ListTvShows = () => {
           listType="grid"
           showListTypeChangeButton
           items={shows.items}
-          listName={t('popularTv')}
+          listName={t('popular-tv-shows')}
           genresMovie={rootData?.genresMovie}
           genresTv={rootData?.genresTv}
           showPagination

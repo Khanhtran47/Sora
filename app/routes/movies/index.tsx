@@ -26,16 +26,18 @@ export const loader = async ({ request }: LoaderArgs) => {
   ]);
 
   const page = 1;
-  const [popular, topRated, upcoming] = await Promise.all([
+  const [popular, topRated, upcoming, nowPlaying] = await Promise.all([
     getListMovies('popular', locale, page),
     getListMovies('top_rated', locale, page),
     getListMovies('upcoming', locale, page),
+    getListMovies('now_playing', locale, page),
   ]);
   return json(
     {
       popular,
       topRated,
       upcoming,
+      nowPlaying,
     },
     {
       headers: {
@@ -46,7 +48,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 const MoviesIndexPage = () => {
-  const { popular, topRated, upcoming } = useLoaderData<typeof loader>();
+  const { popular, topRated, upcoming, nowPlaying } = useLoaderData<typeof loader>();
   const rootData = useTypedRouteLoaderData('root');
   const location = useLocation();
   const navigate = useNavigate();
@@ -169,6 +171,18 @@ const MoviesIndexPage = () => {
             listName="Top Rated Movies"
             showMoreList
             onClickViewMore={() => navigate('/movies/top-rated')}
+            navigationButtons
+            genresMovie={rootData?.genresMovie}
+            genresTv={rootData?.genresTv}
+          />
+        ) : null}
+        {nowPlaying?.items && nowPlaying.items?.length > 0 ? (
+          <MediaList
+            listType="slider-card"
+            items={nowPlaying.items}
+            listName="Now Playing Movies"
+            showMoreList
+            onClickViewMore={() => navigate('/movies/now-playing')}
             navigationButtons
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}

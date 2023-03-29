@@ -32,7 +32,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   const next7Days = today.add(7, 'day');
   const formattedToday = today.format('YYYY-MM-DD');
   const formattedNext7Days = next7Days.format('YYYY-MM-DD');
-  const [popular, topRated, onTheAir] = await Promise.all([
+  const [popular, airingToday, onTheAir, topRated] = await Promise.all([
     getListDiscover(
       'tv',
       undefined,
@@ -46,7 +46,7 @@ export const loader = async ({ request }: LoaderArgs) => {
       undefined,
       50,
     ),
-    getListTvShows('top_rated', locale, page),
+    getListTvShows('airing_today', locale, page),
     getListDiscover(
       'tv',
       undefined,
@@ -74,12 +74,14 @@ export const loader = async ({ request }: LoaderArgs) => {
       formattedToday,
       formattedNext7Days,
     ),
+    getListTvShows('top_rated', locale, page),
   ]);
   return json(
     {
       popular,
-      topRated,
+      airingToday,
       onTheAir,
+      topRated,
     },
     {
       headers: {
@@ -90,7 +92,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 const TvIndexPage = () => {
-  const { popular, topRated, onTheAir } = useLoaderData<typeof loader>();
+  const { popular, airingToday, onTheAir, topRated } = useLoaderData<typeof loader>();
   const rootData = useTypedRouteLoaderData('root');
   const location = useLocation();
   const navigate = useNavigate();
@@ -206,13 +208,13 @@ const TvIndexPage = () => {
           },
         }}
       >
-        {topRated?.items && topRated.items.length > 0 && (
+        {airingToday?.items && airingToday.items.length > 0 && (
           <MediaList
             listType="slider-card"
-            items={topRated.items}
-            listName="Top Rated Tv"
+            items={airingToday.items}
+            listName="Airing today Tv"
             showMoreList
-            onClickViewMore={() => navigate('/tv-shows/top-rated')}
+            onClickViewMore={() => navigate('/tv-shows/airing-today')}
             navigationButtons
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
@@ -224,7 +226,19 @@ const TvIndexPage = () => {
             items={onTheAir.items}
             listName="On the air Tv"
             showMoreList
-            onClickViewMore={() => navigate('/tv-shows/on-tv')}
+            onClickViewMore={() => navigate('/tv-shows/on-the-air')}
+            navigationButtons
+            genresMovie={rootData?.genresMovie}
+            genresTv={rootData?.genresTv}
+          />
+        )}
+        {topRated?.items && topRated.items.length > 0 && (
+          <MediaList
+            listType="slider-card"
+            items={topRated.items}
+            listName="Top Rated Tv"
+            showMoreList
+            onClickViewMore={() => navigate('/tv-shows/top-rated')}
             navigationButtons
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}

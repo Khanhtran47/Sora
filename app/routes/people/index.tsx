@@ -84,7 +84,7 @@ const ListPeoplePopular = () => {
         <MediaList
           currentPage={people.page}
           items={people.items}
-          listName={t('popularPeople')}
+          listName={t('popular-people')}
           listType="grid"
           onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
           showPagination

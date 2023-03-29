@@ -9,8 +9,8 @@ export type StillSize = 'w92' | 'w185' | 'w300' | 'original';
 
 export type MediaType = 'all' | 'movie' | 'tv' | 'person';
 export type TimeWindowType = 'day' | 'week';
-export type ListMovieType = 'upcoming' | 'top_rated' | 'popular';
-export type ListTvShowType = 'on_the_air' | 'popular' | 'top_rated';
+export type ListMovieType = 'upcoming' | 'top_rated' | 'popular' | 'now_playing';
+export type ListTvShowType = 'on_the_air' | 'popular' | 'top_rated' | 'airing_today';
 export type ListPersonType = 'popular' | 'latest';
 
 /**
