@@ -133,12 +133,15 @@ export interface IDate {
 }
 
 export interface IEpisodeInfo {
-  description?: null;
-  id?: string;
-  image?: string;
-  number?: number;
+  id: string;
+  number: number;
   title?: string;
+  description?: string;
+  isFiller?: boolean;
   url?: string;
+  image?: string;
+  releaseDate?: string;
+  [x: string]: unknown;
 }
 
 export interface IAiring {

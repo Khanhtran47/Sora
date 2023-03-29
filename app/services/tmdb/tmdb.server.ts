@@ -648,7 +648,7 @@ export const getInfoWithProvider = async (id: string, type: 'movie' | 'tv', prov
       (p) => p.name.toLowerCase() === provider.toLowerCase(),
     );
     if (!possibleProvider) {
-      throw new Error('provider not found');
+      throw new Error(`Provider ${provider} not found`);
     }
     tmdb = new META.TMDB(TMDB.key, possibleProvider);
   }
