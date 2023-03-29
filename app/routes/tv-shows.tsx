@@ -17,8 +17,9 @@ export const meta: MetaFunction = () => ({
 
 const tvPage = [
   { pageName: 'Popular Tv Shows', pageLink: '/popular' },
+  { pageName: 'Airing Today Tv Shows', pageLink: '/airing-today' },
+  { pageName: 'On the air Tv Shows', pageLink: '/on-the-air' },
   { pageName: 'Top Rated Tv Shows', pageLink: '/top-rated' },
-  { pageName: 'On the air Tv Shows', pageLink: '/on-tv' },
 ];
 
 export const handle = {

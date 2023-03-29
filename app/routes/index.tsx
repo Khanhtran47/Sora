@@ -107,7 +107,7 @@ const Index = () => {
           genresMovie={rootData?.genresMovie}
           genresTv={rootData?.genresTv}
           items={movies}
-          listName={t('popularMovies')}
+          listName={t('popular-movies')}
           listType="slider-card"
           navigationButtons
           onClickViewMore={() => onClickViewMore('movies')}
@@ -118,7 +118,7 @@ const Index = () => {
           genresMovie={rootData?.genresMovie}
           genresTv={rootData?.genresTv}
           items={shows}
-          listName={t('popularTv')}
+          listName={t('popular-tv-shows')}
           listType="slider-card"
           navigationButtons
           onClickViewMore={() => onClickViewMore('tv-shows')}
@@ -147,7 +147,7 @@ const Index = () => {
         />
         <MediaList
           items={people}
-          listName={t('popularPeople')}
+          listName={t('popular-people')}
           listType="slider-card"
           navigationButtons
           onClickViewMore={() => onClickViewMore('people')}

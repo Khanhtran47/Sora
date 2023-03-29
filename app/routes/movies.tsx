@@ -16,8 +16,9 @@ export const meta: MetaFunction = () => ({
 
 const moviePage = [
   { pageName: 'Popular Movies', pageLink: '/popular' },
-  { pageName: 'Top Rated Movies', pageLink: '/top-rated' },
+  { pageName: 'Now Playing Movies', pageLink: '/now-playing' },
   { pageName: 'Upcoming Movies', pageLink: '/upcoming' },
+  { pageName: 'Top Rated Movies', pageLink: '/top-rated' },
 ];
 
 export const handle = {
