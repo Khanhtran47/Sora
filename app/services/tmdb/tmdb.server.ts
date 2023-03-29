@@ -665,7 +665,7 @@ export const getInfoWithProvider = async (id: string, type: 'movie' | 'tv', prov
         return res;
       } catch (error) {
         console.error(error);
-        return { error: 'Get info failed' };
+        return undefined;
       }
     },
   });
@@ -678,8 +678,8 @@ export const getWatchEpisode = async (id: string, episodeId: string) => {
 
   const data = await cachified({
     key: `tmdb-${id}-episode-${episodeId}-watch`,
-    ttl: 1000 * 60 * 60 * 4,
-    staleWhileRevalidate: 1000 * 60 * 60 * 24 * 2,
+    ttl: 1000 * 60 * 60,
+    staleWhileRevalidate: 1000 * 60 * 60 * 3,
     cache: lruCache,
     request: undefined,
     getFreshValue: async () => {
@@ -688,7 +688,7 @@ export const getWatchEpisode = async (id: string, episodeId: string) => {
         return res;
       } catch (error) {
         console.error(error);
-        return { error: 'Get watch episode failed' };
+        return undefined;
       }
     },
   });

@@ -44,7 +44,7 @@ export const meta: MetaFunction = ({ data, params }) => {
       description: `This season of tv show doesn't have episode ${params.episodeId || ''}`,
     };
   }
-  const { detail, color } = data || {};
+  const { detail } = data || {};
   return {
     title: `Watch ${detail?.name || ''} season ${params.seasonId || ''} episode ${
       params.episodeId || ''
@@ -65,7 +65,6 @@ export const meta: MetaFunction = ({ data, params }) => {
     }, English, Subtitle ${detail?.name || ''} season ${params.seasonId || ''} episode ${
       params.episodeId || ''
     }, English Subtitle`,
-    ...(color ? { 'theme-color': color } : null),
     'og:url': `https://sora-anime.vercel.app/tv-shows/${params.tvId}/season/${
       params.seasonId
     }/episode/${params.episodeId || ''}`,

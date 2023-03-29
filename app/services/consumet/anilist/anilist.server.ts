@@ -335,8 +335,8 @@ export const getAnimeEpisodeInfo = async (
   const anilist = generateAnilistMeta(provider);
   const results = await cachified({
     key: `anilist-episode-${id}-${dub}-${provider}-${fetchFiller}`,
-    ttl: 1000 * 60 * 60 * 24,
-    staleWhileRevalidate: 1000 * 60 * 60 * 24 * 7,
+    ttl: 1000 * 60 * 60 * 4,
+    staleWhileRevalidate: 1000 * 60 * 60 * 24,
     cache: lruCache,
     request: undefined,
     getFreshValue: async () => {
@@ -362,7 +362,7 @@ export const getAnimeEpisodeStream = async (
   const results = await cachified({
     key: `anilist-episode-stream-${episodeId}-${provider}-${server}`,
     ttl: 1000 * 60 * 60,
-    staleWhileRevalidate: 1000 * 60 * 60 * 24,
+    staleWhileRevalidate: 1000 * 60 * 60 * 3,
     cache: lruCache,
     request: undefined,
     getFreshValue: async () => {

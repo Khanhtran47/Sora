@@ -40,7 +40,7 @@ export const meta: MetaFunction = ({ data, params }) => {
       description: `There is no movie with the ID: ${params.movieId}`,
     };
   }
-  const { detail, color } = data || {};
+  const { detail } = data || {};
   return {
     title: `Watch ${detail?.title || ''} HD online Free - Sora`,
     description: `Watch ${detail?.title || ''} in full HD online with Subtitle`,
@@ -49,7 +49,6 @@ export const meta: MetaFunction = ({ data, params }) => {
     } HD, Online ${detail?.title || ''}, Streaming ${detail?.title || ''}, English, Subtitle ${
       detail?.title || ''
     }, English Subtitle`,
-    ...(color ? { 'theme-color': color } : null),
     'og:url': `https://sora-anime.vercel.app/movies/${params.movieId}/watch`,
     'og:title': `Watch ${detail?.title || ''} HD online Free - Sora`,
     'og:description': `Watch ${detail?.title || ''} in full HD online with Subtitle`,
