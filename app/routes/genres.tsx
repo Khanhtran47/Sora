@@ -1,14 +1,10 @@
 import { Outlet } from '@remix-run/react';
 
-const genresPage = [
-  { pageName: 'movie-genres', pageLink: '/movie' },
-  { pageName: 'tv-show-genres', pageLink: '/tv' },
-  { pageName: 'anime-genres', pageLink: '/anime' },
-];
+import { genrePages } from '~/constants/tabLinks';
 
 export const handle = {
   showTabLink: true,
-  tabLinkPages: genresPage,
+  tabLinkPages: genrePages,
   tabLinkTo: '/genres',
 };
 

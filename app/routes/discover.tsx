@@ -2,6 +2,8 @@ import { MetaFunction } from '@remix-run/node';
 import { NavLink, Outlet } from '@remix-run/react';
 import { Badge } from '@nextui-org/react';
 
+import { discoverPages } from '~/constants/tabLinks';
+
 export const meta: MetaFunction = () => ({
   title: 'Discover Movies, TV Shows, Anime, People and More - Sora',
   description: 'Discover Movies, TV Shows, Anime, People and More',
@@ -10,12 +12,6 @@ export const meta: MetaFunction = () => ({
   'og:image': 'https://sora-anime.vercel.app/api/ogimage?it=discover',
   'og:description': 'Discover Movies, TV Shows, Anime, People and More',
 });
-
-const discoverPages = [
-  { pageName: 'Discover Movies', pageLink: '/movies' },
-  { pageName: 'Discover TV Shows', pageLink: '/tv-shows' },
-  { pageName: 'Discover Anime', pageLink: '/anime' },
-];
 
 export const handle = {
   breadcrumb: () => (

@@ -2,6 +2,8 @@ import { MetaFunction } from '@remix-run/node';
 import { NavLink, Outlet } from '@remix-run/react';
 import { Container, Badge } from '@nextui-org/react';
 
+import { tvPages } from '~/constants/tabLinks';
+
 export const meta: MetaFunction = () => ({
   title: 'Free Series HD - Watch Series and Movies HD Online on Sora',
   description:
@@ -14,13 +16,6 @@ export const meta: MetaFunction = () => ({
   'og:description':
     'Watch latest Tv series online in HD Quality. Unlimited streaming series for free now',
 });
-
-const tvPage = [
-  { pageName: 'Popular Tv Shows', pageLink: '/popular' },
-  { pageName: 'Airing Today Tv Shows', pageLink: '/airing-today' },
-  { pageName: 'On the air Tv Shows', pageLink: '/on-the-air' },
-  { pageName: 'Top Rated Tv Shows', pageLink: '/top-rated' },
-];
 
 export const handle = {
   breadcrumb: () => (
@@ -41,7 +36,7 @@ export const handle = {
     </NavLink>
   ),
   showTabLink: true,
-  tabLinkPages: tvPage,
+  tabLinkPages: tvPages,
   tabLinkTo: '/tv-shows',
   hideTabLinkWithLocation: (locationPathname: string) => {
     if (locationPathname.split('/')[2]?.match(/^\d+$/) || locationPathname === '/tv-shows')
