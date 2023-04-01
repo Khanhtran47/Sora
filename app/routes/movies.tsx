@@ -2,6 +2,8 @@ import { MetaFunction } from '@remix-run/node';
 import { NavLink, Outlet } from '@remix-run/react';
 import { Container, Badge } from '@nextui-org/react';
 
+import { moviePages } from '~/constants/tabLinks';
+
 export const meta: MetaFunction = () => ({
   title: 'Free Movies HD - Watch Movies and Tv Series HD Online on Sora',
   description: 'Watch latest movies online in HD Quality. Unlimited streaming movies for free now',
@@ -13,13 +15,6 @@ export const meta: MetaFunction = () => ({
   'og:description':
     'Watch latest movies online in HD Quality. Unlimited streaming movies for free now',
 });
-
-const moviePage = [
-  { pageName: 'Popular Movies', pageLink: '/popular' },
-  { pageName: 'Now Playing Movies', pageLink: '/now-playing' },
-  { pageName: 'Upcoming Movies', pageLink: '/upcoming' },
-  { pageName: 'Top Rated Movies', pageLink: '/top-rated' },
-];
 
 export const handle = {
   breadcrumb: () => (
@@ -40,7 +35,7 @@ export const handle = {
     </NavLink>
   ),
   showTabLink: true,
-  tabLinkPages: moviePage,
+  tabLinkPages: moviePages,
   tabLinkTo: '/movies',
   hideTabLinkWithLocation: (locationPathname: string) => {
     if (locationPathname.split('/')[2]?.match(/^\d+$/) || locationPathname === '/movies')

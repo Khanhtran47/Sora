@@ -2,12 +2,7 @@ import { MetaFunction } from '@remix-run/node';
 import { NavLink, Outlet } from '@remix-run/react';
 import { Container, Badge } from '@nextui-org/react';
 
-const searchPage = [
-  { pageName: 'search.title.movie', pageLink: 'movie' },
-  { pageName: 'search.title.tv', pageLink: 'tv' },
-  { pageName: 'search.title.people', pageLink: 'people' },
-  { pageName: 'search.title.anime', pageLink: 'anime' },
-];
+import { searchPages } from '~/constants/tabLinks';
 
 export const meta: MetaFunction = () => ({
   title:
@@ -43,7 +38,7 @@ export const handle = {
     </NavLink>
   ),
   showTabLink: true,
-  tabLinkPages: searchPage,
+  tabLinkPages: searchPages,
   tabLinkTo: '/search/',
 };
 

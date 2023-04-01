@@ -1,13 +1,7 @@
 import { MetaFunction } from '@remix-run/node';
 import { NavLink, Outlet } from '@remix-run/react';
 import { Container, Badge } from '@nextui-org/react';
-
-const animePage = [
-  { pageName: 'Discover Anime', pageLink: '/discover' },
-  { pageName: 'Recent Episodes', pageLink: '/recent-episodes' },
-  { pageName: 'Popular Anime', pageLink: '/popular' },
-  { pageName: 'Trending Anime', pageLink: '/trending' },
-];
+import { animePages } from '~/constants/tabLinks';
 
 export const meta: MetaFunction = () => ({
   title: 'Free Anime HD - Watch Anime HD Online on Sora',
@@ -40,7 +34,7 @@ export const handle = {
     </NavLink>
   ),
   showTabLink: true,
-  tabLinkPages: animePage,
+  tabLinkPages: animePages,
   tabLinkTo: '/anime',
   hideTabLinkWithLocation: (locationPathname: string) => {
     if (locationPathname.split('/')[2]?.match(/^\d+$/) || locationPathname === '/anime')
