@@ -591,6 +591,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
               }}
               onEnd={() => {
                 setShowTrailer(false);
+                swiper.slideNext();
               }}
               onError={() => {
                 setShowTrailer(false);
