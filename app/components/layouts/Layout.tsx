@@ -3,9 +3,10 @@
 import { useRef, useEffect, useMemo } from 'react';
 import type { User } from '@supabase/supabase-js';
 import { tv } from 'tailwind-variants';
-import { useLocation, useMatches, useNavigationType } from '@remix-run/react';
+import { useLocation, useMatches, useNavigationType, useOutlet } from '@remix-run/react';
 import { useMediaQuery } from '@react-hookz/web';
-import { useElementScroll } from 'framer-motion';
+import { useElementScroll, AnimatePresence } from 'framer-motion';
+import { Toaster } from 'sonner';
 
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
@@ -30,7 +31,6 @@ import GlobalPlayer from './GlobalPlayer';
 import MobileHeader from './MobileHeader';
 
 interface ILayout {
-  children: React.ReactNode;
   user?: User;
 }
 
@@ -142,9 +142,10 @@ const tabLinkWrapperStyles = tv({
 });
 
 const Layout = (props: ILayout) => {
-  const { children, user } = props;
+  const { user } = props;
   const location = useLocation();
   const matches = useMatches();
+  const outlet = useOutlet();
   const navigationType = useNavigationType();
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const isMd = useMediaQuery('(max-width: 1280px)', { initializeWithValue: false });
@@ -291,7 +292,33 @@ const Layout = (props: ILayout) => {
             >
               {/* <BreadCrumb /> */}
               <GlobalPlayer />
-              {children}
+              <Toaster
+                position="bottom-right"
+                richColors
+                closeButton
+                toastOptions={{
+                  style: {
+                    // @ts-ignore
+                    '--normal-bg': 'var(--nextui-colors-backgroundContrast)',
+                    '--normal-text': 'var(--nextui-colors-text)',
+                    '--normal-border': 'var(--nextui-colors-border)',
+                    '--success-bg': 'var(--nextui-colors-backgroundContrast)',
+                    '--success-border': 'var(--nextui-colors-border)',
+                    '--success-text': 'var(--nextui-colors-success)',
+                    '--error-bg': 'var(--nextui-colors-backgroundContrast)',
+                    '--error-border': 'var(--nextui-colors-border)',
+                    '--error-text': 'var(--nextui-colors-error)',
+                    '--gray1': 'var(--nextui-colors-accents0)',
+                    '--gray2': 'var(--nextui-colors-accents1)',
+                    '--gray4': 'var(--nextui-colors-accents3)',
+                    '--gray5': 'var(--nextui-colors-accents4)',
+                    '--gray12': 'var(--nextui-colors-accents9)',
+                  },
+                }}
+              />
+              <AnimatePresence exitBeforeEnter initial={false}>
+                {outlet}
+              </AnimatePresence>
             </main>
             {/* <Footer /> */}
             {isSm ? <BottomNav user={user} /> : null}

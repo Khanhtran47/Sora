@@ -10,7 +10,6 @@ import {
   Scripts,
   useCatch,
   useLoaderData,
-  useOutlet,
   useFetchers,
   useNavigation,
   useMatches,
@@ -45,7 +44,7 @@ import FontStyles600 from '@fontsource/inter/600.css';
 import FontStyles700 from '@fontsource/inter/700.css';
 import FontStyles800 from '@fontsource/inter/800.css';
 import FontStyles900 from '@fontsource/inter/900.css';
-import { Toaster, toast } from 'sonner';
+import { toast } from 'sonner';
 
 import i18next, { i18nCookie } from '~/i18n/i18next.server';
 import * as gtag from '~/utils/client/gtags.client';
@@ -493,7 +492,6 @@ const Document = ({ children, title, lang, dir, gaTrackingId, ENV }: DocumentPro
 
 const App = () => {
   globalStyles();
-  const outlet = useOutlet();
   const fetchers = useFetchers();
   const navigation = useNavigation();
   const { user, locale, gaTrackingId, ENV } = useLoaderData<typeof loader>();
@@ -666,35 +664,7 @@ const App = () => {
           ) : null}
         </AnimatePresence>
         <NextUIProvider>
-          <Layout user={user}>
-            <Toaster
-              position="bottom-right"
-              richColors
-              closeButton
-              toastOptions={{
-                style: {
-                  // @ts-ignore
-                  '--normal-bg': 'var(--nextui-colors-backgroundContrast)',
-                  '--normal-text': 'var(--nextui-colors-text)',
-                  '--normal-border': 'var(--nextui-colors-border)',
-                  '--success-bg': 'var(--nextui-colors-backgroundContrast)',
-                  '--success-border': 'var(--nextui-colors-border)',
-                  '--success-text': 'var(--nextui-colors-success)',
-                  '--error-bg': 'var(--nextui-colors-backgroundContrast)',
-                  '--error-border': 'var(--nextui-colors-border)',
-                  '--error-text': 'var(--nextui-colors-error)',
-                  '--gray1': 'var(--nextui-colors-accents0)',
-                  '--gray2': 'var(--nextui-colors-accents1)',
-                  '--gray4': 'var(--nextui-colors-accents3)',
-                  '--gray5': 'var(--nextui-colors-accents4)',
-                  '--gray12': 'var(--nextui-colors-accents9)',
-                },
-              }}
-            />
-            <AnimatePresence exitBeforeEnter initial={false}>
-              {outlet}
-            </AnimatePresence>
-          </Layout>
+          <Layout user={user} />
         </NextUIProvider>
       </RemixThemesProvider>
     </Document>
