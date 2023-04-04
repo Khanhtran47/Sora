@@ -5,12 +5,12 @@
   "description": "",
   "license": "",
   "scripts": {
-    "build": "yarn run prod:css && yarn run build:worker && remix build",
+    "build": "pnpm prod:css && pnpm build:worker && remix build",
     "build:css": "postcss styles/**/*.css --dir app/styles",
-    "prod:css": "yarn run build:css",
+    "prod:css": "pnpm build:css",
     "build:worker": "esbuild ./app/entry.worker.ts --outfile=./public/entry.worker.js --minify --bundle --format=esm --define:process.env.NODE_ENV='\"production\"'",
-    "dev": "concurrently \"yarn dev:css\" \"yarn dev:worker\" \"remix dev\"",
-    "dev:css": "yarn run build:css --watch",
+    "dev": "concurrently \"pnpm dev:css\" \"pnpm dev:worker\" \"remix dev\"",
+    "dev:css": "pnpm build:css --watch",
     "dev:worker": "esbuild ./app/entry.worker.ts --outfile=./public/entry.worker.js --bundle --format=esm --define:process.env.NODE_ENV='\"development\"' --watch",
     "prebuild": "rimraf ./public/build \"./app/styles/**/*.css\"",
     "postinstall": "remix setup node",
@@ -51,6 +51,7 @@
     "cross-env": "^7.0.3",
     "dashjs": "^4.5.1",
     "dayjs": "^1.11.7",
+    "esbuild": "^0.17.15",
     "eslint-import-resolver-typescript": "^2.7.1",
     "framer-motion": "^6.5.1",
     "hls.js": "^1.3.1",
@@ -119,15 +120,15 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.30.0",
     "eslint-plugin-react-hooks": "^4.5.0",
-    "husky": "^7.0.0",
+    "husky": "^8.0.3",
     "lint-staged": "^13.0.1",
     "postcss-import": "^15.0.0",
     "prettier": "^2.8.0",
     "typescript": "^4.9.3"
   },
   "lint-staged": {
-    "*.{tsx,ts,jsx,js}": "yarn eslint",
-    "*": "yarn prettier -c"
+    "*.{tsx,ts,jsx,js}": "pnpm eslint",
+    "*": "pnpm prettier -c"
   },
   "engines": {
     "node": ">=14"

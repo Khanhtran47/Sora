@@ -5,3 +5,5 @@ node_modules
 build
 .env
 /styles/tailwind.css
+/.husky
+pnpm-lock.yaml
