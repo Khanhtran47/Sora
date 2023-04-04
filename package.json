@@ -5,11 +5,11 @@
   "description": "",
   "license": "",
   "scripts": {
-    "build": "pnpm prod:css && pnpm run build:worker && remix build",
+    "build": "pnpm prod:css && pnpm build:worker && remix build",
     "build:css": "postcss styles/**/*.css --dir app/styles",
     "prod:css": "pnpm build:css",
     "build:worker": "esbuild ./app/entry.worker.ts --outfile=./public/entry.worker.js --minify --bundle --format=esm --define:process.env.NODE_ENV='\"production\"'",
-    "dev": "concurrently \"pnpm dev:css\" \"pnpm run dev:worker\" \"remix dev\"",
+    "dev": "concurrently \"pnpm dev:css\" \"pnpm dev:worker\" \"remix dev\"",
     "dev:css": "pnpm build:css --watch",
     "dev:worker": "esbuild ./app/entry.worker.ts --outfile=./public/entry.worker.js --bundle --format=esm --define:process.env.NODE_ENV='\"development\"' --watch",
     "prebuild": "rimraf ./public/build \"./app/styles/**/*.css\"",
