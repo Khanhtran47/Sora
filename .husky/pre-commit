@@ -3,7 +3,7 @@
 
 # check lint/format on staged files
 echo "Run pre-commit tasks"
-yarn lint-staged --quiet || (
+pnpm lint-staged --quiet || (
   echo "Please lint and format your code before commit!";
   false;
 )

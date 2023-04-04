@@ -117,7 +117,8 @@
     "api",
     "*.config.js",
     "*.lock",
-    "*.json"
+    "*.json",
+    "*.yaml"
   ],
   "plugins": ["prettier", "react", "react-hooks", "@typescript-eslint"],
   "settings": {
