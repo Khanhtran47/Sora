@@ -245,7 +245,14 @@ export const loader = async ({ request, params }: LoaderArgs) => {
           detail,
           episodes,
           hasNextEpisode,
-          sources: episodeDetail?.sources,
+          sources: episodeDetail?.sources.map((source) => ({
+            ...source,
+            url: `${
+              env.CORS_PROXY_URL === undefined
+                ? source.url
+                : `${env.CORS_PROXY_URL}?url=${encodeURIComponent(source.url)}`
+            }`,
+          })),
           userId: user?.id,
           episodeInfo,
           providers,
@@ -272,7 +279,14 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         detail,
         episodes,
         hasNextEpisode,
-        sources: episodeDetail?.sources,
+        sources: episodeDetail?.sources.map((source) => ({
+          ...source,
+          url: `${
+            env.CORS_PROXY_URL === undefined
+              ? source.url
+              : `${env.CORS_PROXY_URL}?url=${encodeURIComponent(source.url)}`
+          }`,
+        })),
         userId: user?.id,
         episodeInfo,
         providers,
@@ -323,7 +337,11 @@ export const loader = async ({ request, params }: LoaderArgs) => {
           hasNextEpisode,
           sources: episodeDetail?.sources.map((source) => ({
             ...source,
-            url: `${env.CORS_PROXY_URL === undefined ? '' : env.CORS_PROXY_URL}${source.url}`,
+            url: `${
+              env.CORS_PROXY_URL === undefined
+                ? source.url
+                : `${env.CORS_PROXY_URL}?url=${source.url}`
+            }`,
           })),
           userId: user?.id,
           episodeInfo,
@@ -353,7 +371,14 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         detail,
         episodes,
         hasNextEpisode,
-        sources: episodeDetail?.sources,
+        sources: episodeDetail?.sources.map((source) => ({
+          ...source,
+          url: `${
+            env.CORS_PROXY_URL === undefined
+              ? source.url
+              : `${env.CORS_PROXY_URL}?url=${encodeURIComponent(source.url)}`
+          }`,
+        })),
         userId: user?.id,
         episodeInfo,
         providers,
@@ -602,7 +627,14 @@ export const loader = async ({ request, params }: LoaderArgs) => {
       {
         detail,
         episodes,
-        sources: sources.sources,
+        sources: sources?.sources.map((source) => ({
+          ...source,
+          url: `${
+            env.CORS_PROXY_URL === undefined
+              ? source.url
+              : `${env.CORS_PROXY_URL}?url=${encodeURIComponent(source.url)}`
+          }`,
+        })),
         userId: user?.id,
         episodeInfo,
         providers,
@@ -628,7 +660,14 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     {
       detail,
       episodes,
-      sources: sources.sources,
+      sources: sources?.sources.map((source) => ({
+        ...source,
+        url: `${
+          env.CORS_PROXY_URL === undefined
+            ? source.url
+            : `${env.CORS_PROXY_URL}?url=${encodeURIComponent(source.url)}`
+        }`,
+      })),
       userId: user?.id,
       episodeInfo,
       providers,
