@@ -151,7 +151,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
     const [tvDetail, imdbRating, providers, fimg] = await Promise.all([
       loklokGetTvEpInfo(idProvider, Number(episodeId) - 1),
-      imdbId ? getImdbRating(imdbId) : undefined,
+      imdbId && process.env.IMDB_API_URL === undefined ? getImdbRating(imdbId) : undefined,
       getProviderList({
         type: 'tv',
         title,
@@ -216,7 +216,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
     const [tvDetail, imdbRating, providers, fimg] = await Promise.all([
       getInfoWithProvider(tid.toString(), 'tv'),
-      imdbId ? getImdbRating(imdbId) : undefined,
+      imdbId && process.env.IMDB_API_URL === undefined ? getImdbRating(imdbId) : undefined,
       getProviderList({
         type: 'tv',
         title,
@@ -290,7 +290,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
     const [episodeDetail, imdbRating, providers, fimg] = await Promise.all([
       getKissKhInfo(Number(idProvider)),
-      imdbId ? getImdbRating(imdbId) : undefined,
+      imdbId && process.env.IMDB_API_URL === undefined ? getImdbRating(imdbId) : undefined,
       getProviderList({
         type: 'tv',
         title,
@@ -360,7 +360,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   }
 
   const [imdbRating, providers, fimg] = await Promise.all([
-    imdbId ? getImdbRating(imdbId) : undefined,
+    imdbId && process.env.IMDB_API_URL === undefined ? getImdbRating(imdbId) : undefined,
     getProviderList({
       type: 'tv',
       title,

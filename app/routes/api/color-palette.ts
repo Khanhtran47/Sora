@@ -1,5 +1,5 @@
-import { json } from '@remix-run/node'
-import type { LoaderArgs } from '@remix-run/node'
+import { json } from '@remix-run/node';
+import type { LoaderArgs } from '@remix-run/node';
 
 import { lruCache, cachified } from '~/services/lru-cache';
 import { authenticate } from '~/services/supabase';
@@ -22,9 +22,9 @@ export interface ColorPalette {
 }
 
 export const loader = async ({ request }: LoaderArgs) => {
-  await authenticate(request, undefined, true)
-  const url = new URL(request.url)
-  const color = url.searchParams.get('color')
+  await authenticate(request, undefined, true);
+  const url = new URL(request.url);
+  const color = url.searchParams.get('color');
   const colorData = await cachified({
     key: `color-${color}`,
     ttl: 1000 * 60 * 60 * 24 * 30,
@@ -33,13 +33,13 @@ export const loader = async ({ request }: LoaderArgs) => {
     request,
     getFreshValue: async () => {
       try {
-        const res = await fetch(`${process.env.COLOR_PALETTE_API}/color/${color}`);
+        const res = await fetch(`https://www.tints.dev/api/color/${color}`);
         if (!res.ok) throw new Error(JSON.stringify(await res.json()));
-        const data = await res.json() as Result;
+        const data = (await res.json()) as Result;
         return data;
       } catch (error) {
-        console.error(error)
-        return { error: 'Something went wrong' }
+        console.error(error);
+        return { error: 'Something went wrong' };
       }
     },
     checkValue: (value: unknown) => {
@@ -49,8 +49,8 @@ export const loader = async ({ request }: LoaderArgs) => {
       return false;
     },
   });
-  if ((colorData as {error: string})?.error) {
-    return json(colorData, { status: 500 })
+  if ((colorData as { error: string })?.error) {
+    return json(colorData, { status: 500 });
   }
-  return json(colorData, { status: 200, headers: { 'Cache-Control': 'max-age=31536000' } })
-}
+  return json(colorData, { status: 200, headers: { 'Cache-Control': 'max-age=31536000' } });
+};

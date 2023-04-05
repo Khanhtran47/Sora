@@ -45,7 +45,9 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   if ((detail && detail.original_language !== 'en') || locale !== 'en') {
     const [translations, imdbRating, fimg] = await Promise.all([
       getTranslations('movie', mid),
-      detail?.imdb_id ? getImdbRating(detail?.imdb_id) : undefined,
+      detail?.imdb_id && process.env.IMDB_API_URL === undefined
+        ? getImdbRating(detail?.imdb_id)
+        : undefined,
       fetch(extractColorImage),
     ]);
     const fimgb = Buffer.from(await fimg.arrayBuffer());
@@ -77,7 +79,9 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     );
   }
   const [imdbRating, fimg] = await Promise.all([
-    detail?.imdb_id ? getImdbRating(detail?.imdb_id) : undefined,
+    detail?.imdb_id && process.env.IMDB_API_URL === undefined
+      ? getImdbRating(detail?.imdb_id)
+      : undefined,
     fetch(extractColorImage),
   ]);
   const fimgb = Buffer.from(await fimg.arrayBuffer());
@@ -164,6 +168,7 @@ export const handle = {
   ),
   preventScrollToTop: true,
   disableLayoutPadding: true,
+  backgroundColor: 'light',
 };
 
 const MovieDetail = () => {

@@ -323,7 +323,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
           hasNextEpisode,
           sources: episodeDetail?.sources.map((source) => ({
             ...source,
-            url: `${env.CORS_PROXY_URL}${source.url}`,
+            url: `${env.CORS_PROXY_URL === undefined ? '' : env.CORS_PROXY_URL}${source.url}`,
           })),
           userId: user?.id,
           episodeInfo,

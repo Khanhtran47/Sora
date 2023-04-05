@@ -50,7 +50,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   if ((detail && detail?.original_language !== 'en') || locale !== 'en') {
     const [translations, imdbRating, fimg] = await Promise.all([
       getTranslations('tv', tid),
-      imdbId ? getImdbRating(imdbId) : undefined,
+      imdbId && process.env.IMDB_API_URL === undefined ? getImdbRating(imdbId) : undefined,
       fetch(extractColorImage),
     ]);
     const fimgb = Buffer.from(await fimg.arrayBuffer());
@@ -80,7 +80,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   }
 
   const [imdbRating, fimg] = await Promise.all([
-    imdbId ? getImdbRating(imdbId) : undefined,
+    imdbId && process.env.IMDB_API_URL === undefined ? getImdbRating(imdbId) : undefined,
     fetch(extractColorImage),
   ]);
   const fimgb = Buffer.from(await fimg.arrayBuffer());

@@ -1,6 +1,5 @@
 /* eslint-disable import/prefer-default-export */
 import { fetcher, lruCache } from '~/services/lru-cache';
-import { env } from 'process';
 
 export interface IAniSkipResponse {
   found: boolean;
@@ -27,9 +26,7 @@ export const getAniskip = async (
   episodeLength?: number,
 ): Promise<IAniSkipResponse | undefined> => {
   try {
-    const url = `${
-      env.ANISKIP_API_URL
-    }/skip-times/${id}/${episodeNumber}?types[]=ed&types[]=mixed-ed&types[]=mixed-op&types[]=op&types[]=recap&episodeLength=${
+    const url = `https://api.aniskip.com/v2/skip-times/${id}/${episodeNumber}?types[]=ed&types[]=mixed-ed&types[]=mixed-op&types[]=op&types[]=recap&episodeLength=${
       episodeLength || 0
     }`;
     const fetched = await fetcher<IAniSkipResponse>({

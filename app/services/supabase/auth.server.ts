@@ -54,7 +54,7 @@ export async function authenticate(
   // try to get the session (from cookie) and payload from request
   const [session, payload, botcheck] = await Promise.all([
     getSessionFromCookie(request.headers.get('Cookie')),
-    requestPayload(request),
+    process.env.NODE_ENV === 'production' ? requestPayload(request) : undefined,
     isbot(request.headers.get('User-Agent')),
   ]);
 

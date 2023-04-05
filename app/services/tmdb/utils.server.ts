@@ -15,11 +15,11 @@ import {
 } from './tmdb.types';
 
 export class TMDB {
-  static readonly API_BASE_URL = env.TMDB_API_URL;
+  static readonly API_BASE_URL = 'https://api.themoviedb.org/3/';
 
-  static readonly IMDB_API_BASE_URl = env.IMDB_API_URL;
+  static readonly IMDB_API_BASE_URL = env.IMDB_API_URL;
 
-  static readonly MEDIA_BASE_URL = env.TMDB_MEDIA_URL;
+  static readonly MEDIA_BASE_URL = 'https://image.tmdb.org/t/p/';
 
   static readonly key = process.env.TMDB_API_KEY;
 
@@ -394,7 +394,7 @@ export class TMDB {
     return url;
   };
 
-  static imdbDetailUrl = (id: string) => `${this.IMDB_API_BASE_URl}title/${id}`;
+  static imdbDetailUrl = (id: string) => `${this.IMDB_API_BASE_URL}title/${id}`;
 }
 
 export const postFetchDataHandler = (
