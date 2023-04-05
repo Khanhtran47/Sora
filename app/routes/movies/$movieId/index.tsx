@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { json } from '@remix-run/node';
 import type { LoaderArgs } from '@remix-run/node';
-import { useLoaderData, useNavigate, Link } from '@remix-run/react';
+import { useLoaderData, useNavigate, Link, useParams } from '@remix-run/react';
 import { Row, Col, Image as NextImage } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
 
@@ -62,6 +62,7 @@ const MovieOverview = () => {
   const rootData = useTypedRouteLoaderData('root');
   const detail = movieData && movieData.detail;
   const navigate = useNavigate();
+  const { movieId } = useParams();
 
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const onClickViewMore = (type: 'cast' | 'similar' | 'recommendations') => {
@@ -90,7 +91,7 @@ const MovieOverview = () => {
         },
       }}
     >
-      {!isSm && (
+      {!isSm ? (
         <Col span={4} css={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center' }}>
           <Flex
             direction="column"
@@ -154,7 +155,7 @@ const MovieOverview = () => {
             </H6>
           </Flex>
         </Col>
-      )}
+      ) : null}
       <Col
         css={{
           width: '100%',
@@ -187,7 +188,7 @@ const MovieOverview = () => {
               '@xs': { flexDirection: 'row', rowGap: '1rem', columnGap: '2rem' },
             }}
           >
-            {directors && directors.length > 0 && (
+            {directors && directors.length > 0 ? (
               <H6 h6>
                 <strong>Director</strong>
                 <br />
@@ -204,8 +205,8 @@ const MovieOverview = () => {
                   ))}
                 </Flex>
               </H6>
-            )}
-            {detail?.production_countries && detail.production_countries.length > 0 && (
+            ) : null}
+            {detail?.production_countries && detail.production_countries.length > 0 ? (
               <H6 h6>
                 <strong>Production Countries</strong>
                 <br />
@@ -213,8 +214,8 @@ const MovieOverview = () => {
                   <p key={`country-item-${index}`}>{country.name}</p>
                 ))}
               </H6>
-            )}
-            {detail?.spoken_languages && detail.spoken_languages.length > 0 && (
+            ) : null}
+            {detail?.spoken_languages && detail.spoken_languages.length > 0 ? (
               <H6 h6>
                 <strong>Spoken Languages</strong>
                 <br />
@@ -222,11 +223,12 @@ const MovieOverview = () => {
                   <p key={`language-item-${index}`}>{language.english_name}</p>
                 ))}
               </H6>
-            )}
+            ) : null}
           </Flex>
         </Flex>
-        {topBilledCast && topBilledCast.length > 0 && (
+        {topBilledCast && topBilledCast.length > 0 ? (
           <MediaList
+            key={`movie-top-cast-${movieId}`}
             listType="slider-card"
             items={topBilledCast}
             listName="Top Cast"
@@ -235,9 +237,10 @@ const MovieOverview = () => {
             navigationButtons
             itemsType="people"
           />
-        )}
-        {recommendations && recommendations.items && recommendations.items.length > 0 && (
+        ) : null}
+        {recommendations && recommendations.items && recommendations.items.length > 0 ? (
           <MediaList
+            key={`movie-recommendations-${movieId}`}
             listType="slider-card"
             items={recommendations.items}
             listName="Recommendations"
@@ -248,10 +251,10 @@ const MovieOverview = () => {
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
           />
-        )}
-
-        {similar && similar.items && similar.items.length > 0 && (
+        ) : null}
+        {similar && similar.items && similar.items.length > 0 ? (
           <MediaList
+            key={`movie-similar-${movieId}`}
             listType="slider-card"
             items={similar.items}
             listName="Similar Movies"
@@ -262,7 +265,7 @@ const MovieOverview = () => {
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
           />
-        )}
+        ) : null}
       </Col>
     </Row>
   );

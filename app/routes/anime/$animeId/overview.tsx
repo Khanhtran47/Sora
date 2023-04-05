@@ -15,6 +15,7 @@ import { H2, H5, H6 } from '~/components/styles/Text.styles';
 import Flex from '~/components/styles/Flex.styles';
 
 import PhotoIcon from '~/assets/icons/PhotoIcon';
+import { useParams } from '@remix-run/react';
 
 export const meta: MetaFunction = ({ params }) => ({
   'og:url': `https://sora-anime.vercel.app/anime/${params.animeId}/overview`,
@@ -23,6 +24,7 @@ export const meta: MetaFunction = ({ params }) => ({
 const Overview = () => {
   const animeData = useTypedRouteLoaderData('routes/anime/$animeId');
   const detail = animeData && animeData.detail;
+  const { animeId } = useParams();
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   return (
     <Row
@@ -316,7 +318,7 @@ const Overview = () => {
             </Grid.Container>
           </>
         )}
-        {detail?.characters && detail.characters.length > 0 && (
+        {detail?.characters && detail.characters.length > 0 ? (
           <>
             <H2
               h2
@@ -487,16 +489,17 @@ const Overview = () => {
               ))}
             </Grid.Container>
           </>
-        )}
-        {detail?.recommendations && detail?.recommendations.length > 0 && (
+        ) : null}
+        {detail?.recommendations && detail?.recommendations.length > 0 ? (
           <MediaList
+            key={`anime-recommendations-${animeId}`}
             items={detail?.recommendations as IMedia[]}
             itemsType="anime"
             listName="Recommendations"
             listType="slider-card"
             navigationButtons
           />
-        )}
+        ) : null}
       </Col>
     </Row>
   );

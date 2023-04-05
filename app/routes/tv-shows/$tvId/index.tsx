@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { json } from '@remix-run/node';
 import type { LoaderArgs } from '@remix-run/node';
-import { useLoaderData, useNavigate, Link } from '@remix-run/react';
+import { useLoaderData, useNavigate, Link, useParams } from '@remix-run/react';
 import { Row, Col, Spacer, Image as NextImage, Card, Avatar } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
 
@@ -59,6 +59,7 @@ const TvOverview = () => {
   const rootData = useTypedRouteLoaderData('root');
   const detail = tvData && tvData.detail;
   const navigate = useNavigate();
+  const { tvId } = useParams();
 
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const onClickViewMore = (type: 'cast' | 'similar' | 'recommendations') => {
@@ -87,7 +88,7 @@ const TvOverview = () => {
         },
       }}
     >
-      {!isSm && (
+      {!isSm ? (
         <Col span={4} css={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center' }}>
           <Flex
             direction="column"
@@ -148,7 +149,7 @@ const TvOverview = () => {
             </H6>
           </Flex>
         </Col>
-      )}
+      ) : null}
       <Col
         css={{
           width: '100%',
@@ -181,7 +182,7 @@ const TvOverview = () => {
               '@xs': { flexDirection: 'row', rowGap: '1rem', columnGap: '2rem' },
             }}
           >
-            {detail?.created_by && detail?.created_by.length > 0 && (
+            {detail?.created_by && detail?.created_by.length > 0 ? (
               <H6 h6>
                 <strong>Creators</strong>
                 <br />
@@ -198,8 +199,8 @@ const TvOverview = () => {
                   ))}
                 </Flex>
               </H6>
-            )}
-            {detail?.production_countries && detail.production_countries.length > 0 && (
+            ) : null}
+            {detail?.production_countries && detail.production_countries.length > 0 ? (
               <H6 h6>
                 <strong>Production Countries</strong>
                 <br />
@@ -207,8 +208,8 @@ const TvOverview = () => {
                   <p key={`country-item-${index}`}>{country.name}</p>
                 ))}
               </H6>
-            )}
-            {detail?.spoken_languages && detail.spoken_languages.length > 0 && (
+            ) : null}
+            {detail?.spoken_languages && detail.spoken_languages.length > 0 ? (
               <H6 h6>
                 <strong>Spoken Languages</strong>
                 <br />
@@ -216,11 +217,12 @@ const TvOverview = () => {
                   <p key={`language-item-${index}`}>{language.english_name}</p>
                 ))}
               </H6>
-            )}
+            ) : null}
           </Flex>
         </Flex>
-        {topBilledCast && topBilledCast.length > 0 && (
+        {topBilledCast && topBilledCast.length > 0 ? (
           <MediaList
+            key={`tv-top-cast-${tvId}`}
             listType="slider-card"
             items={topBilledCast}
             listName="Top Cast"
@@ -229,8 +231,8 @@ const TvOverview = () => {
             navigationButtons
             itemsType="people"
           />
-        )}
-        {detail?.seasons && detail?.seasons.length > 0 && (
+        ) : null}
+        {detail?.seasons && detail?.seasons.length > 0 ? (
           <>
             <H2
               h2
@@ -330,9 +332,10 @@ const TvOverview = () => {
                 </Link>
               ))}
           </>
-        )}
-        {recommendations && recommendations.items && recommendations.items.length > 0 && (
+        ) : null}
+        {recommendations && recommendations.items && recommendations.items.length > 0 ? (
           <MediaList
+            key={`tv-recommendations-${tvId}`}
             listType="slider-card"
             items={recommendations.items}
             listName="Recommendations"
@@ -343,9 +346,10 @@ const TvOverview = () => {
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
           />
-        )}
-        {similar.items && similar.items.length > 0 && (
+        ) : null}
+        {similar.items && similar.items.length > 0 ? (
           <MediaList
+            key={`tv-similar-${tvId}`}
             listType="slider-card"
             items={similar.items}
             listName="Similar Tv-Shows"
@@ -356,7 +360,7 @@ const TvOverview = () => {
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
           />
-        )}
+        ) : null}
       </Col>
     </Row>
   );
