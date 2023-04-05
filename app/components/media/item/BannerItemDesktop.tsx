@@ -30,7 +30,7 @@ import VolumeOff from '~/assets/icons/VolumeOffIcon';
 const variants = {
   inView: { opacity: 1, x: 0 },
   outView: { opacity: 0, x: 40 },
-  showTrailer: { opacity: 1, scale: 0.75, x: -40 },
+  showTrailer: { opacity: 1, scale: 0.75 },
 };
 
 interface IBannerItemDesktopProps {
@@ -240,6 +240,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                   }
                   transition={{ duration: 0.5 }}
                   variants={variants}
+                  style={{ originX: 0 }}
                 >
                   <NextImage
                     // @ts-ignore
