@@ -37,7 +37,7 @@ export const handle = {
   ),
   showTabLink: true,
   tabLinkPages: tvPages,
-  tabLinkTo: '/tv-shows',
+  tabLinkTo: () => '/tv-shows',
   hideTabLinkWithLocation: (locationPathname: string) => {
     if (locationPathname.split('/')[2]?.match(/^\d+$/) || locationPathname === '/tv-shows')
       return true;

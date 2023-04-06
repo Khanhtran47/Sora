@@ -44,7 +44,7 @@ export const handle = {
   getSitemapEntries: () => null,
   showTabLink: true,
   tabLinkPages: testingPage,
-  tabLinkTo: '/test',
+  tabLinkTo: () => '/test',
   hideTabLinkWithLocation: (locationPathname: string) => {
     if (locationPathname === '/test/player') {
       return true;

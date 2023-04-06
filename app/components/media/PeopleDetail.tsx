@@ -11,6 +11,8 @@ import {
 } from '@nextui-org/react';
 import { Player } from '@lottiefiles/react-lottie-player';
 import Image, { MimeType } from 'remix-image';
+import { useMeasure } from '@react-hookz/web';
+
 import { IPeopleDetail } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
 
@@ -39,6 +41,7 @@ interface IPeopleDetailProps {
 const PeopleDetail = (props: IPeopleDetailProps) => {
   const { detail, externalIds } = props;
   const { isDark } = useTheme();
+  const [size, imageRef] = useMeasure<HTMLImageElement>();
   const profilePath = detail?.profile_path
     ? TMDB?.profileUrl(detail?.profile_path || '', 'h632')
     : undefined;
@@ -64,15 +67,19 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
         <NextImage
           // @ts-ignore
           as={Image}
+          ref={imageRef}
           src={profilePath}
           objectFit="cover"
+          width="100%"
           height="auto"
           alt={detail?.name}
           maxDelay={10000}
           loading="lazy"
           title={detail?.name}
           css={{
-            minWidth: 'auto !important',
+            aspectRatio: '2 / 3',
+            minWidth: '100% !important',
+            minHeight: 'auto !important',
           }}
           containerCss={{
             borderRadius: '0.75rem',
@@ -84,43 +91,8 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
           responsive={[
             {
               size: {
-                width: 164,
-                height: 245,
-              },
-              maxWidth: 375,
-            },
-            {
-              size: {
-                width: 294,
-                height: 440,
-              },
-              maxWidth: 650,
-            },
-            {
-              size: {
-                width: 192,
-                height: 287,
-              },
-              maxWidth: 960,
-            },
-            {
-              size: {
-                width: 201,
-                height: 301,
-              },
-              maxWidth: 1280,
-            },
-            {
-              size: {
-                width: 222,
-                height: 333,
-              },
-              maxWidth: 1400,
-            },
-            {
-              size: {
-                width: 310,
-                height: 465,
+                width: Math.round(size?.width || 0),
+                height: Math.round(size?.height || 0),
               },
             },
           ]}
