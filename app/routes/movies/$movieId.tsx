@@ -182,7 +182,7 @@ export const handle = {
 };
 
 const backgroundImageStyles = tv({
-  base: 'w-full relative overflow-hidden bg-fixed bg-no-repeat bg-auto',
+  base: 'w-full relative overflow-hidden bg-fixed bg-no-repeat',
   variants: {
     sidebarMiniMode: {
       true: 'bg-[left_80px_top_0px]',
@@ -255,6 +255,7 @@ const MovieDetail = () => {
           }&fit=cover&position=center&background[]=0&background[]=0&background[]=0&background[]=0&quality=80&compressionLevel=9&loop=0&delay=100&crop=null&contentType=image%2Fwebp)`,
           aspectRatio: '2 / 1',
           visibility: size?.width !== undefined ? 'visible' : 'hidden',
+          backgroundSize: `${size?.width}px auto`,
         }}
       >
         <div
