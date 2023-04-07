@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation, useFetcher } from '@remix-run/react';
 import { Card, Col, Row, Button, Spacer, Avatar, Tooltip } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
-import tinycolor from 'tinycolor2';
 // import { useTranslation } from 'react-i18next';
 
 import { IMovieDetail, ITvShowDetail, IMovieTranslations } from '~/services/tmdb/tmdb.types';
@@ -15,7 +14,6 @@ import { WebShareLink } from '~/utils/client/pwa-utils.client';
 import { useMediaQuery, useMeasure } from '@react-hookz/web';
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 
-import TabLink from '~/components/elements/tab/TabLink';
 import Flex from '~/components/styles/Flex.styles';
 import { H2, H5, H6 } from '~/components/styles/Text.styles';
 import SelectProviderModal from '~/components/elements/modal/SelectProviderModal';
@@ -23,9 +21,8 @@ import Rating from '~/components/elements/shared/Rating';
 
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 import ShareIcon from '~/assets/icons/ShareIcon';
-import BackgroundDefault from '~/assets/images/background-default.jpg';
 
-import { BackgroundContent, BackgroundTabLink } from './Media.styles';
+import { BackgroundContent } from './Media.styles';
 
 interface IMediaDetail {
   type: 'movie' | 'tv';
@@ -35,16 +32,6 @@ interface IMediaDetail {
   imdbRating: { count: number; star: number } | undefined;
   color: string | undefined;
 }
-
-const detailTab = [
-  { pageName: 'Overview', pageLink: '/' },
-  { pageName: 'Cast', pageLink: '/cast' },
-  { pageName: 'Crew', pageLink: '/crew' },
-  { pageName: 'Videos', pageLink: '/videos' },
-  { pageName: 'Photos', pageLink: '/photos' },
-  { pageName: 'Recommendations', pageLink: '/recommendations' },
-  { pageName: 'Similar', pageLink: '/similar' },
-];
 
 const MediaDetail = (props: IMediaDetail) => {
   // const { t } = useTranslation();
@@ -70,9 +57,6 @@ const MediaDetail = (props: IMediaDetail) => {
     Number((item as IMovieDetail)?.runtime) ?? Number((item as ITvShowDetail)?.episode_run_time[0]);
   const posterPath = item?.poster_path
     ? TMDB?.posterUrl(item?.poster_path || '', 'w342')
-    : undefined;
-  const backdropPath = item?.backdrop_path
-    ? TMDB?.backdropUrl(item?.backdrop_path || '', 'w1280')
     : undefined;
   const releaseYear = new Date(
     (item as IMovieDetail)?.release_date ?? ((item as ITvShowDetail)?.first_air_date || ''),
@@ -110,7 +94,7 @@ const MediaDetail = (props: IMediaDetail) => {
           flexFlow: 'column',
           width: '100%',
           borderWidth: 0,
-          backgroundColor,
+          backgroundColor: 'transparent',
           borderBottomLeftRadius: 0,
           borderBottomRightRadius: 0,
           borderTopRightRadius: 0,
@@ -124,68 +108,10 @@ const MediaDetail = (props: IMediaDetail) => {
           // '@md': {
           //   minHeight: '1125px',
           // },
-          height: `calc(${size?.height}px + ${(size?.width || 0) / 2}px - 10rem)`,
+          height: `calc(${size?.height}px)`,
+          backgroundImage: `linear-gradient(to bottom, transparent 200px, ${backgroundColor} 200px)`,
         }}
       >
-        <Card.Body
-          css={{
-            p: 0,
-            overflow: 'hidden',
-            margin: 0,
-            '&::after': {
-              content: '',
-              position: 'absolute',
-              left: 0,
-              width: '100%',
-              backgroundImage: `linear-gradient(to top, ${backgroundColor}, ${tinycolor(
-                backgroundColor,
-              ).setAlpha(0)})`,
-              bottom: `calc(${size?.height}px - 10rem)`,
-              height: isXs ? '100px' : '150px',
-              '@xs': {
-                height: '200px',
-              },
-              '@sm': {
-                height: '250px',
-              },
-              '@md': {
-                height: '300px',
-              },
-            },
-          }}
-        >
-          <Card.Image
-            // @ts-ignore
-            as={Image}
-            src={backdropPath || BackgroundDefault}
-            css={{
-              minWidth: '100% !important',
-              width: '100%',
-              top: 0,
-              left: 0,
-              objectFit: 'cover',
-              opacity: 0.8,
-              aspectRatio: '2 / 1',
-            }}
-            title={title}
-            alt={title}
-            showSkeleton
-            containerCss={{ margin: 0 }}
-            loaderUrl="/api/image"
-            placeholder="empty"
-            responsive={[
-              {
-                size: {
-                  width: Math.round(size?.width || 0),
-                  height: Math.round((size?.width || 0) / 2),
-                },
-              },
-            ]}
-            options={{
-              contentType: MimeType.WEBP,
-            }}
-          />
-        </Card.Body>
         <Card.Footer
           ref={ref}
           css={{
@@ -516,21 +442,6 @@ const MediaDetail = (props: IMediaDetail) => {
                 </Flex>
               </Row>
             </Col>
-          </Row>
-          <Row
-            fluid
-            css={{
-              paddingTop: '1rem',
-              paddingBottom: '2rem',
-              borderRadius: 0,
-            }}
-            justify="center"
-          >
-            <BackgroundTabLink css={{ backgroundColor }} />
-            <TabLink
-              pages={detailTab}
-              linkTo={`/${type === 'movie' ? 'movies' : 'tv-shows'}/${id}`}
-            />
           </Row>
         </Card.Footer>
       </Card>

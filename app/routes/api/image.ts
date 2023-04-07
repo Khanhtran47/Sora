@@ -76,7 +76,7 @@ const config = {
   cache: new CustomDiskCache({
     path: path.join(os.tmpdir(), 'img'),
   }),
-  redirectOnFail: true,
+  redirectOnFail: process.env.NODE_ENV === 'development' ? true : false,
   resolver: fetchImage,
   transformer: sharpTransformer,
   basePath: process.env.NODE_ENV === 'development' ? 'public' : '/',

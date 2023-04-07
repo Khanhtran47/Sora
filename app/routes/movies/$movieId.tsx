@@ -12,12 +12,18 @@ import {
   useFetcher,
   useLocation,
 } from '@remix-run/react';
-import { Container, Badge } from '@nextui-org/react';
+import { Badge } from '@nextui-org/react';
 import Vibrant from 'node-vibrant';
+import tinycolor from 'tinycolor2';
+import { useMeasure } from '@react-hookz/web';
+import { tv } from 'tailwind-variants';
 
 import { getMovieDetail, getTranslations, getImdbRating } from '~/services/tmdb/tmdb.server';
 import i18next from '~/i18n/i18next.server';
 import { authenticate } from '~/services/supabase';
+
+import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
+import { useSoraSettings } from '~/hooks/useLocalStorage';
 
 import { CACHE_CONTROL } from '~/utils/server/http';
 import TMDB from '~/utils/media';
@@ -26,6 +32,10 @@ import MediaDetail from '~/components/media/MediaDetail';
 import WatchTrailerModal, { Trailer } from '~/components/elements/modal/WatchTrailerModal';
 import CatchBoundaryView from '~/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/components/ErrorBoundaryView';
+import TabLink from '~/components/elements/tab/TabLink';
+import { BackgroundTabLink } from '~/components/media/Media.styles';
+
+import { movieTvDetailsPages } from '~/constants/tabLinks';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const [, locale] = await Promise.all([
@@ -171,6 +181,30 @@ export const handle = {
   backgroundColor: 'light',
 };
 
+const backgroundImageStyles = tv({
+  base: 'w-full relative overflow-hidden bg-fixed bg-no-repeat bg-auto',
+  variants: {
+    sidebarMiniMode: {
+      true: 'bg-[left_80px_top_0px]',
+    },
+    sidebarBoxedMode: {
+      true: 'bg-[left_280px_top_0px]',
+    },
+  },
+  compoundVariants: [
+    {
+      sidebarMiniMode: true,
+      sidebarBoxedMode: true,
+      class: 'bg-[left_110px_top_0px]',
+    },
+    {
+      sidebarMiniMode: false,
+      sidebarBoxedMode: false,
+      class: 'bg-[left_250px_top_0px]',
+    },
+  ],
+});
+
 const MovieDetail = () => {
   const { detail, imdbRating, translations } = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
@@ -178,6 +212,11 @@ const MovieDetail = () => {
   const currentTime = state && (state as { currentTime: number }).currentTime;
   const [visible, setVisible] = React.useState(false);
   const [trailer, setTrailer] = React.useState<Trailer>({});
+  const { backgroundColor } = useColorDarkenLighten(detail?.color);
+  const { sidebarMiniMode, sidebarBoxedMode } = useSoraSettings();
+  const backdropPath = detail?.backdrop_path
+    ? TMDB?.backdropUrl(detail?.backdrop_path || '', 'w1280')
+    : undefined;
   const Handler = (id: number) => {
     setVisible(true);
     fetcher.load(`/movies/${id}/videos`);
@@ -186,6 +225,7 @@ const MovieDetail = () => {
     setVisible(false);
     setTrailer({});
   };
+  const [size, backgroundRef] = useMeasure<HTMLDivElement>();
   React.useEffect(() => {
     if (fetcher.data && fetcher.data.videos) {
       const { results } = fetcher.data.videos;
@@ -196,27 +236,61 @@ const MovieDetail = () => {
 
   return (
     <>
-      <MediaDetail
-        type="movie"
-        item={detail}
-        handler={Handler}
-        translations={translations}
-        imdbRating={imdbRating}
-        color={detail.color}
-      />
-      <Container
-        as="div"
-        fluid
-        responsive={false}
-        justify="center"
-        css={{
-          display: 'flex',
-          margin: 0,
-          padding: 0,
+      <div
+        ref={backgroundRef}
+        className={backgroundImageStyles({
+          sidebarMiniMode: sidebarMiniMode.value,
+          sidebarBoxedMode: sidebarBoxedMode.value,
+        })}
+        style={{
+          backgroundImage: `url(${
+            process.env.NODE_ENV === 'development'
+              ? 'http://localhost:3001'
+              : 'https://sora-anime.vercel.app'
+          }/api/image?src=${encodeURIComponent(
+            backdropPath ||
+              'https://raw.githubusercontent.com/Khanhtran47/Sora/master/app/assets/images/background-default.jpg',
+          )}&width=${size?.width}&height=${
+            size?.height
+          }&fit=cover&position=center&background[]=0&background[]=0&background[]=0&background[]=0&quality=80&compressionLevel=9&loop=0&delay=100&crop=null&contentType=image%2Fwebp)`,
+          aspectRatio: '2 / 1',
+          visibility: size?.width !== undefined ? 'visible' : 'hidden',
         }}
       >
-        <Outlet />
-      </Container>
+        <div
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            width: '100%',
+            height: '300px',
+            backgroundImage: `linear-gradient(to top, ${backgroundColor}, ${tinycolor(
+              backgroundColor,
+            ).setAlpha(0)})`,
+          }}
+        />
+      </div>
+      <div className="w-full relative top-[-200px]">
+        <MediaDetail
+          type="movie"
+          item={detail}
+          handler={Handler}
+          translations={translations}
+          imdbRating={imdbRating}
+          color={detail.color}
+        />
+        <div className="w-full flex flex-col justify-center items-center">
+          <div
+            className="w-full pt-4 pb-8 flex justify-center relative"
+            style={{ backgroundColor }}
+          >
+            <BackgroundTabLink css={{ backgroundColor, zIndex: 1 }} />
+            <TabLink pages={movieTvDetailsPages} linkTo={`/movies/${detail?.id}`} />
+          </div>
+          <Outlet />
+        </div>
+      </div>
       <WatchTrailerModal
         trailer={trailer}
         visible={visible}

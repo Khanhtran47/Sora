@@ -39,13 +39,17 @@ export const handle = {
 };
 
 const headerStyles = tv({
-  base: 'h-[64px] w-[100vw] fixed z-[1000] py-3 px-5 flex-row justify-between items-center hidden sm:flex',
+  base: 'h-[64px] w-[100vw] fixed z-[1000] py-3 px-5 flex-row justify-between items-center hidden sm:flex rounded-tl-xl',
   variants: {
     miniSidebar: {
       true: 'sm:w-[calc(100vw_-_80px)] top-0',
     },
     boxedSidebar: {
       true: 'sm:w-[calc(100vw_-_280px)] top-[15px]',
+    },
+    backgroundColor: {
+      light: 'bg-background-contrast-alpha',
+      none: 'bg-transparent',
     },
   },
   compoundVariants: [
@@ -63,6 +67,7 @@ const headerStyles = tv({
   defaultVariants: {
     miniSidebar: false,
     boxedSidebar: false,
+    backgroundColor: 'none',
   },
 });
 
@@ -95,6 +100,11 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       return currentMatch?.handle?.hideTabLinkWithLocation(location.pathname);
     return false;
   }, [location.pathname]);
+  const backgroundColor = useMemo(() => {
+    const currentMatch = matches.find((match) => match.handle?.backgroundColor !== undefined);
+    if (currentMatch?.handle?.backgroundColor) return currentMatch?.handle?.backgroundColor;
+    return 'none';
+  }, [matches]);
   const { scrollPosition } = useLayoutScrollPosition((state) => state);
   const { historyBack, historyForward } = useHistoryStack((state) => state);
   const handleNavigationBackForward = (direction: 'back' | 'forward') => {
@@ -118,6 +128,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       className={headerStyles({
         miniSidebar: sidebarMiniMode.value,
         boxedSidebar: sidebarBoxedMode.value,
+        backgroundColor,
       })}
     >
       <div
