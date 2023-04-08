@@ -151,8 +151,13 @@ const Layout = (props: ILayout) => {
   const isMd = useMediaQuery('(max-width: 1280px)', { initializeWithValue: false });
   const { sidebarMiniMode, sidebarBoxedMode, sidebarHoverMode } = useSoraSettings();
   const viewportRef = useRef<HTMLDivElement>(null);
-  const { setScrollPosition, setScrollHeight, scrollDirection, setScrollDirection } =
-    useLayoutScrollPosition((state) => state);
+  const {
+    setScrollPosition,
+    setScrollHeight,
+    scrollDirection,
+    setScrollDirection,
+    setViewportRef,
+  } = useLayoutScrollPosition((state) => state);
   const { scrollY } = useElementScroll(viewportRef);
   const { historyBack, historyForward, setHistoryBack, setHistoryForward } = useHistoryStack(
     (state) => state,
@@ -233,6 +238,7 @@ const Layout = (props: ILayout) => {
         x: 0,
         y: currentScrollPosition,
       });
+      setViewportRef(viewportRef);
       lastScrollPosition = currentScrollPosition > 0 ? currentScrollPosition : 0;
     };
     const removeScrollYProgress = scrollY.onChange(throttle(updateAtScroll, 200));

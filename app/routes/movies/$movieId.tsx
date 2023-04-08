@@ -16,7 +16,7 @@ import {
 import { Badge } from '@nextui-org/react';
 import Vibrant from 'node-vibrant';
 import tinycolor from 'tinycolor2';
-import { useMeasure } from '@react-hookz/web';
+import { useMeasure, useIntersectionObserver } from '@react-hookz/web';
 import { tv } from 'tailwind-variants';
 
 import { getMovieDetail, getTranslations, getImdbRating } from '~/services/tmdb/tmdb.server';
@@ -207,6 +207,16 @@ const backgroundImageStyles = tv({
   ],
 });
 
+const tabLinkWrapperStyles = tv({
+  base: 'w-full flex justify-center top-[64px] sticky z-[1000] transition-[padding] duration-100 ease-in-out',
+  variants: {
+    sticky: {
+      true: '',
+      false: 'pt-4 pb-8',
+    },
+  },
+});
+
 const MovieDetail = () => {
   const { detail, imdbRating, translations } = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
@@ -216,7 +226,13 @@ const MovieDetail = () => {
   const [trailer, setTrailer] = React.useState<Trailer>({});
   const { backgroundColor } = useColorDarkenLighten(detail?.color);
   const { sidebarMiniMode, sidebarBoxedMode } = useSoraSettings();
-  const { scrollPosition } = useLayoutScrollPosition((scrollState) => scrollState);
+  const { scrollPosition, viewportRef } = useLayoutScrollPosition((scrollState) => scrollState);
+  const tabLinkRef = React.useRef<HTMLDivElement>(null);
+  const tabLinkIntersection = useIntersectionObserver(tabLinkRef, {
+    root: viewportRef,
+    rootMargin: sidebarBoxedMode ? '-80px 0px 0px 0px' : '-65px 0px 0px 0px',
+    threshold: [1],
+  });
   const backdropPath = detail?.backdrop_path
     ? TMDB?.backdropUrl(detail?.backdrop_path || '', 'w1280')
     : undefined;
@@ -238,7 +254,7 @@ const MovieDetail = () => {
   }, [fetcher.data]);
 
   return (
-    <>
+    <div className="w-full">
       <div
         ref={backgroundRef}
         className={backgroundImageStyles({
@@ -291,8 +307,11 @@ const MovieDetail = () => {
         />
         <div className="w-full flex flex-col justify-center items-center">
           <div
-            className="w-full pt-4 pb-8 flex justify-center sticky top-[64px] z-[1000]"
+            className={tabLinkWrapperStyles({
+              sticky: !tabLinkIntersection?.isIntersecting,
+            })}
             style={{ backgroundColor }}
+            ref={tabLinkRef}
           >
             <BackgroundTabLink css={{ backgroundColor, zIndex: 1 }} />
             <TabLink pages={movieTvDetailsPages} linkTo={`/movies/${detail?.id}`} />
@@ -306,7 +325,7 @@ const MovieDetail = () => {
         closeHandler={closeHandler}
         currentTime={Number(currentTime)}
       />
-    </>
+    </div>
   );
 };
 
