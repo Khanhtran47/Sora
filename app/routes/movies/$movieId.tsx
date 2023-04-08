@@ -24,6 +24,7 @@ import { authenticate } from '~/services/supabase';
 
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
+import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
 
 import { CACHE_CONTROL } from '~/utils/server/http';
 import TMDB from '~/utils/media';
@@ -214,6 +215,7 @@ const MovieDetail = () => {
   const [trailer, setTrailer] = React.useState<Trailer>({});
   const { backgroundColor } = useColorDarkenLighten(detail?.color);
   const { sidebarMiniMode, sidebarBoxedMode } = useSoraSettings();
+  const { scrollPosition } = useLayoutScrollPosition((scrollState) => scrollState);
   const backdropPath = detail?.backdrop_path
     ? TMDB?.backdropUrl(detail?.backdrop_path || '', 'w1280')
     : undefined;
@@ -265,7 +267,8 @@ const MovieDetail = () => {
             left: 0,
             right: 0,
             width: '100%',
-            height: '300px',
+            // eslint-disable-next-line no-unsafe-optional-chaining
+            height: scrollPosition?.y ? 300 + scrollPosition?.y : 300,
             backgroundImage: `linear-gradient(to top, ${backgroundColor}, ${tinycolor(
               backgroundColor,
             ).setAlpha(0)})`,

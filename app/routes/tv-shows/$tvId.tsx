@@ -29,6 +29,7 @@ import i18next from '~/i18n/i18next.server';
 
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
+import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
 
 import { CACHE_CONTROL } from '~/utils/server/http';
 import TMDB from '~/utils/media';
@@ -211,6 +212,7 @@ const TvShowDetail = () => {
   const [trailer, setTrailer] = React.useState<Trailer>({});
   const { backgroundColor } = useColorDarkenLighten(detail?.color);
   const { sidebarMiniMode, sidebarBoxedMode } = useSoraSettings();
+  const { scrollPosition } = useLayoutScrollPosition((scrollState) => scrollState);
   const backdropPath = detail?.backdrop_path
     ? TMDB?.backdropUrl(detail?.backdrop_path || '', 'w1280')
     : undefined;
@@ -262,7 +264,8 @@ const TvShowDetail = () => {
             left: 0,
             right: 0,
             width: '100%',
-            height: '300px',
+            // eslint-disable-next-line no-unsafe-optional-chaining
+            height: scrollPosition?.y ? 300 + scrollPosition?.y : 300,
             backgroundImage: `linear-gradient(to top, ${backgroundColor}, ${tinycolor(
               backgroundColor,
             ).setAlpha(0)})`,
@@ -284,7 +287,7 @@ const TvShowDetail = () => {
             style={{ backgroundColor }}
           >
             <BackgroundTabLink css={{ backgroundColor, zIndex: 1 }} />
-            <TabLink pages={movieTvDetailsPages} linkTo={`/movies/${detail?.id}`} />
+            <TabLink pages={movieTvDetailsPages} linkTo={`/tv-shows/${detail?.id}`} />
           </div>
           <Outlet />
         </div>
