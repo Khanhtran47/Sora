@@ -1,3 +1,4 @@
+/* eslint-disable no-unsafe-optional-chaining */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
@@ -264,8 +265,12 @@ const TvShowDetail = () => {
             left: 0,
             right: 0,
             width: '100%',
-            // eslint-disable-next-line no-unsafe-optional-chaining
-            height: scrollPosition?.y ? 300 + scrollPosition?.y : 300,
+            height:
+              scrollPosition?.y && 300 + scrollPosition?.y > 1000
+                ? 1000
+                : scrollPosition?.y && 300 + scrollPosition?.y < 1000
+                ? 300 + scrollPosition?.y
+                : 300,
             backgroundImage: `linear-gradient(to top, ${backgroundColor}, ${tinycolor(
               backgroundColor,
             ).setAlpha(0)})`,
@@ -283,7 +288,7 @@ const TvShowDetail = () => {
         />
         <div className="w-full flex flex-col justify-center items-center">
           <div
-            className="w-full pt-4 pb-8 flex justify-center relative"
+            className="w-full pt-4 pb-8 flex justify-center sticky top-[64px] z-[1000]"
             style={{ backgroundColor }}
           >
             <BackgroundTabLink css={{ backgroundColor, zIndex: 1 }} />
