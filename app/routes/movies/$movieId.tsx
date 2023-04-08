@@ -308,7 +308,9 @@ const MovieDetail = () => {
         <div className="w-full flex flex-col justify-center items-center">
           <div
             className={tabLinkWrapperStyles({
-              sticky: !tabLinkIntersection?.isIntersecting,
+              sticky:
+                tabLinkIntersection?.intersectionRatio !== undefined &&
+                tabLinkIntersection?.intersectionRatio < 1,
             })}
             style={{ backgroundColor }}
             ref={tabLinkRef}
