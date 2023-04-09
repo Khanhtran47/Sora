@@ -79,6 +79,10 @@ module.exports = withTV({
         exitToLeft: 'exitToLeft 250ms ease',
         exitToRight: 'exitToRight 250ms ease',
       },
+      gridTemplateAreas: {
+        wide: ['image title', 'image buttons'],
+        small: ['image title', 'buttons buttons'],
+      },
     },
     screens: {
       '2xs': '375px',
@@ -98,5 +102,12 @@ module.exports = withTV({
       'nextui-xl': '1920px',
     },
   },
-  plugins: [require('@tailwindcss/line-clamp'), require('tailwind-scrollbar-hide')],
+  plugins: [
+    require('@tailwindcss/line-clamp'),
+    require('tailwind-scrollbar-hide'),
+    require('@savvywombat/tailwindcss-grid-areas'),
+  ],
+  variants: {
+    gridTemplateAreas: ['responsive'],
+  },
 });

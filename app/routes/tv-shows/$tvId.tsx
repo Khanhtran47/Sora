@@ -181,25 +181,25 @@ export const handle = {
 };
 
 const backgroundImageStyles = tv({
-  base: 'w-full relative overflow-hidden bg-fixed bg-no-repeat',
+  base: 'w-full relative overflow-hidden bg-fixed bg-no-repeat bg-[left_0px_top_0px]',
   variants: {
     sidebarMiniMode: {
-      true: 'bg-[left_80px_top_0px]',
+      true: 'sm:bg-[left_80px_top_0px]',
     },
     sidebarBoxedMode: {
-      true: 'bg-[left_280px_top_0px]',
+      true: 'sm:bg-[left_280px_top_0px]',
     },
   },
   compoundVariants: [
     {
       sidebarMiniMode: true,
       sidebarBoxedMode: true,
-      class: 'bg-[left_110px_top_0px]',
+      class: 'sm:bg-[left_110px_top_0px]',
     },
     {
       sidebarMiniMode: false,
       sidebarBoxedMode: false,
-      class: 'bg-[left_250px_top_0px]',
+      class: 'sm:bg-[left_250px_top_0px]',
     },
   ],
 });

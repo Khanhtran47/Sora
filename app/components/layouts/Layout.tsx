@@ -5,7 +5,7 @@ import type { User } from '@supabase/supabase-js';
 import { tv } from 'tailwind-variants';
 import { useLocation, useMatches, useNavigationType, useOutlet } from '@remix-run/react';
 import { useMediaQuery } from '@react-hookz/web';
-import { useElementScroll, AnimatePresence } from 'framer-motion';
+import { useScroll, AnimatePresence } from 'framer-motion';
 import { Toaster } from 'sonner';
 
 import { useSoraSettings } from '~/hooks/useLocalStorage';
@@ -158,7 +158,7 @@ const Layout = (props: ILayout) => {
     setScrollDirection,
     setViewportRef,
   } = useLayoutScrollPosition((state) => state);
-  const { scrollY } = useElementScroll(viewportRef);
+  const { scrollY } = useScroll({ container: viewportRef });
   const { historyBack, historyForward, setHistoryBack, setHistoryForward } = useHistoryStack(
     (state) => state,
   );

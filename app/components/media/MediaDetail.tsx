@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation, useFetcher } from '@remix-run/react';
-import { Card, Col, Row, Button, Spacer, Avatar, Tooltip } from '@nextui-org/react';
+import { Card, Button, Spacer, Avatar, Tooltip } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
 // import { useTranslation } from 'react-i18next';
 
@@ -14,7 +14,6 @@ import { WebShareLink } from '~/utils/client/pwa-utils.client';
 import { useMediaQuery, useMeasure } from '@react-hookz/web';
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 
-import Flex from '~/components/styles/Flex.styles';
 import { H2, H5, H6 } from '~/components/styles/Text.styles';
 import SelectProviderModal from '~/components/elements/modal/SelectProviderModal';
 import Rating from '~/components/elements/shared/Rating';
@@ -37,12 +36,13 @@ const MediaDetail = (props: IMediaDetail) => {
   // const { t } = useTranslation();
   const { type, item, handler, translations, imdbRating, color } = props;
   const [size, ref] = useMeasure<HTMLDivElement>();
+  const [imageSize, imageRef] = useMeasure<HTMLDivElement>();
   const navigate = useNavigate();
   const location = useLocation();
   const fetcher = useFetcher();
   const { backgroundColor } = useColorDarkenLighten(color);
-  const isXs = useMediaQuery('(max-width: 425px)', { initializeWithValue: false });
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
+  const isXl = useMediaQuery('(max-width: 1280px)', { initializeWithValue: false });
   const [visible, setVisible] = useState(false);
   const [colorPalette, setColorPalette] = useState<ColorPalette>();
   const closeHandler = () => {
@@ -98,16 +98,6 @@ const MediaDetail = (props: IMediaDetail) => {
           borderBottomLeftRadius: 0,
           borderBottomRightRadius: 0,
           borderTopRightRadius: 0,
-          // minHeight: '900px',
-          // '@xs': {
-          //   minHeight: '1075px',
-          // },
-          // '@sm': {
-          //   minHeight: '1100px',
-          // },
-          // '@md': {
-          //   minHeight: '1125px',
-          // },
           height: `calc(${size?.height}px)`,
           backgroundImage: `linear-gradient(to bottom, transparent 200px, ${backgroundColor} 200px)`,
         }}
@@ -128,191 +118,81 @@ const MediaDetail = (props: IMediaDetail) => {
           }}
         >
           <BackgroundContent />
-          <Row
-            fluid
-            align="stretch"
-            justify="center"
-            css={{
-              px: '0.75rem',
-              paddingTop: '1.25rem',
-              '@xs': {
-                px: '3vw',
-              },
-              '@sm': {
-                px: '6vw',
-              },
-              '@md': {
-                px: '12vw',
-              },
-              '@lg': {
-                px: '20px',
-              },
-              maxWidth: '1920px',
-            }}
-          >
-            {!isSm && (
-              <Col
-                span={4}
-                css={{
-                  display: 'none',
-                  '@xs': {
-                    display: 'block',
-                  },
-                }}
-              >
-                {posterPath ? (
-                  <Card.Image
-                    // @ts-ignore
-                    as={Image}
-                    src={posterPath}
-                    alt={title}
-                    objectFit="cover"
-                    css={{
-                      minWidth: 'auto !important',
-                      minHeight: '205px !important',
-                      borderRadius: '24px',
-                      boxShadow: '12px 12px 30px 10px rgb(104 112 118 / 0.35)',
-                    }}
-                    containerCss={{
-                      overflow: 'visible',
+          <div className="w-full grid grid-areas-small sm:grid-areas-wide grid-cols-[1fr_2fr] grid-rows-[1fr_auto] gap-x-4 justify-center items-stretch max-w-[1920px] pt-5 px-3 sm:px-3.5 xl:px-4 2xl:px-5">
+            <div className="flex flex-col grid-in-image" ref={imageRef}>
+              {posterPath ? (
+                <Card.Image
+                  // @ts-ignore
+                  as={Image}
+                  src={posterPath}
+                  alt={title}
+                  objectFit="cover"
+                  css={{
+                    minWidth: 'auto !important',
+                    minHeight: 'auto !important',
+                    borderRadius: '$sm',
+                    boxShadow: '12px 12px 30px 10px rgb(104 112 118 / 0.35)',
+                    aspectRatio: '2 / 3',
+                    '@sm': {
+                      borderRadius: '$md',
+                    },
+                  }}
+                  containerCss={{
+                    overflow: 'visible',
+                    width: '100% !important',
+                    '@xs': {
                       width: '75% !important',
-                      '@md': {
-                        width: '50% !important',
+                    },
+                    '@md': {
+                      width: '50% !important',
+                    },
+                  }}
+                  showSkeleton
+                  loaderUrl="/api/image"
+                  placeholder="empty"
+                  responsive={[
+                    {
+                      size: {
+                        width: Math.round(
+                          (imageSize?.width || 0) *
+                            (!isXl && !isSm ? 0.5 : isXl && !isSm ? 0.75 : isXl && isSm ? 1 : 1),
+                        ),
+                        height: Math.round(
+                          ((imageSize?.width || 0) *
+                            3 *
+                            (!isXl && !isSm ? 0.5 : isXl && !isSm ? 0.75 : isXl && isSm ? 1 : 1)) /
+                            2,
+                        ),
                       },
-                    }}
-                    showSkeleton
-                    loaderUrl="/api/image"
-                    placeholder="empty"
-                    responsive={[
-                      {
-                        size: {
-                          width: 137,
-                          height: 205,
-                        },
-                        maxWidth: 960,
-                      },
-                      {
-                        size: {
-                          width: 158,
-                          height: 237,
-                        },
-                        maxWidth: 1280,
-                      },
-                      {
-                        size: {
-                          width: 173,
-                          height: 260,
-                        },
-                        maxWidth: 1400,
-                      },
-                      {
-                        size: {
-                          width: 239,
-                          height: 359,
-                        },
-                      },
-                    ]}
-                    options={{
-                      contentType: MimeType.WEBP,
+                    },
+                  ]}
+                  options={{
+                    contentType: MimeType.WEBP,
+                  }}
+                />
+              ) : (
+                <div className="flex justify-center items-center">
+                  <Avatar
+                    icon={<PhotoIcon width={48} height={48} />}
+                    css={{
+                      width: '100% !important',
+                      height: 'auto !important',
+                      size: '$20',
+                      borderRadius: '$sm',
+                      aspectRatio: '2 / 3',
+                      '@xs': { width: '75% !important' },
+                      '@sm': { borderRadius: '$md' },
+                      '@md': { width: '50% !important' },
                     }}
                   />
-                ) : (
-                  <Row align="center" justify="center">
-                    <Avatar
-                      icon={<PhotoIcon width={48} height={48} />}
-                      css={{
-                        width: '75% !important',
-                        size: '$20',
-                        minWidth: 'auto !important',
-                        minHeight: '205px !important',
-                        borderRadius: '24px !important',
-                        '@md': {
-                          width: '50% !important',
-                        },
-                      }}
-                    />
-                  </Row>
-                )}
-                <Spacer y={2} />
-              </Col>
-            )}
-            <Col
-              css={{
-                display: 'flex',
-                flexFlow: 'column',
-                justifyContent: 'space-between',
-                width: '100%',
-                '@xs': {
-                  width: '66.6667%',
-                },
-              }}
-            >
-              <Flex direction="column" justify="center" align="start">
-                {isSm && (
-                  <>
-                    <Spacer y={1} />
-                    {posterPath ? (
-                      <Card.Image
-                        // @ts-ignore
-                        as={Image}
-                        src={posterPath}
-                        alt={title}
-                        objectFit="cover"
-                        width={isXs ? '70%' : '40%'}
-                        containerCss={{
-                          borderRadius: '24px',
-                          overflow: 'visible',
-                          '@xs': {
-                            display: 'none',
-                          },
-                        }}
-                        css={{
-                          minWidth: 'auto !important',
-                          borderRadius: '24px',
-                          minHeight: '205px !important',
-                          boxShadow: '12px 12px 30px 10px rgb(104 112 118 / 0.35)',
-                        }}
-                        showSkeleton
-                        loaderUrl="/api/image"
-                        placeholder="empty"
-                        options={{
-                          contentType: MimeType.WEBP,
-                        }}
-                        responsive={[
-                          {
-                            size: {
-                              width: 246,
-                              height: 369,
-                            },
-                            maxWidth: 375,
-                          },
-                          {
-                            size: {
-                              width: 235,
-                              height: 352,
-                            },
-                          },
-                        ]}
-                      />
-                    ) : (
-                      <Row align="center" justify="center">
-                        <Avatar
-                          icon={<PhotoIcon width={48} height={48} />}
-                          css={{
-                            width: `${isXs ? '70%' : '40%'} !important`,
-                            size: '$20',
-                            minWidth: 'auto !important',
-                            minHeight: '205px !important',
-                            borderRadius: '24px !important',
-                          }}
-                        />
-                      </Row>
-                    )}
-                    <Spacer y={1.5} />
-                  </>
-                )}
+                </div>
+              )}
+              <Spacer y={2} />
+            </div>
+            <div className="grid-in-title flex flex-col justify-between w-full">
+              <div className="flex flex-col justify-center items-start">
                 <H2 h1 weight="bold">
-                  {`${title} (${releaseYear})`}
+                  {`${title}${isSm ? '' : ` (${releaseYear})`}`}
                 </H2>
                 <Spacer y={0.5} />
                 {tagline && (
@@ -321,8 +201,8 @@ const MediaDetail = (props: IMediaDetail) => {
                   </H5>
                 )}
                 <Spacer y={0.5} />
-                <Row fluid wrap="wrap">
-                  <Flex direction="row">
+                <div className="flex flex-row flex-wrap">
+                  <div className="flex flex-row">
                     <Rating rating={item?.vote_average?.toFixed(1)} ratingType="movie" />
                     {imdbRating && (
                       <>
@@ -345,59 +225,55 @@ const MediaDetail = (props: IMediaDetail) => {
                         </H6>
                       </>
                     )}
-                  </Flex>
+                  </div>
                   <Spacer x={0.5} />
                   <H6 h6>
                     {releaseDate}
                     {runtime ? ` • ${Math.floor(runtime / 60)}h ${runtime % 60}m` : null}
                   </H6>
-                </Row>
+                </div>
                 <Spacer y={0.5} />
-                <Row fluid align="center" wrap="wrap" justify="flex-start">
-                  {genres &&
-                    genres?.map((genre) => (
-                      <>
-                        <Button
-                          type="button"
-                          color="primary"
-                          flat
-                          auto
-                          // shadow
-                          key={genre?.id}
-                          size={isSm ? 'sm' : 'md'}
-                          css={{
-                            marginBottom: '0.4rem',
-                            ...(colorPalette && {
-                              color: colorPalette[600],
-                              backgroundColor: colorPalette[200],
-                              '&:hover': {
-                                backgroundColor: colorPalette[300],
-                              },
-                            }),
-                          }}
-                          onPress={() =>
-                            navigate(
-                              `/${type === 'movie' ? 'movies/' : 'tv-shows/'}discover?with_genres=${
-                                genre?.id
-                              }`,
-                            )
-                          }
-                        >
-                          {genre?.name}
-                        </Button>
-                        <Spacer x={0.25} />
-                      </>
-                    ))}
-                </Row>
-                <Spacer y={0.5} />
-              </Flex>
-              <Row
-                fluid
-                justify="space-between"
-                align="center"
-                wrap="wrap"
-                css={{ marginBottom: '2rem' }}
-              >
+              </div>
+            </div>
+            <div className="grid-in-buttons">
+              <div className="flex w-full justify-start items-center flex-wrap">
+                {genres &&
+                  genres?.map((genre) => (
+                    <>
+                      <Button
+                        type="button"
+                        color="primary"
+                        flat
+                        auto
+                        // shadow
+                        key={genre?.id}
+                        size={isSm ? 'sm' : 'md'}
+                        css={{
+                          marginBottom: '0.4rem',
+                          ...(colorPalette && {
+                            color: colorPalette[600],
+                            backgroundColor: colorPalette[200],
+                            '&:hover': {
+                              backgroundColor: colorPalette[300],
+                            },
+                          }),
+                        }}
+                        onPress={() =>
+                          navigate(
+                            `/discover/${type === 'movie' ? 'movies' : 'tv-shows'}?with_genres=${
+                              genre?.id
+                            }`,
+                          )
+                        }
+                      >
+                        {genre?.name}
+                      </Button>
+                      <Spacer x={0.25} />
+                    </>
+                  ))}
+              </div>
+              <Spacer y={0.5} />
+              <div className="w-full flex flex-row justify-between items-center flex-wrap mb-8">
                 {(status === 'Released' || status === 'Ended' || status === 'Returning Series') && (
                   <Button
                     type="button"
@@ -416,7 +292,7 @@ const MediaDetail = (props: IMediaDetail) => {
                     </H5>
                   </Button>
                 )}
-                <Flex direction="row" align="center" justify="start" wrap="wrap">
+                <div className="flex flex-row items-center justify-start flex-wrap">
                   <Button
                     type="button"
                     auto
@@ -439,10 +315,10 @@ const MediaDetail = (props: IMediaDetail) => {
                       icon={<ShareIcon />}
                     />
                   </Tooltip>
-                </Flex>
-              </Row>
-            </Col>
-          </Row>
+                </div>
+              </div>
+            </div>
+          </div>
         </Card.Footer>
       </Card>
       <SelectProviderModal
