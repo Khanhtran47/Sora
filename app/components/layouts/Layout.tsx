@@ -180,7 +180,6 @@ const Layout = (props: ILayout) => {
     () => matches.some((match) => match.handle?.disableLayoutPadding === true),
     [location.pathname],
   );
-  console.log('🚀 ~ file: Layout.tsx:183 ~ Layout ~ disableLayoutPadding:', disableLayoutPadding);
   const currentTabLinkPages = useMemo(
     () => matches.find((match) => match.handle?.showTabLink)?.handle?.tabLinkPages,
     [location.pathname],

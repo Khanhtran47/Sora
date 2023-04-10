@@ -57,7 +57,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   if ((detail && detail.original_language !== 'en') || locale !== 'en') {
     const [translations, imdbRating, fimg] = await Promise.all([
       getTranslations('movie', mid),
-      detail?.imdb_id && process.env.IMDB_API_URL === undefined
+      detail?.imdb_id && process.env.IMDB_API_URL !== undefined
         ? getImdbRating(detail?.imdb_id)
         : undefined,
       fetch(extractColorImage),
@@ -91,7 +91,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     );
   }
   const [imdbRating, fimg] = await Promise.all([
-    detail?.imdb_id && process.env.IMDB_API_URL === undefined
+    detail?.imdb_id && process.env.IMDB_API_URL !== undefined
       ? getImdbRating(detail?.imdb_id)
       : undefined,
     fetch(extractColorImage),
