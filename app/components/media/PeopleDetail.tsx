@@ -110,9 +110,9 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
           />
         </div>
       )}
-      <Spacer y={1} />{' '}
-      <H3 h3 css={{ textAlign: 'center' }}>
-        <strong>{detail?.name}</strong>
+      <Spacer y={1} />
+      <H3 h3 css={{ textAlign: 'center' }} weight="bold">
+        {detail?.name}
       </H3>
       <Spacer y={1} />
       {externalIds &&
@@ -122,79 +122,67 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
           externalIds.twitterId ||
           detail.homepage) && (
           <>
-            <div className="flex w-full justify-center gap-1">
-              {externalIds.facebookId && (
-                <>
-                  <NextLink
-                    href={`https://facebook.com/${externalIds.facebookId}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Player
-                      src={isDark ? FacebookWhite : FacebookBlack}
-                      hover
-                      autoplay={false}
-                      speed={0.75}
-                      className="w-7 h-7"
-                      loop
-                    />
-                  </NextLink>
-                  <Spacer x={1} />
-                </>
-              )}
-              {externalIds.instagramId && (
-                <>
-                  <NextLink
-                    href={`https://instagram.com/${externalIds.instagramId}/`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Player
-                      src={isDark ? InstagramWhite : InstagramBlack}
-                      hover
-                      autoplay={false}
-                      speed={0.75}
-                      className="w-7 h-7"
-                      loop
-                    />
-                  </NextLink>
-                  <Spacer x={1} />
-                </>
-              )}
-              {externalIds.twitterId && (
-                <>
-                  <NextLink
-                    href={`https://twitter.com/${externalIds.twitterId}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Player
-                      src={isDark ? TwitterWhite : TwitterBlack}
-                      hover
-                      autoplay={false}
-                      speed={0.75}
-                      className="w-7 h-7"
-                      loop
-                    />
-                  </NextLink>
-                  <Spacer x={1} />
-                </>
-              )}
-              {detail.homepage && (
-                <>
-                  <NextLink href={detail?.homepage} target="_blank" rel="noopener noreferrer">
-                    <Player
-                      src={isDark ? ExternalLinkWhite : ExternalLinkBlack}
-                      hover
-                      autoplay={false}
-                      speed={0.75}
-                      className="w-7 h-7"
-                      loop
-                    />
-                  </NextLink>
-                  <Spacer x={1} />
-                </>
-              )}
+            <div className="flex w-full justify-center gap-4">
+              {externalIds.facebookId ? (
+                <NextLink
+                  href={`https://facebook.com/${externalIds.facebookId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Player
+                    src={isDark ? FacebookWhite : FacebookBlack}
+                    hover
+                    autoplay={false}
+                    speed={0.75}
+                    className="w-7 h-7"
+                    loop
+                  />
+                </NextLink>
+              ) : null}
+              {externalIds.instagramId ? (
+                <NextLink
+                  href={`https://instagram.com/${externalIds.instagramId}/`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Player
+                    src={isDark ? InstagramWhite : InstagramBlack}
+                    hover
+                    autoplay={false}
+                    speed={0.75}
+                    className="w-7 h-7"
+                    loop
+                  />
+                </NextLink>
+              ) : null}
+              {externalIds.twitterId ? (
+                <NextLink
+                  href={`https://twitter.com/${externalIds.twitterId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Player
+                    src={isDark ? TwitterWhite : TwitterBlack}
+                    hover
+                    autoplay={false}
+                    speed={0.75}
+                    className="w-7 h-7"
+                    loop
+                  />
+                </NextLink>
+              ) : null}
+              {detail.homepage ? (
+                <NextLink href={detail?.homepage} target="_blank" rel="noopener noreferrer">
+                  <Player
+                    src={isDark ? ExternalLinkWhite : ExternalLinkBlack}
+                    hover
+                    autoplay={false}
+                    speed={0.75}
+                    className="w-7 h-7"
+                    loop
+                  />
+                </NextLink>
+              ) : null}
             </div>
             <Spacer y={1} />
           </>
@@ -203,7 +191,7 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
         <H4
           h4
           css={{
-            wdith: '100%',
+            width: '100%',
             '@xs': {
               width: '70%',
             },
