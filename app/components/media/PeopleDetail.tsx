@@ -1,14 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/indent */
 // import { Link } from '@remix-run/react';
-import {
-  Row,
-  Image as NextImage,
-  Link as NextLink,
-  useTheme,
-  Spacer,
-  Avatar,
-} from '@nextui-org/react';
+import { Image as NextImage, Link as NextLink, useTheme, Spacer, Avatar } from '@nextui-org/react';
 import { Player } from '@lottiefiles/react-lottie-player';
 import Image, { MimeType } from 'remix-image';
 import { useMeasure } from '@react-hookz/web';
@@ -16,7 +9,6 @@ import { useMeasure } from '@react-hookz/web';
 import { IPeopleDetail } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
 
-import Flex from '~/components/styles/Flex.styles';
 import { H3, H4, H5, H6 } from '~/components/styles/Text.styles';
 
 import PhotoIcon from '~/assets/icons/PhotoIcon';
@@ -101,7 +93,7 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
           }}
         />
       ) : (
-        <Row align="center" justify="center">
+        <div className="flex items-center justify-center">
           <Avatar
             icon={<PhotoIcon width={48} height={48} />}
             pointer
@@ -116,7 +108,7 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
               aspectRatio: '2 / 3',
             }}
           />
-        </Row>
+        </div>
       )}
       <Spacer y={1} />{' '}
       <H3 h3 css={{ textAlign: 'center' }}>
@@ -130,7 +122,7 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
           externalIds.twitterId ||
           detail.homepage) && (
           <>
-            <Row justify="center" fluid gap={1}>
+            <div className="flex w-full justify-center gap-1">
               {externalIds.facebookId && (
                 <>
                   <NextLink
@@ -203,19 +195,11 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
                   <Spacer x={1} />
                 </>
               )}
-            </Row>
+            </div>
             <Spacer y={1} />
           </>
         )}
-      <Row
-        fluid
-        css={{
-          justifyContent: 'flex-start',
-          '@xs': {
-            justifyContent: 'center',
-          },
-        }}
-      >
+      <div className="flex w-full justify-start sm:justify-center ">
         <H4
           h4
           css={{
@@ -227,110 +211,36 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
         >
           <strong>Personal Info</strong>
         </H4>
-      </Row>
+      </div>
       <Spacer y={1} />
-      <Row
-        align="center"
-        fluid
-        css={{
-          justifyContent: 'flex-start',
-          flexWrap: 'wrap',
-          flexDirection: 'row',
-          alignItems: 'center',
-          '@xs': {
-            flexDirection: 'column',
-            justifyContent: 'center',
-          },
-        }}
-      >
-        <Flex
-          direction="column"
-          justify="start"
-          css={{
-            marginBottom: '0.5rem !important',
-            '@xs': {
-              margin: 0,
-              width: '70%',
-            },
-          }}
-        >
-          <H5 h5>
-            <strong>Known For</strong>
-            <br />
+      <div className="flex flex-col justify-start flex-wrap items-start sm:items-center gap-y-4">
+        <div className="flex flex-row items-center gap-x-6 sm:flex-col sm:items-start justify-start mb-2 sm:m-0 sm:w-[70%]">
+          <H5 h5 weight="bold">
+            Known For
           </H5>
           <H6 h6>{detail?.known_for_department}</H6>
-        </Flex>
-        <Spacer y={1} />
-        <Flex
-          direction="column"
-          justify="start"
-          css={{
-            marginBottom: '0.5rem !important',
-            '@xs': {
-              margin: 0,
-              width: '70%',
-            },
-          }}
-        >
-          <H5 h5>
-            <strong>Gender</strong>
-            <br />
+        </div>
+        <div className="flex flex-row items-center gap-x-6 sm:flex-col sm:items-start justify-start mb-2 sm:m-0 sm:w-[70%]">
+          <H5 h5 weight="bold">
+            Gender
           </H5>
           <H6 h6>{gender}</H6>
-        </Flex>
-        <Spacer y={1} />
-        <Flex
-          direction="column"
-          justify="start"
-          css={{
-            marginBottom: '0.5rem !important',
-            '@xs': {
-              margin: 0,
-              width: '70%',
-            },
-          }}
-        >
-          <H5 h5>
-            <strong>Birthday</strong>
-            <br />
+        </div>
+        <div className="flex flex-row items-center gap-x-6 sm:flex-col sm:items-start justify-start mb-2 sm:m-0 sm:w-[70%]">
+          <H5 h5 weight="bold">
+            Birthday
           </H5>
           <H6 h6>{detail?.birthday}</H6>
-        </Flex>
-        <Spacer y={1} />
-        <Flex
-          direction="column"
-          justify="start"
-          css={{
-            marginBottom: '0.5rem !important',
-            '@xs': {
-              margin: 0,
-              width: '70%',
-            },
-          }}
-        >
-          <H5 h5>
-            <strong>Place of Birth</strong>
-            <br />
+        </div>
+        <div className="flex flex-row items-center gap-x-6 sm:flex-col sm:items-start justify-start mb-2 sm:m-0 sm:w-[70%]">
+          <H5 h5 weight="bold">
+            Place of Birth
           </H5>
           <H6 h6>{detail?.place_of_birth}</H6>
-        </Flex>
-        <Spacer y={1} />
-        <Flex
-          direction="column"
-          justify="start"
-          css={{
-            marginBottom: '0.5rem !important',
-            display: 'none',
-            '@xs': {
-              display: 'flex',
-              margin: 0,
-              width: '70%',
-            },
-          }}
-        >
-          <H5 h5>
-            <strong>Also Known As</strong>
-            <br />
+        </div>
+        <div className="flex flex-row items-start gap-x-6 sm:flex-col justify-start mb-2 sm:m-0 sm:w-[70%]">
+          <H5 h5 weight="bold">
+            Also Known As
           </H5>
           <H6 h6>
             {detail?.also_known_as?.map((name) => (
@@ -340,9 +250,8 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
               </>
             ))}
           </H6>
-          <Spacer y={1} />
-        </Flex>
-      </Row>
+        </div>
+      </div>
     </>
   );
 };
