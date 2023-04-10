@@ -8,10 +8,11 @@ import Flex from '~/components/styles/Flex.styles';
 interface IRatingProps {
   rating: number | string | undefined;
   ratingType?: 'movie' | 'tv' | 'anime' | 'people';
+  color?: string;
 }
 
 const Rating = (props: IRatingProps) => {
-  const { rating, ratingType } = props;
+  const { rating, ratingType, color } = props;
   if (ratingType === 'movie' || ratingType === 'tv') {
     return (
       <Flex direction="row" align="center">
@@ -28,7 +29,7 @@ const Rating = (props: IRatingProps) => {
         >
           TMDb
         </H6>
-        <H6 h6 weight="semibold">
+        <H6 h6 weight="semibold" css={color ? { color } : {}}>
           {rating}
         </H6>
       </Flex>

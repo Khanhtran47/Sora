@@ -80,8 +80,8 @@ module.exports = withTV({
         exitToRight: 'exitToRight 250ms ease',
       },
       gridTemplateAreas: {
-        wide: ['image title', 'image buttons'],
-        small: ['image title', 'buttons buttons'],
+        wide: ['image title', 'image info', 'image buttons'],
+        small: ['image title', 'info info', 'buttons buttons'],
       },
     },
     screens: {

@@ -16,7 +16,7 @@ import {
 import { Badge } from '@nextui-org/react';
 import Vibrant from 'node-vibrant';
 import tinycolor from 'tinycolor2';
-import { useMeasure, useIntersectionObserver } from '@react-hookz/web';
+import { useMeasure, useIntersectionObserver, useMediaQuery } from '@react-hookz/web';
 import { tv } from 'tailwind-variants';
 
 import { getMovieDetail, getTranslations, getImdbRating } from '~/services/tmdb/tmdb.server';
@@ -184,25 +184,25 @@ export const handle = {
 };
 
 const backgroundImageStyles = tv({
-  base: 'w-full relative overflow-hidden bg-fixed bg-no-repeat',
+  base: 'w-full relative overflow-hidden bg-fixed bg-no-repeat bg-[left_0px_top_0px]',
   variants: {
     sidebarMiniMode: {
-      true: 'bg-[left_80px_top_0px]',
+      true: 'sm:bg-[left_80px_top_0px]',
     },
     sidebarBoxedMode: {
-      true: 'bg-[left_280px_top_0px]',
+      true: 'sm:bg-[left_280px_top_0px]',
     },
   },
   compoundVariants: [
     {
       sidebarMiniMode: true,
       sidebarBoxedMode: true,
-      class: 'bg-[left_110px_top_0px]',
+      class: 'sm:bg-[left_110px_top_0px]',
     },
     {
       sidebarMiniMode: false,
       sidebarBoxedMode: false,
-      class: 'bg-[left_250px_top_0px]',
+      class: 'sm:bg-[left_250px_top_0px]',
     },
   ],
 });
@@ -226,6 +226,7 @@ const MovieDetail = () => {
   const [trailer, setTrailer] = React.useState<Trailer>({});
   const { backgroundColor } = useColorDarkenLighten(detail?.color);
   const { sidebarMiniMode, sidebarBoxedMode } = useSoraSettings();
+  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const { scrollPosition, viewportRef } = useLayoutScrollPosition((scrollState) => scrollState);
   const tabLinkRef = React.useRef<HTMLDivElement>(null);
   const tabLinkIntersection = useIntersectionObserver(tabLinkRef, {
@@ -245,6 +246,7 @@ const MovieDetail = () => {
     setTrailer({});
   };
   const [size, backgroundRef] = useMeasure<HTMLDivElement>();
+  const backgroundImageHeight = isSm ? 100 : 300;
   React.useEffect(() => {
     if (fetcher.data && fetcher.data.videos) {
       const { results } = fetcher.data.videos;
@@ -285,18 +287,18 @@ const MovieDetail = () => {
             right: 0,
             width: '100%',
             height:
-              scrollPosition?.y && 300 + scrollPosition?.y > 1000
-                ? 1000
-                : scrollPosition?.y && 300 + scrollPosition?.y < 1000
-                ? 300 + scrollPosition?.y
-                : 300,
+              scrollPosition?.y && backgroundImageHeight + scrollPosition?.y > 800
+                ? 800
+                : scrollPosition?.y && backgroundImageHeight + scrollPosition?.y < 800
+                ? backgroundImageHeight + scrollPosition?.y
+                : backgroundImageHeight,
             backgroundImage: `linear-gradient(to top, ${backgroundColor}, ${tinycolor(
               backgroundColor,
             ).setAlpha(0)})`,
           }}
         />
       </div>
-      <div className="w-full relative top-[-200px]">
+      <div className="w-full relative top-[-80px] sm:top-[-200px]">
         <MediaDetail
           type="movie"
           item={detail}

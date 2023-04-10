@@ -4,8 +4,6 @@ import type { LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { authenticate } from '~/services/supabase';
-
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 
 import i18next from '~/i18n/i18next.server';
@@ -15,6 +13,7 @@ import {
   getListPeople,
   getListDiscover,
 } from '~/services/tmdb/tmdb.server';
+import { authenticate } from '~/services/supabase';
 import { getAnimePopular } from '~/services/consumet/anilist/anilist.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
 
@@ -93,7 +92,7 @@ const Index = () => {
       animate={{ x: '0', opacity: 1 }}
       exit={{ y: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="w-full flex flex-col justify-center items-center"
+      className="w-full flex flex-col justify-center items-center mt-[72px] sm:mt-0"
     >
       <MediaList
         genresMovie={rootData?.genresMovie}

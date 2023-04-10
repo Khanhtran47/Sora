@@ -86,7 +86,7 @@ const scrollAreaViewportStyles = tv({
     },
     layoutPadding: {
       true: 'p-0 sm:px-5 mb-[70px]',
-      false: 'p-0 sm:mt-0 mb-[70px]',
+      false: 'p-0 mb-[70px]',
     },
     isShowTabLink: {
       true: 'mt-[128px]',
@@ -103,6 +103,16 @@ const scrollAreaViewportStyles = tv({
       mini: false,
       boxed: false,
       class: 'sm:w-[calc(100vw_-_250px)]',
+    },
+    {
+      layoutPadding: false,
+      isShowTabLink: false,
+      class: 'mt-0',
+    },
+    {
+      layoutPadding: true,
+      isShowTabLink: false,
+      class: 'mt-[72px]',
     },
   ],
   defaultVariants: {
@@ -166,6 +176,11 @@ const Layout = (props: ILayout) => {
     () => matches.some((match) => match.handle?.showTabLink === true),
     [location.pathname],
   );
+  const disableLayoutPadding = useMemo(
+    () => matches.some((match) => match.handle?.disableLayoutPadding === true),
+    [location.pathname],
+  );
+  console.log('🚀 ~ file: Layout.tsx:183 ~ Layout ~ disableLayoutPadding:', disableLayoutPadding);
   const currentTabLinkPages = useMemo(
     () => matches.find((match) => match.handle?.showTabLink)?.handle?.tabLinkPages,
     [location.pathname],
@@ -290,9 +305,7 @@ const Layout = (props: ILayout) => {
               className={scrollAreaViewportStyles({
                 mini: sidebarMiniMode.value,
                 boxed: sidebarBoxedMode.value,
-                layoutPadding: !matches.some(
-                  (match) => match.handle?.disableLayoutPadding === true,
-                ),
+                layoutPadding: !disableLayoutPadding,
                 isShowTabLink: isShowTabLink && !hideTabLinkWithLocation,
               })}
             >

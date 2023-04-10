@@ -16,7 +16,7 @@ import {
 import { Badge } from '@nextui-org/react';
 import Vibrant from 'node-vibrant';
 import tinycolor from 'tinycolor2';
-import { useMeasure, useIntersectionObserver } from '@react-hookz/web';
+import { useMeasure, useIntersectionObserver, useMediaQuery } from '@react-hookz/web';
 import { tv } from 'tailwind-variants';
 
 import {
@@ -178,6 +178,7 @@ export const handle = {
   ),
   preventScrollToTop: true,
   disableLayoutPadding: true,
+  backgroundColor: 'light',
 };
 
 const backgroundImageStyles = tv({
@@ -223,6 +224,7 @@ const TvShowDetail = () => {
   const [trailer, setTrailer] = React.useState<Trailer>({});
   const { backgroundColor } = useColorDarkenLighten(detail?.color);
   const { sidebarMiniMode, sidebarBoxedMode } = useSoraSettings();
+  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const { scrollPosition, viewportRef } = useLayoutScrollPosition((scrollState) => scrollState);
   const tabLinkRef = React.useRef<HTMLDivElement>(null);
   const tabLinkIntersection = useIntersectionObserver(tabLinkRef, {
@@ -242,6 +244,7 @@ const TvShowDetail = () => {
     setTrailer({});
   };
   const [size, backgroundRef] = useMeasure<HTMLDivElement>();
+  const backgroundImageHeight = isSm ? 100 : 300;
   React.useEffect(() => {
     if (fetcher.data && fetcher.data.videos) {
       const { results } = fetcher.data.videos;
@@ -282,18 +285,18 @@ const TvShowDetail = () => {
             right: 0,
             width: '100%',
             height:
-              scrollPosition?.y && 300 + scrollPosition?.y > 1000
-                ? 1000
-                : scrollPosition?.y && 300 + scrollPosition?.y < 1000
-                ? 300 + scrollPosition?.y
-                : 300,
+              scrollPosition?.y && backgroundImageHeight + scrollPosition?.y > 800
+                ? 800
+                : scrollPosition?.y && backgroundImageHeight + scrollPosition?.y < 800
+                ? backgroundImageHeight + scrollPosition?.y
+                : backgroundImageHeight,
             backgroundImage: `linear-gradient(to top, ${backgroundColor}, ${tinycolor(
               backgroundColor,
             ).setAlpha(0)})`,
           }}
         />
       </div>
-      <div className="w-full relative top-[-200px]">
+      <div className="w-full relative top-[-80px] sm:top-[-200px]">
         <MediaDetail
           type="tv"
           item={detail}

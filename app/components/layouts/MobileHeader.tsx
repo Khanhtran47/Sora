@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useMatches, useLocation, NavLink, useNavigate } from '@remix-run/react';
 import { Button } from '@nextui-org/react';
 import { motion } from 'framer-motion';
+import { tv } from 'tailwind-variants';
 
 import { useHistoryStack } from '~/store/layout/useHistoryStack';
 import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
@@ -10,6 +11,19 @@ import { H2 } from '~/components/styles/Text.styles';
 
 import Arrow from '~/assets/icons/ArrowIcon';
 import Search from '~/assets/icons/SearchIcon';
+
+const mobileHeaderStyles = tv({
+  base: 'h-[64px] w-[100vw] fixed top-0 z-[1000] px-3 py-2 flex flex-row justify-between items-center sm:hidden shadow-none',
+  variants: {
+    backgroundColor: {
+      light: 'bg-background-contrast-alpha',
+      none: 'bg-transparent',
+    },
+  },
+  defaultVariants: {
+    backgroundColor: 'none',
+  },
+});
 
 const MobileHeader = () => {
   const matches = useMatches();
@@ -27,6 +41,11 @@ const MobileHeader = () => {
       return currentMatch?.handle?.hideTabLinkWithLocation(location.pathname);
     return false;
   }, [matches, location.pathname]);
+  const backgroundColor = useMemo(() => {
+    const currentMatch = matches.find((match) => match.handle?.backgroundColor !== undefined);
+    if (currentMatch?.handle?.backgroundColor) return currentMatch?.handle?.backgroundColor;
+    return 'none';
+  }, [matches]);
   const handleBackButton = () => {
     if (historyBack.length > 1) {
       navigate(-1);
@@ -71,11 +90,13 @@ const MobileHeader = () => {
     );
   }
   return (
-    <div className="h-[64px] w-[100vw] fixed top-0 z-[1000] px-3 py-2 flex flex-row justify-between items-center sm:hidden shadow-lg">
+    <div className={mobileHeaderStyles({ backgroundColor })}>
       <div
-        className="absolute top-0 left-0 w-full z-[-1] bg-background-contrast"
+        className="absolute top-0 left-0 w-full z-[-1]"
         style={{
           height: isShowTabLink && !hideTabLinkWithLocation ? 112 : 64,
+          backgroundColor:
+            backgroundColor === 'none' ? 'var(--nextui-colors-backgroundContrast)' : 'transparent',
         }}
       />
       <Button auto light icon={<Arrow direction="left" />} onPress={() => handleBackButton()} />

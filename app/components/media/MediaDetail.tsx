@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation, useFetcher } from '@remix-run/react';
-import { Card, Button, Spacer, Avatar, Tooltip } from '@nextui-org/react';
+import { Card, Button, Spacer, Avatar, Tooltip, Badge } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
 // import { useTranslation } from 'react-i18next';
 
@@ -67,10 +68,10 @@ const MediaDetail = (props: IMediaDetail) => {
   const description = (item as IMovieDetail)?.overview || (item as ITvShowDetail)?.overview || '';
 
   useEffect(() => {
-    if (ref.current) {
-      ref.current.scrollIntoView({ behavior: 'auto', block: 'start', inline: 'center' });
+    if (ref.current && !isSm) {
+      ref.current.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'nearest' });
     }
-  }, [ref, location.pathname]);
+  }, [ref, location.pathname, isSm]);
 
   useEffect(() => {
     if (color?.startsWith('#')) {
@@ -99,10 +100,13 @@ const MediaDetail = (props: IMediaDetail) => {
           borderBottomRightRadius: 0,
           borderTopRightRadius: 0,
           height: `calc(${size?.height}px)`,
-          backgroundImage: `linear-gradient(to bottom, transparent 200px, ${backgroundColor} 200px)`,
+          backgroundImage: `linear-gradient(to bottom, transparent 80px, ${backgroundColor} 80px)`,
+          '@xs': {
+            backgroundImage: `linear-gradient(to bottom, transparent 200px, ${backgroundColor} 200px)`,
+          },
         }}
       >
-        <Card.Footer
+        <Card.Body
           ref={ref}
           css={{
             position: 'absolute',
@@ -118,7 +122,7 @@ const MediaDetail = (props: IMediaDetail) => {
           }}
         >
           <BackgroundContent />
-          <div className="w-full grid grid-areas-small sm:grid-areas-wide grid-cols-[1fr_2fr] grid-rows-[1fr_auto] gap-x-4 justify-center items-stretch max-w-[1920px] pt-5 px-3 sm:px-3.5 xl:px-4 2xl:px-5">
+          <div className="w-full grid grid-areas-small sm:grid-areas-wide grid-cols-[1fr_2fr] grid-rows-[1fr_auto_auto] sm:grid-rows-[auto_1fr_auto] gap-x-4 gap-y-6 justify-center items-stretch max-w-[1920px] pt-5 px-3 sm:px-3.5 xl:px-4 2xl:px-5">
             <div className="flex flex-col grid-in-image" ref={imageRef}>
               {posterPath ? (
                 <Card.Image
@@ -187,139 +191,160 @@ const MediaDetail = (props: IMediaDetail) => {
                   />
                 </div>
               )}
-              <Spacer y={2} />
+              {isSm ? null : <Spacer y={2} />}
             </div>
-            <div className="grid-in-title flex flex-col justify-between w-full">
-              <div className="flex flex-col justify-center items-start">
-                <H2 h1 weight="bold">
-                  {`${title}${isSm ? '' : ` (${releaseYear})`}`}
-                </H2>
-                <Spacer y={0.5} />
-                {tagline && (
-                  <H5 h5 css={{ fontStyle: 'italic' }}>
-                    {tagline}
-                  </H5>
-                )}
-                <Spacer y={0.5} />
-                <div className="flex flex-row flex-wrap">
-                  <div className="flex flex-row">
-                    <Rating rating={item?.vote_average?.toFixed(1)} ratingType="movie" />
-                    {imdbRating && (
-                      <>
-                        <Spacer x={0.5} />
-                        <H6
-                          h6
-                          weight="semibold"
-                          css={{
-                            backgroundColor: '#ddb600',
-                            color: '#000',
-                            borderRadius: '$xs',
-                            padding: '0 0.25rem 0 0.25rem',
-                            marginRight: '0.5rem',
-                          }}
-                        >
-                          IMDb
-                        </H6>
-                        <H6 h6 weight="semibold">
-                          {imdbRating?.star}
-                        </H6>
-                      </>
-                    )}
-                  </div>
-                  <Spacer x={0.5} />
-                  <H6 h6>
+            <div className="grid-in-title flex flex-col justify-start items-start w-full">
+              <H2 h1 weight="bold" css={{ '@xsMax': { fontSize: '1.75rem !important' } }}>
+                {`${title}${isSm ? '' : ` (${releaseYear})`}`}
+              </H2>
+              {tagline ? (
+                <H5 h5 css={{ fontStyle: 'italic' }}>
+                  {tagline}
+                </H5>
+              ) : null}
+            </div>
+            <div className="grid-in-info flex flex-col gap-y-3 sm:gap-y-6">
+              <div className="flex flex-row flex-wrap">
+                <Badge
+                  color="primary"
+                  variant="flat"
+                  className="flex flex-row"
+                  css={
+                    colorPalette
+                      ? {
+                          backgroundColor: colorPalette[200],
+                          borderColor: colorPalette[400],
+                        }
+                      : { borderColor: '$primaryLightActive' }
+                  }
+                >
+                  <Rating
+                    rating={item?.vote_average?.toFixed(1)}
+                    ratingType="movie"
+                    color={colorPalette ? colorPalette[600] : undefined}
+                  />
+                  {imdbRating ? (
+                    <>
+                      <Spacer x={0.5} />
+                      <H6
+                        h6
+                        weight="semibold"
+                        css={{
+                          backgroundColor: '#ddb600',
+                          color: '#000',
+                          borderRadius: '$xs',
+                          padding: '0 0.25rem 0 0.25rem',
+                          marginRight: '0.5rem',
+                        }}
+                      >
+                        IMDb
+                      </H6>
+                      <H6
+                        h6
+                        weight="semibold"
+                        css={colorPalette ? { color: colorPalette[600] } : {}}
+                      >
+                        {imdbRating?.star}
+                      </H6>
+                    </>
+                  ) : null}
+                </Badge>
+                <Spacer x={0.5} />
+                <Badge
+                  color="primary"
+                  variant="flat"
+                  className="flex flex-row"
+                  css={
+                    colorPalette
+                      ? {
+                          backgroundColor: colorPalette[200],
+                          borderColor: colorPalette[400],
+                        }
+                      : { borderColor: '$primaryLightActive' }
+                  }
+                >
+                  <H6 h6 weight="semibold" css={colorPalette ? { color: colorPalette[600] } : {}}>
                     {releaseDate}
                     {runtime ? ` • ${Math.floor(runtime / 60)}h ${runtime % 60}m` : null}
                   </H6>
-                </div>
-                <Spacer y={0.5} />
+                </Badge>
               </div>
-            </div>
-            <div className="grid-in-buttons">
-              <div className="flex w-full justify-start items-center flex-wrap">
+              <div className="flex flex-row w-full justify-start items-center flex-wrap gap-3">
                 {genres &&
                   genres?.map((genre) => (
-                    <>
-                      <Button
-                        type="button"
-                        color="primary"
-                        flat
-                        auto
-                        // shadow
-                        key={genre?.id}
-                        size={isSm ? 'sm' : 'md'}
-                        css={{
-                          marginBottom: '0.4rem',
-                          ...(colorPalette && {
-                            color: colorPalette[600],
-                            backgroundColor: colorPalette[200],
-                            '&:hover': {
-                              backgroundColor: colorPalette[300],
-                            },
-                          }),
-                        }}
-                        onPress={() =>
-                          navigate(
-                            `/discover/${type === 'movie' ? 'movies' : 'tv-shows'}?with_genres=${
-                              genre?.id
-                            }`,
-                          )
-                        }
-                      >
-                        {genre?.name}
-                      </Button>
-                      <Spacer x={0.25} />
-                    </>
-                  ))}
-              </div>
-              <Spacer y={0.5} />
-              <div className="w-full flex flex-row justify-between items-center flex-wrap mb-8">
-                {(status === 'Released' || status === 'Ended' || status === 'Returning Series') && (
-                  <Button
-                    type="button"
-                    auto
-                    // shadow
-                    color="gradient"
-                    onPress={() => setVisible(true)}
-                    css={{
-                      '@xsMax': {
-                        width: '100%',
-                      },
-                    }}
-                  >
-                    <H5 h5 weight="bold" transform="uppercase">
-                      Watch now
-                    </H5>
-                  </Button>
-                )}
-                <div className="flex flex-row items-center justify-start flex-wrap">
-                  <Button
-                    type="button"
-                    auto
-                    // shadow
-                    flat
-                    onPress={() => handler && handler(Number(id))}
-                    css={{ margin: '0.5rem 0' }}
-                  >
-                    Watch Trailer
-                  </Button>
-                  <Spacer x={0.5} />
-                  <Tooltip content="Share" placement="top" isDisabled={isSm}>
                     <Button
                       type="button"
-                      auto
+                      color="primary"
                       flat
+                      auto
+                      // shadow
+                      key={genre?.id}
+                      size={isSm ? 'sm' : 'md'}
+                      css={{
+                        ...(colorPalette && {
+                          color: colorPalette[600],
+                          backgroundColor: colorPalette[200],
+                          '&:hover': {
+                            backgroundColor: colorPalette[300],
+                          },
+                        }),
+                      }}
                       onPress={() =>
-                        WebShareLink(window.location.href, `${title}`, `${description}`)
+                        navigate(
+                          `/discover/${type === 'movie' ? 'movies' : 'tv-shows'}?with_genres=${
+                            genre?.id
+                          }`,
+                        )
                       }
-                      icon={<ShareIcon />}
-                    />
-                  </Tooltip>
-                </div>
+                    >
+                      {genre?.name}
+                    </Button>
+                  ))}
+              </div>
+            </div>
+            <div className="grid-in-buttons w-full flex flex-row justify-between items-center flex-wrap mb-10 gap-4">
+              {(status === 'Released' || status === 'Ended' || status === 'Returning Series') && (
+                <Button
+                  type="button"
+                  auto
+                  // shadow
+                  color="gradient"
+                  onPress={() => setVisible(true)}
+                  css={{
+                    '@xsMax': {
+                      width: '100%',
+                    },
+                  }}
+                >
+                  <H5 h5 weight="bold" transform="uppercase">
+                    Watch now
+                  </H5>
+                </Button>
+              )}
+              <div className="flex flex-row items-center justify-start flex-wrap">
+                <Button
+                  type="button"
+                  auto
+                  // shadow
+                  flat
+                  onPress={() => handler && handler(Number(id))}
+                >
+                  Watch Trailer
+                </Button>
+                <Spacer x={0.5} />
+                <Tooltip content="Share" placement="top" isDisabled={isSm}>
+                  <Button
+                    type="button"
+                    auto
+                    flat
+                    onPress={() => WebShareLink(window.location.href, `${title}`, `${description}`)}
+                    icon={<ShareIcon />}
+                  />
+                </Tooltip>
               </div>
             </div>
           </div>
-        </Card.Footer>
+        </Card.Body>
       </Card>
       <SelectProviderModal
         visible={visible}
