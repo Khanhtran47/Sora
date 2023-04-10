@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/indent */
 import * as React from 'react';
 import { MetaFunction } from '@remix-run/node';
-import { Row, Spacer } from '@nextui-org/react';
+import { Spacer } from '@nextui-org/react';
 import { useFetcher } from '@remix-run/react';
 
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
@@ -13,7 +13,7 @@ import { IPeople } from '~/services/tmdb/tmdb.types';
 import { IMedia } from '~/types/media';
 import TMDB from '~/utils/media';
 import MediaList from '~/components/media/MediaList';
-import { H6 } from '~/components/styles/Text.styles';
+import { P, H4 } from '~/components/styles/Text.styles';
 
 export const meta: MetaFunction = ({ params }) => ({
   'og:url': `https://sora-anime.vercel.app/people/${params.peopleId}/overview`,
@@ -36,27 +36,26 @@ const OverviewPage = () => {
   }, [fetcher.data]);
   return (
     <>
-      {peopleData?.detail?.biography && (
+      {peopleData?.detail?.biography ? (
         <>
-          <Row justify="flex-start" fluid>
-            <H6 h6 css={{ whiteSpace: 'pre-line', textAlign: 'justify' }}>
-              <strong>Biography</strong>
-              <br />
+          <div className="flex flex-col gap-y-2">
+            <H4 h4 weight="bold">
+              Biography
+            </H4>
+            <P css={{ whiteSpace: 'pre-line', textAlign: 'justify' }}>
               {/* TODO: add a read more button */}
               {peopleData?.detail?.biography}
-            </H6>
-          </Row>
-          <Spacer y={1} />
+            </P>
+          </div>
+          <Spacer y={1.5} />
         </>
-      )}
+      ) : null}
       {/* TODO: add a loading when "known for" part is loading */}
-      {knownFor && (
+      {knownFor && knownFor.length > 0 ? (
         <>
-          <Row justify="flex-start" fluid>
-            <H6 h6>
-              <strong>Known For</strong>
-            </H6>
-          </Row>
+          <H4 h4 weight="bold">
+            Known For
+          </H4>
           <Spacer y={0.5} />
           <MediaList
             listType="slider-card"
@@ -65,7 +64,7 @@ const OverviewPage = () => {
             genresTv={rootData?.genresTv}
           />
         </>
-      )}
+      ) : null}
     </>
   );
 };

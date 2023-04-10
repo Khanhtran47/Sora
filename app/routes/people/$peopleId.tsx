@@ -12,9 +12,10 @@ import { CACHE_CONTROL } from '~/utils/server/http';
 import TMDB from '~/utils/media';
 
 import PeopleDetail from '~/components/media/PeopleDetail';
-import TabLink from '~/components/elements/tab/TabLink';
 import CatchBoundaryView from '~/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/components/ErrorBoundaryView';
+
+import { peopleDetailPages } from '~/constants/tabLinks';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const [, locale] = await Promise.all([
@@ -109,13 +110,10 @@ export const handle = {
       </NavLink>
     </>
   ),
+  showTabLink: true,
+  tabLinkPages: peopleDetailPages,
+  tabLinkTo: (params: any) => `/people/${params.peopleId}`,
 };
-
-const detailTab = [
-  { pageName: 'Overview', pageLink: '/overview' },
-  { pageName: 'Credits', pageLink: '/credits' },
-  { pageName: 'Media', pageLink: '/media' },
-];
 
 const PeopleDetailPage = () => {
   const { detail, externalIds } = useLoaderData<typeof loader>();
@@ -129,7 +127,6 @@ const PeopleDetailPage = () => {
         padding: 0,
       }}
     >
-      <TabLink pages={detailTab} linkTo={`/people/${detail?.id}`} />
       <Row
         fluid
         align="stretch"

@@ -57,7 +57,7 @@ const SearchRoute = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const paginationChangeHandler = (page: number) => navigate(`/people/popular?page=${page}`);
+  const paginationChangeHandler = (page: number) => navigate(`/search/people?page=${page}`);
 
   const onSubmit = (value: string) => {
     navigate(`/search/people/${value}`);

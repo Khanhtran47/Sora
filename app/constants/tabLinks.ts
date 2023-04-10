@@ -36,3 +36,9 @@ export const genrePages = [
   { pageName: 'tv-show-genres', pageLink: '/tv' },
   { pageName: 'anime-genres', pageLink: '/anime' },
 ];
+
+export const peopleDetailPages = [
+  { pageName: 'Overview', pageLink: '/overview' },
+  { pageName: 'Credits', pageLink: '/credits' },
+  { pageName: 'Media', pageLink: '/media' },
+];
