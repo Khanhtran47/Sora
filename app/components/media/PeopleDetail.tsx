@@ -108,10 +108,12 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
             css={{
               width: '50% !important',
               minWidth: 'auto !important',
-              minHeight: '250px !important',
+              minHeight: 'auto !important',
+              height: 'auto !important',
               size: '$20',
               borderRadius: '0.75rem !important',
               '@xs': { width: '70% !important' },
+              aspectRatio: '2 / 3',
             }}
           />
         </Row>
