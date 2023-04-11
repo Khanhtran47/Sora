@@ -11,6 +11,7 @@ import { Toaster } from 'sonner';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
 import { useHistoryStack } from '~/store/layout/useHistoryStack';
+import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
 
 import { throttle } from '~/utils/function';
 
@@ -172,6 +173,12 @@ const Layout = (props: ILayout) => {
   const { historyBack, historyForward, setHistoryBack, setHistoryForward } = useHistoryStack(
     (state) => state,
   );
+  const {
+    backgroundColor,
+    setBackgroundColor,
+    setStartChangeScrollPosition,
+    startChangeScrollPosition,
+  } = useHeaderStyle((headerState) => headerState);
   const isShowTabLink = useMemo(
     () => matches.some((match) => match.handle?.showTabLink === true),
     [location.pathname],
@@ -186,6 +193,14 @@ const Layout = (props: ILayout) => {
   );
   const currentTabLinkTo = useMemo(
     () => matches.find((match) => match.handle?.showTabLink)?.handle?.tabLinkTo,
+    [location.pathname],
+  );
+  const customHeaderBackgroundColor = useMemo(
+    () => matches.some((match) => match?.handle?.customHeaderBackgroundColor === true),
+    [location.pathname],
+  );
+  const customHeaderChangeColorOnScroll = useMemo(
+    () => matches.some((match) => match?.handle?.customHeaderChangeColorOnScroll === true),
     [location.pathname],
   );
   const hideTabLinkWithLocation: boolean = useMemo(() => {
@@ -205,11 +220,16 @@ const Layout = (props: ILayout) => {
       (match) => match.handle && match.handle.preventScrollToTop === true,
     );
     setScrollHeight(viewportRef.current?.scrollHeight || 0);
-    if (preventScrollToTopRoute) {
-      return;
+    if (!preventScrollToTopRoute) {
+      viewportRef.current?.scrollTo(0, 0);
     }
-    viewportRef.current?.scrollTo(0, 0);
-  }, [location.key]);
+    if (!customHeaderBackgroundColor && backgroundColor !== '') {
+      setBackgroundColor('');
+    }
+    if (!customHeaderChangeColorOnScroll && startChangeScrollPosition !== 0) {
+      setStartChangeScrollPosition(0);
+    }
+  }, [location]);
 
   useEffect(() => {
     if (navigationType === 'PUSH') {

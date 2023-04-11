@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unsafe-optional-chaining */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import * as React from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { json } from '@remix-run/node';
 import type { LoaderArgs, MetaFunction } from '@remix-run/node';
 import {
@@ -26,6 +27,7 @@ import { authenticate } from '~/services/supabase';
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
+import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
 
 import { CACHE_CONTROL } from '~/utils/server/http';
 import TMDB from '~/utils/media';
@@ -180,7 +182,8 @@ export const handle = {
   ),
   preventScrollToTop: true,
   disableLayoutPadding: true,
-  backgroundColor: 'light',
+  customHeaderBackgroundColor: true,
+  customHeaderChangeColorOnScroll: true,
 };
 
 const backgroundImageStyles = tv({
@@ -207,31 +210,22 @@ const backgroundImageStyles = tv({
   ],
 });
 
-const tabLinkWrapperStyles = tv({
-  base: 'w-full flex justify-center top-[64px] sticky z-[1000] transition-[padding] duration-100 ease-in-out',
-  variants: {
-    sticky: {
-      true: '',
-      false: 'pt-4 pb-8',
-    },
-  },
-});
-
 const MovieDetail = () => {
   const { detail, imdbRating, translations } = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
   const { state } = useLocation();
-  const currentTime = state && (state as { currentTime: number }).currentTime;
-  const [visible, setVisible] = React.useState(false);
-  const [trailer, setTrailer] = React.useState<Trailer>({});
+  const [visible, setVisible] = useState(false);
+  const [trailer, setTrailer] = useState<Trailer>({});
   const { backgroundColor } = useColorDarkenLighten(detail?.color);
   const { sidebarMiniMode, sidebarBoxedMode } = useSoraSettings();
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const { scrollPosition, viewportRef } = useLayoutScrollPosition((scrollState) => scrollState);
-  const tabLinkRef = React.useRef<HTMLDivElement>(null);
+  const { setBackgroundColor, setStartChangeScrollPosition, startChangeScrollPosition } =
+    useHeaderStyle((headerState) => headerState);
+  const tabLinkRef = useRef<HTMLDivElement>(null);
   const tabLinkIntersection = useIntersectionObserver(tabLinkRef, {
     root: viewportRef,
-    rootMargin: sidebarBoxedMode ? '-80px 0px 0px 0px' : '-65px 0px 0px 0px',
+    rootMargin: sidebarBoxedMode ? '-180px 0px 0px 0px' : '-165px 0px 0px 0px',
     threshold: [1],
   });
   const backdropPath = detail?.backdrop_path
@@ -246,14 +240,33 @@ const MovieDetail = () => {
     setTrailer({});
   };
   const [size, backgroundRef] = useMeasure<HTMLDivElement>();
-  const backgroundImageHeight = isSm ? 100 : 300;
-  React.useEffect(() => {
+  useEffect(() => {
     if (fetcher.data && fetcher.data.videos) {
       const { results } = fetcher.data.videos;
       const officialTrailer = results.find((result: Trailer) => result.type === 'Trailer');
       setTrailer(officialTrailer);
     }
   }, [fetcher.data]);
+
+  useEffect(() => {
+    if (
+      viewportRef?.current &&
+      tabLinkIntersection?.intersectionRatio !== undefined &&
+      tabLinkIntersection?.intersectionRatio < 1 &&
+      tabLinkIntersection?.boundingClientRect?.top < 500
+    ) {
+      setStartChangeScrollPosition(viewportRef?.current?.scrollTop);
+    }
+  }, [tabLinkIntersection, viewportRef]);
+
+  useEffect(() => {
+    if (startChangeScrollPosition) {
+      setBackgroundColor(backgroundColor);
+    }
+  }, [backgroundColor, scrollPosition, startChangeScrollPosition]);
+
+  const currentTime = state && (state as { currentTime: number }).currentTime;
+  const backgroundImageHeight = isSm ? 100 : 300;
 
   return (
     <div className="w-full">
@@ -309,12 +322,32 @@ const MovieDetail = () => {
         />
         <div className="w-full flex flex-col justify-center items-center">
           <div
-            className={tabLinkWrapperStyles({
-              sticky:
-                tabLinkIntersection?.intersectionRatio !== undefined &&
-                tabLinkIntersection?.intersectionRatio < 1,
-            })}
-            style={{ backgroundColor }}
+            className="w-full flex justify-center top-[64px] sticky z-[1000] transition-[padding] duration-100 ease-in-out"
+            style={{
+              backgroundColor,
+              paddingTop: `${
+                startChangeScrollPosition === 0
+                  ? 1
+                  : scrollPosition?.y - startChangeScrollPosition > 0 &&
+                    scrollPosition?.y - startChangeScrollPosition < 100 &&
+                    startChangeScrollPosition > 0
+                  ? 1 - (scrollPosition?.y - startChangeScrollPosition) / 100
+                  : scrollPosition?.y - startChangeScrollPosition > 100
+                  ? 0
+                  : 1
+              }rem`,
+              paddingBottom: `${
+                startChangeScrollPosition === 0
+                  ? 2
+                  : scrollPosition?.y - startChangeScrollPosition > 0 &&
+                    scrollPosition?.y - startChangeScrollPosition < 100 &&
+                    startChangeScrollPosition > 0
+                  ? 2 - (scrollPosition?.y - startChangeScrollPosition) / 100
+                  : scrollPosition?.y - startChangeScrollPosition > 100
+                  ? 0
+                  : 2
+              }rem`,
+            }}
             ref={tabLinkRef}
           >
             <BackgroundTabLink css={{ backgroundColor, zIndex: 1 }} />

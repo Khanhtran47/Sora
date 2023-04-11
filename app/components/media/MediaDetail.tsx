@@ -68,10 +68,10 @@ const MediaDetail = (props: IMediaDetail) => {
   const description = (item as IMovieDetail)?.overview || (item as ITvShowDetail)?.overview || '';
 
   useEffect(() => {
-    if (ref.current && !isSm) {
+    if (ref.current) {
       ref.current.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'nearest' });
     }
-  }, [ref, location.pathname, isSm]);
+  }, [ref, location.pathname]);
 
   useEffect(() => {
     if (color?.startsWith('#')) {
@@ -206,9 +206,9 @@ const MediaDetail = (props: IMediaDetail) => {
             <div className="grid-in-info flex flex-col gap-y-3 sm:gap-y-6">
               <div className="flex flex-row flex-wrap">
                 <Badge
+                  size={isSm ? 'sm' : 'md'}
                   color="primary"
                   variant="flat"
-                  className="flex flex-row"
                   css={
                     colorPalette
                       ? {
@@ -224,8 +224,7 @@ const MediaDetail = (props: IMediaDetail) => {
                     color={colorPalette ? colorPalette[600] : undefined}
                   />
                   {imdbRating ? (
-                    <>
-                      <Spacer x={0.5} />
+                    <div className="flex flex-row items-center gap-x-2 ml-3">
                       <H6
                         h6
                         weight="semibold"
@@ -234,7 +233,6 @@ const MediaDetail = (props: IMediaDetail) => {
                           color: '#000',
                           borderRadius: '$xs',
                           padding: '0 0.25rem 0 0.25rem',
-                          marginRight: '0.5rem',
                         }}
                       >
                         IMDb
@@ -246,11 +244,12 @@ const MediaDetail = (props: IMediaDetail) => {
                       >
                         {imdbRating?.star}
                       </H6>
-                    </>
+                    </div>
                   ) : null}
                 </Badge>
                 <Spacer x={0.5} />
                 <Badge
+                  size={isSm ? 'sm' : 'md'}
                   color="primary"
                   variant="flat"
                   className="flex flex-row"
@@ -325,6 +324,7 @@ const MediaDetail = (props: IMediaDetail) => {
                 <Button
                   type="button"
                   auto
+                  size={isSm ? 'sm' : 'md'}
                   // shadow
                   flat
                   onPress={() => handler && handler(Number(id))}
@@ -335,10 +335,11 @@ const MediaDetail = (props: IMediaDetail) => {
                 <Tooltip content="Share" placement="top" isDisabled={isSm}>
                   <Button
                     type="button"
-                    auto
+                    size={isSm ? 'sm' : 'md'}
                     flat
                     onPress={() => WebShareLink(window.location.href, `${title}`, `${description}`)}
                     icon={<ShareIcon />}
+                    css={{ minWidth: 'min-content' }}
                   />
                 </Tooltip>
               </div>

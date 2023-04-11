@@ -12,12 +12,12 @@ import type { User } from '@supabase/supabase-js';
 import type { AnimationItem } from 'lottie-web';
 // import { useTranslation } from 'react-i18next';
 import { tv } from 'tailwind-variants';
-// import { useMediaQuery } from '@react-hookz/web';
 import { Player } from '@lottiefiles/react-lottie-player';
 
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
 import { useHistoryStack } from '~/store/layout/useHistoryStack';
+import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
 
 /* Components */
 import MultiLevelDropdown from '~/components/layouts/MultiLevelDropdown';
@@ -47,10 +47,6 @@ const headerStyles = tv({
     boxedSidebar: {
       true: 'sm:w-[calc(100vw_-_280px)] top-[15px]',
     },
-    backgroundColor: {
-      light: 'bg-background-contrast-alpha',
-      none: 'bg-transparent',
-    },
   },
   compoundVariants: [
     {
@@ -67,7 +63,6 @@ const headerStyles = tv({
   defaultVariants: {
     miniSidebar: false,
     boxedSidebar: false,
-    backgroundColor: 'none',
   },
 });
 
@@ -100,12 +95,16 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       return currentMatch?.handle?.hideTabLinkWithLocation(location.pathname);
     return false;
   }, [location.pathname]);
-  const backgroundColor = useMemo(() => {
-    const currentMatch = matches.find((match) => match.handle?.backgroundColor !== undefined);
-    if (currentMatch?.handle?.backgroundColor) return currentMatch?.handle?.backgroundColor;
-    return 'none';
-  }, [matches]);
+  const customHeaderBackgroundColor = useMemo(
+    () => matches.some((match) => match?.handle?.customHeaderBackgroundColor === true),
+    [location.pathname],
+  );
+  const customHeaderChangeColorOnScroll = useMemo(
+    () => matches.some((match) => match?.handle?.customHeaderChangeColorOnScroll === true),
+    [location.pathname],
+  );
   const { scrollPosition } = useLayoutScrollPosition((state) => state);
+  const { backgroundColor, startChangeScrollPosition } = useHeaderStyle((state) => state);
   const { historyBack, historyForward } = useHistoryStack((state) => state);
   const handleNavigationBackForward = (direction: 'back' | 'forward') => {
     if (direction === 'back') {
@@ -114,6 +113,37 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       navigate(1);
     }
   };
+  const headerBackgroundColor = useMemo(() => {
+    if (customHeaderBackgroundColor) {
+      return backgroundColor;
+    }
+    return 'var(--nextui-colors-backgroundContrastAlpha)';
+  }, [customHeaderBackgroundColor, backgroundColor]);
+
+  const headerBackgroundOpacity = useMemo(() => {
+    switch (customHeaderChangeColorOnScroll) {
+      case true:
+        if (startChangeScrollPosition === 0) {
+          return 0;
+        }
+        if (
+          scrollPosition.y > startChangeScrollPosition &&
+          scrollPosition.y < startChangeScrollPosition + 100 &&
+          scrollPosition.y > 80 &&
+          startChangeScrollPosition > 0
+        ) {
+          return (scrollPosition.y - startChangeScrollPosition) / 100;
+        }
+        if (scrollPosition.y > startChangeScrollPosition + 100) {
+          return 1;
+        }
+        return 0;
+      case false:
+        return scrollPosition.y < 80 ? scrollPosition.y / 80 : 1;
+      default:
+        return scrollPosition.y < 80 ? scrollPosition.y / 80 : 1;
+    }
+  }, [customHeaderChangeColorOnScroll, scrollPosition.y, startChangeScrollPosition]);
 
   useEffect(() => {
     if (isDropdownOpen) {
@@ -128,16 +158,20 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       className={headerStyles({
         miniSidebar: sidebarMiniMode.value,
         boxedSidebar: sidebarBoxedMode.value,
-        backgroundColor,
       })}
     >
       <div
-        className="absolute top-0 left-0 w-full z-[-1] bg-background-contrast-alpha backdrop-blur-md rounded-tl-xl"
+        className="absolute top-0 left-0 w-full z-[-1] backdrop-blur-md rounded-tl-xl pointer-events-none"
         style={{
-          opacity: scrollPosition.y < 80 ? scrollPosition.y / 80 : 1,
+          opacity: headerBackgroundOpacity,
           height: isShowTabLink && !hideTabLinkWithLocation ? 112 : 64,
+          backgroundColor: headerBackgroundColor,
         }}
-      />
+      >
+        {customHeaderBackgroundColor ? (
+          <div className="w-full h-full pointer-events-none bg-background-light" />
+        ) : null}
+      </div>
       <div className="flex flex-row justify-center items-center gap-x-2">
         <Button
           auto
