@@ -287,8 +287,10 @@ const Layout = (props: ILayout) => {
       sidebarMiniMode.set(true);
       if (!sidebarHoverMode.value) sidebarHoverMode.set(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isMd, sidebarMiniMode.value, sidebarHoverMode.value]);
+    if (isSm && sidebarBoxedMode.value === true) {
+      sidebarBoxedMode.set(false);
+    }
+  }, [isMd, isSm, sidebarMiniMode.value, sidebarHoverMode.value, sidebarBoxedMode.value]);
 
   return (
     <div className={layoutStyles({ boxed: sidebarBoxedMode.value })}>
