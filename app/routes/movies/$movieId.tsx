@@ -180,6 +180,11 @@ export const handle = {
       )}
     </NavLink>
   ),
+  miniTitle: (match: RouteMatch) => ({
+    title: match.data?.detail?.title,
+    showImage: match.data?.detail?.poster_path !== undefined,
+    imageUrl: TMDB?.posterUrl(match.data?.detail?.poster_path || '', 'w92'),
+  }),
   preventScrollToTop: true,
   disableLayoutPadding: true,
   customHeaderBackgroundColor: true,

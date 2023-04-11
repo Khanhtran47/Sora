@@ -37,6 +37,15 @@ const MobileHeader = () => {
     () => matches.some((match) => match?.handle?.customHeaderChangeColorOnScroll === true),
     [location.pathname],
   );
+  const currentMiniTitle = useMemo(() => {
+    const currentMatch = matches.filter((match) => match.handle?.miniTitle);
+    if (currentMatch?.length > 0) {
+      return currentMatch[currentMatch.length - 1].handle?.miniTitle(
+        currentMatch[currentMatch.length - 1],
+      );
+    }
+    return undefined;
+  }, [location.pathname]);
   const handleBackButton = () => {
     if (historyBack.length > 1) {
       navigate(-1);
@@ -113,7 +122,7 @@ const MobileHeader = () => {
     );
   }
   return (
-    <div className="h-[64px] w-[100vw] fixed top-0 z-[1000] px-3 py-2 flex flex-row justify-between items-center sm:hidden shadow-none">
+    <div className="h-[64px] w-[100vw] fixed top-0 z-[1000] px-3 py-2 flex flex-row justify-start items-center sm:hidden shadow-none gap-x-3">
       <div
         className="absolute top-0 left-0 w-full z-[-1] backdrop-blur-md"
         style={{
@@ -130,10 +139,22 @@ const MobileHeader = () => {
         auto
         light
         rounded
-        css={{ backgroundColor: '$backgroundAlpha' }}
+        css={{ backgroundColor: '$backgroundAlpha', flexBasis: 40, flexShrink: 0 }}
         icon={<Arrow direction="left" />}
         onPress={() => handleBackButton()}
       />
+      <div className="flex flex-row justify-between items-center">
+        {currentMiniTitle ? (
+          <motion.span
+            initial={{ opacity: 0, y: 60 }}
+            animate={{ opacity: headerBackgroundOpacity, y: (1 - headerBackgroundOpacity) * 60 }}
+            transition={{ duration: 0.3 }}
+            className="text-xl font-semibold line-clamp-1"
+          >
+            {currentMiniTitle.title}
+          </motion.span>
+        ) : null}
+      </div>
     </div>
   );
 };

@@ -13,6 +13,7 @@ import type { AnimationItem } from 'lottie-web';
 // import { useTranslation } from 'react-i18next';
 import { tv } from 'tailwind-variants';
 import { Player } from '@lottiefiles/react-lottie-player';
+import { motion } from 'framer-motion';
 
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
@@ -39,7 +40,7 @@ export const handle = {
 };
 
 const headerStyles = tv({
-  base: 'h-[64px] w-[100vw] fixed z-[1000] py-3 px-5 flex-row justify-between items-center hidden sm:flex rounded-tl-xl',
+  base: 'h-[64px] w-[100vw] fixed z-[1000] py-3 px-5 flex-row justify-between items-center hidden sm:flex rounded-tl-xl gap-x-4',
   variants: {
     miniSidebar: {
       true: 'sm:w-[calc(100vw_-_80px)] top-0',
@@ -103,6 +104,15 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
     () => matches.some((match) => match?.handle?.customHeaderChangeColorOnScroll === true),
     [location.pathname],
   );
+  const currentMiniTitle = useMemo(() => {
+    const currentMatch = matches.filter((match) => match.handle?.miniTitle);
+    if (currentMatch?.length > 0) {
+      return currentMatch[currentMatch.length - 1].handle?.miniTitle(
+        currentMatch[currentMatch.length - 1],
+      );
+    }
+    return undefined;
+  }, [location.pathname]);
   const { scrollPosition } = useLayoutScrollPosition((state) => state);
   const { backgroundColor, startChangeScrollPosition } = useHeaderStyle((state) => state);
   const { historyBack, historyForward } = useHistoryStack((state) => state);
@@ -192,7 +202,28 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
           css={{ w: 36, h: 36 }}
         />
       </div>
-      <div />
+      <div className="flex flex-row justify-between items-center w-full">
+        {currentMiniTitle ? (
+          <motion.div
+            initial={{ opacity: 0, y: 60 }}
+            animate={{ opacity: headerBackgroundOpacity, y: (1 - headerBackgroundOpacity) * 60 }}
+            transition={{ duration: 0.3 }}
+            className="flex flex-row items-center justify-start gap-x-3"
+          >
+            {currentMiniTitle.showImage ? (
+              <img
+                src={currentMiniTitle.imageUrl}
+                alt={`${currentMiniTitle.title} mini`}
+                width={36}
+                height={54}
+                loading="lazy"
+                className="rounded-md"
+              />
+            ) : null}
+            <span className="text-2xl font-bold">{currentMiniTitle.title}</span>
+          </motion.div>
+        ) : null}
+      </div>
       <Popover
         shouldFlip
         triggerType="menu"
