@@ -19,6 +19,7 @@ import Vibrant from 'node-vibrant';
 import tinycolor from 'tinycolor2';
 import { useMeasure, useIntersectionObserver, useMediaQuery } from '@react-hookz/web';
 import { tv } from 'tailwind-variants';
+import { isEdgeChromium } from 'react-device-detect';
 
 import { getMovieDetail, getTranslations, getImdbRating } from '~/services/tmdb/tmdb.server';
 import i18next from '~/i18n/i18next.server';
@@ -257,12 +258,16 @@ const MovieDetail = () => {
     if (
       viewportRef?.current &&
       tabLinkIntersection?.intersectionRatio !== undefined &&
-      tabLinkIntersection?.intersectionRatio < 1 &&
-      tabLinkIntersection?.boundingClientRect?.top < 500
+      tabLinkIntersection?.intersectionRatio < 1
     ) {
-      setStartChangeScrollPosition(viewportRef?.current?.scrollTop);
+      if (isEdgeChromium) {
+        // smooth scrolling on edge chromium breaks the getBoundingClientRect() method here, don't know why
+        setStartChangeScrollPosition(viewportRef?.current?.scrollTop);
+      } else if (!isEdgeChromium && tabLinkIntersection?.boundingClientRect?.top < 500) {
+        setStartChangeScrollPosition(viewportRef?.current?.scrollTop);
+      }
     }
-  }, [tabLinkIntersection, viewportRef]);
+  }, [tabLinkIntersection, viewportRef, tabLinkRef]);
 
   useEffect(() => {
     if (startChangeScrollPosition) {
