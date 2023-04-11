@@ -3,7 +3,7 @@
 import { useRef, useEffect, useMemo } from 'react';
 import type { User } from '@supabase/supabase-js';
 import { tv } from 'tailwind-variants';
-import { useLocation, useMatches, useNavigationType, useOutlet } from '@remix-run/react';
+import { useLocation, useMatches, useNavigationType, useOutlet, useParams } from '@remix-run/react';
 import { useMediaQuery } from '@react-hookz/web';
 import { useScroll, AnimatePresence } from 'framer-motion';
 import { Toaster } from 'sonner';
@@ -157,6 +157,7 @@ const Layout = (props: ILayout) => {
   const location = useLocation();
   const matches = useMatches();
   const outlet = useOutlet();
+  const params = useParams();
   const navigationType = useNavigationType();
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const isMd = useMediaQuery('(max-width: 1280px)', { initializeWithValue: false });
@@ -192,7 +193,7 @@ const Layout = (props: ILayout) => {
     [location.pathname],
   );
   const currentTabLinkTo = useMemo(
-    () => matches.find((match) => match.handle?.showTabLink)?.handle?.tabLinkTo,
+    () => matches.find((match) => match.handle?.showTabLink)?.handle?.tabLinkTo(params),
     [location.pathname],
   );
   const customHeaderBackgroundColor = useMemo(

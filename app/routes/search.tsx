@@ -39,7 +39,7 @@ export const handle = {
   ),
   showTabLink: true,
   tabLinkPages: searchPages,
-  tabLinkTo: '/search/',
+  tabLinkTo: () => '/search/',
 };
 
 const SearchPage = () => (

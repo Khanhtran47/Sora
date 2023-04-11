@@ -46,3 +46,9 @@ export const movieTvDetailsPages = [
   { pageName: 'Recommendations', pageLink: '/recommendations' },
   { pageName: 'Similar', pageLink: '/similar' },
 ];
+
+export const peopleDetailPages = [
+  { pageName: 'Overview', pageLink: '/overview' },
+  { pageName: 'Credits', pageLink: '/credits' },
+  { pageName: 'Media', pageLink: '/media' },
+];

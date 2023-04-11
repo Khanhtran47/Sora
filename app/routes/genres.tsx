@@ -5,7 +5,7 @@ import { genrePages } from '~/constants/tabLinks';
 export const handle = {
   showTabLink: true,
   tabLinkPages: genrePages,
-  tabLinkTo: '/genres',
+  tabLinkTo: () => '/genres',
 };
 
 const GenresPage = () => (

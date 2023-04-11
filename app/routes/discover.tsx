@@ -33,7 +33,7 @@ export const handle = {
   ),
   showTabLink: true,
   tabLinkPages: discoverPages,
-  tabLinkTo: '/discover',
+  tabLinkTo: () => '/discover',
   hideTabLinkWithLocation: (locationPathname: string) => {
     if (locationPathname === '/discover') {
       return true;

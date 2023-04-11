@@ -35,7 +35,7 @@ export const handle = {
   ),
   showTabLink: true,
   tabLinkPages: animePages,
-  tabLinkTo: '/anime',
+  tabLinkTo: () => '/anime',
   hideTabLinkWithLocation: (locationPathname: string) => {
     if (locationPathname.split('/')[2]?.match(/^\d+$/) || locationPathname === '/anime')
       return true;
