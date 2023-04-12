@@ -210,7 +210,7 @@ const MediaDetail = (props: IMediaDetail) => {
               ) : null}
             </div>
             <div className="grid-in-info flex flex-col gap-y-3 sm:gap-y-6">
-              <div className="flex flex-row flex-wrap">
+              <div className="flex flex-row flex-wrap gap-3">
                 <Badge
                   size={isSm ? 'sm' : 'md'}
                   color="primary"
@@ -253,7 +253,6 @@ const MediaDetail = (props: IMediaDetail) => {
                     </div>
                   ) : null}
                 </Badge>
-                <Spacer x={0.5} />
                 <Badge
                   size={isSm ? 'sm' : 'md'}
                   color="primary"

@@ -4,7 +4,7 @@ import { useRef } from 'react';
 import { json } from '@remix-run/node';
 import type { MetaFunction, LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useNavigate, NavLink, RouteMatch, useParams } from '@remix-run/react';
-import { Row, Badge } from '@nextui-org/react';
+import { Badge } from '@nextui-org/react';
 
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 
@@ -72,25 +72,13 @@ const MovieRecommendationsPage = () => {
   const navigate = useNavigate();
   const paginationChangeHandler = (page: number) => {
     navigate(`/movies/${movieId}/recommendations?page=${page}`);
-    ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'center' });
+    ref.current?.scrollIntoView({ behavior: 'instant', block: 'center', inline: 'nearest' });
   };
 
   return (
-    <Row
-      fluid
-      justify="center"
-      align="center"
-      css={{
-        display: 'flex',
-        flexDirection: 'column',
-        '@xsMax': {
-          paddingLeft: '$sm',
-          paddingRight: '$sm',
-        },
-      }}
-    >
+    <div className="w-full flex flex-col mt-3 max-w-[1920px] px-3 sm:px-3.5 xl:px-4 2xl:px-5 gap-y-4">
       <div ref={ref} />
-      {recommendations && recommendations.items && recommendations.items.length > 0 && (
+      {recommendations && recommendations.items && recommendations.items.length > 0 ? (
         <MediaList
           listType="grid"
           showListTypeChangeButton
@@ -103,8 +91,8 @@ const MovieRecommendationsPage = () => {
           currentPage={recommendations.page}
           onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
         />
-      )}
-    </Row>
+      ) : null}
+    </div>
   );
 };
 

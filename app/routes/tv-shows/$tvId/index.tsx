@@ -1,9 +1,7 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/no-throw-literal */
 import { json } from '@remix-run/node';
 import type { LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useNavigate, Link, useParams } from '@remix-run/react';
-import { Row, Col, Spacer, Image as NextImage, Card, Avatar } from '@nextui-org/react';
+import { Spacer, Card, Avatar } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
 
 import { authenticate } from '~/services/supabase';
@@ -16,8 +14,7 @@ import TMDB from '~/utils/media';
 import { useMediaQuery } from '@react-hookz/web';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 
-import { H2, H4, H5, H6 } from '~/components/styles/Text.styles';
-import Flex from '~/components/styles/Flex.styles';
+import { H2, H4, H5, H6, P } from '~/components/styles/Text.styles';
 import MediaList from '~/components/media/MediaList';
 
 import PhotoIcon from '~/assets/icons/PhotoIcon';
@@ -66,127 +63,61 @@ const TvOverview = () => {
     navigate(`/tv-shows/${detail?.id}/${type}`);
   };
   return (
-    <Row
-      fluid
-      align="stretch"
-      justify="center"
-      css={{
-        marginTop: '0.75rem',
-        maxWidth: '1920px',
-        px: '1.5rem',
-        '@xs': {
-          px: 'calc(0.75rem + 3vw)',
-        },
-        '@sm': {
-          px: 'calc(0.75rem + 6vw)',
-        },
-        '@md': {
-          px: 'calc(0.75rem + 12vw)',
-        },
-        '@lg': {
-          px: 'calc(0.75rem + 20px)',
-        },
-      }}
-    >
-      {!isSm ? (
-        <Col span={4} css={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center' }}>
-          <Flex
-            direction="column"
-            align="start"
-            justify="center"
-            className="space-y-4"
-            css={{
-              borderRadius: '$lg',
-              backgroundColor: '$backgroundContrast',
-              width: '50%',
-              padding: '$md',
-              '@smMax': {
-                width: '100%',
-              },
-              '@mdMax': {
-                width: '75%',
-              },
-            }}
-          >
-            <H6 h6>
-              <strong>Status</strong>
-              <br />
-              {detail?.status}
+    <div className="w-full flex flex-col sm:flex-row sm:justify-center sm:items-stretch mt-3 max-w-[1920px] px-3 sm:px-3.5 xl:px-4 2xl:px-5 gap-x-0 sm:gap-x-4 gap-y-4 sm:gap-y-0">
+      <div className="flex flex-col sm:items-center sm:justify-start w-full sm:w-1/3 flex-grow-0">
+        <div className="flex flex-col items-start justify-center gap-y-4 rounded-xl bg-background-contrast w-full nextui-sm:w-3/4 xl:w-1/2 p-4">
+          <div className="w-full flex flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
+            <H6 h6 weight="bold" className="basis-1/3 flex-grow-0">
+              Status
             </H6>
-            <H6 h6>
-              <strong>Network</strong>
-              <br />
+            <P as="p" className="flex-grow">
+              {detail?.status}
+            </P>
+          </div>
+          <div className="w-full flex flex-row items-start justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
+            <H6 h6 weight="bold" className="basis-1/3 flex-grow-0">
+              Network
+            </H6>
+            <div className="flex flex-col flex-grow">
               {detail?.networks &&
                 detail.networks.map((network, index) => (
-                  <NextImage
-                    // @ts-ignore
-                    as={Image}
-                    key={`network-item-${index}`}
-                    src={TMDB.logoUrl(network?.logo_path || '', 'w154')}
-                    alt="Network Image"
-                    title={network?.name}
-                    showSkeleton
-                    objectFit="cover"
-                    containerCss={{ padding: '$sm' }}
-                    loaderUrl="/api/image"
-                    placeholder="empty"
-                    option={{
-                      contentType: MimeType.WEBP,
-                    }}
-                  />
+                  <P as="p" key={`network-item-${index}`}>
+                    {network?.name}
+                  </P>
                 ))}
+            </div>
+          </div>
+          <div className="w-full flex flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
+            <H6 h6 weight="bold" className="basis-1/3 flex-grow-0">
+              Type
             </H6>
-            <H6 h6>
-              <strong>Type</strong>
-              <br />
+            <P as="p" className="flex-grow">
               {detail?.type}
+            </P>
+          </div>
+          <div className="w-full flex flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
+            <H6 h6 weight="bold" className="basis-1/3 flex-grow-0">
+              Original Language
             </H6>
-            <H6 h6>
-              <strong>Original Language</strong>
-              <br />
+            <P as="p" className="flex-grow">
               {rootData?.languages?.find((lang) => lang.iso_639_1 === detail?.original_language)
                 ?.english_name || detail?.original_language}
-            </H6>
-          </Flex>
-        </Col>
-      ) : null}
-      <Col
-        css={{
-          width: '100%',
-          '@xs': { width: '66.6667%' },
-        }}
-      >
-        <Flex
-          direction="column"
-          align="start"
-          justify="center"
-          className="space-y-4"
-          css={{
-            borderRadius: '$lg',
-            backgroundColor: '$backgroundContrast',
-            justifyContent: 'flex-start',
-            padding: '$md',
-          }}
-        >
-          <Row>
-            <H6 h6 css={{ textAlign: 'justify' }}>
-              {detail?.overview}
-            </H6>
-          </Row>
-          <Flex
-            wrap="wrap"
-            css={{
-              flexDirection: 'column',
-              rowGap: '1rem',
-              columnGap: 0,
-              '@xs': { flexDirection: 'row', rowGap: '1rem', columnGap: '2rem' },
-            }}
-          >
+            </P>
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-col w-full sm:w-2/3">
+        <div className="flex flex-col justify-start items-start gap-y-4 rounded-xl bg-background-contrast p-4">
+          <H6 h6 css={{ textAlign: 'justify' }}>
+            {detail?.overview}
+          </H6>
+          <div className="flex flex-col flex-wrap gap-x-0 gap-y-4 sm:flex-row sm:gap-x-8">
             {detail?.created_by && detail?.created_by.length > 0 ? (
-              <H6 h6>
-                <strong>Creators</strong>
-                <br />
-                <Flex direction="column">
+              <div className="w-full sm:w-fit flex flex-row justify-start gap-x-4 sm:flex-col items-start">
+                <H6 h6 weight="bold" className="basis-1/3 sm:basis-auto flex-grow-0">
+                  Creators
+                </H6>
+                <div className="flex flex-col flex-grow">
                   {detail.created_by.map((creator) => (
                     <Link
                       key={`director-item-${creator.id}}`}
@@ -197,29 +128,35 @@ const TvOverview = () => {
                       {creator.name}
                     </Link>
                   ))}
-                </Flex>
-              </H6>
+                </div>
+              </div>
             ) : null}
             {detail?.production_countries && detail.production_countries.length > 0 ? (
-              <H6 h6>
-                <strong>Production Countries</strong>
-                <br />
-                {detail?.production_countries.map((country, index) => (
-                  <p key={`country-item-${index}`}>{country.name}</p>
-                ))}
-              </H6>
+              <div className="w-full sm:w-fit flex flex-row justify-start gap-x-4 sm:flex-col items-start">
+                <H6 h6 weight="bold" className="basis-1/3 sm:basis-auto flex-grow-0">
+                  Production Countries
+                </H6>
+                <div className="flex flex-col flex-grow">
+                  {detail?.production_countries.map((country, index) => (
+                    <p key={`country-item-${index}`}>{country.name}</p>
+                  ))}
+                </div>
+              </div>
             ) : null}
             {detail?.spoken_languages && detail.spoken_languages.length > 0 ? (
-              <H6 h6>
-                <strong>Spoken Languages</strong>
-                <br />
-                {detail?.spoken_languages.map((language, index) => (
-                  <p key={`language-item-${index}`}>{language.english_name}</p>
-                ))}
-              </H6>
+              <div className="w-full sm:w-fit flex flex-row justify-start gap-x-4 sm:flex-col items-start">
+                <H6 h6 weight="bold" className="basis-1/3 sm:basis-auto flex-grow-0">
+                  Spoken Languages
+                </H6>
+                <div className="flex flex-col flex-grow">
+                  {detail?.spoken_languages.map((language, index) => (
+                    <p key={`language-item-${index}`}>{language.english_name}</p>
+                  ))}
+                </div>
+              </div>
             ) : null}
-          </Flex>
-        </Flex>
+          </div>
+        </div>
         {topBilledCast && topBilledCast.length > 0 ? (
           <MediaList
             key={`tv-top-cast-${tvId}`}
@@ -315,7 +252,7 @@ const TvOverview = () => {
                           }}
                         />
                       )}
-                      <Flex direction="column" justify="start" css={{ p: '1.25rem' }}>
+                      <div className="flex flex-col justify-start p-5">
                         <H4 h4>{season.name}</H4>
                         <H5 h5>
                           {season.air_date} | {season.episode_count} episodes
@@ -325,7 +262,7 @@ const TvOverview = () => {
                             {season.overview}
                           </H6>
                         )}
-                      </Flex>
+                      </div>
                     </Card.Body>
                   </Card>
                   <Spacer y={1} />
@@ -361,8 +298,8 @@ const TvOverview = () => {
             genresTv={rootData?.genresTv}
           />
         ) : null}
-      </Col>
-    </Row>
+      </div>
+    </div>
   );
 };
 
