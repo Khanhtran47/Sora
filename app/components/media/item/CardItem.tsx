@@ -278,7 +278,7 @@ const CardItem = (props: ICardItemProps) => {
         offset={0}
         visible={false}
         className="!w-fit"
-        css={isEpisodeCard || mediaType === 'people' ? { p: 0 } : {}}
+        css={isEpisodeCard || mediaType === 'people' ? { p: 0 } : { zIndex: 2999 }}
         onVisibleChange={(visible) => {
           if (visible) {
             if (mediaType !== 'anime' && mediaType !== 'people' && isPlayTrailer.value)

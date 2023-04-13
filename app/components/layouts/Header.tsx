@@ -260,7 +260,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
             overflow: 'hidden',
             transition: 'height 0.5s',
             width: 240,
-            zIndex: 999,
+            zIndex: 2999,
             borderWidth: 0,
           }}
         >

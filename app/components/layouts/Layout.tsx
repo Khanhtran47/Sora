@@ -214,6 +214,7 @@ const Layout = (props: ILayout) => {
   useEffect(() => {
     setHistoryBack([location.key]);
     setHistoryForward([location.key]);
+    setViewportRef(viewportRef);
   }, []);
 
   useEffect(() => {
@@ -273,7 +274,6 @@ const Layout = (props: ILayout) => {
         x: 0,
         y: currentScrollPosition,
       });
-      setViewportRef(viewportRef);
       lastScrollPosition = currentScrollPosition > 0 ? currentScrollPosition : 0;
     };
     const removeScrollYProgress = scrollY.onChange(throttle(updateAtScroll, 200));
