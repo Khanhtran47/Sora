@@ -260,13 +260,13 @@ const TvShowDetail = () => {
     ) {
       setStartChangeScrollPosition(viewportRef?.current?.scrollTop);
     }
-  }, [tabLinkIntersection, viewportRef]);
+  }, [tabLinkIntersection]);
 
   useEffect(() => {
     if (startChangeScrollPosition) {
       setBackgroundColor(backgroundColor);
     }
-  }, [backgroundColor, scrollPosition, startChangeScrollPosition]);
+  }, [backgroundColor, startChangeScrollPosition]);
 
   const currentTime = state && (state as { currentTime: number | undefined }).currentTime;
   const backgroundImageHeight = isSm ? 100 : 300;

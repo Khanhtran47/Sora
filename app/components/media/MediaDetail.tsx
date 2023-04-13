@@ -14,7 +14,6 @@ import { WebShareLink } from '~/utils/client/pwa-utils.client';
 
 import { useMediaQuery, useMeasure } from '@react-hookz/web';
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
-import { useSoraSettings } from '~/hooks/useLocalStorage';
 
 import { H2, H5, H6 } from '~/components/styles/Text.styles';
 import SelectProviderModal from '~/components/elements/modal/SelectProviderModal';
@@ -43,7 +42,6 @@ const MediaDetail = (props: IMediaDetail) => {
   const location = useLocation();
   const fetcher = useFetcher();
   const { backgroundColor } = useColorDarkenLighten(color);
-  const { sidebarMiniMode } = useSoraSettings();
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const isXl = useMediaQuery('(max-width: 1280px)', { initializeWithValue: false });
   const [visible, setVisible] = useState(false);
@@ -70,14 +68,14 @@ const MediaDetail = (props: IMediaDetail) => {
   const description = (item as IMovieDetail)?.overview || (item as ITvShowDetail)?.overview || '';
 
   useEffect(() => {
-    if (ref.current && sidebarMiniMode.value !== undefined && size?.height) {
+    if (ref.current) {
       ref.current.scrollIntoView({
         behavior: 'instant',
         block: 'center',
         inline: 'nearest',
       });
     }
-  }, [ref, location.pathname, sidebarMiniMode.value, size]);
+  }, [ref, location.pathname]);
 
   useEffect(() => {
     if (color?.startsWith('#')) {

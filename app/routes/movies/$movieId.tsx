@@ -267,13 +267,13 @@ const MovieDetail = () => {
         setStartChangeScrollPosition(viewportRef?.current?.scrollTop);
       }
     }
-  }, [tabLinkIntersection, viewportRef, tabLinkRef]);
+  }, [tabLinkIntersection]);
 
   useEffect(() => {
     if (startChangeScrollPosition) {
       setBackgroundColor(backgroundColor);
     }
-  }, [backgroundColor, scrollPosition, startChangeScrollPosition]);
+  }, [backgroundColor, startChangeScrollPosition]);
 
   const currentTime = state && (state as { currentTime: number }).currentTime;
   const backgroundImageHeight = isSm ? 100 : 300;
