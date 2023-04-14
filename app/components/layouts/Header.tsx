@@ -1,13 +1,11 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Button,
   // Tooltip,
   Popover,
   styled,
 } from '@nextui-org/react';
-import { useNavigate, useMatches, useLocation } from '@remix-run/react';
+import { useNavigate } from '@remix-run/react';
 import type { User } from '@supabase/supabase-js';
 import type { AnimationItem } from 'lottie-web';
 // import { useTranslation } from 'react-i18next';
@@ -16,9 +14,8 @@ import { Player } from '@lottiefiles/react-lottie-player';
 import { motion } from 'framer-motion';
 
 import { useSoraSettings } from '~/hooks/useLocalStorage';
-import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
+import { useHeaderOptions } from '~/hooks/useHeader';
 import { useHistoryStack } from '~/store/layout/useHistoryStack';
-import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
 
 /* Components */
 import MultiLevelDropdown from '~/components/layouts/MultiLevelDropdown';
@@ -79,43 +76,24 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [lottie, setLottie] = useState<AnimationItem>();
   const navigate = useNavigate();
-  const matches = useMatches();
-  const location = useLocation();
+  const { sidebarMiniMode, sidebarBoxedMode } = useSoraSettings();
   const {
-    sidebarMiniMode,
-    sidebarBoxedMode,
-    // sidebarSheetMode
-  } = useSoraSettings();
-  const isShowTabLink = useMemo(
-    () => matches.some((match) => match.handle?.showTabLink === true),
-    [matches],
-  );
-  const hideTabLinkWithLocation: boolean = useMemo(() => {
-    const currentMatch = matches.find((match) => match.handle?.showTabLink);
-    if (currentMatch?.handle?.hideTabLinkWithLocation)
-      return currentMatch?.handle?.hideTabLinkWithLocation(location.pathname);
-    return false;
-  }, [location.pathname]);
-  const customHeaderBackgroundColor = useMemo(
-    () => matches.some((match) => match?.handle?.customHeaderBackgroundColor === true),
-    [location.pathname],
-  );
-  const customHeaderChangeColorOnScroll = useMemo(
-    () => matches.some((match) => match?.handle?.customHeaderChangeColorOnScroll === true),
-    [location.pathname],
-  );
-  const currentMiniTitle = useMemo(() => {
-    const currentMatch = matches.filter((match) => match.handle?.miniTitle);
-    if (currentMatch?.length > 0) {
-      return currentMatch[currentMatch.length - 1].handle?.miniTitle(
-        currentMatch[currentMatch.length - 1],
-      );
-    }
-    return undefined;
-  }, [location.pathname]);
-  const { scrollPosition } = useLayoutScrollPosition((state) => state);
-  const { backgroundColor, startChangeScrollPosition } = useHeaderStyle((state) => state);
+    isShowTabLink,
+    hideTabLinkWithLocation,
+    customHeaderBackgroundColor,
+    currentMiniTitle,
+    headerBackgroundColor,
+    headerBackgroundOpacity,
+  } = useHeaderOptions();
   const { historyBack, historyForward } = useHistoryStack((state) => state);
+  useEffect(() => {
+    if (isDropdownOpen) {
+      lottie?.playSegments([0, 50], true);
+    } else {
+      lottie?.playSegments([50, 96], true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDropdownOpen]);
   const handleNavigationBackForward = (direction: 'back' | 'forward') => {
     if (direction === 'back') {
       navigate(-1);
@@ -123,45 +101,6 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       navigate(1);
     }
   };
-  const headerBackgroundColor = useMemo(() => {
-    if (customHeaderBackgroundColor) {
-      return backgroundColor;
-    }
-    return 'var(--nextui-colors-backgroundContrastAlpha)';
-  }, [customHeaderBackgroundColor, backgroundColor]);
-
-  const headerBackgroundOpacity = useMemo(() => {
-    switch (customHeaderChangeColorOnScroll) {
-      case true:
-        if (startChangeScrollPosition === 0) {
-          return 0;
-        }
-        if (
-          scrollPosition.y > startChangeScrollPosition &&
-          scrollPosition.y < startChangeScrollPosition + 100 &&
-          scrollPosition.y > 80 &&
-          startChangeScrollPosition > 0
-        ) {
-          return (scrollPosition.y - startChangeScrollPosition) / 100;
-        }
-        if (scrollPosition.y > startChangeScrollPosition + 100) {
-          return 1;
-        }
-        return 0;
-      case false:
-        return scrollPosition.y < 80 ? scrollPosition.y / 80 : 1;
-      default:
-        return scrollPosition.y < 80 ? scrollPosition.y / 80 : 1;
-    }
-  }, [customHeaderChangeColorOnScroll, scrollPosition.y, startChangeScrollPosition]);
-
-  useEffect(() => {
-    if (isDropdownOpen) {
-      lottie?.playSegments([0, 50], true);
-    } else {
-      lottie?.playSegments([50, 96], true);
-    }
-  }, [isDropdownOpen]);
 
   return (
     <div

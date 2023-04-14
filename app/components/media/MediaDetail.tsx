@@ -1,3 +1,4 @@
+/* eslint-disable no-unsafe-optional-chaining */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useState, useEffect } from 'react';
@@ -5,6 +6,8 @@ import { useNavigate, useLocation, useFetcher } from '@remix-run/react';
 import { Card, Button, Spacer, Avatar, Tooltip, Badge } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
 // import { useTranslation } from 'react-i18next';
+import { tv } from 'tailwind-variants';
+import tinycolor from 'tinycolor2';
 
 import { IMovieDetail, ITvShowDetail, IMovieTranslations } from '~/services/tmdb/tmdb.types';
 import { ColorPalette } from '~/routes/api/color-palette';
@@ -14,6 +17,8 @@ import { WebShareLink } from '~/utils/client/pwa-utils.client';
 
 import { useMediaQuery, useMeasure } from '@react-hookz/web';
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
+import { useSoraSettings } from '~/hooks/useLocalStorage';
+import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
 
 import { H2, H5, H6 } from '~/components/styles/Text.styles';
 import SelectProviderModal from '~/components/elements/modal/SelectProviderModal';
@@ -33,7 +38,36 @@ interface IMediaDetail {
   color: string | undefined;
 }
 
-const MediaDetail = (props: IMediaDetail) => {
+interface IMediaBackground {
+  backdropPath: string | undefined;
+  backgroundColor: string;
+}
+
+const backgroundImageStyles = tv({
+  base: 'w-full relative overflow-hidden bg-fixed bg-no-repeat bg-[left_0px_top_0px]',
+  variants: {
+    sidebarMiniMode: {
+      true: 'sm:bg-[left_80px_top_0px]',
+    },
+    sidebarBoxedMode: {
+      true: 'sm:bg-[left_280px_top_0px]',
+    },
+  },
+  compoundVariants: [
+    {
+      sidebarMiniMode: true,
+      sidebarBoxedMode: true,
+      class: 'sm:bg-[left_110px_top_0px]',
+    },
+    {
+      sidebarMiniMode: false,
+      sidebarBoxedMode: false,
+      class: 'sm:bg-[left_250px_top_0px]',
+    },
+  ],
+});
+
+export const MediaDetail = (props: IMediaDetail) => {
   // const { t } = useTranslation();
   const { type, item, handler, translations, imdbRating, color } = props;
   const [size, ref] = useMeasure<HTMLDivElement>();
@@ -366,4 +400,54 @@ const MediaDetail = (props: IMediaDetail) => {
   );
 };
 
-export default MediaDetail;
+export const MediaBackgroundImage = (props: IMediaBackground) => {
+  const { backdropPath, backgroundColor } = props;
+  const [size, backgroundRef] = useMeasure<HTMLDivElement>();
+  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
+  const { sidebarMiniMode, sidebarBoxedMode } = useSoraSettings();
+  const { scrollPosition } = useLayoutScrollPosition((scrollState) => scrollState);
+  const backgroundImageHeight = isSm ? 100 : 300;
+  return (
+    <div
+      ref={backgroundRef}
+      className={backgroundImageStyles({
+        sidebarMiniMode: sidebarMiniMode.value,
+        sidebarBoxedMode: sidebarBoxedMode.value,
+      })}
+      style={{
+        backgroundImage: `url(${
+          process.env.NODE_ENV === 'development'
+            ? 'http://localhost:3000'
+            : 'https://sora-anime.vercel.app'
+        }/api/image?src=${encodeURIComponent(
+          backdropPath ||
+            'https://raw.githubusercontent.com/Khanhtran47/Sora/master/app/assets/images/background-default.jpg',
+        )}&width=${size?.width}&height=${
+          size?.height
+        }&fit=cover&position=center&background[]=0&background[]=0&background[]=0&background[]=0&quality=80&compressionLevel=9&loop=0&delay=100&crop=null&contentType=image%2Fwebp)`,
+        aspectRatio: '2 / 1',
+        visibility: size?.width !== undefined ? 'visible' : 'hidden',
+        backgroundSize: `${size?.width}px auto`,
+      }}
+    >
+      <div
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          width: '100%',
+          height:
+            scrollPosition?.y && backgroundImageHeight + scrollPosition?.y > 800
+              ? 800
+              : scrollPosition?.y && backgroundImageHeight + scrollPosition?.y < 800
+              ? backgroundImageHeight + scrollPosition?.y
+              : backgroundImageHeight,
+          backgroundImage: `linear-gradient(to top, ${backgroundColor}, ${tinycolor(
+            backgroundColor,
+          ).setAlpha(0)})`,
+        }}
+      />
+    </div>
+  );
+};

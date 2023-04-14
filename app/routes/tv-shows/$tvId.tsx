@@ -16,9 +16,7 @@ import {
 } from '@remix-run/react';
 import { Badge } from '@nextui-org/react';
 import Vibrant from 'node-vibrant';
-import tinycolor from 'tinycolor2';
-import { useMeasure, useIntersectionObserver, useMediaQuery } from '@react-hookz/web';
-import { tv } from 'tailwind-variants';
+import { useIntersectionObserver } from '@react-hookz/web';
 
 import {
   getTvShowDetail,
@@ -31,13 +29,14 @@ import i18next from '~/i18n/i18next.server';
 
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
+import { useCustomHeaderChangePosition } from '~/hooks/useHeader';
 import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
 import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
 
 import { CACHE_CONTROL } from '~/utils/server/http';
 import TMDB from '~/utils/media';
 
-import MediaDetail from '~/components/media/MediaDetail';
+import { MediaDetail, MediaBackgroundImage } from '~/components/media/MediaDetail';
 import WatchTrailerModal, { Trailer } from '~/components/elements/modal/WatchTrailerModal';
 import CatchBoundaryView from '~/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/components/ErrorBoundaryView';
@@ -189,30 +188,6 @@ export const handle = {
   customHeaderChangeColorOnScroll: true,
 };
 
-const backgroundImageStyles = tv({
-  base: 'w-full relative overflow-hidden bg-fixed bg-no-repeat bg-[left_0px_top_0px]',
-  variants: {
-    sidebarMiniMode: {
-      true: 'sm:bg-[left_80px_top_0px]',
-    },
-    sidebarBoxedMode: {
-      true: 'sm:bg-[left_280px_top_0px]',
-    },
-  },
-  compoundVariants: [
-    {
-      sidebarMiniMode: true,
-      sidebarBoxedMode: true,
-      class: 'sm:bg-[left_110px_top_0px]',
-    },
-    {
-      sidebarMiniMode: false,
-      sidebarBoxedMode: false,
-      class: 'sm:bg-[left_250px_top_0px]',
-    },
-  ],
-});
-
 const TvShowDetail = () => {
   const { detail, translations, imdbRating } = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
@@ -220,17 +195,34 @@ const TvShowDetail = () => {
   const [visible, setVisible] = useState(false);
   const [trailer, setTrailer] = useState<Trailer>({});
   const { backgroundColor } = useColorDarkenLighten(detail?.color);
-  const { sidebarMiniMode, sidebarBoxedMode } = useSoraSettings();
-  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
+  const { sidebarBoxedMode } = useSoraSettings();
   const { scrollPosition, viewportRef } = useLayoutScrollPosition((scrollState) => scrollState);
-  const { setBackgroundColor, setStartChangeScrollPosition, startChangeScrollPosition } =
-    useHeaderStyle((headerStyle) => headerStyle);
+  const { setBackgroundColor, startChangeScrollPosition } = useHeaderStyle(
+    (headerStyle) => headerStyle,
+  );
   const tabLinkRef = useRef<HTMLDivElement>(null);
-  const tabLinkIntersection = useIntersectionObserver(tabLinkRef, {
+  const tablinkIntersection = useIntersectionObserver(tabLinkRef, {
     root: viewportRef,
     rootMargin: sidebarBoxedMode ? '-180px 0px 0px 0px' : '-165px 0px 0px 0px',
     threshold: [1],
   });
+  useEffect(() => {
+    if (fetcher.data && fetcher.data.videos) {
+      const { results } = fetcher.data.videos;
+      const officialTrailer = results.find((result: Trailer) => result.type === 'Trailer');
+      setTrailer(officialTrailer);
+    }
+  }, [fetcher.data]);
+
+  useCustomHeaderChangePosition(tablinkIntersection);
+
+  useEffect(() => {
+    if (startChangeScrollPosition) {
+      setBackgroundColor(backgroundColor);
+    }
+  }, [backgroundColor, startChangeScrollPosition]);
+
+  const currentTime = state && (state as { currentTime: number | undefined }).currentTime;
   const backdropPath = detail?.backdrop_path
     ? TMDB?.backdropUrl(detail?.backdrop_path || '', 'w1280')
     : undefined;
@@ -242,78 +234,10 @@ const TvShowDetail = () => {
     setVisible(false);
     setTrailer({});
   };
-  const [size, backgroundRef] = useMeasure<HTMLDivElement>();
-  useEffect(() => {
-    if (fetcher.data && fetcher.data.videos) {
-      const { results } = fetcher.data.videos;
-      const officialTrailer = results.find((result: Trailer) => result.type === 'Trailer');
-      setTrailer(officialTrailer);
-    }
-  }, [fetcher.data]);
-
-  useEffect(() => {
-    if (
-      viewportRef?.current &&
-      tabLinkIntersection?.intersectionRatio !== undefined &&
-      tabLinkIntersection?.intersectionRatio < 1 &&
-      tabLinkIntersection?.boundingClientRect?.top < 500
-    ) {
-      setStartChangeScrollPosition(viewportRef?.current?.scrollTop);
-    }
-  }, [tabLinkIntersection]);
-
-  useEffect(() => {
-    if (startChangeScrollPosition) {
-      setBackgroundColor(backgroundColor);
-    }
-  }, [backgroundColor, startChangeScrollPosition]);
-
-  const currentTime = state && (state as { currentTime: number | undefined }).currentTime;
-  const backgroundImageHeight = isSm ? 100 : 300;
 
   return (
     <>
-      <div
-        ref={backgroundRef}
-        className={backgroundImageStyles({
-          sidebarMiniMode: sidebarMiniMode.value,
-          sidebarBoxedMode: sidebarBoxedMode.value,
-        })}
-        style={{
-          backgroundImage: `url(${
-            process.env.NODE_ENV === 'development'
-              ? 'http://localhost:3001'
-              : 'https://sora-anime.vercel.app'
-          }/api/image?src=${encodeURIComponent(
-            backdropPath ||
-              'https://raw.githubusercontent.com/Khanhtran47/Sora/master/app/assets/images/background-default.jpg',
-          )}&width=${size?.width}&height=${
-            size?.height
-          }&fit=cover&position=center&background[]=0&background[]=0&background[]=0&background[]=0&quality=80&compressionLevel=9&loop=0&delay=100&crop=null&contentType=image%2Fwebp)`,
-          aspectRatio: '2 / 1',
-          visibility: size?.width !== undefined ? 'visible' : 'hidden',
-          backgroundSize: `${size?.width}px auto`,
-        }}
-      >
-        <div
-          style={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            width: '100%',
-            height:
-              scrollPosition?.y && backgroundImageHeight + scrollPosition?.y > 800
-                ? 800
-                : scrollPosition?.y && backgroundImageHeight + scrollPosition?.y < 800
-                ? backgroundImageHeight + scrollPosition?.y
-                : backgroundImageHeight,
-            backgroundImage: `linear-gradient(to top, ${backgroundColor}, ${tinycolor(
-              backgroundColor,
-            ).setAlpha(0)})`,
-          }}
-        />
-      </div>
+      <MediaBackgroundImage backdropPath={backdropPath} backgroundColor={backgroundColor} />
       <div className="w-full relative top-[-80px] sm:top-[-200px]">
         <MediaDetail
           type="tv"

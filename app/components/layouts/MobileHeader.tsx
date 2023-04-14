@@ -1,12 +1,10 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useMemo } from 'react';
-import { useMatches, useLocation, NavLink, useNavigate } from '@remix-run/react';
+import { useLocation, NavLink, useNavigate } from '@remix-run/react';
 import { Button } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 
+import { useHeaderOptions } from '~/hooks/useHeader';
 import { useHistoryStack } from '~/store/layout/useHistoryStack';
 import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
-import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
 
 import { H2 } from '~/components/styles/Text.styles';
 
@@ -14,38 +12,18 @@ import Arrow from '~/assets/icons/ArrowIcon';
 import Search from '~/assets/icons/SearchIcon';
 
 const MobileHeader = () => {
-  const matches = useMatches();
   const location = useLocation();
   const navigate = useNavigate();
   const { historyBack } = useHistoryStack((state) => state);
-  const isShowMobileHeader = !matches.some((match) => match.handle?.hideMobileHeader === true);
-  const isShowTabLink = useMemo(
-    () => matches.some((match) => match.handle?.showTabLink === true),
-    [matches],
-  );
-  const hideTabLinkWithLocation: boolean = useMemo(() => {
-    const currentMatch = matches.find((match) => match.handle?.showTabLink);
-    if (currentMatch?.handle?.hideTabLinkWithLocation)
-      return currentMatch?.handle?.hideTabLinkWithLocation(location.pathname);
-    return false;
-  }, [matches, location.pathname]);
-  const customHeaderBackgroundColor = useMemo(
-    () => matches.some((match) => match?.handle?.customHeaderBackgroundColor === true),
-    [location.pathname],
-  );
-  const customHeaderChangeColorOnScroll = useMemo(
-    () => matches.some((match) => match?.handle?.customHeaderChangeColorOnScroll === true),
-    [location.pathname],
-  );
-  const currentMiniTitle = useMemo(() => {
-    const currentMatch = matches.filter((match) => match.handle?.miniTitle);
-    if (currentMatch?.length > 0) {
-      return currentMatch[currentMatch.length - 1].handle?.miniTitle(
-        currentMatch[currentMatch.length - 1],
-      );
-    }
-    return undefined;
-  }, [location.pathname]);
+  const {
+    isShowMobileHeader,
+    isShowTabLink,
+    hideTabLinkWithLocation,
+    customHeaderBackgroundColor,
+    currentMiniTitle,
+    headerBackgroundColor,
+    headerBackgroundOpacity,
+  } = useHeaderOptions();
   const handleBackButton = () => {
     if (historyBack.length > 1) {
       navigate(-1);
@@ -53,39 +31,7 @@ const MobileHeader = () => {
       navigate('/');
     }
   };
-  const { scrollDirection, scrollPosition } = useLayoutScrollPosition((state) => state);
-  const { backgroundColor, startChangeScrollPosition } = useHeaderStyle((state) => state);
-  const headerBackgroundColor = useMemo(() => {
-    if (customHeaderBackgroundColor) {
-      return backgroundColor;
-    }
-    return 'var(--nextui-colors-backgroundContrastAlpha)';
-  }, [customHeaderBackgroundColor, backgroundColor]);
-
-  const headerBackgroundOpacity = useMemo(() => {
-    switch (customHeaderChangeColorOnScroll) {
-      case true:
-        if (startChangeScrollPosition === 0) {
-          return 0;
-        }
-        if (
-          scrollPosition.y > startChangeScrollPosition &&
-          scrollPosition.y < startChangeScrollPosition + 100 &&
-          scrollPosition.y > 80 &&
-          startChangeScrollPosition > 0
-        ) {
-          return (scrollPosition.y - startChangeScrollPosition) / 100;
-        }
-        if (scrollPosition.y > startChangeScrollPosition + 100) {
-          return 1;
-        }
-        return 0;
-      case false:
-        return scrollPosition.y < 80 ? scrollPosition.y / 80 : 1;
-      default:
-        return scrollPosition.y < 80 ? scrollPosition.y / 80 : 1;
-    }
-  }, [customHeaderChangeColorOnScroll, scrollPosition.y, startChangeScrollPosition]);
+  const { scrollDirection } = useLayoutScrollPosition((state) => state);
 
   if (!isShowMobileHeader) {
     return null;
