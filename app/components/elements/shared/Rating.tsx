@@ -41,7 +41,9 @@ const Rating = (props: IRatingProps) => {
       ) : (
         <AnilistStatIcon stat="bad" />
       )}
-      <H6 weight="semibold">{rating}%</H6>
+      <H6 weight="semibold" css={color ? { color } : {}}>
+        {rating}%
+      </H6>
     </div>
   );
 };

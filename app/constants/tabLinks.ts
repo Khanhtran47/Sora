@@ -47,6 +47,13 @@ export const movieTvDetailsPages = [
   { pageName: 'Similar', pageLink: '/similar' },
 ];
 
+export const animeDetailsPages = [
+  { pageName: 'Overview', pageLink: '/overview' },
+  { pageName: 'Episodes', pageLink: '/episodes' },
+  { pageName: 'Character', pageLink: '/characters' },
+  { pageName: 'Staff', pageLink: '/staff' },
+];
+
 export const peopleDetailPages = [
   { pageName: 'Overview', pageLink: '/overview' },
   { pageName: 'Credits', pageLink: '/credits' },

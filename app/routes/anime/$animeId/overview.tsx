@@ -2,17 +2,15 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { MetaFunction } from '@remix-run/node';
-import { Row, Col, Card, Avatar, Grid } from '@nextui-org/react';
+import { Card, Avatar, Grid } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
 
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
-import { useMediaQuery } from '@react-hookz/web';
 
 import { IMedia } from '~/types/media';
 
 import MediaList from '~/components/media/MediaList';
-import { H2, H5, H6 } from '~/components/styles/Text.styles';
-import Flex from '~/components/styles/Flex.styles';
+import { H2, H5, H6, P } from '~/components/styles/Text.styles';
 
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 import { useParams } from '@remix-run/react';
@@ -21,184 +19,134 @@ export const meta: MetaFunction = ({ params }) => ({
   'og:url': `https://sora-anime.vercel.app/anime/${params.animeId}/overview`,
 });
 
-const Overview = () => {
+const AnimeOverview = () => {
   const animeData = useTypedRouteLoaderData('routes/anime/$animeId');
   const detail = animeData && animeData.detail;
   const { animeId } = useParams();
-  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   return (
-    <Row
-      fluid
-      align="stretch"
-      justify="center"
-      css={{
-        marginTop: '0.75rem',
-        maxWidth: '1920px',
-        px: '1.5rem',
-        '@xs': {
-          px: 'calc(0.75rem + 3vw)',
-        },
-        '@sm': {
-          px: 'calc(0.75rem + 6vw)',
-        },
-        '@md': {
-          px: 'calc(0.75rem + 12vw)',
-        },
-        '@lg': {
-          px: 'calc(0.75rem + 20px)',
-        },
-      }}
-    >
-      {!isSm && (
-        <Col span={4} css={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center' }}>
-          <Flex
-            direction="column"
-            align="start"
-            justify="center"
-            className="space-y-4"
-            css={{
-              borderRadius: '$lg',
-              backgroundColor: '$backgroundContrast',
-              width: '50%',
-              padding: '$md',
-              '@smMax': {
-                width: '100%',
-              },
-              '@mdMax': {
-                width: '75%',
-              },
-            }}
-          >
-            {detail?.nextAiringEpisode && (
-              <Flex direction="column">
-                <H5 h5 weight="bold">
-                  Airing
-                </H5>
-                <H6 h6>
-                  {`Ep${detail?.nextAiringEpisode?.episode}: ${detail?.nextAiringEpisode?.timeUntilAiring}`}
-                </H6>
-              </Flex>
-            )}
-            {detail?.totalEpisodes && (
-              <Flex direction="column">
-                <H5 h5 weight="bold">
-                  Episodes
-                </H5>
-                <H6 h6>{detail?.totalEpisodes}</H6>
-              </Flex>
-            )}
-            {detail?.duration && (
-              <Flex direction="column">
-                <H5 h5 weight="bold">
-                  Episode Duration
-                </H5>
-                <H6 h6>{detail?.duration}</H6>
-              </Flex>
-            )}
-            {detail?.status && (
-              <Flex direction="column">
-                <H5 h5 weight="bold">
-                  Status
-                </H5>
-                <H6 h6>{detail?.status}</H6>
-              </Flex>
-            )}
-            {detail?.startDate && (
-              <Flex direction="column">
-                <H5 h5 weight="bold">
-                  Start Date
-                </H5>
-                <H6 h6>
-                  {`${detail?.startDate?.day}/${detail?.startDate?.month}/${detail?.startDate?.year}`}
-                </H6>
-              </Flex>
-            )}
-            {detail?.endDate && (
-              <Flex direction="column">
-                <H5 h5 weight="bold">
-                  End Date
-                </H5>
-                <H6 h6>
-                  {`${detail?.endDate?.day}/${detail?.endDate?.month}/${detail?.endDate?.year}`}
-                </H6>
-              </Flex>
-            )}
-            {detail?.countryOfOrigin && (
-              <Flex direction="column">
-                <H5 h5 weight="bold">
-                  Country of Origin
-                </H5>
-                <H6 h6>{detail?.countryOfOrigin}</H6>
-              </Flex>
-            )}
-            {detail?.popularity && (
-              <Flex direction="column">
-                <H5 h5 weight="bold">
-                  Popularity
-                </H5>
-                <H6 h6>{detail?.popularity}</H6>
-              </Flex>
-            )}
-            {detail?.studios && (
-              <Flex direction="column">
-                <H5 h5 weight="bold">
-                  Studios
-                </H5>
-                {detail?.studios.map((studio, index) => (
-                  <H6
-                    key={index}
-                    h6
-                    css={{
-                      width: '50%',
-                    }}
-                  >
-                    {studio}
-                  </H6>
-                ))}
-              </Flex>
-            )}
-            {detail?.synonyms && (
-              <Flex direction="column">
-                <H5 h5 weight="bold">
-                  Synonyms
-                </H5>
-                {detail?.synonyms.map((synonym, index) => (
-                  <H6
-                    key={index}
-                    h6
-                    css={{
-                      width: '50%',
-                    }}
-                  >
-                    {synonym}
-                  </H6>
-                ))}
-              </Flex>
-            )}
-          </Flex>
-        </Col>
-      )}
-      <Col span={isSm ? 12 : 8}>
-        <Flex
-          direction="column"
-          align="start"
-          justify="center"
-          className="space-y-4"
-          css={{
-            borderRadius: '$lg',
-            backgroundColor: '$backgroundContrast',
-            justifyContent: 'flex-start',
-            padding: '$md',
-          }}
-        >
-          <Row>
-            <H6
-              h6
-              css={{ textAlign: 'justify' }}
-              dangerouslySetInnerHTML={{ __html: detail?.description || '' }}
-            />
-          </Row>
-        </Flex>
+    <div className="w-full flex flex-col sm:flex-row sm:justify-center sm:items-stretch mt-3 max-w-[1920px] px-3 sm:px-3.5 xl:px-4 2xl:px-5 gap-x-0 sm:gap-x-4 gap-y-4 sm:gap-y-0">
+      <div className="flex flex-col sm:items-center sm:justify-start w-full sm:w-1/3 flex-grow-0">
+        <div className="flex flex-col items-start justify-center gap-y-4 rounded-xl bg-background-contrast w-full nextui-sm:w-3/4 xl:w-1/2 p-4">
+          {detail?.nextAiringEpisode ? (
+            <div className="w-full flex flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
+              <H6 h6 weight="bold" className="basis-1/3 flex-grow-0">
+                Airing
+              </H6>
+              <P as="p" className="flex-grow">
+                {`Ep${detail?.nextAiringEpisode?.episode}: ${detail?.nextAiringEpisode?.timeUntilAiring}`}
+              </P>
+            </div>
+          ) : null}
+          {detail?.totalEpisodes ? (
+            <div className="w-full flex flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
+              <H6 h6 weight="bold" className="basis-1/3 flex-grow-0">
+                Episodes
+              </H6>
+              <P as="p" className="flex-grow">
+                {detail?.totalEpisodes}
+              </P>
+            </div>
+          ) : null}
+          {detail?.duration ? (
+            <div className="w-full flex flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
+              <H6 h6 weight="bold" className="basis-1/3 flex-grow-0">
+                Episode Duration
+              </H6>
+              <P as="p" className="flex-grow">
+                {detail?.duration}
+              </P>
+            </div>
+          ) : null}
+          {detail?.status ? (
+            <div className="w-full flex flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
+              <H6 h6 weight="bold" className="basis-1/3 flex-grow-0">
+                Status
+              </H6>
+              <P as="p" className="flex-grow">
+                {detail?.status}
+              </P>
+            </div>
+          ) : null}
+          {detail?.startDate ? (
+            <div className="w-full flex flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
+              <H6 h6 weight="bold" className="basis-1/3 flex-grow-0">
+                Start Date
+              </H6>
+              <P as="p" className="flex-grow">
+                {`${detail?.startDate?.day}/${detail?.startDate?.month}/${detail?.startDate?.year}`}
+              </P>
+            </div>
+          ) : null}
+          {detail?.endDate ? (
+            <div className="w-full flex flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
+              <H6 h6 weight="bold" className="basis-1/3 flex-grow-0">
+                End Date
+              </H6>
+              <P as="p" className="flex-grow">
+                {`${detail?.endDate?.day}/${detail?.endDate?.month}/${detail?.endDate?.year}`}
+              </P>
+            </div>
+          ) : null}
+          {detail?.countryOfOrigin ? (
+            <div className="w-full flex flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
+              <H6 h6 weight="bold" className="basis-1/3 flex-grow-0">
+                Country of Origin
+              </H6>
+              <P as="p" className="flex-grow">
+                {detail?.countryOfOrigin}
+              </P>
+            </div>
+          ) : null}
+          {detail?.popularity ? (
+            <div className="w-full flex flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
+              <H6 h6 weight="bold" className="basis-1/3 flex-grow-0">
+                Popularity
+              </H6>
+              <P as="p" className="flex-grow">
+                {detail?.popularity}
+              </P>
+            </div>
+          ) : null}
+          {detail?.studios ? (
+            <div className="w-full flex flex-row items-start justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
+              <H6 h6 weight="bold" className="basis-1/3 flex-grow-0">
+                Studios
+              </H6>
+              <div className="flex flex-col flex-grow">
+                {detail.studios.length > 0 &&
+                  detail.studios.map((studio) => (
+                    <P key={studio} as="p">
+                      {studio}
+                    </P>
+                  ))}
+              </div>
+            </div>
+          ) : null}
+          {detail?.synonyms ? (
+            <div className="w-full flex flex-row items-start justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
+              <H6 h6 weight="bold" className="basis-1/3 flex-grow-0">
+                Synonyms
+              </H6>
+              <div className="flex flex-col flex-grow">
+                {detail?.synonyms.length > 0 &&
+                  detail?.synonyms.map((synonym) => (
+                    <P key={synonym} as="p">
+                      {synonym}
+                    </P>
+                  ))}
+              </div>
+            </div>
+          ) : null}
+        </div>
+      </div>
+      <div className="flex flex-col w-full sm:w-2/3">
+        <div className="flex flex-col justify-start items-start gap-y-4 rounded-xl bg-background-contrast p-4">
+          <H6
+            h6
+            css={{ textAlign: 'justify' }}
+            dangerouslySetInnerHTML={{ __html: detail?.description || '' }}
+          />
+        </div>
         {detail?.relations && detail.relations.length > 0 && (
           <>
             <H2
@@ -357,7 +305,7 @@ const Overview = () => {
                         justifyContent: 'flex-start',
                       }}
                     >
-                      <Flex justify="start" css={{ flexGrow: 1, columnGap: '0.5rem' }}>
+                      <div className="flex justify-start flex-grow gap-x-2">
                         {character?.image ? (
                           <Card.Image
                             // @ts-ignore
@@ -407,31 +355,21 @@ const Overview = () => {
                             }}
                           />
                         )}
-                        <Flex
-                          direction="column"
-                          justify="center"
-                          align="start"
-                          css={{ p: '0.25rem' }}
-                        >
+                        <div className="flex flex-col justify-center items-start p-1">
                           <H5 h5>{character.name?.full}</H5>
                           <H6 h6 css={{ color: '$accents7', fontWeight: '$semibold' }}>
                             {character.role}
                           </H6>
-                        </Flex>
-                      </Flex>
-                      <Flex justify="end" css={{ flexGrow: 1, columnGap: '0.5rem' }}>
+                        </div>
+                      </div>
+                      <div className="flex flex-row justify-end flex-grow gap-x-2">
                         {character?.voiceActors && character?.voiceActors.length > 0 && (
-                          <Flex
-                            direction="column"
-                            justify="center"
-                            align="end"
-                            css={{ p: '0.25rem' }}
-                          >
+                          <div className="flex flex-col justify-center items-end p-1">
                             <H5 h5>{character.voiceActors[0].name?.full}</H5>
                             <H6 h6 css={{ color: '$accents7', fontWeight: '$semibold' }}>
                               Japanese
                             </H6>
-                          </Flex>
+                          </div>
                         )}
                         {character?.voiceActors && character?.voiceActors[0]?.image ? (
                           <Card.Image
@@ -482,7 +420,7 @@ const Overview = () => {
                             }}
                           />
                         )}
-                      </Flex>
+                      </div>
                     </Card.Body>
                   </Card>
                 </Grid>
@@ -500,9 +438,9 @@ const Overview = () => {
             navigationButtons
           />
         ) : null}
-      </Col>
-    </Row>
+      </div>
+    </div>
   );
 };
 
-export default Overview;
+export default AnimeOverview;

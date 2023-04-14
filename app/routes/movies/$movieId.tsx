@@ -2,7 +2,7 @@
 /* eslint-disable no-unsafe-optional-chaining */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { json } from '@remix-run/node';
 import type { LoaderArgs, MetaFunction } from '@remix-run/node';
 import {
@@ -208,6 +208,36 @@ const MovieDetail = () => {
     rootMargin: sidebarBoxedMode ? '-180px 0px 0px 0px' : '-165px 0px 0px 0px',
     threshold: [1],
   });
+  const tablinkPaddingTop = useMemo(
+    () =>
+      `${
+        startChangeScrollPosition === 0
+          ? 1
+          : scrollPosition?.y - startChangeScrollPosition > 0 &&
+            scrollPosition?.y - startChangeScrollPosition < 100 &&
+            startChangeScrollPosition > 0
+          ? 1 - (scrollPosition?.y - startChangeScrollPosition) / 100
+          : scrollPosition?.y - startChangeScrollPosition > 100
+          ? 0
+          : 1
+      }rem`,
+    [startChangeScrollPosition, scrollPosition?.y],
+  );
+  const tablinkPaddingBottom = useMemo(
+    () =>
+      `${
+        startChangeScrollPosition === 0
+          ? 2
+          : scrollPosition?.y - startChangeScrollPosition > 0 &&
+            scrollPosition?.y - startChangeScrollPosition < 100 &&
+            startChangeScrollPosition > 0
+          ? 2 - (scrollPosition?.y - startChangeScrollPosition) / 100
+          : scrollPosition?.y - startChangeScrollPosition > 100
+          ? 0
+          : 2
+      }rem`,
+    [startChangeScrollPosition, scrollPosition?.y],
+  );
   useEffect(() => {
     if (fetcher.data && fetcher.data.videos) {
       const { results } = fetcher.data.videos;
@@ -254,28 +284,8 @@ const MovieDetail = () => {
             className="w-full flex justify-center top-[64px] sticky z-[1000] transition-[padding] duration-100 ease-in-out"
             style={{
               backgroundColor,
-              paddingTop: `${
-                startChangeScrollPosition === 0
-                  ? 1
-                  : scrollPosition?.y - startChangeScrollPosition > 0 &&
-                    scrollPosition?.y - startChangeScrollPosition < 100 &&
-                    startChangeScrollPosition > 0
-                  ? 1 - (scrollPosition?.y - startChangeScrollPosition) / 100
-                  : scrollPosition?.y - startChangeScrollPosition > 100
-                  ? 0
-                  : 1
-              }rem`,
-              paddingBottom: `${
-                startChangeScrollPosition === 0
-                  ? 2
-                  : scrollPosition?.y - startChangeScrollPosition > 0 &&
-                    scrollPosition?.y - startChangeScrollPosition < 100 &&
-                    startChangeScrollPosition > 0
-                  ? 2 - (scrollPosition?.y - startChangeScrollPosition) / 100
-                  : scrollPosition?.y - startChangeScrollPosition > 100
-                  ? 0
-                  : 2
-              }rem`,
+              paddingTop: tablinkPaddingTop,
+              paddingBottom: tablinkPaddingBottom,
             }}
             ref={tabLinkRef}
           >

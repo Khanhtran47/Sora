@@ -1,6 +1,7 @@
+/* eslint-disable no-unsafe-optional-chaining */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import * as React from 'react';
+import { useRef, useState, useEffect, useMemo } from 'react';
 import { json } from '@remix-run/node';
 import type { LoaderArgs, MetaFunction } from '@remix-run/node';
 import {
@@ -11,24 +12,35 @@ import {
   RouteMatch,
   useLocation,
 } from '@remix-run/react';
-import { Container, Badge } from '@nextui-org/react';
+import { Badge } from '@nextui-org/react';
+
+import { useIntersectionObserver } from '@react-hookz/web';
+import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
+import { useSoraSettings } from '~/hooks/useLocalStorage';
+import { useCustomHeaderChangePosition } from '~/hooks/useHeader';
+import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
+import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
 
 import { getAnimeInfo } from '~/services/consumet/anilist/anilist.server';
 import { authenticate } from '~/services/supabase';
 import getProviderList from '~/services/provider.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
 
-import AnimeDetail from '~/components/media/AnimeDetail';
+import { MediaBackgroundImage, AnimeDetail } from '~/components/media/MediaDetail';
+import { BackgroundTabLink } from '~/components/media/Media.styles';
+import TabLink from '~/components/elements/tab/TabLink';
 import WatchTrailerModal from '~/components/elements/modal/WatchTrailerModal';
 import CatchBoundaryView from '~/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/components/ErrorBoundaryView';
+
+import { animeDetailsPages } from '~/constants/tabLinks';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { animeId } = params;
   const aid = Number(animeId);
   if (!animeId) throw new Response('Not Found', { status: 404 });
   await authenticate(request, undefined, true);
-  const detail = await getAnimeInfo(aid);
+  const detail = await getAnimeInfo(animeId);
   if (!detail) throw new Response('Not Found', { status: 404 });
   const title = detail.title?.english || detail.title?.userPreferred || detail.title?.romaji || '';
   const orgTitle = detail.title?.native;
@@ -137,15 +149,78 @@ export const handle = {
       )}
     </NavLink>
   ),
+  miniTitle: (match: RouteMatch) => ({
+    title:
+      match.data?.detail?.title?.userPreferred ||
+      match.data?.detail?.title?.english ||
+      match.data?.detail?.title?.romaji ||
+      match.data?.detail?.title?.native ||
+      '',
+    showImage: match.data?.detail?.image !== undefined,
+    imageUrl: match.data?.detail?.image,
+  }),
   preventScrollToTop: true,
   disableLayoutPadding: true,
+  customHeaderBackgroundColor: true,
+  customHeaderChangeColorOnScroll: true,
 };
 
 const AnimeDetailPage = () => {
   const { detail } = useLoaderData<typeof loader>();
   const { state } = useLocation();
+  const [visible, setVisible] = useState(false);
+  const { backgroundColor } = useColorDarkenLighten(detail?.color);
+  const { sidebarBoxedMode } = useSoraSettings();
+  const { scrollPosition, viewportRef } = useLayoutScrollPosition((scrollState) => scrollState);
+  const { setBackgroundColor, startChangeScrollPosition } = useHeaderStyle(
+    (headerState) => headerState,
+  );
+  const tabLinkRef = useRef<HTMLDivElement>(null);
+  const tablinkIntersection = useIntersectionObserver(tabLinkRef, {
+    root: viewportRef,
+    rootMargin: sidebarBoxedMode ? '-180px 0px 0px 0px' : '-165px 0px 0px 0px',
+    threshold: [1],
+  });
+  const tablinkPaddingTop = useMemo(
+    () =>
+      `${
+        startChangeScrollPosition === 0
+          ? 1
+          : scrollPosition?.y - startChangeScrollPosition > 0 &&
+            scrollPosition?.y - startChangeScrollPosition < 100 &&
+            startChangeScrollPosition > 0
+          ? 1 - (scrollPosition?.y - startChangeScrollPosition) / 100
+          : scrollPosition?.y - startChangeScrollPosition > 100
+          ? 0
+          : 1
+      }rem`,
+    [startChangeScrollPosition, scrollPosition?.y],
+  );
+  const tablinkPaddingBottom = useMemo(
+    () =>
+      `${
+        startChangeScrollPosition === 0
+          ? 2
+          : scrollPosition?.y - startChangeScrollPosition > 0 &&
+            scrollPosition?.y - startChangeScrollPosition < 100 &&
+            startChangeScrollPosition > 0
+          ? 2 - (scrollPosition?.y - startChangeScrollPosition) / 100
+          : scrollPosition?.y - startChangeScrollPosition > 100
+          ? 0
+          : 2
+      }rem`,
+    [startChangeScrollPosition, scrollPosition?.y],
+  );
+  useCustomHeaderChangePosition(tablinkIntersection);
+
+  useEffect(() => {
+    if (startChangeScrollPosition) {
+      setBackgroundColor(backgroundColor);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [backgroundColor, startChangeScrollPosition]);
+
   const currentTime = state && (state as { currentTime: number | undefined }).currentTime;
-  const [visible, setVisible] = React.useState(false);
   const Handler = () => {
     setVisible(true);
   };
@@ -155,28 +230,33 @@ const AnimeDetailPage = () => {
 
   return (
     <>
-      <AnimeDetail item={detail} handler={Handler} />
-      <Container
-        as="div"
-        fluid
-        responsive={false}
-        justify="center"
-        css={{
-          display: 'flex',
-          margin: 0,
-          padding: 0,
-        }}
-      >
-        <Outlet />
-      </Container>
-      {detail && detail.trailer && (
+      <MediaBackgroundImage backdropPath={detail?.cover} backgroundColor={backgroundColor} />
+      <div className="w-full relative top-[-80px] sm:top-[-200px]">
+        <AnimeDetail item={detail} handler={Handler} />
+        <div className="w-full flex flex-col justify-center items-center">
+          <div
+            className="w-full flex justify-center top-[64px] sticky z-[1000] transition-[padding] duration-100 ease-in-out"
+            style={{
+              backgroundColor,
+              paddingTop: tablinkPaddingTop,
+              paddingBottom: tablinkPaddingBottom,
+            }}
+            ref={tabLinkRef}
+          >
+            <BackgroundTabLink css={{ backgroundColor, zIndex: 1 }} />
+            <TabLink pages={animeDetailsPages} linkTo={`/anime/${detail?.id}`} />
+          </div>
+          <Outlet />
+        </div>
+      </div>
+      {detail && detail.trailer ? (
         <WatchTrailerModal
           trailer={detail.trailer}
           visible={visible}
           closeHandler={closeHandler}
           currentTime={Number(currentTime)}
         />
-      )}
+      ) : null}
     </>
   );
 };
