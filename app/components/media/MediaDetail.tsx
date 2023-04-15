@@ -45,6 +45,11 @@ interface IMediaBackground {
   backgroundColor: string;
 }
 
+interface IAnimeDetail {
+  item: IAnimeInfo | undefined;
+  handler?: (id: number) => void;
+}
+
 const backgroundImageStyles = tv({
   base: 'w-full relative overflow-hidden bg-fixed bg-no-repeat bg-[left_0px_top_0px]',
   variants: {
@@ -405,11 +410,6 @@ export const MediaDetail = (props: IMediaDetail) => {
     </>
   );
 };
-
-interface IAnimeDetail {
-  item: IAnimeInfo | undefined;
-  handler?: (id: number) => void;
-}
 
 export const AnimeDetail = (props: IAnimeDetail) => {
   // const { t } = useTranslation();

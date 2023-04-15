@@ -10,10 +10,6 @@ function useHeaderOptions() {
   const location = useLocation();
   const { scrollPosition } = useLayoutScrollPosition((state) => state);
   const { backgroundColor, startChangeScrollPosition } = useHeaderStyle((state) => state);
-  console.log(
-    '🚀 ~ file: useHeader.ts:14 ~ useHeaderOptions ~ startChangeScrollPosition:',
-    startChangeScrollPosition,
-  );
 
   const isShowMobileHeader = useMemo(
     () => !matches.some((match) => match.handle?.hideMobileHeader === true),
