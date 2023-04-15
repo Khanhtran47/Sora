@@ -3,7 +3,7 @@ import { useRef } from 'react';
 import { json } from '@remix-run/node';
 import type { MetaFunction, LoaderArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import { Row, Pagination, Spacer } from '@nextui-org/react';
+import { Pagination } from '@nextui-org/react';
 
 import { authenticate } from '~/services/supabase';
 import { getCredits } from '~/services/tmdb/tmdb.server';
@@ -14,7 +14,6 @@ import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
 import { useMediaQuery } from '@react-hookz/web';
 
 import MediaList from '~/components/media/MediaList';
-import Flex from '~/components/styles/Flex.styles';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   await authenticate(request, undefined, true);
@@ -46,34 +45,19 @@ const TvCrewPage = () => {
   const { gotoPage, currentPage, maxPage, currentData } = useSplitArrayIntoPage(crew || [], 20);
 
   return (
-    <>
-      <Row
-        fluid
-        justify="center"
-        align="center"
-        css={{
-          display: 'flex',
-          flexDirection: 'column',
-          '@xsMax': {
-            paddingLeft: '$sm',
-            paddingRight: '$sm',
-          },
-        }}
-      >
-        <div ref={ref} />
-        {currentData && currentData.length > 0 && (
-          <MediaList
-            key={`crew-page-${currentPage}`}
-            listType="grid"
-            items={currentData}
-            virtual
-            itemsType="people"
-          />
-        )}
-      </Row>
-      <Spacer y={1} />
-      {maxPage > 1 && (
-        <Flex direction="row" justify="center">
+    <div className="w-full flex flex-col mt-3 max-w-[1920px] px-3 sm:px-3.5 xl:px-4 2xl:px-5 gap-y-4">
+      <div ref={ref} />
+      {currentData && currentData.length > 0 ? (
+        <MediaList
+          key={`crew-page-${currentPage}`}
+          listType="grid"
+          items={currentData}
+          virtual
+          itemsType="people"
+        />
+      ) : null}
+      {maxPage > 1 ? (
+        <div className="flex flex-row justify-center">
           <Pagination
             total={maxPage}
             initialPage={currentPage}
@@ -81,17 +65,17 @@ const TvCrewPage = () => {
             onChange={(page) => {
               gotoPage(page);
               ref.current?.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start',
-                inline: 'center',
+                behavior: 'instant',
+                block: 'center',
+                inline: 'nearest',
               });
             }}
             css={{ marginTop: '2rem' }}
-            {...(isSm && { size: 'xs' })}
+            {...(isSm && { size: 'sm' })}
           />
-        </Flex>
-      )}
-    </>
+        </div>
+      ) : null}
+    </div>
   );
 };
 

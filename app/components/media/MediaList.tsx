@@ -316,6 +316,7 @@ const MediaList = (props: IMediaListProps) => {
   const [slideProgress, setSlideProgress] = useState<number>(0);
   const [displayType, setDisplayType] = useState<string>(listType as string);
   const { showFilter } = useSoraSettings();
+  const is2Xs = useMediaQuery('(max-width: 320px)', { initializeWithValue: false });
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
 
   if (!listType && typeof window !== 'undefined') {
@@ -530,7 +531,7 @@ const MediaList = (props: IMediaListProps) => {
           // shadow
           onChange={onPageChangeHandler}
           css={{ marginTop: '50px' }}
-          {...(isSm && { size: 'xs' })}
+          {...(isSm && !is2Xs ? { size: 'sm' } : isSm && is2Xs ? { size: 'xs' } : {})}
         />
       ) : null}
     </Flex>

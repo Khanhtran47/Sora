@@ -5,12 +5,13 @@ import type { User } from '@supabase/supabase-js';
 import { tv } from 'tailwind-variants';
 import { useLocation, useMatches, useNavigationType, useOutlet, useParams } from '@remix-run/react';
 import { useMediaQuery } from '@react-hookz/web';
-import { useElementScroll, AnimatePresence } from 'framer-motion';
+import { useScroll, AnimatePresence } from 'framer-motion';
 import { Toaster } from 'sonner';
 
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
 import { useHistoryStack } from '~/store/layout/useHistoryStack';
+import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
 
 import { throttle } from '~/utils/function';
 
@@ -86,7 +87,7 @@ const scrollAreaViewportStyles = tv({
     },
     layoutPadding: {
       true: 'p-0 sm:px-5 mb-[70px]',
-      false: 'p-0 sm:mt-0 mb-[70px]',
+      false: 'p-0 mb-[70px]',
     },
     isShowTabLink: {
       true: 'mt-[128px]',
@@ -103,6 +104,16 @@ const scrollAreaViewportStyles = tv({
       mini: false,
       boxed: false,
       class: 'sm:w-[calc(100vw_-_250px)]',
+    },
+    {
+      layoutPadding: false,
+      isShowTabLink: false,
+      class: 'mt-0',
+    },
+    {
+      layoutPadding: true,
+      isShowTabLink: false,
+      class: 'mt-[72px]',
     },
   ],
   defaultVariants: {
@@ -152,14 +163,29 @@ const Layout = (props: ILayout) => {
   const isMd = useMediaQuery('(max-width: 1280px)', { initializeWithValue: false });
   const { sidebarMiniMode, sidebarBoxedMode, sidebarHoverMode } = useSoraSettings();
   const viewportRef = useRef<HTMLDivElement>(null);
-  const { setScrollPosition, setScrollHeight, scrollDirection, setScrollDirection } =
-    useLayoutScrollPosition((state) => state);
-  const { scrollY } = useElementScroll(viewportRef);
+  const {
+    setScrollPosition,
+    setScrollHeight,
+    scrollDirection,
+    setScrollDirection,
+    setViewportRef,
+  } = useLayoutScrollPosition((state) => state);
+  const { scrollY } = useScroll({ container: viewportRef });
   const { historyBack, historyForward, setHistoryBack, setHistoryForward } = useHistoryStack(
     (state) => state,
   );
+  const {
+    backgroundColor,
+    setBackgroundColor,
+    setStartChangeScrollPosition,
+    startChangeScrollPosition,
+  } = useHeaderStyle((headerState) => headerState);
   const isShowTabLink = useMemo(
     () => matches.some((match) => match.handle?.showTabLink === true),
+    [location.pathname],
+  );
+  const disableLayoutPadding = useMemo(
+    () => matches.some((match) => match.handle?.disableLayoutPadding === true),
     [location.pathname],
   );
   const currentTabLinkPages = useMemo(
@@ -168,6 +194,14 @@ const Layout = (props: ILayout) => {
   );
   const currentTabLinkTo = useMemo(
     () => matches.find((match) => match.handle?.showTabLink)?.handle?.tabLinkTo(params),
+    [location.pathname],
+  );
+  const customHeaderBackgroundColor = useMemo(
+    () => matches.some((match) => match?.handle?.customHeaderBackgroundColor === true),
+    [location.pathname],
+  );
+  const customHeaderChangeColorOnScroll = useMemo(
+    () => matches.some((match) => match?.handle?.customHeaderChangeColorOnScroll === true),
     [location.pathname],
   );
   const hideTabLinkWithLocation: boolean = useMemo(() => {
@@ -180,6 +214,7 @@ const Layout = (props: ILayout) => {
   useEffect(() => {
     setHistoryBack([location.key]);
     setHistoryForward([location.key]);
+    setViewportRef(viewportRef);
   }, []);
 
   useEffect(() => {
@@ -187,11 +222,16 @@ const Layout = (props: ILayout) => {
       (match) => match.handle && match.handle.preventScrollToTop === true,
     );
     setScrollHeight(viewportRef.current?.scrollHeight || 0);
-    if (preventScrollToTopRoute) {
-      return;
+    if (!preventScrollToTopRoute) {
+      viewportRef.current?.scrollTo(0, 0);
     }
-    viewportRef.current?.scrollTo(0, 0);
-  }, [location.key]);
+    if (!customHeaderBackgroundColor && backgroundColor !== '') {
+      setBackgroundColor('');
+    }
+    if (!customHeaderChangeColorOnScroll && startChangeScrollPosition !== 0) {
+      setStartChangeScrollPosition(0);
+    }
+  }, [location]);
 
   useEffect(() => {
     if (navigationType === 'PUSH') {
@@ -247,8 +287,10 @@ const Layout = (props: ILayout) => {
       sidebarMiniMode.set(true);
       if (!sidebarHoverMode.value) sidebarHoverMode.set(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isMd, sidebarMiniMode.value, sidebarHoverMode.value]);
+    if (isSm && sidebarBoxedMode.value === true) {
+      sidebarBoxedMode.set(false);
+    }
+  }, [isMd, isSm, sidebarMiniMode.value, sidebarHoverMode.value, sidebarBoxedMode.value]);
 
   return (
     <div className={layoutStyles({ boxed: sidebarBoxedMode.value })}>
@@ -285,9 +327,7 @@ const Layout = (props: ILayout) => {
               className={scrollAreaViewportStyles({
                 mini: sidebarMiniMode.value,
                 boxed: sidebarBoxedMode.value,
-                layoutPadding: !matches.some(
-                  (match) => match.handle?.disableLayoutPadding === true,
-                ),
+                layoutPadding: !disableLayoutPadding,
                 isShowTabLink: isShowTabLink && !hideTabLinkWithLocation,
               })}
             >

@@ -1,22 +1,20 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Button,
   // Tooltip,
   Popover,
   styled,
 } from '@nextui-org/react';
-import { useNavigate, useMatches, useLocation } from '@remix-run/react';
+import { useNavigate } from '@remix-run/react';
 import type { User } from '@supabase/supabase-js';
 import type { AnimationItem } from 'lottie-web';
 // import { useTranslation } from 'react-i18next';
 import { tv } from 'tailwind-variants';
-// import { useMediaQuery } from '@react-hookz/web';
 import { Player } from '@lottiefiles/react-lottie-player';
+import { motion } from 'framer-motion';
 
 import { useSoraSettings } from '~/hooks/useLocalStorage';
-import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
+import { useHeaderOptions } from '~/hooks/useHeader';
 import { useHistoryStack } from '~/store/layout/useHistoryStack';
 
 /* Components */
@@ -39,7 +37,7 @@ export const handle = {
 };
 
 const headerStyles = tv({
-  base: 'h-[64px] w-[100vw] fixed z-[1000] py-3 px-5 flex-row justify-between items-center hidden sm:flex',
+  base: 'h-[64px] w-[100vw] fixed z-[1000] py-3 px-5 flex-row justify-between items-center hidden sm:flex rounded-tl-xl gap-x-4',
   variants: {
     miniSidebar: {
       true: 'sm:w-[calc(100vw_-_80px)] top-0',
@@ -78,25 +76,24 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [lottie, setLottie] = useState<AnimationItem>();
   const navigate = useNavigate();
-  const matches = useMatches();
-  const location = useLocation();
+  const { sidebarMiniMode, sidebarBoxedMode } = useSoraSettings();
   const {
-    sidebarMiniMode,
-    sidebarBoxedMode,
-    // sidebarSheetMode
-  } = useSoraSettings();
-  const isShowTabLink = useMemo(
-    () => matches.some((match) => match.handle?.showTabLink === true),
-    [matches],
-  );
-  const hideTabLinkWithLocation: boolean = useMemo(() => {
-    const currentMatch = matches.find((match) => match.handle?.showTabLink);
-    if (currentMatch?.handle?.hideTabLinkWithLocation)
-      return currentMatch?.handle?.hideTabLinkWithLocation(location.pathname);
-    return false;
-  }, [location.pathname]);
-  const { scrollPosition } = useLayoutScrollPosition((state) => state);
+    isShowTabLink,
+    hideTabLinkWithLocation,
+    customHeaderBackgroundColor,
+    currentMiniTitle,
+    headerBackgroundColor,
+    headerBackgroundOpacity,
+  } = useHeaderOptions();
   const { historyBack, historyForward } = useHistoryStack((state) => state);
+  useEffect(() => {
+    if (isDropdownOpen) {
+      lottie?.playSegments([0, 50], true);
+    } else {
+      lottie?.playSegments([50, 96], true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDropdownOpen]);
   const handleNavigationBackForward = (direction: 'back' | 'forward') => {
     if (direction === 'back') {
       navigate(-1);
@@ -104,14 +101,6 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       navigate(1);
     }
   };
-
-  useEffect(() => {
-    if (isDropdownOpen) {
-      lottie?.playSegments([0, 50], true);
-    } else {
-      lottie?.playSegments([50, 96], true);
-    }
-  }, [isDropdownOpen]);
 
   return (
     <div
@@ -121,12 +110,17 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       })}
     >
       <div
-        className="absolute top-0 left-0 w-full z-[-1] bg-background-contrast-alpha backdrop-blur-md rounded-tl-xl"
+        className="absolute top-0 left-0 w-full z-[-1] backdrop-blur-md rounded-tl-xl pointer-events-none"
         style={{
-          opacity: scrollPosition.y < 80 ? scrollPosition.y / 80 : 1,
+          opacity: headerBackgroundOpacity,
           height: isShowTabLink && !hideTabLinkWithLocation ? 112 : 64,
+          backgroundColor: headerBackgroundColor,
         }}
-      />
+      >
+        {customHeaderBackgroundColor ? (
+          <div className="w-full h-full pointer-events-none bg-background-light" />
+        ) : null}
+      </div>
       <div className="flex flex-row justify-center items-center gap-x-2">
         <Button
           auto
@@ -147,7 +141,28 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
           css={{ w: 36, h: 36 }}
         />
       </div>
-      <div />
+      <div className="flex flex-row justify-between items-center w-full">
+        {currentMiniTitle ? (
+          <motion.div
+            initial={{ opacity: 0, y: 60 }}
+            animate={{ opacity: headerBackgroundOpacity, y: (1 - headerBackgroundOpacity) * 60 }}
+            transition={{ duration: 0.3 }}
+            className="flex flex-row items-center justify-start gap-x-3"
+          >
+            {currentMiniTitle.showImage ? (
+              <img
+                src={currentMiniTitle.imageUrl}
+                alt={`${currentMiniTitle.title} mini`}
+                width={36}
+                height={54}
+                loading="lazy"
+                className="rounded-md"
+              />
+            ) : null}
+            <span className="text-2xl font-bold">{currentMiniTitle.title}</span>
+          </motion.div>
+        ) : null}
+      </div>
       <Popover
         shouldFlip
         triggerType="menu"
@@ -184,7 +199,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
             overflow: 'hidden',
             transition: 'height 0.5s',
             width: 240,
-            zIndex: 999,
+            zIndex: 2999,
             borderWidth: 0,
           }}
         >

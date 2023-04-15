@@ -102,7 +102,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
     const [movieDetail, imdbRating, fimg] = await Promise.all([
       loklokGetMovieInfo(idProvider),
-      detail?.imdb_id && process.env.IMDB_API_URL === undefined
+      detail?.imdb_id && process.env.IMDB_API_URL !== undefined
         ? getImdbRating(detail?.imdb_id)
         : undefined,
       fetch(extractColorImage),
@@ -155,7 +155,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     };
     const [movieStreamLink, imdbRating, fimg] = await Promise.all([
       getWatchEpisode(idProvider, getId(idProvider)),
-      detail?.imdb_id && process.env.IMDB_API_URL === undefined
+      detail?.imdb_id && process.env.IMDB_API_URL !== undefined
         ? getImdbRating(detail?.imdb_id)
         : undefined,
       fetch(extractColorImage),
@@ -201,7 +201,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     if (!idProvider) throw new Response('Id Not Found', { status: 404 });
     const [episodeDetail, imdbRating, fimg] = await Promise.all([
       getKissKhInfo(Number(idProvider)),
-      detail?.imdb_id && process.env.IMDB_API_URL === undefined
+      detail?.imdb_id && process.env.IMDB_API_URL !== undefined
         ? getImdbRating(detail?.imdb_id)
         : undefined,
       fetch(extractColorImage),
@@ -253,7 +253,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     );
   }
   const [imdbRating, fimg] = await Promise.all([
-    detail?.imdb_id && process.env.IMDB_API_URL === undefined
+    detail?.imdb_id && process.env.IMDB_API_URL !== undefined
       ? getImdbRating(detail?.imdb_id)
       : undefined,
     fetch(extractColorImage),

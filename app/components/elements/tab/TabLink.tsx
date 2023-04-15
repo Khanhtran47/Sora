@@ -32,6 +32,7 @@ const TabLink = (props: ITabProps) => {
         borderBottom: '1px solid $border',
         boxShadow: 'unset',
         borderRadius: 0,
+        zIndex: 2,
       }}
     >
       <ScrollAreaViewport>

@@ -40,6 +40,7 @@
     "@remix-run/server-runtime": "^1.10.1",
     "@remix-run/vercel": "^1.10.1",
     "@resvg/resvg-js": "^2.4.1",
+    "@savvywombat/tailwindcss-grid-areas": "^3.0.1",
     "@supabase/supabase-js": "^2.0.4",
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/line-clamp": "^0.4.2",

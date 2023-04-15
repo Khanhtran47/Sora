@@ -11,8 +11,6 @@ const BackgroundTabLink = styled('div', {
     'linear-gradient(var(--nextui-colors-backgroundLight) 0%, var(--nextui-colors-background) 100%), linear-gradient(var(--nextui-colors-backgroundLight) 0%, var(--nextui-colors-backgroundContrastAlpha) 100%)',
   backgroundRepeat: 'no-repeat',
   backgroundBlendMode: 'color',
-  borderTopRightRadius: '$lg',
-  borderTopLeftRadius: '$lg',
 });
 
 const BackgroundContent = styled('div', {
@@ -20,9 +18,9 @@ const BackgroundContent = styled('div', {
   top: 0,
   left: 0,
   width: '100%',
-  zIndex: -1,
+  zIndex: 0,
   display: 'block',
-  height: 'calc(100% + 8rem)',
+  height: '100%',
   background: 'linear-gradient(transparent 0%, var(--nextui-colors-backgroundLight) 100%)',
 });
 

@@ -1,8 +1,8 @@
-import { useMemo } from 'react';
-import { useMatches, useLocation, NavLink, useNavigate } from '@remix-run/react';
+import { useLocation, NavLink, useNavigate } from '@remix-run/react';
 import { Button } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 
+import { useHeaderOptions } from '~/hooks/useHeader';
 import { useHistoryStack } from '~/store/layout/useHistoryStack';
 import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
 
@@ -12,21 +12,18 @@ import Arrow from '~/assets/icons/ArrowIcon';
 import Search from '~/assets/icons/SearchIcon';
 
 const MobileHeader = () => {
-  const matches = useMatches();
   const location = useLocation();
   const navigate = useNavigate();
   const { historyBack } = useHistoryStack((state) => state);
-  const isShowMobileHeader = !matches.some((match) => match.handle?.hideMobileHeader === true);
-  const isShowTabLink = useMemo(
-    () => matches.some((match) => match.handle?.showTabLink === true),
-    [matches],
-  );
-  const hideTabLinkWithLocation: boolean = useMemo(() => {
-    const currentMatch = matches.find((match) => match.handle?.showTabLink);
-    if (currentMatch?.handle?.hideTabLinkWithLocation)
-      return currentMatch?.handle?.hideTabLinkWithLocation(location.pathname);
-    return false;
-  }, [matches, location.pathname]);
+  const {
+    isShowMobileHeader,
+    isShowTabLink,
+    hideTabLinkWithLocation,
+    customHeaderBackgroundColor,
+    currentMiniTitle,
+    headerBackgroundColor,
+    headerBackgroundOpacity,
+  } = useHeaderOptions();
   const handleBackButton = () => {
     if (historyBack.length > 1) {
       navigate(-1);
@@ -34,7 +31,7 @@ const MobileHeader = () => {
       navigate('/');
     }
   };
-  const scrollDirection = useLayoutScrollPosition((state) => state.scrollDirection);
+  const { scrollDirection } = useLayoutScrollPosition((state) => state);
 
   if (!isShowMobileHeader) {
     return null;
@@ -71,14 +68,39 @@ const MobileHeader = () => {
     );
   }
   return (
-    <div className="h-[64px] w-[100vw] fixed top-0 z-[1000] px-3 py-2 flex flex-row justify-between items-center sm:hidden shadow-lg">
+    <div className="h-[64px] w-[100vw] fixed top-0 z-[1000] px-3 py-2 flex flex-row justify-start items-center sm:hidden shadow-none gap-x-3">
       <div
-        className="absolute top-0 left-0 w-full z-[-1] bg-background-contrast"
+        className="absolute top-0 left-0 w-full z-[-1] backdrop-blur-md"
         style={{
+          opacity: headerBackgroundOpacity,
+          backgroundColor: headerBackgroundColor,
           height: isShowTabLink && !hideTabLinkWithLocation ? 112 : 64,
         }}
+      >
+        {customHeaderBackgroundColor ? (
+          <div className="w-full h-full pointer-events-none bg-background-light" />
+        ) : null}
+      </div>
+      <Button
+        auto
+        light
+        rounded
+        css={{ backgroundColor: '$backgroundAlpha', flexBasis: 40, flexShrink: 0 }}
+        icon={<Arrow direction="left" />}
+        onPress={() => handleBackButton()}
       />
-      <Button auto light icon={<Arrow direction="left" />} onPress={() => handleBackButton()} />
+      <div className="flex flex-row justify-between items-center">
+        {currentMiniTitle ? (
+          <motion.span
+            initial={{ opacity: 0, y: 60 }}
+            animate={{ opacity: headerBackgroundOpacity, y: (1 - headerBackgroundOpacity) * 60 }}
+            transition={{ duration: 0.3 }}
+            className="text-xl font-semibold line-clamp-1"
+          >
+            {currentMiniTitle.title}
+          </motion.span>
+        ) : null}
+      </div>
     </div>
   );
 };
