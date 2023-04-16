@@ -18,7 +18,7 @@ import { Badge } from '@nextui-org/react';
 import Vibrant from 'node-vibrant';
 import { useIntersectionObserver } from '@react-hookz/web';
 
-import { getMovieDetail, getTranslations, getImdbRating } from '~/services/tmdb/tmdb.server';
+import { getMovieDetail, getImdbRating } from '~/services/tmdb/tmdb.server';
 import i18next from '~/i18n/i18next.server';
 import { authenticate } from '~/services/supabase';
 
@@ -49,20 +49,26 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const { movieId } = params;
   const mid = Number(movieId);
   if (!mid) throw new Response('Not Found', { status: 404 });
-
   const detail = await getMovieDetail(mid, locale);
   if (!detail) throw new Response('Not Found', { status: 404 });
   const extractColorImage = `https://corsproxy.io/?${encodeURIComponent(
     TMDB.backdropUrl(detail?.backdrop_path || detail?.poster_path || '', 'w300'),
   )}`;
-  if ((detail && detail.original_language !== 'en') || locale !== 'en') {
-    const [translations, imdbRating, fimg] = await Promise.all([
-      getTranslations('movie', mid),
+  let titleEng =
+    detail?.original_language === 'en'
+      ? detail?.original_title
+      : locale === 'en'
+      ? detail?.title
+      : '';
+  if (detail?.original_language !== 'en' && locale !== 'en') {
+    const [detailEng, imdbRating, fimg] = await Promise.all([
+      getMovieDetail(mid, 'en-US'),
       detail?.imdb_id && process.env.IMDB_API_URL !== undefined
         ? getImdbRating(detail?.imdb_id)
         : undefined,
       fetch(extractColorImage),
     ]);
+    titleEng = detailEng?.title || '';
     const fimgb = Buffer.from(await fimg.arrayBuffer());
     const palette =
       detail?.backdrop_path || detail?.poster_path
@@ -79,9 +85,9 @@ export const loader = async ({ request, params }: LoaderArgs) => {
                   : b.population - a.population,
               )[0]?.hex
             : undefined,
+          titleEng,
         },
         imdbRating,
-        translations,
         palette,
       },
       {
@@ -113,6 +119,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
                 : b.population - a.population,
             )[0]?.hex
           : undefined,
+        titleEng,
       },
       imdbRating,
       translations: undefined,
@@ -191,7 +198,7 @@ export const handle = {
 };
 
 const MovieDetail = () => {
-  const { detail, imdbRating, translations } = useLoaderData<typeof loader>();
+  const { detail, imdbRating } = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
   const { state } = useLocation();
   const [visible, setVisible] = useState(false);
@@ -275,7 +282,6 @@ const MovieDetail = () => {
           type="movie"
           item={detail}
           handler={Handler}
-          translations={translations}
           imdbRating={imdbRating}
           color={detail.color}
         />

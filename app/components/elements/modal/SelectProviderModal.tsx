@@ -6,8 +6,6 @@ import { Modal, Button } from '@nextui-org/react';
 import { useWindowSize } from '@react-hookz/web';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 
-import { IMovieTranslations } from '~/services/tmdb/tmdb.types';
-
 import { H3 } from '~/components/styles/Text.styles';
 
 type SelectProviderModalProps = {
@@ -18,7 +16,6 @@ type SelectProviderModalProps = {
   title: string;
   origTitle: string;
   year: number;
-  translations?: IMovieTranslations;
   season?: number;
   episode?: number;
   animeType?: string;
@@ -34,7 +31,6 @@ const SelectProviderModal = (props: SelectProviderModalProps) => {
     title,
     origTitle,
     year,
-    translations,
     season,
     episode,
     animeType,
@@ -51,7 +47,6 @@ const SelectProviderModal = (props: SelectProviderModalProps) => {
     }[]
   >();
   const { width } = useWindowSize();
-  const findTranslation = translations?.translations.find((item) => item.iso_639_1 === 'en');
   const handleProvider = (item: {
     id?: string | number | null;
     provider: string;
@@ -73,15 +68,11 @@ const SelectProviderModal = (props: SelectProviderModalProps) => {
       setProvider([]);
       if (type === 'movie')
         fetcher.load(
-          `/api/provider?title=${
-            findTranslation ? findTranslation.data?.title : title
-          }&type=${type}&origTitle=${origTitle}&year=${year}&isEnded=${isEnded}&tmdbId=${id}`,
+          `/api/provider?title=${title}&type=${type}&origTitle=${origTitle}&year=${year}&isEnded=${isEnded}&tmdbId=${id}`,
         );
       else if (type === 'tv')
         fetcher.load(
-          `/api/provider?title=${
-            findTranslation ? findTranslation.data?.name : title
-          }&type=${type}&origTitle=${origTitle}&year=${year}&season=${season}&isEnded=${isEnded}&tmdbId=${id}`,
+          `/api/provider?title=${title}&type=${type}&origTitle=${origTitle}&year=${year}&season=${season}&isEnded=${isEnded}&tmdbId=${id}`,
         );
       else if (type === 'anime')
         fetcher.load(

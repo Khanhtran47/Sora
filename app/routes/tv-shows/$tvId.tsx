@@ -18,12 +18,7 @@ import { Badge } from '@nextui-org/react';
 import Vibrant from 'node-vibrant';
 import { useIntersectionObserver } from '@react-hookz/web';
 
-import {
-  getTvShowDetail,
-  getTranslations,
-  getTvShowIMDBId,
-  getImdbRating,
-} from '~/services/tmdb/tmdb.server';
+import { getTvShowDetail, getTvShowIMDBId, getImdbRating } from '~/services/tmdb/tmdb.server';
 import { authenticate } from '~/services/supabase';
 import i18next from '~/i18n/i18next.server';
 
@@ -60,12 +55,19 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const extractColorImage = `https://corsproxy.io/?${encodeURIComponent(
     TMDB.backdropUrl(detail?.backdrop_path || detail?.poster_path || '', 'w300'),
   )}`;
-  if ((detail && detail?.original_language !== 'en') || locale !== 'en') {
-    const [translations, imdbRating, fimg] = await Promise.all([
-      getTranslations('tv', tid),
+  let nameEng =
+    detail?.original_language === 'en'
+      ? detail?.original_name
+      : locale === 'en'
+      ? detail?.name
+      : '';
+  if (detail?.original_language !== 'en' && locale !== 'en') {
+    const [detailEng, imdbRating, fimg] = await Promise.all([
+      getTvShowDetail(tid, 'en-US'),
       imdbId && process.env.IMDB_API_URL !== undefined ? getImdbRating(imdbId) : undefined,
       fetch(extractColorImage),
     ]);
+    nameEng = detailEng?.name || '';
     const fimgb = Buffer.from(await fimg.arrayBuffer());
     const palette =
       detail?.backdrop_path || detail?.poster_path
@@ -82,8 +84,8 @@ export const loader = async ({ request, params }: LoaderArgs) => {
                   : b.population - a.population,
               )[0]?.hex
             : undefined,
+          nameEng,
         },
-        translations,
         imdbRating,
       },
       {
@@ -112,6 +114,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
                 : b.population - a.population,
             )[0]?.hex
           : undefined,
+        nameEng,
       },
       imdbRating,
       translations: undefined,
@@ -189,7 +192,7 @@ export const handle = {
 };
 
 const TvShowDetail = () => {
-  const { detail, translations, imdbRating } = useLoaderData<typeof loader>();
+  const { detail, imdbRating } = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
   const { state } = useLocation();
   const [visible, setVisible] = useState(false);
@@ -243,7 +246,6 @@ const TvShowDetail = () => {
           type="tv"
           item={detail}
           handler={Handler}
-          translations={translations}
           imdbRating={imdbRating}
           color={detail.color}
         />

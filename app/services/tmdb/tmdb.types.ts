@@ -64,6 +64,7 @@ export interface IMovieDetail {
   status?: 'Rumored' | 'Planned' | 'In Production' | 'Post Production' | 'Released' | 'Canceled';
   tagline?: string | null;
   title?: string;
+  titleEng?: string;
   video?: boolean;
   vote_average?: number;
   vote_count?: number;
@@ -133,6 +134,7 @@ export interface ITvShowDetail {
     vote_count?: number;
   };
   name?: string;
+  nameEng?: string;
   next_episode_to_air?: null;
   networks?: {
     name?: string;

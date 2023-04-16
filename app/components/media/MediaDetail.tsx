@@ -76,7 +76,7 @@ const backgroundImageStyles = tv({
 
 export const MediaDetail = (props: IMediaDetail) => {
   // const { t } = useTranslation();
-  const { type, item, handler, translations, imdbRating, color } = props;
+  const { type, item, handler, imdbRating, color } = props;
   const [size, ref] = useMeasure<HTMLDivElement>();
   const [imageSize, imageRef] = useMeasure<HTMLDivElement>();
   const navigate = useNavigate();
@@ -92,6 +92,7 @@ export const MediaDetail = (props: IMediaDetail) => {
   };
   const { id, tagline, genres, status } = item || {};
   const title = (item as IMovieDetail)?.title || (item as ITvShowDetail)?.name || '';
+  const titleEng = (item as IMovieDetail)?.titleEng || (item as ITvShowDetail)?.nameEng || '';
   const orgTitle =
     (item as IMovieDetail)?.original_title || (item as ITvShowDetail)?.original_name || '';
   const runtime =
@@ -399,10 +400,9 @@ export const MediaDetail = (props: IMediaDetail) => {
         visible={visible}
         closeHandler={closeHandler}
         type={type}
-        title={title}
+        title={titleEng}
         origTitle={orgTitle}
         year={releaseYear}
-        translations={translations}
         id={item?.id}
         {...(type === 'tv' && { season: 1, episode: 1, isEnded: status === 'Ended' })}
         {...(type === 'movie' && { isEnded: status === 'Released' })}
