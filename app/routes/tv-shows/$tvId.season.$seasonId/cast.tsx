@@ -1,19 +1,16 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { useRef } from 'react';
-import { json } from '@remix-run/node';
-import type { MetaFunction, LoaderArgs } from '@remix-run/node';
+import { Pagination, Row, Spacer } from '@nextui-org/react';
+import { useMediaQuery } from '@react-hookz/web';
+import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import { Row, Pagination, Spacer } from '@nextui-org/react';
-
 import i18next from '~/i18n/i18next.server';
+
 import { authenticate } from '~/services/supabase';
 import { getTvSeasonCredits } from '~/services/tmdb/tmdb.server';
 import { postFetchDataHandler } from '~/services/tmdb/utils.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
-
 import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
-import { useMediaQuery } from '@react-hookz/web';
-
 import MediaList from '~/components/media/MediaList';
 import Flex from '~/components/styles/Flex.styles';
 

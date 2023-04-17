@@ -1,25 +1,24 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/indent */
 // import { Link } from '@remix-run/react';
-import { Image as NextImage, Link as NextLink, useTheme, Spacer, Avatar } from '@nextui-org/react';
+
 import { Player } from '@lottiefiles/react-lottie-player';
-import Image, { MimeType } from 'remix-image';
+import { Avatar, Image as NextImage, Link as NextLink, Spacer, useTheme } from '@nextui-org/react';
 import { useMeasure } from '@react-hookz/web';
+import Image, { MimeType } from 'remix-image';
 
 import type { IPeopleDetail } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
-
 import { H3, H4, H5, H6 } from '~/components/styles/Text.styles';
-
 import PhotoIcon from '~/assets/icons/PhotoIcon';
-import FacebookBlack from '~/assets/lotties/lottieflow-social-networks-15-4-000000-easey.json';
-import FacebookWhite from '~/assets/lotties/lottieflow-social-networks-15-4-FFFFFF-easey.json';
-import TwitterBlack from '~/assets/lotties/lottieflow-social-networks-15-10-000000-easey.json';
-import TwitterWhite from '~/assets/lotties/lottieflow-social-networks-15-10-FFFFFF-easey.json';
-import InstagramBlack from '~/assets/lotties/lottieflow-social-networks-15-5-000000-easey.json';
-import InstagramWhite from '~/assets/lotties/lottieflow-social-networks-15-5-FFFFFF-easey.json';
 import ExternalLinkBlack from '~/assets/lotties/external-link-black.json';
 import ExternalLinkWhite from '~/assets/lotties/external-link-white.json';
+import FacebookBlack from '~/assets/lotties/lottieflow-social-networks-15-4-000000-easey.json';
+import FacebookWhite from '~/assets/lotties/lottieflow-social-networks-15-4-FFFFFF-easey.json';
+import InstagramBlack from '~/assets/lotties/lottieflow-social-networks-15-5-000000-easey.json';
+import InstagramWhite from '~/assets/lotties/lottieflow-social-networks-15-5-FFFFFF-easey.json';
+import TwitterBlack from '~/assets/lotties/lottieflow-social-networks-15-10-000000-easey.json';
+import TwitterWhite from '~/assets/lotties/lottieflow-social-networks-15-10-FFFFFF-easey.json';
 
 interface IPeopleDetailProps {
   detail: IPeopleDetail | undefined;

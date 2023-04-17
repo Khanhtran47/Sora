@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/indent */
 import { useEffect, useState } from 'react';
-import { useFetcher, useNavigate } from '@remix-run/react';
-import { Modal, Button } from '@nextui-org/react';
-
+import { Button, Modal } from '@nextui-org/react';
 import { useWindowSize } from '@react-hookz/web';
-import { useSoraSettings } from '~/hooks/useLocalStorage';
+import { useFetcher, useNavigate } from '@remix-run/react';
 
+import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { H3 } from '~/components/styles/Text.styles';
 
 type SelectProviderModalProps = {

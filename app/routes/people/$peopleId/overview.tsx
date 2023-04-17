@@ -1,16 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useState, useEffect } from 'react';
-import type { MetaFunction } from '@remix-run/node';
+import { useEffect, useState } from 'react';
 import { Spacer } from '@nextui-org/react';
+import type { MetaFunction } from '@remix-run/node';
 import { useFetcher } from '@remix-run/react';
 
-import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
-
-import type { IPeople } from '~/services/tmdb/tmdb.types';
 import type { IMedia } from '~/types/media';
+import type { IPeople } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
-import { P, H4 } from '~/components/styles/Text.styles';
+import { H4, P } from '~/components/styles/Text.styles';
 
 export const meta: MetaFunction = ({ params }) => ({
   'og:url': `https://sora-anime.vercel.app/people/${params.peopleId}/overview`,

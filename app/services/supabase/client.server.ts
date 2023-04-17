@@ -1,5 +1,6 @@
-import { createClient } from '@supabase/supabase-js';
 import { env } from 'process';
+import { createClient } from '@supabase/supabase-js';
+
 import type { Database } from './table.server';
 
 let supabaseUrl;

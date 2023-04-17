@@ -2,46 +2,41 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useState, useEffect, useRef, useMemo } from 'react';
-import { createPortal } from 'react-dom';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Button, Container, Tooltip, keyframes } from '@nextui-org/react';
+import { useMeasure } from '@react-hookz/web';
 import {
-  useLocation,
-  useNavigate,
   useFetcher,
+  useLocation,
   useMatches,
+  useNavigate,
   useParams,
   useRouteLoaderData,
 } from '@remix-run/react';
-import { Container, Button, Tooltip, keyframes } from '@nextui-org/react';
 import type Artplayer from 'artplayer';
 import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
 import Hls from 'hls.js';
 import { isDesktop, isMobile, isMobileOnly } from 'react-device-detect';
+import { createPortal } from 'react-dom';
 import tinycolor from 'tinycolor2';
 
-import usePlayerState from '~/store/player/usePlayerState';
-import type { PlayerData } from '~/store/player/usePlayerState';
-
-import { useSoraSettings } from '~/hooks/useLocalStorage';
-import { useMeasure } from '@react-hookz/web';
-
 import updateHistory from '~/utils/client/update-history';
-
-import ArtPlayer from '~/components/elements/player/ArtPlayer';
-import PlayerSettings from '~/components/elements/player/PlayerSettings';
-import PlayerError from '~/components/elements/player/PlayerError';
-import { H5, H6 } from '~/components/styles/Text.styles';
-import Flex from '~/components/styles/Flex.styles';
-import Box from '~/components/styles/Box.styles';
-import WatchTrailerModal, { type Trailer } from '~/components/elements/modal/WatchTrailerModal';
+import usePlayerState, { type PlayerData } from '~/store/player/usePlayerState';
+import { useSoraSettings } from '~/hooks/useLocalStorage';
 import SearchSubtitles from '~/components/elements/modal/SearchSubtitle';
+import WatchTrailerModal, { type Trailer } from '~/components/elements/modal/WatchTrailerModal';
+import ArtPlayer from '~/components/elements/player/ArtPlayer';
+import PlayerError from '~/components/elements/player/PlayerError';
 import PlayerHotKey from '~/components/elements/player/PlayerHotkey';
-
+import PlayerSettings from '~/components/elements/player/PlayerSettings';
+import Box from '~/components/styles/Box.styles';
+import Flex from '~/components/styles/Flex.styles';
+import { H5, H6 } from '~/components/styles/Text.styles';
 import Close from '~/assets/icons/CloseIcon';
 import Expand from '~/assets/icons/ExpandIcon';
-import Play from '~/assets/icons/PlayIcon';
-import Pause from '~/assets/icons/PauseIcon';
 import Next from '~/assets/icons/NextIcon';
+import Pause from '~/assets/icons/PauseIcon';
+import Play from '~/assets/icons/PlayIcon';
 import Previous from '~/assets/icons/PreviousIcon';
 
 const jumpAnimation = keyframes({

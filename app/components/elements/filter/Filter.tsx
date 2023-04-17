@@ -1,27 +1,25 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react';
-import { Row, Grid, Button, Dropdown, Tooltip, Input, useInput } from '@nextui-org/react';
-import { useLocation, useNavigate, Form } from '@remix-run/react';
+import { Button, Dropdown, Grid, Input, Row, Tooltip, useInput } from '@nextui-org/react';
+import { Form, useLocation, useNavigate } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 import { ClientOnly } from 'remix-utils';
 
 import type { ILanguage } from '~/services/tmdb/tmdb.types';
-
 import {
+  animeFormat,
+  animeGenres,
+  animeSeason,
+  animeSort,
+  animeStatus,
   sortMovieItems,
   sortTvItems,
   tvStatus,
   tvType,
-  animeGenres,
-  animeFormat,
-  animeStatus,
-  animeSort,
-  animeSeason,
 } from '~/constants/filterItems';
-
-import { H6 } from '~/components/styles/Text.styles';
 import Slider from '~/components/elements/slider/Slider';
+import { H6 } from '~/components/styles/Text.styles';
 
 interface IFilterProps {
   genres?: { [id: string]: string }; // genres for movies and tv series

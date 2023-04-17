@@ -1,7 +1,6 @@
-import { json } from '@remix-run/node';
-import type { LoaderArgs } from '@remix-run/node';
+import { json, type LoaderArgs } from '@remix-run/node';
 
-import { lruCache, cachified } from '~/services/lru-cache';
+import { cachified, lruCache } from '~/services/lru-cache';
 import { authenticate } from '~/services/supabase';
 
 interface Result {

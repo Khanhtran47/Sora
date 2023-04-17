@@ -1,13 +1,11 @@
-import { useLocation, NavLink, useNavigate } from '@remix-run/react';
 import { Button } from '@nextui-org/react';
+import { NavLink, useLocation, useNavigate } from '@remix-run/react';
 import { motion } from 'framer-motion';
 
-import { useHeaderOptions } from '~/hooks/useHeader';
 import { useHistoryStack } from '~/store/layout/useHistoryStack';
 import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
-
+import { useHeaderOptions } from '~/hooks/useHeader';
 import { H2 } from '~/components/styles/Text.styles';
-
 import Arrow from '~/assets/icons/ArrowIcon';
 import Search from '~/assets/icons/SearchIcon';
 

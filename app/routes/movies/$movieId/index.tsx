@@ -1,17 +1,14 @@
-import { json } from '@remix-run/node';
-import type { LoaderArgs } from '@remix-run/node';
-import { useLoaderData, useNavigate, Link, useParams } from '@remix-run/react';
+import { json, type LoaderArgs } from '@remix-run/node';
+import { Link, useLoaderData, useNavigate, useParams } from '@remix-run/react';
+
+import { authenticate } from '~/services/supabase';
+import { getCredits, getRecommendation, getSimilar, getVideos } from '~/services/tmdb/tmdb.server';
+import { postFetchDataHandler } from '~/services/tmdb/utils.server';
+import { CACHE_CONTROL } from '~/utils/server/http';
 // import { Image as NextImage } from '@nextui-org/react';
 // import Image, { MimeType } from 'remix-image';
 
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
-
-import { authenticate } from '~/services/supabase';
-import { getSimilar, getVideos, getCredits, getRecommendation } from '~/services/tmdb/tmdb.server';
-import { postFetchDataHandler } from '~/services/tmdb/utils.server';
-
-import { CACHE_CONTROL } from '~/utils/server/http';
-
 import MediaList from '~/components/media/MediaList';
 import { H6, P } from '~/components/styles/Text.styles';
 

@@ -1,16 +1,16 @@
-import { type ActionArgs, type LoaderArgs, json, redirect } from '@remix-run/node';
-import { useActionData, NavLink } from '@remix-run/react';
-import { Container, Badge } from '@nextui-org/react';
+import { Badge, Container } from '@nextui-org/react';
+import { json, redirect, type ActionArgs, type LoaderArgs } from '@remix-run/node';
+import { NavLink, useActionData } from '@remix-run/react';
 
-import {
-  getSessionFromCookie,
-  commitAuthCookie,
-  signUp,
-  requestPayload,
-} from '~/services/supabase';
-import AuthForm from '~/components/AuthForm';
 import sgConfigs from '~/services/configs.server';
+import {
+  commitAuthCookie,
+  getSessionFromCookie,
+  requestPayload,
+  signUp,
+} from '~/services/supabase';
 import encode from '~/utils/encode';
+import AuthForm from '~/components/AuthForm';
 
 type ActionData = {
   errorCode?: string | null;

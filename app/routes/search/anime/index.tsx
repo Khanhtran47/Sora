@@ -1,15 +1,12 @@
-import { json } from '@remix-run/node';
-import type { LoaderArgs } from '@remix-run/node';
-import { useLoaderData, useNavigate, NavLink } from '@remix-run/react';
 import { Badge } from '@nextui-org/react';
+import { json, type LoaderArgs } from '@remix-run/node';
+import { NavLink, useLoaderData, useNavigate } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 
+import type { IMedia } from '~/types/media';
 import { getAnimeTrending } from '~/services/consumet/anilist/anilist.server';
 import { authenticate } from '~/services/supabase';
 import { CACHE_CONTROL } from '~/utils/server/http';
-
-import type { IMedia } from '~/types/media';
-
 import MediaList from '~/components/media/MediaList';
 import SearchForm from '~/components/elements/SearchForm';
 

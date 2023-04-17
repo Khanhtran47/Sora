@@ -1,7 +1,6 @@
-import { json } from '@remix-run/node';
-import type { MetaFunction } from '@remix-run/node';
-import { NavLink } from '@remix-run/react';
 import { Badge } from '@nextui-org/react';
+import { json, type MetaFunction } from '@remix-run/node';
+import { NavLink } from '@remix-run/react';
 
 export const meta: MetaFunction = () => ({
   title: 'Player',

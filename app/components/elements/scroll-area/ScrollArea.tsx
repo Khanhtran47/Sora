@@ -1,9 +1,9 @@
 import {
+  StyledCorner,
   StyledScrollArea,
-  StyledViewport,
   StyledScrollbar,
   StyledThumb,
-  StyledCorner,
+  StyledViewport,
 } from './ScrollArea.styles';
 
 export const ScrollArea = StyledScrollArea;

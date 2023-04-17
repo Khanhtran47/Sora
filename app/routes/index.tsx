@@ -1,26 +1,23 @@
 /* eslint-disable @typescript-eslint/indent */
-import { json } from '@remix-run/node';
-import type { LoaderArgs } from '@remix-run/node';
+import { json, type LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
-
 import i18next from '~/i18n/i18next.server';
-import {
-  getTrending,
-  getListMovies,
-  getListPeople,
-  getListDiscover,
-} from '~/services/tmdb/tmdb.server';
-import { authenticate } from '~/services/supabase';
-import { getAnimePopular } from '~/services/consumet/anilist/anilist.server';
-import { CACHE_CONTROL } from '~/utils/server/http';
 
 import type { IMedia } from '~/types/media';
-
-import MediaList from '~/components/media/MediaList';
+import { getAnimePopular } from '~/services/consumet/anilist/anilist.server';
+import { authenticate } from '~/services/supabase';
+import {
+  getListDiscover,
+  getListMovies,
+  getListPeople,
+  getTrending,
+} from '~/services/tmdb/tmdb.server';
+import { CACHE_CONTROL } from '~/utils/server/http';
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import featuredList from '~/constants/featuredList';
+import MediaList from '~/components/media/MediaList';
 
 export const handle = {
   i18n: 'home',

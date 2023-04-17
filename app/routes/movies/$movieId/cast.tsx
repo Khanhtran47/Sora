@@ -1,17 +1,14 @@
 import { useRef } from 'react';
-import { json } from '@remix-run/node';
-import type { MetaFunction, LoaderArgs } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
 import { Pagination } from '@nextui-org/react';
+import { useMediaQuery } from '@react-hookz/web';
+import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
 
 import { authenticate } from '~/services/supabase';
 import { getCredits } from '~/services/tmdb/tmdb.server';
 import { postFetchDataHandler } from '~/services/tmdb/utils.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
-
 import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
-import { useMediaQuery } from '@react-hookz/web';
-
 import MediaList from '~/components/media/MediaList';
 
 export const loader = async ({ request, params }: LoaderArgs) => {

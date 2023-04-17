@@ -1,31 +1,26 @@
 /* eslint-disable no-unsafe-optional-chaining */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { useState, useEffect } from 'react';
-import { useNavigate, useLocation, useFetcher } from '@remix-run/react';
-import { Card, Button, Spacer, Avatar, Tooltip, Badge } from '@nextui-org/react';
+import { useEffect, useState } from 'react';
+import { Avatar, Badge, Button, Card, Spacer, Tooltip } from '@nextui-org/react';
+import { useMeasure, useMediaQuery } from '@react-hookz/web';
+import { useFetcher, useLocation, useNavigate } from '@remix-run/react';
 import Image, { MimeType } from 'remix-image';
 // import { useTranslation } from 'react-i18next';
 import { tv } from 'tailwind-variants';
 import tinycolor from 'tinycolor2';
-
-import type { IAnimeInfo } from '~/services/consumet/anilist/anilist.types';
-
-import type { IMovieDetail, ITvShowDetail, IMovieTranslations } from '~/services/tmdb/tmdb.types';
 import type { ColorPalette } from '~/routes/api/color-palette';
 
-import TMDB from '~/utils/media';
+import type { IAnimeInfo } from '~/services/consumet/anilist/anilist.types';
+import type { IMovieDetail, IMovieTranslations, ITvShowDetail } from '~/services/tmdb/tmdb.types';
 import { WebShareLink } from '~/utils/client/pwa-utils.client';
-
-import { useMediaQuery, useMeasure } from '@react-hookz/web';
+import TMDB from '~/utils/media';
+import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
-import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
-
-import { H2, H5, H6 } from '~/components/styles/Text.styles';
 import SelectProviderModal from '~/components/elements/modal/SelectProviderModal';
 import Rating from '~/components/elements/shared/Rating';
-
+import { H2, H5, H6 } from '~/components/styles/Text.styles';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 import ShareIcon from '~/assets/icons/ShareIcon';
 

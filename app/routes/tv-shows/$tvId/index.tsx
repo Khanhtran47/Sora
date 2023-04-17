@@ -1,22 +1,17 @@
-import { json } from '@remix-run/node';
-import type { LoaderArgs } from '@remix-run/node';
-import { useLoaderData, useNavigate, Link, useParams } from '@remix-run/react';
-import { Spacer, Card, Avatar } from '@nextui-org/react';
+import { Avatar, Card, Spacer } from '@nextui-org/react';
+import { useMediaQuery } from '@react-hookz/web';
+import { json, type LoaderArgs } from '@remix-run/node';
+import { Link, useLoaderData, useNavigate, useParams } from '@remix-run/react';
 import Image, { MimeType } from 'remix-image';
 
 import { authenticate } from '~/services/supabase';
-import { getSimilar, getCredits, getRecommendation } from '~/services/tmdb/tmdb.server';
+import { getCredits, getRecommendation, getSimilar } from '~/services/tmdb/tmdb.server';
 import { postFetchDataHandler } from '~/services/tmdb/utils.server';
-
-import { CACHE_CONTROL } from '~/utils/server/http';
 import TMDB from '~/utils/media';
-
-import { useMediaQuery } from '@react-hookz/web';
+import { CACHE_CONTROL } from '~/utils/server/http';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
-
-import { H2, H4, H5, H6, P } from '~/components/styles/Text.styles';
 import MediaList from '~/components/media/MediaList';
-
+import { H2, H4, H5, H6, P } from '~/components/styles/Text.styles';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 
 export const loader = async ({ request, params }: LoaderArgs) => {

@@ -1,24 +1,23 @@
-import { useState, Suspense } from 'react';
-import { Button, Row, Spacer, Loading, Pagination, Tooltip } from '@nextui-org/react';
+import { Suspense, useState } from 'react';
+import { Button, Loading, Pagination, Row, Spacer, Tooltip } from '@nextui-org/react';
+import { useMediaQuery } from '@react-hookz/web';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { ClientOnly } from 'remix-utils';
-import { AnimatePresence, motion } from 'framer-motion';
 
 import type { IMedia } from '~/types/media';
 import type { ILanguage } from '~/services/tmdb/tmdb.types';
-import { useMediaQuery } from '@react-hookz/web';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
-
-import FilterIcon from '~/assets/icons/FilterIcon';
-import ChevronRightIcon from '~/assets/icons/ChevronRightIcon';
 import ChevronLeftIcon from '~/assets/icons/ChevronLeftIcon';
+import ChevronRightIcon from '~/assets/icons/ChevronRightIcon';
+import FilterIcon from '~/assets/icons/FilterIcon';
 import ViewGridIcon from '~/assets/icons/ViewGridIcon';
 import ViewTableIcon from '~/assets/icons/ViewTableIcon';
 
-import { MediaListTable, MediaListCard, MediaListBanner, MediaListGrid } from './list';
 import Filter from '../elements/filter/Filter';
-import { H2 } from '../styles/Text.styles';
 import Flex from '../styles/Flex.styles';
+import { H2 } from '../styles/Text.styles';
+import { MediaListBanner, MediaListCard, MediaListGrid, MediaListTable } from './list';
 
 /**
  * @typedef {Object} IMediaListProps

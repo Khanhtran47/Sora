@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type * as SliderPrimitive from '@radix-ui/react-slider';
+
 import { forwardRef, useState } from 'react';
-import { Badge, type CSS, styled } from '@nextui-org/react';
+import { Badge, styled, type CSS } from '@nextui-org/react';
+import type * as SliderPrimitive from '@radix-ui/react-slider';
 import { useHover } from '@react-aria/interactions';
 
-import { StyledSlider, StyledTrack, StyledRange, StyledThumb } from './Slider.styles';
+import { StyledRange, StyledSlider, StyledThumb, StyledTrack } from './Slider.styles';
 
 type SliderPrimitiveProps = React.ComponentProps<typeof SliderPrimitive.Root>;
 type SliderProps = SliderPrimitiveProps & { css?: CSS };

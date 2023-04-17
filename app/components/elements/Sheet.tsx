@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/indent */
 import React from 'react';
-import { styled, keyframes, type VariantProps, type CSS, css, Button } from '@nextui-org/react';
+import { Button, css, keyframes, styled, type CSS, type VariantProps } from '@nextui-org/react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { motion, type PanInfo } from 'framer-motion';
 

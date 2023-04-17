@@ -1,18 +1,16 @@
 /* eslint-disable @typescript-eslint/indent */
-import { json } from '@remix-run/node';
-import type { LoaderArgs, MetaFunction } from '@remix-run/node';
-import { useLoaderData, useNavigate, useLocation, NavLink } from '@remix-run/react';
-import { motion } from 'framer-motion';
-import { Badge } from '@nextui-org/react';
-import { useTranslation } from 'react-i18next';
 
-import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
+import { Badge } from '@nextui-org/react';
+import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
+import { NavLink, useLoaderData, useLocation, useNavigate } from '@remix-run/react';
+import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
+import i18next from '~/i18n/i18next.server';
 
 import { authenticate } from '~/services/supabase';
 import { getTrending } from '~/services/tmdb/tmdb.server';
-import i18next from '~/i18n/i18next.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
-
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
 
 export const meta: MetaFunction = () => ({

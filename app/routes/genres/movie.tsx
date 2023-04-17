@@ -1,9 +1,8 @@
 import { Button, Spacer } from '@nextui-org/react';
-import { useTranslation } from 'react-i18next';
 import { useNavigate } from '@remix-run/react';
+import { useTranslation } from 'react-i18next';
 
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
-
 import { H4 } from '~/components/styles/Text.styles';
 
 const MovieGenresPage = () => {

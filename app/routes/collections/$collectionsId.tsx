@@ -1,21 +1,19 @@
 /* eslint-disable @typescript-eslint/indent */
 import { useRef } from 'react';
-import { json, type MetaFunction, type LoaderArgs } from '@remix-run/node';
-import { useLoaderData, useLocation, NavLink, type RouteMatch } from '@remix-run/react';
+import { Badge, Pagination, Spacer } from '@nextui-org/react';
+import { useMediaQuery } from '@react-hookz/web';
+import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
+import { NavLink, useLoaderData, useLocation, type RouteMatch } from '@remix-run/react';
 import { motion } from 'framer-motion';
-import { Spacer, Badge, Pagination } from '@nextui-org/react';
-
-import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
-import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
+import i18next from '~/i18n/i18next.server';
 
 import { authenticate } from '~/services/supabase';
 import { getListDetail } from '~/services/tmdb/tmdb.server';
-import i18next from '~/i18n/i18next.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
-
+import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
 import Flex from '~/components/styles/Flex.styles';
-import { useMediaQuery } from '@react-hookz/web';
 
 export const meta: MetaFunction = ({ data, params }) => {
   if (!data) {

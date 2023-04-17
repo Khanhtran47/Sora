@@ -1,22 +1,20 @@
 /* eslint-disable @typescript-eslint/indent */
 import { useState } from 'react';
 import { NavLink, useLocation, useSearchParams } from '@remix-run/react';
-import { tv } from 'tailwind-variants';
-import { motion } from 'framer-motion';
 import type { User } from '@supabase/supabase-js';
+import { motion } from 'framer-motion';
+import { tv } from 'tailwind-variants';
 
 import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
-
-import { Sheet, SheetTrigger, SheetContent } from '~/components/elements/Sheet';
-
-import Home from '~/assets/icons/HomeIcon';
-import Discover from '~/assets/icons/DiscoverIcon';
-import Menu from '~/assets/icons/MenuIcon';
-import Settings from '~/assets/icons/SettingsIcon';
-import History from '~/assets/icons/HistoryIcon';
+import { Sheet, SheetContent, SheetTrigger } from '~/components/elements/Sheet';
 import Category from '~/assets/icons/CategoryIcon';
+import Discover from '~/assets/icons/DiscoverIcon';
+import History from '~/assets/icons/HistoryIcon';
+import Home from '~/assets/icons/HomeIcon';
 import LogIn from '~/assets/icons/LogInIcon';
 import LogOut from '~/assets/icons/LogOutIcon';
+import Menu from '~/assets/icons/MenuIcon';
+import Settings from '~/assets/icons/SettingsIcon';
 
 interface IBottomNavProps {
   user?: User | undefined;

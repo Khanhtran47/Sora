@@ -1,9 +1,8 @@
 import { Card, Col, Grid, Image, Progress, Text } from '@nextui-org/react';
-import { Link } from '@remix-run/react';
 import { useMeasure } from '@react-hookz/web';
+import { Link } from '@remix-run/react';
 
 import type { IHistory } from '~/services/supabase';
-
 import notFound from '~/assets/images/404.gif';
 
 interface IHistoryItem {

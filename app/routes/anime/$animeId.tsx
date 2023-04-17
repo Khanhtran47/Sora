@@ -1,39 +1,35 @@
 /* eslint-disable no-unsafe-optional-chaining */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { useRef, useState, useEffect, useMemo } from 'react';
-import { json } from '@remix-run/node';
-import type { LoaderArgs, MetaFunction } from '@remix-run/node';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Badge } from '@nextui-org/react';
+import { useIntersectionObserver } from '@react-hookz/web';
+import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import {
+  NavLink,
+  Outlet,
   useCatch,
   useLoaderData,
-  Outlet,
-  NavLink,
-  type RouteMatch,
   useLocation,
+  type RouteMatch,
 } from '@remix-run/react';
-import { Badge } from '@nextui-org/react';
-
-import { useIntersectionObserver } from '@react-hookz/web';
-import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
-import { useSoraSettings } from '~/hooks/useLocalStorage';
-import { useCustomHeaderChangePosition } from '~/hooks/useHeader';
-import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
-import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
 
 import { getAnimeInfo } from '~/services/consumet/anilist/anilist.server';
-import { authenticate } from '~/services/supabase';
 import getProviderList from '~/services/provider.server';
+import { authenticate } from '~/services/supabase';
 import { CACHE_CONTROL } from '~/utils/server/http';
-
-import { MediaBackgroundImage, AnimeDetail } from '~/components/media/MediaDetail';
+import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
+import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
+import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
+import { useCustomHeaderChangePosition } from '~/hooks/useHeader';
+import { useSoraSettings } from '~/hooks/useLocalStorage';
+import { animeDetailsPages } from '~/constants/tabLinks';
 import { BackgroundTabLink } from '~/components/media/Media.styles';
-import TabLink from '~/components/elements/tab/TabLink';
+import { AnimeDetail, MediaBackgroundImage } from '~/components/media/MediaDetail';
 import WatchTrailerModal from '~/components/elements/modal/WatchTrailerModal';
+import TabLink from '~/components/elements/tab/TabLink';
 import CatchBoundaryView from '~/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/components/ErrorBoundaryView';
-
-import { animeDetailsPages } from '~/constants/tabLinks';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { animeId } = params;

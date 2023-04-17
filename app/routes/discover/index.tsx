@@ -1,18 +1,17 @@
 import { Button, Spacer } from '@nextui-org/react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate, useLocation } from '@remix-run/react';
+import { useLocation, useNavigate } from '@remix-run/react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 import { H1, H4 } from '~/components/styles/Text.styles';
-
-import Search from '~/assets/icons/SearchIcon';
+import Anime from '~/assets/icons/AnimeIcon';
+import Category from '~/assets/icons/CategoryIcon';
 import Filter from '~/assets/icons/FilterIcon';
 import Movie from '~/assets/icons/MovieIcon';
-import TvShows from '~/assets/icons/TvIcon';
-import Anime from '~/assets/icons/AnimeIcon';
-import TwoUsers from '~/assets/icons/TwoUsersIcon';
+import Search from '~/assets/icons/SearchIcon';
 import TrendingUp from '~/assets/icons/TrendingUpIcon';
-import Category from '~/assets/icons/CategoryIcon';
+import TvShows from '~/assets/icons/TvIcon';
+import TwoUsers from '~/assets/icons/TwoUsersIcon';
 
 const categoryPages = [
   {

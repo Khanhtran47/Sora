@@ -1,15 +1,12 @@
-import { useLoaderData, useLocation, NavLink } from '@remix-run/react';
-import { json } from '@remix-run/node';
-import type { LoaderArgs, MetaFunction } from '@remix-run/node';
 import { Badge } from '@nextui-org/react';
+import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
+import { NavLink, useLoaderData, useLocation } from '@remix-run/react';
 import { motion } from 'framer-motion';
 
 import type { IMedia } from '~/types/media';
-
-import { CACHE_CONTROL } from '~/utils/server/http';
-import { authenticate } from '~/services/supabase';
 import { getAnimePopular } from '~/services/consumet/anilist/anilist.server';
-
+import { authenticate } from '~/services/supabase';
+import { CACHE_CONTROL } from '~/utils/server/http';
 import MediaList from '~/components/media/MediaList';
 
 export const meta: MetaFunction = () => ({

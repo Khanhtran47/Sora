@@ -1,8 +1,8 @@
 /* eslint-disable tailwindcss/no-custom-classname */
 /* eslint-disable @typescript-eslint/indent */
-import { forwardRef, type ElementRef, type ComponentPropsWithoutRef } from 'react';
+import { forwardRef, type ComponentPropsWithoutRef, type ElementRef } from 'react';
 import * as NavigationMenuPrimitive from '@radix-ui/react-navigation-menu';
-import { tv, cnBase } from 'tailwind-variants';
+import { cnBase, tv } from 'tailwind-variants';
 
 import ChevronRight from '~/assets/icons/ChevronRightIcon';
 

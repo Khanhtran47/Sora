@@ -1,7 +1,7 @@
 import { Container } from '@nextui-org/react';
 
-import { H1, H4 } from '~/components/styles/Text.styles';
 import AspectRatio from '~/components/elements/aspect-ratio/AspectRatio';
+import { H1, H4 } from '~/components/styles/Text.styles';
 
 interface IPlayerErrorProps {
   title: string;

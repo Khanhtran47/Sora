@@ -1,23 +1,21 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState } from 'react';
-import { useLocation, useNavigate, useSearchParams } from '@remix-run/react';
-import { Avatar, Button, Grid, Switch, useTheme, Divider, styled } from '@nextui-org/react';
-import { useTheme as useRemixTheme } from 'next-themes';
-import { motion } from 'framer-motion';
-import type { User } from '@supabase/supabase-js';
-import { useTranslation } from 'react-i18next';
 import { Player } from '@lottiefiles/react-lottie-player';
+import { Avatar, Button, Divider, Grid, Switch, styled, useTheme } from '@nextui-org/react';
+import { useLocation, useNavigate, useSearchParams } from '@remix-run/react';
+import type { User } from '@supabase/supabase-js';
+import { motion } from 'framer-motion';
+import { useTheme as useRemixTheme } from 'next-themes';
+import { useTranslation } from 'react-i18next';
 
 import languages from '~/constants/languages';
-
 /* Components */
 import { H5, H6 } from '~/components/styles/Text.styles';
-
+import GlobalIcon from '~/assets/icons/GlobalIcon';
+import MoonIcon from '~/assets/icons/MoonIcon';
+import SunIcon from '~/assets/icons/SunIcon';
 /* Assets */
 import kleeCute from '~/assets/images/avatar.png';
-import SunIcon from '~/assets/icons/SunIcon';
-import MoonIcon from '~/assets/icons/MoonIcon';
-import GlobalIcon from '~/assets/icons/GlobalIcon';
 import arrowLeft from '~/assets/lotties/lottieflow-arrow-08-1-0072F5-easey.json';
 
 const slideHorizontalAnimation = {

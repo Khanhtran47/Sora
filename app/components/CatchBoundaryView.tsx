@@ -1,8 +1,7 @@
-import { Text, Image } from '@nextui-org/react';
+import { Image, Text } from '@nextui-org/react';
 import { type ThrownResponse } from '@remix-run/react';
 
 import Flex from '~/components/styles/Flex.styles';
-
 import pageNotFound from '~/assets/images/404.gif';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

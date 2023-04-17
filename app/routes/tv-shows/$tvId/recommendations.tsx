@@ -1,18 +1,15 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { useRef } from 'react';
-import { json } from '@remix-run/node';
-import type { MetaFunction, LoaderArgs } from '@remix-run/node';
-import { useLoaderData, useNavigate, NavLink, type RouteMatch, useParams } from '@remix-run/react';
 import { Badge } from '@nextui-org/react';
-
-import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
-
-import { getRecommendation } from '~/services/tmdb/tmdb.server';
+import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
+import { NavLink, useLoaderData, useNavigate, useParams, type RouteMatch } from '@remix-run/react';
 import i18next from '~/i18n/i18next.server';
-import { authenticate } from '~/services/supabase';
-import { CACHE_CONTROL } from '~/utils/server/http';
 
+import { authenticate } from '~/services/supabase';
+import { getRecommendation } from '~/services/tmdb/tmdb.server';
+import { CACHE_CONTROL } from '~/utils/server/http';
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
 
 export const loader = async ({ request, params }: LoaderArgs) => {

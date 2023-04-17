@@ -1,34 +1,33 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useRef, useEffect, useMemo } from 'react';
-import type { User } from '@supabase/supabase-js';
-import { tv } from 'tailwind-variants';
-import { useLocation, useMatches, useNavigationType, useOutlet, useParams } from '@remix-run/react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useMediaQuery } from '@react-hookz/web';
-import { useScroll, AnimatePresence } from 'framer-motion';
+import { useLocation, useMatches, useNavigationType, useOutlet, useParams } from '@remix-run/react';
+import type { User } from '@supabase/supabase-js';
+import { AnimatePresence, useScroll } from 'framer-motion';
 import { Toaster } from 'sonner';
-
-import { useSoraSettings } from '~/hooks/useLocalStorage';
-import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
-import { useHistoryStack } from '~/store/layout/useHistoryStack';
-import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
+import { tv } from 'tailwind-variants';
 
 import { throttle } from '~/utils/function';
-
+import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
+import { useHistoryStack } from '~/store/layout/useHistoryStack';
+import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
+import { useSoraSettings } from '~/hooks/useLocalStorage';
 import {
   ScrollArea,
-  ScrollAreaViewport,
+  ScrollAreaCorner,
   ScrollAreaScrollbar,
   ScrollAreaThumb,
-  ScrollAreaCorner,
+  ScrollAreaViewport,
 } from '~/components/elements/scroll-area/ScrollArea';
 import TabLink from '~/components/elements/tab/TabLink';
-import Header from './Header';
-import SideBar from './SideBar';
+
 // import Footer from './Footer';
 import BottomNav from './BottomNav';
 // import BreadCrumb from './BreadCrumb';
 import GlobalPlayer from './GlobalPlayer';
+import Header from './Header';
 import MobileHeader from './MobileHeader';
+import SideBar from './SideBar';
 
 interface ILayout {
   user?: User;

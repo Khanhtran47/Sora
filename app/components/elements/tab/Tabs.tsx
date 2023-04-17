@@ -5,10 +5,10 @@ import { motion } from 'framer-motion';
 
 import {
   ScrollArea,
-  ScrollAreaViewport,
+  ScrollAreaCorner,
   ScrollAreaScrollbar,
   ScrollAreaThumb,
-  ScrollAreaCorner,
+  ScrollAreaViewport,
 } from '~/components/elements/scroll-area/ScrollArea';
 
 export const Tabs = styled(TabsPrimitive.Root, {

@@ -1,7 +1,6 @@
-import { json } from '@remix-run/node';
-import type { LoaderArgs } from '@remix-run/node';
-
+import { json, type LoaderArgs } from '@remix-run/node';
 import i18next from '~/i18n/i18next.server';
+
 import { authenticate } from '~/services/supabase';
 import { getImages, getVideos } from '~/services/tmdb/tmdb.server';
 import { CACHE_CONTROL } from '~/utils/server/http';

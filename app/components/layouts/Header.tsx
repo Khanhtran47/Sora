@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Player } from '@lottiefiles/react-lottie-player';
 import {
   Button,
   // Tooltip,
@@ -7,19 +8,16 @@ import {
 } from '@nextui-org/react';
 import { useNavigate } from '@remix-run/react';
 import type { User } from '@supabase/supabase-js';
+import { motion } from 'framer-motion';
 import type { AnimationItem } from 'lottie-web';
 // import { useTranslation } from 'react-i18next';
 import { tv } from 'tailwind-variants';
-import { Player } from '@lottiefiles/react-lottie-player';
-import { motion } from 'framer-motion';
 
-import { useSoraSettings } from '~/hooks/useLocalStorage';
-import { useHeaderOptions } from '~/hooks/useHeader';
 import { useHistoryStack } from '~/store/layout/useHistoryStack';
-
+import { useHeaderOptions } from '~/hooks/useHeader';
+import { useSoraSettings } from '~/hooks/useLocalStorage';
 /* Components */
 import MultiLevelDropdown from '~/components/layouts/MultiLevelDropdown';
-
 /* Assets */
 // import MenuIcon from '~/assets/icons/MenuIcon';
 import ChevronLeft from '~/assets/icons/ChevronLeftIcon';

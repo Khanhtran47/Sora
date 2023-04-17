@@ -2,8 +2,8 @@
 import { Grid, Image, Text, useTheme } from '@nextui-org/react';
 import { Link } from '@remix-run/react';
 
-import Rating from '~/components/elements/shared/Rating';
 import type { IMedia } from '~/types/media';
+import Rating from '~/components/elements/shared/Rating';
 
 interface IRowItem {
   item: IMedia;

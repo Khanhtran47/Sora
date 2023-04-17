@@ -1,14 +1,13 @@
 /* eslint-disable @typescript-eslint/indent */
-import { NavLink } from '@remix-run/react';
-import { Tooltip, Loading, Card, Link } from '@nextui-org/react';
-import { useTranslation } from 'react-i18next';
-import { tv } from 'tailwind-variants';
-import Image, { MimeType } from 'remix-image';
+
+import { Card, Link, Loading, Tooltip } from '@nextui-org/react';
 import { useHover } from '@react-aria/interactions';
+import { NavLink } from '@remix-run/react';
+import { useTranslation } from 'react-i18next';
+import Image, { MimeType } from 'remix-image';
+import { tv } from 'tailwind-variants';
 
 import { useSoraSettings } from '~/hooks/useLocalStorage';
-
-import { H2, H4, H6 } from '~/components/styles/Text.styles';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -18,20 +17,20 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from '~/components/elements/NavigationMenu';
-
+import { H2, H4, H6 } from '~/components/styles/Text.styles';
+import Anime from '~/assets/icons/AnimeIcon';
+import CategoryIcon from '~/assets/icons/CategoryIcon';
+import Discover from '~/assets/icons/DiscoverIcon';
+import History from '~/assets/icons/HistoryIcon';
+import Home from '~/assets/icons/HomeIcon';
+import Movie from '~/assets/icons/MovieIcon';
+import Search from '~/assets/icons/SearchIcon';
+import Settings from '~/assets/icons/SettingsIcon';
 /* icons */
 import TrendingUp from '~/assets/icons/TrendingUpIcon';
-import Settings from '~/assets/icons/SettingsIcon';
-import History from '~/assets/icons/HistoryIcon';
-import TwoUsers from '~/assets/icons/TwoUsersIcon';
-import CategoryIcon from '~/assets/icons/CategoryIcon';
-import Logo from '~/assets/images/logo_loading.png';
-import Home from '~/assets/icons/HomeIcon';
-import Search from '~/assets/icons/SearchIcon';
-import Discover from '~/assets/icons/DiscoverIcon';
-import Movie from '~/assets/icons/MovieIcon';
 import Tv from '~/assets/icons/TvIcon';
-import Anime from '~/assets/icons/AnimeIcon';
+import TwoUsers from '~/assets/icons/TwoUsersIcon';
+import Logo from '~/assets/images/logo_loading.png';
 
 export const handle = {
   i18n: 'left-drawer',

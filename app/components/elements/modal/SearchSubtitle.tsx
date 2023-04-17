@@ -1,43 +1,39 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable @typescript-eslint/indent */
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
-  Modal,
-  Loading,
-  Container,
-  Row,
-  Input,
-  useInput,
   Button,
-  Spacer,
+  Container,
+  Input,
+  Loading,
+  Modal,
   Pagination,
+  Row,
+  Spacer,
+  useInput,
 } from '@nextui-org/react';
+import { useMediaQuery, useWindowSize } from '@react-hookz/web';
 import { useFetcher } from '@remix-run/react';
 import { toast } from 'sonner';
 
+import type { ISubtitle, ISubtitlesSearch } from '~/services/open-subtitles/open-subtitles.types';
 import usePlayerState from '~/store/player/usePlayerState';
-
-import { useMediaQuery, useWindowSize } from '@react-hookz/web';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
-
-import type { ISubtitlesSearch, ISubtitle } from '~/services/open-subtitles/open-subtitles.types';
-
 import {
   Select,
   SelectContent,
+  SelectIcon,
+  SelectItem,
+  SelectItemIndicator,
+  SelectItemText,
+  SelectScrollDownButton,
+  SelectScrollUpButton,
   SelectTrigger,
   SelectValue,
-  SelectIcon,
   SelectViewport,
-  SelectItem,
-  SelectItemText,
-  SelectItemIndicator,
-  SelectScrollUpButton,
-  SelectScrollDownButton,
 } from '~/components/elements/select/Select';
 import { H3 } from '~/components/styles/Text.styles';
-
 import ChevronDownIcon from '~/assets/icons/ChevronDownIcon';
 import ChevronUpIcon from '~/assets/icons/ChevronUpIcon';
 import TickIcon from '~/assets/icons/TickIcon';

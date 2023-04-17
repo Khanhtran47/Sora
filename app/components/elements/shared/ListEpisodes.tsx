@@ -1,25 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/indent */
-import { useState, useMemo } from 'react';
-import { Row, Spacer, Card, Avatar, Button, Pagination, Dropdown } from '@nextui-org/react';
+import { useMemo, useState } from 'react';
+import { Avatar, Button, Card, Dropdown, Pagination, Row, Spacer } from '@nextui-org/react';
+import { useMediaQuery } from '@react-hookz/web';
 import { useNavigate } from '@remix-run/react';
 import Image, { MimeType } from 'remix-image';
 
-import type { IEpisode } from '~/services/tmdb/tmdb.types';
 import type { IEpisodeInfo } from '~/services/consumet/anilist/anilist.types';
-
-import { useMediaQuery } from '@react-hookz/web';
-import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
-import { useSoraSettings } from '~/hooks/useLocalStorage';
-
+import type { IEpisode } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
-
+import { useSoraSettings } from '~/hooks/useLocalStorage';
+import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
 import episodeTypes from '~/constants/episodeTypes';
-
-import { H3, H5, H6 } from '~/components/styles/Text.styles';
-import Flex from '~/components/styles/Flex.styles';
 import Rating from '~/components/elements/shared/Rating';
-
+import Flex from '~/components/styles/Flex.styles';
+import { H3, H5, H6 } from '~/components/styles/Text.styles';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 import ViewGrid from '~/assets/icons/ViewGridIcon';
 

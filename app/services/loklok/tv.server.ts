@@ -1,6 +1,6 @@
-import type { ILoklokMediaInfo, ILoklokSearchData, ILoklokInfoData } from './loklok.type';
-import { LOKLOK_URL } from './utils.server';
 import { fetcher, lruCache } from '../lru-cache';
+import type { ILoklokInfoData, ILoklokMediaInfo, ILoklokSearchData } from './loklok.type';
+import { LOKLOK_URL } from './utils.server';
 
 /**
  * It takes a string as an argument, and returns a promise that resolves to an array of objects

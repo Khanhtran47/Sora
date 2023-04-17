@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { json } from '@remix-run/node';
-import type { LoaderArgs } from '@remix-run/node';
+import { json, type LoaderArgs } from '@remix-run/node';
 
 import getProviderList from '~/services/provider.server';
 import { authenticate } from '~/services/supabase';

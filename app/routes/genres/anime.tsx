@@ -1,10 +1,9 @@
 import { Button, Spacer } from '@nextui-org/react';
-import { useTranslation } from 'react-i18next';
 import { useNavigate } from '@remix-run/react';
-
-import { H4 } from '~/components/styles/Text.styles';
+import { useTranslation } from 'react-i18next';
 
 import { animeGenres } from '~/constants/filterItems';
+import { H4 } from '~/components/styles/Text.styles';
 
 const AnimeGenresPage = () => {
   const navigate = useNavigate();

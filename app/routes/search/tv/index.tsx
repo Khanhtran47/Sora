@@ -1,17 +1,15 @@
 /* eslint-disable @typescript-eslint/indent */
-import { json } from '@remix-run/node';
-import type { LoaderArgs } from '@remix-run/node';
-import { useLoaderData, useNavigate, NavLink } from '@remix-run/react';
+
 import { Badge } from '@nextui-org/react';
+import { json, type LoaderArgs } from '@remix-run/node';
+import { NavLink, useLoaderData, useNavigate } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
-
-import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
-
-import { getTrending } from '~/services/tmdb/tmdb.server';
 import i18next from '~/i18n/i18next.server';
-import { authenticate } from '~/services/supabase';
-import { CACHE_CONTROL } from '~/utils/server/http';
 
+import { authenticate } from '~/services/supabase';
+import { getTrending } from '~/services/tmdb/tmdb.server';
+import { CACHE_CONTROL } from '~/utils/server/http';
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
 import SearchForm from '~/components/elements/SearchForm';
 

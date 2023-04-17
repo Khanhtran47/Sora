@@ -1,14 +1,15 @@
 import { NavLink } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 
-import { H5 } from '~/components/styles/Text.styles';
 import {
   ScrollArea,
-  ScrollAreaViewport,
+  ScrollAreaCorner,
   ScrollAreaScrollbar,
   ScrollAreaThumb,
-  ScrollAreaCorner,
+  ScrollAreaViewport,
 } from '~/components/elements/scroll-area/ScrollArea';
+import { H5 } from '~/components/styles/Text.styles';
+
 import { Underline } from './Tabs';
 
 interface ITabProps {

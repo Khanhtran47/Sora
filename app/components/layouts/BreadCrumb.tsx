@@ -1,5 +1,5 @@
-import { useLocation, useMatches } from '@remix-run/react';
 import { Grid, Spacer } from '@nextui-org/react';
+import { useLocation, useMatches } from '@remix-run/react';
 
 import Flex from '~/components/styles/Flex.styles';
 

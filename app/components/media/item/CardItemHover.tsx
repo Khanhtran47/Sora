@@ -1,26 +1,23 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useState, useEffect, useCallback } from 'react';
-import { Container, Loading, Row, Spacer, Image as NextImage, Button } from '@nextui-org/react';
-import Image, { MimeType } from 'remix-image';
-import { motion, AnimatePresence } from 'framer-motion';
-import YouTube from 'react-youtube';
-import { ClientOnly } from 'remix-utils';
+import { useCallback, useEffect, useState } from 'react';
+import { Button, Container, Loading, Image as NextImage, Row, Spacer } from '@nextui-org/react';
 import { useColor } from 'color-thief-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import YouTube from 'react-youtube';
+import Image, { MimeType } from 'remix-image';
+import { ClientOnly } from 'remix-utils';
 
+import { type ITrailer } from '~/services/consumet/anilist/anilist.types';
 import useCardHoverStore from '~/store/card/useCardHoverStore';
-
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { type Trailer } from '~/components/elements/modal/WatchTrailerModal';
-import { type ITrailer } from '~/services/consumet/anilist/anilist.types';
-
+import Rating from '~/components/elements/shared/Rating';
 import Flex from '~/components/styles/Flex.styles';
 import { H4, H5, H6 } from '~/components/styles/Text.styles';
-import Rating from '~/components/elements/shared/Rating';
-
-import VolumeUp from '~/assets/icons/VolumeUpIcon';
 import VolumeOff from '~/assets/icons/VolumeOffIcon';
+import VolumeUp from '~/assets/icons/VolumeUpIcon';
 
 interface ICardItemHoverProps {
   backdropPath: string;

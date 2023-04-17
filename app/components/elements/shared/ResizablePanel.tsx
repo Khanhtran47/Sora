@@ -1,16 +1,15 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-
 import { useMeasure, useWindowSize } from '@react-hookz/web';
+import { AnimatePresence, motion } from 'framer-motion';
 
 import {
   ScrollArea,
-  ScrollAreaViewport,
+  ScrollAreaCorner,
   ScrollAreaScrollbar,
   ScrollAreaThumb,
-  ScrollAreaCorner,
+  ScrollAreaViewport,
 } from '~/components/elements/scroll-area/ScrollArea';
 
 /*

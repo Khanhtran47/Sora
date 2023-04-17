@@ -1,15 +1,13 @@
 import { useEffect, useState } from 'react';
-import { json } from '@remix-run/node';
-import type { MetaFunction, LoaderArgs } from '@remix-run/node';
-import { useLoaderData, useFetcher } from '@remix-run/react';
-import { Row, Col, Button, Grid, Card } from '@nextui-org/react';
+import { Button, Card, Col, Grid, Row } from '@nextui-org/react';
+import { useMediaQuery } from '@react-hookz/web';
+import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
+import { useFetcher, useLoaderData } from '@remix-run/react';
 
 import { authenticate } from '~/services/supabase';
 import { getVideos } from '~/services/tmdb/tmdb.server';
 import type { Item } from '~/services/youtube/youtube.types';
 import { CACHE_CONTROL } from '~/utils/server/http';
-
-import { useMediaQuery } from '@react-hookz/web';
 import WatchTrailerModal, { type Trailer } from '~/components/elements/modal/WatchTrailerModal';
 import { H5, H6 } from '~/components/styles/Text.styles';
 

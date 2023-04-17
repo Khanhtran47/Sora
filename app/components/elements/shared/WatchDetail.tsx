@@ -1,22 +1,19 @@
 /* eslint-disable @typescript-eslint/indent */
 import { memo } from 'react';
+import { Avatar, Button, Card, Col, Row, Spacer } from '@nextui-org/react';
+import { useMediaQuery } from '@react-hookz/web';
 import { useNavigate } from '@remix-run/react';
-import { Spacer, Button, Row, Col, Card, Avatar } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
 import tinycolor from 'tinycolor2';
 
-import type { IEpisode } from '~/services/tmdb/tmdb.types';
-import type { IEpisodeInfo } from '~/services/consumet/anilist/anilist.types';
 import type { IMedia } from '~/types/media';
-
-import { useMediaQuery } from '@react-hookz/web';
-
+import type { IEpisodeInfo } from '~/services/consumet/anilist/anilist.types';
+import type { IEpisode } from '~/services/tmdb/tmdb.types';
 import MediaList from '~/components/media/MediaList';
 import ListEpisodes from '~/components/elements/shared/ListEpisodes';
+import Rating from '~/components/elements/shared/Rating';
 import Flex from '~/components/styles/Flex.styles';
 import { H2, H6 } from '~/components/styles/Text.styles';
-import Rating from '~/components/elements/shared/Rating';
-
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 
 interface IWatchDetailProps {

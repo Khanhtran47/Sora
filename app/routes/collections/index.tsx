@@ -1,16 +1,15 @@
 /* eslint-disable @typescript-eslint/indent */
 import { useRef } from 'react';
-import type { MetaFunction } from '@remix-run/node';
-import { useLocation, NavLink } from '@remix-run/react';
-import { motion } from 'framer-motion';
-import { Badge, Spacer, Pagination } from '@nextui-org/react';
-
-import MediaList from '~/components/media/MediaList';
-import featuredList from '~/constants/featuredList';
-import Flex from '~/components/styles/Flex.styles';
+import { Badge, Pagination, Spacer } from '@nextui-org/react';
 import { useMediaQuery } from '@react-hookz/web';
+import type { MetaFunction } from '@remix-run/node';
+import { NavLink, useLocation } from '@remix-run/react';
+import { motion } from 'framer-motion';
 
 import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
+import featuredList from '~/constants/featuredList';
+import MediaList from '~/components/media/MediaList';
+import Flex from '~/components/styles/Flex.styles';
 
 export const meta: MetaFunction = () => ({
   title: 'Movies and tv shows Collections | Sora',

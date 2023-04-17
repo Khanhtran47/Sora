@@ -1,5 +1,5 @@
-import { redirect } from '@remix-run/node';
-import type { ActionArgs } from '@remix-run/node';
+import { redirect, type ActionArgs } from '@remix-run/node';
+
 import { authenticate, getUserFromCookie, insertHistory } from '~/services/supabase';
 
 export const action = async ({ request }: ActionArgs) => {

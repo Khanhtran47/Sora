@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/indent */
 import { type IMovieInfo } from '@consumet/extensions';
-import { lruCache, cachified } from '~/services/lru-cache';
+
 import sgConfigs from '~/services/configs.server';
-import { loklokSearchMovie, loklokSearchOneTv, getLoklokOrgDetail } from '~/services/loklok';
-import { getBilibiliSearch, getBilibiliInfo } from '~/services/consumet/bilibili/bilibili.server';
-import type { IBilibiliResult } from '~/services/consumet/bilibili/bilibili.types';
-import { getKissKhSearch, getKissKhInfo } from '~/services/kisskh/kisskh.server';
-import type { ISearchItem } from '~/services/kisskh/kisskh.types';
 import { getAnimeEpisodeInfo } from '~/services/consumet/anilist/anilist.server';
+import { getBilibiliInfo, getBilibiliSearch } from '~/services/consumet/bilibili/bilibili.server';
+import type { IBilibiliResult } from '~/services/consumet/bilibili/bilibili.types';
+import { getKissKhInfo, getKissKhSearch } from '~/services/kisskh/kisskh.server';
+import type { ISearchItem } from '~/services/kisskh/kisskh.types';
+import { getLoklokOrgDetail, loklokSearchMovie, loklokSearchOneTv } from '~/services/loklok';
+import { cachified, lruCache } from '~/services/lru-cache';
 import { getInfoWithProvider } from '~/services/tmdb/tmdb.server';
 
 const getProviderList = async ({

@@ -1,17 +1,14 @@
 /* eslint-disable @typescript-eslint/indent */
-import { Card, Row, Col, Spacer, Badge, Text } from '@nextui-org/react';
+import { Badge, Card, Col, Row, Spacer, Text } from '@nextui-org/react';
+import { useMeasure, useMediaQuery } from '@react-hookz/web';
 import { Link } from '@remix-run/react';
-import Image, { MimeType } from 'remix-image';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import Image, { MimeType } from 'remix-image';
 
 import type { Title } from '~/types/media';
-
-import { useMediaQuery, useMeasure } from '@react-hookz/web';
-
 import AspectRatio from '~/components/elements/aspect-ratio/AspectRatio';
 import { H5 } from '~/components/styles/Text.styles';
-
 import Star from '~/assets/icons/StarIcon';
 
 interface IBannerItemMobileProps {

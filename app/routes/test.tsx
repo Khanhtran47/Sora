@@ -1,7 +1,6 @@
-import type { MetaFunction } from '@remix-run/node';
-import { redirect } from '@remix-run/node';
+import { Badge, Container } from '@nextui-org/react';
+import { redirect, type MetaFunction } from '@remix-run/node';
 import { NavLink, Outlet } from '@remix-run/react';
-import { Container, Badge } from '@nextui-org/react';
 
 const testingPage = [
   { pageName: 'Design System', pageLink: '/design-system' },

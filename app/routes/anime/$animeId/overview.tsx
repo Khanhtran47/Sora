@@ -1,19 +1,17 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
+
+import { Avatar, Card, Grid } from '@nextui-org/react';
 import type { MetaFunction } from '@remix-run/node';
-import { Card, Avatar, Grid } from '@nextui-org/react';
+import { useParams } from '@remix-run/react';
 import Image, { MimeType } from 'remix-image';
 
-import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
-
 import type { IMedia } from '~/types/media';
-
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
 import { H2, H5, H6, P } from '~/components/styles/Text.styles';
-
 import PhotoIcon from '~/assets/icons/PhotoIcon';
-import { useParams } from '@remix-run/react';
 
 export const meta: MetaFunction = ({ params }) => ({
   'og:url': `https://sora-anime.vercel.app/anime/${params.animeId}/overview`,

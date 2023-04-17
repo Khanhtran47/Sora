@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const useSplitArrayIntoPage = (array: any[], pageSize: number) => {

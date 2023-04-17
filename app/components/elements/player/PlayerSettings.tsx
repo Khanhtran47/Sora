@@ -1,26 +1,24 @@
 /* eslint-disable @typescript-eslint/indent */
 import { useMemo, useState } from 'react';
-import { Spacer, Button, Divider, Switch, type SwitchEvent } from '@nextui-org/react';
+import { Button, Divider, Spacer, Switch, type SwitchEvent } from '@nextui-org/react';
 import { isMobileOnly } from 'react-device-detect';
 
 import { useSoraSettings } from '~/hooks/useLocalStorage';
-
-import { H6 } from '~/components/styles/Text.styles';
+import { Sheet, SheetContent, SheetTrigger } from '~/components/elements/Sheet';
+import { Popover, PopoverContent, PopoverTrigger } from '~/components/elements/shared/Popover';
 import ResizablePanel from '~/components/elements/shared/ResizablePanel';
-import Flex from '~/components/styles/Flex.styles';
 import Box from '~/components/styles/Box.styles';
-import { Popover, PopoverTrigger, PopoverContent } from '~/components/elements/shared/Popover';
-import { Sheet, SheetTrigger, SheetContent } from '~/components/elements/Sheet';
-
-import Settings from '~/assets/icons/SettingsIcon';
+import Flex from '~/components/styles/Flex.styles';
+import { H6 } from '~/components/styles/Text.styles';
 import Arrow from '~/assets/icons/ArrowIcon';
-import Tick from '~/assets/icons/TickIcon';
-import Play from '~/assets/icons/PlayIcon';
-import Flip from '~/assets/icons/FlipIcon';
-import Ratio from '~/assets/icons/RatioIcon';
-import Subtitle from '~/assets/icons/SubtitleIcon';
 import Filter from '~/assets/icons/FilterIcon';
+import Flip from '~/assets/icons/FlipIcon';
+import Play from '~/assets/icons/PlayIcon';
+import Ratio from '~/assets/icons/RatioIcon';
 import Search from '~/assets/icons/SearchIcon';
+import Settings from '~/assets/icons/SettingsIcon';
+import Subtitle from '~/assets/icons/SubtitleIcon';
+import Tick from '~/assets/icons/TickIcon';
 
 interface IPlayerSettingsProps {
   artplayer: Artplayer | null;

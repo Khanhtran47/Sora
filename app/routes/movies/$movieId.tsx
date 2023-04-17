@@ -2,43 +2,38 @@
 /* eslint-disable no-unsafe-optional-chaining */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { useState, useRef, useEffect, useMemo } from 'react';
-import { json } from '@remix-run/node';
-import type { LoaderArgs, MetaFunction } from '@remix-run/node';
-import {
-  useCatch,
-  useLoaderData,
-  Outlet,
-  NavLink,
-  type RouteMatch,
-  useFetcher,
-  useLocation,
-} from '@remix-run/react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Badge } from '@nextui-org/react';
-import Vibrant from 'node-vibrant';
 import { useIntersectionObserver } from '@react-hookz/web';
-
-import { getMovieDetail, getImdbRating } from '~/services/tmdb/tmdb.server';
+import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
+import {
+  NavLink,
+  Outlet,
+  useCatch,
+  useFetcher,
+  useLoaderData,
+  useLocation,
+  type RouteMatch,
+} from '@remix-run/react';
+import Vibrant from 'node-vibrant';
 import i18next from '~/i18n/i18next.server';
+
 import { authenticate } from '~/services/supabase';
-
-import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
-import { useSoraSettings } from '~/hooks/useLocalStorage';
-import { useCustomHeaderChangePosition } from '~/hooks/useHeader';
-import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
-import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
-
-import { CACHE_CONTROL } from '~/utils/server/http';
+import { getImdbRating, getMovieDetail } from '~/services/tmdb/tmdb.server';
 import TMDB from '~/utils/media';
-
-import { MediaDetail, MediaBackgroundImage } from '~/components/media/MediaDetail';
+import { CACHE_CONTROL } from '~/utils/server/http';
+import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
+import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
+import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
+import { useCustomHeaderChangePosition } from '~/hooks/useHeader';
+import { useSoraSettings } from '~/hooks/useLocalStorage';
+import { movieTvDetailsPages } from '~/constants/tabLinks';
+import { BackgroundTabLink } from '~/components/media/Media.styles';
+import { MediaBackgroundImage, MediaDetail } from '~/components/media/MediaDetail';
 import WatchTrailerModal, { type Trailer } from '~/components/elements/modal/WatchTrailerModal';
+import TabLink from '~/components/elements/tab/TabLink';
 import CatchBoundaryView from '~/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/components/ErrorBoundaryView';
-import TabLink from '~/components/elements/tab/TabLink';
-import { BackgroundTabLink } from '~/components/media/Media.styles';
-
-import { movieTvDetailsPages } from '~/constants/tabLinks';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const [, locale] = await Promise.all([

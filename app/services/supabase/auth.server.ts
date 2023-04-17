@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import type { Session } from '@supabase/supabase-js';
+
 import { redirect } from '@remix-run/node';
+import type { Session } from '@supabase/supabase-js';
 import isbot from 'isbot';
 
 import sgConfigs from '../configs.server';

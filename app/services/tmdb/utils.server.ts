@@ -2,16 +2,18 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { env } from 'process';
+
 import type { IMedia } from '~/types/media';
+
 import type {
   BackdropSize,
-  ProfileSize,
   ListMovieType,
+  ListPersonType,
   ListTvShowType,
   MediaType,
   PosterSize,
+  ProfileSize,
   TimeWindowType,
-  ListPersonType,
 } from './tmdb.types';
 
 export class TMDB {

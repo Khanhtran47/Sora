@@ -1,38 +1,35 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { json } from '@remix-run/node';
-import type { MetaFunction, LoaderArgs } from '@remix-run/node';
-import { useCatch, useLoaderData, NavLink, type RouteMatch } from '@remix-run/react';
-import { Container, Spacer, Badge } from '@nextui-org/react';
+
+import type { IMovieInfo, ISource } from '@consumet/extensions';
+import { Badge, Container, Spacer } from '@nextui-org/react';
+import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
+import { NavLink, useCatch, useLoaderData, type RouteMatch } from '@remix-run/react';
 import Vibrant from 'node-vibrant';
-import type { ISource, IMovieInfo } from '@consumet/extensions';
 
-import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
-
-import { authenticate, insertHistory } from '~/services/supabase';
 import {
-  getTvShowDetail,
-  getTvShowIMDBId,
-  getRecommendation,
-  getImdbRating,
-  getTvSeasonDetail,
-  getInfoWithProvider,
-  getWatchEpisode,
-} from '~/services/tmdb/tmdb.server';
-import {
-  getKissKhInfo,
   getKissKhEpisodeStream,
   getKissKhEpisodeSubtitle,
+  getKissKhInfo,
 } from '~/services/kisskh/kisskh.server';
 import { loklokGetTvEpInfo } from '~/services/loklok';
-import getProviderList from '~/services/provider.server';
 import { LOKLOK_URL } from '~/services/loklok/utils.server';
+import getProviderList from '~/services/provider.server';
+import { authenticate, insertHistory } from '~/services/supabase';
+import {
+  getImdbRating,
+  getInfoWithProvider,
+  getRecommendation,
+  getTvSeasonDetail,
+  getTvShowDetail,
+  getTvShowIMDBId,
+  getWatchEpisode,
+} from '~/services/tmdb/tmdb.server';
 import { TMDB as TmdbUtils } from '~/services/tmdb/utils.server';
-
-import { CACHE_CONTROL } from '~/utils/server/http';
 import TMDB from '~/utils/media';
-
+import { CACHE_CONTROL } from '~/utils/server/http';
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import WatchDetail from '~/components/elements/shared/WatchDetail';
 import CatchBoundaryView from '~/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/components/ErrorBoundaryView';

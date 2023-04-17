@@ -1,27 +1,31 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { useState, useMemo } from 'react';
-import { json, redirect } from '@remix-run/node';
-import type { LoaderArgs, ActionArgs, MetaFunction } from '@remix-run/node';
+import { useMemo, useState } from 'react';
+import { Badge, Button, Container, Modal, Spacer } from '@nextui-org/react';
+import { useWindowSize } from '@react-hookz/web';
+import {
+  json,
+  redirect,
+  type ActionArgs,
+  type LoaderArgs,
+  type MetaFunction,
+} from '@remix-run/node';
 import {
   NavLink,
   useFetcher,
   useLoaderData,
-  useSearchParams,
   useLocation,
   useNavigate,
+  useSearchParams,
 } from '@remix-run/react';
-import { useWindowSize } from '@react-hookz/web';
-import { motion } from 'framer-motion';
-import { Badge, Container, Spacer, Button, Modal } from '@nextui-org/react';
 import type { CacheEntry } from 'cachified';
+import { motion } from 'framer-motion';
 import { badRequest } from 'remix-utils';
 
 import { getAllCacheKeys, lruCache, searchCacheKeys } from '~/services/lru-cache';
 import { getUserFromCookie } from '~/services/supabase';
-
-import ErrorBoundaryView from '~/components/ErrorBoundaryView';
-import { H2, H3, H5 } from '~/components/styles/Text.styles';
 import SearchForm from '~/components/elements/SearchForm';
+import { H2, H3, H5 } from '~/components/styles/Text.styles';
+import ErrorBoundaryView from '~/components/ErrorBoundaryView';
 
 const loader = async ({ request }: LoaderArgs) => {
   const cookie = request.headers.get('Cookie');

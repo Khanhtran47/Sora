@@ -1,25 +1,23 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable arrow-body-style */
-import { useState, useRef, useEffect, forwardRef } from 'react';
-import { Grid, Button, Card, styled } from '@nextui-org/react';
-import { Thumbs, Pagination, Autoplay } from 'swiper';
+import { forwardRef, useEffect, useRef, useState } from 'react';
+import { Button, Card, Grid, styled } from '@nextui-org/react';
+import { useMediaQuery } from '@react-hookz/web';
+import { Autoplay, Pagination, Thumbs, type Swiper } from 'swiper';
 import { Swiper as SwiperReact, SwiperSlide, useSwiper } from 'swiper/react';
-import type { Swiper } from 'swiper';
 
 import type { IMedia } from '~/types/media';
-import { useMediaQuery } from '@react-hookz/web';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
-
+import Svg from '~/components/styles/Svg.styles';
+import { H5 } from '~/components/styles/Text.styles';
+import ChevronLeftIcon from '~/assets/icons/ChevronLeftIcon';
+import ChevronRightIcon from '~/assets/icons/ChevronRightIcon';
 import PlayIcon from '~/assets/icons/PlayIcon';
 import StopIcon from '~/assets/icons/StopIcon';
-import ChevronRightIcon from '~/assets/icons/ChevronRightIcon';
-import ChevronLeftIcon from '~/assets/icons/ChevronLeftIcon';
 
-import { H5 } from '~/components/styles/Text.styles';
-import Svg from '~/components/styles/Svg.styles';
-import BannerItemCompact from '../item/BannerItemCompact';
 import MediaItem from '../item';
+import BannerItemCompact from '../item/BannerItemCompact';
 
 const AutoplayProgressStyled = styled('div', {
   position: 'absolute',

@@ -1,22 +1,18 @@
 /* eslint-disable @typescript-eslint/indent */
-import { useState, useEffect } from 'react';
-import { json } from '@remix-run/node';
-import type { LoaderArgs } from '@remix-run/node';
-import { useLoaderData, useLocation, useNavigate, useFetcher } from '@remix-run/react';
+import { useEffect, useState } from 'react';
 import { Container, Loading } from '@nextui-org/react';
+import { useMeasure } from '@react-hookz/web';
+import { json, type LoaderArgs } from '@remix-run/node';
+import { useFetcher, useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import NProgress from 'nprogress';
-import { useMeasure } from '@react-hookz/web';
-
 import i18next from '~/i18n/i18next.server';
-import { getListMovies } from '~/services/tmdb/tmdb.server';
-import { authenticate } from '~/services/supabase';
-import { CACHE_CONTROL } from '~/utils/server/http';
 
 import type { IMedia } from '~/types/media';
-
+import { authenticate } from '~/services/supabase';
+import { getListMovies } from '~/services/tmdb/tmdb.server';
+import { CACHE_CONTROL } from '~/utils/server/http';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
-
 import MediaList from '~/components/media/MediaList';
 
 export const loader = async ({ request }: LoaderArgs) => {
