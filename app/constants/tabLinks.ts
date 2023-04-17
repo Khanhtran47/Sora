@@ -59,3 +59,11 @@ export const peopleDetailPages = [
   { pageName: 'Credits', pageLink: '/credits' },
   { pageName: 'Media', pageLink: '/media' },
 ];
+
+export const tvSeasonDetailPages = [
+  { pageName: 'Episodes', pageLink: '/' },
+  { pageName: 'Cast', pageLink: '/cast' },
+  { pageName: 'Crew', pageLink: '/crew' },
+  { pageName: 'Videos', pageLink: '/videos' },
+  { pageName: 'Photos', pageLink: '/photos' },
+];
