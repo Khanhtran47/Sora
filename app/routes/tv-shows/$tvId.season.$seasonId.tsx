@@ -1,13 +1,21 @@
+/* eslint-disable no-unsafe-optional-chaining */
 /* eslint-disable @typescript-eslint/indent */
-/* eslint-disable @typescript-eslint/no-throw-literal */
+import { useRef, useMemo, useEffect } from 'react';
 import { json } from '@remix-run/node';
 import type { LoaderArgs, MetaFunction } from '@remix-run/node';
 import { useCatch, useLoaderData, Outlet, NavLink, RouteMatch, useParams } from '@remix-run/react';
-import { Container, Spacer, Card, Col, Row, Avatar, Badge } from '@nextui-org/react';
+import { Spacer, Card, Avatar, Badge } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
 import Vibrant from 'node-vibrant';
+import tinycolor from 'tinycolor2';
 
-import { useMediaQuery, useMeasure } from '@react-hookz/web';
+import { useMediaQuery, useMeasure, useIntersectionObserver } from '@react-hookz/web';
+import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
+import { useSoraSettings } from '~/hooks/useLocalStorage';
+import { useCustomHeaderChangePosition } from '~/hooks/useHeader';
+import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
+import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
+
 import i18next from '~/i18n/i18next.server';
 import { getTvShowDetail, getTvSeasonDetail } from '~/services/tmdb/tmdb.server';
 import { authenticate } from '~/services/supabase';
@@ -20,9 +28,12 @@ import CatchBoundaryView from '~/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/components/ErrorBoundaryView';
 import TabLink from '~/components/elements/tab/TabLink';
 import { H2, H5, H6 } from '~/components/styles/Text.styles';
+import { BackgroundContent, BackgroundTabLink } from '~/components/media/Media.styles';
 
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 import BackgroundDefault from '~/assets/images/background-default.jpg';
+
+import { tvSeasonDetailPages } from '~/constants/tabLinks';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const [, locale] = await Promise.all([
@@ -37,12 +48,13 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
   // get translators
 
-  const [seasonDetail, detail] = await Promise.all([
+  const [seasonDetail, detail, detailEng] = await Promise.all([
     getTvSeasonDetail(tid, sid, locale),
-    getTvShowDetail(tid),
+    getTvShowDetail(tid, locale),
+    getTvShowDetail(tid, 'en-US'),
   ]);
   if (!seasonDetail) throw new Response('Not Found', { status: 404 });
-  const title = detail?.name || '';
+  const title = detailEng?.name || '';
   const orgTitle = detail?.original_name || '';
   const year = new Date(seasonDetail?.air_date || '').getFullYear();
   const season = seasonDetail?.season_number;
@@ -176,32 +188,93 @@ export const handle = {
       </NavLink>
     </>
   ),
+  miniTitle: (match: RouteMatch) => ({
+    title: `${match.data?.detail?.name || match.data?.detail?.original_name} - ${
+      match.data?.seasonDetail?.name
+    }`,
+    showImage: match.data?.seasonDetail?.poster_path !== undefined,
+    imageUrl: TMDB.posterUrl(match.data?.seasonDetail?.poster_path || '', 'w92'),
+  }),
+  disableLayoutPadding: true,
+  customHeaderBackgroundColor: true,
+  customHeaderChangeColorOnScroll: true,
 };
 
-const detailTab = [
-  { pageName: 'Episodes', pageLink: '/' },
-  { pageName: 'Cast', pageLink: '/cast' },
-  { pageName: 'Crew', pageLink: '/crew' },
-  { pageName: 'Videos', pageLink: '/videos' },
-  { pageName: 'Photos', pageLink: '/photos' },
-];
-
-const SeasonDetail = () => {
-  const { seasonDetail } = useLoaderData<typeof loader>();
+const TvSeasonDetail = () => {
+  const { detail, seasonDetail, color } = useLoaderData<typeof loader>();
   const { tvId, seasonId } = useParams();
   const [size, ref] = useMeasure<HTMLDivElement>();
+  const [imageSize, imageRef] = useMeasure<HTMLDivElement>();
+  const { backgroundColor } = useColorDarkenLighten(color);
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
+  const isXl = useMediaQuery('(max-width: 1280px)', { initializeWithValue: false });
+  const { sidebarBoxedMode } = useSoraSettings();
+  const { scrollPosition, viewportRef } = useLayoutScrollPosition((scrollState) => scrollState);
+  const { setBackgroundColor, startChangeScrollPosition } = useHeaderStyle(
+    (headerState) => headerState,
+  );
+  const tabLinkRef = useRef<HTMLDivElement>(null);
+  const tablinkIntersection = useIntersectionObserver(tabLinkRef, {
+    root: viewportRef,
+    rootMargin: sidebarBoxedMode ? '-180px 0px 0px 0px' : '-165px 0px 0px 0px',
+    threshold: [1],
+  });
+  const tablinkPaddingTop = useMemo(
+    () =>
+      `${
+        startChangeScrollPosition === 0
+          ? 1
+          : scrollPosition?.y - startChangeScrollPosition > 0 &&
+            scrollPosition?.y - startChangeScrollPosition < 100 &&
+            startChangeScrollPosition > 0
+          ? 1 - (scrollPosition?.y - startChangeScrollPosition) / 100
+          : scrollPosition?.y - startChangeScrollPosition > 100
+          ? 0
+          : 1
+      }rem`,
+    [startChangeScrollPosition, scrollPosition?.y],
+  );
+  const tablinkPaddingBottom = useMemo(
+    () =>
+      `${
+        startChangeScrollPosition === 0
+          ? 2
+          : scrollPosition?.y - startChangeScrollPosition > 0 &&
+            scrollPosition?.y - startChangeScrollPosition < 100 &&
+            startChangeScrollPosition > 0
+          ? 2 - (scrollPosition?.y - startChangeScrollPosition) / 100
+          : scrollPosition?.y - startChangeScrollPosition > 100
+          ? 0
+          : 2
+      }rem`,
+    [startChangeScrollPosition, scrollPosition?.y],
+  );
+  useCustomHeaderChangePosition(tablinkIntersection);
+  useEffect(() => {
+    if (startChangeScrollPosition) {
+      setBackgroundColor(backgroundColor);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [backgroundColor, startChangeScrollPosition]);
 
   return (
     <>
       <Card
+        as="section"
         variant="flat"
         css={{
           display: 'flex',
           flexDirection: 'column',
-          height: `calc(${JSON.stringify(size?.height)}px + 1rem)`,
+          borderBottomLeftRadius: 0,
+          borderBottomRightRadius: 0,
+          borderTopRightRadius: 0,
+          height: `calc(${size?.height}px + 72px)`,
           width: '100%',
           borderWidth: 0,
+          backgroundColor: 'transparent',
+          backgroundImage: `linear-gradient(to top, ${backgroundColor}, ${tinycolor(
+            backgroundColor,
+          ).setAlpha(0)})`,
         }}
       >
         <Card.Header
@@ -212,18 +285,16 @@ const SeasonDetail = () => {
             flexGrow: 1,
             display: 'flex',
             justifyContent: 'center',
+            bottom: 0,
+            padding: 0,
+            borderBottomLeftRadius: 0,
+            borderBottomRightRadius: 0,
+            flexDirection: 'column',
           }}
         >
-          <Row
-            fluid
-            align="stretch"
-            justify="center"
-            css={{
-              padding: '20px',
-              maxWidth: '1920px',
-            }}
-          >
-            <Col span={4} css={{ display: 'none', '@xs': { display: 'flex' } }}>
+          <BackgroundContent />
+          <div className="w-full grid grid-areas-small sm:grid-areas-wide grid-cols-[1fr_2fr] grid-rows-[1fr_auto_auto] sm:grid-rows-[auto_1fr_auto] gap-x-4 gap-y-6 justify-center items-stretch max-w-[1920px] pt-5 pb-8 px-3 sm:px-3.5 xl:px-4 2xl:px-5">
+            <div className="flex flex-col grid-in-image" ref={imageRef}>
               {seasonDetail?.poster_path ? (
                 <Card.Image
                   // @ts-ignore
@@ -232,40 +303,42 @@ const SeasonDetail = () => {
                   alt={seasonDetail?.name}
                   title={seasonDetail?.name}
                   objectFit="cover"
-                  width="50%"
-                  showSkeleton
                   css={{
                     minWidth: 'auto !important',
-                    borderRadius: '24px',
+                    minHeight: 'auto !important',
+                    borderRadius: '$sm',
+                    boxShadow: '12px 12px 30px 10px rgb(104 112 118 / 0.35)',
+                    aspectRatio: '2 / 3',
+                    '@sm': {
+                      borderRadius: '$md',
+                    },
                   }}
+                  containerCss={{
+                    overflow: 'visible',
+                    width: '100% !important',
+                    '@xs': {
+                      width: '75% !important',
+                    },
+                    '@md': {
+                      width: '50% !important',
+                    },
+                  }}
+                  showSkeleton
                   loaderUrl="/api/image"
                   placeholder="empty"
                   responsive={[
                     {
                       size: {
-                        width: 137,
-                        height: 205,
-                      },
-                      maxWidth: 960,
-                    },
-                    {
-                      size: {
-                        width: 158,
-                        height: 237,
-                      },
-                      maxWidth: 1280,
-                    },
-                    {
-                      size: {
-                        width: 173,
-                        height: 260,
-                      },
-                      maxWidth: 1400,
-                    },
-                    {
-                      size: {
-                        width: 239,
-                        height: 359,
+                        width: Math.round(
+                          (imageSize?.width || 0) *
+                            (!isXl && !isSm ? 0.5 : isXl && !isSm ? 0.75 : isXl && isSm ? 1 : 1),
+                        ),
+                        height: Math.round(
+                          ((imageSize?.width || 0) *
+                            3 *
+                            (!isXl && !isSm ? 0.5 : isXl && !isSm ? 0.75 : isXl && isSm ? 1 : 1)) /
+                            2,
+                        ),
                       },
                     },
                   ]}
@@ -274,108 +347,37 @@ const SeasonDetail = () => {
                   }}
                 />
               ) : (
-                <Row align="center" justify="center">
+                <div className="flex justify-center items-center">
                   <Avatar
                     icon={<PhotoIcon width={48} height={48} />}
                     css={{
-                      width: '50% !important',
+                      width: '100% !important',
+                      height: 'auto !important',
                       size: '$20',
-                      minWidth: 'auto !important',
-                      minHeight: '205px !important',
-                      marginTop: '10vh',
-                      borderRadius: '24px !important',
+                      borderRadius: '$sm',
+                      aspectRatio: '2 / 3',
+                      '@xs': { width: '75% !important' },
+                      '@sm': { borderRadius: '$md' },
+                      '@md': { width: '50% !important' },
                     }}
                   />
-                </Row>
+                </div>
               )}
-            </Col>
-            <Col
-              css={{
-                width: '100%',
-                display: 'flex',
-                flexFlow: 'column',
-                justifyContent: 'flex-start',
-                '@xs': { width: '66.6667%' },
-              }}
-            >
-              {isSm &&
-                (seasonDetail?.poster_path ? (
-                  <>
-                    <Row>
-                      <Card.Image
-                        // @ts-ignore
-                        as={Image}
-                        src={TMDB.posterUrl(seasonDetail?.poster_path)}
-                        alt={seasonDetail?.name}
-                        title={seasonDetail?.name}
-                        objectFit="cover"
-                        css={{
-                          minWidth: 'auto !important',
-                          marginTop: '2rem',
-                          borderRadius: '24px',
-                        }}
-                        showSkeleton
-                        loaderUrl="/api/image"
-                        placeholder="empty"
-                        options={{
-                          contentType: MimeType.WEBP,
-                        }}
-                        responsive={[
-                          {
-                            size: {
-                              width: 246,
-                              height: 369,
-                            },
-                            maxWidth: 375,
-                          },
-                          {
-                            size: {
-                              width: 235,
-                              height: 352,
-                            },
-                          },
-                        ]}
-                      />
-                    </Row>
-                    <Spacer y={1} />
-                  </>
-                ) : (
-                  <>
-                    <Row align="center" justify="center">
-                      <Avatar
-                        icon={<PhotoIcon width={48} height={48} />}
-                        css={{
-                          width: 'auto !important',
-                          size: '$20',
-                          minWidth: 'auto !important',
-                          minHeight: '205px !important',
-                          marginTop: '2rem',
-                          borderRadius: '24px !important',
-                        }}
-                      />
-                    </Row>
-                    <Spacer y={1} />
-                  </>
-                ))}
-              <Row>
-                <H2 h2 weight="bold">
-                  {seasonDetail?.name}
-                </H2>
-              </Row>
-              <Row>
-                <H5 h5 weight="bold">
-                  {seasonDetail?.episodes?.length || 0} episodes &middot; {seasonDetail?.air_date}{' '}
-                </H5>
-              </Row>
-              {seasonDetail?.overview && (
-                <Row>
-                  <H6 h6>{seasonDetail.overview}</H6>
-                </Row>
-              )}
-              <Spacer y={1} />
-              <TabLink pages={detailTab} linkTo={`/tv-shows/${tvId}/season/${seasonId}`} />
-            </Col>
-          </Row>
+            </div>
+            <div className="grid-in-title flex flex-col justify-start items-start w-full">
+              <H2 h2 weight="bold">
+                {detail?.name} {seasonDetail?.name}
+              </H2>
+              <H5 h5 weight="bold">
+                {seasonDetail?.episodes?.length || 0} episodes &middot; {seasonDetail?.air_date}{' '}
+              </H5>
+            </div>
+            {seasonDetail?.overview ? (
+              <div className="grid-in-info flex flex-col gap-y-3 sm:gap-y-6">
+                <H6 h6>{seasonDetail.overview}</H6>
+              </div>
+            ) : null}
+          </div>
         </Card.Header>
         <Card.Body css={{ p: 0 }}>
           <Card.Image
@@ -388,10 +390,8 @@ const SeasonDetail = () => {
             }
             showSkeleton
             css={{
-              minHeight: '100vh !important',
-              minWidth: '100% !important',
               width: '100%',
-              height: '100vh',
+              height: 'auto',
               top: 0,
               left: 0,
               objectFit: 'cover',
@@ -399,35 +399,39 @@ const SeasonDetail = () => {
             }}
             title={seasonDetail?.name}
             alt={seasonDetail?.name}
-            containerCss={{ margin: 0 }}
+            containerCss={{ margin: 0, visibility: size ? 'visible' : 'hidden' }}
             loaderUrl="/api/image"
             placeholder="empty"
             responsive={[
               {
                 size: {
-                  width: 260,
-                  height: 390,
+                  width: Math.round(size?.width || 0),
+                  height: Math.round(size?.height || 0) + 72,
                 },
               },
             ]}
             options={{
-              blurRadius: 15,
+              blurRadius: 80,
               contentType: MimeType.WEBP,
             }}
           />
         </Card.Body>
       </Card>
-      <Container
-        as="div"
-        responsive={false}
-        xl
-        css={{
-          margin: '0.75rem 0 0 0',
-          padding: 0,
-        }}
-      >
+      <div className="w-full flex flex-col justify-center items-center">
+        <div
+          className="w-full flex justify-center top-[64px] sticky z-[1000] transition-[padding] duration-100 ease-in-out"
+          style={{
+            backgroundColor,
+            paddingTop: tablinkPaddingTop,
+            paddingBottom: tablinkPaddingBottom,
+          }}
+          ref={tabLinkRef}
+        >
+          <BackgroundTabLink css={{ backgroundColor, zIndex: 1 }} />
+          <TabLink pages={tvSeasonDetailPages} linkTo={`/tv-shows/${tvId}/season/${seasonId}`} />
+        </div>
         <Outlet />
-      </Container>
+      </div>
     </>
   );
 };
@@ -440,4 +444,4 @@ export const CatchBoundary = () => {
 
 export const ErrorBoundary = ({ error }: { error: Error }) => <ErrorBoundaryView error={error} />;
 
-export default SeasonDetail;
+export default TvSeasonDetail;
