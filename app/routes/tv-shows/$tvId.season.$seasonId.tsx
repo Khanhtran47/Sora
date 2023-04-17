@@ -201,7 +201,7 @@ export const handle = {
 };
 
 const TvSeasonDetail = () => {
-  const { seasonDetail, color } = useLoaderData<typeof loader>();
+  const { detail, seasonDetail, color } = useLoaderData<typeof loader>();
   const { tvId, seasonId } = useParams();
   const [size, ref] = useMeasure<HTMLDivElement>();
   const [imageSize, imageRef] = useMeasure<HTMLDivElement>();
@@ -366,7 +366,7 @@ const TvSeasonDetail = () => {
             </div>
             <div className="grid-in-title flex flex-col justify-start items-start w-full">
               <H2 h2 weight="bold">
-                {seasonDetail?.name}
+                {detail?.name} {seasonDetail?.name}
               </H2>
               <H5 h5 weight="bold">
                 {seasonDetail?.episodes?.length || 0} episodes &middot; {seasonDetail?.air_date}{' '}
