@@ -27,6 +27,7 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
   const { isSwipeFullscreen } = useSoraSettings();
   const artRef = useRef<HTMLDivElement>(null);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleDragEnd = (event: MouseEvent | PointerEvent | TouchEvent, info: PanInfo) => {
     if (artplayer && isSwipeFullscreen.value) {
       if (!artplayer.fullscreen && info.offset.y < -100) {

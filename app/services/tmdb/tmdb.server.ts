@@ -1,6 +1,6 @@
 import { META, PROVIDERS_LIST } from '@consumet/extensions';
-import { IMedia } from '~/types/media';
-import {
+import type { IMedia } from '~/types/media';
+import type {
   ICredit,
   IMediaList,
   IMovieDetail,

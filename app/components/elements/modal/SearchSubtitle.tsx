@@ -21,7 +21,7 @@ import usePlayerState from '~/store/player/usePlayerState';
 import { useMediaQuery, useWindowSize } from '@react-hookz/web';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 
-import { ISubtitlesSearch, ISubtitle } from '~/services/open-subtitles/open-subtitles.types';
+import type { ISubtitlesSearch, ISubtitle } from '~/services/open-subtitles/open-subtitles.types';
 
 import {
   Select,
@@ -277,12 +277,12 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
       >
         {fetcher.type === 'normalLoad' && !isGetSubtitleLink && (
           <div role="status" className="max-w-sm animate-pulse">
-            <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4" />
-            <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px] mb-4" />
-            <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-4" />
-            <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[330px] mb-4" />
-            <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[300px] mb-4" />
-            <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]" />
+            <div className="mb-4 h-2.5 w-48 rounded-full bg-gray-200 dark:bg-gray-700" />
+            <div className="mb-4 h-2 max-w-[360px] rounded-full bg-gray-200 dark:bg-gray-700" />
+            <div className="mb-4 h-2 rounded-full bg-gray-200 dark:bg-gray-700" />
+            <div className="mb-4 h-2 max-w-[330px] rounded-full bg-gray-200 dark:bg-gray-700" />
+            <div className="mb-4 h-2 max-w-[300px] rounded-full bg-gray-200 dark:bg-gray-700" />
+            <div className="h-2 max-w-[360px] rounded-full bg-gray-200 dark:bg-gray-700" />
             <span className="sr-only">Loading...</span>
           </div>
         )}

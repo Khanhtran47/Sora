@@ -1,5 +1,5 @@
 import React from 'react';
-import { styled, CSS } from '@nextui-org/react';
+import { styled, type CSS } from '@nextui-org/react';
 import * as TabsPrimitive from '@radix-ui/react-tabs';
 import { motion } from 'framer-motion';
 

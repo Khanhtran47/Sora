@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { json } from '@remix-run/node';
 import type { MetaFunction, LoaderArgs } from '@remix-run/node';
-import { useCatch, useLoaderData, Outlet, NavLink, RouteMatch } from '@remix-run/react';
+import { useCatch, useLoaderData, Outlet, NavLink, type RouteMatch } from '@remix-run/react';
 import { Container, Row, Col, Spacer, Badge } from '@nextui-org/react';
 
 import { getPeopleDetail, getPeopleExternalIds } from '~/services/tmdb/tmdb.server';
@@ -112,6 +112,7 @@ export const handle = {
   ),
   showTabLink: true,
   tabLinkPages: peopleDetailPages,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   tabLinkTo: (params: any) => `/people/${params.peopleId}`,
 };
 

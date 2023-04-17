@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 /* eslint-disable react/no-danger */
 import * as React from 'react';
 import type { LinksFunction, MetaFunction, LoaderArgs } from '@remix-run/node';
@@ -83,7 +84,7 @@ interface DocumentProps {
   lang?: string;
   dir?: 'ltr' | 'rtl';
   gaTrackingId?: string;
-  ENV?: any;
+  ENV?: unknown;
 }
 
 export const links: LinksFunction = () => [
@@ -606,21 +607,21 @@ const App = () => {
         <AnimatePresence>
           {isLoading && process.env.NODE_ENV !== 'development' && !isBot ? (
             <div
-              className="w-full h-full fixed block top-0 left-0"
+              className="fixed top-0 left-0 block h-full w-full"
               style={{ zIndex: '9999', backgroundColor: 'var(--nextui-colors-background)' }}
             >
               <motion.div
                 initial={{ opacity: 1 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="top-1/2 my-auto mx-auto block relative w-0 h-0"
+                className="relative top-1/2 m-auto block h-0 w-0"
                 style={{ marginTop: '-77px' }}
               >
-                <div className="flex justify-center	items-center mb-5">
+                <div className="mb-5 flex	items-center justify-center">
                   <Image
                     width="100px"
                     height="100px"
-                    className="rounded-full mr-5"
+                    className="mr-5 rounded-full"
                     loaderUrl="/api/image"
                     title="Logo Loading"
                     alt="Logo Loading"
@@ -657,7 +658,7 @@ const App = () => {
                   </h1>
                 </div>
                 <div style={{ width: `${size}px`, height: `${size}px` }} className="animate-spin">
-                  <div className="h-full w-full border-4 border-t-primary border-b-primary rounded-[50%]" />
+                  <div className="h-full w-full rounded-[50%] border-4 border-y-primary" />
                 </div>
               </motion.div>
             </div>
@@ -762,6 +763,7 @@ export const CatchBoundary = () => {
 
 export const ErrorBoundary = ({ error }: { error: Error }) => {
   const isProd = process.env.NODE_ENV === 'production' && process.env.DEPLOY_ENV === 'production';
+  // eslint-disable-next-line no-console
   console.log(error);
   return (
     <Document title="Error!">

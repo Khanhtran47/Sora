@@ -5,9 +5,9 @@ import { Spacer, Button, Row, Col, Card, Avatar } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
 import tinycolor from 'tinycolor2';
 
-import { IEpisode } from '~/services/tmdb/tmdb.types';
-import { IEpisodeInfo } from '~/services/consumet/anilist/anilist.types';
-import { IMedia } from '~/types/media';
+import type { IEpisode } from '~/services/tmdb/tmdb.types';
+import type { IEpisodeInfo } from '~/services/consumet/anilist/anilist.types';
+import type { IMedia } from '~/types/media';
 
 import { useMediaQuery } from '@react-hookz/web';
 

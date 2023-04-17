@@ -14,13 +14,13 @@ import useCardHoverStore from '~/store/card/useCardHoverStore';
 
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { useMediaQuery, useMeasure } from '@react-hookz/web';
-import { IImage } from '~/services/tmdb/tmdb.types';
-import { ITrailer } from '~/services/consumet/anilist/anilist.types';
-import { Title } from '~/types/media';
+import type { IImage } from '~/services/tmdb/tmdb.types';
+import type { ITrailer } from '~/services/consumet/anilist/anilist.types';
+import type { Title } from '~/types/media';
 import TMDB from '~/utils/media';
 
 import AspectRatio from '~/components/elements/aspect-ratio/AspectRatio';
-import { Trailer } from '~/components/elements/modal/WatchTrailerModal';
+import type { Trailer } from '~/components/elements/modal/WatchTrailerModal';
 import Rating from '~/components/elements/shared/Rating';
 import { H5, H6 } from '~/components/styles/Text.styles';
 
@@ -606,7 +606,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
               }}
               className={
                 showTrailer
-                  ? 'relative !w-full overflow-hidden !h-[300%] !-top-[100%] opacity-80'
+                  ? 'relative !-top-[100%] !h-[300%] !w-full overflow-hidden opacity-80'
                   : 'hidden'
               }
             />
@@ -661,7 +661,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
               }}
               className={
                 showTrailer
-                  ? 'relative !w-full overflow-hidden !h-[300%] !-top-[100%] opacity-80'
+                  ? 'relative !-top-[100%] !h-[300%] !w-full overflow-hidden opacity-80'
                   : 'hidden'
               }
             />

@@ -10,7 +10,7 @@ import {
   useLoaderData,
   Outlet,
   NavLink,
-  RouteMatch,
+  type RouteMatch,
   useFetcher,
   useLocation,
 } from '@remix-run/react';
@@ -32,7 +32,7 @@ import { CACHE_CONTROL } from '~/utils/server/http';
 import TMDB from '~/utils/media';
 
 import { MediaDetail, MediaBackgroundImage } from '~/components/media/MediaDetail';
-import WatchTrailerModal, { Trailer } from '~/components/elements/modal/WatchTrailerModal';
+import WatchTrailerModal, { type Trailer } from '~/components/elements/modal/WatchTrailerModal';
 import CatchBoundaryView from '~/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/components/ErrorBoundaryView';
 import TabLink from '~/components/elements/tab/TabLink';
@@ -241,7 +241,7 @@ const TvShowDetail = () => {
   return (
     <>
       <MediaBackgroundImage backdropPath={backdropPath} backgroundColor={backgroundColor} />
-      <div className="w-full relative top-[-80px] sm:top-[-200px]">
+      <div className="relative top-[-80px] w-full sm:top-[-200px]">
         <MediaDetail
           type="tv"
           item={detail}
@@ -249,9 +249,9 @@ const TvShowDetail = () => {
           imdbRating={imdbRating}
           color={detail.color}
         />
-        <div className="w-full flex flex-col justify-center items-center">
+        <div className="flex w-full flex-col items-center justify-center">
           <div
-            className="w-full flex justify-center top-[64px] sticky z-[1000] transition-[padding] duration-100 ease-in-out"
+            className="sticky top-[64px] z-[1000] flex w-full justify-center transition-[padding] duration-100 ease-in-out"
             style={{
               backgroundColor,
               paddingTop: `${

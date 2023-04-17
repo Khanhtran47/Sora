@@ -17,7 +17,7 @@ import { authenticate } from '~/services/supabase';
 import { getAnimePopular } from '~/services/consumet/anilist/anilist.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
 
-import { IMedia } from '~/types/media';
+import type { IMedia } from '~/types/media';
 
 import MediaList from '~/components/media/MediaList';
 import featuredList from '~/constants/featuredList';
@@ -92,7 +92,7 @@ const Index = () => {
       animate={{ x: '0', opacity: 1 }}
       exit={{ y: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="w-full flex flex-col justify-center items-center mt-[72px] sm:mt-0"
+      className="mt-[72px] flex w-full flex-col items-center justify-center sm:mt-0"
     >
       <MediaList
         genresMovie={rootData?.genresMovie}
@@ -101,7 +101,7 @@ const Index = () => {
         listType="slider-banner"
         key="slider-banner-home"
       />
-      <div className="w-full flex flex-col justify-start items-center mt-9 px-3 sm:px-5">
+      <div className="mt-9 flex w-full flex-col items-center justify-start px-3 sm:px-5">
         <MediaList
           genresMovie={rootData?.genresMovie}
           genresTv={rootData?.genresTv}

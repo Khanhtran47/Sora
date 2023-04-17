@@ -3,7 +3,7 @@ import { Row, Col } from '@nextui-org/react';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 
 import ListEpisodes from '~/components/elements/shared/ListEpisodes';
-import { IEpisode } from '~/services/tmdb/tmdb.types';
+import type { IEpisode } from '~/services/tmdb/tmdb.types';
 
 const Episodes = () => {
   const seasonData = useTypedRouteLoaderData('routes/tv-shows/$tvId.season.$seasonId');

@@ -13,12 +13,12 @@ import { useMeasure, useMediaQuery } from '@react-hookz/web';
 import useCardHoverStore from '~/store/card/useCardHoverStore';
 
 import { useSoraSettings } from '~/hooks/useLocalStorage';
-import { IMedia, Title } from '~/types/media';
-import { ITrailer } from '~/services/consumet/anilist/anilist.types';
+import type { IMedia, Title } from '~/types/media';
+import type { ITrailer } from '~/services/consumet/anilist/anilist.types';
 
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 
-import { Trailer } from '~/components/elements/modal/WatchTrailerModal';
+import type { Trailer } from '~/components/elements/modal/WatchTrailerModal';
 import { H5, H6 } from '~/components/styles/Text.styles';
 import CardItemHover from './CardItemHover';
 

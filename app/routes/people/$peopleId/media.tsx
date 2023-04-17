@@ -5,7 +5,7 @@ import { Image as NextImage, Row, Spacer } from '@nextui-org/react';
 import { json } from '@remix-run/node';
 import type { MetaFunction, LoaderArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import { Gallery, Item, GalleryProps } from 'react-photoswipe-gallery';
+import { Gallery, Item, type GalleryProps } from 'react-photoswipe-gallery';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import Image, { MimeType } from 'remix-image';
 
@@ -54,7 +54,7 @@ const MediaPage = () => {
         outlineID: 'pswp__icn-rotate',
       },
       appendTo: 'bar',
-      onClick: (e, el, pswpInstance) => {
+      onClick: (_, __, pswpInstance) => {
         const item = pswpInstance.currSlide.content.element;
 
         const prevRotateAngle = Number(item.dataset.rotateAngel) || 0;
@@ -67,7 +67,7 @@ const MediaPage = () => {
         )} rotate(-${rotateAngle}deg)`;
         item.dataset.rotateAngel = String(rotateAngle);
       },
-      onInit: (el, pswpInstance) => {
+      onInit: (_, pswpInstance) => {
         // remove applied rotation on slide change
         // https://photoswipe.com/events/#slide-content-events
         pswpInstance.on('contentRemove', () => {
@@ -90,7 +90,7 @@ const MediaPage = () => {
       </Row>
       <Spacer y={0.5} />
       <Gallery withCaption withDownloadButton uiElements={uiElements}>
-        <div className="grid grid-cols-1 xs:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 5xl:grid-cols-5 gap-3">
+        <div className="grid grid-cols-1 gap-3 xs:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 5xl:grid-cols-5">
           {images?.profiles?.map((image) => (
             <Item
               key={image.file_path}

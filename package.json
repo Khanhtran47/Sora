@@ -15,6 +15,9 @@
     "prebuild": "rimraf ./public/build \"./app/styles/**/*.css\"",
     "postinstall": "remix setup node",
     "start": "remix-serve build",
+    "format": "prettier --write .",
+    "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
+    "lint:fix": "pnpm run lint --fix",
     "prepare": "husky install"
   },
   "dependencies": {
@@ -87,7 +90,7 @@
     "satori": "^0.3.2",
     "sharp": "^0.31.3",
     "sonner": "^0.3.0",
-    "swiper": "^9.2.0",
+    "swiper": "^9.2.3",
     "tailwind-scrollbar-hide": "^1.1.7",
     "tailwind-variants": "^0.1.1",
     "tailwindcss": "^3.2.4",
@@ -96,6 +99,7 @@
     "zustand": "^4.1.5"
   },
   "devDependencies": {
+    "@ianvs/prettier-plugin-sort-imports": "^3.7.2",
     "@remix-run/dev": "^1.10.1",
     "@remix-run/eslint-config": "^1.10.1",
     "@types/i18next-fs-backend": "^1.1.2",
@@ -112,24 +116,23 @@
     "@typescript-eslint/parser": "^5.0.0",
     "babel-eslint": "^10.1.0",
     "cssnano": "^5.1.13",
-    "eslint": "^8.17.0",
-    "eslint-config-airbnb": "^19.0.4",
-    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint": "^8.38.0",
     "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.30.0",
     "eslint-plugin-react-hooks": "^4.5.0",
+    "eslint-plugin-tailwindcss": "^3.11.0",
     "husky": "^8.0.3",
     "lint-staged": "^13.0.1",
     "postcss-import": "^15.0.0",
     "prettier": "^2.8.0",
+    "prettier-plugin-tailwindcss": "^0.2.7",
     "typescript": "^4.9.3"
   },
   "lint-staged": {
-    "*.{tsx,ts,jsx,js}": "pnpm eslint",
-    "*": "pnpm prettier -c"
+    "*.{tsx,ts,jsx,js}": "pnpm lint",
+    "*.{tsx,ts,jsx,js,json,css,md}": "pnpm format"
   },
   "engines": {
     "node": ">=14"

@@ -3,10 +3,10 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { json } from '@remix-run/node';
 import type { MetaFunction, LoaderArgs } from '@remix-run/node';
-import { useCatch, useLoaderData, NavLink, RouteMatch } from '@remix-run/react';
+import { useCatch, useLoaderData, NavLink, type RouteMatch } from '@remix-run/react';
 import { Container, Spacer, Badge } from '@nextui-org/react';
 import Vibrant from 'node-vibrant';
-import { ISource, IMovieInfo } from '@consumet/extensions';
+import type { ISource, IMovieInfo } from '@consumet/extensions';
 
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 

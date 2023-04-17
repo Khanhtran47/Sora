@@ -1,6 +1,6 @@
 import { useLoaderData, useLocation, NavLink } from '@remix-run/react';
-import { json, MetaFunction } from '@remix-run/node';
-import type { LoaderArgs } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type { LoaderArgs, MetaFunction } from '@remix-run/node';
 import { Badge } from '@nextui-org/react';
 import { motion } from 'framer-motion';
 
@@ -8,7 +8,7 @@ import { authenticate } from '~/services/supabase';
 import { getAnimeRecentEpisodes } from '~/services/consumet/anilist/anilist.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
 
-import { IMedia } from '~/types/media';
+import type { IMedia } from '~/types/media';
 
 import MediaList from '~/components/media/MediaList';
 
@@ -75,7 +75,7 @@ const RecentEpisodes = () => {
       animate={{ x: '0', opacity: 1 }}
       exit={{ y: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="w-full flex justify-center flex-col items-center px-3 sm:px-0"
+      className="flex w-full flex-col items-center justify-center px-3 sm:px-0"
     >
       {items && items.results && items.results.length > 0 && (
         <MediaList

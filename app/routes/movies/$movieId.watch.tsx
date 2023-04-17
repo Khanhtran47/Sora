@@ -1,11 +1,8 @@
-/* eslint-disable @typescript-eslint/indent */
-/* eslint-disable @typescript-eslint/no-throw-literal */
-import { MetaFunction, json } from '@remix-run/node';
-import type { LoaderArgs } from '@remix-run/node';
-import { useCatch, useLoaderData, NavLink, RouteMatch } from '@remix-run/react';
+import { type MetaFunction, type LoaderArgs, json } from '@remix-run/node';
+import { useCatch, useLoaderData, NavLink, type RouteMatch } from '@remix-run/react';
 import { Container, Spacer, Badge } from '@nextui-org/react';
 import Vibrant from 'node-vibrant';
-import { ISource } from '@consumet/extensions';
+import type { ISource } from '@consumet/extensions';
 
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 

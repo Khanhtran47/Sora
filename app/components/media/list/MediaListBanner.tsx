@@ -7,7 +7,7 @@ import { Thumbs, Pagination, Autoplay } from 'swiper';
 import { Swiper as SwiperReact, SwiperSlide, useSwiper } from 'swiper/react';
 import type { Swiper } from 'swiper';
 
-import { IMedia } from '~/types/media';
+import type { IMedia } from '~/types/media';
 import { useMediaQuery } from '@react-hookz/web';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 
@@ -401,7 +401,7 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
               disableOnInteraction: false,
             }}
             style={{ width: '100%' }}
-            onAutoplayTimeLeft={(s, timeLeft, percentage) => {
+            onAutoplayTimeLeft={(_, timeLeft, percentage) => {
               if (
                 autoplayProgressRef.current &&
                 autoplayProgressRef.current.firstChild &&

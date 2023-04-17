@@ -1,6 +1,6 @@
 /* eslint-disable arrow-body-style */
 import { generateRobotsTxt, generateSitemap } from '@balavishnuvj/remix-seo';
-import { EntryContext } from '@remix-run/node';
+import type { EntryContext } from '@remix-run/node';
 
 type Handler = (request: Request, remixContext: EntryContext) => Promise<Response | null> | null;
 

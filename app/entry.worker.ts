@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
 /// <reference lib="WebWorker" />
@@ -13,6 +14,7 @@ const ASSET_CACHE = 'asset-cache';
 const DATA_CACHE = 'data-cache';
 const DOCUMENT_CACHE = 'document-cache';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function debug(...messages: any[]) {
   if (process.env.NODE_ENV === 'development') {
     console.debug(...messages);

@@ -211,7 +211,7 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
                       hover
                       autoplay={false}
                       speed={0.75}
-                      className="w-8 h-8"
+                      className="h-8 w-8"
                       loop
                     />
                   }
@@ -266,7 +266,7 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
                       hover
                       autoplay={false}
                       speed={0.75}
-                      className="w-8 h-8"
+                      className="h-8 w-8"
                       loop
                     />
                   }

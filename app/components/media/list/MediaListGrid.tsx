@@ -8,7 +8,7 @@ import { useMediaQuery, useMeasure } from '@react-hookz/web';
 
 import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
 
-import { IMedia } from '~/types/media';
+import type { IMedia } from '~/types/media';
 import MediaItem from '../item';
 
 interface IMediaListCardProps {

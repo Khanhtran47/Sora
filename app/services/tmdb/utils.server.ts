@@ -2,8 +2,8 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { env } from 'process';
-import { IMedia } from '~/types/media';
-import {
+import type { IMedia } from '~/types/media';
+import type {
   BackdropSize,
   ProfileSize,
   ListMovieType,

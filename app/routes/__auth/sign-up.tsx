@@ -1,4 +1,4 @@
-import { ActionFunction, LoaderFunction, json, redirect } from '@remix-run/node';
+import { type ActionArgs, type LoaderArgs, json, redirect } from '@remix-run/node';
 import { useActionData, NavLink } from '@remix-run/react';
 import { Container, Badge } from '@nextui-org/react';
 
@@ -17,7 +17,7 @@ type ActionData = {
   error?: string;
 };
 
-export const action: ActionFunction = async ({ request }) => {
+export const action = async ({ request }: ActionArgs) => {
   const { searchParams } = new URL(request.url);
   const data = await request.clone().formData();
 
@@ -79,7 +79,7 @@ export const action: ActionFunction = async ({ request }) => {
   });
 };
 
-export const loader = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const { searchParams } = new URL(request.url);
   const session = await getSessionFromCookie(request.headers.get('Cookie'));
   const ref = (searchParams.get('ref') || '/').replace('_0x3F_', '?').replace('_0x26', '&');

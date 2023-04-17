@@ -137,7 +137,7 @@ const DesignSystem = () => {
             onPress={() =>
               toast('This is a toast', {
                 description: 'This is a toast description',
-                icon: <Info className="w-5 h-5" />,
+                icon: <Info className="h-5 w-5" />,
                 duration: Infinity,
               })
             }
@@ -172,6 +172,7 @@ const DesignSystem = () => {
               toast('This is a action toast', {
                 action: {
                   label: 'Undo',
+                  // eslint-disable-next-line no-console
                   onClick: () => console.log('Undo'),
                 },
                 duration: Infinity,

@@ -29,7 +29,7 @@ const BottomNav = (props: IBottomNavProps) => {
   const [search] = useSearchParams();
   const scrollDirection = useLayoutScrollPosition((state) => state.scrollDirection);
   const bottomNavItemStyles = tv({
-    base: 'flex flex-col justify-center items-center gap-y-2 text-xs font-medium rounded-md bg-transparent text-text',
+    base: 'text-text flex flex-col items-center justify-center gap-y-2 rounded-md bg-transparent text-xs font-medium',
     variants: {
       active: {
         true: 'text-primary',
@@ -79,7 +79,7 @@ const BottomNav = (props: IBottomNavProps) => {
       initial={{ y: 0 }}
       animate={{ y: scrollDirection === 'down' ? 65 : 0 }}
       transition={{ duration: 0.5 }}
-      className="w-full fixed bottom-0 flex flex-row justify-around items-center flex-nowrap py-2 bg-background-alpha h-16 backdrop-blur-md sm:hidden border-t border-border drop-shadow-md z-[1000]"
+      className="fixed bottom-0 z-[1000] flex h-16 w-full flex-row flex-nowrap items-center justify-around border-t border-border bg-background-alpha py-2 drop-shadow-md backdrop-blur-md sm:hidden"
     >
       <NavLink
         to="/"
@@ -125,7 +125,7 @@ const BottomNav = (props: IBottomNavProps) => {
           open={openMore}
           onOpenChange={() => setOpenMore(!openMore)}
         >
-          <div className="grid grid-cols-3 xs:grid-cols-4 gap-x-3 gap-y-5 justify-center p-2 my-4">
+          <div className="my-4 grid grid-cols-3 justify-center gap-x-3 gap-y-5 p-2 xs:grid-cols-4">
             {moreNavItems.map((item) => (
               <NavLink
                 key={item.name}

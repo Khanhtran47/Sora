@@ -15,9 +15,12 @@ export const loader = async ({ request }: LoaderArgs) => {
   const youtubeVideo = await getYoutubeVideo(id, true, true);
   if (!youtubeVideo) throw new Response('Not Found', { status: 404 });
 
-  return json({ youtubeVideo }, {
-    headers: {
-      'Cache-Control': CACHE_CONTROL.default,
-    }
-  });
+  return json(
+    { youtubeVideo },
+    {
+      headers: {
+        'Cache-Control': CACHE_CONTROL.default,
+      },
+    },
+  );
 };

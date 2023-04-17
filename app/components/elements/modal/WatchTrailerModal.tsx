@@ -1,8 +1,8 @@
 import { Modal } from '@nextui-org/react';
-import YouTube, { YouTubeProps } from 'react-youtube';
+import YouTube, { type YouTubeProps } from 'react-youtube';
 
 import { useWindowSize } from '@react-hookz/web';
-import { ITrailer } from '~/services/consumet/anilist/anilist.types';
+import { type ITrailer } from '~/services/consumet/anilist/anilist.types';
 
 export type Trailer = {
   iso_639_1?: string;

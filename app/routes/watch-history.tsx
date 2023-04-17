@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { NavLink, useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 import { json } from '@remix-run/node';
 import type { LoaderArgs } from '@remix-run/node';
-import { authenticate, getCountHistory, getHistory, IHistory } from '~/services/supabase';
+import { authenticate, getCountHistory, getHistory, type IHistory } from '~/services/supabase';
 import {
   Button,
   Checkbox,

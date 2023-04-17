@@ -6,7 +6,7 @@ import { useLocation, useNavigate, Form } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 import { ClientOnly } from 'remix-utils';
 
-import { ILanguage } from '~/services/tmdb/tmdb.types';
+import type { ILanguage } from '~/services/tmdb/tmdb.types';
 
 import {
   sortMovieItems,
@@ -48,7 +48,7 @@ const Filter = (props: IFilterProps) => {
   }, [languages, t]);
   const animeYearItems = [
     t('all'),
-    ...Array.from(new Array(currentYear - 1938), (x, i) => i + 1940).reverse(),
+    ...Array.from(new Array(currentYear - 1938), (_, i) => i + 1940).reverse(),
   ];
   const animeSeasonItems = [t('all'), ...animeSeason];
   const animeStatusItems = [t('all'), ...animeStatus];

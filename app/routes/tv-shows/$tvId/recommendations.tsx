@@ -3,7 +3,7 @@
 import { useRef } from 'react';
 import { json } from '@remix-run/node';
 import type { MetaFunction, LoaderArgs } from '@remix-run/node';
-import { useLoaderData, useNavigate, NavLink, RouteMatch, useParams } from '@remix-run/react';
+import { useLoaderData, useNavigate, NavLink, type RouteMatch, useParams } from '@remix-run/react';
 import { Badge } from '@nextui-org/react';
 
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
@@ -80,7 +80,7 @@ const TvRecommendationsPage = () => {
   };
 
   return (
-    <div className="w-full flex flex-col mt-3 max-w-[1920px] px-3 sm:px-3.5 xl:px-4 2xl:px-5 gap-y-4">
+    <div className="mt-3 flex w-full max-w-[1920px] flex-col gap-y-4 px-3 sm:px-3.5 xl:px-4 2xl:px-5">
       <div ref={ref} />
       {recommendations && recommendations.items && recommendations.items.length > 0 ? (
         <MediaList

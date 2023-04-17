@@ -91,7 +91,7 @@ export async function WakeLock(): Promise<ResponseObject> {
       // This is an experimental feature!
 
       // @ts-ignore
-      const wakelock = navigator.wakeLock.request('screen');
+      const wakelock = await navigator.wakeLock.request('screen');
       if (wakelock) {
         return {
           status: 'success',
@@ -357,7 +357,7 @@ export async function copyImage(url: string): Promise<ResponseObject> {
  * @param {any} data - The data to be shared.
  * @return {Promise<ResponseObject>} An object consisting of two properties: A status to indicate the status of the invocation and also an accompanying message.
  */
-export async function WebShare(data: any): Promise<ResponseObject> {
+export async function WebShare(data: never): Promise<ResponseObject> {
   try {
     if (navigator.share && navigator.canShare(data)) {
       await navigator.share(data);
@@ -423,7 +423,7 @@ export async function WebShareLink(
  */
 export async function WebShareFile(
   title: string,
-  data: any[],
+  data: never[],
   text: string,
 ): Promise<ResponseObject> {
   const filesArray = [...data];

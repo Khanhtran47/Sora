@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { json } from '@remix-run/node';
 import type { LoaderArgs, MetaFunction } from '@remix-run/node';
-import { useCatch, useLoaderData, NavLink, RouteMatch } from '@remix-run/react';
+import { useCatch, useLoaderData, NavLink, type RouteMatch } from '@remix-run/react';
 import { Container, Spacer, Badge } from '@nextui-org/react';
 import { env } from 'process';
 
@@ -18,13 +18,13 @@ import {
   getKissKhEpisodeStream,
   getKissKhEpisodeSubtitle,
 } from '~/services/kisskh/kisskh.server';
-import { IEpisodeInfo } from '~/services/consumet/anilist/anilist.types';
+import type { IEpisodeInfo } from '~/services/consumet/anilist/anilist.types';
 import { loklokGetTvEpInfo, loklokGetMovieInfo } from '~/services/loklok';
-import { getAniskip, IAniSkipResponse } from '~/services/aniskip/aniskip.server';
+import { getAniskip, type IAniSkipResponse } from '~/services/aniskip/aniskip.server';
 import { LOKLOK_URL } from '~/services/loklok/utils.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
 
-import { IMedia } from '~/types/media';
+import type { IMedia } from '~/types/media';
 
 import WatchDetail from '~/components/elements/shared/WatchDetail';
 import CatchBoundaryView from '~/components/CatchBoundaryView';

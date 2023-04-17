@@ -38,18 +38,18 @@ export const handle = {
 };
 
 const sidebarStyles = tv({
-  base: 'grow-0 shrink-0 box-border fixed z-[1999] hidden sm:block transition-[max-width] duration-400',
+  base: 'duration-400 fixed z-[1999] box-border hidden shrink-0 grow-0 transition-[max-width] sm:block',
   variants: {
     sidebarMiniMode: {
-      true: 'basis-[80px] max-w-[80px] w-full',
-      false: 'basis-[250px] max-w-[250px] w-full',
+      true: 'w-full max-w-[80px] basis-[80px]',
+      false: 'w-full max-w-[250px] basis-[250px]',
     },
     sidebarBoxedMode: {
-      true: 'top-[15px] left-[15px] bg-background-contrast-alpha rounded-xl h-[calc(100vh_-_30px)]',
+      true: 'bg-background-contrast-alpha top-[15px] left-[15px] h-[calc(100vh_-_30px)] rounded-xl',
       false: 'top-0 left-0 h-screen',
     },
     sidebarHoverMode: {
-      true: 'basis-[250px] max-w-[250px] w-full bg-background-contrast rounded-r-xl border border-border shadow-2xl',
+      true: 'bg-background-contrast border-border w-full max-w-[250px] basis-[250px] rounded-r-xl border shadow-2xl',
     },
   },
   compoundVariants: [{}],
@@ -60,7 +60,7 @@ const sidebarStyles = tv({
 });
 
 const sidebarActiveStyles = tv({
-  base: 'h-[56px] justify-start transition-[width] duration-400',
+  base: 'duration-400 h-[56px] justify-start transition-[width]',
   variants: {
     sidebarMiniMode: {
       true: 'w-[56px]',
@@ -125,7 +125,7 @@ const viewportPositionStyles = tv({
 });
 
 const navigationPartStyles = tv({
-  base: 'w-full overflow-x-visible overflow-y-scroll scrollbar-hide',
+  base: 'scrollbar-hide w-full overflow-x-visible overflow-y-scroll',
   variants: {
     sidebarBoxedMode: {
       true: 'h-[calc(100%_-_100px)]',
@@ -154,11 +154,11 @@ const SideBar = () => {
         sidebarHoverMode: isHovered,
       })}
     >
-      <div className="flex flex-row justify-start w-full h-[65px] items-center mb-3 ml-4">
+      <div className="mb-3 ml-4 flex h-[65px] w-full flex-row items-center justify-start">
         <div
           className={`${
             sidebarMiniMode.value && !isHovered ? 'basis-[50px]' : 'basis-[65px]'
-          } grow-0 shrink-0 flex justify-center`}
+          } flex shrink-0 grow-0 justify-center`}
         >
           <Image
             width="30px"
@@ -211,10 +211,7 @@ const SideBar = () => {
             sidebarBoxedMode: sidebarBoxedMode.value,
           })}
         >
-          <NavigationMenuList
-            orientation="vertical"
-            className="m-0 [&_.active]:bg-primary-light-active [&_.active]:text-primary"
-          >
+          <NavigationMenuList className="m-0 [&_.active]:bg-primary-light-active [&_.active]:text-primary">
             <NavigationMenuItem
               className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
               value="home"
@@ -366,8 +363,8 @@ const SideBar = () => {
                 {!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? t('search') : null}
               </NavigationMenuTrigger>
               <NavigationMenuContent>
-                <ul className="m-0 flex flex-row gap-x-[6px] p-[6px] w-fit">
-                  <li className="flex flex-col gap-y-[6px] m-0 justify-between [&_.active]:bg-background [&_.active]:text-primary">
+                <ul className="m-0 flex w-fit flex-row gap-x-[6px] p-[6px]">
+                  <li className="m-0 flex flex-col justify-between gap-y-[6px] [&_.active]:bg-background [&_.active]:text-primary">
                     <NavigationMenuLink asChild>
                       <NavLink
                         to="/search/movie"
@@ -378,7 +375,7 @@ const SideBar = () => {
                       >
                         {({ isActive, isPending }) => (
                           <>
-                            <Search className="mr-2 w-5 h-5" filled={isActive} />
+                            <Search className="mr-2 h-5 w-5" filled={isActive} />
                             {t('search-movies')}
                             <Loading
                               className={isPending ? 'ml-auto' : '!hidden'}
@@ -398,7 +395,7 @@ const SideBar = () => {
                       >
                         {({ isActive, isPending }) => (
                           <>
-                            <Search className="mr-2 w-5 h-5" filled={isActive} />
+                            <Search className="mr-2 h-5 w-5" filled={isActive} />
                             {t('search-tv-shows')}
                             <Loading
                               className={isPending ? 'ml-auto' : '!hidden'}
@@ -418,7 +415,7 @@ const SideBar = () => {
                       >
                         {({ isActive, isPending }) => (
                           <>
-                            <Search className="mr-2 w-5 h-5" filled={isActive} />
+                            <Search className="mr-2 h-5 w-5" filled={isActive} />
                             {t('search-anime')}
                             <Loading
                               className={isPending ? 'ml-auto' : '!hidden'}
@@ -438,7 +435,7 @@ const SideBar = () => {
                       >
                         {({ isActive, isPending }) => (
                           <>
-                            <Search className="mr-2 w-5 h-5" filled={isActive} />
+                            <Search className="mr-2 h-5 w-5" filled={isActive} />
                             {t('search-people')}
                             <Loading
                               className={isPending ? 'ml-auto' : '!hidden'}
@@ -472,8 +469,8 @@ const SideBar = () => {
                 {!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? t('movies') : null}
               </NavigationMenuTrigger>
               <NavigationMenuContent>
-                <ul className="m-0 flex flex-row gap-x-[6px] p-[6px] w-fit">
-                  <li className="m-0 basis-[215px] grow-0 shrink-0">
+                <ul className="m-0 flex w-fit flex-row gap-x-[6px] p-[6px]">
+                  <li className="m-0 shrink-0 grow-0 basis-[215px]">
                     <NavLink to="/discover/movies">
                       <Card
                         as="div"
@@ -484,7 +481,7 @@ const SideBar = () => {
                           <Link
                             as={H6}
                             isExternal
-                            className="text-text !max-w-none !w-full [&_.nextui-link-icon]:ml-auto"
+                            className="!w-full !max-w-none text-text [&_.nextui-link-icon]:ml-auto"
                           >
                             {t('movies-discover')}
                           </Link>
@@ -522,7 +519,7 @@ const SideBar = () => {
                         </Card.Body>
                         <Card.Footer
                           isBlurred
-                          className="absolute b-0 z-[1] backdrop-blur-sm bg-background-contrast-alpha"
+                          className="b-0 absolute z-[1] bg-background-contrast-alpha backdrop-blur-sm"
                           css={{
                             position: 'absolute',
                             zIndex: 1,
@@ -538,7 +535,7 @@ const SideBar = () => {
                       </Card>
                     </NavLink>
                   </li>
-                  <li className="flex flex-col gap-y-[6px] m-0 justify-between [&_.active]:bg-background [&_.active]:text-primary">
+                  <li className="m-0 flex flex-col justify-between gap-y-[6px] [&_.active]:bg-background [&_.active]:text-primary">
                     <NavigationMenuLink asChild>
                       <NavLink
                         to="/movies/popular"
@@ -549,15 +546,15 @@ const SideBar = () => {
                       >
                         {({ isActive, isPending }) => (
                           <>
-                            <div className="flex flex-row justify-start items-center w-full mb-2">
-                              <Discover className="mr-2 w-5 h-5" filled={isActive} />
+                            <div className="mb-2 flex w-full flex-row items-center justify-start">
+                              <Discover className="mr-2 h-5 w-5" filled={isActive} />
                               {t('movies-popular')}
                               <Loading
                                 className={isPending ? 'ml-auto' : '!hidden'}
                                 type="points-opacity"
                               />
                             </div>
-                            <p className="text-text text-xs w-full">
+                            <p className="w-full text-xs text-text">
                               {t('movies-popular-subtitle')}
                             </p>
                           </>
@@ -574,15 +571,15 @@ const SideBar = () => {
                       >
                         {({ isActive, isPending }) => (
                           <>
-                            <div className="flex flex-row justify-start items-center w-full mb-2">
-                              <Discover className="mr-2 w-5 h-5" filled={isActive} />
+                            <div className="mb-2 flex w-full flex-row items-center justify-start">
+                              <Discover className="mr-2 h-5 w-5" filled={isActive} />
                               {t('movies-now-playing')}
                               <Loading
                                 className={isPending ? 'ml-auto' : '!hidden'}
                                 type="points-opacity"
                               />
                             </div>
-                            <p className="text-text text-xs w-full">
+                            <p className="w-full text-xs text-text">
                               {t('movies-now-playing-subtitle')}
                             </p>
                           </>
@@ -599,15 +596,15 @@ const SideBar = () => {
                       >
                         {({ isActive, isPending }) => (
                           <>
-                            <div className="flex flex-row justify-start items-center w-full mb-2">
-                              <Discover className="mr-2 w-5 h-5" filled={isActive} />
+                            <div className="mb-2 flex w-full flex-row items-center justify-start">
+                              <Discover className="mr-2 h-5 w-5" filled={isActive} />
                               {t('movies-upcoming')}
                               <Loading
                                 className={isPending ? 'ml-auto' : '!hidden'}
                                 type="points-opacity"
                               />
                             </div>
-                            <p className="text-text text-xs w-full">
+                            <p className="w-full text-xs text-text">
                               {t('movies-upcoming-subtitle')}
                             </p>
                           </>
@@ -624,15 +621,15 @@ const SideBar = () => {
                       >
                         {({ isActive, isPending }) => (
                           <>
-                            <div className="flex flex-row justify-start items-center w-full mb-2">
-                              <Discover className="mr-2 w-5 h-5" filled={isActive} />
+                            <div className="mb-2 flex w-full flex-row items-center justify-start">
+                              <Discover className="mr-2 h-5 w-5" filled={isActive} />
                               {t('movies-top-rated')}
                               <Loading
                                 className={isPending ? 'ml-auto' : '!hidden'}
                                 type="points-opacity"
                               />
                             </div>
-                            <p className="text-text text-xs w-full">
+                            <p className="w-full text-xs text-text">
                               {t('movies-top-rated-subtitle')}
                             </p>
                           </>
@@ -663,8 +660,8 @@ const SideBar = () => {
                 {!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? t('tv-shows') : null}
               </NavigationMenuTrigger>
               <NavigationMenuContent>
-                <ul className="m-0 flex flex-row gap-x-[6px] p-[6px] w-fit">
-                  <li className="m-0 basis-[215px] grow-0 shrink-0">
+                <ul className="m-0 flex w-fit flex-row gap-x-[6px] p-[6px]">
+                  <li className="m-0 shrink-0 grow-0 basis-[215px]">
                     <NavLink to="/discover/tv-shows">
                       <Card
                         as="div"
@@ -675,7 +672,7 @@ const SideBar = () => {
                           <Link
                             as={H6}
                             isExternal
-                            className="text-text !max-w-none !w-full [&_.nextui-link-icon]:ml-auto"
+                            className="!w-full !max-w-none text-text [&_.nextui-link-icon]:ml-auto"
                           >
                             {t('tv-shows-discover')}
                           </Link>
@@ -713,7 +710,7 @@ const SideBar = () => {
                         </Card.Body>
                         <Card.Footer
                           isBlurred
-                          className="absolute b-0 z-[1] backdrop-blur-sm bg-background-contrast-alpha"
+                          className="b-0 absolute z-[1] bg-background-contrast-alpha backdrop-blur-sm"
                           css={{
                             position: 'absolute',
                             zIndex: 1,
@@ -729,7 +726,7 @@ const SideBar = () => {
                       </Card>
                     </NavLink>
                   </li>
-                  <li className="flex flex-col gap-y-[6px] m-0 justify-between [&_.active]:bg-background [&_.active]:text-primary">
+                  <li className="m-0 flex flex-col justify-between gap-y-[6px] [&_.active]:bg-background [&_.active]:text-primary">
                     <NavigationMenuLink asChild>
                       <NavLink
                         to="/tv-shows/popular"
@@ -740,15 +737,15 @@ const SideBar = () => {
                       >
                         {({ isActive, isPending }) => (
                           <>
-                            <div className="flex flex-row justify-start items-center w-full mb-2">
-                              <Discover className="mr-2 w-5 h-5" filled={isActive} />
+                            <div className="mb-2 flex w-full flex-row items-center justify-start">
+                              <Discover className="mr-2 h-5 w-5" filled={isActive} />
                               {t('tv-shows-popular')}
                               <Loading
                                 className={isPending ? 'ml-auto' : '!hidden'}
                                 type="points-opacity"
                               />
                             </div>
-                            <p className="text-text text-xs w-full">
+                            <p className="w-full text-xs text-text">
                               {t('tv-shows-popular-subtitle')}
                             </p>
                           </>
@@ -765,15 +762,15 @@ const SideBar = () => {
                       >
                         {({ isActive, isPending }) => (
                           <>
-                            <div className="flex flex-row justify-start items-center w-full mb-2">
-                              <Discover className="mr-2 w-5 h-5" filled={isActive} />
+                            <div className="mb-2 flex w-full flex-row items-center justify-start">
+                              <Discover className="mr-2 h-5 w-5" filled={isActive} />
                               {t('tv-shows-airing-today')}
                               <Loading
                                 className={isPending ? 'ml-auto' : '!hidden'}
                                 type="points-opacity"
                               />
                             </div>
-                            <p className="text-text text-xs w-full">
+                            <p className="w-full text-xs text-text">
                               {t('tv-shows-airing-today-subtitle')}
                             </p>
                           </>
@@ -790,15 +787,15 @@ const SideBar = () => {
                       >
                         {({ isActive, isPending }) => (
                           <>
-                            <div className="flex flex-row justify-start items-center w-full mb-2">
-                              <Discover className="mr-2 w-5 h-5" filled={isActive} />
+                            <div className="mb-2 flex w-full flex-row items-center justify-start">
+                              <Discover className="mr-2 h-5 w-5" filled={isActive} />
                               {t('tv-shows-on-the-air')}
                               <Loading
                                 className={isPending ? 'ml-auto' : '!hidden'}
                                 type="points-opacity"
                               />
                             </div>
-                            <p className="text-text text-xs w-full">
+                            <p className="w-full text-xs text-text">
                               {t('tv-shows-on-the-air-subtitle')}
                             </p>
                           </>
@@ -815,15 +812,15 @@ const SideBar = () => {
                       >
                         {({ isActive, isPending }) => (
                           <>
-                            <div className="flex flex-row justify-start items-center w-full mb-2">
-                              <Discover className="mr-2 w-5 h-5" filled={isActive} />
+                            <div className="mb-2 flex w-full flex-row items-center justify-start">
+                              <Discover className="mr-2 h-5 w-5" filled={isActive} />
                               {t('tv-shows-top-rated')}
                               <Loading
                                 className={isPending ? 'ml-auto' : '!hidden'}
                                 type="points-opacity"
                               />
                             </div>
-                            <p className="text-text text-xs w-full">
+                            <p className="w-full text-xs text-text">
                               {t('tv-shows-top-rated-subtitle')}
                             </p>
                           </>
@@ -854,8 +851,8 @@ const SideBar = () => {
                 {!sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? t('anime') : null}
               </NavigationMenuTrigger>
               <NavigationMenuContent>
-                <ul className="m-0 flex flex-row gap-x-[6px] p-[6px] w-fit">
-                  <li className="m-0 basis-[215px] grow-0 shrink-0">
+                <ul className="m-0 flex w-fit flex-row gap-x-[6px] p-[6px]">
+                  <li className="m-0 shrink-0 grow-0 basis-[215px]">
                     <NavLink to="/discover/anime">
                       <Card
                         as="div"
@@ -866,7 +863,7 @@ const SideBar = () => {
                           <Link
                             as={H6}
                             isExternal
-                            className="text-text !max-w-none !w-full [&_.nextui-link-icon]:ml-auto"
+                            className="!w-full !max-w-none text-text [&_.nextui-link-icon]:ml-auto"
                           >
                             {t('anime-discover')}
                           </Link>
@@ -904,7 +901,7 @@ const SideBar = () => {
                         </Card.Body>
                         <Card.Footer
                           isBlurred
-                          className="absolute b-0 z-[1] backdrop-blur-sm bg-background-contrast-alpha"
+                          className="b-0 absolute z-[1] bg-background-contrast-alpha backdrop-blur-sm"
                           css={{
                             position: 'absolute',
                             zIndex: 1,
@@ -920,7 +917,7 @@ const SideBar = () => {
                       </Card>
                     </NavLink>
                   </li>
-                  <li className="flex flex-col gap-y-[6px] m-0 justify-between [&_.active]:bg-background [&_.active]:text-primary">
+                  <li className="m-0 flex flex-col justify-between gap-y-[6px] [&_.active]:bg-background [&_.active]:text-primary">
                     <NavigationMenuLink asChild>
                       <NavLink
                         to="/anime/popular"
@@ -931,15 +928,15 @@ const SideBar = () => {
                       >
                         {({ isActive, isPending }) => (
                           <>
-                            <div className="flex flex-row justify-start items-center w-full mb-2">
-                              <Discover className="mr-2 w-5 h-5" filled={isActive} />
+                            <div className="mb-2 flex w-full flex-row items-center justify-start">
+                              <Discover className="mr-2 h-5 w-5" filled={isActive} />
                               {t('anime-popular')}
                               <Loading
                                 className={isPending ? 'ml-auto' : '!hidden'}
                                 type="points-opacity"
                               />
                             </div>
-                            <p className="text-text text-xs w-full">
+                            <p className="w-full text-xs text-text">
                               {t('anime-popular-subtitle')}
                             </p>
                           </>
@@ -956,15 +953,15 @@ const SideBar = () => {
                       >
                         {({ isActive, isPending }) => (
                           <>
-                            <div className="flex flex-row justify-start items-center w-full mb-2">
-                              <Discover className="mr-2 w-5 h-5" filled={isActive} />
+                            <div className="mb-2 flex w-full flex-row items-center justify-start">
+                              <Discover className="mr-2 h-5 w-5" filled={isActive} />
                               {t('anime-trending')}
                               <Loading
                                 className={isPending ? 'ml-auto' : '!hidden'}
                                 type="points-opacity"
                               />
                             </div>
-                            <p className="text-text text-xs w-full">
+                            <p className="w-full text-xs text-text">
                               {t('anime-trending-subtitle')}
                             </p>
                           </>
@@ -981,15 +978,15 @@ const SideBar = () => {
                       >
                         {({ isActive, isPending }) => (
                           <>
-                            <div className="flex flex-row justify-start items-center w-full mb-2">
-                              <Discover className="mr-2 w-5 h-5" filled={isActive} />
+                            <div className="mb-2 flex w-full flex-row items-center justify-start">
+                              <Discover className="mr-2 h-5 w-5" filled={isActive} />
                               {t('anime-recent-episodes')}
                               <Loading
                                 className={isPending ? 'ml-auto' : '!hidden'}
                                 type="points-opacity"
                               />
                             </div>
-                            <p className="text-text text-xs w-full">
+                            <p className="w-full text-xs text-text">
                               {t('anime-recent-episodes-subtitle')}
                             </p>
                           </>
@@ -1006,15 +1003,15 @@ const SideBar = () => {
                       >
                         {({ isPending }) => (
                           <>
-                            <div className="flex flex-row justify-start items-center w-full mb-2">
-                              <Discover className="mr-2 w-5 h-5" />
+                            <div className="mb-2 flex w-full flex-row items-center justify-start">
+                              <Discover className="mr-2 h-5 w-5" />
                               {t('anime-random')}
                               <Loading
                                 className={isPending ? 'ml-auto' : '!hidden'}
                                 type="points-opacity"
                               />
                             </div>
-                            <p className="text-text text-xs w-full">{t('anime-random-subtitle')}</p>
+                            <p className="w-full text-xs text-text">{t('anime-random-subtitle')}</p>
                           </>
                         )}
                       </NavLink>

@@ -9,10 +9,10 @@ import Image, { MimeType } from 'remix-image';
 import { tv } from 'tailwind-variants';
 import tinycolor from 'tinycolor2';
 
-import { IAnimeInfo } from '~/services/consumet/anilist/anilist.types';
+import type { IAnimeInfo } from '~/services/consumet/anilist/anilist.types';
 
-import { IMovieDetail, ITvShowDetail, IMovieTranslations } from '~/services/tmdb/tmdb.types';
-import { ColorPalette } from '~/routes/api/color-palette';
+import type { IMovieDetail, ITvShowDetail, IMovieTranslations } from '~/services/tmdb/tmdb.types';
+import type { ColorPalette } from '~/routes/api/color-palette';
 
 import TMDB from '~/utils/media';
 import { WebShareLink } from '~/utils/client/pwa-utils.client';
@@ -51,7 +51,7 @@ interface IAnimeDetail {
 }
 
 const backgroundImageStyles = tv({
-  base: 'w-full relative overflow-hidden bg-fixed bg-no-repeat bg-[left_0px_top_0px]',
+  base: 'relative w-full overflow-hidden bg-fixed bg-[left_0px_top_0px] bg-no-repeat',
   variants: {
     sidebarMiniMode: {
       true: 'sm:bg-[left_80px_top_0px]',
@@ -168,7 +168,7 @@ export const MediaDetail = (props: IMediaDetail) => {
           }}
         >
           <BackgroundContent />
-          <div className="w-full grid grid-areas-small sm:grid-areas-wide grid-cols-[1fr_2fr] grid-rows-[1fr_auto_auto] sm:grid-rows-[auto_1fr_auto] gap-x-4 gap-y-6 justify-center items-stretch max-w-[1920px] pt-5 px-3 sm:px-3.5 xl:px-4 2xl:px-5">
+          <div className="grid w-full max-w-[1920px] grid-cols-[1fr_2fr] grid-rows-[1fr_auto_auto] items-stretch justify-center gap-x-4 gap-y-6 px-3 pt-5 grid-areas-small sm:grid-rows-[auto_1fr_auto] sm:px-3.5 sm:grid-areas-wide xl:px-4 2xl:px-5">
             <div className="flex flex-col grid-in-image" ref={imageRef}>
               {posterPath ? (
                 <Card.Image
@@ -221,7 +221,7 @@ export const MediaDetail = (props: IMediaDetail) => {
                   }}
                 />
               ) : (
-                <div className="flex justify-center items-center">
+                <div className="flex items-center justify-center">
                   <Avatar
                     icon={<PhotoIcon width={48} height={48} />}
                     css={{
@@ -239,7 +239,7 @@ export const MediaDetail = (props: IMediaDetail) => {
               )}
               {isSm ? null : <Spacer y={2} />}
             </div>
-            <div className="grid-in-title flex flex-col justify-start items-start w-full">
+            <div className="flex w-full flex-col items-start justify-start grid-in-title">
               <H2 h1 weight="bold" css={{ '@xsMax': { fontSize: '1.75rem !important' } }}>
                 {`${title}${isSm ? '' : ` (${releaseYear})`}`}
               </H2>
@@ -249,7 +249,7 @@ export const MediaDetail = (props: IMediaDetail) => {
                 </H5>
               ) : null}
             </div>
-            <div className="grid-in-info flex flex-col gap-y-3 sm:gap-y-6">
+            <div className="flex flex-col gap-y-3 grid-in-info sm:gap-y-6">
               <div className="flex flex-row flex-wrap gap-3">
                 <Badge
                   size={isSm ? 'sm' : 'md'}
@@ -271,7 +271,7 @@ export const MediaDetail = (props: IMediaDetail) => {
                     color={colorPalette ? colorPalette[600] : undefined}
                   />
                   {imdbRating ? (
-                    <div className="flex flex-row items-center gap-x-2 ml-3">
+                    <div className="ml-3 flex flex-row items-center gap-x-2">
                       <H6
                         h6
                         weight="semibold"
@@ -314,7 +314,7 @@ export const MediaDetail = (props: IMediaDetail) => {
                   </H6>
                 </Badge>
               </div>
-              <div className="flex flex-row w-full justify-start items-center flex-wrap gap-3">
+              <div className="flex w-full flex-row flex-wrap items-center justify-start gap-3">
                 {genres &&
                   genres?.map((genre) => (
                     <Button
@@ -350,7 +350,7 @@ export const MediaDetail = (props: IMediaDetail) => {
                   ))}
               </div>
             </div>
-            <div className="grid-in-buttons w-full flex flex-row justify-between items-center flex-wrap mb-10 gap-4">
+            <div className="mb-10 flex w-full flex-row flex-wrap items-center justify-between gap-4 grid-in-buttons">
               {(status === 'Released' || status === 'Ended' || status === 'Returning Series') && (
                 <Button
                   type="button"
@@ -369,7 +369,7 @@ export const MediaDetail = (props: IMediaDetail) => {
                   </H5>
                 </Button>
               )}
-              <div className="flex flex-row items-center justify-start flex-wrap">
+              <div className="flex flex-row flex-wrap items-center justify-start">
                 <Button
                   type="button"
                   auto
@@ -485,7 +485,7 @@ export const AnimeDetail = (props: IAnimeDetail) => {
           }}
         >
           <BackgroundContent />
-          <div className="w-full grid grid-areas-small sm:grid-areas-wide grid-cols-[1fr_2fr] grid-rows-[1fr_auto_auto] sm:grid-rows-[auto_1fr_auto] gap-x-4 gap-y-6 justify-center items-stretch max-w-[1920px] pt-5 px-3 sm:px-3.5 xl:px-4 2xl:px-5">
+          <div className="grid w-full max-w-[1920px] grid-cols-[1fr_2fr] grid-rows-[1fr_auto_auto] items-stretch justify-center gap-x-4 gap-y-6 px-3 pt-5 grid-areas-small sm:grid-rows-[auto_1fr_auto] sm:px-3.5 sm:grid-areas-wide xl:px-4 2xl:px-5">
             <div className="flex flex-col grid-in-image" ref={imageRef}>
               {image ? (
                 <Card.Image
@@ -539,7 +539,7 @@ export const AnimeDetail = (props: IAnimeDetail) => {
                   }}
                 />
               ) : (
-                <div className="flex justify-center items-center">
+                <div className="flex items-center justify-center">
                   <Avatar
                     icon={<PhotoIcon width={48} height={48} />}
                     css={{
@@ -557,12 +557,12 @@ export const AnimeDetail = (props: IAnimeDetail) => {
               )}
               {isSm ? null : <Spacer y={2} />}
             </div>
-            <div className="grid-in-title flex flex-col justify-start items-start w-full">
+            <div className="flex w-full flex-col items-start justify-start grid-in-title">
               <H2 h1 weight="bold" css={{ '@xsMax': { fontSize: '1.75rem !important' } }}>
                 {`${title?.userPreferred || title?.english || title?.romaji || title?.native}`}
               </H2>
             </div>
-            <div className="grid-in-info flex flex-col gap-y-3 sm:gap-y-6">
+            <div className="flex flex-col gap-y-3 grid-in-info sm:gap-y-6">
               <div className="flex flex-row flex-wrap gap-3">
                 <Badge
                   size={isSm ? 'sm' : 'md'}
@@ -604,7 +604,7 @@ export const AnimeDetail = (props: IAnimeDetail) => {
                   </H6>
                 </Badge>
               </div>
-              <div className="flex flex-row w-full justify-start items-center flex-wrap gap-3">
+              <div className="flex w-full flex-row flex-wrap items-center justify-start gap-3">
                 {genres &&
                   genres?.map((genre) => (
                     <Button
@@ -634,7 +634,7 @@ export const AnimeDetail = (props: IAnimeDetail) => {
                   ))}
               </div>
             </div>
-            <div className="grid-in-buttons w-full flex flex-row justify-between items-center flex-wrap mb-10 gap-4">
+            <div className="mb-10 flex w-full flex-row flex-wrap items-center justify-between gap-4 grid-in-buttons">
               <Button
                 type="button"
                 auto
@@ -651,7 +651,7 @@ export const AnimeDetail = (props: IAnimeDetail) => {
                   Watch now
                 </H5>
               </Button>
-              <div className="flex flex-row items-center justify-start flex-wrap">
+              <div className="flex flex-row flex-wrap items-center justify-start">
                 <Button
                   type="button"
                   auto

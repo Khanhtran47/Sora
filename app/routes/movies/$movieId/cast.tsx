@@ -42,7 +42,7 @@ const MovieCastPage = () => {
   const { gotoPage, currentPage, maxPage, currentData } = useSplitArrayIntoPage(cast || [], 20);
 
   return (
-    <div className="w-full flex flex-col mt-3 max-w-[1920px] px-3 sm:px-3.5 xl:px-4 2xl:px-5 gap-y-4">
+    <div className="mt-3 flex w-full max-w-[1920px] flex-col gap-y-4 px-3 sm:px-3.5 xl:px-4 2xl:px-5">
       <div ref={ref} />
       {currentData && currentData.length > 0 ? (
         <MediaList

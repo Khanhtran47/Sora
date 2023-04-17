@@ -2,8 +2,8 @@
 /* eslint-disable @typescript-eslint/indent */
 import { create } from 'zustand';
 
-import { IMovieSource, IMovieSubtitle } from '~/services/consumet/flixhq/flixhq.types';
-import { ITrailer } from '~/services/consumet/anilist/anilist.types';
+import type { ITrailer } from '~/services/consumet/anilist/anilist.types';
+import type { IMovieSource, IMovieSubtitle } from '~/services/tmdb/tmdb.types';
 
 export type PlayerData =
   | {

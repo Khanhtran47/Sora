@@ -1,5 +1,5 @@
-import { IMedia, Title } from '~/types/media';
-import { ITrailer } from '~/services/consumet/anilist/anilist.types';
+import type { IMedia, Title } from '~/types/media';
+import type { ITrailer } from '~/services/consumet/anilist/anilist.types';
 import BannerItem from './BannerItem';
 import CardItem from './CardItem';
 

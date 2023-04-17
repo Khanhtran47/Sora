@@ -1,5 +1,5 @@
 import { Text, Image } from '@nextui-org/react';
-import { ThrownResponse } from '@remix-run/react';
+import { type ThrownResponse } from '@remix-run/react';
 
 import Flex from '~/components/styles/Flex.styles';
 

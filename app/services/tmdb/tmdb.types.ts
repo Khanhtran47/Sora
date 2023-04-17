@@ -1,4 +1,4 @@
-import { IMedia } from '~/types/media';
+import type { IMedia } from '~/types/media';
 
 // https://developers.themoviedb.org/3/configuration/get-api-configuration
 export type PosterSize = 'w92' | 'w154' | 'w185' | 'w342' | 'w500' | 'w780' | 'original';
@@ -328,4 +328,18 @@ export interface IList {
   items: IMedia[];
   name: string;
   poster_path: string | null;
+}
+
+export interface IMovieSource {
+  isM3U8?: boolean;
+  isDASH?: boolean;
+  quality: string;
+  url: string;
+}
+
+export interface IMovieSubtitle {
+  id?: number;
+  default?: boolean;
+  lang: string;
+  url: string;
 }

@@ -12,8 +12,8 @@ import useCardHoverStore from '~/store/card/useCardHoverStore';
 
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
-import { Trailer } from '~/components/elements/modal/WatchTrailerModal';
-import { ITrailer } from '~/services/consumet/anilist/anilist.types';
+import { type Trailer } from '~/components/elements/modal/WatchTrailerModal';
+import { type ITrailer } from '~/services/consumet/anilist/anilist.types';
 
 import Flex from '~/components/styles/Flex.styles';
 import { H4, H5, H6 } from '~/components/styles/Text.styles';
@@ -200,7 +200,7 @@ const CardItemHover = (props: ICardItemHoverProps) => {
                       pointerEvents: 'none',
                     }}
                     className={
-                      showTrailer ? 'aspect-w-16 aspect-h-9 rounded-lg overflow-hidden' : 'hidden'
+                      showTrailer ? 'aspect-w-16 aspect-h-9 overflow-hidden rounded-lg' : 'hidden'
                     }
                   />
                 );

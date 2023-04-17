@@ -1,6 +1,12 @@
 import { json } from '@remix-run/node';
 import type { MetaFunction, LoaderArgs } from '@remix-run/node';
-import { useLoaderData, useNavigate, NavLink, RouteMatch, useLocation } from '@remix-run/react';
+import {
+  useLoaderData,
+  useNavigate,
+  NavLink,
+  type RouteMatch,
+  useLocation,
+} from '@remix-run/react';
 import { Badge } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 
@@ -8,7 +14,7 @@ import { authenticate } from '~/services/supabase';
 import { getAnimeSearch } from '~/services/consumet/anilist/anilist.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
 
-import { IMedia } from '~/types/media';
+import type { IMedia } from '~/types/media';
 
 import MediaList from '~/components/media/MediaList';
 import SearchForm from '~/components/elements/SearchForm';
@@ -77,7 +83,7 @@ const SearchRoute = () => {
     navigate(`/search/anime/${value}`);
   };
   return (
-    <div className="w-full flex justify-center flex-col items-center px-3 sm:px-0">
+    <div className="flex w-full flex-col items-center justify-center px-3 sm:px-0">
       <SearchForm
         onSubmit={onSubmit}
         textOnButton={t('search.action')}

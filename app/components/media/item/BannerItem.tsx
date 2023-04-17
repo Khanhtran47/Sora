@@ -1,6 +1,6 @@
 import { useMediaQuery } from '@react-hookz/web';
-import { Title } from '~/types/media';
-import { ITrailer } from '~/services/consumet/anilist/anilist.types';
+import type { Title } from '~/types/media';
+import type { ITrailer } from '~/services/consumet/anilist/anilist.types';
 
 import BannerItemMobile from './BannerItemMobile';
 import BannerItemDesktop from './BannerItemDesktop';

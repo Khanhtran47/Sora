@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { ClientOnly } from 'remix-utils';
 import { AnimatePresence, motion } from 'framer-motion';
 
-import { IMedia } from '~/types/media';
-import { ILanguage } from '~/services/tmdb/tmdb.types';
+import type { IMedia } from '~/types/media';
+import type { ILanguage } from '~/services/tmdb/tmdb.types';
 import { useMediaQuery } from '@react-hookz/web';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 

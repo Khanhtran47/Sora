@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import * as SliderPrimitive from '@radix-ui/react-slider';
+import type * as SliderPrimitive from '@radix-ui/react-slider';
 import { forwardRef, useState } from 'react';
-import { Badge, CSS, styled } from '@nextui-org/react';
+import { Badge, type CSS, styled } from '@nextui-org/react';
 import { useHover } from '@react-aria/interactions';
 
 import { StyledSlider, StyledTrack, StyledRange, StyledThumb } from './Slider.styles';

@@ -37,25 +37,25 @@ export const handle = {
 };
 
 const headerStyles = tv({
-  base: 'h-[64px] w-[100vw] fixed z-[1000] py-3 px-5 flex-row justify-between items-center hidden sm:flex rounded-tl-xl gap-x-4',
+  base: 'fixed z-[1000] hidden h-[64px] w-[100vw] flex-row items-center justify-between gap-x-4 rounded-tl-xl py-3 px-5 sm:flex',
   variants: {
     miniSidebar: {
-      true: 'sm:w-[calc(100vw_-_80px)] top-0',
+      true: 'top-0 sm:w-[calc(100vw_-_80px)]',
     },
     boxedSidebar: {
-      true: 'sm:w-[calc(100vw_-_280px)] top-[15px]',
+      true: 'top-[15px] sm:w-[calc(100vw_-_280px)]',
     },
   },
   compoundVariants: [
     {
       miniSidebar: true,
       boxedSidebar: true,
-      class: 'sm:w-[calc(100vw_-_110px)] top-[15px]',
+      class: 'top-[15px] sm:w-[calc(100vw_-_110px)]',
     },
     {
       miniSidebar: false,
       boxedSidebar: false,
-      class: 'sm:w-[calc(100vw_-_250px)] top-0',
+      class: 'top-0 sm:w-[calc(100vw_-_250px)]',
     },
   ],
   defaultVariants: {
@@ -110,7 +110,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       })}
     >
       <div
-        className="absolute top-0 left-0 w-full z-[-1] backdrop-blur-md rounded-tl-xl pointer-events-none"
+        className="pointer-events-none absolute top-0 left-0 z-[-1] w-full rounded-tl-xl backdrop-blur-md"
         style={{
           opacity: headerBackgroundOpacity,
           height: isShowTabLink && !hideTabLinkWithLocation ? 112 : 64,
@@ -118,10 +118,10 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
         }}
       >
         {customHeaderBackgroundColor ? (
-          <div className="w-full h-full pointer-events-none bg-background-light" />
+          <div className="pointer-events-none h-full w-full bg-background-light" />
         ) : null}
       </div>
-      <div className="flex flex-row justify-center items-center gap-x-2">
+      <div className="flex flex-row items-center justify-center gap-x-2">
         <Button
           auto
           flat
@@ -141,7 +141,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
           css={{ w: 36, h: 36 }}
         />
       </div>
-      <div className="flex flex-row justify-between items-center w-full">
+      <div className="flex w-full flex-row items-center justify-between">
         {currentMiniTitle ? (
           <motion.div
             initial={{ opacity: 0, y: 60 }}
@@ -187,7 +187,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
               autoplay={false}
               keepLastFrame
               speed={2.7}
-              className="w-8 h-8"
+              className="h-8 w-8"
             />
           </Button>
         </Popover.Trigger>

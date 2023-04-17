@@ -78,7 +78,7 @@ const ListPeoplePopular = () => {
       animate={{ x: '0', opacity: 1 }}
       exit={{ y: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="w-full flex justify-center flex-col items-center px-3 sm:px-0"
+      className="flex w-full flex-col items-center justify-center px-3 sm:px-0"
     >
       {people && people.items && people.items.length > 0 && (
         <MediaList

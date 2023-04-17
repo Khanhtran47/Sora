@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
 import { json } from '@remix-run/node';
 import type { MetaFunction, LoaderArgs } from '@remix-run/node';
-import { useLoaderData, useNavigate, useParams, NavLink, RouteMatch } from '@remix-run/react';
+import { useLoaderData, useNavigate, useParams, NavLink, type RouteMatch } from '@remix-run/react';
 import { Badge } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 
@@ -87,7 +87,7 @@ const SearchRoute = () => {
   };
 
   return (
-    <div className="w-full flex justify-center flex-col items-center px-3 sm:px-0">
+    <div className="flex w-full flex-col items-center justify-center px-3 sm:px-0">
       <SearchForm
         onSubmit={onSubmit}
         textOnButton={t('search.action')}

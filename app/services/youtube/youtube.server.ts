@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable import/prefer-default-export */
-import { IYoutubeVideo, Item } from './youtube.types';
+import type { IYoutubeVideo, Item } from './youtube.types';
 import Youtube from './utils.server';
 
 const fetcher = async <T = any>(url: URL): Promise<T> => {

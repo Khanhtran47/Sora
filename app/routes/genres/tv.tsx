@@ -14,7 +14,7 @@ const TvGenresPage = () => {
     <div className="px-4">
       <H4>{t('tv-show-genres')}</H4>
       <Spacer y={1} />
-      <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 justify-center">
+      <div className="grid grid-cols-1 justify-center gap-3 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
         {Object.entries(genresTv).map(([id, name]) => (
           <Button
             key={id}

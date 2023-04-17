@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useMemo } from 'react';
@@ -16,7 +17,7 @@ import {
   Loading,
   Link,
 } from '@nextui-org/react';
-import { motion, AnimatePresence, PanInfo } from 'framer-motion';
+import { motion, AnimatePresence, type PanInfo } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { ClientOnly } from 'remix-utils';
 import Image, { MimeType } from 'remix-image';
@@ -51,7 +52,6 @@ import {
   TabsContent,
   Underline,
 } from '~/components/elements/tab/Tabs';
-import Balancer from '~/components/elements/shared/Balancer';
 import Kbd from '~/components/elements/Kbd';
 
 import LogoFooter from '~/assets/images/logo_footer.png';
@@ -219,6 +219,7 @@ const Settings = () => {
   //   [selectedSidebarStyleMode],
   // );
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleDragEnd = (event: MouseEvent | PointerEvent | TouchEvent, info: PanInfo) => {
     const currentTab = settingsTab.find((tab) => tab.id === activeTab);
     if (info.offset?.x > 100) {
@@ -466,7 +467,7 @@ const Settings = () => {
                               </H5>
                               {isMd ? null : (
                                 <>
-                                  <div className="flex flex-row justify-between items-center gap-x-2 w-full">
+                                  <div className="flex w-full flex-row items-center justify-between gap-x-2">
                                     <H6>{t('sidebar-mini-mode')}</H6>
                                     <Switch
                                       checked={sidebarMiniMode.value}
@@ -478,7 +479,7 @@ const Settings = () => {
                                       }}
                                     />
                                   </div>
-                                  <div className="flex flex-row justify-between items-center gap-x-2 w-full">
+                                  <div className="flex w-full flex-row items-center justify-between gap-x-2">
                                     <H6>{t('sidebar-hover-mode')}</H6>
                                     <Switch
                                       checked={sidebarHoverMode.value}
@@ -492,7 +493,7 @@ const Settings = () => {
                                   </div>
                                 </>
                               )}
-                              <div className="flex flex-row justify-between items-center gap-x-2 w-full">
+                              <div className="flex w-full flex-row items-center justify-between gap-x-2">
                                 <H6>{t('sidebar-boxed-mode')}</H6>
                                 <Switch
                                   checked={sidebarBoxedMode.value}
@@ -1519,10 +1520,8 @@ const Settings = () => {
                       </Flex>
                       <Spacer y={1} />
                       <H6 weight="semibold" css={{ textAlign: 'center' }}>
-                        <Balancer>
-                          This site does not store any files on its server. All contents are
-                          provided by non-affiliated third parties.
-                        </Balancer>
+                        This site does not store any files on its server. All contents are provided
+                        by non-affiliated third parties.
                       </H6>
                     </Container>
                   </motion.div>

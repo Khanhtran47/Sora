@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/indent */
 import { useRef } from 'react';
-import { MetaFunction } from '@remix-run/node';
+import type { MetaFunction } from '@remix-run/node';
 import { useLocation, NavLink } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import { Badge, Spacer, Pagination } from '@nextui-org/react';
@@ -56,7 +56,7 @@ const Collections = () => {
       animate={{ x: '0', opacity: 1 }}
       exit={{ y: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="w-full flex justify-center flex-col items-center px-3 sm:px-0"
+      className="flex w-full flex-col items-center justify-center px-3 sm:px-0"
     >
       <div ref={ref} />
       {featuredList && featuredList.length > 0 && (

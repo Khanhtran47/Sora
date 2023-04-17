@@ -2,7 +2,7 @@ import { META, PROVIDERS_LIST } from '@consumet/extensions';
 
 import { lruCache, cachified } from '~/services/lru-cache';
 import { fetchAnimeEpisodeHandler, fetchAnimeResultsHandler } from './utils.server';
-import { IAnimeList, IAnimeInfo, IEpisodeInfo, IAnimeResult } from './anilist.types';
+import type { IAnimeList, IAnimeInfo, IEpisodeInfo, IAnimeResult } from './anilist.types';
 
 const generateAnilistMeta = (provider?: string) => {
   if (provider) {

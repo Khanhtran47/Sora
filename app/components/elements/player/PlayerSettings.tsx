@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/indent */
 import { useMemo, useState } from 'react';
-import { Spacer, Button, Divider, Switch, SwitchEvent } from '@nextui-org/react';
+import { Spacer, Button, Divider, Switch, type SwitchEvent } from '@nextui-org/react';
 import { isMobileOnly } from 'react-device-detect';
 
 import { useSoraSettings } from '~/hooks/useLocalStorage';
@@ -1405,7 +1405,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                 direction="column"
                 align="start"
                 justify="start"
-                className="space-y-2 !p-2 w-full"
+                className="w-full space-y-2 !p-2"
               >
                 {currentDropdownLevel?.showBackButton || currentDropdownLevel?.showTitle ? (
                   <>
@@ -1445,7 +1445,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                   direction="column"
                   align="start"
                   justify="start"
-                  className="space-y-2 !p-2 w-full"
+                  className="w-full space-y-2 !p-2"
                 >
                   {currentDropdownLevel?.listItems.map((item) => (
                     <Button
@@ -1548,14 +1548,14 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
       >
         <ResizablePanel contentWidth="fit">
           {currentDropdownLevel ? (
-            <Flex direction="column" align="start" justify="start" className="space-y-2 w-fit">
+            <Flex direction="column" align="start" justify="start" className="w-fit space-y-2">
               {currentDropdownLevel?.showBackButton || currentDropdownLevel?.showTitle ? (
                 <Box className="w-full">
                   <Flex
                     direction="row"
                     align="center"
                     justify="between"
-                    className="w-fit !p-2 space-x-4"
+                    className="w-fit space-x-4 !p-2"
                   >
                     <Flex direction="row" align="center" justify="start">
                       {currentDropdownLevel?.showBackButton ? (
@@ -1588,7 +1588,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                   <Divider css={{ m: 0 }} />
                 </Box>
               ) : null}
-              <Flex direction="column" align="start" justify="start" className="space-y-2 w-full">
+              <Flex direction="column" align="start" justify="start" className="w-full space-y-2">
                 {currentDropdownLevel?.listItems.map((item) => (
                   <Button
                     key={item.id}

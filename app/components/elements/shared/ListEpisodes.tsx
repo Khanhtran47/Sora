@@ -5,8 +5,8 @@ import { Row, Spacer, Card, Avatar, Button, Pagination, Dropdown } from '@nextui
 import { useNavigate } from '@remix-run/react';
 import Image, { MimeType } from 'remix-image';
 
-import { IEpisode } from '~/services/tmdb/tmdb.types';
-import { IEpisodeInfo } from '~/services/consumet/anilist/anilist.types';
+import type { IEpisode } from '~/services/tmdb/tmdb.types';
+import type { IEpisodeInfo } from '~/services/consumet/anilist/anilist.types';
 
 import { useMediaQuery } from '@react-hookz/web';
 import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';

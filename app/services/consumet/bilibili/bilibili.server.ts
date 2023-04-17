@@ -1,6 +1,6 @@
 import { lruCache, fetcher } from '~/services/lru-cache';
 import Bilibili from './utils.server';
-import { IBilibiliSearch, IBilibiliInfo, IBilibiliEpisode } from './bilibili.types';
+import type { IBilibiliSearch, IBilibiliInfo, IBilibiliEpisode } from './bilibili.types';
 
 export const getBilibiliSearch = async (query: string): Promise<IBilibiliSearch | undefined> => {
   try {

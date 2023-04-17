@@ -68,7 +68,7 @@ const SearchRoute = () => {
   };
 
   return (
-    <div className="w-full flex justify-center flex-col items-center px-3 sm:px-0">
+    <div className="flex w-full flex-col items-center justify-center px-3 sm:px-0">
       <SearchForm
         onSubmit={onSubmit}
         textOnButton={t('search.action')}

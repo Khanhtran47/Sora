@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { Session } from '@supabase/supabase-js';
+import type { Session } from '@supabase/supabase-js';
 import { redirect } from '@remix-run/node';
 import isbot from 'isbot';
 
@@ -58,6 +58,7 @@ export async function authenticate(
     isbot(request.headers.get('User-Agent')),
   ]);
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   if (botcheck && botcheckRequired && userAgentBlock.includes(request.headers.get('User-Agent')!)) {
     console.log('bot detected', request.headers.get('User-Agent'));
     throw new Response(null, { status: 500 });

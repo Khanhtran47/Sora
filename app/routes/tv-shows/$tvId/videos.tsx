@@ -9,12 +9,12 @@ import { Row, Col, Button, Grid, Card } from '@nextui-org/react';
 
 import { authenticate } from '~/services/supabase';
 import { getVideos } from '~/services/tmdb/tmdb.server';
-import { Item } from '~/services/youtube/youtube.types';
+import type { Item } from '~/services/youtube/youtube.types';
 import { CACHE_CONTROL } from '~/utils/server/http';
 
 import { useMediaQuery } from '@react-hookz/web';
 
-import WatchTrailerModal, { Trailer } from '~/components/elements/modal/WatchTrailerModal';
+import WatchTrailerModal, { type Trailer } from '~/components/elements/modal/WatchTrailerModal';
 import { H5, H6 } from '~/components/styles/Text.styles';
 
 export const loader = async ({ request, params }: LoaderArgs) => {

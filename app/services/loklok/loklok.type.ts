@@ -1,4 +1,4 @@
-import { IMovieSource } from '../consumet/flixhq/flixhq.types';
+import type { IMovieSource } from '~/services/tmdb/tmdb.types';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface ILoklokSubtitle {
   language: string;

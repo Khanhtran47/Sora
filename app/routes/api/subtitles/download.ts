@@ -15,9 +15,12 @@ export const loader = async ({ request }: LoaderArgs) => {
   if (!file_id || !sub_format) throw { status: 400, message: 'Missing file_id or sub_format' };
   const subtitle = await getSubtitleDownload(Number(file_id), sub_format);
 
-  return json({ subtitle }, {
-    headers: {
-      'Cache-Control': CACHE_CONTROL.default,
-    }
-  });
+  return json(
+    { subtitle },
+    {
+      headers: {
+        'Cache-Control': CACHE_CONTROL.default,
+      },
+    },
+  );
 };

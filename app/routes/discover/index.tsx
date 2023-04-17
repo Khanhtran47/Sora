@@ -76,7 +76,7 @@ const DiscoverPage = () => {
       animate={{ x: '0', opacity: 1 }}
       exit={{ x: '10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="flex flex-col w-full px-3 justify-center items-start"
+      className="flex w-full flex-col items-start justify-center px-3"
     >
       <H1 h1>{t('discover')}</H1>
       <Spacer y={0.5} />
@@ -102,10 +102,10 @@ const DiscoverPage = () => {
         {t('filter')}
       </Button>
       <Spacer y={1.5} />
-      <div className="flex flex-col w-full justify-center items-start">
+      <div className="flex w-full flex-col items-start justify-center">
         <H4>{t('categories')}</H4>
         <Spacer y={0.5} />
-        <div className="flex flex-wrap w-full gap-x-2 gap-y-4">
+        <div className="flex w-full flex-wrap gap-x-2 gap-y-4">
           {categoryPages.map((page) => (
             <Button
               key={page.name}
@@ -122,10 +122,10 @@ const DiscoverPage = () => {
         </div>
       </div>
       <Spacer y={1.5} />
-      <div className="flex flex-col w-full justify-center items-start">
+      <div className="flex w-full flex-col items-start justify-center">
         <H4>{t('general')}</H4>
         <Spacer y={0.5} />
-        <div className="flex flex-wrap w-full gap-x-2 gap-y-4">
+        <div className="flex w-full flex-wrap gap-x-2 gap-y-4">
           {generalPages.map((page) => (
             <Button
               key={page.name}

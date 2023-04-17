@@ -9,7 +9,7 @@ import {
   useLoaderData,
   Outlet,
   NavLink,
-  RouteMatch,
+  type RouteMatch,
   useLocation,
 } from '@remix-run/react';
 import { Badge } from '@nextui-org/react';
@@ -231,11 +231,11 @@ const AnimeDetailPage = () => {
   return (
     <>
       <MediaBackgroundImage backdropPath={detail?.cover} backgroundColor={backgroundColor} />
-      <div className="w-full relative top-[-80px] sm:top-[-200px]">
+      <div className="relative top-[-80px] w-full sm:top-[-200px]">
         <AnimeDetail item={detail} handler={Handler} />
-        <div className="w-full flex flex-col justify-center items-center">
+        <div className="flex w-full flex-col items-center justify-center">
           <div
-            className="w-full flex justify-center top-[64px] sticky z-[1000] transition-[padding] duration-100 ease-in-out"
+            className="sticky top-[64px] z-[1000] flex w-full justify-center transition-[padding] duration-100 ease-in-out"
             style={{
               backgroundColor,
               paddingTop: tablinkPaddingTop,

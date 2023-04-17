@@ -4,9 +4,9 @@ import { lruCache, cachified } from '~/services/lru-cache';
 import sgConfigs from '~/services/configs.server';
 import { loklokSearchMovie, loklokSearchOneTv, getLoklokOrgDetail } from '~/services/loklok';
 import { getBilibiliSearch, getBilibiliInfo } from '~/services/consumet/bilibili/bilibili.server';
-import { IBilibiliResult } from '~/services/consumet/bilibili/bilibili.types';
+import type { IBilibiliResult } from '~/services/consumet/bilibili/bilibili.types';
 import { getKissKhSearch, getKissKhInfo } from '~/services/kisskh/kisskh.server';
-import { ISearchItem } from '~/services/kisskh/kisskh.types';
+import type { ISearchItem } from '~/services/kisskh/kisskh.types';
 import { getAnimeEpisodeInfo } from '~/services/consumet/anilist/anilist.server';
 import { getInfoWithProvider } from '~/services/tmdb/tmdb.server';
 
@@ -174,7 +174,7 @@ const getProviderList = async ({
           ? loklokSearchOneTv(title, orgTitle || '', Number(year))
           : undefined,
         sgConfigs.__kisskhProvider ? getKissKhSearch(title, 3) : undefined,
-        getAnimeEpisodeInfo(animeId),
+        getAnimeEpisodeInfo(animeId?.toString() || ''),
       ]);
       const provider: {
         id?: string | number | null;

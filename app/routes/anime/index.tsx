@@ -16,7 +16,7 @@ import {
 import { authenticate } from '~/services/supabase';
 import { CACHE_CONTROL } from '~/utils/server/http';
 
-import { IMedia } from '~/types/media';
+import type { IMedia } from '~/types/media';
 
 import { animeGenres } from '~/constants/filterItems';
 
