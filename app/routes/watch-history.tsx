@@ -1,9 +1,6 @@
 import { useRef, useState } from 'react';
-import { NavLink, useLoaderData, useLocation, useNavigate } from '@remix-run/react';
-import { json } from '@remix-run/node';
-import type { LoaderArgs } from '@remix-run/node';
-import { authenticate, getCountHistory, getHistory, IHistory } from '~/services/supabase';
 import {
+  Badge,
   Button,
   Checkbox,
   Container,
@@ -11,13 +8,13 @@ import {
   Input,
   Pagination,
   Text,
-  Badge,
 } from '@nextui-org/react';
-
 import { useMediaQuery } from '@react-hookz/web';
+import { json, type LoaderArgs } from '@remix-run/node';
+import { NavLink, useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 
+import { authenticate, getCountHistory, getHistory, type IHistory } from '~/services/supabase';
 import { CACHE_CONTROL } from '~/utils/server/http';
-
 import HistoryItem from '~/components/media/item/HistoryItem';
 
 export const handle = {

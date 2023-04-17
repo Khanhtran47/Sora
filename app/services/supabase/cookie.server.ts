@@ -1,5 +1,6 @@
-import { createCookieSessionStorage } from '@remix-run/node'; // or "@remix-run/cloudflare"
+// or "@remix-run/cloudflare"
 import { env } from 'process';
+import { createCookieSessionStorage } from '@remix-run/node';
 
 const {
   getSession: getSessionFromCookie,

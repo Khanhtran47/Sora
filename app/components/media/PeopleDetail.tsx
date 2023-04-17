@@ -1,25 +1,24 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/indent */
 // import { Link } from '@remix-run/react';
-import { Image as NextImage, Link as NextLink, useTheme, Spacer, Avatar } from '@nextui-org/react';
+
 import { Player } from '@lottiefiles/react-lottie-player';
-import Image, { MimeType } from 'remix-image';
+import { Avatar, Image as NextImage, Link as NextLink, Spacer, useTheme } from '@nextui-org/react';
 import { useMeasure } from '@react-hookz/web';
+import Image, { MimeType } from 'remix-image';
 
-import { IPeopleDetail } from '~/services/tmdb/tmdb.types';
+import type { IPeopleDetail } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
-
 import { H3, H4, H5, H6 } from '~/components/styles/Text.styles';
-
 import PhotoIcon from '~/assets/icons/PhotoIcon';
-import FacebookBlack from '~/assets/lotties/lottieflow-social-networks-15-4-000000-easey.json';
-import FacebookWhite from '~/assets/lotties/lottieflow-social-networks-15-4-FFFFFF-easey.json';
-import TwitterBlack from '~/assets/lotties/lottieflow-social-networks-15-10-000000-easey.json';
-import TwitterWhite from '~/assets/lotties/lottieflow-social-networks-15-10-FFFFFF-easey.json';
-import InstagramBlack from '~/assets/lotties/lottieflow-social-networks-15-5-000000-easey.json';
-import InstagramWhite from '~/assets/lotties/lottieflow-social-networks-15-5-FFFFFF-easey.json';
 import ExternalLinkBlack from '~/assets/lotties/external-link-black.json';
 import ExternalLinkWhite from '~/assets/lotties/external-link-white.json';
+import FacebookBlack from '~/assets/lotties/lottieflow-social-networks-15-4-000000-easey.json';
+import FacebookWhite from '~/assets/lotties/lottieflow-social-networks-15-4-FFFFFF-easey.json';
+import InstagramBlack from '~/assets/lotties/lottieflow-social-networks-15-5-000000-easey.json';
+import InstagramWhite from '~/assets/lotties/lottieflow-social-networks-15-5-FFFFFF-easey.json';
+import TwitterBlack from '~/assets/lotties/lottieflow-social-networks-15-10-000000-easey.json';
+import TwitterWhite from '~/assets/lotties/lottieflow-social-networks-15-10-FFFFFF-easey.json';
 
 interface IPeopleDetailProps {
   detail: IPeopleDetail | undefined;
@@ -134,7 +133,7 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
                     hover
                     autoplay={false}
                     speed={0.75}
-                    className="w-7 h-7"
+                    className="h-7 w-7"
                     loop
                   />
                 </NextLink>
@@ -150,7 +149,7 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
                     hover
                     autoplay={false}
                     speed={0.75}
-                    className="w-7 h-7"
+                    className="h-7 w-7"
                     loop
                   />
                 </NextLink>
@@ -166,7 +165,7 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
                     hover
                     autoplay={false}
                     speed={0.75}
-                    className="w-7 h-7"
+                    className="h-7 w-7"
                     loop
                   />
                 </NextLink>
@@ -178,7 +177,7 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
                     hover
                     autoplay={false}
                     speed={0.75}
-                    className="w-7 h-7"
+                    className="h-7 w-7"
                     loop
                   />
                 </NextLink>
@@ -201,32 +200,32 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
         </H4>
       </div>
       <Spacer y={1} />
-      <div className="flex flex-col justify-start flex-wrap items-start sm:items-center gap-y-4">
-        <div className="flex flex-row items-center gap-x-6 sm:flex-col sm:items-start justify-start mb-2 sm:m-0 sm:w-[70%]">
+      <div className="flex flex-col flex-wrap items-start justify-start gap-y-4 sm:items-center">
+        <div className="mb-2 flex flex-row items-center justify-start gap-x-6 sm:m-0 sm:w-[70%] sm:flex-col sm:items-start">
           <H5 h5 weight="bold">
             Known For
           </H5>
           <H6 h6>{detail?.known_for_department}</H6>
         </div>
-        <div className="flex flex-row items-center gap-x-6 sm:flex-col sm:items-start justify-start mb-2 sm:m-0 sm:w-[70%]">
+        <div className="mb-2 flex flex-row items-center justify-start gap-x-6 sm:m-0 sm:w-[70%] sm:flex-col sm:items-start">
           <H5 h5 weight="bold">
             Gender
           </H5>
           <H6 h6>{gender}</H6>
         </div>
-        <div className="flex flex-row items-center gap-x-6 sm:flex-col sm:items-start justify-start mb-2 sm:m-0 sm:w-[70%]">
+        <div className="mb-2 flex flex-row items-center justify-start gap-x-6 sm:m-0 sm:w-[70%] sm:flex-col sm:items-start">
           <H5 h5 weight="bold">
             Birthday
           </H5>
           <H6 h6>{detail?.birthday}</H6>
         </div>
-        <div className="flex flex-row items-center gap-x-6 sm:flex-col sm:items-start justify-start mb-2 sm:m-0 sm:w-[70%]">
+        <div className="mb-2 flex flex-row items-center justify-start gap-x-6 sm:m-0 sm:w-[70%] sm:flex-col sm:items-start">
           <H5 h5 weight="bold">
             Place of Birth
           </H5>
           <H6 h6>{detail?.place_of_birth}</H6>
         </div>
-        <div className="flex flex-row items-start gap-x-6 sm:flex-col justify-start mb-2 sm:m-0 sm:w-[70%]">
+        <div className="mb-2 flex flex-row items-start justify-start gap-x-6 sm:m-0 sm:w-[70%] sm:flex-col">
           <H5 h5 weight="bold">
             Also Known As
           </H5>

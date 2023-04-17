@@ -1,7 +1,8 @@
-import * as C from 'cachified';
-import Opensubtitles from './utils.server';
-import { ISubtitlesSearch, ISubtitleDownload } from './open-subtitles.types';
+import type * as C from 'cachified';
+
 import { cachified, lruCache } from '../lru-cache';
+import type { ISubtitleDownload, ISubtitlesSearch } from './open-subtitles.types';
+import Opensubtitles from './utils.server';
 
 const fetcher = async <Value>({
   url,

@@ -1,24 +1,20 @@
 /* eslint-disable @typescript-eslint/indent */
 import * as React from 'react';
-import { json } from '@remix-run/node';
-import type { LoaderArgs } from '@remix-run/node';
-import { useLoaderData, useLocation, useNavigate, useFetcher } from '@remix-run/react';
 import { Container, Loading } from '@nextui-org/react';
+import { useMeasure } from '@react-hookz/web';
+import { json, type LoaderArgs } from '@remix-run/node';
+import { useFetcher, useLoaderData, useLocation, useNavigate } from '@remix-run/react';
+import dayjs from 'dayjs';
 import { AnimatePresence, motion } from 'framer-motion';
 import NProgress from 'nprogress';
-import dayjs from 'dayjs';
-
 import i18next from '~/i18n/i18next.server';
-import { getListTvShows, getListDiscover } from '~/services/tmdb/tmdb.server';
+
+import type { IMedia } from '~/types/media';
 import { authenticate } from '~/services/supabase';
+import { getListDiscover, getListTvShows } from '~/services/tmdb/tmdb.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
-
-import { IMedia } from '~/types/media';
-
-import MediaList from '~/components/media/MediaList';
-
-import { useMeasure } from '@react-hookz/web';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
+import MediaList from '~/components/media/MediaList';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const [, locale] = await Promise.all([

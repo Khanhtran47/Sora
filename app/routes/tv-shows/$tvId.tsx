@@ -2,43 +2,38 @@
 /* eslint-disable no-unsafe-optional-chaining */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { useState, useRef, useEffect } from 'react';
-import { json } from '@remix-run/node';
-import type { MetaFunction, LoaderArgs } from '@remix-run/node';
-import {
-  useCatch,
-  useLoaderData,
-  Outlet,
-  NavLink,
-  RouteMatch,
-  useFetcher,
-  useLocation,
-} from '@remix-run/react';
+import { useEffect, useRef, useState } from 'react';
 import { Badge } from '@nextui-org/react';
-import Vibrant from 'node-vibrant';
 import { useIntersectionObserver } from '@react-hookz/web';
-
-import { getTvShowDetail, getTvShowIMDBId, getImdbRating } from '~/services/tmdb/tmdb.server';
-import { authenticate } from '~/services/supabase';
+import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
+import {
+  NavLink,
+  Outlet,
+  useCatch,
+  useFetcher,
+  useLoaderData,
+  useLocation,
+  type RouteMatch,
+} from '@remix-run/react';
+import Vibrant from 'node-vibrant';
 import i18next from '~/i18n/i18next.server';
 
-import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
-import { useSoraSettings } from '~/hooks/useLocalStorage';
-import { useCustomHeaderChangePosition } from '~/hooks/useHeader';
-import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
-import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
-
-import { CACHE_CONTROL } from '~/utils/server/http';
+import { authenticate } from '~/services/supabase';
+import { getImdbRating, getTvShowDetail, getTvShowIMDBId } from '~/services/tmdb/tmdb.server';
 import TMDB from '~/utils/media';
-
-import { MediaDetail, MediaBackgroundImage } from '~/components/media/MediaDetail';
-import WatchTrailerModal, { Trailer } from '~/components/elements/modal/WatchTrailerModal';
+import { CACHE_CONTROL } from '~/utils/server/http';
+import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
+import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
+import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
+import { useCustomHeaderChangePosition } from '~/hooks/useHeader';
+import { useSoraSettings } from '~/hooks/useLocalStorage';
+import { movieTvDetailsPages } from '~/constants/tabLinks';
+import { BackgroundTabLink } from '~/components/media/Media.styles';
+import { MediaBackgroundImage, MediaDetail } from '~/components/media/MediaDetail';
+import WatchTrailerModal, { type Trailer } from '~/components/elements/modal/WatchTrailerModal';
+import TabLink from '~/components/elements/tab/TabLink';
 import CatchBoundaryView from '~/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/components/ErrorBoundaryView';
-import TabLink from '~/components/elements/tab/TabLink';
-import { BackgroundTabLink } from '~/components/media/Media.styles';
-
-import { movieTvDetailsPages } from '~/constants/tabLinks';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const [, locale] = await Promise.all([
@@ -241,7 +236,7 @@ const TvShowDetail = () => {
   return (
     <>
       <MediaBackgroundImage backdropPath={backdropPath} backgroundColor={backgroundColor} />
-      <div className="w-full relative top-[-80px] sm:top-[-200px]">
+      <div className="relative top-[-80px] w-full sm:top-[-200px]">
         <MediaDetail
           type="tv"
           item={detail}
@@ -249,9 +244,9 @@ const TvShowDetail = () => {
           imdbRating={imdbRating}
           color={detail.color}
         />
-        <div className="w-full flex flex-col justify-center items-center">
+        <div className="flex w-full flex-col items-center justify-center">
           <div
-            className="w-full flex justify-center top-[64px] sticky z-[1000] transition-[padding] duration-100 ease-in-out"
+            className="sticky top-[64px] z-[1000] flex w-full justify-center transition-[padding] duration-100 ease-in-out"
             style={{
               backgroundColor,
               paddingTop: `${

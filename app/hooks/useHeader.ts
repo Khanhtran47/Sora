@@ -1,5 +1,5 @@
-import { useMemo, useEffect } from 'react';
-import { useMatches, useLocation } from '@remix-run/react';
+import { useEffect, useMemo } from 'react';
+import { useLocation, useMatches } from '@remix-run/react';
 import { isEdgeChromium } from 'react-device-detect';
 
 import { useHeaderStyle } from '~/store/layout/useHeaderStyle';

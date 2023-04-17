@@ -1,25 +1,21 @@
-import { useState, useEffect } from 'react';
-import { json } from '@remix-run/node';
-import type { LoaderArgs } from '@remix-run/node';
-import { useFetcher, useNavigate, useLoaderData, useLocation } from '@remix-run/react';
+import { useEffect, useState } from 'react';
 import { Container, Loading } from '@nextui-org/react';
+import { useMeasure } from '@react-hookz/web';
+import { json, type LoaderArgs } from '@remix-run/node';
+import { useFetcher, useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 import { AnimatePresence, motion } from 'framer-motion';
 // import { useTranslation } from 'react-i18next';
 import NProgress from 'nprogress';
-import { useMeasure } from '@react-hookz/web';
 
+import type { IMedia } from '~/types/media';
 import {
-  getAnimeTrending,
   getAnimePopular,
   getAnimeRecentEpisodes,
+  getAnimeTrending,
 } from '~/services/consumet/anilist/anilist.server';
 import { authenticate } from '~/services/supabase';
 import { CACHE_CONTROL } from '~/utils/server/http';
-
-import { IMedia } from '~/types/media';
-
 import { animeGenres } from '~/constants/filterItems';
-
 import MediaList from '~/components/media/MediaList';
 
 export const loader = async ({ request }: LoaderArgs) => {

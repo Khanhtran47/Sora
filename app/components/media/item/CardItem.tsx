@@ -1,25 +1,23 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable no-unsafe-optional-chaining */
 import * as React from 'react';
-import { Card, Loading, Tooltip, Avatar } from '@nextui-org/react';
+import { Avatar, Card, Loading, Tooltip } from '@nextui-org/react';
+import { useMeasure, useMediaQuery } from '@react-hookz/web';
 import { useFetcher } from '@remix-run/react';
-import Image, { MimeType } from 'remix-image';
-import { useInView } from 'react-intersection-observer';
-import { ClientOnly } from 'remix-utils';
 import { motion } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
-import { useMeasure, useMediaQuery } from '@react-hookz/web';
+import { useInView } from 'react-intersection-observer';
+import Image, { MimeType } from 'remix-image';
+import { ClientOnly } from 'remix-utils';
 
+import type { IMedia, Title } from '~/types/media';
+import type { ITrailer } from '~/services/consumet/anilist/anilist.types';
 import useCardHoverStore from '~/store/card/useCardHoverStore';
-
 import { useSoraSettings } from '~/hooks/useLocalStorage';
-import { IMedia, Title } from '~/types/media';
-import { ITrailer } from '~/services/consumet/anilist/anilist.types';
-
+import type { Trailer } from '~/components/elements/modal/WatchTrailerModal';
+import { H5, H6 } from '~/components/styles/Text.styles';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 
-import { Trailer } from '~/components/elements/modal/WatchTrailerModal';
-import { H5, H6 } from '~/components/styles/Text.styles';
 import CardItemHover from './CardItemHover';
 
 interface ICardItemProps {

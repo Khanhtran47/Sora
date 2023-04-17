@@ -1,31 +1,29 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { json } from '@remix-run/node';
-import type { LoaderArgs, MetaFunction } from '@remix-run/node';
-import { useCatch, useLoaderData, NavLink, RouteMatch } from '@remix-run/react';
-import { Container, Spacer, Badge } from '@nextui-org/react';
-import { env } from 'process';
 
-import { authenticate, insertHistory } from '~/services/supabase';
-import getProviderList from '~/services/provider.server';
+import { env } from 'process';
+import { Badge, Container, Spacer } from '@nextui-org/react';
+import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
+import { NavLink, useCatch, useLoaderData, type RouteMatch } from '@remix-run/react';
+
+import type { IMedia } from '~/types/media';
+import { getAniskip, type IAniSkipResponse } from '~/services/aniskip/aniskip.server';
 import {
+  getAnimeEpisodeInfo,
   getAnimeEpisodeStream,
   getAnimeInfo,
-  getAnimeEpisodeInfo,
 } from '~/services/consumet/anilist/anilist.server';
+import type { IEpisodeInfo } from '~/services/consumet/anilist/anilist.types';
 import { getBilibiliEpisode, getBilibiliInfo } from '~/services/consumet/bilibili/bilibili.server';
 import {
-  getKissKhInfo,
   getKissKhEpisodeStream,
   getKissKhEpisodeSubtitle,
+  getKissKhInfo,
 } from '~/services/kisskh/kisskh.server';
-import { IEpisodeInfo } from '~/services/consumet/anilist/anilist.types';
-import { loklokGetTvEpInfo, loklokGetMovieInfo } from '~/services/loklok';
-import { getAniskip, IAniSkipResponse } from '~/services/aniskip/aniskip.server';
+import { loklokGetMovieInfo, loklokGetTvEpInfo } from '~/services/loklok';
 import { LOKLOK_URL } from '~/services/loklok/utils.server';
+import getProviderList from '~/services/provider.server';
+import { authenticate, insertHistory } from '~/services/supabase';
 import { CACHE_CONTROL } from '~/utils/server/http';
-
-import { IMedia } from '~/types/media';
-
 import WatchDetail from '~/components/elements/shared/WatchDetail';
 import CatchBoundaryView from '~/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/components/ErrorBoundaryView';

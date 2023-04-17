@@ -1,6 +1,6 @@
-import { MetaFunction } from '@remix-run/node';
-import { NavLink, Outlet } from '@remix-run/react';
 import { Badge } from '@nextui-org/react';
+import type { MetaFunction } from '@remix-run/node';
+import { NavLink, Outlet } from '@remix-run/react';
 
 import { discoverPages } from '~/constants/tabLinks';
 

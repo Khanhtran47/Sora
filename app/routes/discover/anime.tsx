@@ -1,13 +1,11 @@
-import { useLoaderData, useLocation, NavLink } from '@remix-run/react';
-import { json } from '@remix-run/node';
-import type { LoaderArgs, MetaFunction } from '@remix-run/node';
 import { Badge } from '@nextui-org/react';
+import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
+import { NavLink, useLoaderData, useLocation } from '@remix-run/react';
 import { motion } from 'framer-motion';
 
-import { IMedia } from '~/types/media';
-import { authenticate } from '~/services/supabase';
+import type { IMedia } from '~/types/media';
 import { getAnimeAdvancedSearch } from '~/services/consumet/anilist/anilist.server';
-
+import { authenticate } from '~/services/supabase';
 import MediaList from '~/components/media/MediaList';
 
 export const meta: MetaFunction = () => ({
@@ -101,7 +99,7 @@ const DiscoverAnime = () => {
       animate={{ x: '0', opacity: 1 }}
       exit={{ y: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="w-full flex justify-center flex-col items-center px-3 sm:px-0"
+      className="flex w-full flex-col items-center justify-center px-3 sm:px-0"
     >
       {items && items.results && items.results.length > 0 && (
         <MediaList

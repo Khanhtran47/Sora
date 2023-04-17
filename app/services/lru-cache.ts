@@ -1,7 +1,6 @@
-import LRU from 'lru-cache';
-import type { CacheEntry } from 'cachified';
-import { verboseReporter, lruCacheAdapter } from 'cachified';
+import { lruCacheAdapter, verboseReporter, type CacheEntry } from 'cachified';
 import * as C from 'cachified';
+import LRU from 'lru-cache';
 
 // https://www.npmjs.com/package/lru-cache
 

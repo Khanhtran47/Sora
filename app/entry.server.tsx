@@ -1,21 +1,22 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
+
+import { resolve } from 'node:path';
+import { getCssText } from '@nextui-org/react';
 import type { EntryContext } from '@remix-run/node';
 import { RemixServer } from '@remix-run/react';
-import { renderToString } from 'react-dom/server';
-import { getCssText } from '@nextui-org/react';
 import { createInstance } from 'i18next';
 import Backend from 'i18next-fs-backend';
-import { I18nextProvider, initReactI18next } from 'react-i18next';
-import { resolve } from 'node:path';
-import { etag } from 'remix-etag';
 import isbot from 'isbot';
+import { renderToString } from 'react-dom/server';
+import { I18nextProvider, initReactI18next } from 'react-i18next';
+import { etag } from 'remix-etag';
 
-import { IsBotProvider } from '~/context/isbot.context';
 import { otherRootRouteHandlers } from '~/services/other-root-routes.server';
+import { IsBotProvider } from '~/context/isbot.context';
 
-import i18next from './i18n/i18next.server';
 import i18n from './i18n/i18n.config';
+import i18next from './i18n/i18next.server';
 
 export default async function handleRequest(
   request: Request,

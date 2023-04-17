@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { forwardRef } from 'react';
-import { Card, styled, keyframes } from '@nextui-org/react';
+import { Card, keyframes, styled } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
 
-import { Title } from '~/types/media';
-
+import type { Title } from '~/types/media';
 import AspectRatio from '~/components/elements/aspect-ratio/AspectRatio';
 import { H5 } from '~/components/styles/Text.styles';
 

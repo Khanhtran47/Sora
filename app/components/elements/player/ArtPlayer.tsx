@@ -1,16 +1,12 @@
 /* eslint-disable no-nested-ternary */
-import { useEffect, useRef, useState, memo } from 'react';
-import type { CSSProperties } from 'react';
+import { memo, useEffect, useRef, useState, type CSSProperties } from 'react';
 import { styled } from '@nextui-org/react';
 import Artplayer from 'artplayer';
+import { motion, type PanInfo } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
-import { motion } from 'framer-motion';
-import type { PanInfo } from 'framer-motion';
-
-import { useSoraSettings } from '~/hooks/useLocalStorage';
 
 import usePlayerState from '~/store/player/usePlayerState';
-
+import { useSoraSettings } from '~/hooks/useLocalStorage';
 import AspectRatio from '~/components/elements/aspect-ratio/AspectRatio';
 
 interface IPlayerProps {
@@ -27,6 +23,7 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
   const { isSwipeFullscreen } = useSoraSettings();
   const artRef = useRef<HTMLDivElement>(null);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleDragEnd = (event: MouseEvent | PointerEvent | TouchEvent, info: PanInfo) => {
     if (artplayer && isSwipeFullscreen.value) {
       if (!artplayer.fullscreen && info.offset.y < -100) {

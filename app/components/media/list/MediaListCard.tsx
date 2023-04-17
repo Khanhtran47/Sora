@@ -4,7 +4,7 @@ import { Navigation } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { tv } from 'tailwind-variants';
 
-import { IMedia } from '~/types/media';
+import type { IMedia } from '~/types/media';
 
 import MediaItem from '../item';
 
@@ -25,7 +25,7 @@ const swiperSlideStyles = tv({
   variants: {
     cardType: {
       coverCard: '!w-[280px] sm:!w-[480px]',
-      card: '!w-[164px] sm:!w-[210px] nextui-sm:!w-[244px] 2xl:!w-[280px]',
+      card: 'nextui-sm:!w-[244px] !w-[164px] sm:!w-[210px] 2xl:!w-[280px]',
       peopleCard: '!w-[160px]',
     },
   },
@@ -51,7 +51,7 @@ const MediaListCard = (props: IMediaListCardProps) => {
 
   if (isCoverCard) {
     return (
-      <div className="flex justify-start items-center w-full">
+      <div className="flex w-full items-center justify-start">
         {coverItem && coverItem?.length > 0 && (
           <Swiper
             className={swiperStyles()}
@@ -98,7 +98,7 @@ const MediaListCard = (props: IMediaListCardProps) => {
   }
 
   return (
-    <div className="flex justify-start items-center w-full">
+    <div className="flex w-full items-center justify-start">
       {items && items?.length > 0 ? (
         <Swiper
           className={swiperStyles()}

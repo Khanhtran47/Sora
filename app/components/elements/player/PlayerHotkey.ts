@@ -1,5 +1,5 @@
 import type { Dispatch, SetStateAction } from 'react';
-import Artplayer from 'artplayer';
+import type Artplayer from 'artplayer';
 
 function PlayerHotKey(art: Artplayer, setShowSubtitle: Dispatch<SetStateAction<boolean>>) {
   // https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode
@@ -161,4 +161,4 @@ function PlayerHotKey(art: Artplayer, setShowSubtitle: Dispatch<SetStateAction<b
   });
 }
 
-export { PlayerHotKey };
+export default PlayerHotKey;

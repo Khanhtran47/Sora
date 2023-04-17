@@ -1,45 +1,43 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/indent */
-import { useRef, useEffect, useMemo } from 'react';
-import type { User } from '@supabase/supabase-js';
-import { tv } from 'tailwind-variants';
-import { useLocation, useMatches, useNavigationType, useOutlet, useParams } from '@remix-run/react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useMediaQuery } from '@react-hookz/web';
-import { useScroll, AnimatePresence } from 'framer-motion';
+import { useLocation, useMatches, useNavigationType, useOutlet, useParams } from '@remix-run/react';
+import type { User } from '@supabase/supabase-js';
+import { AnimatePresence, useScroll } from 'framer-motion';
 import { Toaster } from 'sonner';
-
-import { useSoraSettings } from '~/hooks/useLocalStorage';
-import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
-import { useHistoryStack } from '~/store/layout/useHistoryStack';
-import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
+import { tv } from 'tailwind-variants';
 
 import { throttle } from '~/utils/function';
-
+import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
+import { useHistoryStack } from '~/store/layout/useHistoryStack';
+import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
+import { useSoraSettings } from '~/hooks/useLocalStorage';
 import {
   ScrollArea,
-  ScrollAreaViewport,
+  ScrollAreaCorner,
   ScrollAreaScrollbar,
   ScrollAreaThumb,
-  ScrollAreaCorner,
+  ScrollAreaViewport,
 } from '~/components/elements/scroll-area/ScrollArea';
 import TabLink from '~/components/elements/tab/TabLink';
-import Header from './Header';
-import SideBar from './SideBar';
+
 // import Footer from './Footer';
 import BottomNav from './BottomNav';
 // import BreadCrumb from './BreadCrumb';
 import GlobalPlayer from './GlobalPlayer';
+import Header from './Header';
 import MobileHeader from './MobileHeader';
+import SideBar from './SideBar';
 
 interface ILayout {
   user?: User;
 }
 
 const layoutStyles = tv({
-  base: 'flex flex-nowrap justify-start max-w-full max-h-full min-h-screen bg-background transition-[padding] duration-200 font-[Inter]',
+  base: 'bg-background flex max-h-full min-h-screen max-w-full flex-nowrap justify-start font-[Inter] transition-[padding] duration-200',
   variants: {
     boxed: {
-      true: 'pt-[15px] min-h-[calc(100vh_-_115px)]',
+      true: 'min-h-[calc(100vh_-_115px)] pt-[15px]',
       false: 'p-0',
     },
   },
@@ -49,7 +47,7 @@ const layoutStyles = tv({
 });
 
 const contentAreaStyles = tv({
-  base: 'grow flex flex-col justify-end bg-background-contrast-alpha ml-0 !rounded-none sm:!rounded-tl-xl overflow-hidden transition-[margin] duration-200 w-full',
+  base: 'bg-background-contrast-alpha ml-0 flex w-full grow flex-col justify-end overflow-hidden !rounded-none transition-[margin] duration-200 sm:!rounded-tl-xl',
   variants: {
     mini: {
       true: 'sm:ml-[80px]',
@@ -77,7 +75,7 @@ const contentAreaStyles = tv({
 });
 
 const scrollAreaViewportStyles = tv({
-  base: 'flex flex-col justify-start items-center w-[100vw] transition-[width,_height] duration-200 min-h-screen',
+  base: 'flex min-h-screen w-[100vw] flex-col items-center justify-start transition-[width,_height] duration-200',
   variants: {
     mini: {
       true: 'sm:w-[calc(100vw_-_80px)]',
@@ -86,8 +84,8 @@ const scrollAreaViewportStyles = tv({
       true: 'sm:w-[calc(100vw_-_280px)]',
     },
     layoutPadding: {
-      true: 'p-0 sm:px-5 mb-[70px]',
-      false: 'p-0 mb-[70px]',
+      true: 'mb-[70px] p-0 sm:px-5',
+      false: 'mb-[70px] p-0',
     },
     isShowTabLink: {
       true: 'mt-[128px]',
@@ -125,25 +123,25 @@ const scrollAreaViewportStyles = tv({
 });
 
 const tabLinkWrapperStyles = tv({
-  base: 'h-[56px] w-[100vw] fixed z-[1000] flex items-end shadow-lg',
+  base: 'fixed z-[1000] flex h-[56px] w-[100vw] items-end shadow-lg',
   variants: {
     miniSidebar: {
-      true: 'sm:w-[calc(100vw_-_80px)] top-[56px]',
+      true: 'top-[56px] sm:w-[calc(100vw_-_80px)]',
     },
     boxedSidebar: {
-      true: 'sm:w-[calc(100vw_-_280px)] top-[71px]',
+      true: 'top-[71px] sm:w-[calc(100vw_-_280px)]',
     },
   },
   compoundVariants: [
     {
       miniSidebar: true,
       boxedSidebar: true,
-      class: 'sm:w-[calc(100vw_-_110px)] top-[79px]',
+      class: 'top-[79px] sm:w-[calc(100vw_-_110px)]',
     },
     {
       miniSidebar: false,
       boxedSidebar: false,
-      class: 'sm:w-[calc(100vw_-_250px)] top-[56px]',
+      class: 'top-[56px] sm:w-[calc(100vw_-_250px)]',
     },
   ],
   defaultVariants: {
@@ -182,34 +180,34 @@ const Layout = (props: ILayout) => {
   } = useHeaderStyle((headerState) => headerState);
   const isShowTabLink = useMemo(
     () => matches.some((match) => match.handle?.showTabLink === true),
-    [location.pathname],
+    [matches],
   );
   const disableLayoutPadding = useMemo(
     () => matches.some((match) => match.handle?.disableLayoutPadding === true),
-    [location.pathname],
+    [matches],
   );
   const currentTabLinkPages = useMemo(
     () => matches.find((match) => match.handle?.showTabLink)?.handle?.tabLinkPages,
-    [location.pathname],
+    [matches],
   );
   const currentTabLinkTo = useMemo(
     () => matches.find((match) => match.handle?.showTabLink)?.handle?.tabLinkTo(params),
-    [location.pathname],
+    [matches],
   );
   const customHeaderBackgroundColor = useMemo(
     () => matches.some((match) => match?.handle?.customHeaderBackgroundColor === true),
-    [location.pathname],
+    [matches],
   );
   const customHeaderChangeColorOnScroll = useMemo(
     () => matches.some((match) => match?.handle?.customHeaderChangeColorOnScroll === true),
-    [location.pathname],
+    [matches],
   );
   const hideTabLinkWithLocation: boolean = useMemo(() => {
     const currentMatch = matches.find((match) => match.handle?.showTabLink);
     if (currentMatch?.handle?.hideTabLinkWithLocation)
       return currentMatch?.handle?.hideTabLinkWithLocation(location.pathname);
     return false;
-  }, [location.pathname]);
+  }, [matches, location.pathname]);
 
   useEffect(() => {
     setHistoryBack([location.key]);

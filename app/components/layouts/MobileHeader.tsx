@@ -1,13 +1,11 @@
-import { useLocation, NavLink, useNavigate } from '@remix-run/react';
 import { Button } from '@nextui-org/react';
+import { NavLink, useLocation, useNavigate } from '@remix-run/react';
 import { motion } from 'framer-motion';
 
-import { useHeaderOptions } from '~/hooks/useHeader';
 import { useHistoryStack } from '~/store/layout/useHistoryStack';
 import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
-
+import { useHeaderOptions } from '~/hooks/useHeader';
 import { H2 } from '~/components/styles/Text.styles';
-
 import Arrow from '~/assets/icons/ArrowIcon';
 import Search from '~/assets/icons/SearchIcon';
 
@@ -42,7 +40,7 @@ const MobileHeader = () => {
         initial={{ y: 0 }}
         animate={{ y: scrollDirection === 'down' ? -65 : 0 }}
         transition={{ duration: 0.5 }}
-        className="h-[64px] w-full fixed top-0 z-[1000] px-6 flex flex-row justify-between items-center bg-background-contrast-alpha backdrop-blur-md sm:hidden shadow-lg"
+        className="fixed top-0 z-[1000] flex h-[64px] w-full flex-row items-center justify-between bg-background-contrast-alpha px-6 shadow-lg backdrop-blur-md sm:hidden"
       >
         <NavLink to="/" arial-label="home-page">
           <H2
@@ -68,9 +66,9 @@ const MobileHeader = () => {
     );
   }
   return (
-    <div className="h-[64px] w-[100vw] fixed top-0 z-[1000] px-3 py-2 flex flex-row justify-start items-center sm:hidden shadow-none gap-x-3">
+    <div className="fixed top-0 z-[1000] flex h-[64px] w-[100vw] flex-row items-center justify-start gap-x-3 px-3 py-2 shadow-none sm:hidden">
       <div
-        className="absolute top-0 left-0 w-full z-[-1] backdrop-blur-md"
+        className="absolute top-0 left-0 z-[-1] w-full backdrop-blur-md"
         style={{
           opacity: headerBackgroundOpacity,
           backgroundColor: headerBackgroundColor,
@@ -78,7 +76,7 @@ const MobileHeader = () => {
         }}
       >
         {customHeaderBackgroundColor ? (
-          <div className="w-full h-full pointer-events-none bg-background-light" />
+          <div className="pointer-events-none h-full w-full bg-background-light" />
         ) : null}
       </div>
       <Button
@@ -89,7 +87,7 @@ const MobileHeader = () => {
         icon={<Arrow direction="left" />}
         onPress={() => handleBackButton()}
       />
-      <div className="flex flex-row justify-between items-center">
+      <div className="flex flex-row items-center justify-between">
         {currentMiniTitle ? (
           <motion.span
             initial={{ opacity: 0, y: 60 }}

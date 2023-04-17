@@ -2,21 +2,17 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
 import { Image as NextImage, Row, Spacer } from '@nextui-org/react';
-import { json } from '@remix-run/node';
-import type { MetaFunction, LoaderArgs } from '@remix-run/node';
+import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import { Gallery, Item, GalleryProps } from 'react-photoswipe-gallery';
+import { Gallery, Item, type GalleryProps } from 'react-photoswipe-gallery';
 import Image, { MimeType } from 'remix-image';
-
 import i18next from '~/i18n/i18next.server';
+
 import { authenticate } from '~/services/supabase';
 import { getTvSeasonImages } from '~/services/tmdb/tmdb.server';
-
-import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
-
 import TMDB from '~/utils/media';
 import { CACHE_CONTROL } from '~/utils/server/http';
-
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import { H6 } from '~/components/styles/Text.styles';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
@@ -56,7 +52,7 @@ const PhotosPage = () => {
         outlineID: 'pswp__icn-rotate',
       },
       appendTo: 'bar',
-      onClick: (e, el, pswpInstance) => {
+      onClick: (_, __, pswpInstance) => {
         const item = pswpInstance.currSlide.content.element;
 
         const prevRotateAngle = Number(item.dataset.rotateAngel) || 0;
@@ -69,7 +65,7 @@ const PhotosPage = () => {
         )} rotate(-${rotateAngle}deg)`;
         item.dataset.rotateAngel = String(rotateAngle);
       },
-      onInit: (el, pswpInstance) => {
+      onInit: (_, pswpInstance) => {
         // remove applied rotation on slide change
         // https://photoswipe.com/events/#slide-content-events
         pswpInstance.on('contentRemove', () => {
@@ -105,7 +101,7 @@ const PhotosPage = () => {
       </Row>
       <Spacer y={0.5} />
       <Gallery withCaption withDownloadButton uiElements={uiElements}>
-        <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 justify-center">
+        <div className="grid grid-cols-1 justify-center gap-3 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
           {images?.posters?.map((image) => (
             <Item
               key={image.file_path}

@@ -106,6 +106,7 @@ module.exports = withTV({
     require('@tailwindcss/line-clamp'),
     require('tailwind-scrollbar-hide'),
     require('@savvywombat/tailwindcss-grid-areas'),
+    require('prettier-plugin-tailwindcss'),
   ],
   variants: {
     gridTemplateAreas: ['responsive'],

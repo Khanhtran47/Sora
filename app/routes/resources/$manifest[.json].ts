@@ -1,8 +1,7 @@
-import { json } from '@remix-run/node';
-import type { LoaderArgs } from '@remix-run/node';
+import { json, type LoaderArgs } from '@remix-run/node';
+import i18next from '~/i18n/i18next.server';
 
 import { authenticate } from '~/services/supabase';
-import i18next from '~/i18n/i18next.server';
 
 // eslint-disable-next-line import/prefer-default-export, arrow-body-style
 export const loader = async ({ request }: LoaderArgs) => {

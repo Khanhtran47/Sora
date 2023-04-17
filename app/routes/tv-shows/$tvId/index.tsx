@@ -1,22 +1,17 @@
-import { json } from '@remix-run/node';
-import type { LoaderArgs } from '@remix-run/node';
-import { useLoaderData, useNavigate, Link, useParams } from '@remix-run/react';
-import { Spacer, Card, Avatar } from '@nextui-org/react';
+import { Avatar, Card, Spacer } from '@nextui-org/react';
+import { useMediaQuery } from '@react-hookz/web';
+import { json, type LoaderArgs } from '@remix-run/node';
+import { Link, useLoaderData, useNavigate, useParams } from '@remix-run/react';
 import Image, { MimeType } from 'remix-image';
 
 import { authenticate } from '~/services/supabase';
-import { getSimilar, getCredits, getRecommendation } from '~/services/tmdb/tmdb.server';
+import { getCredits, getRecommendation, getSimilar } from '~/services/tmdb/tmdb.server';
 import { postFetchDataHandler } from '~/services/tmdb/utils.server';
-
-import { CACHE_CONTROL } from '~/utils/server/http';
 import TMDB from '~/utils/media';
-
-import { useMediaQuery } from '@react-hookz/web';
+import { CACHE_CONTROL } from '~/utils/server/http';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
-
-import { H2, H4, H5, H6, P } from '~/components/styles/Text.styles';
 import MediaList from '~/components/media/MediaList';
-
+import { H2, H4, H5, H6, P } from '~/components/styles/Text.styles';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
@@ -63,22 +58,22 @@ const TvOverview = () => {
     navigate(`/tv-shows/${detail?.id}/${type}`);
   };
   return (
-    <div className="w-full flex flex-col sm:flex-row sm:justify-center sm:items-stretch mt-3 max-w-[1920px] px-3 sm:px-3.5 xl:px-4 2xl:px-5 gap-x-0 sm:gap-x-4 gap-y-4 sm:gap-y-0">
-      <div className="flex flex-col sm:items-center sm:justify-start w-full sm:w-1/3 flex-grow-0">
-        <div className="flex flex-col items-start justify-center gap-y-4 rounded-xl bg-background-contrast w-full nextui-sm:w-3/4 xl:w-1/2 p-4">
-          <div className="w-full flex flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-            <H6 h6 weight="bold" className="basis-1/3 flex-grow-0">
+    <div className="mt-3 flex w-full max-w-[1920px] flex-col gap-x-0 gap-y-4 px-3 sm:flex-row sm:items-stretch sm:justify-center sm:gap-x-4 sm:gap-y-0 sm:px-3.5 xl:px-4 2xl:px-5">
+      <div className="flex w-full grow-0 flex-col sm:w-1/3 sm:items-center sm:justify-start">
+        <div className="flex w-full flex-col items-start justify-center gap-y-4 rounded-xl bg-background-contrast p-4 nextui-sm:w-3/4 xl:w-1/2">
+          <div className="flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
+            <H6 h6 weight="bold" className="grow-0 basis-1/3">
               Status
             </H6>
-            <P as="p" className="flex-grow">
+            <P as="p" className="grow">
               {detail?.status}
             </P>
           </div>
-          <div className="w-full flex flex-row items-start justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-            <H6 h6 weight="bold" className="basis-1/3 flex-grow-0">
+          <div className="flex w-full flex-row items-start justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
+            <H6 h6 weight="bold" className="grow-0 basis-1/3">
               Network
             </H6>
-            <div className="flex flex-col flex-grow">
+            <div className="flex grow flex-col">
               {detail?.networks &&
                 detail.networks.map((network, index) => (
                   <P as="p" key={`network-item-${index}`}>
@@ -87,37 +82,37 @@ const TvOverview = () => {
                 ))}
             </div>
           </div>
-          <div className="w-full flex flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-            <H6 h6 weight="bold" className="basis-1/3 flex-grow-0">
+          <div className="flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
+            <H6 h6 weight="bold" className="grow-0 basis-1/3">
               Type
             </H6>
-            <P as="p" className="flex-grow">
+            <P as="p" className="grow">
               {detail?.type}
             </P>
           </div>
-          <div className="w-full flex flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-            <H6 h6 weight="bold" className="basis-1/3 flex-grow-0">
+          <div className="flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
+            <H6 h6 weight="bold" className="grow-0 basis-1/3">
               Original Language
             </H6>
-            <P as="p" className="flex-grow">
+            <P as="p" className="grow">
               {rootData?.languages?.find((lang) => lang.iso_639_1 === detail?.original_language)
                 ?.english_name || detail?.original_language}
             </P>
           </div>
         </div>
       </div>
-      <div className="flex flex-col w-full sm:w-2/3">
-        <div className="flex flex-col justify-start items-start gap-y-4 rounded-xl bg-background-contrast p-4">
+      <div className="flex w-full flex-col sm:w-2/3">
+        <div className="flex flex-col items-start justify-start gap-y-4 rounded-xl bg-background-contrast p-4">
           <H6 h6 css={{ textAlign: 'justify' }}>
             {detail?.overview}
           </H6>
           <div className="flex flex-col flex-wrap gap-x-0 gap-y-4 sm:flex-row sm:gap-x-8">
             {detail?.created_by && detail?.created_by.length > 0 ? (
-              <div className="w-full sm:w-fit flex flex-row justify-start gap-x-4 sm:flex-col items-start">
-                <H6 h6 weight="bold" className="basis-1/3 sm:basis-auto flex-grow-0">
+              <div className="flex w-full flex-row items-start justify-start gap-x-4 sm:w-fit sm:flex-col">
+                <H6 h6 weight="bold" className="grow-0 basis-1/3 sm:basis-auto">
                   Creators
                 </H6>
-                <div className="flex flex-col flex-grow">
+                <div className="flex grow flex-col">
                   {detail.created_by.map((creator) => (
                     <Link
                       key={`director-item-${creator.id}}`}
@@ -132,11 +127,11 @@ const TvOverview = () => {
               </div>
             ) : null}
             {detail?.production_countries && detail.production_countries.length > 0 ? (
-              <div className="w-full sm:w-fit flex flex-row justify-start gap-x-4 sm:flex-col items-start">
-                <H6 h6 weight="bold" className="basis-1/3 sm:basis-auto flex-grow-0">
+              <div className="flex w-full flex-row items-start justify-start gap-x-4 sm:w-fit sm:flex-col">
+                <H6 h6 weight="bold" className="grow-0 basis-1/3 sm:basis-auto">
                   Production Countries
                 </H6>
-                <div className="flex flex-col flex-grow">
+                <div className="flex grow flex-col">
                   {detail?.production_countries.map((country, index) => (
                     <p key={`country-item-${index}`}>{country.name}</p>
                   ))}
@@ -144,11 +139,11 @@ const TvOverview = () => {
               </div>
             ) : null}
             {detail?.spoken_languages && detail.spoken_languages.length > 0 ? (
-              <div className="w-full sm:w-fit flex flex-row justify-start gap-x-4 sm:flex-col items-start">
-                <H6 h6 weight="bold" className="basis-1/3 sm:basis-auto flex-grow-0">
+              <div className="flex w-full flex-row items-start justify-start gap-x-4 sm:w-fit sm:flex-col">
+                <H6 h6 weight="bold" className="grow-0 basis-1/3 sm:basis-auto">
                   Spoken Languages
                 </H6>
-                <div className="flex flex-col flex-grow">
+                <div className="flex grow flex-col">
                   {detail?.spoken_languages.map((language, index) => (
                     <p key={`language-item-${index}`}>{language.english_name}</p>
                   ))}
@@ -258,6 +253,7 @@ const TvOverview = () => {
                           {season.air_date} | {season.episode_count} episodes
                         </H5>
                         {!isSm && (
+                          // eslint-disable-next-line tailwindcss/no-custom-classname
                           <H6 h6 className="!line-clamp-3">
                             {season.overview}
                           </H6>

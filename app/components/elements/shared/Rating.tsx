@@ -1,7 +1,7 @@
 /* eslint-disable no-nested-ternary */
-import AnilistStatIcon from '~/assets/icons/AnilistStatIcon';
 
 import { H6 } from '~/components/styles/Text.styles';
+import AnilistStatIcon from '~/assets/icons/AnilistStatIcon';
 
 interface IRatingProps {
   rating: number | string | undefined;

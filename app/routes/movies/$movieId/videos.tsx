@@ -1,19 +1,14 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
-/* eslint-disable no-unused-expressions */
-/* eslint-disable @typescript-eslint/no-throw-literal */
 import { useEffect, useState } from 'react';
-import { json } from '@remix-run/node';
-import type { MetaFunction, LoaderArgs } from '@remix-run/node';
-import { useLoaderData, useFetcher } from '@remix-run/react';
-import { Row, Col, Button, Grid, Card } from '@nextui-org/react';
+import { Button, Card, Col, Grid, Row } from '@nextui-org/react';
+import { useMediaQuery } from '@react-hookz/web';
+import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
+import { useFetcher, useLoaderData } from '@remix-run/react';
 
 import { authenticate } from '~/services/supabase';
 import { getVideos } from '~/services/tmdb/tmdb.server';
-import { Item } from '~/services/youtube/youtube.types';
+import type { Item } from '~/services/youtube/youtube.types';
 import { CACHE_CONTROL } from '~/utils/server/http';
-
-import { useMediaQuery } from '@react-hookz/web';
-import WatchTrailerModal, { Trailer } from '~/components/elements/modal/WatchTrailerModal';
+import WatchTrailerModal, { type Trailer } from '~/components/elements/modal/WatchTrailerModal';
 import { H5, H6 } from '~/components/styles/Text.styles';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
@@ -77,7 +72,8 @@ const MovieVideosPage = () => {
       const activeTypeVideo = typeVideo.find((item) => item.activeType === activeType);
       activeVideo = videos.results?.filter((video) => video.type === activeTypeVideo?.activeVideo);
       const keyVideo = activeVideo.map((item) => item.key).join(',');
-      keyVideo ? fetcher.load(`/api/youtube-video?id=${keyVideo}`) : setActiveTypeVideos([]);
+      if (keyVideo) fetcher.load(`/api/youtube-video?id=${keyVideo}`);
+      else setActiveTypeVideos([]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeType, videos]);

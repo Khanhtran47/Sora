@@ -1,19 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-unused-expressions */
-/* eslint-disable @typescript-eslint/no-unused-expressions */
-/* eslint-disable @typescript-eslint/indent */
-import * as React from 'react';
-import { MetaFunction } from '@remix-run/node';
+import { useEffect, useState } from 'react';
 import { Spacer } from '@nextui-org/react';
+import type { MetaFunction } from '@remix-run/node';
 import { useFetcher } from '@remix-run/react';
 
-import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
-
-import { IPeople } from '~/services/tmdb/tmdb.types';
-import { IMedia } from '~/types/media';
+import type { IMedia } from '~/types/media';
+import type { IPeople } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
-import { P, H4 } from '~/components/styles/Text.styles';
+import { H4, P } from '~/components/styles/Text.styles';
 
 export const meta: MetaFunction = ({ params }) => ({
   'og:url': `https://sora-anime.vercel.app/people/${params.peopleId}/overview`,
@@ -23,11 +19,13 @@ const OverviewPage = () => {
   const peopleData = useTypedRouteLoaderData('routes/people/$peopleId');
   const rootData = useTypedRouteLoaderData('root');
   const fetcher = useFetcher();
-  const [knownFor, setKnownFor] = React.useState<IMedia[]>();
-  React.useEffect(() => {
-    peopleData?.detail?.name && fetcher.load(`/search/people/${peopleData?.detail?.name}`);
+  const [knownFor, setKnownFor] = useState<IMedia[]>();
+  useEffect(() => {
+    if (peopleData?.detail?.name) {
+      fetcher.load(`/search/people/${peopleData?.detail?.name}`);
+    }
   }, [peopleData]);
-  React.useEffect(() => {
+  useEffect(() => {
     if (fetcher.data && fetcher.data.searchResults) {
       const { items } = fetcher.data.searchResults;
       const peopleFound = items.find((result: IPeople) => result.id === peopleData?.detail?.id);

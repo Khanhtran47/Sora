@@ -1,40 +1,6 @@
+/* eslint-disable import/no-unresolved */
 /* eslint-disable react/no-danger */
 import * as React from 'react';
-import type { LinksFunction, MetaFunction, LoaderArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
-import {
-  NavLink,
-  Links,
-  LiveReload,
-  Meta,
-  Scripts,
-  useCatch,
-  useLoaderData,
-  useFetchers,
-  useNavigation,
-  useMatches,
-  useLocation,
-} from '@remix-run/react';
-import { NextUIProvider, Text, Image as NextImage, Badge, useSSR, Button } from '@nextui-org/react';
-import { ThemeProvider as RemixThemesProvider } from 'next-themes';
-// @ts-ignore
-import swiperStyles from 'swiper/css';
-// @ts-ignore
-import swiperPaginationStyles from 'swiper/css/navigation';
-// @ts-ignore
-import swiperNavigationStyles from 'swiper/css/pagination';
-// @ts-ignore
-import swiperThumbsStyles from 'swiper/css/thumbs';
-// @ts-ignore
-import swiperAutoPlayStyles from 'swiper/css/autoplay';
-import { AnimatePresence, motion } from 'framer-motion';
-import NProgress from 'nprogress';
-import { useChangeLanguage } from 'remix-i18next';
-import { useTranslation } from 'react-i18next';
-import photoSwipeStyles from 'photoswipe/dist/photoswipe.css';
-import remixImageStyles from 'remix-image/remix-image.css';
-import Image, { MimeType } from 'remix-image';
-import { getSelectorsByUserAgent } from 'react-device-detect';
 import FontStyles100 from '@fontsource/inter/100.css';
 import FontStyles200 from '@fontsource/inter/200.css';
 import FontStyles300 from '@fontsource/inter/300.css';
@@ -44,38 +10,68 @@ import FontStyles600 from '@fontsource/inter/600.css';
 import FontStyles700 from '@fontsource/inter/700.css';
 import FontStyles800 from '@fontsource/inter/800.css';
 import FontStyles900 from '@fontsource/inter/900.css';
+import { Badge, Button, Image as NextImage, NextUIProvider, Text, useSSR } from '@nextui-org/react';
+import { json, type LinksFunction, type LoaderArgs, type MetaFunction } from '@remix-run/node';
+import {
+  Links,
+  LiveReload,
+  Meta,
+  NavLink,
+  Scripts,
+  useCatch,
+  useFetchers,
+  useLoaderData,
+  useLocation,
+  useMatches,
+  useNavigation,
+} from '@remix-run/react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ThemeProvider as RemixThemesProvider } from 'next-themes';
+import NProgress from 'nprogress';
+import photoSwipeStyles from 'photoswipe/dist/photoswipe.css';
+import { getSelectorsByUserAgent } from 'react-device-detect';
+import { useTranslation } from 'react-i18next';
+import { useChangeLanguage } from 'remix-i18next';
+import Image, { MimeType } from 'remix-image';
+import remixImageStyles from 'remix-image/remix-image.css';
+import { getClientIPAddress, getClientLocales } from 'remix-utils';
 import { toast } from 'sonner';
-
+// @ts-ignore
+import swiperStyles from 'swiper/css';
+// @ts-ignore
+import swiperAutoPlayStyles from 'swiper/css/autoplay';
+// @ts-ignore
+import swiperPaginationStyles from 'swiper/css/navigation';
+// @ts-ignore
+import swiperNavigationStyles from 'swiper/css/pagination';
+// @ts-ignore
+import swiperThumbsStyles from 'swiper/css/thumbs';
 import i18next, { i18nCookie } from '~/i18n/i18next.server';
-import * as gtag from '~/utils/client/gtags.client';
-import { getListGenre, getListLanguages } from '~/services/tmdb/tmdb.server';
-import { getUserFromCookie } from '~/services/supabase';
 
+import { getUserFromCookie } from '~/services/supabase';
+import { getListGenre, getListLanguages } from '~/services/tmdb/tmdb.server';
+import * as gtag from '~/utils/client/gtags.client';
 import { ClientStyleContext } from '~/context/client.context';
 import { useIsBot } from '~/context/isbot.context';
-
-import globalStyles from '~/styles/global.stitches';
-import {
-  lightTheme,
-  darkTheme,
-  bumblebeeTheme,
-  autumnTheme,
-  retroTheme,
-  synthwaveTheme,
-  nightTheme,
-  draculaTheme,
-} from '~/styles/nextui.config';
-import styles from '~/styles/tailwind.css';
-import nProgressStyles from '~/components/styles/nprogress.css';
-
 import Layout from '~/components/layouts/Layout';
 import Flex from '~/components/styles/Flex.styles';
-
+import nProgressStyles from '~/components/styles/nprogress.css';
 import Home from '~/assets/icons/HomeIcon';
 import Refresh from '~/assets/icons/RefreshIcon';
 import pageNotFound from '~/assets/images/404.gif';
 import logoLoading from '~/assets/images/logo_loading.png';
-import { getClientIPAddress, getClientLocales } from 'remix-utils';
+import globalStyles from '~/styles/global.stitches';
+import {
+  autumnTheme,
+  bumblebeeTheme,
+  darkTheme,
+  draculaTheme,
+  lightTheme,
+  nightTheme,
+  retroTheme,
+  synthwaveTheme,
+} from '~/styles/nextui.config';
+import styles from '~/styles/tailwind.css';
 
 interface DocumentProps {
   children: React.ReactNode;
@@ -83,7 +79,7 @@ interface DocumentProps {
   lang?: string;
   dir?: 'ltr' | 'rtl';
   gaTrackingId?: string;
-  ENV?: any;
+  ENV?: unknown;
 }
 
 export const links: LinksFunction = () => [
@@ -606,21 +602,21 @@ const App = () => {
         <AnimatePresence>
           {isLoading && process.env.NODE_ENV !== 'development' && !isBot ? (
             <div
-              className="w-full h-full fixed block top-0 left-0"
+              className="fixed top-0 left-0 block h-full w-full"
               style={{ zIndex: '9999', backgroundColor: 'var(--nextui-colors-background)' }}
             >
               <motion.div
                 initial={{ opacity: 1 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="top-1/2 my-auto mx-auto block relative w-0 h-0"
+                className="relative top-1/2 m-auto block h-0 w-0"
                 style={{ marginTop: '-77px' }}
               >
-                <div className="flex justify-center	items-center mb-5">
+                <div className="mb-5 flex	items-center justify-center">
                   <Image
                     width="100px"
                     height="100px"
-                    className="rounded-full mr-5"
+                    className="mr-5 rounded-full"
                     loaderUrl="/api/image"
                     title="Logo Loading"
                     alt="Logo Loading"
@@ -657,7 +653,7 @@ const App = () => {
                   </h1>
                 </div>
                 <div style={{ width: `${size}px`, height: `${size}px` }} className="animate-spin">
-                  <div className="h-full w-full border-4 border-t-primary border-b-primary rounded-[50%]" />
+                  <div className="h-full w-full rounded-[50%] border-4 border-y-primary" />
                 </div>
               </motion.div>
             </div>
@@ -762,6 +758,7 @@ export const CatchBoundary = () => {
 
 export const ErrorBoundary = ({ error }: { error: Error }) => {
   const isProd = process.env.NODE_ENV === 'production' && process.env.DEPLOY_ENV === 'production';
+  // eslint-disable-next-line no-console
   console.log(error);
   return (
     <Document title="Error!">

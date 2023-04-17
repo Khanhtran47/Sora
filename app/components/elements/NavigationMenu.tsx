@@ -1,19 +1,18 @@
+/* eslint-disable tailwindcss/no-custom-classname */
 /* eslint-disable @typescript-eslint/indent */
-import { forwardRef, type ElementRef, type ComponentPropsWithoutRef } from 'react';
+import { forwardRef, type ComponentPropsWithoutRef, type ElementRef } from 'react';
 import * as NavigationMenuPrimitive from '@radix-ui/react-navigation-menu';
-import { tv, cnBase } from 'tailwind-variants';
+import { cnBase, tv } from 'tailwind-variants';
 
 import ChevronRight from '~/assets/icons/ChevronRightIcon';
 
 const NavigationMenuViewport = forwardRef<
   ElementRef<typeof NavigationMenuPrimitive.Viewport>,
-  ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Viewport> & {
-    orientation: NavigationMenuPrimitive.Orientation | undefined;
-  }
->(({ className = '', orientation, ...props }, ref) => (
+  ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Viewport>
+>(({ className = '', ...props }, ref) => (
   <NavigationMenuPrimitive.Viewport
     className={cnBase(
-      'origin-[top_center] data-[state=open]:animate-scaleIn data-[state=closed]:animate-scaleOut data-[state=open]:fadeIn data-[state=closed]:fadeOut relative data-[orientation=horizontal]:mt-1.5 data-[orientation=vertical]:ml-[-8px] h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden rounded-[12px] border border-border shadow-lg transition-[width,_height] duration-300 bg-background-contrast-alpha sm:w-[var(--radix-navigation-menu-viewport-width)] backdrop-blur-md',
+      'data-[state=open]:fadeIn data-[state=closed]:fadeOut relative h-[var(--radix-navigation-menu-viewport-height)] w-full origin-[top_center] overflow-hidden rounded-[12px] border border-border bg-background-contrast-alpha shadow-lg backdrop-blur-md transition-[width,_height] duration-300 data-[orientation=horizontal]:mt-1.5 data-[orientation=vertical]:ml-[-8px] data-[state=open]:animate-scaleIn data-[state=closed]:animate-scaleOut sm:w-[var(--radix-navigation-menu-viewport-width)]',
       className,
     )}
     ref={ref}
@@ -43,21 +42,19 @@ const NavigationMenu = forwardRef<
         viewportPositionClassName,
       )}
     >
-      <NavigationMenuViewport orientation={orientation} />
+      <NavigationMenuViewport />
     </div>
   </NavigationMenuPrimitive.Root>
 ));
 NavigationMenu.displayName = NavigationMenuPrimitive.Root.displayName;
 
 const navigationMenuListStyles = tv({
-  base: 'group flex flex-1 data-[orientation=vertical]:flex-col list-none items-center justify-center',
+  base: 'group flex flex-1 list-none items-center justify-center data-[orientation=vertical]:flex-col',
 });
 const NavigationMenuList = forwardRef<
   ElementRef<typeof NavigationMenuPrimitive.List>,
-  ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.List> & {
-    orientation: NavigationMenuPrimitive.Orientation | undefined;
-  }
->(({ className = '', orientation, ...props }, ref) => (
+  ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.List>
+>(({ className = '', ...props }, ref) => (
   <NavigationMenuPrimitive.List
     ref={ref}
     className={navigationMenuListStyles({ class: className })}
@@ -69,11 +66,9 @@ NavigationMenuList.displayName = NavigationMenuPrimitive.List.displayName;
 const NavigationMenuItem = NavigationMenuPrimitive.Item;
 
 const navigationMenuTriggerStyle = tv({
-  base: `inline-flex items-center justify-center rounded-md text-md font-medium transition-colors
-  focus:outline-none focus:bg-primary-light-hover disabled:opacity-50 disabled:pointer-events-none
-  bg-transparent hover:bg-primary-light-hover text-text data-[state=open]:bg-primary-light-active
-  data-[active]:bg-primary-light-active h-10 group w-max hover:text-primary data-[active]:text-primary
-  hover:opacity-80 focus:text-primary px-4 py-2 data-[state=open]:text-primary`,
+  base: `text-md focus:bg-primary-light-hover hover:bg-primary-light-hover text-text data-[state=open]:bg-primary-light-active data-[active]:bg-primary-light-active hover:text-primary
+  data-[active]:text-primary focus:text-primary data-[state=open]:text-primary group inline-flex h-10 w-max items-center justify-center rounded-md bg-transparent px-4 py-2 font-medium
+  transition-colors hover:opacity-80 focus:outline-none disabled:pointer-events-none disabled:opacity-50`,
   variants: {
     active: {
       true: 'bg-primary-light-active text-primary',
@@ -96,7 +91,7 @@ const NavigationMenuTrigger = forwardRef<
     {children}{' '}
     {showArrow ? (
       <ChevronRight
-        className="relative top-[1px] ml-auto h-5 w-5 transition duration-400 group-data-[state=open]:rotate-180"
+        className="duration-400 relative top-[1px] ml-auto h-5 w-5 transition group-data-[state=open]:rotate-180"
         aria-hidden="true"
       />
     ) : null}

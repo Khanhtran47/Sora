@@ -1,9 +1,10 @@
 import { useMediaQuery } from '@react-hookz/web';
-import { Title } from '~/types/media';
-import { ITrailer } from '~/services/consumet/anilist/anilist.types';
 
-import BannerItemMobile from './BannerItemMobile';
+import type { Title } from '~/types/media';
+import type { ITrailer } from '~/services/consumet/anilist/anilist.types';
+
 import BannerItemDesktop from './BannerItemDesktop';
+import BannerItemMobile from './BannerItemMobile';
 
 interface IBannerItemProps {
   active?: boolean;

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/indent */
 import React from 'react';
-import { styled, CSS, css, keyframes } from '@nextui-org/react';
+import { css, keyframes, styled, type CSS } from '@nextui-org/react';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 
 import Box from '~/components/styles/Box.styles';

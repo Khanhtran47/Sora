@@ -1,5 +1,6 @@
-import { IMedia } from '~/types/media';
-import { IAnimeResult, IAnimeEpisode } from './anilist.types';
+import type { IMedia } from '~/types/media';
+
+import type { IAnimeEpisode, IAnimeResult } from './anilist.types';
 
 export const fetchAnimeResultsHandler = (data: IAnimeResult[]): IMedia[] => {
   const media: IMedia[] = [];

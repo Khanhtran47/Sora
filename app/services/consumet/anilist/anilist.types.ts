@@ -1,4 +1,4 @@
-import { IMedia } from '~/types/media';
+import type { IMedia } from '~/types/media';
 
 export interface IAnimeList {
   currentPage: number;

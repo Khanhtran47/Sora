@@ -1,48 +1,43 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useState, useEffect, useRef, useMemo } from 'react';
-import { createPortal } from 'react-dom';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Button, Container, Tooltip, keyframes } from '@nextui-org/react';
+import { useMeasure } from '@react-hookz/web';
 import {
-  useLocation,
-  useNavigate,
   useFetcher,
+  useLocation,
   useMatches,
+  useNavigate,
   useParams,
   useRouteLoaderData,
 } from '@remix-run/react';
-import { Container, Button, Tooltip, keyframes } from '@nextui-org/react';
-import Artplayer from 'artplayer';
+import type Artplayer from 'artplayer';
 import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
 import Hls from 'hls.js';
 import { isDesktop, isMobile, isMobileOnly } from 'react-device-detect';
+import { createPortal } from 'react-dom';
 import tinycolor from 'tinycolor2';
 
-import usePlayerState from '~/store/player/usePlayerState';
-import type { PlayerData } from '~/store/player/usePlayerState';
-
-import { useSoraSettings } from '~/hooks/useLocalStorage';
-import { useMeasure } from '@react-hookz/web';
-
 import updateHistory from '~/utils/client/update-history';
-
-import ArtPlayer from '~/components/elements/player/ArtPlayer';
-import PlayerSettings from '~/components/elements/player/PlayerSettings';
-import PlayerError from '~/components/elements/player/PlayerError';
-import { H5, H6 } from '~/components/styles/Text.styles';
-import Flex from '~/components/styles/Flex.styles';
-import Box from '~/components/styles/Box.styles';
-import WatchTrailerModal, { Trailer } from '~/components/elements/modal/WatchTrailerModal';
+import usePlayerState, { type PlayerData } from '~/store/player/usePlayerState';
+import { useSoraSettings } from '~/hooks/useLocalStorage';
 import SearchSubtitles from '~/components/elements/modal/SearchSubtitle';
-
+import WatchTrailerModal, { type Trailer } from '~/components/elements/modal/WatchTrailerModal';
+import ArtPlayer from '~/components/elements/player/ArtPlayer';
+import PlayerError from '~/components/elements/player/PlayerError';
+import PlayerHotKey from '~/components/elements/player/PlayerHotkey';
+import PlayerSettings from '~/components/elements/player/PlayerSettings';
+import Box from '~/components/styles/Box.styles';
+import Flex from '~/components/styles/Flex.styles';
+import { H5, H6 } from '~/components/styles/Text.styles';
 import Close from '~/assets/icons/CloseIcon';
 import Expand from '~/assets/icons/ExpandIcon';
-import Play from '~/assets/icons/PlayIcon';
-import Pause from '~/assets/icons/PauseIcon';
 import Next from '~/assets/icons/NextIcon';
+import Pause from '~/assets/icons/PauseIcon';
+import Play from '~/assets/icons/PlayIcon';
 import Previous from '~/assets/icons/PreviousIcon';
-
-import { PlayerHotKey } from '../elements/player/PlayerHotkey';
 
 const jumpAnimation = keyframes({
   '15%': {
@@ -493,7 +488,7 @@ const GlobalPlayer = () => {
       responsive={false}
       css={{ margin: 0, padding: 0, width: isMini ? '20rem' : '100%' }}
     >
-      <div className="fixed inset-0 pointer-events-none" ref={constraintsRef} />
+      <div className="pointer-events-none fixed inset-0" ref={constraintsRef} />
       <AnimatePresence initial={false}>
         {shouldShowPlayer ? (
           <motion.div
@@ -1352,24 +1347,24 @@ const GlobalPlayer = () => {
         : null}
       {artplayer?.controls.topControlButtons && !isMini
         ? createPortal(
-            <Flex direction="row" align="center" justify="start" className="w-full z-10 space-x-2">
+            <Flex direction="row" align="center" justify="start" className="z-10 w-full space-x-2">
               <Flex
                 direction="row"
                 align="center"
                 justify="start"
-                className="space-x-2 basis-2/3 shrink grow-0 w-2/3"
+                className="w-2/3 shrink grow-0 basis-2/3 space-x-2"
               >
                 {isPlayerFullScreen ? (
                   <Flex
                     direction="column"
                     align="start"
                     justify="center"
-                    className="space-y-2 w-full"
+                    className="w-full space-y-2"
                   >
                     <H6
                       h6
                       weight="bold"
-                      className="text-ellipsis text-start whitespace-nowrap overflow-hidden w-full"
+                      className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-start"
                     >
                       {playerData?.titlePlayer}
                     </H6>
@@ -1385,7 +1380,7 @@ const GlobalPlayer = () => {
                   direction="row"
                   align="center"
                   justify="end"
-                  className="space-x-2 grow shrink-0 basis-1/3"
+                  className="shrink-0 grow basis-1/3 space-x-2"
                 >
                   <PlayerSettings
                     artplayer={artplayer}

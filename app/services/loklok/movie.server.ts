@@ -1,6 +1,6 @@
+import { fetcher, lruCache } from '../lru-cache';
 import type { ILoklokMediaInfo, ILoklokSearchData } from './loklok.type';
 import { LOKLOK_URL } from './utils.server';
-import { fetcher, lruCache } from '../lru-cache';
 
 /**
  * Get movie info by id

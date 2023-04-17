@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import type { ActionArgs } from '@remix-run/node';
 import webPush from 'web-push';
 

@@ -1,65 +1,62 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import {
+  Badge,
+  Collapse,
+  Container,
+  Dropdown,
+  Link,
+  Loading,
+  Image as NextImage,
+  Radio,
+  Spacer,
+  Switch,
+  Tooltip,
+} from '@nextui-org/react';
+import { useMediaQuery } from '@react-hookz/web';
 import type { MetaFunction } from '@remix-run/node';
 import { NavLink, useLocation, useNavigate } from '@remix-run/react';
-import {
-  Container,
-  Spacer,
-  Dropdown,
-  Image as NextImage,
-  Collapse,
-  Switch,
-  Radio,
-  Tooltip,
-  Badge,
-  Loading,
-  Link,
-} from '@nextui-org/react';
-import { motion, AnimatePresence, PanInfo } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
-import { ClientOnly } from 'remix-utils';
-import Image, { MimeType } from 'remix-image';
+import { AnimatePresence, motion, type PanInfo } from 'framer-motion';
 import { useTheme } from 'next-themes';
 import { isMobile } from 'react-device-detect';
+import { useTranslation } from 'react-i18next';
+import Image, { MimeType } from 'remix-image';
+import { ClientOnly } from 'remix-utils';
 
-import { useMediaQuery } from '@react-hookz/web';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
-
+import languages from '~/constants/languages';
 import {
-  settingsTab,
-  listThemes,
-  listSubtitleFontColor,
-  listSubtitleFontSize,
   listSubtitleBackgroundColor,
   listSubtitleBackgroundOpacity,
-  listSubtitleWindowColor,
-  listSubtitleWindowOpacity,
+  listSubtitleFontColor,
+  listSubtitleFontSize,
   listSubtitleTextEffects,
   // listSidebarActiveStyleMode,
+  listSubtitleWindowColor,
+  listSubtitleWindowOpacity,
+  listThemes,
+  settingsTab,
 } from '~/constants/settings';
-import languages from '~/constants/languages';
-
+import Kbd from '~/components/elements/Kbd';
 import AboutLogo from '~/components/elements/NavLink';
-import { H2, H5, H6 } from '~/components/styles/Text.styles';
-import Flex from '~/components/styles/Flex.styles';
 import {
   Tabs,
+  TabsContent,
   TabsList,
   TabsTrigger,
-  TabsContent,
   Underline,
 } from '~/components/elements/tab/Tabs';
-import Balancer from '~/components/elements/shared/Balancer';
-import Kbd from '~/components/elements/Kbd';
-
-import LogoFooter from '~/assets/images/logo_footer.png';
-import SettingsIcon from '~/assets/icons/SettingsIcon';
+import Flex from '~/components/styles/Flex.styles';
+import { H2, H5, H6 } from '~/components/styles/Text.styles';
 import Brush from '~/assets/icons/BrushIcon';
-import User from '~/assets/icons/UserIcon';
-import Play from '~/assets/icons/PlayIcon';
 import Info from '~/assets/icons/InfoIcon';
+import Play from '~/assets/icons/PlayIcon';
+import SettingsIcon from '~/assets/icons/SettingsIcon';
+import User from '~/assets/icons/UserIcon';
+import LogoFooter from '~/assets/images/logo_footer.png';
 
 export const meta: MetaFunction = () => ({
   title: 'Settings',
@@ -219,6 +216,7 @@ const Settings = () => {
   //   [selectedSidebarStyleMode],
   // );
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleDragEnd = (event: MouseEvent | PointerEvent | TouchEvent, info: PanInfo) => {
     const currentTab = settingsTab.find((tab) => tab.id === activeTab);
     if (info.offset?.x > 100) {
@@ -466,7 +464,7 @@ const Settings = () => {
                               </H5>
                               {isMd ? null : (
                                 <>
-                                  <div className="flex flex-row justify-between items-center gap-x-2 w-full">
+                                  <div className="flex w-full flex-row items-center justify-between gap-x-2">
                                     <H6>{t('sidebar-mini-mode')}</H6>
                                     <Switch
                                       checked={sidebarMiniMode.value}
@@ -478,7 +476,7 @@ const Settings = () => {
                                       }}
                                     />
                                   </div>
-                                  <div className="flex flex-row justify-between items-center gap-x-2 w-full">
+                                  <div className="flex w-full flex-row items-center justify-between gap-x-2">
                                     <H6>{t('sidebar-hover-mode')}</H6>
                                     <Switch
                                       checked={sidebarHoverMode.value}
@@ -492,7 +490,7 @@ const Settings = () => {
                                   </div>
                                 </>
                               )}
-                              <div className="flex flex-row justify-between items-center gap-x-2 w-full">
+                              <div className="flex w-full flex-row items-center justify-between gap-x-2">
                                 <H6>{t('sidebar-boxed-mode')}</H6>
                                 <Switch
                                   checked={sidebarBoxedMode.value}
@@ -1519,10 +1517,8 @@ const Settings = () => {
                       </Flex>
                       <Spacer y={1} />
                       <H6 weight="semibold" css={{ textAlign: 'center' }}>
-                        <Balancer>
-                          This site does not store any files on its server. All contents are
-                          provided by non-affiliated third parties.
-                        </Balancer>
+                        This site does not store any files on its server. All contents are provided
+                        by non-affiliated third parties.
                       </H6>
                     </Container>
                   </motion.div>

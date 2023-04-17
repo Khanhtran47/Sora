@@ -1,34 +1,29 @@
-/* eslint-disable @typescript-eslint/indent */
-/* eslint-disable @typescript-eslint/no-throw-literal */
-import { MetaFunction, json } from '@remix-run/node';
-import type { LoaderArgs } from '@remix-run/node';
-import { useCatch, useLoaderData, NavLink, RouteMatch } from '@remix-run/react';
-import { Container, Spacer, Badge } from '@nextui-org/react';
+import type { ISource } from '@consumet/extensions';
+import { Badge, Container, Spacer } from '@nextui-org/react';
+import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
+import { NavLink, useCatch, useLoaderData, type RouteMatch } from '@remix-run/react';
 import Vibrant from 'node-vibrant';
-import { ISource } from '@consumet/extensions';
 
-import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
-
-import { authenticate, insertHistory } from '~/services/supabase';
 import {
-  getMovieDetail,
-  getRecommendation,
-  // getTranslations,
-  getImdbRating,
-  getWatchEpisode,
-} from '~/services/tmdb/tmdb.server';
-import {
-  getKissKhInfo,
   getKissKhEpisodeStream,
   getKissKhEpisodeSubtitle,
+  getKissKhInfo,
 } from '~/services/kisskh/kisskh.server';
 import { loklokGetMovieInfo } from '~/services/loklok';
 import { LOKLOK_URL } from '~/services/loklok/utils.server';
+import { authenticate, insertHistory } from '~/services/supabase';
+import {
+  // getTranslations,
+  getImdbRating,
+  getMovieDetail,
+  getRecommendation,
+  getWatchEpisode,
+} from '~/services/tmdb/tmdb.server';
+import { TMDB as TmdbUtils } from '~/services/tmdb/utils.server';
 // import i18next from '~/i18n/i18next.server';
 import TMDB from '~/utils/media';
-import { TMDB as TmdbUtils } from '~/services/tmdb/utils.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
-
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import WatchDetail from '~/components/elements/shared/WatchDetail';
 import CatchBoundaryView from '~/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/components/ErrorBoundaryView';

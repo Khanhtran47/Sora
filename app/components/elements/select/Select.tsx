@@ -1,16 +1,17 @@
 import React from 'react';
 import * as SelectPrimitive from '@radix-ui/react-select';
+
 import {
-  StyledTrigger,
-  StyledIcon,
   StyledContent,
-  StyledViewport,
+  StyledIcon,
   StyledItem,
-  StyledLabel,
-  StyledSeparator,
   StyledItemIndicator,
-  StyledScrollUpButton,
+  StyledLabel,
   StyledScrollDownButton,
+  StyledScrollUpButton,
+  StyledSeparator,
+  StyledTrigger,
+  StyledViewport,
 } from './Select.styles';
 
 const Content = ({ children, ...props }: { children: React.ReactNode }) => (

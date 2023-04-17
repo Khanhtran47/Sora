@@ -1,39 +1,40 @@
 /* eslint-disable no-unsafe-optional-chaining */
 /* eslint-disable @typescript-eslint/indent */
-import { useRef, useMemo, useEffect } from 'react';
-import { json } from '@remix-run/node';
-import type { LoaderArgs, MetaFunction } from '@remix-run/node';
-import { useCatch, useLoaderData, Outlet, NavLink, RouteMatch, useParams } from '@remix-run/react';
-import { Spacer, Card, Avatar, Badge } from '@nextui-org/react';
-import Image, { MimeType } from 'remix-image';
+import { useEffect, useMemo, useRef } from 'react';
+import { Avatar, Badge, Card, Spacer } from '@nextui-org/react';
+import { useIntersectionObserver, useMeasure, useMediaQuery } from '@react-hookz/web';
+import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
+import {
+  NavLink,
+  Outlet,
+  useCatch,
+  useLoaderData,
+  useParams,
+  type RouteMatch,
+} from '@remix-run/react';
 import Vibrant from 'node-vibrant';
+import Image, { MimeType } from 'remix-image';
 import tinycolor from 'tinycolor2';
-
-import { useMediaQuery, useMeasure, useIntersectionObserver } from '@react-hookz/web';
-import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
-import { useSoraSettings } from '~/hooks/useLocalStorage';
-import { useCustomHeaderChangePosition } from '~/hooks/useHeader';
-import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
-import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
-
 import i18next from '~/i18n/i18next.server';
-import { getTvShowDetail, getTvSeasonDetail } from '~/services/tmdb/tmdb.server';
-import { authenticate } from '~/services/supabase';
+
 import getProviderList from '~/services/provider.server';
-
-import { CACHE_CONTROL } from '~/utils/server/http';
+import { authenticate } from '~/services/supabase';
+import { getTvSeasonDetail, getTvShowDetail } from '~/services/tmdb/tmdb.server';
 import TMDB from '~/utils/media';
-
-import CatchBoundaryView from '~/components/CatchBoundaryView';
-import ErrorBoundaryView from '~/components/ErrorBoundaryView';
+import { CACHE_CONTROL } from '~/utils/server/http';
+import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
+import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
+import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
+import { useCustomHeaderChangePosition } from '~/hooks/useHeader';
+import { useSoraSettings } from '~/hooks/useLocalStorage';
+import { tvSeasonDetailPages } from '~/constants/tabLinks';
+import { BackgroundContent, BackgroundTabLink } from '~/components/media/Media.styles';
 import TabLink from '~/components/elements/tab/TabLink';
 import { H2, H5, H6 } from '~/components/styles/Text.styles';
-import { BackgroundContent, BackgroundTabLink } from '~/components/media/Media.styles';
-
+import CatchBoundaryView from '~/components/CatchBoundaryView';
+import ErrorBoundaryView from '~/components/ErrorBoundaryView';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 import BackgroundDefault from '~/assets/images/background-default.jpg';
-
-import { tvSeasonDetailPages } from '~/constants/tabLinks';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const [, locale] = await Promise.all([
@@ -293,7 +294,7 @@ const TvSeasonDetail = () => {
           }}
         >
           <BackgroundContent />
-          <div className="w-full grid grid-areas-small sm:grid-areas-wide grid-cols-[1fr_2fr] grid-rows-[1fr_auto_auto] sm:grid-rows-[auto_1fr_auto] gap-x-4 gap-y-6 justify-center items-stretch max-w-[1920px] pt-5 pb-8 px-3 sm:px-3.5 xl:px-4 2xl:px-5">
+          <div className="grid w-full max-w-[1920px] grid-cols-[1fr_2fr] grid-rows-[1fr_auto_auto] items-stretch justify-center gap-x-4 gap-y-6 px-3 pt-5 pb-8 grid-areas-small sm:grid-rows-[auto_1fr_auto] sm:px-3.5 sm:grid-areas-wide xl:px-4 2xl:px-5">
             <div className="flex flex-col grid-in-image" ref={imageRef}>
               {seasonDetail?.poster_path ? (
                 <Card.Image
@@ -347,7 +348,7 @@ const TvSeasonDetail = () => {
                   }}
                 />
               ) : (
-                <div className="flex justify-center items-center">
+                <div className="flex items-center justify-center">
                   <Avatar
                     icon={<PhotoIcon width={48} height={48} />}
                     css={{
@@ -364,7 +365,7 @@ const TvSeasonDetail = () => {
                 </div>
               )}
             </div>
-            <div className="grid-in-title flex flex-col justify-start items-start w-full">
+            <div className="flex w-full flex-col items-start justify-start grid-in-title">
               <H2 h2 weight="bold">
                 {detail?.name} {seasonDetail?.name}
               </H2>
@@ -373,7 +374,7 @@ const TvSeasonDetail = () => {
               </H5>
             </div>
             {seasonDetail?.overview ? (
-              <div className="grid-in-info flex flex-col gap-y-3 sm:gap-y-6">
+              <div className="flex flex-col gap-y-3 grid-in-info sm:gap-y-6">
                 <H6 h6>{seasonDetail.overview}</H6>
               </div>
             ) : null}
@@ -417,9 +418,9 @@ const TvSeasonDetail = () => {
           />
         </Card.Body>
       </Card>
-      <div className="w-full flex flex-col justify-center items-center">
+      <div className="flex w-full flex-col items-center justify-center">
         <div
-          className="w-full flex justify-center top-[64px] sticky z-[1000] transition-[padding] duration-100 ease-in-out"
+          className="sticky top-[64px] z-[1000] flex w-full justify-center transition-[padding] duration-100 ease-in-out"
           style={{
             backgroundColor,
             paddingTop: tablinkPaddingTop,

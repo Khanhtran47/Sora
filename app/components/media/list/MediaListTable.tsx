@@ -1,6 +1,8 @@
 import { Divider } from '@nextui-org/react';
 import { useMeasure } from '@react-hookz/web';
-import { IMedia } from '~/types/media';
+
+import type { IMedia } from '~/types/media';
+
 import { RowItem } from '../item';
 
 type IProps = {

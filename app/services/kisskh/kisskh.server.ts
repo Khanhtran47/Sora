@@ -1,6 +1,7 @@
-import { lruCache, fetcher } from '~/services/lru-cache';
+import { fetcher, lruCache } from '~/services/lru-cache';
+
+import type { IEpisodeVideo, IItemInfo, ISearchItem, IVideoSubtitle } from './kisskh.types';
 import KissKh from './utils.server';
-import { ISearchItem, IItemInfo, IEpisodeVideo, IVideoSubtitle } from './kisskh.types';
 
 export const getKissKhSearch = async (
   query: string,

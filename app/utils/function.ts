@@ -11,6 +11,7 @@ function throttle<T extends unknown[], R>(
     lastArgs = args;
     if (!timerId) {
       timerId = setTimeout(() => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         fn(...lastArgs!);
         timerId = undefined;
         lastArgs = undefined;

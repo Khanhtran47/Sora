@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/indent */
 import React from 'react';
-import { styled, keyframes, VariantProps, CSS, css, Button } from '@nextui-org/react';
+import { Button, css, keyframes, styled, type CSS, type VariantProps } from '@nextui-org/react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import { motion, PanInfo } from 'framer-motion';
+import { motion, type PanInfo } from 'framer-motion';
 
 import Close from '~/assets/icons/CloseIcon';
 
@@ -153,6 +153,7 @@ const SheetContent = React.forwardRef<React.ElementRef<typeof StyledContent>, Sh
     { children, hideCloseButton, swipeDownToClose, open, onOpenChange, container, ...props },
     forwardedRef,
   ) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
       if (info.offset.y > 100 && open && onOpenChange && swipeDownToClose) {
         onOpenChange();

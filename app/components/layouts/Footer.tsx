@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { Link, Container, Image as NextImage } from '@nextui-org/react';
+import { Container, Link, Image as NextImage } from '@nextui-org/react';
 import Image, { MimeType } from 'remix-image';
+
 import { H5 } from '~/components/styles/Text.styles';
 import LogoFooter from '~/assets/images/logo_footer.png';
 

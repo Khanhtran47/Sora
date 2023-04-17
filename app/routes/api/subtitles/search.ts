@@ -1,11 +1,9 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { json } from '@remix-run/node';
-import { LoaderArgs } from '@remix-run/node';
+import { LoaderArgs, json } from '@remix-run/node';
 
 import { getSubtitlesSearch } from '~/services/open-subtitles/open-subtitles.server';
 import { authenticate } from '~/services/supabase';
-
-import {CACHE_CONTROL} from '~/utils/server/http';
+import { CACHE_CONTROL } from '~/utils/server/http';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await authenticate(request, undefined, true);
@@ -44,9 +42,12 @@ export const loader = async ({ request }: LoaderArgs) => {
     undefined,
   );
 
-  return json({ subtitlesSearch }, {
-    headers: {
-      'Cache-Control': CACHE_CONTROL.default,
-    }
-  });
+  return json(
+    { subtitlesSearch },
+    {
+      headers: {
+        'Cache-Control': CACHE_CONTROL.default,
+      },
+    },
+  );
 };

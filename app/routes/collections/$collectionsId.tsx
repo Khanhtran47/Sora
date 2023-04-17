@@ -1,22 +1,19 @@
 /* eslint-disable @typescript-eslint/indent */
 import { useRef } from 'react';
-import { json, MetaFunction } from '@remix-run/node';
-import type { LoaderArgs } from '@remix-run/node';
-import { useLoaderData, useLocation, NavLink, RouteMatch } from '@remix-run/react';
+import { Badge, Pagination, Spacer } from '@nextui-org/react';
+import { useMediaQuery } from '@react-hookz/web';
+import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
+import { NavLink, useLoaderData, useLocation, type RouteMatch } from '@remix-run/react';
 import { motion } from 'framer-motion';
-import { Spacer, Badge, Pagination } from '@nextui-org/react';
-
-import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
-import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
+import i18next from '~/i18n/i18next.server';
 
 import { authenticate } from '~/services/supabase';
 import { getListDetail } from '~/services/tmdb/tmdb.server';
-import i18next from '~/i18n/i18next.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
-
+import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
 import Flex from '~/components/styles/Flex.styles';
-import { useMediaQuery } from '@react-hookz/web';
 
 export const meta: MetaFunction = ({ data, params }) => {
   if (!data) {
@@ -114,7 +111,7 @@ const CollectionDetail = () => {
       animate={{ x: '0', opacity: 1 }}
       exit={{ y: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="w-full flex justify-center flex-col items-center px-3 sm:px-0 pb-16"
+      className="flex w-full flex-col items-center justify-center px-3 pb-16 sm:px-0"
     >
       <div ref={ref} />
       {detail && detail.items && detail.items.length > 0 && (

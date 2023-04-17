@@ -1,4 +1,4 @@
-import { Text, Row } from '@nextui-org/react';
+import { Row, Text } from '@nextui-org/react';
 
 const StaffPage = () => (
   <Row

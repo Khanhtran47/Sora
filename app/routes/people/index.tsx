@@ -1,15 +1,13 @@
-import { useLoaderData, useNavigate, useLocation, NavLink } from '@remix-run/react';
-import { json } from '@remix-run/node';
-import type { MetaFunction, LoaderArgs } from '@remix-run/node';
 import { Badge } from '@nextui-org/react';
+import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
+import { NavLink, useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import i18next from '~/i18n/i18next.server';
 
 import { authenticate } from '~/services/supabase';
 import { getListPeople } from '~/services/tmdb/tmdb.server';
-import i18next from '~/i18n/i18next.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
-
 import MediaList from '~/components/media/MediaList';
 
 export const meta: MetaFunction = () => ({
@@ -78,7 +76,7 @@ const ListPeoplePopular = () => {
       animate={{ x: '0', opacity: 1 }}
       exit={{ y: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="w-full flex justify-center flex-col items-center px-3 sm:px-0"
+      className="flex w-full flex-col items-center justify-center px-3 sm:px-0"
     >
       {people && people.items && people.items.length > 0 && (
         <MediaList

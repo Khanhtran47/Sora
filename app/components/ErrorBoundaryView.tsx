@@ -1,7 +1,6 @@
-import { Text, Image } from '@nextui-org/react';
+import { Image, Text } from '@nextui-org/react';
 
 import Flex from '~/components/styles/Flex.styles';
-
 import errorGif from '~/assets/images/404.gif';
 
 interface IErrorBoundary {

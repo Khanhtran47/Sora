@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/indent */
-import { useEffect, useState, useRef } from 'react';
-import { Grid, Button } from '@nextui-org/react';
-import { useFetcher, Link } from '@remix-run/react';
+import { useEffect, useRef, useState } from 'react';
+import { Button, Grid } from '@nextui-org/react';
+import { useMeasure, useMediaQuery } from '@react-hookz/web';
+import { Link, useFetcher } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import NProgress from 'nprogress';
-import { useMediaQuery, useMeasure } from '@react-hookz/web';
 
+import type { IMedia } from '~/types/media';
 import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
 
-import { IMedia } from '~/types/media';
 import MediaItem from '../item';
 
 interface IMediaListCardProps {

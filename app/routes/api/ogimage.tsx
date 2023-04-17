@@ -1,12 +1,10 @@
-import type { LoaderArgs, HeadersFunction } from '@remix-run/node';
+import type { HeadersFunction, LoaderArgs } from '@remix-run/node';
 import { badRequest } from 'remix-utils';
 
 import { getMovieDetail, getTvShowDetail } from '~/services/tmdb/tmdb.server';
 import { IMovieDetail, ITvShowDetail } from '~/services/tmdb/tmdb.types';
-
-import { generateSvg, generateMovieSvg, generatePng } from '~/utils/server/og.server';
 import TMDB from '~/utils/media';
-
+import { generateMovieSvg, generatePng, generateSvg } from '~/utils/server/og.server';
 import HomeOgImage from '~/assets/images/home-ogimage.jpg';
 
 export let headers: HeadersFunction = () => {

@@ -1,14 +1,15 @@
 import { NavLink } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 
-import { H5 } from '~/components/styles/Text.styles';
 import {
   ScrollArea,
-  ScrollAreaViewport,
+  ScrollAreaCorner,
   ScrollAreaScrollbar,
   ScrollAreaThumb,
-  ScrollAreaCorner,
+  ScrollAreaViewport,
 } from '~/components/elements/scroll-area/ScrollArea';
+import { H5 } from '~/components/styles/Text.styles';
+
 import { Underline } from './Tabs';
 
 interface ITabProps {
@@ -41,7 +42,7 @@ const TabLink = (props: ITabProps) => {
             <NavLink
               key={page.pageLink}
               to={`${linkTo}${page.pageLink}`}
-              className="flex shrink-0 relative text-sm font-semibold h-12 p-4 outline-none items-center justify-center rounded-xl z-10 text-text hover:opacity-80 hover:text-primary-solid-hover focus:bg-background-contrast"
+              className="relative z-10 flex h-12 shrink-0 items-center justify-center rounded-xl p-4 text-sm font-semibold text-text outline-none hover:text-primary-solid-hover hover:opacity-80 focus:bg-background-contrast"
             >
               {({ isActive }) => (
                 <>

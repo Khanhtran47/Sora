@@ -1,21 +1,18 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { json } from '@remix-run/node';
-import type { MetaFunction, LoaderArgs } from '@remix-run/node';
-import { useCatch, useLoaderData, Outlet, NavLink, RouteMatch } from '@remix-run/react';
-import { Container, Row, Col, Spacer, Badge } from '@nextui-org/react';
 
-import { getPeopleDetail, getPeopleExternalIds } from '~/services/tmdb/tmdb.server';
+import { Badge, Col, Container, Row, Spacer } from '@nextui-org/react';
+import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
+import { NavLink, Outlet, useCatch, useLoaderData, type RouteMatch } from '@remix-run/react';
 import i18next from '~/i18n/i18next.server';
+
 import { authenticate } from '~/services/supabase';
-import { CACHE_CONTROL } from '~/utils/server/http';
-
+import { getPeopleDetail, getPeopleExternalIds } from '~/services/tmdb/tmdb.server';
 import TMDB from '~/utils/media';
-
+import { CACHE_CONTROL } from '~/utils/server/http';
+import { peopleDetailPages } from '~/constants/tabLinks';
 import PeopleDetail from '~/components/media/PeopleDetail';
 import CatchBoundaryView from '~/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/components/ErrorBoundaryView';
-
-import { peopleDetailPages } from '~/constants/tabLinks';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const [, locale] = await Promise.all([
@@ -112,6 +109,7 @@ export const handle = {
   ),
   showTabLink: true,
   tabLinkPages: peopleDetailPages,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   tabLinkTo: (params: any) => `/people/${params.peopleId}`,
 };
 

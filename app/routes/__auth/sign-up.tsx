@@ -1,23 +1,23 @@
-import { ActionFunction, LoaderFunction, json, redirect } from '@remix-run/node';
-import { useActionData, NavLink } from '@remix-run/react';
-import { Container, Badge } from '@nextui-org/react';
+import { Badge, Container } from '@nextui-org/react';
+import { json, redirect, type ActionArgs, type LoaderArgs } from '@remix-run/node';
+import { NavLink, useActionData } from '@remix-run/react';
 
-import {
-  getSessionFromCookie,
-  commitAuthCookie,
-  signUp,
-  requestPayload,
-} from '~/services/supabase';
-import AuthForm from '~/components/AuthForm';
 import sgConfigs from '~/services/configs.server';
+import {
+  commitAuthCookie,
+  getSessionFromCookie,
+  requestPayload,
+  signUp,
+} from '~/services/supabase';
 import encode from '~/utils/encode';
+import AuthForm from '~/components/AuthForm';
 
 type ActionData = {
   errorCode?: string | null;
   error?: string;
 };
 
-export const action: ActionFunction = async ({ request }) => {
+export const action = async ({ request }: ActionArgs) => {
   const { searchParams } = new URL(request.url);
   const data = await request.clone().formData();
 
@@ -79,7 +79,7 @@ export const action: ActionFunction = async ({ request }) => {
   });
 };
 
-export const loader = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const { searchParams } = new URL(request.url);
   const session = await getSessionFromCookie(request.headers.get('Cookie'));
   const ref = (searchParams.get('ref') || '/').replace('_0x3F_', '?').replace('_0x26', '&');

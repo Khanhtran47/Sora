@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
+import { Button, Card, Checkbox, Input, Row, Spacer, useInput } from '@nextui-org/react';
 import { Form, Link, useLocation } from '@remix-run/react';
-import { Card, Button, Input, Row, Checkbox, Spacer, useInput } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 
 import { H2, H4, H5 } from '~/components/styles/Text.styles';

@@ -1,8 +1,7 @@
 /* eslint-disable import/prefer-default-export */
-import { redirect } from '@remix-run/node';
-import type { ActionArgs } from '@remix-run/node';
+import { redirect, type ActionArgs } from '@remix-run/node';
 
-import { getSessionFromCookie, destroyAuthCookie } from '~/services/supabase';
+import { destroyAuthCookie, getSessionFromCookie } from '~/services/supabase';
 
 export const loader = async ({ request }: ActionArgs) => {
   const { searchParams } = new URL(request.url);

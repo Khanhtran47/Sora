@@ -1,10 +1,17 @@
 import os from 'os';
 import path from 'path';
-import type { LoaderFunction } from '@remix-run/node';
-import type { Resolver, CacheConfig } from 'remix-image/server';
 import BaseCache from '@next-boost/hybrid-disk-cache';
-import { imageLoader, fsResolver, fetchResolver, Cache, CacheStatus } from 'remix-image/server';
+import type { LoaderFunction } from '@remix-run/node';
 import { sharpTransformer } from 'remix-image-sharp';
+import {
+  Cache,
+  CacheStatus,
+  fetchResolver,
+  fsResolver,
+  imageLoader,
+  type CacheConfig,
+  type Resolver,
+} from 'remix-image/server';
 
 import { authenticate } from '~/services/supabase';
 

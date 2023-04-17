@@ -21,7 +21,7 @@ const SearchForm = (props: ISearchForm) => {
   return (
     <Form
       onSubmit={submitHandler}
-      className="flex flex-row gap-4 mt-10 mb-4 justify-center items-center w-full"
+      className="mt-10 mb-4 flex w-full flex-row items-center justify-center gap-4"
     >
       <Input
         {...bindings}

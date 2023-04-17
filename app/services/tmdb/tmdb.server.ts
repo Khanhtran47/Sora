@@ -1,29 +1,31 @@
 import { META, PROVIDERS_LIST } from '@consumet/extensions';
-import { IMedia } from '~/types/media';
-import {
+
+import type { IMedia } from '~/types/media';
+
+import { cachified, fetcher, lruCache } from '../lru-cache';
+import type {
   ICredit,
+  IDetailImages,
+  ILanguage,
+  IList,
+  IListGenre,
   IMediaList,
   IMovieDetail,
+  IMovieTranslations,
+  IPeopleCredits,
+  IPeopleDetail,
+  IPeopleExternalIds,
+  IPeopleImages,
+  ISeasonDetail,
   ITvShowDetail,
   IVideos,
   ListMovieType,
+  ListPersonType,
   ListTvShowType,
   MediaType,
   TimeWindowType,
-  IListGenre,
-  IPeopleDetail,
-  ListPersonType,
-  IPeopleExternalIds,
-  IPeopleImages,
-  IDetailImages,
-  IPeopleCredits,
-  IMovieTranslations,
-  ILanguage,
-  ISeasonDetail,
-  IList,
 } from './tmdb.types';
-import { postFetchDataHandler, TMDB } from './utils.server';
-import { fetcher, lruCache, cachified } from '../lru-cache';
+import { TMDB, postFetchDataHandler } from './utils.server';
 
 // reusable function
 const getListFromTMDB = async (

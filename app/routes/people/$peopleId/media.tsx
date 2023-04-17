@@ -2,18 +2,16 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
 import { Image as NextImage, Row, Spacer } from '@nextui-org/react';
-import { json } from '@remix-run/node';
-import type { MetaFunction, LoaderArgs } from '@remix-run/node';
+import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import { Gallery, Item, GalleryProps } from 'react-photoswipe-gallery';
-import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
+import { Gallery, Item, type GalleryProps } from 'react-photoswipe-gallery';
 import Image, { MimeType } from 'remix-image';
-
 import i18next from '~/i18n/i18next.server';
-import { getPeopleImages } from '~/services/tmdb/tmdb.server';
-import { CACHE_CONTROL } from '~/utils/server/http';
-import TMDB from '~/utils/media';
 
+import { getPeopleImages } from '~/services/tmdb/tmdb.server';
+import TMDB from '~/utils/media';
+import { CACHE_CONTROL } from '~/utils/server/http';
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import { H5 } from '~/components/styles/Text.styles';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
@@ -54,7 +52,7 @@ const MediaPage = () => {
         outlineID: 'pswp__icn-rotate',
       },
       appendTo: 'bar',
-      onClick: (e, el, pswpInstance) => {
+      onClick: (_, __, pswpInstance) => {
         const item = pswpInstance.currSlide.content.element;
 
         const prevRotateAngle = Number(item.dataset.rotateAngel) || 0;
@@ -67,7 +65,7 @@ const MediaPage = () => {
         )} rotate(-${rotateAngle}deg)`;
         item.dataset.rotateAngel = String(rotateAngle);
       },
-      onInit: (el, pswpInstance) => {
+      onInit: (_, pswpInstance) => {
         // remove applied rotation on slide change
         // https://photoswipe.com/events/#slide-content-events
         pswpInstance.on('contentRemove', () => {
@@ -90,7 +88,7 @@ const MediaPage = () => {
       </Row>
       <Spacer y={0.5} />
       <Gallery withCaption withDownloadButton uiElements={uiElements}>
-        <div className="grid grid-cols-1 xs:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 5xl:grid-cols-5 gap-3">
+        <div className="grid grid-cols-1 gap-3 xs:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 5xl:grid-cols-5">
           {images?.profiles?.map((image) => (
             <Item
               key={image.file_path}

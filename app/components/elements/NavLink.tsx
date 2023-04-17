@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import React from 'react';
 import { NavLink as NavigationLink } from '@remix-run/react';
+
 import { H2, H5 } from '~/components/styles/Text.styles';
 
 export interface INavLinkProps {

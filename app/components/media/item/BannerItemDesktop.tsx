@@ -1,31 +1,28 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState, useCallback } from 'react';
-import { Button, Card, Col, Row, Spacer, Text, Badge, Image as NextImage } from '@nextui-org/react';
+import { useCallback, useEffect, useState } from 'react';
+import { Badge, Button, Card, Col, Image as NextImage, Row, Spacer, Text } from '@nextui-org/react';
+import { useMeasure, useMediaQuery } from '@react-hookz/web';
 import { useFetcher, useNavigate } from '@remix-run/react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import Image, { MimeType } from 'remix-image';
-import { motion, AnimatePresence } from 'framer-motion';
-import YouTube from 'react-youtube';
 import { useInView } from 'react-intersection-observer';
+import YouTube from 'react-youtube';
+import Image, { MimeType } from 'remix-image';
 import { useSwiper } from 'swiper/react';
 
-import useCardHoverStore from '~/store/card/useCardHoverStore';
-
-import { useSoraSettings } from '~/hooks/useLocalStorage';
-import { useMediaQuery, useMeasure } from '@react-hookz/web';
-import { IImage } from '~/services/tmdb/tmdb.types';
-import { ITrailer } from '~/services/consumet/anilist/anilist.types';
-import { Title } from '~/types/media';
+import type { Title } from '~/types/media';
+import type { ITrailer } from '~/services/consumet/anilist/anilist.types';
+import type { IImage } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
-
+import useCardHoverStore from '~/store/card/useCardHoverStore';
+import { useSoraSettings } from '~/hooks/useLocalStorage';
 import AspectRatio from '~/components/elements/aspect-ratio/AspectRatio';
-import { Trailer } from '~/components/elements/modal/WatchTrailerModal';
+import type { Trailer } from '~/components/elements/modal/WatchTrailerModal';
 import Rating from '~/components/elements/shared/Rating';
 import { H5, H6 } from '~/components/styles/Text.styles';
-
-import VolumeUp from '~/assets/icons/VolumeUpIcon';
 import VolumeOff from '~/assets/icons/VolumeOffIcon';
+import VolumeUp from '~/assets/icons/VolumeUpIcon';
 
 const variants = {
   inView: { opacity: 1, x: 0 },
@@ -606,7 +603,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
               }}
               className={
                 showTrailer
-                  ? 'relative !w-full overflow-hidden !h-[300%] !-top-[100%] opacity-80'
+                  ? 'relative !-top-[100%] !h-[300%] !w-full overflow-hidden opacity-80'
                   : 'hidden'
               }
             />
@@ -661,7 +658,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
               }}
               className={
                 showTrailer
-                  ? 'relative !w-full overflow-hidden !h-[300%] !-top-[100%] opacity-80'
+                  ? 'relative !-top-[100%] !h-[300%] !w-full overflow-hidden opacity-80'
                   : 'hidden'
               }
             />

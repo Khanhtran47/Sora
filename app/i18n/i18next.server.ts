@@ -1,6 +1,6 @@
+import { resolve } from 'node:path';
 import { createCookie } from '@remix-run/node';
 import Backend from 'i18next-fs-backend';
-import { resolve } from 'node:path';
 import { RemixI18Next } from 'remix-i18next';
 import i18n from '~/i18n/i18n.config';
 

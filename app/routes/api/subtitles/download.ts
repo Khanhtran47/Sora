@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { json } from '@remix-run/node';
-import type { LoaderArgs } from '@remix-run/node';
+import { json, type LoaderArgs } from '@remix-run/node';
 
 import { getSubtitleDownload } from '~/services/open-subtitles/open-subtitles.server';
 import { authenticate } from '~/services/supabase';
-
 import { CACHE_CONTROL } from '~/utils/server/http';
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -15,9 +13,12 @@ export const loader = async ({ request }: LoaderArgs) => {
   if (!file_id || !sub_format) throw { status: 400, message: 'Missing file_id or sub_format' };
   const subtitle = await getSubtitleDownload(Number(file_id), sub_format);
 
-  return json({ subtitle }, {
-    headers: {
-      'Cache-Control': CACHE_CONTROL.default,
-    }
-  });
+  return json(
+    { subtitle },
+    {
+      headers: {
+        'Cache-Control': CACHE_CONTROL.default,
+      },
+    },
+  );
 };
