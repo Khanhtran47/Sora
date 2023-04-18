@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
-import { Image as NextImage, Row, Spacer } from '@nextui-org/react';
+import { Badge, Image as NextImage, Row, Spacer } from '@nextui-org/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import { NavLink, useLoaderData, type RouteMatch } from '@remix-run/react';
 import { Gallery, Item, type GalleryProps } from 'react-photoswipe-gallery';
 import Image, { MimeType } from 'remix-image';
 import i18next from '~/i18n/i18next.server';
@@ -39,6 +39,33 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 export const meta: MetaFunction = ({ params }) => ({
   'og:url': `https://sora-anime.vercel.app/tv-shows/${params.tvId}/photos`,
 });
+
+export const handle = {
+  breadcrumb: (match: RouteMatch) => (
+    <NavLink to={`/tv-shows/${match.params.tvId}/photos`} aria-label="Photos">
+      {({ isActive }) => (
+        <Badge
+          color="primary"
+          variant="flat"
+          css={{
+            opacity: isActive ? 1 : 0.7,
+            transition: 'opacity 0.25s ease 0s',
+            '&:hover': { opacity: 0.8 },
+          }}
+        >
+          Photos
+        </Badge>
+      )}
+    </NavLink>
+  ),
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  miniTitle: (match: RouteMatch, parentMatch: RouteMatch) => ({
+    title: parentMatch.data?.detail?.name,
+    subtitle: 'Photos',
+    showImage: parentMatch.data?.detail?.poster_path !== undefined,
+    imageUrl: TMDB?.posterUrl(parentMatch.data?.detail?.poster_path || '', 'w92'),
+  }),
+};
 
 const uiElements: GalleryProps['uiElements'] = [
   {

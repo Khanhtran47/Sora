@@ -332,6 +332,12 @@ export const handle = {
     isMini: false,
     shouldShowPlayer: true,
   },
+  miniTitle: (match: RouteMatch) => ({
+    title: match.data?.detail?.title,
+    subtitle: 'Watch',
+    showImage: match.data?.detail?.poster_path !== undefined,
+    imageUrl: TMDB.posterUrl(match.data?.detail?.poster_path || '', 'w92'),
+  }),
 };
 
 const MovieWatch = () => {

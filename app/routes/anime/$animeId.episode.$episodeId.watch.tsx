@@ -731,7 +731,7 @@ export const handle = {
   breadcrumb: (match: RouteMatch) => (
     <>
       <NavLink
-        to={`/anime/${match.params.animeId}/overview`}
+        to={`/anime/${match.params.animeId}/`}
         aria-label={match.data?.detail?.title?.english || match.data?.detail?.title?.romaji}
       >
         {({ isActive }) => (
@@ -771,6 +771,17 @@ export const handle = {
       </NavLink>
     </>
   ),
+  miniTitle: (match: RouteMatch) => ({
+    title:
+      match.data?.detail?.title?.userPreferred ||
+      match.data?.detail?.title?.english ||
+      match.data?.detail?.title?.romaji ||
+      match.data?.detail?.title?.native ||
+      '',
+    subtitle: `Episode ${match.params.episodeId}`,
+    showImage: match.data?.detail?.image !== undefined,
+    imageUrl: match.data?.detail?.image,
+  }),
   playerSettings: {
     isMini: false,
     shouldShowPlayer: true,

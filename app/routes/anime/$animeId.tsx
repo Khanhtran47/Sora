@@ -127,7 +127,7 @@ export const meta: MetaFunction = ({ data, params }) => {
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
     <NavLink
-      to={`/anime/${match.params.animeId}/overview`}
+      to={`/anime/${match.params.animeId}/`}
       aria-label={match.data?.detail?.title?.english || match.data?.detail?.title?.romaji}
     >
       {({ isActive }) => (
@@ -152,6 +152,7 @@ export const handle = {
       match.data?.detail?.title?.romaji ||
       match.data?.detail?.title?.native ||
       '',
+    subtitle: 'Overview',
     showImage: match.data?.detail?.image !== undefined,
     imageUrl: match.data?.detail?.image,
   }),

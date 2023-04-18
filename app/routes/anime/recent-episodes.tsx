@@ -59,6 +59,11 @@ export const handle = {
       )}
     </NavLink>
   ),
+  miniTitle: () => ({
+    title: 'Anime',
+    subtitle: 'Recent Episodes',
+    showImage: false,
+  }),
 };
 
 const RecentEpisodes = () => {

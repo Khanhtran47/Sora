@@ -193,6 +193,7 @@ export const handle = {
     title: `${match.data?.detail?.name || match.data?.detail?.original_name} - ${
       match.data?.seasonDetail?.name
     }`,
+    subtitle: 'Episodes',
     showImage: match.data?.seasonDetail?.poster_path !== undefined,
     imageUrl: TMDB.posterUrl(match.data?.seasonDetail?.poster_path || '', 'w92'),
   }),

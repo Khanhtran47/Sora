@@ -40,6 +40,10 @@ export const handle = {
     }
     return false;
   },
+  miniTitle: () => ({
+    title: 'Discover',
+    showImage: false,
+  }),
 };
 
 const DiscoverPage = () => (

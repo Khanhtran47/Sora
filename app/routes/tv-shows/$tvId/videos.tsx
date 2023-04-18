@@ -2,14 +2,15 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { useEffect, useState } from 'react';
-import { Button, Card, Col, Grid, Row } from '@nextui-org/react';
+import { Badge, Button, Card, Col, Grid, Row } from '@nextui-org/react';
 import { useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { useFetcher, useLoaderData } from '@remix-run/react';
+import { NavLink, useFetcher, useLoaderData, type RouteMatch } from '@remix-run/react';
 
 import { authenticate } from '~/services/supabase';
 import { getVideos } from '~/services/tmdb/tmdb.server';
 import type { Item } from '~/services/youtube/youtube.types';
+import TMDB from '~/utils/media';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import WatchTrailerModal, { type Trailer } from '~/components/elements/modal/WatchTrailerModal';
 import { H5, H6 } from '~/components/styles/Text.styles';
@@ -34,6 +35,33 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 export const meta: MetaFunction = ({ params }) => ({
   'og:url': `https://sora-anime.vercel.app/tv-shows/${params.tvId}/videos`,
 });
+
+export const handle = {
+  breadcrumb: (match: RouteMatch) => (
+    <NavLink to={`/tv-shows/${match.params.tvId}/videos`} aria-label="Videos">
+      {({ isActive }) => (
+        <Badge
+          color="primary"
+          variant="flat"
+          css={{
+            opacity: isActive ? 1 : 0.7,
+            transition: 'opacity 0.25s ease 0s',
+            '&:hover': { opacity: 0.8 },
+          }}
+        >
+          Videos
+        </Badge>
+      )}
+    </NavLink>
+  ),
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  miniTitle: (match: RouteMatch, parentMatch: RouteMatch) => ({
+    title: parentMatch.data?.detail?.name,
+    subtitle: 'Videos',
+    showImage: parentMatch.data?.detail?.poster_path !== undefined,
+    imageUrl: TMDB?.posterUrl(parentMatch.data?.detail?.poster_path || '', 'w92'),
+  }),
+};
 
 const TvVideosPage = () => {
   const { videos } = useLoaderData<typeof loader>();

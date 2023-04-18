@@ -22,6 +22,10 @@ import MediaList from '~/components/media/MediaList';
 export const handle = {
   i18n: 'home',
   disableLayoutPadding: true,
+  miniTitle: () => ({
+    title: 'Home',
+    showImage: false,
+  }),
 };
 
 export const loader = async ({ request }: LoaderArgs) => {

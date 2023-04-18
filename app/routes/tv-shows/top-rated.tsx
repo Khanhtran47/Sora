@@ -65,6 +65,10 @@ export const handle = {
       )}
     </NavLink>
   ),
+  miniTitle: () => ({
+    title: 'Top Rated Tv',
+    showImage: false,
+  }),
 };
 
 const ListTvShows = () => {

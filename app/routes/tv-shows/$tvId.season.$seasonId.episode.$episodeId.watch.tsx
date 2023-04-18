@@ -475,6 +475,12 @@ export const handle = {
     isMini: false,
     shouldShowPlayer: true,
   },
+  miniTitle: (match: RouteMatch) => ({
+    title: match.data?.detail?.name || match.data?.detail?.original_name,
+    subtitle: `${match.data?.seasonDetail?.name} Episode ${match.params.episodeId}`,
+    showImage: match.data?.seasonDetail?.poster_path !== undefined,
+    imageUrl: TMDB.posterUrl(match.data?.seasonDetail?.poster_path || '', 'w92'),
+  }),
 };
 
 const EpisodeWatch = () => {

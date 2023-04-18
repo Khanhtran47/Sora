@@ -36,6 +36,10 @@ export const handle = {
     </NavLink>
   ),
   getSitemapEntries: () => null,
+  miniTitle: () => ({
+    title: 'History',
+    showImage: false,
+  }),
 };
 
 export const loader = async ({ request }: LoaderArgs) => {

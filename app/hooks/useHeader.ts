@@ -40,9 +40,15 @@ function useHeaderOptions() {
 
   const currentMiniTitle = useMemo(() => {
     const currentMatch = matches.filter((match) => match.handle?.miniTitle);
-    if (currentMatch?.length > 0) {
+    if (currentMatch?.length > 0 && currentMatch?.length < 2) {
       return currentMatch[currentMatch.length - 1].handle?.miniTitle(
         currentMatch[currentMatch.length - 1],
+      );
+    }
+    if (currentMatch?.length > 1) {
+      return currentMatch[currentMatch.length - 1].handle?.miniTitle(
+        currentMatch[currentMatch.length - 1],
+        currentMatch[currentMatch.length - 2], // for titles that need from parent route
       );
     }
     return undefined;

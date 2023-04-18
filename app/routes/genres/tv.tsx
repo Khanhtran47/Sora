@@ -1,9 +1,34 @@
-import { Button, Spacer } from '@nextui-org/react';
-import { useNavigate } from '@remix-run/react';
+import { Badge, Button, Spacer } from '@nextui-org/react';
+import { NavLink, useNavigate } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import { H4 } from '~/components/styles/Text.styles';
+
+export const handle = {
+  breadcrumb: () => (
+    <NavLink to="/genres/tv" aria-label="Tv Show Genres">
+      {({ isActive }) => (
+        <Badge
+          color="primary"
+          variant="flat"
+          css={{
+            opacity: isActive ? 1 : 0.7,
+            transition: 'opacity 0.25s ease 0s',
+            '&:hover': { opacity: 0.8 },
+          }}
+        >
+          Tv Show Genres
+        </Badge>
+      )}
+    </NavLink>
+  ),
+  miniTitle: () => ({
+    title: 'Genres',
+    subtitle: 'Tv Show',
+    showImage: false,
+  }),
+};
 
 const TvGenresPage = () => {
   const navigate = useNavigate();

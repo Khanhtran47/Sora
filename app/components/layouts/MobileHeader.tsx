@@ -93,9 +93,16 @@ const MobileHeader = () => {
             initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: headerBackgroundOpacity, y: (1 - headerBackgroundOpacity) * 60 }}
             transition={{ duration: 0.3 }}
-            className="text-xl font-semibold line-clamp-1"
+            className="flex flex-col items-start justify-center"
           >
-            {currentMiniTitle.title}
+            <div className="flex flex-col items-start justify-center">
+              <span className="text-xl font-semibold line-clamp-1">{currentMiniTitle.title}</span>
+              {currentMiniTitle.subtitle ? (
+                <span className="text-xs font-medium opacity-75 line-clamp-1">
+                  {currentMiniTitle.subtitle}
+                </span>
+              ) : null}
+            </div>
           </motion.span>
         ) : null}
       </div>

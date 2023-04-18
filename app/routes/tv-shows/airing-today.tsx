@@ -63,6 +63,10 @@ export const handle = {
       )}
     </NavLink>
   ),
+  miniTitle: () => ({
+    title: 'Airing today Tv',
+    showImage: false,
+  }),
 };
 
 const ListAiringTodayTvShows = () => {

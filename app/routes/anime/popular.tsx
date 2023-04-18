@@ -56,6 +56,11 @@ export const handle = {
       )}
     </NavLink>
   ),
+  miniTitle: () => ({
+    title: 'Anime',
+    subtitle: 'Popular',
+    showImage: false,
+  }),
 };
 
 const PopularAnime = () => {

@@ -1,12 +1,13 @@
 import { useRef } from 'react';
-import { Pagination } from '@nextui-org/react';
+import { Badge, Pagination } from '@nextui-org/react';
 import { useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import { NavLink, useLoaderData, type RouteMatch } from '@remix-run/react';
 
 import { authenticate } from '~/services/supabase';
 import { getCredits } from '~/services/tmdb/tmdb.server';
 import { postFetchDataHandler } from '~/services/tmdb/utils.server';
+import TMDB from '~/utils/media';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
 import MediaList from '~/components/media/MediaList';
@@ -31,6 +32,33 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 export const meta: MetaFunction = ({ params }) => ({
   'og:url': `https://sora-anime.vercel.app/movies/${params.movieId}/cast`,
 });
+
+export const handle = {
+  breadcrumb: (match: RouteMatch) => (
+    <NavLink to={`/movies/${match.params.movieId}/cast`} aria-label="Cast">
+      {({ isActive }) => (
+        <Badge
+          color="primary"
+          variant="flat"
+          css={{
+            opacity: isActive ? 1 : 0.7,
+            transition: 'opacity 0.25s ease 0s',
+            '&:hover': { opacity: 0.8 },
+          }}
+        >
+          Cast
+        </Badge>
+      )}
+    </NavLink>
+  ),
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  miniTitle: (match: RouteMatch, parentMatch: RouteMatch) => ({
+    title: parentMatch.data?.detail?.title,
+    subtitle: 'Cast',
+    showImage: parentMatch.data?.detail?.poster_path !== undefined,
+    imageUrl: TMDB?.posterUrl(parentMatch.data?.detail?.poster_path || '', 'w92'),
+  }),
+};
 
 const MovieCastPage = () => {
   const { cast } = useLoaderData<typeof loader>();

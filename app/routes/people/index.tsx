@@ -59,6 +59,11 @@ export const handle = {
       )}
     </NavLink>
   ),
+  miniTitle: () => ({
+    title: 'People',
+    subtitle: 'Popular',
+    showImage: false,
+  }),
 };
 
 const ListPeoplePopular = () => {

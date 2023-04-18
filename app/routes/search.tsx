@@ -40,6 +40,10 @@ export const handle = {
   showTabLink: true,
   tabLinkPages: searchPages,
   tabLinkTo: () => '/search/',
+  miniTitle: () => ({
+    title: 'Search',
+    showImage: false,
+  }),
 };
 
 const SearchPage = () => (

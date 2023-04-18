@@ -48,14 +48,14 @@ export const movieTvDetailsPages = [
 ];
 
 export const animeDetailsPages = [
-  { pageName: 'Overview', pageLink: '/overview' },
+  { pageName: 'Overview', pageLink: '/' },
   { pageName: 'Episodes', pageLink: '/episodes' },
   { pageName: 'Character', pageLink: '/characters' },
   { pageName: 'Staff', pageLink: '/staff' },
 ];
 
 export const peopleDetailPages = [
-  { pageName: 'Overview', pageLink: '/overview' },
+  { pageName: 'Overview', pageLink: '/' },
   { pageName: 'Credits', pageLink: '/credits' },
   { pageName: 'Media', pageLink: '/media' },
 ];

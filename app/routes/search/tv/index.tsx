@@ -46,11 +46,16 @@ export const handle = {
             '&:hover': { opacity: 0.8 },
           }}
         >
-          Search Tv
+          Search Tv Shows
         </Badge>
       )}
     </NavLink>
   ),
+  miniTitle: () => ({
+    title: 'Search',
+    subtitle: 'Tv Shows',
+    showImage: false,
+  }),
 };
 
 const SearchRoute = () => {

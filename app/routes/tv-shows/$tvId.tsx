@@ -177,6 +177,7 @@ export const handle = {
   ),
   miniTitle: (match: RouteMatch) => ({
     title: match.data?.detail?.name,
+    subtitle: 'Overview',
     showImage: match.data?.detail?.poster_path !== undefined,
     imageUrl: TMDB?.posterUrl(match.data?.detail?.poster_path || '', 'w92'),
   }),

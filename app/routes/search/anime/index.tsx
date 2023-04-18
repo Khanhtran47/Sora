@@ -45,6 +45,11 @@ export const handle = {
       )}
     </NavLink>
   ),
+  miniTitle: () => ({
+    title: 'Search',
+    subtitle: 'Anime',
+    showImage: false,
+  }),
 };
 
 const SearchRoute = () => {

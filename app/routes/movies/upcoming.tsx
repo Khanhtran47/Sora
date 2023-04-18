@@ -65,6 +65,11 @@ export const handle = {
       )}
     </NavLink>
   ),
+  miniTitle: () => ({
+    title: 'Movies',
+    subtitle: 'Upcoming',
+    showImage: false,
+  }),
 };
 
 const ListMovies = () => {

@@ -81,6 +81,10 @@ export const handle = {
     isMini: false,
     shouldShowPlayer: true,
   },
+  miniTitle: () => ({
+    title: 'Player',
+    showImage: false,
+  }),
   getSitemapEntries: () => null,
 };
 

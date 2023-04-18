@@ -91,6 +91,10 @@ export const handle = {
       </NavLink>
     </>
   ),
+  miniTitle: (match: RouteMatch) => ({
+    title: match.data?.detail?.name || 'Collection',
+    showImage: false,
+  }),
 };
 
 const CollectionDetail = () => {
