@@ -116,7 +116,7 @@ const TvOverview = () => {
                   {detail.created_by.map((creator) => (
                     <Link
                       key={`director-item-${creator.id}}`}
-                      to={`/people/${creator.id}/overview`}
+                      to={`/people/${creator.id}/`}
                       style={{ lineHeight: '1.75rem' }}
                       className="text-[var(--nextui-color-text)] hover:text-primary"
                     >

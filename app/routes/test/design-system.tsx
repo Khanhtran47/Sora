@@ -42,6 +42,10 @@ export const handle = {
       )}
     </NavLink>
   ),
+  miniTitle: () => ({
+    title: 'Design System',
+    showImage: false,
+  }),
   getSitemapEntries: () => null,
 };
 

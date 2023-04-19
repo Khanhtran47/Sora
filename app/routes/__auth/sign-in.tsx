@@ -95,6 +95,10 @@ export const handle = {
       )}
     </NavLink>
   ),
+  miniTitle: () => ({
+    title: 'Sign In',
+    showImage: false,
+  }),
 };
 
 const SignInPage = () => {

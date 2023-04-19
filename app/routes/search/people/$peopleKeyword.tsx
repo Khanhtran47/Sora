@@ -65,6 +65,11 @@ export const handle = {
       )}
     </NavLink>
   ),
+  miniTitle: (match: RouteMatch) => ({
+    title: 'Search results',
+    subtitle: match.params.peopleKeyword,
+    showImage: false,
+  }),
 };
 
 const SearchRoute = () => {

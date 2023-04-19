@@ -136,7 +136,7 @@ const MovieOverview = () => {
                   {directors.map((director) => (
                     <Link
                       key={`director-item-${director.id}`}
-                      to={`/people/${director.id}/overview`}
+                      to={`/people/${director.id}/`}
                       style={{ lineHeight: '1.75rem' }}
                       className="text-text hover:text-primary"
                     >

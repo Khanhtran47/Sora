@@ -8,6 +8,7 @@ import i18next from '~/i18n/i18next.server';
 
 import { authenticate } from '~/services/supabase';
 import { getRecommendation } from '~/services/tmdb/tmdb.server';
+import TMDB from '~/utils/media';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
@@ -55,6 +56,13 @@ export const handle = {
       )}
     </NavLink>
   ),
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  miniTitle: (match: RouteMatch, parentMatch: RouteMatch) => ({
+    title: parentMatch.data?.detail?.name,
+    subtitle: 'Recommendations',
+    showImage: parentMatch.data?.detail?.poster_path !== undefined,
+    imageUrl: TMDB?.posterUrl(parentMatch.data?.detail?.poster_path || '', 'w92'),
+  }),
 };
 
 export const meta: MetaFunction = ({ params }) => ({

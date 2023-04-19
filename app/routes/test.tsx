@@ -50,6 +50,10 @@ export const handle = {
     }
     return false;
   },
+  miniTitle: () => ({
+    title: 'Test',
+    showImage: false,
+  }),
 };
 
 const TestRoute = () => (

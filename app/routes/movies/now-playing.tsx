@@ -63,6 +63,11 @@ export const handle = {
       )}
     </NavLink>
   ),
+  miniTitle: () => ({
+    title: 'Movies',
+    subtitle: 'Now Playing',
+    showImage: false,
+  }),
 };
 
 const ListNowPlayingMovies = () => {

@@ -83,6 +83,10 @@ export const handle = {
       )}
     </NavLink>
   ),
+  miniTitle: () => ({
+    title: 'Settings',
+    showImage: false,
+  }),
 };
 
 const settingsIcon = (id: string, filled: boolean) => {

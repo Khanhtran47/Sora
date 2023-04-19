@@ -111,6 +111,12 @@ export const handle = {
   tabLinkPages: peopleDetailPages,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   tabLinkTo: (params: any) => `/people/${params.peopleId}`,
+  miniTitle: (match: RouteMatch) => ({
+    title: match.data?.detail?.name || 'People',
+    subtitle: 'Overview',
+    showImage: match.data?.detail?.profile_path !== undefined,
+    imageUrl: TMDB.profileUrl(match.data?.detail?.profile_path, 'w45'),
+  }),
 };
 
 const PeopleDetailPage = () => {

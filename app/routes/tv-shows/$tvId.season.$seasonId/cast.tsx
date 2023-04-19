@@ -1,14 +1,15 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { useRef } from 'react';
-import { Pagination, Row, Spacer } from '@nextui-org/react';
+import { Badge, Pagination, Row, Spacer } from '@nextui-org/react';
 import { useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import { NavLink, useLoaderData, type RouteMatch } from '@remix-run/react';
 import i18next from '~/i18n/i18next.server';
 
 import { authenticate } from '~/services/supabase';
 import { getTvSeasonCredits } from '~/services/tmdb/tmdb.server';
 import { postFetchDataHandler } from '~/services/tmdb/utils.server';
+import TMDB from '~/utils/media';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
 import MediaList from '~/components/media/MediaList';
@@ -35,6 +36,38 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 export const meta: MetaFunction = ({ params }) => ({
   'og:url': `https://sora-anime.vercel.app/tv-shows/${params.tvId}/season/${params.seasonId}/cast`,
 });
+
+export const handle = {
+  breadcrumb: (match: RouteMatch) => (
+    <NavLink
+      to={`/tv-shows/${match.params.tvId}/season/${match.params.seasonId}/cast`}
+      aria-label="Cast"
+    >
+      {({ isActive }) => (
+        <Badge
+          color="primary"
+          variant="flat"
+          css={{
+            opacity: isActive ? 1 : 0.7,
+            transition: 'opacity 0.25s ease 0s',
+            '&:hover': { opacity: 0.8 },
+          }}
+        >
+          Cast
+        </Badge>
+      )}
+    </NavLink>
+  ),
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  miniTitle: (match: RouteMatch, parentMatch: RouteMatch) => ({
+    title: `${parentMatch.data?.detail?.name || parentMatch.data?.detail?.original_name} - ${
+      parentMatch.data?.seasonDetail?.name
+    }`,
+    subtitle: 'Cast',
+    showImage: parentMatch.data?.seasonDetail?.poster_path !== undefined,
+    imageUrl: TMDB.posterUrl(parentMatch.data?.seasonDetail?.poster_path || '', 'w92'),
+  }),
+};
 
 const TvSeasonCastPage = () => {
   const { cast } = useLoaderData<typeof loader>();

@@ -1,9 +1,34 @@
-import { Button, Spacer } from '@nextui-org/react';
-import { useNavigate } from '@remix-run/react';
+import { Badge, Button, Spacer } from '@nextui-org/react';
+import { NavLink, useNavigate } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 
 import { animeGenres } from '~/constants/filterItems';
 import { H4 } from '~/components/styles/Text.styles';
+
+export const handle = {
+  breadcrumb: () => (
+    <NavLink to="/genres/anime" aria-label="Anime Genres">
+      {({ isActive }) => (
+        <Badge
+          color="primary"
+          variant="flat"
+          css={{
+            opacity: isActive ? 1 : 0.7,
+            transition: 'opacity 0.25s ease 0s',
+            '&:hover': { opacity: 0.8 },
+          }}
+        >
+          Anime Genres
+        </Badge>
+      )}
+    </NavLink>
+  ),
+  miniTitle: () => ({
+    title: 'Genres',
+    subtitle: 'Anime',
+    showImage: false,
+  }),
+};
 
 const AnimeGenresPage = () => {
   const navigate = useNavigate();

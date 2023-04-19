@@ -9,7 +9,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 
   const randomAnime = await getAnimeRandom();
   if (randomAnime) {
-    return redirect(`/anime/${randomAnime.id}/overview`);
+    return redirect(`/anime/${randomAnime.id}/`);
   }
   return redirect('/anime/popular');
 };

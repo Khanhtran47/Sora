@@ -79,6 +79,10 @@ export const handle = {
       )}
     </NavLink>
   ),
+  miniTitle: () => ({
+    title: 'Today Trending',
+    showImage: false,
+  }),
 };
 
 const Trending = () => {

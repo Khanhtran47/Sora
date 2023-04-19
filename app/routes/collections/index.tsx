@@ -41,6 +41,10 @@ export const handle = {
       )}
     </NavLink>
   ),
+  miniTitle: () => ({
+    title: 'Featured Collections',
+    showImage: false,
+  }),
 };
 
 const Collections = () => {

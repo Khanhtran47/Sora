@@ -84,6 +84,10 @@ const handle = {
       )}
     </NavLink>
   ),
+  miniTitle: () => ({
+    title: 'Cache Management',
+    showImage: false,
+  }),
 };
 
 const CacheKeyRow = ({

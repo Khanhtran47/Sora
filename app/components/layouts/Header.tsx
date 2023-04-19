@@ -157,7 +157,12 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
                 className="rounded-md"
               />
             ) : null}
-            <span className="text-2xl font-bold">{currentMiniTitle.title}</span>
+            <div className="flex flex-col items-start justify-center">
+              <span className="text-2xl font-bold">{currentMiniTitle.title}</span>
+              {currentMiniTitle.subtitle ? (
+                <span className="text-sm font-medium opacity-75">{currentMiniTitle.subtitle}</span>
+              ) : null}
+            </div>
           </motion.div>
         ) : null}
       </div>

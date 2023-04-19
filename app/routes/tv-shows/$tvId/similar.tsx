@@ -7,6 +7,7 @@ import i18next from '~/i18n/i18next.server';
 
 import { authenticate } from '~/services/supabase';
 import { getSimilar } from '~/services/tmdb/tmdb.server';
+import TMDB from '~/utils/media';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
@@ -44,7 +45,7 @@ export const meta: MetaFunction = ({ params }) => ({
 
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
-    <NavLink to={`/tv-shows/${match.params.movieId}/similar`} aria-label="Similar Tv">
+    <NavLink to={`/tv-shows/${match.params.tvId}/similar`} aria-label="Similar Tv">
       {({ isActive }) => (
         <Badge
           color="primary"
@@ -55,11 +56,18 @@ export const handle = {
             '&:hover': { opacity: 0.8 },
           }}
         >
-          Similar Tv Shows
+          Similar
         </Badge>
       )}
     </NavLink>
   ),
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  miniTitle: (match: RouteMatch, parentMatch: RouteMatch) => ({
+    title: parentMatch.data?.detail?.name,
+    subtitle: 'Similar',
+    showImage: parentMatch.data?.detail?.poster_path !== undefined,
+    imageUrl: TMDB?.posterUrl(parentMatch.data?.detail?.poster_path || '', 'w92'),
+  }),
 };
 
 const TvSimilarPage = () => {

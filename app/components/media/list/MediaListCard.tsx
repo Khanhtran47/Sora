@@ -121,9 +121,9 @@ const MediaListCard = (props: IMediaListCardProps) => {
                 itemsType && itemsType === 'episode'
                   ? `/anime/${item.id}/episode/${item.episodeNumber}/watch?provider=${provider}`
                   : itemsType === 'anime'
-                  ? `/anime/${item.id}/overview`
+                  ? `/anime/${item.id}/`
                   : itemsType === 'people'
-                  ? `/people/${item.id}/overview`
+                  ? `/people/${item.id}/`
                   : item?.mediaType === 'movie' || itemsType === 'movie'
                   ? `/movies/${item.id}/`
                   : `/tv-shows/${item.id}/`;
