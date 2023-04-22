@@ -34,7 +34,7 @@ interface ILayout {
 }
 
 const layoutStyles = tv({
-  base: 'bg-background flex max-h-full min-h-screen max-w-full flex-nowrap justify-start font-[Inter] transition-[padding] duration-200',
+  base: 'flex max-h-full min-h-screen max-w-full flex-nowrap justify-start bg-background font-[Inter] transition-[padding] duration-200',
   variants: {
     boxed: {
       true: 'min-h-[calc(100vh_-_115px)] pt-[15px]',
@@ -47,7 +47,7 @@ const layoutStyles = tv({
 });
 
 const contentAreaStyles = tv({
-  base: 'bg-background-contrast-alpha ml-0 flex w-full grow flex-col justify-end overflow-hidden !rounded-none transition-[margin] duration-200 sm:!rounded-tl-xl',
+  base: 'ml-0 flex w-full grow flex-col justify-end overflow-hidden !rounded-none bg-background-contrast-alpha transition-[margin] duration-200 sm:!rounded-tl-xl',
   variants: {
     mini: {
       true: 'sm:ml-[80px]',

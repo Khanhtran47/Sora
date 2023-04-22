@@ -44,11 +44,11 @@ const sidebarStyles = tv({
       false: 'w-full max-w-[250px] basis-[250px]',
     },
     sidebarBoxedMode: {
-      true: 'bg-background-contrast-alpha top-[15px] left-[15px] h-[calc(100vh_-_30px)] rounded-xl',
+      true: 'top-[15px] left-[15px] h-[calc(100vh_-_30px)] rounded-xl bg-background-contrast-alpha',
       false: 'top-0 left-0 h-screen',
     },
     sidebarHoverMode: {
-      true: 'bg-background-contrast border-border w-full max-w-[250px] basis-[250px] rounded-r-xl border shadow-2xl',
+      true: 'w-full max-w-[250px] basis-[250px] rounded-r-xl border border-border bg-background-contrast shadow-2xl',
     },
   },
   compoundVariants: [{}],
@@ -124,7 +124,7 @@ const viewportPositionStyles = tv({
 });
 
 const navigationPartStyles = tv({
-  base: 'scrollbar-hide w-full overflow-x-visible overflow-y-scroll',
+  base: 'w-full overflow-x-visible overflow-y-scroll scrollbar-hide',
   variants: {
     sidebarBoxedMode: {
       true: 'h-[calc(100%_-_100px)]',

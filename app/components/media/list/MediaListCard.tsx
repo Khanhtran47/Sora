@@ -25,7 +25,7 @@ const swiperSlideStyles = tv({
   variants: {
     cardType: {
       coverCard: '!w-[280px] sm:!w-[480px]',
-      card: 'nextui-sm:!w-[244px] !w-[164px] sm:!w-[210px] 2xl:!w-[280px]',
+      card: '!w-[164px] sm:!w-[210px] nextui-sm:!w-[244px] 2xl:!w-[280px]',
       peopleCard: '!w-[160px]',
     },
   },
