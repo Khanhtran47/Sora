@@ -1,9 +1,10 @@
 import { Suspense, useState } from 'react';
-import { Button, Loading, Pagination, Row, Spacer, Tooltip } from '@nextui-org/react';
+import { Button, Loading, Pagination, Tooltip } from '@nextui-org/react';
 import { useMediaQuery } from '@react-hookz/web';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { ClientOnly } from 'remix-utils';
+import { tv } from 'tailwind-variants';
 
 import type { IMedia } from '~/types/media';
 import type { ILanguage } from '~/services/tmdb/tmdb.types';
@@ -15,7 +16,6 @@ import ViewGridIcon from '~/assets/icons/ViewGridIcon';
 import ViewTableIcon from '~/assets/icons/ViewTableIcon';
 
 import Filter from '../elements/filter/Filter';
-import Flex from '../styles/Flex.styles';
 import { H2 } from '../styles/Text.styles';
 import { MediaListBanner, MediaListCard, MediaListGrid, MediaListTable } from './list';
 
@@ -280,6 +280,26 @@ interface IMediaListProps {
   virtual?: boolean; // value is true if the list is virtual
 }
 
+const mediaListStyles = tv({
+  base: 'flex w-full max-w-screen-4xl flex-col justify-center',
+  variants: {
+    gap: {
+      none: 'gap-0',
+      normal: 'gap-2',
+      grid: 'gap-6',
+    },
+    alignItems: {
+      start: 'items-start',
+      center: 'items-center',
+      end: 'items-end',
+    },
+  },
+  defaultVariants: {
+    gap: 'normal',
+    alignItems: 'start',
+  },
+});
+
 const MediaList = (props: IMediaListProps) => {
   const {
     coverItem,
@@ -373,23 +393,21 @@ const MediaList = (props: IMediaListProps) => {
   }
 
   return (
-    <Flex
-      direction="column"
-      justify="center"
-      align={
-        listType === 'grid' || listType === 'table' || listType === 'slider-banner'
-          ? 'center'
-          : 'start'
-      }
-      css={{ width: '100%', maxWidth: '1920px' }}
+    <div
+      className={mediaListStyles({
+        gap: listType === 'grid' ? 'grid' : 'normal',
+        alignItems:
+          listType === 'grid' || listType === 'table' || listType === 'slider-banner'
+            ? 'center'
+            : 'start',
+      })}
     >
       {listName || showFilterButton || showListTypeChangeButton ? (
-        <Flex direction="row" justify="between" align="center" wrap="wrap" css={{ width: '100%' }}>
+        <div className="mt-5 flex w-full flex-row flex-wrap items-center justify-between gap-3">
           {listName ? (
             <H2
               h2
               css={{
-                margin: '20px 0 5px 0',
                 '@xsMax': {
                   fontSize: '1.75rem !important',
                 },
@@ -399,7 +417,7 @@ const MediaList = (props: IMediaListProps) => {
             </H2>
           ) : null}
           {showFilterButton || showListTypeChangeButton ? (
-            <Flex direction="row" justify="end" align="center" css={{ gap: '$5' }}>
+            <div className="flex flex-row items-center justify-end gap-3">
               {showFilterButton ? (
                 <Tooltip content={t('show-hide-filter')}>
                   <Button
@@ -428,12 +446,12 @@ const MediaList = (props: IMediaListProps) => {
                   />
                 </Button.Group>
               ) : null}
-            </Flex>
+            </div>
           ) : null}
-        </Flex>
+        </div>
       ) : null}
       {showMoreList ? (
-        <Row fluid justify="space-between" wrap="nowrap" align="center">
+        <div className="mb-2 flex w-full flex-row flex-wrap items-center justify-between">
           <Button
             type="button"
             auto
@@ -443,19 +461,12 @@ const MediaList = (props: IMediaListProps) => {
             onPress={onClickViewMore}
             css={{
               maxWidth: '$8',
-              marginBottom: '$5',
             }}
           >
             {t('viewMore')}
           </Button>
           {navigationButtons ? (
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                marginBottom: 'var(--nextui-space-5)',
-              }}
-            >
+            <div className="flex flex-row gap-x-2">
               <Button
                 type="button"
                 auto
@@ -475,7 +486,6 @@ const MediaList = (props: IMediaListProps) => {
                 disabled={slideProgress === 0}
                 icon={<ChevronLeftIcon height={isSm ? 18 : 24} width={isSm ? 18 : 24} />}
               />
-              <Spacer x={0.25} />
               <Button
                 type="button"
                 auto
@@ -497,7 +507,7 @@ const MediaList = (props: IMediaListProps) => {
               />
             </div>
           ) : null}
-        </Row>
+        </div>
       ) : null}
       <AnimatePresence>
         {showFilter.value && mediaType && (
@@ -533,7 +543,7 @@ const MediaList = (props: IMediaListProps) => {
           {...(isSm && !is2Xs ? { size: 'sm' } : isSm && is2Xs ? { size: 'xs' } : {})}
         />
       ) : null}
-    </Flex>
+    </div>
   );
 };
 
