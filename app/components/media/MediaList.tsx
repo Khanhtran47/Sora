@@ -385,7 +385,7 @@ const MediaList = (props: IMediaListProps) => {
     >
       {listName || showFilterButton || showListTypeChangeButton ? (
         <Flex direction="row" justify="between" align="center" wrap="wrap" css={{ width: '100%' }}>
-          {listName && (
+          {listName ? (
             <H2
               h2
               css={{
@@ -397,7 +397,7 @@ const MediaList = (props: IMediaListProps) => {
             >
               {listName}
             </H2>
-          )}
+          ) : null}
           {showFilterButton || showListTypeChangeButton ? (
             <Flex direction="row" justify="end" align="center" css={{ gap: '$5' }}>
               {showFilterButton ? (
@@ -432,7 +432,7 @@ const MediaList = (props: IMediaListProps) => {
           ) : null}
         </Flex>
       ) : null}
-      {showMoreList && (
+      {showMoreList ? (
         <Row fluid justify="space-between" wrap="nowrap" align="center">
           <Button
             type="button"
@@ -448,7 +448,7 @@ const MediaList = (props: IMediaListProps) => {
           >
             {t('viewMore')}
           </Button>
-          {navigationButtons && (
+          {navigationButtons ? (
             <div
               style={{
                 display: 'flex',
@@ -496,9 +496,9 @@ const MediaList = (props: IMediaListProps) => {
                 icon={<ChevronRightIcon height={isSm ? 18 : 24} width={isSm ? 18 : 24} />}
               />
             </div>
-          )}
+          ) : null}
         </Row>
-      )}
+      ) : null}
       <AnimatePresence>
         {showFilter.value && mediaType && (
           <ClientOnly fallback={<Loading type="default" />}>
