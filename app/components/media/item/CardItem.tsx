@@ -1,14 +1,12 @@
 /* eslint-disable @typescript-eslint/indent */
-/* eslint-disable no-unsafe-optional-chaining */
 import * as React from 'react';
-import { Avatar, Card, Loading, Tooltip } from '@nextui-org/react';
+import { Avatar, Card, Tooltip } from '@nextui-org/react';
 import { useMeasure, useMediaQuery } from '@react-hookz/web';
 import { useFetcher } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
 import { useInView } from 'react-intersection-observer';
 import Image, { MimeType } from 'remix-image';
-import { ClientOnly } from 'remix-utils';
 
 import type { IMedia, Title } from '~/types/media';
 import type { ITrailer } from '~/services/consumet/anilist/anilist.types';
@@ -77,6 +75,7 @@ const CardItem = (props: ICardItemProps) => {
   const fetcher = useFetcher();
   const setIsCardPlaying = useCardHoverStore((state) => state.setIsCardPlaying);
   const [trailerCard, setTrailerCard] = React.useState<Trailer>({});
+  const [isTooltipVisible, setIsTooltipVisible] = React.useState(false);
   const { isPlayTrailer } = useSoraSettings();
   const [size, imageRef] = useMeasure<HTMLDivElement>();
   const titleItem =
@@ -104,8 +103,7 @@ const CardItem = (props: ICardItemProps) => {
         isHoverable
         isPressable
         css={{
-          width: '100%',
-          minWidth: isSm ? '480px' : '280px',
+          // width: '100%',
           borderWidth: 0,
           filter: 'unset',
           '&:hover': {
@@ -114,6 +112,7 @@ const CardItem = (props: ICardItemProps) => {
               'drop-shadow(0 4px 12px rgb(104 112 118 / 0.15)) drop-shadow(0 20px 8px rgb(104 112 118 / 0.1))',
           },
         }}
+        className="!w-[280px] sm:!w-[480px]"
         role="figure"
         ref={ref}
       >
@@ -184,12 +183,14 @@ const CardItem = (props: ICardItemProps) => {
           filter:
             'drop-shadow(0 4px 12px rgb(104 112 118 / 0.15)) drop-shadow(0 20px 8px rgb(104 112 118 / 0.1))',
         },
+        opacity: isTooltipVisible ? 0 : 1,
+        transition: 'all 0.3s ease',
       }}
       role="figure"
       ref={ref}
     >
       <Card.Body ref={imageRef} css={{ p: 0, width: '100%', aspectRatio: '2 / 3' }}>
-        {size ? (
+        {size && !isTooltipVisible ? (
           // eslint-disable-next-line react/jsx-no-useless-fragment
           <>
             {posterPath ? (
@@ -204,7 +205,16 @@ const CardItem = (props: ICardItemProps) => {
                 title={titleItem}
                 loading="lazy"
                 decoding={inView ? 'async' : 'auto'}
-                css={{ aspectRatio: '2 / 3' }}
+                css={{
+                  aspectRatio: '2 / 3',
+                  transition: 'all 0.3s ease !important',
+                  transform: 'scale(1)',
+                  '&:hover': {
+                    transform: 'scale(1.05)',
+                    transformOrigin: 'center center',
+                  },
+                }}
+                containerCss={{ overflow: 'hidden' }}
                 showSkeleton
                 loaderUrl="/api/image"
                 placeholder="empty"
@@ -238,50 +248,53 @@ const CardItem = (props: ICardItemProps) => {
       </Card.Body>
       <Tooltip
         placement="top"
+        animated={false}
         content={
-          <ClientOnly fallback={<Loading type="default" />}>
-            {() => {
-              if (isEpisodeCard || mediaType === 'people') {
-                return null;
-              }
-              return (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.2, ease: [0, 0.71, 0.2, 1.01] }}
-                >
-                  <CardItemHover
-                    backdropPath={backdropPath}
-                    genreIds={genreIds}
-                    genresAnime={genresAnime}
-                    genresMovie={genresMovie}
-                    genresTv={genresTv}
-                    mediaType={mediaType}
-                    overview={overview}
-                    posterPath={posterPath}
-                    releaseDate={releaseDate}
-                    title={titleItem || ''}
-                    trailer={trailer || trailerCard}
-                    voteAverage={voteAverage}
-                  />
-                </motion.div>
-              );
-            }}
-          </ClientOnly>
+          <motion.div
+            initial={{ scaleX: 0.6, scaleY: 1.1 }}
+            animate={{ scaleX: 1, scaleY: 1 }}
+            transition={{ duration: 0.2 }}
+            className="rounded-xl bg-background-contrast-alpha shadow-md backdrop-blur-md"
+          >
+            <CardItemHover
+              backdropPath={backdropPath}
+              genreIds={genreIds}
+              genresAnime={genresAnime}
+              genresMovie={genresMovie}
+              genresTv={genresTv}
+              mediaType={mediaType}
+              overview={overview}
+              posterPath={posterPath}
+              releaseDate={releaseDate}
+              title={titleItem || ''}
+              trailer={trailer || trailerCard}
+              voteAverage={voteAverage}
+            />
+          </motion.div>
         }
         rounded
-        isDisabled={isMobile}
+        isDisabled={isMobile || mediaType === 'people' || isEpisodeCard}
         // shadow
         hideArrow
-        offset={0}
+        offset={-70}
+        enterDelay={300}
         visible={false}
         className="!w-fit"
-        css={isEpisodeCard || mediaType === 'people' ? { p: 0 } : { zIndex: 2999 }}
+        css={
+          isEpisodeCard || mediaType === 'people'
+            ? { p: 0 }
+            : { zIndex: 2999, backgroundColor: 'transparent', boxShadow: 'none' }
+        }
         onVisibleChange={(visible) => {
           if (visible) {
-            if (mediaType !== 'anime' && mediaType !== 'people' && isPlayTrailer.value)
-              fetcher.load(`/${mediaType === 'movie' ? 'movies' : 'tv-shows'}/${id}/videos`);
+            if (mediaType !== 'people') {
+              setIsTooltipVisible(true);
+              if (isPlayTrailer.value && mediaType !== 'anime') {
+                fetcher.load(`/${mediaType === 'movie' ? 'movies' : 'tv-shows'}/${id}/videos`);
+              }
+            }
           } else {
+            setIsTooltipVisible(false);
             setIsCardPlaying(false);
           }
         }}
@@ -305,6 +318,7 @@ const CardItem = (props: ICardItemProps) => {
           <H5
             h5
             weight="bold"
+            className="!line-clamp-2"
             css={{
               ...(color ? { color } : null),
               minWidth: `${mediaType === 'people' ? '100px' : '150px'}`,

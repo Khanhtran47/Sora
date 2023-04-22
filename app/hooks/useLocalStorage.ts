@@ -110,6 +110,10 @@ function useSoraSettings() {
     defaultValue: false,
     initializeWithValue: false,
   });
+  const listViewType = useLocalStorageValue('sora-settings_layout_list-view', {
+    defaultValue: 'cover',
+    initializeWithValue: false,
+  });
 
   return {
     currentSubtitleFontColor,
@@ -142,6 +146,7 @@ function useSoraSettings() {
     sidebarHoverMode,
     sidebarBoxedMode,
     sidebarSheetMode,
+    listViewType,
   };
 }
 
