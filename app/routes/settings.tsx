@@ -15,7 +15,7 @@ import {
   Switch,
   Tooltip,
 } from '@nextui-org/react';
-import { useMediaQuery } from '@react-hookz/web';
+import { useLocalStorageValue, useMediaQuery } from '@react-hookz/web';
 import type { MetaFunction } from '@remix-run/node';
 import { NavLink, useLocation, useNavigate } from '@remix-run/react';
 import { AnimatePresence, motion, type PanInfo } from 'framer-motion';
@@ -29,6 +29,8 @@ import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import languages from '~/constants/languages';
 import {
+  listListLoadingType,
+  listListViewType,
   listSubtitleBackgroundColor,
   listSubtitleBackgroundOpacity,
   listSubtitleFontColor,
@@ -155,6 +157,12 @@ const Settings = () => {
     sidebarBoxedMode,
     // sidebarSheetMode,
   } = useSoraSettings();
+  const listViewType = useLocalStorageValue('sora-settings_layout_list-view', {
+    defaultValue: 'card',
+  });
+  const listLoadingType = useLocalStorageValue('sora-settings_layout_list-loading-type', {
+    defaultValue: 'pagination',
+  });
 
   const [activeTab, setActiveTab] = useState('general-tab');
   const [selectedLang, setSelectedLang] = useState(new Set([locale]));
@@ -178,6 +186,10 @@ const Settings = () => {
   );
   const [selectedSubtitleTextEffects, setSelectedSubtitleTextEffects] = useState(
     new Set([currentSubtitleTextEffects.value!]),
+  );
+  const [selectedListViewType, setSelectedListViewType] = useState(new Set([listViewType.value!]));
+  const [selectedListLoadingType, setSelectedListLoadingType] = useState(
+    new Set([listLoadingType.value!]),
   );
   // const [selectedSidebarStyleMode, setSelectedSidebarStyleMode] = useState(
   //   new Set([sidebarStyleMode.value!]),
@@ -214,6 +226,14 @@ const Settings = () => {
   const selectedSubtitleTextEffectsValue = useMemo(
     () => Array.from(selectedSubtitleTextEffects).join(', '),
     [selectedSubtitleTextEffects],
+  );
+  const selectedListViewTypeValue = useMemo(
+    () => Array.from(selectedListViewType).join(', '),
+    [selectedListViewType],
+  );
+  const selectedListLoadingTypeValue = useMemo(
+    () => Array.from(selectedListLoadingType).join(', '),
+    [selectedListLoadingType],
   );
   // const selectedSidebarStyleModeValue = useMemo(
   //   () => Array.from(selectedSidebarStyleMode).join(', '),
@@ -545,6 +565,82 @@ const Settings = () => {
                           </Flex> */}
                           </Collapse>
                         )}
+                        <Collapse
+                          title={t('media-list-grid')}
+                          subtitle={t('media-list-grid-subtitle')}
+                          css={{
+                            background: '$backgroundAlpha !important',
+                            borderRadius: '$xs !important',
+                          }}
+                        >
+                          <Flex
+                            direction={isXs ? 'column' : 'row'}
+                            justify="between"
+                            align={isXs ? 'start' : 'center'}
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
+                          >
+                            <H6>{t('list-view-type')}</H6>
+                            <Dropdown isBordered>
+                              <Dropdown.Button color="primary">
+                                {t(selectedListViewTypeValue)}
+                              </Dropdown.Button>
+                              <Dropdown.Menu
+                                aria-label="Select list view type"
+                                color="primary"
+                                selectionMode="single"
+                                disallowEmptySelection
+                                selectedKeys={selectedListViewType}
+                                onSelectionChange={(keys: any) => {
+                                  const viewType = Array.from(keys).join(', ');
+                                  setSelectedListViewType(keys);
+                                  listViewType.set(viewType);
+                                }}
+                              >
+                                {listListViewType.map((viewType) => (
+                                  <Dropdown.Item key={viewType}>{t(viewType)}</Dropdown.Item>
+                                ))}
+                              </Dropdown.Menu>
+                            </Dropdown>
+                          </Flex>
+                          <Spacer y={0.25} />
+                          <Flex
+                            direction={isXs ? 'column' : 'row'}
+                            justify="between"
+                            align={isXs ? 'start' : 'center'}
+                            css={{
+                              backgroundColor: '$background',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
+                          >
+                            <H6>{t('list-loading-type')}</H6>
+                            <Dropdown isBordered>
+                              <Dropdown.Button color="primary">
+                                {t(selectedListLoadingTypeValue)}
+                              </Dropdown.Button>
+                              <Dropdown.Menu
+                                aria-label="Select list loading type"
+                                color="primary"
+                                selectionMode="single"
+                                disallowEmptySelection
+                                selectedKeys={selectedListLoadingType}
+                                onSelectionChange={(keys: any) => {
+                                  const loadingType = Array.from(keys).join(', ');
+                                  setSelectedListLoadingType(keys);
+                                  listLoadingType.set(loadingType);
+                                }}
+                              >
+                                {listListLoadingType.map((loadingType) => (
+                                  <Dropdown.Item key={loadingType}>{t(loadingType)}</Dropdown.Item>
+                                ))}
+                              </Dropdown.Menu>
+                            </Dropdown>
+                          </Flex>
+                        </Collapse>
                         <Collapse
                           title={t('experiments')}
                           subtitle={t('experiments-subtitle')}
