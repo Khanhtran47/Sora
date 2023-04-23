@@ -130,6 +130,21 @@ const MediaListGrid = (props: IMediaListCardProps) => {
         } else {
           setShouldFetch(false);
         }
+      } else if (Object.keys(fetcher.data).length) {
+        const newItems = Object.values(fetcher.data)[0] as {
+          items: IMedia[];
+          totalPages: number;
+          page: number;
+        };
+        if (newItems.items) {
+          setListItems((prevItems) => [...prevItems, ...newItems.items]);
+          if (newItems.page < newItems.totalPages) {
+            setPage(page + 1);
+            setShouldFetch(true);
+          } else {
+            setShouldFetch(false);
+          }
+        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -232,7 +247,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={
-                  itemsType === 'episode' || itemsType === 'anime'
+                  listLoadingType.value === 'infinite-scroll'
                     ? { x: { type: 'spring', stiffness: 100 }, duration: 0.1 }
                     : { duration: 0.05 * index }
                 }
@@ -276,7 +291,10 @@ const MediaListGrid = (props: IMediaListCardProps) => {
             );
           })}
       </div>
-      {!shouldFetch && hasNextPage && showLoadMore && listLoadingType.value === 'scroll' ? (
+      {!shouldFetch &&
+      (hasNextPage || (currentPage && totalPages && currentPage < totalPages)) &&
+      showLoadMore &&
+      listLoadingType.value === 'infinite-scroll' ? (
         <Button
           type="button"
           // shadow
