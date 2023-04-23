@@ -268,7 +268,7 @@ const SideBar = () => {
               >
                 <NavigationMenuLink asChild>
                   <NavLink
-                    to="/trending"
+                    to="/trending/today"
                     className={navigationMenuTriggerStyle({
                       class: `${navigationItemWidthStyle} h-[56px] justify-start transition-[width] duration-200`,
                     })}
