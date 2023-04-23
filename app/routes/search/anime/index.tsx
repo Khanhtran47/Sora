@@ -75,7 +75,7 @@ const SearchRoute = () => {
           itemsType="anime"
           listName="Trending Anime"
           listType="grid"
-          routeName="/anime/trending"
+          showListTypeChangeButton
         />
       )}
     </div>

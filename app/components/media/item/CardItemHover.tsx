@@ -273,7 +273,7 @@ const CardItemHover = (props: ICardItemHoverProps) => {
       ) : null}
       <Row justify="space-between" align="center">
         {releaseDate ? (
-          <H5 h5>{`${mediaType === 'movie' ? 'Movie' : 'TV-Show'} • ${releaseDate}`}</H5>
+          <H5 h5>{`${mediaType.charAt(0).toUpperCase()}${mediaType.slice(1)} • ${releaseDate}`}</H5>
         ) : null}
         {voteAverage ? (
           <Flex direction="row" align="center">

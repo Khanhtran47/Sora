@@ -8,15 +8,17 @@ import { tv } from 'tailwind-variants';
 
 import type { IMedia } from '~/types/media';
 import type { ILanguage } from '~/services/tmdb/tmdb.types';
+import { useSoraSettings } from '~/hooks/useLocalStorage';
 import ChevronLeftIcon from '~/assets/icons/ChevronLeftIcon';
 import ChevronRightIcon from '~/assets/icons/ChevronRightIcon';
 import FilterIcon from '~/assets/icons/FilterIcon';
-import ViewGridIcon from '~/assets/icons/ViewGridIcon';
-import ViewTableIcon from '~/assets/icons/ViewTableIcon';
+import ViewGridCard from '~/assets/icons/ViewGridCardIcon';
+import ViewGridDetail from '~/assets/icons/ViewGridDetailIcon';
+import ViewGridTable from '~/assets/icons/ViewGridTableIcon';
 
 import Filter from '../elements/filter/Filter';
 import { H2 } from '../styles/Text.styles';
-import { MediaListBanner, MediaListCard, MediaListGrid, MediaListTable } from './list';
+import { MediaListBanner, MediaListCard, MediaListGrid } from './list';
 
 interface IMediaListProps {
   /**
@@ -127,15 +129,14 @@ interface IMediaListProps {
   listName?: string | (() => never);
   /**
    * Value is type of list to show
-   * @type {'table' | 'slider-card' | 'slider-banner' | 'grid'}
+   * @type {'slider-card' | 'slider-banner' | 'grid'}
    * @memberof IMediaListProps
    * @example
-   * 'table'
    * 'slider-card'
    * 'slider-banner'
    * 'grid'
    */
-  listType?: 'table' | 'slider-card' | 'slider-banner' | 'grid';
+  listType?: 'slider-card' | 'slider-banner' | 'grid';
   /**
    * Value is true if the navigation buttons are active
    * @type {boolean}
@@ -258,29 +259,18 @@ const MediaList = (props: IMediaListProps) => {
     showListTypeChangeButton,
     showMoreList,
     totalPages,
+    listType,
   } = props;
-  let { listType } = props;
   let list;
   const { t } = useTranslation();
   const [prevEl, setPrevEl] = useState<HTMLElement | null>(null);
   const [nextEl, setNextEl] = useState<HTMLElement | null>(null);
   const [slideProgress, setSlideProgress] = useState<number>(0);
-  const [displayType, setDisplayType] = useState<string>(listType as string);
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
+  const { listViewType } = useSoraSettings();
 
-  if (!listType && typeof window !== 'undefined') {
-    listType =
-      (localStorage.getItem('listType') as 'table' | 'slider-card' | 'slider-banner' | 'grid') ??
-      'grid';
-  }
-
-  const filterChangeHandler = (value: string) => {
-    setDisplayType(value);
-    localStorage.setItem('listType', value);
-  };
-
-  switch (displayType) {
+  switch (listType) {
     case 'grid':
       list = (
         <MediaListGrid
@@ -298,9 +288,6 @@ const MediaList = (props: IMediaListProps) => {
           scrollToTopListAfterChangePage={scrollToTopListAfterChangePage}
         />
       );
-      break;
-    case 'table':
-      list = <MediaListTable items={items} />;
       break;
     case 'slider-banner':
       list = <MediaListBanner items={items} genresMovie={genresMovie} genresTv={genresTv} />;
@@ -327,10 +314,7 @@ const MediaList = (props: IMediaListProps) => {
     <div
       className={mediaListStyles({
         gap: listType === 'grid' ? 'grid' : 'normal',
-        alignItems:
-          listType === 'grid' || listType === 'table' || listType === 'slider-banner'
-            ? 'center'
-            : 'start',
+        alignItems: listType === 'grid' || listType === 'slider-banner' ? 'center' : 'start',
       })}
     >
       {listName || showFilterButton || showListTypeChangeButton ? (
@@ -365,15 +349,21 @@ const MediaList = (props: IMediaListProps) => {
                 <Button.Group css={{ margin: 0 }}>
                   <Button
                     type="button"
-                    onPress={() => filterChangeHandler('grid')}
-                    icon={<ViewGridIcon width={40} height={40} />}
-                    {...(displayType === 'grid' ? {} : { ghost: true })}
+                    onPress={() => listViewType.set('card')}
+                    icon={<ViewGridCard width={40} height={40} />}
+                    {...(listViewType.value === 'card' ? {} : { ghost: true })}
                   />
                   <Button
                     type="button"
-                    onPress={() => filterChangeHandler('table')}
-                    icon={<ViewTableIcon width={40} height={40} />}
-                    {...(displayType === 'table' ? {} : { ghost: true })}
+                    onPress={() => listViewType.set('detail')}
+                    icon={<ViewGridDetail width={40} height={40} />}
+                    {...(listViewType.value === 'detail' ? {} : { ghost: true })}
+                  />
+                  <Button
+                    type="button"
+                    onPress={() => listViewType.set('table')}
+                    icon={<ViewGridTable width={40} height={40} />}
+                    {...(listViewType.value === 'table' ? {} : { ghost: true })}
                   />
                 </Button.Group>
               ) : null}

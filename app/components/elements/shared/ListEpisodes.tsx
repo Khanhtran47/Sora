@@ -16,7 +16,7 @@ import Rating from '~/components/elements/shared/Rating';
 import Flex from '~/components/styles/Flex.styles';
 import { H3, H5, H6 } from '~/components/styles/Text.styles';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
-import ViewGrid from '~/assets/icons/ViewGridIcon';
+import ViewGrid from '~/assets/icons/ViewGridCardIcon';
 
 interface IListEpisodesProps {
   type: 'tv' | 'anime';

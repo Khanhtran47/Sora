@@ -5,6 +5,7 @@ import { useMeasure, useMediaQuery } from '@react-hookz/web';
 import { Link, useFetcher, useLocation, useSearchParams } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import NProgress from 'nprogress';
+import { tv } from 'tailwind-variants';
 
 import type { IMedia } from '~/types/media';
 import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
@@ -29,6 +30,21 @@ interface IMediaListCardProps {
 }
 
 const MotionLink = motion(Link);
+
+const mediaListGridStyles = tv({
+  base: 'grid w-full max-w-screen-4xl items-stretch justify-items-center gap-5',
+  variants: {
+    listViewType: {
+      table: 'grid-cols-1',
+      card: 'grid-cols-1 2xs:grid-cols-2 md:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6',
+      detail: 'grid-cols-1 xl:grid-cols-2 4xl:grid-cols-3',
+      coverCard: 'grid-cols-1 xl:grid-cols-2 4xl:grid-cols-3',
+    },
+  },
+  defaultVariants: {
+    listViewType: 'card',
+  },
+});
 
 const MediaListGrid = (props: IMediaListCardProps) => {
   const {
@@ -56,7 +72,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
   const topRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const [size, parentRef] = useMeasure<HTMLDivElement>();
-  const { listLoadingType } = useSoraSettings();
+  const { listLoadingType, listViewType } = useSoraSettings();
   const is2Xs = useMediaQuery('(max-width: 320px)', { initializeWithValue: false });
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const currentSearchParams = useMemo<{ [key: string]: string }>(() => {
@@ -155,7 +171,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
 
   if (isCoverCard) {
     return (
-      <div className="grid w-full grid-cols-1 items-stretch justify-items-center gap-5 xl:grid-cols-2 4xl:grid-cols-3">
+      <div className={mediaListGridStyles({ listViewType: 'coverCard' })}>
         {coverItem &&
           coverItem?.length > 0 &&
           coverItem.map((item, index) => {
@@ -184,7 +200,10 @@ const MediaListGrid = (props: IMediaListCardProps) => {
     <>
       <div ref={topRef} />
       <div
-        className="grid w-full max-w-screen-4xl grid-cols-1 items-stretch justify-items-center gap-5 2xs:grid-cols-2 md:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6"
+        className={mediaListGridStyles({
+          listViewType:
+            itemsType === 'episode' || itemsType === 'people' ? 'card' : listViewType.value,
+        })}
         ref={parentRef}
       >
         {listItems &&
@@ -208,7 +227,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
                 : '/';
 
             return (
-              <MotionLink
+              <motion.div
                 key={`${item.id}-${index}-card-grid`}
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -217,7 +236,17 @@ const MediaListGrid = (props: IMediaListCardProps) => {
                     ? { x: { type: 'spring', stiffness: 100 }, duration: 0.1 }
                     : { duration: 0.05 * index }
                 }
-                to={href}
+                className={
+                  listViewType.value === 'table' &&
+                  itemsType !== 'episode' &&
+                  itemsType !== 'people'
+                    ? 'w-full'
+                    : listViewType.value === 'detail' &&
+                      itemsType !== 'episode' &&
+                      itemsType !== 'people'
+                    ? 'w-full sm:w-fit'
+                    : ''
+                }
               >
                 <MediaItem
                   backdropPath={item?.backdropPath}
@@ -233,6 +262,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
                   job={item?.job}
                   key={item.id}
                   knownFor={item?.knownFor}
+                  linkTo={href}
                   mediaType={item?.mediaType}
                   overview={item?.overview}
                   posterPath={item?.posterPath}
@@ -242,7 +272,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
                   type={itemsType === 'episode' ? itemsType : 'card'}
                   voteAverage={item?.voteAverage}
                 />
-              </MotionLink>
+              </motion.div>
             );
           })}
       </div>

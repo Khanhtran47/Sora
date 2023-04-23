@@ -115,6 +115,7 @@ const DiscoverAnime = () => {
           listName="Discover Anime"
           listType="grid"
           showFilterButton
+          showListTypeChangeButton
         />
       )}
     </motion.div>

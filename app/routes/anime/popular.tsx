@@ -84,6 +84,7 @@ const PopularAnime = () => {
           itemsType="anime"
           listName="Popular Anime"
           listType="grid"
+          showListTypeChangeButton
         />
       )}
     </motion.div>

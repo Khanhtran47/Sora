@@ -111,7 +111,7 @@ function useSoraSettings() {
     initializeWithValue: false,
   });
   const listViewType = useLocalStorageValue('sora-settings_layout_list-view', {
-    defaultValue: 'cover',
+    defaultValue: 'card',
     initializeWithValue: false,
   });
   const listLoadingType = useLocalStorageValue('sora-settings_layout_list-loading-type', {

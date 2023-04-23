@@ -150,6 +150,7 @@ const MediaListCard = (props: IMediaListCardProps) => {
                       genresMovie={genresMovie}
                       genresTv={genresTv}
                       id={item?.id}
+                      isSliderCard
                       job={item?.job}
                       key={item.id}
                       knownFor={item?.knownFor}
