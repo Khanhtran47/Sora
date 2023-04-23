@@ -1,16 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Avatar, Button, Card, Tooltip } from '@nextui-org/react';
-import { useMeasure } from '@react-hookz/web';
+import { useIntersectionObserver, useMeasure } from '@react-hookz/web';
 import { Link, useFetcher, useNavigate } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
-// import { useInView } from 'react-intersection-observer';
 import Image, { MimeType } from 'remix-image';
 import { tv } from 'tailwind-variants';
 
 import type { IMedia, Title } from '~/types/media';
 import type { ITrailer } from '~/services/consumet/anilist/anilist.types';
 import useCardHoverStore from '~/store/card/useCardHoverStore';
+import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import type { Trailer } from '~/components/elements/modal/WatchTrailerModal';
 import {
@@ -134,10 +134,6 @@ const CardItem = (props: ICardItemProps) => {
     trailer,
     voteAverage,
   } = props;
-  // const { cardRef, inView } = useInView({
-  //   rootMargin: '3000px 1000px',
-  //   triggerOnce: !virtual,
-  // });
   const fetcher = useFetcher();
   const navigate = useNavigate();
   const setIsCardPlaying = useCardHoverStore((state) => state.setIsCardPlaying);
@@ -145,11 +141,7 @@ const CardItem = (props: ICardItemProps) => {
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
   const { isPlayTrailer, listViewType } = useSoraSettings();
   const [size, imageRef] = useMeasure<HTMLDivElement>();
-  const titleItem =
-    typeof title === 'string'
-      ? title
-      : title?.userPreferred || title?.english || title?.romaji || title?.native;
-
+  const { viewportRef } = useLayoutScrollPosition((scrollState) => scrollState);
   useEffect(() => {
     if (fetcher.data && fetcher.data.videos) {
       const { results } = fetcher.data.videos;
@@ -157,7 +149,16 @@ const CardItem = (props: ICardItemProps) => {
       setTrailerCard(officialTrailer);
     }
   }, [fetcher.data]);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const cardIntersection = useIntersectionObserver(cardRef, {
+    root: viewportRef,
+    rootMargin: '1500px 0px 1500px 0px',
+  });
 
+  const titleItem =
+    typeof title === 'string'
+      ? title
+      : title?.userPreferred || title?.english || title?.romaji || title?.native;
   const { base, body, imageContainer, image, content, footer } = cardItemStyles({
     listViewType: isCoverCard
       ? 'coverCard'
@@ -191,7 +192,7 @@ const CardItem = (props: ICardItemProps) => {
         }}
         className={base()}
         role="figure"
-        // ref={cardRef}
+        ref={cardRef}
       >
         <Card.Body ref={imageRef} css={{ p: 0, width: '100%' }} className={body()}>
           {size ? (
@@ -252,11 +253,11 @@ const CardItem = (props: ICardItemProps) => {
       }}
       className={base()}
       role="figure"
-      // ref={cardRef}
+      ref={cardRef}
     >
       <Card.Body css={{ p: 0, width: '100%' }} className={body()}>
         <div className={imageContainer()} ref={imageRef}>
-          {size && !isTooltipVisible ? (
+          {size && !isTooltipVisible && cardIntersection?.isIntersecting ? (
             <Link to={linkTo || '/'}>
               {posterPath ? (
                 <Card.Image
@@ -313,7 +314,8 @@ const CardItem = (props: ICardItemProps) => {
         {listViewType.value === 'detail' &&
         !isSliderCard &&
         !isEpisodeCard &&
-        mediaType !== 'people' ? (
+        mediaType !== 'people' &&
+        cardIntersection?.isIntersecting ? (
           <div className={content()}>
             <div className="flex h-6 flex-row items-center justify-between">
               <H6 h6 weight="semibold" className="hidden 2xs:block">
@@ -409,7 +411,8 @@ const CardItem = (props: ICardItemProps) => {
         ) : listViewType.value === 'table' &&
           !isSliderCard &&
           !isEpisodeCard &&
-          mediaType !== 'people' ? (
+          mediaType !== 'people' &&
+          cardIntersection?.isIntersecting ? (
           <div className={content()}>
             <H5 h5 weight="bold">
               {titleItem}
@@ -509,7 +512,8 @@ const CardItem = (props: ICardItemProps) => {
           </div>
         ) : null}
       </Card.Body>
-      {listViewType.value === 'card' || mediaType === 'people' || isSliderCard || isEpisodeCard ? (
+      {(listViewType.value === 'card' || mediaType === 'people' || isSliderCard || isEpisodeCard) &&
+      cardIntersection?.isIntersecting ? (
         <Tooltip
           placement="top"
           animated={false}
@@ -619,7 +623,10 @@ const CardItem = (props: ICardItemProps) => {
             ) : null}
           </Card.Footer>
         </Tooltip>
-      ) : listViewType.value === 'detail' && !isSliderCard && !isEpisodeCard ? (
+      ) : listViewType.value === 'detail' &&
+        !isSliderCard &&
+        !isEpisodeCard &&
+        cardIntersection?.isIntersecting ? (
         <Link to={linkTo || '/'}>
           <Card.Footer className={footer()}>
             <H5 h5 weight="bold">
