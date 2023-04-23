@@ -13,9 +13,7 @@ import {
 
 export const Tabs = styled(TabsPrimitive.Root, {
   display: 'flex',
-  boxShadow: '$sm',
-  borderRadius: '$sm',
-  backgroundColor: '$backgroundContrast',
+  columnGap: '$5',
   '&[data-orientation="horizontal"]': {
     flexDirection: 'column',
   },
@@ -39,7 +37,8 @@ export const TabsTrigger = styled(TabsPrimitive.Trigger, {
   zIndex: '10',
   '&:hover': {
     opacity: '0.8',
-    color: '$primarySolidHover',
+    // color: '$primarySolidHover',
+    backgroundColor: '$primaryLightActive',
   },
   '&[data-disabled]': {
     color: '$neutral',
@@ -47,7 +46,7 @@ export const TabsTrigger = styled(TabsPrimitive.Trigger, {
   },
   '&[data-state="active"]': {
     color: '$primary',
-    backgroundColor: '$backgroundContrast',
+    backgroundColor: '$primaryLightActive',
   },
   '&[data-orientation="vertical"]': {
     justifyContent: 'flex-start',
@@ -57,15 +56,16 @@ export const TabsTrigger = styled(TabsPrimitive.Trigger, {
       color: '$primarySolidHover',
     },
     '&[data-state="active"]': {
-      backgroundColor: '$backgroundContrast',
+      backgroundColor: '$primaryLightActive',
     },
   },
-  '&:focus': { backgroundColor: '$backgroundContrast' },
+  '&:focus': { backgroundColor: '$primaryLightActive' },
 });
 
 const StyledTabsList = styled(TabsPrimitive.List, {
   flexShrink: 0,
   display: 'flex',
+  rowGap: '$5',
   '&:focus': {
     outline: 'none',
   },
@@ -89,22 +89,38 @@ export const TabsList = React.forwardRef<React.ElementRef<typeof StyledTabsList>
       css={{
         height: 'auto',
         minWidth: 200,
-        backgroundColor: '$backgroundAlpha',
-        borderRight: '1px solid $border',
+        // backgroundColor: '$backgroundContrastLight',
+        // borderRight: '1px solid $border',
+        borderTopLeftRadius: '$sm',
+        borderBottomLeftRadius: '$sm',
+        borderTopRightRadius: 0,
+        borderBottomRightRadius: 0,
+        boxShadow: 'none',
         '@xsMax': {
           width: '100%',
           height: 61,
           maxWidth: 'calc(100vw - 1.5rem)',
           borderBottom: '1px solid $border',
           borderRight: 'none',
+          borderBottomLeftRadius: 0,
         },
       }}
     >
       <ScrollAreaViewport>
         <StyledTabsList {...props} ref={forwardedRef} />
       </ScrollAreaViewport>
-      <ScrollAreaScrollbar orientation="horizontal">
-        <ScrollAreaThumb />
+      <ScrollAreaScrollbar
+        orientation="horizontal"
+        css={{
+          padding: 0,
+          margin: 2,
+          backgroundColor: 'transparent',
+          '&:hover': { backgroundColor: 'transparent' },
+        }}
+      >
+        <ScrollAreaThumb
+          css={{ backgroundColor: '$accents8', '&:hover': { background: '$accents6' } }}
+        />
       </ScrollAreaScrollbar>
       <ScrollAreaCorner />
     </ScrollArea>
@@ -115,10 +131,16 @@ TabsList.displayName = 'TabsList';
 
 export const TabsContent = styled(TabsPrimitive.Content, {
   flexGrow: 1,
-  py: 20,
-  px: 5,
+  // backgroundColor: '$backgroundContrastLight',
+  minHeight: '75vh',
+  borderBottomLeftRadius: '$sm',
+  borderBottomRightRadius: '$sm',
+  borderTopRightRadius: 0,
+  borderTopLeftRadius: 0,
   '@xs': {
     px: 10,
+    borderTopRightRadius: '$sm',
+    borderBottomLeftRadius: 0,
   },
   '@md': {
     px: 20,

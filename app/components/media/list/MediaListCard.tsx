@@ -153,6 +153,7 @@ const MediaListCard = (props: IMediaListCardProps) => {
                       isSliderCard
                       job={item?.job}
                       key={item.id}
+                      linkTo={href}
                       knownFor={item?.knownFor}
                       mediaType={item?.mediaType}
                       overview={item?.overview}

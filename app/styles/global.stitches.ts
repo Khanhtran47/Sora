@@ -16,6 +16,7 @@ const globalStyles = globalCss({
   body: {
     fontFamily: 'Inter !important',
     fontWeight: 400,
+    backgroundColor: '$backgroundBody !important',
   },
   html: {
     fontSize: '85%',

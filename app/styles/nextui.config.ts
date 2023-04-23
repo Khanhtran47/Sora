@@ -4,6 +4,8 @@ export const lightTheme = createTheme({
   type: 'light',
   theme: {
     colors: {
+      backgroundBody: '#ffffff',
+      backgroundTitleBar: '#ffffff',
       backgroundTransparent: 'rgba(0, 0, 0, 0)',
       backgroundAlpha: 'rgba(255, 255, 255, 0.5)',
       backgroundLight: 'rgba(255, 255, 255, 0.2)',
@@ -19,6 +21,8 @@ export const darkTheme = createTheme({
   type: 'dark',
   theme: {
     colors: {
+      backgroundBody: '#000000',
+      backgroundTitleBar: '#000000',
       backgroundTransparent: 'rgba(0, 0, 0, 0)',
       backgroundAlpha: 'rgba(0, 0, 0, 0.6)',
       backgroundLight: 'rgba(0, 0, 0, 0.2)',
@@ -35,6 +39,8 @@ export const bumblebeeTheme = createTheme({
     colors: {
       // background colors
       background: '#FEFAEA',
+      backgroundTitleBar: '#fefcf4',
+      backgroundBody: '#ffffff',
       backgroundAlpha: 'rgb(254, 250, 234, 0.5)',
       backgroundLight: 'rgb(254, 250, 234, 0.2)',
       backgroundContrast: '#fffdf4',
@@ -80,6 +86,8 @@ export const autumnTheme = createTheme({
     colors: {
       // background colors
       background: '#FCE6E3',
+      backgroundTitleBar: '#fcf2f1',
+      backgroundBody: '#ffffff',
       backgroundAlpha: 'rgba(252, 230, 227, 0.5)',
       backgroundLight: 'rgba(252, 230, 227, 0.2)',
       foreground: '$black',
@@ -128,6 +136,8 @@ export const retroTheme = createTheme({
     colors: {
       // background colors
       background: '#e2d8b3',
+      backgroundTitleBar: '#f0ebd8',
+      backgroundBody: '#ffffff',
       backgroundAlpha: 'rgb(226, 216, 179, 0.5)',
       backgroundLight: 'rgb(226, 216, 179, 0.2)',
       foreground: '$black',
@@ -176,6 +186,8 @@ export const synthwaveTheme = createTheme({
     colors: {
       // background
       background: '#2d1b69',
+      backgroundTitleBar: '#1b1140',
+      backgroundBody: '#000000',
       backgroundAlpha: 'rgb(45, 27, 105, 0.6)',
       backgroundLight: 'rgb(45, 27, 105, 0.2)',
       foreground: '#d1c7db',
@@ -224,6 +236,8 @@ export const nightTheme = createTheme({
     colors: {
       // background
       background: '#101729',
+      backgroundTitleBar: '#0a0e19',
+      backgroundBody: '#000000',
       backgroundAlpha: 'rgb(16, 23, 41, 0.6)',
       backgroundLight: 'rgb(16, 23, 41, 0.2)',
       foreground: '$white',
@@ -273,6 +287,8 @@ export const draculaTheme = createTheme({
     colors: {
       // background
       background: '#282a36',
+      backgroundTitleBar: '#181921',
+      backgroundBody: '#000000',
       backgroundAlpha: 'rgb(40, 42, 54, 0.6)',
       backgroundLight: 'rgb(40, 42, 54, 0.2)',
       foreground: '#f8f8f2',

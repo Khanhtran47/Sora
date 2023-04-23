@@ -254,7 +254,7 @@ export const meta: MetaFunction = () => {
   const { isBrowser } = useSSR();
   if (isBrowser) {
     const color = getComputedStyle(document.documentElement).getPropertyValue(
-      '--nextui-colors-background',
+      '--nextui-colors-backgroundTitleBar',
     );
     return {
       charset: 'utf-8',

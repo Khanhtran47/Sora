@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Badge,
   Collapse,
@@ -124,6 +124,7 @@ const Settings = () => {
   const isXs = useMediaQuery('(max-width: 450px)', { initializeWithValue: false });
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const isMd = useMediaQuery('(max-width: 1280px)', { initializeWithValue: false });
+  const underlineRef = useRef<HTMLDivElement>(null);
 
   const {
     currentSubtitleFontColor,
@@ -240,6 +241,16 @@ const Settings = () => {
   //   [selectedSidebarStyleMode],
   // );
 
+  useEffect(() => {
+    if (underlineRef.current) {
+      underlineRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'center',
+      });
+    }
+  }, [activeTab]);
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleDragEnd = (event: MouseEvent | PointerEvent | TouchEvent, info: PanInfo) => {
     const currentTab = settingsTab.find((tab) => tab.id === activeTab);
@@ -289,6 +300,7 @@ const Settings = () => {
         <H2 h2 css={{ '@xsMax': { fontSize: '1.75rem !important' } }}>
           {t('settings')}
         </H2>
+        <Spacer y={0.5} />
         <ClientOnly fallback={<Loading type="default" />}>
           {() => (
             <Tabs
@@ -330,7 +342,7 @@ const Settings = () => {
                       {t(tab.title)}
                     </H6>
                     {activeTab === tab.id ? (
-                      <Underline className="underline" layoutId="underline" />
+                      <Underline className="underline" layoutId="underline" ref={underlineRef} />
                     ) : null}
                   </TabsTrigger>
                 ))}
@@ -355,14 +367,19 @@ const Settings = () => {
                       display="flex"
                       justify="flex-start"
                       direction="column"
-                      css={{ padding: 0 }}
+                      css={{
+                        boxShadow: '$md',
+                        borderRadius: '$xs',
+                        backgroundColor: '$backgroundContrastAlpha',
+                        padding: 20,
+                      }}
                     >
                       <Flex
                         direction="row"
                         justify="between"
                         align="center"
                         css={{
-                          backgroundColor: '$background',
+                          backgroundColor: '$backgroundContrast',
                           borderRadius: '$xs',
                           padding: '$sm',
                         }}
@@ -410,12 +427,12 @@ const Settings = () => {
                       direction="column"
                       css={{ padding: 0 }}
                     >
-                      <Collapse.Group splitted accordion={false}>
+                      <Collapse.Group splitted accordion={false} css={{ p: 0 }}>
                         <Collapse
                           title={t('theme')}
                           subtitle={t('theme-subtitle')}
                           css={{
-                            background: '$backgroundAlpha !important',
+                            background: '$backgroundContrastAlpha !important',
                             borderRadius: '$xs !important',
                           }}
                         >
@@ -465,7 +482,7 @@ const Settings = () => {
                             title={t('sidebar')}
                             subtitle={t('sidebar-subtitle')}
                             css={{
-                              background: '$backgroundAlpha !important',
+                              background: '$backgroundContrastAlpha !important',
                               borderRadius: '$xs !important',
                             }}
                           >
@@ -475,7 +492,7 @@ const Settings = () => {
                               align="start"
                               className="gap-y-4"
                               css={{
-                                backgroundColor: '$background',
+                                backgroundColor: '$backgroundContrast',
                                 borderRadius: '$xs',
                                 padding: '$sm',
                               }}
@@ -535,7 +552,7 @@ const Settings = () => {
                             justify="between"
                             align={isXs ? 'start' : 'center'}
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -569,7 +586,7 @@ const Settings = () => {
                           title={t('media-list-grid')}
                           subtitle={t('media-list-grid-subtitle')}
                           css={{
-                            background: '$backgroundAlpha !important',
+                            background: '$backgroundContrastAlpha !important',
                             borderRadius: '$xs !important',
                           }}
                         >
@@ -578,7 +595,7 @@ const Settings = () => {
                             justify="between"
                             align={isXs ? 'start' : 'center'}
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -612,7 +629,7 @@ const Settings = () => {
                             justify="between"
                             align={isXs ? 'start' : 'center'}
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -645,7 +662,7 @@ const Settings = () => {
                           title={t('experiments')}
                           subtitle={t('experiments-subtitle')}
                           css={{
-                            background: '$backgroundAlpha !important',
+                            background: '$backgroundContrastAlpha !important',
                             borderRadius: '$xs !important',
                           }}
                         >
@@ -655,7 +672,7 @@ const Settings = () => {
                             align="center"
                             className="gap-x-2"
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -673,7 +690,7 @@ const Settings = () => {
                             align="center"
                             className="gap-x-2"
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -707,9 +724,7 @@ const Settings = () => {
                       justify="flex-start"
                       direction="column"
                       css={{ padding: 0 }}
-                    >
-                      <H6>Panel 3</H6>
-                    </Container>
+                    ></Container>
                   </motion.div>
                 </TabsContent>
                 <TabsContent value="player-tab" asChild>
@@ -731,12 +746,12 @@ const Settings = () => {
                       direction="column"
                       css={{ padding: 0 }}
                     >
-                      <Collapse.Group splitted accordion={false}>
+                      <Collapse.Group splitted accordion={false} css={{ p: 0 }}>
                         <Collapse
                           title={t('defaults')}
                           subtitle={t('defaults-subtitle')}
                           css={{
-                            background: '$backgroundAlpha !important',
+                            background: '$backgroundContrastAlpha !important',
                             borderRadius: '$xs !important',
                           }}
                         >
@@ -746,7 +761,7 @@ const Settings = () => {
                             align="center"
                             className="gap-x-2"
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -767,7 +782,7 @@ const Settings = () => {
                             align="center"
                             className="gap-x-2"
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -788,7 +803,7 @@ const Settings = () => {
                             align="center"
                             className="gap-x-2"
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -809,7 +824,7 @@ const Settings = () => {
                             align="center"
                             className="gap-x-2"
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -828,7 +843,7 @@ const Settings = () => {
                           title={t('subtitles')}
                           subtitle={t('subtitles-subtitle')}
                           css={{
-                            background: '$backgroundAlpha !important',
+                            background: '$backgroundContrastAlpha !important',
                             borderRadius: '$xs !important',
                           }}
                         >
@@ -838,7 +853,7 @@ const Settings = () => {
                             align="center"
                             className="gap-x-2"
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -858,7 +873,7 @@ const Settings = () => {
                             justify="between"
                             align={isXs ? 'start' : 'center'}
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -892,7 +907,7 @@ const Settings = () => {
                             justify="between"
                             align={isXs ? 'start' : 'center'}
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -926,7 +941,7 @@ const Settings = () => {
                             justify="between"
                             align={isXs ? 'start' : 'center'}
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -960,7 +975,7 @@ const Settings = () => {
                             justify="between"
                             align={isXs ? 'start' : 'center'}
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -994,7 +1009,7 @@ const Settings = () => {
                             justify="between"
                             align={isXs ? 'start' : 'center'}
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -1028,7 +1043,7 @@ const Settings = () => {
                             justify="between"
                             align={isXs ? 'start' : 'center'}
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -1062,7 +1077,7 @@ const Settings = () => {
                             justify="between"
                             align={isXs ? 'start' : 'center'}
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -1095,7 +1110,7 @@ const Settings = () => {
                           title={t('player-features')}
                           subtitle={t('player-features-subtitle')}
                           css={{
-                            background: '$backgroundAlpha !important',
+                            background: '$backgroundContrastAlpha !important',
                             borderRadius: '$xs !important',
                           }}
                         >
@@ -1105,7 +1120,7 @@ const Settings = () => {
                             align="center"
                             className="gap-x-2"
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -1126,7 +1141,7 @@ const Settings = () => {
                             align="center"
                             className="gap-x-2"
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -1147,7 +1162,7 @@ const Settings = () => {
                             align="center"
                             className="gap-x-2"
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -1168,7 +1183,7 @@ const Settings = () => {
                             align="center"
                             className="gap-x-2"
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -1189,7 +1204,7 @@ const Settings = () => {
                             align="center"
                             className="gap-x-2"
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -1210,7 +1225,7 @@ const Settings = () => {
                             align="center"
                             className="gap-x-2"
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -1233,7 +1248,7 @@ const Settings = () => {
                             align="center"
                             className="gap-x-2"
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -1269,7 +1284,7 @@ const Settings = () => {
                                   align="center"
                                   className="gap-x-2"
                                   css={{
-                                    backgroundColor: '$background',
+                                    backgroundColor: '$backgroundContrast',
                                     borderRadius: '$xs',
                                     padding: '$sm',
                                   }}
@@ -1293,7 +1308,7 @@ const Settings = () => {
                           title={t('gestures')}
                           subtitle={t('gestures-subtitle')}
                           css={{
-                            background: '$backgroundAlpha !important',
+                            background: '$backgroundContrastAlpha !important',
                             borderRadius: '$xs !important',
                           }}
                         >
@@ -1303,7 +1318,7 @@ const Settings = () => {
                             align="center"
                             className="gap-x-2"
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -1324,7 +1339,7 @@ const Settings = () => {
                             align="center"
                             className="gap-x-2"
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -1345,7 +1360,7 @@ const Settings = () => {
                           title={t('keyboard')}
                           subtitle={t('keyboard-subtitle')}
                           css={{
-                            background: '$backgroundAlpha !important',
+                            background: '$backgroundContrastAlpha !important',
                             borderRadius: '$xs !important',
                           }}
                         >
@@ -1355,7 +1370,7 @@ const Settings = () => {
                             align="center"
                             className="gap-x-2"
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -1370,7 +1385,7 @@ const Settings = () => {
                             align="center"
                             className="gap-x-2"
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -1385,7 +1400,7 @@ const Settings = () => {
                             align="center"
                             className="gap-x-2"
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -1400,7 +1415,7 @@ const Settings = () => {
                             align="center"
                             className="gap-x-2"
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -1415,7 +1430,7 @@ const Settings = () => {
                             align="center"
                             className="gap-x-2"
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -1434,7 +1449,7 @@ const Settings = () => {
                             align="center"
                             className="gap-x-2"
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -1453,7 +1468,7 @@ const Settings = () => {
                             align="center"
                             className="gap-x-2"
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -1468,7 +1483,7 @@ const Settings = () => {
                             align="center"
                             className="gap-x-2"
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -1487,7 +1502,7 @@ const Settings = () => {
                             align="center"
                             className="gap-x-2"
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -1502,7 +1517,7 @@ const Settings = () => {
                             align="center"
                             className="gap-x-2"
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -1517,7 +1532,7 @@ const Settings = () => {
                             align="center"
                             className="gap-x-2"
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -1532,7 +1547,7 @@ const Settings = () => {
                             align="center"
                             className="gap-x-2"
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -1547,7 +1562,7 @@ const Settings = () => {
                             align="center"
                             className="gap-x-2"
                             css={{
-                              backgroundColor: '$background',
+                              backgroundColor: '$backgroundContrast',
                               borderRadius: '$xs',
                               padding: '$sm',
                             }}
@@ -1577,7 +1592,12 @@ const Settings = () => {
                       display="flex"
                       justify="flex-start"
                       direction="column"
-                      css={{ padding: 0 }}
+                      css={{
+                        boxShadow: '$md',
+                        borderRadius: '$xs',
+                        backgroundColor: '$backgroundContrastAlpha',
+                        padding: 20,
+                      }}
                     >
                       <Flex direction="column" justify="center" align="center">
                         <NextImage
