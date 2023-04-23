@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/indent */
 import { useEffect, useState } from 'react';
 import { Avatar, Card, Tooltip } from '@nextui-org/react';
-import { useMeasure, useMediaQuery } from '@react-hookz/web';
+import { useMeasure } from '@react-hookz/web';
 import { useFetcher } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
@@ -80,11 +79,6 @@ const CardItem = (props: ICardItemProps) => {
     typeof title === 'string'
       ? title
       : title?.userPreferred || title?.english || title?.romaji || title?.native;
-  const isSm = useMediaQuery('(min-width: 650px)', { initializeWithValue: false });
-  const isMd = useMediaQuery('(min-width: 768px)', { initializeWithValue: false });
-  const isLg = useMediaQuery('(min-width: 1024px)', { initializeWithValue: false });
-  const isXl = useMediaQuery('(min-width: 1280px)', { initializeWithValue: false });
-  const cardMaxWidth = isXl ? '264px' : isLg ? '244px' : isMd ? '200px' : isSm ? '180px' : '164px';
 
   useEffect(() => {
     if (fetcher.data && fetcher.data.videos) {
@@ -172,7 +166,6 @@ const CardItem = (props: ICardItemProps) => {
       isHoverable
       isPressable
       css={{
-        width: mediaType === 'people' ? '164px' : cardMaxWidth,
         minHeight: `${mediaType === 'people' ? '324px' : '318px'} !important`,
         borderWidth: 0,
         filter: 'unset',
@@ -184,6 +177,11 @@ const CardItem = (props: ICardItemProps) => {
         opacity: isTooltipVisible ? 0 : 1,
         transition: 'all 0.3s ease',
       }}
+      className={
+        mediaType === 'people'
+          ? '!w-[164px]'
+          : '!w-[164px] sm:!w-[180px] md:!w-[200px] lg:!w-[244px] xl:!w-[264px]'
+      }
       role="figure"
       // ref={cardRef}
     >
