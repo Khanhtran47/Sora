@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/indent */
-
 import { Badge } from '@nextui-org/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { NavLink, useLoaderData, useNavigate, useParams, type RouteMatch } from '@remix-run/react';
+import { NavLink, useLoaderData, useNavigate, type RouteMatch } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 import i18next from '~/i18n/i18next.server';
 
@@ -79,11 +77,7 @@ const SearchRoute = () => {
   const { searchResults } = useLoaderData<typeof loader>() || {};
   const rootData = useTypedRouteLoaderData('root');
   const navigate = useNavigate();
-  const { movieKeyword } = useParams();
   const { t } = useTranslation();
-
-  const paginationChangeHandler = (page: number) =>
-    navigate(`/search/movie/${movieKeyword}?page=${page}`);
 
   const onSubmit = (value: string) => {
     navigate(`/search/movie/${value}`);
@@ -93,22 +87,21 @@ const SearchRoute = () => {
     <div className="flex w-full flex-col items-center justify-center px-3 sm:px-0">
       <SearchForm
         onSubmit={onSubmit}
-        textOnButton={t('search.action')}
         textHelper={t('search.helper.movie')}
+        textOnButton={t('search.action')}
         textPlaceHolder={t('search.placeHolder.movie')}
       />
       {searchResults && searchResults.items && searchResults.items.length > 0 && (
         <MediaList
-          listType="grid"
-          showListTypeChangeButton
-          items={searchResults?.items}
-          listName={t('search.searchResults')}
+          currentPage={searchResults?.page}
           genresMovie={rootData?.genresMovie}
           genresTv={rootData?.genresTv}
-          showPagination
+          items={searchResults?.items}
+          itemsType="movie"
+          listName={t('search.searchResults')}
+          listType="grid"
+          showListTypeChangeButton
           totalPages={searchResults?.totalPages}
-          currentPage={searchResults?.page}
-          onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
         />
       )}
     </div>

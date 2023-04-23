@@ -206,38 +206,41 @@ const TvIndexPage = () => {
       >
         {airingToday?.items && airingToday.items.length > 0 && (
           <MediaList
-            listType="slider-card"
-            items={airingToday.items}
-            listName="Airing today Tv"
-            showMoreList
-            onClickViewMore={() => navigate('/tv-shows/airing-today')}
-            navigationButtons
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
+            items={airingToday.items}
+            itemsType="tv"
+            listName="Airing today Tv"
+            listType="slider-card"
+            navigationButtons
+            onClickViewMore={() => navigate('/tv-shows/airing-today')}
+            showMoreList
           />
         )}
         {onTheAir?.items && onTheAir.items.length > 0 && (
           <MediaList
-            listType="slider-card"
-            items={onTheAir.items}
-            listName="On the air Tv"
-            showMoreList
-            onClickViewMore={() => navigate('/tv-shows/on-the-air')}
-            navigationButtons
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
+            items={onTheAir.items}
+            itemsType="tv"
+            listName="On the air Tv"
+            listType="slider-card"
+            navigationButtons
+            onClickViewMore={() => navigate('/tv-shows/on-the-air')}
+            showMoreList
           />
         )}
         {topRated?.items && topRated.items.length > 0 && (
           <MediaList
-            listType="slider-card"
-            items={topRated.items}
-            listName="Top Rated Tv"
-            showMoreList
-            onClickViewMore={() => navigate('/tv-shows/top-rated')}
-            navigationButtons
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
+            items={topRated.items}
+            itemsType="tv"
+            listName="Top Rated Tv"
+            listType="slider-card"
+            navigationButtons
+            onClickViewMore={() => navigate('/tv-shows/top-rated')}
+            showMoreList
           />
         )}
         {listItems &&
@@ -246,18 +249,19 @@ const TvIndexPage = () => {
             if (items && items.length > 0)
               return (
                 <MediaList
-                  listType="slider-card"
+                  genresMovie={rootData?.genresMovie}
+                  genresTv={rootData?.genresTv}
                   items={items}
+                  itemsType="tv"
                   listName={Object.values(listGenresTv[index])[0]}
-                  showMoreList
+                  listType="slider-card"
+                  navigationButtons
                   onClickViewMore={() =>
                     navigate(
                       `/discover/tv-shows?with_genres=${Object.keys(listGenresTv[index])[0]}`,
                     )
                   }
-                  navigationButtons
-                  genresMovie={rootData?.genresMovie}
-                  genresTv={rootData?.genresTv}
+                  showMoreList
                 />
               );
             return null;

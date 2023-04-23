@@ -162,38 +162,41 @@ const MoviesIndexPage = () => {
       >
         {topRated?.items && topRated?.items?.length > 0 ? (
           <MediaList
-            listType="slider-card"
-            items={topRated.items}
-            listName="Top Rated Movies"
-            showMoreList
-            onClickViewMore={() => navigate('/movies/top-rated')}
-            navigationButtons
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
+            items={topRated.items}
+            itemsType="movie"
+            listName="Top Rated Movies"
+            listType="slider-card"
+            navigationButtons
+            onClickViewMore={() => navigate('/movies/top-rated')}
+            showMoreList
           />
         ) : null}
         {nowPlaying?.items && nowPlaying.items?.length > 0 ? (
           <MediaList
-            listType="slider-card"
-            items={nowPlaying.items}
-            listName="Now Playing Movies"
-            showMoreList
-            onClickViewMore={() => navigate('/movies/now-playing')}
-            navigationButtons
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
+            items={nowPlaying.items}
+            itemsType="movie"
+            listName="Now Playing Movies"
+            listType="slider-card"
+            navigationButtons
+            onClickViewMore={() => navigate('/movies/now-playing')}
+            showMoreList
           />
         ) : null}
         {upcoming?.items && upcoming.items?.length > 0 ? (
           <MediaList
-            listType="slider-card"
-            items={upcoming.items}
-            listName="Upcoming Movies"
-            showMoreList
-            onClickViewMore={() => navigate('/movies/upcoming')}
-            navigationButtons
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
+            items={upcoming.items}
+            itemsType="movie"
+            listName="Upcoming Movies"
+            listType="slider-card"
+            navigationButtons
+            onClickViewMore={() => navigate('/movies/upcoming')}
+            showMoreList
           />
         ) : null}
         {listItems &&
@@ -202,19 +205,20 @@ const MoviesIndexPage = () => {
             if (items && items.length > 0)
               return (
                 <MediaList
-                  key={index}
-                  listType="slider-card"
+                  genresMovie={rootData?.genresMovie}
+                  genresTv={rootData?.genresTv}
                   items={items}
+                  itemsType="movie"
+                  key={index}
                   listName={Object.values(listGenresMovie[index])[0]}
-                  showMoreList
+                  listType="slider-card"
+                  navigationButtons
                   onClickViewMore={() =>
                     navigate(
                       `/discover/movies?with_genres=${Object.keys(listGenresMovie[index])[0]}`,
                     )
                   }
-                  navigationButtons
-                  genresMovie={rootData?.genresMovie}
-                  genresTv={rootData?.genresTv}
+                  showMoreList
                 />
               );
             return null;

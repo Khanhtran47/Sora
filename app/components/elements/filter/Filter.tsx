@@ -22,7 +22,10 @@ import Slider from '~/components/elements/slider/Slider';
 import { H6 } from '~/components/styles/Text.styles';
 
 interface IFilterProps {
-  genres?: { [id: string]: string }; // genres for movies and tv series
+  /**
+   * genres for movies and tv series
+   */
+  genres?: { [id: string]: string };
   mediaType?: 'movie' | 'tv' | 'anime';
   languages?: ILanguage[];
 }

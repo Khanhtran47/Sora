@@ -75,9 +75,7 @@ const SearchRoute = () => {
           itemsType="anime"
           listName="Trending Anime"
           listType="grid"
-          loadingType="scroll"
           routeName="/anime/trending"
-          virtual
         />
       )}
     </div>

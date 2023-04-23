@@ -2,7 +2,7 @@
 
 import { Badge } from '@nextui-org/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { NavLink, useLoaderData, useLocation, useNavigate } from '@remix-run/react';
+import { NavLink, useLoaderData, useLocation } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import i18next from '~/i18n/i18next.server';
@@ -75,11 +75,8 @@ export const handle = {
 const ListMovies = () => {
   const { movies } = useLoaderData<typeof loader>();
   const rootData = useTypedRouteLoaderData('root');
-  const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
-
-  const paginationChangeHandler = (page: number) => navigate(`/movies/top-rated?page=${page}`);
 
   return (
     <motion.div
@@ -92,16 +89,15 @@ const ListMovies = () => {
     >
       {movies && movies.items && movies.items.length > 0 && (
         <MediaList
-          listType="grid"
-          showListTypeChangeButton
-          items={movies.items}
-          listName={t('top-rated-movies')}
+          currentPage={movies.page}
           genresMovie={rootData?.genresMovie}
           genresTv={rootData?.genresTv}
-          showPagination
+          items={movies.items}
+          itemsType="movie"
+          listName={t('top-rated-movies')}
+          listType="grid"
+          showListTypeChangeButton
           totalPages={movies.totalPages}
-          currentPage={movies.page}
-          onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
         />
       )}
     </motion.div>

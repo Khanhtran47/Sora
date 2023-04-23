@@ -73,13 +73,7 @@ const TvCastPage = () => {
     <div className="mt-3 flex w-full max-w-[1920px] flex-col gap-y-4 px-3 sm:px-3.5 xl:px-4 2xl:px-5">
       <div ref={ref} />
       {currentData && currentData.length > 0 ? (
-        <MediaList
-          key={`cast-page-${currentPage}`}
-          listType="grid"
-          items={currentData}
-          virtual
-          itemsType="people"
-        />
+        <MediaList items={currentData} itemsType="people" listType="grid" />
       ) : null}
       {maxPage > 1 ? (
         <div className="flex flex-row justify-center">
@@ -90,9 +84,9 @@ const TvCastPage = () => {
             onChange={(page) => {
               gotoPage(page);
               ref.current?.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start',
-                inline: 'center',
+                behavior: 'instant',
+                block: 'center',
+                inline: 'nearest',
               });
             }}
             css={{ marginTop: '2rem' }}

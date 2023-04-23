@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
 import { useRef } from 'react';
-import { Badge, Pagination, Row, Spacer } from '@nextui-org/react';
+import { Badge, Pagination } from '@nextui-org/react';
 import { useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { NavLink, useLoaderData, type RouteMatch } from '@remix-run/react';
@@ -13,7 +13,6 @@ import TMDB from '~/utils/media';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
 import MediaList from '~/components/media/MediaList';
-import Flex from '~/components/styles/Flex.styles';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const [, locale] = await Promise.all([
@@ -78,34 +77,13 @@ const TvSeasonCrewPage = () => {
   const { gotoPage, currentPage, maxPage, currentData } = useSplitArrayIntoPage(crew || [], 20);
 
   return (
-    <>
-      <Row
-        fluid
-        justify="center"
-        align="center"
-        css={{
-          display: 'flex',
-          flexDirection: 'column',
-          '@xsMax': {
-            paddingLeft: '$sm',
-            paddingRight: '$sm',
-          },
-        }}
-      >
-        <div ref={ref} />
-        {currentData && currentData.length > 0 && (
-          <MediaList
-            key={`crew-page-${currentPage}`}
-            listType="grid"
-            items={currentData}
-            virtual
-            itemsType="people"
-          />
-        )}
-      </Row>
-      <Spacer y={1} />
-      {maxPage > 1 && (
-        <Flex direction="row" justify="center">
+    <div className="mt-3 flex w-full max-w-[1920px] flex-col gap-y-4 px-3 sm:px-3.5 xl:px-4 2xl:px-5">
+      <div ref={ref} />
+      {currentData && currentData.length > 0 && (
+        <MediaList items={currentData} itemsType="people" listType="grid" />
+      )}
+      {maxPage > 1 ? (
+        <div className="flex flex-row justify-center">
           <Pagination
             total={maxPage}
             initialPage={currentPage}
@@ -121,9 +99,9 @@ const TvSeasonCrewPage = () => {
             css={{ marginTop: '2rem' }}
             {...(isSm && { size: 'xs' })}
           />
-        </Flex>
-      )}
-    </>
+        </div>
+      ) : null}
+    </div>
   );
 };
 

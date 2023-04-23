@@ -1,28 +1,31 @@
 /* eslint-disable @typescript-eslint/indent */
-import { useEffect, useRef, useState } from 'react';
-import { Button } from '@nextui-org/react';
-import { useMeasure } from '@react-hookz/web';
-import { Link, useFetcher } from '@remix-run/react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Button, Pagination } from '@nextui-org/react';
+import { useMeasure, useMediaQuery } from '@react-hookz/web';
+import { Link, useFetcher, useLocation, useSearchParams } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import NProgress from 'nprogress';
 
 import type { IMedia } from '~/types/media';
 import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
+import { useSoraSettings } from '~/hooks/useLocalStorage';
+import Arrow from '~/assets/icons/ArrowIcon';
 
 import MediaItem from '../item';
 
 interface IMediaListCardProps {
   coverItem?: { id: number; name: string; backdropPath: string }[];
+  currentPage?: number;
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
   hasNextPage?: boolean;
   isCoverCard?: boolean;
   items?: IMedia[];
-  itemsType?: 'movie' | 'tv' | 'anime' | 'people' | 'episode';
-  loadingType?: 'page' | 'scroll';
+  itemsType?: 'movie' | 'tv' | 'anime' | 'people' | 'episode' | 'movie-tv';
+  listType?: 'table' | 'slider-card' | 'slider-banner' | 'grid';
   provider?: string;
-  routeName?: string;
-  virtual?: boolean;
+  totalPages?: number;
+  scrollToTopListAfterChangePage?: boolean;
 }
 
 const MotionLink = motion(Link);
@@ -30,25 +33,39 @@ const MotionLink = motion(Link);
 const MediaListGrid = (props: IMediaListCardProps) => {
   const {
     coverItem,
+    currentPage,
     genresMovie,
     genresTv,
     hasNextPage,
     isCoverCard,
     items,
     itemsType,
-    loadingType,
+    listType,
     provider,
-    routeName,
-    virtual,
+    totalPages,
+    scrollToTopListAfterChangePage = false,
   } = props;
   const fetcher = useFetcher();
+  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams({});
   const { scrollHeight, scrollPosition } = useLayoutScrollPosition((state) => state);
   const [listItems, setListItems] = useState<IMedia[]>(items || []);
   const [shouldFetch, setShouldFetch] = useState(false);
   const [showLoadMore, setShowLoadMore] = useState(true);
   const [page, setPage] = useState(2);
+  const topRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const [size, parentRef] = useMeasure<HTMLDivElement>();
+  const { listLoadingType } = useSoraSettings();
+  const is2Xs = useMediaQuery('(max-width: 320px)', { initializeWithValue: false });
+  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
+  const currentSearchParams = useMemo<{ [key: string]: string }>(() => {
+    const params: { [key: string]: string } = {};
+    searchParams.forEach((value, key) => {
+      params[key] = value;
+    });
+    return params;
+  }, [searchParams]);
 
   useEffect(() => {
     setListItems(items || []);
@@ -63,9 +80,9 @@ const MediaListGrid = (props: IMediaListCardProps) => {
     if (scrollHeight + scrollPosition.y + 100 < size?.height) return;
 
     fetcher.load(
-      `${routeName}${routeName?.includes('?') ? '&' : '?'}page=${page}${
-        provider ? `&provider=${provider}` : ''
-      }`,
+      `${location.pathname}${location.search || ''}${
+        location.search?.includes('?') ? '&' : '?'
+      }page=${page}${provider ? `&provider=${provider}` : ''}`,
     );
     setShouldFetch(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -111,6 +128,31 @@ const MediaListGrid = (props: IMediaListCardProps) => {
     }
   }, [fetcher.type]);
 
+  const handlePageChange = ({
+    direction,
+    page,
+  }: {
+    direction?: 'next' | 'prev';
+    page?: number;
+  }) => {
+    if (direction) {
+      if (direction === 'prev' && currentPage && currentPage > 1) {
+        setSearchParams({ ...currentSearchParams, page: (currentPage - 1).toString() });
+      } else if (direction === 'next' && currentPage && hasNextPage) {
+        setSearchParams({ ...currentSearchParams, page: (currentPage + 1).toString() });
+      }
+    }
+    if (page) {
+      setSearchParams({
+        ...currentSearchParams,
+        page: page.toString(),
+      });
+    }
+    if (scrollToTopListAfterChangePage) {
+      topRef.current?.scrollIntoView({ behavior: 'instant', block: 'center', inline: 'nearest' });
+    }
+  };
+
   if (isCoverCard) {
     return (
       <div className="grid w-full grid-cols-1 items-stretch justify-items-center gap-5 xl:grid-cols-2 4xl:grid-cols-3">
@@ -140,6 +182,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
   }
   return (
     <>
+      <div ref={topRef} />
       <div
         className="grid w-full max-w-screen-4xl grid-cols-1 items-stretch justify-items-center gap-5 2xs:grid-cols-2 md:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6"
         ref={parentRef}
@@ -154,9 +197,16 @@ const MediaListGrid = (props: IMediaListCardProps) => {
                 ? `/anime/${item.id}/`
                 : itemsType === 'people'
                 ? `/people/${item.id}/`
-                : item?.mediaType === 'movie' || itemsType === 'movie'
+                : itemsType === 'movie'
                 ? `/movies/${item.id}/`
-                : `/tv-shows/${item.id}/`;
+                : itemsType === 'tv'
+                ? `/tv-shows/${item.id}/`
+                : itemsType === 'movie-tv' && item?.mediaType === 'movie'
+                ? `/movies/${item.id}/`
+                : itemsType === 'movie-tv' && item?.mediaType === 'tv'
+                ? `/tv-shows/${item.id}/`
+                : '/';
+
             return (
               <MotionLink
                 key={`${item.id}-${index}-card-grid`}
@@ -190,14 +240,13 @@ const MediaListGrid = (props: IMediaListCardProps) => {
                   title={item?.title}
                   trailer={item?.trailer}
                   type={itemsType === 'episode' ? itemsType : 'card'}
-                  virtual={virtual}
                   voteAverage={item?.voteAverage}
                 />
               </MotionLink>
             );
           })}
       </div>
-      {!shouldFetch && hasNextPage && showLoadMore && loadingType === 'scroll' ? (
+      {!shouldFetch && hasNextPage && showLoadMore && listLoadingType.value === 'scroll' ? (
         <Button
           type="button"
           // shadow
@@ -212,6 +261,33 @@ const MediaListGrid = (props: IMediaListCardProps) => {
         >
           Load More
         </Button>
+      ) : null}
+      {listType === 'grid' && listLoadingType.value === 'pagination' ? (
+        itemsType === 'anime' || itemsType === 'episode' ? (
+          <div className="mt-[50px] flex flex-row gap-x-3">
+            <Button
+              auto
+              icon={<Arrow direction="left" />}
+              onPress={() => handlePageChange({ direction: 'prev' })}
+              disabled={currentPage === 1}
+            />
+            <Button
+              auto
+              icon={<Arrow direction="right" />}
+              onPress={() => handlePageChange({ direction: 'next' })}
+              disabled={!hasNextPage}
+            />
+          </div>
+        ) : totalPages && totalPages > 1 ? (
+          <Pagination
+            total={totalPages}
+            initialPage={currentPage}
+            // shadow
+            onChange={(page) => handlePageChange({ page })}
+            css={{ marginTop: '50px' }}
+            {...(isSm && !is2Xs ? { size: 'sm' } : isSm && is2Xs ? { size: 'xs' } : {})}
+          />
+        ) : null
       ) : null}
     </>
   );

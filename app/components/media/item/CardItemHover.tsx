@@ -26,7 +26,6 @@ interface ICardItemHoverProps {
   genresTv?: { [id: string]: string };
   mediaType: 'movie' | 'tv' | 'anime' | 'people';
   overview: string;
-  posterPath: string;
   releaseDate: string | number;
   title: string;
   trailer?: Trailer | ITrailer;
@@ -42,7 +41,6 @@ const CardItemHover = (props: ICardItemHoverProps) => {
     genresTv,
     mediaType,
     overview,
-    posterPath,
     releaseDate,
     title,
     trailer,
@@ -50,7 +48,7 @@ const CardItemHover = (props: ICardItemHoverProps) => {
     genresAnime,
   } = props;
   const { data } = useColor(
-    `https://corsproxy.io/?${encodeURIComponent(posterPath || '')}`,
+    `https://corsproxy.io/?${encodeURIComponent(backdropPath || '')}`,
     'hex',
     {
       crossOrigin: 'anonymous',

@@ -126,7 +126,6 @@ const CollectionDetail = () => {
           listName={detail?.name}
           genresMovie={rootData?.genresMovie}
           genresTv={rootData?.genresTv}
-          virtual
         />
       )}
       <Spacer y={1} />
@@ -139,9 +138,9 @@ const CollectionDetail = () => {
             onChange={(page) => {
               gotoPage(page);
               ref.current?.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start',
-                inline: 'center',
+                behavior: 'instant',
+                block: 'center',
+                inline: 'nearest',
               });
             }}
             css={{ marginTop: '2rem' }}

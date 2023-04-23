@@ -81,15 +81,13 @@ const RecentEpisodes = () => {
     >
       {items && items.results && items.results.length > 0 && (
         <MediaList
+          currentPage={items?.currentPage || 1}
           hasNextPage={items.hasNextPage || false}
           items={items.results as IMedia[]}
           itemsType="episode"
           listName="Recent Episodes"
           listType="grid"
-          loadingType="scroll"
           provider={provider}
-          routeName="/anime/recent-episodes"
-          virtual
         />
       )}
     </motion.div>

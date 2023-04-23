@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/no-throw-literal */
-import { useRef } from 'react';
 import { Badge } from '@nextui-org/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { NavLink, useLoaderData, useNavigate, useParams, type RouteMatch } from '@remix-run/react';
+import { NavLink, useLoaderData, type RouteMatch } from '@remix-run/react';
 import i18next from '~/i18n/i18next.server';
 
 import { authenticate } from '~/services/supabase';
@@ -71,36 +69,23 @@ export const handle = {
 };
 
 const TvSimilarPage = () => {
-  const { tvId } = useParams();
   const { similar } = useLoaderData<typeof loader>();
   const rootData = useTypedRouteLoaderData('root');
-  const ref = useRef<HTMLDivElement>(null);
-  const navigate = useNavigate();
-  const paginationChangeHandler = (page: number) => {
-    navigate(`/tv-shows/${tvId}/similar?page=${page}`);
-    ref.current?.scrollIntoView({
-      behavior: 'instant',
-      block: 'center',
-      inline: 'nearest',
-    });
-  };
 
   return (
     <div className="mt-3 flex w-full max-w-[1920px] flex-col gap-y-4 px-3 sm:px-3.5 xl:px-4 2xl:px-5">
-      <div ref={ref} />
       {similar && similar.items && similar.items.length > 0 ? (
         <MediaList
-          listType="grid"
-          showListTypeChangeButton
-          itemsType="tv"
-          items={similar.items}
-          listName="Similar Tv Shows"
+          currentPage={similar?.page}
           genresMovie={rootData?.genresMovie}
           genresTv={rootData?.genresTv}
-          showPagination
+          items={similar.items}
+          itemsType="tv"
+          listName="Similar Tv Shows"
+          listType="grid"
+          scrollToTopListAfterChangePage
+          showListTypeChangeButton
           totalPages={similar?.totalPages}
-          currentPage={similar?.page}
-          onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
         />
       ) : null}
     </div>

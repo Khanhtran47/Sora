@@ -60,8 +60,6 @@ const SearchRoute = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const paginationChangeHandler = (page: number) => navigate(`/search/people?page=${page}`);
-
   const onSubmit = (value: string) => {
     navigate(`/search/people/${value}`);
   };
@@ -70,20 +68,18 @@ const SearchRoute = () => {
     <div className="flex w-full flex-col items-center justify-center px-3 sm:px-0">
       <SearchForm
         onSubmit={onSubmit}
-        textOnButton={t('search.action')}
         textHelper={t('search.helper.people')}
+        textOnButton={t('search.action')}
         textPlaceHolder={t('search.placeHolder.people')}
       />
       {people && people.items && people.items.length > 0 && (
         <MediaList
           currentPage={people.page}
           items={people.items}
+          itemsType="people"
           listName={t('popular-people')}
           listType="grid"
-          onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
-          showPagination
           totalPages={people.totalPages}
-          itemsType="people"
         />
       )}
     </div>

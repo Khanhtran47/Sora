@@ -99,9 +99,7 @@ const SearchRoute = () => {
           itemsType="anime"
           listName={t('search.searchResults')}
           listType="grid"
-          loadingType="scroll"
           routeName={location.pathname}
-          virtual
         />
       )}
     </div>

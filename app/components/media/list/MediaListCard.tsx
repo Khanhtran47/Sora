@@ -14,11 +14,10 @@ interface IMediaListCardProps {
   genresTv?: { [id: string]: string };
   isCoverCard?: boolean;
   items?: IMedia[];
-  itemsType?: 'movie' | 'tv' | 'anime' | 'people' | 'episode';
+  itemsType?: 'movie' | 'tv' | 'anime' | 'people' | 'episode' | 'movie-tv';
   navigation?: { nextEl?: string | HTMLElement | null; prevEl?: string | HTMLElement | null };
   provider?: string;
   setSlideProgress?: React.Dispatch<React.SetStateAction<number>>;
-  virtual?: boolean;
 }
 
 const swiperSlideStyles = tv({
@@ -46,7 +45,6 @@ const MediaListCard = (props: IMediaListCardProps) => {
     navigation,
     provider,
     setSlideProgress,
-    virtual,
   } = props;
 
   if (isCoverCard) {
@@ -85,7 +83,6 @@ const MediaListCard = (props: IMediaListCardProps) => {
                         key={item.id}
                         title={item?.name}
                         type="card"
-                        virtual={virtual}
                       />
                     </Link>
                   </SwiperSlide>
@@ -124,9 +121,16 @@ const MediaListCard = (props: IMediaListCardProps) => {
                   ? `/anime/${item.id}/`
                   : itemsType === 'people'
                   ? `/people/${item.id}/`
-                  : item?.mediaType === 'movie' || itemsType === 'movie'
+                  : itemsType === 'movie'
                   ? `/movies/${item.id}/`
-                  : `/tv-shows/${item.id}/`;
+                  : itemsType === 'tv'
+                  ? `/tv-shows/${item.id}/`
+                  : itemsType === 'movie-tv' && item?.mediaType === 'movie'
+                  ? `/movies/${item.id}/`
+                  : itemsType === 'movie-tv' && item?.mediaType === 'tv'
+                  ? `/tv-shows/${item.id}/`
+                  : '/';
+
               return (
                 <SwiperSlide
                   key={`${item.id}-${index}-card`}
@@ -156,7 +160,6 @@ const MediaListCard = (props: IMediaListCardProps) => {
                       title={item?.title}
                       trailer={item?.trailer}
                       type={itemsType === 'episode' ? itemsType : 'card'}
-                      virtual={virtual}
                       voteAverage={item?.voteAverage}
                     />
                   </Link>

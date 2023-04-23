@@ -2,7 +2,7 @@
 
 import { Badge } from '@nextui-org/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { NavLink, useLoaderData, useLocation, useNavigate } from '@remix-run/react';
+import { NavLink, useLoaderData, useLocation } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import i18next from '~/i18n/i18next.server';
@@ -76,18 +76,6 @@ export const loader = async ({ request }: LoaderArgs) => {
         withStatus,
         withType,
       ),
-      withGenres,
-      withOriginalLanguage,
-      withStatus,
-      withType,
-      sortBy,
-      voteAverageGte,
-      voteAverageLte,
-      firstAirDateGte,
-      firstAirDateLte,
-      withRuntimeGte,
-      withRuntimeLte,
-      voteCountGte: Number(voteCountGte),
     },
     {
       headers: {
@@ -123,44 +111,10 @@ export const handle = {
 };
 
 const DiscoverTvShows = () => {
-  const {
-    shows,
-    withGenres,
-    withOriginalLanguage,
-    withStatus,
-    withType,
-    sortBy,
-    firstAirDateGte,
-    firstAirDateLte,
-    voteAverageGte,
-    voteAverageLte,
-    withRuntimeGte,
-    withRuntimeLte,
-    voteCountGte,
-  } = useLoaderData<typeof loader>();
+  const { shows } = useLoaderData<typeof loader>();
   const rootData = useTypedRouteLoaderData('root');
-  const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
-
-  const paginationChangeHandler = (page: number) => {
-    let url = `?page=${page}`;
-
-    if (withGenres) url += `&with_genres=${withGenres}`;
-    if (withOriginalLanguage) url += `&with_original_language=${withOriginalLanguage}`;
-    if (withStatus) url += `&with_status=${withStatus}`;
-    if (withType) url += `&with_type=${withType}`;
-    if (firstAirDateGte) url += `&date.gte=${firstAirDateGte}`;
-    if (firstAirDateLte) url += `&date.lte=${firstAirDateLte}`;
-    if (voteAverageGte) url += `&vote_average.gte=${voteAverageGte}`;
-    if (voteAverageLte) url += `&vote_average.lte=${voteAverageLte}`;
-    if (withRuntimeGte) url += `&with_runtime.gte=${withRuntimeGte}`;
-    if (withRuntimeLte) url += `&with_runtime.lte=${withRuntimeLte}`;
-    if (voteCountGte) url += `&vote_count.gte=${voteCountGte}`;
-    if (sortBy) url += `&sort_by=${sortBy}`;
-
-    navigate(url);
-  };
   return (
     <motion.div
       key={location.key}
@@ -172,19 +126,17 @@ const DiscoverTvShows = () => {
     >
       {shows && shows.items && shows.items.length > 0 && (
         <MediaList
-          listType="grid"
-          showListTypeChangeButton
-          items={shows.items}
-          listName={t('discoverTv')}
-          showFilterButton
+          currentPage={shows.page}
           genresMovie={rootData?.genresMovie}
           genresTv={rootData?.genresTv}
-          mediaType="tv"
+          items={shows.items}
+          itemsType="tv"
           languages={rootData?.languages}
-          showPagination
+          listName={t('discoverTv')}
+          listType="grid"
+          showFilterButton
+          showListTypeChangeButton
           totalPages={shows.totalPages}
-          currentPage={shows.page}
-          onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
         />
       )}
     </motion.div>

@@ -34,10 +34,10 @@ function useSoraSettings() {
   const autoShowSubtitle = useLocalStorageValue('sora-settings_subtitle_auto-show', {
     defaultValue: false,
   });
-  const showFilter = useLocalStorageValue('sora-settings_layout_show-filter', {
-    defaultValue: false,
-    initializeWithValue: false,
-  });
+  // const showFilter = useLocalStorageValue('sora-settings_layout_show-filter', {
+  //   defaultValue: false,
+  //   initializeWithValue: false,
+  // });
   const isMutedTrailer = useLocalStorageValue('sora-settings_experiments_mute-trailer', {
     defaultValue: true,
     initializeWithValue: false,
@@ -114,6 +114,10 @@ function useSoraSettings() {
     defaultValue: 'cover',
     initializeWithValue: false,
   });
+  const listLoadingType = useLocalStorageValue('sora-settings_layout_list-loading-type', {
+    defaultValue: 'pagination',
+    initializeWithValue: false,
+  });
 
   return {
     currentSubtitleFontColor,
@@ -123,7 +127,7 @@ function useSoraSettings() {
     currentSubtitleWindowColor,
     currentSubtitleWindowOpacity,
     autoShowSubtitle,
-    showFilter,
+    // showFilter,
     isMutedTrailer,
     isPlayTrailer,
     isAutoSize,
@@ -147,6 +151,7 @@ function useSoraSettings() {
     sidebarBoxedMode,
     sidebarSheetMode,
     listViewType,
+    listLoadingType,
   };
 }
 

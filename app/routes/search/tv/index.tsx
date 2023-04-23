@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/indent */
-
 import { Badge } from '@nextui-org/react';
 import { json, type LoaderArgs } from '@remix-run/node';
 import { NavLink, useLoaderData, useNavigate } from '@remix-run/react';
@@ -64,8 +62,6 @@ const SearchRoute = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const paginationChangeHandler = (page: number) => navigate(`/search/tv?page=${page}`);
-
   const onSubmit = (value: string) => {
     navigate(`/search/tv/${value}`);
   };
@@ -74,22 +70,21 @@ const SearchRoute = () => {
     <div className="flex w-full flex-col items-center justify-center px-3 sm:px-0">
       <SearchForm
         onSubmit={onSubmit}
-        textOnButton={t('search.action')}
         textHelper={t('search.helper.tv')}
+        textOnButton={t('search.action')}
         textPlaceHolder={t('search.placeHolder.tv')}
       />
       {todayTrending && todayTrending.items && todayTrending?.items.length > 0 && (
         <MediaList
-          listType="grid"
-          showListTypeChangeButton
-          items={todayTrending && todayTrending.items}
-          listName={t('todayTrending')}
+          currentPage={todayTrending?.page}
           genresMovie={rootData?.genresMovie}
           genresTv={rootData?.genresTv}
-          showPagination
+          items={todayTrending && todayTrending.items}
+          itemsType="movie-tv"
+          listName={t('todayTrending')}
+          listType="grid"
+          showListTypeChangeButton
           totalPages={todayTrending?.totalPages}
-          currentPage={todayTrending?.page}
-          onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
         />
       )}
     </div>

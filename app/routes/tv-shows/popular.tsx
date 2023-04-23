@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/indent */
-
 import { Badge } from '@nextui-org/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { NavLink, useLoaderData, useLocation, useNavigate } from '@remix-run/react';
+import { NavLink, useLoaderData, useLocation } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import i18next from '~/i18n/i18next.server';
@@ -86,11 +84,8 @@ export const handle = {
 const ListTvShows = () => {
   const { shows } = useLoaderData<typeof loader>();
   const rootData = useTypedRouteLoaderData('root');
-  const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
-
-  const paginationChangeHandler = (page: number) => navigate(`/tv-shows/popular?page=${page}`);
 
   return (
     <motion.div
@@ -101,20 +96,19 @@ const ListTvShows = () => {
       transition={{ duration: 0.3 }}
       className="flex w-full flex-col items-center justify-center px-3 sm:px-0"
     >
-      {shows && shows.items && shows.items.length > 0 && (
+      {shows && shows.items && shows.items.length > 0 ? (
         <MediaList
-          listType="grid"
-          showListTypeChangeButton
-          items={shows.items}
-          listName={t('popular-tv-shows')}
+          currentPage={shows?.page}
           genresMovie={rootData?.genresMovie}
           genresTv={rootData?.genresTv}
-          showPagination
+          items={shows.items}
+          itemsType="tv"
+          listName={t('popular-tv-shows')}
+          listType="grid"
+          showListTypeChangeButton
           totalPages={shows?.totalPages}
-          currentPage={shows?.page}
-          onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
         />
-      )}
+      ) : null}
     </motion.div>
   );
 };

@@ -428,9 +428,9 @@ const AnimeOverview = () => {
         ) : null}
         {detail?.recommendations && detail?.recommendations.length > 0 ? (
           <MediaList
-            key={`anime-recommendations-${animeId}`}
             items={detail?.recommendations as IMedia[]}
             itemsType="anime"
+            key={`anime-recommendations-${animeId}`}
             listName="Recommendations"
             listType="slider-card"
             navigationButtons

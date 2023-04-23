@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/indent */
-import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { Avatar, Card, Tooltip } from '@nextui-org/react';
 import { useMeasure, useMediaQuery } from '@react-hookz/web';
 import { useFetcher } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
-import { useInView } from 'react-intersection-observer';
+// import { useInView } from 'react-intersection-observer';
 import Image, { MimeType } from 'remix-image';
 
 import type { IMedia, Title } from '~/types/media';
@@ -39,7 +39,6 @@ interface ICardItemProps {
   releaseDate: string | number;
   title: string | Title;
   trailer?: ITrailer;
-  virtual?: boolean;
   voteAverage: number;
 }
 
@@ -65,17 +64,16 @@ const CardItem = (props: ICardItemProps) => {
     releaseDate,
     title,
     trailer,
-    virtual,
     voteAverage,
   } = props;
-  const { ref, inView } = useInView({
-    rootMargin: '3000px 1000px',
-    triggerOnce: !virtual,
-  });
+  // const { cardRef, inView } = useInView({
+  //   rootMargin: '3000px 1000px',
+  //   triggerOnce: !virtual,
+  // });
   const fetcher = useFetcher();
   const setIsCardPlaying = useCardHoverStore((state) => state.setIsCardPlaying);
-  const [trailerCard, setTrailerCard] = React.useState<Trailer>({});
-  const [isTooltipVisible, setIsTooltipVisible] = React.useState(false);
+  const [trailerCard, setTrailerCard] = useState<Trailer>({});
+  const [isTooltipVisible, setIsTooltipVisible] = useState(false);
   const { isPlayTrailer } = useSoraSettings();
   const [size, imageRef] = useMeasure<HTMLDivElement>();
   const titleItem =
@@ -88,7 +86,7 @@ const CardItem = (props: ICardItemProps) => {
   const isXl = useMediaQuery('(min-width: 1280px)', { initializeWithValue: false });
   const cardMaxWidth = isXl ? '264px' : isLg ? '244px' : isMd ? '200px' : isSm ? '180px' : '164px';
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (fetcher.data && fetcher.data.videos) {
       const { results } = fetcher.data.videos;
       const officialTrailer = results.find((result: Trailer) => result.type === 'Trailer');
@@ -114,7 +112,7 @@ const CardItem = (props: ICardItemProps) => {
         }}
         className="!w-[280px] sm:!w-[480px]"
         role="figure"
-        ref={ref}
+        // ref={cardRef}
       >
         <Card.Body ref={imageRef} css={{ p: 0, width: '100%', aspectRatio: '16 / 9' }}>
           {size ? (
@@ -134,7 +132,7 @@ const CardItem = (props: ICardItemProps) => {
               loaderUrl="/api/image"
               placeholder="empty"
               loading="lazy"
-              decoding={inView ? 'async' : 'auto'}
+              // decoding={inView ? 'async' : 'auto'}
               options={{
                 contentType: MimeType.WEBP,
               }}
@@ -187,7 +185,7 @@ const CardItem = (props: ICardItemProps) => {
         transition: 'all 0.3s ease',
       }}
       role="figure"
-      ref={ref}
+      // ref={cardRef}
     >
       <Card.Body ref={imageRef} css={{ p: 0, width: '100%', aspectRatio: '2 / 3' }}>
         {size && !isTooltipVisible ? (
@@ -204,7 +202,7 @@ const CardItem = (props: ICardItemProps) => {
                 alt={titleItem}
                 title={titleItem}
                 loading="lazy"
-                decoding={inView ? 'async' : 'auto'}
+                // decoding={inView ? 'async' : 'auto'}
                 css={{
                   aspectRatio: '2 / 3',
                   transition: 'all 0.3s ease !important',
@@ -264,7 +262,6 @@ const CardItem = (props: ICardItemProps) => {
               genresTv={genresTv}
               mediaType={mediaType}
               overview={overview}
-              posterPath={posterPath}
               releaseDate={releaseDate}
               title={titleItem || ''}
               trailer={trailer || trailerCard}

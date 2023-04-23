@@ -26,7 +26,6 @@ interface IMediaItem {
   title?: string | Title; // value is title of media
   trailer?: ITrailer; // value is trailer of media
   type: 'banner' | 'card' | 'episode'; // value is type of media item
-  virtual?: boolean; // value is true if the media is virtual
   voteAverage?: number; // value is vote average of media
 }
 
@@ -53,7 +52,6 @@ const MediaItem = (props: IMediaItem) => {
     title,
     trailer,
     type,
-    virtual,
     voteAverage,
   } = props;
 
@@ -98,7 +96,6 @@ const MediaItem = (props: IMediaItem) => {
       releaseDate={releaseDate || ''}
       title={title || ''}
       trailer={trailer}
-      virtual={virtual}
       voteAverage={voteAverage || 0}
     />
   );
