@@ -9,12 +9,10 @@ import { tv } from 'tailwind-variants';
 import type { IMedia } from '~/types/media';
 import type { ILanguage } from '~/services/tmdb/tmdb.types';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
+import ListViewChangeButton from '~/components/elements/shared/ListViewChangeButton';
 import ChevronLeftIcon from '~/assets/icons/ChevronLeftIcon';
 import ChevronRightIcon from '~/assets/icons/ChevronRightIcon';
 import FilterIcon from '~/assets/icons/FilterIcon';
-import ViewGridCard from '~/assets/icons/ViewGridCardIcon';
-import ViewGridDetail from '~/assets/icons/ViewGridDetailIcon';
-import ViewGridTable from '~/assets/icons/ViewGridTableIcon';
 
 import Filter from '../elements/filter/Filter';
 import { H2 } from '../styles/Text.styles';
@@ -345,28 +343,7 @@ const MediaList = (props: IMediaListProps) => {
                   />
                 </Tooltip>
               ) : null}
-              {showListTypeChangeButton ? (
-                <Button.Group css={{ margin: 0 }}>
-                  <Button
-                    type="button"
-                    onPress={() => listViewType.set('card')}
-                    icon={<ViewGridCard width={40} height={40} />}
-                    {...(listViewType.value === 'card' ? {} : { ghost: true })}
-                  />
-                  <Button
-                    type="button"
-                    onPress={() => listViewType.set('detail')}
-                    icon={<ViewGridDetail width={40} height={40} />}
-                    {...(listViewType.value === 'detail' ? {} : { ghost: true })}
-                  />
-                  <Button
-                    type="button"
-                    onPress={() => listViewType.set('table')}
-                    icon={<ViewGridTable width={40} height={40} />}
-                    {...(listViewType.value === 'table' ? {} : { ghost: true })}
-                  />
-                </Button.Group>
-              ) : null}
+              {showListTypeChangeButton ? <ListViewChangeButton /> : null}
             </div>
           ) : null}
         </div>

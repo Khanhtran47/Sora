@@ -72,6 +72,7 @@ export const handle = {
     subtitle: match.params.tvKeyword,
     showImage: false,
   }),
+  showListViewChangeButton: true,
 };
 
 const SearchRoute = () => {

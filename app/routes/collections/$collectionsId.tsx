@@ -95,6 +95,7 @@ export const handle = {
     title: match.data?.detail?.name || 'Collection',
     showImage: false,
   }),
+  showListViewChangeButton: true,
 };
 
 const CollectionDetail = () => {

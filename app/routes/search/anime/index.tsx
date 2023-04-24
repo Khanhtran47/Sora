@@ -50,6 +50,7 @@ export const handle = {
     subtitle: 'Anime',
     showImage: false,
   }),
+  showListViewChangeButton: true,
 };
 
 const SearchRoute = () => {
@@ -70,6 +71,7 @@ const SearchRoute = () => {
       />
       {items && items.results && items.results.length > 0 && (
         <MediaList
+          currentPage={items?.currentPage || 1}
           hasNextPage={items.hasNextPage || false}
           items={items.results as IMedia[]}
           itemsType="anime"

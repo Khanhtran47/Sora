@@ -18,9 +18,8 @@ import { useHistoryStack } from '~/store/layout/useHistoryStack';
 import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
 import { useHeaderOptions } from '~/hooks/useHeader';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
-/* Components */
 import MultiLevelDropdown from '~/components/layouts/MultiLevelDropdown';
-/* Assets */
+import ListViewChangeButton from '~/components/elements/shared/ListViewChangeButton';
 // import MenuIcon from '~/assets/icons/MenuIcon';
 import ChevronLeft from '~/assets/icons/ChevronLeftIcon';
 import ChevronRight from '~/assets/icons/ChevronRightIcon';
@@ -80,12 +79,13 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   const { scrollY } = useLayoutScrollPosition((state) => state);
   const { startChangeScrollPosition } = useHeaderStyle((state) => state);
   const {
-    isShowTabLink,
-    hideTabLinkWithLocation,
-    customHeaderBackgroundColor,
     currentMiniTitle,
-    headerBackgroundColor,
+    customHeaderBackgroundColor,
     customHeaderChangeColorOnScroll,
+    headerBackgroundColor,
+    hideTabLinkWithLocation,
+    isShowListViewChangeButton,
+    isShowTabLink,
   } = useHeaderOptions();
   const { historyBack, historyForward } = useHistoryStack((state) => state);
   const opacity = useTransform(
@@ -176,6 +176,15 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
                 <span className="text-sm font-medium opacity-75">{currentMiniTitle.subtitle}</span>
               ) : null}
             </div>
+          </motion.div>
+        ) : null}
+        {isShowListViewChangeButton ? (
+          <motion.div
+            style={{ opacity, y }}
+            transition={{ duration: 0.3 }}
+            className="flex flex-row items-center justify-end gap-x-3"
+          >
+            {isShowListViewChangeButton ? <ListViewChangeButton /> : null}
           </motion.div>
         ) : null}
       </div>

@@ -63,6 +63,7 @@ export const handle = {
     subtitle: 'This Week',
     showImage: false,
   }),
+  showListViewChangeButton: true,
 };
 
 const TrendingWeek = () => {

@@ -68,6 +68,7 @@ export const handle = {
     subtitle: 'Now Playing',
     showImage: false,
   }),
+  showListViewChangeButton: true,
 };
 
 const ListNowPlayingMovies = () => {

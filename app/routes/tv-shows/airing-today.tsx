@@ -67,6 +67,7 @@ export const handle = {
     title: 'Airing today Tv',
     showImage: false,
   }),
+  showListViewChangeButton: true,
 };
 
 const ListAiringTodayTvShows = () => {

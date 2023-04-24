@@ -69,6 +69,7 @@ export const handle = {
     title: 'Top Rated Tv',
     showImage: false,
   }),
+  showListViewChangeButton: true,
 };
 
 const ListTvShows = () => {

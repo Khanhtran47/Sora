@@ -91,6 +91,7 @@ export const handle = {
     subtitle: 'Anime',
     showImage: false,
   }),
+  showListViewChangeButton: true,
 };
 
 const DiscoverAnime = () => {

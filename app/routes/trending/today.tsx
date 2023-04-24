@@ -63,6 +63,7 @@ export const handle = {
     subtitle: 'Today',
     showImage: false,
   }),
+  showListViewChangeButton: true,
 };
 
 const TrendingToday = () => {

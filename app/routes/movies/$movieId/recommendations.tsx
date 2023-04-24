@@ -64,6 +64,7 @@ export const handle = {
     showImage: parentMatch.data?.detail?.poster_path !== undefined,
     imageUrl: TMDB?.posterUrl(parentMatch.data?.detail?.poster_path || '', 'w92'),
   }),
+  showListViewChangeButton: true,
 };
 
 const MovieRecommendationsPage = () => {

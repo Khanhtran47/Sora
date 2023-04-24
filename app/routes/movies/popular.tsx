@@ -70,6 +70,7 @@ export const handle = {
     subtitle: 'Popular',
     showImage: false,
   }),
+  showListViewChangeButton: true,
 };
 
 const ListMovies = () => {

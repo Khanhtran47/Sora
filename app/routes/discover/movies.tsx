@@ -106,6 +106,7 @@ export const handle = {
     subtitle: 'Movies',
     showImage: false,
   }),
+  showListViewChangeButton: true,
 };
 
 const DiscoverMovies = () => {

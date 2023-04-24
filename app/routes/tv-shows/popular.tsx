@@ -79,6 +79,7 @@ export const handle = {
     title: 'Popular Tv',
     showImage: false,
   }),
+  showListViewChangeButton: true,
 };
 
 const ListTvShows = () => {

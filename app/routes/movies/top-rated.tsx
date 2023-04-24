@@ -70,6 +70,7 @@ export const handle = {
     subtitle: 'Top Rated',
     showImage: false,
   }),
+  showListViewChangeButton: true,
 };
 
 const ListMovies = () => {

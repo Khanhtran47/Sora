@@ -71,6 +71,7 @@ export const handle = {
     subtitle: match.params.movieKeyword,
     showImage: false,
   }),
+  showListViewChangeButton: true,
 };
 
 const SearchRoute = () => {

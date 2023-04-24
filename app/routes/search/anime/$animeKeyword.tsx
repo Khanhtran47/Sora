@@ -67,6 +67,7 @@ export const handle = {
     subtitle: match.params.animeKeyword,
     showImage: false,
   }),
+  showListViewChangeButton: true,
 };
 
 const SearchRoute = () => {
@@ -87,6 +88,7 @@ const SearchRoute = () => {
       />
       {searchResults && searchResults.results && searchResults.results.length > 0 && (
         <MediaList
+          currentPage={searchResults.currentPage || 1}
           hasNextPage={searchResults.hasNextPage || false}
           items={searchResults.results as IMedia[]}
           itemsType="anime"

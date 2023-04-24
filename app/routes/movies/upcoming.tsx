@@ -70,6 +70,7 @@ export const handle = {
     subtitle: 'Upcoming',
     showImage: false,
   }),
+  showListViewChangeButton: true,
 };
 
 const ListMovies = () => {

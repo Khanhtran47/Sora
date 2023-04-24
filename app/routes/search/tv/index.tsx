@@ -54,6 +54,7 @@ export const handle = {
     subtitle: 'Tv Shows',
     showImage: false,
   }),
+  showListViewChangeButton: true,
 };
 
 const SearchRoute = () => {

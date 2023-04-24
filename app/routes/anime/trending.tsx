@@ -61,6 +61,7 @@ export const handle = {
     subtitle: 'Trending',
     showImage: false,
   }),
+  showListViewChangeButton: true,
 };
 
 const TrendingAnime = () => {

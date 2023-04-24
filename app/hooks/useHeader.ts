@@ -60,14 +60,20 @@ function useHeaderOptions() {
     return 'var(--nextui-colors-backgroundContrastAlpha)';
   }, [customHeaderBackgroundColor, backgroundColor]);
 
+  const isShowListViewChangeButton = useMemo(
+    () => matches.some((match) => match.handle?.showListViewChangeButton === true),
+    [matches],
+  );
+
   return {
-    isShowMobileHeader,
-    isShowTabLink,
-    hideTabLinkWithLocation,
+    currentMiniTitle,
     customHeaderBackgroundColor,
     customHeaderChangeColorOnScroll,
-    currentMiniTitle,
     headerBackgroundColor,
+    hideTabLinkWithLocation,
+    isShowListViewChangeButton,
+    isShowMobileHeader,
+    isShowTabLink,
   };
 }
 

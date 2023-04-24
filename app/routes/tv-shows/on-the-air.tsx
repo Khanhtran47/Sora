@@ -100,6 +100,7 @@ export const handle = {
     title: 'On the air Tv',
     showImage: false,
   }),
+  showListViewChangeButton: true,
 };
 
 const ListTvShows = () => {
