@@ -67,3 +67,8 @@ export const tvSeasonDetailPages = [
   { pageName: 'Videos', pageLink: '/videos' },
   { pageName: 'Photos', pageLink: '/photos' },
 ];
+
+export const trendingPages = [
+  { pageName: 'Trending Today', pageLink: '/today' },
+  { pageName: 'Trending This Week', pageLink: '/week' },
+];

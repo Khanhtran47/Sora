@@ -1,8 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-unsafe-optional-chaining */
-/* eslint-disable @typescript-eslint/indent */
-/* eslint-disable @typescript-eslint/no-throw-literal */
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Badge } from '@nextui-org/react';
 import { useIntersectionObserver } from '@react-hookz/web';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
@@ -15,6 +11,7 @@ import {
   useLocation,
   type RouteMatch,
 } from '@remix-run/react';
+import { motion, useTransform } from 'framer-motion';
 import Vibrant from 'node-vibrant';
 import i18next from '~/i18n/i18next.server';
 
@@ -201,9 +198,19 @@ const MovieDetail = () => {
   const [trailer, setTrailer] = useState<Trailer>({});
   const { backgroundColor } = useColorDarkenLighten(detail?.color);
   const { sidebarBoxedMode } = useSoraSettings();
-  const { scrollPosition, viewportRef } = useLayoutScrollPosition((scrollState) => scrollState);
+  const { viewportRef, scrollY } = useLayoutScrollPosition((scrollState) => scrollState);
   const { setBackgroundColor, startChangeScrollPosition } = useHeaderStyle(
     (headerState) => headerState,
+  );
+  const paddingTop = useTransform(
+    scrollY,
+    [0, startChangeScrollPosition, startChangeScrollPosition + 100],
+    [16, 16, startChangeScrollPosition ? 0 : 16],
+  );
+  const paddingBottom = useTransform(
+    scrollY,
+    [0, startChangeScrollPosition, startChangeScrollPosition + 100],
+    [32, 32, startChangeScrollPosition ? 0 : 32],
   );
   const tabLinkRef = useRef<HTMLDivElement>(null);
   const tablinkIntersection = useIntersectionObserver(tabLinkRef, {
@@ -211,36 +218,6 @@ const MovieDetail = () => {
     rootMargin: sidebarBoxedMode ? '-180px 0px 0px 0px' : '-165px 0px 0px 0px',
     threshold: [1],
   });
-  const tablinkPaddingTop = useMemo(
-    () =>
-      `${
-        startChangeScrollPosition === 0
-          ? 1
-          : scrollPosition?.y - startChangeScrollPosition > 0 &&
-            scrollPosition?.y - startChangeScrollPosition < 100 &&
-            startChangeScrollPosition > 0
-          ? 1 - (scrollPosition?.y - startChangeScrollPosition) / 100
-          : scrollPosition?.y - startChangeScrollPosition > 100
-          ? 0
-          : 1
-      }rem`,
-    [startChangeScrollPosition, scrollPosition?.y],
-  );
-  const tablinkPaddingBottom = useMemo(
-    () =>
-      `${
-        startChangeScrollPosition === 0
-          ? 2
-          : scrollPosition?.y - startChangeScrollPosition > 0 &&
-            scrollPosition?.y - startChangeScrollPosition < 100 &&
-            startChangeScrollPosition > 0
-          ? 2 - (scrollPosition?.y - startChangeScrollPosition) / 100
-          : scrollPosition?.y - startChangeScrollPosition > 100
-          ? 0
-          : 2
-      }rem`,
-    [startChangeScrollPosition, scrollPosition?.y],
-  );
   useEffect(() => {
     if (fetcher.data && fetcher.data.videos) {
       const { results } = fetcher.data.videos;
@@ -255,6 +232,7 @@ const MovieDetail = () => {
     if (startChangeScrollPosition) {
       setBackgroundColor(backgroundColor);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [backgroundColor, startChangeScrollPosition]);
 
   const currentTime = state && (state as { currentTime: number }).currentTime;
@@ -282,18 +260,18 @@ const MovieDetail = () => {
           color={detail.color}
         />
         <div className="flex w-full flex-col items-center justify-center">
-          <div
+          <motion.div
             className="sticky top-[64px] z-[1000] flex w-full justify-center transition-[padding] duration-100 ease-in-out"
             style={{
               backgroundColor,
-              paddingTop: tablinkPaddingTop,
-              paddingBottom: tablinkPaddingBottom,
+              paddingTop,
+              paddingBottom,
             }}
             ref={tabLinkRef}
           >
             <BackgroundTabLink css={{ backgroundColor, zIndex: 1 }} />
             <TabLink pages={movieTvDetailsPages} linkTo={`/movies/${detail?.id}`} />
-          </div>
+          </motion.div>
           <Outlet />
         </div>
       </div>

@@ -66,9 +66,9 @@ NavigationMenuList.displayName = NavigationMenuPrimitive.List.displayName;
 const NavigationMenuItem = NavigationMenuPrimitive.Item;
 
 const navigationMenuTriggerStyle = tv({
-  base: `text-md focus:bg-primary-light-hover hover:bg-primary-light-hover text-text data-[state=open]:bg-primary-light-active data-[active]:bg-primary-light-active hover:text-primary
-  data-[active]:text-primary focus:text-primary data-[state=open]:text-primary group inline-flex h-10 w-max items-center justify-center rounded-md bg-transparent px-4 py-2 font-medium
-  transition-colors hover:opacity-80 focus:outline-none disabled:pointer-events-none disabled:opacity-50`,
+  base: `text-md group inline-flex h-10 w-max items-center justify-center
+  rounded-md bg-transparent px-4 py-2 font-medium text-text transition-colors hover:bg-primary-light-hover hover:text-primary hover:opacity-80 focus:bg-primary-light-hover focus:text-primary focus:outline-none disabled:pointer-events-none
+  disabled:opacity-50 data-[state=open]:bg-primary-light-active data-[active]:bg-primary-light-active data-[active]:text-primary data-[state=open]:text-primary`,
   variants: {
     active: {
       true: 'bg-primary-light-active text-primary',
@@ -100,9 +100,9 @@ const NavigationMenuTrigger = forwardRef<
 NavigationMenuTrigger.displayName = NavigationMenuPrimitive.Trigger.displayName;
 
 const navigationMenuContentStyle = tv({
-  base: `data-[motion=from-start]:animate-enterFromLeft data-[motion=from-end]:animate-enterFromRight
-  data-[motion=to-start]:animate-exitToLeft data-[motion=to-end]:animate-exitToRight absolute top-0 left-0
-  w-full sm:w-auto`,
+  base: `absolute top-0
+  left-0 w-full data-[motion=from-start]:animate-enterFromLeft data-[motion=from-end]:animate-enterFromRight data-[motion=to-start]:animate-exitToLeft
+  data-[motion=to-end]:animate-exitToRight sm:w-auto`,
 });
 const NavigationMenuContent = forwardRef<
   ElementRef<typeof NavigationMenuPrimitive.Content>,

@@ -1,13 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useMemo, useRef } from 'react';
-import { useMediaQuery } from '@react-hookz/web';
+import { useMediaQuery, useThrottledCallback } from '@react-hookz/web';
 import { useLocation, useMatches, useNavigationType, useOutlet, useParams } from '@remix-run/react';
 import type { User } from '@supabase/supabase-js';
 import { AnimatePresence, useScroll } from 'framer-motion';
 import { Toaster } from 'sonner';
 import { tv } from 'tailwind-variants';
 
-import { throttle } from '~/utils/function';
 import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
 import { useHistoryStack } from '~/store/layout/useHistoryStack';
 import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
@@ -21,6 +20,7 @@ import {
 } from '~/components/elements/scroll-area/ScrollArea';
 import TabLink from '~/components/elements/tab/TabLink';
 
+import ActionButtons from './ActionButtons';
 // import Footer from './Footer';
 import BottomNav from './BottomNav';
 // import BreadCrumb from './BreadCrumb';
@@ -34,7 +34,7 @@ interface ILayout {
 }
 
 const layoutStyles = tv({
-  base: 'bg-background flex max-h-full min-h-screen max-w-full flex-nowrap justify-start font-[Inter] transition-[padding] duration-200',
+  base: 'flex max-h-full min-h-screen max-w-full flex-nowrap justify-start bg-background-alpha font-[Inter] transition-[padding] duration-200',
   variants: {
     boxed: {
       true: 'min-h-[calc(100vh_-_115px)] pt-[15px]',
@@ -47,7 +47,7 @@ const layoutStyles = tv({
 });
 
 const contentAreaStyles = tv({
-  base: 'bg-background-contrast-alpha ml-0 flex w-full grow flex-col justify-end overflow-hidden !rounded-none transition-[margin] duration-200 sm:!rounded-tl-xl',
+  base: 'ml-0 flex w-full grow flex-col justify-end overflow-hidden !rounded-none bg-background transition-[margin] duration-200 sm:!rounded-tl-xl',
   variants: {
     mini: {
       true: 'sm:ml-[80px]',
@@ -161,14 +161,9 @@ const Layout = (props: ILayout) => {
   const isMd = useMediaQuery('(max-width: 1280px)', { initializeWithValue: false });
   const { sidebarMiniMode, sidebarBoxedMode, sidebarHoverMode } = useSoraSettings();
   const viewportRef = useRef<HTMLDivElement>(null);
-  const {
-    setScrollPosition,
-    setScrollHeight,
-    scrollDirection,
-    setScrollDirection,
-    setViewportRef,
-  } = useLayoutScrollPosition((state) => state);
-  const { scrollY } = useScroll({ container: viewportRef });
+  const { setViewportRef, setScrollY, setScrollYProgress, scrollDirection, setScrollDirection } =
+    useLayoutScrollPosition((state) => state);
+  const { scrollY, scrollYProgress } = useScroll({ container: viewportRef });
   const { historyBack, historyForward, setHistoryBack, setHistoryForward } = useHistoryStack(
     (state) => state,
   );
@@ -213,13 +208,14 @@ const Layout = (props: ILayout) => {
     setHistoryBack([location.key]);
     setHistoryForward([location.key]);
     setViewportRef(viewportRef);
+    setScrollY(scrollY);
+    setScrollYProgress(scrollYProgress);
   }, []);
 
   useEffect(() => {
     const preventScrollToTopRoute = matches.some(
       (match) => match.handle && match.handle.preventScrollToTop === true,
     );
-    setScrollHeight(viewportRef.current?.scrollHeight || 0);
     if (!preventScrollToTopRoute) {
       viewportRef.current?.scrollTo(0, 0);
     }
@@ -256,31 +252,6 @@ const Layout = (props: ILayout) => {
   }, [location.key, navigationType]);
 
   useEffect(() => {
-    let lastScrollPosition = viewportRef.current?.scrollTop || 0;
-
-    const updateAtScroll = () => {
-      const currentScrollPosition = scrollY.get();
-      const direction = currentScrollPosition > lastScrollPosition ? 'down' : 'up';
-      if (
-        direction !== scrollDirection &&
-        (currentScrollPosition - lastScrollPosition > 20 ||
-          currentScrollPosition - lastScrollPosition < -20)
-      ) {
-        setScrollDirection(direction);
-      }
-      setScrollPosition({
-        x: 0,
-        y: currentScrollPosition,
-      });
-      lastScrollPosition = currentScrollPosition > 0 ? currentScrollPosition : 0;
-    };
-    const removeScrollYProgress = scrollY.onChange(throttle(updateAtScroll, 200));
-    return () => {
-      removeScrollYProgress();
-    };
-  }, []);
-
-  useEffect(() => {
     if (isMd && !sidebarMiniMode.value) {
       sidebarMiniMode.set(true);
       if (!sidebarHoverMode.value) sidebarHoverMode.set(false);
@@ -289,6 +260,26 @@ const Layout = (props: ILayout) => {
       sidebarBoxedMode.set(false);
     }
   }, [isMd, isSm, sidebarMiniMode.value, sidebarHoverMode.value, sidebarBoxedMode.value]);
+
+  let lastScrollY = viewportRef.current?.scrollTop || 0;
+
+  const handleScroll = useThrottledCallback(
+    (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
+      if (isSm) {
+        const scrollY = e.currentTarget.scrollTop;
+        const direction = scrollY > lastScrollY ? 'down' : 'up';
+        if (
+          direction !== scrollDirection &&
+          (scrollY - lastScrollY > 10 || scrollY - lastScrollY < -10)
+        ) {
+          setScrollDirection(direction);
+        }
+        lastScrollY = scrollY > 0 ? scrollY : 0;
+      }
+    },
+    [scrollDirection, isSm],
+    130,
+  );
 
   return (
     <div className={layoutStyles({ boxed: sidebarBoxedMode.value })}>
@@ -310,6 +301,7 @@ const Layout = (props: ILayout) => {
             <TabLink pages={currentTabLinkPages} linkTo={currentTabLinkTo} />
           </div>
         ) : null}
+        <ActionButtons />
         <ScrollArea
           type={isSm ? 'scroll' : 'always'}
           scrollHideDelay={500}
@@ -320,7 +312,7 @@ const Layout = (props: ILayout) => {
           }}
           key="scroll-area-main"
         >
-          <ScrollAreaViewport ref={viewportRef}>
+          <ScrollAreaViewport ref={viewportRef} onScroll={(e) => handleScroll(e)}>
             <main
               className={scrollAreaViewportStyles({
                 mini: sidebarMiniMode.value,

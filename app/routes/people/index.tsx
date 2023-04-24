@@ -1,6 +1,6 @@
 import { Badge } from '@nextui-org/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { NavLink, useLoaderData, useLocation, useNavigate } from '@remix-run/react';
+import { NavLink, useLoaderData, useLocation } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import i18next from '~/i18n/i18next.server';
@@ -68,11 +68,8 @@ export const handle = {
 
 const ListPeoplePopular = () => {
   const { people } = useLoaderData<typeof loader>();
-  const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
-
-  const paginationChangeHandler = (page: number) => navigate(`/people?page=${page}`);
 
   return (
     <motion.div
@@ -87,12 +84,10 @@ const ListPeoplePopular = () => {
         <MediaList
           currentPage={people.page}
           items={people.items}
+          itemsType="people"
           listName={t('popular-people')}
           listType="grid"
-          onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
-          showPagination
           totalPages={people.totalPages}
-          itemsType="people"
         />
       )}
     </motion.div>

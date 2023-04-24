@@ -8,17 +8,18 @@ import {
 } from '@nextui-org/react';
 import { useNavigate } from '@remix-run/react';
 import type { User } from '@supabase/supabase-js';
-import { motion } from 'framer-motion';
+import { motion, useTransform } from 'framer-motion';
 import type { AnimationItem } from 'lottie-web';
 // import { useTranslation } from 'react-i18next';
 import { tv } from 'tailwind-variants';
 
+import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
 import { useHistoryStack } from '~/store/layout/useHistoryStack';
+import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
 import { useHeaderOptions } from '~/hooks/useHeader';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
-/* Components */
 import MultiLevelDropdown from '~/components/layouts/MultiLevelDropdown';
-/* Assets */
+import ListViewChangeButton from '~/components/elements/shared/ListViewChangeButton';
 // import MenuIcon from '~/assets/icons/MenuIcon';
 import ChevronLeft from '~/assets/icons/ChevronLeftIcon';
 import ChevronRight from '~/assets/icons/ChevronRightIcon';
@@ -75,15 +76,28 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   const [lottie, setLottie] = useState<AnimationItem>();
   const navigate = useNavigate();
   const { sidebarMiniMode, sidebarBoxedMode } = useSoraSettings();
+  const { scrollY } = useLayoutScrollPosition((state) => state);
+  const { startChangeScrollPosition } = useHeaderStyle((state) => state);
   const {
-    isShowTabLink,
-    hideTabLinkWithLocation,
-    customHeaderBackgroundColor,
     currentMiniTitle,
+    customHeaderBackgroundColor,
+    customHeaderChangeColorOnScroll,
     headerBackgroundColor,
-    headerBackgroundOpacity,
+    hideTabLinkWithLocation,
+    isShowListViewChangeButton,
+    isShowTabLink,
   } = useHeaderOptions();
   const { historyBack, historyForward } = useHistoryStack((state) => state);
+  const opacity = useTransform(
+    scrollY,
+    [0, startChangeScrollPosition, startChangeScrollPosition + 80],
+    [0, 0, customHeaderChangeColorOnScroll ? (startChangeScrollPosition ? 1 : 0) : 1],
+  );
+  const y = useTransform(
+    scrollY,
+    [0, startChangeScrollPosition, startChangeScrollPosition + 80],
+    [60, 60, customHeaderChangeColorOnScroll ? (startChangeScrollPosition ? 0 : 60) : 0],
+  );
   useEffect(() => {
     if (isDropdownOpen) {
       lottie?.playSegments([0, 50], true);
@@ -107,10 +121,10 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
         boxedSidebar: sidebarBoxedMode.value,
       })}
     >
-      <div
+      <motion.div
         className="pointer-events-none absolute top-0 left-0 z-[-1] w-full rounded-tl-xl backdrop-blur-md"
         style={{
-          opacity: headerBackgroundOpacity,
+          opacity,
           height: isShowTabLink && !hideTabLinkWithLocation ? 112 : 64,
           backgroundColor: headerBackgroundColor,
         }}
@@ -118,7 +132,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
         {customHeaderBackgroundColor ? (
           <div className="pointer-events-none h-full w-full bg-background-light" />
         ) : null}
-      </div>
+      </motion.div>
       <div className="flex flex-row items-center justify-center gap-x-2">
         <Button
           auto
@@ -142,8 +156,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       <div className="flex w-full flex-row items-center justify-between">
         {currentMiniTitle ? (
           <motion.div
-            initial={{ opacity: 0, y: 60 }}
-            animate={{ opacity: headerBackgroundOpacity, y: (1 - headerBackgroundOpacity) * 60 }}
+            style={{ opacity, y }}
             transition={{ duration: 0.3 }}
             className="flex flex-row items-center justify-start gap-x-3"
           >
@@ -163,6 +176,15 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
                 <span className="text-sm font-medium opacity-75">{currentMiniTitle.subtitle}</span>
               ) : null}
             </div>
+          </motion.div>
+        ) : null}
+        {isShowListViewChangeButton ? (
+          <motion.div
+            style={{ opacity, y }}
+            transition={{ duration: 0.3 }}
+            className="flex flex-row items-center justify-end gap-x-3"
+          >
+            {isShowListViewChangeButton ? <ListViewChangeButton /> : null}
           </motion.div>
         ) : null}
       </div>

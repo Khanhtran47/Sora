@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/indent */
-
 import { Badge } from '@nextui-org/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { NavLink, useLoaderData, useLocation, useNavigate } from '@remix-run/react';
+import { NavLink, useLoaderData, useLocation } from '@remix-run/react';
 import dayjs from 'dayjs';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -102,16 +100,14 @@ export const handle = {
     title: 'On the air Tv',
     showImage: false,
   }),
+  showListViewChangeButton: true,
 };
 
 const ListTvShows = () => {
   const { shows } = useLoaderData<typeof loader>();
   const rootData = useTypedRouteLoaderData('root');
-  const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
-
-  const paginationChangeHandler = (page: number) => navigate(`/tv-shows/on-the-air?page=${page}`);
 
   return (
     <motion.div
@@ -124,16 +120,15 @@ const ListTvShows = () => {
     >
       {shows && shows.items && shows.items.length > 0 && (
         <MediaList
-          listType="grid"
-          showListTypeChangeButton
-          items={shows.items}
-          listName={t('on-the-air-tv-shows')}
+          currentPage={shows.page}
           genresMovie={rootData?.genresMovie}
           genresTv={rootData?.genresTv}
-          showPagination
+          items={shows.items}
+          itemsType="tv"
+          listName={t('on-the-air-tv-shows')}
+          listType="grid"
+          showListTypeChangeButton
           totalPages={shows.totalPages}
-          currentPage={shows.page}
-          onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
         />
       )}
     </motion.div>

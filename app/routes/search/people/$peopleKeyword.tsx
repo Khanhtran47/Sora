@@ -1,6 +1,6 @@
 import { Badge } from '@nextui-org/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { NavLink, useLoaderData, useNavigate, useParams, type RouteMatch } from '@remix-run/react';
+import { NavLink, useLoaderData, useNavigate, type RouteMatch } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 import i18next from '~/i18n/i18next.server';
 
@@ -75,11 +75,7 @@ export const handle = {
 const SearchRoute = () => {
   const { searchResults } = useLoaderData<typeof loader>() || {};
   const navigate = useNavigate();
-  const { peopleKeyword } = useParams();
   const { t } = useTranslation();
-
-  const paginationChangeHandler = (page: number) =>
-    navigate(`/search/people/${peopleKeyword}?page=${page}`);
 
   const onSubmit = (value: string) => {
     navigate(`/search/people/${value}`);
@@ -89,20 +85,18 @@ const SearchRoute = () => {
     <div className="flex w-full flex-col items-center justify-center px-3 sm:px-0">
       <SearchForm
         onSubmit={onSubmit}
-        textOnButton={t('search.action')}
         textHelper={t('search.helper.people')}
+        textOnButton={t('search.action')}
         textPlaceHolder={t('search.placeHolder.people')}
       />
       {searchResults && searchResults.items && searchResults.items?.length > 0 && (
         <MediaList
           currentPage={searchResults.page}
           items={searchResults.items}
+          itemsType="people"
           listName={t('search.searchResults')}
           listType="grid"
-          onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
-          showPagination
           totalPages={searchResults.totalPages}
-          itemsType="people"
         />
       )}
     </div>

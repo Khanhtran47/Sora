@@ -1,51 +1,23 @@
 import { Suspense, useState } from 'react';
-import { Button, Loading, Pagination, Row, Spacer, Tooltip } from '@nextui-org/react';
+import { Button, Loading, Tooltip } from '@nextui-org/react';
 import { useMediaQuery } from '@react-hookz/web';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { ClientOnly } from 'remix-utils';
+import { tv } from 'tailwind-variants';
 
 import type { IMedia } from '~/types/media';
 import type { ILanguage } from '~/services/tmdb/tmdb.types';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
+import ListViewChangeButton from '~/components/elements/shared/ListViewChangeButton';
 import ChevronLeftIcon from '~/assets/icons/ChevronLeftIcon';
 import ChevronRightIcon from '~/assets/icons/ChevronRightIcon';
 import FilterIcon from '~/assets/icons/FilterIcon';
-import ViewGridIcon from '~/assets/icons/ViewGridIcon';
-import ViewTableIcon from '~/assets/icons/ViewTableIcon';
 
 import Filter from '../elements/filter/Filter';
-import Flex from '../styles/Flex.styles';
 import { H2 } from '../styles/Text.styles';
-import { MediaListBanner, MediaListCard, MediaListGrid, MediaListTable } from './list';
+import { MediaListBanner, MediaListCard, MediaListGrid } from './list';
 
-/**
- * @typedef {Object} IMediaListProps
- * @property {Array<{ id: number; name: string; backdropPath: string }>} [coverItem] - Require when cover card is true, value is cover items to show
- * @property {number} [currentPage] - Require when pagination is true, loading type is page, value is current page
- * @property {{ [id: string]: string }} [genresMovie] - Pass genres movie object
- * @property {{ [id: string]: string }} [genresTv] - Pass genres tv object
- * @property {boolean} [hasNextPage] - Require when loading type is scroll, value is true if there is a next page
- * @property {boolean} [isCoverCard] - Value is true if the cover card is active
- * @property {Array<IMedia>} [items] - Value is items to show
- * @property {'movie' | 'tv' | 'anime' | 'people' | 'episode'} [itemsType] - Value is type of items to show, help to show the correct url, item type and item title
- * @property {Array<ILanguage>} [languages] - Pass languages object
- * @property {string | (() => never)} [listName] - Value is list name to show
- * @property {'table' | 'card' | 'banner' | 'grid'} [listType] - Value is list type to show
- * @property {'page' | 'scroll'} [loadingType] - Value is loading type to show
- * @property {'movie' | 'tv' | 'anime'} [mediaType] - Value is media type to show, help for filter type
- * @property {boolean} [navigationButtons] - Value is true if the navigation buttons are active
- * @property {() => void} [onClickViewMore] - Require when view more button is true, value is function to execute when view more button is clicked
- * @property {(page: number) => void} [onPageChangeHandler] - Require when pagination is true, value is function to execute when page is changed
- * @property {string} [provider] - Value is provider name, help to show the correct url for episode itemsType
- * @property {string} [routeName] - Value is route name, help to load the correct route when scrolling
- * @property {boolean} [showFilterButton] - Value is true if the filter button is active
- * @property {boolean} [showListTypeChangeButton] - Value is true if the list type change button is active
- * @property {boolean} [showMoreList] - Value is true if the view more button is active
- * @property {boolean} [showPagination] - Value is true if the pagination is active
- * @property {number} [totalPages] - Require when pagination is true, value is total pages
- * @property {boolean} [virtual] - Value is true if the virtual list is active
- */
 interface IMediaListProps {
   /**
    * Require when cover card is true, value is cover items to show
@@ -126,7 +98,7 @@ interface IMediaListProps {
   items?: IMedia[];
   /**
    * Value is type of items to show, help to show the correct url, item type and item title
-   * @type {'movie' | 'tv' | 'anime' | 'people' | 'episode'}
+   * @type {'movie' | 'tv' | 'anime' | 'people' | 'episode' | 'movie-tv'}
    * @memberof IMediaListProps
    * @example
    * 'movie'
@@ -134,8 +106,9 @@ interface IMediaListProps {
    * 'anime'
    * 'people'
    * 'episode'
+   * 'movie-tv'
    */
-  itemsType?: 'movie' | 'tv' | 'anime' | 'people' | 'episode';
+  itemsType?: 'movie' | 'tv' | 'anime' | 'people' | 'episode' | 'movie-tv';
   /**
    * Pass languages object
    * @type {Array<ILanguage>}
@@ -154,34 +127,14 @@ interface IMediaListProps {
   listName?: string | (() => never);
   /**
    * Value is type of list to show
-   * @type {'table' | 'slider-card' | 'slider-banner' | 'grid'}
+   * @type {'slider-card' | 'slider-banner' | 'grid'}
    * @memberof IMediaListProps
    * @example
-   * 'table'
    * 'slider-card'
    * 'slider-banner'
    * 'grid'
    */
-  listType?: 'table' | 'slider-card' | 'slider-banner' | 'grid';
-  /**
-   * Value is type of loading to show
-   * @type {'page' | 'scroll'}
-   * @memberof IMediaListProps
-   * @example
-   * 'page'
-   * 'scroll'
-   */
-  loadingType?: 'page' | 'scroll';
-  /**
-   * Value is true if the media to show, help for filter type
-   * @type {'movie' | 'tv' | 'anime'}
-   * @memberof IMediaListProps
-   * @example
-   * 'movie'
-   * 'tv'
-   * 'anime'
-   */
-  mediaType?: 'movie' | 'tv' | 'anime';
+  listType?: 'slider-card' | 'slider-banner' | 'grid';
   /**
    * Value is true if the navigation buttons are active
    * @type {boolean}
@@ -198,13 +151,6 @@ interface IMediaListProps {
    * () => console.log('View more button is clicked')
    */
   onClickViewMore?: () => void;
-  /**
-   * Require when pagination is true, value is function to execute when page is changed
-   * @memberof IMediaListProps
-   * @example
-   * (page: number) => console.log('Page is changed to', page)
-   */
-  onPageChangeHandler?: (page: number) => void;
   /**
    * Value is provider name, help to show the correct url for episode itemsType
    * @type {string}
@@ -250,15 +196,6 @@ interface IMediaListProps {
    */
   showMoreList?: boolean;
   /**
-   * Value is true if the pagination is active
-   * @type {boolean}
-   * @memberof IMediaListProps
-   * @example
-   * true
-   * false
-   */
-  showPagination?: boolean;
-  /**
    * Require when pagination is true, value is total pages
    * @type {number}
    * @memberof IMediaListProps
@@ -270,15 +207,35 @@ interface IMediaListProps {
    */
   totalPages?: number;
   /**
-   * Value is true if the list is virtual
+   * Value is true if scroll to top list after changing page
    * @type {boolean}
    * @memberof IMediaListProps
    * @example
    * true
    * false
    */
-  virtual?: boolean; // value is true if the list is virtual
+  scrollToTopListAfterChangePage?: boolean;
 }
+
+const mediaListStyles = tv({
+  base: 'flex w-full max-w-screen-4xl flex-col justify-center',
+  variants: {
+    gap: {
+      none: 'gap-0',
+      normal: 'gap-2',
+      grid: 'gap-6',
+    },
+    alignItems: {
+      start: 'items-start',
+      center: 'items-center',
+      end: 'items-end',
+    },
+  },
+  defaultVariants: {
+    gap: 'normal',
+    alignItems: 'start',
+  },
+});
 
 const MediaList = (props: IMediaListProps) => {
   const {
@@ -292,44 +249,26 @@ const MediaList = (props: IMediaListProps) => {
     itemsType,
     languages,
     listName,
-    loadingType,
-    mediaType,
     navigationButtons,
     onClickViewMore,
-    onPageChangeHandler,
     provider,
-    routeName,
+    scrollToTopListAfterChangePage,
     showFilterButton,
     showListTypeChangeButton,
     showMoreList,
-    showPagination,
     totalPages,
-    virtual,
+    listType,
   } = props;
-  let { listType } = props;
   let list;
   const { t } = useTranslation();
-
   const [prevEl, setPrevEl] = useState<HTMLElement | null>(null);
   const [nextEl, setNextEl] = useState<HTMLElement | null>(null);
   const [slideProgress, setSlideProgress] = useState<number>(0);
-  const [displayType, setDisplayType] = useState<string>(listType as string);
-  const { showFilter } = useSoraSettings();
-  const is2Xs = useMediaQuery('(max-width: 320px)', { initializeWithValue: false });
+  const [showFilter, setShowFilter] = useState<boolean>(false);
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
+  const { listViewType } = useSoraSettings();
 
-  if (!listType && typeof window !== 'undefined') {
-    listType =
-      (localStorage.getItem('listType') as 'table' | 'slider-card' | 'slider-banner' | 'grid') ??
-      'grid';
-  }
-
-  const filterChangeHandler = (value: string) => {
-    setDisplayType(value);
-    localStorage.setItem('listType', value);
-  };
-
-  switch (displayType) {
+  switch (listType) {
     case 'grid':
       list = (
         <MediaListGrid
@@ -340,15 +279,13 @@ const MediaList = (props: IMediaListProps) => {
           isCoverCard={isCoverCard}
           items={items}
           itemsType={itemsType}
-          loadingType={loadingType}
           provider={provider}
-          routeName={routeName}
-          virtual={virtual}
+          totalPages={totalPages}
+          currentPage={currentPage}
+          listType={listType}
+          scrollToTopListAfterChangePage={scrollToTopListAfterChangePage}
         />
       );
-      break;
-    case 'table':
-      list = <MediaListTable items={items} />;
       break;
     case 'slider-banner':
       list = <MediaListBanner items={items} genresMovie={genresMovie} genresTv={genresTv} />;
@@ -365,7 +302,6 @@ const MediaList = (props: IMediaListProps) => {
           navigation={{ nextEl, prevEl }}
           provider={provider}
           setSlideProgress={setSlideProgress}
-          virtual={virtual}
         />
       );
       break;
@@ -373,23 +309,18 @@ const MediaList = (props: IMediaListProps) => {
   }
 
   return (
-    <Flex
-      direction="column"
-      justify="center"
-      align={
-        listType === 'grid' || listType === 'table' || listType === 'slider-banner'
-          ? 'center'
-          : 'start'
-      }
-      css={{ width: '100%', maxWidth: '1920px' }}
+    <div
+      className={mediaListStyles({
+        gap: listType === 'grid' ? 'grid' : 'normal',
+        alignItems: listType === 'grid' || listType === 'slider-banner' ? 'center' : 'start',
+      })}
     >
       {listName || showFilterButton || showListTypeChangeButton ? (
-        <Flex direction="row" justify="between" align="center" wrap="wrap" css={{ width: '100%' }}>
-          {listName && (
+        <div className="mt-5 flex w-full flex-row flex-wrap items-center justify-between gap-3">
+          {listName ? (
             <H2
               h2
               css={{
-                margin: '20px 0 5px 0',
                 '@xsMax': {
                   fontSize: '1.75rem !important',
                 },
@@ -397,43 +328,28 @@ const MediaList = (props: IMediaListProps) => {
             >
               {listName}
             </H2>
-          )}
+          ) : null}
           {showFilterButton || showListTypeChangeButton ? (
-            <Flex direction="row" justify="end" align="center" css={{ gap: '$5' }}>
+            <div className="flex flex-row items-center justify-end gap-3">
               {showFilterButton ? (
                 <Tooltip content={t('show-hide-filter')}>
                   <Button
                     type="button"
                     auto
                     color="primary"
-                    bordered={!showFilter.value}
+                    bordered={!showFilter}
                     icon={<FilterIcon />}
-                    onPress={() => showFilter.set(!showFilter.value)}
+                    onPress={() => setShowFilter(!showFilter)}
                   />
                 </Tooltip>
               ) : null}
-              {showListTypeChangeButton ? (
-                <Button.Group css={{ margin: 0 }}>
-                  <Button
-                    type="button"
-                    onPress={() => filterChangeHandler('grid')}
-                    icon={<ViewGridIcon width={40} height={40} />}
-                    {...(displayType === 'grid' ? {} : { ghost: true })}
-                  />
-                  <Button
-                    type="button"
-                    onPress={() => filterChangeHandler('table')}
-                    icon={<ViewTableIcon width={40} height={40} />}
-                    {...(displayType === 'table' ? {} : { ghost: true })}
-                  />
-                </Button.Group>
-              ) : null}
-            </Flex>
+              {showListTypeChangeButton ? <ListViewChangeButton /> : null}
+            </div>
           ) : null}
-        </Flex>
+        </div>
       ) : null}
-      {showMoreList && (
-        <Row fluid justify="space-between" wrap="nowrap" align="center">
+      {showMoreList ? (
+        <div className="mb-2 flex w-full flex-row flex-wrap items-center justify-between">
           <Button
             type="button"
             auto
@@ -443,19 +359,12 @@ const MediaList = (props: IMediaListProps) => {
             onPress={onClickViewMore}
             css={{
               maxWidth: '$8',
-              marginBottom: '$5',
             }}
           >
             {t('viewMore')}
           </Button>
-          {navigationButtons && (
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                marginBottom: 'var(--nextui-space-5)',
-              }}
-            >
+          {navigationButtons ? (
+            <div className="flex flex-row gap-x-2">
               <Button
                 type="button"
                 auto
@@ -475,7 +384,6 @@ const MediaList = (props: IMediaListProps) => {
                 disabled={slideProgress === 0}
                 icon={<ChevronLeftIcon height={isSm ? 18 : 24} width={isSm ? 18 : 24} />}
               />
-              <Spacer x={0.25} />
               <Button
                 type="button"
                 auto
@@ -496,11 +404,11 @@ const MediaList = (props: IMediaListProps) => {
                 icon={<ChevronRightIcon height={isSm ? 18 : 24} width={isSm ? 18 : 24} />}
               />
             </div>
-          )}
-        </Row>
-      )}
+          ) : null}
+        </div>
+      ) : null}
       <AnimatePresence>
-        {showFilter.value && mediaType && (
+        {showFilter && itemsType ? (
           <ClientOnly fallback={<Loading type="default" />}>
             {() => (
               <Suspense fallback={<Loading type="default" />}>
@@ -512,28 +420,18 @@ const MediaList = (props: IMediaListProps) => {
                   style={{ width: '100%' }}
                 >
                   <Filter
-                    genres={mediaType === 'movie' ? genresMovie : genresTv}
-                    mediaType={mediaType}
+                    genres={itemsType === 'movie' ? genresMovie : genresTv}
+                    mediaType={itemsType as 'movie' | 'tv' | 'anime'}
                     languages={languages}
                   />
                 </motion.div>
               </Suspense>
             )}
           </ClientOnly>
-        )}
+        ) : null}
       </AnimatePresence>
       {list}
-      {showPagination && totalPages && totalPages > 1 ? (
-        <Pagination
-          total={totalPages}
-          initialPage={currentPage}
-          // shadow
-          onChange={onPageChangeHandler}
-          css={{ marginTop: '50px' }}
-          {...(isSm && !is2Xs ? { size: 'sm' } : isSm && is2Xs ? { size: 'xs' } : {})}
-        />
-      ) : null}
-    </Flex>
+    </div>
   );
 };
 

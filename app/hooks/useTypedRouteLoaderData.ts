@@ -40,7 +40,8 @@ import type { loader as RoutesSearchTvLoader } from '~/routes/search/tv/$tvKeywo
 import type { loader as RoutesSearchTvIndexLoader } from '~/routes/search/tv/index';
 import type { loader as RoutesTestLoader } from '~/routes/test';
 import type { loader as RoutesTestPlayerLoader } from '~/routes/test/player';
-import type { loader as RoutesTrendingLoader } from '~/routes/trending';
+import type { loader as RoutesTrendingTodayLoader } from '~/routes/trending/today';
+import type { loader as RoutesTrendingThisWeekLoader } from '~/routes/trending/week';
 import type { loader as RoutesTvLoader } from '~/routes/tv-shows/$tvId';
 import type { loader as RoutesTvSeasonLoader } from '~/routes/tv-shows/$tvId.season.$seasonId';
 import type { loader as RoutesTvSeasonEpisodeWatchLoader } from '~/routes/tv-shows/$tvId.season.$seasonId.episode.$episodeId.watch';
@@ -65,7 +66,8 @@ type Loaders = {
   root: typeof RootLoader;
   'routes/index': typeof RoutesIndexLoader;
   'routes/test': typeof RoutesTestLoader;
-  'routes/trending': typeof RoutesTrendingLoader;
+  'routes/trending/today': typeof RoutesTrendingTodayLoader;
+  'routes/trending/this-week': typeof RoutesTrendingThisWeekLoader;
   'routes/watch-history': typeof RoutesWatchHistoryLoader;
   'routes/anime/$animeId.episode.$episodeId.watch': typeof RoutesAnimeEpisodeWatchLoader;
   'routes/anime/$animeId': typeof RoutesAnimeLoader;

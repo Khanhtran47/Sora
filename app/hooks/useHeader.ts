@@ -8,8 +8,7 @@ import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition'
 function useHeaderOptions() {
   const matches = useMatches();
   const location = useLocation();
-  const { scrollPosition } = useLayoutScrollPosition((state) => state);
-  const { backgroundColor, startChangeScrollPosition } = useHeaderStyle((state) => state);
+  const { backgroundColor } = useHeaderStyle((state) => state);
 
   const isShowMobileHeader = useMemo(
     () => !matches.some((match) => match.handle?.hideMobileHeader === true),
@@ -61,40 +60,20 @@ function useHeaderOptions() {
     return 'var(--nextui-colors-backgroundContrastAlpha)';
   }, [customHeaderBackgroundColor, backgroundColor]);
 
-  const headerBackgroundOpacity = useMemo(() => {
-    switch (customHeaderChangeColorOnScroll) {
-      case true:
-        if (startChangeScrollPosition === 0) {
-          return 0;
-        }
-        if (
-          scrollPosition.y > startChangeScrollPosition &&
-          scrollPosition.y < startChangeScrollPosition + 100 &&
-          scrollPosition.y > 80 &&
-          startChangeScrollPosition > 0
-        ) {
-          return (scrollPosition.y - startChangeScrollPosition) / 100;
-        }
-        if (scrollPosition.y > startChangeScrollPosition + 100) {
-          return 1;
-        }
-        return 0;
-      case false:
-        return scrollPosition.y < 80 ? scrollPosition.y / 80 : 1;
-      default:
-        return scrollPosition.y < 80 ? scrollPosition.y / 80 : 1;
-    }
-  }, [customHeaderChangeColorOnScroll, scrollPosition.y, startChangeScrollPosition]);
+  const isShowListViewChangeButton = useMemo(
+    () => matches.some((match) => match.handle?.showListViewChangeButton === true),
+    [matches],
+  );
 
   return {
-    isShowMobileHeader,
-    isShowTabLink,
-    hideTabLinkWithLocation,
+    currentMiniTitle,
     customHeaderBackgroundColor,
     customHeaderChangeColorOnScroll,
-    currentMiniTitle,
     headerBackgroundColor,
-    headerBackgroundOpacity,
+    hideTabLinkWithLocation,
+    isShowListViewChangeButton,
+    isShowMobileHeader,
+    isShowTabLink,
   };
 }
 

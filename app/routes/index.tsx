@@ -99,61 +99,63 @@ const Index = () => {
         genresMovie={rootData?.genresMovie}
         genresTv={rootData?.genresTv}
         items={todayTrending}
-        listType="slider-banner"
         key="slider-banner-home"
+        listType="slider-banner"
       />
       <div className="mt-9 flex w-full flex-col items-center justify-start px-3 sm:px-5">
         <MediaList
           genresMovie={rootData?.genresMovie}
           genresTv={rootData?.genresTv}
           items={movies}
+          itemsType="movie"
+          key="slider-card-popular-movies"
           listName={t('popular-movies')}
           listType="slider-card"
           navigationButtons
           onClickViewMore={() => onClickViewMore('movies')}
           showMoreList
-          key="slider-card-popular-movies"
         />
         <MediaList
           genresMovie={rootData?.genresMovie}
           genresTv={rootData?.genresTv}
           items={shows}
+          itemsType="tv"
+          key="slider-card-popular-tv"
           listName={t('popular-tv-shows')}
           listType="slider-card"
           navigationButtons
           onClickViewMore={() => onClickViewMore('tv-shows')}
           showMoreList
-          key="slider-card-popular-tv"
         />
         <MediaList
           items={popularAnime}
           itemsType="anime"
+          key="slider-card-popular-anime"
           listName="Popular Anime"
           listType="slider-card"
           navigationButtons
           onClickViewMore={() => navigate('/anime/popular')}
           showMoreList
-          key="slider-card-popular-anime"
         />
         <MediaList
           coverItem={featuredList}
           isCoverCard
+          key="slider-card-featured-collections"
           listName="Featured Collections"
           listType="slider-card"
           navigationButtons
           onClickViewMore={() => navigate('/collections')}
           showMoreList
-          key="slider-card-featured-collections"
         />
         <MediaList
           items={people}
+          itemsType="people"
+          key="slider-card-popular-people"
           listName={t('popular-people')}
           listType="slider-card"
           navigationButtons
           onClickViewMore={() => onClickViewMore('people')}
           showMoreList
-          itemsType="people"
-          key="slider-card-popular-people"
         />
       </div>
     </motion.div>

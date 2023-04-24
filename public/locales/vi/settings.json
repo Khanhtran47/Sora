@@ -84,5 +84,14 @@
   "sidebar-mini-mode": "Mini",
   "sidebar-hover-mode": "Hover",
   "sidebar-boxed-mode": "Boxed",
-  "sidebar-sheet-mode": "Sheet"
+  "sidebar-sheet-mode": "Sheet",
+  "media-list-grid": "Media list grid",
+  "media-list-grid-subtitle": "Media list grid settings customization",
+  "list-view-type": "List view type",
+  "card": "Card",
+  "detail": "Detail",
+  "table": "Table",
+  "list-loading-type": "List loading type",
+  "pagination": "Pagination",
+  "infinite-scroll": "Infinite scroll"
 }

@@ -14,18 +14,17 @@ interface IMediaListCardProps {
   genresTv?: { [id: string]: string };
   isCoverCard?: boolean;
   items?: IMedia[];
-  itemsType?: 'movie' | 'tv' | 'anime' | 'people' | 'episode';
+  itemsType?: 'movie' | 'tv' | 'anime' | 'people' | 'episode' | 'movie-tv';
   navigation?: { nextEl?: string | HTMLElement | null; prevEl?: string | HTMLElement | null };
   provider?: string;
   setSlideProgress?: React.Dispatch<React.SetStateAction<number>>;
-  virtual?: boolean;
 }
 
 const swiperSlideStyles = tv({
   variants: {
     cardType: {
       coverCard: '!w-[280px] sm:!w-[480px]',
-      card: 'nextui-sm:!w-[244px] !w-[164px] sm:!w-[210px] 2xl:!w-[280px]',
+      card: '!w-[164px] sm:!w-[210px] nextui-sm:!w-[244px] 2xl:!w-[280px]',
       peopleCard: '!w-[160px]',
     },
   },
@@ -46,7 +45,6 @@ const MediaListCard = (props: IMediaListCardProps) => {
     navigation,
     provider,
     setSlideProgress,
-    virtual,
   } = props;
 
   if (isCoverCard) {
@@ -85,7 +83,6 @@ const MediaListCard = (props: IMediaListCardProps) => {
                         key={item.id}
                         title={item?.name}
                         type="card"
-                        virtual={virtual}
                       />
                     </Link>
                   </SwiperSlide>
@@ -124,9 +121,16 @@ const MediaListCard = (props: IMediaListCardProps) => {
                   ? `/anime/${item.id}/`
                   : itemsType === 'people'
                   ? `/people/${item.id}/`
-                  : item?.mediaType === 'movie' || itemsType === 'movie'
+                  : itemsType === 'movie'
                   ? `/movies/${item.id}/`
-                  : `/tv-shows/${item.id}/`;
+                  : itemsType === 'tv'
+                  ? `/tv-shows/${item.id}/`
+                  : itemsType === 'movie-tv' && item?.mediaType === 'movie'
+                  ? `/movies/${item.id}/`
+                  : itemsType === 'movie-tv' && item?.mediaType === 'tv'
+                  ? `/tv-shows/${item.id}/`
+                  : '/';
+
               return (
                 <SwiperSlide
                   key={`${item.id}-${index}-card`}
@@ -146,8 +150,10 @@ const MediaListCard = (props: IMediaListCardProps) => {
                       genresMovie={genresMovie}
                       genresTv={genresTv}
                       id={item?.id}
+                      isSliderCard
                       job={item?.job}
                       key={item.id}
+                      linkTo={href}
                       knownFor={item?.knownFor}
                       mediaType={item?.mediaType}
                       overview={item?.overview}
@@ -156,7 +162,6 @@ const MediaListCard = (props: IMediaListCardProps) => {
                       title={item?.title}
                       trailer={item?.trailer}
                       type={itemsType === 'episode' ? itemsType : 'card'}
-                      virtual={virtual}
                       voteAverage={item?.voteAverage}
                     />
                   </Link>

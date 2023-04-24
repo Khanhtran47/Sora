@@ -154,14 +154,14 @@ const TvOverview = () => {
         </div>
         {topBilledCast && topBilledCast.length > 0 ? (
           <MediaList
-            key={`tv-top-cast-${tvId}`}
-            listType="slider-card"
             items={topBilledCast}
-            listName="Top Cast"
-            showMoreList
-            onClickViewMore={() => onClickViewMore('cast')}
-            navigationButtons
             itemsType="people"
+            key={`tv-top-cast-${tvId}`}
+            listName="Top Cast"
+            listType="slider-card"
+            navigationButtons
+            onClickViewMore={() => onClickViewMore('cast')}
+            showMoreList
           />
         ) : null}
         {detail?.seasons && detail?.seasons.length > 0 ? (
@@ -268,30 +268,30 @@ const TvOverview = () => {
         ) : null}
         {recommendations && recommendations.items && recommendations.items.length > 0 ? (
           <MediaList
-            key={`tv-recommendations-${tvId}`}
-            listType="slider-card"
-            items={recommendations.items}
-            listName="Recommendations"
-            showMoreList
-            onClickViewMore={() => onClickViewMore('recommendations')}
-            itemsType="tv"
-            navigationButtons
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
+            items={recommendations.items}
+            itemsType="tv"
+            key={`tv-recommendations-${tvId}`}
+            listName="Recommendations"
+            listType="slider-card"
+            navigationButtons
+            onClickViewMore={() => onClickViewMore('recommendations')}
+            showMoreList
           />
         ) : null}
         {similar.items && similar.items.length > 0 ? (
           <MediaList
-            key={`tv-similar-${tvId}`}
-            listType="slider-card"
-            items={similar.items}
-            listName="Similar Tv-Shows"
-            showMoreList
-            onClickViewMore={() => onClickViewMore('similar')}
-            itemsType="tv"
-            navigationButtons
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
+            items={similar.items}
+            itemsType="tv"
+            key={`tv-similar-${tvId}`}
+            listName="Similar Tv-Shows"
+            listType="slider-card"
+            navigationButtons
+            onClickViewMore={() => onClickViewMore('similar')}
+            showMoreList
           />
         ) : null}
       </div>

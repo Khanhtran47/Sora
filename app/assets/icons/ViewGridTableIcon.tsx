@@ -117,7 +117,7 @@ const Light = ({ color, strokeWidth }: { color: string; strokeWidth: number }) =
   </>
 );
 
-interface IViewTableProps {
+interface IViewGridTableProps {
   /**
    * The color of the icon
    * @default 'currentColor'
@@ -147,21 +147,28 @@ interface IViewTableProps {
    * @type number
    * */
   width?: number;
+  /**
+   * The className of the icon
+   * @default ''
+   * @type string
+   * */
+  className?: string;
 }
 
-const ViewTable = ({
+const ViewGridTable = ({
   fill = 'currentColor',
   filled = false,
   size = 24,
   height = 24,
   width = 24,
+  className = '',
   ...props
-}: IViewTableProps) => {
+}: IViewGridTableProps) => {
   switch (filled) {
     case false:
       return (
         <Svg
-          className=""
+          className={className}
           width={width || size}
           height={height || size}
           viewBox="0 0 48 48"
@@ -193,6 +200,6 @@ const ViewTable = ({
   }
 };
 
-ViewTable.displayName = 'ViewTableIcon';
+ViewGridTable.displayName = 'ViewGridTableIcon';
 
-export default ViewTable;
+export default ViewGridTable;

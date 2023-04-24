@@ -1,6 +1,6 @@
 import { Badge } from '@nextui-org/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { NavLink, useLoaderData, useLocation, useNavigate } from '@remix-run/react';
+import { NavLink, useLoaderData, useLocation } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import i18next from '~/i18n/i18next.server';
@@ -67,16 +67,14 @@ export const handle = {
     title: 'Airing today Tv',
     showImage: false,
   }),
+  showListViewChangeButton: true,
 };
 
 const ListAiringTodayTvShows = () => {
   const { shows } = useLoaderData<typeof loader>();
   const rootData = useTypedRouteLoaderData('root');
-  const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
-
-  const paginationChangeHandler = (page: number) => navigate(`/tv-shows/airing-today?page=${page}`);
 
   return (
     <motion.div
@@ -89,16 +87,15 @@ const ListAiringTodayTvShows = () => {
     >
       {shows && shows.items && shows.items.length > 0 && (
         <MediaList
-          listType="grid"
-          showListTypeChangeButton
-          items={shows.items}
-          listName={t('airing-today-tv-shows')}
+          currentPage={shows?.page}
           genresMovie={rootData?.genresMovie}
           genresTv={rootData?.genresTv}
-          showPagination
+          items={shows.items}
+          itemsType="tv"
+          listName={t('airing-today-tv-shows')}
+          listType="grid"
+          showListTypeChangeButton
           totalPages={shows?.totalPages}
-          currentPage={shows?.page}
-          onPageChangeHandler={(page: number) => paginationChangeHandler(page)}
         />
       )}
     </motion.div>

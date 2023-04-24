@@ -91,6 +91,7 @@ export const handle = {
     subtitle: 'Anime',
     showImage: false,
   }),
+  showListViewChangeButton: true,
 };
 
 const DiscoverAnime = () => {
@@ -108,16 +109,14 @@ const DiscoverAnime = () => {
     >
       {items && items.results && items.results.length > 0 && (
         <MediaList
+          currentPage={items?.currentPage || 1}
           hasNextPage={items.hasNextPage || false}
           items={items.results as IMedia[]}
           itemsType="anime"
           listName="Discover Anime"
           listType="grid"
-          loadingType="scroll"
-          routeName={`${location.pathname}${location.search || ''}`}
-          virtual
-          mediaType="anime"
           showFilterButton
+          showListTypeChangeButton
         />
       )}
     </motion.div>

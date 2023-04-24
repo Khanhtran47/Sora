@@ -56,10 +56,11 @@ const OverviewPage = () => {
           </H4>
           <Spacer y={0.5} />
           <MediaList
-            listType="slider-card"
-            items={knownFor}
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
+            items={knownFor}
+            itemsType="movie-tv"
+            listType="slider-card"
           />
         </>
       ) : null}

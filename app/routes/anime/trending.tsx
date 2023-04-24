@@ -61,6 +61,7 @@ export const handle = {
     subtitle: 'Trending',
     showImage: false,
   }),
+  showListViewChangeButton: true,
 };
 
 const TrendingAnime = () => {
@@ -78,14 +79,13 @@ const TrendingAnime = () => {
     >
       {items && items.results && items.results.length > 0 && (
         <MediaList
+          currentPage={items?.currentPage || 1}
           hasNextPage={items.hasNextPage || false}
           items={items.results as IMedia[]}
           itemsType="anime"
           listName="Trending Anime"
           listType="grid"
-          loadingType="scroll"
-          routeName="/anime/trending"
-          virtual
+          showListTypeChangeButton
         />
       )}
     </motion.div>

@@ -23,34 +23,32 @@ const Bold = ({ color, strokeWidth }: { color: string; strokeWidth: number }) =>
       strokeWidth={strokeWidth}
       strokeLinejoin="round"
     />
-    <rect
-      x="27"
-      y="13"
-      width="8"
-      height="8"
-      fill="#FFF"
+    <path
+      d="M27 13L35 13"
       stroke="#FFF"
       strokeWidth={strokeWidth}
+      strokeLinecap="round"
       strokeLinejoin="round"
     />
-    <rect
-      x="13"
-      y="27"
-      width="8"
-      height="8"
-      fill="#FFF"
+    <path
+      d="M27 20L35 20"
       stroke="#FFF"
       strokeWidth={strokeWidth}
+      strokeLinecap="round"
       strokeLinejoin="round"
     />
-    <rect
-      x="27"
-      y="27"
-      width="8"
-      height="8"
-      fill="#FFF"
+    <path
+      d="M13 28L35 28"
       stroke="#FFF"
       strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M13 35H35"
+      stroke="#FFF"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
       strokeLinejoin="round"
     />
   </>
@@ -68,34 +66,32 @@ const Light = ({ color, strokeWidth }: { color: string; strokeWidth: number }) =
       strokeWidth={strokeWidth}
       strokeLinejoin="round"
     />
-    <rect
-      x="27"
-      y="13"
-      width="8"
-      height="8"
-      fill="none"
+    <path
+      d="M27 13L35 13"
       stroke={color}
       strokeWidth={strokeWidth}
+      strokeLinecap="round"
       strokeLinejoin="round"
     />
-    <rect
-      x="13"
-      y="27"
-      width="8"
-      height="8"
-      fill="none"
+    <path
+      d="M27 20L35 20"
       stroke={color}
       strokeWidth={strokeWidth}
+      strokeLinecap="round"
       strokeLinejoin="round"
     />
-    <rect
-      x="27"
-      y="27"
-      width="8"
-      height="8"
-      fill="none"
+    <path
+      d="M13 28L35 28"
       stroke={color}
       strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M13 35H35"
+      stroke={color}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
       strokeLinejoin="round"
     />
   </>
@@ -131,21 +127,28 @@ interface IViewGridProps {
    * @type number
    * */
   width?: number;
+  /**
+   * The className of the icon
+   * @default ''
+   * @type string
+   * */
+  className?: string;
 }
 
-const ViewGrid = ({
+const ViewGridDetail = ({
   fill = 'currentColor',
   filled = false,
   size = 24,
   height = 24,
   width = 24,
+  className = '',
   ...props
 }: IViewGridProps) => {
   switch (filled) {
     case false:
       return (
         <Svg
-          className=""
+          className={className}
           width={width || size}
           height={height || size}
           viewBox="0 0 48 48"
@@ -177,6 +180,6 @@ const ViewGrid = ({
   }
 };
 
-ViewGrid.displayName = 'ViewGridIcon';
+ViewGridDetail.displayName = 'ViewGridDetailIcon';
 
-export default ViewGrid;
+export default ViewGridDetail;

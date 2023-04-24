@@ -172,9 +172,6 @@ dependencies:
   react-i18next:
     specifier: ^11.18.4
     version: 11.18.6(i18next@21.10.0)(react-dom@17.0.2)(react@17.0.2)
-  react-intersection-observer:
-    specifier: ^9.4.0
-    version: 9.4.1(react@17.0.2)
   react-photoswipe-gallery:
     specifier: ^2.2.1
     version: 2.2.2(photoswipe@5.3.4)(prop-types@15.8.1)(react@17.0.2)
@@ -215,8 +212,8 @@ dependencies:
     specifier: ^1.1.7
     version: 1.1.7
   tailwind-variants:
-    specifier: ^0.1.2
-    version: 0.1.2(tailwindcss@3.2.4)
+    specifier: ^0.1.3
+    version: 0.1.3(tailwindcss@3.2.4)
   tailwindcss:
     specifier: ^3.2.4
     version: 3.2.4(postcss@8.4.21)
@@ -12068,14 +12065,6 @@ packages:
       react-dom: 17.0.2(react@17.0.2)
     dev: false
 
-  /react-intersection-observer@9.4.1(react@17.0.2):
-    resolution: {integrity: sha512-IXpIsPe6BleFOEHKzKh5UjwRUaz/JYS0lT/HPsupWEQou2hDqjhLMStc5zyE3eQVT4Fk3FufM8Fw33qW1uyeiw==}
-    peerDependencies:
-      react: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
-    dependencies:
-      react: 17.0.2
-    dev: false
-
   /react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
@@ -13253,8 +13242,8 @@ packages:
     resolution: {integrity: sha512-X324n9OtpTmOMqEgDUEA/RgLrNfBF/jwJdctaPZDzB3mppxJk7TLIDmOreEDm1Bq4R9LSPu4Epf8VSdovNU+iA==}
     dev: false
 
-  /tailwind-variants@0.1.2(tailwindcss@3.2.4):
-    resolution: {integrity: sha512-MOTaBS5Hg7RN/M0tlMZCUD1crDGPlHe7XsFS7+I5bc4hfwQPVuTiPiRqivW9xH/0QvtuVo8AlEwvR2uxSC3phw==}
+  /tailwind-variants@0.1.3(tailwindcss@3.2.4):
+    resolution: {integrity: sha512-lr6pVbUaTUya9unW2XbvwadMOqJg3b/cmCE3XHGxTHYFHD0msEg9lmzWVSaFvdPhk8tYsPf5JRECZIiPjeWmZA==}
     engines: {node: '>=16.x', pnpm: '>=7.x'}
     peerDependencies:
       tailwindcss: '*'

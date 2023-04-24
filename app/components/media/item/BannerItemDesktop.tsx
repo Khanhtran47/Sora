@@ -1,12 +1,10 @@
-/* eslint-disable @typescript-eslint/indent */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Badge, Button, Card, Col, Image as NextImage, Row, Spacer, Text } from '@nextui-org/react';
-import { useMeasure, useMediaQuery } from '@react-hookz/web';
+import { useIntersectionObserver, useMeasure, useMediaQuery } from '@react-hookz/web';
 import { useFetcher, useNavigate } from '@remix-run/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { useInView } from 'react-intersection-observer';
 import YouTube from 'react-youtube';
 import Image, { MimeType } from 'remix-image';
 import { useSwiper } from 'swiper/react';
@@ -16,6 +14,7 @@ import type { ITrailer } from '~/services/consumet/anilist/anilist.types';
 import type { IImage } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
 import useCardHoverStore from '~/store/card/useCardHoverStore';
+import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import AspectRatio from '~/components/elements/aspect-ratio/AspectRatio';
 import type { Trailer } from '~/components/elements/modal/WatchTrailerModal';
@@ -71,12 +70,12 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
   const [showTrailer, setShowTrailer] = useState<boolean>(false);
   const [trailerBanner, setTrailerBanner] = useState<Trailer>({});
   const swiper = useSwiper();
+  const cardRef = useRef<HTMLDivElement>(null);
+  const { viewportRef } = useLayoutScrollPosition((state) => state);
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const isMd = useMediaQuery('(max-width: 960px)', { initializeWithValue: false });
   const isLg = useMediaQuery('(max-width: 1280px)', { initializeWithValue: false });
-  const { ref, inView } = useInView({
-    threshold: 0,
-  });
+  const bannerIntersection = useIntersectionObserver(cardRef, { root: viewportRef });
   const [size, bannerRef] = useMeasure<HTMLDivElement>();
 
   const isCardPlaying = useCardHoverStore((state) => state.isCardPlaying);
@@ -87,54 +86,69 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
       ? title
       : title?.userPreferred || title?.english || title?.romaji || title?.native;
 
-  const mute = useCallback(() => {
+  const mute = () => {
     if (!player) return;
     player.mute();
     isMutedTrailer.set(true);
-  }, [player]);
+  };
 
-  const unMute = useCallback(() => {
+  const unMute = () => {
     if (!player) return;
     player.unMute();
     isMutedTrailer.set(false);
-  }, [player]);
+  };
 
-  const play = useCallback(() => {
+  const play = () => {
     if (!player) return;
     player.playVideo();
     setIsPlayed(true);
-  }, [player]);
+  };
 
-  const pause = useCallback(() => {
+  const pause = () => {
     if (!player) return;
     player.pauseVideo();
     setIsPlayed(false);
-  }, [player]);
+  };
 
-  const pauseVideoOnOutOfView = () => {
+  useEffect(() => {
+    if (!isPlayTrailer.value === true) {
+      setShowTrailer(false);
+    }
+    if (isPlayTrailer.value && swiper.autoplay.running) {
+      swiper.autoplay.stop();
+    }
+  }, [isPlayTrailer.value]);
+
+  useEffect(() => {
     if (!player) return;
-    if (inView && !isPlayed) {
+    if (
+      bannerIntersection?.isIntersecting &&
+      active &&
+      !isPlayed &&
+      !isCardPlaying &&
+      !document.hidden
+    ) {
       play();
-    } else if (!inView && isPlayed) {
+    } else if (!bannerIntersection?.isIntersecting && active && isPlayed) {
+      pause();
+    } else if (active && isCardPlaying && isPlayed) {
       pause();
     }
-  };
+  }, [bannerIntersection?.isIntersecting, isPlayed, player, active, isCardPlaying]);
 
-  const handleVisibility = () => {
-    if (!document.hidden && inView && !isPlayed) {
-      play();
-    } else if (document.hidden && isPlayed) {
-      pause();
-    }
-  };
-
-  const pauseVideoOnCardPlaying = () => {
-    if (player) {
-      if (isCardPlaying && isPlayed) {
+  useEffect(() => {
+    const handleVisibility = () => {
+      if (!document.hidden && bannerIntersection?.isIntersecting && active && !isPlayed) {
+        play();
+      } else if (document.hidden && isPlayed && active) {
         pause();
       }
-    }
-  };
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
+  }, [active, isPlayed]);
 
   useEffect(() => {
     // fetch logo and youtube trailer key from tmdb
@@ -149,51 +163,33 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
   }, [active, isPlayTrailer.value]);
 
   useEffect(() => {
-    if (active === true && fetcher.data && fetcher.data.videos && inView && mediaType !== 'anime') {
+    if (
+      active === true &&
+      fetcher.data &&
+      fetcher.data.videos &&
+      bannerIntersection?.isIntersecting &&
+      mediaType !== 'anime'
+    ) {
       const { results } = fetcher.data.videos;
       const officialTrailer = results.find((result: Trailer) => result.type === 'Trailer');
       setTrailerBanner(officialTrailer);
     }
-    if (active === true && fetcher.data && fetcher.data.images && inView && mediaType !== 'anime') {
+    if (
+      active === true &&
+      fetcher.data &&
+      fetcher.data.images &&
+      bannerIntersection?.isIntersecting &&
+      mediaType !== 'anime'
+    ) {
       const { logos } = fetcher.data.images;
       if (logos && logos.length > 0) setLogo(logos[0]);
     }
   }, [fetcher.data]);
 
-  useEffect(() => {
-    if (!isPlayTrailer.value === true) {
-      setShowTrailer(false);
-    }
-    if (isPlayTrailer.value && swiper.autoplay.running) {
-      swiper.autoplay.stop();
-    }
-  }, [isPlayTrailer.value]);
-
-  useEffect(() => {
-    const watchScroll = () => {
-      window.addEventListener('scroll', pauseVideoOnOutOfView);
-    };
-    watchScroll();
-    return () => {
-      window.removeEventListener('scroll', pauseVideoOnOutOfView);
-    };
-  });
-
-  useEffect(() => {
-    document.addEventListener('visibilitychange', handleVisibility);
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibility);
-    };
-  }, [handleVisibility]);
-
-  useEffect(() => {
-    pauseVideoOnCardPlaying();
-  }, [isCardPlaying]);
-
   return (
     <AspectRatio.Root ratio={16 / 8} ref={bannerRef}>
       <Card
-        ref={ref}
+        ref={cardRef}
         variant="flat"
         css={{ w: size?.width, h: size?.height, borderWidth: 0 }}
         role="figure"
@@ -497,9 +493,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
               width: '100%',
               height: '100px',
               backgroundImage:
-                'linear-gradient(0deg, $background, $backgroundTransparent), linear-gradient(0deg, $backgroundContrastAlpha, $backgroundTransparent)',
-              backgroundRepeat: 'no-repeat',
-              backgroundBlendMode: 'color',
+                'linear-gradient(var(--nextui-colors-backgroundTransparent) 0%, var(--nextui-colors-background) 100%)',
               '@lgMin': {
                 height: '250px',
               },
@@ -576,13 +570,13 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                 },
               }}
               onReady={({ target }) => {
-                if (active && inView) target.playVideo();
+                if (active && bannerIntersection?.isIntersecting) target.playVideo();
                 setPlayer(target);
                 if (!isMutedTrailer.value) target.unMute();
               }}
               onPlay={() => {
                 setIsPlayed(true);
-                if (active && inView) setShowTrailer(true);
+                if (active && bannerIntersection?.isIntersecting) setShowTrailer(true);
               }}
               onPause={() => {
                 setShowTrailer(false);
@@ -632,7 +626,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                 },
               }}
               onReady={({ target }) => {
-                if (active && inView) target.playVideo();
+                if (active && bannerIntersection?.isIntersecting) target.playVideo();
                 setPlayer(target);
                 if (!isMutedTrailer.value) target.unMute();
               }}

@@ -1,12 +1,6 @@
 import { Badge } from '@nextui-org/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import {
-  NavLink,
-  useLoaderData,
-  useLocation,
-  useNavigate,
-  type RouteMatch,
-} from '@remix-run/react';
+import { NavLink, useLoaderData, useNavigate, type RouteMatch } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 
 import type { IMedia } from '~/types/media';
@@ -73,13 +67,13 @@ export const handle = {
     subtitle: match.params.animeKeyword,
     showImage: false,
   }),
+  showListViewChangeButton: true,
 };
 
 const SearchRoute = () => {
   const { searchResults } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const location = useLocation();
 
   const onSubmit = (value: string) => {
     navigate(`/search/anime/${value}`);
@@ -94,14 +88,13 @@ const SearchRoute = () => {
       />
       {searchResults && searchResults.results && searchResults.results.length > 0 && (
         <MediaList
+          currentPage={searchResults.currentPage || 1}
           hasNextPage={searchResults.hasNextPage || false}
           items={searchResults.results as IMedia[]}
           itemsType="anime"
           listName={t('search.searchResults')}
           listType="grid"
-          loadingType="scroll"
-          routeName={location.pathname}
-          virtual
+          showListTypeChangeButton
         />
       )}
     </div>

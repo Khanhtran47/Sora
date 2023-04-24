@@ -8,9 +8,7 @@ const BackgroundTabLink = styled('div', {
   zIndex: -2,
   height: '100%',
   backgroundImage:
-    'linear-gradient(var(--nextui-colors-backgroundLight) 0%, var(--nextui-colors-background) 100%), linear-gradient(var(--nextui-colors-backgroundLight) 0%, var(--nextui-colors-backgroundContrastAlpha) 100%)',
-  backgroundRepeat: 'no-repeat',
-  backgroundBlendMode: 'color',
+    'linear-gradient(var(--nextui-colors-backgroundLight) 0%, var(--nextui-colors-background) 100%)',
 });
 
 const BackgroundContent = styled('div', {
