@@ -1,7 +1,8 @@
 import { Button } from '@nextui-org/react';
 import { NavLink, useLocation, useNavigate } from '@remix-run/react';
-import { motion } from 'framer-motion';
+import { motion, useTransform } from 'framer-motion';
 
+import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
 import { useHistoryStack } from '~/store/layout/useHistoryStack';
 import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
 import { useHeaderOptions } from '~/hooks/useHeader';
@@ -13,6 +14,8 @@ const MobileHeader = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { historyBack } = useHistoryStack((state) => state);
+  const { scrollY } = useLayoutScrollPosition((state) => state);
+  const { startChangeScrollPosition } = useHeaderStyle((state) => state);
   const {
     isShowMobileHeader,
     isShowTabLink,
@@ -20,8 +23,18 @@ const MobileHeader = () => {
     customHeaderBackgroundColor,
     currentMiniTitle,
     headerBackgroundColor,
-    headerBackgroundOpacity,
+    customHeaderChangeColorOnScroll,
   } = useHeaderOptions();
+  const opacity = useTransform(
+    scrollY,
+    [0, startChangeScrollPosition, startChangeScrollPosition + 80],
+    [0, 0, customHeaderChangeColorOnScroll ? (startChangeScrollPosition ? 1 : 0) : 1],
+  );
+  const y = useTransform(
+    scrollY,
+    [0, startChangeScrollPosition, startChangeScrollPosition + 80],
+    [60, 60, customHeaderChangeColorOnScroll ? (startChangeScrollPosition ? 0 : 60) : 0],
+  );
   const handleBackButton = () => {
     if (historyBack.length > 1) {
       navigate(-1);
@@ -67,10 +80,10 @@ const MobileHeader = () => {
   }
   return (
     <div className="fixed top-0 z-[1000] flex h-[64px] w-[100vw] flex-row items-center justify-start gap-x-3 px-3 py-2 shadow-none sm:hidden">
-      <div
+      <motion.div
         className="absolute top-0 left-0 z-[-1] w-full backdrop-blur-md"
         style={{
-          opacity: headerBackgroundOpacity,
+          opacity,
           backgroundColor: headerBackgroundColor,
           height: isShowTabLink && !hideTabLinkWithLocation ? 112 : 64,
         }}
@@ -78,7 +91,7 @@ const MobileHeader = () => {
         {customHeaderBackgroundColor ? (
           <div className="pointer-events-none h-full w-full bg-background-light" />
         ) : null}
-      </div>
+      </motion.div>
       <Button
         auto
         light
@@ -90,8 +103,7 @@ const MobileHeader = () => {
       <div className="flex flex-row items-center justify-between">
         {currentMiniTitle ? (
           <motion.span
-            initial={{ opacity: 0, y: 60 }}
-            animate={{ opacity: headerBackgroundOpacity, y: (1 - headerBackgroundOpacity) * 60 }}
+            style={{ opacity, y }}
             transition={{ duration: 0.3 }}
             className="flex flex-col items-start justify-center"
           >

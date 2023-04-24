@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { Avatar, Badge, Button, Card, Spacer, Tooltip } from '@nextui-org/react';
 import { useMeasure, useMediaQuery } from '@react-hookz/web';
 import { useFetcher, useLocation, useNavigate } from '@remix-run/react';
+import { motion, useTransform } from 'framer-motion';
 import Image, { MimeType } from 'remix-image';
 // import { useTranslation } from 'react-i18next';
 import { tv } from 'tailwind-variants';
@@ -695,8 +696,13 @@ export const MediaBackgroundImage = (props: IMediaBackground) => {
   const [size, backgroundRef] = useMeasure<HTMLDivElement>();
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const { sidebarMiniMode, sidebarBoxedMode } = useSoraSettings();
-  const { scrollPosition } = useLayoutScrollPosition((scrollState) => scrollState);
+  const { scrollY } = useLayoutScrollPosition((scrollState) => scrollState);
   const backgroundImageHeight = isSm ? 100 : 300;
+  const height = useTransform(
+    scrollY,
+    [0, 800 - backgroundImageHeight],
+    [backgroundImageHeight, 800],
+  );
   return (
     <div
       ref={backgroundRef}
@@ -720,19 +726,14 @@ export const MediaBackgroundImage = (props: IMediaBackground) => {
         backgroundSize: `${size?.width}px auto`,
       }}
     >
-      <div
+      <motion.div
         style={{
           position: 'absolute',
           bottom: 0,
           left: 0,
           right: 0,
           width: '100%',
-          height:
-            scrollPosition?.y && backgroundImageHeight + scrollPosition?.y > 800
-              ? 800
-              : scrollPosition?.y && backgroundImageHeight + scrollPosition?.y < 800
-              ? backgroundImageHeight + scrollPosition?.y
-              : backgroundImageHeight,
+          height,
           backgroundImage: `linear-gradient(to top, ${backgroundColor}, ${tinycolor(
             backgroundColor,
           ).setAlpha(0)})`,

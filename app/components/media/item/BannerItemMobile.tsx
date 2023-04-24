@@ -83,9 +83,7 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
                 width: '100%',
                 height: `${(size?.height || 0) / 2}px`,
                 backgroundImage:
-                  'linear-gradient(0deg, $background, $backgroundTransparent), linear-gradient(0deg, $backgroundContrastAlpha, $backgroundTransparent)',
-                backgroundRepeat: 'no-repeat',
-                backgroundBlendMode: 'color',
+                  'linear-gradient(var(--nextui-colors-backgroundTransparent) 0%, var(--nextui-colors-background) 100%)',
                 '@lgMin': {
                   height: '250px',
                 },

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Button, Pagination } from '@nextui-org/react';
-import { useMeasure, useMediaQuery } from '@react-hookz/web';
+import { useIntersectionObserver, useMediaQuery } from '@react-hookz/web';
 import { Link, useFetcher, useLocation, useSearchParams } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import NProgress from 'nprogress';
@@ -64,14 +64,13 @@ const MediaListGrid = (props: IMediaListCardProps) => {
   const fetcher = useFetcher();
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams({});
-  const { scrollHeight, scrollPosition } = useLayoutScrollPosition((state) => state);
+  const { viewportRef } = useLayoutScrollPosition((state) => state);
   const [listItems, setListItems] = useState<IMedia[]>(items || []);
   const [shouldFetch, setShouldFetch] = useState(false);
   const [showLoadMore, setShowLoadMore] = useState(true);
   const [page, setPage] = useState(2);
   const topRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
-  const [size, parentRef] = useMeasure<HTMLDivElement>();
   const { listLoadingType, listViewType } = useSoraSettings();
   const is2Xs = useMediaQuery('(max-width: 320px)', { initializeWithValue: false });
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
@@ -82,6 +81,11 @@ const MediaListGrid = (props: IMediaListCardProps) => {
     });
     return params;
   }, [searchParams]);
+  const bottomIntersection = useIntersectionObserver(bottomRef, {
+    root: viewportRef,
+    rootMargin: '0px 0px 300px 0px',
+    threshold: [0],
+  });
 
   useEffect(() => {
     setListItems(items || []);
@@ -90,19 +94,18 @@ const MediaListGrid = (props: IMediaListCardProps) => {
     setShowLoadMore(true);
   }, [items]);
 
-  // Listen on scrolls. Fire on some self-described breakpoint
   useEffect(() => {
-    if (!shouldFetch || !size?.height) return;
-    if (scrollHeight + scrollPosition.y + 100 < size?.height) return;
-
-    fetcher.load(
-      `${location.pathname}${location.search || ''}${
-        location.search?.includes('?') ? '&' : '?'
-      }page=${page}${provider ? `&provider=${provider}` : ''}`,
-    );
-    setShouldFetch(false);
+    if (!bottomIntersection || !shouldFetch) return;
+    if (bottomIntersection.isIntersecting) {
+      fetcher.load(
+        `${location.pathname}${location.search || ''}${
+          location.search?.includes('?') ? '&' : '?'
+        }page=${page}${provider ? `&provider=${provider}` : ''}`,
+      );
+      setShouldFetch(false);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scrollPosition, scrollHeight, size?.height]);
+  }, [bottomIntersection]);
 
   // Merge items, increment page, and allow fetching again
   useEffect(() => {
@@ -219,7 +222,6 @@ const MediaListGrid = (props: IMediaListCardProps) => {
           listViewType:
             itemsType === 'episode' || itemsType === 'people' ? 'card' : listViewType.value,
         })}
-        ref={parentRef}
       >
         {listItems &&
           listItems?.length > 0 &&
@@ -299,11 +301,13 @@ const MediaListGrid = (props: IMediaListCardProps) => {
           type="button"
           // shadow
           color="primary"
-          ref={bottomRef}
           onPress={() => {
+            fetcher.load(
+              `${location.pathname}${location.search || ''}${
+                location.search?.includes('?') ? '&' : '?'
+              }page=${page}${provider ? `&provider=${provider}` : ''}`,
+            );
             setShowLoadMore(false);
-            setShouldFetch(true);
-            bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
           }}
           css={{ marginTop: '$32' }}
         >
@@ -337,6 +341,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
           />
         ) : null
       ) : null}
+      <div ref={bottomRef} />
     </>
   );
 };

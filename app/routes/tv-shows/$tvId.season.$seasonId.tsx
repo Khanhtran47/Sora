@@ -1,6 +1,4 @@
-/* eslint-disable no-unsafe-optional-chaining */
-/* eslint-disable @typescript-eslint/indent */
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { Avatar, Badge, Card, Spacer } from '@nextui-org/react';
 import { useIntersectionObserver, useMeasure, useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
@@ -12,6 +10,7 @@ import {
   useParams,
   type RouteMatch,
 } from '@remix-run/react';
+import { motion, useTransform } from 'framer-motion';
 import Vibrant from 'node-vibrant';
 import Image, { MimeType } from 'remix-image';
 import tinycolor from 'tinycolor2';
@@ -211,7 +210,7 @@ const TvSeasonDetail = () => {
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const isXl = useMediaQuery('(max-width: 1280px)', { initializeWithValue: false });
   const { sidebarBoxedMode } = useSoraSettings();
-  const { scrollPosition, viewportRef } = useLayoutScrollPosition((scrollState) => scrollState);
+  const { viewportRef, scrollY } = useLayoutScrollPosition((scrollState) => scrollState);
   const { setBackgroundColor, startChangeScrollPosition } = useHeaderStyle(
     (headerState) => headerState,
   );
@@ -221,35 +220,15 @@ const TvSeasonDetail = () => {
     rootMargin: sidebarBoxedMode ? '-180px 0px 0px 0px' : '-165px 0px 0px 0px',
     threshold: [1],
   });
-  const tablinkPaddingTop = useMemo(
-    () =>
-      `${
-        startChangeScrollPosition === 0
-          ? 1
-          : scrollPosition?.y - startChangeScrollPosition > 0 &&
-            scrollPosition?.y - startChangeScrollPosition < 100 &&
-            startChangeScrollPosition > 0
-          ? 1 - (scrollPosition?.y - startChangeScrollPosition) / 100
-          : scrollPosition?.y - startChangeScrollPosition > 100
-          ? 0
-          : 1
-      }rem`,
-    [startChangeScrollPosition, scrollPosition?.y],
+  const paddingTop = useTransform(
+    scrollY,
+    [0, startChangeScrollPosition, startChangeScrollPosition + 100],
+    [16, 16, startChangeScrollPosition ? 0 : 16],
   );
-  const tablinkPaddingBottom = useMemo(
-    () =>
-      `${
-        startChangeScrollPosition === 0
-          ? 2
-          : scrollPosition?.y - startChangeScrollPosition > 0 &&
-            scrollPosition?.y - startChangeScrollPosition < 100 &&
-            startChangeScrollPosition > 0
-          ? 2 - (scrollPosition?.y - startChangeScrollPosition) / 100
-          : scrollPosition?.y - startChangeScrollPosition > 100
-          ? 0
-          : 2
-      }rem`,
-    [startChangeScrollPosition, scrollPosition?.y],
+  const paddingBottom = useTransform(
+    scrollY,
+    [0, startChangeScrollPosition, startChangeScrollPosition + 100],
+    [32, 32, startChangeScrollPosition ? 0 : 32],
   );
   useCustomHeaderChangePosition(tablinkIntersection);
   useEffect(() => {
@@ -420,18 +399,18 @@ const TvSeasonDetail = () => {
         </Card.Body>
       </Card>
       <div className="flex w-full flex-col items-center justify-center">
-        <div
+        <motion.div
           className="sticky top-[64px] z-[1000] flex w-full justify-center transition-[padding] duration-100 ease-in-out"
           style={{
             backgroundColor,
-            paddingTop: tablinkPaddingTop,
-            paddingBottom: tablinkPaddingBottom,
+            paddingTop,
+            paddingBottom,
           }}
           ref={tabLinkRef}
         >
           <BackgroundTabLink css={{ backgroundColor, zIndex: 1 }} />
           <TabLink pages={tvSeasonDetailPages} linkTo={`/tv-shows/${tvId}/season/${seasonId}`} />
-        </div>
+        </motion.div>
         <Outlet />
       </div>
     </>
