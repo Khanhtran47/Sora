@@ -1,4 +1,4 @@
-/* eslint-disable no-nested-ternary */
+import { cnBase } from 'tailwind-variants';
 
 import { H6 } from '~/components/styles/Text.styles';
 import AnilistStatIcon from '~/assets/icons/AnilistStatIcon';
@@ -7,13 +7,14 @@ interface IRatingProps {
   rating: number | string | undefined;
   ratingType?: 'movie' | 'tv' | 'anime' | 'people';
   color?: string;
+  className?: string;
 }
 
 const Rating = (props: IRatingProps) => {
-  const { rating, ratingType, color } = props;
+  const { rating, ratingType, color, className } = props;
   if (ratingType === 'movie' || ratingType === 'tv') {
     return (
-      <div className="flex flex-row items-center gap-x-2">
+      <div className={cnBase('flex flex-row items-center gap-x-2', className)}>
         <H6
           h6
           weight="semibold"
@@ -33,7 +34,7 @@ const Rating = (props: IRatingProps) => {
     );
   }
   return (
-    <div className="flex flex-row items-center gap-x-2">
+    <div className={cnBase('flex flex-row items-center gap-x-2', className)}>
       {Number(rating) > 75 ? (
         <AnilistStatIcon stat="good" />
       ) : Number(rating) > 60 ? (

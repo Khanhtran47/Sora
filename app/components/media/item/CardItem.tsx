@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Avatar, Button, Card, Tooltip } from '@nextui-org/react';
 import { useIntersectionObserver, useMeasure } from '@react-hookz/web';
 import { Link, useFetcher, useNavigate } from '@remix-run/react';
@@ -154,6 +154,12 @@ const CardItem = (props: ICardItemProps) => {
     root: viewportRef,
     rootMargin: '1500px 0px 1500px 0px',
   });
+  const inView = useMemo(() => {
+    if (isSliderCard) {
+      return true;
+    }
+    return cardIntersection?.isIntersecting;
+  }, [cardIntersection, isSliderCard]);
 
   const titleItem =
     typeof title === 'string'
@@ -210,7 +216,7 @@ const CardItem = (props: ICardItemProps) => {
                 loaderUrl="/api/image"
                 placeholder="empty"
                 loading="lazy"
-                // decoding={inView ? 'async' : 'auto'}
+                decoding={inView ? 'async' : 'auto'}
                 options={{
                   contentType: MimeType.WEBP,
                 }}
@@ -239,7 +245,7 @@ const CardItem = (props: ICardItemProps) => {
     <Card
       as="div"
       isHoverable
-      isPressable
+      isPressable={listViewType.value === 'card'}
       css={{
         borderWidth: 0,
         filter: 'unset',
@@ -257,7 +263,7 @@ const CardItem = (props: ICardItemProps) => {
     >
       <Card.Body css={{ p: 0, width: '100%' }} className={body()}>
         <div className={imageContainer()} ref={imageRef}>
-          {size && !isTooltipVisible && cardIntersection?.isIntersecting ? (
+          {size && !isTooltipVisible && inView ? (
             <Link to={linkTo || '/'}>
               {posterPath ? (
                 <Card.Image
@@ -270,7 +276,7 @@ const CardItem = (props: ICardItemProps) => {
                   title={titleItem}
                   loading="lazy"
                   className={image()}
-                  // decoding={inView ? 'async' : 'auto'}
+                  decoding={inView ? 'async' : 'auto'}
                   css={{
                     transition: 'all 0.3s ease !important',
                     transform: 'scale(1)',
@@ -315,7 +321,7 @@ const CardItem = (props: ICardItemProps) => {
         !isSliderCard &&
         !isEpisodeCard &&
         mediaType !== 'people' &&
-        cardIntersection?.isIntersecting ? (
+        inView ? (
           <div className={content()}>
             <div className="flex h-6 flex-row items-center justify-between">
               <H6 h6 weight="semibold" className="hidden 2xs:block">
@@ -412,15 +418,15 @@ const CardItem = (props: ICardItemProps) => {
           !isSliderCard &&
           !isEpisodeCard &&
           mediaType !== 'people' &&
-          cardIntersection?.isIntersecting ? (
+          inView ? (
           <div className={content()}>
-            <H5 h5 weight="bold">
+            <Link to={linkTo || '/'} className="text-lg font-bold text-text">
               {titleItem}
-            </H5>
+            </Link>
             <div className="flex flex-row items-center justify-between">
               <div className="flex flex-row items-center justify-start gap-x-3">
                 {mediaType === 'anime'
-                  ? genresAnime?.slice(0, 2).map((genre) => (
+                  ? genresAnime?.slice(0, 2).map((genre, index) => (
                       <Button
                         key={genre}
                         type="button"
@@ -429,11 +435,12 @@ const CardItem = (props: ICardItemProps) => {
                         auto
                         size="xs"
                         onPress={() => navigate(`/discover/anime?genres=${genre}`)}
+                        className={index === 1 ? '!hidden sm:!flex' : ''}
                       >
                         {genre}
                       </Button>
                     ))
-                  : genreIds?.slice(0, 2).map((genreId) => {
+                  : genreIds?.slice(0, 2).map((genreId, index) => {
                       if (mediaType === 'movie') {
                         return (
                           <Button
@@ -446,6 +453,7 @@ const CardItem = (props: ICardItemProps) => {
                             onPress={() =>
                               navigate(`/discover/movies?with_genres=${genresMovie?.[genreId]}`)
                             }
+                            className={index === 1 ? '!hidden sm:!flex' : ''}
                           >
                             {genresMovie?.[genreId]}
                           </Button>
@@ -462,6 +470,7 @@ const CardItem = (props: ICardItemProps) => {
                           onPress={() =>
                             navigate(`/discover/tv-shows?with_genres=${genresTv?.[genreId]}`)
                           }
+                          className={index === 1 ? '!hidden sm:flex' : ''}
                         >
                           {genresTv?.[genreId]}
                         </Button>
@@ -469,12 +478,13 @@ const CardItem = (props: ICardItemProps) => {
                     })}
               </div>
               <div className="flex h-6 flex-row items-center justify-between gap-x-3">
-                <H6 h6 weight="semibold" className="hidden 2xs:block">
+                <H6 h6 weight="semibold" className="hidden sm:block">
                   {`${mediaType.charAt(0).toUpperCase()}${mediaType.slice(1)} • ${releaseDate}`}
                 </H6>
                 <Rating
                   ratingType={mediaType}
                   rating={mediaType === 'anime' ? voteAverage : voteAverage.toFixed(1)}
+                  className="hidden 2xs:flex"
                 />
               </div>
             </div>
@@ -513,7 +523,7 @@ const CardItem = (props: ICardItemProps) => {
         ) : null}
       </Card.Body>
       {(listViewType.value === 'card' || mediaType === 'people' || isSliderCard || isEpisodeCard) &&
-      cardIntersection?.isIntersecting ? (
+      inView ? (
         <Tooltip
           placement="top"
           animated={false}
@@ -623,10 +633,7 @@ const CardItem = (props: ICardItemProps) => {
             ) : null}
           </Card.Footer>
         </Tooltip>
-      ) : listViewType.value === 'detail' &&
-        !isSliderCard &&
-        !isEpisodeCard &&
-        cardIntersection?.isIntersecting ? (
+      ) : listViewType.value === 'detail' && !isSliderCard && !isEpisodeCard && inView ? (
         <Link to={linkTo || '/'}>
           <Card.Footer className={footer()}>
             <H5 h5 weight="bold">
