@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/indent */
+import { useRef } from 'react';
 import { Badge, Card, Col, Row, Spacer, Text } from '@nextui-org/react';
-import { useMeasure, useMediaQuery } from '@react-hookz/web';
+import { useIntersectionObserver, useMeasure, useMediaQuery } from '@react-hookz/web';
 import { Link } from '@remix-run/react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
 import Image, { MimeType } from 'remix-image';
 
 import type { Title } from '~/types/media';
+import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
 import AspectRatio from '~/components/elements/aspect-ratio/AspectRatio';
 import { H5 } from '~/components/styles/Text.styles';
 import Star from '~/assets/icons/StarIcon';
@@ -38,9 +39,9 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
     genresAnime,
   } = props;
   const isXs = useMediaQuery('(max-width: 375px)', { initializeWithValue: false });
-  const { ref, inView } = useInView({
-    threshold: 0,
-  });
+  const { viewportRef } = useLayoutScrollPosition((state) => state);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const cardIntersection = useIntersectionObserver(cardRef, { root: viewportRef });
   const [size, bannerRef] = useMeasure<HTMLDivElement>();
   const titleItem =
     typeof title === 'string'
@@ -57,7 +58,7 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
         <Card
           as="div"
           variant="flat"
-          ref={ref}
+          ref={cardRef}
           isPressable
           css={{
             w: size?.width,
@@ -106,7 +107,7 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
                     as={Image}
                     src={posterPath || ''}
                     loading="lazy"
-                    decoding={inView ? 'auto' : 'async'}
+                    decoding={cardIntersection?.isIntersecting ? 'auto' : 'async'}
                     width="100%"
                     height="auto"
                     css={{
