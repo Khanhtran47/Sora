@@ -20,6 +20,7 @@ import {
 } from '~/components/elements/scroll-area/ScrollArea';
 import TabLink from '~/components/elements/tab/TabLink';
 
+import ActionButtons from './ActionButtons';
 // import Footer from './Footer';
 import BottomNav from './BottomNav';
 // import BreadCrumb from './BreadCrumb';
@@ -300,6 +301,7 @@ const Layout = (props: ILayout) => {
             <TabLink pages={currentTabLinkPages} linkTo={currentTabLinkTo} />
           </div>
         ) : null}
+        <ActionButtons />
         <ScrollArea
           type={isSm ? 'scroll' : 'always'}
           scrollHideDelay={500}
