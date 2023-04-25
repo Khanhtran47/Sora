@@ -1386,7 +1386,14 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
     return (
       <Sheet open={isSettingsOpen} onOpenChange={(open) => handleOpenChange(open)}>
         <SheetTrigger asChild>
-          <Button type="button" auto light aria-label="dropdown" icon={<Settings filled />} />
+          <Button
+            type="button"
+            auto
+            light
+            aria-label="dropdown"
+            icon={<Settings filled />}
+            className="art-icon"
+          />
         </SheetTrigger>
         <SheetContent
           side="bottom"
@@ -1530,7 +1537,14 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
   return (
     <Popover open={isSettingsOpen} onOpenChange={(open) => handleOpenChange(open)}>
       <PopoverTrigger asChild>
-        <Button type="button" auto light aria-label="dropdown" icon={<Settings filled />} />
+        <Button
+          type="button"
+          auto
+          light
+          aria-label="dropdown"
+          icon={<Settings filled />}
+          className="art-icon"
+        />
       </PopoverTrigger>
       <PopoverContent
         side="top"

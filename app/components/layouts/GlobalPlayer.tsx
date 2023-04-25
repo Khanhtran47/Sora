@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Button, Container, Tooltip, keyframes } from '@nextui-org/react';
+import { Button, Container, Tooltip } from '@nextui-org/react';
 import { useMeasure } from '@react-hookz/web';
 import {
   useFetcher,
@@ -18,6 +18,7 @@ import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
 import Hls from 'hls.js';
 import { isDesktop, isMobile, isMobileOnly } from 'react-device-detect';
 import { createPortal } from 'react-dom';
+import { tv } from 'tailwind-variants';
 import tinycolor from 'tinycolor2';
 
 import updateHistory from '~/utils/client/update-history';
@@ -25,53 +26,72 @@ import usePlayerState, { type PlayerData } from '~/store/player/usePlayerState';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import SearchSubtitles from '~/components/elements/modal/SearchSubtitle';
 import WatchTrailerModal, { type Trailer } from '~/components/elements/modal/WatchTrailerModal';
-import ArtPlayer from '~/components/elements/player/ArtPlayer';
+import Player from '~/components/elements/player/ArtPlayer';
 import PlayerError from '~/components/elements/player/PlayerError';
 import PlayerHotKey from '~/components/elements/player/PlayerHotkey';
 import PlayerSettings from '~/components/elements/player/PlayerSettings';
 import Box from '~/components/styles/Box.styles';
 import Flex from '~/components/styles/Flex.styles';
-import { H5, H6 } from '~/components/styles/Text.styles';
-import Close from '~/assets/icons/CloseIcon';
+import { H6 } from '~/components/styles/Text.styles';
 import Expand from '~/assets/icons/ExpandIcon';
 import Next from '~/assets/icons/NextIcon';
 import Pause from '~/assets/icons/PauseIcon';
 import Play from '~/assets/icons/PlayIcon';
 import Previous from '~/assets/icons/PreviousIcon';
 
-const jumpAnimation = keyframes({
-  '15%': {
-    borderBottomRightRadius: '3px',
-  },
-  '25%': {
-    transform: 'translateY(9px) rotate(22.5deg)',
-  },
-  '50%': {
-    transform: 'translateY(18px) scale(1, .9) rotate(45deg)',
-    borderBottomRightRadius: '40px',
-  },
-  '75%': {
-    transform: 'translateY(9px) rotate(67.5deg)',
-  },
-  '100%': {
-    transform: 'translateY(0) rotate(90deg)',
-  },
-});
-
-const shadowAnimation = keyframes({
-  '0%, 100%': {
-    transform: 'scale(1, 1)',
-  },
-  '50%': {
-    transform: 'scale(1.2, 1)',
-  },
-});
-
 type Highlight = {
   start: number;
   end: number;
   text: string;
 };
+
+const playerStyles = tv({
+  base: "custom-player-subtitle custom-player-layer-auto-playback custom-player-contextmenus custom-player-info custom-player-notice-inner custom-player-volume-control custom-player-icon-after custom-player-icon-before custom-player-control-after custom-player-control-before [&_.art-bottom]:!bg-gradient-to-b [&_.art-bottom]:from-transparent [&_.art-bottom]:via-background-alpha [&_.art-bottom]:to-background-contrast [&_.art-layer-lock]:bg-background-alpha [&_.art-control-topControlButtons]:!opacity-100 [&_.art-control-topControlButtons]:before:absolute [&_.art-control-topControlButtons]:before:top-0 [&_.art-control-topControlButtons]:before:left-0 [&_.art-control-topControlButtons]:before:h-[100px] [&_.art-control-topControlButtons]:before:w-full [&_.art-control-topControlButtons]:before:bg-gradient-to-t [&_.art-control-topControlButtons]:before:from-transparent [&_.art-control-topControlButtons]:before:via-background-alpha [&_.art-control-topControlButtons]:before:to-background-contrast [&_.art-control-topControlButtons]:before:bg-top [&_.art-control-topControlButtons]:before:bg-repeat-x [&_.art-control-topControlButtons]:before:content-[''] [&_.art-subtitle]:bg-player-subtitle-window-color [&_.art-subtitle]:!text-shadow-player [&_.art-video-player]:!font-[Inter] [&_.art-notice]:!justify-center [&_.art-layer-mask]:hidden [&_.art-layer-mask]:bg-transparent [&_.art-layer-mask]:transition-all [&_.art-layer-mask]:duration-300 [&_.art-layer-mask]:ease-[ease] [&_.art-layer-playPauseButton]:hidden [&_.art-layer-playPauseButton]:transition-all [&_.art-layer-playPauseButton]:duration-300 [&_.art-layer-playPauseButton]:ease-[ease] [&_.art-contextmenu]:!border-border [&_.art-contextmenu]:!text-shadow-none [&_.art-layer-miniTopControlButtons]:hidden [&_.art-layer-miniTopControlButtons]:transition-all [&_.art-layer-miniTopControlButtons]:duration-300 [&_.art-layer-miniTopControlButtons]:ease-[ease]",
+  variants: {
+    isMini: {
+      true: 'custom-mini-player-hover h-[14.0625rem] w-[25rem] rounded-t-lg [&_.art-bottom]:!visible [&_.art-bottom]:!overflow-visible [&_.art-bottom]:!bg-none [&_.art-bottom]:!p-0 [&_.art-bottom]:!opacity-100 [&_.art-subtitle]:!bottom-[7px] [&_.art-controls]:hidden [&_.art-controls]:!transform-none [&_.art-control-progress]:!h-[7px] [&_.art-control-progress]:!items-end [&_.art-mask]:!hidden [&_.art-progress]:!transform-none',
+      false: 'h-full w-full rounded-none',
+    },
+    isMobile: {
+      true: '[&_.art-bottom]:!flex-col-reverse [&_.art-bottom]:!justify-start [&_.art-bottom]:!overflow-visible [&_.art-bottom]:!p-0 [&_.art-controls]:!px-[10px] [&_.art-progress-indicator]:!m-0',
+      false: '',
+    },
+    isSettingsOpen: {
+      true: '',
+      false: '',
+    },
+    isPlayerFullScreen: {
+      true: '[&_.art-control-topControlButtons]:block [&_.art-control-topControlButtons]:before:block',
+      false:
+        '[&_.art-control-topControlButtons]:hidden [&_.art-control-topControlButtons]:before:hidden',
+    },
+    showSubtitle: {
+      true: '[&_.art-subtitle]:!flex',
+      false: '[&_.art-subtitle]:!hidden',
+    },
+    subtitleColor: {
+      White: '[&_.art-subtitle]:text-[#fff]',
+      Blue: '[&_.art-subtitle]:text-[#0072F5]',
+      Purple: '[&_.art-subtitle]:text-[#7828C8]',
+      Green: '[&_.art-subtitle]:text-[#17C964]',
+      Yellow: '[&_.art-subtitle]:text-[#F5A524]',
+      Red: '[&_.art-subtitle]:text-[#F31260]',
+      Cyan: '[&_.art-subtitle]:text-[#06B7DB]',
+      Pink: '[&_.art-subtitle]:text-[#FF4ECD]',
+      Black: '[&_.art-subtitle]:text-[#000]',
+    },
+  },
+  compoundVariants: [
+    {
+      // @ts-ignore
+      isMini: true,
+      // @ts-ignores
+      isSettingsOpen: true,
+      class:
+        '[&_.art-layer-mask]:block [&_.art-layer-mask]:bg-background-alpha [&_.art-layer-miniTopControlButtons]:block',
+    },
+  ],
+});
 
 const GlobalPlayer = () => {
   const location = useLocation();
@@ -262,6 +282,27 @@ const GlobalPlayer = () => {
         break;
     }
   }, [currentSubtitleWindowColor.value, currentSubtitleWindowOpacity.value]);
+  const subtitleFontSize = useMemo(
+    () =>
+      currentSubtitleFontSize.value === '50%'
+        ? `${(size?.height || 0) * 0.05 * 0.5}px`
+        : currentSubtitleFontSize.value === '75%'
+        ? `${(size?.height || 0) * 0.05 * 0.75}px`
+        : currentSubtitleFontSize.value === '100%'
+        ? `${(size?.height || 0) * 0.05}px`
+        : currentSubtitleFontSize.value === '125%'
+        ? `${(size?.height || 0) * 0.05 * 1.25}px`
+        : currentSubtitleFontSize.value === '150%'
+        ? `${(size?.height || 0) * 0.05 * 1.5}px`
+        : currentSubtitleFontSize.value === '175%'
+        ? `${(size?.height || 0) * 0.05 * 1.75}px`
+        : currentSubtitleFontSize.value === '200%'
+        ? `${(size?.height || 0) * 0.05 * 2}px`
+        : currentSubtitleFontSize.value === '300%'
+        ? `${(size?.height || 0) * 0.05 * 3}px`
+        : `${(size?.height || 0) * 0.05 * 4}px`,
+    [currentSubtitleFontSize.value, size?.height],
+  );
   const subtitleTextEffects = useMemo(() => {
     switch (currentSubtitleTextEffects.value) {
       case 'None':
@@ -513,7 +554,7 @@ const GlobalPlayer = () => {
           >
             {playerData?.sources ? (
               <>
-                <ArtPlayer
+                <Player
                   key={`${id}-${routePlayer}-${titlePlayer}-${provider}`}
                   option={{
                     id: `${id}-${routePlayer}-${titlePlayer}-${provider}`,
@@ -531,9 +572,9 @@ const GlobalPlayer = () => {
                     airplay: true,
                     pip: isPicInPic.value,
                     autoplay: isAutoPlay.value,
-                    screenshot: isDesktop && isScreenshot.value,
+                    screenshot: isDesktop ? isScreenshot.value : false,
                     subtitleOffset: true,
-                    fastForward: isMobile && isFastForward.value,
+                    fastForward: isMobile ? isFastForward.value : false,
                     lock: isMobile,
                     miniProgressBar: isMiniProgressbar.value,
                     autoOrientation: isMobile,
@@ -662,54 +703,53 @@ const GlobalPlayer = () => {
                       },
                     ],
                     icons: {
-                      // state: isDesktop && '',
-                      loading: '<div class="custom-loader"></div>',
+                      loading: `<div class="w-12 h-12 !m-auto relative before:content-[''] before:w-12 before:h-[5px] before:bg-primary-solid-hover before:absolute before:top-[60px] before:left-0 before:rounded-[50%] before:animate-shadow after:content-[''] after:w-full after:h-full after:bg-primary after:absolute after:top-0 after:left-0 after:rounded-md after:animate-jump"></div>`,
                       play: `
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M17.49 9.59965L5.6 16.7696C4.9 17.1896 4 16.6896 4 15.8696V7.86965C4 4.37965 7.77 2.19965 10.8 3.93965L15.39 6.57965L17.48 7.77965C18.17 8.18965 18.18 9.18965 17.49 9.59965Z" fill="none"/>
-                          <path d="M18.0888 15.4606L14.0388 17.8006L9.99883 20.1306C8.54883 20.9606 6.90883 20.7906 5.71883 19.9506C5.13883 19.5506 5.20883 18.6606 5.81883 18.3006L18.5288 10.6806C19.1288 10.3206 19.9188 10.6606 20.0288 11.3506C20.2788 12.9006 19.6388 14.5706 18.0888 15.4606Z" fill="none"/>
+                          <path d="M17.49 9.59965L5.6 16.7696C4.9 17.1896 4 16.6896 4 15.8696V7.86965C4 4.37965 7.77 2.19965 10.8 3.93965L15.39 6.57965L17.48 7.77965C18.17 8.18965 18.18 9.18965 17.49 9.59965Z" fill="currentColor"/>
+                          <path d="M18.0888 15.4606L14.0388 17.8006L9.99883 20.1306C8.54883 20.9606 6.90883 20.7906 5.71883 19.9506C5.13883 19.5506 5.20883 18.6606 5.81883 18.3006L18.5288 10.6806C19.1288 10.3206 19.9188 10.6606 20.0288 11.3506C20.2788 12.9006 19.6388 14.5706 18.0888 15.4606Z" fill="currentColor"/>
                         </svg>
                       `,
                       pause: `
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M10.65 19.11V4.89C10.65 3.54 10.08 3 8.64 3H5.01C3.57 3 3 3.54 3 4.89V19.11C3 20.46 3.57 21 5.01 21H8.64C10.08 21 10.65 20.46 10.65 19.11Z" fill="none"/>
-                          <path d="M21.0016 19.11V4.89C21.0016 3.54 20.4316 3 18.9916 3H15.3616C13.9316 3 13.3516 3.54 13.3516 4.89V19.11C13.3516 20.46 13.9216 21 15.3616 21H18.9916C20.4316 21 21.0016 20.46 21.0016 19.11Z" fill="none"/>
+                          <path d="M10.65 19.11V4.89C10.65 3.54 10.08 3 8.64 3H5.01C3.57 3 3 3.54 3 4.89V19.11C3 20.46 3.57 21 5.01 21H8.64C10.08 21 10.65 20.46 10.65 19.11Z" fill="currentColor"/>
+                          <path d="M21.0016 19.11V4.89C21.0016 3.54 20.4316 3 18.9916 3H15.3616C13.9316 3 13.3516 3.54 13.3516 4.89V19.11C13.3516 20.46 13.9216 21 15.3616 21H18.9916C20.4316 21 21.0016 20.46 21.0016 19.11Z" fill="currentColor"/>
                         </svg>
                       `,
                       volume: `
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M18.0003 16.7503C17.8403 16.7503 17.6903 16.7003 17.5503 16.6003C17.2203 16.3503 17.1503 15.8803 17.4003 15.5503C18.9703 13.4603 18.9703 10.5403 17.4003 8.45027C17.1503 8.12027 17.2203 7.65027 17.5503 7.40027C17.8803 7.15027 18.3503 7.22027 18.6003 7.55027C20.5603 10.1703 20.5603 13.8303 18.6003 16.4503C18.4503 16.6503 18.2303 16.7503 18.0003 16.7503Z" fill="none"/>
-                          <path d="M19.8284 19.2503C19.6684 19.2503 19.5184 19.2003 19.3784 19.1003C19.0484 18.8503 18.9784 18.3803 19.2284 18.0503C21.8984 14.4903 21.8984 9.51027 19.2284 5.95027C18.9784 5.62027 19.0484 5.15027 19.3784 4.90027C19.7084 4.65027 20.1784 4.72027 20.4284 5.05027C23.4984 9.14027 23.4984 14.8603 20.4284 18.9503C20.2884 19.1503 20.0584 19.2503 19.8284 19.2503Z" fill="none"/>
-                          <path d="M14.02 3.78168C12.9 3.16168 11.47 3.32168 10.01 4.23168L7.09 6.06168C6.89 6.18168 6.66 6.25168 6.43 6.25168H5.5H5C2.58 6.25168 1.25 7.58168 1.25 10.0017V14.0017C1.25 16.4217 2.58 17.7517 5 17.7517H5.5H6.43C6.66 17.7517 6.89 17.8217 7.09 17.9417L10.01 19.7717C10.89 20.3217 11.75 20.5917 12.55 20.5917C13.07 20.5917 13.57 20.4717 14.02 20.2217C15.13 19.6017 15.75 18.3117 15.75 16.5917V7.41168C15.75 5.69168 15.13 4.40168 14.02 3.78168Z" fill="none"/>
+                          <path d="M18.0003 16.7503C17.8403 16.7503 17.6903 16.7003 17.5503 16.6003C17.2203 16.3503 17.1503 15.8803 17.4003 15.5503C18.9703 13.4603 18.9703 10.5403 17.4003 8.45027C17.1503 8.12027 17.2203 7.65027 17.5503 7.40027C17.8803 7.15027 18.3503 7.22027 18.6003 7.55027C20.5603 10.1703 20.5603 13.8303 18.6003 16.4503C18.4503 16.6503 18.2303 16.7503 18.0003 16.7503Z" fill="currentColor"/>
+                          <path d="M19.8284 19.2503C19.6684 19.2503 19.5184 19.2003 19.3784 19.1003C19.0484 18.8503 18.9784 18.3803 19.2284 18.0503C21.8984 14.4903 21.8984 9.51027 19.2284 5.95027C18.9784 5.62027 19.0484 5.15027 19.3784 4.90027C19.7084 4.65027 20.1784 4.72027 20.4284 5.05027C23.4984 9.14027 23.4984 14.8603 20.4284 18.9503C20.2884 19.1503 20.0584 19.2503 19.8284 19.2503Z" fill="currentColor"/>
+                          <path d="M14.02 3.78168C12.9 3.16168 11.47 3.32168 10.01 4.23168L7.09 6.06168C6.89 6.18168 6.66 6.25168 6.43 6.25168H5.5H5C2.58 6.25168 1.25 7.58168 1.25 10.0017V14.0017C1.25 16.4217 2.58 17.7517 5 17.7517H5.5H6.43C6.66 17.7517 6.89 17.8217 7.09 17.9417L10.01 19.7717C10.89 20.3217 11.75 20.5917 12.55 20.5917C13.07 20.5917 13.57 20.4717 14.02 20.2217C15.13 19.6017 15.75 18.3117 15.75 16.5917V7.41168C15.75 5.69168 15.13 4.40168 14.02 3.78168Z" fill="currentColor"/>
                         </svg>
                       `,
                       volumeClose: `
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M22.5314 13.4197L21.0814 11.9697L22.4814 10.5697C22.7714 10.2797 22.7714 9.79969 22.4814 9.50969C22.1914 9.21969 21.7114 9.21969 21.4214 9.50969L20.0214 10.9097L18.5714 9.45969C18.2814 9.16969 17.8014 9.16969 17.5114 9.45969C17.2214 9.74969 17.2214 10.2297 17.5114 10.5197L18.9614 11.9697L17.4714 13.4597C17.1814 13.7497 17.1814 14.2297 17.4714 14.5197C17.6214 14.6697 17.8114 14.7397 18.0014 14.7397C18.1914 14.7397 18.3814 14.6697 18.5314 14.5197L20.0214 13.0297L21.4714 14.4797C21.6214 14.6297 21.8114 14.6997 22.0014 14.6997C22.1914 14.6997 22.3814 14.6297 22.5314 14.4797C22.8214 14.1897 22.8214 13.7197 22.5314 13.4197Z" fill="none"/>
-                          <path d="M14.02 3.78168C12.9 3.16168 11.47 3.32168 10.01 4.23168L7.09 6.06168C6.89 6.18168 6.66 6.25168 6.43 6.25168H5.5H5C2.58 6.25168 1.25 7.58168 1.25 10.0017V14.0017C1.25 16.4217 2.58 17.7517 5 17.7517H5.5H6.43C6.66 17.7517 6.89 17.8217 7.09 17.9417L10.01 19.7717C10.89 20.3217 11.75 20.5917 12.55 20.5917C13.07 20.5917 13.57 20.4717 14.02 20.2217C15.13 19.6017 15.75 18.3117 15.75 16.5917V7.41168C15.75 5.69168 15.13 4.40168 14.02 3.78168Z" fill="none"/>
+                          <path d="M22.5314 13.4197L21.0814 11.9697L22.4814 10.5697C22.7714 10.2797 22.7714 9.79969 22.4814 9.50969C22.1914 9.21969 21.7114 9.21969 21.4214 9.50969L20.0214 10.9097L18.5714 9.45969C18.2814 9.16969 17.8014 9.16969 17.5114 9.45969C17.2214 9.74969 17.2214 10.2297 17.5114 10.5197L18.9614 11.9697L17.4714 13.4597C17.1814 13.7497 17.1814 14.2297 17.4714 14.5197C17.6214 14.6697 17.8114 14.7397 18.0014 14.7397C18.1914 14.7397 18.3814 14.6697 18.5314 14.5197L20.0214 13.0297L21.4714 14.4797C21.6214 14.6297 21.8114 14.6997 22.0014 14.6997C22.1914 14.6997 22.3814 14.6297 22.5314 14.4797C22.8214 14.1897 22.8214 13.7197 22.5314 13.4197Z" fill="currentColor"/>
+                          <path d="M14.02 3.78168C12.9 3.16168 11.47 3.32168 10.01 4.23168L7.09 6.06168C6.89 6.18168 6.66 6.25168 6.43 6.25168H5.5H5C2.58 6.25168 1.25 7.58168 1.25 10.0017V14.0017C1.25 16.4217 2.58 17.7517 5 17.7517H5.5H6.43C6.66 17.7517 6.89 17.8217 7.09 17.9417L10.01 19.7717C10.89 20.3217 11.75 20.5917 12.55 20.5917C13.07 20.5917 13.57 20.4717 14.02 20.2217C15.13 19.6017 15.75 18.3117 15.75 16.5917V7.41168C15.75 5.69168 15.13 4.40168 14.02 3.78168Z" fill="currentColor"/>
                         </svg>
                       `,
                       screenshot: `
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M18.0002 6C17.3902 6 16.8302 5.65 16.5502 5.11L15.8302 3.66C15.3702 2.75 14.1702 2 13.1502 2H10.8602C9.83017 2 8.63017 2.75 8.17017 3.66L7.45017 5.11C7.17017 5.65 6.61017 6 6.00017 6C3.83017 6 2.11017 7.83 2.25017 9.99L2.77017 18.25C2.89017 20.31 4.00017 22 6.76017 22H17.2402C20.0002 22 21.1002 20.31 21.2302 18.25L21.7502 9.99C21.8902 7.83 20.1702 6 18.0002 6ZM10.5002 7.25H13.5002C13.9102 7.25 14.2502 7.59 14.2502 8C14.2502 8.41 13.9102 8.75 13.5002 8.75H10.5002C10.0902 8.75 9.75017 8.41 9.75017 8C9.75017 7.59 10.0902 7.25 10.5002 7.25ZM12.0002 18.12C10.1402 18.12 8.62017 16.61 8.62017 14.74C8.62017 12.87 10.1302 11.36 12.0002 11.36C13.8702 11.36 15.3802 12.87 15.3802 14.74C15.3802 16.61 13.8602 18.12 12.0002 18.12Z" fill="none"/>
+                          <path d="M18.0002 6C17.3902 6 16.8302 5.65 16.5502 5.11L15.8302 3.66C15.3702 2.75 14.1702 2 13.1502 2H10.8602C9.83017 2 8.63017 2.75 8.17017 3.66L7.45017 5.11C7.17017 5.65 6.61017 6 6.00017 6C3.83017 6 2.11017 7.83 2.25017 9.99L2.77017 18.25C2.89017 20.31 4.00017 22 6.76017 22H17.2402C20.0002 22 21.1002 20.31 21.2302 18.25L21.7502 9.99C21.8902 7.83 20.1702 6 18.0002 6ZM10.5002 7.25H13.5002C13.9102 7.25 14.2502 7.59 14.2502 8C14.2502 8.41 13.9102 8.75 13.5002 8.75H10.5002C10.0902 8.75 9.75017 8.41 9.75017 8C9.75017 7.59 10.0902 7.25 10.5002 7.25ZM12.0002 18.12C10.1402 18.12 8.62017 16.61 8.62017 14.74C8.62017 12.87 10.1302 11.36 12.0002 11.36C13.8702 11.36 15.3802 12.87 15.3802 14.74C15.3802 16.61 13.8602 18.12 12.0002 18.12Z" fill="currentColor"/>
                         </svg>
                       `,
                       pip: `
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM18.5 16.4C18.5 17.9 17.9 18.5 16.4 18.5H12.6C11.1 18.5 10.5 17.9 10.5 16.4V14.6C10.5 13.1 11.1 12.5 12.6 12.5H16.4C17.9 12.5 18.5 13.1 18.5 14.6V16.4Z" fill="none"/>
+                          <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM18.5 16.4C18.5 17.9 17.9 18.5 16.4 18.5H12.6C11.1 18.5 10.5 17.9 10.5 16.4V14.6C10.5 13.1 11.1 12.5 12.6 12.5H16.4C17.9 12.5 18.5 13.1 18.5 14.6V16.4Z" fill="currentColor"/>
                         </svg>
                       `,
                       fullscreenOn: `
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM10.22 21H7.91C5.2 21 3 18.8 3 16.09V13.78C3 13.37 3.34 13.03 3.75 13.03C4.16 13.03 4.5 13.37 4.5 13.78V16.09C4.5 17.97 6.03 19.5 7.91 19.5H10.22C10.63 19.5 10.97 19.84 10.97 20.25C10.97 20.66 10.64 21 10.22 21ZM10.22 4.5H7.91C6.03 4.5 4.5 6.03 4.5 7.91V10.22C4.5 10.63 4.16 10.97 3.75 10.97C3.34 10.97 3 10.64 3 10.22V7.91C3 5.2 5.2 3 7.91 3H10.22C10.63 3 10.97 3.34 10.97 3.75C10.97 4.16 10.64 4.5 10.22 4.5ZM21 16.09C21 18.8 18.8 21 16.09 21H14.7C14.29 21 13.95 20.66 13.95 20.25C13.95 19.84 14.29 19.5 14.7 19.5H16.09C17.97 19.5 19.5 17.97 19.5 16.09V14.7C19.5 14.29 19.84 13.95 20.25 13.95C20.66 13.95 21 14.29 21 14.7V16.09ZM21 10.22C21 10.63 20.66 10.97 20.25 10.97C19.84 10.97 19.5 10.63 19.5 10.22V7.91C19.5 6.03 17.97 4.5 16.09 4.5H13.78C13.37 4.5 13.03 4.16 13.03 3.75C13.03 3.34 13.36 3 13.78 3H16.09C18.8 3 21 5.2 21 7.91V10.22Z" fill="none"/>
+                          <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM10.22 21H7.91C5.2 21 3 18.8 3 16.09V13.78C3 13.37 3.34 13.03 3.75 13.03C4.16 13.03 4.5 13.37 4.5 13.78V16.09C4.5 17.97 6.03 19.5 7.91 19.5H10.22C10.63 19.5 10.97 19.84 10.97 20.25C10.97 20.66 10.64 21 10.22 21ZM10.22 4.5H7.91C6.03 4.5 4.5 6.03 4.5 7.91V10.22C4.5 10.63 4.16 10.97 3.75 10.97C3.34 10.97 3 10.64 3 10.22V7.91C3 5.2 5.2 3 7.91 3H10.22C10.63 3 10.97 3.34 10.97 3.75C10.97 4.16 10.64 4.5 10.22 4.5ZM21 16.09C21 18.8 18.8 21 16.09 21H14.7C14.29 21 13.95 20.66 13.95 20.25C13.95 19.84 14.29 19.5 14.7 19.5H16.09C17.97 19.5 19.5 17.97 19.5 16.09V14.7C19.5 14.29 19.84 13.95 20.25 13.95C20.66 13.95 21 14.29 21 14.7V16.09ZM21 10.22C21 10.63 20.66 10.97 20.25 10.97C19.84 10.97 19.5 10.63 19.5 10.22V7.91C19.5 6.03 17.97 4.5 16.09 4.5H13.78C13.37 4.5 13.03 4.16 13.03 3.75C13.03 3.34 13.36 3 13.78 3H16.09C18.8 3 21 5.2 21 7.91V10.22Z" fill="currentColor"/>
                         </svg>
                       `,
                       fullscreenOff: `
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M3 9C3 8.44772 3.44772 8 4 8H8L8 4C8 3.44772 8.44772 3 9 3C9.55229 3 10 3.44772 10 4L10 9C10 9.55229 9.55228 10 9 10H4C3.44772 10 3 9.55229 3 9Z" fill="none"/>
-                          <path d="M20 8C20.5523 8 21 8.44772 21 9C21 9.55229 20.5523 10 20 10H15C14.4477 10 14 9.55229 14 9L14 4C14 3.44772 14.4477 3 15 3C15.5523 3 16 3.44772 16 4V8H20Z" fill="none"/>
-                          <path d="M20 16C20.5523 16 21 15.5523 21 15C21 14.4477 20.5523 14 20 14H15C14.4477 14 14 14.4477 14 15L14 20C14 20.5523 14.4477 21 15 21C15.5523 21 16 20.5523 16 20V16H20Z" fill="none"/>
-                          <path d="M4 16C3.44772 16 3 15.5523 3 15C3 14.4477 3.44772 14 4 14H9C9.55228 14 10 14.4477 10 15L10 20C10 20.5523 9.55229 21 9 21C8.44772 21 8 20.5523 8 20L8 16H4Z" fill="none"/>
+                          <path d="M3 9C3 8.44772 3.44772 8 4 8H8L8 4C8 3.44772 8.44772 3 9 3C9.55229 3 10 3.44772 10 4L10 9C10 9.55229 9.55228 10 9 10H4C3.44772 10 3 9.55229 3 9Z" fill="currentColor"/>
+                          <path d="M20 8C20.5523 8 21 8.44772 21 9C21 9.55229 20.5523 10 20 10H15C14.4477 10 14 9.55229 14 9L14 4C14 3.44772 14.4477 3 15 3C15.5523 3 16 3.44772 16 4V8H20Z" fill="currentColor"/>
+                          <path d="M20 16C20.5523 16 21 15.5523 21 15C21 14.4477 20.5523 14 20 14H15C14.4477 14 14 14.4477 14 15L14 20C14 20.5523 14.4477 21 15 21C15.5523 21 16 20.5523 16 20V16H20Z" fill="currentColor"/>
+                          <path d="M4 16C3.44772 16 3 15.5523 3 15C3 14.4477 3.44772 14 4 14H9C9.55228 14 10 14.4477 10 15L10 20C10 20.5523 9.55229 21 9 21C8.44772 21 8 20.5523 8 20L8 16H4Z" fill="currentColor"/>
                         </svg>
                       `,
                     },
@@ -753,6 +793,18 @@ const GlobalPlayer = () => {
                         ? [{ position: 'left', name: 'next', html: '' }]
                         : []),
                     ],
+                    cssVar: {
+                      '--art-font-color': 'var(--nextui-colors-text)',
+                      '--art-progress-color': 'var(--nextui-colors-textLight)',
+                      '--art-loaded-color': 'var(--nextui-colors-textAlpha)',
+                    },
+                  }}
+                  style={{
+                    // @ts-ignore
+                    '--art-subtitle-background-color': subtitleBackgroundColor,
+                    '--art-subtitle-window-color': subtitleWindowColor,
+                    '--art-subtitle-custom-font-size': subtitleFontSize,
+                    '--art-subtitle-text-shadow': subtitleTextEffects,
                   }}
                   getInstance={(art) => {
                     art.on('ready', async () => {
@@ -767,9 +819,9 @@ const GlobalPlayer = () => {
                           html: '',
                           style: {
                             position: 'absolute',
-                            bottom: `${Number(art?.height) - (isMobile ? 70 : 55)}px`,
-                            left: isMobile ? '-7px' : '-10px',
-                            width: `${Number(art?.width)}px`,
+                            bottom: `${Number(art?.height) - (isMobile ? 70 : 50)}px`,
+                            left: isMobile ? '0' : '-10px',
+                            width: `${Number(art?.width) + 5}px`,
                             padding: '0 7px 0 7px',
                             height: '55px',
                             cursor: 'default',
@@ -861,274 +913,16 @@ const GlobalPlayer = () => {
                       }
                     });
                   }}
-                  css={{
-                    width: isMini ? '25rem' : '100%',
-                    height: isMini ? '14.0625rem' : '100%',
-                    borderTopLeftRadius: isMini ? '$sm' : 0,
-                    borderTopRightRadius: isMini ? '$sm' : 0,
-                    overflow: 'hidden',
-                    '& svg': {
-                      fill: '$text !important',
-                      '& path': {
-                        fill: '$text !important',
-                      },
-                    },
-                    '& div': {
-                      '&.art-video-player': {
-                        fontFamily: 'Inter !important',
-                      },
-                      '&.custom-loader': {
-                        width: '48px',
-                        height: '48px',
-                        margin: 'auto',
-                        position: 'relative',
-                        '&::before': {
-                          content: "''",
-                          width: '48px',
-                          height: '5px',
-                          background: '$primarySolidHover',
-                          position: 'absolute',
-                          top: '60px',
-                          left: 0,
-                          borderRadius: '50%',
-                          animation: `${shadowAnimation} 0.5s linear infinite`,
-                        },
-                        '&::after': {
-                          content: "''",
-                          width: '100%',
-                          height: '100%',
-                          background: '$primary',
-                          position: 'absolute',
-                          top: 0,
-                          left: 0,
-                          borderRadius: '4px',
-                          animation: `${jumpAnimation} 0.5s linear infinite`,
-                        },
-                      },
-                      '&.art-controls': {
-                        display: isMini && 'none !important',
-                      },
-                      '&.art-bottom': {
-                        height: isMini && '7px !important',
-                        padding: isMini && '0 !important',
-                        flexDirection: isMobile && 'column-reverse',
-                        opacity: !isMini && isSettingsOpen && 1,
-                        visibility: !isMini && isSettingsOpen && 'visible',
-                        backgroundImage:
-                          'linear-gradient(to bottom, transparent, $backgroundAlpha, $background)',
-                      },
-                      '&.art-notice': {
-                        justifyContent: 'center',
-                      },
-                      '&.art-notice-inner': {
-                        backgroundColor: '$backgroundAlpha !important',
-                        color: '$text !important',
-                      },
-                      '&.art-control-progress': {
-                        height: isMini && '7px !important',
-                        alignItems: isMini && 'flex-end !important',
-                      },
-                      '&.art-layer-mask': {
-                        transition: 'all 0.3s ease',
-                        backgroundColor:
-                          isMini && isSettingsOpen ? '$backgroundAlpha' : 'rgba(0, 0, 0, 0)',
-                        display: isMini && isSettingsOpen ? 'block' : 'none',
-                      },
-                      '&.art-layer-playPauseButton': {
-                        transition: 'all 0.3s ease',
-                        display: 'none',
-                      },
-                      '&.art-layer-miniTopControlButtons': {
-                        transition: 'all 0.3s ease',
-                        display: isMini && isSettingsOpen ? 'block' : 'none',
-                      },
-                      // '&.art-control-playAndPause': {
-                      //   display: isMobile && 'none !important',
-                      // },
-                      '&.art-layer-lock': {
-                        background: '$backgroundAlpha !important',
-                      },
-                      '&.art-control-topControlButtons': {
-                        opacity: '1 !important',
-                        display: isPlayerFullScreen ? 'block' : 'none',
-                        '&::before': {
-                          display: isPlayerFullScreen ? 'block' : 'none',
-                          content: '',
-                          position: 'absolute',
-                          top: 0,
-                          left: 0,
-                          width: '100%',
-                          height: '100px',
-                          backgroundImage:
-                            'linear-gradient(to top, transparent, $backgroundAlpha, $background)',
-                          backgroundPosition: 'top',
-                          backgroundRepeat: 'repeat-x',
-                        },
-                      },
-                      '&.art-control-volume': {
-                        display: isMobile && 'none !important',
-                      },
-                      '&.art-state': {
-                        display: isDesktop && 'none !important',
-                      },
-                      '&.art-subtitle': {
-                        bottom: isMini && '7px !important',
-                        display: showSubtitle ? 'flex !important' : 'none !important',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexDirection: 'column',
-                        backgroundColor: subtitleWindowColor,
-                        color:
-                          currentSubtitleFontColor.value === 'White'
-                            ? '#fff'
-                            : currentSubtitleFontColor.value === 'Blue'
-                            ? '#0072F5'
-                            : currentSubtitleFontColor.value === 'Purple'
-                            ? '#7828C8'
-                            : currentSubtitleFontColor.value === 'Green'
-                            ? '#17C964'
-                            : currentSubtitleFontColor.value === 'Yellow'
-                            ? '#F5A524'
-                            : currentSubtitleFontColor.value === 'Red'
-                            ? '#F31260'
-                            : currentSubtitleFontColor.value === 'Cyan'
-                            ? '#06B7DB'
-                            : currentSubtitleFontColor.value === 'Pink'
-                            ? '#FF4ECD'
-                            : currentSubtitleFontColor.value === 'White'
-                            ? '#7828C8'
-                            : '#000',
-                        fontSize:
-                          currentSubtitleFontSize.value === '50%'
-                            ? `${(size?.height || 0) * 0.05 * 0.5}px`
-                            : currentSubtitleFontSize.value === '75%'
-                            ? `${(size?.height || 0) * 0.05 * 0.75}px`
-                            : currentSubtitleFontSize.value === '100%'
-                            ? `${(size?.height || 0) * 0.05}px`
-                            : currentSubtitleFontSize.value === '150%'
-                            ? `${(size?.height || 0) * 0.05 * 1.5}px`
-                            : currentSubtitleFontSize.value === '200%'
-                            ? `${(size?.height || 0) * 0.05 * 2}px`
-                            : currentSubtitleFontSize.value === '300%'
-                            ? `${(size?.height || 0) * 0.05 * 3}px`
-                            : `${(size?.height || 0) * 0.05 * 4}px`,
-                        textShadow: subtitleTextEffects,
-                        '& p': {
-                          p: '$2',
-                          backgroundColor: subtitleBackgroundColor,
-                          m: 0,
-                        },
-                      },
-                      '&.art-control-progress-inner': {
-                        background: '$textLight !important',
-                      },
-                      '&.art-progress-loaded': {
-                        background: '$textAlpha !important',
-                      },
-                      '&.art-control-time': {
-                        color: '$text !important',
-                      },
-                      '&.art-layer-autoPlayback': {
-                        background: '$backgroundAlpha !important',
-                        color: '$text !important',
-                        backdropFilter: 'saturate(180%) blur(20px)',
-                        borderRadius: '$md',
-                        border: '1px solid $border',
-                        boxShadow: '$lg',
-                      },
-                      '&.art-contextmenus': {
-                        background: '$backgroundAlpha !important',
-                        borderRadius: '$md',
-                        border: '1px solid $border',
-                        boxShadow: '$lg',
-                      },
-                      '&.art-contextmenu': {
-                        color: '$text !important',
-                        textShadow: 'none !important',
-                        borderBottomColor: '$border !important',
-                        '& a': {
-                          color: '$text !important',
-                        },
-                      },
-                      '&.art-info': {
-                        color: '$text !important',
-                        background: '$backgroundAlpha !important',
-                        borderRadius: '$md',
-                        border: '1px solid $border',
-                        boxShadow: '$lg',
-                      },
-                      '&.art-volume-slider-handle': {
-                        background: '$text !important',
-                        '&::before': {
-                          background: '$text !important',
-                        },
-                        '&::after': {
-                          background: '$textLight !important',
-                        },
-                      },
-                    },
-                    '&:hover': {
-                      '& div': {
-                        '&.art-layer-mask': {
-                          backgroundColor: '$backgroundAlpha',
-                          display: isMini && 'block',
-                        },
-                        '&.art-layer-playPauseButton': {
-                          display: isMini && 'block',
-                        },
-                        '&.art-layer-miniTopControlButtons': {
-                          display: isMini && 'block',
-                        },
-                      },
-                    },
-                  }}
+                  setIsPlayerPlaying={setIsPlayerPlaying}
+                  className={playerStyles({
+                    isMini,
+                    isSettingsOpen,
+                    isMobile,
+                    isPlayerFullScreen,
+                    showSubtitle,
+                    subtitleColor: currentSubtitleFontColor.value,
+                  })}
                 />
-                {isMini ? (
-                  <Flex
-                    direction="row"
-                    align="center"
-                    justify="between"
-                    css={{
-                      position: 'absolute',
-                      bottom: '-64px',
-                      left: 0,
-                      right: 0,
-                      height: '64px',
-                      padding: '$sm',
-                      backgroundColor: '$backgroundContrast',
-                      borderBottomLeftRadius: '$sm',
-                      borderBottomRightRadius: '$sm',
-                    }}
-                  >
-                    <H5
-                      h5
-                      weight="bold"
-                      onClick={() => navigate(routePlayer)}
-                      className="line-clamp-1"
-                      css={{ cursor: 'pointer' }}
-                      title={titlePlayer}
-                    >
-                      {titlePlayer}
-                    </H5>
-                    <Button
-                      type="button"
-                      auto
-                      light
-                      onPress={() => {
-                        if (artplayer) artplayer.destroy();
-                        setShouldShowPlayer(false);
-                        setPlayerData(undefined);
-                        setIsMini(false);
-                        setRoutePlayer('');
-                        setTitlePlayer('');
-                        setQualitySelector([]);
-                        setSubtitleSelector([]);
-                        setIsPlayerPlaying(false);
-                      }}
-                      icon={<Close />}
-                    />
-                  </Flex>
-                ) : null}
                 {!isMini ? (
                   <Flex
                     justify="start"
@@ -1179,17 +973,6 @@ const GlobalPlayer = () => {
                     >
                       Watch Trailer
                     </Button>
-                    {/* <Tooltip content="In development">
-                      <Button
-                        size="sm"
-                        color="primary"
-                        auto
-                        ghost
-                        css={{ marginBottom: '0.75rem' }}
-                      >
-                        Add to My List
-                      </Button>
-                    </Tooltip> */}
                   </Flex>
                 ) : null}
               </>
@@ -1329,6 +1112,7 @@ const GlobalPlayer = () => {
               light
               onPress={() => prevEpisodeUrl && navigate(prevEpisodeUrl)}
               icon={<Previous filled />}
+              className="art-icon"
             />,
             artplayer.controls.prev,
           )
@@ -1341,6 +1125,7 @@ const GlobalPlayer = () => {
               light
               onPress={() => nextEpisodeUrl && navigate(nextEpisodeUrl)}
               icon={<Next filled />}
+              className="art-icon"
             />,
             artplayer.controls.next,
           )
