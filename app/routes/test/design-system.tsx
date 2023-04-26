@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/indent */
 
-import { Badge, Button, Container, Spacer } from '@nextui-org/react';
+import { Badge, Button } from '@nextui-org/react';
 import type { MetaFunction } from '@remix-run/node';
 import { NavLink, useLocation, useNavigate } from '@remix-run/react';
 import { motion } from 'framer-motion';
@@ -21,7 +21,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '~/components/elements/Sheet';
-import Flex from '~/components/styles/Flex.styles';
 import { H2, H4 } from '~/components/styles/Text.styles';
 import Info from '~/assets/icons/InfoIcon';
 

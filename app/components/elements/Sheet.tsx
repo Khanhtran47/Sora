@@ -1,156 +1,141 @@
-/* eslint-disable @typescript-eslint/indent */
-import React from 'react';
-import { Button, css, keyframes, styled, type CSS, type VariantProps } from '@nextui-org/react';
+import * as React from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { motion, type PanInfo } from 'framer-motion';
+import { cnBase, tv, type VariantProps } from 'tailwind-variants';
 
 import Close from '~/assets/icons/CloseIcon';
-
-const overlayStyles = css({
-  backgroundColor: 'rgba(0, 0, 0, .15)',
-});
 
 const Sheet = DialogPrimitive.Root;
 const SheetTrigger = DialogPrimitive.Trigger;
 
-const fadeIn = keyframes({
-  from: { opacity: '0' },
-  to: { opacity: '1' },
-});
+const SheetOverlay = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Overlay>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
+>(({ className, ...props }, ref) => (
+  <DialogPrimitive.Overlay
+    ref={ref}
+    className={cnBase(
+      'fixed inset-0 z-[9998] bg-background-alpha backdrop-blur-lg transition-all duration-300 data-[state=closed]:animate-fadeOut data-[state=open]:animate-fadeIn',
+      className,
+    )}
+    {...props}
+  />
+));
+SheetOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
-const fadeOut = keyframes({
-  from: { opacity: '1' },
-  to: { opacity: '0' },
-});
-
-const StyledOverlay = styled(DialogPrimitive.Overlay, overlayStyles, {
-  position: 'fixed',
-  top: 0,
-  right: 0,
-  bottom: 0,
-  left: 0,
-  zIndex: 9998,
-
-  '&[data-state="open"]': {
-    animation: `${fadeIn} 150ms cubic-bezier(0.22, 1, 0.36, 1)`,
-  },
-
-  '&[data-state="closed"]': {
-    animation: `${fadeOut} 150ms cubic-bezier(0.22, 1, 0.36, 1)`,
-  },
-});
-
-const slideIn = keyframes({
-  from: { transform: '$$transformValue' },
-  to: { transform: 'translate3d(0,0,0)' },
-});
-
-const slideOut = keyframes({
-  from: { transform: 'translate3d(0,0,0)' },
-  to: { transform: '$$transformValue' },
-});
-
-const StyledContent = styled(DialogPrimitive.Content, {
-  backgroundColor: '$backgroundContrast',
-  boxShadow: '$backgroundAlpha 0 0 38px -10px',
-  position: 'fixed',
-  top: 0,
-  bottom: 0,
-  width: 250,
-  zIndex: 9999,
-  padding: '$4',
-  outline: 'none',
-
-  // Among other things, prevents text alignment inconsistencies when dialog can't be centered in the viewport evenly.
-  // Affects animated and non-animated dialogs alike.
-  willChange: 'transform',
-
-  // '&:focus': {
-  //   outline: 'none',
-  // },
-
-  '&[data-state="open"]': {
-    animation: `${slideIn} 300ms cubic-bezier(0.22, 1, 0.36, 1)`,
-  },
-
-  '&[data-state="closed"]': {
-    animation: `${slideOut} 300ms cubic-bezier(0.22, 1, 0.36, 1)`,
-  },
-
+const sheetContentStyles = tv({
+  base: 'fixed inset-y-0 z-[9999] w-[250px] bg-background-contrast p-6 shadow-lg shadow-background-alpha will-change-transform focus:outline-none',
   variants: {
     side: {
-      top: {
-        $$transformValue: 'translate3d(0,-100%,0)',
-        width: '100%',
-        height: 'auto',
-        minHeight: 100,
-        bottom: 'auto',
-        borderBottomLeftRadius: '$lg',
-        borderBottomRightRadius: '$lg',
-        borderBottom: '1px solid $border',
-      },
-      right: {
-        $$transformValue: 'translate3d(100%,0,0)',
-        right: 0,
-        borderTopLeftRadius: '$lg',
-        borderBottomLeftRadius: '$lg',
-        borderLeft: '1px solid $border',
-      },
-      bottom: {
-        $$transformValue: 'translate3d(0,100%,0)',
-        width: '100%',
-        height: 'auto',
-        minHeight: 100,
-        bottom: 0,
-        top: 'auto',
-        borderTopLeftRadius: '$lg',
-        borderTopRightRadius: '$lg',
-        borderTop: '1px solid $border',
-      },
-      left: {
-        $$transformValue: 'translate3d(-100%,0,0)',
-        left: 0,
-        borderTopRightRadius: '$lg',
-        borderBottomRightRadius: '$lg',
-        borderRight: '1px solid $border',
-      },
+      top: 'bottom-auto w-full rounded-b-xl animate-in slide-in-from-top duration-300',
+      right: 'right-0 h-full rounded-l-xl animate-in slide-in-from-right duration-300',
+      bottom: 'bottom-0 top-auto w-full rounded-t-xl animate-in slide-in-from-bottom duration-300',
+      left: 'left-0 h-full rounded-r-xl animate-in slide-in-from-left duration-300',
+    },
+    size: {
+      content: '',
+      default: '',
+      sm: '',
+      lg: '',
+      xl: '',
+      full: '',
     },
   },
-
+  compoundVariants: [
+    {
+      side: ['top', 'bottom'],
+      size: 'content',
+      class: 'max-h-screen',
+    },
+    {
+      side: ['top', 'bottom'],
+      size: 'default',
+      class: 'h-1/3',
+    },
+    {
+      side: ['top', 'bottom'],
+      size: 'sm',
+      class: 'h-1/4',
+    },
+    {
+      side: ['top', 'bottom'],
+      size: 'lg',
+      class: 'h-1/2',
+    },
+    {
+      side: ['top', 'bottom'],
+      size: 'xl',
+      class: 'h-5/6',
+    },
+    {
+      side: ['top', 'bottom'],
+      size: 'full',
+      class: 'h-screen',
+    },
+    {
+      side: ['right', 'left'],
+      size: 'content',
+      class: 'max-w-screen',
+    },
+    {
+      side: ['right', 'left'],
+      size: 'default',
+      class: 'w-1/3',
+    },
+    {
+      side: ['right', 'left'],
+      size: 'sm',
+      class: 'w-1/4',
+    },
+    {
+      side: ['right', 'left'],
+      size: 'lg',
+      class: 'w-1/2',
+    },
+    {
+      side: ['right', 'left'],
+      size: 'xl',
+      class: 'w-5/6',
+    },
+    {
+      side: ['right', 'left'],
+      size: 'full',
+      class: 'w-screen',
+    },
+  ],
   defaultVariants: {
     side: 'right',
+    size: 'default',
   },
 });
 
-const StyledCloseButton = styled(DialogPrimitive.Close, {
-  position: 'absolute',
-  top: '$2',
-  right: '$2',
-});
+export interface SheetContentProps
+  extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>,
+    VariantProps<typeof sheetContentStyles> {
+  hideCloseButton?: boolean;
+  swipeDownToClose?: boolean;
+  open?: boolean;
+  onOpenChange?: () => void;
+  container?: HTMLElement;
+}
 
-const Handle = styled('div', {
-  width: '75px',
-  height: '4px',
-  backgroundColor: '$border',
-  borderRadius: '$sm',
-  margin: '1rem auto 0 !important',
-});
-
-type SheetContentVariants = VariantProps<typeof StyledContent>;
-type DialogContentPrimitiveProps = React.ComponentProps<typeof DialogPrimitive.Content>;
-type SheetContentProps = DialogContentPrimitiveProps &
-  SheetContentVariants & {
-    css?: CSS;
-    hideCloseButton?: boolean;
-    swipeDownToClose?: boolean;
-    open?: boolean;
-    onOpenChange?: () => void;
-    container?: HTMLElement;
-  };
-
-const SheetContent = React.forwardRef<React.ElementRef<typeof StyledContent>, SheetContentProps>(
+const SheetContent = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Content>,
+  SheetContentProps
+>(
   (
-    { children, hideCloseButton, swipeDownToClose, open, onOpenChange, container, ...props },
+    {
+      children,
+      hideCloseButton,
+      swipeDownToClose,
+      open,
+      onOpenChange,
+      container,
+      className,
+      side,
+      size,
+      ...props
+    },
     forwardedRef,
   ) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -161,8 +146,13 @@ const SheetContent = React.forwardRef<React.ElementRef<typeof StyledContent>, Sh
     };
     return (
       <DialogPrimitive.Portal container={container}>
-        <StyledOverlay />
-        <StyledContent {...props} ref={forwardedRef} asChild>
+        <SheetOverlay />
+        <DialogPrimitive.Content
+          className={cnBase(sheetContentStyles({ side, size }), className)}
+          {...props}
+          ref={forwardedRef}
+          asChild
+        >
           <motion.div
             drag={swipeDownToClose ? 'y' : false}
             dragConstraints={{ top: 0, bottom: 0 }}
@@ -170,11 +160,14 @@ const SheetContent = React.forwardRef<React.ElementRef<typeof StyledContent>, Sh
             dragMomentum={false}
             onDragEnd={handleDragEnd}
           >
-            {swipeDownToClose ? <Handle /> : null}
+            {swipeDownToClose ? (
+              <div className="!m-[1rem_auto_0] h-1 w-[75px] rounded-md bg-border" />
+            ) : null}
             {!hideCloseButton ? (
-              <StyledCloseButton asChild>
-                <Button type="button" auto light icon={<Close />} />
-              </StyledCloseButton>
+              <DialogPrimitive.Close className="absolute right-4 top-4 flex h-5 w-5 items-center justify-center rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-primary-light-active focus:ring-offset-2 disabled:pointer-events-none">
+                <Close className="h-4 w-4" />
+                <span className="sr-only">Close</span>
+              </DialogPrimitive.Close>
             ) : null}
             <motion.div
               drag="y"
@@ -185,7 +178,7 @@ const SheetContent = React.forwardRef<React.ElementRef<typeof StyledContent>, Sh
               {children}
             </motion.div>
           </motion.div>
-        </StyledContent>
+        </DialogPrimitive.Content>
       </DialogPrimitive.Portal>
     );
   },
@@ -193,8 +186,52 @@ const SheetContent = React.forwardRef<React.ElementRef<typeof StyledContent>, Sh
 
 SheetContent.displayName = 'SheetContent';
 
-const SheetClose = DialogPrimitive.Close;
-const SheetTitle = DialogPrimitive.Title;
-const SheetDescription = DialogPrimitive.Description;
+const SheetHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div
+    className={cnBase('flex flex-col space-y-2 text-center sm:text-left', className)}
+    {...props}
+  />
+);
+SheetHeader.displayName = 'SheetHeader';
 
-export { Sheet, SheetTrigger, SheetContent, SheetClose, SheetTitle, SheetDescription };
+const SheetFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div
+    className={cnBase('flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2', className)}
+    {...props}
+  />
+);
+SheetFooter.displayName = 'SheetFooter';
+
+const SheetTitle = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Title>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
+>(({ className, ...props }, ref) => (
+  <DialogPrimitive.Title
+    ref={ref}
+    className={cnBase('text-lg font-semibold text-foreground', className)}
+    {...props}
+  />
+));
+SheetTitle.displayName = DialogPrimitive.Title.displayName;
+
+const SheetDescription = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Description>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
+>(({ className, ...props }, ref) => (
+  <DialogPrimitive.Description
+    ref={ref}
+    className={cnBase('text-muted-foreground text-sm', className)}
+    {...props}
+  />
+));
+SheetDescription.displayName = DialogPrimitive.Description.displayName;
+
+export {
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetHeader,
+  SheetFooter,
+  SheetTitle,
+  SheetDescription,
+};
