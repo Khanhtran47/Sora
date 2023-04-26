@@ -17,7 +17,7 @@ import getProviderList from '~/services/provider.server';
 import { authenticate } from '~/services/supabase';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
-import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
+import { useLayout } from '~/store/layout/useLayout';
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { useCustomHeaderChangePosition } from '~/hooks/useHeader';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
@@ -166,7 +166,7 @@ const AnimeDetailPage = () => {
   const [visible, setVisible] = useState(false);
   const { backgroundColor } = useColorDarkenLighten(detail?.color);
   const { sidebarBoxedMode } = useSoraSettings();
-  const { viewportRef, scrollY } = useLayoutScrollPosition((scrollState) => scrollState);
+  const { viewportRef, scrollY } = useLayout((scrollState) => scrollState);
   const { setBackgroundColor, startChangeScrollPosition } = useHeaderStyle(
     (headerState) => headerState,
   );

@@ -14,7 +14,7 @@ import type { ITrailer } from '~/services/consumet/anilist/anilist.types';
 import type { IImage } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
 import useCardHoverStore from '~/store/card/useCardHoverStore';
-import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
+import { useLayout } from '~/store/layout/useLayout';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import AspectRatio from '~/components/elements/aspect-ratio/AspectRatio';
 import type { Trailer } from '~/components/elements/modal/WatchTrailerModal';
@@ -71,7 +71,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
   const [trailerBanner, setTrailerBanner] = useState<Trailer>({});
   const swiper = useSwiper();
   const cardRef = useRef<HTMLDivElement>(null);
-  const { viewportRef } = useLayoutScrollPosition((state) => state);
+  const { viewportRef } = useLayout((state) => state);
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const isMd = useMediaQuery('(max-width: 960px)', { initializeWithValue: false });
   const isLg = useMediaQuery('(max-width: 1280px)', { initializeWithValue: false });

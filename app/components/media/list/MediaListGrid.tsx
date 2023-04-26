@@ -8,7 +8,7 @@ import NProgress from 'nprogress';
 import { tv } from 'tailwind-variants';
 
 import type { IMedia } from '~/types/media';
-import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
+import { useLayout } from '~/store/layout/useLayout';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import Arrow from '~/assets/icons/ArrowIcon';
 
@@ -64,7 +64,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
   const fetcher = useFetcher();
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams({});
-  const { viewportRef } = useLayoutScrollPosition((state) => state);
+  const { viewportRef } = useLayout((state) => state);
   const [listItems, setListItems] = useState<IMedia[]>(items || []);
   const [shouldFetch, setShouldFetch] = useState(false);
   const [showLoadMore, setShowLoadMore] = useState(true);

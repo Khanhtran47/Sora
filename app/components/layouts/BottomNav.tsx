@@ -5,7 +5,7 @@ import type { User } from '@supabase/supabase-js';
 import { motion } from 'framer-motion';
 import { tv } from 'tailwind-variants';
 
-import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
+import { useLayout } from '~/store/layout/useLayout';
 import { Sheet, SheetContent, SheetTrigger } from '~/components/elements/Sheet';
 import Category from '~/assets/icons/CategoryIcon';
 import Discover from '~/assets/icons/DiscoverIcon';
@@ -25,7 +25,7 @@ const BottomNav = (props: IBottomNavProps) => {
   const [openMore, setOpenMore] = useState(false);
   const location = useLocation();
   const [search] = useSearchParams();
-  const scrollDirection = useLayoutScrollPosition((state) => state.scrollDirection);
+  const scrollDirection = useLayout((state) => state.scrollDirection);
   const bottomNavItemStyles = tv({
     base: 'flex flex-col items-center justify-center gap-y-2 rounded-md bg-transparent text-xs font-medium text-text',
     variants: {

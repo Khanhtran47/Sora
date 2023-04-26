@@ -15,7 +15,7 @@ import { tv } from 'tailwind-variants';
 
 import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
 import { useHistoryStack } from '~/store/layout/useHistoryStack';
-import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
+import { useLayout } from '~/store/layout/useLayout';
 import { useHeaderOptions } from '~/hooks/useHeader';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import MultiLevelDropdown from '~/components/layouts/MultiLevelDropdown';
@@ -76,7 +76,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   const [lottie, setLottie] = useState<AnimationItem>();
   const navigate = useNavigate();
   const { sidebarMiniMode, sidebarBoxedMode } = useSoraSettings();
-  const { scrollY } = useLayoutScrollPosition((state) => state);
+  const { scrollY } = useLayout((state) => state);
   const { startChangeScrollPosition } = useHeaderStyle((state) => state);
   const {
     currentMiniTitle,

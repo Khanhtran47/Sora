@@ -4,7 +4,7 @@ import { motion, useTransform } from 'framer-motion';
 
 import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
 import { useHistoryStack } from '~/store/layout/useHistoryStack';
-import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
+import { useLayout } from '~/store/layout/useLayout';
 import { useHeaderOptions } from '~/hooks/useHeader';
 import { H2 } from '~/components/styles/Text.styles';
 import Arrow from '~/assets/icons/ArrowIcon';
@@ -14,7 +14,7 @@ const MobileHeader = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { historyBack } = useHistoryStack((state) => state);
-  const { scrollY } = useLayoutScrollPosition((state) => state);
+  const { scrollY } = useLayout((state) => state);
   const { startChangeScrollPosition } = useHeaderStyle((state) => state);
   const {
     isShowMobileHeader,
@@ -42,7 +42,7 @@ const MobileHeader = () => {
       navigate('/');
     }
   };
-  const { scrollDirection } = useLayoutScrollPosition((state) => state);
+  const { scrollDirection } = useLayout((state) => state);
 
   if (!isShowMobileHeader) {
     return null;

@@ -7,7 +7,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Image, { MimeType } from 'remix-image';
 
 import type { Title } from '~/types/media';
-import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
+import { useLayout } from '~/store/layout/useLayout';
 import AspectRatio from '~/components/elements/aspect-ratio/AspectRatio';
 import { H5 } from '~/components/styles/Text.styles';
 import Star from '~/assets/icons/StarIcon';
@@ -39,7 +39,7 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
     genresAnime,
   } = props;
   const isXs = useMediaQuery('(max-width: 375px)', { initializeWithValue: false });
-  const { viewportRef } = useLayoutScrollPosition((state) => state);
+  const { viewportRef } = useLayout((state) => state);
   const cardRef = useRef<HTMLDivElement>(null);
   const cardIntersection = useIntersectionObserver(cardRef, { root: viewportRef });
   const [size, bannerRef] = useMeasure<HTMLDivElement>();

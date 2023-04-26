@@ -3,7 +3,7 @@ import { useLocation, useMatches } from '@remix-run/react';
 import { isEdgeChromium } from 'react-device-detect';
 
 import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
-import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
+import { useLayout } from '~/store/layout/useLayout';
 
 function useHeaderOptions() {
   const matches = useMatches();
@@ -78,7 +78,7 @@ function useHeaderOptions() {
 }
 
 function useCustomHeaderChangePosition(intersection?: IntersectionObserverEntry) {
-  const { viewportRef } = useLayoutScrollPosition((state) => state);
+  const { viewportRef } = useLayout((state) => state);
   const { setStartChangeScrollPosition } = useHeaderStyle((state) => state);
   useEffect(() => {
     if (

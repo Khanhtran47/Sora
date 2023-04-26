@@ -16,7 +16,7 @@ import type { IAnimeInfo } from '~/services/consumet/anilist/anilist.types';
 import type { IMovieDetail, IMovieTranslations, ITvShowDetail } from '~/services/tmdb/tmdb.types';
 import { WebShareLink } from '~/utils/client/pwa-utils.client';
 import TMDB from '~/utils/media';
-import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
+import { useLayout } from '~/store/layout/useLayout';
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import SelectProviderModal from '~/components/elements/modal/SelectProviderModal';
@@ -696,7 +696,7 @@ export const MediaBackgroundImage = (props: IMediaBackground) => {
   const [size, backgroundRef] = useMeasure<HTMLDivElement>();
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const { sidebarMiniMode, sidebarBoxedMode } = useSoraSettings();
-  const { scrollY } = useLayoutScrollPosition((scrollState) => scrollState);
+  const { scrollY } = useLayout((scrollState) => scrollState);
   const backgroundImageHeight = isSm ? 100 : 300;
   const height = useTransform(
     scrollY,

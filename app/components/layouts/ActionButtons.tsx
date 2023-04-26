@@ -1,11 +1,11 @@
 import { Button } from '@nextui-org/react';
 import { motion, useTransform } from 'framer-motion';
 
-import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
+import { useLayout } from '~/store/layout/useLayout';
 import Arrow from '~/assets/icons/ArrowIcon';
 
 const ActionButtons = () => {
-  const { scrollY, viewportRef } = useLayoutScrollPosition((state) => state);
+  const { scrollY, viewportRef } = useLayout((state) => state);
   const opacity = useTransform(scrollY, [0, 200], [0, 1]);
   const y = useTransform(scrollY, [0, 200], [100, 0]);
   const handleButtonPress = () => {

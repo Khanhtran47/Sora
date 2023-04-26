@@ -3,13 +3,13 @@ import { useEffect, useMemo, useRef } from 'react';
 import { useMediaQuery, useThrottledCallback } from '@react-hookz/web';
 import { useLocation, useMatches, useNavigationType, useOutlet, useParams } from '@remix-run/react';
 import type { User } from '@supabase/supabase-js';
-import { AnimatePresence, useScroll } from 'framer-motion';
+import { AnimatePresence, motion, useScroll } from 'framer-motion';
 import { Toaster } from 'sonner';
 import { tv } from 'tailwind-variants';
 
 import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
 import { useHistoryStack } from '~/store/layout/useHistoryStack';
-import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
+import { useLayout } from '~/store/layout/useLayout';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import {
   ScrollArea,
@@ -161,8 +161,14 @@ const Layout = (props: ILayout) => {
   const isMd = useMediaQuery('(max-width: 1280px)', { initializeWithValue: false });
   const { sidebarMiniMode, sidebarBoxedMode, sidebarHoverMode } = useSoraSettings();
   const viewportRef = useRef<HTMLDivElement>(null);
-  const { setViewportRef, setScrollY, setScrollYProgress, scrollDirection, setScrollDirection } =
-    useLayoutScrollPosition((state) => state);
+  const {
+    setViewportRef,
+    setScrollY,
+    setScrollYProgress,
+    scrollDirection,
+    setScrollDirection,
+    isShowOverlay,
+  } = useLayout((state) => state);
   const { scrollY, scrollYProgress } = useScroll({ container: viewportRef });
   const { historyBack, historyForward, setHistoryBack, setHistoryForward } = useHistoryStack(
     (state) => state,
@@ -284,6 +290,14 @@ const Layout = (props: ILayout) => {
   return (
     <div className={layoutStyles({ boxed: sidebarBoxedMode.value })}>
       {isSm ? null : <SideBar />}
+      {isShowOverlay ? (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3, ease: 'easeInOut' }}
+          className="fixed inset-0 z-[9998] bg-[rgba(0,_0,_0,_.85)]"
+        />
+      ) : null}
       <div
         className={contentAreaStyles({
           mini: sidebarMiniMode.value,

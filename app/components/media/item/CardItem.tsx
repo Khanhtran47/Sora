@@ -10,7 +10,7 @@ import { tv } from 'tailwind-variants';
 import type { IMedia, Title } from '~/types/media';
 import type { ITrailer } from '~/services/consumet/anilist/anilist.types';
 import useCardHoverStore from '~/store/card/useCardHoverStore';
-import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
+import { useLayout } from '~/store/layout/useLayout';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import type { Trailer } from '~/components/elements/modal/WatchTrailerModal';
 import {
@@ -141,7 +141,7 @@ const CardItem = (props: ICardItemProps) => {
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
   const { isPlayTrailer, listViewType } = useSoraSettings();
   const [size, imageRef] = useMeasure<HTMLDivElement>();
-  const { viewportRef } = useLayoutScrollPosition((scrollState) => scrollState);
+  const { viewportRef } = useLayout((scrollState) => scrollState);
   useEffect(() => {
     if (fetcher.data && fetcher.data.videos) {
       const { results } = fetcher.data.videos;

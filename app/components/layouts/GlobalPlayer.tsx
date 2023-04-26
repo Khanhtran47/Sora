@@ -22,6 +22,7 @@ import { tv } from 'tailwind-variants';
 import tinycolor from 'tinycolor2';
 
 import updateHistory from '~/utils/client/update-history';
+import { useLayout } from '~/store/layout/useLayout';
 import usePlayerState, { type PlayerData } from '~/store/player/usePlayerState';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import SearchSubtitles from '~/components/elements/modal/SearchSubtitle';
@@ -54,6 +55,10 @@ const playerStyles = tv({
     },
     isMobile: {
       true: '[&_.art-bottom]:!flex-col-reverse [&_.art-bottom]:!justify-start [&_.art-bottom]:!overflow-visible [&_.art-bottom]:!p-0 [&_.art-controls]:!px-[10px] [&_.art-progress-indicator]:!m-0',
+      false: '',
+    },
+    isShowOverlay: {
+      true: '[&_.art-video-player]:!z-[9999]',
       false: '',
     },
     isSettingsOpen: {
@@ -115,6 +120,7 @@ const GlobalPlayer = () => {
     subtitleSelector,
     setSubtitleSelector,
   } = usePlayerState((state) => state);
+  const { isShowOverlay, setIsShowOverlay } = useLayout((state) => state);
 
   const {
     provider,
@@ -921,6 +927,7 @@ const GlobalPlayer = () => {
                     isPlayerFullScreen,
                     showSubtitle,
                     subtitleColor: currentSubtitleFontColor.value,
+                    isShowOverlay,
                   })}
                 />
                 {!isMini ? (
@@ -943,18 +950,19 @@ const GlobalPlayer = () => {
                       },
                     }}
                   >
-                    <Tooltip content="In development">
-                      <Button
-                        type="button"
-                        size="sm"
-                        color="primary"
-                        auto
-                        ghost
-                        css={{ marginBottom: '0.75rem' }}
-                      >
-                        Toggle Light
-                      </Button>
-                    </Tooltip>
+                    <Button
+                      type="button"
+                      size="sm"
+                      color="primary"
+                      auto
+                      ghost={!isShowOverlay}
+                      flat={isShowOverlay}
+                      css={{ marginBottom: '0.75rem' }}
+                      className={isShowOverlay ? 'z-[9999]' : ''}
+                      onPress={() => setIsShowOverlay(!isShowOverlay)}
+                    >
+                      Toggle Light
+                    </Button>
                     <Button
                       type="button"
                       size="sm"
