@@ -31,7 +31,7 @@ interface IPlayerSettingsProps {
     isM3U8?: boolean;
     isDASH?: boolean;
   }[];
-  subtitleSelector?: { html: string; url: string; default?: boolean }[];
+  subtitleSelector?: { html: string; url: string; default?: boolean; type?: string }[];
   isPlayerFullScreen?: boolean;
   isSettingsOpen: boolean;
   showSubtitle: boolean;
@@ -435,7 +435,10 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                   showIcon: false,
                   action: () => {
                     if (artplayer) {
-                      artplayer.subtitle.switch(subtitle.url, { name: subtitle.html });
+                      artplayer.subtitle.switch(subtitle.url, {
+                        name: subtitle.html,
+                        ...(subtitle.type ? { type: subtitle.type } : {}),
+                      });
                       setCurrentSubtitle(subtitle.html);
                       setDropdownLevelKey('general');
                     }

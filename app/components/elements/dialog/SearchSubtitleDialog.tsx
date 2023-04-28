@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/no-shadow */
-/* eslint-disable @typescript-eslint/indent */
 import { useEffect, useState } from 'react';
 import { Button, Input, Loading, Pagination, Row, Spacer, useInput } from '@nextui-org/react';
 import { useMediaQuery } from '@react-hookz/web';
