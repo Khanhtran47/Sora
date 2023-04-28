@@ -4,7 +4,10 @@ import { Button, Divider, Spacer, Switch, type SwitchEvent } from '@nextui-org/r
 import { isMobileOnly } from 'react-device-detect';
 
 import { useSoraSettings } from '~/hooks/useLocalStorage';
+import { Dialog, DialogContent, DialogTrigger } from '~/components/elements/Dialog';
 import { Sheet, SheetContent, SheetTrigger } from '~/components/elements/Sheet';
+import AddSubtitles from '~/components/elements/dialog/AddSubtitleDialog';
+import SearchSubtitles from '~/components/elements/dialog/SearchSubtitleDialog';
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/elements/shared/Popover';
 import ResizablePanel from '~/components/elements/shared/ResizablePanel';
 import Box from '~/components/styles/Box.styles';
@@ -13,6 +16,7 @@ import { H6 } from '~/components/styles/Text.styles';
 import Arrow from '~/assets/icons/ArrowIcon';
 import Filter from '~/assets/icons/FilterIcon';
 import Flip from '~/assets/icons/FlipIcon';
+import PaperPlus from '~/assets/icons/PaperPlusIcon';
 import Play from '~/assets/icons/PlayIcon';
 import Ratio from '~/assets/icons/RatioIcon';
 import Search from '~/assets/icons/SearchIcon';
@@ -35,8 +39,35 @@ interface IPlayerSettingsProps {
   showSubtitle: boolean;
   setShowSubtitle: React.Dispatch<React.SetStateAction<boolean>>;
   setSettingsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setSearchModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  subtitleOptions?: {
+    imdb_id?: number;
+    tmdb_id?: number;
+    parent_feature_id?: number;
+    parent_imdb_id?: number;
+    parent_tmdb_id?: number;
+    episode_number?: number;
+    season_number?: number;
+    type?: 'movie' | 'episode' | 'all';
+    title?: string;
+    sub_format: 'srt' | 'webvtt';
+  };
 }
+
+type SettingsOption = {
+  id: string;
+  title: string;
+  description?: string;
+  showIcon?: boolean;
+  icon?: JSX.Element;
+  action?: () => void;
+  currentValue?: string;
+  isCurrent?: boolean;
+  isSwitch?: boolean;
+  isSwitchOn?: boolean;
+  isTriggerDialog?: boolean;
+  switchAction?: (e: SwitchEvent) => void;
+  dialogName?: string;
+};
 
 const PlayerSettings = (props: IPlayerSettingsProps) => {
   const {
@@ -48,7 +79,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
     showSubtitle,
     setShowSubtitle,
     setSettingsOpen,
-    setSearchModalVisible,
+    subtitleOptions,
   } = props;
 
   const [dropdownLevelKey, setDropdownLevelKey] = useState('general');
@@ -62,6 +93,8 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
     subtitleSelector?.find((subtitle) => subtitle.default === true)?.html || 'English',
   );
   const [currentSubtitleOffset, setCurrentSubtitleOffset] = useState('Normal');
+  const [openDialog, setOpenDialog] = useState(false);
+  const [currentDialogName, setCurrentDialogName] = useState('');
 
   const {
     currentSubtitleFontColor,
@@ -85,19 +118,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
         showExtraButton?: boolean;
         extraButtonAction?: () => void;
         extraButtonTitle?: string;
-        listItems: {
-          id: string;
-          title: string;
-          description?: string;
-          showIcon?: boolean;
-          icon?: JSX.Element;
-          action?: () => void;
-          currentValue?: string;
-          isCurrent?: boolean;
-          isSwitch?: boolean;
-          isSwitchOn?: boolean;
-          switchAction?: (e: SwitchEvent) => void;
-        }[];
+        listItems: SettingsOption[];
       }[] = [
         {
           id: 'general',
@@ -387,8 +408,27 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
               id: 'search-subtitle',
               title: 'Search Subtitle',
               showIcon: true,
+              isTriggerDialog: true,
               icon: <Search />,
-              action: () => setSearchModalVisible(true),
+              action: () => {
+                setSettingsOpen(false);
+                setDropdownLevelKey('general');
+                setOpenDialog(true);
+                setCurrentDialogName('search-subtitle');
+              },
+            },
+            {
+              id: 'add-subtitle',
+              title: 'Add Subtitle',
+              showIcon: true,
+              isTriggerDialog: true,
+              icon: <PaperPlus />,
+              action: () => {
+                setSettingsOpen(false);
+                setDropdownLevelKey('general');
+                setOpenDialog(true);
+                setCurrentDialogName('add-subtitle');
+              },
             },
             ...(subtitleSelector
               ? subtitleSelector.map((subtitle) => ({
@@ -1377,15 +1417,205 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
     [dropdownLevelKey],
   );
 
+  const containerPortal = useMemo(
+    // portals overlay and content parts into the player when fullscreen is enabled
+    () => (isPlayerFullScreen ? artplayer?.template?.$player : document.body),
+    [artplayer, isPlayerFullScreen],
+  );
+
   const handleOpenChange = (open: boolean) => {
     setSettingsOpen(open);
     if (!open) setDropdownLevelKey('general');
   };
 
+  const settingsOptions = (item: SettingsOption) => (
+    <Button
+      key={item.id}
+      type="button"
+      auto
+      light
+      onPress={item.action}
+      css={{
+        p: '$4 !important',
+        height: 'auto',
+        width: '100%',
+        '& span': {
+          '&.nextui-button-text': {
+            display: 'block',
+            width: '100%',
+          },
+        },
+        '&:hover': {
+          backgroundColor: '$backgroundAlpha',
+        },
+      }}
+    >
+      <Flex direction="row" align="center" justify="between" className="space-x-8">
+        <Flex direction="row" align="center" className="space-x-2">
+          {item?.showIcon ? (
+            (
+              item as {
+                id: string;
+                title: string;
+                description: string;
+                showIcon: boolean;
+                icon: JSX.Element;
+                action: () => void;
+                currentValue: string;
+              }
+            )?.icon
+          ) : (
+              item as {
+                id: string;
+                title: string;
+                showIcon: boolean;
+                action: () => void;
+                isCurrent: boolean;
+              }
+            )?.isCurrent ? (
+            <Tick />
+          ) : (
+            <Spacer x={1.15} />
+          )}
+          <H6 h6 css={{ margin: 0 }} weight="semibold">
+            {item.title}
+          </H6>
+        </Flex>
+        <Flex direction="row" align="center" className="space-x-2">
+          {item?.isSwitch ? (
+            <Switch checked={showSubtitle} onChange={item.switchAction} />
+          ) : (
+            <>
+              <H6 h6 css={{ margin: 0, color: '$accents9' }} weight="thin">
+                {(
+                  item as {
+                    id: string;
+                    title: string;
+                    description: string;
+                    showIcon: boolean;
+                    icon: JSX.Element;
+                    action: () => void;
+                    currentValue: string;
+                  }
+                )?.currentValue || ''}
+              </H6>
+              {item.showIcon ? <Arrow direction="right" /> : null}
+            </>
+          )}
+        </Flex>
+      </Flex>
+    </Button>
+  );
+
   if (isMobileOnly) {
     return (
-      <Sheet open={isSettingsOpen} onOpenChange={(open) => handleOpenChange(open)}>
-        <SheetTrigger asChild>
+      <Sheet open={openDialog} onOpenChange={(open) => setOpenDialog(open)}>
+        <Sheet open={isSettingsOpen} onOpenChange={(open) => handleOpenChange(open)}>
+          <SheetTrigger asChild>
+            <Button
+              type="button"
+              auto
+              light
+              aria-label="dropdown"
+              icon={<Settings filled />}
+              className="art-icon"
+            />
+          </SheetTrigger>
+          <SheetContent
+            side="bottom"
+            size="content"
+            hideCloseButton
+            swipeDownToClose
+            open={isSettingsOpen}
+            onOpenChange={() => handleOpenChange(!isSettingsOpen)}
+            container={isPlayerFullScreen ? artplayer?.template?.$player : document.body}
+          >
+            <ResizablePanel contentWidth="full">
+              {currentDropdownLevel ? (
+                <Flex
+                  direction="column"
+                  align="start"
+                  justify="start"
+                  className="w-full space-y-2 !p-2"
+                >
+                  {currentDropdownLevel?.showBackButton || currentDropdownLevel?.showTitle ? (
+                    <>
+                      <Flex direction="row" align="center" justify="between" className="w-full">
+                        <Flex direction="row" align="center" justify="start">
+                          {currentDropdownLevel?.showBackButton ? (
+                            <Button
+                              type="button"
+                              auto
+                              light
+                              onPress={currentDropdownLevel?.backButtonAction}
+                              icon={<Arrow direction="left" />}
+                            />
+                          ) : null}
+                          {currentDropdownLevel?.showTitle ? (
+                            <H6 h6 css={{ margin: 0 }} weight="semibold">
+                              {currentDropdownLevel?.title}
+                            </H6>
+                          ) : null}
+                        </Flex>
+                        {currentDropdownLevel?.showExtraButton ? (
+                          <Button
+                            type="button"
+                            auto
+                            light
+                            onPress={currentDropdownLevel?.extraButtonAction}
+                            css={{ fontWeight: '$bold', textDecoration: 'underline', p: 0, m: 0 }}
+                          >
+                            {currentDropdownLevel?.extraButtonTitle}
+                          </Button>
+                        ) : null}
+                      </Flex>
+                      <Divider />
+                    </>
+                  ) : null}
+                  <Flex
+                    direction="column"
+                    align="start"
+                    justify="start"
+                    className="w-full space-y-2 !p-2"
+                  >
+                    {currentDropdownLevel?.listItems.map((item) => {
+                      if (item.isTriggerDialog) {
+                        return (
+                          <SheetTrigger key={item.id} asChild>
+                            {settingsOptions(item)}
+                          </SheetTrigger>
+                        );
+                      }
+                      return settingsOptions(item);
+                    })}
+                  </Flex>
+                </Flex>
+              ) : null}
+            </ResizablePanel>
+          </SheetContent>
+        </Sheet>
+        <SheetContent
+          container={containerPortal}
+          side="bottom"
+          size="content"
+          hideCloseButton
+          swipeDownToClose
+          open={openDialog}
+          onOpenChange={() => setOpenDialog(!openDialog)}
+        >
+          {currentDialogName === 'add-subtitle' ? (
+            <AddSubtitles />
+          ) : currentDialogName === 'search-subtitle' ? (
+            <SearchSubtitles subtitleOptions={subtitleOptions} />
+          ) : null}
+        </SheetContent>
+      </Sheet>
+    );
+  }
+  return (
+    <Dialog open={openDialog} onOpenChange={(open) => setOpenDialog(open)}>
+      <Popover open={isSettingsOpen} onOpenChange={(open) => handleOpenChange(open)}>
+        <PopoverTrigger asChild>
           <Button
             type="button"
             auto
@@ -1394,27 +1624,29 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
             icon={<Settings filled />}
             className="art-icon"
           />
-        </SheetTrigger>
-        <SheetContent
-          side="bottom"
-          hideCloseButton
-          swipeDownToClose
-          open={isSettingsOpen}
-          onOpenChange={() => handleOpenChange(!isSettingsOpen)}
-          // portals overlay and content parts into the player when fullscreen is enabled
-          container={isPlayerFullScreen ? artplayer?.template?.$player : document.body}
+        </PopoverTrigger>
+        <PopoverContent
+          side="top"
+          container={containerPortal}
+          css={{
+            zIndex: 1000,
+            backgroundColor: '$backgroundAlpha',
+            backdropFilter: 'blur(21px) saturate(180%)',
+            '-webkit-backdrop-filter': 'blur(21px) saturate(180%)',
+            border: '1px solid $border',
+          }}
         >
-          <ResizablePanel contentWidth="full">
+          <ResizablePanel contentWidth="fit">
             {currentDropdownLevel ? (
-              <Flex
-                direction="column"
-                align="start"
-                justify="start"
-                className="w-full space-y-2 !p-2"
-              >
+              <Flex direction="column" align="start" justify="start" className="w-fit space-y-2">
                 {currentDropdownLevel?.showBackButton || currentDropdownLevel?.showTitle ? (
-                  <>
-                    <Flex direction="row" align="center" justify="between" className="w-full">
+                  <Box className="w-full">
+                    <Flex
+                      direction="row"
+                      align="center"
+                      justify="between"
+                      className="w-fit space-x-4 !p-2"
+                    >
                       <Flex direction="row" align="center" justify="start">
                         {currentDropdownLevel?.showBackButton ? (
                           <Button
@@ -1426,7 +1658,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                           />
                         ) : null}
                         {currentDropdownLevel?.showTitle ? (
-                          <H6 h6 css={{ margin: 0 }} weight="semibold">
+                          <H6 h6 css={{ margin: 0, px: '$6' }} weight="semibold">
                             {currentDropdownLevel?.title}
                           </H6>
                         ) : null}
@@ -1443,248 +1675,34 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                         </Button>
                       ) : null}
                     </Flex>
-                    <Divider />
-                  </>
+                    <Divider css={{ m: 0 }} />
+                  </Box>
                 ) : null}
-                <Flex
-                  direction="column"
-                  align="start"
-                  justify="start"
-                  className="w-full space-y-2 !p-2"
-                >
-                  {currentDropdownLevel?.listItems.map((item) => (
-                    <Button
-                      type="button"
-                      key={item.id}
-                      auto
-                      light
-                      onPress={item.action}
-                      css={{
-                        p: 0,
-                        width: '100%',
-                        '& span': {
-                          '&.nextui-button-text': {
-                            display: 'block',
-                            width: '100%',
-                          },
-                        },
-                      }}
-                    >
-                      <Flex direction="row" align="center" justify="between" className="space-x-8">
-                        <Flex direction="row" align="center" className="space-x-2">
-                          {item?.showIcon ? (
-                            (
-                              item as {
-                                id: string;
-                                title: string;
-                                description: string;
-                                showIcon: boolean;
-                                icon: JSX.Element;
-                                action: () => void;
-                                currentValue: string;
-                              }
-                            )?.icon
-                          ) : (
-                              item as {
-                                id: string;
-                                title: string;
-                                showIcon: boolean;
-                                action: () => void;
-                                isCurrent: boolean;
-                              }
-                            )?.isCurrent ? (
-                            <Tick />
-                          ) : (
-                            <Spacer x={1.15} />
-                          )}
-                          <H6 h6 css={{ margin: 0 }} weight="semibold">
-                            {item.title}
-                          </H6>
-                        </Flex>
-                        <Flex direction="row" align="center" className="space-x-2">
-                          {item?.isSwitch ? (
-                            <Switch checked={showSubtitle} onChange={item.switchAction} />
-                          ) : (
-                            <>
-                              <H6 h6 css={{ margin: 0, color: '$accents9' }} weight="thin">
-                                {(
-                                  item as {
-                                    id: string;
-                                    title: string;
-                                    description: string;
-                                    showIcon: boolean;
-                                    icon: JSX.Element;
-                                    action: () => void;
-                                    currentValue: string;
-                                  }
-                                )?.currentValue || ''}
-                              </H6>
-                              {item.showIcon ? <Arrow direction="right" /> : null}
-                            </>
-                          )}
-                        </Flex>
-                      </Flex>
-                    </Button>
-                  ))}
+                <Flex direction="column" align="start" justify="start" className="w-full space-y-2">
+                  {currentDropdownLevel?.listItems.map((item) => {
+                    if (item.isTriggerDialog) {
+                      return (
+                        <DialogTrigger key={item.id} asChild>
+                          {settingsOptions(item)}
+                        </DialogTrigger>
+                      );
+                    }
+                    return settingsOptions(item);
+                  })}
                 </Flex>
               </Flex>
             ) : null}
           </ResizablePanel>
-        </SheetContent>
-      </Sheet>
-    );
-  }
-  return (
-    <Popover open={isSettingsOpen} onOpenChange={(open) => handleOpenChange(open)}>
-      <PopoverTrigger asChild>
-        <Button
-          type="button"
-          auto
-          light
-          aria-label="dropdown"
-          icon={<Settings filled />}
-          className="art-icon"
-        />
-      </PopoverTrigger>
-      <PopoverContent
-        side="top"
-        // portals overlay and content parts into the player when fullscreen is enabled
-        container={isPlayerFullScreen ? artplayer?.template?.$player : document.body}
-        css={{
-          zIndex: 1000,
-          backgroundColor: '$backgroundAlpha',
-          backdropFilter: 'blur(21px) saturate(180%)',
-          '-webkit-backdrop-filter': 'blur(21px) saturate(180%)',
-          border: '1px solid $border',
-        }}
-      >
-        <ResizablePanel contentWidth="fit">
-          {currentDropdownLevel ? (
-            <Flex direction="column" align="start" justify="start" className="w-fit space-y-2">
-              {currentDropdownLevel?.showBackButton || currentDropdownLevel?.showTitle ? (
-                <Box className="w-full">
-                  <Flex
-                    direction="row"
-                    align="center"
-                    justify="between"
-                    className="w-fit space-x-4 !p-2"
-                  >
-                    <Flex direction="row" align="center" justify="start">
-                      {currentDropdownLevel?.showBackButton ? (
-                        <Button
-                          type="button"
-                          auto
-                          light
-                          onPress={currentDropdownLevel?.backButtonAction}
-                          icon={<Arrow direction="left" />}
-                        />
-                      ) : null}
-                      {currentDropdownLevel?.showTitle ? (
-                        <H6 h6 css={{ margin: 0, px: '$6' }} weight="semibold">
-                          {currentDropdownLevel?.title}
-                        </H6>
-                      ) : null}
-                    </Flex>
-                    {currentDropdownLevel?.showExtraButton ? (
-                      <Button
-                        type="button"
-                        auto
-                        light
-                        onPress={currentDropdownLevel?.extraButtonAction}
-                        css={{ fontWeight: '$bold', textDecoration: 'underline', p: 0, m: 0 }}
-                      >
-                        {currentDropdownLevel?.extraButtonTitle}
-                      </Button>
-                    ) : null}
-                  </Flex>
-                  <Divider css={{ m: 0 }} />
-                </Box>
-              ) : null}
-              <Flex direction="column" align="start" justify="start" className="w-full space-y-2">
-                {currentDropdownLevel?.listItems.map((item) => (
-                  <Button
-                    key={item.id}
-                    type="button"
-                    auto
-                    light
-                    onPress={item.action}
-                    css={{
-                      p: '$4 !important',
-                      height: 'auto',
-                      width: '100%',
-                      '& span': {
-                        '&.nextui-button-text': {
-                          display: 'block',
-                          width: '100%',
-                        },
-                      },
-                      '&:hover': {
-                        backgroundColor: '$backgroundAlpha',
-                      },
-                    }}
-                  >
-                    <Flex direction="row" align="center" justify="between" className="space-x-8">
-                      <Flex direction="row" align="center" className="space-x-2">
-                        {item?.showIcon ? (
-                          (
-                            item as {
-                              id: string;
-                              title: string;
-                              description: string;
-                              showIcon: boolean;
-                              icon: JSX.Element;
-                              action: () => void;
-                              currentValue: string;
-                            }
-                          )?.icon
-                        ) : (
-                            item as {
-                              id: string;
-                              title: string;
-                              showIcon: boolean;
-                              action: () => void;
-                              isCurrent: boolean;
-                            }
-                          )?.isCurrent ? (
-                          <Tick />
-                        ) : (
-                          <Spacer x={1.15} />
-                        )}
-                        <H6 h6 css={{ margin: 0 }} weight="semibold">
-                          {item.title}
-                        </H6>
-                      </Flex>
-                      <Flex direction="row" align="center" className="space-x-2">
-                        {item?.isSwitch ? (
-                          <Switch checked={showSubtitle} onChange={item.switchAction} />
-                        ) : (
-                          <>
-                            <H6 h6 css={{ margin: 0, color: '$accents9' }} weight="thin">
-                              {(
-                                item as {
-                                  id: string;
-                                  title: string;
-                                  description: string;
-                                  showIcon: boolean;
-                                  icon: JSX.Element;
-                                  action: () => void;
-                                  currentValue: string;
-                                }
-                              )?.currentValue || ''}
-                            </H6>
-                            {item.showIcon ? <Arrow direction="right" /> : null}
-                          </>
-                        )}
-                      </Flex>
-                    </Flex>
-                  </Button>
-                ))}
-              </Flex>
-            </Flex>
-          ) : null}
-        </ResizablePanel>
-      </PopoverContent>
-    </Popover>
+        </PopoverContent>
+      </Popover>
+      <DialogContent container={containerPortal}>
+        {currentDialogName === 'add-subtitle' ? (
+          <AddSubtitles />
+        ) : currentDialogName === 'search-subtitle' ? (
+          <SearchSubtitles subtitleOptions={subtitleOptions} />
+        ) : null}
+      </DialogContent>
+    </Dialog>
   );
 };
 

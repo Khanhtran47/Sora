@@ -24,7 +24,7 @@ const SheetOverlay = React.forwardRef<
 SheetOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
 const sheetContentStyles = tv({
-  base: 'fixed inset-y-0 z-[9999] w-[250px] bg-background-contrast p-6 shadow-lg shadow-background-alpha will-change-transform focus:outline-none',
+  base: 'fixed inset-y-0 z-[9999] w-[250px] bg-background-contrast !p-1 shadow-lg shadow-background-alpha will-change-transform focus:outline-none sm:!p-6',
   variants: {
     side: {
       top: 'bottom-auto w-full rounded-b-xl animate-in slide-in-from-top duration-300',
@@ -45,7 +45,7 @@ const sheetContentStyles = tv({
     {
       side: ['top', 'bottom'],
       size: 'content',
-      class: 'max-h-screen',
+      class: 'max-h-screen min-h-[100px]',
     },
     {
       side: ['top', 'bottom'],
@@ -174,6 +174,7 @@ const SheetContent = React.forwardRef<
               dragConstraints={{ top: 0, bottom: 0 }}
               dragElastic={0}
               dragMomentum={false}
+              className={swipeDownToClose ? 'mt-2' : ''}
             >
               {children}
             </motion.div>

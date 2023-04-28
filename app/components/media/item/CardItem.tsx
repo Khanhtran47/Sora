@@ -12,7 +12,7 @@ import type { ITrailer } from '~/services/consumet/anilist/anilist.types';
 import useCardHoverStore from '~/store/card/useCardHoverStore';
 import { useLayout } from '~/store/layout/useLayout';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
-import type { Trailer } from '~/components/elements/modal/WatchTrailerModal';
+import type { Trailer } from '~/components/elements/dialog/WatchTrailerModal';
 import {
   ScrollArea,
   ScrollAreaCorner,

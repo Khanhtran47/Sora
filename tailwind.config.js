@@ -97,6 +97,14 @@ module.exports = withTV({
             transform: 'translateY(0) rotate(90deg)',
           },
         },
+        slideIn: {
+          from: { transform: '$$transformValue' },
+          to: { transform: 'translate3d(0,0,0)' },
+        },
+        slideOut: {
+          from: { transform: 'translate3d(0,0,0)' },
+          to: { transform: '$$transformValue' },
+        },
       },
       animation: {
         scaleIn: 'scaleIn 200ms ease',
@@ -158,6 +166,7 @@ module.exports = withTV({
     require('tailwind-scrollbar-hide'),
     require('@savvywombat/tailwindcss-grid-areas'),
     require('prettier-plugin-tailwindcss'),
+    require('tailwindcss-animate'),
   ],
   variants: {
     gridTemplateAreas: ['responsive'],

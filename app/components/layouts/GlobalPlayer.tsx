@@ -25,8 +25,7 @@ import updateHistory from '~/utils/client/update-history';
 import { useLayout } from '~/store/layout/useLayout';
 import usePlayerState, { type PlayerData } from '~/store/player/usePlayerState';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
-import SearchSubtitles from '~/components/elements/modal/SearchSubtitle';
-import WatchTrailerModal, { type Trailer } from '~/components/elements/modal/WatchTrailerModal';
+import WatchTrailerModal, { type Trailer } from '~/components/elements/dialog/WatchTrailerModal';
 import Player from '~/components/elements/player/ArtPlayer';
 import PlayerError from '~/components/elements/player/PlayerError';
 import PlayerHotKey from '~/components/elements/player/PlayerHotkey';
@@ -47,7 +46,7 @@ type Highlight = {
 };
 
 const playerStyles = tv({
-  base: "custom-player-subtitle custom-player-layer-auto-playback custom-player-contextmenus custom-player-info custom-player-notice-inner custom-player-volume-control custom-player-icon-after custom-player-icon-before custom-player-control-after custom-player-control-before [&_.art-bottom]:!bg-gradient-to-b [&_.art-bottom]:from-transparent [&_.art-bottom]:via-background-alpha [&_.art-bottom]:to-background-contrast [&_.art-layer-lock]:bg-background-alpha [&_.art-control-topControlButtons]:!opacity-100 [&_.art-control-topControlButtons]:before:absolute [&_.art-control-topControlButtons]:before:top-0 [&_.art-control-topControlButtons]:before:left-0 [&_.art-control-topControlButtons]:before:h-[100px] [&_.art-control-topControlButtons]:before:w-full [&_.art-control-topControlButtons]:before:bg-gradient-to-t [&_.art-control-topControlButtons]:before:from-transparent [&_.art-control-topControlButtons]:before:via-background-alpha [&_.art-control-topControlButtons]:before:to-background-contrast [&_.art-control-topControlButtons]:before:bg-top [&_.art-control-topControlButtons]:before:bg-repeat-x [&_.art-control-topControlButtons]:before:content-[''] [&_.art-subtitle]:bg-player-subtitle-window-color [&_.art-subtitle]:!text-shadow-player [&_.art-video-player]:!font-[Inter] [&_.art-notice]:!justify-center [&_.art-layer-mask]:hidden [&_.art-layer-mask]:bg-transparent [&_.art-layer-mask]:transition-all [&_.art-layer-mask]:duration-300 [&_.art-layer-mask]:ease-[ease] [&_.art-layer-playPauseButton]:hidden [&_.art-layer-playPauseButton]:transition-all [&_.art-layer-playPauseButton]:duration-300 [&_.art-layer-playPauseButton]:ease-[ease] [&_.art-contextmenu]:!border-border [&_.art-contextmenu]:!text-shadow-none [&_.art-layer-miniTopControlButtons]:hidden [&_.art-layer-miniTopControlButtons]:transition-all [&_.art-layer-miniTopControlButtons]:duration-300 [&_.art-layer-miniTopControlButtons]:ease-[ease]",
+  base: "custom-player-subtitle custom-player-layer-auto-playback custom-player-contextmenus custom-player-info custom-player-notice-inner custom-player-volume-control custom-player-icon-after custom-player-icon-before custom-player-control-after custom-player-control-before [&_.art-layer-mask]:hidden [&_.art-layer-mask]:bg-transparent [&_.art-layer-mask]:transition-all [&_.art-layer-mask]:duration-300 [&_.art-layer-mask]:ease-in-out [&_.art-layer-playPauseButton]:hidden [&_.art-layer-playPauseButton]:transition-all [&_.art-layer-playPauseButton]:duration-300 [&_.art-layer-playPauseButton]:ease-in-out [&_.art-layer-miniTopControlButtons]:hidden [&_.art-layer-miniTopControlButtons]:transition-all [&_.art-layer-miniTopControlButtons]:duration-300 [&_.art-layer-miniTopControlButtons]:ease-in-out [&_.art-bottom]:!bg-gradient-to-b [&_.art-bottom]:from-transparent [&_.art-bottom]:via-background-alpha [&_.art-bottom]:to-background-contrast [&_.art-layer-lock]:bg-background-alpha [&_.art-control-topControlButtons]:!opacity-100 [&_.art-control-topControlButtons]:before:absolute [&_.art-control-topControlButtons]:before:top-0 [&_.art-control-topControlButtons]:before:left-0 [&_.art-control-topControlButtons]:before:h-[100px] [&_.art-control-topControlButtons]:before:w-full [&_.art-control-topControlButtons]:before:bg-gradient-to-t [&_.art-control-topControlButtons]:before:from-transparent [&_.art-control-topControlButtons]:before:via-background-alpha [&_.art-control-topControlButtons]:before:to-background-contrast [&_.art-control-topControlButtons]:before:bg-top [&_.art-control-topControlButtons]:before:bg-repeat-x [&_.art-control-topControlButtons]:before:content-[''] [&_.art-subtitle]:bg-player-subtitle-window-color [&_.art-subtitle]:!text-shadow-player [&_.art-video-player]:!font-[Inter] [&_.art-notice]:!justify-center [&_.art-contextmenu]:!border-border [&_.art-contextmenu]:!text-shadow-none",
   variants: {
     isMini: {
       true: 'custom-mini-player-hover h-[14.0625rem] w-[25rem] rounded-t-lg [&_.art-bottom]:!visible [&_.art-bottom]:!overflow-visible [&_.art-bottom]:!bg-none [&_.art-bottom]:!p-0 [&_.art-bottom]:!opacity-100 [&_.art-subtitle]:!bottom-[7px] [&_.art-controls]:hidden [&_.art-controls]:!transform-none [&_.art-control-progress]:!h-[7px] [&_.art-control-progress]:!items-end [&_.art-mask]:!hidden [&_.art-progress]:!transform-none',
@@ -182,7 +181,6 @@ const GlobalPlayer = () => {
   const [isVideoEnded, setIsVideoEnded] = useState(false);
   const [isPlayerFullScreen, setIsPlayerFullScreen] = useState(false);
   const [isSettingsOpen, setSettingsOpen] = useState(false);
-  const [isSearchModalVisible, setSearchModalVisible] = useState(false);
   const [showSubtitle, setShowSubtitle] = useState(autoShowSubtitle.value!);
   const [showSkipButton, setShowSkipButton] = useState(false);
   const [currentHighlight, setCurrentHighlight] = useState<Highlight | null>(null);
@@ -325,10 +323,6 @@ const GlobalPlayer = () => {
         break;
     }
   }, [currentSubtitleTextEffects.value]);
-
-  const closeSearchModalHandler = () => {
-    setSearchModalVisible(false);
-  };
 
   const savePlayProgress = (art: Artplayer) => {
     if (userId && playerData?.titlePlayer) {
@@ -550,7 +544,13 @@ const GlobalPlayer = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 250 }}
             transition={{ duration: 0.3 }}
-            className={shouldPlayInBackground ? 'fixed bottom-16 right-4 z-[9999]' : ''}
+            className={
+              shouldPlayInBackground
+                ? 'fixed bottom-16 right-4 z-[9999]'
+                : isShowOverlay
+                ? ''
+                : 'relative z-[4000]'
+            }
             style={{
               x,
               y,
@@ -1066,7 +1066,7 @@ const GlobalPlayer = () => {
                 showSubtitle={showSubtitle}
                 setShowSubtitle={setShowSubtitle}
                 setSettingsOpen={setSettingsOpen}
-                setSearchModalVisible={setSearchModalVisible}
+                subtitleOptions={subtitleOptions}
               />
             </Flex>,
             artplayer.layers.miniTopControlButtons,
@@ -1107,7 +1107,7 @@ const GlobalPlayer = () => {
               showSubtitle={showSubtitle}
               setShowSubtitle={setShowSubtitle}
               setSettingsOpen={setSettingsOpen}
-              setSearchModalVisible={setSearchModalVisible}
+              subtitleOptions={subtitleOptions}
             />,
             artplayer.controls.settings,
           )
@@ -1184,7 +1184,7 @@ const GlobalPlayer = () => {
                     showSubtitle={showSubtitle}
                     setShowSubtitle={setShowSubtitle}
                     setSettingsOpen={setSettingsOpen}
-                    setSearchModalVisible={setSearchModalVisible}
+                    subtitleOptions={subtitleOptions}
                   />
                 </Flex>
               ) : null}
@@ -1192,12 +1192,6 @@ const GlobalPlayer = () => {
             artplayer.controls.topControlButtons,
           )
         : null}
-
-      <SearchSubtitles
-        visible={isSearchModalVisible}
-        closeHandler={closeSearchModalHandler}
-        subtitleOptions={subtitleOptions}
-      />
       {typeVideo === 'movie' || typeVideo === 'tv' ? (
         <WatchTrailerModal
           trailer={trailer}

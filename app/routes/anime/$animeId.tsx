@@ -24,7 +24,7 @@ import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { animeDetailsPages } from '~/constants/tabLinks';
 import { BackgroundTabLink } from '~/components/media/Media.styles';
 import { AnimeDetail, MediaBackgroundImage } from '~/components/media/MediaDetail';
-import WatchTrailerModal from '~/components/elements/modal/WatchTrailerModal';
+import WatchTrailerModal from '~/components/elements/dialog/WatchTrailerModal';
 import TabLink from '~/components/elements/tab/TabLink';
 import CatchBoundaryView from '~/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/components/ErrorBoundaryView';

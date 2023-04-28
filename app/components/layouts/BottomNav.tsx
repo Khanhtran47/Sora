@@ -118,12 +118,13 @@ const BottomNav = (props: IBottomNavProps) => {
         </SheetTrigger>
         <SheetContent
           side="bottom"
+          size="content"
           hideCloseButton
           swipeDownToClose
           open={openMore}
           onOpenChange={() => setOpenMore(!openMore)}
         >
-          <div className="my-4 grid grid-cols-3 justify-center gap-x-3 gap-y-5 p-2 xs:grid-cols-4">
+          <div className="my-4 grid grid-cols-3 items-center justify-center gap-x-3 gap-y-5 p-2 xs:grid-cols-4">
             {moreNavItems.map((item) => (
               <NavLink
                 key={item.name}

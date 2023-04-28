@@ -17,7 +17,7 @@ import useCardHoverStore from '~/store/card/useCardHoverStore';
 import { useLayout } from '~/store/layout/useLayout';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import AspectRatio from '~/components/elements/aspect-ratio/AspectRatio';
-import type { Trailer } from '~/components/elements/modal/WatchTrailerModal';
+import type { Trailer } from '~/components/elements/dialog/WatchTrailerModal';
 import Rating from '~/components/elements/shared/Rating';
 import { H5, H6 } from '~/components/styles/Text.styles';
 import VolumeOff from '~/assets/icons/VolumeOffIcon';

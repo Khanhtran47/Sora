@@ -13,7 +13,7 @@ import { getTvSeasonVideos } from '~/services/tmdb/tmdb.server';
 import type { Item } from '~/services/youtube/youtube.types';
 import TMDB from '~/utils/media';
 import { CACHE_CONTROL } from '~/utils/server/http';
-import WatchTrailerModal, { type Trailer } from '~/components/elements/modal/WatchTrailerModal';
+import WatchTrailerModal, { type Trailer } from '~/components/elements/dialog/WatchTrailerModal';
 import { H5, H6 } from '~/components/styles/Text.styles';
 
 export const loader = async ({ request, params }: LoaderArgs) => {

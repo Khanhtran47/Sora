@@ -2,24 +2,15 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable @typescript-eslint/indent */
 import { useEffect, useState } from 'react';
-import {
-  Button,
-  Container,
-  Input,
-  Loading,
-  Modal,
-  Pagination,
-  Row,
-  Spacer,
-  useInput,
-} from '@nextui-org/react';
-import { useMediaQuery, useWindowSize } from '@react-hookz/web';
+import { Button, Input, Loading, Pagination, Row, Spacer, useInput } from '@nextui-org/react';
+import { useMediaQuery } from '@react-hookz/web';
 import { useFetcher } from '@remix-run/react';
 import { toast } from 'sonner';
 
 import type { ISubtitle, ISubtitlesSearch } from '~/services/open-subtitles/open-subtitles.types';
 import usePlayerState from '~/store/player/usePlayerState';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
+import { DialogHeader, DialogTitle } from '~/components/elements/Dialog';
 import {
   Select,
   SelectContent,
@@ -33,14 +24,11 @@ import {
   SelectValue,
   SelectViewport,
 } from '~/components/elements/select/Select';
-import { H3 } from '~/components/styles/Text.styles';
 import ChevronDownIcon from '~/assets/icons/ChevronDownIcon';
 import ChevronUpIcon from '~/assets/icons/ChevronUpIcon';
 import TickIcon from '~/assets/icons/TickIcon';
 
 interface ISearchSubtitlesProps {
-  visible: boolean;
-  closeHandler: () => void;
   subtitleOptions?: {
     imdb_id?: number;
     tmdb_id?: number;
@@ -56,11 +44,10 @@ interface ISearchSubtitlesProps {
 }
 
 const SearchSubtitles = (props: ISearchSubtitlesProps) => {
-  const { visible, closeHandler, subtitleOptions } = props;
+  const { subtitleOptions } = props;
   const rootData = useTypedRouteLoaderData('root');
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const fetcher = useFetcher();
-  const { width } = useWindowSize();
   const { updateSubtitleSelector } = usePlayerState((state) => state);
 
   const preInput: string | undefined =
@@ -192,19 +179,9 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
   }, [fetcher.data]);
 
   return (
-    <Modal
-      closeButton
-      blur
-      scroll
-      aria-labelledby="Search Subtitles"
-      open={visible}
-      onClose={closeHandler}
-      width={width && width < 960 ? `${width}px` : '960px'}
-    >
-      <Modal.Header css={{ display: 'flex', flexFlow: 'row wrap' }}>
-        <H3 h3 id="Search Subtitles" css={{ margin: '0 0 $8 0' }}>
-          Search Subtitles
-        </H3>
+    <>
+      <DialogHeader>
+        <DialogTitle>Search Subtitles</DialogTitle>
         <Row fluid justify="flex-start" align="center" css={{ margin: '0 0 $8 0' }}>
           <Input
             {...bindings}
@@ -264,13 +241,8 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
             )}
           </Button>
         </Row>
-      </Modal.Header>
-      <Modal.Body
-        // @ts-ignore
-        as={Container}
-        fluid
-        responsive
-      >
+      </DialogHeader>
+      <div className="w-full">
         {fetcher.type === 'normalLoad' && !isGetSubtitleLink && (
           <div role="status" className="max-w-sm animate-pulse">
             <div className="mb-4 h-2.5 w-48 rounded-full bg-gray-200 dark:bg-gray-700" />
@@ -305,8 +277,8 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
             />
           </Row>
         )}
-      </Modal.Body>
-    </Modal>
+      </div>
+    </>
   );
 };
 

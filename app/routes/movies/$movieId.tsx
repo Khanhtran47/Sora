@@ -27,7 +27,7 @@ import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { movieTvDetailsPages } from '~/constants/tabLinks';
 import { BackgroundTabLink } from '~/components/media/Media.styles';
 import { MediaBackgroundImage, MediaDetail } from '~/components/media/MediaDetail';
-import WatchTrailerModal, { type Trailer } from '~/components/elements/modal/WatchTrailerModal';
+import WatchTrailerModal, { type Trailer } from '~/components/elements/dialog/WatchTrailerModal';
 import TabLink from '~/components/elements/tab/TabLink';
 import CatchBoundaryView from '~/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/components/ErrorBoundaryView';

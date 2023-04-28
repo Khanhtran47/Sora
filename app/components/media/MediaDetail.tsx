@@ -19,7 +19,7 @@ import TMDB from '~/utils/media';
 import { useLayout } from '~/store/layout/useLayout';
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
-import SelectProviderModal from '~/components/elements/modal/SelectProviderModal';
+import SelectProviderModal from '~/components/elements/dialog/SelectProviderModal';
 import Rating from '~/components/elements/shared/Rating';
 import { H2, H5, H6 } from '~/components/styles/Text.styles';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
