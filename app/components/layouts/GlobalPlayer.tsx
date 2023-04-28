@@ -30,8 +30,6 @@ import Player from '~/components/elements/player/ArtPlayer';
 import PlayerError from '~/components/elements/player/PlayerError';
 import PlayerHotKey from '~/components/elements/player/PlayerHotkey';
 import PlayerSettings from '~/components/elements/player/PlayerSettings';
-import Box from '~/components/styles/Box.styles';
-import Flex from '~/components/styles/Flex.styles';
 import { H6 } from '~/components/styles/Text.styles';
 import Expand from '~/assets/icons/ExpandIcon';
 import Next from '~/assets/icons/NextIcon';
@@ -933,25 +931,7 @@ const GlobalPlayer = () => {
                   })}
                 />
                 {!isMini ? (
-                  <Flex
-                    justify="start"
-                    align="center"
-                    wrap="wrap"
-                    className="space-x-4"
-                    css={{
-                      marginTop: '1.5rem',
-                      padding: '0 0.75rem',
-                      '@xs': {
-                        padding: '0 3vw',
-                      },
-                      '@sm': {
-                        padding: '0 6vw',
-                      },
-                      '@md': {
-                        padding: '0 12vw',
-                      },
-                    }}
-                  >
+                  <div className="mt-6 flex flex-row flex-wrap items-center justify-start gap-4">
                     <Button
                       type="button"
                       size="sm"
@@ -983,7 +963,7 @@ const GlobalPlayer = () => {
                     >
                       Watch Trailer
                     </Button>
-                  </Flex>
+                  </div>
                 ) : null}
               </>
             ) : (
@@ -997,28 +977,11 @@ const GlobalPlayer = () => {
       </AnimatePresence>
       {/* Creating a portal for the player layers */}
       {isMini && artplayer
-        ? createPortal(
-            <Box
-              css={{
-                width: '100%',
-                height: '100%',
-                zIndex: 1,
-              }}
-            />,
-            artplayer.layers.mask,
-          )
+        ? createPortal(<div className="z-[1] h-full w-full" />, artplayer.layers.mask)
         : null}
       {isMini && artplayer
         ? createPortal(
-            <Flex
-              direction="row"
-              align="center"
-              justify="center"
-              css={{
-                w: '100%',
-                h: '100%',
-              }}
-            >
+            <div className="flex h-full w-full flex-row items-center justify-center">
               <Tooltip content={isPlayerPlaying ? 'Pause' : 'Play'}>
                 <Button
                   type="button"
@@ -1041,14 +1004,14 @@ const GlobalPlayer = () => {
                   css={{ height: '48px' }}
                 />
               </Tooltip>
-            </Flex>,
+            </div>,
             artplayer.layers.playPauseButton,
           )
         : null}
       {isMini && artplayer
         ? createPortal(
-            <Flex direction="row" align="center" justify="between">
-              <Flex direction="row" align="center" justify="center" className="space-x-1">
+            <div className="flex flex-row items-center justify-between">
+              <div className="flex flex-row items-center justify-center gap-x-1">
                 <Tooltip content="Expand">
                   <Button
                     type="button"
@@ -1058,7 +1021,7 @@ const GlobalPlayer = () => {
                     icon={<Expand filled />}
                   />
                 </Tooltip>
-              </Flex>
+              </div>
               <PlayerSettings
                 artplayer={artplayer}
                 qualitySelector={qualitySelector}
@@ -1070,7 +1033,7 @@ const GlobalPlayer = () => {
                 setSettingsOpen={setSettingsOpen}
                 subtitleOptions={subtitleOptions}
               />
-            </Flex>,
+            </div>,
             artplayer.layers.miniTopControlButtons,
           )
         : null}
@@ -1142,20 +1105,10 @@ const GlobalPlayer = () => {
         : null}
       {artplayer?.controls.topControlButtons && !isMini
         ? createPortal(
-            <Flex direction="row" align="center" justify="start" className="z-10 w-full space-x-2">
-              <Flex
-                direction="row"
-                align="center"
-                justify="start"
-                className="w-2/3 shrink grow-0 basis-2/3 space-x-2"
-              >
+            <div className="z-10 flex w-full flex-row items-center justify-start gap-x-2">
+              <div className="flex w-2/3 shrink grow-0 basis-2/3 flex-row items-center justify-start space-x-2">
                 {isPlayerFullScreen ? (
-                  <Flex
-                    direction="column"
-                    align="start"
-                    justify="center"
-                    className="w-full space-y-2"
-                  >
+                  <div className="flex w-full flex-col items-start justify-center space-y-2">
                     <H6
                       h6
                       weight="bold"
@@ -1167,16 +1120,11 @@ const GlobalPlayer = () => {
                       {seasonId ? ` Season ${seasonId}` : ''}
                       {episodeId ? ` Episode ${episodeId}` : ''}
                     </H6>
-                  </Flex>
+                  </div>
                 ) : null}
-              </Flex>
+              </div>
               {isMobile ? (
-                <Flex
-                  direction="row"
-                  align="center"
-                  justify="end"
-                  className="shrink-0 grow basis-1/3 space-x-2"
-                >
+                <div className="flex shrink-0 grow basis-1/3 flex-row items-center justify-end space-x-2">
                   <PlayerSettings
                     artplayer={artplayer}
                     qualitySelector={qualitySelector}
@@ -1188,9 +1136,9 @@ const GlobalPlayer = () => {
                     setSettingsOpen={setSettingsOpen}
                     subtitleOptions={subtitleOptions}
                   />
-                </Flex>
+                </div>
               ) : null}
-            </Flex>,
+            </div>,
             artplayer.controls.topControlButtons,
           )
         : null}

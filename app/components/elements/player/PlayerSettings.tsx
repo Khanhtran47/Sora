@@ -10,8 +10,6 @@ import AddSubtitles from '~/components/elements/dialog/AddSubtitleDialog';
 import SearchSubtitles from '~/components/elements/dialog/SearchSubtitleDialog';
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/elements/shared/Popover';
 import ResizablePanel from '~/components/elements/shared/ResizablePanel';
-import Box from '~/components/styles/Box.styles';
-import Flex from '~/components/styles/Flex.styles';
 import { H6 } from '~/components/styles/Text.styles';
 import Arrow from '~/assets/icons/ArrowIcon';
 import Filter from '~/assets/icons/FilterIcon';
@@ -1450,8 +1448,8 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
         },
       }}
     >
-      <Flex direction="row" align="center" justify="between" className="space-x-8">
-        <Flex direction="row" align="center" className="space-x-2">
+      <div className="flex flex-row items-center justify-between gap-x-8">
+        <div className="flex flex-row items-center gap-x-2">
           {item?.showIcon ? (
             (
               item as {
@@ -1480,8 +1478,8 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           <H6 h6 css={{ margin: 0 }} weight="semibold">
             {item.title}
           </H6>
-        </Flex>
-        <Flex direction="row" align="center" className="space-x-2">
+        </div>
+        <div className="flex flex-row items-center gap-x-2">
           {item?.isSwitch ? (
             <Switch checked={showSubtitle} onChange={item.switchAction} />
           ) : (
@@ -1502,8 +1500,8 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
               {item.showIcon ? <Arrow direction="right" /> : null}
             </>
           )}
-        </Flex>
-      </Flex>
+        </div>
+      </div>
     </Button>
   );
 
@@ -1532,16 +1530,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           >
             <ResizablePanel contentWidth="full">
               {currentDropdownLevel ? (
-                <Flex
-                  direction="column"
-                  align="start"
-                  justify="start"
-                  className="w-full space-y-2 !p-2"
-                >
+                <div className="flex w-full flex-col items-start justify-start gap-y-2 !p-2">
                   {currentDropdownLevel?.showBackButton || currentDropdownLevel?.showTitle ? (
                     <>
-                      <Flex direction="row" align="center" justify="between" className="w-full">
-                        <Flex direction="row" align="center" justify="start">
+                      <div className="flex w-full flex-row items-center justify-between">
+                        <div className="justify-star flex flex-row items-center">
                           {currentDropdownLevel?.showBackButton ? (
                             <Button
                               type="button"
@@ -1556,7 +1549,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                               {currentDropdownLevel?.title}
                             </H6>
                           ) : null}
-                        </Flex>
+                        </div>
                         {currentDropdownLevel?.showExtraButton ? (
                           <Button
                             type="button"
@@ -1568,16 +1561,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                             {currentDropdownLevel?.extraButtonTitle}
                           </Button>
                         ) : null}
-                      </Flex>
+                      </div>
                       <Divider />
                     </>
                   ) : null}
-                  <Flex
-                    direction="column"
-                    align="start"
-                    justify="start"
-                    className="w-full space-y-2 !p-2"
-                  >
+                  <div className="flex w-full flex-col items-start justify-start gap-y-2 !p-2">
                     {currentDropdownLevel?.listItems.map((item) => {
                       if (item.isTriggerDialog) {
                         return (
@@ -1588,8 +1576,8 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                       }
                       return settingsOptions(item);
                     })}
-                  </Flex>
-                </Flex>
+                  </div>
+                </div>
               ) : null}
             </ResizablePanel>
           </SheetContent>
@@ -1638,16 +1626,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
         >
           <ResizablePanel contentWidth="fit">
             {currentDropdownLevel ? (
-              <Flex direction="column" align="start" justify="start" className="w-fit space-y-2">
+              <div className="flex w-fit flex-col items-start justify-start gap-y-2">
                 {currentDropdownLevel?.showBackButton || currentDropdownLevel?.showTitle ? (
-                  <Box className="w-full">
-                    <Flex
-                      direction="row"
-                      align="center"
-                      justify="between"
-                      className="w-fit space-x-4 !p-2"
-                    >
-                      <Flex direction="row" align="center" justify="start">
+                  <div className="w-full">
+                    <div className="flex w-fit flex-row items-center justify-between gap-x-4 !p-2">
+                      <div className="flex flex-row items-center justify-start">
                         {currentDropdownLevel?.showBackButton ? (
                           <Button
                             type="button"
@@ -1662,7 +1645,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                             {currentDropdownLevel?.title}
                           </H6>
                         ) : null}
-                      </Flex>
+                      </div>
                       {currentDropdownLevel?.showExtraButton ? (
                         <Button
                           type="button"
@@ -1674,11 +1657,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                           {currentDropdownLevel?.extraButtonTitle}
                         </Button>
                       ) : null}
-                    </Flex>
+                    </div>
                     <Divider css={{ m: 0 }} />
-                  </Box>
+                  </div>
                 ) : null}
-                <Flex direction="column" align="start" justify="start" className="w-full space-y-2">
+                <div className="flex w-full flex-col items-start justify-start gap-y-2">
                   {currentDropdownLevel?.listItems.map((item) => {
                     if (item.isTriggerDialog) {
                       return (
@@ -1689,8 +1672,8 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                     }
                     return settingsOptions(item);
                   })}
-                </Flex>
-              </Flex>
+                </div>
+              </div>
             ) : null}
           </ResizablePanel>
         </PopoverContent>
