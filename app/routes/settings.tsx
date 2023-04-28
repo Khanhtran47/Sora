@@ -151,7 +151,7 @@ const Settings = () => {
     isShowSkipOpEdButton,
     isAutoSkipOpEd,
     isFastForward,
-    isSwipeFullscreen,
+    // isSwipeFullscreen,
     // sidebarStyleMode,
     sidebarMiniMode,
     sidebarHoverMode,
@@ -1231,6 +1231,27 @@ const Settings = () => {
                             }}
                           >
                             <Flex direction="column" justify="center" align="start">
+                              <H6>{t('fast-forward')}</H6>
+                              <H6 css={{ color: '$accents8' }}>{t('fast-forward-subtitle')}</H6>
+                            </Flex>
+                            <Switch
+                              checked={isFastForward.value}
+                              onChange={(e) => isFastForward.set(e.target.checked)}
+                            />
+                          </Flex>
+                          <Spacer y={0.25} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="gap-x-2"
+                            css={{
+                              backgroundColor: '$backgroundContrast',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
+                          >
+                            <Flex direction="column" justify="center" align="start">
                               <H6>{t('auto-play-next-episode')}</H6>
                               <H6 css={{ color: '$accents8' }}>
                                 {t('auto-play-next-episode-subtitle')}
@@ -1304,7 +1325,7 @@ const Settings = () => {
                             ) : null}
                           </AnimatePresence>
                         </Collapse>
-                        <Collapse
+                        {/* <Collapse
                           title={t('gestures')}
                           subtitle={t('gestures-subtitle')}
                           css={{
@@ -1355,7 +1376,7 @@ const Settings = () => {
                               onChange={(e) => isSwipeFullscreen.set(e.target.checked)}
                             />
                           </Flex>
-                        </Collapse>
+                        </Collapse> */}
                         <Collapse
                           title={t('keyboard')}
                           subtitle={t('keyboard-subtitle')}

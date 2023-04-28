@@ -93,5 +93,7 @@
   "table": "Table",
   "list-loading-type": "List loading type",
   "pagination": "Pagination",
-  "infinite-scroll": "Infinite scroll"
+  "infinite-scroll": "Infinite scroll",
+  "fast-forward": "Avance rapide",
+  "fast-forward-subtitle": "Appuyez longuement sur la vidéo pour avancer rapidement sur mobile"
 }

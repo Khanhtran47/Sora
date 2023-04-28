@@ -202,19 +202,20 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
             flat
             rounded
             aria-label="dropdown"
-            css={{ padding: 0, w: 36, h: 36 }}
-          >
-            <PlayerStyled
-              lottieRef={(instance) => {
-                setLottie(instance);
-              }}
-              src={dropdown}
-              autoplay={false}
-              keepLastFrame
-              speed={2.7}
-              className="h-8 w-8"
-            />
-          </Button>
+            css={{ padding: 0, h: 36 }}
+            icon={
+              <PlayerStyled
+                lottieRef={(instance) => {
+                  setLottie(instance);
+                }}
+                src={dropdown}
+                autoplay={false}
+                keepLastFrame
+                speed={2.7}
+                className="h-6 w-6"
+              />
+            }
+          />
         </Popover.Trigger>
         <Popover.Content
           css={{
