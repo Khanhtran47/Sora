@@ -32,14 +32,20 @@ const AddSubtitles = () => {
       const url = URL.createObjectURL(subtitle);
       const newSubtitle = [
         {
-          html: subtitle.name,
+          html:
+            subtitle.name.length > 20
+              ? `${subtitle.name.slice(0, 10)}...${subtitle.name.slice(
+                  subtitle.name.length - 10,
+                  subtitle.name.length,
+                )}`
+              : subtitle.name,
           url,
           type,
         },
       ];
       updateSubtitleSelector(newSubtitle);
-      toast.success('Open Subtitle', {
-        description: 'Subtitle added successfully',
+      toast.success('Subtitle added successfully', {
+        description: 'You can choose the subtitle in the subtitles list',
         duration: 3000,
       });
       setDisabledSubmit(true);
@@ -52,7 +58,7 @@ const AddSubtitles = () => {
         <DialogTitle>Add Subtitle</DialogTitle>
       </DialogHeader>
       <div className="w-full">
-        <div className="mb-5 flex flex-col items-center justify-start gap-x-4 sm:flex-row">
+        <div className="mb-5 flex flex-col items-end justify-start gap-4 sm:flex-row sm:items-center">
           <input
             type="file"
             id="subtitle"

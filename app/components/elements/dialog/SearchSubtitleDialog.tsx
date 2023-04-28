@@ -167,8 +167,8 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
       ];
       // @ts-ignore
       updateSubtitleSelector(newSubtitle);
-      toast.success('Open Subtitle', {
-        description: 'Subtitle added successfully',
+      toast.success('Subtitle added successfully', {
+        description: 'You can choose the subtitle in the subtitles list',
         duration: 3000,
       });
       setIsGetSubtitleLink(false);
@@ -180,51 +180,52 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
     <>
       <DialogHeader>
         <DialogTitle>Search Subtitles</DialogTitle>
-        <Row fluid justify="flex-start" align="center" css={{ margin: '0 0 $8 0' }}>
-          <Input
-            {...bindings}
-            size="sm"
-            placeholder="Search Subtitle"
-            clearable
-            bordered
-            color="primary"
-            type="text"
-          />
-          <Spacer x={1} />
-          <Select value={language} onValueChange={(value: string) => setLanguage(value)}>
-            <SelectTrigger aria-label="Language">
-              <SelectValue placeholder="Select language" />
-              <SelectIcon>
-                <ChevronDownIcon />
-              </SelectIcon>
-            </SelectTrigger>
-            <SelectContent>
-              <SelectScrollUpButton>
-                <ChevronUpIcon />
-              </SelectScrollUpButton>
-              <SelectViewport>
-                {rootData?.languages &&
-                  rootData?.languages
-                    .sort((a, b) => {
-                      const textA = a.english_name.toUpperCase();
-                      const textB = b.english_name.toUpperCase();
-                      return textA < textB ? -1 : textA > textB ? 1 : 0;
-                    })
-                    .map((lang) => (
-                      <SelectItem value={lang.iso_639_1} key={`SelectItem${lang.iso_639_1}`}>
-                        <SelectItemText>{lang.english_name}</SelectItemText>
-                        <SelectItemIndicator>
-                          <TickIcon />
-                        </SelectItemIndicator>
-                      </SelectItem>
-                    ))}
-              </SelectViewport>
-              <SelectScrollDownButton>
-                <ChevronDownIcon />
-              </SelectScrollDownButton>
-            </SelectContent>
-          </Select>
-          <Spacer x={1} />
+        <div className="mb-5 flex w-full flex-col items-end justify-start gap-6 sm:flex-row sm:items-center">
+          <div className="flex w-full flex-col items-center justify-start gap-4 sm:flex-row sm:flex-wrap">
+            <Input
+              {...bindings}
+              size="sm"
+              placeholder="Search Subtitle"
+              clearable
+              bordered
+              color="primary"
+              type="text"
+              css={{ w: '100%', '@xs': { w: 'auto' } }}
+            />
+            <Select value={language} onValueChange={(value: string) => setLanguage(value)}>
+              <SelectTrigger aria-label="Language" css={{ w: '92%', '@xs': { w: 'auto' } }}>
+                <SelectValue placeholder="Select language" />
+                <SelectIcon>
+                  <ChevronDownIcon />
+                </SelectIcon>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectScrollUpButton>
+                  <ChevronUpIcon />
+                </SelectScrollUpButton>
+                <SelectViewport>
+                  {rootData?.languages &&
+                    rootData?.languages
+                      .sort((a, b) => {
+                        const textA = a.english_name.toUpperCase();
+                        const textB = b.english_name.toUpperCase();
+                        return textA < textB ? -1 : textA > textB ? 1 : 0;
+                      })
+                      .map((lang) => (
+                        <SelectItem value={lang.iso_639_1} key={`SelectItem${lang.iso_639_1}`}>
+                          <SelectItemText>{lang.english_name}</SelectItemText>
+                          <SelectItemIndicator>
+                            <TickIcon />
+                          </SelectItemIndicator>
+                        </SelectItem>
+                      ))}
+                </SelectViewport>
+                <SelectScrollDownButton>
+                  <ChevronDownIcon />
+                </SelectScrollDownButton>
+              </SelectContent>
+            </Select>
+          </div>
           <Button
             type="button"
             auto
@@ -238,7 +239,7 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
               'Search'
             )}
           </Button>
-        </Row>
+        </div>
       </DialogHeader>
       <div className="w-full">
         {fetcher.type === 'normalLoad' && !isGetSubtitleLink && (

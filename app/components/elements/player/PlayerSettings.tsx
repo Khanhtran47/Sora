@@ -1478,7 +1478,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           ) : (
             <Spacer x={1.15} />
           )}
-          <H6 h6 css={{ margin: 0 }} weight="semibold">
+          <H6 h6 css={{ margin: 0 }} weight="semibold" className="!line-clamp-1">
             {item.title}
           </H6>
         </div>
