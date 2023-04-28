@@ -45,27 +45,27 @@ const sheetContentStyles = tv({
     {
       side: ['top', 'bottom'],
       size: 'content',
-      class: 'max-h-screen min-h-[100px]',
+      class: 'max-h-screen min-h-[150px]',
     },
     {
       side: ['top', 'bottom'],
       size: 'default',
-      class: 'h-1/3',
+      class: 'h-1/3 min-h-[150px]',
     },
     {
       side: ['top', 'bottom'],
       size: 'sm',
-      class: 'h-1/4',
+      class: 'h-1/4 min-h-[150px]',
     },
     {
       side: ['top', 'bottom'],
       size: 'lg',
-      class: 'h-1/2',
+      class: 'h-1/2 min-h-[150px]',
     },
     {
       side: ['top', 'bottom'],
       size: 'xl',
-      class: 'h-5/6',
+      class: 'h-5/6 min-h-[150px]',
     },
     {
       side: ['top', 'bottom'],
@@ -75,27 +75,27 @@ const sheetContentStyles = tv({
     {
       side: ['right', 'left'],
       size: 'content',
-      class: 'max-w-screen',
+      class: 'max-w-screen min-w-[250px]',
     },
     {
       side: ['right', 'left'],
       size: 'default',
-      class: 'w-1/3',
+      class: 'w-1/3 min-w-[250px]',
     },
     {
       side: ['right', 'left'],
       size: 'sm',
-      class: 'w-1/4',
+      class: 'w-1/4 min-w-[250px]',
     },
     {
       side: ['right', 'left'],
       size: 'lg',
-      class: 'w-1/2',
+      class: 'w-1/2 min-w-[250px]',
     },
     {
       side: ['right', 'left'],
       size: 'xl',
-      class: 'w-5/6',
+      class: 'w-5/6 min-w-[250px]',
     },
     {
       side: ['right', 'left'],

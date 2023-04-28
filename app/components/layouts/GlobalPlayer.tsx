@@ -549,7 +549,9 @@ const GlobalPlayer = () => {
                 ? 'fixed bottom-16 right-4 z-[9999]'
                 : isShowOverlay
                 ? ''
-                : 'relative z-[4000]'
+                : isMobile
+                ? 'relative z-[4000]'
+                : ''
             }
             style={{
               x,
