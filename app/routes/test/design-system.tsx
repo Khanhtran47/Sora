@@ -15,6 +15,13 @@ import {
   DialogTrigger,
 } from '~/components/elements/Dialog';
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '~/components/elements/Select';
+import {
   Sheet,
   SheetContent,
   SheetDescription,
@@ -216,6 +223,28 @@ const DesignSystem = () => {
             </DialogHeader>
           </DialogContent>
         </Dialog>
+      </div>
+      <div className="flex flex-row gap-x-4">
+        <Select>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Theme" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="light">Light</SelectItem>
+            <SelectItem value="dark">Dark</SelectItem>
+            <SelectItem value="system">System</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Theme" />
+          </SelectTrigger>
+          <SelectContent position="popper">
+            <SelectItem value="light">Light</SelectItem>
+            <SelectItem value="dark">Dark</SelectItem>
+            <SelectItem value="system">System</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
     </motion.div>
   );

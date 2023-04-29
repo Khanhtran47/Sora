@@ -5,10 +5,10 @@ import { isMobileOnly } from 'react-device-detect';
 
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { Dialog, DialogContent, DialogTrigger } from '~/components/elements/Dialog';
+import { Popover, PopoverContent, PopoverTrigger } from '~/components/elements/Popover';
 import { Sheet, SheetContent, SheetTrigger } from '~/components/elements/Sheet';
 import AddSubtitles from '~/components/elements/dialog/AddSubtitleDialog';
 import SearchSubtitles from '~/components/elements/dialog/SearchSubtitleDialog';
-import { Popover, PopoverContent, PopoverTrigger } from '~/components/elements/shared/Popover';
 import ResizablePanel from '~/components/elements/shared/ResizablePanel';
 import { H6 } from '~/components/styles/Text.styles';
 import Arrow from '~/assets/icons/ArrowIcon';
@@ -1595,9 +1595,13 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           onOpenChange={() => setOpenDialog(!openDialog)}
         >
           {currentDialogName === 'add-subtitle' ? (
-            <AddSubtitles />
+            <AddSubtitles artplayer={artplayer} />
           ) : currentDialogName === 'search-subtitle' ? (
-            <SearchSubtitles subtitleOptions={subtitleOptions} />
+            <SearchSubtitles
+              artplayer={artplayer}
+              subtitleOptions={subtitleOptions}
+              containerPortal={containerPortal}
+            />
           ) : null}
         </SheetContent>
       </Sheet>
@@ -1683,9 +1687,13 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
       </Popover>
       <DialogContent container={containerPortal}>
         {currentDialogName === 'add-subtitle' ? (
-          <AddSubtitles />
+          <AddSubtitles artplayer={artplayer} />
         ) : currentDialogName === 'search-subtitle' ? (
-          <SearchSubtitles subtitleOptions={subtitleOptions} />
+          <SearchSubtitles
+            artplayer={artplayer}
+            subtitleOptions={subtitleOptions}
+            containerPortal={containerPortal}
+          />
         ) : null}
       </DialogContent>
     </Dialog>

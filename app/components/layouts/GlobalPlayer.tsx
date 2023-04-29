@@ -51,7 +51,7 @@ const playerStyles = tv({
       false: 'h-full w-full rounded-none',
     },
     isMobile: {
-      true: '[&_.art-bottom]:!flex-col-reverse [&_.art-bottom]:!justify-start [&_.art-bottom]:!overflow-visible [&_.art-bottom]:!p-0 [&_.art-controls]:!px-[10px] [&_.art-progress-indicator]:!m-0',
+      true: '[&_.art-bottom]:!p-0 [&_.art-controls]:!px-[10px] [&_.art-progress-indicator]:!m-0',
       false: '',
     },
     isShowOverlay: {
@@ -91,6 +91,14 @@ const playerStyles = tv({
       isSettingsOpen: true,
       class:
         '[&_.art-layer-mask]:block [&_.art-layer-mask]:bg-background-alpha [&_.art-layer-miniTopControlButtons]:block',
+    },
+    {
+      // @ts-ignores
+      isMobile: true,
+      // @ts-ignores
+      isPlayerFullScreen: false,
+      class:
+        '[&_.art-bottom]:!flex-col-reverse [&_.art-bottom]:!justify-start [&_.art-bottom]:!overflow-visible',
     },
   ],
 });
@@ -827,7 +835,7 @@ const GlobalPlayer = () => {
                             position: 'absolute',
                             bottom: `${Number(art?.height) - (isMobile ? 70 : 50)}px`,
                             left: isMobile ? '0' : '-10px',
-                            width: `${Number(art?.width) + 5}px`,
+                            width: `${Number(art?.width)}px`,
                             padding: '0 7px 0 7px',
                             height: '55px',
                             cursor: 'default',
@@ -876,7 +884,7 @@ const GlobalPlayer = () => {
                       const $topControlButtons = art.controls['topControlButtons'];
                       // set top control buttons position when player resize
                       $topControlButtons.style.bottom = `${
-                        Number(art?.height) - (isMobile ? 70 : 55)
+                        Number(art?.height) - (isMobile && !art.fullscreen ? 70 : 55)
                       }px`;
                       $topControlButtons.style.width = `${Number(art?.width)}px`;
                     });

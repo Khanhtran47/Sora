@@ -174,7 +174,7 @@ const SheetContent = React.forwardRef<
               dragConstraints={{ top: 0, bottom: 0 }}
               dragElastic={0}
               dragMomentum={false}
-              className={swipeDownToClose ? 'mt-2' : ''}
+              className={swipeDownToClose ? '!mt-2' : ''}
             >
               {children}
             </motion.div>

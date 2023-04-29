@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useEffect, useState } from 'react';
-import { Button, Input, Loading, Pagination, Row, Spacer, useInput } from '@nextui-org/react';
+import { Button, Input, Loading, Pagination, useInput } from '@nextui-org/react';
 import { useMediaQuery } from '@react-hookz/web';
 import { useFetcher } from '@remix-run/react';
 import { toast } from 'sonner';
@@ -12,21 +12,14 @@ import { DialogHeader, DialogTitle } from '~/components/elements/Dialog';
 import {
   Select,
   SelectContent,
-  SelectIcon,
   SelectItem,
-  SelectItemIndicator,
-  SelectItemText,
-  SelectScrollDownButton,
-  SelectScrollUpButton,
   SelectTrigger,
   SelectValue,
-  SelectViewport,
-} from '~/components/elements/select/Select';
-import ChevronDownIcon from '~/assets/icons/ChevronDownIcon';
-import ChevronUpIcon from '~/assets/icons/ChevronUpIcon';
-import TickIcon from '~/assets/icons/TickIcon';
+} from '~/components/elements/Select';
 
 interface ISearchSubtitlesProps {
+  artplayer: Artplayer | null;
+  containerPortal?: HTMLElement;
   subtitleOptions?: {
     imdb_id?: number;
     tmdb_id?: number;
@@ -42,7 +35,7 @@ interface ISearchSubtitlesProps {
 }
 
 const SearchSubtitles = (props: ISearchSubtitlesProps) => {
-  const { subtitleOptions } = props;
+  const { artplayer, subtitleOptions, containerPortal } = props;
   const rootData = useTypedRouteLoaderData('root');
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const fetcher = useFetcher();
@@ -178,9 +171,9 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
 
   return (
     <>
-      <DialogHeader>
-        <DialogTitle>Search Subtitles</DialogTitle>
-        <div className="mb-5 flex w-full flex-col items-end justify-start gap-6 sm:flex-row sm:items-center">
+      <DialogHeader className="!px-2 sm:!px-0">
+        <DialogTitle className="!mb-3">Search Subtitles</DialogTitle>
+        <div className="!mb-5 flex w-full flex-col items-end justify-start gap-6 sm:flex-row sm:items-center">
           <div className="flex w-full flex-col items-center justify-start gap-4 sm:flex-row sm:flex-wrap">
             <Input
               {...bindings}
@@ -193,36 +186,22 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
               css={{ w: '100%', '@xs': { w: 'auto' } }}
             />
             <Select value={language} onValueChange={(value: string) => setLanguage(value)}>
-              <SelectTrigger aria-label="Language" css={{ w: '92%', '@xs': { w: 'auto' } }}>
+              <SelectTrigger aria-label="Language" className="h-8 sm:w-fit">
                 <SelectValue placeholder="Select language" />
-                <SelectIcon>
-                  <ChevronDownIcon />
-                </SelectIcon>
               </SelectTrigger>
-              <SelectContent>
-                <SelectScrollUpButton>
-                  <ChevronUpIcon />
-                </SelectScrollUpButton>
-                <SelectViewport>
-                  {rootData?.languages &&
-                    rootData?.languages
-                      .sort((a, b) => {
-                        const textA = a.english_name.toUpperCase();
-                        const textB = b.english_name.toUpperCase();
-                        return textA < textB ? -1 : textA > textB ? 1 : 0;
-                      })
-                      .map((lang) => (
-                        <SelectItem value={lang.iso_639_1} key={`SelectItem${lang.iso_639_1}`}>
-                          <SelectItemText>{lang.english_name}</SelectItemText>
-                          <SelectItemIndicator>
-                            <TickIcon />
-                          </SelectItemIndicator>
-                        </SelectItem>
-                      ))}
-                </SelectViewport>
-                <SelectScrollDownButton>
-                  <ChevronDownIcon />
-                </SelectScrollDownButton>
+              <SelectContent container={containerPortal}>
+                {rootData?.languages &&
+                  rootData?.languages
+                    .sort((a, b) => {
+                      const textA = a.english_name.toUpperCase();
+                      const textB = b.english_name.toUpperCase();
+                      return textA < textB ? -1 : textA > textB ? 1 : 0;
+                    })
+                    .map((lang) => (
+                      <SelectItem value={lang.iso_639_1} key={`SelectItem${lang.iso_639_1}`}>
+                        {lang.english_name}
+                      </SelectItem>
+                    ))}
               </SelectContent>
             </Select>
           </div>
@@ -232,6 +211,7 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
             size="sm"
             onPress={searchSubtitles}
             disabled={fetcher.type === 'normalLoad' && !isGetSubtitleLink}
+            className="!px-3"
           >
             {fetcher.type === 'normalLoad' && !isGetSubtitleLink ? (
               <Loading type="points" color="currentColor" size="sm" />
@@ -244,11 +224,11 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
       <div className="w-full">
         {fetcher.type === 'normalLoad' && !isGetSubtitleLink && (
           <div role="status" className="max-w-sm animate-pulse">
-            <div className="mb-4 h-2.5 w-48 rounded-full bg-gray-200 dark:bg-gray-700" />
-            <div className="mb-4 h-2 max-w-[360px] rounded-full bg-gray-200 dark:bg-gray-700" />
-            <div className="mb-4 h-2 rounded-full bg-gray-200 dark:bg-gray-700" />
-            <div className="mb-4 h-2 max-w-[330px] rounded-full bg-gray-200 dark:bg-gray-700" />
-            <div className="mb-4 h-2 max-w-[300px] rounded-full bg-gray-200 dark:bg-gray-700" />
+            <div className="!mb-4 h-2.5 w-48 rounded-full bg-gray-200 dark:bg-gray-700" />
+            <div className="!mb-4 h-2 max-w-[360px] rounded-full bg-gray-200 dark:bg-gray-700" />
+            <div className="!mb-4 h-2 rounded-full bg-gray-200 dark:bg-gray-700" />
+            <div className="!mb-4 h-2 max-w-[330px] rounded-full bg-gray-200 dark:bg-gray-700" />
+            <div className="!mb-4 h-2 max-w-[300px] rounded-full bg-gray-200 dark:bg-gray-700" />
             <div className="h-2 max-w-[360px] rounded-full bg-gray-200 dark:bg-gray-700" />
             <span className="sr-only">Loading...</span>
           </div>
@@ -265,17 +245,18 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
               {subtitle.attributes.release} ({subtitle.attributes.language})
             </Button>
           ))}
-        {totalPages > 1 && (
-          <Row fluid justify="center" align="center" css={{ margin: '0 0 $8 0' }}>
+        {totalPages > 1 ? (
+          <div className="!mb-5 flex w-full flex-row items-center justify-center">
             <Pagination
               total={totalPages}
               initialPage={page}
               // shadow
               onChange={handlePageChange}
               {...(isSm && { size: 'xs' })}
+              className="[&>*]:!mx-[0.125rem] sm:[&>*]:!mx-1"
             />
-          </Row>
-        )}
+          </div>
+        ) : null}
       </div>
     </>
   );
