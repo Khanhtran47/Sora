@@ -40,6 +40,8 @@
 
 ## Tech Stack
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d9de7bbf429b4219b5f60a1d2b9f6888)](https://app.codacy.com/gh/Khanhtran47/Sora?utm_source=github.com&utm_medium=referral&utm_content=Khanhtran47/Sora&utm_campaign=Badge_Grade)
+
 - **Remix** with Typescript
 - **NextUI** for pre-made components and themes
 - Styled using **TailwindCSS** and **Stitches**
