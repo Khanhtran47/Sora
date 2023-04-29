@@ -1595,12 +1595,13 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           onOpenChange={() => setOpenDialog(!openDialog)}
         >
           {currentDialogName === 'add-subtitle' ? (
-            <AddSubtitles artplayer={artplayer} />
+            <AddSubtitles artplayer={artplayer} setCurrentSubtitle={setCurrentSubtitle} />
           ) : currentDialogName === 'search-subtitle' ? (
             <SearchSubtitles
               artplayer={artplayer}
               subtitleOptions={subtitleOptions}
               containerPortal={containerPortal}
+              setCurrentSubtitle={setCurrentSubtitle}
             />
           ) : null}
         </SheetContent>
@@ -1687,12 +1688,13 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
       </Popover>
       <DialogContent container={containerPortal}>
         {currentDialogName === 'add-subtitle' ? (
-          <AddSubtitles artplayer={artplayer} />
+          <AddSubtitles artplayer={artplayer} setCurrentSubtitle={setCurrentSubtitle} />
         ) : currentDialogName === 'search-subtitle' ? (
           <SearchSubtitles
             artplayer={artplayer}
             subtitleOptions={subtitleOptions}
             containerPortal={containerPortal}
+            setCurrentSubtitle={setCurrentSubtitle}
           />
         ) : null}
       </DialogContent>

@@ -11,11 +11,9 @@ import {
 import { Button } from '@nextui-org/react';
 import { useNavigate } from '@remix-run/react';
 import Artplayer from 'artplayer';
-import { motion, type PanInfo } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
 
 import usePlayerState from '~/store/player/usePlayerState';
-import { useSoraSettings } from '~/hooks/useLocalStorage';
 import AspectRatio from '~/components/elements/aspect-ratio/AspectRatio';
 import { H5 } from '~/components/styles/Text.styles';
 import Close from '~/assets/icons/CloseIcon';
@@ -45,20 +43,20 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
     setSubtitleSelector,
   } = usePlayerState((state) => state);
   const [artplayer, setArtplayer] = useState<Artplayer | null>(null);
-  const { isSwipeFullscreen } = useSoraSettings();
+  // const { isSwipeFullscreen } = useSoraSettings();
   const artRef = useRef<HTMLDivElement>(null);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleDragEnd = (event: MouseEvent | PointerEvent | TouchEvent, info: PanInfo) => {
-    if (artplayer && isSwipeFullscreen.value) {
-      if (!artplayer.fullscreen && info.offset.y < -100) {
-        artplayer.fullscreen = true;
-      }
-      if (artplayer.fullscreen && info.offset.y > 100) {
-        artplayer.fullscreen = false;
-      }
-    }
-  };
+  // // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // const handleDragEnd = (event: MouseEvent | PointerEvent | TouchEvent, info: PanInfo) => {
+  //   if (artplayer && isSwipeFullscreen.value) {
+  //     if (!artplayer.fullscreen && info.offset.y < -100) {
+  //       artplayer.fullscreen = true;
+  //     }
+  //     if (artplayer.fullscreen && info.offset.y > 100) {
+  //       artplayer.fullscreen = false;
+  //     }
+  //   }
+  // };
   useEffect(
     () => {
       const art = new Artplayer({
@@ -83,16 +81,16 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
       ratio={isMini ? undefined : isMobile ? 16 / 9 : 7 / 3}
       className={isMini ? 'overflow-hidden rounded-lg' : ''}
     >
-      <motion.div
+      <div
         ref={artRef}
         style={style}
         className={className}
-        drag={isMobile && isSwipeFullscreen ? 'y' : false}
-        whileDrag={{ scale: 1.2 }}
-        dragConstraints={{ top: 0, bottom: 0 }}
-        dragSnapToOrigin
-        dragElastic={0.8}
-        onDragEnd={handleDragEnd}
+        // drag={isMobile && isSwipeFullscreen ? 'y' : false}
+        // whileDrag={{ scale: 1.2 }}
+        // dragConstraints={{ top: 0, bottom: 0 }}
+        // dragSnapToOrigin
+        // dragElastic={0.8}
+        // onDragEnd={handleDragEnd}
         {...rest}
       />
       {isMini ? (

@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 
 import type { ISubtitle, ISubtitlesSearch } from '~/services/open-subtitles/open-subtitles.types';
 import usePlayerState from '~/store/player/usePlayerState';
+import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import { DialogHeader, DialogTitle } from '~/components/elements/Dialog';
 import {
@@ -32,10 +33,11 @@ interface ISearchSubtitlesProps {
     title?: string;
     sub_format: 'srt' | 'webvtt';
   };
+  setCurrentSubtitle: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const SearchSubtitles = (props: ISearchSubtitlesProps) => {
-  const { artplayer, subtitleOptions, containerPortal } = props;
+  const { artplayer, subtitleOptions, containerPortal, setCurrentSubtitle } = props;
   const rootData = useTypedRouteLoaderData('root');
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const fetcher = useFetcher();
@@ -57,6 +59,7 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
   const [subtitle, setSubtitle] = useState<ISubtitle>();
   const [subtitlesSearch, setSubtitlesSearch] = useState<ISubtitlesSearch>();
   const [isGetSubtitleLink, setIsGetSubtitleLink] = useState<boolean>(false);
+  const { autoSwitchSubtitle } = useSoraSettings();
 
   const handlePageChange = (page: number) => {
     setSubtitlesSearch(undefined);
@@ -152,19 +155,38 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
       setTotalPages(fetcher.data.subtitlesSearch.total_pages);
     }
     if (fetcher.data && fetcher.data.subtitle) {
+      setIsGetSubtitleLink(false);
+      const subtitleName = subtitle?.attributes?.release || '';
+      const subtitleHtml =
+        subtitleName.length > 20
+          ? `${subtitleName.substring(0, 10)}...${subtitleName.substring(
+              subtitleName.length - 10,
+              subtitleName.length,
+            )}`
+          : subtitleName;
+      const url = fetcher.data.subtitle.link;
       const newSubtitle = [
         {
-          html: subtitle?.attributes?.language,
-          url: fetcher.data.subtitle.link,
+          html: subtitleHtml,
+          url,
         },
       ];
-      // @ts-ignore
       updateSubtitleSelector(newSubtitle);
-      toast.success('Subtitle added successfully', {
-        description: 'You can choose the subtitle in the subtitles list',
-        duration: 3000,
-      });
-      setIsGetSubtitleLink(false);
+      if (artplayer && autoSwitchSubtitle.value) {
+        artplayer.subtitle.switch(url, {
+          name: subtitleHtml,
+        });
+        setCurrentSubtitle(subtitleHtml);
+        toast.success('Subtitle added successfully', {
+          description: 'The subtitle has been switched automatically',
+          duration: 3000,
+        });
+      } else {
+        toast.success('Subtitle added successfully', {
+          description: 'You can choose the subtitle in the subtitles list',
+          duration: 3000,
+        });
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetcher.data]);

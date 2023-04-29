@@ -95,5 +95,7 @@
   "pagination": "Pagination",
   "infinite-scroll": "Infinite scroll",
   "fast-forward": "Fast forward",
-  "fast-forward-subtitle": "Long press video to fast forward on mobile"
+  "fast-forward-subtitle": "Long press video to fast forward on mobile",
+  "auto-switch-subtitle": "Auto switch subtitle",
+  "auto-switch-subtitle-subtitle": "Whether to automatically switch the subtitle after adding subtitle to the list."
 }

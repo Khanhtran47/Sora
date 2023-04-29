@@ -4,12 +4,20 @@ import { toast } from 'sonner';
 
 import { getExt } from '~/utils/file';
 import usePlayerState from '~/store/player/usePlayerState';
+import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { DialogHeader, DialogTitle } from '~/components/elements/Dialog';
 
-const AddSubtitles = ({ artplayer }: { artplayer: Artplayer | null }) => {
+interface IAddSubtitlesProps {
+  artplayer: Artplayer | null;
+  setCurrentSubtitle: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const AddSubtitles = (props: IAddSubtitlesProps) => {
+  const { artplayer, setCurrentSubtitle } = props;
   const [disabledSubmit, setDisabledSubmit] = useState(true);
   const [subtitle, setSubtitle] = useState<File | null>(null);
   const { updateSubtitleSelector } = usePlayerState((state) => state);
+  const { autoSwitchSubtitle } = useSoraSettings();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -28,27 +36,40 @@ const AddSubtitles = ({ artplayer }: { artplayer: Artplayer | null }) => {
 
   const handleSubtitleSubmit = () => {
     if (subtitle) {
+      setDisabledSubmit(true);
       const type = getExt(subtitle.name);
       const url = URL.createObjectURL(subtitle);
+      const subtitleName =
+        subtitle.name.length > 20
+          ? `${subtitle.name.substring(0, 10)}...${subtitle.name.substring(
+              subtitle.name.length - 10,
+              subtitle.name.length,
+            )}`
+          : subtitle.name;
       const newSubtitle = [
         {
-          html:
-            subtitle.name.length > 20
-              ? `${subtitle.name.slice(0, 10)}...${subtitle.name.slice(
-                  subtitle.name.length - 10,
-                  subtitle.name.length,
-                )}`
-              : subtitle.name,
+          html: subtitleName,
           url,
           type,
         },
       ];
       updateSubtitleSelector(newSubtitle);
-      toast.success('Subtitle added successfully', {
-        description: 'You can choose the subtitle in the subtitles list',
-        duration: 3000,
-      });
-      setDisabledSubmit(true);
+      if (artplayer && autoSwitchSubtitle.value) {
+        artplayer.subtitle.switch(url, {
+          name: subtitleName,
+          type,
+        });
+        setCurrentSubtitle(subtitleName);
+        toast.success('Subtitle added successfully', {
+          description: 'The subtitle has been switched automatically',
+          duration: 3000,
+        });
+      } else {
+        toast.success('Subtitle added successfully', {
+          description: 'You can choose the subtitle in the subtitles list',
+          duration: 3000,
+        });
+      }
     }
   };
 

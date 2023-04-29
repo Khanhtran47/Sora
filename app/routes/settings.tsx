@@ -157,6 +157,7 @@ const Settings = () => {
     sidebarHoverMode,
     sidebarBoxedMode,
     // sidebarSheetMode,
+    autoSwitchSubtitle,
   } = useSoraSettings();
   const listViewType = useLocalStorageValue('sora-settings_layout_list-view', {
     defaultValue: 'card',
@@ -865,6 +866,29 @@ const Settings = () => {
                             <Switch
                               checked={autoShowSubtitle.value}
                               onChange={(e) => autoShowSubtitle.set(e.target.checked)}
+                            />
+                          </Flex>
+                          <Spacer y={0.25} />
+                          <Flex
+                            direction="row"
+                            justify="between"
+                            align="center"
+                            className="gap-x-2"
+                            css={{
+                              backgroundColor: '$backgroundContrast',
+                              borderRadius: '$xs',
+                              padding: '$sm',
+                            }}
+                          >
+                            <Flex direction="column" justify="center" align="start">
+                              <H6>{t('auto-switch-subtitle')}</H6>
+                              <H6 css={{ color: '$accents8' }}>
+                                {t('auto-switch-subtitle-subtitle')}
+                              </H6>
+                            </Flex>
+                            <Switch
+                              checked={autoSwitchSubtitle.value}
+                              onChange={(e) => autoSwitchSubtitle.set(e.target.checked)}
                             />
                           </Flex>
                           <Spacer y={0.25} />
