@@ -128,7 +128,6 @@ const getProviderList = async ({
         id?: string | number | null;
         provider: string;
         episodesCount?: number;
-        episodeId?: string;
       }[] = findTvSeason?.episodes.some((e) => e.id)
         ? [
             {
@@ -169,30 +168,35 @@ const getProviderList = async ({
       return provider;
     }
     if (type === 'anime') {
-      const [bilibiliSearch, loklokSearch, kisskhSearch, animeEpisodes] = await Promise.all([
-        sgConfigs.__bilibiliProvider ? getBilibiliSearch(title) : undefined,
-        sgConfigs.__loklokProvider
-          ? loklokSearchOneTv(title, orgTitle || '', Number(year))
-          : undefined,
-        sgConfigs.__kisskhProvider ? getKissKhSearch(title, 3) : undefined,
-        getAnimeEpisodeInfo(animeId?.toString() || ''),
-      ]);
+      const [bilibiliSearch, loklokSearch, kisskhSearch, gogoEpisodes, zoroEpisodes] =
+        await Promise.all([
+          sgConfigs.__bilibiliProvider ? getBilibiliSearch(title) : undefined,
+          sgConfigs.__loklokProvider
+            ? loklokSearchOneTv(title, orgTitle || '', Number(year))
+            : undefined,
+          sgConfigs.__kisskhProvider ? getKissKhSearch(title, 3) : undefined,
+          getAnimeEpisodeInfo(animeId?.toString() || '', undefined, 'gogoanime'),
+          getAnimeEpisodeInfo(animeId?.toString() || '', undefined, 'zoro'),
+        ]);
       const provider: {
         id?: string | number | null;
         provider: string;
         episodesCount?: number;
-      }[] = [
-        {
+      }[] = [];
+      if (gogoEpisodes && gogoEpisodes.length > 0) {
+        provider.push({
           id: animeId,
           provider: 'Gogo',
-          episodesCount: animeEpisodes ? animeEpisodes.length : 0,
-        },
-        {
+          episodesCount: gogoEpisodes.length,
+        });
+      }
+      if (zoroEpisodes && zoroEpisodes.length > 0) {
+        provider.push({
           id: animeId,
           provider: 'Zoro',
-          episodesCount: animeEpisodes ? animeEpisodes.length : 0,
-        },
-      ];
+          episodesCount: zoroEpisodes.length,
+        });
+      }
       const findKissKh: ISearchItem | undefined = kisskhSearch?.find((item) =>
         item.title.includes(' - ') ? item.title.split(' - ')[1] === title : item.title === title,
       );
