@@ -46,6 +46,12 @@ interface ICloseProps {
    * @type number
    * */
   width?: number;
+  /**
+   * The class name of the icon
+   * @default ''
+   * @type string
+   * */
+  className?: string;
 }
 
 const Close = ({
@@ -54,13 +60,14 @@ const Close = ({
   size = 24,
   height = 24,
   width = 24,
+  className = '',
   ...props
 }: ICloseProps) => {
   switch (filled) {
     case false:
       return (
         <Svg
-          className=""
+          className={className}
           width={width || size}
           height={height || size}
           viewBox="0 0 22 22"

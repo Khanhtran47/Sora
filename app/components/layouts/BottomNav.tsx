@@ -5,7 +5,7 @@ import type { User } from '@supabase/supabase-js';
 import { motion } from 'framer-motion';
 import { tv } from 'tailwind-variants';
 
-import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
+import { useLayout } from '~/store/layout/useLayout';
 import { Sheet, SheetContent, SheetTrigger } from '~/components/elements/Sheet';
 import Category from '~/assets/icons/CategoryIcon';
 import Discover from '~/assets/icons/DiscoverIcon';
@@ -25,7 +25,7 @@ const BottomNav = (props: IBottomNavProps) => {
   const [openMore, setOpenMore] = useState(false);
   const location = useLocation();
   const [search] = useSearchParams();
-  const scrollDirection = useLayoutScrollPosition((state) => state.scrollDirection);
+  const scrollDirection = useLayout((state) => state.scrollDirection);
   const bottomNavItemStyles = tv({
     base: 'flex flex-col items-center justify-center gap-y-2 rounded-md bg-transparent text-xs font-medium text-text',
     variants: {
@@ -118,12 +118,13 @@ const BottomNav = (props: IBottomNavProps) => {
         </SheetTrigger>
         <SheetContent
           side="bottom"
+          size="content"
           hideCloseButton
           swipeDownToClose
           open={openMore}
           onOpenChange={() => setOpenMore(!openMore)}
         >
-          <div className="my-4 grid grid-cols-3 justify-center gap-x-3 gap-y-5 p-2 xs:grid-cols-4">
+          <div className="my-4 grid grid-cols-3 items-center justify-center gap-x-3 gap-y-5 p-2 xs:grid-cols-4">
             {moreNavItems.map((item) => (
               <NavLink
                 key={item.name}

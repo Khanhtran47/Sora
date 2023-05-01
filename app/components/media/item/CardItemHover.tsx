@@ -12,7 +12,7 @@ import { type ITrailer } from '~/services/consumet/anilist/anilist.types';
 import useCardHoverStore from '~/store/card/useCardHoverStore';
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
-import { type Trailer } from '~/components/elements/modal/WatchTrailerModal';
+import { type Trailer } from '~/components/elements/dialog/WatchTrailerModal';
 import Rating from '~/components/elements/shared/Rating';
 import Flex from '~/components/styles/Flex.styles';
 import { H4, H5, H6 } from '~/components/styles/Text.styles';

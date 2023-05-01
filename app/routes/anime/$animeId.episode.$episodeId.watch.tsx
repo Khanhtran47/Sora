@@ -216,8 +216,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   }
 
   if (provider === 'Gogo') {
-    const [episodeDetail, providers, aniskip] = await Promise.all([
-      getAnimeEpisodeStream(episodeIndex, 'gogoanime'),
+    const [providers, aniskip, gogoEpisodes] = await Promise.all([
       getProviderList({
         type: 'anime',
         title,
@@ -229,14 +228,19 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         isEnded,
       }),
       malId && isGetSkipOpEd ? getAniskip(malId, Number(episodeId)) : undefined,
+      getAnimeEpisodeInfo(animeId, undefined, 'gogoanime'),
     ]);
     const hasNextEpisode = checkHasNextEpisode(
       provider,
       Number(episodeInfo?.number),
       totalEpisodes,
     );
+    const gogoEpisodeId = gogoEpisodes ? gogoEpisodes[Number(episodeId) - 1]?.id : undefined;
     if (aniskip) {
-      await getHighlights(aniskip);
+      const [, episodeDetail] = await Promise.all([
+        getHighlights(aniskip),
+        getAnimeEpisodeStream(gogoEpisodeId, 'gogoanime'),
+      ]);
       return json(
         {
           provider,
@@ -271,6 +275,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         },
       );
     }
+    const episodeDetail = await getAnimeEpisodeStream(gogoEpisodeId, 'gogoanime');
     return json(
       {
         provider,
@@ -306,8 +311,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   }
 
   if (provider === 'Zoro') {
-    const [episodeDetail, providers, aniskip] = await Promise.all([
-      getAnimeEpisodeStream(episodeIndex, 'zoro'),
+    const [providers, aniskip, zoroEpisodes] = await Promise.all([
       getProviderList({
         type: 'anime',
         title,
@@ -319,14 +323,19 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         isEnded,
       }),
       malId && isGetSkipOpEd ? getAniskip(malId, Number(episodeId)) : undefined,
+      getAnimeEpisodeInfo(animeId, undefined, 'zoro'),
     ]);
     const hasNextEpisode = checkHasNextEpisode(
       provider,
       Number(episodeInfo?.number),
       totalEpisodes,
     );
+    const zoroEpisodeId = zoroEpisodes ? zoroEpisodes[Number(episodeId) - 1]?.id : undefined;
     if (aniskip) {
-      await getHighlights(aniskip);
+      const [, episodeDetail] = await Promise.all([
+        getHighlights(aniskip),
+        getAnimeEpisodeStream(zoroEpisodeId, 'zoro', 'vidstreaming'),
+      ]);
       return json(
         {
           provider,
@@ -338,7 +347,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
             url: `${
               env.CORS_PROXY_URL === undefined
                 ? source.url
-                : `${env.CORS_PROXY_URL}?url=${source.url}`
+                : `${env.CORS_PROXY_URL}?url=${encodeURIComponent(source.url)}`
             }`,
           })),
           userId: user?.id,
@@ -362,7 +371,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         },
       );
     }
-
+    const episodeDetail = await getAnimeEpisodeStream(zoroEpisodeId, 'zoro', 'vidstreaming');
     return json(
       {
         provider,

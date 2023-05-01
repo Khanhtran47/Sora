@@ -20,14 +20,14 @@ import { getImdbRating, getMovieDetail } from '~/services/tmdb/tmdb.server';
 import TMDB from '~/utils/media';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
-import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
+import { useLayout } from '~/store/layout/useLayout';
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { useCustomHeaderChangePosition } from '~/hooks/useHeader';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { movieTvDetailsPages } from '~/constants/tabLinks';
 import { BackgroundTabLink } from '~/components/media/Media.styles';
 import { MediaBackgroundImage, MediaDetail } from '~/components/media/MediaDetail';
-import WatchTrailerModal, { type Trailer } from '~/components/elements/modal/WatchTrailerModal';
+import WatchTrailerModal, { type Trailer } from '~/components/elements/dialog/WatchTrailerModal';
 import TabLink from '~/components/elements/tab/TabLink';
 import CatchBoundaryView from '~/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/components/ErrorBoundaryView';
@@ -198,7 +198,7 @@ const MovieDetail = () => {
   const [trailer, setTrailer] = useState<Trailer>({});
   const { backgroundColor } = useColorDarkenLighten(detail?.color);
   const { sidebarBoxedMode } = useSoraSettings();
-  const { viewportRef, scrollY } = useLayoutScrollPosition((scrollState) => scrollState);
+  const { viewportRef, scrollY } = useLayout((scrollState) => scrollState);
   const { setBackgroundColor, startChangeScrollPosition } = useHeaderStyle(
     (headerState) => headerState,
   );

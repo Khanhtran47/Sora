@@ -52,6 +52,7 @@ export type SubtitleSelector =
   | {
       html: string;
       url: string;
+      type?: string;
       default?: true;
     }[]
   | undefined;

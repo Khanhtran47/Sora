@@ -93,5 +93,9 @@
   "table": "Table",
   "list-loading-type": "List loading type",
   "pagination": "Pagination",
-  "infinite-scroll": "Infinite scroll"
+  "infinite-scroll": "Infinite scroll",
+  "fast-forward": "Tua nhanh",
+  "fast-forward-subtitle": "Nhấn và giữ video để tua nhanh trên di động",
+  "auto-switch-subtitle": "Tự động chuyển phụ đề",
+  "auto-switch-subtitle-subtitle": "Tự động chuyển phụ đề sau khi thêm phụ đề vào danh sách phụ đề."
 }

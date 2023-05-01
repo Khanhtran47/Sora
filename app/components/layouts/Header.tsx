@@ -15,7 +15,7 @@ import { tv } from 'tailwind-variants';
 
 import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
 import { useHistoryStack } from '~/store/layout/useHistoryStack';
-import { useLayoutScrollPosition } from '~/store/layout/useLayoutScrollPosition';
+import { useLayout } from '~/store/layout/useLayout';
 import { useHeaderOptions } from '~/hooks/useHeader';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import MultiLevelDropdown from '~/components/layouts/MultiLevelDropdown';
@@ -76,7 +76,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   const [lottie, setLottie] = useState<AnimationItem>();
   const navigate = useNavigate();
   const { sidebarMiniMode, sidebarBoxedMode } = useSoraSettings();
-  const { scrollY } = useLayoutScrollPosition((state) => state);
+  const { scrollY } = useLayout((state) => state);
   const { startChangeScrollPosition } = useHeaderStyle((state) => state);
   const {
     currentMiniTitle,
@@ -202,19 +202,20 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
             flat
             rounded
             aria-label="dropdown"
-            css={{ padding: 0, w: 36, h: 36 }}
-          >
-            <PlayerStyled
-              lottieRef={(instance) => {
-                setLottie(instance);
-              }}
-              src={dropdown}
-              autoplay={false}
-              keepLastFrame
-              speed={2.7}
-              className="h-8 w-8"
-            />
-          </Button>
+            css={{ padding: 0, h: 36 }}
+            icon={
+              <PlayerStyled
+                lottieRef={(instance) => {
+                  setLottie(instance);
+                }}
+                src={dropdown}
+                autoplay={false}
+                keepLastFrame
+                speed={2.7}
+                className="h-6 w-6"
+              />
+            }
+          />
         </Popover.Trigger>
         <Popover.Content
           css={{

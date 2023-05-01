@@ -1,46 +1,26 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/no-shadow */
-/* eslint-disable @typescript-eslint/indent */
 import { useEffect, useState } from 'react';
-import {
-  Button,
-  Container,
-  Input,
-  Loading,
-  Modal,
-  Pagination,
-  Row,
-  Spacer,
-  useInput,
-} from '@nextui-org/react';
-import { useMediaQuery, useWindowSize } from '@react-hookz/web';
+import { Button, Input, Loading, Pagination, useInput } from '@nextui-org/react';
+import { useMediaQuery } from '@react-hookz/web';
 import { useFetcher } from '@remix-run/react';
 import { toast } from 'sonner';
 
 import type { ISubtitle, ISubtitlesSearch } from '~/services/open-subtitles/open-subtitles.types';
 import usePlayerState from '~/store/player/usePlayerState';
+import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
+import { DialogHeader, DialogTitle } from '~/components/elements/Dialog';
 import {
   Select,
   SelectContent,
-  SelectIcon,
   SelectItem,
-  SelectItemIndicator,
-  SelectItemText,
-  SelectScrollDownButton,
-  SelectScrollUpButton,
   SelectTrigger,
   SelectValue,
-  SelectViewport,
-} from '~/components/elements/select/Select';
-import { H3 } from '~/components/styles/Text.styles';
-import ChevronDownIcon from '~/assets/icons/ChevronDownIcon';
-import ChevronUpIcon from '~/assets/icons/ChevronUpIcon';
-import TickIcon from '~/assets/icons/TickIcon';
+} from '~/components/elements/Select';
 
 interface ISearchSubtitlesProps {
-  visible: boolean;
-  closeHandler: () => void;
+  artplayer: Artplayer | null;
+  containerPortal?: HTMLElement;
   subtitleOptions?: {
     imdb_id?: number;
     tmdb_id?: number;
@@ -53,14 +33,14 @@ interface ISearchSubtitlesProps {
     title?: string;
     sub_format: 'srt' | 'webvtt';
   };
+  setCurrentSubtitle: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const SearchSubtitles = (props: ISearchSubtitlesProps) => {
-  const { visible, closeHandler, subtitleOptions } = props;
+  const { artplayer, subtitleOptions, containerPortal, setCurrentSubtitle } = props;
   const rootData = useTypedRouteLoaderData('root');
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const fetcher = useFetcher();
-  const { width } = useWindowSize();
   const { updateSubtitleSelector } = usePlayerState((state) => state);
 
   const preInput: string | undefined =
@@ -79,6 +59,7 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
   const [subtitle, setSubtitle] = useState<ISubtitle>();
   const [subtitlesSearch, setSubtitlesSearch] = useState<ISubtitlesSearch>();
   const [isGetSubtitleLink, setIsGetSubtitleLink] = useState<boolean>(false);
+  const { autoSwitchSubtitle } = useSoraSettings();
 
   const handlePageChange = (page: number) => {
     setSubtitlesSearch(undefined);
@@ -174,60 +155,63 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
       setTotalPages(fetcher.data.subtitlesSearch.total_pages);
     }
     if (fetcher.data && fetcher.data.subtitle) {
+      setIsGetSubtitleLink(false);
+      const subtitleName = subtitle?.attributes?.release || '';
+      const subtitleHtml =
+        subtitleName.length > 20
+          ? `${subtitleName.substring(0, 10)}...${subtitleName.substring(
+              subtitleName.length - 10,
+              subtitleName.length,
+            )}`
+          : subtitleName;
+      const url = fetcher.data.subtitle.link;
       const newSubtitle = [
         {
-          html: subtitle?.attributes?.language,
-          url: fetcher.data.subtitle.link,
+          html: subtitleHtml,
+          url,
         },
       ];
-      // @ts-ignore
       updateSubtitleSelector(newSubtitle);
-      toast.success('Open Subtitle', {
-        description: 'Subtitle added successfully',
-        duration: 3000,
-      });
-      setIsGetSubtitleLink(false);
+      if (artplayer && autoSwitchSubtitle.value) {
+        artplayer.subtitle.switch(url, {
+          name: subtitleHtml,
+        });
+        setCurrentSubtitle(subtitleHtml);
+        toast.success('Subtitle added successfully', {
+          description: 'The subtitle has been switched automatically',
+          duration: 3000,
+        });
+      } else {
+        toast.success('Subtitle added successfully', {
+          description: 'You can choose the subtitle in the subtitles list',
+          duration: 3000,
+        });
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetcher.data]);
 
   return (
-    <Modal
-      closeButton
-      blur
-      scroll
-      aria-labelledby="Search Subtitles"
-      open={visible}
-      onClose={closeHandler}
-      width={width && width < 960 ? `${width}px` : '960px'}
-    >
-      <Modal.Header css={{ display: 'flex', flexFlow: 'row wrap' }}>
-        <H3 h3 id="Search Subtitles" css={{ margin: '0 0 $8 0' }}>
-          Search Subtitles
-        </H3>
-        <Row fluid justify="flex-start" align="center" css={{ margin: '0 0 $8 0' }}>
-          <Input
-            {...bindings}
-            size="sm"
-            placeholder="Search Subtitle"
-            clearable
-            bordered
-            color="primary"
-            type="text"
-          />
-          <Spacer x={1} />
-          <Select value={language} onValueChange={(value: string) => setLanguage(value)}>
-            <SelectTrigger aria-label="Language">
-              <SelectValue placeholder="Select language" />
-              <SelectIcon>
-                <ChevronDownIcon />
-              </SelectIcon>
-            </SelectTrigger>
-            <SelectContent>
-              <SelectScrollUpButton>
-                <ChevronUpIcon />
-              </SelectScrollUpButton>
-              <SelectViewport>
+    <>
+      <DialogHeader className="!px-2 sm:!px-0">
+        <DialogTitle className="!mb-3">Search Subtitles</DialogTitle>
+        <div className="!mb-5 flex w-full flex-col items-end justify-start gap-6 sm:flex-row sm:items-center">
+          <div className="flex w-full flex-col items-center justify-start gap-4 sm:flex-row sm:flex-wrap">
+            <Input
+              {...bindings}
+              size="sm"
+              placeholder="Search Subtitle"
+              clearable
+              bordered
+              color="primary"
+              type="text"
+              css={{ w: '100%', '@xs': { w: 'auto' } }}
+            />
+            <Select value={language} onValueChange={(value: string) => setLanguage(value)}>
+              <SelectTrigger aria-label="Language" className="h-8 sm:w-fit">
+                <SelectValue placeholder="Select language" />
+              </SelectTrigger>
+              <SelectContent container={containerPortal}>
                 {rootData?.languages &&
                   rootData?.languages
                     .sort((a, b) => {
@@ -237,25 +221,19 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
                     })
                     .map((lang) => (
                       <SelectItem value={lang.iso_639_1} key={`SelectItem${lang.iso_639_1}`}>
-                        <SelectItemText>{lang.english_name}</SelectItemText>
-                        <SelectItemIndicator>
-                          <TickIcon />
-                        </SelectItemIndicator>
+                        {lang.english_name}
                       </SelectItem>
                     ))}
-              </SelectViewport>
-              <SelectScrollDownButton>
-                <ChevronDownIcon />
-              </SelectScrollDownButton>
-            </SelectContent>
-          </Select>
-          <Spacer x={1} />
+              </SelectContent>
+            </Select>
+          </div>
           <Button
             type="button"
             auto
             size="sm"
             onPress={searchSubtitles}
             disabled={fetcher.type === 'normalLoad' && !isGetSubtitleLink}
+            className="!px-3"
           >
             {fetcher.type === 'normalLoad' && !isGetSubtitleLink ? (
               <Loading type="points" color="currentColor" size="sm" />
@@ -263,21 +241,16 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
               'Search'
             )}
           </Button>
-        </Row>
-      </Modal.Header>
-      <Modal.Body
-        // @ts-ignore
-        as={Container}
-        fluid
-        responsive
-      >
+        </div>
+      </DialogHeader>
+      <div className="w-full">
         {fetcher.type === 'normalLoad' && !isGetSubtitleLink && (
           <div role="status" className="max-w-sm animate-pulse">
-            <div className="mb-4 h-2.5 w-48 rounded-full bg-gray-200 dark:bg-gray-700" />
-            <div className="mb-4 h-2 max-w-[360px] rounded-full bg-gray-200 dark:bg-gray-700" />
-            <div className="mb-4 h-2 rounded-full bg-gray-200 dark:bg-gray-700" />
-            <div className="mb-4 h-2 max-w-[330px] rounded-full bg-gray-200 dark:bg-gray-700" />
-            <div className="mb-4 h-2 max-w-[300px] rounded-full bg-gray-200 dark:bg-gray-700" />
+            <div className="!mb-4 h-2.5 w-48 rounded-full bg-gray-200 dark:bg-gray-700" />
+            <div className="!mb-4 h-2 max-w-[360px] rounded-full bg-gray-200 dark:bg-gray-700" />
+            <div className="!mb-4 h-2 rounded-full bg-gray-200 dark:bg-gray-700" />
+            <div className="!mb-4 h-2 max-w-[330px] rounded-full bg-gray-200 dark:bg-gray-700" />
+            <div className="!mb-4 h-2 max-w-[300px] rounded-full bg-gray-200 dark:bg-gray-700" />
             <div className="h-2 max-w-[360px] rounded-full bg-gray-200 dark:bg-gray-700" />
             <span className="sr-only">Loading...</span>
           </div>
@@ -294,19 +267,20 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
               {subtitle.attributes.release} ({subtitle.attributes.language})
             </Button>
           ))}
-        {totalPages > 1 && (
-          <Row fluid justify="center" align="center" css={{ margin: '0 0 $8 0' }}>
+        {totalPages > 1 ? (
+          <div className="!mb-5 flex w-full flex-row items-center justify-center">
             <Pagination
               total={totalPages}
               initialPage={page}
               // shadow
               onChange={handlePageChange}
               {...(isSm && { size: 'xs' })}
+              className="[&>*]:!mx-[0.125rem] sm:[&>*]:!mx-1"
             />
-          </Row>
-        )}
-      </Modal.Body>
-    </Modal>
+          </div>
+        ) : null}
+      </div>
+    </>
   );
 };
 

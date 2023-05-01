@@ -1,4 +1,5 @@
 const { withTV } = require('tailwind-variants/transformer');
+const plugin = require('tailwindcss/plugin');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = withTV({
@@ -34,6 +35,8 @@ module.exports = withTV({
         border: 'var(--nextui-colors-border)',
         selection: 'var(--nextui-colors-selection)',
         code: 'var(--nextui-colors-code)',
+        'player-subtitle-window-color': 'var(--art-subtitle-window-color)',
+        'player-subtitle-background-color': 'var(--art-subtitle-background-color)',
       },
       keyframes: {
         enterFromRight: {
@@ -68,6 +71,40 @@ module.exports = withTV({
           from: { opacity: 1 },
           to: { opacity: 0 },
         },
+        shadowAnimation: {
+          '0%, 100%': {
+            transform: 'scale(1, 1)',
+          },
+          '50%': {
+            transform: 'scale(1.2, 1)',
+          },
+        },
+        jumpAnimation: {
+          '15%': {
+            borderBottomRightRadius: '3px',
+          },
+          '25%': {
+            transform: 'translateY(9px) rotate(22.5deg)',
+          },
+          '50%': {
+            transform: 'translateY(18px) scale(1, .9) rotate(45deg)',
+            borderBottomRightRadius: '40px',
+          },
+          '75%': {
+            transform: 'translateY(9px) rotate(67.5deg)',
+          },
+          '100%': {
+            transform: 'translateY(0) rotate(90deg)',
+          },
+        },
+        slideIn: {
+          from: { transform: '$$transformValue' },
+          to: { transform: 'translate3d(0,0,0)' },
+        },
+        slideOut: {
+          from: { transform: 'translate3d(0,0,0)' },
+          to: { transform: '$$transformValue' },
+        },
       },
       animation: {
         scaleIn: 'scaleIn 200ms ease',
@@ -78,10 +115,22 @@ module.exports = withTV({
         enterFromRight: 'enterFromRight 250ms ease',
         exitToLeft: 'exitToLeft 250ms ease',
         exitToRight: 'exitToRight 250ms ease',
+        shadow: 'shadowAnimation 500ms linear infinite',
+        jump: 'jumpAnimation 500ms linear infinite',
       },
       gridTemplateAreas: {
         wide: ['image title', 'image info', 'image buttons'],
         small: ['image title', 'info info', 'buttons buttons'],
+      },
+      fontSize: {
+        'player-subtitle-font-size': 'var(--art-subtitle-custom-font-size)',
+      },
+      textShadow: {
+        none: 'none',
+        sm: '0 1px 2px var(--tw-shadow-color)',
+        DEFAULT: '0 2px 4px var(--tw-shadow-color)',
+        lg: '0 8px 16px var(--tw-shadow-color)',
+        player: 'var(--art-subtitle-text-shadow)',
       },
     },
     screens: {
@@ -103,10 +152,21 @@ module.exports = withTV({
     },
   },
   plugins: [
+    plugin(function ({ matchUtilities, theme }) {
+      matchUtilities(
+        {
+          'text-shadow': (value) => ({
+            textShadow: value,
+          }),
+        },
+        { values: theme('textShadow') },
+      );
+    }),
     require('@tailwindcss/line-clamp'),
     require('tailwind-scrollbar-hide'),
     require('@savvywombat/tailwindcss-grid-areas'),
     require('prettier-plugin-tailwindcss'),
+    require('tailwindcss-animate'),
   ],
   variants: {
     gridTemplateAreas: ['responsive'],

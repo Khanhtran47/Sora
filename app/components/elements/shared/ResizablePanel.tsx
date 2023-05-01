@@ -67,7 +67,7 @@ const ResizablePanel = ({
           className={size?.height ? 'absolute' : 'relative'}
         >
           <ScrollArea
-            type="auto"
+            type="hover"
             css={{
               height: panelHeight,
               width: size?.width || 'auto',
@@ -78,8 +78,18 @@ const ResizablePanel = ({
                 {children}
               </div>
             </ScrollAreaViewport>
-            <ScrollAreaScrollbar orientation="vertical" css={{ width: '10px !important' }}>
-              <ScrollAreaThumb />
+            <ScrollAreaScrollbar
+              orientation="vertical"
+              css={{
+                padding: 0,
+                margin: 2,
+                backgroundColor: 'transparent',
+                '&:hover': { backgroundColor: 'transparent' },
+              }}
+            >
+              <ScrollAreaThumb
+                css={{ backgroundColor: '$accents8', '&:hover': { background: '$accents6' } }}
+              />
             </ScrollAreaScrollbar>
             <ScrollAreaCorner />
           </ScrollArea>

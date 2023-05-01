@@ -85,12 +85,12 @@ function useSoraSettings() {
   const isAutoSkipOpEd = useLocalStorageValue('sora-settings_player_auto-skip-op-ed', {
     defaultValue: false,
   });
-  const isFastForward = useLocalStorageValue('sora-settings_player-gestures_fast-forward', {
+  const isFastForward = useLocalStorageValue('sora-settings_player_fast-forward', {
     defaultValue: true,
   });
-  const isSwipeFullscreen = useLocalStorageValue('sora-settings_player-gestures_swipe-fullscreen', {
-    defaultValue: false,
-  });
+  // const isSwipeFullscreen = useLocalStorageValue('sora-settings_player-gestures_swipe-fullscreen', {
+  //   defaultValue: false,
+  // });
   const sidebarStyleMode = useLocalStorageValue('sora-settings_layout_sidebar-style-mode', {
     defaultValue: 'rounded-all',
   });
@@ -118,6 +118,9 @@ function useSoraSettings() {
     defaultValue: 'pagination',
     initializeWithValue: false,
   });
+  const autoSwitchSubtitle = useLocalStorageValue('sora-settings_subtitle_auto-switch', {
+    defaultValue: true,
+  });
 
   return {
     currentSubtitleFontColor,
@@ -143,7 +146,7 @@ function useSoraSettings() {
     isShowSkipOpEdButton,
     isAutoSkipOpEd,
     isFastForward,
-    isSwipeFullscreen,
+    // isSwipeFullscreen,
     currentSubtitleTextEffects,
     sidebarStyleMode,
     sidebarMiniMode,
@@ -152,6 +155,7 @@ function useSoraSettings() {
     sidebarSheetMode,
     listViewType,
     listLoadingType,
+    autoSwitchSubtitle,
   };
 }
 
