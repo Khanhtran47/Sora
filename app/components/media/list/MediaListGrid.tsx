@@ -207,6 +207,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
                   isCoverCard={isCoverCard}
                   title={item?.name}
                   type="card"
+                  linkTo={href}
                 />
               </MotionLink>
             );

@@ -8,7 +8,6 @@ import { tv } from 'tailwind-variants';
 
 import type { IMedia } from '~/types/media';
 import type { ILanguage } from '~/services/tmdb/tmdb.types';
-import { useSoraSettings } from '~/hooks/useLocalStorage';
 import ListViewChangeButton from '~/components/elements/shared/ListViewChangeButton';
 import ChevronLeftIcon from '~/assets/icons/ChevronLeftIcon';
 import ChevronRightIcon from '~/assets/icons/ChevronRightIcon';
@@ -266,7 +265,6 @@ const MediaList = (props: IMediaListProps) => {
   const [slideProgress, setSlideProgress] = useState<number>(0);
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
-  const { listViewType } = useSoraSettings();
 
   switch (listType) {
     case 'grid':
