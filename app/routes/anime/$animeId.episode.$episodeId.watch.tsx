@@ -334,7 +334,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     if (aniskip) {
       const [, episodeDetail] = await Promise.all([
         getHighlights(aniskip),
-        getAnimeEpisodeStream(zoroEpisodeId, 'zoro'),
+        getAnimeEpisodeStream(zoroEpisodeId, 'zoro', 'vidstreaming'),
       ]);
       return json(
         {
@@ -347,7 +347,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
             url: `${
               env.CORS_PROXY_URL === undefined
                 ? source.url
-                : `${env.CORS_PROXY_URL}?url=${source.url}`
+                : `${env.CORS_PROXY_URL}?url=${encodeURIComponent(source.url)}`
             }`,
           })),
           userId: user?.id,
@@ -371,7 +371,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         },
       );
     }
-    const episodeDetail = await getAnimeEpisodeStream(zoroEpisodeId, 'zoro');
+    const episodeDetail = await getAnimeEpisodeStream(zoroEpisodeId, 'zoro', 'vidstreaming');
     return json(
       {
         provider,
