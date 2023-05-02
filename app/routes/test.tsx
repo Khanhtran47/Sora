@@ -1,4 +1,4 @@
-import { Badge, Container } from '@nextui-org/react';
+import { Badge } from '@nextui-org/react';
 import { redirect, type MetaFunction } from '@remix-run/node';
 import { NavLink, Outlet } from '@remix-run/react';
 
@@ -56,22 +56,6 @@ export const handle = {
   }),
 };
 
-const TestRoute = () => (
-  <Container
-    fluid
-    responsive={false}
-    display="flex"
-    justify="flex-start"
-    direction="column"
-    css={{
-      padding: '0 $sm',
-      '@xs': {
-        padding: 0,
-      },
-    }}
-  >
-    <Outlet />
-  </Container>
-);
+const TestRoute = () => <Outlet />;
 
 export default TestRoute;

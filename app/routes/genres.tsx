@@ -12,10 +12,6 @@ export const handle = {
   }),
 };
 
-const GenresPage = () => (
-  <div className="w-full">
-    <Outlet />
-  </div>
-);
+const GenresPage = () => <Outlet />;
 
 export default GenresPage;

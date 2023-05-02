@@ -1,7 +1,17 @@
 import { Badge } from '@nextui-org/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { NavLink, useLoaderData, useNavigate, type RouteMatch } from '@remix-run/react';
+import {
+  NavLink,
+  useLoaderData,
+  useLocation,
+  useNavigate,
+  type RouteMatch,
+} from '@remix-run/react';
+import { motion, type PanInfo } from 'framer-motion';
+import { isMobile } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
+import { useHydrated } from 'remix-utils';
+import i18next from '~/i18n/i18next.server';
 
 import { authenticate } from '~/services/supabase';
 import { getSearchTvShows } from '~/services/tmdb/tmdb.server';
@@ -11,24 +21,18 @@ import MediaList from '~/components/media/MediaList';
 import SearchForm from '~/components/elements/SearchForm';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  await authenticate(request, undefined, true);
+  const [, locale] = await Promise.all([
+    authenticate(request, undefined, true),
+    i18next.getLocale(request),
+  ]);
 
   const keyword = params?.tvKeyword || '';
   const url = new URL(request.url);
-  const page = Number(url.searchParams.get('page'));
-  if (!page || page < 1 || page > 1000) {
-    return json(
-      {
-        searchResults: await getSearchTvShows(keyword),
-      },
-      {
-        headers: { 'Cache-Control': CACHE_CONTROL.search },
-      },
-    );
-  }
+  let page = Number(url.searchParams.get('page')) || undefined;
+  if (page && (page < 1 || page > 1000)) page = 1;
   return json(
     {
-      searchResults: await getSearchTvShows(keyword, page),
+      searchResults: await getSearchTvShows(keyword, page, locale),
     },
     {
       headers: { 'Cache-Control': CACHE_CONTROL.search },
@@ -79,14 +83,38 @@ const SearchRoute = () => {
   const { searchResults } = useLoaderData<typeof loader>() || {};
   const rootData = useTypedRouteLoaderData('root');
   const navigate = useNavigate();
+  const location = useLocation();
+  const isHydrated = useHydrated();
   const { t } = useTranslation();
+
+  const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    if (info.offset?.x > 100) {
+      navigate('/search/movie');
+    }
+    if (info.offset?.x < -100 && info.offset?.y > -50) {
+      navigate('/search/anime');
+    }
+  };
 
   const onSubmit = (value: string) => {
     navigate(`/search/tv/${value}`);
   };
 
   return (
-    <div className="flex w-full flex-col items-center justify-center px-3 sm:px-0">
+    <motion.div
+      key={location.key}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+      className="flex w-full flex-col items-center justify-center px-3 sm:px-0"
+      drag={isMobile && isHydrated ? 'x' : false}
+      dragConstraints={isMobile && isHydrated ? { left: 0, right: 0 } : false}
+      dragElastic={isMobile && isHydrated ? 0.7 : false}
+      onDragEnd={handleDragEnd}
+      dragDirectionLock={isMobile && isHydrated}
+      draggable={isMobile && isHydrated}
+    >
       <SearchForm
         onSubmit={onSubmit}
         textHelper={t('search.helper.tv')}
@@ -106,7 +134,7 @@ const SearchRoute = () => {
           totalPages={searchResults?.totalPages}
         />
       )}
-    </div>
+    </motion.div>
   );
 };
 

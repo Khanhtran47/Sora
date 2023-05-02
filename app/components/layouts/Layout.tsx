@@ -4,6 +4,7 @@ import { useMediaQuery, useThrottledCallback } from '@react-hookz/web';
 import { useLocation, useMatches, useNavigationType, useOutlet, useParams } from '@remix-run/react';
 import type { User } from '@supabase/supabase-js';
 import { AnimatePresence, motion, useScroll } from 'framer-motion';
+import { useHydrated } from 'remix-utils';
 import { Toaster } from 'sonner';
 import { tv } from 'tailwind-variants';
 
@@ -156,6 +157,7 @@ const Layout = (props: ILayout) => {
   const matches = useMatches();
   const outlet = useOutlet();
   const params = useParams();
+  const isHydrated = useHydrated();
   const navigationType = useNavigationType();
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const isMd = useMediaQuery('(max-width: 1280px)', { initializeWithValue: false });
@@ -272,7 +274,7 @@ const Layout = (props: ILayout) => {
   const handleScroll = useThrottledCallback(
     (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
       if (isSm) {
-        const scrollY = e.currentTarget.scrollTop;
+        const scrollY = e.currentTarget?.scrollTop;
         const direction = scrollY > lastScrollY ? 'down' : 'up';
         if (
           direction !== scrollDirection &&
@@ -315,7 +317,7 @@ const Layout = (props: ILayout) => {
             <TabLink pages={currentTabLinkPages} linkTo={currentTabLinkTo} />
           </div>
         ) : null}
-        <ActionButtons />
+        {isHydrated ? <ActionButtons /> : null}
         <ScrollArea
           type={isSm ? 'scroll' : 'always'}
           scrollHideDelay={500}

@@ -46,10 +46,6 @@ export const handle = {
   }),
 };
 
-const DiscoverPage = () => (
-  <div className="w-full">
-    <Outlet />
-  </div>
-);
+const DiscoverPage = () => <Outlet />;
 
 export default DiscoverPage;
