@@ -1,3 +1,4 @@
+import { useMediaQuery } from '@react-hookz/web';
 import { NavLink } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 
@@ -23,9 +24,10 @@ interface ITabProps {
 const TabLink = (props: ITabProps) => {
   const { pages, linkTo } = props;
   const { t } = useTranslation();
+  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   return (
     <ScrollArea
-      type="scroll"
+      type={isSm ? 'scroll' : 'hover'}
       scrollHideDelay={100}
       css={{
         height: 55,
@@ -42,15 +44,11 @@ const TabLink = (props: ITabProps) => {
             <NavLink
               key={page.pageLink}
               to={`${linkTo}${page.pageLink}`}
-              className="relative z-10 flex h-12 shrink-0 items-center justify-center rounded-xl p-4 text-sm font-semibold text-text outline-none hover:text-primary-solid-hover hover:opacity-80 focus:bg-background-contrast"
+              className="relative z-10 flex h-12 shrink-0 items-center justify-center rounded-xl p-4 text-sm font-semibold text-foreground outline-none hover:text-primary-700 hover:opacity-80 focus:bg-neutral"
             >
               {({ isActive }) => (
                 <>
-                  <H5
-                    h5
-                    weight="bold"
-                    // transform="uppercase"
-                  >
+                  <H5 h5 weight="bold">
                     {t(page.pageName)}
                   </H5>
                   {isActive && (
@@ -73,9 +71,11 @@ const TabLink = (props: ITabProps) => {
         orientation="horizontal"
         css={{
           padding: 0,
-          margin: 2,
+          margin: 0,
+          bottom: '-5px !important',
           backgroundColor: 'transparent',
           '&:hover': { backgroundColor: 'transparent' },
+          '&[data-orientation="horizontal"]': { h: 5 },
         }}
       >
         <ScrollAreaThumb

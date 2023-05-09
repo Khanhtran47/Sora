@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useEffect, useState } from 'react';
-import { Button, Input, Loading, Pagination, useInput } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
+import { Input, Loading, Pagination, useInput } from '@nextui-org/react';
 import { useMediaQuery } from '@react-hookz/web';
 import { useFetcher } from '@remix-run/react';
 import { toast } from 'sonner';
@@ -229,11 +230,12 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
           </div>
           <Button
             type="button"
-            auto
-            size="sm"
-            onPress={searchSubtitles}
-            disabled={fetcher.type === 'normalLoad' && !isGetSubtitleLink}
+            size="md"
+            radius="xl"
+            color="primary"
+            isDisabled={fetcher.type === 'normalLoad' && !isGetSubtitleLink}
             className="!px-3"
+            onPress={searchSubtitles}
           >
             {fetcher.type === 'normalLoad' && !isGetSubtitleLink ? (
               <Loading type="points" color="currentColor" size="sm" />
@@ -243,7 +245,7 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
           </Button>
         </div>
       </DialogHeader>
-      <div className="w-full">
+      <div className="flex w-full flex-col gap-y-2">
         {fetcher.type === 'normalLoad' && !isGetSubtitleLink && (
           <div role="status" className="max-w-sm animate-pulse">
             <div className="!mb-4 h-2.5 w-48 rounded-full bg-gray-200 dark:bg-gray-700" />
@@ -260,8 +262,9 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
             <Button
               key={subtitle.id}
               type="button"
-              light
-              css={{ '@hover': { color: '$primaryLightContrast' } }}
+              variant="light"
+              color="primary"
+              className="hover:text-primary-600"
               onPress={() => handleSubtitleClick(subtitle)}
             >
               {subtitle.attributes.release} ({subtitle.attributes.language})

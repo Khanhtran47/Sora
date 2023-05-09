@@ -10,7 +10,9 @@ import FontStyles600 from '@fontsource/inter/600.css';
 import FontStyles700 from '@fontsource/inter/700.css';
 import FontStyles800 from '@fontsource/inter/800.css';
 import FontStyles900 from '@fontsource/inter/900.css';
-import { Badge, Button, Image as NextImage, NextUIProvider, Text, useSSR } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
+import { Badge, Image as NextImage, NextUIProvider, Text, useSSR } from '@nextui-org/react';
+import { NextUIProvider as NextUIv2Provider } from '@nextui-org/system';
 import { json, type LinksFunction, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import {
   Links,
@@ -578,8 +580,6 @@ const App = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const size = 35;
-
   return (
     <Document lang={locale} dir={i18n.dir()} gaTrackingId={gaTrackingId} ENV={ENV}>
       <RemixThemesProvider
@@ -601,17 +601,13 @@ const App = () => {
       >
         <AnimatePresence>
           {isLoading && process.env.NODE_ENV !== 'development' && !isBot ? (
-            <div
-              className="fixed top-0 left-0 block h-full w-full"
-              style={{ zIndex: '9999', backgroundColor: 'var(--nextui-colors-background)' }}
+            <motion.div
+              initial={{ opacity: 1 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed top-0 left-0 z-[9999] block h-full w-full bg-background"
             >
-              <motion.div
-                initial={{ opacity: 1 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="relative top-1/2 m-auto block h-0 w-0"
-                style={{ marginTop: '-77px' }}
-              >
+              <div className="relative top-1/2 m-auto mt-[-77px] block h-0 w-0">
                 <div className="mb-5 flex	items-center justify-center">
                   <Image
                     width="100px"
@@ -635,33 +631,22 @@ const App = () => {
                       contentType: MimeType.WEBP,
                     }}
                   />
-                  <h1
-                    style={{
-                      fontSize: '48px !important',
-                      margin: 0,
-                      fontWeight: 600,
-                      backgroundImage:
-                        'linear-gradient(45deg, var(--nextui-colors-primary), var(--nextui-colors-secondary) 50%)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      fontFamily: 'monospace',
-                      letterSpacing: '.3rem',
-                      textDecoration: 'none',
-                    }}
-                  >
+                  <h1 className="m-0 bg-gradient-to-br from-primary to-secondary bg-clip-text font-mono !text-5xl	 font-bold tracking-[0.3rem] text-transparent no-underline">
                     SORA
                   </h1>
                 </div>
-                <div style={{ width: `${size}px`, height: `${size}px` }} className="animate-spin">
+                <div className="h-9 w-9 animate-spin">
                   <div className="h-full w-full rounded-[50%] border-4 border-y-primary" />
                 </div>
-              </motion.div>
-            </div>
+              </div>
+            </motion.div>
           ) : null}
         </AnimatePresence>
-        <NextUIProvider>
-          <Layout user={user} />
-        </NextUIProvider>
+        <NextUIv2Provider>
+          <NextUIProvider>
+            <Layout user={user} />
+          </NextUIProvider>
+        </NextUIv2Provider>
       </RemixThemesProvider>
     </Document>
   );
@@ -725,26 +710,26 @@ export const CatchBoundary = () => {
             </Text>
             <Flex direction="row" align="center" justify="center" className="w-full space-x-4">
               <Button
-                auto
-                ghost
+                size="md"
+                variant="ghost"
+                color="success"
+                startIcon={<Home />}
+                type="button"
                 onPress={() => {
                   window.location.href = '/';
                 }}
-                color="success"
-                icon={<Home />}
-                type="button"
               >
                 Back to Home
               </Button>
               <Button
-                auto
-                ghost
+                size="md"
+                variant="ghost"
+                color="warning"
+                startIcon={<Refresh filled />}
+                type="button"
                 onPress={() => {
                   window.location.reload();
                 }}
-                color="warning"
-                icon={<Refresh filled />}
-                type="button"
               >
                 Reload Page
               </Button>
@@ -804,26 +789,26 @@ export const ErrorBoundary = ({ error }: { error: Error }) => {
             </Text>
             <Flex direction="row" align="center" justify="center" className="w-full space-x-4">
               <Button
-                auto
-                ghost
+                size="md"
+                variant="ghost"
+                color="success"
+                startIcon={<Home />}
+                type="button"
                 onPress={() => {
                   window.location.href = '/';
                 }}
-                color="success"
-                icon={<Home />}
-                type="button"
               >
                 Back to Home
               </Button>
               <Button
-                auto
-                ghost
+                size="md"
+                variant="ghost"
+                color="warning"
+                startIcon={<Refresh filled />}
+                type="button"
                 onPress={() => {
                   window.location.reload();
                 }}
-                color="warning"
-                icon={<Refresh filled />}
-                type="button"
               >
                 Reload Page
               </Button>

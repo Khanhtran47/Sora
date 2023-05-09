@@ -21,7 +21,7 @@
     "es2021": true
   },
   "rules": {
-    "arrow-body-style": [2, "as-needed"],
+    "arrow-body-style": 0,
     "comma-dangle": 0,
     "consistent-return": 0,
     "func-names": 0,

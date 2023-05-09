@@ -53,7 +53,7 @@ const MobileHeader = () => {
         initial={{ y: 0 }}
         animate={{ y: scrollDirection === 'down' ? -65 : 0 }}
         transition={{ duration: 0.5 }}
-        className="fixed top-0 z-[1000] flex h-[64px] w-full flex-row items-center justify-between bg-background-contrast-alpha px-6 shadow-lg backdrop-blur-md sm:hidden"
+        className="fixed top-0 z-[1000] flex h-[64px] w-full flex-row items-center justify-between bg-neutral/60 px-6 shadow-lg backdrop-blur-md sm:hidden"
       >
         <NavLink to="/" arial-label="home-page">
           <H2
@@ -89,7 +89,7 @@ const MobileHeader = () => {
         }}
       >
         {customHeaderBackgroundColor ? (
-          <div className="pointer-events-none h-full w-full bg-background-light" />
+          <div className="pointer-events-none h-full w-full bg-background/[0.2]" />
         ) : null}
       </motion.div>
       <Button

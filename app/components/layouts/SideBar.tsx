@@ -37,18 +37,18 @@ export const handle = {
 };
 
 const sidebarStyles = tv({
-  base: 'duration-400 fixed z-[1999] box-border hidden shrink-0 grow-0 transition-[max-width] sm:block',
+  base: 'fixed z-[1999] box-border hidden shrink-0 grow-0 transition-[max-width] duration-400 sm:block',
   variants: {
     sidebarMiniMode: {
       true: 'w-full max-w-[80px] basis-[80px]',
       false: 'w-full max-w-[250px] basis-[250px]',
     },
     sidebarBoxedMode: {
-      true: 'top-[15px] left-[15px] h-[calc(100vh_-_30px)] rounded-xl bg-background-contrast-alpha',
+      true: 'top-[15px] left-[15px] h-[calc(100vh_-_30px)] rounded-xl bg-background/60',
       false: 'top-0 left-0 h-screen',
     },
     sidebarHoverMode: {
-      true: 'w-full max-w-[250px] basis-[250px] rounded-r-xl border border-border bg-background-contrast shadow-2xl',
+      true: 'w-full max-w-[250px] basis-[250px] rounded-r-xl border border-border bg-background shadow-2xl',
     },
   },
   compoundVariants: [{}],
@@ -59,7 +59,7 @@ const sidebarStyles = tv({
 });
 
 const sidebarActiveStyles = tv({
-  base: 'duration-400 h-[56px] justify-start transition-[width]',
+  base: 'h-[56px] justify-start transition-[width] duration-400',
   variants: {
     sidebarMiniMode: {
       true: 'w-[56px]',
@@ -210,7 +210,7 @@ const SideBar = () => {
             sidebarBoxedMode: sidebarBoxedMode.value,
           })}
         >
-          <NavigationMenuList className="m-0 [&_.active]:bg-primary-light-active [&_.active]:text-primary">
+          <NavigationMenuList className="m-0 [&_.active]:bg-primary-200 [&_.active]:text-primary">
             <NavigationMenuItem
               className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
               value="home"
@@ -369,7 +369,7 @@ const SideBar = () => {
                         to="/search/movie"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[215px] h-auto flex flex-row px-2 justify-start items-center focus:bg-background-alpha hover:bg-background-alpha',
+                            'w-[215px] h-auto flex flex-row px-2 justify-start items-center focus:bg-background/[0.6] hover:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -389,7 +389,7 @@ const SideBar = () => {
                         to="/search/tv"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[215px] h-auto flex flex-row px-2 justify-start items-center focus:bg-background-alpha hover:bg-background-alpha',
+                            'w-[215px] h-auto flex flex-row px-2 justify-start items-center focus:bg-background/[0.6] hover:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -409,7 +409,7 @@ const SideBar = () => {
                         to="/search/anime"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[215px] h-auto  flex flex-row px-2 justify-start items-center focus:bg-background-alpha hover:bg-background-alpha',
+                            'w-[215px] h-auto  flex flex-row px-2 justify-start items-center focus:bg-background/[0.6] hover:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -429,7 +429,7 @@ const SideBar = () => {
                         to="/search/people"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[215px] h-auto flex flex-row px-2 justify-start items-center focus:bg-background-alpha hover:bg-background-alpha',
+                            'w-[215px] h-auto flex flex-row px-2 justify-start items-center focus:bg-background/[0.6] hover:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -480,7 +480,7 @@ const SideBar = () => {
                           <Link
                             as={H6}
                             isExternal
-                            className="!w-full !max-w-none text-text [&_.nextui-link-icon]:ml-auto"
+                            className="!w-full !max-w-none text-foreground [&_.nextui-link-icon]:ml-auto"
                           >
                             {t('movies-discover')}
                           </Link>
@@ -518,7 +518,7 @@ const SideBar = () => {
                         </Card.Body>
                         <Card.Footer
                           isBlurred
-                          className="b-0 absolute z-[1] bg-background-contrast-alpha backdrop-blur-sm"
+                          className="b-0 absolute z-[1] bg-background/60 backdrop-blur-sm"
                           css={{
                             position: 'absolute',
                             zIndex: 1,
@@ -540,7 +540,7 @@ const SideBar = () => {
                         to="/movies/popular"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[215px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
+                            'w-[215px] h-auto flex flex-col px-2 justify-start focus:bg-background/[0.6] hover:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -553,7 +553,7 @@ const SideBar = () => {
                                 type="points-opacity"
                               />
                             </div>
-                            <p className="w-full text-xs text-text">
+                            <p className="w-full text-xs text-foreground">
                               {t('movies-popular-subtitle')}
                             </p>
                           </>
@@ -565,7 +565,7 @@ const SideBar = () => {
                         to="/movies/now-playing"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[215px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
+                            'w-[215px] h-auto flex flex-col px-2 justify-start focus:bg-background/[0.6] hover:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -578,7 +578,7 @@ const SideBar = () => {
                                 type="points-opacity"
                               />
                             </div>
-                            <p className="w-full text-xs text-text">
+                            <p className="w-full text-xs text-foreground">
                               {t('movies-now-playing-subtitle')}
                             </p>
                           </>
@@ -590,7 +590,7 @@ const SideBar = () => {
                         to="/movies/upcoming"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[215px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
+                            'w-[215px] h-auto flex flex-col px-2 justify-start focus:bg-background/[0.6] hover:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -603,7 +603,7 @@ const SideBar = () => {
                                 type="points-opacity"
                               />
                             </div>
-                            <p className="w-full text-xs text-text">
+                            <p className="w-full text-xs text-foreground">
                               {t('movies-upcoming-subtitle')}
                             </p>
                           </>
@@ -615,7 +615,7 @@ const SideBar = () => {
                         to="/movies/top-rated"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[215px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
+                            'w-[215px] h-auto flex flex-col px-2 justify-start focus:bg-background/[0.6] hover:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -628,7 +628,7 @@ const SideBar = () => {
                                 type="points-opacity"
                               />
                             </div>
-                            <p className="w-full text-xs text-text">
+                            <p className="w-full text-xs text-foreground">
                               {t('movies-top-rated-subtitle')}
                             </p>
                           </>
@@ -671,7 +671,7 @@ const SideBar = () => {
                           <Link
                             as={H6}
                             isExternal
-                            className="!w-full !max-w-none text-text [&_.nextui-link-icon]:ml-auto"
+                            className="!w-full !max-w-none text-foreground [&_.nextui-link-icon]:ml-auto"
                           >
                             {t('tv-shows-discover')}
                           </Link>
@@ -709,7 +709,7 @@ const SideBar = () => {
                         </Card.Body>
                         <Card.Footer
                           isBlurred
-                          className="b-0 absolute z-[1] bg-background-contrast-alpha backdrop-blur-sm"
+                          className="b-0 absolute z-[1] bg-background/60 backdrop-blur-sm"
                           css={{
                             position: 'absolute',
                             zIndex: 1,
@@ -731,7 +731,7 @@ const SideBar = () => {
                         to="/tv-shows/popular"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
+                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background/[0.6] hover:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -744,7 +744,7 @@ const SideBar = () => {
                                 type="points-opacity"
                               />
                             </div>
-                            <p className="w-full text-xs text-text">
+                            <p className="w-full text-xs text-foreground">
                               {t('tv-shows-popular-subtitle')}
                             </p>
                           </>
@@ -756,7 +756,7 @@ const SideBar = () => {
                         to="/tv-shows/airing-today"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
+                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background/[0.6] hover:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -769,7 +769,7 @@ const SideBar = () => {
                                 type="points-opacity"
                               />
                             </div>
-                            <p className="w-full text-xs text-text">
+                            <p className="w-full text-xs text-foreground">
                               {t('tv-shows-airing-today-subtitle')}
                             </p>
                           </>
@@ -781,7 +781,7 @@ const SideBar = () => {
                         to="/tv-shows/on-the-air"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
+                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background/[0.6] hover:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -794,7 +794,7 @@ const SideBar = () => {
                                 type="points-opacity"
                               />
                             </div>
-                            <p className="w-full text-xs text-text">
+                            <p className="w-full text-xs text-foreground">
                               {t('tv-shows-on-the-air-subtitle')}
                             </p>
                           </>
@@ -806,7 +806,7 @@ const SideBar = () => {
                         to="/tv-shows/top-rated"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
+                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background/[0.6] hover:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -819,7 +819,7 @@ const SideBar = () => {
                                 type="points-opacity"
                               />
                             </div>
-                            <p className="w-full text-xs text-text">
+                            <p className="w-full text-xs text-foreground">
                               {t('tv-shows-top-rated-subtitle')}
                             </p>
                           </>
@@ -862,7 +862,7 @@ const SideBar = () => {
                           <Link
                             as={H6}
                             isExternal
-                            className="!w-full !max-w-none text-text [&_.nextui-link-icon]:ml-auto"
+                            className="!w-full !max-w-none text-foreground [&_.nextui-link-icon]:ml-auto"
                           >
                             {t('anime-discover')}
                           </Link>
@@ -900,7 +900,7 @@ const SideBar = () => {
                         </Card.Body>
                         <Card.Footer
                           isBlurred
-                          className="b-0 absolute z-[1] bg-background-contrast-alpha backdrop-blur-sm"
+                          className="b-0 absolute z-[1] bg-background/60 backdrop-blur-sm"
                           css={{
                             position: 'absolute',
                             zIndex: 1,
@@ -922,7 +922,7 @@ const SideBar = () => {
                         to="/anime/popular"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
+                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background/[0.6] hover:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -935,7 +935,7 @@ const SideBar = () => {
                                 type="points-opacity"
                               />
                             </div>
-                            <p className="w-full text-xs text-text">
+                            <p className="w-full text-xs text-foreground">
                               {t('anime-popular-subtitle')}
                             </p>
                           </>
@@ -947,7 +947,7 @@ const SideBar = () => {
                         to="/anime/trending"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
+                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background/[0.6] hover:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -960,7 +960,7 @@ const SideBar = () => {
                                 type="points-opacity"
                               />
                             </div>
-                            <p className="w-full text-xs text-text">
+                            <p className="w-full text-xs text-foreground">
                               {t('anime-trending-subtitle')}
                             </p>
                           </>
@@ -972,7 +972,7 @@ const SideBar = () => {
                         to="/anime/recent-episodes"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
+                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background/[0.6] hover:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -985,7 +985,7 @@ const SideBar = () => {
                                 type="points-opacity"
                               />
                             </div>
-                            <p className="w-full text-xs text-text">
+                            <p className="w-full text-xs text-foreground">
                               {t('anime-recent-episodes-subtitle')}
                             </p>
                           </>
@@ -997,7 +997,7 @@ const SideBar = () => {
                         to="/anime/random"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
+                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background/[0.6] hover:bg-background/[0.6]',
                         })}
                       >
                         {({ isPending }) => (
@@ -1010,7 +1010,9 @@ const SideBar = () => {
                                 type="points-opacity"
                               />
                             </div>
-                            <p className="w-full text-xs text-text">{t('anime-random-subtitle')}</p>
+                            <p className="w-full text-xs text-foreground">
+                              {t('anime-random-subtitle')}
+                            </p>
                           </>
                         )}
                       </NavLink>

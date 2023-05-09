@@ -34,7 +34,7 @@ interface ILayout {
 }
 
 const layoutStyles = tv({
-  base: 'flex max-h-full min-h-screen max-w-full flex-nowrap justify-start bg-background-alpha font-[Inter] transition-[padding] duration-200',
+  base: 'flex max-h-full min-h-screen max-w-full flex-nowrap justify-start bg-background/[0.6] font-[Inter] transition-[padding] duration-200',
   variants: {
     boxed: {
       true: 'min-h-[calc(100vh_-_115px)] pt-[15px]',

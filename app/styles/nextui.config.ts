@@ -15,6 +15,7 @@ export const lightTheme = createTheme({
       textAlpha: 'rgba(17, 24, 28, 0.6)',
     },
   },
+  className: 'light',
 });
 
 export const darkTheme = createTheme({
@@ -31,6 +32,7 @@ export const darkTheme = createTheme({
       textAlpha: 'rgba(236, 237, 238, 0.6)',
     },
   },
+  className: 'dark',
 });
 
 export const bumblebeeTheme = createTheme({

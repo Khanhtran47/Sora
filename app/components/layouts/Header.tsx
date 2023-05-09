@@ -130,7 +130,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
         }}
       >
         {customHeaderBackgroundColor ? (
-          <div className="pointer-events-none h-full w-full bg-background-light" />
+          <div className="pointer-events-none h-full w-full bg-background/[0.2]" />
         ) : null}
       </motion.div>
       <div className="flex flex-row items-center justify-center gap-x-2">

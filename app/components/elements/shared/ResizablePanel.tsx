@@ -74,7 +74,12 @@ const ResizablePanel = ({
             }}
           >
             <ScrollAreaViewport>
-              <div ref={ref} className={`w-${contentWidth}`}>
+              <div
+                ref={ref}
+                className={`${
+                  contentWidth === 'fit' ? 'w-fit' : contentWidth === 'full' ? 'w-full' : ''
+                }`}
+              >
                 {children}
               </div>
             </ScrollAreaViewport>

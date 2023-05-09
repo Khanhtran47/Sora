@@ -3,10 +3,10 @@ import { json, type MetaFunction } from '@remix-run/node';
 import { NavLink } from '@remix-run/react';
 
 export const meta: MetaFunction = () => ({
-  title: 'Player',
-  description: 'This page for testing the player',
-  'og:title': 'Player',
-  'og:description': 'This page for testing the player',
+  title: 'Video Player',
+  description: 'This page for testing the video player',
+  'og:title': 'Video Player',
+  'og:description': 'This page for testing the video player',
 });
 
 export const loader = async () =>
@@ -53,7 +53,7 @@ export const loader = async () =>
       image: 'https://artplayer.org/assets/sample/poster.jpg',
     },
     hasNextEpisode: true,
-    routePlayer: '/test/player',
+    routePlayer: '/design-system/video-player',
     titlePlayer: 'Test Player',
     id: 'test-player',
     posterPlayer: 'https://artplayer.org/assets/sample/poster.jpg',
@@ -61,7 +61,7 @@ export const loader = async () =>
 
 export const handle = {
   breadcrumb: () => (
-    <NavLink to="/test/player" aria-label="Player Page">
+    <NavLink to="/design-system/video-player" aria-label="Player Page">
       {({ isActive }) => (
         <Badge
           color="primary"

@@ -44,7 +44,7 @@ type Highlight = {
 };
 
 const playerStyles = tv({
-  base: "custom-player-subtitle custom-player-layer-auto-playback custom-player-contextmenus custom-player-info custom-player-notice-inner custom-player-volume-control custom-player-icon-after custom-player-icon-before custom-player-control-after custom-player-control-before [&_.art-layer-mask]:hidden [&_.art-layer-mask]:bg-transparent [&_.art-layer-mask]:transition-all [&_.art-layer-mask]:duration-300 [&_.art-layer-mask]:ease-in-out [&_.art-layer-playPauseButton]:hidden [&_.art-layer-playPauseButton]:transition-all [&_.art-layer-playPauseButton]:duration-300 [&_.art-layer-playPauseButton]:ease-in-out [&_.art-layer-miniTopControlButtons]:hidden [&_.art-layer-miniTopControlButtons]:transition-all [&_.art-layer-miniTopControlButtons]:duration-300 [&_.art-layer-miniTopControlButtons]:ease-in-out [&_.art-bottom]:!bg-gradient-to-b [&_.art-bottom]:from-transparent [&_.art-bottom]:via-background-alpha [&_.art-bottom]:to-background-contrast [&_.art-layer-lock]:bg-background-alpha [&_.art-control-topControlButtons]:!opacity-100 [&_.art-control-topControlButtons]:before:absolute [&_.art-control-topControlButtons]:before:top-0 [&_.art-control-topControlButtons]:before:left-0 [&_.art-control-topControlButtons]:before:h-[100px] [&_.art-control-topControlButtons]:before:w-full [&_.art-control-topControlButtons]:before:bg-gradient-to-t [&_.art-control-topControlButtons]:before:from-transparent [&_.art-control-topControlButtons]:before:via-background-alpha [&_.art-control-topControlButtons]:before:to-background-contrast [&_.art-control-topControlButtons]:before:bg-top [&_.art-control-topControlButtons]:before:bg-repeat-x [&_.art-control-topControlButtons]:before:content-[''] [&_.art-subtitle]:bg-player-subtitle-window-color [&_.art-subtitle]:!text-shadow-player [&_.art-video-player]:!font-[Inter] [&_.art-notice]:!justify-center [&_.art-contextmenu]:!border-border [&_.art-contextmenu]:!text-shadow-none",
+  base: "custom-player-subtitle custom-player-layer-auto-playback custom-player-contextmenus custom-player-info custom-player-notice-inner custom-player-volume-control custom-player-icon-after custom-player-icon-before custom-player-control-after custom-player-control-before [&_.art-control-topControlButtons]:!opacity-100 [&_.art-control-topControlButtons]:before:absolute [&_.art-control-topControlButtons]:before:top-0 [&_.art-control-topControlButtons]:before:left-0 [&_.art-control-topControlButtons]:before:h-[100px] [&_.art-control-topControlButtons]:before:w-full [&_.art-control-topControlButtons]:before:bg-gradient-to-t [&_.art-control-topControlButtons]:before:from-transparent [&_.art-control-topControlButtons]:before:via-neutral/[0.6] [&_.art-control-topControlButtons]:before:to-neutral [&_.art-control-topControlButtons]:before:bg-top [&_.art-control-topControlButtons]:before:bg-repeat-x [&_.art-control-topControlButtons]:before:content-[''] [&_.art-layer-mask]:hidden [&_.art-layer-mask]:bg-transparent [&_.art-layer-mask]:duration-300 [&_.art-layer-mask]:ease-in-out [&_.art-layer-mask]:transition-all [&_.art-layer-playPauseButton]:hidden [&_.art-layer-playPauseButton]:duration-300 [&_.art-layer-playPauseButton]:ease-in-out [&_.art-layer-playPauseButton]:transition-all [&_.art-layer-miniTopControlButtons]:hidden [&_.art-layer-miniTopControlButtons]:duration-300 [&_.art-layer-miniTopControlButtons]:ease-in-out [&_.art-layer-miniTopControlButtons]:transition-all [&_.art-bottom]:!bg-gradient-to-b [&_.art-bottom]:from-transparent [&_.art-bottom]:via-neutral/60 [&_.art-bottom]:to-neutral [&_.art-layer-lock]:bg-background/[0.6] [&_.art-subtitle]:bg-player-subtitle-window-color [&_.art-subtitle]:!text-shadow-player [&_.art-video-player]:!font-[Inter] [&_.art-notice]:!justify-center [&_.art-contextmenu]:!border-border [&_.art-contextmenu]:!text-shadow-none",
   variants: {
     isMini: {
       true: 'custom-mini-player-hover h-[14.0625rem] w-[25rem] rounded-t-lg [&_.art-bottom]:!visible [&_.art-bottom]:!overflow-visible [&_.art-bottom]:!bg-none [&_.art-bottom]:!p-0 [&_.art-bottom]:!opacity-100 [&_.art-subtitle]:!bottom-[7px] [&_.art-controls]:hidden [&_.art-controls]:!transform-none [&_.art-control-progress]:!h-[7px] [&_.art-control-progress]:!items-end [&_.art-mask]:!hidden [&_.art-progress]:!transform-none',
@@ -90,7 +90,7 @@ const playerStyles = tv({
       // @ts-ignores
       isSettingsOpen: true,
       class:
-        '[&_.art-layer-mask]:block [&_.art-layer-mask]:bg-background-alpha [&_.art-layer-miniTopControlButtons]:block',
+        '[&_.art-layer-mask]:block [&_.art-layer-mask]:bg-background/[0.6] [&_.art-layer-miniTopControlButtons]:block',
     },
     {
       // @ts-ignores
@@ -596,7 +596,7 @@ const GlobalPlayer = () => {
                     playsInline: true,
                     autoPlayback: isAutoPlayback.value,
                     whitelist: ['*'],
-                    theme: 'var(--nextui-colors-primary)',
+                    theme: 'hsl(var(--colors-primary))',
                     autoMini: isAutoMini.value,
                     hotkey: true,
                     useSSR: false,
@@ -717,7 +717,7 @@ const GlobalPlayer = () => {
                       },
                     ],
                     icons: {
-                      loading: `<div class="w-12 h-12 !m-auto relative before:content-[''] before:w-12 before:h-[5px] before:bg-primary-solid-hover before:absolute before:top-[60px] before:left-0 before:rounded-[50%] before:animate-shadow after:content-[''] after:w-full after:h-full after:bg-primary after:absolute after:top-0 after:left-0 after:rounded-md after:animate-jump"></div>`,
+                      loading: `<div class="w-12 h-12 !m-auto relative before:content-[''] before:w-12 before:h-[5px] before:bg-primary-700 before:absolute before:top-[60px] before:left-0 before:rounded-[50%] before:animate-shadow after:content-[''] after:w-full after:h-full after:bg-primary after:absolute after:top-0 after:left-0 after:rounded-md after:animate-jump"></div>`,
                       play: `
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                           <path d="M17.49 9.59965L5.6 16.7696C4.9 17.1896 4 16.6896 4 15.8696V7.86965C4 4.37965 7.77 2.19965 10.8 3.93965L15.39 6.57965L17.48 7.77965C18.17 8.18965 18.18 9.18965 17.49 9.59965Z" fill="currentColor"/>
@@ -808,9 +808,9 @@ const GlobalPlayer = () => {
                         : []),
                     ],
                     cssVar: {
-                      '--art-font-color': 'var(--nextui-colors-text)',
-                      '--art-progress-color': 'var(--nextui-colors-textLight)',
-                      '--art-loaded-color': 'var(--nextui-colors-textAlpha)',
+                      '--art-font-color': 'hsl(var(--colors-neutral-foreground))',
+                      '--art-progress-color': 'hsl(var(--colors-neutral-foreground) / 0.2)',
+                      '--art-loaded-color': 'hsl(var(--colors-neutral-foreground) / 0.4)',
                     },
                   }}
                   style={{
@@ -873,7 +873,7 @@ const GlobalPlayer = () => {
                           setStyles($item, {
                             left: `${left}%`,
                             width: `${width}%`,
-                            backgroundColor: 'var(--nextui-colors-secondary) !important',
+                            backgroundColor: 'hsl(var(--colors-secondary)) !important',
                           });
                           append($highlight, $item);
                         }
@@ -1120,11 +1120,11 @@ const GlobalPlayer = () => {
                     <H6
                       h6
                       weight="bold"
-                      className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-start"
+                      className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-start !text-neutral-foreground"
                     >
                       {playerData?.titlePlayer}
                     </H6>
-                    <H6 h6 weight="light" css={{ color: '$accents8' }}>
+                    <H6 h6 weight="light" className="!text-neutral-foreground/80">
                       {seasonId ? ` Season ${seasonId}` : ''}
                       {episodeId ? ` Episode ${episodeId}` : ''}
                     </H6>

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
 import { toast } from 'sonner';
 
 import { getExt } from '~/utils/file';
@@ -86,12 +86,13 @@ const AddSubtitles = (props: IAddSubtitlesProps) => {
             name="subtitle"
             accept=".srt,.vtt,.ass"
             onChange={(e) => handleFileChange(e)}
-            className="flex h-10 w-full rounded-md border border-border bg-transparent !px-3 !py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-text-alpha focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+            className="flex h-10 w-full rounded-md border border-border bg-transparent !px-3 !py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-foreground/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
           />
           <Button
             type="submit"
-            auto
-            disabled={disabledSubmit}
+            size="md"
+            color="primary"
+            isDisabled={disabledSubmit}
             onPress={() => handleSubtitleSubmit()}
             className="!px-4"
           >

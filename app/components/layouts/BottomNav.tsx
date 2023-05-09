@@ -27,7 +27,7 @@ const BottomNav = (props: IBottomNavProps) => {
   const [search] = useSearchParams();
   const scrollDirection = useLayout((state) => state.scrollDirection);
   const bottomNavItemStyles = tv({
-    base: 'flex flex-col items-center justify-center gap-y-2 rounded-md bg-transparent text-xs font-medium text-text',
+    base: 'flex flex-col items-center justify-center gap-y-2 rounded-md bg-transparent text-xs font-medium text-foreground',
     variants: {
       active: {
         true: 'text-primary',
@@ -77,7 +77,7 @@ const BottomNav = (props: IBottomNavProps) => {
       initial={{ y: 0 }}
       animate={{ y: scrollDirection === 'down' ? 65 : 0 }}
       transition={{ duration: 0.5 }}
-      className="fixed bottom-0 z-[1000] flex h-16 w-full flex-row flex-nowrap items-center justify-around border-t border-border bg-background-alpha py-2 drop-shadow-md backdrop-blur-md sm:hidden"
+      className="fixed bottom-0 z-[1000] flex h-16 w-full flex-row flex-nowrap items-center justify-around border-t border-border bg-background/[0.6] py-2 drop-shadow-md backdrop-blur-md sm:hidden"
     >
       <NavLink
         to="/"

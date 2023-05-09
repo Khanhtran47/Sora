@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
-import { Button, Card, Checkbox, Input, Row, Spacer, useInput } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
+import { Card, Checkbox, Input, Row, Spacer, useInput } from '@nextui-org/react';
 import { Form, Link, useLocation } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 
@@ -150,7 +151,7 @@ const AuthForm = ({ type, error, code, errorCode }: IAuthForm) => {
         </Card.Body>
         <Card.Footer>
           <Row justify="flex-end">
-            <Button size="sm" type="submit">
+            <Button size="md" color="primary" type="submit">
               {type === 'sign-in' ? t('signIn') : t('signUp')}
             </Button>
           </Row>

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
 import { useEffect, useState } from 'react';
-import { Button, Modal } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
+import { Modal } from '@nextui-org/react';
 import { useWindowSize } from '@react-hookz/web';
 import { useFetcher, useNavigate } from '@remix-run/react';
 
@@ -115,8 +116,9 @@ const SelectProviderModal = (props: SelectProviderModalProps) => {
               <Button
                 type="button"
                 key={item.id}
-                light
-                css={{ '@hover': { color: '$primaryLightContrast' } }}
+                variant="light"
+                color="primary"
+                className="hover:text-primary-600"
                 onPress={() => handleProvider(item)}
               >
                 {item.provider}

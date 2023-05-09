@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
 import { useMemo, useState } from 'react';
-import { Button, Divider, Spacer, Switch, type SwitchEvent } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
+import { Divider, Spacer, Switch, type SwitchEvent } from '@nextui-org/react';
 import { isMobileOnly } from 'react-device-detect';
 
 import { useSoraSettings } from '~/hooks/useLocalStorage';
@@ -1433,77 +1434,72 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
     <Button
       key={item.id}
       type="button"
-      auto
-      light
+      fullWidth
+      variant="light"
       onPress={item.action}
-      css={{
-        p: '$4 !important',
-        height: 'auto',
-        width: '100%',
-        '& span': {
-          '&.nextui-button-text': {
-            display: 'block',
-            width: '100%',
-          },
-        },
-        '&:hover': {
-          backgroundColor: '$backgroundAlpha',
-        },
-      }}
+      className="flex h-14 flex-row items-center justify-between gap-x-8 !p-2 data-[hover=true]:bg-neutral/[.6]"
     >
-      <div className="flex flex-row items-center justify-between gap-x-8">
-        <div className="flex flex-row items-center gap-x-2">
-          {item?.showIcon ? (
-            (
-              item as {
-                id: string;
-                title: string;
-                description: string;
-                showIcon: boolean;
-                icon: JSX.Element;
-                action: () => void;
-                currentValue: string;
-              }
-            )?.icon
-          ) : (
-              item as {
-                id: string;
-                title: string;
-                showIcon: boolean;
-                action: () => void;
-                isCurrent: boolean;
-              }
-            )?.isCurrent ? (
-            <Tick />
-          ) : (
-            <Spacer x={1.15} />
-          )}
-          <H6 h6 css={{ margin: 0 }} weight="semibold" className="!line-clamp-1">
-            {item.title}
-          </H6>
-        </div>
-        <div className="flex flex-row items-center gap-x-2">
-          {item?.isSwitch ? (
-            <Switch checked={showSubtitle} onChange={item.switchAction} />
-          ) : (
-            <>
-              <H6 h6 css={{ margin: 0, color: '$accents9' }} weight="thin">
-                {(
-                  item as {
-                    id: string;
-                    title: string;
-                    description: string;
-                    showIcon: boolean;
-                    icon: JSX.Element;
-                    action: () => void;
-                    currentValue: string;
-                  }
-                )?.currentValue || ''}
-              </H6>
-              {item.showIcon ? <Arrow direction="right" /> : null}
-            </>
-          )}
-        </div>
+      <div className="flex shrink-0 grow flex-row items-center gap-x-2">
+        {item?.showIcon ? (
+          (
+            item as {
+              id: string;
+              title: string;
+              description: string;
+              showIcon: boolean;
+              icon: JSX.Element;
+              action: () => void;
+              currentValue: string;
+            }
+          )?.icon
+        ) : (
+            item as {
+              id: string;
+              title: string;
+              showIcon: boolean;
+              action: () => void;
+              isCurrent: boolean;
+            }
+          )?.isCurrent ? (
+          <Tick />
+        ) : (
+          <Spacer x={1.15} />
+        )}
+        <H6
+          h6
+          css={{ margin: 0 }}
+          weight="semibold"
+          className="!text-neutral-foreground !line-clamp-1"
+        >
+          {item.title}
+        </H6>
+      </div>
+      <div className="flex shrink-0 grow flex-row items-center justify-end gap-x-2">
+        {item?.isSwitch ? (
+          <Switch checked={showSubtitle} onChange={item.switchAction} />
+        ) : (
+          <>
+            <H6
+              h6
+              css={{ margin: 0, color: '$accents9' }}
+              weight="thin"
+              className="!text-neutral-foreground"
+            >
+              {(
+                item as {
+                  id: string;
+                  title: string;
+                  description: string;
+                  showIcon: boolean;
+                  icon: JSX.Element;
+                  action: () => void;
+                  currentValue: string;
+                }
+              )?.currentValue || ''}
+            </H6>
+            {item.showIcon ? <Arrow direction="right" /> : null}
+          </>
+        )}
       </div>
     </Button>
   );
@@ -1515,12 +1511,14 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           <SheetTrigger asChild>
             <Button
               type="button"
-              auto
-              light
+              size="md"
+              variant="light"
+              isIconOnly
               aria-label="dropdown"
-              icon={<Settings filled />}
-              className="art-icon"
-            />
+              className="art-icon data-[hover=true]:bg-none"
+            >
+              <Settings filled />
+            </Button>
           </SheetTrigger>
           <SheetContent
             side="bottom"
@@ -1530,6 +1528,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
             open={isSettingsOpen}
             onOpenChange={() => handleOpenChange(!isSettingsOpen)}
             container={isPlayerFullScreen ? artplayer?.template?.$player : document.body}
+            className="!bg-neutral"
           >
             <ResizablePanel contentWidth="full">
               {currentDropdownLevel ? (
@@ -1541,14 +1540,21 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                           {currentDropdownLevel?.showBackButton ? (
                             <Button
                               type="button"
-                              auto
-                              light
+                              isIconOnly
+                              size="md"
+                              variant="light"
                               onPress={currentDropdownLevel?.backButtonAction}
-                              icon={<Arrow direction="left" />}
-                            />
+                            >
+                              <Arrow direction="left" />
+                            </Button>
                           ) : null}
                           {currentDropdownLevel?.showTitle ? (
-                            <H6 h6 css={{ margin: 0 }} weight="semibold">
+                            <H6
+                              h6
+                              css={{ margin: 0 }}
+                              weight="semibold"
+                              className="!text-neutral-foreground"
+                            >
                               {currentDropdownLevel?.title}
                             </H6>
                           ) : null}
@@ -1556,10 +1562,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                         {currentDropdownLevel?.showExtraButton ? (
                           <Button
                             type="button"
-                            auto
-                            light
+                            size="md"
+                            variant="light"
                             onPress={currentDropdownLevel?.extraButtonAction}
-                            css={{ fontWeight: '$bold', textDecoration: 'underline', p: 0, m: 0 }}
+                            // css={{ fontWeight: '$bold', textDecoration: 'underline', p: 0, m: 0 }}
+                            className="m-0 p-0 font-bold underline"
                           >
                             {currentDropdownLevel?.extraButtonTitle}
                           </Button>
@@ -1614,19 +1621,21 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
         <PopoverTrigger asChild>
           <Button
             type="button"
-            auto
-            light
+            size="md"
+            variant="light"
+            isIconOnly
             aria-label="dropdown"
-            icon={<Settings filled />}
-            className="art-icon"
-          />
+            className="art-icon data-[hover=true]:bg-transparent"
+          >
+            <Settings filled />
+          </Button>
         </PopoverTrigger>
         <PopoverContent
           side="top"
           container={containerPortal}
+          className="!bg-neutral/60"
           css={{
             zIndex: 1000,
-            backgroundColor: '$backgroundAlpha',
             backdropFilter: 'blur(21px) saturate(180%)',
             '-webkit-backdrop-filter': 'blur(21px) saturate(180%)',
             border: '1px solid $border',
@@ -1634,7 +1643,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
         >
           <ResizablePanel contentWidth="fit">
             {currentDropdownLevel ? (
-              <div className="flex w-fit flex-col items-start justify-start gap-y-2">
+              <div className="flex w-max flex-col items-start justify-start gap-y-2">
                 {currentDropdownLevel?.showBackButton || currentDropdownLevel?.showTitle ? (
                   <div className="w-full">
                     <div className="flex w-fit flex-row items-center justify-between gap-x-4 !p-2">
@@ -1642,14 +1651,21 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                         {currentDropdownLevel?.showBackButton ? (
                           <Button
                             type="button"
-                            auto
-                            light
+                            isIconOnly
+                            size="md"
+                            variant="light"
                             onPress={currentDropdownLevel?.backButtonAction}
-                            icon={<Arrow direction="left" />}
-                          />
+                          >
+                            <Arrow direction="left" />
+                          </Button>
                         ) : null}
                         {currentDropdownLevel?.showTitle ? (
-                          <H6 h6 css={{ margin: 0, px: '$6' }} weight="semibold">
+                          <H6
+                            h6
+                            css={{ margin: 0, px: '$6' }}
+                            weight="semibold"
+                            className="!text-neutral-foreground"
+                          >
                             {currentDropdownLevel?.title}
                           </H6>
                         ) : null}
@@ -1657,10 +1673,11 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                       {currentDropdownLevel?.showExtraButton ? (
                         <Button
                           type="button"
-                          auto
-                          light
+                          size="md"
+                          variant="light"
                           onPress={currentDropdownLevel?.extraButtonAction}
-                          css={{ fontWeight: '$bold', textDecoration: 'underline', p: 0, m: 0 }}
+                          // css={{ fontWeight: '$bold', textDecoration: 'underline', p: 0, m: 0 }}
+                          className="m-0 p-0 font-bold underline"
                         >
                           {currentDropdownLevel?.extraButtonTitle}
                         </Button>

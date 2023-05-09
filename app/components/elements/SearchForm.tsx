@@ -1,4 +1,5 @@
-import { Button, Input, useInput } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
+import { Input, useInput } from '@nextui-org/react';
 import { Form } from '@remix-run/react';
 
 interface ISearchForm {
@@ -32,7 +33,7 @@ const SearchForm = (props: ISearchForm) => {
         fullWidth
         helperText={textHelper}
       />
-      <Button auto type="submit">
+      <Button size="md" color="primary" type="submit">
         {textOnButton}
       </Button>
     </Form>

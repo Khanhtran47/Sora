@@ -12,7 +12,7 @@ const NavigationMenuViewport = forwardRef<
 >(({ className = '', ...props }, ref) => (
   <NavigationMenuPrimitive.Viewport
     className={cnBase(
-      'data-[state=open]:fadeIn data-[state=closed]:fadeOut relative h-[var(--radix-navigation-menu-viewport-height)] w-full origin-[top_center] overflow-hidden rounded-[12px] border border-border bg-background-contrast-alpha shadow-lg backdrop-blur-md transition-[width,_height] duration-300 data-[orientation=horizontal]:mt-1.5 data-[orientation=vertical]:ml-[-8px] data-[state=open]:animate-scaleIn data-[state=closed]:animate-scaleOut sm:w-[var(--radix-navigation-menu-viewport-width)]',
+      'data-[state=open]:fadeIn data-[state=closed]:fadeOut relative h-[var(--radix-navigation-menu-viewport-height)] w-full origin-[top_center] overflow-hidden rounded-[12px] border border-border bg-background/60 shadow-lg backdrop-blur-md transition-[width,_height] duration-300 data-[orientation=horizontal]:mt-1.5 data-[orientation=vertical]:ml-[-8px] data-[state=open]:animate-scaleIn data-[state=closed]:animate-scaleOut sm:w-[var(--radix-navigation-menu-viewport-width)]',
       className,
     )}
     ref={ref}
@@ -67,11 +67,11 @@ const NavigationMenuItem = NavigationMenuPrimitive.Item;
 
 const navigationMenuTriggerStyle = tv({
   base: `text-md group inline-flex h-10 w-max items-center justify-center
-  rounded-md bg-transparent px-4 py-2 font-medium text-text transition-colors hover:bg-primary-light-hover hover:text-primary hover:opacity-80 focus:bg-primary-light-hover focus:text-primary focus:outline-none disabled:pointer-events-none
-  disabled:opacity-50 data-[state=open]:bg-primary-light-active data-[active]:bg-primary-light-active data-[active]:text-primary data-[state=open]:text-primary`,
+  rounded-md bg-transparent px-4 py-2 font-medium text-foreground transition-colors hover:bg-primary-100 hover:text-primary hover:opacity-80 focus:bg-primary-100 focus:text-primary focus:outline-none disabled:pointer-events-none
+  disabled:opacity-50 data-[state=open]:bg-primary-200 data-[active]:bg-primary-200 data-[active]:text-primary data-[state=open]:text-primary`,
   variants: {
     active: {
-      true: 'bg-primary-light-active text-primary',
+      true: 'bg-primary-200 text-primary',
       false: '',
     },
   },
@@ -91,7 +91,7 @@ const NavigationMenuTrigger = forwardRef<
     {children}{' '}
     {showArrow ? (
       <ChevronRight
-        className="duration-400 relative top-[1px] ml-auto h-5 w-5 transition group-data-[state=open]:rotate-180"
+        className="relative top-[1px] ml-auto h-5 w-5 duration-400 transition group-data-[state=open]:rotate-180"
         aria-hidden="true"
       />
     ) : null}
@@ -119,8 +119,8 @@ NavigationMenuContent.displayName = NavigationMenuPrimitive.Content.displayName;
 const NavigationMenuLink = NavigationMenuPrimitive.Link;
 
 const navigationMenuIndicatorStyle = tv({
-  base: `data-[state=visible]:animate-in data-[state=hidden]:animate-out data-[state=visible]:fade-in
-  data-[state=hidden]:fade-out top-full z-[1] flex h-2.5 items-end justify-center overflow-hidden`,
+  base: `top-full z-[1] flex
+  h-2.5 items-end justify-center overflow-hidden data-[state=visible]:animate-in data-[state=hidden]:animate-out data-[state=visible]:fade-in data-[state=hidden]:fade-out`,
 });
 const NavigationMenuIndicator = forwardRef<
   ElementRef<typeof NavigationMenuPrimitive.Indicator>,

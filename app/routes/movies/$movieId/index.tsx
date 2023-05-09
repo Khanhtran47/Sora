@@ -60,7 +60,7 @@ const MovieOverview = () => {
   return (
     <div className="mt-3 flex w-full max-w-[1920px] flex-col gap-x-0 gap-y-4 px-3 sm:flex-row sm:items-stretch sm:justify-center sm:gap-x-4 sm:gap-y-0 sm:px-3.5 xl:px-4 2xl:px-5">
       <div className="flex w-full grow-0 flex-col sm:w-1/3 sm:items-center sm:justify-start">
-        <div className="flex w-full flex-col items-start justify-center gap-y-4 rounded-xl bg-background-contrast p-4 nextui-sm:w-3/4 xl:w-1/2">
+        <div className="flex w-full flex-col items-start justify-center gap-y-4 rounded-xl bg-neutral p-4 nextui-sm:w-3/4 xl:w-1/2">
           <div className="flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
             <H6 h6 weight="bold" className="grow-0 basis-1/3">
               Original Title
@@ -122,7 +122,7 @@ const MovieOverview = () => {
         </div>
       </div>
       <div className="flex w-full flex-col sm:w-2/3">
-        <div className="flex flex-col items-start justify-start gap-y-4 rounded-xl bg-background-contrast p-4">
+        <div className="flex flex-col items-start justify-start gap-y-4 rounded-xl bg-neutral p-4">
           <H6 h6 css={{ textAlign: 'justify' }}>
             {detail?.overview}
           </H6>
@@ -138,7 +138,7 @@ const MovieOverview = () => {
                       key={`director-item-${director.id}`}
                       to={`/people/${director.id}/`}
                       style={{ lineHeight: '1.75rem' }}
-                      className="text-text hover:text-primary"
+                      className="text-foreground hover:text-primary"
                     >
                       {director.name}
                     </Link>

@@ -16,8 +16,7 @@
     .art-video-player {
       .art-layers {
         .art-layer-auto-playback {
-          @apply !rounded-lg !border !border-solid !border-border !shadow-lg !backdrop-blur-md !backdrop-saturate-200;
-          background-color: var(--nextui-colors-backgroundAlpha) !important;
+          @apply !rounded-lg !border !border-solid !border-border !shadow-lg !backdrop-blur-md !backdrop-saturate-200 !bg-neutral/[0.6];
         }
       }
     }
@@ -26,8 +25,7 @@
   .custom-player-contextmenus {
     .art-video-player.art-contextmenu-show {
       .art-contextmenus {
-        @apply !rounded-lg !border !border-solid !border-border !shadow-lg !backdrop-blur-md !backdrop-saturate-200;
-        background-color: var(--nextui-colors-backgroundAlpha) !important;
+        @apply !rounded-lg !border !border-solid !border-border !shadow-lg !backdrop-blur-md !backdrop-saturate-200 !bg-neutral/[0.6];
       }
     }
   }
@@ -35,22 +33,20 @@
   .custom-player-info {
     .art-video-player.art-info-show {
       .art-info {
-        @apply !rounded-lg !border !border-solid !border-border !shadow-lg !backdrop-blur-md !backdrop-saturate-200;
-        background-color: var(--nextui-colors-backgroundAlpha) !important;
+        @apply !rounded-lg !border !border-solid !border-border !shadow-lg !backdrop-blur-md !backdrop-saturate-200 !bg-neutral/[0.6];
       }
     }
   }
 
   .custom-player-notice-inner {
     .art-notice-inner {
-      @apply !rounded-lg !border !border-solid !border-border !shadow-lg !backdrop-blur-md !backdrop-saturate-200;
-      background-color: var(--nextui-colors-backgroundAlpha) !important;
+      @apply !rounded-lg !border !border-solid !border-border !shadow-lg !backdrop-blur-md !backdrop-saturate-200 !bg-neutral/[0.6];
     }
   }
 
   .custom-mini-player-hover {
     .art-video-player:hover {
-      @apply [&_.art-layer-mask]:block [&_.art-layer-mask]:!bg-background-alpha [&_.art-layer-playPauseButton]:block [&_.art-layer-miniTopControlButtons]:block
+      @apply [&_.art-layer-mask]:block [&_.art-layer-mask]:!bg-neutral/[0.6] [&_.art-layer-playPauseButton]:block [&_.art-layer-miniTopControlButtons]:block
     }
   }
 
@@ -58,8 +54,7 @@
     .art-video-player {
       .art-volume-panel {
         .art-volume-inner {
-          @apply !rounded-lg !border !border-solid !border-border !shadow-lg !backdrop-blur-md !backdrop-saturate-200;
-          background-color: var(--nextui-colors-backgroundAlpha) !important;
+          @apply !rounded-lg !border !border-solid !border-border !shadow-lg !backdrop-blur-md !backdrop-saturate-200 !bg-neutral/[0.6];
         }
       }
     }
@@ -67,27 +62,25 @@
 
   .custom-player-icon-after {
     .art-icon::after {
-      @apply !rounded-lg !border !border-solid !border-border !shadow-lg !backdrop-blur-md !backdrop-saturate-200 !text-text !font-[Inter];
-      background-color: var(--nextui-colors-backgroundAlpha) !important;
+      @apply !rounded-lg !border !border-solid !border-border !shadow-lg !backdrop-blur-md !backdrop-saturate-200 !text-neutral-foreground !font-[Inter] !bg-neutral/[0.6];
     }
   }
 
   .custom-player-icon-before {
     .art-icon::before {
-      @apply !border-t-background-alpha;
+      @apply !border-t-background/[0.6];
     }
   }
 
   .custom-player-control-after {
     .art-control::after {
-      @apply !rounded-lg !border !border-solid !border-border !shadow-lg !backdrop-blur-md !backdrop-saturate-200 !text-text !font-[Inter];
-      background-color: var(--nextui-colors-backgroundAlpha) !important;
+      @apply !rounded-lg !border !border-solid !border-border !shadow-lg !backdrop-blur-md !backdrop-saturate-200 !text-neutral-foreground !font-[Inter] !bg-neutral/[0.6];
     }
   }
 
   .custom-player-control-before {
     .art-control::before {
-      @apply !border-t-background-alpha;
+      @apply !border-t-background/[0.6];
     }
   }
 }
