@@ -94,6 +94,7 @@ export const designSystemPages = [
   { pageName: 'Pagination', pageLink: '/pagination' },
   { pageName: 'Table', pageLink: '/table' },
   { pageName: 'Dialog', pageLink: '/dialog' },
+  { pageName: 'Sheet', pageLink: '/sheet' },
   { pageName: 'Menu', pageLink: '/menu' },
   { pageName: 'Message', pageLink: '/message' },
   { pageName: 'Toast', pageLink: '/toast' },

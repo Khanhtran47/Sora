@@ -210,7 +210,7 @@ const SideBar = () => {
             sidebarBoxedMode: sidebarBoxedMode.value,
           })}
         >
-          <NavigationMenuList className="m-0 [&_.active]:bg-primary-200 [&_.active]:text-primary">
+          <NavigationMenuList className="m-0 [&_.active]:bg-primary-50 [&_.active]:text-primary">
             <NavigationMenuItem
               className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
               value="home"

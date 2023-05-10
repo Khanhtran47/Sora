@@ -3,6 +3,46 @@
 @tailwind utilities;
 @tailwind variants;
 
+@layer base {
+  .h0 {
+    @apply !text-3xl font-bold md:!text-5xl !tracking-normal;
+  }
+
+  h1,
+  .h1 {
+    @apply !text-2xl font-bold md:!text-4xl !tracking-normal;
+  }
+
+  h2,
+  .h2 {
+    @apply !text-xl font-bold md:!text-3xl !tracking-normal;
+  }
+
+  h3,
+  .h3 {
+    @apply !text-lg font-bold md:!text-2xl !tracking-normal;
+  }
+
+  h4,
+  .h4 {
+    @apply !text-base font-bold md:!text-lg !tracking-normal;
+  }
+
+  body,
+  p,
+  .p {
+    @apply text-base md:text-lg tracking-wide;
+  }
+
+  .text-display {
+    @apply !text-inherit !text-base !tracking-wide !font-normal md:!text-lg;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary via-neutral-600 to-secondary bg-clip-text text-transparent;
+  }
+}
+
 @layer components {
   .custom-player-subtitle {
     .art-subtitle {

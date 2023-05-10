@@ -2,7 +2,6 @@ const { dirname, join } = require('path');
 const { withTV } = require('tailwind-variants/transformer');
 const plugin = require('tailwindcss/plugin');
 const { nextui } = require('@nextui-org/theme');
-const { commonColors } = require('@nextui-org/theme/colors');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = withTV({
@@ -13,17 +12,6 @@ module.exports = withTV({
   theme: {
     extend: {
       colors: {
-        // background: 'var(--nextui-colors-background)',
-        'background-alpha': 'var(--nextui-colors-backgroundAlpha)',
-        'background-transparent': 'var(--nextui-colors-backgroundTransparent)',
-        gradient: 'var(--nextui-colors-gradient)',
-        success: 'var(--nextui-colors-success)',
-        warning: 'var(--nextui-colors-warning)',
-        error: 'var(--nextui-colors-error)',
-        link: 'var(--nextui-colors-link)',
-        // border: 'var(--nextui-colors-border)',
-        selection: 'var(--nextui-colors-selection)',
-        code: 'var(--nextui-colors-code)',
         'player-subtitle-window-color': 'var(--art-subtitle-window-color)',
         'player-subtitle-background-color': 'var(--art-subtitle-background-color)',
       },
@@ -112,6 +100,70 @@ module.exports = withTV({
         small: ['image title', 'info info', 'buttons buttons'],
       },
       fontSize: {
+        xs: [
+          '0.75rem',
+          {
+            lineHeight: '1rem',
+            letterSpacing: '-0.05em',
+            fontWeight: '400',
+          },
+        ],
+        sm: [
+          '0.875rem',
+          {
+            lineHeight: '1.25rem',
+            letterSpacing: '-0.05em',
+            fontWeight: '400',
+          },
+        ],
+        base: [
+          '1rem',
+          {
+            lineHeight: '1.5rem',
+            letterSpacing: '-0.025em',
+            fontWeight: '400',
+          },
+        ],
+        lg: [
+          '1.125rem',
+          {
+            lineHeight: '1.75rem',
+            letterSpacing: '0',
+            fontWeight: '400',
+          },
+        ],
+        xl: [
+          '1.25rem',
+          {
+            lineHeight: '1.75rem',
+            letterSpacing: '0.025em',
+            fontWeight: '400',
+          },
+        ],
+        '2xl': [
+          '1.5rem',
+          {
+            lineHeight: '2rem',
+            letterSpacing: '0.05em',
+            fontWeight: '400',
+          },
+        ],
+        '3xl': [
+          '1.875rem',
+          {
+            lineHeight: '2.25rem',
+            letterSpacing: '0.05em',
+            fontWeight: '400',
+          },
+        ],
+        '4xl': [
+          '2.25rem',
+          {
+            lineHeight: '2.5rem',
+            letterSpacing: '0.05em',
+            fontWeight: '400',
+          },
+        ],
         'player-subtitle-font-size': 'var(--art-subtitle-custom-font-size)',
       },
       textShadow: {
