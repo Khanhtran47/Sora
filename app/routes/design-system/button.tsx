@@ -1,22 +1,34 @@
+import { useState } from 'react';
 import { Button } from '@nextui-org/button';
-import { Badge } from '@nextui-org/react';
+import { Chip } from '@nextui-org/chip';
+import { Spinner } from '@nextui-org/spinner';
+// import { Switch } from '@nextui-org/switch';
 import { NavLink } from '@remix-run/react';
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '~/components/elements/Select';
+import Search from '~/assets/icons/SearchIcon';
+import Settings from '~/assets/icons/SettingsIcon';
 
 export const handle = {
   breadcrumb: () => (
     <NavLink to="/design-system/button" aria-label="Player Page">
       {({ isActive }) => (
-        <Badge
+        <Chip
           color="primary"
           variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
+          size="sm"
+          className={`${
+            isActive ? 'opacity-100' : 'opacity-70'
+          } duration-250 ease-in-out transition-opacity hover:opacity-80`}
         >
           Button
-        </Badge>
+        </Chip>
       )}
     </NavLink>
   ),
@@ -28,17 +40,213 @@ export const handle = {
 };
 
 const ButtonComponent = () => {
+  const [size, setSize] = useState('md');
+  const [radius, setRadius] = useState('xl');
+  const [
+    isFullWidth,
+    // setIsFullWidth
+  ] = useState(true);
   return (
     <>
+      <h2>Button</h2>
+      <p className="text-base tracking-wide md:text-lg">Default</p>
+      <Button>Default</Button>
+      <p className="text-base tracking-wide md:text-lg">Disabled</p>
+      <Button isDisabled>Disabled</Button>
+      <p className="text-base tracking-wide md:text-lg">Sizes</p>
+      <Select defaultValue="md" value={size} onValueChange={(value) => setSize(value)}>
+        <SelectTrigger className="w-[80px]">
+          <SelectValue placeholder="Button size" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="xs">xs</SelectItem>
+          <SelectItem value="sm">sm</SelectItem>
+          <SelectItem value="md">md</SelectItem>
+          <SelectItem value="lg">lg</SelectItem>
+          <SelectItem value="xl">xl</SelectItem>
+        </SelectContent>
+      </Select>
+      <Button size={size as 'xs' | 'sm' | 'md' | 'lg' | 'xl' | undefined}>{size}</Button>
+      <p className="text-base tracking-wide md:text-lg">Radius</p>
+      <Select defaultValue="xl" value={radius} onValueChange={(value) => setRadius(value)}>
+        <SelectTrigger className="w-[80px]">
+          <SelectValue placeholder="Button size" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="none">none</SelectItem>
+          <SelectItem value="base">base</SelectItem>
+          <SelectItem value="sm">sm</SelectItem>
+          <SelectItem value="md">md</SelectItem>
+          <SelectItem value="lg">lg</SelectItem>
+          <SelectItem value="xl">xl</SelectItem>
+          <SelectItem value="2xl">2xl</SelectItem>
+          <SelectItem value="3xl">3xl</SelectItem>
+          <SelectItem value="full">full</SelectItem>
+        </SelectContent>
+      </Select>
       <Button
-        color="primary"
-        radius="full"
-        // size="xs"
-        // variant="flat"
-        onPress={() => console.log('clicked')}
+        radius={
+          radius as 'base' | 'md' | 'xl' | 'sm' | 'lg' | '2xl' | '3xl' | 'none' | 'full' | undefined
+        }
       >
+        {radius}
+      </Button>
+      <p className="text-base tracking-wide md:text-lg">Icons</p>
+      <Button startIcon={<Search />} endIcon={<Settings />}>
         Button
       </Button>
+      <Button isIconOnly>
+        <Settings />
+      </Button>
+      <p className="text-base tracking-wide md:text-lg">Loading</p>
+      <Button isDisabled>
+        <Spinner size="sm" />
+      </Button>
+      <p className="text-base tracking-wide md:text-lg">Disable Ripple Animation</p>
+      <Button disableRipple>Button</Button>
+      <p className="text-base tracking-wide md:text-lg">Full Width</p>
+      {/* need React 18's useId, fix after upgrade react */}
+      {/* <Switch isSelected={isFullWidth} onValueChange={(value) => setIsFullWidth(value)} /> */}
+      <Button fullWidth={isFullWidth}>Button</Button>
+      <p className="text-base tracking-wide md:text-lg">Colors</p>
+      <div className="flex flex-row flex-wrap items-center justify-start gap-4">
+        <Button>Neutral</Button>
+        <Button color="primary">Primary</Button>
+        <Button color="secondary">Secondary</Button>
+        <Button color="success">Success</Button>
+        <Button color="warning">Warning</Button>
+        <Button color="danger">Danger</Button>
+        <Button className="bg-gradient-to-tr from-primary via-neutral-600 to-secondary">
+          Custom colors
+        </Button>
+      </div>
+      <p className="text-base tracking-wide md:text-lg">Variants</p>
+      <div className="flex flex-row flex-wrap items-center justify-start gap-4">
+        <Button variant="solid">Solid</Button>
+        <Button variant="solid" color="primary">
+          Solid
+        </Button>
+        <Button variant="solid" color="secondary">
+          Solid
+        </Button>
+        <Button variant="solid" color="success">
+          Solid
+        </Button>
+        <Button variant="solid" color="warning">
+          Solid
+        </Button>
+        <Button variant="solid" color="danger">
+          Solid
+        </Button>
+      </div>
+      <div className="flex flex-row flex-wrap items-center justify-start gap-4">
+        <Button variant="bordered">Bordered</Button>
+        <Button variant="bordered" color="primary">
+          Bordered
+        </Button>
+        <Button variant="bordered" color="secondary">
+          Bordered
+        </Button>
+        <Button variant="bordered" color="success">
+          Bordered
+        </Button>
+        <Button variant="bordered" color="warning">
+          Bordered
+        </Button>
+        <Button variant="bordered" color="danger">
+          Bordered
+        </Button>
+      </div>
+      <div className="flex flex-row flex-wrap items-center justify-start gap-4">
+        <Button variant="light">Light</Button>
+        <Button variant="light" color="primary">
+          Light
+        </Button>
+        <Button variant="light" color="secondary">
+          Light
+        </Button>
+        <Button variant="light" color="success">
+          Light
+        </Button>
+        <Button variant="light" color="warning">
+          Light
+        </Button>
+        <Button variant="light" color="danger">
+          Light
+        </Button>
+      </div>
+      <div className="flex flex-row flex-wrap items-center justify-start gap-4">
+        <Button variant="flat">flat</Button>
+        <Button variant="flat" color="primary">
+          flat
+        </Button>
+        <Button variant="flat" color="secondary">
+          flat
+        </Button>
+        <Button variant="flat" color="success">
+          flat
+        </Button>
+        <Button variant="flat" color="warning">
+          flat
+        </Button>
+        <Button variant="flat" color="danger">
+          flat
+        </Button>
+      </div>
+      <div className="flex flex-row flex-wrap items-center justify-start gap-4">
+        <Button variant="faded">faded</Button>
+        <Button variant="faded" color="primary">
+          faded
+        </Button>
+        <Button variant="faded" color="secondary">
+          faded
+        </Button>
+        <Button variant="faded" color="success">
+          faded
+        </Button>
+        <Button variant="faded" color="warning">
+          faded
+        </Button>
+        <Button variant="faded" color="danger">
+          faded
+        </Button>
+      </div>
+      <div className="flex flex-row flex-wrap items-center justify-start gap-4">
+        <Button variant="shadow">shadow</Button>
+        <Button variant="shadow" color="primary">
+          shadow
+        </Button>
+        <Button variant="shadow" color="secondary">
+          shadow
+        </Button>
+        <Button variant="shadow" color="success">
+          shadow
+        </Button>
+        <Button variant="shadow" color="warning">
+          shadow
+        </Button>
+        <Button variant="shadow" color="danger">
+          shadow
+        </Button>
+      </div>
+      <div className="flex flex-row flex-wrap items-center justify-start gap-4">
+        <Button variant="ghost">ghost</Button>
+        <Button variant="ghost" color="primary">
+          ghost
+        </Button>
+        <Button variant="ghost" color="secondary">
+          ghost
+        </Button>
+        <Button variant="ghost" color="success">
+          ghost
+        </Button>
+        <Button variant="ghost" color="warning">
+          ghost
+        </Button>
+        <Button variant="ghost" color="danger">
+          ghost
+        </Button>
+      </div>
     </>
   );
 };

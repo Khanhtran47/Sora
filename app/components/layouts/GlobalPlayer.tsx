@@ -3,7 +3,8 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Button, Container, Tooltip } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
+import { Container, Tooltip } from '@nextui-org/react';
 import { useMeasure } from '@react-hookz/web';
 import {
   useFetcher,
@@ -943,12 +944,8 @@ const GlobalPlayer = () => {
                     <Button
                       type="button"
                       size="sm"
-                      color="primary"
-                      auto
-                      ghost={!isShowOverlay}
-                      flat={isShowOverlay}
-                      css={{ marginBottom: '0.75rem' }}
-                      className={isShowOverlay ? 'z-[9999]' : ''}
+                      variant={isShowOverlay ? 'flat' : 'solid'}
+                      className={isShowOverlay ? 'z-[9999] mb-3' : 'mb-3'}
                       onPress={() => setIsShowOverlay(!isShowOverlay)}
                     >
                       Toggle Light
@@ -956,9 +953,6 @@ const GlobalPlayer = () => {
                     <Button
                       type="button"
                       size="sm"
-                      color="primary"
-                      auto
-                      ghost
                       onPress={() => {
                         artplayer?.pause();
                         setWatchTrailerModalVisible(true);
@@ -967,7 +961,7 @@ const GlobalPlayer = () => {
                             `/${typeVideo === 'movie' ? 'movies' : 'tv-shows'}/${id}/videos`,
                           );
                       }}
-                      css={{ marginBottom: '0.75rem' }}
+                      className="mb-3"
                     >
                       Watch Trailer
                     </Button>
@@ -993,8 +987,7 @@ const GlobalPlayer = () => {
               <Tooltip content={isPlayerPlaying ? 'Pause' : 'Play'}>
                 <Button
                   type="button"
-                  auto
-                  light
+                  variant="light"
                   onPress={() => {
                     if (isPlayerPlaying) {
                       artplayer.pause();
@@ -1002,15 +995,15 @@ const GlobalPlayer = () => {
                       artplayer.play();
                     }
                   }}
-                  icon={
-                    isPlayerPlaying ? (
-                      <Pause height={48} width={48} filled />
-                    ) : (
-                      <Play height={48} width={48} filled />
-                    )
-                  }
-                  css={{ height: '48px' }}
-                />
+                  isIconOnly
+                  className="h-12 data-[hover=true]:bg-transparent"
+                >
+                  {isPlayerPlaying ? (
+                    <Pause height={48} width={48} filled />
+                  ) : (
+                    <Play height={48} width={48} filled />
+                  )}
+                </Button>
               </Tooltip>
             </div>,
             artplayer.layers.playPauseButton,
@@ -1023,11 +1016,13 @@ const GlobalPlayer = () => {
                 <Tooltip content="Expand">
                   <Button
                     type="button"
-                    auto
-                    light
+                    variant="light"
                     onPress={() => navigate(routePlayer)}
-                    icon={<Expand filled />}
-                  />
+                    isIconOnly
+                    className="data-[hover=true]:bg-transparent"
+                  >
+                    <Expand filled />
+                  </Button>
                 </Tooltip>
               </div>
               <PlayerSettings
@@ -1054,8 +1049,6 @@ const GlobalPlayer = () => {
             >
               <Button
                 type="button"
-                auto
-                css={{ px: '$md !important' }}
                 onPress={() => {
                   if (currentHighlight?.end) {
                     artplayer.currentTime = currentHighlight?.end;
@@ -1089,12 +1082,13 @@ const GlobalPlayer = () => {
         ? createPortal(
             <Button
               type="button"
-              auto
-              light
+              variant="light"
               onPress={() => prevEpisodeUrl && navigate(prevEpisodeUrl)}
-              icon={<Previous filled />}
-              className="art-icon"
-            />,
+              isIconOnly
+              className="art-icon data-[hover=true]:bg-transparent"
+            >
+              <Previous filled />
+            </Button>,
             artplayer.controls.prev,
           )
         : null}
@@ -1102,12 +1096,13 @@ const GlobalPlayer = () => {
         ? createPortal(
             <Button
               type="button"
-              auto
-              light
+              variant="light"
               onPress={() => nextEpisodeUrl && navigate(nextEpisodeUrl)}
-              icon={<Next filled />}
-              className="art-icon"
-            />,
+              isIconOnly
+              className="art-icon data-[hover=true]:bg-transparent"
+            >
+              <Next filled />
+            </Button>,
             artplayer.controls.next,
           )
         : null}

@@ -1,5 +1,6 @@
 import { Suspense, useState } from 'react';
-import { Button, Loading, Tooltip } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
+import { Loading, Tooltip } from '@nextui-org/react';
 import { useMediaQuery } from '@react-hookz/web';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -333,12 +334,13 @@ const MediaList = (props: IMediaListProps) => {
                 <Tooltip content={t('show-hide-filter')}>
                   <Button
                     type="button"
-                    auto
                     color="primary"
-                    bordered={!showFilter}
-                    icon={<FilterIcon />}
+                    variant={showFilter ? 'flat' : 'solid'}
+                    isIconOnly
                     onPress={() => setShowFilter(!showFilter)}
-                  />
+                  >
+                    <FilterIcon />
+                  </Button>
                 </Tooltip>
               ) : null}
               {showListTypeChangeButton ? <ListViewChangeButton /> : null}
@@ -350,14 +352,10 @@ const MediaList = (props: IMediaListProps) => {
         <div className="mb-2 flex w-full flex-row flex-wrap items-center justify-between">
           <Button
             type="button"
-            auto
             size={isSm ? 'sm' : 'md'}
-            rounded
-            ghost
+            radius="full"
+            variant="solid"
             onPress={onClickViewMore}
-            css={{
-              maxWidth: '$8',
-            }}
           >
             {t('viewMore')}
           </Button>
@@ -365,42 +363,28 @@ const MediaList = (props: IMediaListProps) => {
             <div className="flex flex-row gap-x-2">
               <Button
                 type="button"
-                auto
-                color="primary"
-                rounded
-                ghost
+                radius="full"
+                variant="solid"
                 ref={(node) => setPrevEl(node)}
-                css={{
-                  width: '32px',
-                  height: '32px',
-                  padding: 0,
-                  cursor: 'pointer',
-                  '&:hover': { opacity: '0.8' },
-                  '@xs': { width: '44px', height: '44px' },
-                }}
+                className="h-8 w-8 cursor-pointer p-0 hover:opacity-80 sm:h-10 sm:w-10"
                 aria-label="Previous"
-                disabled={slideProgress === 0}
-                icon={<ChevronLeftIcon height={isSm ? 18 : 24} width={isSm ? 18 : 24} />}
-              />
+                isDisabled={slideProgress === 0}
+                isIconOnly
+              >
+                <ChevronLeftIcon height={isSm ? 18 : 24} width={isSm ? 18 : 24} />
+              </Button>
               <Button
                 type="button"
-                auto
-                color="primary"
-                rounded
-                ghost
+                radius="full"
+                variant="solid"
                 ref={(node) => setNextEl(node)}
-                css={{
-                  width: '32px',
-                  height: '32px',
-                  padding: 0,
-                  cursor: 'pointer',
-                  '&:hover': { opacity: '0.8' },
-                  '@xs': { width: '44px', height: '44px' },
-                }}
+                className="h-8 w-8 cursor-pointer p-0 hover:opacity-80 sm:h-10 sm:w-10"
                 aria-label="Next"
-                disabled={slideProgress === 1}
-                icon={<ChevronRightIcon height={isSm ? 18 : 24} width={isSm ? 18 : 24} />}
-              />
+                isDisabled={slideProgress === 1}
+                isIconOnly
+              >
+                <ChevronRightIcon height={isSm ? 18 : 24} width={isSm ? 18 : 24} />
+              </Button>
             </div>
           ) : null}
         </div>

@@ -151,7 +151,7 @@ const AuthForm = ({ type, error, code, errorCode }: IAuthForm) => {
         </Card.Body>
         <Card.Footer>
           <Row justify="flex-end">
-            <Button size="md" color="primary" type="submit">
+            <Button color="primary" type="submit">
               {type === 'sign-in' ? t('signIn') : t('signUp')}
             </Button>
           </Row>

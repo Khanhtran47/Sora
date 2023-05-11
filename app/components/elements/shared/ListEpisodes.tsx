@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/indent */
 import { useMemo, useState } from 'react';
-import { Avatar, Button, Card, Dropdown, Pagination, Row, Spacer } from '@nextui-org/react';
+import { Button, ButtonGroup } from '@nextui-org/button';
+import { Avatar, Card, Dropdown, Pagination, Row, Spacer } from '@nextui-org/react';
 import { useMediaQuery } from '@react-hookz/web';
 import { useNavigate } from '@remix-run/react';
 import Image, { MimeType } from 'remix-image';
@@ -101,9 +102,9 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
 
   return (
     <>
-      <Flex direction="row" justify="between" align="center" wrap="wrap" css={{ margin: '20px 0' }}>
+      <div className="my-5 flex flex-row flex-wrap items-center justify-between gap-4">
         <H3 h3>Episodes</H3>
-        <Flex direction="row" justify="end" align="center" className="space-x-2">
+        <div className="flex flex-row items-center justify-end gap-2">
           {providers ? (
             <Dropdown isBordered>
               <Dropdown.Button css={{ tt: 'capitalize' }}>{selectedValue}</Dropdown.Button>
@@ -122,33 +123,26 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
             </Dropdown>
           ) : null}
           {episodesCountAvailable && episodesCountAvailable >= episodesCountProvider ? (
-            <Button.Group>
+            <ButtonGroup color="primary">
               {episodeTypes.map((episodeType) => (
                 <Button
                   key={`button-item-${episodeType.activeType}`}
                   type="button"
                   onPress={() => setActiveType(episodeType.activeType)}
-                  {...(activeType === episodeType.activeType ? {} : { ghost: true })}
-                  css={{
-                    '@xsMax': {
-                      flexGrow: '1',
-                      flexShrink: '0',
-                      dflex: 'center',
-                    },
-                  }}
-                  icon={
-                    episodeType.activeTypeName === 'Image' ? (
-                      <PhotoIcon />
-                    ) : (
-                      <ViewGrid width={36} height={36} />
-                    )
-                  }
-                />
+                  {...(activeType === episodeType.activeType ? {} : { variant: 'ghost' })}
+                  isIconOnly
+                >
+                  {episodeType.activeTypeName === 'Image' ? (
+                    <PhotoIcon />
+                  ) : (
+                    <ViewGrid width={36} height={36} />
+                  )}
+                </Button>
               ))}
-            </Button.Group>
+            </ButtonGroup>
           ) : null}
-        </Flex>
-      </Flex>
+        </div>
+      </div>
       {currentData && currentData.length > 0 && (
         <Flex
           direction={activeType === 0 ? 'row' : 'column'}
@@ -164,14 +158,9 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
             activeType === 0 ? (
               <Button
                 key={episode.id}
-                auto
                 type="button"
                 onPress={() => handleSelectEpisode(index)}
-                css={{
-                  padding: 0,
-                  minWidth: '40px',
-                  margin: '0 0.5rem 0.5rem 0',
-                }}
+                className="mr-2 mb-2 w-10 p-0"
               >
                 {index + 1 + (currentPage - 1) * 50}
               </Button>

@@ -1,15 +1,7 @@
-import { useEffect, useState } from 'react';
-import { Player } from '@lottiefiles/react-lottie-player';
-import {
-  Button,
-  // Tooltip,
-  Popover,
-  styled,
-} from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
 import { useNavigate } from '@remix-run/react';
 import type { User } from '@supabase/supabase-js';
 import { motion, useTransform } from 'framer-motion';
-import type { AnimationItem } from 'lottie-web';
 // import { useTranslation } from 'react-i18next';
 import { tv } from 'tailwind-variants';
 
@@ -23,7 +15,6 @@ import ListViewChangeButton from '~/components/elements/shared/ListViewChangeBut
 // import MenuIcon from '~/assets/icons/MenuIcon';
 import ChevronLeft from '~/assets/icons/ChevronLeftIcon';
 import ChevronRight from '~/assets/icons/ChevronRightIcon';
-import dropdown from '~/assets/lotties/lottieflow-dropdown-03-0072F5-easey.json';
 
 interface IHeaderProps {
   // open: boolean;
@@ -63,17 +54,9 @@ const headerStyles = tv({
   },
 });
 
-const PlayerStyled = styled(Player, {
-  '& path': {
-    stroke: '$primary',
-  },
-});
-
 const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   // const { t } = useTranslation('header');
   const { user } = props;
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [lottie, setLottie] = useState<AnimationItem>();
   const navigate = useNavigate();
   const { sidebarMiniMode, sidebarBoxedMode } = useSoraSettings();
   const { scrollY } = useLayout((state) => state);
@@ -98,14 +81,6 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
     [0, startChangeScrollPosition, startChangeScrollPosition + 80],
     [60, 60, customHeaderChangeColorOnScroll ? (startChangeScrollPosition ? 0 : 60) : 0],
   );
-  useEffect(() => {
-    if (isDropdownOpen) {
-      lottie?.playSegments([0, 50], true);
-    } else {
-      lottie?.playSegments([50, 96], true);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isDropdownOpen]);
   const handleNavigationBackForward = (direction: 'back' | 'forward') => {
     if (direction === 'back') {
       navigate(-1);
@@ -135,23 +110,25 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       </motion.div>
       <div className="flex flex-row items-center justify-center gap-x-2">
         <Button
-          auto
-          flat
-          rounded
-          icon={<ChevronLeft />}
+          variant="faded"
+          radius="full"
+          isIconOnly
           onPress={() => handleNavigationBackForward('back')}
-          disabled={historyBack.length <= 1}
-          css={{ w: 36, h: 36 }}
-        />
+          isDisabled={historyBack.length <= 1}
+          className="h-9 w-9"
+        >
+          <ChevronLeft />
+        </Button>
         <Button
-          auto
-          flat
-          rounded
-          icon={<ChevronRight />}
+          variant="faded"
+          radius="full"
+          isIconOnly
           onPress={() => handleNavigationBackForward('forward')}
-          disabled={historyForward.length <= 1}
-          css={{ w: 36, h: 36 }}
-        />
+          isDisabled={historyForward.length <= 1}
+          className="h-9 w-9"
+        >
+          <ChevronRight />
+        </Button>
       </div>
       <div className="flex w-full flex-row items-center justify-between">
         {currentMiniTitle ? (
@@ -188,50 +165,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
           </motion.div>
         ) : null}
       </div>
-      <Popover
-        shouldFlip
-        triggerType="menu"
-        placement="bottom-right"
-        isOpen={isDropdownOpen}
-        onOpenChange={setIsDropdownOpen}
-      >
-        <Popover.Trigger>
-          <Button
-            type="button"
-            auto
-            flat
-            rounded
-            aria-label="dropdown"
-            css={{ padding: 0, h: 36 }}
-            icon={
-              <PlayerStyled
-                lottieRef={(instance) => {
-                  setLottie(instance);
-                }}
-                src={dropdown}
-                autoplay={false}
-                keepLastFrame
-                speed={2.7}
-                className="h-6 w-6"
-              />
-            }
-          />
-        </Popover.Trigger>
-        <Popover.Content
-          css={{
-            display: 'block',
-            opacity: 1,
-            transform: 'none',
-            overflow: 'hidden',
-            transition: 'height 0.5s',
-            width: 240,
-            zIndex: 2999,
-            borderWidth: 0,
-          }}
-        >
-          <MultiLevelDropdown user={user} />
-        </Popover.Content>
-      </Popover>
+      <MultiLevelDropdown user={user} />
     </div>
   );
 };

@@ -1,7 +1,35 @@
+import { Chip } from '@nextui-org/chip';
+import { NavLink } from '@remix-run/react';
+
+export const handle = {
+  breadcrumb: () => (
+    <NavLink to="/design-system/typography" aria-label="Player Page">
+      {({ isActive }) => (
+        <Chip
+          color="primary"
+          variant="flat"
+          size="sm"
+          className={`${
+            isActive ? 'opacity-100' : 'opacity-70'
+          } duration-250 ease-in-out transition-opacity hover:opacity-80`}
+        >
+          Typography
+        </Chip>
+      )}
+    </NavLink>
+  ),
+  miniTitle: () => ({
+    title: 'Typography',
+    showImage: false,
+  }),
+  getSitemapEntries: () => null,
+};
+
 const TypographyPage = () => {
   return (
     <>
       <h2>Typography</h2>
+      <br />
       <p className="text-base tracking-wide md:text-lg">Display</p>
       <span className="text-display">Almost before we knew it, we had left the ground.</span>
       {/* <p className="text-base tracking-wide md:text-lg">Numeric</p>

@@ -1,4 +1,4 @@
-import { Button } from '@nextui-org/react';
+import { Button, ButtonGroup } from '@nextui-org/button';
 
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import ViewGridCard from '~/assets/icons/ViewGridCardIcon';
@@ -8,26 +8,32 @@ import ViewGridTable from '~/assets/icons/ViewGridTableIcon';
 const ListViewChangeButton = () => {
   const { listViewType } = useSoraSettings();
   return (
-    <Button.Group css={{ margin: 0 }}>
+    <ButtonGroup color="primary">
       <Button
         type="button"
         onPress={() => listViewType.set('card')}
-        icon={<ViewGridCard width={40} height={40} />}
-        {...(listViewType.value === 'card' ? {} : { ghost: true })}
-      />
+        isIconOnly
+        {...(listViewType.value === 'card' ? {} : { variant: 'ghost' })}
+      >
+        <ViewGridCard width={40} height={40} />
+      </Button>
       <Button
         type="button"
         onPress={() => listViewType.set('detail')}
-        icon={<ViewGridDetail width={40} height={40} />}
-        {...(listViewType.value === 'detail' ? {} : { ghost: true })}
-      />
+        isIconOnly
+        {...(listViewType.value === 'detail' ? {} : { variant: 'ghost' })}
+      >
+        <ViewGridDetail width={40} height={40} />
+      </Button>
       <Button
         type="button"
         onPress={() => listViewType.set('table')}
-        icon={<ViewGridTable width={40} height={40} />}
-        {...(listViewType.value === 'table' ? {} : { ghost: true })}
-      />
-    </Button.Group>
+        isIconOnly
+        {...(listViewType.value === 'table' ? {} : { variant: 'ghost' })}
+      >
+        <ViewGridTable width={40} height={40} />
+      </Button>
+    </ButtonGroup>
   );
 };
 

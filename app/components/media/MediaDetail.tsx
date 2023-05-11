@@ -1,8 +1,6 @@
-/* eslint-disable no-unsafe-optional-chaining */
-/* eslint-disable @typescript-eslint/indent */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useEffect, useState } from 'react';
-import { Avatar, Badge, Button, Card, Spacer, Tooltip } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
+import { Avatar, Badge, Card, Spacer, Tooltip } from '@nextui-org/react';
 import { useMeasure, useMediaQuery } from '@react-hookz/web';
 import { useFetcher, useLocation, useNavigate } from '@remix-run/react';
 import { motion, useTransform } from 'framer-motion';
@@ -251,7 +249,7 @@ export const MediaDetail = (props: IMediaDetail) => {
                   size={isSm ? 'sm' : 'md'}
                   color="primary"
                   variant="flat"
-                  className="transition-all duration-200 ease-in-out"
+                  className="duration-200 ease-in-out transition-all"
                   css={
                     colorPalette
                       ? {
@@ -294,7 +292,7 @@ export const MediaDetail = (props: IMediaDetail) => {
                   size={isSm ? 'sm' : 'md'}
                   color="primary"
                   variant="flat"
-                  className="flex flex-row transition-all duration-200 ease-in-out"
+                  className="flex flex-row duration-200 ease-in-out transition-all"
                   css={
                     colorPalette
                       ? {
@@ -315,21 +313,16 @@ export const MediaDetail = (props: IMediaDetail) => {
                   genres?.map((genre) => (
                     <Button
                       type="button"
-                      color="primary"
-                      flat
-                      auto
-                      // shadow
+                      variant="flat"
                       key={genre?.id}
                       size={isSm ? 'sm' : 'md'}
-                      css={{
+                      className="hover:opacity-80"
+                      style={{
                         transition: 'all 0.2s ease-in-out',
                         ...(colorPalette
                           ? {
                               color: colorPalette[600],
                               backgroundColor: colorPalette[200],
-                              '&:hover': {
-                                backgroundColor: colorPalette[300],
-                              },
                             }
                           : {}),
                       }}
@@ -350,15 +343,9 @@ export const MediaDetail = (props: IMediaDetail) => {
               {(status === 'Released' || status === 'Ended' || status === 'Returning Series') && (
                 <Button
                   type="button"
-                  auto
                   // shadow
-                  color="gradient"
                   onPress={() => setVisible(true)}
-                  css={{
-                    '@xsMax': {
-                      width: '100%',
-                    },
-                  }}
+                  className="w-full bg-gradient-to-r from-primary to-secondary sm:w-auto"
                 >
                   <H5 h5 weight="bold" transform="uppercase">
                     Watch now
@@ -368,10 +355,7 @@ export const MediaDetail = (props: IMediaDetail) => {
               <div className="flex flex-row flex-wrap items-center justify-start">
                 <Button
                   type="button"
-                  auto
                   size={isSm ? 'sm' : 'md'}
-                  // shadow
-                  flat
                   onPress={() => handler && handler(Number(id))}
                 >
                   Watch Trailer
@@ -381,11 +365,11 @@ export const MediaDetail = (props: IMediaDetail) => {
                   <Button
                     type="button"
                     size={isSm ? 'sm' : 'md'}
-                    flat
                     onPress={() => WebShareLink(window.location.href, `${title}`, `${description}`)}
-                    icon={<ShareIcon />}
-                    css={{ minWidth: 'min-content' }}
-                  />
+                    isIconOnly
+                  >
+                    <ShareIcon />
+                  </Button>
                 </Tooltip>
               </div>
             </div>
@@ -564,7 +548,7 @@ export const AnimeDetail = (props: IAnimeDetail) => {
                   size={isSm ? 'sm' : 'md'}
                   color="primary"
                   variant="flat"
-                  className="transition-all duration-200 ease-in-out"
+                  className="duration-200 ease-in-out transition-all"
                   css={
                     colorPalette
                       ? {
@@ -584,7 +568,7 @@ export const AnimeDetail = (props: IAnimeDetail) => {
                   size={isSm ? 'sm' : 'md'}
                   color="primary"
                   variant="flat"
-                  className="flex flex-row transition-all duration-200 ease-in-out"
+                  className="flex flex-row duration-200 ease-in-out transition-all"
                   css={
                     colorPalette
                       ? {
@@ -605,21 +589,16 @@ export const AnimeDetail = (props: IAnimeDetail) => {
                   genres?.map((genre) => (
                     <Button
                       type="button"
-                      color="primary"
-                      flat
-                      auto
-                      // shadow
-                      key={genre}
+                      variant="flat"
+                      key={genre?.id}
                       size={isSm ? 'sm' : 'md'}
-                      css={{
+                      className="hover:opacity-80"
+                      style={{
                         transition: 'all 0.2s ease-in-out',
                         ...(colorPalette
                           ? {
                               color: colorPalette[600],
                               backgroundColor: colorPalette[200],
-                              '&:hover': {
-                                backgroundColor: colorPalette[300],
-                              },
                             }
                           : {}),
                       }}
@@ -633,15 +612,8 @@ export const AnimeDetail = (props: IAnimeDetail) => {
             <div className="mb-10 flex w-full flex-row flex-wrap items-center justify-between gap-4 grid-in-buttons">
               <Button
                 type="button"
-                auto
-                // shadow
-                color="gradient"
                 onPress={() => setVisible(true)}
-                css={{
-                  '@xsMax': {
-                    width: '100%',
-                  },
-                }}
+                className="w-full bg-gradient-to-r from-primary to-secondary sm:w-auto"
               >
                 <H5 h5 weight="bold" transform="uppercase">
                   Watch now
@@ -650,10 +622,7 @@ export const AnimeDetail = (props: IAnimeDetail) => {
               <div className="flex flex-row flex-wrap items-center justify-start">
                 <Button
                   type="button"
-                  auto
                   size={isSm ? 'sm' : 'md'}
-                  // shadow
-                  flat
                   onPress={() => handler && handler(Number(id))}
                 >
                   Watch Trailer
@@ -663,11 +632,11 @@ export const AnimeDetail = (props: IAnimeDetail) => {
                   <Button
                     type="button"
                     size={isSm ? 'sm' : 'md'}
-                    flat
                     onPress={() => WebShareLink(window.location.href, `${title}`, `${description}`)}
-                    icon={<ShareIcon />}
-                    css={{ minWidth: 'min-content' }}
-                  />
+                    isIconOnly
+                  >
+                    <ShareIcon />
+                  </Button>
                 </Tooltip>
               </div>
             </div>

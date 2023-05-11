@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useCallback, useEffect, useState } from 'react';
-import { Button, Container, Loading, Image as NextImage, Row, Spacer } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
+import { Container, Loading, Image as NextImage, Row, Spacer } from '@nextui-org/react';
 import { useColor } from 'color-thief-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import YouTube from 'react-youtube';
@@ -288,32 +289,20 @@ const CardItemHover = (props: ICardItemHoverProps) => {
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
           <Button
             type="button"
-            auto
             color="primary"
-            rounded
-            ghost
-            icon={
-              isMutedTrailer.value ? (
-                <VolumeOff fill="currentColor" />
-              ) : (
-                <VolumeUp fill="currentColor" />
-              )
-            }
-            css={{
-              width: '42px',
-              height: '42px',
-              cursor: 'pointer',
-              position: 'absolute',
-              top: '25px',
-              right: '20px',
-              zIndex: '90',
-              '&:hover': {
-                opacity: '0.8',
-              },
-            }}
+            radius="full"
+            variant="ghost"
+            isIconOnly
+            className="absolute top-[25px] right-5 z-[90] h-10 w-10 cursor-pointer hover:opacity-80"
             aria-label="Toggle Mute"
             onPress={isMutedTrailer.value ? unMute : mute}
-          />
+          >
+            {isMutedTrailer.value ? (
+              <VolumeOff fill="currentColor" />
+            ) : (
+              <VolumeUp fill="currentColor" />
+            )}
+          </Button>
         </motion.div>
       ) : null}
     </Container>

@@ -118,7 +118,6 @@ const SelectProviderModal = (props: SelectProviderModalProps) => {
                 key={item.id}
                 variant="light"
                 color="primary"
-                className="hover:text-primary-600"
                 onPress={() => handleProvider(item)}
               >
                 {item.provider}

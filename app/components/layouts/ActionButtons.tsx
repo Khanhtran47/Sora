@@ -1,4 +1,4 @@
-import { Button } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
 import { motion, useTransform } from 'framer-motion';
 
 import { useLayout } from '~/store/layout/useLayout';
@@ -16,7 +16,16 @@ const ActionButtons = () => {
       style={{ opacity, y }}
       className="fixed bottom-24 right-8 z-[3999] flex flex-col items-center sm:bottom-8"
     >
-      <Button auto rounded icon={<Arrow direction="up" />} onPress={() => handleButtonPress()} />
+      <Button
+        color="primary"
+        size="lg"
+        radius="full"
+        isIconOnly
+        onPress={() => handleButtonPress()}
+        className="shadow-2xl"
+      >
+        <Arrow direction="up" />
+      </Button>
     </motion.div>
   );
 };

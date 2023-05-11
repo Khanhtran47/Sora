@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Avatar, Button, Card, Tooltip } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
+import { Avatar, Card, Tooltip } from '@nextui-org/react';
 import { useIntersectionObserver, useMeasure } from '@react-hookz/web';
 import { Link, useFetcher, useNavigate } from '@remix-run/react';
 import { motion } from 'framer-motion';
@@ -370,8 +371,7 @@ const CardItem = (props: ICardItemProps) => {
                       key={genre}
                       type="button"
                       color="primary"
-                      flat
-                      auto
+                      variant="flat"
                       size="xs"
                       onPress={() => navigate(`/discover/anime?genres=${genre}`)}
                     >
@@ -385,8 +385,7 @@ const CardItem = (props: ICardItemProps) => {
                           key={genreId}
                           type="button"
                           color="primary"
-                          flat
-                          auto
+                          variant="flat"
                           size="xs"
                           onPress={() =>
                             navigate(`/discover/movies?with_genres=${genresMovie?.[genreId]}`)
@@ -401,8 +400,7 @@ const CardItem = (props: ICardItemProps) => {
                         key={genreId}
                         type="button"
                         color="primary"
-                        flat
-                        auto
+                        variant="flat"
                         size="xs"
                         onPress={() =>
                           navigate(`/discover/tv-shows?with_genres=${genresTv?.[genreId]}`)
@@ -431,8 +429,7 @@ const CardItem = (props: ICardItemProps) => {
                         key={genre}
                         type="button"
                         color="primary"
-                        flat
-                        auto
+                        variant="flat"
                         size="xs"
                         onPress={() => navigate(`/discover/anime?genres=${genre}`)}
                         className={index === 1 ? '!hidden sm:!flex' : ''}
@@ -447,8 +444,7 @@ const CardItem = (props: ICardItemProps) => {
                             key={genreId}
                             type="button"
                             color="primary"
-                            flat
-                            auto
+                            variant="flat"
                             size="xs"
                             onPress={() =>
                               navigate(`/discover/movies?with_genres=${genresMovie?.[genreId]}`)
@@ -464,8 +460,7 @@ const CardItem = (props: ICardItemProps) => {
                           key={genreId}
                           type="button"
                           color="primary"
-                          flat
-                          auto
+                          variant="flat"
                           size="xs"
                           onPress={() =>
                             navigate(`/discover/tv-shows?with_genres=${genresTv?.[genreId]}`)

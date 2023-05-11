@@ -230,8 +230,6 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
           </div>
           <Button
             type="button"
-            size="md"
-            radius="xl"
             color="primary"
             isDisabled={fetcher.type === 'normalLoad' && !isGetSubtitleLink}
             className="!px-3"
@@ -264,7 +262,7 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
               type="button"
               variant="light"
               color="primary"
-              className="hover:text-primary-600"
+              className="!px-3"
               onPress={() => handleSubtitleClick(subtitle)}
             >
               {subtitle.attributes.release} ({subtitle.attributes.language})

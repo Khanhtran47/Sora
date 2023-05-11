@@ -1,4 +1,4 @@
-import { Button } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
 import { NavLink, useLocation, useNavigate } from '@remix-run/react';
 import { motion, useTransform } from 'framer-motion';
 
@@ -69,12 +69,13 @@ const MobileHeader = () => {
           </H2>
         </NavLink>
         <Button
-          auto
-          light
+          variant="light"
           color="primary"
-          icon={<Search filled />}
+          isIconOnly
           onPress={() => navigate('/search/movie')}
-        />
+        >
+          <Search filled />
+        </Button>
       </motion.div>
     );
   }
@@ -92,14 +93,9 @@ const MobileHeader = () => {
           <div className="pointer-events-none h-full w-full bg-background/[0.2]" />
         ) : null}
       </motion.div>
-      <Button
-        auto
-        light
-        rounded
-        css={{ backgroundColor: '$backgroundAlpha', flexBasis: 40, flexShrink: 0 }}
-        icon={<Arrow direction="left" />}
-        onPress={() => handleBackButton()}
-      />
+      <Button variant="faded" radius="full" isIconOnly onPress={() => handleBackButton()}>
+        <Arrow direction="left" />
+      </Button>
       <div className="flex flex-row items-center justify-between">
         {currentMiniTitle ? (
           <motion.span

@@ -5,27 +5,27 @@
 
 @layer base {
   .h0 {
-    @apply !text-3xl font-bold md:!text-5xl !tracking-normal;
+    @apply !text-3xl !font-bold md:!text-5xl !tracking-normal;
   }
 
   h1,
   .h1 {
-    @apply !text-2xl font-bold md:!text-4xl !tracking-normal;
+    @apply !text-2xl !font-bold md:!text-4xl !tracking-normal;
   }
 
   h2,
   .h2 {
-    @apply !text-xl font-bold md:!text-3xl !tracking-normal;
+    @apply !text-xl !font-bold md:!text-3xl !tracking-normal;
   }
 
   h3,
   .h3 {
-    @apply !text-lg font-bold md:!text-2xl !tracking-normal;
+    @apply !text-lg !font-bold md:!text-2xl !tracking-normal;
   }
 
   h4,
   .h4 {
-    @apply !text-base font-bold md:!text-lg !tracking-normal;
+    @apply !text-base !font-bold md:!text-lg !tracking-normal;
   }
 
   body,

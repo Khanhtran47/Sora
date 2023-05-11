@@ -64,7 +64,7 @@ type PopoverContentProps = PopoverContentPrimitiveProps & {
 const PopoverContent = React.forwardRef<
   React.ElementRef<typeof StyledContent>,
   PopoverContentProps
->(({ children, hideArrow, container = document.body, ...props }, fowardedRef) => (
+>(({ children, hideArrow, container, ...props }, fowardedRef) => (
   <PopoverPrimitive.Portal container={container}>
     <StyledContent sideOffset={0} {...props} ref={fowardedRef}>
       {children}

@@ -105,7 +105,6 @@ module.exports = withTV({
           {
             lineHeight: '1rem',
             letterSpacing: '-0.05em',
-            fontWeight: '400',
           },
         ],
         sm: [
@@ -113,7 +112,6 @@ module.exports = withTV({
           {
             lineHeight: '1.25rem',
             letterSpacing: '-0.05em',
-            fontWeight: '400',
           },
         ],
         base: [
@@ -121,7 +119,6 @@ module.exports = withTV({
           {
             lineHeight: '1.5rem',
             letterSpacing: '-0.025em',
-            fontWeight: '400',
           },
         ],
         lg: [
@@ -129,39 +126,34 @@ module.exports = withTV({
           {
             lineHeight: '1.75rem',
             letterSpacing: '0',
-            fontWeight: '400',
           },
         ],
         xl: [
           '1.25rem',
           {
-            lineHeight: '1.75rem',
-            letterSpacing: '0.025em',
-            fontWeight: '400',
+            lineHeight: '1.5',
+            letterSpacing: '0',
           },
         ],
         '2xl': [
           '1.5rem',
           {
-            lineHeight: '2rem',
-            letterSpacing: '0.05em',
-            fontWeight: '400',
+            lineHeight: '1.5',
+            letterSpacing: '0',
           },
         ],
         '3xl': [
           '1.875rem',
           {
-            lineHeight: '2.25rem',
-            letterSpacing: '0.05em',
-            fontWeight: '400',
+            lineHeight: '1.5',
+            letterSpacing: '0',
           },
         ],
         '4xl': [
           '2.25rem',
           {
-            lineHeight: '2.5rem',
-            letterSpacing: '0.05em',
-            fontWeight: '400',
+            lineHeight: '1.5',
+            letterSpacing: '0',
           },
         ],
         'player-subtitle-font-size': 'var(--art-subtitle-custom-font-size)',

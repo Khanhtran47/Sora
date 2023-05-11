@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
 import { memo } from 'react';
-import { Avatar, Button, Card, Col, Row, Spacer } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
+import { Avatar, Card, Col, Row, Spacer } from '@nextui-org/react';
 import { useMediaQuery } from '@react-hookz/web';
 import { useNavigate } from '@remix-run/react';
 import Image, { MimeType } from 'remix-image';
@@ -241,17 +242,12 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
                   <Button
                     key={genre?.id}
                     type="button"
-                    color="primary"
-                    auto
                     size={isSm ? 'sm' : 'md'}
-                    css={{
+                    className="hover:opacity-80"
+                    style={{
                       marginBottom: '0.125rem',
                       background: color,
                       color: colorBackground,
-                      '&:hover': {
-                        background: colorBackground,
-                        color,
-                      },
                     }}
                     onPress={() =>
                       navigate(
@@ -273,17 +269,13 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
                   <Button
                     key={index}
                     type="button"
-                    auto
                     size={isSm ? 'sm' : 'md'}
+                    className="hover:opacity-80"
                     onPress={() => navigate(`/discover/anime?genres=${genre}`)}
-                    css={{
+                    style={{
                       marginBottom: '0.125rem',
                       background: color,
                       color: colorBackground,
-                      '&:hover': {
-                        background: colorBackground,
-                        color,
-                      },
                     }}
                   >
                     {genre}

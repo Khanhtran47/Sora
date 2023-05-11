@@ -1,4 +1,5 @@
-import { Badge, Button, Spacer } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
+import { Badge, Spacer } from '@nextui-org/react';
 import { NavLink, useNavigate } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 
@@ -43,8 +44,8 @@ const MovieGenresPage = () => {
           <Button
             key={id}
             type="button"
-            flat
-            auto
+            variant="flat"
+            color="primary"
             onPress={() => navigate(`/discover/movies?with_genres=${id}`)}
           >
             {name}

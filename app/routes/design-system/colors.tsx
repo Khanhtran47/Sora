@@ -8,6 +8,7 @@ export const handle = {
         <Chip
           color="primary"
           variant="flat"
+          size="sm"
           className={`${
             isActive ? 'opacity-100' : 'opacity-70'
           } duration-250 ease-in-out transition-opacity hover:opacity-80`}

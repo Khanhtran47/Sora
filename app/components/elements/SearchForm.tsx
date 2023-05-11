@@ -33,7 +33,7 @@ const SearchForm = (props: ISearchForm) => {
         fullWidth
         helperText={textHelper}
       />
-      <Button size="md" color="primary" type="submit">
+      <Button color="primary" type="submit">
         {textOnButton}
       </Button>
     </Form>

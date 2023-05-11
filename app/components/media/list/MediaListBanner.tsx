@@ -1,15 +1,12 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/indent */
-/* eslint-disable arrow-body-style */
 import { forwardRef, useEffect, useRef, useState } from 'react';
-import { Button, Card, Grid, styled } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
+import { Card, Grid, styled } from '@nextui-org/react';
 import { useMediaQuery } from '@react-hookz/web';
 import { Autoplay, Pagination, Thumbs, type Swiper } from 'swiper';
 import { Swiper as SwiperReact, SwiperSlide, useSwiper } from 'swiper/react';
 
 import type { IMedia } from '~/types/media';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
-import Svg from '~/components/styles/Svg.styles';
 import { H5 } from '~/components/styles/Text.styles';
 import ChevronLeftIcon from '~/assets/icons/ChevronLeftIcon';
 import ChevronRightIcon from '~/assets/icons/ChevronRightIcon';
@@ -63,17 +60,10 @@ const CustomNavigation = forwardRef<HTMLDivElement, { slot: 'container-end' }>(
       <div slot={slot} className="hidden sm:block">
         <Button
           type="button"
-          auto
           color="primary"
-          rounded
-          ghost
-          icon={
-            isPlayTrailer.value ? (
-              <StopIcon fill="currentColor" />
-            ) : (
-              <PlayIcon fill="currentColor" filled />
-            )
-          }
+          radius="full"
+          variant="ghost"
+          isIconOnly
           onPress={() => {
             isPlayTrailer.set(!isPlayTrailer.value);
             if (isPlayTrailer.value && !swiper.autoplay.running) {
@@ -83,70 +73,42 @@ const CustomNavigation = forwardRef<HTMLDivElement, { slot: 'container-end' }>(
               swiper.autoplay.stop();
             }
           }}
-          css={{
-            width: '44px',
-            height: '44px',
-            cursor: 'pointer',
-            position: 'absolute',
-            bottom: '80px',
-            right: '35px',
-            zIndex: '90',
-            '&:hover': {
-              opacity: '0.8',
-            },
-            '@lgMin': { bottom: '200px' },
-          }}
+          className="absolute bottom-20 right-[35px] z-[90] h-11 w-11 cursor-pointer hover:opacity-80 2xl:bottom-[200px]"
           aria-label="Play Trailer"
-        />
+        >
+          {isPlayTrailer.value ? (
+            <StopIcon fill="currentColor" />
+          ) : (
+            <PlayIcon fill="currentColor" filled />
+          )}
+        </Button>
         <div className="hidden sm:block 2xl:hidden">
           <Button
             type="button"
-            auto
             color="primary"
-            rounded
-            ghost
-            icon={<ChevronLeftIcon fill="currentColor" />}
+            radius="full"
+            variant="ghost"
+            isIconOnly
             onPress={() => swiper.slidePrev()}
-            css={{
-              width: '44px',
-              height: '44px',
-              cursor: 'pointer',
-              position: 'absolute',
-              bottom: '10px',
-              right: '85px',
-              zIndex: '90',
-              '&:hover': {
-                opacity: '0.8',
-              },
-              '@lgMin': { bottom: '200px' },
-            }}
+            className="absolute bottom-[10px] right-[85px] z-[90] h-11 w-11 cursor-pointer hover:opacity-80 2xl:bottom-[200px]"
             aria-label="Previous"
             disabled={slideProgress === 0}
-          />
+          >
+            <ChevronLeftIcon fill="currentColor" />
+          </Button>
           <Button
             type="button"
-            auto
             color="primary"
-            rounded
-            ghost
-            icon={<ChevronRightIcon fill="currentColor" />}
+            radius="full"
+            variant="ghost"
+            isIconOnly
             onPress={() => swiper.slideNext()}
-            css={{
-              width: '44px',
-              height: '44px',
-              cursor: 'pointer',
-              position: 'absolute',
-              bottom: '10px',
-              right: '35px',
-              zIndex: '90',
-              '&:hover': {
-                opacity: '0.8',
-              },
-              '@lgMin': { bottom: '200px' },
-            }}
+            className="absolute bottom-[10px] right-[35px] z-[90] h-11 w-11 cursor-pointer hover:opacity-80"
             aria-label="Next"
             disabled={slideProgress === 1}
-          />
+          >
+            <ChevronRightIcon fill="currentColor" />
+          </Button>
           <AutoplayProgressStyled className="autoplay-progress" ref={forwardedRef}>
             {/* @ts-ignore */}
             <svg viewBox="0 0 48 48" style={{ '--progress': 1 }}>
@@ -168,70 +130,34 @@ const CustomNavigationThumbs = ({ slot }: { slot: 'container-end' }) => {
     <div slot={slot} className="hidden sm:block">
       <Button
         type="button"
-        auto
         color="primary"
-        flat
-        className="backdrop-blur-md"
-        icon={<ChevronLeftIcon fill="currentColor" filled />}
+        variant="flat"
+        className="absolute top-[60px] left-[2px] z-[90] m-0 h-11 w-min cursor-pointer rounded-md bg-background/60 p-0 backdrop-blur-md"
+        isIconOnly
         onPress={() => swiper.slidePrev()}
-        css={{
-          p: 0,
-          m: 0,
-          backgroundColor: '$backgroundAlpha',
-          borderRadius: '$xs',
-          width: 'min-content',
-          height: '44px',
-          cursor: 'pointer',
-          position: 'absolute',
-          top: '60px',
-          left: '2px',
-          zIndex: '90',
-          [`& ${Svg}`]: {
-            opacity: '0.8',
-            scale: '0.8',
-          },
-          '&:hover': {
-            [`& ${Svg}`]: {
-              opacity: 1,
-              scale: 1,
-            },
-          },
-        }}
         aria-label="Previous"
-      />
+      >
+        <ChevronLeftIcon
+          fill="currentColor"
+          filled
+          className="scale-75 opacity-80 duration-200 ease-linear transition-all hover:scale-100 hover:opacity-100"
+        />
+      </Button>
       <Button
         type="button"
-        auto
         color="primary"
-        flat
-        className="backdrop-blur-md"
-        icon={<ChevronRightIcon fill="currentColor" filled />}
+        variant="flat"
+        className="absolute top-[60px] right-[2px] z-[90] m-0 h-11 w-min cursor-pointer rounded-md bg-background/60 p-0 backdrop-blur-md"
+        isIconOnly
         onPress={() => swiper.slideNext()}
-        css={{
-          p: 0,
-          m: 0,
-          backgroundColor: '$backgroundAlpha',
-          borderRadius: '$xs',
-          width: 'min-content',
-          height: '44px',
-          cursor: 'pointer',
-          position: 'absolute',
-          top: '60px',
-          right: '2px',
-          zIndex: '90',
-          [`& ${Svg}`]: {
-            opacity: '0.8',
-            scale: '0.8',
-          },
-          '&:hover': {
-            [`& ${Svg}`]: {
-              opacity: 1,
-              scale: 1,
-            },
-          },
-        }}
         aria-label="Next"
-      />
+      >
+        <ChevronRightIcon
+          fill="currentColor"
+          filled
+          className="scale-75 opacity-80 duration-200 ease-linear transition-all hover:scale-100 hover:opacity-100"
+        />
+      </Button>
     </div>
   );
 };

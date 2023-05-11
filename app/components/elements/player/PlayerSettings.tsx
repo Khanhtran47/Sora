@@ -1515,7 +1515,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
               variant="light"
               isIconOnly
               aria-label="dropdown"
-              className="art-icon data-[hover=true]:bg-none"
+              className="art-icon data-[hover=true]:bg-transparent"
             >
               <Settings filled />
             </Button>
@@ -1645,8 +1645,8 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
             {currentDropdownLevel ? (
               <div className="flex w-max flex-col items-start justify-start gap-y-2">
                 {currentDropdownLevel?.showBackButton || currentDropdownLevel?.showTitle ? (
-                  <div className="w-full">
-                    <div className="flex w-fit flex-row items-center justify-between gap-x-4 !p-2">
+                  <>
+                    <div className="flex w-full flex-row items-center justify-between gap-x-4 !p-2">
                       <div className="flex flex-row items-center justify-start">
                         {currentDropdownLevel?.showBackButton ? (
                           <Button
@@ -1684,7 +1684,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                       ) : null}
                     </div>
                     <Divider css={{ m: 0 }} />
-                  </div>
+                  </>
                 ) : null}
                 <div className="flex w-full flex-col items-start justify-start gap-y-2">
                   {currentDropdownLevel?.listItems.map((item) => {
