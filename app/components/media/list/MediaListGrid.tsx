@@ -1,6 +1,6 @@
-/* eslint-disable @typescript-eslint/indent */
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Button, Pagination } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
+import { Pagination } from '@nextui-org/react';
 import { useIntersectionObserver, useMediaQuery } from '@react-hookz/web';
 import { Link, useFetcher, useLocation, useSearchParams } from '@remix-run/react';
 import { motion } from 'framer-motion';
@@ -301,6 +301,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
         <Button
           type="button"
           // shadow
+          fullWidth
           color="primary"
           onPress={() => {
             fetcher.load(
@@ -310,7 +311,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
             );
             setShowLoadMore(false);
           }}
-          css={{ marginTop: '$32' }}
+          className="mt-20 md:mt-12"
         >
           Load More
         </Button>
@@ -319,17 +320,21 @@ const MediaListGrid = (props: IMediaListCardProps) => {
         itemsType === 'anime' || itemsType === 'episode' ? (
           <div className="mt-[50px] flex flex-row gap-x-3">
             <Button
-              auto
-              icon={<Arrow direction="left" />}
+              color="primary"
+              isIconOnly
               onPress={() => handlePageChange({ direction: 'prev' })}
-              disabled={currentPage === 1}
-            />
+              isDisabled={currentPage === 1}
+            >
+              <Arrow direction="left" />
+            </Button>
             <Button
-              auto
-              icon={<Arrow direction="right" />}
+              color="primary"
+              isIconOnly
               onPress={() => handlePageChange({ direction: 'next' })}
-              disabled={!hasNextPage}
-            />
+              isDisabled={!hasNextPage}
+            >
+              <Arrow direction="right" />
+            </Button>
           </div>
         ) : totalPages && totalPages > 1 ? (
           <Pagination

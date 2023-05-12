@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useCallback, useEffect, useState } from 'react';
-import { Button, Container, Loading, Image as NextImage, Row, Spacer } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
+import { Container, Loading, Image as NextImage, Row, Spacer } from '@nextui-org/react';
 import { useColor } from 'color-thief-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import YouTube from 'react-youtube';
@@ -14,7 +15,6 @@ import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { type Trailer } from '~/components/elements/dialog/WatchTrailerModal';
 import Rating from '~/components/elements/shared/Rating';
-import Flex from '~/components/styles/Flex.styles';
 import { H4, H5, H6 } from '~/components/styles/Text.styles';
 import VolumeOff from '~/assets/icons/VolumeOffIcon';
 import VolumeUp from '~/assets/icons/VolumeUpIcon';
@@ -204,7 +204,7 @@ const CardItemHover = (props: ICardItemHoverProps) => {
       <Spacer y={0.5} />
       {genreIds || genresAnime ? (
         <>
-          <Flex direction="row">
+          <div className="flex flex-row">
             {mediaType === 'anime'
               ? genresAnime?.slice(0, 2).map((genre, index) => (
                   <>
@@ -261,7 +261,7 @@ const CardItemHover = (props: ICardItemHoverProps) => {
                     </>
                   );
                 })}
-          </Flex>
+          </div>
           <Spacer y={0.5} />
         </>
       ) : null}
@@ -276,44 +276,32 @@ const CardItemHover = (props: ICardItemHoverProps) => {
           <H5 h5>{`${mediaType.charAt(0).toUpperCase()}${mediaType.slice(1)} • ${releaseDate}`}</H5>
         ) : null}
         {voteAverage ? (
-          <Flex direction="row" align="center">
+          <div className="flex flex-row items-center">
             <Rating
               rating={mediaType === 'anime' ? voteAverage : Number(voteAverage.toFixed(1))}
               ratingType={mediaType}
             />
-          </Flex>
+          </div>
         ) : null}
       </Row>
       {showTrailer ? (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
           <Button
             type="button"
-            auto
             color="primary"
-            rounded
-            ghost
-            icon={
-              isMutedTrailer.value ? (
-                <VolumeOff fill="currentColor" />
-              ) : (
-                <VolumeUp fill="currentColor" />
-              )
-            }
-            css={{
-              width: '42px',
-              height: '42px',
-              cursor: 'pointer',
-              position: 'absolute',
-              top: '25px',
-              right: '20px',
-              zIndex: '90',
-              '&:hover': {
-                opacity: '0.8',
-              },
-            }}
+            radius="full"
+            variant="ghost"
+            isIconOnly
+            className="absolute top-[25px] right-5 z-[90] h-10 w-10 cursor-pointer hover:opacity-80"
             aria-label="Toggle Mute"
             onPress={isMutedTrailer.value ? unMute : mute}
-          />
+          >
+            {isMutedTrailer.value ? (
+              <VolumeOff fill="currentColor" />
+            ) : (
+              <VolumeUp fill="currentColor" />
+            )}
+          </Button>
         </motion.div>
       ) : null}
     </Container>

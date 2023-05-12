@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useMemo, useState } from 'react';
-import { Badge, Button, Container, Modal, Spacer } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
+import { Badge, Container, Modal, Spacer } from '@nextui-org/react';
 import { useWindowSize } from '@react-hookz/web';
 import {
   json,
@@ -105,9 +106,8 @@ const CacheKeyRow = ({
         <input type="hidden" name="cacheKey" value={cacheKey} />
         {/* @ts-ignore */}
         <Button
-          ghost
-          color="error"
-          auto
+          variant="ghost"
+          color="danger"
           onBlur={() => setDoubleCheck(false)}
           onPress={(e) => {
             const target = e.target as HTMLFormElement;
@@ -121,7 +121,7 @@ const CacheKeyRow = ({
           {fetcher.state === 'idle' ? (doubleCheck ? 'You sure?' : 'Delete') : 'Deleting...'}
         </Button>
       </fetcher.Form>
-      <Button auto light onPress={() => handleOpenDetailCache(cacheKey)}>
+      <Button variant="light" color="primary" onPress={() => handleOpenDetailCache(cacheKey)}>
         {cacheKey}
       </Button>
     </div>
@@ -234,7 +234,7 @@ const CacheAdminRoute = () => {
           ) : null}
         </Modal.Body>
         <Modal.Footer>
-          <Button auto flat color="error" onPress={closeHandler}>
+          <Button variant="flat" color="danger" onPress={closeHandler}>
             Close
           </Button>
         </Modal.Footer>

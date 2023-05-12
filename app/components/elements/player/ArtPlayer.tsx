@@ -8,7 +8,7 @@ import {
   type Dispatch,
   type SetStateAction,
 } from 'react';
-import { Button } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
 import { useNavigate } from '@remix-run/react';
 import Artplayer from 'artplayer';
 import { isMobile } from 'react-device-detect';
@@ -94,12 +94,12 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
         {...rest}
       />
       {isMini ? (
-        <div className="inset-x-0 bottom-[-64px] flex h-16 flex-row items-center justify-between rounded-b-lg bg-background-contrast p-3">
+        <div className="inset-x-0 bottom-[-64px] flex h-16 flex-row items-center justify-between rounded-b-lg bg-neutral p-3">
           <H5
             h5
             weight="bold"
             onClick={() => navigate(routePlayer)}
-            className="line-clamp-1"
+            className="!text-neutral-foreground line-clamp-1"
             css={{ cursor: 'pointer' }}
             title={titlePlayer}
           >
@@ -107,8 +107,9 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
           </H5>
           <Button
             type="button"
-            auto
-            light
+            size="md"
+            variant="light"
+            isIconOnly
             onPress={() => {
               if (artplayer) artplayer.destroy();
               setShouldShowPlayer(false);
@@ -120,8 +121,9 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
               setSubtitleSelector([]);
               setIsPlayerPlaying(false);
             }}
-            icon={<Close />}
-          />
+          >
+            <Close />
+          </Button>
         </div>
       ) : null}
     </AspectRatio.Root>

@@ -19,7 +19,7 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cnBase(
-      'flex h-10 w-full items-center justify-between rounded-lg bg-primary !px-3 !py-2 text-sm text-primary-solid-contrast placeholder:text-primary-solid-contrast focus:outline-none disabled:cursor-not-allowed disabled:opacity-50',
+      'flex h-10 w-full items-center justify-between rounded-lg bg-primary !px-3 !py-2 text-sm text-primary-foreground placeholder:text-primary-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50',
       className,
     )}
     {...props}
@@ -42,7 +42,7 @@ const SelectContent = React.forwardRef<
     <SelectPrimitive.Content
       ref={ref}
       className={cnBase(
-        'relative z-[9999] min-w-[8rem] overflow-hidden rounded-lg bg-background-contrast text-text shadow-lg shadow-background-alpha animate-in fade-in-80',
+        'relative z-[9999] min-w-[8rem] overflow-hidden rounded-lg bg-neutral text-foreground shadow-lg shadow-background/[0.6] animate-in fade-in-80',
         position === 'popper' ? 'translate-y-1' : '!p-1.5',
         className,
       )}
@@ -50,7 +50,7 @@ const SelectContent = React.forwardRef<
       {...props}
     >
       {position === 'item-aligned' ? (
-        <SelectPrimitive.ScrollUpButton className="flex h-6 cursor-default items-center justify-center bg-background-contrast text-primary">
+        <SelectPrimitive.ScrollUpButton className="flex h-6 cursor-default items-center justify-center bg-neutral text-primary">
           <ChevronUp className="h-4 w-4" />
         </SelectPrimitive.ScrollUpButton>
       ) : null}
@@ -65,7 +65,7 @@ const SelectContent = React.forwardRef<
         {children}
       </SelectPrimitive.Viewport>
       {position === 'item-aligned' ? (
-        <SelectPrimitive.ScrollDownButton className="flex h-6 cursor-default items-center justify-center bg-background-contrast text-primary">
+        <SelectPrimitive.ScrollDownButton className="flex h-6 cursor-default items-center justify-center bg-neutral text-primary">
           <ChevronDown className="h-4 w-4" />
         </SelectPrimitive.ScrollDownButton>
       ) : null}
@@ -93,7 +93,7 @@ const SelectItem = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cnBase(
-      'relative flex w-full cursor-default select-none items-center rounded-md !py-1.5 !pl-8 !pr-2 text-sm outline-none data-[disabled]:pointer-events-none data-[highlighted]:bg-primary-light-hover data-[highlighted]:text-primary-light-contrast data-[disabled]:opacity-50',
+      'relative flex w-full cursor-default select-none items-center rounded-md !py-1.5 !pl-8 !pr-2 text-sm outline-none data-[disabled]:pointer-events-none data-[highlighted]:bg-primary-100 data-[highlighted]:text-primary-600 data-[disabled]:opacity-50',
       className,
     )}
     {...props}
@@ -115,7 +115,7 @@ const SelectSeparator = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SelectPrimitive.Separator
     ref={ref}
-    className={cnBase('-mx-1 my-1 h-px bg-primary-solid-hover', className)}
+    className={cnBase('-mx-1 my-1 h-px bg-primary-700', className)}
     {...props}
   />
 ));

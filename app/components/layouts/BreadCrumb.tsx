@@ -1,7 +1,5 @@
-import { Grid, Spacer } from '@nextui-org/react';
+import { Spacer } from '@nextui-org/react';
 import { useLocation, useMatches } from '@remix-run/react';
-
-import Flex from '~/components/styles/Flex.styles';
 
 const BreadCrumb = () => {
   const matches = useMatches();
@@ -14,34 +12,15 @@ const BreadCrumb = () => {
   )
     return null;
   return (
-    <Grid.Container
-      justify="flex-start"
-      alignItems="center"
-      gap={2}
-      wrap="wrap"
-      css={{
-        width: 'fit-content',
-        height: 'auto',
-        padding: '0 $sm',
-        margin: '0 0 15px 0',
-        zIndex: 1,
-        '@xs': {
-          padding: 0,
-        },
-      }}
-    >
+    <div className="z-[1] mb-4 flex h-auto w-fit flex-row flex-wrap items-center justify-start gap-4 sm:py-2">
       {matches
         // skip routes that don't have a breadcrumb
         .filter((match) => match.handle && match.handle.breadcrumb)
         // render breadcrumbs!
         .map((match, index) => (
-          <Flex
-            direction="row"
-            justify="start"
-            align="center"
-            wrap="wrap"
+          <div
             key={match.id}
-            style={{ color: 'var(--nextui-colors-primarySolidHover)' }}
+            className="flex flex-row flex-wrap items-center justify-start text-primary-700"
           >
             {index ? (
               <>
@@ -51,9 +30,9 @@ const BreadCrumb = () => {
               </>
             ) : null}
             {match?.handle?.breadcrumb(match)}
-          </Flex>
+          </div>
         ))}
-    </Grid.Container>
+    </div>
   );
 };
 

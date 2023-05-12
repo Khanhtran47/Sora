@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
 import { memo } from 'react';
-import { Avatar, Button, Card, Col, Row, Spacer } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
+import { Avatar, Card, Col, Row, Spacer } from '@nextui-org/react';
 import { useMediaQuery } from '@react-hookz/web';
 import { useNavigate } from '@remix-run/react';
 import Image, { MimeType } from 'remix-image';
@@ -12,7 +13,6 @@ import type { IEpisode } from '~/services/tmdb/tmdb.types';
 import MediaList from '~/components/media/MediaList';
 import ListEpisodes from '~/components/elements/shared/ListEpisodes';
 import Rating from '~/components/elements/shared/Rating';
-import Flex from '~/components/styles/Flex.styles';
 import { H2, H6 } from '~/components/styles/Text.styles';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 
@@ -193,14 +193,14 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
               />
             </Row>
           ))}
-        <Flex direction="column" justify="start" align="start" className="w-full">
+        <div className="flex w-full flex-col items-start justify-start">
           <H2 h2 weight="bold">
             {title}
           </H2>
           <Spacer y={0.5} />
           {type === 'movie' || type === 'tv' ? (
             <>
-              <Flex direction="row">
+              <div className="flex flex-row">
                 <Rating rating={tmdbRating?.toFixed(1)} ratingType="movie" />
                 {imdbRating && (
                   <>
@@ -223,7 +223,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
                     </H6>
                   </>
                 )}
-              </Flex>
+              </div>
               <Spacer y={1} />
             </>
           ) : null}
@@ -233,7 +233,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
               <Spacer y={1} />
             </>
           ) : null}
-          <Flex align="center" wrap="wrap" justify="start" className="w-full">
+          <div className="flex w-full flex-row flex-wrap items-center justify-start">
             {(type === 'movie' || type === 'tv') &&
               genresMedia &&
               genresMedia.map((genre) => (
@@ -241,17 +241,12 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
                   <Button
                     key={genre?.id}
                     type="button"
-                    color="primary"
-                    auto
                     size={isSm ? 'sm' : 'md'}
-                    css={{
+                    className="hover:opacity-80"
+                    style={{
                       marginBottom: '0.125rem',
                       background: color,
                       color: colorBackground,
-                      '&:hover': {
-                        background: colorBackground,
-                        color,
-                      },
                     }}
                     onPress={() =>
                       navigate(
@@ -273,17 +268,13 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
                   <Button
                     key={index}
                     type="button"
-                    auto
                     size={isSm ? 'sm' : 'md'}
+                    className="hover:opacity-80"
                     onPress={() => navigate(`/discover/anime?genres=${genre}`)}
-                    css={{
+                    style={{
                       marginBottom: '0.125rem',
                       background: color,
                       color: colorBackground,
-                      '&:hover': {
-                        background: colorBackground,
-                        color,
-                      },
                     }}
                   >
                     {genre}
@@ -291,7 +282,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
                   <Spacer x={1} />
                 </>
               ))}
-          </Flex>
+          </div>
           <Spacer y={1} />
           {type === 'movie' || type === 'tv' ? (
             <H6 h6 css={{ textAlign: 'justify' }}>
@@ -306,7 +297,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
             />
           ) : null}
           <Spacer y={1} />
-        </Flex>
+        </div>
       </Row>
       <Spacer y={2} />
       {(type === 'movie' || type === 'tv') &&

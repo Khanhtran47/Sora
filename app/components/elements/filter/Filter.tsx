@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react';
-import { Button, Dropdown, Grid, Input, Row, Tooltip, useInput } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
+import { Dropdown, Grid, Input, Row, Tooltip, useInput } from '@nextui-org/react';
 import { Form, useLocation, useNavigate } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 import { ClientOnly } from 'remix-utils';
@@ -754,7 +755,7 @@ const Filter = (props: IFilterProps) => {
         <Row justify="flex-end" css={{ marginTop: '6px', gap: '6px' }}>
           <Tooltip content={t('reset-tooltip')}>
             <Button
-              auto
+              color="neutral"
               type="button"
               onPress={() => {
                 setReleaseDateFrom(preDateGte || '');
@@ -777,7 +778,7 @@ const Filter = (props: IFilterProps) => {
               {t('reset')}
             </Button>
           </Tooltip>
-          <Button auto type="submit">
+          <Button color="primary" type="submit">
             {t('discover')}
           </Button>
         </Row>

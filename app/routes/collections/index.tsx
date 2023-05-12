@@ -9,7 +9,6 @@ import { motion } from 'framer-motion';
 import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
 import featuredList from '~/constants/featuredList';
 import MediaList from '~/components/media/MediaList';
-import Flex from '~/components/styles/Flex.styles';
 
 export const meta: MetaFunction = () => ({
   title: 'Movies and tv shows Collections | Sora',
@@ -72,7 +71,7 @@ const Collections = () => {
       )}
       <Spacer y={1} />
       {maxPage > 1 && (
-        <Flex direction="row" justify="center">
+        <div className="flex flex-row justify-center">
           <Pagination
             total={maxPage}
             initialPage={currentPage}
@@ -88,7 +87,7 @@ const Collections = () => {
             css={{ marginTop: '2rem' }}
             {...(isSm && { size: 'xs' })}
           />
-        </Flex>
+        </div>
       )}
     </motion.div>
   );

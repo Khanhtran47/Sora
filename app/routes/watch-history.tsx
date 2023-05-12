@@ -1,14 +1,6 @@
 import { useRef, useState } from 'react';
-import {
-  Badge,
-  Button,
-  Checkbox,
-  Container,
-  Grid,
-  Input,
-  Pagination,
-  Text,
-} from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
+import { Badge, Checkbox, Container, Grid, Input, Pagination, Text } from '@nextui-org/react';
 import { useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs } from '@remix-run/node';
 import { NavLink, useLoaderData, useLocation, useNavigate } from '@remix-run/react';
@@ -130,13 +122,7 @@ const History = () => {
                 />
               </Grid>
               <Grid xs={12}>
-                <Button
-                  type="button"
-                  // shadow
-                  color="primary"
-                  auto
-                  onPress={searchHistoryHandler}
-                >
+                <Button type="button" color="primary" onPress={searchHistoryHandler}>
                   Search History
                 </Button>
               </Grid>

@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef, useState } from 'react';
-import { Badge, Button, Card, Col, Image as NextImage, Row, Spacer, Text } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
+import { Badge, Card, Col, Image as NextImage, Row, Spacer, Text } from '@nextui-org/react';
 import { useIntersectionObserver, useMeasure, useMediaQuery } from '@react-hookz/web';
 import { useFetcher, useNavigate } from '@remix-run/react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -388,11 +389,8 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
               >
                 <Button
                   type="button"
-                  auto
-                  // shadow
-                  css={{
-                    marginTop: '1.125rem',
-                  }}
+                  color="primary"
+                  className="mt-5"
                   onPress={() =>
                     navigate(
                       `/${
@@ -662,33 +660,20 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <Button
               type="button"
-              auto
               color="primary"
-              rounded
-              ghost
-              icon={
-                isMutedTrailer.value ? (
-                  <VolumeOff fill="currentColor" />
-                ) : (
-                  <VolumeUp fill="currentColor" />
-                )
-              }
-              css={{
-                width: '44px',
-                height: '44px',
-                cursor: 'pointer',
-                position: 'absolute',
-                bottom: '80px',
-                right: '85px',
-                zIndex: '90',
-                '&:hover': {
-                  opacity: '0.8',
-                },
-                '@lgMin': { bottom: '200px' },
-              }}
+              radius="full"
+              variant="ghost"
+              isIconOnly
+              className="absolute bottom-20 right-[85px] z-[90] h-11 w-11 cursor-pointer hover:opacity-80 2xl:bottom-[200px]"
               aria-label="Toggle Mute"
               onPress={isMutedTrailer.value ? unMute : mute}
-            />
+            >
+              {isMutedTrailer.value ? (
+                <VolumeOff fill="currentColor" />
+              ) : (
+                <VolumeUp fill="currentColor" />
+              )}
+            </Button>
           </motion.div>
         )}
       </Card>

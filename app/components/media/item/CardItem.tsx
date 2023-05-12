@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Avatar, Button, Card, Tooltip } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
+import { Avatar, Card, Tooltip } from '@nextui-org/react';
 import { useIntersectionObserver, useMeasure } from '@react-hookz/web';
 import { Link, useFetcher, useNavigate } from '@remix-run/react';
 import { motion } from 'framer-motion';
@@ -78,7 +79,7 @@ const cardItemStyles = tv({
         image: '!h-[174px] sm:aspect-[2/3] sm:!h-[auto]',
         content: 'flex grow flex-col gap-y-4 p-3 sm:w-3/5',
         footer:
-          'absolute bottom-0 z-[1] flex !w-[116px] justify-center !rounded-br-none border-t border-border bg-background-alpha backdrop-blur-md sm:!w-2/5',
+          'absolute bottom-0 z-[1] flex !w-[116px] justify-center !rounded-br-none border-t border-border bg-background/[0.6] backdrop-blur-md sm:!w-2/5',
       },
       table: {
         base: '!w-full',
@@ -93,7 +94,7 @@ const cardItemStyles = tv({
         body: 'aspect-[16/9]',
         image: 'aspect-[16/9]',
         footer:
-          'absolute bottom-0 z-[1] flex justify-center border-t border-border bg-background-alpha backdrop-blur-md',
+          'absolute bottom-0 z-[1] flex justify-center border-t border-border bg-background/[0.6] backdrop-blur-md',
       },
       people: {
         base: '!w-[164px]',
@@ -370,8 +371,7 @@ const CardItem = (props: ICardItemProps) => {
                       key={genre}
                       type="button"
                       color="primary"
-                      flat
-                      auto
+                      variant="flat"
                       size="xs"
                       onPress={() => navigate(`/discover/anime?genres=${genre}`)}
                     >
@@ -385,8 +385,7 @@ const CardItem = (props: ICardItemProps) => {
                           key={genreId}
                           type="button"
                           color="primary"
-                          flat
-                          auto
+                          variant="flat"
                           size="xs"
                           onPress={() =>
                             navigate(`/discover/movies?with_genres=${genresMovie?.[genreId]}`)
@@ -401,8 +400,7 @@ const CardItem = (props: ICardItemProps) => {
                         key={genreId}
                         type="button"
                         color="primary"
-                        flat
-                        auto
+                        variant="flat"
                         size="xs"
                         onPress={() =>
                           navigate(`/discover/tv-shows?with_genres=${genresTv?.[genreId]}`)
@@ -420,7 +418,7 @@ const CardItem = (props: ICardItemProps) => {
           mediaType !== 'people' &&
           inView ? (
           <div className={content()}>
-            <Link to={linkTo || '/'} className="text-lg font-bold text-text">
+            <Link to={linkTo || '/'} className="text-lg font-bold text-foreground">
               {titleItem}
             </Link>
             <div className="flex flex-row items-center justify-between">
@@ -431,8 +429,7 @@ const CardItem = (props: ICardItemProps) => {
                         key={genre}
                         type="button"
                         color="primary"
-                        flat
-                        auto
+                        variant="flat"
                         size="xs"
                         onPress={() => navigate(`/discover/anime?genres=${genre}`)}
                         className={index === 1 ? '!hidden sm:!flex' : ''}
@@ -447,8 +444,7 @@ const CardItem = (props: ICardItemProps) => {
                             key={genreId}
                             type="button"
                             color="primary"
-                            flat
-                            auto
+                            variant="flat"
                             size="xs"
                             onPress={() =>
                               navigate(`/discover/movies?with_genres=${genresMovie?.[genreId]}`)
@@ -464,8 +460,7 @@ const CardItem = (props: ICardItemProps) => {
                           key={genreId}
                           type="button"
                           color="primary"
-                          flat
-                          auto
+                          variant="flat"
                           size="xs"
                           onPress={() =>
                             navigate(`/discover/tv-shows?with_genres=${genresTv?.[genreId]}`)
@@ -532,7 +527,7 @@ const CardItem = (props: ICardItemProps) => {
               initial={{ scaleX: 0.6, scaleY: 1.1 }}
               animate={{ scaleX: 1, scaleY: 1 }}
               transition={{ duration: 0.2 }}
-              className="rounded-xl bg-background-contrast-alpha shadow-md backdrop-blur-md"
+              className="rounded-xl bg-neutral/60 shadow-md backdrop-blur-md"
             >
               <CardItemHover
                 backdropPath={backdropPath}

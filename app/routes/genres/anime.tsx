@@ -1,4 +1,5 @@
-import { Badge, Button, Spacer } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
+import { Badge, Spacer } from '@nextui-org/react';
 import { NavLink, useLocation, useNavigate } from '@remix-run/react';
 import { motion, type PanInfo } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
@@ -69,8 +70,8 @@ const AnimeGenresPage = () => {
           <Button
             key={genre}
             type="button"
-            flat
-            auto
+            variant="flat"
+            color="primary"
             onPress={() => navigate(`/discover/anime?genres=${genre}`)}
           >
             {genre}

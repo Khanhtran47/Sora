@@ -1,4 +1,5 @@
-import { Button, Spacer } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
+import { Spacer } from '@nextui-org/react';
 import { useLocation, useNavigate } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -80,9 +81,9 @@ const DiscoverPage = () => {
       <H1 h1>{t('discover')}</H1>
       <Spacer y={0.5} />
       <Button
-        icon={<Search fill="currentColor" />}
+        startIcon={<Search fill="currentColor" />}
         type="button"
-        css={{ width: '100%' }}
+        fullWidth
         onPress={() => {
           navigate('/search/movie');
         }}
@@ -91,9 +92,8 @@ const DiscoverPage = () => {
       </Button>
       <Spacer y={0.75} />
       <Button
-        icon={<Filter fill="currentColor" />}
+        startIcon={<Filter fill="currentColor" />}
         type="button"
-        auto
         onPress={() => {
           navigate('/discover/movies');
         }}
@@ -108,9 +108,8 @@ const DiscoverPage = () => {
           {categoryPages.map((page) => (
             <Button
               key={page.name}
-              icon={page.icon}
+              startIcon={page.icon}
               type="button"
-              auto
               onPress={() => {
                 navigate(page.path);
               }}
@@ -128,9 +127,8 @@ const DiscoverPage = () => {
           {generalPages.map((page) => (
             <Button
               key={page.name}
-              icon={page.icon}
+              startIcon={page.icon}
               type="button"
-              auto
               onPress={() => {
                 navigate(page.path);
               }}

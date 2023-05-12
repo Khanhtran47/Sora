@@ -1,4 +1,5 @@
-import { Badge, Button, Spacer } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
+import { Badge, Spacer } from '@nextui-org/react';
 import { NavLink, useLocation, useNavigate } from '@remix-run/react';
 import { motion, type PanInfo } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
@@ -69,9 +70,9 @@ const TvGenresPage = () => {
         {Object.entries(genresTv).map(([id, name]) => (
           <Button
             key={id}
+            color="primary"
             type="button"
-            flat
-            auto
+            variant="flat"
             onPress={() => navigate(`/discover/tv-shows?with_genres=${id}`)}
           >
             {name}

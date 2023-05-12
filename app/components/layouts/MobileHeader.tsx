@@ -1,4 +1,4 @@
-import { Button } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
 import { NavLink, useLocation, useNavigate } from '@remix-run/react';
 import { motion, useTransform } from 'framer-motion';
 
@@ -53,7 +53,7 @@ const MobileHeader = () => {
         initial={{ y: 0 }}
         animate={{ y: scrollDirection === 'down' ? -65 : 0 }}
         transition={{ duration: 0.5 }}
-        className="fixed top-0 z-[1000] flex h-[64px] w-full flex-row items-center justify-between bg-background-contrast-alpha px-6 shadow-lg backdrop-blur-md sm:hidden"
+        className="fixed top-0 z-[1000] flex h-[64px] w-full flex-row items-center justify-between bg-neutral/60 px-6 shadow-lg backdrop-blur-md sm:hidden"
       >
         <NavLink to="/" arial-label="home-page">
           <H2
@@ -69,12 +69,13 @@ const MobileHeader = () => {
           </H2>
         </NavLink>
         <Button
-          auto
-          light
+          variant="light"
           color="primary"
-          icon={<Search filled />}
+          isIconOnly
           onPress={() => navigate('/search/movie')}
-        />
+        >
+          <Search filled />
+        </Button>
       </motion.div>
     );
   }
@@ -89,17 +90,12 @@ const MobileHeader = () => {
         }}
       >
         {customHeaderBackgroundColor ? (
-          <div className="pointer-events-none h-full w-full bg-background-light" />
+          <div className="pointer-events-none h-full w-full bg-background/[0.2]" />
         ) : null}
       </motion.div>
-      <Button
-        auto
-        light
-        rounded
-        css={{ backgroundColor: '$backgroundAlpha', flexBasis: 40, flexShrink: 0 }}
-        icon={<Arrow direction="left" />}
-        onPress={() => handleBackButton()}
-      />
+      <Button variant="faded" radius="full" isIconOnly onPress={() => handleBackButton()}>
+        <Arrow direction="left" />
+      </Button>
       <div className="flex flex-row items-center justify-between">
         {currentMiniTitle ? (
           <motion.span

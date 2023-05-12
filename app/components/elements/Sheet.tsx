@@ -15,7 +15,7 @@ const SheetOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cnBase(
-      'fixed inset-0 z-[9998] bg-background-alpha backdrop-blur-lg transition-all duration-300 data-[state=closed]:animate-fadeOut data-[state=open]:animate-fadeIn',
+      'fixed inset-0 z-[9998] cursor-pointer bg-background/[0.6] backdrop-blur-lg duration-300 transition-all data-[state=closed]:animate-fadeOut data-[state=open]:animate-fadeIn',
       className,
     )}
     {...props}
@@ -24,7 +24,7 @@ const SheetOverlay = React.forwardRef<
 SheetOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
 const sheetContentStyles = tv({
-  base: 'fixed inset-y-0 z-[9999] w-[250px] bg-background-contrast !p-1 shadow-lg shadow-background-alpha will-change-transform focus:outline-none sm:!p-6',
+  base: 'fixed inset-y-0 z-[9999] w-[250px] bg-content1 !p-1 shadow-lg shadow-background/[0.6] will-change-transform focus:outline-none sm:!p-6',
   variants: {
     side: {
       top: 'bottom-auto w-full rounded-b-xl animate-in slide-in-from-top duration-300',
@@ -155,16 +155,17 @@ const SheetContent = React.forwardRef<
         >
           <motion.div
             drag={swipeDownToClose ? 'y' : false}
+            dragDirectionLock
             dragConstraints={{ top: 0, bottom: 0 }}
             dragElastic={{ top: 0, bottom: 0.8 }}
             dragMomentum={false}
             onDragEnd={handleDragEnd}
           >
             {swipeDownToClose ? (
-              <div className="!m-[1rem_auto_0] h-1 w-[75px] rounded-md bg-border" />
+              <div className="!m-[1rem_auto_0] h-1 w-[75px] rounded-md bg-neutral-foreground" />
             ) : null}
             {!hideCloseButton ? (
-              <DialogPrimitive.Close className="absolute right-4 top-4 flex h-5 w-5 items-center justify-center rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-primary-light-active focus:ring-offset-2 disabled:pointer-events-none">
+              <DialogPrimitive.Close className="absolute right-4 top-4 flex h-5 w-5 items-center justify-center rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-primary-200 focus:ring-offset-2 disabled:pointer-events-none">
                 <Close className="h-4 w-4" />
                 <span className="sr-only">Close</span>
               </DialogPrimitive.Close>

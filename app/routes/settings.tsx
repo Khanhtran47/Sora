@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useEffect, useMemo, useRef, useState, type Key } from 'react';
+import { Kbd, type KbdKey } from '@nextui-org/kbd';
 import {
   Badge,
   Collapse,
-  Container,
   Dropdown,
   Link,
   Loading,
@@ -14,10 +13,11 @@ import {
   Spacer,
   Switch,
   Tooltip,
+  type SwitchEvent,
 } from '@nextui-org/react';
 import { useLocalStorageValue, useMediaQuery } from '@react-hookz/web';
 import type { MetaFunction } from '@remix-run/node';
-import { NavLink, useLocation, useNavigate } from '@remix-run/react';
+import { NavLink, Link as RemixLink, useLocation, useNavigate } from '@remix-run/react';
 import { AnimatePresence, motion, type PanInfo } from 'framer-motion';
 import { useTheme } from 'next-themes';
 import { isMobile } from 'react-device-detect';
@@ -42,7 +42,6 @@ import {
   listThemes,
   settingsTab,
 } from '~/constants/settings';
-import Kbd from '~/components/elements/Kbd';
 import AboutLogo from '~/components/elements/NavLink';
 import {
   Tabs,
@@ -51,7 +50,6 @@ import {
   TabsTrigger,
   Underline,
 } from '~/components/elements/tab/Tabs';
-import Flex from '~/components/styles/Flex.styles';
 import { H2, H5, H6 } from '~/components/styles/Text.styles';
 import Brush from '~/assets/icons/BrushIcon';
 import Info from '~/assets/icons/InfoIcon';
@@ -112,6 +110,128 @@ const settingsIcon = (id: string, filled: boolean) => {
     default:
   }
   return icon;
+};
+
+interface SettingBlockCommonProps {
+  title: string;
+}
+
+interface SettingBlockSelectProps extends SettingBlockCommonProps {
+  type: 'select';
+  selectedValue: string;
+  selectedKeys: Set<string>;
+  onSelectionChange: ((keys: 'all' | Set<Key>) => any) | undefined;
+  selectItems: string[];
+}
+
+interface SettingBlockSwitchProps extends SettingBlockCommonProps {
+  type: 'switch';
+  description?: string;
+  checked?: boolean;
+  onChange: ((ev: SwitchEvent) => void) | undefined;
+}
+
+interface SettingBlockKbdProps extends SettingBlockCommonProps {
+  type: 'kbd';
+  keys?:
+    | KbdKey
+    | KbdKey[]
+    | {
+        keys?: KbdKey | KbdKey[];
+        key?: string | number;
+        id: string;
+      }[];
+  kbd?: string | number;
+  betweenKeys?: string;
+}
+
+type SettingBlockProps = SettingBlockSelectProps | SettingBlockSwitchProps | SettingBlockKbdProps;
+
+const SettingBlock = (props: SettingBlockProps) => {
+  const { type } = props;
+  const { t } = useTranslation('settings');
+  if (type === 'switch') {
+    const { checked, onChange, title, description } = props;
+    return (
+      <div className="flex flex-row items-center justify-between gap-x-2 rounded-md bg-content2 p-3">
+        {description ? (
+          <div className="flex flex-col items-start justify-center">
+            <H6>{title}</H6>
+            <H6 css={{ color: '$accents8' }}>{description}</H6>
+          </div>
+        ) : (
+          <H6>{title}</H6>
+        )}
+        <Switch checked={checked} onChange={onChange} />
+      </div>
+    );
+  }
+  if (type === 'select') {
+    const { title, selectedValue, selectedKeys, onSelectionChange, selectItems } = props;
+    return (
+      <div className="flex flex-row items-center justify-between rounded-md bg-content2 p-3">
+        <H6>{title}</H6>
+        <Dropdown isBordered>
+          <Dropdown.Button color="primary">{selectedValue}</Dropdown.Button>
+          <Dropdown.Menu
+            aria-label="Select language"
+            color="primary"
+            selectionMode="single"
+            disallowEmptySelection
+            selectedKeys={selectedKeys}
+            onSelectionChange={onSelectionChange}
+          >
+            {selectItems.map((item) => (
+              <Dropdown.Item key={item}>{t(item)}</Dropdown.Item>
+            ))}
+          </Dropdown.Menu>
+        </Dropdown>
+      </div>
+    );
+  }
+  if (type === 'kbd') {
+    const { keys, kbd, title, betweenKeys } = props;
+    return (
+      <div className="flex flex-row items-center justify-between gap-x-2 rounded-md bg-content2 p-3">
+        <H6>{title}</H6>
+        {keys ? (
+          Array.isArray(
+            keys as {
+              keys?: KbdKey | KbdKey[];
+              key?: string | number;
+              id: string;
+            }[],
+          ) ? (
+            <div className="flex flex-row items-center gap-x-2">
+              {(
+                keys as {
+                  keys?: KbdKey | KbdKey[];
+                  key?: string | number;
+                  id: string;
+                }[]
+              ).map((k, index) => (
+                <Fragment key={k.id}>
+                  {k?.keys ? (
+                    <Kbd keys={k?.keys as KbdKey | KbdKey[]}>{k?.key ? k?.key : null}</Kbd>
+                  ) : (
+                    <Kbd>{k?.key ? k?.key : null}</Kbd>
+                  )}
+                  {index !== (keys as KbdKey[]).length - 1 && betweenKeys ? (
+                    <div>{betweenKeys}</div>
+                  ) : null}
+                </Fragment>
+              ))}
+            </div>
+          ) : typeof keys === 'string' ? (
+            <Kbd keys={keys as KbdKey | KbdKey[]}>{kbd || ''}</Kbd>
+          ) : null
+        ) : (
+          <Kbd>{kbd || ''}</Kbd>
+        )}
+      </div>
+    );
+  }
+  return null;
 };
 
 const Settings = () => {
@@ -282,1417 +402,664 @@ const Settings = () => {
       animate={{ x: '0', opacity: 1 }}
       exit={{ y: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="w-full"
+      className="flex w-full max-w-screen-4xl flex-col justify-start py-3 sm:py-0"
     >
-      <Container
-        fluid
-        responsive={false}
-        display="flex"
-        justify="flex-start"
-        direction="column"
-        css={{
-          maxWidth: '1920px',
-          padding: '0 $sm',
-          '@xs': {
-            padding: 0,
-          },
-        }}
-      >
-        <H2 h2 css={{ '@xsMax': { fontSize: '1.75rem !important' } }}>
-          {t('settings')}
-        </H2>
-        <Spacer y={0.5} />
-        <ClientOnly fallback={<Loading type="default" />}>
-          {() => (
-            <Tabs
-              defaultValue={activeTab}
-              value={activeTab}
-              orientation={isSm ? 'horizontal' : 'vertical'}
-              onValueChange={(value) => setActiveTab(value)}
-            >
-              <TabsList>
-                {settingsTab.map((tab) => (
-                  <TabsTrigger
-                    key={tab.id}
-                    value={tab.id}
-                    disabled={tab.disabled}
-                    css={{
-                      position: 'relative',
+      <H2 h2 css={{ '@xsMax': { fontSize: '1.75rem !important' } }}>
+        {t('settings')}
+      </H2>
+      <Spacer y={0.5} />
+      <ClientOnly fallback={<Loading type="default" />}>
+        {() => (
+          <Tabs
+            defaultValue={activeTab}
+            value={activeTab}
+            orientation={isSm ? 'horizontal' : 'vertical'}
+            onValueChange={(value) => setActiveTab(value)}
+          >
+            <TabsList>
+              {settingsTab.map((tab) => (
+                <TabsTrigger
+                  key={tab.id}
+                  value={tab.id}
+                  disabled={tab.disabled}
+                  css={{
+                    position: 'relative',
+                    '&[data-state="active"]': {
+                      [`& ${Underline}`]: {
+                        height: 4,
+                        width: '50%',
+                        bottom: 0,
+                        left: 'unset',
+                      },
+                    },
+                    '&[data-orientation="vertical"]': {
                       '&[data-state="active"]': {
                         [`& ${Underline}`]: {
-                          height: 4,
-                          width: '50%',
-                          bottom: 0,
-                          left: 'unset',
+                          width: 4,
+                          height: '50%',
+                          left: 0,
+                          bottom: 'unset',
                         },
                       },
-                      '&[data-orientation="vertical"]': {
-                        '&[data-state="active"]': {
-                          [`& ${Underline}`]: {
-                            width: 4,
-                            height: '50%',
-                            left: 0,
-                            bottom: 'unset',
-                          },
-                        },
-                      },
-                    }}
-                  >
-                    {settingsIcon(tab.id, activeTab === tab.id)}
-                    <H6 h6 css={{ color: 'inherit', marginLeft: '0.5rem' }}>
-                      {t(tab.title)}
-                    </H6>
-                    {activeTab === tab.id ? (
-                      <Underline className="underline" layoutId="underline" ref={underlineRef} />
-                    ) : null}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-              <AnimatePresence exitBeforeEnter>
-                <TabsContent value="general-tab" asChild>
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    drag={isMobile ? 'x' : false}
-                    dragConstraints={{ left: 0, right: 0 }}
-                    dragElastic={0.4}
-                    onDragEnd={handleDragEnd}
-                    dragDirectionLock
-                    // onDirectionLock={(axis) => console.log(axis)}
-                  >
-                    <Container
-                      fluid
-                      responsive={false}
-                      display="flex"
-                      justify="flex-start"
-                      direction="column"
+                    },
+                  }}
+                >
+                  {settingsIcon(tab.id, activeTab === tab.id)}
+                  <H6 h6 css={{ color: 'inherit', marginLeft: '0.5rem' }}>
+                    {t(tab.title)}
+                  </H6>
+                  {activeTab === tab.id ? (
+                    <Underline className="underline" layoutId="underline" ref={underlineRef} />
+                  ) : null}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+            <AnimatePresence exitBeforeEnter>
+              <TabsContent value="general-tab" asChild>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  drag={isMobile ? 'x' : false}
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={0.4}
+                  onDragEnd={handleDragEnd}
+                  dragDirectionLock
+                  // onDirectionLock={(axis) => console.log(axis)}
+                >
+                  <div className="flex w-full flex-col justify-start rounded-xl bg-content1 p-5 shadow-lg shadow-neutral/10">
+                    <SettingBlock
+                      type="select"
+                      title={t('language')}
+                      selectedValue={t(selectedLangValue)}
+                      selectedKeys={selectedLang}
+                      onSelectionChange={(keys: any) => {
+                        const lang = Array.from(keys).join(', ').replaceAll('_', ' ');
+                        setSelectedLang(keys);
+                        navigate(`${location.pathname}?lng=${lang}`);
+                      }}
+                      selectItems={languages}
+                    />
+                  </div>
+                </motion.div>
+              </TabsContent>
+              <TabsContent value="appearance-tab" asChild>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  drag={isMobile ? 'x' : false}
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={0.4}
+                  onDragEnd={handleDragEnd}
+                  className="w-full"
+                >
+                  <Collapse.Group splitted accordion={false} css={{ p: 0 }}>
+                    <Collapse
+                      title={t('theme')}
+                      subtitle={t('theme-subtitle')}
                       css={{
-                        boxShadow: '$md',
-                        borderRadius: '$xs',
-                        backgroundColor: '$backgroundContrastAlpha',
-                        padding: 20,
+                        backgroundColor: 'hsl(var(--colors-content1)) !important',
+                        borderRadius: '0.75rem !important',
                       }}
                     >
-                      <Flex
-                        direction="row"
-                        justify="between"
-                        align="center"
-                        css={{
-                          backgroundColor: '$backgroundContrast',
-                          borderRadius: '$xs',
-                          padding: '$sm',
+                      <Radio.Group
+                        orientation={isXs ? 'vertical' : 'horizontal'}
+                        defaultValue={theme}
+                        size="sm"
+                        onChange={(value) => {
+                          if (value === 'light' || value === 'dark') {
+                            setTheme(value);
+                          } else if (['bumblebee', 'retro', 'autumn'].includes(value)) {
+                            setTheme('light');
+                            setTheme(value);
+                          } else {
+                            setTheme('dark');
+                            setTheme(value);
+                          }
                         }}
                       >
-                        <H6>{t('language')}</H6>
-                        <Dropdown isBordered>
-                          <Dropdown.Button color="primary">{t(selectedLangValue)}</Dropdown.Button>
-                          <Dropdown.Menu
-                            aria-label="Select language"
+                        {listThemes.map((themeItem) => (
+                          <Tooltip
+                            key={themeItem.id}
+                            content={isXs ? null : themeItem.title}
+                            rounded
                             color="primary"
-                            selectionMode="single"
-                            disallowEmptySelection
-                            selectedKeys={selectedLang}
-                            onSelectionChange={(keys: any) => {
-                              const lang = Array.from(keys).join(', ').replaceAll('_', ' ');
-                              setSelectedLang(keys);
-                              navigate(`${location.pathname}?lng=${lang}`);
-                            }}
+                            hideArrow
+                            offset={0}
                           >
-                            {languages.map((lang) => (
-                              <Dropdown.Item key={lang}>{t(lang)}</Dropdown.Item>
-                            ))}
-                          </Dropdown.Menu>
-                        </Dropdown>
-                      </Flex>
-                    </Container>
-                  </motion.div>
-                </TabsContent>
-                <TabsContent value="appearance-tab" asChild>
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    drag={isMobile ? 'x' : false}
-                    dragConstraints={{ left: 0, right: 0 }}
-                    dragElastic={0.4}
-                    onDragEnd={handleDragEnd}
-                  >
-                    <Container
-                      fluid
-                      responsive={false}
-                      display="flex"
-                      justify="flex-start"
-                      direction="column"
-                      css={{ padding: 0 }}
-                    >
-                      <Collapse.Group splitted accordion={false} css={{ p: 0 }}>
-                        <Collapse
-                          title={t('theme')}
-                          subtitle={t('theme-subtitle')}
-                          css={{
-                            background: '$backgroundContrastAlpha !important',
-                            borderRadius: '$xs !important',
-                          }}
-                        >
-                          <Radio.Group
-                            orientation={isXs ? 'vertical' : 'horizontal'}
-                            defaultValue={theme}
-                            size="sm"
-                            onChange={(value) => {
-                              if (value === 'light' || value === 'dark') {
-                                setTheme(value);
-                              } else if (['bumblebee', 'retro', 'autumn'].includes(value)) {
-                                setTheme('light');
-                                setTheme(value);
-                              } else {
-                                setTheme('dark');
-                                setTheme(value);
-                              }
-                            }}
-                          >
-                            {listThemes.map((themeItem) => (
-                              <Tooltip
-                                key={themeItem.id}
-                                content={isXs ? null : themeItem.title}
-                                rounded
-                                color="primary"
-                                hideArrow
-                                offset={0}
-                              >
-                                <Radio
-                                  key={themeItem.id}
-                                  value={themeItem.id}
-                                  css={{
-                                    p: '$xs',
-                                    '--nextui--radioColor': themeItem.color,
-                                    '--nextui-colors-border': themeItem.color,
-                                    '--nextui--radioColorHover': themeItem.colorHover,
-                                  }}
-                                >
-                                  {isXs ? themeItem.title : null}
-                                </Radio>
-                              </Tooltip>
-                            ))}
-                          </Radio.Group>
-                        </Collapse>
-                        {isSm ? null : (
-                          <Collapse
-                            title={t('sidebar')}
-                            subtitle={t('sidebar-subtitle')}
-                            css={{
-                              background: '$backgroundContrastAlpha !important',
-                              borderRadius: '$xs !important',
-                            }}
-                          >
-                            <Flex
-                              direction="column"
-                              justify="center"
-                              align="start"
-                              className="gap-y-4"
+                            <Radio
+                              key={themeItem.id}
+                              value={themeItem.id}
                               css={{
-                                backgroundColor: '$backgroundContrast',
-                                borderRadius: '$xs',
-                                padding: '$sm',
+                                p: '$xs',
+                                '--nextui--radioColor': themeItem.color,
+                                '--nextui-colors-border': themeItem.color,
+                                '--nextui--radioColorHover': themeItem.colorHover,
                               }}
                             >
-                              <H5
-                                weight="medium"
-                                css={{ color: '$foreground', margin: '0.25rem 0' }}
-                              >
-                                {t('sidebar-mode')}
-                              </H5>
-                              {isMd ? null : (
-                                <>
-                                  <div className="flex w-full flex-row items-center justify-between gap-x-2">
-                                    <H6>{t('sidebar-mini-mode')}</H6>
-                                    <Switch
-                                      checked={sidebarMiniMode.value}
-                                      onChange={(e) => {
-                                        sidebarMiniMode.set(e.target.checked);
-                                        if (sidebarMiniMode.value) {
-                                          sidebarHoverMode.set(false);
-                                        }
-                                      }}
-                                    />
-                                  </div>
-                                  <div className="flex w-full flex-row items-center justify-between gap-x-2">
-                                    <H6>{t('sidebar-hover-mode')}</H6>
-                                    <Switch
-                                      checked={sidebarHoverMode.value}
-                                      onChange={(e) => {
-                                        sidebarHoverMode.set(e.target.checked);
-                                        if (!sidebarHoverMode.value) {
-                                          sidebarMiniMode.set(true);
-                                        }
-                                      }}
-                                    />
-                                  </div>
-                                </>
-                              )}
+                              {isXs ? themeItem.title : null}
+                            </Radio>
+                          </Tooltip>
+                        ))}
+                      </Radio.Group>
+                    </Collapse>
+                    {isSm ? null : (
+                      <Collapse
+                        title={t('sidebar')}
+                        subtitle={t('sidebar-subtitle')}
+                        css={{
+                          backgroundColor: 'hsl(var(--colors-content1)) !important',
+                          borderRadius: '0.75rem !important',
+                        }}
+                      >
+                        <div className="flex flex-col items-start justify-center gap-y-4 rounded-md bg-content2 p-3">
+                          <H5 weight="medium" css={{ color: '$foreground', margin: '0.25rem 0' }}>
+                            {t('sidebar-mode')}
+                          </H5>
+                          {isMd ? null : (
+                            <>
                               <div className="flex w-full flex-row items-center justify-between gap-x-2">
-                                <H6>{t('sidebar-boxed-mode')}</H6>
+                                <H6>{t('sidebar-mini-mode')}</H6>
                                 <Switch
-                                  checked={sidebarBoxedMode.value}
-                                  onChange={(e) => sidebarBoxedMode.set(e.target.checked)}
+                                  checked={sidebarMiniMode.value}
+                                  onChange={(e) => {
+                                    sidebarMiniMode.set(e.target.checked);
+                                    if (sidebarMiniMode.value) {
+                                      sidebarHoverMode.set(false);
+                                    }
+                                  }}
                                 />
                               </div>
-                              {/* <div className="flex flex-row justify-between items-center gap-x-2 w-full">
-                                <H6>{t('sidebar-sheet-mode')}</H6>
+                              <div className="flex w-full flex-row items-center justify-between gap-x-2">
+                                <H6>{t('sidebar-hover-mode')}</H6>
                                 <Switch
-                                  checked={sidebarSheetMode.value}
-                                  onChange={(e) => sidebarSheetMode.set(e.target.checked)}
-                                />
-                              </div> */}
-                            </Flex>
-                            {/* <Spacer y={0.25} />
-                          <Flex
-                            direction={isXs ? 'column' : 'row'}
-                            justify="between"
-                            align={isXs ? 'start' : 'center'}
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <H6>{t('sidebar-active-style-mode')}</H6>
-                            <Dropdown isBordered>
-                              <Dropdown.Button color="primary">
-                                {selectedSidebarStyleModeValue}
-                              </Dropdown.Button>
-                              <Dropdown.Menu
-                                aria-label="Select sidebar active style mode"
-                                color="primary"
-                                selectionMode="single"
-                                disallowEmptySelection
-                                selectedKeys={selectedSidebarStyleMode}
-                                onSelectionChange={(keys: any) => {
-                                  const mode = Array.from(keys).join(', ');
-                                  setSelectedSidebarStyleMode(keys);
-                                  sidebarStyleMode.set(mode);
-                                }}
-                              >
-                                {listSidebarActiveStyleMode.map((mode) => (
-                                  <Dropdown.Item key={mode}>{t(mode)}</Dropdown.Item>
-                                ))}
-                              </Dropdown.Menu>
-                            </Dropdown>
-                          </Flex> */}
-                          </Collapse>
-                        )}
-                        <Collapse
-                          title={t('media-list-grid')}
-                          subtitle={t('media-list-grid-subtitle')}
-                          css={{
-                            background: '$backgroundContrastAlpha !important',
-                            borderRadius: '$xs !important',
-                          }}
-                        >
-                          <Flex
-                            direction={isXs ? 'column' : 'row'}
-                            justify="between"
-                            align={isXs ? 'start' : 'center'}
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <H6>{t('list-view-type')}</H6>
-                            <Dropdown isBordered>
-                              <Dropdown.Button color="primary">
-                                {t(selectedListViewTypeValue)}
-                              </Dropdown.Button>
-                              <Dropdown.Menu
-                                aria-label="Select list view type"
-                                color="primary"
-                                selectionMode="single"
-                                disallowEmptySelection
-                                selectedKeys={selectedListViewType}
-                                onSelectionChange={(keys: any) => {
-                                  const viewType = Array.from(keys).join(', ');
-                                  setSelectedListViewType(keys);
-                                  listViewType.set(viewType);
-                                }}
-                              >
-                                {listListViewType.map((viewType) => (
-                                  <Dropdown.Item key={viewType}>{t(viewType)}</Dropdown.Item>
-                                ))}
-                              </Dropdown.Menu>
-                            </Dropdown>
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction={isXs ? 'column' : 'row'}
-                            justify="between"
-                            align={isXs ? 'start' : 'center'}
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <H6>{t('list-loading-type')}</H6>
-                            <Dropdown isBordered>
-                              <Dropdown.Button color="primary">
-                                {t(selectedListLoadingTypeValue)}
-                              </Dropdown.Button>
-                              <Dropdown.Menu
-                                aria-label="Select list loading type"
-                                color="primary"
-                                selectionMode="single"
-                                disallowEmptySelection
-                                selectedKeys={selectedListLoadingType}
-                                onSelectionChange={(keys: any) => {
-                                  const loadingType = Array.from(keys).join(', ');
-                                  setSelectedListLoadingType(keys);
-                                  listLoadingType.set(loadingType);
-                                }}
-                              >
-                                {listListLoadingType.map((loadingType) => (
-                                  <Dropdown.Item key={loadingType}>{t(loadingType)}</Dropdown.Item>
-                                ))}
-                              </Dropdown.Menu>
-                            </Dropdown>
-                          </Flex>
-                        </Collapse>
-                        <Collapse
-                          title={t('experiments')}
-                          subtitle={t('experiments-subtitle')}
-                          css={{
-                            background: '$backgroundContrastAlpha !important',
-                            borderRadius: '$xs !important',
-                          }}
-                        >
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="gap-x-2"
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <H6>{t('play-trailer')}</H6>
-                            <Switch
-                              checked={isPlayTrailer.value}
-                              onChange={(e) => isPlayTrailer.set(e.target.checked)}
-                            />
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="gap-x-2"
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <H6>{t('mute-trailer')}</H6>
-                            <Switch
-                              checked={isMutedTrailer.value}
-                              onChange={(e) => isMutedTrailer.set(e.target.checked)}
-                            />
-                          </Flex>
-                        </Collapse>
-                      </Collapse.Group>
-                    </Container>
-                  </motion.div>
-                </TabsContent>
-                <TabsContent value="account-tab" asChild>
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    drag={isMobile ? 'x' : false}
-                    dragConstraints={{ left: 0, right: 0 }}
-                    dragElastic={0.4}
-                    onDragEnd={handleDragEnd}
-                  >
-                    <Container
-                      fluid
-                      responsive={false}
-                      display="flex"
-                      justify="flex-start"
-                      direction="column"
-                      css={{ padding: 0 }}
-                    ></Container>
-                  </motion.div>
-                </TabsContent>
-                <TabsContent value="player-tab" asChild>
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    drag={isMobile ? 'x' : false}
-                    dragConstraints={{ left: 0, right: 0 }}
-                    dragElastic={0.4}
-                    onDragEnd={handleDragEnd}
-                  >
-                    <Container
-                      fluid
-                      responsive={false}
-                      display="flex"
-                      justify="flex-start"
-                      direction="column"
-                      css={{ padding: 0 }}
-                    >
-                      <Collapse.Group splitted accordion={false} css={{ p: 0 }}>
-                        <Collapse
-                          title={t('defaults')}
-                          subtitle={t('defaults-subtitle')}
-                          css={{
-                            background: '$backgroundContrastAlpha !important',
-                            borderRadius: '$xs !important',
-                          }}
-                        >
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="gap-x-2"
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <Flex direction="column" justify="center" align="start">
-                              <H6>{t('pic-in-pic')}</H6>
-                              <H6 css={{ color: '$accents8' }}>{t('pic-in-pic-subtitle')}</H6>
-                            </Flex>
-                            <Switch
-                              checked={isPicInPic.value}
-                              onChange={(e) => isPicInPic.set(e.target.checked)}
-                            />
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="gap-x-2"
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <Flex direction="column" justify="center" align="start">
-                              <H6>{t('muted')}</H6>
-                              <H6 css={{ color: '$accents8' }}>{t('muted-subtitle')}</H6>
-                            </Flex>
-                            <Switch
-                              checked={isMuted.value}
-                              onChange={(e) => isMuted.set(e.target.checked)}
-                            />
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="gap-x-2"
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <Flex direction="column" justify="center" align="start">
-                              <H6>{t('autoplay')}</H6>
-                              <H6 css={{ color: '$accents8' }}>{t('autoplay-subtitle')}</H6>
-                            </Flex>
-                            <Switch
-                              checked={isAutoPlay.value}
-                              onChange={(e) => isAutoPlay.set(e.target.checked)}
-                            />
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="gap-x-2"
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <Flex direction="column" justify="center" align="start">
-                              <H6>{t('loop')}</H6>
-                              <H6 css={{ color: '$accents8' }}>{t('loop-subtitle')}</H6>
-                            </Flex>
-                            <Switch
-                              checked={isLoop.value}
-                              onChange={(e) => isLoop.set(e.target.checked)}
-                            />
-                          </Flex>
-                        </Collapse>
-                        <Collapse
-                          title={t('subtitles')}
-                          subtitle={t('subtitles-subtitle')}
-                          css={{
-                            background: '$backgroundContrastAlpha !important',
-                            borderRadius: '$xs !important',
-                          }}
-                        >
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="gap-x-2"
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <Flex direction="column" justify="center" align="start">
-                              <H6>{t('show-subtitle')}</H6>
-                              <H6 css={{ color: '$accents8' }}>{t('show-subtitle-subtitle')}</H6>
-                            </Flex>
-                            <Switch
-                              checked={autoShowSubtitle.value}
-                              onChange={(e) => autoShowSubtitle.set(e.target.checked)}
-                            />
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="gap-x-2"
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <Flex direction="column" justify="center" align="start">
-                              <H6>{t('auto-switch-subtitle')}</H6>
-                              <H6 css={{ color: '$accents8' }}>
-                                {t('auto-switch-subtitle-subtitle')}
-                              </H6>
-                            </Flex>
-                            <Switch
-                              checked={autoSwitchSubtitle.value}
-                              onChange={(e) => autoSwitchSubtitle.set(e.target.checked)}
-                            />
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction={isXs ? 'column' : 'row'}
-                            justify="between"
-                            align={isXs ? 'start' : 'center'}
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <H6>{t('subtitle-font-color')}</H6>
-                            <Dropdown isBordered>
-                              <Dropdown.Button color="primary">
-                                {t(selectedSubtitleFontColorValue)}
-                              </Dropdown.Button>
-                              <Dropdown.Menu
-                                aria-label="Select subtitle font color"
-                                color="primary"
-                                selectionMode="single"
-                                disallowEmptySelection
-                                selectedKeys={selectedSubtitleFontColor}
-                                onSelectionChange={(keys: any) => {
-                                  const color = Array.from(keys).join(', ');
-                                  setSelectedSubtitleFontColor(keys);
-                                  currentSubtitleFontColor.set(color);
-                                }}
-                              >
-                                {listSubtitleFontColor.map((color) => (
-                                  <Dropdown.Item key={color}>{t(color)}</Dropdown.Item>
-                                ))}
-                              </Dropdown.Menu>
-                            </Dropdown>
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction={isXs ? 'column' : 'row'}
-                            justify="between"
-                            align={isXs ? 'start' : 'center'}
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <H6>{t('subtitle-font-size')}</H6>
-                            <Dropdown isBordered>
-                              <Dropdown.Button color="primary">
-                                {selectedSubtitleFontSizeValue}
-                              </Dropdown.Button>
-                              <Dropdown.Menu
-                                aria-label="Select subtitle font size"
-                                color="primary"
-                                selectionMode="single"
-                                disallowEmptySelection
-                                selectedKeys={selectedSubtitleFontSize}
-                                onSelectionChange={(keys: any) => {
-                                  const size = Array.from(keys).join(', ');
-                                  setSelectedSubtitleFontSize(keys);
-                                  currentSubtitleFontSize.set(size);
-                                }}
-                              >
-                                {listSubtitleFontSize.map((size) => (
-                                  <Dropdown.Item key={size}>{size}</Dropdown.Item>
-                                ))}
-                              </Dropdown.Menu>
-                            </Dropdown>
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction={isXs ? 'column' : 'row'}
-                            justify="between"
-                            align={isXs ? 'start' : 'center'}
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <H6>{t('subtitle-background-color')}</H6>
-                            <Dropdown isBordered>
-                              <Dropdown.Button color="primary">
-                                {t(selectedSubtitleBackgroundColorValue)}
-                              </Dropdown.Button>
-                              <Dropdown.Menu
-                                aria-label="Select subtitle background color"
-                                color="primary"
-                                selectionMode="single"
-                                disallowEmptySelection
-                                selectedKeys={selectedSubtitleBackgroundColor}
-                                onSelectionChange={(keys: any) => {
-                                  const color = Array.from(keys).join(', ');
-                                  setSelectedSubtitleBackgroundColor(keys);
-                                  currentSubtitleBackgroundColor.set(color);
-                                }}
-                              >
-                                {listSubtitleBackgroundColor.map((color) => (
-                                  <Dropdown.Item key={color}>{t(color)}</Dropdown.Item>
-                                ))}
-                              </Dropdown.Menu>
-                            </Dropdown>
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction={isXs ? 'column' : 'row'}
-                            justify="between"
-                            align={isXs ? 'start' : 'center'}
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <H6>{t('subtitle-background-opacity')}</H6>
-                            <Dropdown isBordered>
-                              <Dropdown.Button color="primary">
-                                {selectedSubtitleBackgroundOpacityValue}
-                              </Dropdown.Button>
-                              <Dropdown.Menu
-                                aria-label="Select subtitle background opacity"
-                                color="primary"
-                                selectionMode="single"
-                                disallowEmptySelection
-                                selectedKeys={selectedSubtitleBackgroundOpacity}
-                                onSelectionChange={(keys: any) => {
-                                  const opacity = Array.from(keys).join(', ');
-                                  setSelectedSubtitleBackgroundOpacity(keys);
-                                  currentSubtitleBackgroundOpacity.set(opacity);
-                                }}
-                              >
-                                {listSubtitleBackgroundOpacity.map((opacity) => (
-                                  <Dropdown.Item key={opacity}>{opacity}</Dropdown.Item>
-                                ))}
-                              </Dropdown.Menu>
-                            </Dropdown>
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction={isXs ? 'column' : 'row'}
-                            justify="between"
-                            align={isXs ? 'start' : 'center'}
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <H6>{t('subtitle-window-color')}</H6>
-                            <Dropdown isBordered>
-                              <Dropdown.Button color="primary">
-                                {t(selectedSubtitleWindowColorValue)}
-                              </Dropdown.Button>
-                              <Dropdown.Menu
-                                aria-label="Select subtitle window color"
-                                color="primary"
-                                selectionMode="single"
-                                disallowEmptySelection
-                                selectedKeys={selectedSubtitleWindowColor}
-                                onSelectionChange={(keys: any) => {
-                                  const color = Array.from(keys).join(', ');
-                                  setSelectedSubtitleWindowColor(keys);
-                                  currentSubtitleWindowColor.set(color);
-                                }}
-                              >
-                                {listSubtitleWindowColor.map((color) => (
-                                  <Dropdown.Item key={color}>{t(color)}</Dropdown.Item>
-                                ))}
-                              </Dropdown.Menu>
-                            </Dropdown>
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction={isXs ? 'column' : 'row'}
-                            justify="between"
-                            align={isXs ? 'start' : 'center'}
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <H6>{t('subtitle-window-opacity')}</H6>
-                            <Dropdown isBordered>
-                              <Dropdown.Button color="primary">
-                                {selectedSubtitleWindowOpacityValue}
-                              </Dropdown.Button>
-                              <Dropdown.Menu
-                                aria-label="Select subtitle window opacity"
-                                color="primary"
-                                selectionMode="single"
-                                disallowEmptySelection
-                                selectedKeys={selectedSubtitleWindowOpacity}
-                                onSelectionChange={(keys: any) => {
-                                  const opacity = Array.from(keys).join(', ');
-                                  setSelectedSubtitleWindowOpacity(keys);
-                                  currentSubtitleWindowOpacity.set(opacity);
-                                }}
-                              >
-                                {listSubtitleWindowOpacity.map((opacity) => (
-                                  <Dropdown.Item key={opacity}>{t(opacity)}</Dropdown.Item>
-                                ))}
-                              </Dropdown.Menu>
-                            </Dropdown>
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction={isXs ? 'column' : 'row'}
-                            justify="between"
-                            align={isXs ? 'start' : 'center'}
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <H6>{t('subtitle-text-effects')}</H6>
-                            <Dropdown isBordered>
-                              <Dropdown.Button color="primary">
-                                {selectedSubtitleTextEffectsValue}
-                              </Dropdown.Button>
-                              <Dropdown.Menu
-                                aria-label="Select subtitle text effects"
-                                color="primary"
-                                selectionMode="single"
-                                disallowEmptySelection
-                                selectedKeys={selectedSubtitleTextEffects}
-                                onSelectionChange={(keys: any) => {
-                                  const effect = Array.from(keys).join(', ');
-                                  setSelectedSubtitleTextEffects(keys);
-                                  currentSubtitleTextEffects.set(effect);
-                                }}
-                              >
-                                {listSubtitleTextEffects.map((effect) => (
-                                  <Dropdown.Item key={effect}>{t(effect)}</Dropdown.Item>
-                                ))}
-                              </Dropdown.Menu>
-                            </Dropdown>
-                          </Flex>
-                        </Collapse>
-                        <Collapse
-                          title={t('player-features')}
-                          subtitle={t('player-features-subtitle')}
-                          css={{
-                            background: '$backgroundContrastAlpha !important',
-                            borderRadius: '$xs !important',
-                          }}
-                        >
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="gap-x-2"
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <Flex direction="column" justify="center" align="start">
-                              <H6>{t('auto-size')}</H6>
-                              <H6 css={{ color: '$accents8' }}>{t('auto-size-subtitle')}</H6>
-                            </Flex>
-                            <Switch
-                              checked={isAutoSize.value}
-                              onChange={(e) => isAutoSize.set(e.target.checked)}
-                            />
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="gap-x-2"
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <Flex direction="column" justify="center" align="start">
-                              <H6>{t('auto-mini')}</H6>
-                              <H6 css={{ color: '$accents8' }}>{t('auto-mini-subtitle')}</H6>
-                            </Flex>
-                            <Switch
-                              checked={isAutoMini.value}
-                              onChange={(e) => isAutoMini.set(e.target.checked)}
-                            />
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="gap-x-2"
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <Flex direction="column" justify="center" align="start">
-                              <H6>{t('screenshot')}</H6>
-                              <H6 css={{ color: '$accents8' }}>{t('screenshot-subtitle')}</H6>
-                            </Flex>
-                            <Switch
-                              checked={isScreenshot.value}
-                              onChange={(e) => isScreenshot.set(e.target.checked)}
-                            />
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="gap-x-2"
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <Flex direction="column" justify="center" align="start">
-                              <H6>{t('mini-progressbar')}</H6>
-                              <H6 css={{ color: '$accents8' }}>{t('mini-progressbar-subtitle')}</H6>
-                            </Flex>
-                            <Switch
-                              checked={isMiniProgressbar.value}
-                              onChange={(e) => isMiniProgressbar.set(e.target.checked)}
-                            />
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="gap-x-2"
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <Flex direction="column" justify="center" align="start">
-                              <H6>{t('auto-playback')}</H6>
-                              <H6 css={{ color: '$accents8' }}>{t('auto-playback-subtitle')}</H6>
-                            </Flex>
-                            <Switch
-                              checked={isAutoPlayback.value}
-                              onChange={(e) => isAutoPlayback.set(e.target.checked)}
-                            />
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="gap-x-2"
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <Flex direction="column" justify="center" align="start">
-                              <H6>{t('fast-forward')}</H6>
-                              <H6 css={{ color: '$accents8' }}>{t('fast-forward-subtitle')}</H6>
-                            </Flex>
-                            <Switch
-                              checked={isFastForward.value}
-                              onChange={(e) => isFastForward.set(e.target.checked)}
-                            />
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="gap-x-2"
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <Flex direction="column" justify="center" align="start">
-                              <H6>{t('auto-play-next-episode')}</H6>
-                              <H6 css={{ color: '$accents8' }}>
-                                {t('auto-play-next-episode-subtitle')}
-                              </H6>
-                            </Flex>
-                            <Switch
-                              checked={isAutoPlayNextEpisode.value}
-                              onChange={(e) => isAutoPlayNextEpisode.set(e.target.checked)}
-                            />
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="gap-x-2"
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <Flex direction="column" justify="center" align="start">
-                              <H6>{t('show-skip-op-ed-button')}</H6>
-                              <H6 css={{ color: '$accents8' }}>
-                                {t('show-skip-op-ed-button-subtitle')}
-                              </H6>
-                            </Flex>
-                            <Switch
-                              checked={isShowSkipOpEdButton.value}
-                              onChange={(e) => {
-                                isShowSkipOpEdButton.set(e.target.checked);
-                                if (!isShowSkipOpEdButton.value) {
-                                  isAutoSkipOpEd.set(false);
-                                }
-                              }}
-                            />
-                          </Flex>
-                          <AnimatePresence>
-                            {isShowSkipOpEdButton ? (
-                              <motion.div
-                                initial={{ y: -20, opacity: 0 }}
-                                animate={{ y: 0, opacity: 1 }}
-                                exit={{ y: -20, opacity: 0 }}
-                                transition={{ duration: 0.3 }}
-                              >
-                                <Spacer y={0.25} />
-                                <Flex
-                                  direction="row"
-                                  justify="between"
-                                  align="center"
-                                  className="gap-x-2"
-                                  css={{
-                                    backgroundColor: '$backgroundContrast',
-                                    borderRadius: '$xs',
-                                    padding: '$sm',
+                                  checked={sidebarHoverMode.value}
+                                  onChange={(e) => {
+                                    sidebarHoverMode.set(e.target.checked);
+                                    if (!sidebarHoverMode.value) {
+                                      sidebarMiniMode.set(true);
+                                    }
                                   }}
-                                >
-                                  <Flex direction="column" justify="center" align="start">
-                                    <H6>{t('auto-skip-op-ed')}</H6>
-                                    <H6 css={{ color: '$accents8' }}>
-                                      {t('auto-skip-op-ed-subtitle')}
-                                    </H6>
-                                  </Flex>
-                                  <Switch
-                                    checked={isAutoSkipOpEd.value}
-                                    onChange={(e) => isAutoSkipOpEd.set(e.target.checked)}
-                                  />
-                                </Flex>
-                              </motion.div>
-                            ) : null}
-                          </AnimatePresence>
-                        </Collapse>
-                        {/* <Collapse
-                          title={t('gestures')}
-                          subtitle={t('gestures-subtitle')}
-                          css={{
-                            background: '$backgroundContrastAlpha !important',
-                            borderRadius: '$xs !important',
-                          }}
-                        >
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="gap-x-2"
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <Flex direction="column" justify="center" align="start">
-                              <H6>{t('swipe-to-seek')}</H6>
-                              <H6 css={{ color: '$accents8' }}>{t('swipe-to-seek-subtitle')}</H6>
-                            </Flex>
+                                />
+                              </div>
+                            </>
+                          )}
+                          <div className="flex w-full flex-row items-center justify-between gap-x-2">
+                            <H6>{t('sidebar-boxed-mode')}</H6>
                             <Switch
-                              checked={isFastForward.value}
-                              onChange={(e) => isFastForward.set(e.target.checked)}
+                              checked={sidebarBoxedMode.value}
+                              onChange={(e) => sidebarBoxedMode.set(e.target.checked)}
                             />
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="gap-x-2"
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <Flex direction="column" justify="center" align="start">
-                              <H6>{t('swipe-to-fullscreen')}</H6>
-                              <H6 css={{ color: '$accents8' }}>
-                                {t('swipe-to-fullscreen-subtitle')}
-                              </H6>
-                            </Flex>
-                            <Switch
-                              checked={isSwipeFullscreen.value}
-                              onChange={(e) => isSwipeFullscreen.set(e.target.checked)}
-                            />
-                          </Flex>
-                        </Collapse> */}
-                        <Collapse
-                          title={t('keyboard')}
-                          subtitle={t('keyboard-subtitle')}
-                          css={{
-                            background: '$backgroundContrastAlpha !important',
-                            borderRadius: '$xs !important',
-                          }}
-                        >
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="gap-x-2"
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <H6>{t('volume-up')}</H6>
-                            <Kbd>↑</Kbd>
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="gap-x-2"
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <H6>{t('volume-down')}</H6>
-                            <Kbd>↓</Kbd>
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="gap-x-2"
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <H6>{t('fast-rewind-5s')}</H6>
-                            <Kbd>←</Kbd>
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="gap-x-2"
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <H6>{t('fast-forward-5s')}</H6>
-                            <Kbd>→</Kbd>
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="gap-x-2"
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <H6>{t('toggle-play-pause')}</H6>
-                            <Flex direction="row" className="gap-x-2" align="center">
-                              <Kbd width="space">space</Kbd>
-                              <div>{t('or')}</div>
-                              <Kbd>K</Kbd>
-                            </Flex>
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="gap-x-2"
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <H6>{t('seek-to-start')}</H6>
-                            <Flex direction="row" className="gap-x-2" align="center">
-                              <Kbd>home</Kbd>
-                              <div>{t('or')}</div>
-                              <Kbd>0</Kbd>
-                            </Flex>
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="gap-x-2"
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <H6>{t('seek-to-end')}</H6>
-                            <Kbd>end</Kbd>
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="gap-x-2"
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <H6>{t('seek-to-percent')}</H6>
-                            <Flex direction="row" className="gap-x-2" align="center">
-                              <Kbd>1</Kbd>
-                              <div>...</div>
-                              <Kbd>9</Kbd>
-                            </Flex>
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="gap-x-2"
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <H6>{t('toggle-subtitle')}</H6>
-                            <Kbd>C</Kbd>
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="gap-x-2"
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <H6>{t('toggle-fullscreen')}</H6>
-                            <Kbd>F</Kbd>
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="gap-x-2"
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <H6>{t('fast-rewind-10s')}</H6>
-                            <Kbd>J</Kbd>
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="gap-x-2"
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <H6>{t('fast-forward-10s')}</H6>
-                            <Kbd>L</Kbd>
-                          </Flex>
-                          <Spacer y={0.25} />
-                          <Flex
-                            direction="row"
-                            justify="between"
-                            align="center"
-                            className="gap-x-2"
-                            css={{
-                              backgroundColor: '$backgroundContrast',
-                              borderRadius: '$xs',
-                              padding: '$sm',
-                            }}
-                          >
-                            <H6>{t('mute-unmute')}</H6>
-                            <Kbd>M</Kbd>
-                          </Flex>
-                        </Collapse>
-                      </Collapse.Group>
-                    </Container>
-                  </motion.div>
-                </TabsContent>
-                <TabsContent value="about-tab" asChild>
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    drag={isMobile ? 'x' : false}
-                    dragConstraints={{ left: 0, right: 0 }}
-                    dragElastic={0.4}
-                    onDragEnd={handleDragEnd}
-                  >
-                    <Container
-                      fluid
-                      responsive={false}
-                      display="flex"
-                      justify="flex-start"
-                      direction="column"
+                          </div>
+                        </div>
+                      </Collapse>
+                    )}
+                    <Collapse
+                      title={t('media-list-grid')}
+                      subtitle={t('media-list-grid-subtitle')}
                       css={{
-                        boxShadow: '$md',
-                        borderRadius: '$xs',
-                        backgroundColor: '$backgroundContrastAlpha',
-                        padding: 20,
+                        backgroundColor: 'hsl(var(--colors-content1)) !important',
+                        borderRadius: '0.75rem !important',
                       }}
                     >
-                      <Flex direction="column" justify="center" align="center">
-                        <NextImage
-                          // @ts-ignore
-                          as={Image}
-                          alt="About Logo"
-                          title="About Logo"
-                          src={LogoFooter}
-                          width="76px"
-                          height="76px"
-                          containerCss={{ margin: 0 }}
-                          css={{
-                            borderRadius: '50%',
-                          }}
-                          loaderUrl="/api/image"
-                          placeholder="empty"
-                          responsive={[
-                            {
-                              size: {
-                                width: 76,
-                                height: 76,
-                              },
+                      <SettingBlock
+                        type="select"
+                        title={t('list-view-type')}
+                        selectedValue={t(selectedListViewTypeValue)}
+                        selectedKeys={selectedListViewType}
+                        onSelectionChange={(keys: any) => {
+                          const viewType = Array.from(keys).join(', ');
+                          setSelectedListViewType(keys);
+                          listViewType.set(viewType);
+                        }}
+                        selectItems={listListViewType}
+                      />
+                      <Spacer y={0.25} />
+                      <SettingBlock
+                        type="select"
+                        title={t('list-loading-type')}
+                        selectedValue={t(selectedListLoadingTypeValue)}
+                        selectedKeys={selectedListLoadingType}
+                        onSelectionChange={(keys: any) => {
+                          const loadingType = Array.from(keys).join(', ');
+                          setSelectedListLoadingType(keys);
+                          listLoadingType.set(loadingType);
+                        }}
+                        selectItems={listListLoadingType}
+                      />
+                    </Collapse>
+                    <Collapse
+                      title={t('experiments')}
+                      subtitle={t('experiments-subtitle')}
+                      css={{
+                        backgroundColor: 'hsl(var(--colors-content1)) !important',
+                        borderRadius: '0.75rem !important',
+                      }}
+                    >
+                      <SettingBlock
+                        type="switch"
+                        title={t('play-trailer')}
+                        checked={isPlayTrailer.value}
+                        onChange={(e) => isPlayTrailer.set(e.target.checked)}
+                      />
+                      <Spacer y={0.25} />
+                      <SettingBlock
+                        type="switch"
+                        title={t('mute-trailer')}
+                        checked={isMutedTrailer.value}
+                        onChange={(e) => isMutedTrailer.set(e.target.checked)}
+                      />
+                    </Collapse>
+                  </Collapse.Group>
+                </motion.div>
+              </TabsContent>
+              <TabsContent value="account-tab" asChild>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  drag={isMobile ? 'x' : false}
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={0.4}
+                  onDragEnd={handleDragEnd}
+                  className="w-full"
+                ></motion.div>
+              </TabsContent>
+              <TabsContent value="player-tab" asChild>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  drag={isMobile ? 'x' : false}
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={0.4}
+                  onDragEnd={handleDragEnd}
+                  className="w-full"
+                >
+                  <Collapse.Group splitted accordion={false} css={{ p: 0 }}>
+                    <Collapse
+                      title={t('defaults')}
+                      subtitle={t('defaults-subtitle')}
+                      css={{
+                        backgroundColor: 'hsl(var(--colors-content1)) !important',
+                        borderRadius: '0.75rem !important',
+                      }}
+                    >
+                      <SettingBlock
+                        type="switch"
+                        title={t('mute-trailer')}
+                        description={t('pic-in-pic-subtitle')}
+                        checked={isPicInPic.value}
+                        onChange={(e) => isPicInPic.set(e.target.checked)}
+                      />
+                      <Spacer y={0.25} />
+                      <SettingBlock
+                        type="switch"
+                        title={t('muted')}
+                        description={t('muted-subtitle')}
+                        checked={isMuted.value}
+                        onChange={(e) => isMuted.set(e.target.checked)}
+                      />
+                      <Spacer y={0.25} />
+                      <SettingBlock
+                        type="switch"
+                        title={t('autoplay')}
+                        description={t('autoplay-subtitle')}
+                        checked={isAutoPlay.value}
+                        onChange={(e) => isAutoPlay.set(e.target.checked)}
+                      />
+                      <Spacer y={0.25} />
+                      <SettingBlock
+                        type="switch"
+                        title={t('loop')}
+                        description={t('loop-subtitle')}
+                        checked={isLoop.value}
+                        onChange={(e) => isLoop.set(e.target.checked)}
+                      />
+                    </Collapse>
+                    <Collapse
+                      title={t('subtitles')}
+                      subtitle={t('subtitles-subtitle')}
+                      css={{
+                        backgroundColor: 'hsl(var(--colors-content1)) !important',
+                        borderRadius: '0.75rem !important',
+                      }}
+                    >
+                      <SettingBlock
+                        type="switch"
+                        title={t('show-subtitle')}
+                        description={t('show-subtitle-subtitle')}
+                        checked={autoShowSubtitle.value}
+                        onChange={(e) => autoShowSubtitle.set(e.target.checked)}
+                      />
+                      <Spacer y={0.25} />
+                      <SettingBlock
+                        type="switch"
+                        title={t('auto-switch-subtitle')}
+                        description={t('auto-switch-subtitle-subtitle')}
+                        checked={autoSwitchSubtitle.value}
+                        onChange={(e) => autoSwitchSubtitle.set(e.target.checked)}
+                      />
+                      <Spacer y={0.25} />
+                      <SettingBlock
+                        type="select"
+                        title={t('subtitle-font-color')}
+                        selectedValue={t(selectedSubtitleFontColorValue)}
+                        selectedKeys={selectedSubtitleFontColor}
+                        onSelectionChange={(keys: any) => {
+                          const color = Array.from(keys).join(', ');
+                          setSelectedSubtitleFontColor(keys);
+                          currentSubtitleFontColor.set(color);
+                        }}
+                        selectItems={listSubtitleFontColor}
+                      />
+                      <Spacer y={0.25} />
+                      <SettingBlock
+                        type="select"
+                        title={t('subtitle-font-size')}
+                        selectedValue={t(selectedSubtitleFontSizeValue)}
+                        selectedKeys={selectedSubtitleFontSize}
+                        onSelectionChange={(keys: any) => {
+                          const size = Array.from(keys).join(', ');
+                          setSelectedSubtitleFontSize(keys);
+                          currentSubtitleFontSize.set(size);
+                        }}
+                        selectItems={listSubtitleFontSize}
+                      />
+                      <Spacer y={0.25} />
+                      <SettingBlock
+                        type="select"
+                        title={t('subtitle-background-color')}
+                        selectedValue={t(selectedSubtitleBackgroundColorValue)}
+                        selectedKeys={selectedSubtitleBackgroundColor}
+                        onSelectionChange={(keys: any) => {
+                          const color = Array.from(keys).join(', ');
+                          setSelectedSubtitleBackgroundColor(keys);
+                          currentSubtitleBackgroundColor.set(color);
+                        }}
+                        selectItems={listSubtitleBackgroundColor}
+                      />
+                      <Spacer y={0.25} />
+                      <SettingBlock
+                        type="select"
+                        title={t('subtitle-background-opacity')}
+                        selectedValue={t(selectedSubtitleBackgroundOpacityValue)}
+                        selectedKeys={selectedSubtitleBackgroundOpacity}
+                        onSelectionChange={(keys: any) => {
+                          const opacity = Array.from(keys).join(', ');
+                          setSelectedSubtitleBackgroundOpacity(keys);
+                          currentSubtitleBackgroundOpacity.set(opacity);
+                        }}
+                        selectItems={listSubtitleBackgroundOpacity}
+                      />
+                      <Spacer y={0.25} />
+                      <SettingBlock
+                        type="select"
+                        title={t('subtitle-window-color')}
+                        selectedValue={t(selectedSubtitleWindowColorValue)}
+                        selectedKeys={selectedSubtitleWindowColor}
+                        onSelectionChange={(keys: any) => {
+                          const color = Array.from(keys).join(', ');
+                          setSelectedSubtitleWindowColor(keys);
+                          currentSubtitleWindowColor.set(color);
+                        }}
+                        selectItems={listSubtitleWindowColor}
+                      />
+                      <Spacer y={0.25} />
+                      <SettingBlock
+                        type="select"
+                        title={t('subtitle-window-opacity')}
+                        selectedValue={t(selectedSubtitleWindowOpacityValue)}
+                        selectedKeys={selectedSubtitleWindowOpacity}
+                        onSelectionChange={(keys: any) => {
+                          const opacity = Array.from(keys).join(', ');
+                          setSelectedSubtitleWindowOpacity(keys);
+                          currentSubtitleWindowOpacity.set(opacity);
+                        }}
+                        selectItems={listSubtitleWindowOpacity}
+                      />
+                      <Spacer y={0.25} />
+                      <SettingBlock
+                        type="select"
+                        title={t('subtitle-text-effects')}
+                        selectedValue={t(selectedSubtitleTextEffectsValue)}
+                        selectedKeys={selectedSubtitleTextEffects}
+                        onSelectionChange={(keys: any) => {
+                          const effect = Array.from(keys).join(', ');
+                          setSelectedSubtitleTextEffects(keys);
+                          currentSubtitleTextEffects.set(effect);
+                        }}
+                        selectItems={listSubtitleTextEffects}
+                      />
+                    </Collapse>
+                    <Collapse
+                      title={t('player-features')}
+                      subtitle={t('player-features-subtitle')}
+                      css={{
+                        backgroundColor: 'hsl(var(--colors-content1)) !important',
+                        borderRadius: '0.75rem !important',
+                      }}
+                    >
+                      <SettingBlock
+                        type="switch"
+                        title={t('auto-size')}
+                        description={t('auto-size-subtitle')}
+                        checked={isAutoSize.value}
+                        onChange={(e) => isAutoSize.set(e.target.checked)}
+                      />
+                      <Spacer y={0.25} />
+                      <SettingBlock
+                        type="switch"
+                        title={t('auto-mini')}
+                        description={t('auto-mini-subtitle')}
+                        checked={isAutoMini.value}
+                        onChange={(e) => isAutoMini.set(e.target.checked)}
+                      />
+                      <Spacer y={0.25} />
+                      <SettingBlock
+                        type="switch"
+                        title={t('screenshot')}
+                        description={t('screenshot-subtitle')}
+                        checked={isScreenshot.value}
+                        onChange={(e) => isScreenshot.set(e.target.checked)}
+                      />
+                      <Spacer y={0.25} />
+                      <SettingBlock
+                        type="switch"
+                        title={t('mini-progressbar')}
+                        description={t('mini-progressbar-subtitle')}
+                        checked={isMiniProgressbar.value}
+                        onChange={(e) => isMiniProgressbar.set(e.target.checked)}
+                      />
+                      <Spacer y={0.25} />
+                      <SettingBlock
+                        type="switch"
+                        title={t('auto-playback')}
+                        description={t('auto-playback-subtitle')}
+                        checked={isAutoPlayback.value}
+                        onChange={(e) => isAutoPlayback.set(e.target.checked)}
+                      />
+                      <Spacer y={0.25} />
+                      <SettingBlock
+                        type="switch"
+                        title={t('fast-forward')}
+                        description={t('fast-forward-subtitle')}
+                        checked={isFastForward.value}
+                        onChange={(e) => isFastForward.set(e.target.checked)}
+                      />
+                      <Spacer y={0.25} />
+                      <SettingBlock
+                        type="switch"
+                        title={t('auto-play-next-episode')}
+                        description={t('auto-play-next-episode-subtitle')}
+                        checked={isAutoPlayNextEpisode.value}
+                        onChange={(e) => isAutoPlayNextEpisode.set(e.target.checked)}
+                      />
+                      <Spacer y={0.25} />
+                      <SettingBlock
+                        type="switch"
+                        title={t('show-skip-op-ed-button')}
+                        description={t('show-skip-op-ed-button-subtitle')}
+                        checked={isShowSkipOpEdButton.value}
+                        onChange={(e) => {
+                          isShowSkipOpEdButton.set(e.target.checked);
+                          if (!isShowSkipOpEdButton.value) {
+                            isAutoSkipOpEd.set(false);
+                          }
+                        }}
+                      />
+                      <AnimatePresence>
+                        {isShowSkipOpEdButton ? (
+                          <motion.div
+                            initial={{ y: -20, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            exit={{ y: -20, opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                          >
+                            <Spacer y={0.25} />
+                            <SettingBlock
+                              type="switch"
+                              title={t('auto-skip-op-ed')}
+                              description={t('auto-skip-op-ed-subtitle')}
+                              checked={isAutoSkipOpEd.value}
+                              onChange={(e) => isAutoSkipOpEd.set(e.target.checked)}
+                            />
+                          </motion.div>
+                        ) : null}
+                      </AnimatePresence>
+                    </Collapse>
+                    <Collapse
+                      title={t('keyboard')}
+                      subtitle={t('keyboard-subtitle')}
+                      css={{
+                        backgroundColor: 'hsl(var(--colors-content1)) !important',
+                        borderRadius: '0.75rem !important',
+                      }}
+                    >
+                      <SettingBlock type="kbd" title={t('volume-up')} keys="up" />
+                      <Spacer y={0.25} />
+                      <SettingBlock type="kbd" title={t('volume-down')} keys="down" />
+                      <Spacer y={0.25} />
+                      <SettingBlock type="kbd" title={t('fast-rewind-5s')} keys="left" />
+                      <Spacer y={0.25} />
+                      <SettingBlock type="kbd" title={t('fast-forward-5s')} keys="right" />
+                      <Spacer y={0.25} />
+                      <SettingBlock
+                        type="kbd"
+                        title={t('toggle-play-pause')}
+                        keys={[
+                          { keys: 'space', id: 'space' },
+                          { key: 'K', id: 'K' },
+                        ]}
+                        betweenKeys={t('or')}
+                      />
+                      <Spacer y={0.25} />
+                      <SettingBlock
+                        type="kbd"
+                        title={t('seek-to-start')}
+                        keys={[
+                          { keys: 'home', id: 'home' },
+                          { key: '0', id: '0' },
+                        ]}
+                        betweenKeys={t('or')}
+                      />
+                      <Spacer y={0.25} />
+                      <SettingBlock type="kbd" title={t('seek-to-end')} keys="end" />
+                      <Spacer y={0.25} />
+                      <SettingBlock
+                        type="kbd"
+                        title={t('seek-to-percent')}
+                        keys={[
+                          { key: '1', id: '1' },
+                          { key: '9', id: '9' },
+                        ]}
+                        betweenKeys="..."
+                      />
+                      <Spacer y={0.25} />
+                      <SettingBlock type="kbd" title={t('toggle-subtitle')} kbd="C" />
+                      <Spacer y={0.25} />
+                      <SettingBlock type="kbd" title={t('toggle-fullscreen')} kbd="F" />
+                      <Spacer y={0.25} />
+                      <SettingBlock type="kbd" title={t('fast-rewind-10s')} kbd="J" />
+                      <Spacer y={0.25} />
+                      <SettingBlock type="kbd" title={t('fast-forward-10s')} kbd="L" />
+                      <Spacer y={0.25} />
+                      <SettingBlock type="kbd" title={t('mute-unmute')} kbd="M" />
+                    </Collapse>
+                  </Collapse.Group>
+                </motion.div>
+              </TabsContent>
+              <TabsContent value="about-tab" asChild>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  drag={isMobile ? 'x' : false}
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={0.4}
+                  onDragEnd={handleDragEnd}
+                  className="w-full"
+                >
+                  <div className="w-full rounded-xl bg-content1 p-5 shadow-lg shadow-neutral/10">
+                    <div className="flex flex-col items-center justify-center">
+                      <NextImage
+                        // @ts-ignore
+                        as={Image}
+                        alt="About Logo"
+                        title="About Logo"
+                        src={LogoFooter}
+                        width="76px"
+                        height="76px"
+                        containerCss={{ margin: 0 }}
+                        css={{
+                          borderRadius: '50%',
+                        }}
+                        loaderUrl="/api/image"
+                        placeholder="empty"
+                        responsive={[
+                          {
+                            size: {
+                              width: 76,
+                              height: 76,
                             },
-                          ]}
-                          options={{
-                            contentType: MimeType.WEBP,
-                          }}
-                        />
-                        <AboutLogo linkTo="/" isLogo />
-                      </Flex>
-                      <Spacer y={1} />
-                      <Flex direction="row" justify="center" align="center" className="space-x-4">
-                        <Link href="https://raw.githubusercontent.com/Khanhtran47/Sora/master/LICENSE.txt">
-                          License 📜
-                        </Link>
-                        <Link href="#">Contact ✉️</Link>
-                      </Flex>
-                      <Spacer y={1} />
-                      <H6 weight="semibold" css={{ textAlign: 'center' }}>
-                        This site does not store any files on its server. All contents are provided
-                        by non-affiliated third parties.
-                      </H6>
-                    </Container>
-                  </motion.div>
-                </TabsContent>
-              </AnimatePresence>
-            </Tabs>
-          )}
-        </ClientOnly>
-      </Container>
+                          },
+                        ]}
+                        options={{
+                          contentType: MimeType.WEBP,
+                        }}
+                      />
+                      <AboutLogo linkTo="/" isLogo />
+                    </div>
+                    <Spacer y={1} />
+                    <div className="flex flex-row items-center justify-center space-x-4">
+                      <RemixLink to="/design-system">Design 🎨</RemixLink>
+                      <Link href="https://raw.githubusercontent.com/Khanhtran47/Sora/master/LICENSE.txt">
+                        License 📜
+                      </Link>
+                      <Link href="#">Contact ✉️</Link>
+                    </div>
+                    <Spacer y={1} />
+                    <H6
+                      weight="semibold"
+                      css={{ textAlign: 'center' }}
+                      className="!text-neutral-900"
+                    >
+                      This site does not store any files on its server. All contents are provided by
+                      non-affiliated third parties.
+                    </H6>
+                  </div>
+                </motion.div>
+              </TabsContent>
+            </AnimatePresence>
+          </Tabs>
+        )}
+      </ClientOnly>
     </motion.div>
   );
 };
