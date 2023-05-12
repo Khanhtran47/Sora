@@ -98,7 +98,7 @@
     "remix-i18next": "^4.1.1",
     "remix-image": "^1.4.0",
     "remix-image-sharp": "^0.1.4",
-    "remix-utils": "^6.0.0",
+    "remix-utils": "^6.3.0",
     "satori": "^0.3.2",
     "sharp": "^0.31.3",
     "sonner": "^0.3.0",

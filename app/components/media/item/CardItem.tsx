@@ -153,7 +153,7 @@ const CardItem = (props: ICardItemProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const cardIntersection = useIntersectionObserver(cardRef, {
     root: viewportRef,
-    rootMargin: '1500px 0px 1500px 0px',
+    rootMargin: '1500px 650px 1500px 650px',
   });
   const inView = useMemo(() => {
     if (isSliderCard) {

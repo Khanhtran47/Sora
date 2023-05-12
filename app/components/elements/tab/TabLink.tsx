@@ -1,5 +1,6 @@
-import { useMediaQuery } from '@react-hookz/web';
-import { NavLink } from '@remix-run/react';
+import { useRef } from 'react';
+import { useDebouncedEffect, useMediaQuery } from '@react-hookz/web';
+import { NavLink, useLocation } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -24,6 +25,22 @@ interface ITabProps {
 const TabLink = (props: ITabProps) => {
   const { pages, linkTo } = props;
   const { t } = useTranslation();
+  const location = useLocation();
+  const underlineRef = useRef<HTMLDivElement>(null);
+  useDebouncedEffect(
+    // need to debounce this because the scrollIntoView is called before the underline is rendered
+    () => {
+      if (underlineRef.current) {
+        underlineRef.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+          inline: 'center',
+        });
+      }
+    },
+    [location],
+    350,
+  );
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   return (
     <ScrollArea
@@ -51,8 +68,9 @@ const TabLink = (props: ITabProps) => {
                   <H5 h5 weight="bold">
                     {t(page.pageName)}
                   </H5>
-                  {isActive && (
+                  {isActive ? (
                     <Underline
+                      ref={underlineRef}
                       layoutId="underline"
                       css={{
                         height: 4,
@@ -60,7 +78,7 @@ const TabLink = (props: ITabProps) => {
                         bottom: 0,
                       }}
                     />
-                  )}
+                  ) : null}
                 </>
               )}
             </NavLink>

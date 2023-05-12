@@ -1,4 +1,4 @@
-import { Badge, Container } from '@nextui-org/react';
+import { Badge } from '@nextui-org/react';
 import type { MetaFunction } from '@remix-run/node';
 import { NavLink, Outlet } from '@remix-run/react';
 
@@ -44,10 +44,6 @@ export const handle = {
   },
 };
 
-const MoviePage = () => (
-  <Container fluid responsive={false} css={{ m: 0, p: 0 }}>
-    <Outlet />
-  </Container>
-);
+const MoviePage = () => <Outlet />;
 
 export default MoviePage;

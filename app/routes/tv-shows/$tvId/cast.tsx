@@ -54,8 +54,7 @@ export const handle = {
       )}
     </NavLink>
   ),
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  miniTitle: (match: RouteMatch, parentMatch: RouteMatch) => ({
+  miniTitle: (_match: RouteMatch, parentMatch: RouteMatch) => ({
     title: parentMatch.data?.detail?.name,
     subtitle: 'Cast',
     showImage: parentMatch.data?.detail?.poster_path !== undefined,

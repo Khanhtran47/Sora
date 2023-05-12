@@ -1,7 +1,10 @@
 import { Badge } from '@nextui-org/react';
 import { json, type LoaderArgs } from '@remix-run/node';
-import { NavLink, useLoaderData, useNavigate } from '@remix-run/react';
+import { NavLink, useLoaderData, useLocation, useNavigate } from '@remix-run/react';
+import { motion, type PanInfo } from 'framer-motion';
+import { isMobile } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
+import { useHydrated } from 'remix-utils';
 import i18next from '~/i18n/i18next.server';
 
 import { authenticate } from '~/services/supabase';
@@ -58,14 +61,38 @@ export const handle = {
 const SearchRoute = () => {
   const { people } = useLoaderData<typeof loader>() || {};
   const navigate = useNavigate();
+  const location = useLocation();
+  const isHydrated = useHydrated();
   const { t } = useTranslation();
+
+  const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    if (info.offset?.x > 100) {
+      navigate('/search/anime');
+    }
+    if (info.offset?.x < -100 && info.offset?.y > -50) {
+      return;
+    }
+  };
 
   const onSubmit = (value: string) => {
     navigate(`/search/people/${value}`);
   };
 
   return (
-    <div className="flex w-full flex-col items-center justify-center px-3 sm:px-0">
+    <motion.div
+      key={location.key}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+      className="flex w-full flex-col items-center justify-center px-3 sm:px-0"
+      drag={isMobile && isHydrated ? 'x' : false}
+      dragConstraints={isMobile && isHydrated ? { left: 0, right: 0 } : false}
+      dragElastic={isMobile && isHydrated ? 0.7 : false}
+      onDragEnd={handleDragEnd}
+      dragDirectionLock={isMobile && isHydrated}
+      draggable={isMobile && isHydrated}
+    >
       <SearchForm
         onSubmit={onSubmit}
         textHelper={t('search.helper.people')}
@@ -82,7 +109,7 @@ const SearchRoute = () => {
           totalPages={people.totalPages}
         />
       )}
-    </div>
+    </motion.div>
   );
 };
 
