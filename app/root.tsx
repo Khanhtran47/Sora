@@ -56,7 +56,6 @@ import * as gtag from '~/utils/client/gtags.client';
 import { ClientStyleContext } from '~/context/client.context';
 import { useIsBot } from '~/context/isbot.context';
 import Layout from '~/components/layouts/Layout';
-import Flex from '~/components/styles/Flex.styles';
 import nProgressStyles from '~/components/styles/nprogress.css';
 import Home from '~/assets/icons/HomeIcon';
 import Refresh from '~/assets/icons/RefreshIcon';
@@ -688,13 +687,7 @@ export const CatchBoundary = () => {
         }}
       >
         <NextUIProvider>
-          <Flex
-            direction="column"
-            justify="center"
-            align="center"
-            className="space-y-4"
-            css={{ height: '100vh' }}
-          >
+          <div className="flex h-screen flex-col items-center justify-center gap-y-4">
             <NextImage
               autoResize
               width={480}
@@ -708,7 +701,7 @@ export const CatchBoundary = () => {
             <Text h1 color="warning" css={{ textAlign: 'center' }}>
               {caught.status} {caught.statusText} {message}
             </Text>
-            <Flex direction="row" align="center" justify="center" className="w-full space-x-4">
+            <div className="flex w-full flex-row items-center justify-center gap-x-4">
               <Button
                 size="md"
                 variant="ghost"
@@ -733,8 +726,8 @@ export const CatchBoundary = () => {
               >
                 Reload Page
               </Button>
-            </Flex>
-          </Flex>
+            </div>
+          </div>
         </NextUIProvider>
       </RemixThemesProvider>
     </Document>
@@ -765,13 +758,7 @@ export const ErrorBoundary = ({ error }: { error: Error }) => {
         }}
       >
         <NextUIProvider>
-          <Flex
-            direction="column"
-            justify="center"
-            align="center"
-            className="space-y-4"
-            css={{ height: '100vh' }}
-          >
+          <div className="flex h-screen flex-col items-center justify-center gap-y-4">
             <NextImage
               autoResize
               width={480}
@@ -787,7 +774,7 @@ export const ErrorBoundary = ({ error }: { error: Error }) => {
                 ? 'Some thing went wrong'
                 : `[ErrorBoundary]: There was an error: ${error.message}`}
             </Text>
-            <Flex direction="row" align="center" justify="center" className="w-full space-x-4">
+            <div className="flex w-full flex-row items-center justify-center gap-x-4">
               <Button
                 size="md"
                 variant="ghost"
@@ -812,8 +799,8 @@ export const ErrorBoundary = ({ error }: { error: Error }) => {
               >
                 Reload Page
               </Button>
-            </Flex>
-          </Flex>
+            </div>
+          </div>
         </NextUIProvider>
       </RemixThemesProvider>
     </Document>

@@ -250,13 +250,7 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
         side="bottom"
         align="end"
         alignOffset={-8}
-        className="!bg-neutral/60"
-        css={{
-          zIndex: 1000,
-          backdropFilter: 'blur(21px) saturate(180%)',
-          '-webkit-backdrop-filter': 'blur(21px) saturate(180%)',
-          border: '1px solid $border',
-        }}
+        className="z-[1000] bg-neutral/60 backdrop-blur-xl backdrop-saturate-200"
       >
         <ResizablePanel contentWidth="fit">
           {currentDropdownLevel ? (

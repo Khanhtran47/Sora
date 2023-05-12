@@ -13,7 +13,6 @@ import { CACHE_CONTROL } from '~/utils/server/http';
 import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
-import Flex from '~/components/styles/Flex.styles';
 
 export const meta: MetaFunction = ({ data, params }) => {
   if (!data) {
@@ -131,7 +130,7 @@ const CollectionDetail = () => {
       )}
       <Spacer y={1} />
       {maxPage > 1 && (
-        <Flex direction="row" justify="center">
+        <div className="flex flex-row items-center">
           <Pagination
             total={maxPage}
             initialPage={currentPage}
@@ -147,7 +146,7 @@ const CollectionDetail = () => {
             css={{ marginTop: '2rem' }}
             {...(isSm && { size: 'xs' })}
           />
-        </Flex>
+        </div>
       )}
     </motion.div>
   );

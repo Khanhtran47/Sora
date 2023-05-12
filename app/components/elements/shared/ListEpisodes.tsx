@@ -14,7 +14,6 @@ import { useSoraSettings } from '~/hooks/useLocalStorage';
 import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
 import episodeTypes from '~/constants/episodeTypes';
 import Rating from '~/components/elements/shared/Rating';
-import Flex from '~/components/styles/Flex.styles';
 import { H3, H5, H6 } from '~/components/styles/Text.styles';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 import ViewGrid from '~/assets/icons/ViewGridCardIcon';
@@ -144,15 +143,10 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
         </div>
       </div>
       {currentData && currentData.length > 0 && (
-        <Flex
-          direction={activeType === 0 ? 'row' : 'column'}
-          {...(activeType === 0
-            ? {
-                wrap: 'wrap',
-                justify: 'start',
-                align: 'center',
-              }
-            : {})}
+        <div
+          className={`flex ${
+            activeType === 0 ? 'flex-row flex-wrap items-center justify-start' : 'flex-col'
+          }`}
         >
           {currentData.map((episode, index) =>
             activeType === 0 ? (
@@ -280,7 +274,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                           }}
                         />
                       ))}
-                    <Flex direction="column" justify="start" css={{ p: '1rem' }}>
+                    <div className="flex flex-col justify-start p-4">
                       <H5 h5 weight="bold" className="line-clamp-1">
                         Episode{' '}
                         {type === 'tv'
@@ -318,18 +312,18 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                           </H6>
                         </>
                       )}
-                    </Flex>
+                    </div>
                   </Card.Body>
                 </Card>
                 <Spacer y={1} />
               </div>
             ) : null,
           )}
-        </Flex>
+        </div>
       )}
       <Spacer y={1} />
       {maxPage > 1 && (
-        <Flex direction="row" justify="center">
+        <div className="flex flex-row justify-center">
           <Pagination
             total={maxPage}
             initialPage={currentPage}
@@ -338,7 +332,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
             css={{ marginTop: '2rem' }}
             {...(isSm && { size: 'xs' })}
           />
-        </Flex>
+        </div>
       )}
     </>
   );

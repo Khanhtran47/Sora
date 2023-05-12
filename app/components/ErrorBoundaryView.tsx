@@ -1,6 +1,5 @@
 import { Image, Text } from '@nextui-org/react';
 
-import Flex from '~/components/styles/Flex.styles';
 import errorGif from '~/assets/images/404.gif';
 
 interface IErrorBoundary {
@@ -10,7 +9,7 @@ interface IErrorBoundary {
 const ErrorBoundary = ({ error }: IErrorBoundary) => {
   const isProd = process.env.NODE_ENV === 'production' && process.env.DEPLOY_ENV === 'production';
   return (
-    <Flex direction="column" justify="center" align="center" className="space-y-4">
+    <div className="flex flex-col items-center justify-center gap-y-4">
       <Image
         autoResize
         width={480}
@@ -32,7 +31,7 @@ const ErrorBoundary = ({ error }: IErrorBoundary) => {
           {error.stack}
         </Text>
       ) : null}
-    </Flex>
+    </div>
   );
 };
 

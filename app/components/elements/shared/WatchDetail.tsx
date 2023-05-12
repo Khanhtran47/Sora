@@ -13,7 +13,6 @@ import type { IEpisode } from '~/services/tmdb/tmdb.types';
 import MediaList from '~/components/media/MediaList';
 import ListEpisodes from '~/components/elements/shared/ListEpisodes';
 import Rating from '~/components/elements/shared/Rating';
-import Flex from '~/components/styles/Flex.styles';
 import { H2, H6 } from '~/components/styles/Text.styles';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 
@@ -194,14 +193,14 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
               />
             </Row>
           ))}
-        <Flex direction="column" justify="start" align="start" className="w-full">
+        <div className="flex w-full flex-col items-start justify-start">
           <H2 h2 weight="bold">
             {title}
           </H2>
           <Spacer y={0.5} />
           {type === 'movie' || type === 'tv' ? (
             <>
-              <Flex direction="row">
+              <div className="flex flex-row">
                 <Rating rating={tmdbRating?.toFixed(1)} ratingType="movie" />
                 {imdbRating && (
                   <>
@@ -224,7 +223,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
                     </H6>
                   </>
                 )}
-              </Flex>
+              </div>
               <Spacer y={1} />
             </>
           ) : null}
@@ -234,7 +233,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
               <Spacer y={1} />
             </>
           ) : null}
-          <Flex align="center" wrap="wrap" justify="start" className="w-full">
+          <div className="flex w-full flex-row flex-wrap items-center justify-start">
             {(type === 'movie' || type === 'tv') &&
               genresMedia &&
               genresMedia.map((genre) => (
@@ -283,7 +282,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
                   <Spacer x={1} />
                 </>
               ))}
-          </Flex>
+          </div>
           <Spacer y={1} />
           {type === 'movie' || type === 'tv' ? (
             <H6 h6 css={{ textAlign: 'justify' }}>
@@ -298,7 +297,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
             />
           ) : null}
           <Spacer y={1} />
-        </Flex>
+        </div>
       </Row>
       <Spacer y={2} />
       {(type === 'movie' || type === 'tv') &&

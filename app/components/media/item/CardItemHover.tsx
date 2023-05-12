@@ -15,7 +15,6 @@ import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { type Trailer } from '~/components/elements/dialog/WatchTrailerModal';
 import Rating from '~/components/elements/shared/Rating';
-import Flex from '~/components/styles/Flex.styles';
 import { H4, H5, H6 } from '~/components/styles/Text.styles';
 import VolumeOff from '~/assets/icons/VolumeOffIcon';
 import VolumeUp from '~/assets/icons/VolumeUpIcon';
@@ -205,7 +204,7 @@ const CardItemHover = (props: ICardItemHoverProps) => {
       <Spacer y={0.5} />
       {genreIds || genresAnime ? (
         <>
-          <Flex direction="row">
+          <div className="flex flex-row">
             {mediaType === 'anime'
               ? genresAnime?.slice(0, 2).map((genre, index) => (
                   <>
@@ -262,7 +261,7 @@ const CardItemHover = (props: ICardItemHoverProps) => {
                     </>
                   );
                 })}
-          </Flex>
+          </div>
           <Spacer y={0.5} />
         </>
       ) : null}
@@ -277,12 +276,12 @@ const CardItemHover = (props: ICardItemHoverProps) => {
           <H5 h5>{`${mediaType.charAt(0).toUpperCase()}${mediaType.slice(1)} • ${releaseDate}`}</H5>
         ) : null}
         {voteAverage ? (
-          <Flex direction="row" align="center">
+          <div className="flex flex-row items-center">
             <Rating
               rating={mediaType === 'anime' ? voteAverage : Number(voteAverage.toFixed(1))}
               ratingType={mediaType}
             />
-          </Flex>
+          </div>
         ) : null}
       </Row>
       {showTrailer ? (
