@@ -1,18 +1,16 @@
 import { useRef } from 'react';
 import { useDebouncedEffect, useMediaQuery } from '@react-hookz/web';
 import { NavLink, useLocation } from '@remix-run/react';
+import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
 import {
   ScrollArea,
-  ScrollAreaCorner,
-  ScrollAreaScrollbar,
-  ScrollAreaThumb,
-  ScrollAreaViewport,
-} from '~/components/elements/scroll-area/ScrollArea';
+  ScrollBar,
+  ScrollCorner,
+  ScrollViewport,
+} from '~/components/elements/ScrollArea';
 import { H5 } from '~/components/styles/Text.styles';
-
-import { Underline } from './Tabs';
 
 interface ITabProps {
   pages?: {
@@ -46,16 +44,15 @@ const TabLink = (props: ITabProps) => {
     <ScrollArea
       type={isSm ? 'scroll' : 'hover'}
       scrollHideDelay={100}
-      css={{
+      style={{
         height: 55,
         width: '100%',
         borderBottom: '1px solid $border',
-        boxShadow: 'unset',
         borderRadius: 0,
         zIndex: 2,
       }}
     >
-      <ScrollAreaViewport>
+      <ScrollViewport>
         <div className="flex shrink-0 p-[6px] focus:outline-none">
           {pages?.map((page) => (
             <NavLink
@@ -69,14 +66,10 @@ const TabLink = (props: ITabProps) => {
                     {t(page.pageName)}
                   </H5>
                   {isActive ? (
-                    <Underline
+                    <motion.div
                       ref={underlineRef}
                       layoutId="underline"
-                      css={{
-                        height: 4,
-                        width: '50%',
-                        bottom: 0,
-                      }}
+                      className="absolute bottom-0 h-1 w-1/2 overflow-hidden rounded-md bg-primary"
                     />
                   ) : null}
                 </>
@@ -84,23 +77,9 @@ const TabLink = (props: ITabProps) => {
             </NavLink>
           ))}
         </div>
-      </ScrollAreaViewport>
-      <ScrollAreaScrollbar
-        orientation="horizontal"
-        css={{
-          padding: 0,
-          margin: 0,
-          bottom: '-5px !important',
-          backgroundColor: 'transparent',
-          '&:hover': { backgroundColor: 'transparent' },
-          '&[data-orientation="horizontal"]': { h: 5 },
-        }}
-      >
-        <ScrollAreaThumb
-          css={{ backgroundColor: '$accents8', '&:hover': { background: '$accents6' } }}
-        />
-      </ScrollAreaScrollbar>
-      <ScrollAreaCorner />
+      </ScrollViewport>
+      <ScrollBar orientation="horizontal" />
+      <ScrollCorner />
     </ScrollArea>
   );
 };

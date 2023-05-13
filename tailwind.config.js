@@ -1,4 +1,3 @@
-const { dirname, join } = require('path');
 const { withTV } = require('tailwind-variants/transformer');
 const plugin = require('tailwindcss/plugin');
 const { nextui } = require('@nextui-org/theme');
@@ -7,7 +6,7 @@ const { nextui } = require('@nextui-org/theme');
 module.exports = withTV({
   content: [
     './app/**/*.{js,ts,jsx,tsx}',
-    join(dirname(require.resolve('@nextui-org/theme')), '**/*.js'),
+    './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     extend: {

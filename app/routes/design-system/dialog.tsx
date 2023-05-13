@@ -1,5 +1,7 @@
 import { Button } from '@nextui-org/button';
+import { Chip } from '@nextui-org/chip';
 import { Link } from '@nextui-org/link';
+import { NavLink } from '@remix-run/react';
 
 import {
   Dialog,
@@ -17,6 +19,30 @@ import {
   SheetTrigger,
 } from '~/components/elements/Sheet';
 
+export const handle = {
+  breadcrumb: () => (
+    <NavLink to="/design-system/dialog" aria-label="Dialog Page">
+      {({ isActive }) => (
+        <Chip
+          color="primary"
+          variant="flat"
+          size="sm"
+          className={`${
+            isActive ? 'opacity-100' : 'opacity-70'
+          } duration-250 ease-in-out transition-opacity hover:opacity-80`}
+        >
+          Dialog
+        </Chip>
+      )}
+    </NavLink>
+  ),
+  miniTitle: () => ({
+    title: 'Dialog',
+    showImage: false,
+  }),
+  getSitemapEntries: () => null,
+};
+
 const DialogPage = () => {
   return (
     <>
@@ -24,6 +50,7 @@ const DialogPage = () => {
         showAnchorIcon
         underline="hover"
         isExternal
+        isBlock
         href="https://www.radix-ui.com/docs/primitives/components/dialog#api-reference"
       >
         API Reference

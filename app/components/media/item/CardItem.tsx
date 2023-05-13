@@ -13,14 +13,13 @@ import type { ITrailer } from '~/services/consumet/anilist/anilist.types';
 import useCardHoverStore from '~/store/card/useCardHoverStore';
 import { useLayout } from '~/store/layout/useLayout';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
-import type { Trailer } from '~/components/elements/dialog/WatchTrailerModal';
 import {
   ScrollArea,
-  ScrollAreaCorner,
-  ScrollAreaScrollbar,
-  ScrollAreaThumb,
-  ScrollAreaViewport,
-} from '~/components/elements/scroll-area/ScrollArea';
+  ScrollBar,
+  ScrollCorner,
+  ScrollViewport,
+} from '~/components/elements/ScrollArea';
+import type { Trailer } from '~/components/elements/dialog/WatchTrailerModal';
 import Rating from '~/components/elements/shared/Rating';
 import { H5, H6, P } from '~/components/styles/Text.styles';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
@@ -336,33 +335,20 @@ const CardItem = (props: ICardItemProps) => {
             <ScrollArea
               type="hover"
               scrollHideDelay={400}
-              css={{
+              style={{
                 height: 'calc(100% - 5rem)',
                 width: '100%',
-                boxShadow: 'none',
               }}
             >
-              <ScrollAreaViewport>
+              <ScrollViewport>
                 <P
                   as="p"
                   dangerouslySetInnerHTML={{ __html: overview || '' }}
                   css={{ fontSize: '0.85rem', pr: '1rem' }}
                 />
-              </ScrollAreaViewport>
-              <ScrollAreaScrollbar
-                orientation="vertical"
-                css={{
-                  padding: 0,
-                  margin: 2,
-                  backgroundColor: 'transparent',
-                  '&:hover': { backgroundColor: 'transparent' },
-                }}
-              >
-                <ScrollAreaThumb
-                  css={{ backgroundColor: '$accents8', '&:hover': { background: '$accents6' } }}
-                />
-              </ScrollAreaScrollbar>
-              <ScrollAreaCorner />
+              </ScrollViewport>
+              <ScrollBar />
+              <ScrollCorner />
             </ScrollArea>
             <div className="flex flex-row items-center justify-start gap-x-3">
               {mediaType === 'anime'
@@ -486,33 +472,21 @@ const CardItem = (props: ICardItemProps) => {
             <ScrollArea
               type="hover"
               scrollHideDelay={400}
-              css={{
+              style={{
                 height: 'calc(100% - 5rem)',
                 width: '100%',
                 boxShadow: 'none',
               }}
             >
-              <ScrollAreaViewport>
+              <ScrollViewport>
                 <P
                   as="p"
                   dangerouslySetInnerHTML={{ __html: overview || '' }}
                   css={{ fontSize: '0.85rem', pr: '1rem' }}
                 />
-              </ScrollAreaViewport>
-              <ScrollAreaScrollbar
-                orientation="vertical"
-                css={{
-                  padding: 0,
-                  margin: 2,
-                  backgroundColor: 'transparent',
-                  '&:hover': { backgroundColor: 'transparent' },
-                }}
-              >
-                <ScrollAreaThumb
-                  css={{ backgroundColor: '$accents8', '&:hover': { background: '$accents6' } }}
-                />
-              </ScrollAreaScrollbar>
-              <ScrollAreaCorner />
+              </ScrollViewport>
+              <ScrollBar />
+              <ScrollCorner />
             </ScrollArea>
           </div>
         ) : null}

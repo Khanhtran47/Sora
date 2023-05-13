@@ -39,7 +39,7 @@ export const handle = {
   getSitemapEntries: () => null,
 };
 
-const ButtonComponent = () => {
+const ButtonPage = () => {
   const [size, setSize] = useState('md');
   const [radius, setRadius] = useState('xl');
   const [
@@ -251,4 +251,4 @@ const ButtonComponent = () => {
   );
 };
 
-export default ButtonComponent;
+export default ButtonPage;

@@ -25,7 +25,7 @@ export const handle = {
   getSitemapEntries: () => null,
 };
 
-const Colors = () => {
+const ColorsPage = () => {
   return (
     <>
       <h2 className="m-0">Semantic colors</h2>
@@ -524,4 +524,4 @@ const Colors = () => {
   );
 };
 
-export default Colors;
+export default ColorsPage;

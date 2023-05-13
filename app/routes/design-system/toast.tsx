@@ -1,12 +1,39 @@
 import { Button } from '@nextui-org/button';
+import { Chip } from '@nextui-org/chip';
 import { Link } from '@nextui-org/link';
+import { NavLink } from '@remix-run/react';
 import { toast } from 'sonner';
 
 import Info from '~/assets/icons/InfoIcon';
 
+export const handle = {
+  breadcrumb: () => (
+    <NavLink to="/design-system/toast" aria-label="Toast Page">
+      {({ isActive }) => (
+        <Chip
+          color="primary"
+          variant="flat"
+          size="sm"
+          className={`${
+            isActive ? 'opacity-100' : 'opacity-70'
+          } duration-250 ease-in-out transition-opacity hover:opacity-80`}
+        >
+          Toast
+        </Chip>
+      )}
+    </NavLink>
+  ),
+  miniTitle: () => ({
+    title: 'Toast',
+    showImage: false,
+  }),
+  getSitemapEntries: () => null,
+};
+
 const ToastPage = () => {
   return (
     <>
+      <h2>Toast</h2>
       <Link
         showAnchorIcon
         underline="hover"

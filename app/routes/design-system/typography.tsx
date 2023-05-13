@@ -3,7 +3,7 @@ import { NavLink } from '@remix-run/react';
 
 export const handle = {
   breadcrumb: () => (
-    <NavLink to="/design-system/typography" aria-label="Player Page">
+    <NavLink to="/design-system/typography" aria-label="Typography Page">
       {({ isActive }) => (
         <Chip
           color="primary"

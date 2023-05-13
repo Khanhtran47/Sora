@@ -43,13 +43,7 @@ import {
   settingsTab,
 } from '~/constants/settings';
 import AboutLogo from '~/components/elements/NavLink';
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-  Underline,
-} from '~/components/elements/tab/Tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/elements/tab/Tabs';
 import { H2, H5, H6 } from '~/components/styles/Text.styles';
 import Brush from '~/assets/icons/BrushIcon';
 import Info from '~/assets/icons/InfoIcon';
@@ -422,34 +416,19 @@ const Settings = () => {
                   key={tab.id}
                   value={tab.id}
                   disabled={tab.disabled}
-                  css={{
-                    position: 'relative',
-                    '&[data-state="active"]': {
-                      [`& ${Underline}`]: {
-                        height: 4,
-                        width: '50%',
-                        bottom: 0,
-                        left: 'unset',
-                      },
-                    },
-                    '&[data-orientation="vertical"]': {
-                      '&[data-state="active"]': {
-                        [`& ${Underline}`]: {
-                          width: 4,
-                          height: '50%',
-                          left: 0,
-                          bottom: 'unset',
-                        },
-                      },
-                    },
-                  }}
+                  className="relative"
                 >
                   {settingsIcon(tab.id, activeTab === tab.id)}
                   <H6 h6 css={{ color: 'inherit', marginLeft: '0.5rem' }}>
                     {t(tab.title)}
                   </H6>
                   {activeTab === tab.id ? (
-                    <Underline className="underline" layoutId="underline" ref={underlineRef} />
+                    <motion.div
+                      className="absolute overflow-hidden rounded-md bg-neutral-foreground data-[orientation=horizontal]:bottom-0 data-[orientation=vertical]:left-0 data-[orientation=horizontal]:h-1 data-[orientation=vertical]:h-1/2 data-[orientation=horizontal]:w-1/2 data-[orientation=vertical]:w-1"
+                      layoutId="underline"
+                      data-orientation={isSm ? 'horizontal' : 'vertical'}
+                      ref={underlineRef}
+                    />
                   ) : null}
                 </TabsTrigger>
               ))}

@@ -1,4 +1,3 @@
-/* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMemo } from 'react';
 import { useMeasure, useWindowSize } from '@react-hookz/web';
@@ -6,11 +5,10 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 import {
   ScrollArea,
-  ScrollAreaCorner,
-  ScrollAreaScrollbar,
-  ScrollAreaThumb,
-  ScrollAreaViewport,
-} from '~/components/elements/scroll-area/ScrollArea';
+  ScrollBar,
+  ScrollCorner,
+  ScrollViewport,
+} from '~/components/elements/ScrollArea';
 
 /*
   Replacer function to JSON.stringify that ignores
@@ -68,12 +66,12 @@ const ResizablePanel = ({
         >
           <ScrollArea
             type="hover"
-            css={{
+            style={{
               height: panelHeight,
               width: size?.width || 'auto',
             }}
           >
-            <ScrollAreaViewport>
+            <ScrollViewport>
               <div
                 ref={ref}
                 className={`${
@@ -82,21 +80,9 @@ const ResizablePanel = ({
               >
                 {children}
               </div>
-            </ScrollAreaViewport>
-            <ScrollAreaScrollbar
-              orientation="vertical"
-              css={{
-                padding: 0,
-                margin: 2,
-                backgroundColor: 'transparent',
-                '&:hover': { backgroundColor: 'transparent' },
-              }}
-            >
-              <ScrollAreaThumb
-                css={{ backgroundColor: '$accents8', '&:hover': { background: '$accents6' } }}
-              />
-            </ScrollAreaScrollbar>
-            <ScrollAreaCorner />
+            </ScrollViewport>
+            <ScrollBar />
+            <ScrollCorner />
           </ScrollArea>
         </motion.div>
       </AnimatePresence>

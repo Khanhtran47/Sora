@@ -14,11 +14,10 @@ import { useLayout } from '~/store/layout/useLayout';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import {
   ScrollArea,
-  ScrollAreaCorner,
-  ScrollAreaScrollbar,
-  ScrollAreaThumb,
-  ScrollAreaViewport,
-} from '~/components/elements/scroll-area/ScrollArea';
+  ScrollBar,
+  ScrollCorner,
+  ScrollViewport,
+} from '~/components/elements/ScrollArea';
 import TabLink from '~/components/elements/tab/TabLink';
 
 import ActionButtons from './ActionButtons';
@@ -321,14 +320,15 @@ const Layout = (props: ILayout) => {
         <ScrollArea
           type={isSm ? 'scroll' : 'always'}
           scrollHideDelay={500}
-          css={{
-            width: '100%',
-            height: sidebarBoxedMode.value ? 'calc(100vh - 15px)' : '100vh',
-            borderRadius: 0,
-          }}
+          // css={{
+          //   width: '100%',
+          //   height: sidebarBoxedMode.value ? 'calc(100vh - 15px)' : '100vh',
+          //   borderRadius: 0,
+          // }}
+          className={`w-full ${sidebarBoxedMode.value ? 'h-[calc(100vh-15px)]' : 'h-screen'}`}
           key="scroll-area-main"
         >
-          <ScrollAreaViewport ref={viewportRef} onScroll={(e) => handleScroll(e)}>
+          <ScrollViewport ref={viewportRef} onScroll={(e) => handleScroll(e)}>
             <main
               className={scrollAreaViewportStyles({
                 mini: sidebarMiniMode.value,
@@ -369,21 +369,9 @@ const Layout = (props: ILayout) => {
             </main>
             {/* <Footer /> */}
             {isSm ? <BottomNav user={user} /> : null}
-          </ScrollAreaViewport>
-          <ScrollAreaScrollbar
-            orientation="vertical"
-            css={{
-              padding: 0,
-              margin: 2,
-              backgroundColor: 'transparent',
-              '&:hover': { backgroundColor: 'transparent' },
-            }}
-          >
-            <ScrollAreaThumb
-              css={{ backgroundColor: '$accents8', '&:hover': { background: '$accents6' } }}
-            />
-          </ScrollAreaScrollbar>
-          <ScrollAreaCorner />
+          </ScrollViewport>
+          <ScrollBar />
+          <ScrollCorner />
         </ScrollArea>
       </div>
     </div>
