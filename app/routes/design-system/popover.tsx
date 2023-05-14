@@ -48,7 +48,7 @@ const PopoverPage = () => {
         <PopoverTrigger asChild>
           <Button variant={openPopover ? 'flat' : 'solid'}>Open</Button>
         </PopoverTrigger>
-        <PopoverContent>Place content for the popover here.</PopoverContent>
+        <PopoverContent className="!p-3">Place content for the popover here.</PopoverContent>
       </Popover>
     </>
   );

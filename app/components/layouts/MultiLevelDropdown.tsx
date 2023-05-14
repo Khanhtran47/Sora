@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Player } from '@lottiefiles/react-lottie-player';
 import { Button } from '@nextui-org/button';
-import { Avatar, Divider, Spacer, styled } from '@nextui-org/react';
+import { Avatar, Divider, Spacer } from '@nextui-org/react';
 import { useLocation, useNavigate, useSearchParams } from '@remix-run/react';
 import type { User } from '@supabase/supabase-js';
 import type { AnimationItem } from 'lottie-web';
@@ -24,12 +24,6 @@ import dropdown from '~/assets/lotties/lottieflow-dropdown-03-0072F5-easey.json'
 interface IMultiLevelDropdownProps {
   user?: User | undefined;
 }
-
-const PlayerStyled = styled(Player, {
-  '& path': {
-    stroke: '$primary',
-  },
-});
 
 const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
   const { user } = props;
@@ -234,7 +228,7 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
           isIconOnly
           className="h-9 w-10"
         >
-          <PlayerStyled
+          <Player
             lottieRef={(instance) => {
               setLottie(instance);
             }}
@@ -242,7 +236,7 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
             autoplay={false}
             keepLastFrame
             speed={2.7}
-            className="h-6 w-6"
+            className="lottie-color h-6 w-6"
           />
         </Button>
       </PopoverTrigger>

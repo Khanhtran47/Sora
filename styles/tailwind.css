@@ -123,4 +123,12 @@
       @apply !border-t-background/[0.6];
     }
   }
+
+  .lottie-color {
+    svg {
+      path {
+        @apply stroke-primary;
+      }
+    }
+  }
 }

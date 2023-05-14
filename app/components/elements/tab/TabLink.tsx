@@ -44,13 +44,7 @@ const TabLink = (props: ITabProps) => {
     <ScrollArea
       type={isSm ? 'scroll' : 'hover'}
       scrollHideDelay={100}
-      style={{
-        height: 55,
-        width: '100%',
-        borderBottom: '1px solid $border',
-        borderRadius: 0,
-        zIndex: 2,
-      }}
+      className="z-[2] h-[55px] w-full border-b border-border"
     >
       <ScrollViewport>
         <div className="flex shrink-0 p-[6px] focus:outline-none">

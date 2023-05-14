@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
 import { Button } from '@nextui-org/button';
-import { Card, Checkbox, Input, Row, Spacer, useInput } from '@nextui-org/react';
+import { Card, CardBody, CardFooter, CardHeader } from '@nextui-org/card';
+import { Checkbox, Input, Spacer, useInput } from '@nextui-org/react';
 import { Form, Link, useLocation } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 
-import { H2, H4, H5 } from '~/components/styles/Text.styles';
 import MailEdit from '~/assets/icons/MailEditIcon';
 import Password from '~/assets/icons/Password';
 
@@ -47,19 +47,14 @@ const AuthForm = ({ type, error, code, errorCode }: IAuthForm) => {
   }, [value]);
 
   return (
-    <Form method="post">
-      <Card variant="bordered" css={{ mw: '100%', padding: '$5' }} role="form">
-        <Card.Header>
-          <H2
-            h2
-            css={{
-              textGradient: '45deg, $blue600 -20%, $pink600 50%',
-            }}
-          >
+    <Form method="post" className="flex w-full justify-center">
+      <Card className="w-full max-w-lg">
+        <CardHeader className="flex w-full justify-center">
+          <h2 className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
             {t('welcome')}
-          </H2>
-        </Card.Header>
-        <Card.Body css={{ py: '$10' }}>
+          </h2>
+        </CardHeader>
+        <CardBody className="flex flex-col gap-y-3 py-4">
           <Input
             {...bindings}
             clearable
@@ -78,7 +73,7 @@ const AuthForm = ({ type, error, code, errorCode }: IAuthForm) => {
             aria-label="Email"
             contentLeft={<MailEdit fill="currentColor" />}
           />
-          <Spacer y={1.5} />
+          <Spacer y={0.5} />
           <Input.Password
             name="password"
             type="password"
@@ -93,7 +88,7 @@ const AuthForm = ({ type, error, code, errorCode }: IAuthForm) => {
           />
           {type === 'sign-up' && (
             <>
-              <Spacer y={1.5} />
+              <Spacer y={0.5} />
               <Input.Password
                 name="re-password"
                 type="password"
@@ -109,53 +104,32 @@ const AuthForm = ({ type, error, code, errorCode }: IAuthForm) => {
               <input type="hidden" name="invite-code" hidden value={inviteCode} />
             </>
           )}
-          {error && (
-            <H4 h4 color="error">
-              {error}
-            </H4>
-          )}
-          {errorCode && (
-            <H4 h4 color="error">
-              {t(errorCode)}
-            </H4>
-          )}
-          {!error && hasMessage && (
-            <H4 h4 color="green">
-              {t(code)}
-            </H4>
-          )}
-          <Spacer />
-          <Row justify="space-between" align="center">
+          {error ? <h4 className="text-danger">{error}</h4> : null}
+          {errorCode ? <h4 className="text-danger">{t(errorCode)}</h4> : null}
+          {!error && hasMessage ? <h4 className="text-success">{t(code)}</h4> : null}
+          <div className="flex items-center justify-between">
             {type === 'sign-in' ? (
               <>
-                <Link to="/sign-up">
-                  <H5 h5 weight="semibold" color="primary">
-                    {t('signUp')}
-                  </H5>
+                <Link to="/sign-up" className="font-semibold text-primary">
+                  {t('signUp')}
                 </Link>
                 <Checkbox>
-                  <H5 h5 size={14}>
-                    {t('rememberMe')}
-                  </H5>
+                  <h4 className="!m-0">{t('rememberMe')}</h4>
                 </Checkbox>
                 {/* <H4 h4 size={14}>Forgot password?</H4> */}
               </>
             ) : (
-              <Link to="/sign-in">
-                <H5 h5 weight="semibold" color="primary">
-                  {t('signIn')}
-                </H5>
+              <Link to="/sign-in" className="font-semibold text-primary">
+                {t('signIn')}
               </Link>
             )}
-          </Row>
-        </Card.Body>
-        <Card.Footer>
-          <Row justify="flex-end">
-            <Button color="primary" type="submit">
-              {type === 'sign-in' ? t('signIn') : t('signUp')}
-            </Button>
-          </Row>
-        </Card.Footer>
+          </div>
+        </CardBody>
+        <CardFooter className="flex justify-end p-5">
+          <Button color="primary" type="submit">
+            {type === 'sign-in' ? t('signIn') : t('signUp')}
+          </Button>
+        </CardFooter>
       </Card>
     </Form>
   );

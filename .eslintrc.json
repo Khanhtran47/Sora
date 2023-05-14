@@ -60,6 +60,7 @@
     "react/require-default-props": 0,
     "space-before-function-paren": 0,
     // @typescript-eslint
+    "@typescript-eslint/no-empty-interface": "off",
     "@typescript-eslint/no-throw-literal": "off",
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/no-duplicate-imports": "error",

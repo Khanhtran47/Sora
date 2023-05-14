@@ -1,4 +1,4 @@
-import { Badge, Container } from '@nextui-org/react';
+import { Badge } from '@nextui-org/react';
 import { json, redirect, type ActionArgs, type LoaderArgs } from '@remix-run/node';
 import { NavLink, useActionData } from '@remix-run/react';
 
@@ -118,11 +118,7 @@ export const handle = {
 const SignUpPage = () => {
   const actionData = useActionData<ActionData>();
 
-  return (
-    <Container fluid responsive={false} justify="center" display="flex">
-      <AuthForm type="sign-up" error={actionData?.error} errorCode={actionData?.errorCode} />
-    </Container>
-  );
+  return <AuthForm type="sign-up" error={actionData?.error} errorCode={actionData?.errorCode} />;
 };
 
 export default SignUpPage;

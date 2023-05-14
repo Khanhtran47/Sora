@@ -2,10 +2,11 @@
 /* eslint-disable @typescript-eslint/indent */
 import { useMemo, useState } from 'react';
 import { Button, ButtonGroup } from '@nextui-org/button';
-import { Avatar, Card, Dropdown, Pagination, Row, Spacer } from '@nextui-org/react';
+import { Card, CardBody } from '@nextui-org/card';
+import { Avatar, Dropdown, Pagination, Row, Spacer } from '@nextui-org/react';
 import { useMediaQuery } from '@react-hookz/web';
 import { useNavigate } from '@remix-run/react';
-import Image, { MimeType } from 'remix-image';
+import { MimeType } from 'remix-image';
 
 import type { IEpisodeInfo } from '~/services/consumet/anilist/anilist.types';
 import type { IEpisode } from '~/services/tmdb/tmdb.types';
@@ -17,6 +18,8 @@ import Rating from '~/components/elements/shared/Rating';
 import { H3, H5, H6 } from '~/components/styles/Text.styles';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 import ViewGrid from '~/assets/icons/ViewGridCardIcon';
+
+import Image from '../Image';
 
 interface IListEpisodesProps {
   type: 'tv' | 'anime';
@@ -163,52 +166,30 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
               episodesCountAvailable >= episodesCountProvider ? (
               <div key={episode.id}>
                 <Card
-                  as="div"
                   isHoverable
                   isPressable
-                  css={{
-                    maxHeight: '127px !important',
-                    borderWidth: 0,
-                    filter: 'unset',
-                    '&:hover': {
-                      boxShadow: '0 0 0 1px var(--nextui-colors-primarySolidHover)',
-                      filter:
-                        'drop-shadow(0 4px 12px rgb(104 112 118 / 0.15)) drop-shadow(0 20px 8px rgb(104 112 118 / 0.1))',
-                    },
-                  }}
-                  role="figure"
+                  className="!max-h-[127px] hover:shadow-[0_0_0_1px] hover:shadow-primary-200"
                   onClick={() => handleSelectEpisode(index)}
                 >
-                  <Card.Body
-                    css={{
-                      p: 0,
-                      flexFlow: 'row nowrap',
-                      justifyContent: 'flex-start',
-                    }}
-                  >
+                  <CardBody className="flex flex-row flex-nowrap justify-start p-0">
                     {type === 'tv' &&
                       (episode?.still_path ? (
-                        <Card.Image
-                          // @ts-ignore
-                          as={Image}
-                          src={TMDB.posterUrl(episode?.still_path, 'w185')}
-                          objectFit="cover"
-                          width="227px"
+                        <Image
+                          src={TMDB.posterUrl(episode?.still_path, 'w342')}
+                          width={227}
                           height="100%"
-                          showSkeleton
+                          isZoomed
                           loading="lazy"
+                          disableSkeleton={false}
                           alt={episode?.name || ''}
                           title={episode?.name || ''}
-                          css={{
-                            minWidth: '227px !important',
-                            minHeight: '127px !important',
+                          classNames={{
+                            base: 'm-0 min-w-[227px] rounded-md max-h-[127px] overflow-hidden space-y-0',
+                            img: 'object-cover',
                           }}
                           loaderUrl="/api/image"
                           placeholder="empty"
-                          options={{
-                            contentType: MimeType.WEBP,
-                          }}
-                          containerCss={{ margin: 0, minWidth: '227px', borderRadius: '$lg' }}
+                          options={{ contentType: MimeType.WEBP }}
                           responsive={[
                             {
                               size: {
@@ -232,27 +213,22 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                       ))}
                     {type === 'anime' &&
                       (episode?.image ? (
-                        <Card.Image
-                          // @ts-ignore
-                          as={Image}
+                        <Image
                           src={episode.image}
-                          objectFit="cover"
-                          width="227px"
+                          width={227}
                           height="100%"
                           alt={episode?.title || ''}
                           title={episode?.title || ''}
-                          showSkeleton
                           loading="lazy"
-                          css={{
-                            minWidth: '227px !important',
-                            minHeight: '127px !important',
+                          isZoomed
+                          // disableSkeleton
+                          classNames={{
+                            base: 'm-0 min-w-[227px] rounded-md max-h-[127px] overflow-hidden space-y-0',
+                            img: 'object-cover',
                           }}
                           loaderUrl="/api/image"
                           placeholder="empty"
-                          options={{
-                            contentType: MimeType.WEBP,
-                          }}
-                          containerCss={{ margin: 0, minWidth: '227px', borderRadius: '$lg' }}
+                          options={{ contentType: MimeType.WEBP }}
                           responsive={[
                             {
                               size: {
@@ -313,7 +289,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                         </>
                       )}
                     </div>
-                  </Card.Body>
+                  </CardBody>
                 </Card>
                 <Spacer y={1} />
               </div>
