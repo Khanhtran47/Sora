@@ -5,6 +5,7 @@
   "description": "",
   "license": "",
   "scripts": {
+    "cleanup": "rimraf .cache ./public/build ./app/styles/tailwind.css",
     "build": "pnpm prod:css && pnpm build:worker && remix build",
     "build:css": "postcss styles/**/*.css --dir app/styles",
     "prod:css": "pnpm build:css",
@@ -12,7 +13,7 @@
     "dev": "concurrently \"pnpm dev:css\" \"pnpm dev:worker\" \"remix dev\"",
     "dev:css": "pnpm build:css --watch",
     "dev:worker": "esbuild ./app/entry.worker.ts --outfile=./public/entry.worker.js --bundle --format=esm --define:process.env.NODE_ENV='\"development\"' --watch",
-    "prebuild": "rimraf ./public/build \"./app/styles/**/*.css\"",
+    "prebuild": "pnpm cleanup",
     "postinstall": "remix setup node",
     "start": "remix-serve build",
     "format": "prettier --write .",
@@ -139,6 +140,7 @@
     "postcss-import": "^15.0.0",
     "prettier": "^2.8.0",
     "prettier-plugin-tailwindcss": "^0.2.7",
+    "rimraf": "^3.0.2",
     "typescript": "^4.9.3"
   },
   "lint-staged": {
