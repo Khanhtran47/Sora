@@ -47,7 +47,7 @@ const TabLink = (props: ITabProps) => {
       className="z-[2] h-[55px] w-full border-b border-border"
     >
       <ScrollViewport>
-        <div className="flex shrink-0 p-[6px] focus:outline-none">
+        <div className="flex p-[6px] focus:outline-none">
           {pages?.map((page) => (
             <NavLink
               key={page.pageLink}

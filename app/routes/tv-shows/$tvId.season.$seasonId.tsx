@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
-import { Avatar, Badge, Card, Spacer } from '@nextui-org/react';
+import { Card, CardBody, CardHeader } from '@nextui-org/card';
+import { Avatar, Badge, Spacer } from '@nextui-org/react';
 import { useIntersectionObserver, useMeasure, useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import {
@@ -12,8 +13,7 @@ import {
 } from '@remix-run/react';
 import { motion, useTransform } from 'framer-motion';
 import Vibrant from 'node-vibrant';
-import Image, { MimeType } from 'remix-image';
-import tinycolor from 'tinycolor2';
+import { MimeType } from 'remix-image';
 import i18next from '~/i18n/i18next.server';
 
 import getProviderList from '~/services/provider.server';
@@ -28,6 +28,7 @@ import { useCustomHeaderChangePosition } from '~/hooks/useHeader';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { tvSeasonDetailPages } from '~/constants/tabLinks';
 import { BackgroundContent, BackgroundTabLink } from '~/components/media/Media.styles';
+import Image from '~/components/elements/Image';
 import TabLink from '~/components/elements/tab/TabLink';
 import { H2, H5, H6 } from '~/components/styles/Text.styles';
 import CatchBoundaryView from '~/components/CatchBoundaryView';
@@ -242,91 +243,73 @@ const TvSeasonDetail = () => {
     <>
       <Card
         as="section"
-        variant="flat"
-        css={{
-          display: 'flex',
-          flexDirection: 'column',
-          borderBottomLeftRadius: 0,
-          borderBottomRightRadius: 0,
-          borderTopRightRadius: 0,
-          height: `calc(${size?.height}px + 72px)`,
-          width: '100%',
-          borderWidth: 0,
-          backgroundColor: 'transparent',
-          backgroundImage: `linear-gradient(to top, ${backgroundColor}, ${tinycolor(
-            backgroundColor,
-          ).setAlpha(0)})`,
-        }}
+        radius="none"
+        className="flex w-full flex-col border-0 !bg-transparent"
+        style={{ height: `calc(${size?.height}px + 72px)` }}
       >
-        <Card.Header
+        <CardHeader
           ref={ref}
-          css={{
-            position: 'absolute',
-            zIndex: 1,
-            flexGrow: 1,
-            display: 'flex',
-            justifyContent: 'center',
-            bottom: 0,
-            padding: 0,
-            borderBottomLeftRadius: 0,
-            borderBottomRightRadius: 0,
-            flexDirection: 'column',
-          }}
+          className="rounded-b-0 absolute bottom-0 z-10 flex grow flex-col justify-center p-0"
         >
           <BackgroundContent />
-          <div className="grid w-full max-w-[1920px] grid-cols-[1fr_2fr] grid-rows-[1fr_auto_auto] items-stretch justify-center gap-x-4 gap-y-6 px-3 pt-5 pb-8 grid-areas-small sm:grid-rows-[auto_1fr_auto] sm:px-3.5 sm:grid-areas-wide xl:px-4 2xl:px-5">
-            <div className="flex flex-col grid-in-image" ref={imageRef}>
+          <div className="grid w-full max-w-[1920px] grid-cols-[1fr_2fr] grid-rows-[1fr_auto_auto] items-stretch justify-center gap-x-4 gap-y-6 px-3 pb-8 pt-5 grid-areas-small sm:grid-rows-[auto_1fr_auto] sm:px-3.5 sm:grid-areas-wide xl:px-4 2xl:px-5">
+            <div className="flex flex-col items-center justify-center grid-in-image" ref={imageRef}>
               {seasonDetail?.poster_path ? (
-                <Card.Image
-                  // @ts-ignore
-                  as={Image}
-                  src={TMDB.posterUrl(seasonDetail?.poster_path)}
-                  alt={seasonDetail?.name}
-                  title={seasonDetail?.name}
-                  objectFit="cover"
-                  css={{
-                    minWidth: 'auto !important',
-                    minHeight: 'auto !important',
-                    borderRadius: '$sm',
-                    boxShadow: '12px 12px 30px 10px rgb(104 112 118 / 0.35)',
-                    aspectRatio: '2 / 3',
-                    '@sm': {
-                      borderRadius: '$md',
-                    },
-                  }}
-                  containerCss={{
-                    overflow: 'visible',
-                    width: '100% !important',
-                    '@xs': {
-                      width: '75% !important',
-                    },
-                    '@md': {
-                      width: '50% !important',
-                    },
-                  }}
-                  showSkeleton
-                  loaderUrl="/api/image"
-                  placeholder="empty"
-                  responsive={[
-                    {
-                      size: {
-                        width: Math.round(
-                          (imageSize?.width || 0) *
-                            (!isXl && !isSm ? 0.5 : isXl && !isSm ? 0.75 : isXl && isSm ? 1 : 1),
-                        ),
-                        height: Math.round(
-                          ((imageSize?.width || 0) *
-                            3 *
-                            (!isXl && !isSm ? 0.5 : isXl && !isSm ? 0.75 : isXl && isSm ? 1 : 1)) /
-                            2,
-                        ),
+                <div className="w-full sm:w-3/4 xl:w-1/2">
+                  <Image
+                    src={TMDB.posterUrl(seasonDetail?.poster_path)}
+                    alt={seasonDetail?.name}
+                    title={seasonDetail?.name}
+                    // css={{
+                    //   minWidth: 'auto !important',
+                    //   minHeight: 'auto !important',
+                    //   borderRadius: '$sm',
+                    //   boxShadow: '12px 12px 30px 10px rgb(104 112 118 / 0.35)',
+                    //   aspectRatio: '2 / 3',
+                    //   '@sm': {
+                    //     borderRadius: '$md',
+                    //   },
+                    // }}
+                    // containerCss={{
+                    //   overflow: 'visible',
+                    //   width: '100% !important',
+                    //   '@xs': {
+                    //     width: '75% !important',
+                    //   },
+                    //   '@md': {
+                    //     width: '50% !important',
+                    //   },
+                    // }}
+                    className="aspect-[2/3] !min-h-[auto] !min-w-[auto] shadow-xl shadow-neutral"
+                    loaderUrl="/api/image"
+                    placeholder="empty"
+                    responsive={[
+                      {
+                        size: {
+                          width: Math.round(
+                            (imageSize?.width || 0) *
+                              (!isXl && !isSm ? 0.5 : isXl && !isSm ? 0.75 : isXl && isSm ? 1 : 1),
+                          ),
+                          height: Math.round(
+                            ((imageSize?.width || 0) *
+                              3 *
+                              (!isXl && !isSm
+                                ? 0.5
+                                : isXl && !isSm
+                                ? 0.75
+                                : isXl && isSm
+                                ? 1
+                                : 1)) /
+                              2,
+                          ),
+                        },
                       },
-                    },
-                  ]}
-                  options={{
-                    contentType: MimeType.WEBP,
-                  }}
-                />
+                    ]}
+                    options={{
+                      contentType: MimeType.WEBP,
+                    }}
+                  />
+                </div>
               ) : (
                 <div className="flex items-center justify-center">
                   <Avatar
@@ -359,28 +342,26 @@ const TvSeasonDetail = () => {
               </div>
             ) : null}
           </div>
-        </Card.Header>
-        <Card.Body css={{ p: 0 }}>
-          <Card.Image
+        </CardHeader>
+        <CardBody
+          style={{
             // @ts-ignore
-            as={Image}
+            '--colors-movie-brand': backgroundColor,
+          }}
+          className="absolute bottom-0 to-transparent p-0 after:absolute after:bottom-0 after:h-full after:w-full after:bg-gradient-to-t after:from-movie-brand-color after:opacity-70 after:content-['']"
+        >
+          <Image
             src={
               seasonDetail?.poster_path
                 ? TMDB.posterUrl(seasonDetail?.poster_path, 'w342')
                 : BackgroundDefault
             }
-            showSkeleton
-            css={{
-              width: '100%',
-              height: 'auto',
-              top: 0,
-              left: 0,
-              objectFit: 'cover',
-              opacity: 0.3,
-            }}
+            radius="none"
+            className={`left-0 top-0 z-0 m-0 h-auto w-full object-cover opacity-30 ${
+              size ? 'visible' : 'invisible'
+            }'}`}
             title={seasonDetail?.name}
             alt={seasonDetail?.name}
-            containerCss={{ margin: 0, visibility: size ? 'visible' : 'hidden' }}
             loaderUrl="/api/image"
             placeholder="empty"
             responsive={[
@@ -396,7 +377,7 @@ const TvSeasonDetail = () => {
               contentType: MimeType.WEBP,
             }}
           />
-        </Card.Body>
+        </CardBody>
       </Card>
       <div className="flex w-full flex-col items-center justify-center">
         <motion.div

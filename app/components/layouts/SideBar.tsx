@@ -1,13 +1,13 @@
-/* eslint-disable @typescript-eslint/indent */
-
-import { Card, Link, Loading, Tooltip } from '@nextui-org/react';
+import { Card, CardBody, CardFooter, CardHeader } from '@nextui-org/card';
+import { Link, Loading, Tooltip } from '@nextui-org/react';
 import { useHover } from '@react-aria/interactions';
 import { NavLink } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
-import Image, { MimeType } from 'remix-image';
+import { MimeType } from 'remix-image';
 import { tv } from 'tailwind-variants';
 
 import { useSoraSettings } from '~/hooks/useLocalStorage';
+import Image from '~/components/elements/Image';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -17,7 +17,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from '~/components/elements/NavigationMenu';
-import { H2, H4, H6 } from '~/components/styles/Text.styles';
+import { H2, H6 } from '~/components/styles/Text.styles';
 import Anime from '~/assets/icons/AnimeIcon';
 import CategoryIcon from '~/assets/icons/CategoryIcon';
 import Discover from '~/assets/icons/DiscoverIcon';
@@ -26,7 +26,6 @@ import Home from '~/assets/icons/HomeIcon';
 import Movie from '~/assets/icons/MovieIcon';
 import Search from '~/assets/icons/SearchIcon';
 import Settings from '~/assets/icons/SettingsIcon';
-/* icons */
 import TrendingUp from '~/assets/icons/TrendingUpIcon';
 import Tv from '~/assets/icons/TvIcon';
 import TwoUsers from '~/assets/icons/TwoUsersIcon';
@@ -44,8 +43,8 @@ const sidebarStyles = tv({
       false: 'w-full max-w-[250px] basis-[250px]',
     },
     sidebarBoxedMode: {
-      true: 'top-[15px] left-[15px] h-[calc(100vh_-_30px)] rounded-xl bg-background/60',
-      false: 'top-0 left-0 h-screen',
+      true: 'left-[15px] top-[15px] h-[calc(100vh_-_30px)] rounded-xl bg-background/60',
+      false: 'left-0 top-0 h-screen',
     },
     sidebarHoverMode: {
       true: 'w-full max-w-[250px] basis-[250px] rounded-r-xl border border-border bg-background shadow-2xl',
@@ -254,7 +253,6 @@ const SideBar = () => {
                 </NavigationMenuLink>
               </Tooltip>
             </NavigationMenuItem>
-
             <NavigationMenuItem
               className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
               value="trending"
@@ -298,7 +296,6 @@ const SideBar = () => {
                 </NavigationMenuLink>
               </Tooltip>
             </NavigationMenuItem>
-
             <NavigationMenuItem
               className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
               value="discover"
@@ -342,7 +339,6 @@ const SideBar = () => {
                 </NavigationMenuLink>
               </Tooltip>
             </NavigationMenuItem>
-
             <NavigationMenuItem
               className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
               value="search"
@@ -448,7 +444,6 @@ const SideBar = () => {
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
-
             <NavigationMenuItem
               className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
               value="movies"
@@ -470,71 +465,60 @@ const SideBar = () => {
               <NavigationMenuContent>
                 <ul className="m-0 flex w-fit flex-row gap-x-[6px] p-[6px]">
                   <li className="m-0 shrink-0 grow-0 basis-[215px]">
-                    <NavLink to="/discover/movies">
-                      <Card
-                        as="div"
-                        isPressable
-                        css={{ w: '100%', borderWidth: 0, filter: 'unset', borderRadius: 6 }}
-                      >
-                        <Card.Header css={{ position: 'absolute', zIndex: 1 }}>
-                          <Link
-                            as={H6}
-                            isExternal
-                            className="!w-full !max-w-none text-foreground [&_.nextui-link-icon]:ml-auto"
-                          >
-                            {t('movies-discover')}
-                          </Link>
-                        </Card.Header>
-                        <Card.Body css={{ p: 0, w: '100%', aspectRatio: '2/3' }}>
-                          <Card.Image
-                            // @ts-ignore
-                            as={Image}
-                            width="215px"
-                            height="auto"
-                            objectFit="cover"
-                            css={{
-                              aspectRatio: '2/3',
-                              filter: 'brightness(0.5)',
-                            }}
-                            showSkeleton
-                            loaderUrl="/api/image"
-                            alt="Discover movies"
-                            src="https://image.tmdb.org/t/p/w342_filter(duotone,190235,ad47dd)/wNB551TsEb7KFU3an5LwOrgvUpn.jpg"
-                            loading="lazy"
-                            placeholder="empty"
-                            responsive={[
-                              {
-                                size: {
-                                  width: 215,
-                                  height: (215 / 2) * 3,
-                                },
-                              },
-                            ]}
-                            dprVariants={[1, 3]}
-                            options={{
-                              contentType: MimeType.WEBP,
-                            }}
-                          />
-                        </Card.Body>
-                        <Card.Footer
-                          isBlurred
-                          className="b-0 absolute z-[1] bg-background/60 backdrop-blur-sm"
-                          css={{
-                            position: 'absolute',
-                            zIndex: 1,
-                            bottom: 0,
-                            backgroundColor: '$backgroundAlpha',
-                            justifyContent: 'flex-start',
-                            borderBottomLeftRadius: 6,
-                            borderBottomRightRadius: 6,
-                          }}
+                    <Card
+                      as={NavLink}
+                      radius="md"
+                      isPressable
+                      isFooterBlurred
+                      classNames={{
+                        base: 'w-full',
+                      }}
+                      to="/discover/movies"
+                      role="link"
+                    >
+                      <CardHeader className="absolute top-0 z-20">
+                        <Link
+                          as={H6}
+                          isExternal
+                          className="!w-full !max-w-none text-foreground [&_.nextui-link-icon]:ml-auto"
                         >
-                          <H4 className="text-white">{t('movies-footer')}</H4>
-                        </Card.Footer>
-                      </Card>
-                    </NavLink>
+                          {t('movies-discover')}
+                        </Link>
+                      </CardHeader>
+                      <CardBody className="aspect-[2/3] w-full p-0">
+                        <Image
+                          radius="md"
+                          width="215px"
+                          height="auto"
+                          style={{
+                            aspectRatio: '2/3',
+                            filter: 'brightness(0.8)',
+                          }}
+                          loaderUrl="/api/image"
+                          alt="Discover movies"
+                          src="https://image.tmdb.org/t/p/w342_filter(duotone,190235,ad47dd)/wNB551TsEb7KFU3an5LwOrgvUpn.jpg"
+                          loading="lazy"
+                          placeholder="empty"
+                          responsive={[
+                            {
+                              size: {
+                                width: 215,
+                                height: (215 / 2) * 3,
+                              },
+                            },
+                          ]}
+                          dprVariants={[1, 3]}
+                          options={{
+                            contentType: MimeType.WEBP,
+                          }}
+                        />
+                      </CardBody>
+                      <CardFooter className="absolute bottom-0 z-[10] justify-start bg-neutral/60 backdrop-blur-sm">
+                        <h4 className="text-neutral-foreground">{t('movies-footer')}</h4>
+                      </CardFooter>
+                    </Card>
                   </li>
-                  <li className="m-0 flex flex-col justify-between gap-y-[6px] [&_.active]:bg-background [&_.active]:text-primary">
+                  <li className="m-0 flex min-w-[215px] flex-col justify-between gap-y-[6px] [&_.active]:bg-background [&_.active]:text-primary">
                     <NavigationMenuLink asChild>
                       <NavLink
                         to="/movies/popular"
@@ -639,7 +623,6 @@ const SideBar = () => {
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
-
             <NavigationMenuItem
               className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
               value="tv-shows"
@@ -661,71 +644,60 @@ const SideBar = () => {
               <NavigationMenuContent>
                 <ul className="m-0 flex w-fit flex-row gap-x-[6px] p-[6px]">
                   <li className="m-0 shrink-0 grow-0 basis-[215px]">
-                    <NavLink to="/discover/tv-shows">
-                      <Card
-                        as="div"
-                        isPressable
-                        css={{ w: '100%', borderWidth: 0, filter: 'unset', borderRadius: 6 }}
-                      >
-                        <Card.Header css={{ position: 'absolute', zIndex: 1 }}>
-                          <Link
-                            as={H6}
-                            isExternal
-                            className="!w-full !max-w-none text-foreground [&_.nextui-link-icon]:ml-auto"
-                          >
-                            {t('tv-shows-discover')}
-                          </Link>
-                        </Card.Header>
-                        <Card.Body css={{ p: 0, w: '100%', aspectRatio: '2/3' }}>
-                          <Card.Image
-                            // @ts-ignore
-                            as={Image}
-                            width="215px"
-                            height="auto"
-                            objectFit="cover"
-                            css={{
-                              aspectRatio: '2/3',
-                              filter: 'brightness(0.5)',
-                            }}
-                            showSkeleton
-                            loaderUrl="/api/image"
-                            alt="Discover tv shows"
-                            src="https://image.tmdb.org/t/p/w342_filter(duotone,352302,ddd147)/ggFHVNu6YYI5L9pCfOacjizRGt.jpg"
-                            loading="lazy"
-                            placeholder="empty"
-                            responsive={[
-                              {
-                                size: {
-                                  width: 215,
-                                  height: (215 / 2) * 3,
-                                },
-                              },
-                            ]}
-                            dprVariants={[1, 3]}
-                            options={{
-                              contentType: MimeType.WEBP,
-                            }}
-                          />
-                        </Card.Body>
-                        <Card.Footer
-                          isBlurred
-                          className="b-0 absolute z-[1] bg-background/60 backdrop-blur-sm"
-                          css={{
-                            position: 'absolute',
-                            zIndex: 1,
-                            bottom: 0,
-                            backgroundColor: '$backgroundAlpha',
-                            justifyContent: 'flex-start',
-                            borderBottomLeftRadius: 6,
-                            borderBottomRightRadius: 6,
-                          }}
+                    <Card
+                      as={NavLink}
+                      role="link"
+                      to="/discover/tv-shows"
+                      radius="md"
+                      isPressable
+                      isFooterBlurred
+                      classNames={{
+                        base: 'w-full',
+                      }}
+                    >
+                      <CardHeader className="absolute top-0 z-20">
+                        <Link
+                          as={H6}
+                          isExternal
+                          className="!w-full !max-w-none text-foreground [&_.nextui-link-icon]:ml-auto"
                         >
-                          <H4 className="text-white">{t('tv-shows-footer')}</H4>
-                        </Card.Footer>
-                      </Card>
-                    </NavLink>
+                          {t('tv-shows-discover')}
+                        </Link>
+                      </CardHeader>
+                      <CardBody className="aspect-[2/3] w-full p-0">
+                        <Image
+                          radius="md"
+                          width="215px"
+                          height="auto"
+                          style={{
+                            aspectRatio: '2/3',
+                            filter: 'brightness(0.8)',
+                          }}
+                          loaderUrl="/api/image"
+                          alt="Discover tv shows"
+                          src="https://image.tmdb.org/t/p/w342_filter(duotone,352302,ddd147)/ggFHVNu6YYI5L9pCfOacjizRGt.jpg"
+                          loading="lazy"
+                          placeholder="empty"
+                          responsive={[
+                            {
+                              size: {
+                                width: 215,
+                                height: (215 / 2) * 3,
+                              },
+                            },
+                          ]}
+                          dprVariants={[1, 3]}
+                          options={{
+                            contentType: MimeType.WEBP,
+                          }}
+                        />
+                      </CardBody>
+                      <CardFooter className="absolute bottom-0 z-[10] justify-start bg-neutral/60 backdrop-blur-sm">
+                        <h4 className="text-neutral-foreground">{t('tv-shows-footer')}</h4>
+                      </CardFooter>
+                    </Card>
                   </li>
-                  <li className="m-0 flex flex-col justify-between gap-y-[6px] [&_.active]:bg-background [&_.active]:text-primary">
+                  <li className="m-0 flex min-w-[215px] flex-col justify-between gap-y-[6px] [&_.active]:bg-background [&_.active]:text-primary">
                     <NavigationMenuLink asChild>
                       <NavLink
                         to="/tv-shows/popular"
@@ -830,7 +802,6 @@ const SideBar = () => {
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
-
             <NavigationMenuItem
               className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
               value="anime"
@@ -852,71 +823,60 @@ const SideBar = () => {
               <NavigationMenuContent>
                 <ul className="m-0 flex w-fit flex-row gap-x-[6px] p-[6px]">
                   <li className="m-0 shrink-0 grow-0 basis-[215px]">
-                    <NavLink to="/discover/anime">
-                      <Card
-                        as="div"
-                        isPressable
-                        css={{ w: '100%', borderWidth: 0, filter: 'unset', borderRadius: 6 }}
-                      >
-                        <Card.Header css={{ position: 'absolute', zIndex: 1 }}>
-                          <Link
-                            as={H6}
-                            isExternal
-                            className="!w-full !max-w-none text-foreground [&_.nextui-link-icon]:ml-auto"
-                          >
-                            {t('anime-discover')}
-                          </Link>
-                        </Card.Header>
-                        <Card.Body css={{ p: 0, w: '100%', aspectRatio: '2/3' }}>
-                          <Card.Image
-                            // @ts-ignore
-                            as={Image}
-                            width="215px"
-                            height="auto"
-                            objectFit="cover"
-                            css={{
-                              aspectRatio: '2/3',
-                              filter: 'brightness(0.5)',
-                            }}
-                            showSkeleton
-                            loaderUrl="/api/image"
-                            alt="Discover anime"
-                            src="https://image.tmdb.org/t/p/w342_filter(duotone,070235,dd4749)/iAld03IP69UEpqQbVWoRBvjqkqX.jpg"
-                            loading="lazy"
-                            placeholder="empty"
-                            responsive={[
-                              {
-                                size: {
-                                  width: 215,
-                                  height: (215 / 2) * 3,
-                                },
-                              },
-                            ]}
-                            dprVariants={[1, 3]}
-                            options={{
-                              contentType: MimeType.WEBP,
-                            }}
-                          />
-                        </Card.Body>
-                        <Card.Footer
-                          isBlurred
-                          className="b-0 absolute z-[1] bg-background/60 backdrop-blur-sm"
-                          css={{
-                            position: 'absolute',
-                            zIndex: 1,
-                            bottom: 0,
-                            backgroundColor: '$backgroundAlpha',
-                            justifyContent: 'flex-start',
-                            borderBottomLeftRadius: 6,
-                            borderBottomRightRadius: 6,
-                          }}
+                    <Card
+                      as={NavLink}
+                      role="link"
+                      to="/discover/anime"
+                      radius="md"
+                      isPressable
+                      isFooterBlurred
+                      classNames={{
+                        base: 'w-full',
+                      }}
+                    >
+                      <CardHeader className="absolute top-0 z-20">
+                        <Link
+                          as={H6}
+                          isExternal
+                          className="!w-full !max-w-none text-foreground [&_.nextui-link-icon]:ml-auto"
                         >
-                          <H4 className="text-white">{t('anime-footer')}</H4>
-                        </Card.Footer>
-                      </Card>
-                    </NavLink>
+                          {t('anime-discover')}
+                        </Link>
+                      </CardHeader>
+                      <CardBody className="aspect-[2/3] w-full p-0">
+                        <Image
+                          radius="md"
+                          width="215px"
+                          height="auto"
+                          style={{
+                            aspectRatio: '2/3',
+                            filter: 'brightness(0.8)',
+                          }}
+                          loaderUrl="/api/image"
+                          alt="Discover anime"
+                          src="https://image.tmdb.org/t/p/w342_filter(duotone,070235,dd4749)/iAld03IP69UEpqQbVWoRBvjqkqX.jpg"
+                          loading="lazy"
+                          placeholder="empty"
+                          responsive={[
+                            {
+                              size: {
+                                width: 215,
+                                height: (215 / 2) * 3,
+                              },
+                            },
+                          ]}
+                          dprVariants={[1, 3]}
+                          options={{
+                            contentType: MimeType.WEBP,
+                          }}
+                        />
+                      </CardBody>
+                      <CardFooter className="absolute bottom-0 z-[10] justify-start bg-neutral/60 backdrop-blur-sm">
+                        <h4 className="text-neutral-foreground">{t('anime-footer')}</h4>
+                      </CardFooter>
+                    </Card>
                   </li>
-                  <li className="m-0 flex flex-col justify-between gap-y-[6px] [&_.active]:bg-background [&_.active]:text-primary">
+                  <li className="m-0 flex min-w-[215px] flex-col justify-between gap-y-[6px] [&_.active]:bg-background [&_.active]:text-primary">
                     <NavigationMenuLink asChild>
                       <NavLink
                         to="/anime/popular"
@@ -1021,7 +981,6 @@ const SideBar = () => {
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
-
             <NavigationMenuItem
               className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
               value="collections"
@@ -1065,7 +1024,6 @@ const SideBar = () => {
                 </NavigationMenuLink>
               </Tooltip>
             </NavigationMenuItem>
-
             <NavigationMenuItem
               className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
               value="people"
@@ -1152,7 +1110,6 @@ const SideBar = () => {
                 </NavigationMenuLink>
               </Tooltip>
             </NavigationMenuItem>
-
             <NavigationMenuItem
               className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
               value="settings"

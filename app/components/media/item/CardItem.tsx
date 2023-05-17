@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '@nextui-org/button';
-import { Avatar, Card, Tooltip } from '@nextui-org/react';
+import { Card, CardBody, CardFooter } from '@nextui-org/card';
+import { Avatar, Tooltip } from '@nextui-org/react';
 import { useIntersectionObserver, useMeasure } from '@react-hookz/web';
 import { Link, useFetcher, useNavigate } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
-import Image, { MimeType } from 'remix-image';
+import { MimeType } from 'remix-image';
 import { tv } from 'tailwind-variants';
 
 import type { IMedia, Title } from '~/types/media';
@@ -13,6 +14,7 @@ import type { ITrailer } from '~/services/consumet/anilist/anilist.types';
 import useCardHoverStore from '~/store/card/useCardHoverStore';
 import { useLayout } from '~/store/layout/useLayout';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
+import Image from '~/components/elements/Image';
 import {
   ScrollArea,
   ScrollBar,
@@ -64,42 +66,45 @@ const cardItemStyles = tv({
   variants: {
     listViewType: {
       card: {
-        base: '!w-[164px] sm:!w-[180px] md:!w-[200px] lg:!w-[244px] xl:!w-[264px]',
-        body: 'aspect-[2/3]',
+        base: '!w-[164px] hover:shadow-[0_0_0_1px] hover:shadow-primary-200 sm:!w-[180px] md:!w-[200px] lg:!w-[244px] xl:!w-[264px]',
+        body: 'aspect-[2/3] w-full overflow-hidden p-0',
         imageContainer: 'w-full',
-        image: 'aspect-[2/3]',
+        image:
+          'z-0 aspect-[2/3] !min-h-[auto] !min-w-[auto] overflow-hidden !transition-[transform,_opacity]',
         footer:
           'flex min-h-[4.875rem] max-w-[164px] flex-col items-start justify-start sm:max-w-[210px] md:max-w-[200px] lg:max-w-[244px] xl:max-w-[264px]',
       },
       detail: {
-        base: '!w-full sm:!w-[480px]',
-        body: 'flex !h-[174px] !flex-row !overflow-hidden sm:aspect-[5/3] sm:!h-[auto]',
+        base: '!w-full hover:shadow-[0_0_0_1px] hover:shadow-primary-200 sm:!w-[480px]',
+        body: 'flex !h-[174px] w-full !flex-row !overflow-hidden p-0 sm:aspect-[5/3] sm:!h-[auto]',
         imageContainer: 'w-[116px] sm:w-2/5',
-        image: '!h-[174px] sm:aspect-[2/3] sm:!h-[auto]',
+        image: 'z-0 !h-[174px] !min-h-[auto] !min-w-[auto] sm:aspect-[2/3] sm:!h-[auto]',
         content: 'flex grow flex-col gap-y-4 p-3 sm:w-3/5',
         footer:
-          'absolute bottom-0 z-[1] flex !w-[116px] justify-center !rounded-br-none border-t border-border bg-background/[0.6] backdrop-blur-md sm:!w-2/5',
+          'absolute bottom-0 flex !w-[116px] justify-center !rounded-br-none border-t border-border bg-background/[0.6] backdrop-blur-md sm:!w-2/5',
       },
       table: {
-        base: '!w-full',
-        body: 'flex !h-[174px] !flex-row !overflow-hidden',
+        base: '!w-full hover:shadow-[0_0_0_1px] hover:shadow-primary-200',
+        body: 'flex !h-[174px] w-full !flex-row !overflow-hidden p-0',
         imageContainer: 'w-[116px]',
-        image: '!h-[174px]',
+        image: 'z-0 !h-[174px] !min-h-[auto]',
         content: 'flex grow flex-col gap-y-4 p-3',
         footer: '',
       },
       coverCard: {
-        base: '!w-[280px] sm:!w-[480px]',
-        body: 'aspect-[16/9]',
-        image: 'aspect-[16/9]',
+        base: '!w-[280px] hover:shadow-[0_0_0_1px] hover:shadow-primary-200 sm:!w-[480px]',
+        body: 'aspect-[16/9] w-full overflow-hidden p-0',
+        image:
+          'z-0 aspect-[16/9] !min-h-[auto] !min-w-[auto] overflow-hidden !transition-[transform,_opacity]',
         footer:
-          'absolute bottom-0 z-[1] flex justify-center border-t border-border bg-background/[0.6] backdrop-blur-md',
+          'absolute bottom-0 flex justify-center border-t border-border bg-background/[0.6] backdrop-blur-md',
       },
       people: {
-        base: '!w-[164px]',
-        body: 'aspect-[2/3]',
+        base: '!w-[164px] hover:shadow-[0_0_0_1px] hover:shadow-primary-200',
+        body: 'aspect-[2/3] w-full overflow-hidden p-0',
         imageContainer: 'w-full',
-        image: 'aspect-[2/3]',
+        image:
+          'z-0 aspect-[2/3] !min-h-[auto] !min-w-[auto] overflow-hidden !transition-[transform,_opacity]',
         footer: 'flex min-h-[5.25rem] max-w-[164px] flex-col items-start justify-start',
       },
     },
@@ -183,43 +188,23 @@ const CardItem = (props: ICardItemProps) => {
 
   if (isCoverCard) {
     return (
-      <Card
-        as="div"
-        isHoverable
-        isPressable
-        css={{
-          borderWidth: 0,
-          filter: 'unset',
-          '&:hover': {
-            boxShadow: '0 0 0 1px var(--nextui-colors-primarySolidHover)',
-            filter:
-              'drop-shadow(0 4px 12px rgb(104 112 118 / 0.15)) drop-shadow(0 20px 8px rgb(104 112 118 / 0.1))',
-          },
-        }}
-        className={base()}
-        role="figure"
-        ref={cardRef}
-      >
-        <Card.Body ref={imageRef} css={{ p: 0, width: '100%' }} className={body()}>
+      <Card isHoverable isPressable className={base()} role="figure" ref={cardRef}>
+        <CardBody ref={imageRef} className={body()}>
           {size ? (
             <Link to={linkTo || '/'}>
-              <Card.Image
-                // @ts-ignore
-                as={Image}
+              <Image
                 src={backdropPath}
-                objectFit="cover"
                 width="100%"
                 alt={titleItem}
                 title={titleItem}
                 className={image()}
-                showSkeleton
                 loaderUrl="/api/image"
                 placeholder="empty"
                 loading="lazy"
+                disableSkeleton={false}
+                isZoomed
                 decoding={inView ? 'async' : 'auto'}
-                options={{
-                  contentType: MimeType.WEBP,
-                }}
+                options={{ contentType: MimeType.WEBP }}
                 responsive={[
                   {
                     size: {
@@ -231,67 +216,43 @@ const CardItem = (props: ICardItemProps) => {
               />
             </Link>
           ) : null}
-        </Card.Body>
-        <Card.Footer className={footer()}>
+        </CardBody>
+        <CardFooter className={footer()}>
           <H5 h5 weight="bold">
             {titleItem}
           </H5>
-        </Card.Footer>
+        </CardFooter>
       </Card>
     );
   }
 
   return (
     <Card
-      as="div"
       isHoverable
       isPressable={listViewType.value === 'card'}
-      css={{
-        borderWidth: 0,
-        filter: 'unset',
-        '&:hover': {
-          boxShadow: '0 0 0 1px var(--nextui-colors-primarySolidHover)',
-          filter:
-            'drop-shadow(0 4px 12px rgb(104 112 118 / 0.15)) drop-shadow(0 20px 8px rgb(104 112 118 / 0.1))',
-        },
-        opacity: isTooltipVisible ? 0 : 1,
-        transition: 'all 0.3s ease',
-      }}
       className={base()}
       role="figure"
+      style={{ opacity: isTooltipVisible && !isMobile ? 0 : 1 }}
       ref={cardRef}
     >
-      <Card.Body css={{ p: 0, width: '100%' }} className={body()}>
+      <CardBody className={body()}>
         <div className={imageContainer()} ref={imageRef}>
-          {size && !isTooltipVisible && inView ? (
+          {size && inView ? (
             <Link to={linkTo || '/'}>
               {posterPath ? (
-                <Card.Image
-                  // @ts-ignore
-                  as={Image}
+                <Image
                   src={posterPath || ''}
-                  objectFit="cover"
                   width="100%"
                   alt={titleItem}
                   title={titleItem}
                   loading="lazy"
                   className={image()}
                   decoding={inView ? 'async' : 'auto'}
-                  css={{
-                    transition: 'all 0.3s ease !important',
-                    transform: 'scale(1)',
-                    '&:hover': {
-                      transform: 'scale(1.05)',
-                      transformOrigin: 'center center',
-                    },
-                  }}
-                  containerCss={{ overflow: 'hidden' }}
-                  showSkeleton
+                  disableSkeleton={false}
+                  isZoomed={listViewType.value === 'card' || mediaType === 'people'}
                   loaderUrl="/api/image"
                   placeholder="empty"
-                  options={{
-                    contentType: MimeType.WEBP,
-                  }}
+                  options={{ contentType: MimeType.WEBP }}
                   responsive={[
                     {
                       size: {
@@ -490,7 +451,7 @@ const CardItem = (props: ICardItemProps) => {
             </ScrollArea>
           </div>
         ) : null}
-      </Card.Body>
+      </CardBody>
       {(listViewType.value === 'card' || mediaType === 'people' || isSliderCard || isEpisodeCard) &&
       inView ? (
         <Tooltip
@@ -545,7 +506,7 @@ const CardItem = (props: ICardItemProps) => {
             }
           }}
         >
-          <Card.Footer className={footer()}>
+          <CardFooter className={footer()}>
             <H5
               h5
               weight="bold"
@@ -600,15 +561,15 @@ const CardItem = (props: ICardItemProps) => {
                 ) : null}
               </>
             ) : null}
-          </Card.Footer>
+          </CardFooter>
         </Tooltip>
       ) : listViewType.value === 'detail' && !isSliderCard && !isEpisodeCard && inView ? (
         <Link to={linkTo || '/'}>
-          <Card.Footer className={footer()}>
+          <CardFooter className={footer()}>
             <H5 h5 weight="bold">
               {titleItem}
             </H5>
-          </Card.Footer>
+          </CardFooter>
         </Link>
       ) : null}
     </Card>

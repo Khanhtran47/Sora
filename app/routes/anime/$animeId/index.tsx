@@ -1,15 +1,16 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/indent */
-/* eslint-disable @typescript-eslint/no-throw-literal */
 
-import { Avatar, Card, Grid } from '@nextui-org/react';
+import { useMemo } from 'react';
+import { Card, CardBody } from '@nextui-org/card';
+import { Avatar } from '@nextui-org/react';
 import type { MetaFunction } from '@remix-run/node';
 import { useParams } from '@remix-run/react';
-import Image, { MimeType } from 'remix-image';
+import { MimeType } from 'remix-image';
 
 import type { IMedia } from '~/types/media';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
+import Image from '~/components/elements/Image';
 import { H2, H5, H6, P } from '~/components/styles/Text.styles';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 
@@ -21,6 +22,20 @@ const AnimeOverview = () => {
   const animeData = useTypedRouteLoaderData('routes/anime/$animeId');
   const detail = animeData && animeData.detail;
   const { animeId } = useParams();
+  const listRelations = useMemo(() => {
+    if (!detail?.relations || detail?.relations.length === 0) return [];
+    const listFiltered = detail?.relations.filter(
+      (relation) => relation.relationType === 'SEQUEL' || relation.relationType === 'PREQUEL',
+    );
+    const listFormatted = listFiltered.map((relation) => ({
+      id: relation.id,
+      title: relation.title,
+      posterPath: relation.image,
+      backdropPath: relation.cover,
+      voteAverage: relation.rating,
+    }));
+    return listFormatted;
+  }, [detail?.relations]);
   return (
     <div className="mt-3 flex w-full max-w-[1920px] flex-col gap-x-0 gap-y-4 px-3 sm:flex-row sm:items-stretch sm:justify-center sm:gap-x-4 sm:gap-y-0 sm:px-3.5 xl:px-4 2xl:px-5">
       <div className="flex w-full grow-0 flex-col sm:w-1/3 sm:items-center sm:justify-start">
@@ -145,125 +160,16 @@ const AnimeOverview = () => {
             dangerouslySetInnerHTML={{ __html: detail?.description || '' }}
           />
         </div>
-        {detail?.relations && detail.relations.length > 0 && (
-          <>
-            <H2
-              h2
-              css={{
-                margin: '20px 0 20px 0',
-                '@xsMax': {
-                  fontSize: '1.75rem !important',
-                },
-              }}
-            >
-              Relations
-            </H2>
-            <Grid.Container gap={1}>
-              {detail.relations.map((relation) => (
-                <Grid key={relation.id} xs={6} sm={2.4} xl>
-                  <Card
-                    as="div"
-                    isHoverable
-                    isPressable
-                    css={{
-                      maxWidth: '120px !important',
-                      maxHeight: '187px !important',
-                      borderWidth: 0,
-                      filter: 'unset',
-                      '&:hover': {
-                        boxShadow: '0 0 0 1px var(--nextui-colors-primarySolidHover)',
-                        filter:
-                          'drop-shadow(0 4px 12px rgb(104 112 118 / 0.15)) drop-shadow(0 20px 8px rgb(104 112 118 / 0.1))',
-                      },
-                    }}
-                    role="figure"
-                  >
-                    <Card.Body css={{ p: 0 }}>
-                      {relation.image ? (
-                        <Card.Image
-                          // @ts-ignore
-                          as={Image}
-                          src={relation.image || ''}
-                          objectFit="cover"
-                          width="100%"
-                          height="auto"
-                          showSkeleton
-                          alt={
-                            relation.title?.userPreferred ||
-                            relation.title?.english ||
-                            relation.title?.romaji ||
-                            relation.title?.native
-                          }
-                          title={
-                            relation.title?.userPreferred ||
-                            relation.title?.english ||
-                            relation.title?.romaji ||
-                            relation.title?.native
-                          }
-                          css={{
-                            minWidth: '120px !important',
-                            minHeight: '187px !important',
-                          }}
-                          loaderUrl="/api/image"
-                          placeholder="empty"
-                          options={{
-                            contentType: MimeType.WEBP,
-                          }}
-                          responsive={[
-                            {
-                              size: {
-                                width: 164,
-                                height: 245,
-                              },
-                              maxWidth: 650,
-                            },
-                            {
-                              size: {
-                                width: 210,
-                                height: 357,
-                              },
-                              maxWidth: 1280,
-                            },
-                            {
-                              size: {
-                                width: 240,
-                                height: 410,
-                              },
-                            },
-                          ]}
-                        />
-                      ) : (
-                        <Avatar
-                          icon={<PhotoIcon width={48} height={48} />}
-                          pointer
-                          css={{
-                            minWidth: '120px !important',
-                            minHeight: '187px !important',
-                            size: '$20',
-                            borderRadius: '0 !important',
-                          }}
-                        />
-                      )}
-                    </Card.Body>
-                    <Card.Footer
-                      className="backdrop-blur-md"
-                      css={{
-                        position: 'absolute',
-                        backgroundColor: '$backgroundAlpha',
-                        borderTop: '$borderWeights$light solid $border',
-                        bottom: 0,
-                        zIndex: 1,
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <H6 h6>{relation.relationType}</H6>
-                    </Card.Footer>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid.Container>
-          </>
-        )}
+        {listRelations && listRelations.length > 0 ? (
+          <MediaList
+            items={listRelations as IMedia[]}
+            itemsType="anime"
+            key={`anime-relations-${animeId}`}
+            listName="Relations"
+            listType="slider-card"
+            navigationButtons
+          />
+        ) : null}
         {detail?.characters && detail.characters.length > 0 ? (
           <>
             <H2
@@ -277,153 +183,120 @@ const AnimeOverview = () => {
             >
               Characters
             </H2>
-            <Grid.Container gap={1}>
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
               {detail.characters.slice(0, 12).map((character) => (
-                <Grid key={character.id} xs={12} md={6}>
-                  <Card
-                    as="div"
-                    isHoverable
-                    isPressable
-                    css={{
-                      maxHeight: '80px !important',
-                      borderWidth: 0,
-                      filter: 'unset',
-                      '&:hover': {
-                        boxShadow: '0 0 0 1px var(--nextui-colors-primarySolidHover)',
-                        filter:
-                          'drop-shadow(0 4px 12px rgb(104 112 118 / 0.15)) drop-shadow(0 20px 8px rgb(104 112 118 / 0.1))',
-                      },
-                    }}
-                    role="figure"
-                  >
-                    <Card.Body
-                      css={{
-                        p: 0,
-                        flexFlow: 'row nowrap',
-                        justifyContent: 'flex-start',
-                      }}
-                    >
-                      <div className="flex grow justify-start gap-x-2">
-                        {character?.image ? (
-                          <Card.Image
-                            // @ts-ignore
-                            as={Image}
-                            src={character.image}
-                            showSkeleton
-                            objectFit="cover"
-                            width="60px"
-                            height="100%"
-                            alt={character?.name?.full}
-                            title={character?.name?.full}
-                            css={{
-                              minWidth: '60px !important',
-                              minHeight: '80px !important',
-                            }}
-                            loaderUrl="/api/image"
-                            placeholder="empty"
-                            options={{
-                              contentType: MimeType.WEBP,
-                            }}
-                            containerCss={{
-                              margin: 0,
-                              minWidth: '60px',
-                              flexBasis: '60px',
-                              borderRadius: '$lg',
-                            }}
-                            responsive={[
-                              {
-                                size: {
-                                  width: 60,
-                                  height: 80,
-                                },
+                <Card
+                  key={character.id}
+                  isHoverable
+                  isPressable
+                  className="max-h-[80px] hover:shadow-[0_0_0_1px] hover:shadow-primary-200"
+                >
+                  <CardBody className="flex flex-row flex-nowrap items-center justify-start overflow-hidden p-0">
+                    <div className="flex grow justify-start gap-x-2">
+                      {character?.image ? (
+                        <Image
+                          src={character.image}
+                          width="60px"
+                          height="100%"
+                          alt={character?.name?.full}
+                          title={character?.name?.full}
+                          className="min-h-[80px] min-w-[60px] object-cover"
+                          loaderUrl="/api/image"
+                          placeholder="empty"
+                          options={{
+                            contentType: MimeType.WEBP,
+                          }}
+                          responsive={[
+                            {
+                              size: {
+                                width: 60,
+                                height: 80,
                               },
-                            ]}
-                          />
-                        ) : (
-                          <Avatar
-                            icon={<PhotoIcon width={48} height={48} />}
-                            pointer
-                            squared
-                            css={{
-                              minWidth: '60px !important',
-                              minHeight: '80px !important',
-                              size: '$20',
-                              borderRadius: '0 !important',
-                              flexBasis: '60px',
-                            }}
-                          />
-                        )}
-                        <div className="flex flex-col items-start justify-center p-1">
-                          <H5 h5>{character.name?.full}</H5>
+                            },
+                          ]}
+                        />
+                      ) : (
+                        <Avatar
+                          icon={<PhotoIcon width={48} height={48} />}
+                          pointer
+                          squared
+                          css={{
+                            minWidth: '60px !important',
+                            minHeight: '80px !important',
+                            size: '$20',
+                            borderRadius: '0 !important',
+                            flexBasis: '60px',
+                          }}
+                        />
+                      )}
+                      <div className="flex flex-col items-start justify-center p-1">
+                        <H5 h5>{character.name?.full}</H5>
+                        <H6 h6 css={{ color: '$accents7', fontWeight: '$semibold' }}>
+                          {character.role}
+                        </H6>
+                      </div>
+                    </div>
+                    <div className="flex grow flex-row justify-end gap-x-2">
+                      {character?.voiceActors && character?.voiceActors.length > 0 && (
+                        <div className="flex flex-col items-end justify-center p-1">
+                          <H5 h5>{character.voiceActors[0].name?.full}</H5>
                           <H6 h6 css={{ color: '$accents7', fontWeight: '$semibold' }}>
-                            {character.role}
+                            Japanese
                           </H6>
                         </div>
-                      </div>
-                      <div className="flex grow flex-row justify-end gap-x-2">
-                        {character?.voiceActors && character?.voiceActors.length > 0 && (
-                          <div className="flex flex-col items-end justify-center p-1">
-                            <H5 h5>{character.voiceActors[0].name?.full}</H5>
-                            <H6 h6 css={{ color: '$accents7', fontWeight: '$semibold' }}>
-                              Japanese
-                            </H6>
-                          </div>
-                        )}
-                        {character?.voiceActors && character?.voiceActors[0]?.image ? (
-                          <Card.Image
-                            // @ts-ignore
-                            as={Image}
-                            src={character.voiceActors[0]?.image}
-                            objectFit="cover"
-                            width="60px"
-                            height="100%"
-                            showSkeleton
-                            alt={character.voiceActors[0].name?.full}
-                            title={character.voiceActors[0].name?.full}
-                            css={{
-                              minWidth: '60px !important',
-                              minHeight: '80px !important',
-                            }}
-                            loaderUrl="/api/image"
-                            placeholder="empty"
-                            options={{
-                              contentType: MimeType.WEBP,
-                            }}
-                            containerCss={{
-                              margin: 0,
-                              minWidth: '60px',
-                              flexBasis: '60px',
-                              borderRadius: '$lg',
-                            }}
-                            responsive={[
-                              {
-                                size: {
-                                  width: 60,
-                                  height: 80,
-                                },
+                      )}
+                      {character?.voiceActors && character?.voiceActors[0]?.image ? (
+                        <Image
+                          src={character.voiceActors[0]?.image}
+                          // objectFit="cover"
+                          width="60px"
+                          height="100%"
+                          // showSkeleton
+                          alt={character.voiceActors[0].name?.full}
+                          title={character.voiceActors[0].name?.full}
+                          // css={{
+                          //   minWidth: '60px !important',
+                          //   minHeight: '80px !important',
+                          // }}
+                          loaderUrl="/api/image"
+                          placeholder="empty"
+                          options={{
+                            contentType: MimeType.WEBP,
+                          }}
+                          // containerCss={{
+                          //   margin: 0,
+                          //   minWidth: '60px',
+                          //   flexBasis: '60px',
+                          //   borderRadius: '$lg',
+                          // }}
+                          responsive={[
+                            {
+                              size: {
+                                width: 60,
+                                height: 80,
                               },
-                            ]}
-                          />
-                        ) : (
-                          <Avatar
-                            icon={<PhotoIcon width={48} height={48} />}
-                            pointer
-                            squared
-                            css={{
-                              minWidth: '60px !important',
-                              minHeight: '80px !important',
-                              size: '$20',
-                              borderRadius: '0 !important',
-                              flexBasis: '60px',
-                            }}
-                          />
-                        )}
-                      </div>
-                    </Card.Body>
-                  </Card>
-                </Grid>
+                            },
+                          ]}
+                        />
+                      ) : (
+                        <Avatar
+                          icon={<PhotoIcon width={48} height={48} />}
+                          pointer
+                          squared
+                          css={{
+                            minWidth: '60px !important',
+                            minHeight: '80px !important',
+                            size: '$20',
+                            borderRadius: '0 !important',
+                            flexBasis: '60px',
+                          }}
+                        />
+                      )}
+                    </div>
+                  </CardBody>
+                </Card>
               ))}
-            </Grid.Container>
+            </div>
           </>
         ) : null}
         {detail?.recommendations && detail?.recommendations.length > 0 ? (

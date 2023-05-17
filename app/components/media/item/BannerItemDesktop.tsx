@@ -1,13 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '@nextui-org/button';
-import { Badge, Card, Col, Image as NextImage, Row, Spacer, Text } from '@nextui-org/react';
+import { Card, CardBody, CardHeader } from '@nextui-org/card';
+import { Badge, Text } from '@nextui-org/react';
 import { useIntersectionObserver, useMeasure, useMediaQuery } from '@react-hookz/web';
 import { useFetcher, useNavigate } from '@remix-run/react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion, useMotionTemplate, useMotionValue } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import YouTube from 'react-youtube';
-import Image, { MimeType } from 'remix-image';
+import { MimeType, Image as RemixImage } from 'remix-image';
 import { useSwiper } from 'swiper/react';
 
 import type { Title } from '~/types/media';
@@ -17,10 +18,10 @@ import TMDB from '~/utils/media';
 import useCardHoverStore from '~/store/card/useCardHoverStore';
 import { useLayout } from '~/store/layout/useLayout';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
-import AspectRatio from '~/components/elements/aspect-ratio/AspectRatio';
+import AspectRatio from '~/components/elements/AspectRatio';
+import Image from '~/components/elements/Image';
 import type { Trailer } from '~/components/elements/dialog/WatchTrailerModal';
 import Rating from '~/components/elements/shared/Rating';
-import { H5, H6 } from '~/components/styles/Text.styles';
 import VolumeOff from '~/assets/icons/VolumeOffIcon';
 import VolumeUp from '~/assets/icons/VolumeUpIcon';
 
@@ -78,10 +79,11 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
   const isLg = useMediaQuery('(max-width: 1280px)', { initializeWithValue: false });
   const bannerIntersection = useIntersectionObserver(cardRef, { root: viewportRef });
   const [size, bannerRef] = useMeasure<HTMLDivElement>();
-
   const isCardPlaying = useCardHoverStore((state) => state.isCardPlaying);
-
   const { isMutedTrailer, isPlayTrailer } = useSoraSettings();
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const mouseRadius = useMotionValue(0);
   const titleItem =
     typeof title === 'string'
       ? title
@@ -187,317 +189,245 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
     }
   }, [fetcher.data]);
 
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const { currentTarget, clientX, clientY } = e;
+    const { top, left } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+    mouseRadius.set(size?.width ? (size?.width * 2) / 3 : 1000);
+  };
+
   return (
-    <AspectRatio.Root ratio={16 / 8} ref={bannerRef}>
+    <AspectRatio ratio={16 / 8} ref={bannerRef}>
       <Card
+        radius="none"
+        className="h-full w-full border-0"
         ref={cardRef}
-        variant="flat"
-        css={{ w: size?.width, h: size?.height, borderWidth: 0 }}
         role="figure"
+        onMouseMove={handleMouseMove}
       >
-        <Card.Header
-          css={{
-            position: 'absolute',
-            zIndex: 1,
-            h: size?.height,
-            '@lgMin': { h: (size?.height || 0) - 160 },
+        <motion.div
+          className="pointer-events-none absolute -inset-px rounded-xl duration-300 transition group-hover:opacity-100"
+          style={{
+            background: useMotionTemplate`
+              radial-gradient(
+                ${mouseRadius}px circle at ${mouseX}px ${mouseY}px,
+                hsl(var(--colors-neutral-400) / 15),
+                transparent 80%
+              )
+            `,
           }}
-        >
-          <Row
-            gap={isMd ? 0.5 : 3}
-            css={{
-              h: size?.height,
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <Col
-              css={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'flex-start',
-                transition: 'all 0.5s ease',
-                width: '83.3333%',
-                '@sm': { width: '66.6667%' },
-              }}
-            >
-              {logo ? (
+        />
+        <CardHeader className="absolute z-10 flex h-full flex-row items-center justify-center gap-5 md:gap-7 lg:gap-9 2xl:h-[calc(100%_-_160px)]">
+          <div className="flex w-5/6 flex-col items-start justify-center gap-4 px-10 md:w-3/4 lg:w-2/3">
+            {logo ? (
+              <motion.div
+                animate={
+                  active && !showTrailer
+                    ? 'inView'
+                    : active && showTrailer
+                    ? 'showTrailer'
+                    : 'outView'
+                }
+                transition={{ duration: 0.5 }}
+                variants={variants}
+                style={{ originX: 0 }}
+              >
+                <Image
+                  removeWrapper
+                  src={TMDB.logoUrl(logo.file_path, isMd ? 'w185' : 'w300')}
+                  alt={titleItem}
+                  title={titleItem}
+                  radius="none"
+                  className="w-logo object-contain nextui-sm:w-logo-sm"
+                  loading="eager"
+                  disableSkeleton={false}
+                  style={{
+                    aspectRatio: logo.aspect_ratio,
+                    mixBlendMode: 'color-burn',
+                    // @ts-ignore
+                    '--movie-logo-width':
+                      logo?.aspect_ratio && 185 / logo.aspect_ratio > 85
+                        ? 85 * Number(logo.aspect_ratio)
+                        : 185,
+                    '--movie-logo-width-sm':
+                      logo?.aspect_ratio && 300 / logo.aspect_ratio > 100
+                        ? 100 * Number(logo.aspect_ratio)
+                        : 300,
+                  }}
+                  loaderUrl="/api/image"
+                  placeholder="empty"
+                  options={{ contentType: MimeType.WEBP }}
+                />
+              </motion.div>
+            ) : (
+              <Text
+                as={motion.h1}
+                weight="bold"
+                className="!line-clamp-2"
+                css={{
+                  fontSize: '3.25rem !important',
+                  marginBottom: 0,
+                  fontWeight: 700,
+                  lineHeight: 'var(--nextui-lineHeights-base)',
+                }}
+                // @ts-ignore
+                animate={active ? 'inView' : 'outView'}
+                transition={{ duration: 0.5 }}
+                variants={variants}
+              >
+                {titleItem}
+              </Text>
+            )}
+            <AnimatePresence>
+              {!showTrailer ? (
                 <motion.div
+                  className="flex flex-row items-center gap-x-4"
+                  initial={{ opacity: 0, x: 40 }}
                   animate={
                     active && !showTrailer
                       ? 'inView'
                       : active && showTrailer
-                      ? 'showTrailer'
+                      ? 'outView'
                       : 'outView'
                   }
-                  transition={{ duration: 0.5 }}
+                  exit={{ opacity: 0, x: 40 }}
+                  transition={{ duration: 0.5, delay: 0.25 }}
                   variants={variants}
-                  style={{ originX: 0 }}
                 >
-                  <NextImage
-                    // @ts-ignore
-                    as={Image}
-                    src={TMDB.logoUrl(logo.file_path, isMd ? 'w185' : 'w300')}
-                    alt={titleItem}
-                    title={titleItem}
-                    objectFit="contain"
-                    loading="eager"
-                    showSkeleton
-                    css={{
-                      aspectRatio: logo.aspect_ratio,
-                      mixBlendMode: 'color-burn',
-                      width:
-                        logo?.aspect_ratio && 185 / logo.aspect_ratio > 85
-                          ? `${85 * Number(logo.aspect_ratio)}px !important`
-                          : '185px !important',
-                      '@sm': {
-                        width:
-                          logo?.aspect_ratio && 300 / logo.aspect_ratio > 100
-                            ? `${100 * Number(logo.aspect_ratio)}px !important`
-                            : '300px !important',
-                      },
-                    }}
-                    loaderUrl="/api/image"
-                    placeholder="empty"
-                    options={{
-                      contentType: MimeType.WEBP,
-                    }}
+                  <Rating
+                    rating={mediaType === 'anime' ? voteAverage : Number(voteAverage.toFixed(1))}
+                    ratingType={mediaType}
                   />
-                </motion.div>
-              ) : (
-                <Text
-                  as={motion.h1}
-                  weight="bold"
-                  className="!line-clamp-2"
-                  css={{
-                    fontSize: '3.25rem !important',
-                    marginBottom: 0,
-                    fontWeight: 700,
-                    lineHeight: 'var(--nextui-lineHeights-base)',
-                  }}
-                  // @ts-ignore
-                  animate={active ? 'inView' : 'outView'}
-                  transition={{ duration: 0.5 }}
-                  variants={variants}
-                >
-                  {titleItem}
-                </Text>
-              )}
-              <AnimatePresence>
-                {!showTrailer ? (
-                  <Row
-                    // @ts-ignore
-                    as={motion.div}
-                    css={{ marginTop: '1rem' }}
-                    align="center"
-                    initial={{ opacity: 0, x: 40 }}
-                    animate={
-                      active && !showTrailer
-                        ? 'inView'
-                        : active && showTrailer
-                        ? 'outView'
-                        : 'outView'
-                    }
-                    exit={{ opacity: 0, x: 40 }}
-                    transition={{ duration: 0.5, delay: 0.25 }}
-                    variants={variants}
-                  >
-                    <Rating
-                      rating={mediaType === 'anime' ? voteAverage : Number(voteAverage.toFixed(1))}
-                      ratingType={mediaType}
-                    />
-                    <Spacer x={1.5} />
-                    <H5
-                      h5
-                      css={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        [`& ${Badge}`]: {
-                          border: 0,
-                        },
-                      }}
-                    >
-                      {mediaType === 'anime'
-                        ? genresAnime?.slice(0, 2).map((genre) => (
-                            <>
-                              <Badge variant="flat" color="primary">
-                                {genre}
-                              </Badge>
-                              <Spacer x={0.5} />
-                            </>
-                          ))
-                        : genreIds?.map((genreId) => {
-                            if (mediaType === 'movie') {
-                              return (
-                                <>
-                                  <Badge variant="flat" color="primary">
-                                    {genresMovie?.[genreId]}
-                                  </Badge>
-                                  <Spacer x={0.5} />
-                                </>
-                              );
-                            }
+                  <div className="flex flex-row gap-x-2">
+                    {mediaType === 'anime'
+                      ? genresAnime?.slice(0, 3).map((genre) => (
+                          <Badge key={genre} variant="flat" color="primary" css={{ border: 0 }}>
+                            {genre}
+                          </Badge>
+                        ))
+                      : genreIds?.slice(0, 3).map((genreId) => {
+                          if (mediaType === 'movie') {
                             return (
-                              <>
-                                <Badge variant="flat" color="primary">
-                                  {genresTv?.[genreId]}
-                                </Badge>
-                                <Spacer x={0.5} />
-                              </>
+                              <Badge
+                                key={genresMovie?.[genreId]}
+                                variant="flat"
+                                color="primary"
+                                css={{ border: 0 }}
+                              >
+                                {genresMovie?.[genreId]}
+                              </Badge>
                             );
-                          })}
-                    </H5>
-                  </Row>
-                ) : null}
-              </AnimatePresence>
-              <AnimatePresence>
-                {!isMd && !showTrailer ? (
-                  <Text
-                    as={motion.p}
-                    className="!line-clamp-6"
-                    css={{
-                      fontSize: '1rem !important',
-                      fontWeight: 400,
-                      margin: '1.25rem 0 0 0',
-                      textAlign: 'justify',
-                    }}
-                    // @ts-ignore
-                    initial={{ opacity: 0, x: 40 }}
-                    animate={
-                      active && !showTrailer
-                        ? 'inView'
-                        : active && showTrailer
-                        ? 'outView'
-                        : 'outView'
-                    }
-                    exit={{ opacity: 0, x: 40 }}
-                    transition={{ duration: 0.5, delay: 0.5 }}
-                    variants={variants}
-                    dangerouslySetInnerHTML={{ __html: overview || '' }}
-                  />
-                ) : null}
-              </AnimatePresence>
-              <Row
-                // @ts-ignore
-                as={motion.div}
-                wrap="wrap"
-                animate={active ? 'inView' : 'outView'}
-                transition={{ duration: 0.5, delay: 0.75 }}
-                variants={variants}
-              >
-                <Button
-                  type="button"
-                  color="primary"
-                  className="mt-5"
-                  onPress={() =>
-                    navigate(
-                      `/${
-                        mediaType === 'movie'
-                          ? 'movies/'
-                          : mediaType === 'tv'
-                          ? 'tv-shows/'
-                          : 'anime/'
-                      }${id}/${mediaType === 'anime' ? 'overview' : ''}`,
-                      {
-                        state: { currentTime: player ? player.playerInfo.currentTime : 0 },
-                      },
-                    )
-                  }
-                >
-                  <H6 h6 weight="bold">
-                    {t('moreDetails')}
-                  </H6>
-                </Button>
-              </Row>
-            </Col>
-            {!isLg ? (
-              <Col
-                // @ts-ignore
-                as={motion.div}
-                span={4}
-                animate={
-                  active && !showTrailer ? 'inView' : active && showTrailer ? 'outView' : 'outView'
-                }
-                transition={{ duration: 0.75 }}
-                variants={{
-                  inView: { opacity: 1, scale: 1, x: 0 },
-                  outView: { opacity: 0, scale: 0, x: 0 },
-                }}
-              >
-                <Card.Image
+                          }
+                          return (
+                            <Badge
+                              key={genresTv?.[genreId]}
+                              variant="flat"
+                              color="primary"
+                              css={{ border: 0 }}
+                            >
+                              {genresTv?.[genreId]}
+                            </Badge>
+                          );
+                        })}
+                  </div>
+                </motion.div>
+              ) : null}
+            </AnimatePresence>
+            <AnimatePresence>
+              {!isMd && !showTrailer ? (
+                <motion.p
+                  className="!line-clamp-6 text-justify"
                   // @ts-ignore
-                  as={Image}
-                  src={posterPath || ''}
-                  alt={titleItem}
-                  title={titleItem}
-                  objectFit="cover"
-                  width="100%"
-                  containerCss={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    overflow: 'visible',
-                  }}
-                  showSkeleton
-                  css={{
-                    minWidth: 'auto !important',
-                    minHeight: 'auto !important',
-                    maxWidth: '270px',
-                    maxHeight: '390px',
-                    borderRadius: '24px',
-                    boxShadow: '12px 12px 30px 10px rgb(104 112 118 / 0.18)',
-                    '@lg': {
-                      maxWidth: '318px',
-                      maxHeight: '477px',
-                    },
-                  }}
-                  loading="eager"
-                  loaderUrl="/api/image"
-                  placeholder="empty"
-                  responsive={[
-                    {
-                      size: {
-                        width: 270,
-                        height: 390,
-                      },
-                      maxWidth: 1400,
-                    },
-                    {
-                      size: {
-                        width: 318,
-                        height: 477,
-                      },
-                    },
-                  ]}
-                  options={{
-                    contentType: MimeType.WEBP,
-                  }}
+                  initial={{ opacity: 0, x: 40 }}
+                  animate={
+                    active && !showTrailer
+                      ? 'inView'
+                      : active && showTrailer
+                      ? 'outView'
+                      : 'outView'
+                  }
+                  exit={{ opacity: 0, x: 40 }}
+                  transition={{ duration: 0.5, delay: 0.5 }}
+                  variants={variants}
+                  dangerouslySetInnerHTML={{ __html: overview || '' }}
                 />
-              </Col>
-            ) : null}
-          </Row>
-        </Card.Header>
-        <Card.Body
-          css={{
-            p: 0,
-            overflow: 'hidden',
-            margin: 0,
-            '&::after': {
-              content: '',
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-              width: '100%',
-              height: '100px',
-              backgroundImage:
-                'linear-gradient(var(--nextui-colors-backgroundTransparent) 0%, var(--nextui-colors-background) 100%)',
-              '@lgMin': {
-                height: '250px',
-              },
-            },
-          }}
-        >
+              ) : null}
+            </AnimatePresence>
+            <motion.div
+              animate={active ? 'inView' : 'outView'}
+              transition={{ duration: 0.5, delay: 0.75 }}
+              variants={variants}
+            >
+              <Button
+                type="button"
+                color="primary"
+                className="font-bold"
+                onPress={() =>
+                  navigate(
+                    `/${
+                      mediaType === 'movie'
+                        ? 'movies/'
+                        : mediaType === 'tv'
+                        ? 'tv-shows/'
+                        : 'anime/'
+                    }${id}/${mediaType === 'anime' ? 'overview' : ''}`,
+                    {
+                      state: { currentTime: player ? player.playerInfo.currentTime : 0 },
+                    },
+                  )
+                }
+              >
+                {t('moreDetails')}
+              </Button>
+            </motion.div>
+          </div>
+          {!isLg ? (
+            <motion.div
+              animate={
+                active && !showTrailer ? 'inView' : active && showTrailer ? 'outView' : 'outView'
+              }
+              transition={{ duration: 0.75 }}
+              variants={{
+                inView: { opacity: 1, scale: 1, x: 0 },
+                outView: { opacity: 0, scale: 0, x: 0 },
+              }}
+              className="flex w-1/3 justify-center"
+            >
+              <Image
+                src={posterPath || ''}
+                alt={titleItem}
+                title={titleItem}
+                width="100%"
+                disableSkeleton={false}
+                className="max-h-[390px] !min-h-[auto] !min-w-[auto] max-w-[270px] rounded-xl shadow-xl shadow-neutral 2xl:max-h-[477px] 2xl:max-w-[318px]"
+                loading="eager"
+                loaderUrl="/api/image"
+                placeholder="empty"
+                responsive={[
+                  {
+                    size: {
+                      width: 270,
+                      height: 390,
+                    },
+                    maxWidth: 1400,
+                  },
+                  {
+                    size: {
+                      width: 318,
+                      height: 477,
+                    },
+                  },
+                ]}
+                options={{
+                  contentType: MimeType.WEBP,
+                }}
+              />
+            </motion.div>
+          ) : null}
+          {/* </Row> */}
+        </CardHeader>
+        <CardBody className="m-0 overflow-hidden p-0 after:absolute after:bottom-0 after:left-0 after:h-[100px] after:w-full after:bg-gradient-to-b after:from-transparent after:to-background after:content-[''] after:2xl:h-[250px]">
           <AnimatePresence>
             {!showTrailer && size ? (
               <motion.div
@@ -509,22 +439,13 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                 transition={{ duration: 0.5 }}
                 style={{ overflow: 'hidden' }}
               >
-                <Card.Image
-                  // @ts-ignore
-                  as={Image}
+                <RemixImage
                   src={backdropPath || ''}
                   width="100%"
                   height="auto"
-                  css={{
-                    top: 0,
-                    left: 0,
-                    objectFit: 'cover',
-                    opacity: 0.3,
-                    aspectRatio: '2 / 1',
-                  }}
+                  className="left-0 top-0 aspect-[2/1] object-cover opacity-30"
                   decoding={active ? 'auto' : 'async'}
                   loading="lazy"
-                  showSkeleton
                   alt={titleItem}
                   title={titleItem}
                   loaderUrl="/api/image"
@@ -655,7 +576,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
               }
             />
           ) : null}
-        </Card.Body>
+        </CardBody>
         {!isSm && showTrailer && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <Button
@@ -677,7 +598,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
           </motion.div>
         )}
       </Card>
-    </AspectRatio.Root>
+    </AspectRatio>
   );
 };
 

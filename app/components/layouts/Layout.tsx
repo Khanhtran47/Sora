@@ -123,7 +123,7 @@ const scrollAreaViewportStyles = tv({
 });
 
 const tabLinkWrapperStyles = tv({
-  base: 'fixed z-[1000] flex h-[56px] w-[100vw] items-end shadow-lg',
+  base: 'fixed z-[1000] flex h-[56px] w-[100vw] items-end shadow-md shadow-neutral/10',
   variants: {
     miniSidebar: {
       true: 'top-[56px] sm:w-[calc(100vw_-_80px)]',

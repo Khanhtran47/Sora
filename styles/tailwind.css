@@ -5,26 +5,36 @@
 
 @layer base {
   .h0 {
-    @apply !text-3xl !font-bold md:!text-5xl !tracking-normal;
+    @apply !text-5xl !font-bold md:!text-6xl !tracking-normal;
   }
 
   h1,
   .h1 {
-    @apply !text-2xl !font-bold md:!text-4xl !tracking-normal;
+    @apply !text-4xl !font-bold md:!text-5xl !tracking-normal;
   }
 
   h2,
   .h2 {
-    @apply !text-xl !font-bold md:!text-3xl !tracking-normal;
+    @apply !text-3xl !font-bold md:!text-4xl !tracking-normal;
   }
 
   h3,
   .h3 {
-    @apply !text-lg !font-bold md:!text-2xl !tracking-normal;
+    @apply !text-2xl !font-bold md:!text-3xl !tracking-normal;
   }
 
   h4,
   .h4 {
+    @apply !text-xl !font-bold md:!text-2xl !tracking-normal;
+  }
+
+  h5,
+  .h5 {
+    @apply !text-lg !font-bold md:!text-xl !tracking-normal;
+  }
+
+  h6,
+  .h6 {
     @apply !text-base !font-bold md:!text-lg !tracking-normal;
   }
 
@@ -56,7 +66,7 @@
     .art-video-player {
       .art-layers {
         .art-layer-auto-playback {
-          @apply !rounded-lg !border !border-solid !border-border !shadow-lg !backdrop-blur-md !backdrop-saturate-200 !bg-neutral/[0.6];
+          @apply !rounded-lg !border !border-solid !border-border !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-neutral/[0.6];
         }
       }
     }
@@ -65,7 +75,7 @@
   .custom-player-contextmenus {
     .art-video-player.art-contextmenu-show {
       .art-contextmenus {
-        @apply !rounded-lg !border !border-solid !border-border !shadow-lg !backdrop-blur-md !backdrop-saturate-200 !bg-neutral/[0.6];
+        @apply !rounded-lg !border !border-solid !border-border !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-neutral/[0.6];
       }
     }
   }
@@ -73,14 +83,14 @@
   .custom-player-info {
     .art-video-player.art-info-show {
       .art-info {
-        @apply !rounded-lg !border !border-solid !border-border !shadow-lg !backdrop-blur-md !backdrop-saturate-200 !bg-neutral/[0.6];
+        @apply !rounded-lg !border !border-solid !border-border !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-neutral/[0.6];
       }
     }
   }
 
   .custom-player-notice-inner {
     .art-notice-inner {
-      @apply !rounded-lg !border !border-solid !border-border !shadow-lg !backdrop-blur-md !backdrop-saturate-200 !bg-neutral/[0.6];
+      @apply !rounded-lg !border !border-solid !border-border !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-neutral/[0.6];
     }
   }
 
@@ -94,7 +104,7 @@
     .art-video-player {
       .art-volume-panel {
         .art-volume-inner {
-          @apply !rounded-lg !border !border-solid !border-border !shadow-lg !backdrop-blur-md !backdrop-saturate-200 !bg-neutral/[0.6];
+          @apply !rounded-lg !border !border-solid !border-border !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-neutral/[0.6];
         }
       }
     }
@@ -102,7 +112,7 @@
 
   .custom-player-icon-after {
     .art-icon::after {
-      @apply !rounded-lg !border !border-solid !border-border !shadow-lg !backdrop-blur-md !backdrop-saturate-200 !text-neutral-foreground !font-[Inter] !bg-neutral/[0.6];
+      @apply !rounded-lg !border !border-solid !border-border !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !text-neutral-foreground !font-[Inter] !bg-neutral/[0.6];
     }
   }
 
@@ -114,7 +124,7 @@
 
   .custom-player-control-after {
     .art-control::after {
-      @apply !rounded-lg !border !border-solid !border-border !shadow-lg !backdrop-blur-md !backdrop-saturate-200 !text-neutral-foreground !font-[Inter] !bg-neutral/[0.6];
+      @apply !rounded-lg !border !border-solid !border-border !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !text-neutral-foreground !font-[Inter] !bg-neutral/[0.6];
     }
   }
 

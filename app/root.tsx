@@ -604,7 +604,7 @@ const App = () => {
               initial={{ opacity: 1 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed top-0 left-0 z-[9999] block h-full w-full bg-background"
+              className="fixed left-0 top-0 z-[9999] block h-full w-full bg-background"
             >
               <div className="relative top-1/2 m-auto mt-[-77px] block h-0 w-0">
                 <div className="mb-5 flex	items-center justify-center">

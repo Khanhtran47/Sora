@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Button } from '@nextui-org/button';
-import { Avatar, Badge, Card, Spacer, Tooltip } from '@nextui-org/react';
+import { Card, CardBody } from '@nextui-org/card';
+import { Avatar, Badge, Spacer, Tooltip } from '@nextui-org/react';
 import { useMeasure, useMediaQuery } from '@react-hookz/web';
 import { useFetcher, useLocation, useNavigate } from '@remix-run/react';
 import { motion, useTransform } from 'framer-motion';
-import Image, { MimeType } from 'remix-image';
+import { MimeType } from 'remix-image';
 // import { useTranslation } from 'react-i18next';
 import { tv } from 'tailwind-variants';
 import tinycolor from 'tinycolor2';
@@ -17,6 +18,7 @@ import TMDB from '~/utils/media';
 import { useLayout } from '~/store/layout/useLayout';
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
+import Image from '~/components/elements/Image';
 import SelectProviderModal from '~/components/elements/dialog/SelectProviderModal';
 import Rating from '~/components/elements/shared/Rating';
 import { H2, H5, H6 } from '~/components/styles/Text.styles';
@@ -129,91 +131,61 @@ export const MediaDetail = (props: IMediaDetail) => {
   return (
     <>
       <Card
-        variant="flat"
-        css={{
-          display: 'flex',
-          flexFlow: 'column',
-          width: '100%',
-          borderWidth: 0,
-          backgroundColor: 'transparent',
-          borderBottomLeftRadius: 0,
-          borderBottomRightRadius: 0,
-          borderTopRightRadius: 0,
+        radius="none"
+        style={{
           height: `calc(${size?.height}px)`,
-          backgroundImage: `linear-gradient(to bottom, transparent 80px, ${backgroundColor} 80px)`,
-          '@xs': {
-            backgroundImage: `linear-gradient(to bottom, transparent 200px, ${backgroundColor} 200px)`,
-          },
+          // @ts-ignore
+          '--colors-movie-brand': backgroundColor,
+        }}
+        classNames={{
+          base: 'flex flex-col w-full !bg-transparent bg-gradient-to-b !from-transparent from-[80px] !to-movie-brand-color border-0 to-[80px] sm:from-[200px] sm:to-[200px]',
         }}
       >
-        <Card.Body
+        <CardBody
           ref={ref}
-          css={{
-            position: 'absolute',
-            zIndex: 1,
-            bottom: 0,
-            display: 'flex',
-            flexGrow: 1,
-            justifyContent: 'center',
-            flexDirection: 'column',
-            padding: 0,
-            borderBottomLeftRadius: 0,
-            borderBottomRightRadius: 0,
-          }}
+          className="z-1 absolute bottom-0 flex grow flex-col items-center justify-center p-0"
         >
           <BackgroundContent />
           <div className="grid w-full max-w-[1920px] grid-cols-[1fr_2fr] grid-rows-[1fr_auto_auto] items-stretch justify-center gap-x-4 gap-y-6 px-3 pt-5 grid-areas-small sm:grid-rows-[auto_1fr_auto] sm:px-3.5 sm:grid-areas-wide xl:px-4 2xl:px-5">
-            <div className="flex flex-col grid-in-image" ref={imageRef}>
+            <div className="flex flex-col items-center justify-center grid-in-image" ref={imageRef}>
               {posterPath ? (
-                <Card.Image
-                  // @ts-ignore
-                  as={Image}
-                  src={posterPath}
-                  alt={title}
-                  objectFit="cover"
-                  css={{
-                    minWidth: 'auto !important',
-                    minHeight: 'auto !important',
-                    borderRadius: '$sm',
-                    boxShadow: '12px 12px 30px 10px rgb(104 112 118 / 0.35)',
-                    aspectRatio: '2 / 3',
-                    '@sm': {
-                      borderRadius: '$md',
-                    },
-                  }}
-                  containerCss={{
-                    overflow: 'visible',
-                    width: '100% !important',
-                    '@xs': {
-                      width: '75% !important',
-                    },
-                    '@md': {
-                      width: '50% !important',
-                    },
-                  }}
-                  showSkeleton
-                  loaderUrl="/api/image"
-                  placeholder="empty"
-                  responsive={[
-                    {
-                      size: {
-                        width: Math.round(
-                          (imageSize?.width || 0) *
-                            (!isXl && !isSm ? 0.5 : isXl && !isSm ? 0.75 : isXl && isSm ? 1 : 1),
-                        ),
-                        height: Math.round(
-                          ((imageSize?.width || 0) *
-                            3 *
-                            (!isXl && !isSm ? 0.5 : isXl && !isSm ? 0.75 : isXl && isSm ? 1 : 1)) /
-                            2,
-                        ),
+                <div className="w-full sm:w-3/4 xl:w-1/2">
+                  <Image
+                    src={posterPath}
+                    alt={title}
+                    radius="xl"
+                    shadow="xl"
+                    className="aspect-[2/3] !min-h-[auto] !min-w-[auto]"
+                    disableSkeleton={false}
+                    loaderUrl="/api/image"
+                    placeholder="empty"
+                    responsive={[
+                      {
+                        size: {
+                          width: Math.round(
+                            (imageSize?.width || 0) *
+                              (!isXl && !isSm ? 0.5 : isXl && !isSm ? 0.75 : isXl && isSm ? 1 : 1),
+                          ),
+                          height: Math.round(
+                            ((imageSize?.width || 0) *
+                              3 *
+                              (!isXl && !isSm
+                                ? 0.5
+                                : isXl && !isSm
+                                ? 0.75
+                                : isXl && isSm
+                                ? 1
+                                : 1)) /
+                              2,
+                          ),
+                        },
                       },
-                    },
-                  ]}
-                  options={{
-                    contentType: MimeType.WEBP,
-                  }}
-                />
+                    ]}
+                    options={{
+                      contentType: MimeType.WEBP,
+                    }}
+                  />
+                </div>
               ) : (
                 <div className="flex items-center justify-center">
                   <Avatar
@@ -374,7 +346,7 @@ export const MediaDetail = (props: IMediaDetail) => {
               </div>
             </div>
           </div>
-        </Card.Body>
+        </CardBody>
       </Card>
       <SelectProviderModal
         visible={visible}
@@ -432,92 +404,58 @@ export const AnimeDetail = (props: IAnimeDetail) => {
   return (
     <>
       <Card
-        variant="flat"
-        css={{
-          display: 'flex',
-          flexFlow: 'column',
-          width: '100%',
-          borderWidth: 0,
-          backgroundColor: 'transparent',
-          borderBottomLeftRadius: 0,
-          borderBottomRightRadius: 0,
-          borderTopRightRadius: 0,
+        radius="none"
+        style={{
           height: `calc(${size?.height}px)`,
-          backgroundImage: `linear-gradient(to bottom, transparent 80px, ${backgroundColor} 80px)`,
-          '@xs': {
-            backgroundImage: `linear-gradient(to bottom, transparent 200px, ${backgroundColor} 200px)`,
-          },
+          // @ts-ignore
+          '--colors-movie-brand': backgroundColor,
+        }}
+        classNames={{
+          base: 'flex flex-col w-full !bg-transparent bg-gradient-to-b !from-transparent from-[80px] !to-movie-brand-color border-0 to-[80px] sm:from-[200px] sm:to-[200px]',
         }}
       >
-        <Card.Body
-          ref={ref}
-          css={{
-            position: 'absolute',
-            zIndex: 1,
-            bottom: 0,
-            flexGrow: 1,
-            display: 'flex',
-            justifyContent: 'center',
-            flexDirection: 'column',
-            padding: 0,
-            borderBottomLeftRadius: 0,
-            borderBottomRightRadius: 0,
-          }}
-        >
+        <CardBody ref={ref} className="z-1 absolute bottom-0 flex grow flex-col justify-center p-0">
           <BackgroundContent />
           <div className="grid w-full max-w-[1920px] grid-cols-[1fr_2fr] grid-rows-[1fr_auto_auto] items-stretch justify-center gap-x-4 gap-y-6 px-3 pt-5 grid-areas-small sm:grid-rows-[auto_1fr_auto] sm:px-3.5 sm:grid-areas-wide xl:px-4 2xl:px-5">
-            <div className="flex flex-col grid-in-image" ref={imageRef}>
+            <div className="flex flex-col items-center justify-center grid-in-image" ref={imageRef}>
               {image ? (
-                <Card.Image
-                  // @ts-ignore
-                  as={Image}
-                  src={image}
-                  title={title?.userPreferred || title?.english || title?.romaji || title?.native}
-                  alt={title?.userPreferred || title?.english || title?.romaji || title?.native}
-                  objectFit="cover"
-                  css={{
-                    minWidth: 'auto !important',
-                    minHeight: 'auto !important',
-                    borderRadius: '$sm',
-                    boxShadow: '12px 12px 30px 10px rgb(104 112 118 / 0.35)',
-                    aspectRatio: '2 / 3',
-                    '@sm': {
-                      borderRadius: '$md',
-                    },
-                  }}
-                  containerCss={{
-                    overflow: 'visible',
-                    width: '100% !important',
-                    '@xs': {
-                      width: '75% !important',
-                    },
-                    '@md': {
-                      width: '50% !important',
-                    },
-                  }}
-                  showSkeleton
-                  loaderUrl="/api/image"
-                  placeholder="empty"
-                  responsive={[
-                    {
-                      size: {
-                        width: Math.round(
-                          (imageSize?.width || 0) *
-                            (!isXl && !isSm ? 0.5 : isXl && !isSm ? 0.75 : isXl && isSm ? 1 : 1),
-                        ),
-                        height: Math.round(
-                          ((imageSize?.width || 0) *
-                            3 *
-                            (!isXl && !isSm ? 0.5 : isXl && !isSm ? 0.75 : isXl && isSm ? 1 : 1)) /
-                            2,
-                        ),
+                <div className="w-full sm:w-3/4 xl:w-1/2">
+                  <Image
+                    src={image}
+                    title={title?.userPreferred || title?.english || title?.romaji || title?.native}
+                    alt={title?.userPreferred || title?.english || title?.romaji || title?.native}
+                    radius="xl"
+                    className="aspect-[2/3] !min-h-[auto] !min-w-[auto]"
+                    disableSkeleton={false}
+                    loaderUrl="/api/image"
+                    placeholder="empty"
+                    responsive={[
+                      {
+                        size: {
+                          width: Math.round(
+                            (imageSize?.width || 0) *
+                              (!isXl && !isSm ? 0.5 : isXl && !isSm ? 0.75 : isXl && isSm ? 1 : 1),
+                          ),
+                          height: Math.round(
+                            ((imageSize?.width || 0) *
+                              3 *
+                              (!isXl && !isSm
+                                ? 0.5
+                                : isXl && !isSm
+                                ? 0.75
+                                : isXl && isSm
+                                ? 1
+                                : 1)) /
+                              2,
+                          ),
+                        },
                       },
-                    },
-                  ]}
-                  options={{
-                    contentType: MimeType.WEBP,
-                  }}
-                />
+                    ]}
+                    options={{
+                      contentType: MimeType.WEBP,
+                    }}
+                  />
+                </div>
               ) : (
                 <div className="flex items-center justify-center">
                   <Avatar
@@ -590,7 +528,7 @@ export const AnimeDetail = (props: IAnimeDetail) => {
                     <Button
                       type="button"
                       variant="flat"
-                      key={genre?.id}
+                      key={genre}
                       size={isSm ? 'sm' : 'md'}
                       className="hover:opacity-80"
                       style={{
@@ -641,7 +579,7 @@ export const AnimeDetail = (props: IAnimeDetail) => {
               </div>
             </div>
           </div>
-        </Card.Body>
+        </CardBody>
       </Card>
       <SelectProviderModal
         visible={visible}

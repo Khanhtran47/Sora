@@ -1,10 +1,9 @@
-/* eslint-disable @typescript-eslint/indent */
 import { memo } from 'react';
 import { Button } from '@nextui-org/button';
-import { Avatar, Card, Col, Row, Spacer } from '@nextui-org/react';
+import { Avatar, Spacer } from '@nextui-org/react';
 import { useMediaQuery } from '@react-hookz/web';
 import { useNavigate } from '@remix-run/react';
-import Image, { MimeType } from 'remix-image';
+import { MimeType } from 'remix-image';
 import tinycolor from 'tinycolor2';
 
 import type { IMedia } from '~/types/media';
@@ -13,8 +12,9 @@ import type { IEpisode } from '~/services/tmdb/tmdb.types';
 import MediaList from '~/components/media/MediaList';
 import ListEpisodes from '~/components/elements/shared/ListEpisodes';
 import Rating from '~/components/elements/shared/Rating';
-import { H2, H6 } from '~/components/styles/Text.styles';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
+
+import Image from '../Image';
 
 interface IWatchDetailProps {
   id?: number | string | undefined;
@@ -67,6 +67,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
   } = props;
   const navigate = useNavigate();
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
+  const isMd = useMediaQuery('(max-width: 768px)', { initializeWithValue: false });
   const colorBackground = tinycolor(color).isDark()
     ? tinycolor(color).brighten(40).saturate(70).spin(180).toString()
     : tinycolor(color).darken(40).saturate(70).spin(180).toString();
@@ -75,72 +76,39 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
     <>
       {type === 'anime' || type === 'tv' ? (
         <>
-          <Row>
-            {type === 'anime' ? (
-              <Col span={12}>
-                <ListEpisodes
-                  type="anime"
-                  id={id}
-                  episodes={episodes}
-                  providers={providers || []}
-                  // episodeId
-                  // episodeNumber
-                />
-              </Col>
-            ) : null}
-            {type === 'tv' ? (
-              <Col span={12}>
-                <ListEpisodes
-                  type="tv"
-                  id={id}
-                  episodes={episodes}
-                  season={season}
-                  providers={providers || []}
-                />
-              </Col>
-            ) : null}
-          </Row>
+          {type === 'anime' ? (
+            <ListEpisodes
+              type="anime"
+              id={id}
+              episodes={episodes}
+              providers={providers || []}
+              // episodeId
+              // episodeNumber
+            />
+          ) : null}
+          {type === 'tv' ? (
+            <ListEpisodes
+              type="tv"
+              id={id}
+              episodes={episodes}
+              season={season}
+              providers={providers || []}
+            />
+          ) : null}
           <Spacer y={2} />
         </>
       ) : null}
-      <Row
-        css={{
-          backgroundColor: '$backgroundContrast',
-          p: '$lg',
-          borderRadius: '$lg',
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'flex-start',
-          alignItems: 'flex-start',
-          gap: '$lg',
-        }}
-      >
-        {!isSm &&
+      <div className="flex flex-row items-start justify-start gap-3 rounded-xl bg-content1 p-2 sm:p-4">
+        {!isMd &&
           (posterPath ? (
-            <Card.Image
-              // @ts-ignore
-              as={Image}
+            <Image
               src={posterPath}
               alt={title}
               title={title}
-              objectFit="cover"
-              showSkeleton
-              css={{
-                width: '100%',
-                height: 'auto',
-                aspectRatio: '2 / 3',
-                borderRadius: '$sm',
-                minWidth: 'auto !important',
-                minHeight: 'auto !important',
-                maxWidth: '137px',
-                '@sm': { maxWidth: '158px' },
-                '@md': { maxWidth: '173px' },
-                '@lg': { maxWidth: '239px' },
-              }}
-              containerCss={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
+              disableSkeleton={false}
+              radius="lg"
+              classNames={{
+                base: 'w-full h-auto aspect-[2/3] min-w-[auto] min-h-[auto] max-w-[137px] lg:max-w-[158px] xl:max-w-[173px] 2xl:max-w-[239px]',
               }}
               loading="lazy"
               loaderUrl="/api/image"
@@ -179,7 +147,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
               }}
             />
           ) : (
-            <Row align="center" justify="center">
+            <div className="flex items-center justify-center">
               <Avatar
                 icon={<PhotoIcon width={48} height={48} />}
                 css={{
@@ -191,12 +159,10 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
                   borderRadius: '24px !important',
                 }}
               />
-            </Row>
+            </div>
           ))}
         <div className="flex w-full flex-col items-start justify-start">
-          <H2 h2 weight="bold">
-            {title}
-          </H2>
+          <h3 className="font-semibold text-neutral-900">{title}</h3>
           <Spacer y={0.5} />
           {type === 'movie' || type === 'tv' ? (
             <>
@@ -205,22 +171,10 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
                 {imdbRating && (
                   <>
                     <Spacer x={0.75} />
-                    <H6
-                      h6
-                      weight="semibold"
-                      css={{
-                        backgroundColor: '#ddb600',
-                        color: '#000',
-                        borderRadius: '$xs',
-                        padding: '0 0.25rem 0 0.25rem',
-                        marginRight: '0.5rem',
-                      }}
-                    >
+                    <p className="mr-2 rounded-lg bg-[#ddb600] px-1 font-semibold text-black">
                       IMDb
-                    </H6>
-                    <H6 h6 weight="semibold">
-                      {imdbRating}
-                    </H6>
+                    </p>
+                    <p className="font-semibold">{imdbRating}</p>
                   </>
                 )}
               </div>
@@ -285,20 +239,17 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
           </div>
           <Spacer y={1} />
           {type === 'movie' || type === 'tv' ? (
-            <H6 h6 css={{ textAlign: 'justify' }}>
-              {overview}
-            </H6>
+            <p style={{ textAlign: 'justify' }}>{overview}</p>
           ) : null}
           {type === 'anime' ? (
-            <H6
-              h6
-              css={{ textAlign: 'justify' }}
+            <p
+              style={{ textAlign: 'justify' }}
               dangerouslySetInnerHTML={{ __html: overview || '' }}
             />
           ) : null}
           <Spacer y={1} />
         </div>
-      </Row>
+      </div>
       <Spacer y={2} />
       {(type === 'movie' || type === 'tv') &&
       recommendationsMovies &&

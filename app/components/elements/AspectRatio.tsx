@@ -1,5 +1,5 @@
 import * as AspectRatioPrimitive from '@radix-ui/react-aspect-ratio';
 
-const AspectRatio = AspectRatioPrimitive;
+const AspectRatio = AspectRatioPrimitive.Root;
 
 export default AspectRatio;

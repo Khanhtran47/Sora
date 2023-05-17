@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/indent */
 import { useMemo, useState } from 'react';
 import { Button, ButtonGroup } from '@nextui-org/button';
 import { Card, CardBody } from '@nextui-org/card';
@@ -125,7 +124,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
             </Dropdown>
           ) : null}
           {episodesCountAvailable && episodesCountAvailable >= episodesCountProvider ? (
-            <ButtonGroup color="primary">
+            <ButtonGroup>
               {episodeTypes.map((episodeType) => (
                 <Button
                   key={`button-item-${episodeType.activeType}`}
@@ -157,7 +156,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                 key={episode.id}
                 type="button"
                 onPress={() => handleSelectEpisode(index)}
-                className="mr-2 mb-2 w-10 p-0"
+                className="mb-2 mr-2 w-10 p-0"
               >
                 {index + 1 + (currentPage - 1) * 50}
               </Button>
@@ -179,13 +178,13 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                           width={227}
                           height="100%"
                           isZoomed
+                          radius="xl"
                           loading="lazy"
                           disableSkeleton={false}
                           alt={episode?.name || ''}
                           title={episode?.name || ''}
                           classNames={{
-                            base: 'm-0 min-w-[227px] rounded-md max-h-[127px] overflow-hidden space-y-0',
-                            img: 'object-cover',
+                            base: 'm-0 min-w-[227px] max-h-[127px] overflow-hidden !transition-[transform,_opacity]',
                           }}
                           loaderUrl="/api/image"
                           placeholder="empty"
@@ -220,11 +219,11 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                           alt={episode?.title || ''}
                           title={episode?.title || ''}
                           loading="lazy"
+                          radius="xl"
                           isZoomed
-                          // disableSkeleton
+                          disableSkeleton={false}
                           classNames={{
-                            base: 'm-0 min-w-[227px] rounded-md max-h-[127px] overflow-hidden space-y-0',
-                            img: 'object-cover',
+                            base: 'm-0 min-w-[227px] max-h-[127px] overflow-hidden !transition-[transform,_opacity]',
                           }}
                           loaderUrl="/api/image"
                           placeholder="empty"

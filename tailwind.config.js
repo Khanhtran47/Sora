@@ -13,6 +13,7 @@ module.exports = withTV({
       colors: {
         'player-subtitle-window-color': 'var(--art-subtitle-window-color)',
         'player-subtitle-background-color': 'var(--art-subtitle-background-color)',
+        'movie-brand-color': 'var(--colors-movie-brand)',
       },
       keyframes: {
         enterFromRight: {
@@ -81,6 +82,10 @@ module.exports = withTV({
           from: { transform: 'translate3d(0,0,0)' },
           to: { transform: '$$transformValue' },
         },
+        progressBarStripes: {
+          '0%': { backgroundPosition: '40px 0' },
+          '100%': { backgroundPosition: '0 0' },
+        },
       },
       animation: {
         scaleIn: 'scaleIn 200ms ease',
@@ -93,6 +98,7 @@ module.exports = withTV({
         exitToRight: 'exitToRight 250ms ease',
         shadow: 'shadowAnimation 500ms linear infinite',
         jump: 'jumpAnimation 500ms linear infinite',
+        progressBarStripes: 'progressBarStripes 2s linear infinite',
       },
       gridTemplateAreas: {
         wide: ['image title', 'image info', 'image buttons'],
@@ -164,6 +170,10 @@ module.exports = withTV({
         lg: '0 8px 16px var(--tw-shadow-color)',
         player: 'var(--art-subtitle-text-shadow)',
       },
+      width: {
+        logo: 'calc(var(--movie-logo-width) * 1px)',
+        'logo-sm': 'calc(var(--movie-logo-width-sm) * 1px)',
+      },
     },
     screens: {
       '2xs': '375px',
@@ -194,7 +204,6 @@ module.exports = withTV({
         { values: theme('textShadow') },
       );
     }),
-    require('@tailwindcss/line-clamp'),
     require('tailwind-scrollbar-hide'),
     require('@savvywombat/tailwindcss-grid-areas'),
     require('prettier-plugin-tailwindcss'),

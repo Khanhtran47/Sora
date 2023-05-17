@@ -48,6 +48,10 @@ const TypographyPage = () => {
       <h3>Almost before we knew it, we had left the ground.</h3>
       <p className="text-base tracking-wide md:text-lg">H4</p>
       <h4>Almost before we knew it, we had left the ground.</h4>
+      <p className="text-base tracking-wide md:text-lg">H5</p>
+      <h5>Almost before we knew it, we had left the ground.</h5>
+      <p className="text-base tracking-wide md:text-lg">H6</p>
+      <h6>Almost before we knew it, we had left the ground.</h6>
       <br />
       <p className="text-base tracking-wide md:text-lg">Text size 4xl</p>
       <p className="text-4xl">Almost before we knew it, we had left the ground.</p>

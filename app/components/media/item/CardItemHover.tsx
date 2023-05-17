@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/indent */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useCallback, useEffect, useState } from 'react';
 import { Button } from '@nextui-org/button';
@@ -188,9 +187,7 @@ const CardItemHover = (props: ICardItemHoverProps) => {
                   height: '218.25px',
                   pointerEvents: 'none',
                 }}
-                className={
-                  showTrailer ? 'aspect-w-16 aspect-h-9 overflow-hidden rounded-lg' : 'hidden'
-                }
+                className={showTrailer ? 'aspect-video overflow-hidden rounded-lg' : 'hidden'}
               />
             );
         }}
@@ -292,7 +289,7 @@ const CardItemHover = (props: ICardItemHoverProps) => {
             radius="full"
             variant="ghost"
             isIconOnly
-            className="absolute top-[25px] right-5 z-[90] h-10 w-10 cursor-pointer hover:opacity-80"
+            className="absolute right-5 top-[25px] z-[90] h-10 w-10 cursor-pointer hover:opacity-80"
             aria-label="Toggle Mute"
             onPress={isMutedTrailer.value ? unMute : mute}
           >

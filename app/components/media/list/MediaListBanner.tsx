@@ -1,13 +1,12 @@
 import { forwardRef, useEffect, useRef, useState } from 'react';
 import { Button } from '@nextui-org/button';
-import { Card, Grid, styled } from '@nextui-org/react';
+import { Grid, styled } from '@nextui-org/react';
 import { useMediaQuery } from '@react-hookz/web';
 import { Autoplay, Pagination, Thumbs, type Swiper } from 'swiper';
 import { Swiper as SwiperReact, SwiperSlide, useSwiper } from 'swiper/react';
 
 import type { IMedia } from '~/types/media';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
-import { H5 } from '~/components/styles/Text.styles';
 import ChevronLeftIcon from '~/assets/icons/ChevronLeftIcon';
 import ChevronRightIcon from '~/assets/icons/ChevronRightIcon';
 import PlayIcon from '~/assets/icons/PlayIcon';
@@ -132,7 +131,7 @@ const CustomNavigationThumbs = ({ slot }: { slot: 'container-end' }) => {
         type="button"
         color="primary"
         variant="flat"
-        className="absolute top-[60px] left-[2px] z-[90] m-0 h-11 w-min cursor-pointer rounded-md bg-background/60 p-0 backdrop-blur-md"
+        className="absolute left-[2px] top-[60px] z-[90] m-0 h-11 w-min cursor-pointer rounded-md bg-background/60 p-0 backdrop-blur-md"
         isIconOnly
         onPress={() => swiper.slidePrev()}
         aria-label="Previous"
@@ -147,7 +146,7 @@ const CustomNavigationThumbs = ({ slot }: { slot: 'container-end' }) => {
         type="button"
         color="primary"
         variant="flat"
-        className="absolute top-[60px] right-[2px] z-[90] m-0 h-11 w-min cursor-pointer rounded-md bg-background/60 p-0 backdrop-blur-md"
+        className="absolute right-[2px] top-[60px] z-[90] m-0 h-11 w-min cursor-pointer rounded-md bg-background/60 p-0 backdrop-blur-md"
         isIconOnly
         onPress={() => swiper.slideNext()}
         aria-label="Next"
@@ -162,10 +161,6 @@ const CustomNavigationThumbs = ({ slot }: { slot: 'container-end' }) => {
   );
 };
 
-// target React components for Stitches
-Card.toString = () => '.card';
-Card.Image.toString = () => '.card-image';
-
 const SwiperSlideStyled = styled(SwiperSlide, {
   overflow: 'hidden',
   borderRadius: '$lg',
@@ -176,56 +171,8 @@ const SwiperSlideStyled = styled(SwiperSlide, {
   '&:hover': {
     border: '4px solid var(--nextui-colors-primarySolidHover)',
   },
-  [`& ${Card}`]: {
-    transition: 'all 0.4s ease',
-    transform: 'scale(1.125, 1.03) translateX(-10px)',
-    '&::after': {
-      transition: 'all 0.4s ease',
-      opacity: 0,
-      content: '',
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      width: '150px',
-      height: '135px',
-      backgroundImage: 'linear-gradient(90deg, $background, $backgroundTransparent)',
-    },
-    '&:hover': {
-      transform: 'scale(1.075, 1.015) translateX(-5px)',
-      [`& ${H5}`]: {
-        display: 'block',
-      },
-      [`& ${Card.Image}`]: {},
-      '&::after': {
-        content: '',
-        opacity: 1,
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '150px',
-        height: '135px',
-        backgroundImage: 'linear-gradient(90deg, $background, $backgroundTransparent)',
-      },
-    },
-  },
   '&.swiper-slide-thumb-active': {
     border: '4px solid var(--nextui-colors-primary)',
-    [`& ${Card}`]: {
-      transform: 'scale(1) translateX(0)',
-      [`& ${H5}`]: {
-        display: 'block',
-      },
-      '&::after': {
-        content: '',
-        opacity: 1,
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '200px',
-        height: '135px',
-        backgroundImage: 'linear-gradient(90deg, $background, $backgroundTransparent)',
-      },
-    },
   },
 });
 

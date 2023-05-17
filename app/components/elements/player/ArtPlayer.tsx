@@ -14,7 +14,7 @@ import Artplayer from 'artplayer';
 import { isMobile } from 'react-device-detect';
 
 import usePlayerState from '~/store/player/usePlayerState';
-import AspectRatio from '~/components/elements/aspect-ratio/AspectRatio';
+import AspectRatio from '~/components/elements/AspectRatio';
 import { H5 } from '~/components/styles/Text.styles';
 import Close from '~/assets/icons/CloseIcon';
 
@@ -77,7 +77,7 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
     [],
   );
   return (
-    <AspectRatio.Root
+    <AspectRatio
       ratio={isMini ? undefined : isMobile ? 16 / 9 : 7 / 3}
       className={isMini ? 'overflow-hidden rounded-lg' : ''}
     >
@@ -126,7 +126,7 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
           </Button>
         </div>
       ) : null}
-    </AspectRatio.Root>
+    </AspectRatio>
   );
 };
 

@@ -1,6 +1,6 @@
 import { Container } from '@nextui-org/react';
 
-import AspectRatio from '~/components/elements/aspect-ratio/AspectRatio';
+import AspectRatio from '~/components/elements/AspectRatio';
 import { H1, H4 } from '~/components/styles/Text.styles';
 
 interface IPlayerErrorProps {
@@ -11,7 +11,7 @@ interface IPlayerErrorProps {
 const PlayerError = (props: IPlayerErrorProps) => {
   const { title, message } = props;
   return (
-    <AspectRatio.Root ratio={7 / 3}>
+    <AspectRatio ratio={7 / 3}>
       <Container
         fluid
         responsive={false}
@@ -28,7 +28,7 @@ const PlayerError = (props: IPlayerErrorProps) => {
           {message}
         </H4>
       </Container>
-    </AspectRatio.Root>
+    </AspectRatio>
   );
 };
 

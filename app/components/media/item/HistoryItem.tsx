@@ -1,8 +1,10 @@
-import { Card, Col, Grid, Image, Progress, Text } from '@nextui-org/react';
-import { useMeasure } from '@react-hookz/web';
+import { Card, CardBody } from '@nextui-org/card';
+import { Progress } from '@nextui-org/react';
 import { Link } from '@remix-run/react';
+import { MimeType } from 'remix-image';
 
 import type { IHistory } from '~/services/supabase';
+import Image from '~/components/elements/Image';
 import notFound from '~/assets/images/404.gif';
 
 interface IHistoryItem {
@@ -10,57 +12,51 @@ interface IHistoryItem {
 }
 
 const HistoryItem = ({ item }: IHistoryItem) => {
-  const [size, ref] = useMeasure<HTMLDivElement>();
-  const watched = Math.round((item.watched / item.duration) * 100);
+  const watched = Math.round((item?.watched / item?.duration) * 100);
 
-  const url = new URL(`http://abc${item.route}`);
-  if (item.watched !== 0) {
+  const url = new URL(`http://abc${item?.route}`);
+  if (item?.watched !== 0) {
     url.searchParams.set('t', item.watched.toString());
   }
 
   return (
-    <Card isPressable isHoverable ref={ref}>
-      <Link to={url.pathname + url.search}>
-        <Grid.Container gap={2}>
-          {/* left */}
-          <Grid xs={6} css={{ padding: '$0' }} justify="flex-start">
-            <Col>
-              <Image
-                showSkeleton
-                width="16rem"
-                height="9rem"
-                src={item.poster || notFound}
-                alt={item.title}
-                objectFit="cover"
-                placeholder="empty"
-              />
-              {watched > 5 && <Progress size="xs" value={watched} color="error" />}
-            </Col>
-          </Grid>
-          {/* right */}
-          <Grid xs={6}>
-            <Grid.Container
-              alignContent="flex-start"
-              css={size?.width && size.width > 350 ? { marginTop: '1rem' } : {}}
-            >
-              {/* title */}
-              <Grid xs={12}>
-                <Text h1 size="$md">
-                  {item.title}
-                </Text>
-              </Grid>
-              <Grid xs={12}>
-                {item.season && <Text size="$sm">SS {item.season}&ensp;-&ensp;</Text>}
-                {item.episode && <Text size="$sm">EP {item.episode.split('-').at(-1)}</Text>}
-              </Grid>
-              <Grid xs={12}>
-                <Text size="$sm">{new Date(item.updated_at.toString()).toLocaleString()}</Text>
-              </Grid>
-            </Grid.Container>
-          </Grid>
-        </Grid.Container>
-      </Link>
-    </Card>
+    <Link to={url.pathname + url.search} className="w-[304px] sm:w-full">
+      <Card
+        isPressable
+        isHoverable
+        className="hover:shadow-[0_0_0_1px] hover:shadow-primary-200 sm:!max-h-[171px]"
+      >
+        <CardBody className="flex flex-col flex-nowrap justify-start overflow-hidden p-0 sm:flex-row">
+          <Image
+            width="304px"
+            height="171px"
+            src={item?.poster || notFound}
+            alt={item?.title}
+            title={item?.title}
+            className="z-0 m-0 min-h-[171px] min-w-[304px] overflow-hidden"
+            placeholder="empty"
+            loading="lazy"
+            loaderUrl="/api/image"
+            options={{ contentType: MimeType.WEBP }}
+            responsive={[{ size: { width: 304, height: 171 } }]}
+          />
+          <div className="flex flex-col justify-start p-3">
+            <h4 className="line-clamp-1">{item?.title}</h4>
+            {item?.season ? <p>SS {item.season}&ensp;-&ensp;</p> : null}
+            {item?.episode ? <p>EP {item.episode.split('-').at(-1)}</p> : null}
+            <p>{new Date(item?.updated_at.toString()).toLocaleString()}</p>
+          </div>
+          {watched > 5 ? (
+            <Progress
+              size="xs"
+              value={watched}
+              color="primary"
+              className="!absolute bottom-0 w-full"
+            />
+          ) : null}
+        </CardBody>
+      </Card>
+    </Link>
   );
 };
 

@@ -1,8 +1,9 @@
-import { Avatar, Card, Spacer } from '@nextui-org/react';
+import { Card, CardBody } from '@nextui-org/card';
+import { Avatar } from '@nextui-org/react';
 import { useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs } from '@remix-run/node';
 import { Link, useLoaderData, useNavigate, useParams } from '@remix-run/react';
-import Image, { MimeType } from 'remix-image';
+import { MimeType } from 'remix-image';
 
 import { authenticate } from '~/services/supabase';
 import { getCredits, getRecommendation, getSimilar } from '~/services/tmdb/tmdb.server';
@@ -11,6 +12,7 @@ import TMDB from '~/utils/media';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
+import Image from '~/components/elements/Image';
 import { H2, H4, H5, H6, P } from '~/components/styles/Text.styles';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 
@@ -177,54 +179,33 @@ const TvOverview = () => {
             >
               Seasons
             </H2>
-            {detail.seasons
-              .filter((season) => !season.name?.includes('Specials'))
-              .map((season) => (
-                <Link key={season.id} to={`/tv-shows/${detail.id}/season/${season.season_number}/`}>
+            <div className="flex w-full flex-col gap-4">
+              {detail.seasons
+                .filter((season) => !season.name?.includes('Specials'))
+                .map((season) => (
                   <Card
-                    as="div"
+                    as={Link}
+                    key={season.id}
+                    to={`/tv-shows/${detail.id}/season/${season.season_number}/`}
                     isHoverable
                     isPressable
-                    css={{
-                      maxHeight: '195px !important',
-                      borderWidth: 0,
-                      filter: 'unset',
-                      '&:hover': {
-                        boxShadow: '0 0 0 1px var(--nextui-colors-primarySolidHover)',
-                        filter:
-                          'drop-shadow(0 4px 12px rgb(104 112 118 / 0.15)) drop-shadow(0 20px 8px rgb(104 112 118 / 0.1))',
-                      },
-                    }}
+                    className="!max-h-[195px] hover:shadow-[0_0_0_1px] hover:shadow-primary-200"
                     role="figure"
                   >
-                    <Card.Body
-                      css={{
-                        p: 0,
-                        flexFlow: 'row nowrap',
-                        justifyContent: 'flex-start',
-                      }}
-                    >
+                    <CardBody className="flex flex-row flex-nowrap justify-start overflow-hidden p-0">
                       {season.poster_path ? (
-                        <Card.Image
-                          // @ts-ignore
-                          as={Image}
+                        <Image
                           src={TMDB.posterUrl(season?.poster_path, 'w154')}
-                          objectFit="cover"
                           width="130px"
                           height="100%"
-                          showSkeleton
+                          className="m-0 min-h-[195px] min-w-[130px] overflow-hidden"
                           alt={season.name}
                           title={season.name}
-                          css={{
-                            minWidth: '130px !important',
-                            minHeight: '195px !important',
-                          }}
                           loaderUrl="/api/image"
                           placeholder="empty"
                           options={{
                             contentType: MimeType.WEBP,
                           }}
-                          containerCss={{ margin: 0, minWidth: '130px', borderRadius: '$lg' }}
                           responsive={[
                             {
                               size: {
@@ -252,18 +233,16 @@ const TvOverview = () => {
                         <H5 h5>
                           {season.air_date} | {season.episode_count} episodes
                         </H5>
-                        {!isSm && (
-                          // eslint-disable-next-line tailwindcss/no-custom-classname
+                        {!isSm ? (
                           <H6 h6 className="!line-clamp-3">
                             {season.overview}
                           </H6>
-                        )}
+                        ) : null}
                       </div>
-                    </Card.Body>
+                    </CardBody>
                   </Card>
-                  <Spacer y={1} />
-                </Link>
-              ))}
+                ))}
+            </div>
           </>
         ) : null}
         {recommendations && recommendations.items && recommendations.items.length > 0 ? (

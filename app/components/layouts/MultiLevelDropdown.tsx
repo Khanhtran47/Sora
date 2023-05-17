@@ -129,7 +129,10 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
           description: theme.title,
           showIcon: false,
           icon: null,
-          action: () => setTheme(theme.id),
+          action: async () => {
+            await setTheme(theme.themeType);
+            await setTheme(theme.id);
+          },
           currentValue: null,
           isCurrent: currentTheme === theme.id,
         })),
@@ -183,7 +186,7 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
           h6
           css={{ margin: 0 }}
           weight="semibold"
-          className="!text-neutral-foreground !line-clamp-1"
+          className="!line-clamp-1 !text-neutral-foreground"
         >
           {item.title}
         </H6>
@@ -244,7 +247,7 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
         side="bottom"
         align="end"
         alignOffset={-8}
-        className="z-[1000] bg-neutral/60 backdrop-blur-xl backdrop-saturate-200"
+        className="z-[1000] bg-neutral/60 backdrop-blur-2xl backdrop-contrast-125 backdrop-saturate-200"
       >
         <ResizablePanel contentWidth="fit">
           {currentDropdownLevel ? (
