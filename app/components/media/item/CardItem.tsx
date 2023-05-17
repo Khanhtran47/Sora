@@ -69,8 +69,7 @@ const cardItemStyles = tv({
         base: '!w-[164px] hover:shadow-[0_0_0_1px] hover:shadow-primary-200 sm:!w-[180px] md:!w-[200px] lg:!w-[244px] xl:!w-[264px]',
         body: 'aspect-[2/3] w-full overflow-hidden p-0',
         imageContainer: 'w-full',
-        image:
-          'z-0 aspect-[2/3] !min-h-[auto] !min-w-[auto] overflow-hidden !transition-[transform,_opacity]',
+        image: 'z-0 aspect-[2/3] !min-h-[auto] !min-w-[auto] !transition-[transform,_opacity]',
         footer:
           'flex min-h-[4.875rem] max-w-[164px] flex-col items-start justify-start sm:max-w-[210px] md:max-w-[200px] lg:max-w-[244px] xl:max-w-[264px]',
       },
@@ -145,7 +144,7 @@ const CardItem = (props: ICardItemProps) => {
   const [trailerCard, setTrailerCard] = useState<Trailer>({});
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
   const { isPlayTrailer, listViewType } = useSoraSettings();
-  const [size, imageRef] = useMeasure<HTMLDivElement>();
+  const [size, imageRef] = useMeasure<HTMLAnchorElement>();
   const { viewportRef } = useLayout((scrollState) => scrollState);
   useEffect(() => {
     if (fetcher.data && fetcher.data.videos) {
@@ -189,9 +188,9 @@ const CardItem = (props: ICardItemProps) => {
   if (isCoverCard) {
     return (
       <Card isHoverable isPressable className={base()} role="figure" ref={cardRef}>
-        <CardBody ref={imageRef} className={body()}>
-          {size ? (
-            <Link to={linkTo || '/'}>
+        <CardBody className={body()}>
+          <Link to={linkTo || '/'} ref={imageRef}>
+            {size ? (
               <Image
                 src={backdropPath}
                 width="100%"
@@ -214,8 +213,8 @@ const CardItem = (props: ICardItemProps) => {
                   },
                 ]}
               />
-            </Link>
-          ) : null}
+            ) : null}
+          </Link>
         </CardBody>
         <CardFooter className={footer()}>
           <H5 h5 weight="bold">
@@ -229,55 +228,53 @@ const CardItem = (props: ICardItemProps) => {
   return (
     <Card
       isHoverable
-      isPressable={listViewType.value === 'card'}
+      isPressable
       className={base()}
       role="figure"
       style={{ opacity: isTooltipVisible && !isMobile ? 0 : 1 }}
       ref={cardRef}
     >
       <CardBody className={body()}>
-        <div className={imageContainer()} ref={imageRef}>
-          {size && inView ? (
-            <Link to={linkTo || '/'}>
-              {posterPath ? (
-                <Image
-                  src={posterPath || ''}
-                  width="100%"
-                  alt={titleItem}
-                  title={titleItem}
-                  loading="lazy"
-                  className={image()}
-                  decoding={inView ? 'async' : 'auto'}
-                  disableSkeleton={false}
-                  isZoomed={listViewType.value === 'card' || mediaType === 'people'}
-                  loaderUrl="/api/image"
-                  placeholder="empty"
-                  options={{ contentType: MimeType.WEBP }}
-                  responsive={[
-                    {
-                      size: {
-                        width: Math.round(size?.width),
-                        height: Math.round(size?.height),
-                      },
+        <Link to={linkTo || '/'} className={imageContainer()} ref={imageRef}>
+          {size && !isTooltipVisible && inView ? (
+            posterPath ? (
+              <Image
+                src={posterPath || ''}
+                width="100%"
+                alt={titleItem}
+                title={titleItem}
+                loading="lazy"
+                className={image()}
+                decoding={inView ? 'async' : 'auto'}
+                disableSkeleton={false}
+                isZoomed={listViewType.value === 'card' || mediaType === 'people'}
+                loaderUrl="/api/image"
+                placeholder="empty"
+                options={{ contentType: MimeType.WEBP }}
+                responsive={[
+                  {
+                    size: {
+                      width: Math.round(size?.width),
+                      height: Math.round(size?.height),
                     },
-                  ]}
-                />
-              ) : (
-                <Avatar
-                  icon={<PhotoIcon width={48} height={48} />}
-                  pointer
-                  css={{
-                    size: '$20',
-                    borderRadius: '0 !important',
-                    width: '100%',
-                    height: 'auto',
-                    aspectRatio: '2 / 3',
-                  }}
-                />
-              )}
-            </Link>
+                  },
+                ]}
+              />
+            ) : (
+              <Avatar
+                icon={<PhotoIcon width={48} height={48} />}
+                pointer
+                css={{
+                  size: '$20',
+                  borderRadius: '0 !important',
+                  width: '100%',
+                  height: 'auto',
+                  aspectRatio: '2 / 3',
+                }}
+              />
+            )
           ) : null}
-        </div>
+        </Link>
         {listViewType.value === 'detail' &&
         !isSliderCard &&
         !isEpisodeCard &&
@@ -528,6 +525,7 @@ const CardItem = (props: ICardItemProps) => {
                   fontWeight: '$semibold',
                   fontSize: '$sm',
                   width: '100%',
+                  textAlign: 'left',
                 }}
               >
                 EP {episodeNumber} - {episodeTitle}
@@ -539,7 +537,7 @@ const CardItem = (props: ICardItemProps) => {
                   <H6
                     h6
                     className="!line-clamp-2"
-                    css={{ color: '$accents7', fontWeight: '$semibold' }}
+                    css={{ color: '$accents7', fontWeight: '$semibold', textAlign: 'left' }}
                   >
                     {knownFor?.map((movie, index) => (
                       <>
@@ -550,12 +548,12 @@ const CardItem = (props: ICardItemProps) => {
                   </H6>
                 ) : null}
                 {character ? (
-                  <H6 h6 css={{ color: '$accents7', fontWeight: '$semibold' }}>
+                  <H6 h6 css={{ color: '$accents7', fontWeight: '$semibold', textAlign: 'left' }}>
                     {character}
                   </H6>
                 ) : null}
                 {job ? (
-                  <H6 h6 css={{ color: '$accents7', fontWeight: '$semibold' }}>
+                  <H6 h6 css={{ color: '$accents7', fontWeight: '$semibold', textAlign: 'left' }}>
                     {job}
                   </H6>
                 ) : null}

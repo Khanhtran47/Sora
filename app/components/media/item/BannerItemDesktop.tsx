@@ -400,7 +400,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                 title={titleItem}
                 width="100%"
                 disableSkeleton={false}
-                className="max-h-[390px] !min-h-[auto] !min-w-[auto] max-w-[270px] rounded-xl shadow-xl shadow-neutral 2xl:max-h-[477px] 2xl:max-w-[318px]"
+                className="min-h-[390px] min-w-[270px] rounded-xl shadow-xl shadow-neutral 2xl:min-h-[477px] 2xl:min-w-[318px]"
                 loading="eager"
                 loaderUrl="/api/image"
                 placeholder="empty"
