@@ -102,7 +102,8 @@ export async function authenticate(
           access_token: data.session.access_token,
           refresh_token: data.session.refresh_token,
           expires_at: Date.now() + (data.session.expires_in - 10) * 1000,
-          req_payload: await requestPayload(request),
+          req_payload:
+            process.env.NODE_ENV === 'production' ? await requestPayload(request) : undefined,
         });
 
         headers.append('Set-Cookie', await commitAuthCookie(session));

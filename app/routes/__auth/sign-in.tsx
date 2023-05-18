@@ -47,7 +47,7 @@ export const action = async ({ request }: ActionArgs) => {
   if (authCookie.has('auth_token')) {
     return redirect(searchParams.get('ref') || '/');
   }
-  const payload = await requestPayload(request);
+  const payload = process.env.NODE_ENV === 'production' ? await requestPayload(request) : undefined;
 
   authCookie.set('auth_token', {
     access_token: session.access_token,
