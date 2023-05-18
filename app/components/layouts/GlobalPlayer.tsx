@@ -19,6 +19,7 @@ import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
 import Hls from 'hls.js';
 import { isDesktop, isMobile, isMobileOnly } from 'react-device-detect';
 import { createPortal } from 'react-dom';
+import { toast } from 'sonner';
 import { tv } from 'tailwind-variants';
 import tinycolor from 'tinycolor2';
 
@@ -45,10 +46,10 @@ type Highlight = {
 };
 
 const playerStyles = tv({
-  base: "custom-player-subtitle custom-player-layer-auto-playback custom-player-contextmenus custom-player-info custom-player-notice-inner custom-player-volume-control custom-player-icon-after custom-player-icon-before custom-player-control-after custom-player-control-before [&_.art-control-topControlButtons]:!opacity-100 [&_.art-control-topControlButtons]:before:absolute [&_.art-control-topControlButtons]:before:top-0 [&_.art-control-topControlButtons]:before:left-0 [&_.art-control-topControlButtons]:before:h-[100px] [&_.art-control-topControlButtons]:before:w-full [&_.art-control-topControlButtons]:before:bg-gradient-to-t [&_.art-control-topControlButtons]:before:from-transparent [&_.art-control-topControlButtons]:before:via-neutral/[0.6] [&_.art-control-topControlButtons]:before:to-neutral [&_.art-control-topControlButtons]:before:bg-top [&_.art-control-topControlButtons]:before:bg-repeat-x [&_.art-control-topControlButtons]:before:content-[''] [&_.art-layer-mask]:hidden [&_.art-layer-mask]:bg-transparent [&_.art-layer-mask]:duration-300 [&_.art-layer-mask]:ease-in-out [&_.art-layer-mask]:transition-all [&_.art-layer-playPauseButton]:hidden [&_.art-layer-playPauseButton]:duration-300 [&_.art-layer-playPauseButton]:ease-in-out [&_.art-layer-playPauseButton]:transition-all [&_.art-layer-miniTopControlButtons]:hidden [&_.art-layer-miniTopControlButtons]:duration-300 [&_.art-layer-miniTopControlButtons]:ease-in-out [&_.art-layer-miniTopControlButtons]:transition-all [&_.art-bottom]:!bg-gradient-to-b [&_.art-bottom]:from-transparent [&_.art-bottom]:via-neutral/60 [&_.art-bottom]:to-neutral [&_.art-layer-lock]:bg-background/[0.6] [&_.art-subtitle]:bg-player-subtitle-window-color [&_.art-subtitle]:!text-shadow-player [&_.art-video-player]:!font-[Inter] [&_.art-notice]:!justify-center [&_.art-contextmenu]:!border-border [&_.art-contextmenu]:!text-shadow-none",
+  base: "custom-player-subtitle custom-player-layer-auto-playback custom-player-contextmenus custom-player-info custom-player-notice-inner custom-player-volume-control custom-player-icon-after custom-player-icon-before custom-player-control-after custom-player-control-before [&_.art-bottom]:!bg-gradient-to-b [&_.art-bottom]:from-transparent [&_.art-bottom]:via-neutral/60 [&_.art-bottom]:to-neutral [&_.art-contextmenu]:!border-border [&_.art-contextmenu]:!text-shadow-none [&_.art-control-topControlButtons]:!opacity-100 [&_.art-control-topControlButtons]:before:absolute [&_.art-control-topControlButtons]:before:left-0 [&_.art-control-topControlButtons]:before:top-0 [&_.art-control-topControlButtons]:before:h-[100px] [&_.art-control-topControlButtons]:before:w-full [&_.art-control-topControlButtons]:before:bg-gradient-to-t [&_.art-control-topControlButtons]:before:from-transparent [&_.art-control-topControlButtons]:before:via-neutral/[0.6] [&_.art-control-topControlButtons]:before:to-neutral [&_.art-control-topControlButtons]:before:bg-top [&_.art-control-topControlButtons]:before:bg-repeat-x [&_.art-control-topControlButtons]:before:content-[''] [&_.art-layer-lock]:bg-background/[0.6] [&_.art-layer-mask]:hidden [&_.art-layer-mask]:bg-transparent [&_.art-layer-mask]:duration-300 [&_.art-layer-mask]:ease-in-out [&_.art-layer-mask]:transition-all [&_.art-layer-miniTopControlButtons]:hidden [&_.art-layer-miniTopControlButtons]:duration-300 [&_.art-layer-miniTopControlButtons]:ease-in-out [&_.art-layer-miniTopControlButtons]:transition-all [&_.art-layer-playPauseButton]:hidden [&_.art-layer-playPauseButton]:duration-300 [&_.art-layer-playPauseButton]:ease-in-out [&_.art-layer-playPauseButton]:transition-all [&_.art-notice]:!justify-center [&_.art-subtitle]:bg-player-subtitle-window-color [&_.art-subtitle]:!text-shadow-player [&_.art-video-player]:!font-[Inter]",
   variants: {
     isMini: {
-      true: 'custom-mini-player-hover h-[14.0625rem] w-[25rem] rounded-t-lg [&_.art-bottom]:!visible [&_.art-bottom]:!overflow-visible [&_.art-bottom]:!bg-none [&_.art-bottom]:!p-0 [&_.art-bottom]:!opacity-100 [&_.art-subtitle]:!bottom-[7px] [&_.art-controls]:hidden [&_.art-controls]:!transform-none [&_.art-control-progress]:!h-[7px] [&_.art-control-progress]:!items-end [&_.art-mask]:!hidden [&_.art-progress]:!transform-none',
+      true: 'custom-mini-player-hover h-[14.0625rem] w-[25rem] rounded-t-lg [&_.art-bottom]:!visible [&_.art-bottom]:!overflow-visible [&_.art-bottom]:!bg-none [&_.art-bottom]:!p-0 [&_.art-bottom]:!opacity-100 [&_.art-control-progress]:!h-[7px] [&_.art-control-progress]:!items-end [&_.art-controls]:hidden [&_.art-controls]:!transform-none [&_.art-mask]:!hidden [&_.art-progress]:!transform-none [&_.art-subtitle]:!bottom-[7px]',
       false: 'h-full w-full rounded-none',
     },
     isMobile: {
@@ -596,7 +597,6 @@ const GlobalPlayer = () => {
                     isLive: false,
                     playsInline: true,
                     autoPlayback: isAutoPlayback.value,
-                    whitelist: ['*'],
                     theme: 'hsl(var(--colors-primary))',
                     autoMini: isAutoMini.value,
                     hotkey: true,
@@ -672,7 +672,6 @@ const GlobalPlayer = () => {
                           ? 'srt'
                           : '',
                     },
-                    title: titlePlayer,
                     poster: posterPlayer,
                     layers: [
                       {
@@ -883,11 +882,13 @@ const GlobalPlayer = () => {
                     art.on('resize', () => {
                       // eslint-disable-next-line @typescript-eslint/dot-notation
                       const $topControlButtons = art.controls['topControlButtons'];
-                      // set top control buttons position when player resize
-                      $topControlButtons.style.bottom = `${
-                        Number(art?.height) - (isMobile && !art.fullscreen ? 70 : 55)
-                      }px`;
-                      $topControlButtons.style.width = `${Number(art?.width)}px`;
+                      if ($topControlButtons?.style) {
+                        // set top control buttons position when player resize
+                        $topControlButtons.style.bottom = `${
+                          Number(art?.height) - (isMobile && !art.fullscreen ? 70 : 55)
+                        }px`;
+                        $topControlButtons.style.width = `${Number(art?.width)}px`;
+                      }
                     });
                     art.on('video:timeupdate', () => {
                       /* Finding the current highlight and show skip button */
@@ -926,6 +927,11 @@ const GlobalPlayer = () => {
                       if (hls) {
                         hls.destroy();
                       }
+                    });
+                    art.on('error', (_error, _reconnectTime) => {
+                      toast.error('An error occurred while playing the video.', {
+                        description: 'Please try again later.',
+                      });
                     });
                   }}
                   setIsPlayerPlaying={setIsPlayerPlaying}

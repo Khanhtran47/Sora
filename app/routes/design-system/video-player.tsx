@@ -15,34 +15,34 @@ export const loader = async () =>
     idProvider: 'test-player',
     subtitles: [
       {
-        url: 'https://artplayer.org/assets/sample/subtitle.srt',
+        url: 'https://www.artplayer.org/assets/sample/subtitle.srt',
         lang: 'ch-jp',
       },
       {
-        url: 'https://artplayer.org/assets/sample/subtitle.cn.srt',
+        url: 'https://www.artplayer.org/assets/sample/subtitle.cn.srt',
         lang: 'ch',
       },
       {
-        url: 'https://artplayer.org/assets/sample/subtitle.jp.srt',
+        url: 'https://www.artplayer.org/assets/sample/subtitle.jp.srt',
         lang: 'jp',
       },
     ],
     sources: [
       {
         quality: 360,
-        url: 'https://artplayer.org/assets/sample/video.mp4',
+        url: 'https://www.artplayer.org/assets/sample/video.mp4',
       },
       {
         quality: 480,
-        url: 'https://artplayer.org/assets/sample/video.mp4',
+        url: 'https://www.artplayer.org/assets/sample/video.mp4',
       },
       {
         quality: 720,
-        url: 'https://artplayer.org/assets/sample/video.mp4',
+        url: 'https://www.artplayer.org/assets/sample/video.mp4',
       },
       {
         quality: 1080,
-        url: 'https://artplayer.org/assets/sample/video.mp4',
+        url: 'https://www.artplayer.org/assets/sample/video.mp4',
       },
     ],
     episodeInfo: {
@@ -50,13 +50,13 @@ export const loader = async () =>
       title: 'Your name',
       description: "It's a test episode",
       number: 1,
-      image: 'https://artplayer.org/assets/sample/poster.jpg',
+      image: 'https://www.artplayer.org/assets/sample/poster.jpg',
     },
     hasNextEpisode: true,
     routePlayer: '/design-system/video-player',
     titlePlayer: 'Test Player',
     id: 'test-player',
-    posterPlayer: 'https://artplayer.org/assets/sample/poster.jpg',
+    posterPlayer: 'https://www.artplayer.org/assets/sample/poster.jpg',
   });
 
 export const handle = {

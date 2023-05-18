@@ -1381,11 +1381,19 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
             id: quality.html,
             title: quality.html,
             showIcon: false,
-            action: () => {
+            action: async () => {
               if (artplayer) {
-                artplayer.switchQuality(quality.url);
+                await artplayer.switchQuality(quality.url);
                 setCurrentQuality(quality.html);
                 setDropdownLevelKey('general');
+                const currentSubtitleSelected = subtitleSelector?.find(
+                  (subtitle) => subtitle.html === currentSubtitle,
+                );
+                if (currentSubtitleSelected) {
+                  artplayer.subtitle.switch(currentSubtitleSelected.url, {
+                    name: currentSubtitleSelected.html,
+                  });
+                }
               }
             },
             isCurrent: currentQuality === quality.html,

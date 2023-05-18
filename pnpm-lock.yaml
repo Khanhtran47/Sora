@@ -116,8 +116,8 @@ dependencies:
     specifier: ^2.0.4
     version: 2.4.0
   artplayer:
-    specifier: ^5.0.4
-    version: 5.0.4
+    specifier: ^5.0.9
+    version: 5.0.9
   autoprefixer:
     specifier: ^10.4.13
     version: 10.4.13(postcss@8.4.21)
@@ -239,8 +239,8 @@ dependencies:
     specifier: ^0.3.0
     version: 0.3.0(react-dom@17.0.2)(react@17.0.2)
   swiper:
-    specifier: ^9.2.3
-    version: 9.2.3
+    specifier: ^9.3.2
+    version: 9.3.2
   tailwind-scrollbar-hide:
     specifier: ^1.1.7
     version: 1.1.7
@@ -5977,8 +5977,8 @@ packages:
       get-intrinsic: 1.1.3
     dev: true
 
-  /artplayer@5.0.4:
-    resolution: {integrity: sha512-klX7v0OUa4S5C25IaBG1w9GkHKUf4qxK6K5pG96ksMH98lmm5gEJvh/xjDC7ZRGbOH5db7uFIHOJnJnMx2XTfA==}
+  /artplayer@5.0.9:
+    resolution: {integrity: sha512-IM/DShYdmKFEA9jl08LYbTK2Jfz9s7qIjEH0xWjnxvVArUKZZKcoqwr6i54U0c4grtc/Uvb4wtCd78kvtSVlgw==}
     dependencies:
       option-validator: 2.0.6
     dev: false
@@ -13084,8 +13084,8 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
-  /swiper@9.2.3:
-    resolution: {integrity: sha512-hxqcjIsYPP1fv+KIXPqGywl6ik8RBp0y0i9+TOIh55ca6SpZ5FrgNJ4QXPhsl6mlSBMEYPmh5zOKtZpI8zpWeQ==}
+  /swiper@9.3.2:
+    resolution: {integrity: sha512-Kj9Z4kXRmJR3YT/Wj+XLWj8P6IcRt+WG38uL8M3/Wny7+6sV0TlP9vnE1X+Co9c7VzNooojWGnFa+Wf/9+CUMA==}
     engines: {node: '>= 4.7.0'}
     dependencies:
       ssr-window: 4.0.2
