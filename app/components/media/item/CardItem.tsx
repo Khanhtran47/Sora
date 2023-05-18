@@ -77,7 +77,7 @@ const cardItemStyles = tv({
         base: '!w-full hover:shadow-[0_0_0_1px] hover:shadow-primary-200 sm:!w-[480px]',
         body: 'flex !h-[174px] w-full !flex-row !overflow-hidden p-0 sm:aspect-[5/3] sm:!h-[auto]',
         imageContainer: 'w-[116px] sm:w-2/5',
-        image: 'z-0 !h-[174px] !min-h-[auto] !min-w-[auto] sm:aspect-[2/3] sm:!h-[auto]',
+        image: 'z-0 !h-[174px] !min-h-[auto] !min-w-[116px] sm:aspect-[2/3] sm:!h-[auto]',
         content: 'flex grow flex-col gap-y-4 p-3 sm:w-3/5',
         footer:
           'absolute bottom-0 flex !w-[116px] justify-center !rounded-br-none border-t border-border bg-background/[0.6] backdrop-blur-md sm:!w-2/5',
@@ -187,7 +187,7 @@ const CardItem = (props: ICardItemProps) => {
 
   if (isCoverCard) {
     return (
-      <Card isHoverable isPressable className={base()} role="figure" ref={cardRef}>
+      <Card as="div" isHoverable isPressable className={base()} role="figure" ref={cardRef}>
         <CardBody className={body()}>
           <Link to={linkTo || '/'} ref={imageRef}>
             {size ? (
@@ -227,6 +227,7 @@ const CardItem = (props: ICardItemProps) => {
 
   return (
     <Card
+      as="div"
       isHoverable
       isPressable
       className={base()}
@@ -247,7 +248,9 @@ const CardItem = (props: ICardItemProps) => {
                 className={image()}
                 decoding={inView ? 'async' : 'auto'}
                 disableSkeleton={false}
-                isZoomed={listViewType.value === 'card' || mediaType === 'people'}
+                isZoomed={
+                  (listViewType.value === 'card' || mediaType === 'people') && !isSliderCard
+                }
                 loaderUrl="/api/image"
                 placeholder="empty"
                 options={{ contentType: MimeType.WEBP }}
@@ -564,7 +567,7 @@ const CardItem = (props: ICardItemProps) => {
       ) : listViewType.value === 'detail' && !isSliderCard && !isEpisodeCard && inView ? (
         <Link to={linkTo || '/'}>
           <CardFooter className={footer()}>
-            <H5 h5 weight="bold">
+            <H5 h5 weight="bold" className="line-clamp-2">
               {titleItem}
             </H5>
           </CardFooter>

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '@nextui-org/button';
-import { Pagination } from '@nextui-org/react';
+import { Pagination, Spacer } from '@nextui-org/react';
 import { useIntersectionObserver, useMediaQuery } from '@react-hookz/web';
 import { Link, useFetcher, useLocation, useSearchParams } from '@remix-run/react';
 import { motion } from 'framer-motion';
@@ -187,6 +187,38 @@ const MediaListGrid = (props: IMediaListCardProps) => {
     }
   };
 
+  const pagination =
+    listType === 'grid' && listLoadingType.value === 'pagination' ? (
+      itemsType === 'anime' || itemsType === 'episode' ? (
+        <div className="flex flex-row gap-x-3">
+          <Button
+            color="primary"
+            isIconOnly
+            onPress={() => handlePageChange({ direction: 'prev' })}
+            isDisabled={currentPage === 1}
+          >
+            <Arrow direction="left" />
+          </Button>
+          <Button
+            color="primary"
+            isIconOnly
+            onPress={() => handlePageChange({ direction: 'next' })}
+            isDisabled={!hasNextPage}
+          >
+            <Arrow direction="right" />
+          </Button>
+        </div>
+      ) : totalPages && totalPages > 1 ? (
+        <Pagination
+          total={totalPages}
+          initialPage={currentPage}
+          // shadow
+          onChange={(page) => handlePageChange({ page })}
+          {...(isSm && !is2Xs ? { size: 'sm' } : isSm && is2Xs ? { size: 'xs' } : {})}
+        />
+      ) : null
+    ) : null;
+
   if (isCoverCard) {
     return (
       <div className={mediaListGridStyles({ listViewType: 'coverCard' })}>
@@ -218,6 +250,8 @@ const MediaListGrid = (props: IMediaListCardProps) => {
   return (
     <>
       <div ref={topRef} />
+      {pagination}
+      <Spacer y={0.25} />
       <div
         className={mediaListGridStyles({
           listViewType:
@@ -294,6 +328,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
             );
           })}
       </div>
+      <Spacer y={1} />
       {!shouldFetch &&
       (hasNextPage || (currentPage && totalPages && currentPage < totalPages)) &&
       showLoadMore &&
@@ -311,42 +346,11 @@ const MediaListGrid = (props: IMediaListCardProps) => {
             );
             setShowLoadMore(false);
           }}
-          className="mt-20 md:mt-12"
         >
           Load More
         </Button>
       ) : null}
-      {listType === 'grid' && listLoadingType.value === 'pagination' ? (
-        itemsType === 'anime' || itemsType === 'episode' ? (
-          <div className="mt-[50px] flex flex-row gap-x-3">
-            <Button
-              color="primary"
-              isIconOnly
-              onPress={() => handlePageChange({ direction: 'prev' })}
-              isDisabled={currentPage === 1}
-            >
-              <Arrow direction="left" />
-            </Button>
-            <Button
-              color="primary"
-              isIconOnly
-              onPress={() => handlePageChange({ direction: 'next' })}
-              isDisabled={!hasNextPage}
-            >
-              <Arrow direction="right" />
-            </Button>
-          </div>
-        ) : totalPages && totalPages > 1 ? (
-          <Pagination
-            total={totalPages}
-            initialPage={currentPage}
-            // shadow
-            onChange={(page) => handlePageChange({ page })}
-            css={{ marginTop: '50px' }}
-            {...(isSm && !is2Xs ? { size: 'sm' } : isSm && is2Xs ? { size: 'xs' } : {})}
-          />
-        ) : null
-      ) : null}
+      {pagination}
       <div ref={bottomRef} />
     </>
   );
