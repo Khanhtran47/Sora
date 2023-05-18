@@ -82,7 +82,7 @@ const MobileHeader = () => {
   return (
     <div className="fixed top-0 z-[1000] flex h-[64px] w-[100vw] flex-row items-center justify-start gap-x-3 px-3 py-2 shadow-none sm:hidden">
       <motion.div
-        className="absolute top-0 left-0 z-[-1] w-full backdrop-blur-md"
+        className="absolute left-0 top-0 z-[-1] w-full backdrop-blur-md"
         style={{
           opacity,
           backgroundColor: headerBackgroundColor,
@@ -104,9 +104,9 @@ const MobileHeader = () => {
             className="flex flex-col items-start justify-center"
           >
             <div className="flex flex-col items-start justify-center">
-              <span className="text-xl font-semibold line-clamp-1">{currentMiniTitle.title}</span>
+              <span className="line-clamp-1 text-xl font-semibold">{currentMiniTitle.title}</span>
               {currentMiniTitle.subtitle ? (
-                <span className="text-xs font-medium opacity-75 line-clamp-1">
+                <span className="line-clamp-1 text-xs font-medium opacity-75">
                   {currentMiniTitle.subtitle}
                 </span>
               ) : null}

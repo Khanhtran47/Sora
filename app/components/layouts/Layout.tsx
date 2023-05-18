@@ -273,7 +273,8 @@ const Layout = (props: ILayout) => {
   const handleScroll = useThrottledCallback(
     (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
       if (isSm) {
-        const scrollY = e.currentTarget?.scrollTop;
+        // @ts-ignore
+        const scrollY = e?.target?.scrollTop || 0;
         const direction = scrollY > lastScrollY ? 'down' : 'up';
         if (
           direction !== scrollDirection &&
@@ -284,8 +285,8 @@ const Layout = (props: ILayout) => {
         lastScrollY = scrollY > 0 ? scrollY : 0;
       }
     },
-    [scrollDirection, isSm],
-    130,
+    [scrollDirection, isSm, viewportRef],
+    50,
   );
 
   return (
@@ -320,11 +321,6 @@ const Layout = (props: ILayout) => {
         <ScrollArea
           type={isSm ? 'scroll' : 'always'}
           scrollHideDelay={500}
-          // css={{
-          //   width: '100%',
-          //   height: sidebarBoxedMode.value ? 'calc(100vh - 15px)' : '100vh',
-          //   borderRadius: 0,
-          // }}
           className={`w-full ${sidebarBoxedMode.value ? 'h-[calc(100vh-15px)]' : 'h-screen'}`}
           key="scroll-area-main"
         >
