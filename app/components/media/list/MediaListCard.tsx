@@ -1,6 +1,6 @@
-/* eslint-disable @typescript-eslint/indent */
 import { Link } from '@remix-run/react';
-import { Navigation } from 'swiper';
+import { isMobile } from 'react-device-detect';
+import { FreeMode, Navigation } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { tv } from 'tailwind-variants';
 
@@ -53,8 +53,9 @@ const MediaListCard = (props: IMediaListCardProps) => {
         {coverItem && coverItem?.length > 0 && (
           <Swiper
             className={swiperStyles()}
-            modules={[Navigation]}
+            modules={[Navigation, FreeMode]}
             grabCursor
+            freeMode
             spaceBetween={10}
             slidesPerView="auto"
             slidesPerGroup={1}
@@ -100,8 +101,18 @@ const MediaListCard = (props: IMediaListCardProps) => {
       {items && items?.length > 0 ? (
         <Swiper
           className={swiperStyles()}
-          modules={[Navigation]}
+          modules={[Navigation, FreeMode]}
           grabCursor
+          freeMode={{
+            enabled: isMobile,
+            sticky: true,
+            minimumVelocity: 0.1,
+            momentum: true,
+            momentumVelocityRatio: 1,
+            momentumRatio: 1,
+            momentumBounce: true,
+            momentumBounceRatio: 1,
+          }}
           spaceBetween={10}
           slidesPerView="auto"
           slidesPerGroup={1}

@@ -43,6 +43,8 @@ import swiperStyles from 'swiper/css';
 // @ts-ignore
 import swiperAutoPlayStyles from 'swiper/css/autoplay';
 // @ts-ignore
+import swiperFreeModeStyles from 'swiper/css/free-mode';
+// @ts-ignore
 import swiperPaginationStyles from 'swiper/css/navigation';
 // @ts-ignore
 import swiperNavigationStyles from 'swiper/css/pagination';
@@ -115,6 +117,11 @@ export const links: LinksFunction = () => [
     rel: 'preload',
     as: 'style',
     href: swiperAutoPlayStyles,
+  },
+  {
+    rel: 'preload',
+    as: 'style',
+    href: swiperFreeModeStyles,
   },
   {
     rel: 'preload',
@@ -199,6 +206,10 @@ export const links: LinksFunction = () => [
   {
     rel: 'stylesheet',
     href: swiperAutoPlayStyles,
+  },
+  {
+    rel: 'stylesheet',
+    href: swiperFreeModeStyles,
   },
   {
     rel: 'stylesheet',
