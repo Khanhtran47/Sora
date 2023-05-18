@@ -126,6 +126,7 @@ const CollectionDetail = () => {
           listName={detail?.name}
           genresMovie={rootData?.genresMovie}
           genresTv={rootData?.genresTv}
+          itemsType="movie-tv"
         />
       )}
       <Spacer y={1} />

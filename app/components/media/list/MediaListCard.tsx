@@ -81,6 +81,7 @@ const MediaListCard = (props: IMediaListCardProps) => {
                         backdropPath={item?.backdropPath}
                         isCoverCard={isCoverCard}
                         key={item.id}
+                        linkTo={href}
                         title={item?.name}
                         type="card"
                       />
