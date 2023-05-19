@@ -1,6 +1,5 @@
 import { cnBase } from 'tailwind-variants';
 
-import { H6 } from '~/components/styles/Text.styles';
 import AnilistStatIcon from '~/assets/icons/AnilistStatIcon';
 
 interface IRatingProps {
@@ -15,10 +14,8 @@ const Rating = (props: IRatingProps) => {
   if (ratingType === 'movie' || ratingType === 'tv') {
     return (
       <div className={cnBase('flex flex-row items-center gap-x-2', className)}>
-        <H6
-          h6
-          weight="semibold"
-          css={{
+        <h6
+          style={{
             backgroundColor: '#3ec2c2',
             borderRadius: '$xs',
             padding: '0 0.25rem 0 0.25rem',
@@ -26,10 +23,8 @@ const Rating = (props: IRatingProps) => {
           }}
         >
           TMDb
-        </H6>
-        <H6 h6 weight="semibold" css={color ? { color } : {}}>
-          {rating}
-        </H6>
+        </h6>
+        <h6 style={color ? { color } : {}}>{rating}</h6>
       </div>
     );
   }
@@ -42,9 +37,7 @@ const Rating = (props: IRatingProps) => {
       ) : (
         <AnilistStatIcon stat="bad" />
       )}
-      <H6 weight="semibold" css={color ? { color } : {}}>
-        {rating}%
-      </H6>
+      <h6 style={color ? { color } : {}}>{rating}%</h6>
     </div>
   );
 };

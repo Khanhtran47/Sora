@@ -20,22 +20,22 @@
 
   h3,
   .h3 {
-    @apply !text-2xl !font-bold md:!text-3xl !tracking-normal;
+    @apply !text-2xl !font-semibold md:!text-3xl !tracking-normal;
   }
 
   h4,
   .h4 {
-    @apply !text-xl !font-bold md:!text-2xl !tracking-normal;
+    @apply !text-xl !font-semibold md:!text-2xl !tracking-normal;
   }
 
   h5,
   .h5 {
-    @apply !text-lg !font-bold md:!text-xl !tracking-normal;
+    @apply !text-lg !font-medium md:!text-xl !tracking-normal;
   }
 
   h6,
   .h6 {
-    @apply !text-base !font-bold md:!text-lg !tracking-normal;
+    @apply !text-base !font-medium md:!text-lg !tracking-normal;
   }
 
   body,

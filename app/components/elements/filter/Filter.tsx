@@ -20,7 +20,6 @@ import {
   tvType,
 } from '~/constants/filterItems';
 import Slider from '~/components/elements/slider/Slider';
-import { H6 } from '~/components/styles/Text.styles';
 
 interface IFilterProps {
   /**
@@ -361,7 +360,7 @@ const Filter = (props: IFilterProps) => {
         <>
           <Grid>
             <Row justify="center">
-              <H6 h6> {t('release-dates')} </H6>
+              <h6> {t('release-dates')} </h6>
             </Row>
             <Row
               gap={1}
@@ -392,7 +391,7 @@ const Filter = (props: IFilterProps) => {
           </Grid>
           <Grid>
             <Row justify="center">
-              <H6 h6> {t('genre')} </H6>
+              <h6> {t('genre')} </h6>
             </Row>
             <Row css={{ marginTop: '6px' }}>
               {genres && (
@@ -416,7 +415,7 @@ const Filter = (props: IFilterProps) => {
           </Grid>
           <Grid>
             <Row justify="center">
-              <H6 h6> {t('language')} </H6>
+              <h6> {t('language')} </h6>
             </Row>
             <Row css={{ marginTop: '6px' }}>
               {languageItems && (
@@ -442,7 +441,7 @@ const Filter = (props: IFilterProps) => {
             <>
               <Grid>
                 <Row justify="center">
-                  <H6 h6> {t('status')} </H6>
+                  <h6> {t('status')} </h6>
                 </Row>
                 <Row css={{ marginTop: '6px' }}>
                   {tvStatus && (
@@ -466,7 +465,7 @@ const Filter = (props: IFilterProps) => {
               </Grid>
               <Grid>
                 <Row justify="center">
-                  <H6 h6> {t('type')} </H6>
+                  <h6> {t('type')} </h6>
                 </Row>
                 <Row css={{ marginTop: '6px' }}>
                   {tvType && (
@@ -492,7 +491,7 @@ const Filter = (props: IFilterProps) => {
           ) : null}
           <Grid>
             <Row justify="center">
-              <H6 h6> {t('sortBy')} </H6>
+              <h6> {t('sortBy')} </h6>
             </Row>
             <Row css={{ marginTop: '6px' }}>
               <Dropdown isBordered>
@@ -514,7 +513,7 @@ const Filter = (props: IFilterProps) => {
           </Grid>
           <Grid>
             <Row justify="center">
-              <H6 h6> {t('minimum-user-votes')} </H6>
+              <h6> {t('minimum-user-votes')} </h6>
             </Row>
             <Row css={{ marginTop: '6px' }}>
               <ClientOnly>
@@ -532,12 +531,12 @@ const Filter = (props: IFilterProps) => {
               </ClientOnly>
             </Row>
             <Row justify="center">
-              <H6 h6>{voteCount[0]}</H6>
+              <h6>{voteCount[0]}</h6>
             </Row>
           </Grid>
           <Grid>
             <Row justify="center">
-              <H6 h6> {t('user-score')} </H6>
+              <h6> {t('user-score')} </h6>
             </Row>
             <Row css={{ marginTop: '6px' }}>
               <Slider
@@ -552,15 +551,15 @@ const Filter = (props: IFilterProps) => {
             </Row>
             {voteAverage ? (
               <Row justify="center">
-                <H6 h6>
+                <h6>
                   {t('rated')} {voteAverage[0]} - {voteAverage[1]}
-                </H6>
+                </h6>
               </Row>
             ) : null}
           </Grid>
           <Grid>
             <Row justify="center">
-              <H6 h6> {t('runtime')} </H6>
+              <h6> {t('runtime')} </h6>
             </Row>
             <Row css={{ marginTop: '6px' }}>
               <ClientOnly>
@@ -579,9 +578,9 @@ const Filter = (props: IFilterProps) => {
             </Row>
             {runtime ? (
               <Row justify="center">
-                <H6 h6>
+                <h6>
                   {runtime[0]} {t('minutes')} - {runtime[1]} {t('minutes')}
-                </H6>
+                </h6>
               </Row>
             ) : null}
           </Grid>
@@ -591,7 +590,7 @@ const Filter = (props: IFilterProps) => {
         <>
           <Grid>
             <Row justify="center">
-              <H6 h6> {t('search.title.anime')} </H6>
+              <h6> {t('search.title.anime')} </h6>
             </Row>
             <Row css={{ marginTop: '6px' }}>
               <Input
@@ -607,7 +606,7 @@ const Filter = (props: IFilterProps) => {
           </Grid>
           <Grid>
             <Row justify="center">
-              <H6 h6> {t('genre')} </H6>
+              <h6> {t('genre')} </h6>
             </Row>
             <Row css={{ marginTop: '6px' }}>
               {animeGenres && (
@@ -631,7 +630,7 @@ const Filter = (props: IFilterProps) => {
           </Grid>
           <Grid>
             <Row justify="center">
-              <H6 h6> {t('year')} </H6>
+              <h6> {t('year')} </h6>
             </Row>
             <Row css={{ marginTop: '6px' }}>
               {animeYearItems && (
@@ -655,7 +654,7 @@ const Filter = (props: IFilterProps) => {
           </Grid>
           <Grid>
             <Row justify="center">
-              <H6 h6> {t('season')} </H6>
+              <h6> {t('season')} </h6>
             </Row>
             <Row css={{ marginTop: '6px' }}>
               {animeSeasonItems && (
@@ -679,7 +678,7 @@ const Filter = (props: IFilterProps) => {
           </Grid>
           <Grid>
             <Row justify="center">
-              <H6 h6> {t('format')} </H6>
+              <h6> {t('format')} </h6>
             </Row>
             <Row css={{ marginTop: '6px' }}>
               {animeFormatItems && (
@@ -703,7 +702,7 @@ const Filter = (props: IFilterProps) => {
           </Grid>
           <Grid>
             <Row justify="center">
-              <H6 h6> {t('airing-status')} </H6>
+              <h6> {t('airing-status')} </h6>
             </Row>
             <Row css={{ marginTop: '6px' }}>
               {animeStatusItems && (
@@ -729,7 +728,7 @@ const Filter = (props: IFilterProps) => {
           </Grid>
           <Grid>
             <Row justify="center">
-              <H6 h6> {t('sortBy')} </H6>
+              <h6> {t('sortBy')} </h6>
             </Row>
             <Row css={{ marginTop: '6px' }}>
               <Dropdown isBordered>

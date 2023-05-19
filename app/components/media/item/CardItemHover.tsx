@@ -14,7 +14,6 @@ import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { type Trailer } from '~/components/elements/dialog/WatchTrailerModal';
 import Rating from '~/components/elements/shared/Rating';
-import { H4, H5, H6 } from '~/components/styles/Text.styles';
 import VolumeOff from '~/assets/icons/VolumeOffIcon';
 import VolumeUp from '~/assets/icons/VolumeUpIcon';
 
@@ -194,68 +193,54 @@ const CardItemHover = (props: ICardItemHoverProps) => {
       </ClientOnly>
       <Spacer y={0.5} />
       <Row justify="center" align="center">
-        <H4 h4 weight="bold" color={saturatedColor}>
-          {title}
-        </H4>
+        <h4 style={{ color: saturatedColor }}>{title}</h4>
       </Row>
       <Spacer y={0.5} />
       {genreIds || genresAnime ? (
         <>
-          <div className="flex flex-row">
+          <div className="flex flex-row gap-x-2">
             {mediaType === 'anime'
               ? genresAnime?.slice(0, 2).map((genre, index) => (
-                  <>
-                    <H5
+                  <h5
+                    key={index}
+                    style={{
+                      color: saturatedColor,
+                      backgroundColor: backgroundInvertColor,
+                      borderRadius: '$md',
+                      padding: '0 0.5rem 0 0.5rem',
+                    }}
+                  >
+                    {genre}
+                  </h5>
+                ))
+              : genreIds?.slice(0, 3).map((genreId, index) => {
+                  if (mediaType === 'movie') {
+                    return (
+                      <h5
+                        key={index}
+                        style={{
+                          color: saturatedColor,
+                          backgroundColor: backgroundInvertColor,
+                          borderRadius: '$md',
+                          padding: '0 0.5rem 0 0.5rem',
+                        }}
+                      >
+                        {genresMovie?.[genreId]}
+                      </h5>
+                    );
+                  }
+                  return (
+                    <h5
                       key={index}
-                      h5
-                      color={saturatedColor}
-                      css={{
+                      style={{
+                        color: saturatedColor,
                         backgroundColor: backgroundInvertColor,
                         borderRadius: '$md',
                         padding: '0 0.5rem 0 0.5rem',
                       }}
                     >
-                      {genre}
-                    </H5>
-                    <Spacer x={0.5} />
-                  </>
-                ))
-              : genreIds?.slice(0, 3).map((genreId) => {
-                  if (mediaType === 'movie') {
-                    return (
-                      <>
-                        <H5
-                          key={genreId}
-                          h5
-                          color={saturatedColor}
-                          css={{
-                            backgroundColor: backgroundInvertColor,
-                            borderRadius: '$md',
-                            padding: '0 0.5rem 0 0.5rem',
-                          }}
-                        >
-                          {genresMovie?.[genreId]}
-                        </H5>
-                        <Spacer x={0.25} />
-                      </>
-                    );
-                  }
-                  return (
-                    <>
-                      <H5
-                        key={genreId}
-                        h5
-                        color={saturatedColor}
-                        css={{
-                          backgroundColor: backgroundInvertColor,
-                          borderRadius: '$md',
-                          padding: '0 0.25rem 0 0.25rem',
-                        }}
-                      >
-                        {genresTv?.[genreId]}
-                      </H5>
-                      <Spacer x={0.25} />
-                    </>
+                      {genresTv?.[genreId]}
+                    </h5>
                   );
                 })}
           </div>
@@ -264,13 +249,13 @@ const CardItemHover = (props: ICardItemHoverProps) => {
       ) : null}
       {overview ? (
         <>
-          <H6 h6 className="!line-clamp-2" dangerouslySetInnerHTML={{ __html: overview || '' }} />
+          <p className="!line-clamp-2" dangerouslySetInnerHTML={{ __html: overview || '' }} />
           <Spacer y={0.5} />
         </>
       ) : null}
       <Row justify="space-between" align="center">
         {releaseDate ? (
-          <H5 h5>{`${mediaType.charAt(0).toUpperCase()}${mediaType.slice(1)} • ${releaseDate}`}</H5>
+          <h5>{`${mediaType.charAt(0).toUpperCase()}${mediaType.slice(1)} • ${releaseDate}`}</h5>
         ) : null}
         {voteAverage ? (
           <div className="flex flex-row items-center">

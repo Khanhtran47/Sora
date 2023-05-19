@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/indent */
 import { useMemo, useState } from 'react';
 import { Button } from '@nextui-org/button';
 import { Divider, Spacer, Switch, type SwitchEvent } from '@nextui-org/react';
@@ -11,7 +10,6 @@ import { Sheet, SheetContent, SheetTrigger } from '~/components/elements/Sheet';
 import AddSubtitles from '~/components/elements/dialog/AddSubtitleDialog';
 import SearchSubtitles from '~/components/elements/dialog/SearchSubtitleDialog';
 import ResizablePanel from '~/components/elements/shared/ResizablePanel';
-import { H6 } from '~/components/styles/Text.styles';
 import Arrow from '~/assets/icons/ArrowIcon';
 import Filter from '~/assets/icons/FilterIcon';
 import Flip from '~/assets/icons/FlipIcon';
@@ -1473,26 +1471,14 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
         ) : (
           <Spacer x={1.15} />
         )}
-        <H6
-          h6
-          css={{ margin: 0 }}
-          weight="semibold"
-          className="!line-clamp-1 !text-neutral-foreground"
-        >
-          {item.title}
-        </H6>
+        <h6 className="!line-clamp-1 !text-neutral-foreground">{item.title}</h6>
       </div>
       <div className="flex shrink-0 grow flex-row items-center justify-end gap-x-2">
         {item?.isSwitch ? (
           <Switch checked={showSubtitle} onChange={item.switchAction} />
         ) : (
           <>
-            <H6
-              h6
-              css={{ margin: 0, color: '$accents9' }}
-              weight="thin"
-              className="!text-neutral-foreground"
-            >
+            <h6 className="!text-neutral-foreground">
               {(
                 item as {
                   id: string;
@@ -1504,7 +1490,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                   currentValue: string;
                 }
               )?.currentValue || ''}
-            </H6>
+            </h6>
             {item.showIcon ? <Arrow direction="right" /> : null}
           </>
         )}
@@ -1557,14 +1543,9 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                             </Button>
                           ) : null}
                           {currentDropdownLevel?.showTitle ? (
-                            <H6
-                              h6
-                              css={{ margin: 0 }}
-                              weight="semibold"
-                              className="!text-neutral-foreground"
-                            >
+                            <h6 className="!text-neutral-foreground">
                               {currentDropdownLevel?.title}
-                            </H6>
+                            </h6>
                           ) : null}
                         </div>
                         {currentDropdownLevel?.showExtraButton ? (
@@ -1662,14 +1643,9 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                           </Button>
                         ) : null}
                         {currentDropdownLevel?.showTitle ? (
-                          <H6
-                            h6
-                            css={{ margin: 0, px: '$6' }}
-                            weight="semibold"
-                            className="!text-neutral-foreground"
-                          >
+                          <h6 className="!text-neutral-foreground">
                             {currentDropdownLevel?.title}
-                          </H6>
+                          </h6>
                         ) : null}
                       </div>
                       {currentDropdownLevel?.showExtraButton ? (

@@ -14,8 +14,8 @@ import ChevronLeftIcon from '~/assets/icons/ChevronLeftIcon';
 import ChevronRightIcon from '~/assets/icons/ChevronRightIcon';
 import FilterIcon from '~/assets/icons/FilterIcon';
 
+import { H2 } from '../elements/Text';
 import Filter from '../elements/filter/Filter';
-import { H2 } from '../styles/Text.styles';
 import { MediaListBanner, MediaListCard, MediaListGrid } from './list';
 
 interface IMediaListProps {

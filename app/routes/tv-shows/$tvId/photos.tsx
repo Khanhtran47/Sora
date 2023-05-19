@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
 import { Badge, Image as NextImage, Row, Spacer } from '@nextui-org/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
@@ -13,7 +11,6 @@ import { getImages } from '~/services/tmdb/tmdb.server';
 import TMDB from '~/utils/media';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
-import { H5 } from '~/components/styles/Text.styles';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const [, locale] = await Promise.all([
@@ -129,9 +126,9 @@ const TvPhotosPage = () => {
       {images?.backdrops && images.backdrops.length > 0 && (
         <>
           <Row justify="center" fluid>
-            <H5 h5>
+            <h5>
               <strong>Backdrops</strong>
-            </H5>
+            </h5>
           </Row>
           <Spacer y={0.5} />
           <Gallery withCaption withDownloadButton uiElements={uiElements}>
@@ -180,9 +177,9 @@ const TvPhotosPage = () => {
       {images?.logos && images.logos.length > 0 && (
         <>
           <Row justify="center" fluid>
-            <H5 h5>
+            <h5>
               <strong>Logos</strong>
-            </H5>
+            </h5>
           </Row>
           <Spacer y={0.5} />
           <Gallery withCaption withDownloadButton uiElements={uiElements}>
@@ -231,9 +228,9 @@ const TvPhotosPage = () => {
       {images?.posters && images.posters.length > 0 && (
         <>
           <Row justify="center" fluid>
-            <H5 h5>
+            <h5>
               <strong>Posters</strong>
-            </H5>
+            </h5>
           </Row>
           <Spacer y={0.5} />
           <Gallery withCaption withDownloadButton uiElements={uiElements}>

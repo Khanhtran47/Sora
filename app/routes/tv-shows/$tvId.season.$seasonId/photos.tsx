@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
 import { Badge, Image as NextImage, Row, Spacer } from '@nextui-org/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
@@ -13,7 +11,6 @@ import { getTvSeasonImages } from '~/services/tmdb/tmdb.server';
 import TMDB from '~/utils/media';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
-import { H6 } from '~/components/styles/Text.styles';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const [, locale] = await Promise.all([
@@ -127,9 +124,9 @@ const PhotosPage = () => {
     >
       <Spacer y={1} />
       <Row justify="center" fluid>
-        <H6 h6>
+        <h5>
           <strong>Posters</strong>
-        </H6>
+        </h5>
       </Row>
       <Spacer y={0.5} />
       <Gallery withCaption withDownloadButton uiElements={uiElements}>

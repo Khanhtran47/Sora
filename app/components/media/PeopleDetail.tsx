@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/indent */
-// import { Link } from '@remix-run/react';
-
 import { Player } from '@lottiefiles/react-lottie-player';
 import { Avatar, Image as NextImage, Link as NextLink, Spacer, useTheme } from '@nextui-org/react';
 import { useMeasure } from '@react-hookz/web';
@@ -9,7 +5,6 @@ import Image, { MimeType } from 'remix-image';
 
 import type { IPeopleDetail } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
-import { H3, H4, H5, H6 } from '~/components/styles/Text.styles';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 import ExternalLinkBlack from '~/assets/lotties/external-link-black.json';
 import ExternalLinkWhite from '~/assets/lotties/external-link-white.json';
@@ -110,9 +105,7 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
         </div>
       )}
       <Spacer y={1} />
-      <H3 h3 css={{ textAlign: 'center' }} weight="bold">
-        {detail?.name}
-      </H3>
+      <h3 className="text-center">{detail?.name}</h3>
       <Spacer y={1} />
       {externalIds &&
         detail &&
@@ -187,56 +180,38 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
           </>
         )}
       <div className="flex w-full justify-start sm:justify-center ">
-        <H4
-          h4
-          css={{
-            width: '100%',
-            '@xs': {
-              width: '70%',
-            },
-          }}
-        >
+        <h4 className="w-full sm:w-[70%]">
           <strong>Personal Info</strong>
-        </H4>
+        </h4>
       </div>
       <Spacer y={1} />
       <div className="flex flex-col flex-wrap items-start justify-start gap-y-4 sm:items-center">
         <div className="mb-2 flex flex-row items-center justify-start gap-x-6 sm:m-0 sm:w-[70%] sm:flex-col sm:items-start">
-          <H5 h5 weight="bold">
-            Known For
-          </H5>
-          <H6 h6>{detail?.known_for_department}</H6>
+          <h5>Known For</h5>
+          <p>{detail?.known_for_department}</p>
         </div>
         <div className="mb-2 flex flex-row items-center justify-start gap-x-6 sm:m-0 sm:w-[70%] sm:flex-col sm:items-start">
-          <H5 h5 weight="bold">
-            Gender
-          </H5>
-          <H6 h6>{gender}</H6>
+          <h5>Gender</h5>
+          <p>{gender}</p>
         </div>
         <div className="mb-2 flex flex-row items-center justify-start gap-x-6 sm:m-0 sm:w-[70%] sm:flex-col sm:items-start">
-          <H5 h5 weight="bold">
-            Birthday
-          </H5>
-          <H6 h6>{detail?.birthday}</H6>
+          <h5>Birthday</h5>
+          <p>{detail?.birthday}</p>
         </div>
         <div className="mb-2 flex flex-row items-center justify-start gap-x-6 sm:m-0 sm:w-[70%] sm:flex-col sm:items-start">
-          <H5 h5 weight="bold">
-            Place of Birth
-          </H5>
-          <H6 h6>{detail?.place_of_birth}</H6>
+          <h5>Place of Birth</h5>
+          <p>{detail?.place_of_birth}</p>
         </div>
         <div className="mb-2 flex flex-row items-start justify-start gap-x-6 sm:m-0 sm:w-[70%] sm:flex-col">
-          <H5 h5 weight="bold">
-            Also Known As
-          </H5>
-          <H6 h6>
+          <h5>Also Known As</h5>
+          <p>
             {detail?.also_known_as?.map((name) => (
               <>
                 <span key={name}>{name}</span>
                 <br />
               </>
             ))}
-          </H6>
+          </p>
         </div>
       </div>
     </>

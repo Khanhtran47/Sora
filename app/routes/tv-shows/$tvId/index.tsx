@@ -13,7 +13,6 @@ import { CACHE_CONTROL } from '~/utils/server/http';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
 import Image from '~/components/elements/Image';
-import { H2, H4, H5, H6, P } from '~/components/styles/Text.styles';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
@@ -64,56 +63,38 @@ const TvOverview = () => {
       <div className="flex w-full grow-0 flex-col sm:w-1/3 sm:items-center sm:justify-start">
         <div className="flex w-full flex-col items-start justify-center gap-y-4 rounded-xl bg-neutral p-4 nextui-sm:w-3/4 xl:w-1/2">
           <div className="flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-            <H6 h6 weight="bold" className="grow-0 basis-1/3">
-              Status
-            </H6>
-            <P as="p" className="grow">
-              {detail?.status}
-            </P>
+            <h6 className="grow-0 basis-1/3">Status</h6>
+            <p className="grow">{detail?.status}</p>
           </div>
           <div className="flex w-full flex-row items-start justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-            <H6 h6 weight="bold" className="grow-0 basis-1/3">
-              Network
-            </H6>
+            <h6 className="grow-0 basis-1/3">Network</h6>
             <div className="flex grow flex-col">
               {detail?.networks &&
                 detail.networks.map((network, index) => (
-                  <P as="p" key={`network-item-${index}`}>
-                    {network?.name}
-                  </P>
+                  <p key={`network-item-${index}`}>{network?.name}</p>
                 ))}
             </div>
           </div>
           <div className="flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-            <H6 h6 weight="bold" className="grow-0 basis-1/3">
-              Type
-            </H6>
-            <P as="p" className="grow">
-              {detail?.type}
-            </P>
+            <h6 className="grow-0 basis-1/3">Type</h6>
+            <p className="grow">{detail?.type}</p>
           </div>
           <div className="flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-            <H6 h6 weight="bold" className="grow-0 basis-1/3">
-              Original Language
-            </H6>
-            <P as="p" className="grow">
+            <h6 className="grow-0 basis-1/3">Original Language</h6>
+            <p className="grow">
               {rootData?.languages?.find((lang) => lang.iso_639_1 === detail?.original_language)
                 ?.english_name || detail?.original_language}
-            </P>
+            </p>
           </div>
         </div>
       </div>
       <div className="flex w-full flex-col sm:w-2/3">
         <div className="flex flex-col items-start justify-start gap-y-4 rounded-xl bg-neutral p-4">
-          <H6 h6 css={{ textAlign: 'justify' }}>
-            {detail?.overview}
-          </H6>
+          <h6 className="text-justify">{detail?.overview}</h6>
           <div className="flex flex-col flex-wrap gap-x-0 gap-y-4 sm:flex-row sm:gap-x-8">
             {detail?.created_by && detail?.created_by.length > 0 ? (
               <div className="flex w-full flex-row items-start justify-start gap-x-4 sm:w-fit sm:flex-col">
-                <H6 h6 weight="bold" className="grow-0 basis-1/3 sm:basis-auto">
-                  Creators
-                </H6>
+                <h6 className="grow-0 basis-1/3 sm:basis-auto">Creators</h6>
                 <div className="flex grow flex-col">
                   {detail.created_by.map((creator) => (
                     <Link
@@ -130,9 +111,7 @@ const TvOverview = () => {
             ) : null}
             {detail?.production_countries && detail.production_countries.length > 0 ? (
               <div className="flex w-full flex-row items-start justify-start gap-x-4 sm:w-fit sm:flex-col">
-                <H6 h6 weight="bold" className="grow-0 basis-1/3 sm:basis-auto">
-                  Production Countries
-                </H6>
+                <h6 className="grow-0 basis-1/3 sm:basis-auto">Production Countries</h6>
                 <div className="flex grow flex-col">
                   {detail?.production_countries.map((country, index) => (
                     <p key={`country-item-${index}`}>{country.name}</p>
@@ -142,9 +121,7 @@ const TvOverview = () => {
             ) : null}
             {detail?.spoken_languages && detail.spoken_languages.length > 0 ? (
               <div className="flex w-full flex-row items-start justify-start gap-x-4 sm:w-fit sm:flex-col">
-                <H6 h6 weight="bold" className="grow-0 basis-1/3 sm:basis-auto">
-                  Spoken Languages
-                </H6>
+                <h6 className="grow-0 basis-1/3 sm:basis-auto">Spoken Languages</h6>
                 <div className="flex grow flex-col">
                   {detail?.spoken_languages.map((language, index) => (
                     <p key={`language-item-${index}`}>{language.english_name}</p>
@@ -168,17 +145,7 @@ const TvOverview = () => {
         ) : null}
         {detail?.seasons && detail?.seasons.length > 0 ? (
           <>
-            <H2
-              h2
-              css={{
-                margin: '20px 0 5px 0',
-                '@xsMax': {
-                  fontSize: '1.75rem !important',
-                },
-              }}
-            >
-              Seasons
-            </H2>
+            <h2 style={{ margin: '20px 0 5px 0' }}>Seasons</h2>
             <div className="flex w-full flex-col gap-4">
               {detail.seasons
                 .filter((season) => !season.name?.includes('Specials'))
@@ -229,15 +196,11 @@ const TvOverview = () => {
                         />
                       )}
                       <div className="flex flex-col justify-start p-5">
-                        <H4 h4>{season.name}</H4>
-                        <H5 h5>
+                        <h4>{season.name}</h4>
+                        <h5>
                           {season.air_date} | {season.episode_count} episodes
-                        </H5>
-                        {!isSm ? (
-                          <H6 h6 className="!line-clamp-3">
-                            {season.overview}
-                          </H6>
-                        ) : null}
+                        </h5>
+                        {!isSm ? <h6 className="!line-clamp-3">{season.overview}</h6> : null}
                       </div>
                     </CardBody>
                   </Card>

@@ -23,7 +23,6 @@ import {
 } from '~/components/elements/ScrollArea';
 import type { Trailer } from '~/components/elements/dialog/WatchTrailerModal';
 import Rating from '~/components/elements/shared/Rating';
-import { H5, H6, P } from '~/components/styles/Text.styles';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 
 import CardItemHover from './CardItemHover';
@@ -217,9 +216,7 @@ const CardItem = (props: ICardItemProps) => {
           </Link>
         </CardBody>
         <CardFooter className={footer()}>
-          <H5 h5 weight="bold">
-            {titleItem}
-          </H5>
+          <h5>{titleItem}</h5>
         </CardFooter>
       </Card>
     );
@@ -285,9 +282,9 @@ const CardItem = (props: ICardItemProps) => {
         inView ? (
           <div className={content()}>
             <div className="flex h-6 flex-row items-center justify-between">
-              <H6 h6 weight="semibold" className="hidden 2xs:block">
+              <h6 className="hidden 2xs:block">
                 {`${mediaType.charAt(0).toUpperCase()}${mediaType.slice(1)} • ${releaseDate}`}
-              </H6>
+              </h6>
               <Rating
                 ratingType={mediaType}
                 rating={mediaType === 'anime' ? voteAverage : voteAverage.toFixed(1)}
@@ -302,11 +299,7 @@ const CardItem = (props: ICardItemProps) => {
               }}
             >
               <ScrollViewport>
-                <P
-                  as="p"
-                  dangerouslySetInnerHTML={{ __html: overview || '' }}
-                  css={{ fontSize: '0.85rem', pr: '1rem' }}
-                />
+                <p dangerouslySetInnerHTML={{ __html: overview || '' }} className="pr-4 text-sm" />
               </ScrollViewport>
               <ScrollBar />
               <ScrollCorner />
@@ -420,9 +413,9 @@ const CardItem = (props: ICardItemProps) => {
                     })}
               </div>
               <div className="flex h-6 flex-row items-center justify-between gap-x-3">
-                <H6 h6 weight="semibold" className="hidden sm:block">
+                <h6 className="hidden sm:block">
                   {`${mediaType.charAt(0).toUpperCase()}${mediaType.slice(1)} • ${releaseDate}`}
-                </H6>
+                </h6>
                 <Rating
                   ratingType={mediaType}
                   rating={mediaType === 'anime' ? voteAverage : voteAverage.toFixed(1)}
@@ -440,11 +433,7 @@ const CardItem = (props: ICardItemProps) => {
               }}
             >
               <ScrollViewport>
-                <P
-                  as="p"
-                  dangerouslySetInnerHTML={{ __html: overview || '' }}
-                  css={{ fontSize: '0.85rem', pr: '1rem' }}
-                />
+                <p dangerouslySetInnerHTML={{ __html: overview || '' }} className="pr-4 text-sm" />
               </ScrollViewport>
               <ScrollBar />
               <ScrollCorner />
@@ -507,11 +496,9 @@ const CardItem = (props: ICardItemProps) => {
           }}
         >
           <CardFooter className={footer()}>
-            <H5
-              h5
-              weight="bold"
+            <h5
               className="!line-clamp-2"
-              css={{
+              style={{
                 ...(color ? { color } : null),
                 minWidth: `${mediaType === 'people' ? '100px' : '150px'}`,
                 padding: '0 0.25rem',
@@ -519,46 +506,31 @@ const CardItem = (props: ICardItemProps) => {
               }}
             >
               {titleItem}
-            </H5>
+            </h5>
             {isEpisodeCard ? (
-              <H6
-                h6
-                css={{
-                  color: '$accents7',
-                  fontWeight: '$semibold',
-                  fontSize: '$sm',
-                  width: '100%',
-                  textAlign: 'left',
-                }}
-              >
+              <p className="line-clamp-2 w-full text-left text-sm text-foreground/60">
                 EP {episodeNumber} - {episodeTitle}
-              </H6>
+              </p>
             ) : null}
             {mediaType === 'people' ? (
               <>
                 {knownFor ? (
-                  <H6
-                    h6
-                    className="!line-clamp-2"
-                    css={{ color: '$accents7', fontWeight: '$semibold', textAlign: 'left' }}
-                  >
+                  <p className="line-clamp-2 w-full text-left text-sm text-foreground/60">
                     {knownFor?.map((movie, index) => (
                       <>
                         {movie?.title || movie?.originalTitle || movie?.name || movie?.originalName}
                         {knownFor?.length && (index < knownFor?.length - 1 ? ', ' : '')}
                       </>
                     ))}
-                  </H6>
+                  </p>
                 ) : null}
                 {character ? (
-                  <H6 h6 css={{ color: '$accents7', fontWeight: '$semibold', textAlign: 'left' }}>
+                  <p className="line-clamp-2 w-full text-left text-sm text-foreground/60">
                     {character}
-                  </H6>
+                  </p>
                 ) : null}
                 {job ? (
-                  <H6 h6 css={{ color: '$accents7', fontWeight: '$semibold', textAlign: 'left' }}>
-                    {job}
-                  </H6>
+                  <p className="line-clamp-2 w-full text-left text-sm text-foreground/60">{job}</p>
                 ) : null}
               </>
             ) : null}
@@ -567,9 +539,7 @@ const CardItem = (props: ICardItemProps) => {
       ) : listViewType.value === 'detail' && !isSliderCard && !isEpisodeCard && inView ? (
         <Link to={linkTo || '/'}>
           <CardFooter className={footer()}>
-            <H5 h5 weight="bold" className="line-clamp-2">
-              {titleItem}
-            </H5>
+            <h5 className="line-clamp-2">{titleItem}</h5>
           </CardFooter>
         </Link>
       ) : null}

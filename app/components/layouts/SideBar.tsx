@@ -17,7 +17,6 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from '~/components/elements/NavigationMenu';
-import { H2, H6 } from '~/components/styles/Text.styles';
 import Anime from '~/assets/icons/AnimeIcon';
 import CategoryIcon from '~/assets/icons/CategoryIcon';
 import Discover from '~/assets/icons/DiscoverIcon';
@@ -181,18 +180,12 @@ const SideBar = () => {
           />
         </div>
         {sidebarMiniMode.value && !isHovered ? null : (
-          <NavLink to="/" arial-label="home-page">
-            <H2
-              h2
-              css={{
-                textGradient: '45deg, $primary, $secondary 50%',
-                fontFamily: 'monospace',
-                letterSpacing: '0.3rem',
-                textDecoration: 'none',
-              }}
-            >
-              SORA
-            </H2>
+          <NavLink
+            to="/"
+            arial-label="home-page"
+            className="bg-gradient-to-tr from-primary to-secondary to-50% bg-clip-text text-3xl font-bold tracking-normal text-transparent md:text-4xl"
+          >
+            SORA
           </NavLink>
         )}
       </div>
@@ -478,9 +471,9 @@ const SideBar = () => {
                     >
                       <CardHeader className="absolute top-0 z-20">
                         <Link
-                          as={H6}
+                          as="h6"
                           isExternal
-                          className="!w-full !max-w-none text-foreground [&_.nextui-link-icon]:ml-auto"
+                          className="!w-full !max-w-none !text-white [&_.nextui-link-icon]:ml-auto"
                         >
                           {t('movies-discover')}
                         </Link>
@@ -657,9 +650,9 @@ const SideBar = () => {
                     >
                       <CardHeader className="absolute top-0 z-20">
                         <Link
-                          as={H6}
+                          as="h6"
                           isExternal
-                          className="!w-full !max-w-none text-foreground [&_.nextui-link-icon]:ml-auto"
+                          className="!w-full !max-w-none !text-white [&_.nextui-link-icon]:ml-auto"
                         >
                           {t('tv-shows-discover')}
                         </Link>
@@ -836,9 +829,9 @@ const SideBar = () => {
                     >
                       <CardHeader className="absolute top-0 z-20">
                         <Link
-                          as={H6}
+                          as="h6"
                           isExternal
-                          className="!w-full !max-w-none text-foreground [&_.nextui-link-icon]:ml-auto"
+                          className="!w-full !max-w-none !text-white [&_.nextui-link-icon]:ml-auto"
                         >
                           {t('anime-discover')}
                         </Link>

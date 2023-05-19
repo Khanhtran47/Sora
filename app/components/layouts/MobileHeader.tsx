@@ -6,7 +6,6 @@ import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
 import { useHistoryStack } from '~/store/layout/useHistoryStack';
 import { useLayout } from '~/store/layout/useLayout';
 import { useHeaderOptions } from '~/hooks/useHeader';
-import { H2 } from '~/components/styles/Text.styles';
 import Arrow from '~/assets/icons/ArrowIcon';
 import Search from '~/assets/icons/SearchIcon';
 
@@ -55,18 +54,12 @@ const MobileHeader = () => {
         transition={{ duration: 0.5 }}
         className="fixed top-0 z-[1000] flex h-[64px] w-full flex-row items-center justify-between bg-neutral/60 px-6 shadow-lg backdrop-blur-md sm:hidden"
       >
-        <NavLink to="/" arial-label="home-page">
-          <H2
-            h2
-            css={{
-              textGradient: '45deg, $primary, $secondary 50%',
-              fontFamily: 'monospace',
-              letterSpacing: '0.3rem',
-              textDecoration: 'none',
-            }}
-          >
-            SORA
-          </H2>
+        <NavLink
+          to="/"
+          arial-label="home-page"
+          className="bg-gradient-to-tr from-primary to-secondary to-50% bg-clip-text text-3xl font-bold tracking-normal text-transparent md:text-4xl"
+        >
+          SORA
         </NavLink>
         <Button
           variant="light"

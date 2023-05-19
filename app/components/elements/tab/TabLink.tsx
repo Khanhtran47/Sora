@@ -10,7 +10,6 @@ import {
   ScrollCorner,
   ScrollViewport,
 } from '~/components/elements/ScrollArea';
-import { H5 } from '~/components/styles/Text.styles';
 
 interface ITabProps {
   pages?: {
@@ -56,9 +55,7 @@ const TabLink = (props: ITabProps) => {
             >
               {({ isActive }) => (
                 <>
-                  <H5 h5 weight="bold">
-                    {t(page.pageName)}
-                  </H5>
+                  <h5>{t(page.pageName)}</h5>
                   {isActive ? (
                     <motion.div
                       ref={underlineRef}

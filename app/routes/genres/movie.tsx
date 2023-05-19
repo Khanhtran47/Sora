@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 import { useHydrated } from 'remix-utils';
 
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
-import { H4 } from '~/components/styles/Text.styles';
 
 export const handle = {
   breadcrumb: () => (
@@ -64,7 +63,7 @@ const MovieGenresPage = () => {
       dragDirectionLock={isMobile && isHydrated}
       draggable={isMobile && isHydrated}
     >
-      <H4>{t('movie-genres')}</H4>
+      <h4>{t('movie-genres')}</h4>
       <Spacer y={1} />
       <div className="grid grid-cols-1 justify-center gap-3 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
         {Object.entries(genresMovie).map(([id, name]) => (

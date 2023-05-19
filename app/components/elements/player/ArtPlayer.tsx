@@ -1,4 +1,3 @@
-/* eslint-disable no-nested-ternary */
 import {
   memo,
   useEffect,
@@ -9,13 +8,12 @@ import {
   type SetStateAction,
 } from 'react';
 import { Button } from '@nextui-org/button';
-import { useNavigate } from '@remix-run/react';
+import { Link } from '@remix-run/react';
 import Artplayer from 'artplayer';
 import { isMobile } from 'react-device-detect';
 
 import usePlayerState from '~/store/player/usePlayerState';
 import AspectRatio from '~/components/elements/AspectRatio';
-import { H5 } from '~/components/styles/Text.styles';
 import Close from '~/assets/icons/CloseIcon';
 
 interface IPlayerProps {
@@ -29,7 +27,6 @@ interface IPlayerProps {
 
 const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
   const { option, getInstance, style, className, setIsPlayerPlaying, ...rest } = props;
-  const navigate = useNavigate();
   const {
     isMini,
     setIsMini,
@@ -95,16 +92,13 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
       />
       {isMini ? (
         <div className="inset-x-0 bottom-[-64px] flex h-16 flex-row items-center justify-between rounded-b-lg bg-neutral p-3">
-          <H5
-            h5
-            weight="bold"
-            onClick={() => navigate(routePlayer)}
-            className="!text-neutral-foreground line-clamp-1"
-            css={{ cursor: 'pointer' }}
+          <Link
+            to={routePlayer}
+            className="line-clamp-1 !text-neutral-foreground"
             title={titlePlayer}
           >
             {titlePlayer}
-          </H5>
+          </Link>
           <Button
             type="button"
             size="md"

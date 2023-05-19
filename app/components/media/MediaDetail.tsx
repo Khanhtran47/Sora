@@ -21,7 +21,6 @@ import { useSoraSettings } from '~/hooks/useLocalStorage';
 import Image from '~/components/elements/Image';
 import SelectProviderModal from '~/components/elements/dialog/SelectProviderModal';
 import Rating from '~/components/elements/shared/Rating';
-import { H2, H5, H6 } from '~/components/styles/Text.styles';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 import ShareIcon from '~/assets/icons/ShareIcon';
 
@@ -206,14 +205,10 @@ export const MediaDetail = (props: IMediaDetail) => {
               {isSm ? null : <Spacer y={2} />}
             </div>
             <div className="flex w-full flex-col items-start justify-start grid-in-title">
-              <H2 h1 weight="bold" css={{ '@xsMax': { fontSize: '1.75rem !important' } }}>
+              <h1 className="!text-3xl md:!text-4xl">
                 {`${title}${isSm ? '' : ` (${releaseYear})`}`}
-              </H2>
-              {tagline ? (
-                <H5 h5 css={{ fontStyle: 'italic' }}>
-                  {tagline}
-                </H5>
-              ) : null}
+              </h1>
+              {tagline ? <p className="italic">{tagline}</p> : null}
             </div>
             <div className="flex flex-col gap-y-3 grid-in-info sm:gap-y-6">
               <div className="flex flex-row flex-wrap gap-3">
@@ -238,25 +233,19 @@ export const MediaDetail = (props: IMediaDetail) => {
                   />
                   {imdbRating ? (
                     <div className="ml-3 flex flex-row items-center gap-x-2">
-                      <H6
-                        h6
-                        weight="semibold"
-                        css={{
+                      <h6
+                        style={{
                           backgroundColor: '#ddb600',
                           color: '#000',
-                          borderRadius: '$xs',
+                          borderRadius: '0.25rem',
                           padding: '0 0.25rem 0 0.25rem',
                         }}
                       >
                         IMDb
-                      </H6>
-                      <H6
-                        h6
-                        weight="semibold"
-                        css={colorPalette ? { color: colorPalette[600] } : {}}
-                      >
+                      </h6>
+                      <h6 style={colorPalette ? { color: colorPalette[600] } : {}}>
                         {imdbRating?.star}
-                      </H6>
+                      </h6>
                     </div>
                   ) : null}
                 </Badge>
@@ -274,10 +263,10 @@ export const MediaDetail = (props: IMediaDetail) => {
                       : { borderColor: '$primaryLightActive' }
                   }
                 >
-                  <H6 h6 weight="semibold" css={colorPalette ? { color: colorPalette[600] } : {}}>
+                  <h6 style={colorPalette ? { color: colorPalette[600] } : {}}>
                     {releaseDate}
                     {runtime ? ` • ${Math.floor(runtime / 60)}h ${runtime % 60}m` : null}
-                  </H6>
+                  </h6>
                 </Badge>
               </div>
               <div className="flex w-full flex-row flex-wrap items-center justify-start gap-3">
@@ -319,9 +308,7 @@ export const MediaDetail = (props: IMediaDetail) => {
                   onPress={() => setVisible(true)}
                   className="w-full bg-gradient-to-r from-primary to-secondary sm:w-auto"
                 >
-                  <H5 h5 weight="bold" transform="uppercase">
-                    Watch now
-                  </H5>
+                  Watch now
                 </Button>
               )}
               <div className="flex flex-row flex-wrap items-center justify-start">
@@ -476,9 +463,9 @@ export const AnimeDetail = (props: IAnimeDetail) => {
               {isSm ? null : <Spacer y={2} />}
             </div>
             <div className="flex w-full flex-col items-start justify-start grid-in-title">
-              <H2 h1 weight="bold" css={{ '@xsMax': { fontSize: '1.75rem !important' } }}>
+              <h1 className="!text-3xl md:!text-4xl">
                 {`${title?.userPreferred || title?.english || title?.romaji || title?.native}`}
-              </H2>
+              </h1>
             </div>
             <div className="flex flex-col gap-y-3 grid-in-info sm:gap-y-6">
               <div className="flex flex-row flex-wrap gap-3">
@@ -516,10 +503,10 @@ export const AnimeDetail = (props: IAnimeDetail) => {
                       : { borderColor: '$primaryLightActive' }
                   }
                 >
-                  <H6 h6 weight="semibold" css={colorPalette ? { color: colorPalette[600] } : {}}>
+                  <h6 style={colorPalette ? { color: colorPalette[600] } : {}}>
                     {type}
                     {releaseDate ? ` • ${releaseDate}` : ''}
-                  </H6>
+                  </h6>
                 </Badge>
               </div>
               <div className="flex w-full flex-row flex-wrap items-center justify-start gap-3">
@@ -553,9 +540,7 @@ export const AnimeDetail = (props: IAnimeDetail) => {
                 onPress={() => setVisible(true)}
                 className="w-full bg-gradient-to-r from-primary to-secondary sm:w-auto"
               >
-                <H5 h5 weight="bold" transform="uppercase">
-                  Watch now
-                </H5>
+                Watch now
               </Button>
               <div className="flex flex-row flex-wrap items-center justify-start">
                 <Button

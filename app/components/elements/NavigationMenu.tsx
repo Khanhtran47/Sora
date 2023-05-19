@@ -1,5 +1,3 @@
-/* eslint-disable tailwindcss/no-custom-classname */
-/* eslint-disable @typescript-eslint/indent */
 import { forwardRef, type ComponentPropsWithoutRef, type ElementRef } from 'react';
 import * as NavigationMenuPrimitive from '@radix-ui/react-navigation-menu';
 import { cnBase, tv } from 'tailwind-variants';
@@ -12,7 +10,7 @@ const NavigationMenuViewport = forwardRef<
 >(({ className = '', ...props }, ref) => (
   <NavigationMenuPrimitive.Viewport
     className={cnBase(
-      'data-[state=open]:fadeIn data-[state=closed]:fadeOut relative h-[var(--radix-navigation-menu-viewport-height)] w-full origin-[top_center] overflow-hidden rounded-[12px] border border-border bg-neutral/60 shadow-lg backdrop-blur-2xl backdrop-contrast-125 backdrop-saturate-200 transition-[width,_height] duration-300 data-[orientation=horizontal]:mt-1.5 data-[orientation=vertical]:ml-[-8px] data-[state=open]:animate-scaleIn data-[state=closed]:animate-scaleOut sm:w-[var(--radix-navigation-menu-viewport-width)]',
+      'data-[state=open]:fadeIn data-[state=closed]:fadeOut relative h-[var(--radix-navigation-menu-viewport-height)] w-full origin-[top_center] overflow-hidden rounded-[12px] border border-border bg-neutral/60 shadow-lg backdrop-blur-2xl backdrop-contrast-125 backdrop-saturate-200 transition-[width,_height] duration-300 data-[orientation=horizontal]:mt-1.5 data-[orientation=vertical]:ml-[-8px] data-[state=closed]:animate-scaleOut data-[state=open]:animate-scaleIn sm:w-[var(--radix-navigation-menu-viewport-width)]',
       className,
     )}
     ref={ref}
@@ -37,8 +35,8 @@ const NavigationMenu = forwardRef<
     <div
       data-orientation={orientation}
       className={cnBase(
-        `absolute flex justify-center data-[orientation=vertical]:left-full
-      data-[orientation=horizontal]:top-full data-[orientation=horizontal]:left-0`,
+        `absolute flex justify-center data-[orientation=horizontal]:left-0
+      data-[orientation=horizontal]:top-full data-[orientation=vertical]:left-full`,
         viewportPositionClassName,
       )}
     >
@@ -68,7 +66,7 @@ const NavigationMenuItem = NavigationMenuPrimitive.Item;
 const navigationMenuTriggerStyle = tv({
   base: `text-md group inline-flex h-10 w-max items-center justify-center
   rounded-md bg-transparent px-4 py-2 font-medium text-foreground transition-colors hover:bg-primary-50 hover:text-primary hover:opacity-80 focus:bg-primary-50 focus:text-primary focus:outline-none disabled:pointer-events-none
-  disabled:opacity-50 data-[state=open]:bg-primary-50 data-[active]:bg-primary-50 data-[active]:text-primary data-[state=open]:text-primary`,
+  disabled:opacity-50 data-[active]:bg-primary-50 data-[state=open]:bg-primary-50 data-[active]:text-primary data-[state=open]:text-primary`,
   variants: {
     active: {
       true: 'bg-primary-50 text-primary',
@@ -100,9 +98,9 @@ const NavigationMenuTrigger = forwardRef<
 NavigationMenuTrigger.displayName = NavigationMenuPrimitive.Trigger.displayName;
 
 const navigationMenuContentStyle = tv({
-  base: `absolute top-0
-  left-0 w-full data-[motion=from-start]:animate-enterFromLeft data-[motion=from-end]:animate-enterFromRight data-[motion=to-start]:animate-exitToLeft
-  data-[motion=to-end]:animate-exitToRight sm:w-auto`,
+  base: `absolute left-0
+  top-0 w-full data-[motion=from-end]:animate-enterFromRight data-[motion=from-start]:animate-enterFromLeft data-[motion=to-end]:animate-exitToRight
+  data-[motion=to-start]:animate-exitToLeft sm:w-auto`,
 });
 const NavigationMenuContent = forwardRef<
   ElementRef<typeof NavigationMenuPrimitive.Content>,
@@ -120,7 +118,7 @@ const NavigationMenuLink = NavigationMenuPrimitive.Link;
 
 const navigationMenuIndicatorStyle = tv({
   base: `top-full z-[1] flex
-  h-2.5 items-end justify-center overflow-hidden data-[state=visible]:animate-in data-[state=hidden]:animate-out data-[state=visible]:fade-in data-[state=hidden]:fade-out`,
+  h-2.5 items-end justify-center overflow-hidden data-[state=visible]:animate-in data-[state=hidden]:animate-out data-[state=hidden]:fade-out data-[state=visible]:fade-in`,
 });
 const NavigationMenuIndicator = forwardRef<
   ElementRef<typeof NavigationMenuPrimitive.Indicator>,

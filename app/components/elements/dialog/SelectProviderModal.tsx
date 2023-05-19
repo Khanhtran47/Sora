@@ -6,7 +6,6 @@ import { useWindowSize } from '@react-hookz/web';
 import { useFetcher, useNavigate } from '@remix-run/react';
 
 import { useSoraSettings } from '~/hooks/useLocalStorage';
-import { H3 } from '~/components/styles/Text.styles';
 
 type SelectProviderModalProps = {
   id: number | string | undefined;
@@ -99,9 +98,7 @@ const SelectProviderModal = (props: SelectProviderModalProps) => {
       width={width && width < 720 ? `${width}px` : '720px'}
     >
       <Modal.Header css={{ display: 'flex', flexFlow: 'row wrap' }}>
-        <H3 h3 css={{ margin: '0 0 $8 0' }}>
-          Select Provider
-        </H3>
+        <h3 className="mb-4">Select Provider</h3>
       </Modal.Header>
       <Modal.Body
         css={{

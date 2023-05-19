@@ -12,7 +12,6 @@ import { getPeopleImages } from '~/services/tmdb/tmdb.server';
 import TMDB from '~/utils/media';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
-import { H5 } from '~/components/styles/Text.styles';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const locale = await i18next.getLocale(request);
@@ -108,9 +107,9 @@ const MediaPage = () => {
   return (
     <>
       <Row justify="flex-start" fluid>
-        <H5 h5>
+        <h5>
           <strong>Profiles</strong>
-        </H5>
+        </h5>
       </Row>
       <Spacer y={0.5} />
       <Gallery withCaption withDownloadButton uiElements={uiElements}>

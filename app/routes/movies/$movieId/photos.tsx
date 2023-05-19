@@ -13,7 +13,6 @@ import { getImages } from '~/services/tmdb/tmdb.server';
 import TMDB from '~/utils/media';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
-import { H5 } from '~/components/styles/Text.styles';
 
 export const meta: MetaFunction = ({ params }) => ({
   'og:url': `https://sora-anime.vercel.app/movies/${params.movieId}/photos`,
@@ -122,9 +121,9 @@ const MoviePhotosPage = () => {
       {images?.backdrops && images.backdrops.length > 0 && (
         <>
           <Row justify="center" fluid>
-            <H5 h5>
+            <h5>
               <strong>Backdrops</strong>
-            </H5>
+            </h5>
           </Row>
           <Spacer y={0.5} />
           <Gallery withCaption withDownloadButton uiElements={uiElements}>
@@ -173,9 +172,9 @@ const MoviePhotosPage = () => {
       {images?.logos && images.logos.length > 0 && (
         <>
           <Row justify="center" fluid>
-            <H5 h5>
+            <h5>
               <strong>Logos</strong>
-            </H5>
+            </h5>
           </Row>
           <Spacer y={0.5} />
           <Gallery withCaption withDownloadButton uiElements={uiElements}>
@@ -224,9 +223,9 @@ const MoviePhotosPage = () => {
       {images?.posters && images.posters.length > 0 && (
         <>
           <Row justify="center" fluid>
-            <H5 h5>
+            <h5>
               <strong>Posters</strong>
-            </H5>
+            </h5>
           </Row>
           <Spacer y={0.5} />
           <Gallery withCaption withDownloadButton uiElements={uiElements}>

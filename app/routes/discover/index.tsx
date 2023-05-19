@@ -4,7 +4,6 @@ import { useLocation, useNavigate } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
-import { H1, H4 } from '~/components/styles/Text.styles';
 import Anime from '~/assets/icons/AnimeIcon';
 import Category from '~/assets/icons/CategoryIcon';
 import Filter from '~/assets/icons/FilterIcon';
@@ -78,7 +77,7 @@ const DiscoverPage = () => {
       transition={{ duration: 0.3 }}
       className="flex w-full flex-col items-start justify-center px-3"
     >
-      <H1 h1>{t('discover')}</H1>
+      <h1>{t('discover')}</h1>
       <Spacer y={0.5} />
       <Button
         startIcon={<Search fill="currentColor" />}
@@ -102,7 +101,7 @@ const DiscoverPage = () => {
       </Button>
       <Spacer y={1.5} />
       <div className="flex w-full flex-col items-start justify-center">
-        <H4>{t('categories')}</H4>
+        <h4>{t('categories')}</h4>
         <Spacer y={0.5} />
         <div className="flex w-full flex-wrap gap-x-2 gap-y-4">
           {categoryPages.map((page) => (
@@ -121,7 +120,7 @@ const DiscoverPage = () => {
       </div>
       <Spacer y={1.5} />
       <div className="flex w-full flex-col items-start justify-center">
-        <H4>{t('general')}</H4>
+        <h4>{t('general')}</h4>
         <Spacer y={0.5} />
         <div className="flex w-full flex-wrap gap-x-2 gap-y-4">
           {generalPages.map((page) => (

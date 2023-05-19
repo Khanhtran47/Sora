@@ -25,7 +25,6 @@ import { badRequest } from 'remix-utils';
 import { getAllCacheKeys, lruCache, searchCacheKeys } from '~/services/lru-cache';
 import { getUserFromCookie } from '~/services/supabase';
 import SearchForm from '~/components/elements/SearchForm';
-import { H2, H3, H5 } from '~/components/styles/Text.styles';
 import ErrorBoundaryView from '~/components/ErrorBoundaryView';
 
 const loader = async ({ request }: LoaderArgs) => {
@@ -174,9 +173,7 @@ const CacheAdminRoute = () => {
           '@xs': { padding: 0 },
         }}
       >
-        <H2 h2 css={{ '@xsMax': { fontSize: '1.75rem !important' } }}>
-          Cache Admin
-        </H2>
+        <h2>Cache Admin</h2>
         <SearchForm
           onSubmit={onSubmit}
           textOnButton="Search"
@@ -208,28 +205,26 @@ const CacheAdminRoute = () => {
         width={width && width < 720 ? `${width}px` : '720px'}
       >
         <Modal.Header css={{ display: 'flex', flexFlow: 'row wrap' }}>
-          <H3 h3 id="modal-title">
-            Cache detail
-          </H3>
+          <h3 id="modal-title">Cache detail</h3>
         </Modal.Header>
         <Modal.Body>
           {currentCache ? (
             <div className="flex flex-col gap-4" id="modal-description">
-              <H5>
+              <h5>
                 Cache Key: <span>{currentCache.key}</span>
-              </H5>
-              <H5>
+              </h5>
+              <h5>
                 Cache TTL: <span>{currentCache.data.metadata.ttl}</span>
-              </H5>
-              <H5>
+              </h5>
+              <h5>
                 Cache Stale While Revalidate: <span>{currentCache.data.metadata.swr}</span>
-              </H5>
-              <H5>
+              </h5>
+              <h5>
                 Cache Created At: <span>{currentCache.data.metadata.createdTime}</span>
-              </H5>
-              <H5>
+              </h5>
+              <h5>
                 Cache Data: <span>{JSON.stringify(currentCache.data.value)}</span>
-              </H5>
+              </h5>
             </div>
           ) : null}
         </Modal.Body>

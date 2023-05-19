@@ -11,7 +11,6 @@ import type { IMedia } from '~/types/media';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
 import Image from '~/components/elements/Image';
-import { H2, H5, H6, P } from '~/components/styles/Text.styles';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 
 export const meta: MetaFunction = ({ params }) => ({
@@ -42,111 +41,73 @@ const AnimeOverview = () => {
         <div className="flex w-full flex-col items-start justify-center gap-y-4 rounded-xl bg-neutral p-4 nextui-sm:w-3/4 xl:w-1/2">
           {detail?.nextAiringEpisode ? (
             <div className="flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-              <H6 h6 weight="bold" className="grow-0 basis-1/3">
-                Airing
-              </H6>
-              <P as="p" className="grow">
+              <h6 className="grow-0 basis-1/3">Airing</h6>
+              <p className="grow">
                 {`Ep${detail?.nextAiringEpisode?.episode}: ${detail?.nextAiringEpisode?.timeUntilAiring}`}
-              </P>
+              </p>
             </div>
           ) : null}
           {detail?.totalEpisodes ? (
             <div className="flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-              <H6 h6 weight="bold" className="grow-0 basis-1/3">
-                Episodes
-              </H6>
-              <P as="p" className="grow">
-                {detail?.totalEpisodes}
-              </P>
+              <h6 className="grow-0 basis-1/3">Episodes</h6>
+              <p className="grow">{detail?.totalEpisodes}</p>
             </div>
           ) : null}
           {detail?.duration ? (
             <div className="flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-              <H6 h6 weight="bold" className="grow-0 basis-1/3">
-                Episode Duration
-              </H6>
-              <P as="p" className="grow">
-                {detail?.duration}
-              </P>
+              <h6 className="grow-0 basis-1/3">Episode Duration</h6>
+              <p className="grow">{detail?.duration}</p>
             </div>
           ) : null}
           {detail?.status ? (
             <div className="flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-              <H6 h6 weight="bold" className="grow-0 basis-1/3">
-                Status
-              </H6>
-              <P as="p" className="grow">
-                {detail?.status}
-              </P>
+              <h6 className="grow-0 basis-1/3">Status</h6>
+              <p className="grow">{detail?.status}</p>
             </div>
           ) : null}
           {detail?.startDate ? (
             <div className="flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-              <H6 h6 weight="bold" className="grow-0 basis-1/3">
-                Start Date
-              </H6>
-              <P as="p" className="grow">
+              <h6 className="grow-0 basis-1/3">Start Date</h6>
+              <p className="grow">
                 {`${detail?.startDate?.day}/${detail?.startDate?.month}/${detail?.startDate?.year}`}
-              </P>
+              </p>
             </div>
           ) : null}
           {detail?.endDate ? (
             <div className="flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-              <H6 h6 weight="bold" className="grow-0 basis-1/3">
-                End Date
-              </H6>
-              <P as="p" className="grow">
+              <h6 className="grow-0 basis-1/3">End Date</h6>
+              <p className="grow">
                 {`${detail?.endDate?.day}/${detail?.endDate?.month}/${detail?.endDate?.year}`}
-              </P>
+              </p>
             </div>
           ) : null}
           {detail?.countryOfOrigin ? (
             <div className="flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-              <H6 h6 weight="bold" className="grow-0 basis-1/3">
-                Country of Origin
-              </H6>
-              <P as="p" className="grow">
-                {detail?.countryOfOrigin}
-              </P>
+              <h6 className="grow-0 basis-1/3">Country of Origin</h6>
+              <p className="grow">{detail?.countryOfOrigin}</p>
             </div>
           ) : null}
           {detail?.popularity ? (
             <div className="flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-              <H6 h6 weight="bold" className="grow-0 basis-1/3">
-                Popularity
-              </H6>
-              <P as="p" className="grow">
-                {detail?.popularity}
-              </P>
+              <h6 className="grow-0 basis-1/3">Popularity</h6>
+              <p className="grow">{detail?.popularity}</p>
             </div>
           ) : null}
           {detail?.studios ? (
             <div className="flex w-full flex-row items-start justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-              <H6 h6 weight="bold" className="grow-0 basis-1/3">
-                Studios
-              </H6>
+              <h6 className="grow-0 basis-1/3">Studios</h6>
               <div className="flex grow flex-col">
                 {detail.studios.length > 0 &&
-                  detail.studios.map((studio) => (
-                    <P key={studio} as="p">
-                      {studio}
-                    </P>
-                  ))}
+                  detail.studios.map((studio) => <p key={studio}>{studio}</p>)}
               </div>
             </div>
           ) : null}
           {detail?.synonyms ? (
             <div className="flex w-full flex-row items-start justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-              <H6 h6 weight="bold" className="grow-0 basis-1/3">
-                Synonyms
-              </H6>
+              <h6 className="grow-0 basis-1/3">Synonyms</h6>
               <div className="flex grow flex-col">
                 {detail?.synonyms.length > 0 &&
-                  detail?.synonyms.map((synonym) => (
-                    <P key={synonym} as="p">
-                      {synonym}
-                    </P>
-                  ))}
+                  detail?.synonyms.map((synonym) => <p key={synonym}>{synonym}</p>)}
               </div>
             </div>
           ) : null}
@@ -154,9 +115,8 @@ const AnimeOverview = () => {
       </div>
       <div className="flex w-full flex-col sm:w-2/3">
         <div className="flex flex-col items-start justify-start gap-y-4 rounded-xl bg-neutral p-4">
-          <H6
-            h6
-            css={{ textAlign: 'justify' }}
+          <h6
+            className="text-justify"
             dangerouslySetInnerHTML={{ __html: detail?.description || '' }}
           />
         </div>
@@ -172,17 +132,7 @@ const AnimeOverview = () => {
         ) : null}
         {detail?.characters && detail.characters.length > 0 ? (
           <>
-            <H2
-              h2
-              css={{
-                margin: '20px 0 20px 0',
-                '@xsMax': {
-                  fontSize: '1.75rem !important',
-                },
-              }}
-            >
-              Characters
-            </H2>
+            <h2 className="my-5">Characters</h2>
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
               {detail.characters.slice(0, 12).map((character) => (
                 <Card
@@ -230,28 +180,22 @@ const AnimeOverview = () => {
                         />
                       )}
                       <div className="flex flex-col items-start justify-center p-1">
-                        <H5 h5>{character.name?.full}</H5>
-                        <H6 h6 css={{ color: '$accents7', fontWeight: '$semibold' }}>
-                          {character.role}
-                        </H6>
+                        <h5>{character.name?.full}</h5>
+                        <p className="opacity-80">{character.role}</p>
                       </div>
                     </div>
                     <div className="flex grow flex-row justify-end gap-x-2">
                       {character?.voiceActors && character?.voiceActors.length > 0 && (
                         <div className="flex flex-col items-end justify-center p-1">
-                          <H5 h5>{character.voiceActors[0].name?.full}</H5>
-                          <H6 h6 css={{ color: '$accents7', fontWeight: '$semibold' }}>
-                            Japanese
-                          </H6>
+                          <h5>{character.voiceActors[0].name?.full}</h5>
+                          <p className="opacity-80">Japanese</p>
                         </div>
                       )}
                       {character?.voiceActors && character?.voiceActors[0]?.image ? (
                         <Image
                           src={character.voiceActors[0]?.image}
-                          // objectFit="cover"
                           width="60px"
                           height="100%"
-                          // showSkeleton
                           alt={character.voiceActors[0].name?.full}
                           title={character.voiceActors[0].name?.full}
                           // css={{
@@ -263,12 +207,6 @@ const AnimeOverview = () => {
                           options={{
                             contentType: MimeType.WEBP,
                           }}
-                          // containerCss={{
-                          //   margin: 0,
-                          //   minWidth: '60px',
-                          //   flexBasis: '60px',
-                          //   borderRadius: '$lg',
-                          // }}
                           responsive={[
                             {
                               size: {

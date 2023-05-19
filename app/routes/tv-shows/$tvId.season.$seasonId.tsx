@@ -30,7 +30,6 @@ import { tvSeasonDetailPages } from '~/constants/tabLinks';
 import { BackgroundContent, BackgroundTabLink } from '~/components/media/Media.styles';
 import Image from '~/components/elements/Image';
 import TabLink from '~/components/elements/tab/TabLink';
-import { H2, H5, H6 } from '~/components/styles/Text.styles';
 import CatchBoundaryView from '~/components/CatchBoundaryView';
 import ErrorBoundaryView from '~/components/ErrorBoundaryView';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
@@ -260,26 +259,6 @@ const TvSeasonDetail = () => {
                     src={TMDB.posterUrl(seasonDetail?.poster_path)}
                     alt={seasonDetail?.name}
                     title={seasonDetail?.name}
-                    // css={{
-                    //   minWidth: 'auto !important',
-                    //   minHeight: 'auto !important',
-                    //   borderRadius: '$sm',
-                    //   boxShadow: '12px 12px 30px 10px rgb(104 112 118 / 0.35)',
-                    //   aspectRatio: '2 / 3',
-                    //   '@sm': {
-                    //     borderRadius: '$md',
-                    //   },
-                    // }}
-                    // containerCss={{
-                    //   overflow: 'visible',
-                    //   width: '100% !important',
-                    //   '@xs': {
-                    //     width: '75% !important',
-                    //   },
-                    //   '@md': {
-                    //     width: '50% !important',
-                    //   },
-                    // }}
                     className="aspect-[2/3] !min-h-[auto] !min-w-[auto] shadow-xl shadow-neutral"
                     loaderUrl="/api/image"
                     placeholder="empty"
@@ -329,16 +308,16 @@ const TvSeasonDetail = () => {
               )}
             </div>
             <div className="flex w-full flex-col items-start justify-start grid-in-title">
-              <H2 h2 weight="bold">
+              <h2>
                 {detail?.name} {seasonDetail?.name}
-              </H2>
-              <H5 h5 weight="bold">
+              </h2>
+              <h5>
                 {seasonDetail?.episodes?.length || 0} episodes &middot; {seasonDetail?.air_date}{' '}
-              </H5>
+              </h5>
             </div>
             {seasonDetail?.overview ? (
               <div className="flex flex-col gap-y-3 grid-in-info sm:gap-y-6">
-                <H6 h6>{seasonDetail.overview}</H6>
+                <h6>{seasonDetail.overview}</h6>
               </div>
             ) : null}
           </div>

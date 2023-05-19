@@ -42,9 +42,7 @@ import {
   listThemes,
   settingsTab,
 } from '~/constants/settings';
-import AboutLogo from '~/components/elements/NavLink';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/elements/tab/Tabs';
-import { H2, H5, H6 } from '~/components/styles/Text.styles';
 import Brush from '~/assets/icons/BrushIcon';
 import Info from '~/assets/icons/InfoIcon';
 import Play from '~/assets/icons/PlayIcon';
@@ -150,11 +148,11 @@ const SettingBlock = (props: SettingBlockProps) => {
       <div className="flex flex-row items-center justify-between gap-x-2 rounded-md bg-content2 p-3">
         {description ? (
           <div className="flex flex-col items-start justify-center">
-            <H6>{title}</H6>
-            <H6 css={{ color: '$accents8' }}>{description}</H6>
+            <h6>{title}</h6>
+            <p className="opacity-80">{description}</p>
           </div>
         ) : (
-          <H6>{title}</H6>
+          <h6>{title}</h6>
         )}
         <Switch checked={checked} onChange={onChange} />
       </div>
@@ -164,7 +162,7 @@ const SettingBlock = (props: SettingBlockProps) => {
     const { title, selectedValue, selectedKeys, onSelectionChange, selectItems } = props;
     return (
       <div className="flex flex-row items-center justify-between rounded-md bg-content2 p-3">
-        <H6>{title}</H6>
+        <h6>{title}</h6>
         <Dropdown isBordered>
           <Dropdown.Button color="primary">{selectedValue}</Dropdown.Button>
           <Dropdown.Menu
@@ -187,7 +185,7 @@ const SettingBlock = (props: SettingBlockProps) => {
     const { keys, kbd, title, betweenKeys } = props;
     return (
       <div className="flex flex-row items-center justify-between gap-x-2 rounded-md bg-content2 p-3">
-        <H6>{title}</H6>
+        <h6>{title}</h6>
         {keys ? (
           Array.isArray(
             keys as {
@@ -398,9 +396,7 @@ const Settings = () => {
       transition={{ duration: 0.3 }}
       className="flex w-full max-w-screen-4xl flex-col justify-start py-3 sm:py-0"
     >
-      <H2 h2 css={{ '@xsMax': { fontSize: '1.75rem !important' } }}>
-        {t('settings')}
-      </H2>
+      <h2>{t('settings')}</h2>
       <Spacer y={0.5} />
       <ClientOnly fallback={<Loading type="default" />}>
         {() => (
@@ -419,9 +415,7 @@ const Settings = () => {
                   className="relative"
                 >
                   {settingsIcon(tab.id, activeTab === tab.id)}
-                  <H6 h6 css={{ color: 'inherit', marginLeft: '0.5rem' }}>
-                    {t(tab.title)}
-                  </H6>
+                  <h6 className="ml-2">{t(tab.title)}</h6>
                   {activeTab === tab.id ? (
                     <motion.div
                       className="absolute overflow-hidden rounded-md bg-neutral-foreground data-[orientation=horizontal]:bottom-0 data-[orientation=vertical]:left-0 data-[orientation=horizontal]:h-1 data-[orientation=vertical]:h-1/2 data-[orientation=horizontal]:w-1/2 data-[orientation=vertical]:w-1"
@@ -535,13 +529,11 @@ const Settings = () => {
                         }}
                       >
                         <div className="flex flex-col items-start justify-center gap-y-4 rounded-md bg-content2 p-3">
-                          <H5 weight="medium" css={{ color: '$foreground', margin: '0.25rem 0' }}>
-                            {t('sidebar-mode')}
-                          </H5>
+                          <h5 className="my-1">{t('sidebar-mode')}</h5>
                           {isMd ? null : (
                             <>
                               <div className="flex w-full flex-row items-center justify-between gap-x-2">
-                                <H6>{t('sidebar-mini-mode')}</H6>
+                                <h6>{t('sidebar-mini-mode')}</h6>
                                 <Switch
                                   checked={sidebarMiniMode.value}
                                   onChange={(e) => {
@@ -553,7 +545,7 @@ const Settings = () => {
                                 />
                               </div>
                               <div className="flex w-full flex-row items-center justify-between gap-x-2">
-                                <H6>{t('sidebar-hover-mode')}</H6>
+                                <h6>{t('sidebar-hover-mode')}</h6>
                                 <Switch
                                   checked={sidebarHoverMode.value}
                                   onChange={(e) => {
@@ -567,7 +559,7 @@ const Settings = () => {
                             </>
                           )}
                           <div className="flex w-full flex-row items-center justify-between gap-x-2">
-                            <H6>{t('sidebar-boxed-mode')}</H6>
+                            <h6>{t('sidebar-boxed-mode')}</h6>
                             <Switch
                               checked={sidebarBoxedMode.value}
                               onChange={(e) => sidebarBoxedMode.set(e.target.checked)}
@@ -1013,7 +1005,13 @@ const Settings = () => {
                           contentType: MimeType.WEBP,
                         }}
                       />
-                      <AboutLogo linkTo="/" isLogo />
+                      <NavLink
+                        to="/"
+                        arial-label="home-page"
+                        className="bg-gradient-to-tr from-primary to-secondary to-50% bg-clip-text text-3xl font-bold tracking-normal text-transparent md:text-4xl"
+                      >
+                        SORA
+                      </NavLink>
                     </div>
                     <Spacer y={1} />
                     <div className="flex flex-row items-center justify-center space-x-4">
@@ -1024,14 +1022,10 @@ const Settings = () => {
                       <Link href="#">Contact ✉️</Link>
                     </div>
                     <Spacer y={1} />
-                    <H6
-                      weight="semibold"
-                      css={{ textAlign: 'center' }}
-                      className="!text-neutral-900"
-                    >
+                    <h6 className="text-center !text-neutral-900">
                       This site does not store any files on its server. All contents are provided by
                       non-affiliated third parties.
-                    </H6>
+                    </h6>
                   </div>
                 </motion.div>
               </TabsContent>

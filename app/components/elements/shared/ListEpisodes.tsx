@@ -14,7 +14,6 @@ import { useSoraSettings } from '~/hooks/useLocalStorage';
 import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
 import episodeTypes from '~/constants/episodeTypes';
 import Rating from '~/components/elements/shared/Rating';
-import { H3, H5, H6 } from '~/components/styles/Text.styles';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 import ViewGrid from '~/assets/icons/ViewGridCardIcon';
 
@@ -104,7 +103,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
   return (
     <>
       <div className="my-5 flex flex-row flex-wrap items-center justify-between gap-4">
-        <H3 h3>Episodes</H3>
+        <h3>Episodes</h3>
         <div className="flex flex-row items-center justify-end gap-2">
           {providers ? (
             <Dropdown isBordered>
@@ -250,7 +249,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                         />
                       ))}
                     <div className="flex flex-col justify-start p-4">
-                      <H5 h5 weight="bold" className="line-clamp-1">
+                      <h5 className="line-clamp-1">
                         Episode{' '}
                         {type === 'tv'
                           ? isSm
@@ -262,29 +261,25 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                             ? `${episode?.number}`
                             : `${episode?.number}: ${episode?.title}`
                           : null}
-                      </H5>
+                      </h5>
                       {type === 'tv' && !isSm && (
                         <>
                           <Spacer y={0.25} />
                           <Row align="center">
                             <Rating rating={episode?.vote_average.toFixed(1)} ratingType="tv" />
                             <Spacer x={0.5} />
-                            <H5 h5>
+                            <h5>
                               {episode.air_date} | {episode?.runtime} min
-                            </H5>
+                            </h5>
                           </Row>
                           <Spacer y={0.25} />
-                          <H6 h6 className="!line-clamp-1">
-                            {episode.overview}
-                          </H6>
+                          <h6 className="!line-clamp-1">{episode.overview}</h6>
                         </>
                       )}
                       {type === 'anime' && !isSm && episode.description && (
                         <>
                           <Spacer y={0.25} />
-                          <H6 h6 className="!line-clamp-2">
-                            {episode.description}
-                          </H6>
+                          <h6 className="!line-clamp-2">{episode.description}</h6>
                         </>
                       )}
                     </div>

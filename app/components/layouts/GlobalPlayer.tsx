@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/indent */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '@nextui-org/button';
@@ -32,7 +31,6 @@ import Player from '~/components/elements/player/ArtPlayer';
 import PlayerError from '~/components/elements/player/PlayerError';
 import PlayerHotKey from '~/components/elements/player/PlayerHotkey';
 import PlayerSettings from '~/components/elements/player/PlayerSettings';
-import { H6 } from '~/components/styles/Text.styles';
 import Expand from '~/assets/icons/ExpandIcon';
 import Next from '~/assets/icons/NextIcon';
 import Pause from '~/assets/icons/PauseIcon';
@@ -1118,17 +1116,13 @@ const GlobalPlayer = () => {
               <div className="flex w-2/3 shrink grow-0 basis-2/3 flex-row items-center justify-start space-x-2">
                 {isPlayerFullScreen ? (
                   <div className="flex w-full flex-col items-start justify-center space-y-2">
-                    <H6
-                      h6
-                      weight="bold"
-                      className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-start !text-neutral-foreground"
-                    >
+                    <h6 className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-start !text-neutral-foreground">
                       {playerData?.titlePlayer}
-                    </H6>
-                    <H6 h6 weight="light" className="!text-neutral-foreground/80">
+                    </h6>
+                    <p className="!text-neutral-foreground/80">
                       {seasonId ? ` Season ${seasonId}` : ''}
                       {episodeId ? ` Episode ${episodeId}` : ''}
-                    </H6>
+                    </p>
                   </div>
                 ) : null}
               </div>
