@@ -43,10 +43,10 @@ const TabLink = (props: ITabProps) => {
     <ScrollArea
       type={isSm ? 'scroll' : 'hover'}
       scrollHideDelay={100}
-      className="z-[2] h-[55px] w-full border-b border-border"
+      className="z-[2] w-full border-b border-border"
     >
       <ScrollViewport>
-        <div className="flex p-[6px] focus:outline-none">
+        <div className="flex focus:outline-none">
           {pages?.map((page) => (
             <NavLink
               key={page.pageLink}

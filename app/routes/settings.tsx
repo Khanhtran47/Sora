@@ -2,11 +2,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Fragment, useEffect, useMemo, useRef, useState, type Key } from 'react';
 import { Kbd, type KbdKey } from '@nextui-org/kbd';
+import { Link } from '@nextui-org/link';
 import {
   Badge,
   Collapse,
   Dropdown,
-  Link,
   Loading,
   Image as NextImage,
   Radio,
@@ -1015,8 +1015,13 @@ const Settings = () => {
                     </div>
                     <Spacer y={1} />
                     <div className="flex flex-row items-center justify-center space-x-4">
-                      <RemixLink to="/design-system">Design 🎨</RemixLink>
-                      <Link href="https://raw.githubusercontent.com/Khanhtran47/Sora/master/LICENSE.txt">
+                      <Link as={RemixLink} to="/design-system">
+                        Design 🎨
+                      </Link>
+                      <Link
+                        isExternal
+                        href="https://raw.githubusercontent.com/Khanhtran47/Sora/master/LICENSE.txt"
+                      >
                         License 📜
                       </Link>
                       <Link href="#">Contact ✉️</Link>
