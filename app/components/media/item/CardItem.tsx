@@ -497,12 +497,10 @@ const CardItem = (props: ICardItemProps) => {
         >
           <CardFooter className={footer()}>
             <h5
-              className="!line-clamp-2"
+              className="!line-clamp-2 w-full"
               style={{
                 ...(color ? { color } : null),
                 minWidth: `${mediaType === 'people' ? '100px' : '150px'}`,
-                padding: '0 0.25rem',
-                ...(mediaType !== 'people' ? { '@xs': { minWidth: '240px' } } : {}),
               }}
             >
               {titleItem}

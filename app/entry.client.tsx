@@ -6,7 +6,6 @@ import { hydrate } from 'react-dom';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { getInitialNamespaces } from 'remix-i18next';
 
-import { ClientCacheProvider } from './context/client.context';
 import i18n from './i18n/i18n.config';
 
 i18next
@@ -35,11 +34,9 @@ i18next
     // We need to wait to ensure translations are loaded before the hydration
     // Here wrap RemixBrowser in I18nextProvider from react-i18next
     hydrate(
-      <ClientCacheProvider>
-        <I18nextProvider i18n={i18next}>
-          <RemixBrowser />
-        </I18nextProvider>
-      </ClientCacheProvider>,
+      <I18nextProvider i18n={i18next}>
+        <RemixBrowser />
+      </I18nextProvider>,
       document,
     ),
   );

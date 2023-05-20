@@ -55,7 +55,6 @@ import i18next, { i18nCookie } from '~/i18n/i18next.server';
 import { getUserFromCookie } from '~/services/supabase';
 import { getListGenre, getListLanguages } from '~/services/tmdb/tmdb.server';
 import * as gtag from '~/utils/client/gtags.client';
-import { ClientStyleContext } from '~/context/client.context';
 import { useIsBot } from '~/context/isbot.context';
 import Layout from '~/components/layouts/Layout';
 import nProgressStyles from '~/components/styles/nprogress.css';
@@ -374,7 +373,6 @@ let isMount = true;
 const Document = ({ children, title, lang, dir, gaTrackingId, ENV }: DocumentProps) => {
   const location = useLocation();
   const matches = useMatches();
-  const clientStyleData = React.useContext(ClientStyleContext);
   const isBot = useIsBot();
 
   /**
@@ -397,12 +395,6 @@ const Document = ({ children, title, lang, dir, gaTrackingId, ENV }: DocumentPro
     }
     return clone;
   }
-
-  // Only executed on client
-  React.useEffect(() => {
-    // reset cache to re-apply global styles
-    clientStyleData.reset();
-  }, [clientStyleData]);
 
   React.useEffect(() => {
     if (gaTrackingId?.length) {
@@ -456,11 +448,6 @@ const Document = ({ children, title, lang, dir, gaTrackingId, ENV }: DocumentPro
         {title ? <title>{title}</title> : null}
         <Meta />
         <Links />
-        <style
-          id="stitches"
-          dangerouslySetInnerHTML={{ __html: clientStyleData.sheet }}
-          suppressHydrationWarning
-        />
       </head>
       <body>
         {process.env.NODE_ENV === 'development' || !gaTrackingId || isBot ? null : (
@@ -641,7 +628,7 @@ const App = () => {
                       contentType: MimeType.WEBP,
                     }}
                   />
-                  <h1 className="m-0 bg-gradient-to-br from-primary to-secondary bg-clip-text font-mono !text-5xl	 font-bold tracking-[0.3rem] text-transparent no-underline">
+                  <h1 className="bg-gradient-to-tr from-primary to-secondary to-50% bg-clip-text !text-3xl font-bold tracking-normal text-transparent md:!text-5xl">
                     SORA
                   </h1>
                 </div>
@@ -653,7 +640,7 @@ const App = () => {
           ) : null}
         </AnimatePresence>
         <NextUIv2Provider>
-          <NextUIProvider>
+          <NextUIProvider disableBaseline>
             <Layout user={user} />
           </NextUIProvider>
         </NextUIv2Provider>

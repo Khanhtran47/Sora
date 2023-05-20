@@ -5,47 +5,47 @@
 
 @layer base {
   .h0 {
-    @apply !text-5xl !font-bold md:!text-6xl !tracking-normal;
+    @apply text-5xl font-bold md:text-6xl !tracking-tighter text-foreground !font-[Inter];
   }
 
   h1,
   .h1 {
-    @apply !text-4xl !font-bold md:!text-5xl !tracking-normal;
+    @apply text-4xl font-bold md:text-5xl !tracking-tighter text-foreground !font-[Inter];
   }
 
   h2,
   .h2 {
-    @apply !text-3xl !font-bold md:!text-4xl !tracking-normal;
+    @apply text-3xl font-bold md:text-4xl !tracking-tighter text-foreground !font-[Inter];
   }
 
   h3,
   .h3 {
-    @apply !text-2xl !font-semibold md:!text-3xl !tracking-normal;
+    @apply text-2xl font-semibold md:text-3xl !tracking-normal text-foreground !font-[Inter];
   }
 
   h4,
   .h4 {
-    @apply !text-xl !font-semibold md:!text-2xl !tracking-normal;
+    @apply text-xl font-semibold md:text-2xl !tracking-tight text-foreground !font-[Inter];
   }
 
   h5,
   .h5 {
-    @apply !text-lg !font-medium md:!text-xl !tracking-normal;
+    @apply text-lg font-medium md:text-xl !tracking-tight text-foreground !font-[Inter];
   }
 
   h6,
   .h6 {
-    @apply !text-base !font-medium md:!text-lg !tracking-normal;
+    @apply text-base font-medium md:text-lg !tracking-tight text-foreground !font-[Inter];
   }
 
   body,
   p,
   .p {
-    @apply text-base md:text-lg tracking-wide;
+    @apply text-base md:text-lg !tracking-normal text-foreground !font-[Inter];
   }
 
   .text-display {
-    @apply !text-inherit !text-base !tracking-wide !font-normal md:!text-lg;
+    @apply text-inherit text-base !tracking-normal font-normal md:text-lg text-foreground !font-[Inter];
   }
 
   .text-gradient {
