@@ -1,6 +1,5 @@
 import { forwardRef, useEffect, useRef, useState } from 'react';
 import { Button } from '@nextui-org/button';
-import { Grid, styled } from '@nextui-org/react';
 import { useMediaQuery } from '@react-hookz/web';
 import { Autoplay, Pagination, Thumbs, type Swiper } from 'swiper';
 import { Swiper as SwiperReact, SwiperSlide, useSwiper } from 'swiper/react';
@@ -14,34 +13,6 @@ import StopIcon from '~/assets/icons/StopIcon';
 
 import MediaItem from '../item';
 import BannerItemCompact from '../item/BannerItemCompact';
-
-const AutoplayProgressStyled = styled('div', {
-  position: 'absolute',
-  width: '48px',
-  height: '48px',
-  bottom: '150px',
-  right: '35px',
-  zIndex: '90',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  color: '$primary',
-  '@lgMin': { bottom: '270px' },
-  '& svg': {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    zIndex: 10,
-    width: '100%',
-    height: '100%',
-    strokeWidth: 2,
-    stroke: '$primary',
-    fill: 'none',
-    strokeDashoffset: 'calc(125.6 * (var(--progress)))',
-    strokeDasharray: '125.6',
-    transform: 'rotate(-90deg)',
-  },
-});
 
 const CustomNavigation = forwardRef<HTMLDivElement, { slot: 'container-end' }>(
   (props, forwardedRef) => {
@@ -108,13 +79,24 @@ const CustomNavigation = forwardRef<HTMLDivElement, { slot: 'container-end' }>(
           >
             <ChevronRightIcon fill="currentColor" />
           </Button>
-          <AutoplayProgressStyled className="autoplay-progress" ref={forwardedRef}>
-            {/* @ts-ignore */}
-            <svg viewBox="0 0 48 48" style={{ '--progress': 1 }}>
+          <div
+            className="absolute bottom-[150px] right-[35px] z-[90] flex h-12 w-12 items-center justify-center text-primary 2xl:bottom-[270px]"
+            ref={forwardedRef}
+          >
+            <svg
+              viewBox="0 0 48 48"
+              style={{
+                // @ts-ignore
+                '--progress': 1,
+                strokeDashoffset: 'calc(125.6 * (var(--progress)))',
+                strokeDasharray: '125.6',
+              }}
+              className="absolute left-0 top-0 z-10 h-full w-full rotate-90 fill-none stroke-primary stroke-2"
+            >
               <circle cx="24" cy="24" r="20" />
             </svg>
             <span />
-          </AutoplayProgressStyled>
+          </div>
         </div>
       </div>
     );
@@ -161,38 +143,6 @@ const CustomNavigationThumbs = ({ slot }: { slot: 'container-end' }) => {
   );
 };
 
-const SwiperSlideStyled = styled(SwiperSlide, {
-  overflow: 'hidden',
-  borderRadius: '$lg',
-  width: '240px',
-  height: 'auto',
-  margin: '8px 4px',
-  border: '4px solid transparent',
-  '&:hover': {
-    border: '4px solid var(--nextui-colors-primarySolidHover)',
-  },
-  '&.swiper-slide-thumb-active': {
-    border: '4px solid var(--nextui-colors-primary)',
-  },
-});
-
-const SwiperReactStyled = styled(SwiperReact, {
-  position: 'absolute',
-  bottom: '15px',
-  left: '0',
-  width: '100%',
-  minHeight: '150px',
-  display: 'none',
-  '@lg': {
-    display: 'block',
-  },
-  '& div': {
-    '&.swiper-wrapper': {
-      marginLeft: 7,
-    },
-  },
-});
-
 interface IMediaListBannerProps {
   genresMovie?: { [id: string]: string };
   genresTv?: { [id: string]: string };
@@ -222,18 +172,7 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
   }, [isPlayTrailer.value, isXl]);
 
   return (
-    <Grid.Container
-      gap={1}
-      justify="center"
-      alignItems="center"
-      css={{
-        margin: 0,
-        padding: 0,
-        width: '100%',
-        maxWidth: '1920px',
-        position: 'relative',
-      }}
-    >
+    <section className="relative m-0 box-border flex h-full w-full max-w-screen-4xl flex-wrap items-center justify-center p-0">
       {items && items?.length > 0 && (
         <>
           <SwiperReact
@@ -325,7 +264,7 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
             ))}
             <CustomNavigation slot="container-end" ref={autoplayProgressRef} />
           </SwiperReact>
-          <SwiperReactStyled
+          <SwiperReact
             grabCursor
             cssMode
             spaceBetween={15}
@@ -335,20 +274,20 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
             watchSlidesProgress
             modules={[Thumbs]}
             onSwiper={setThumbsSwiper}
+            className="absolute bottom-[150px] left-0 hidden min-h-[150px] w-full 2xl:block"
           >
             {items.map((item, index) => (
-              <SwiperSlideStyled
+              <SwiperSlide
                 key={`${item.id}-${index}-banner-thumb`}
-                {...(isPlayTrailer
-                  ? {
-                      css: {
-                        opacity: isPlayTrailer.value ? 0.2 : 1,
-                        '&:hover': { opacity: isPlayTrailer.value ? 0.7 : 1 },
-                        '&.swiper-slide-thumb-active': { opacity: isPlayTrailer.value ? 0.9 : 1 },
-                        transition: 'opacity 0.3s ease',
-                      },
-                    }
-                  : {})}
+                className={`mx-1 my-2 !h-[135px] !w-[240px] overflow-hidden rounded-xl border-4 duration-300 ease-out transition-opacity ${
+                  isPlayTrailer.value
+                    ? `opacity-20 hover:opacity-70 ${activeIndex === index ? 'opacity-90' : ''}`
+                    : 'opacity-100'
+                } ${
+                  activeIndex === index
+                    ? 'border-primary'
+                    : 'border-transparent hover:border-primary-600'
+                }`}
               >
                 <BannerItemCompact
                   ref={progressRef}
@@ -356,13 +295,13 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
                   title={item?.title || ''}
                   active={activeIndex === index}
                 />
-              </SwiperSlideStyled>
+              </SwiperSlide>
             ))}
             <CustomNavigationThumbs slot="container-end" />
-          </SwiperReactStyled>
+          </SwiperReact>
         </>
       )}
-    </Grid.Container>
+    </section>
   );
 };
 

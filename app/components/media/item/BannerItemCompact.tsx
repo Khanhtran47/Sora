@@ -98,7 +98,7 @@ const BannerItemCompact = forwardRef<HTMLDivElement, IBannerItemCompactProps>(
           </CardFooter>
         </Card>
         {active ? (
-          <div className="absolute bottom-0 z-20 h-[6px] w-full overflow-hidden">
+          <div className="absolute bottom-0 z-20 h-[10px] w-full overflow-hidden">
             <div
               ref={forwardedRef}
               className="float-left h-full animate-progressBarStripes rounded-r-[3px] bg-primary bg-[length:40px_40px]"
