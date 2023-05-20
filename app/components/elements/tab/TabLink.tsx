@@ -51,11 +51,11 @@ const TabLink = (props: ITabProps) => {
             <NavLink
               key={page.pageLink}
               to={`${linkTo}${page.pageLink}`}
-              className="relative z-10 flex h-12 shrink-0 items-center justify-center rounded-xl p-4 text-sm font-semibold text-foreground outline-none hover:text-primary-700 hover:opacity-80 focus:bg-neutral"
+              className="relative z-10 flex h-12 shrink-0 items-center justify-center rounded-xl p-4 outline-none hover:opacity-80"
             >
               {({ isActive }) => (
                 <>
-                  <h5>{t(page.pageName)}</h5>
+                  <h6 className="font-semibold">{t(page.pageName)}</h6>
                   {isActive ? (
                     <motion.div
                       ref={underlineRef}

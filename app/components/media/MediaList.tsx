@@ -1,21 +1,19 @@
-import { Suspense, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@nextui-org/button';
-import { Loading, Tooltip } from '@nextui-org/react';
+import { Spacer, Tooltip } from '@nextui-org/react';
 import { useMediaQuery } from '@react-hookz/web';
-import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { ClientOnly } from 'remix-utils';
 import { tv } from 'tailwind-variants';
 
 import type { IMedia } from '~/types/media';
 import type { ILanguage } from '~/services/tmdb/tmdb.types';
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '~/components/elements/Sheet';
+import Filter from '~/components/elements/shared/Filter';
 import ListViewChangeButton from '~/components/elements/shared/ListViewChangeButton';
 import ChevronLeftIcon from '~/assets/icons/ChevronLeftIcon';
 import ChevronRightIcon from '~/assets/icons/ChevronRightIcon';
 import FilterIcon from '~/assets/icons/FilterIcon';
 
-import { H2 } from '../elements/Text';
-import Filter from '../elements/filter/Filter';
 import { MediaListBanner, MediaListCard, MediaListGrid } from './list';
 
 interface IMediaListProps {
@@ -316,32 +314,41 @@ const MediaList = (props: IMediaListProps) => {
     >
       {listName || showFilterButton || showListTypeChangeButton ? (
         <div className="mt-5 flex w-full flex-row flex-wrap items-center justify-between gap-3">
-          {listName ? (
-            <H2
-              h2
-              css={{
-                '@xsMax': {
-                  fontSize: '1.75rem !important',
-                },
-              }}
-            >
-              {listName}
-            </H2>
-          ) : null}
+          {listName ? <h2>{listName}</h2> : null}
           {showFilterButton || showListTypeChangeButton ? (
             <div className="flex flex-row items-center justify-end gap-3">
               {showFilterButton ? (
-                <Tooltip content={t('show-hide-filter')}>
-                  <Button
-                    type="button"
-                    color="primary"
-                    variant={showFilter ? 'flat' : 'solid'}
-                    isIconOnly
-                    onPress={() => setShowFilter(!showFilter)}
+                <Sheet open={showFilter} onOpenChange={setShowFilter}>
+                  <Tooltip content={t('show-hide-filter')}>
+                    <SheetTrigger asChild>
+                      <Button
+                        type="button"
+                        color="primary"
+                        variant={showFilter ? 'flat' : 'solid'}
+                        isIconOnly
+                      >
+                        <FilterIcon />
+                      </Button>
+                    </SheetTrigger>
+                  </Tooltip>
+                  <SheetContent
+                    swipeDownToClose={isSm}
+                    side={isSm ? 'bottom' : 'right'}
+                    size={isSm ? 'xl' : 'sm'}
+                    open={showFilter}
+                    hideCloseButton
+                    onOpenChange={() => setShowFilter(!showFilter)}
+                    className="!px-0 md:!px-0"
                   >
-                    <FilterIcon />
-                  </Button>
-                </Tooltip>
+                    <SheetTitle className="px-0 md:px-6">Filters</SheetTitle>
+                    <Spacer y={0.5} />
+                    <Filter
+                      genres={itemsType === 'movie' ? genresMovie : genresTv}
+                      mediaType={itemsType as 'movie' | 'tv' | 'anime'}
+                      languages={languages}
+                    />
+                  </SheetContent>
+                </Sheet>
               ) : null}
               {showListTypeChangeButton ? <ListViewChangeButton /> : null}
             </div>
@@ -389,29 +396,6 @@ const MediaList = (props: IMediaListProps) => {
           ) : null}
         </div>
       ) : null}
-      <AnimatePresence>
-        {showFilter && itemsType ? (
-          <ClientOnly fallback={<Loading type="default" />}>
-            {() => (
-              <Suspense fallback={<Loading type="default" />}>
-                <motion.div
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.2 }}
-                  style={{ width: '100%' }}
-                >
-                  <Filter
-                    genres={itemsType === 'movie' ? genresMovie : genresTv}
-                    mediaType={itemsType as 'movie' | 'tv' | 'anime'}
-                    languages={languages}
-                  />
-                </motion.div>
-              </Suspense>
-            )}
-          </ClientOnly>
-        ) : null}
-      </AnimatePresence>
       {list}
     </div>
   );

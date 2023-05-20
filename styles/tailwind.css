@@ -41,7 +41,7 @@
   body,
   p,
   .p {
-    @apply text-base md:text-lg !tracking-normal text-foreground !font-[Inter];
+    @apply text-base !tracking-normal text-foreground !font-[Inter];
   }
 
   .text-display {

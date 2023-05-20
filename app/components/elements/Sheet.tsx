@@ -138,9 +138,8 @@ const SheetContent = React.forwardRef<
     },
     forwardedRef,
   ) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
-      if (info.offset.y > 100 && open && onOpenChange && swipeDownToClose) {
+    const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+      if (info.offset.y > 100 && open && onOpenChange && swipeDownToClose && side === 'bottom') {
         onOpenChange();
       }
     };
@@ -154,14 +153,15 @@ const SheetContent = React.forwardRef<
           asChild
         >
           <motion.div
-            drag={swipeDownToClose ? 'y' : false}
+            drag={swipeDownToClose && side === 'bottom' ? 'y' : false}
             dragDirectionLock
-            dragConstraints={{ top: 0, bottom: 0 }}
-            dragElastic={{ top: 0, bottom: 0.8 }}
+            dragConstraints={{ top: 0, bottom: 300 }}
+            dragElastic={{ top: 0, bottom: 0.5 }}
             dragMomentum={false}
             onDragEnd={handleDragEnd}
+            dragTransition={{ bounceStiffness: 1000, bounceDamping: 50 }}
           >
-            {swipeDownToClose ? (
+            {swipeDownToClose && side === 'bottom' ? (
               <div className="!m-[1rem_auto_0] h-1 w-[75px] rounded-md bg-neutral-foreground" />
             ) : null}
             {!hideCloseButton ? (
@@ -175,7 +175,7 @@ const SheetContent = React.forwardRef<
               dragConstraints={{ top: 0, bottom: 0 }}
               dragElastic={0}
               dragMomentum={false}
-              className={swipeDownToClose ? '!mt-2' : ''}
+              className={swipeDownToClose && side === 'bottom' ? '!mt-2' : ''}
             >
               {children}
             </motion.div>
@@ -189,16 +189,16 @@ const SheetContent = React.forwardRef<
 SheetContent.displayName = 'SheetContent';
 
 const SheetHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
-    className={cnBase('flex flex-col space-y-2 text-center sm:text-left', className)}
-    {...props}
-  />
+  <div className={cnBase('flex flex-col gap-y-2 text-center sm:text-left', className)} {...props} />
 );
 SheetHeader.displayName = 'SheetHeader';
 
 const SheetFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={cnBase('flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2', className)}
+    className={cnBase(
+      'flex flex-col-reverse gap-y-2 sm:flex-row sm:justify-end sm:gap-x-2',
+      className,
+    )}
     {...props}
   />
 );
@@ -210,7 +210,7 @@ const SheetTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    className={cnBase('text-lg font-semibold text-foreground', className)}
+    className={cnBase('font-semibold text-neutral-foreground', className)}
     {...props}
   />
 ));
