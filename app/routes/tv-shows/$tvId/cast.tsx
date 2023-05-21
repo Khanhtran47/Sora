@@ -71,9 +71,7 @@ const TvCastPage = () => {
   return (
     <div className="mt-3 flex w-full max-w-[1920px] flex-col gap-y-4 px-3 sm:px-3.5 xl:px-4 2xl:px-5">
       <div ref={ref} />
-      {currentData && currentData.length > 0 ? (
-        <MediaList items={currentData} itemsType="people" listType="grid" />
-      ) : null}
+      <MediaList items={currentData} itemsType="people" listType="grid" />
       {maxPage > 1 ? (
         <div className="flex flex-row justify-center">
           <Pagination

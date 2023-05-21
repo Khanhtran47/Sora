@@ -72,20 +72,18 @@ const MovieSimilarPage = () => {
 
   return (
     <div className="mt-3 flex w-full max-w-[1920px] flex-col gap-y-4 px-3 sm:px-3.5 xl:px-4 2xl:px-5">
-      {similar && similar.items && similar.items.length > 0 ? (
-        <MediaList
-          currentPage={similar.page}
-          genresMovie={rootData?.genresMovie}
-          genresTv={rootData?.genresTv}
-          items={similar.items}
-          itemsType="movie"
-          listName="Similar Movies"
-          listType="grid"
-          scrollToTopListAfterChangePage
-          showListTypeChangeButton
-          totalPages={similar.totalPages}
-        />
-      ) : null}
+      <MediaList
+        currentPage={similar?.page}
+        genresMovie={rootData?.genresMovie}
+        genresTv={rootData?.genresTv}
+        items={similar?.items}
+        itemsType="movie"
+        listName="Similar Movies"
+        listType="grid"
+        scrollToTopListAfterChangePage
+        showListTypeChangeButton
+        totalPages={similar?.totalPages}
+      />
     </div>
   );
 };

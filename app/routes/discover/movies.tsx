@@ -141,21 +141,19 @@ const DiscoverMovies = () => {
       dragDirectionLock={isMobile && isHydrated}
       draggable={isMobile && isHydrated}
     >
-      {movies && movies.items && movies.items.length > 0 && (
-        <MediaList
-          currentPage={movies.page}
-          genresMovie={rootData?.genresMovie}
-          genresTv={rootData?.genresTv}
-          items={movies.items}
-          itemsType="movie"
-          languages={rootData?.languages}
-          listName={t('discoverMovies')}
-          listType="grid"
-          showFilterButton
-          showListTypeChangeButton
-          totalPages={movies.totalPages}
-        />
-      )}
+      <MediaList
+        currentPage={movies.page}
+        genresMovie={rootData?.genresMovie}
+        genresTv={rootData?.genresTv}
+        items={movies.items}
+        itemsType="movie"
+        languages={rootData?.languages}
+        listName={t('discoverMovies')}
+        listType="grid"
+        showFilterButton
+        showListTypeChangeButton
+        totalPages={movies.totalPages}
+      />
     </motion.div>
   );
 };

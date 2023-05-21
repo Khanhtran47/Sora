@@ -190,25 +190,27 @@ const MediaListGrid = (props: IMediaListCardProps) => {
   const pagination =
     listType === 'grid' && listLoadingType.value === 'pagination' ? (
       itemsType === 'anime' || itemsType === 'episode' ? (
-        <div className="flex flex-row gap-x-3">
-          <Button
-            color="primary"
-            isIconOnly
-            onPress={() => handlePageChange({ direction: 'prev' })}
-            isDisabled={currentPage === 1}
-          >
-            <Arrow direction="left" />
-          </Button>
-          <Button
-            color="primary"
-            isIconOnly
-            onPress={() => handlePageChange({ direction: 'next' })}
-            isDisabled={!hasNextPage}
-          >
-            <Arrow direction="right" />
-          </Button>
+        <>
+          <div className="flex flex-row gap-x-3">
+            <Button
+              color="primary"
+              isIconOnly
+              onPress={() => handlePageChange({ direction: 'prev' })}
+              isDisabled={currentPage === 1}
+            >
+              <Arrow direction="left" />
+            </Button>
+            <Button
+              color="primary"
+              isIconOnly
+              onPress={() => handlePageChange({ direction: 'next' })}
+              isDisabled={!hasNextPage}
+            >
+              <Arrow direction="right" />
+            </Button>
+          </div>
           <Spacer y={0.25} />
-        </div>
+        </>
       ) : totalPages && totalPages > 1 ? (
         <>
           <Pagination
@@ -255,82 +257,85 @@ const MediaListGrid = (props: IMediaListCardProps) => {
     <>
       <div ref={topRef} />
       {pagination}
-      <div
-        className={mediaListGridStyles({
-          listViewType:
-            itemsType === 'episode' || itemsType === 'people' ? 'card' : listViewType.value,
-        })}
-      >
-        {listItems && listItems?.length > 0
-          ? listItems.map((item, index) => {
-              const href =
-                itemsType && itemsType === 'episode'
-                  ? `/anime/${item.id}/episode/${item.episodeNumber}/watch?provider=${provider}`
-                  : itemsType === 'anime'
-                  ? `/anime/${item.id}/`
-                  : itemsType === 'people'
-                  ? `/people/${item.id}/`
-                  : itemsType === 'movie'
-                  ? `/movies/${item.id}/`
-                  : itemsType === 'tv'
-                  ? `/tv-shows/${item.id}/`
-                  : itemsType === 'movie-tv' && item?.mediaType === 'movie'
-                  ? `/movies/${item.id}/`
-                  : itemsType === 'movie-tv' && item?.mediaType === 'tv'
-                  ? `/tv-shows/${item.id}/`
-                  : '/';
-
-              return (
-                <motion.div
-                  key={`${item.id}-${index}-card-grid`}
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={
-                    listLoadingType.value === 'infinite-scroll'
-                      ? { x: { type: 'spring', stiffness: 100 }, duration: 0.1 }
-                      : { duration: 0.05 * index }
-                  }
-                  className={
-                    listViewType.value === 'table' &&
-                    itemsType !== 'episode' &&
-                    itemsType !== 'people'
-                      ? 'w-full'
-                      : listViewType.value === 'detail' &&
-                        itemsType !== 'episode' &&
-                        itemsType !== 'people'
-                      ? 'w-full sm:w-fit'
-                      : ''
-                  }
-                >
-                  <MediaItem
-                    backdropPath={item?.backdropPath}
-                    character={item?.character}
-                    color={item?.color}
-                    episodeNumber={item?.episodeNumber}
-                    episodeTitle={item?.episodeTitle}
-                    genreIds={item?.genreIds}
-                    genresAnime={item?.genresAnime}
-                    genresMovie={genresMovie}
-                    genresTv={genresTv}
-                    id={item?.id}
-                    job={item?.job}
-                    key={item.id}
-                    knownFor={item?.knownFor}
-                    linkTo={href}
-                    mediaType={item?.mediaType}
-                    overview={item?.overview}
-                    posterPath={item?.posterPath}
-                    releaseDate={item?.releaseDate}
-                    title={item?.title}
-                    trailer={item?.trailer}
-                    type={itemsType === 'episode' ? itemsType : 'card'}
-                    voteAverage={item?.voteAverage}
-                  />
-                </motion.div>
-              );
-            })
-          : null}
-      </div>
+      {listItems && listItems?.length > 0 ? (
+        <div
+          className={mediaListGridStyles({
+            listViewType:
+              itemsType === 'episode' || itemsType === 'people' ? 'card' : listViewType.value,
+          })}
+        >
+          {listItems.map((item, index) => {
+            const href =
+              itemsType && itemsType === 'episode'
+                ? `/anime/${item.id}/episode/${item.episodeNumber}/watch?provider=${provider}`
+                : itemsType === 'anime'
+                ? `/anime/${item.id}/`
+                : itemsType === 'people'
+                ? `/people/${item.id}/`
+                : itemsType === 'movie'
+                ? `/movies/${item.id}/`
+                : itemsType === 'tv'
+                ? `/tv-shows/${item.id}/`
+                : itemsType === 'movie-tv' && item?.mediaType === 'movie'
+                ? `/movies/${item.id}/`
+                : itemsType === 'movie-tv' && item?.mediaType === 'tv'
+                ? `/tv-shows/${item.id}/`
+                : '/';
+            return (
+              <motion.div
+                key={`${item.id}-${index}-card-grid`}
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={
+                  listLoadingType.value === 'infinite-scroll'
+                    ? { x: { type: 'spring', stiffness: 100 }, duration: 0.1 }
+                    : { duration: 0.05 * index }
+                }
+                className={
+                  listViewType.value === 'table' &&
+                  itemsType !== 'episode' &&
+                  itemsType !== 'people'
+                    ? 'w-full'
+                    : listViewType.value === 'detail' &&
+                      itemsType !== 'episode' &&
+                      itemsType !== 'people'
+                    ? 'w-full sm:w-fit'
+                    : ''
+                }
+              >
+                <MediaItem
+                  backdropPath={item?.backdropPath}
+                  character={item?.character}
+                  color={item?.color}
+                  episodeNumber={item?.episodeNumber}
+                  episodeTitle={item?.episodeTitle}
+                  genreIds={item?.genreIds}
+                  genresAnime={item?.genresAnime}
+                  genresMovie={genresMovie}
+                  genresTv={genresTv}
+                  id={item?.id}
+                  job={item?.job}
+                  key={item.id}
+                  knownFor={item?.knownFor}
+                  linkTo={href}
+                  mediaType={item?.mediaType}
+                  overview={item?.overview}
+                  posterPath={item?.posterPath}
+                  releaseDate={item?.releaseDate}
+                  title={item?.title}
+                  trailer={item?.trailer}
+                  type={itemsType === 'episode' ? itemsType : 'card'}
+                  voteAverage={item?.voteAverage}
+                />
+              </motion.div>
+            );
+          })}
+        </div>
+      ) : (
+        <div className="flex w-full items-center justify-center">
+          <h4 className="opacity-70">No results</h4>
+        </div>
+      )}
       <Spacer y={1} />
       {!shouldFetch &&
       (hasNextPage || (currentPage && totalPages && currentPage < totalPages)) &&

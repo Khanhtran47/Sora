@@ -72,20 +72,18 @@ const MovieRecommendationsPage = () => {
 
   return (
     <div className="mt-3 flex w-full max-w-[1920px] flex-col gap-y-4 px-3 sm:px-3.5 xl:px-4 2xl:px-5">
-      {recommendations && recommendations.items && recommendations.items.length > 0 ? (
-        <MediaList
-          currentPage={recommendations.page}
-          genresMovie={rootData?.genresMovie}
-          genresTv={rootData?.genresTv}
-          itemsType="movie"
-          items={recommendations.items}
-          listName="Recommendations"
-          listType="grid"
-          scrollToTopListAfterChangePage
-          showListTypeChangeButton
-          totalPages={recommendations.totalPages}
-        />
-      ) : null}
+      <MediaList
+        currentPage={recommendations?.page}
+        genresMovie={rootData?.genresMovie}
+        genresTv={rootData?.genresTv}
+        itemsType="movie"
+        items={recommendations?.items}
+        listName="Recommendations"
+        listType="grid"
+        scrollToTopListAfterChangePage
+        showListTypeChangeButton
+        totalPages={recommendations?.totalPages}
+      />
     </div>
   );
 };

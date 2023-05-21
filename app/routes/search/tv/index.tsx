@@ -102,19 +102,17 @@ const SearchRoute = () => {
         textOnButton={t('search.action')}
         textPlaceHolder={t('search.placeHolder.tv')}
       />
-      {todayTrending && todayTrending.items && todayTrending?.items.length > 0 && (
-        <MediaList
-          currentPage={todayTrending?.page}
-          genresMovie={rootData?.genresMovie}
-          genresTv={rootData?.genresTv}
-          items={todayTrending && todayTrending.items}
-          itemsType="movie-tv"
-          listName={t('todayTrending')}
-          listType="grid"
-          showListTypeChangeButton
-          totalPages={todayTrending?.totalPages}
-        />
-      )}
+      <MediaList
+        currentPage={todayTrending?.page}
+        genresMovie={rootData?.genresMovie}
+        genresTv={rootData?.genresTv}
+        items={todayTrending?.items}
+        itemsType="movie-tv"
+        listName={t('todayTrending')}
+        listType="grid"
+        showListTypeChangeButton
+        totalPages={todayTrending?.totalPages}
+      />
     </motion.div>
   );
 };

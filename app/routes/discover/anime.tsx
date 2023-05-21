@@ -126,18 +126,16 @@ const DiscoverAnime = () => {
       dragDirectionLock={isMobile && isHydrated}
       draggable={isMobile && isHydrated}
     >
-      {items && items.results && items.results.length > 0 && (
-        <MediaList
-          currentPage={items?.currentPage || 1}
-          hasNextPage={items.hasNextPage || false}
-          items={items.results as IMedia[]}
-          itemsType="anime"
-          listName="Discover Anime"
-          listType="grid"
-          showFilterButton
-          showListTypeChangeButton
-        />
-      )}
+      <MediaList
+        currentPage={items?.currentPage || 1}
+        hasNextPage={items?.hasNextPage || false}
+        items={items?.results as IMedia[]}
+        itemsType="anime"
+        listName="Discover Anime"
+        listType="grid"
+        showFilterButton
+        showListTypeChangeButton
+      />
     </motion.div>
   );
 };

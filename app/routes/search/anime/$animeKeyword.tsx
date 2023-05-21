@@ -119,17 +119,15 @@ const SearchRoute = () => {
         textHelper={t('search.helper.anime')}
         textPlaceHolder={t('search.placeHolder.anime')}
       />
-      {searchResults && searchResults.results && searchResults.results.length > 0 && (
-        <MediaList
-          currentPage={searchResults.currentPage || 1}
-          hasNextPage={searchResults.hasNextPage || false}
-          items={searchResults.results as IMedia[]}
-          itemsType="anime"
-          listName={t('search.searchResults')}
-          listType="grid"
-          showListTypeChangeButton
-        />
-      )}
+      <MediaList
+        currentPage={searchResults?.currentPage || 1}
+        hasNextPage={searchResults?.hasNextPage || false}
+        items={searchResults?.results as IMedia[]}
+        itemsType="anime"
+        listName={t('search.searchResults')}
+        listType="grid"
+        showListTypeChangeButton
+      />
     </motion.div>
   );
 };

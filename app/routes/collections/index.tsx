@@ -61,14 +61,12 @@ const Collections = () => {
       className="flex w-full flex-col items-center justify-center px-3 sm:px-0"
     >
       <div ref={ref} />
-      {featuredList && featuredList.length > 0 && (
-        <MediaList
-          listType="grid"
-          listName="Featured Collections"
-          isCoverCard
-          coverItem={currentData}
-        />
-      )}
+      <MediaList
+        listType="grid"
+        listName="Featured Collections"
+        isCoverCard
+        coverItem={currentData}
+      />
       <Spacer y={1} />
       {maxPage > 1 && (
         <div className="flex flex-row justify-center">

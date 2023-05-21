@@ -104,19 +104,17 @@ const ListAiringTodayTvShows = () => {
       dragDirectionLock={isMobile && isHydrated}
       draggable={isMobile && isHydrated}
     >
-      {shows && shows.items && shows.items.length > 0 && (
-        <MediaList
-          currentPage={shows?.page}
-          genresMovie={rootData?.genresMovie}
-          genresTv={rootData?.genresTv}
-          items={shows.items}
-          itemsType="tv"
-          listName={t('airing-today-tv-shows')}
-          listType="grid"
-          showListTypeChangeButton
-          totalPages={shows?.totalPages}
-        />
-      )}
+      <MediaList
+        currentPage={shows?.page}
+        genresMovie={rootData?.genresMovie}
+        genresTv={rootData?.genresTv}
+        items={shows?.items}
+        itemsType="tv"
+        listName={t('airing-today-tv-shows')}
+        listType="grid"
+        showListTypeChangeButton
+        totalPages={shows?.totalPages}
+      />
     </motion.div>
   );
 };

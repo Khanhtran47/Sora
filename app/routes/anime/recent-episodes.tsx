@@ -98,17 +98,15 @@ const RecentEpisodes = () => {
       dragDirectionLock={isMobile && isHydrated}
       draggable={isMobile && isHydrated}
     >
-      {items && items.results && items.results.length > 0 && (
-        <MediaList
-          currentPage={items?.currentPage || 1}
-          hasNextPage={items.hasNextPage || false}
-          items={items.results as IMedia[]}
-          itemsType="episode"
-          listName="Recent Episodes"
-          listType="grid"
-          provider={provider}
-        />
-      )}
+      <MediaList
+        currentPage={items?.currentPage || 1}
+        hasNextPage={items?.hasNextPage || false}
+        items={items?.results as IMedia[]}
+        itemsType="episode"
+        listName="Recent Episodes"
+        listType="grid"
+        provider={provider}
+      />
     </motion.div>
   );
 };

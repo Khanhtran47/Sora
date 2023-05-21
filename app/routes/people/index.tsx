@@ -80,16 +80,14 @@ const ListPeoplePopular = () => {
       transition={{ duration: 0.3 }}
       className="flex w-full flex-col items-center justify-center px-3 sm:px-0"
     >
-      {people && people.items && people.items.length > 0 && (
-        <MediaList
-          currentPage={people.page}
-          items={people.items}
-          itemsType="people"
-          listName={t('popular-people')}
-          listType="grid"
-          totalPages={people.totalPages}
-        />
-      )}
+      <MediaList
+        currentPage={people?.page}
+        items={people?.items}
+        itemsType="people"
+        listName={t('popular-people')}
+        listType="grid"
+        totalPages={people?.totalPages}
+      />
     </motion.div>
   );
 };

@@ -96,17 +96,15 @@ const SearchRoute = () => {
         textHelper={t('search.helper.anime')}
         textPlaceHolder={t('search.placeHolder.anime')}
       />
-      {items && items.results && items.results.length > 0 && (
-        <MediaList
-          currentPage={items?.currentPage || 1}
-          hasNextPage={items.hasNextPage || false}
-          items={items.results as IMedia[]}
-          itemsType="anime"
-          listName="Trending Anime"
-          listType="grid"
-          showListTypeChangeButton
-        />
-      )}
+      <MediaList
+        currentPage={items?.currentPage || 1}
+        hasNextPage={items?.hasNextPage || false}
+        items={items?.results as IMedia[]}
+        itemsType="anime"
+        listName="Trending Anime"
+        listType="grid"
+        showListTypeChangeButton
+      />
     </motion.div>
   );
 };

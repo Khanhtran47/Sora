@@ -118,17 +118,15 @@ const CollectionDetail = () => {
       className="flex w-full flex-col items-center justify-center px-3 pb-16 sm:px-0"
     >
       <div ref={ref} />
-      {detail && detail.items && detail.items.length > 0 && (
-        <MediaList
-          listType="grid"
-          showListTypeChangeButton
-          items={currentData}
-          listName={detail?.name}
-          genresMovie={rootData?.genresMovie}
-          genresTv={rootData?.genresTv}
-          itemsType="movie-tv"
-        />
-      )}
+      <MediaList
+        listType="grid"
+        showListTypeChangeButton
+        items={currentData}
+        listName={detail?.name}
+        genresMovie={rootData?.genresMovie}
+        genresTv={rootData?.genresTv}
+        itemsType="movie-tv"
+      />
       <Spacer y={1} />
       {maxPage > 1 && (
         <div className="flex flex-row items-center">

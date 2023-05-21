@@ -122,16 +122,14 @@ const SearchRoute = () => {
         textOnButton={t('search.action')}
         textPlaceHolder={t('search.placeHolder.people')}
       />
-      {searchResults && searchResults.items && searchResults.items?.length > 0 && (
-        <MediaList
-          currentPage={searchResults.page}
-          items={searchResults.items}
-          itemsType="people"
-          listName={t('search.searchResults')}
-          listType="grid"
-          totalPages={searchResults.totalPages}
-        />
-      )}
+      <MediaList
+        currentPage={searchResults?.page}
+        items={searchResults?.items}
+        itemsType="people"
+        listName={t('search.searchResults')}
+        listType="grid"
+        totalPages={searchResults?.totalPages}
+      />
     </motion.div>
   );
 };

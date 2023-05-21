@@ -105,19 +105,17 @@ const ListTopRatedMovies = () => {
       dragDirectionLock={isMobile && isHydrated}
       draggable={isMobile && isHydrated}
     >
-      {movies && movies.items && movies.items.length > 0 && (
-        <MediaList
-          currentPage={movies.page}
-          genresMovie={rootData?.genresMovie}
-          genresTv={rootData?.genresTv}
-          items={movies.items}
-          itemsType="movie"
-          listName={t('top-rated-movies')}
-          listType="grid"
-          showListTypeChangeButton
-          totalPages={movies.totalPages}
-        />
-      )}
+      <MediaList
+        currentPage={movies?.page}
+        genresMovie={rootData?.genresMovie}
+        genresTv={rootData?.genresTv}
+        items={movies?.items}
+        itemsType="movie"
+        listName={t('top-rated-movies')}
+        listType="grid"
+        showListTypeChangeButton
+        totalPages={movies?.totalPages}
+      />
     </motion.div>
   );
 };

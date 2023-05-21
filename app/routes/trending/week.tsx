@@ -100,19 +100,17 @@ const TrendingWeek = () => {
       dragDirectionLock={isMobile && isHydrated}
       draggable={isMobile && isHydrated}
     >
-      {weekTrending && weekTrending.items && weekTrending.items.length > 0 && (
-        <MediaList
-          currentPage={weekTrending?.page}
-          genresMovie={rootData?.genresMovie}
-          genresTv={rootData?.genresTv}
-          items={weekTrending?.items}
-          itemsType="movie-tv"
-          listName={t('weekTrending')}
-          listType="grid"
-          showListTypeChangeButton
-          totalPages={weekTrending?.totalPages}
-        />
-      )}
+      <MediaList
+        currentPage={weekTrending?.page}
+        genresMovie={rootData?.genresMovie}
+        genresTv={rootData?.genresTv}
+        items={weekTrending?.items}
+        itemsType="movie-tv"
+        listName={t('weekTrending')}
+        listType="grid"
+        showListTypeChangeButton
+        totalPages={weekTrending?.totalPages}
+      />
     </motion.div>
   );
 };
