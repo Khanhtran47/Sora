@@ -2,7 +2,8 @@
 import { useMemo, useState } from 'react';
 import { Button, ButtonGroup } from '@nextui-org/button';
 import { Card, CardBody } from '@nextui-org/card';
-import { Avatar, Dropdown, Pagination, Row, Spacer } from '@nextui-org/react';
+import { Pagination } from '@nextui-org/pagination';
+import { Avatar, Dropdown, Row, Spacer } from '@nextui-org/react';
 import { useMediaQuery } from '@react-hookz/web';
 import { useNavigate } from '@remix-run/react';
 import { MimeType } from 'remix-image';
@@ -291,19 +292,19 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
           )}
         </div>
       )}
-      <Spacer y={1} />
-      {maxPage > 1 && (
+      <Spacer y={1.25} />
+      {maxPage > 1 ? (
         <div className="flex flex-row justify-center">
           <Pagination
+            showControls={!isSm}
             total={maxPage}
             initialPage={currentPage}
             // shadow
             onChange={(page) => gotoPage(page)}
-            css={{ marginTop: '2rem' }}
             {...(isSm && { size: 'xs' })}
           />
         </div>
-      )}
+      ) : null}
     </>
   );
 };

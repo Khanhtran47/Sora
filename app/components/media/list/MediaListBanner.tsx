@@ -274,7 +274,7 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
             watchSlidesProgress
             modules={[Thumbs]}
             onSwiper={setThumbsSwiper}
-            className="absolute bottom-[150px] left-0 !hidden min-h-[150px] w-full 2xl:!block"
+            className="!absolute bottom-[15px] left-0 !hidden min-h-[150px] w-full 2xl:!block"
           >
             {items.map((item, index) => (
               <SwiperSlide

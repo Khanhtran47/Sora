@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useEffect, useState } from 'react';
 import { Button } from '@nextui-org/button';
-import { Input, Loading, Pagination, useInput } from '@nextui-org/react';
+import { Pagination } from '@nextui-org/pagination';
+import { Input, Loading, useInput } from '@nextui-org/react';
 import { useMediaQuery } from '@react-hookz/web';
 import { useFetcher } from '@remix-run/react';
 import { toast } from 'sonner';
@@ -271,6 +272,7 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
         {totalPages > 1 ? (
           <div className="!mb-5 flex w-full flex-row items-center justify-center">
             <Pagination
+              showControls={!isSm}
               total={totalPages}
               initialPage={page}
               // shadow

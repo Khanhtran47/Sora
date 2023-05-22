@@ -14,16 +14,7 @@ const Rating = (props: IRatingProps) => {
   if (ratingType === 'movie' || ratingType === 'tv') {
     return (
       <div className={cnBase('flex flex-row items-center gap-x-2', className)}>
-        <h6
-          style={{
-            backgroundColor: '#3ec2c2',
-            borderRadius: '$xs',
-            padding: '0 0.25rem 0 0.25rem',
-            color: '#fff',
-          }}
-        >
-          TMDb
-        </h6>
+        <h6 className="rounded-xl bg-[#3ec2c2] px-1 text-white">TMDb</h6>
         <h6 style={color ? { color } : {}}>{rating}</h6>
       </div>
     );

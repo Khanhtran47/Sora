@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
 import { useRef } from 'react';
-import { Badge, Pagination, Spacer } from '@nextui-org/react';
+import { Pagination } from '@nextui-org/pagination';
+import { Badge, Spacer } from '@nextui-org/react';
 import { useMediaQuery } from '@react-hookz/web';
 import type { MetaFunction } from '@remix-run/node';
 import { NavLink, useLocation } from '@remix-run/react';
@@ -69,8 +70,9 @@ const Collections = () => {
       />
       <Spacer y={1} />
       {maxPage > 1 && (
-        <div className="flex flex-row justify-center">
+        <div className="mt-7 flex flex-row justify-center">
           <Pagination
+            showControls={!isSm}
             total={maxPage}
             initialPage={currentPage}
             // shadow
@@ -82,7 +84,6 @@ const Collections = () => {
                 inline: 'center',
               });
             }}
-            css={{ marginTop: '2rem' }}
             {...(isSm && { size: 'xs' })}
           />
         </div>

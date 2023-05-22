@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '@nextui-org/button';
-import { Pagination, Spacer } from '@nextui-org/react';
+import { Pagination } from '@nextui-org/pagination';
+import { Spacer } from '@nextui-org/react';
 import { useIntersectionObserver, useMediaQuery } from '@react-hookz/web';
 import { Link, useFetcher, useLocation, useSearchParams } from '@remix-run/react';
 import { motion } from 'framer-motion';
@@ -214,6 +215,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
       ) : totalPages && totalPages > 1 ? (
         <>
           <Pagination
+            showControls={!isSm}
             total={totalPages}
             initialPage={currentPage}
             // shadow

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Button } from '@nextui-org/button';
-import { Badge, Checkbox, Input, Pagination } from '@nextui-org/react';
+import { Pagination } from '@nextui-org/pagination';
+import { Badge, Checkbox, Input } from '@nextui-org/react';
 import { useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs } from '@remix-run/node';
 import { NavLink, useLoaderData, useLocation, useNavigate } from '@remix-run/react';
@@ -59,7 +60,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 const History = () => {
   const { histories, page, totalPage } = useLoaderData<typeof loader>();
-  const isXs = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
+  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -129,14 +130,14 @@ const History = () => {
         ))}
       </div>
       {totalPage > 1 ? (
-        <div className="flex justify-center">
+        <div className="mt-7 flex justify-center">
           <Pagination
+            showControls={!isSm}
             total={totalPage}
             initialPage={page}
             // shadow
             onChange={paginationChangeHandler}
-            css={{ marginTop: '30px' }}
-            {...(isXs && { size: 'xs' })}
+            {...(isSm && { size: 'xs' })}
           />
         </div>
       ) : null}

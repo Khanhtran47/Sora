@@ -1,5 +1,6 @@
 import { useRef } from 'react';
-import { Badge, Pagination } from '@nextui-org/react';
+import { Pagination } from '@nextui-org/pagination';
+import { Badge } from '@nextui-org/react';
 import { useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { NavLink, useLoaderData, type RouteMatch } from '@remix-run/react';
@@ -70,8 +71,9 @@ const MovieCastPage = () => {
       <div ref={ref} />
       <MediaList items={currentData} itemsType="people" listType="grid" />
       {maxPage > 1 ? (
-        <div className="flex flex-row justify-center">
+        <div className="mt-7 flex flex-row justify-center">
           <Pagination
+            showControls={!isSm}
             total={maxPage}
             initialPage={currentPage}
             // shadow
@@ -83,7 +85,6 @@ const MovieCastPage = () => {
                 inline: 'nearest',
               });
             }}
-            css={{ marginTop: '2rem' }}
             {...(isSm && { size: 'sm' })}
           />
         </div>

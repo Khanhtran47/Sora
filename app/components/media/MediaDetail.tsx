@@ -233,16 +233,7 @@ export const MediaDetail = (props: IMediaDetail) => {
                   />
                   {imdbRating ? (
                     <div className="ml-3 flex flex-row items-center gap-x-2">
-                      <h6
-                        style={{
-                          backgroundColor: '#ddb600',
-                          color: '#000',
-                          borderRadius: '0.25rem',
-                          padding: '0 0.25rem 0 0.25rem',
-                        }}
-                      >
-                        IMDb
-                      </h6>
+                      <h6 className="rounded-xl bg-[#ddb600] px-1 text-black">IMDb</h6>
                       <h6 style={colorPalette ? { color: colorPalette[600] } : {}}>
                         {imdbRating?.star}
                       </h6>
