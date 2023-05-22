@@ -24,9 +24,9 @@ import { LOKLOK_URL } from '~/services/loklok/utils.server';
 import getProviderList from '~/services/provider.server';
 import { authenticate, insertHistory } from '~/services/supabase';
 import { CACHE_CONTROL } from '~/utils/server/http';
+import CatchBoundaryView from '~/components/elements/shared/CatchBoundaryView';
+import ErrorBoundaryView from '~/components/elements/shared/ErrorBoundaryView';
 import WatchDetail from '~/components/elements/shared/WatchDetail';
-import CatchBoundaryView from '~/components/CatchBoundaryView';
-import ErrorBoundaryView from '~/components/ErrorBoundaryView';
 
 const checkHasNextEpisode = (
   provider: string,

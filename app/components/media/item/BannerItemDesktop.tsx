@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '@nextui-org/button';
 import { Card, CardBody, CardHeader } from '@nextui-org/card';
-import { Badge, Text } from '@nextui-org/react';
+import { Badge } from '@nextui-org/react';
 import { useIntersectionObserver, useMeasure, useMediaQuery } from '@react-hookz/web';
 import { useFetcher, useNavigate } from '@remix-run/react';
 import { AnimatePresence, motion, useMotionTemplate, useMotionValue } from 'framer-motion';
@@ -261,23 +261,14 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                 />
               </motion.div>
             ) : (
-              <Text
-                as={motion.h1}
-                weight="bold"
+              <motion.h1
                 className="!line-clamp-2"
-                css={{
-                  fontSize: '3.25rem !important',
-                  marginBottom: 0,
-                  fontWeight: 700,
-                  lineHeight: 'var(--nextui-lineHeights-base)',
-                }}
-                // @ts-ignore
                 animate={active ? 'inView' : 'outView'}
                 transition={{ duration: 0.5 }}
                 variants={variants}
               >
                 {titleItem}
-              </Text>
+              </motion.h1>
             )}
             <AnimatePresence>
               {!showTrailer ? (

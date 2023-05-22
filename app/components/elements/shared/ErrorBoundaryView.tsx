@@ -1,4 +1,4 @@
-import { Image, Text } from '@nextui-org/react';
+import { Image } from '@nextui-org/react';
 
 import errorGif from '~/assets/images/404.gif';
 
@@ -20,17 +20,11 @@ const ErrorBoundary = ({ error }: IErrorBoundary) => {
           marginTop: '20px',
         }}
       />
-      <Text h1 color="error" css={{ textAlign: 'center' }}>
-        Some thing went wrong
-      </Text>
-      <Text h4 color="error" css={{ textAlign: 'center' }}>
+      <h1 className="text-center text-danger">Some thing went wrong</h1>
+      <h4 className="text-center text-danger">
         {isProd ? 'We are already working on fixing-it' : error.message}
-      </Text>
-      {!isProd ? (
-        <Text as="p" size={14} css={{}}>
-          {error.stack}
-        </Text>
-      ) : null}
+      </h4>
+      {!isProd ? <p>{error.stack}</p> : null}
     </div>
   );
 };

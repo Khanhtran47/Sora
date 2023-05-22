@@ -27,11 +27,11 @@ import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { useCustomHeaderChangePosition } from '~/hooks/useHeader';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { tvSeasonDetailPages } from '~/constants/tabLinks';
-import { BackgroundContent, BackgroundTabLink } from '~/components/media/Media.styles';
 import Image from '~/components/elements/Image';
+import CatchBoundaryView from '~/components/elements/shared/CatchBoundaryView';
+import ErrorBoundaryView from '~/components/elements/shared/ErrorBoundaryView';
 import TabLink from '~/components/elements/tab/TabLink';
-import CatchBoundaryView from '~/components/CatchBoundaryView';
-import ErrorBoundaryView from '~/components/ErrorBoundaryView';
+import { backgroundStyles } from '~/components/styles/primitives';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 import BackgroundDefault from '~/assets/images/background-default.jpg';
 
@@ -250,7 +250,7 @@ const TvSeasonDetail = () => {
           ref={ref}
           className="rounded-b-0 absolute bottom-0 z-10 flex grow flex-col justify-center p-0"
         >
-          <BackgroundContent />
+          <div className={backgroundStyles({ content: true })} />
           <div className="grid w-full max-w-[1920px] grid-cols-[1fr_2fr] grid-rows-[1fr_auto_auto] items-stretch justify-center gap-x-4 gap-y-6 px-3 pb-8 pt-5 grid-areas-small sm:grid-rows-[auto_1fr_auto] sm:px-3.5 sm:grid-areas-wide xl:px-4 2xl:px-5">
             <div className="flex flex-col items-center justify-center grid-in-image" ref={imageRef}>
               {seasonDetail?.poster_path ? (
@@ -368,7 +368,7 @@ const TvSeasonDetail = () => {
           }}
           ref={tabLinkRef}
         >
-          <BackgroundTabLink css={{ backgroundColor, zIndex: 1 }} />
+          <div className={backgroundStyles({ tablink: true })} style={{ backgroundColor }} />
           <TabLink pages={tvSeasonDetailPages} linkTo={`/tv-shows/${tvId}/season/${seasonId}`} />
         </motion.div>
         <Outlet />

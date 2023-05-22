@@ -1,5 +1,3 @@
-import Svg from '~/components/styles/Svg.styles';
-
 const Good = () => (
   <path
     fill="rgb(93,193,47)"
@@ -73,51 +71,42 @@ const AnilistStat = ({
   switch (stat) {
     case 'average':
       return (
-        <Svg
-          className=""
+        <svg
+          className="inline"
           width={width || size}
           height={height || size}
           viewBox="0 0 512 512"
           xmlns="http://www.w3.org/2000/svg"
-          css={{
-            display: 'inline',
-          }}
           {...props}
         >
           <Average />
-        </Svg>
+        </svg>
       );
     case 'bad':
       return (
-        <Svg
-          className=""
+        <svg
+          className="inline"
           width={width || size}
           height={height || size}
           viewBox="0 0 512 512"
           xmlns="http://www.w3.org/2000/svg"
-          css={{
-            display: 'inline',
-          }}
           {...props}
         >
           <Bad />
-        </Svg>
+        </svg>
       );
     default:
       return (
-        <Svg
-          className=""
+        <svg
+          className="inline"
           width={width || size}
           height={height || size}
           viewBox="0 0 512 512"
           xmlns="http://www.w3.org/2000/svg"
-          css={{
-            display: 'inline',
-          }}
           {...props}
         >
           <Good />
-        </Svg>
+        </svg>
       );
   }
 };

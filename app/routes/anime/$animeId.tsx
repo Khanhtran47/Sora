@@ -22,12 +22,12 @@ import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { useCustomHeaderChangePosition } from '~/hooks/useHeader';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { animeDetailsPages } from '~/constants/tabLinks';
-import { BackgroundTabLink } from '~/components/media/Media.styles';
 import { AnimeDetail, MediaBackgroundImage } from '~/components/media/MediaDetail';
 import WatchTrailerModal from '~/components/elements/dialog/WatchTrailerModal';
+import CatchBoundaryView from '~/components/elements/shared/CatchBoundaryView';
+import ErrorBoundaryView from '~/components/elements/shared/ErrorBoundaryView';
 import TabLink from '~/components/elements/tab/TabLink';
-import CatchBoundaryView from '~/components/CatchBoundaryView';
-import ErrorBoundaryView from '~/components/ErrorBoundaryView';
+import { backgroundStyles } from '~/components/styles/primitives';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { animeId } = params;
@@ -218,7 +218,7 @@ const AnimeDetailPage = () => {
             }}
             ref={tabLinkRef}
           >
-            <BackgroundTabLink css={{ backgroundColor, zIndex: 1 }} />
+            <div className={backgroundStyles({ tablink: true })} style={{ backgroundColor }} />
             <TabLink pages={animeDetailsPages} linkTo={`/anime/${detail?.id}`} />
           </motion.div>
           <Outlet />

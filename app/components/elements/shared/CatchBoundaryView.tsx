@@ -1,4 +1,4 @@
-import { Image, Text } from '@nextui-org/react';
+import { Image } from '@nextui-org/react';
 import { type ThrownResponse } from '@remix-run/react';
 
 import pageNotFound from '~/assets/images/404.gif';
@@ -30,9 +30,9 @@ const CatchBoundaryView = ({ caught }: { caught: ThrownResponse<number, any> }) 
           marginTop: '20px',
         }}
       />
-      <Text h1 color="warning" css={{ textAlign: 'center', pt: '88px' }}>
+      <h1 className="mt-14 text-center text-warning">
         {caught.status} {caught.statusText} {message}
-      </Text>
+      </h1>
     </div>
   );
 };

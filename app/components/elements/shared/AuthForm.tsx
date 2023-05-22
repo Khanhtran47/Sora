@@ -114,9 +114,8 @@ const AuthForm = ({ type, error, code, errorCode }: IAuthForm) => {
                   {t('signUp')}
                 </Link>
                 <Checkbox>
-                  <h4 className="!m-0">{t('rememberMe')}</h4>
+                  <h6 className="!m-0">{t('rememberMe')}</h6>
                 </Checkbox>
-                {/* <H4 h4 size={14}>Forgot password?</H4> */}
               </>
             ) : (
               <Link to="/sign-in" className="font-semibold text-primary">

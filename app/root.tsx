@@ -11,7 +11,7 @@ import FontStyles700 from '@fontsource/inter/700.css';
 import FontStyles800 from '@fontsource/inter/800.css';
 import FontStyles900 from '@fontsource/inter/900.css';
 import { Button } from '@nextui-org/button';
-import { Badge, Image as NextImage, NextUIProvider, Text, useSSR } from '@nextui-org/react';
+import { Badge, Image as NextImage, NextUIProvider, useSSR } from '@nextui-org/react';
 import { NextUIProvider as NextUIv2Provider } from '@nextui-org/system';
 import { json, type LinksFunction, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import {
@@ -696,9 +696,9 @@ export const CatchBoundary = () => {
                 marginTop: '20px',
               }}
             />
-            <Text h1 color="warning" css={{ textAlign: 'center' }}>
+            <h1 className="text-center text-warning">
               {caught.status} {caught.statusText} {message}
-            </Text>
+            </h1>
             <div className="flex w-full flex-row items-center justify-center gap-x-4">
               <Button
                 size="md"
@@ -767,11 +767,11 @@ export const ErrorBoundary = ({ error }: { error: Error }) => {
                 marginTop: '20px',
               }}
             />
-            <Text h1 color="error" css={{ textAlign: 'center' }}>
+            <h1 className="text-center text-danger">
               {isProd
                 ? 'Some thing went wrong'
                 : `[ErrorBoundary]: There was an error: ${error.message}`}
-            </Text>
+            </h1>
             <div className="flex w-full flex-row items-center justify-center gap-x-4">
               <Button
                 size="md"

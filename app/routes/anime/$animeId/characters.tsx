@@ -1,4 +1,4 @@
-import { Row, Text } from '@nextui-org/react';
+import { Row } from '@nextui-org/react';
 
 const CharactersPage = () => (
   <Row
@@ -19,9 +19,7 @@ const CharactersPage = () => (
       },
     }}
   >
-    <Text b h4>
-      In development
-    </Text>
+    <h4>In development</h4>
   </Row>
 );
 

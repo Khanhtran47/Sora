@@ -203,11 +203,10 @@ const CardItemHover = (props: ICardItemHoverProps) => {
               ? genresAnime?.slice(0, 2).map((genre, index) => (
                   <h5
                     key={index}
+                    className="rounded-xl px-2"
                     style={{
                       color: saturatedColor,
                       backgroundColor: backgroundInvertColor,
-                      borderRadius: '$md',
-                      padding: '0 0.5rem 0 0.5rem',
                     }}
                   >
                     {genre}
@@ -218,11 +217,10 @@ const CardItemHover = (props: ICardItemHoverProps) => {
                     return (
                       <h5
                         key={index}
+                        className="rounded-xl px-2"
                         style={{
                           color: saturatedColor,
                           backgroundColor: backgroundInvertColor,
-                          borderRadius: '$md',
-                          padding: '0 0.5rem 0 0.5rem',
                         }}
                       >
                         {genresMovie?.[genreId]}
@@ -232,11 +230,10 @@ const CardItemHover = (props: ICardItemHoverProps) => {
                   return (
                     <h5
                       key={index}
+                      className="rounded-xl px-2"
                       style={{
                         color: saturatedColor,
                         backgroundColor: backgroundInvertColor,
-                        borderRadius: '$md',
-                        padding: '0 0.5rem 0 0.5rem',
                       }}
                     >
                       {genresTv?.[genreId]}

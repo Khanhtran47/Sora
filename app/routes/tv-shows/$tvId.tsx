@@ -25,12 +25,12 @@ import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { useCustomHeaderChangePosition } from '~/hooks/useHeader';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { movieTvDetailsPages } from '~/constants/tabLinks';
-import { BackgroundTabLink } from '~/components/media/Media.styles';
 import { MediaBackgroundImage, MediaDetail } from '~/components/media/MediaDetail';
 import WatchTrailerModal, { type Trailer } from '~/components/elements/dialog/WatchTrailerModal';
+import CatchBoundaryView from '~/components/elements/shared/CatchBoundaryView';
+import ErrorBoundaryView from '~/components/elements/shared/ErrorBoundaryView';
 import TabLink from '~/components/elements/tab/TabLink';
-import CatchBoundaryView from '~/components/CatchBoundaryView';
-import ErrorBoundaryView from '~/components/ErrorBoundaryView';
+import { backgroundStyles } from '~/components/styles/primitives';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const [, locale] = await Promise.all([
@@ -263,7 +263,7 @@ const TvShowDetail = () => {
             }}
             ref={tabLinkRef}
           >
-            <BackgroundTabLink css={{ backgroundColor, zIndex: 1 }} />
+            <div className={backgroundStyles({ tablink: true })} style={{ backgroundColor }} />
             <TabLink pages={movieTvDetailsPages} linkTo={`/tv-shows/${detail?.id}`} />
           </motion.div>
           <Outlet />

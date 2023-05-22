@@ -1,10 +1,3 @@
-import { Text } from '@nextui-org/react';
-
-const SearchIndexPage = () => (
-  <Text b h4>
-    {' '}
-    Choose a search.
-  </Text>
-);
+const SearchIndexPage = () => <h4> Choose a search.</h4>;
 
 export default SearchIndexPage;

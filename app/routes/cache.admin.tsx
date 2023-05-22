@@ -25,7 +25,7 @@ import { badRequest } from 'remix-utils';
 import { getAllCacheKeys, lruCache, searchCacheKeys } from '~/services/lru-cache';
 import { getUserFromCookie } from '~/services/supabase';
 import SearchForm from '~/components/elements/SearchForm';
-import ErrorBoundaryView from '~/components/ErrorBoundaryView';
+import ErrorBoundaryView from '~/components/elements/shared/ErrorBoundaryView';
 
 const loader = async ({ request }: LoaderArgs) => {
   const cookie = request.headers.get('Cookie');

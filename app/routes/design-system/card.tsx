@@ -149,7 +149,7 @@ const CardPage = () => {
         </CardFooter>
       </Card>
       <p className="text-base tracking-wide md:text-lg">Center Image</p>
-      <Card className="max-w-fit py-4 px-0">
+      <Card className="max-w-fit px-0 py-4">
         <CardHeader className="flex-col !items-start px-4 pb-0 pt-2">
           <p className="text-xs font-bold uppercase">Daily Mix</p>
           <small className="text-neutral-500">12 Tracks</small>

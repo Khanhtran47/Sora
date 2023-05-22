@@ -21,10 +21,9 @@ import { useSoraSettings } from '~/hooks/useLocalStorage';
 import Image from '~/components/elements/Image';
 import SelectProviderModal from '~/components/elements/dialog/SelectProviderModal';
 import Rating from '~/components/elements/shared/Rating';
+import { backgroundStyles } from '~/components/styles/primitives';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 import ShareIcon from '~/assets/icons/ShareIcon';
-
-import { BackgroundContent } from './Media.styles';
 
 interface IMediaDetail {
   type: 'movie' | 'tv';
@@ -144,7 +143,7 @@ export const MediaDetail = (props: IMediaDetail) => {
           ref={ref}
           className="z-1 absolute bottom-0 flex grow flex-col items-center justify-center p-0"
         >
-          <BackgroundContent />
+          <div className={backgroundStyles({ content: true })} />
           <div className="grid w-full max-w-[1920px] grid-cols-[1fr_2fr] grid-rows-[1fr_auto_auto] items-stretch justify-center gap-x-4 gap-y-6 px-3 pt-5 grid-areas-small sm:grid-rows-[auto_1fr_auto] sm:px-3.5 sm:grid-areas-wide xl:px-4 2xl:px-5">
             <div className="flex flex-col items-center justify-center grid-in-image" ref={imageRef}>
               {posterPath ? (
@@ -393,7 +392,7 @@ export const AnimeDetail = (props: IAnimeDetail) => {
         }}
       >
         <CardBody ref={ref} className="z-1 absolute bottom-0 flex grow flex-col justify-center p-0">
-          <BackgroundContent />
+          <div className={backgroundStyles({ content: true })} />
           <div className="grid w-full max-w-[1920px] grid-cols-[1fr_2fr] grid-rows-[1fr_auto_auto] items-stretch justify-center gap-x-4 gap-y-6 px-3 pt-5 grid-areas-small sm:grid-rows-[auto_1fr_auto] sm:px-3.5 sm:grid-areas-wide xl:px-4 2xl:px-5">
             <div className="flex flex-col items-center justify-center grid-in-image" ref={imageRef}>
               {image ? (

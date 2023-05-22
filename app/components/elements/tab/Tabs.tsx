@@ -68,7 +68,7 @@ const TabsContent = React.forwardRef<
   <TabsPrimitive.Content
     ref={ref}
     className={cnBase(
-      'min-h-[75vh] grow rounded-md outline-none sm:rounded-tr-md sm:rounded-bl-none sm:px-[10px] xl:px-5',
+      'min-h-[75vh] grow rounded-md outline-none sm:rounded-bl-none sm:rounded-tr-md sm:px-[10px] xl:px-5',
       className,
     )}
     {...props}
