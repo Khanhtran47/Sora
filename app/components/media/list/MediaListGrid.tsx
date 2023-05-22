@@ -22,12 +22,13 @@ interface IMediaListCardProps {
   genresTv?: { [id: string]: string };
   hasNextPage?: boolean;
   isCoverCard?: boolean;
+  isCreditsCard?: boolean;
   items?: IMedia[];
   itemsType?: 'movie' | 'tv' | 'anime' | 'people' | 'episode' | 'movie-tv';
   listType?: 'table' | 'slider-card' | 'slider-banner' | 'grid';
   provider?: string;
-  totalPages?: number;
   scrollToTopListAfterChangePage?: boolean;
+  totalPages?: number;
 }
 
 const MotionLink = motion(Link);
@@ -55,12 +56,13 @@ const MediaListGrid = (props: IMediaListCardProps) => {
     genresTv,
     hasNextPage,
     isCoverCard,
+    isCreditsCard,
     items,
     itemsType,
     listType,
     provider,
-    totalPages,
     scrollToTopListAfterChangePage = false,
+    totalPages,
   } = props;
   const fetcher = useFetcher();
   const location = useLocation();
@@ -263,7 +265,11 @@ const MediaListGrid = (props: IMediaListCardProps) => {
         <div
           className={mediaListGridStyles({
             listViewType:
-              itemsType === 'episode' || itemsType === 'people' ? 'card' : listViewType.value,
+              itemsType === 'episode' || itemsType === 'people'
+                ? 'card'
+                : isCreditsCard
+                ? 'table'
+                : listViewType.value,
           })}
         >
           {listItems.map((item, index) => {
@@ -294,9 +300,11 @@ const MediaListGrid = (props: IMediaListCardProps) => {
                     : { duration: 0.05 * index }
                 }
                 className={
-                  listViewType.value === 'table' &&
-                  itemsType !== 'episode' &&
-                  itemsType !== 'people'
+                  isCreditsCard
+                    ? 'w-full'
+                    : listViewType.value === 'table' &&
+                      itemsType !== 'episode' &&
+                      itemsType !== 'people'
                     ? 'w-full'
                     : listViewType.value === 'detail' &&
                       itemsType !== 'episode' &&
@@ -328,6 +336,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
                   trailer={item?.trailer}
                   type={itemsType === 'episode' ? itemsType : 'card'}
                   voteAverage={item?.voteAverage}
+                  isCreditsCard={isCreditsCard}
                 />
               </motion.div>
             );

@@ -1,14 +1,14 @@
-/* eslint-disable @typescript-eslint/no-throw-literal */
-
 import { Badge } from '@nextui-org/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { NavLink, useLoaderData, type RouteMatch } from '@remix-run/react';
+import { NavLink, useLoaderData, useLocation, type RouteMatch } from '@remix-run/react';
+import { motion } from 'framer-motion';
 import i18next from '~/i18n/i18next.server';
 
 import { getPeopleCredits } from '~/services/tmdb/tmdb.server';
 import TMDB from '~/utils/media';
 import { CACHE_CONTROL } from '~/utils/server/http';
-import { MediaListTable } from '~/components/media/list';
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
+import MediaList from '~/components/media/MediaList';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const locale = await i18next.getLocale(request);
@@ -58,8 +58,28 @@ export const handle = {
 
 const CreditsPage = () => {
   const { credits } = useLoaderData<typeof loader>();
+  const location = useLocation();
+  const rootData = useTypedRouteLoaderData('root');
+  // TODO: Add filter and sort data
 
-  return <MediaListTable items={credits?.cast || []} simplified sorted />;
+  return (
+    <motion.div
+      key={location.key}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <MediaList
+        genresMovie={rootData?.genresMovie}
+        genresTv={rootData?.genresTv}
+        isCreditsCard
+        items={credits?.cast}
+        itemsType="movie-tv"
+        listType="grid"
+      />
+    </motion.div>
+  );
 };
 
 export default CreditsPage;

@@ -17,10 +17,11 @@ interface IMediaItem {
   genresTv?: { [id: string]: string }; // value is all genres of tv-series, require when type is tv
   id?: number | string; // value is id of media
   isCoverCard?: boolean; // value is true if the cover card is active
+  isCreditsCard?: boolean; // value is true if the card is in people's credits
   isSliderCard?: boolean; // value is true if the card is in slider
   job?: string; // value is job of a person, can exist when media type is people
-  linkTo?: string; // value is link to media detail page
   knownFor?: IMedia[]; // value is known for of a person, can exist when media type is people
+  linkTo?: string; // value is link to media detail page
   mediaType?: 'movie' | 'tv' | 'anime' | 'people'; // value is type of media
   overview?: string; // value is overview of media
   posterPath?: string; // value is poster path of media
@@ -45,6 +46,7 @@ const MediaItem = (props: IMediaItem) => {
     genresTv,
     id,
     isCoverCard,
+    isCreditsCard,
     isSliderCard,
     job,
     knownFor,
@@ -103,6 +105,7 @@ const MediaItem = (props: IMediaItem) => {
       title={title || ''}
       trailer={trailer}
       voteAverage={voteAverage || 0}
+      isCreditsCard={isCreditsCard}
     />
   );
 };
@@ -110,4 +113,3 @@ const MediaItem = (props: IMediaItem) => {
 export default MediaItem;
 export { default as BannerItem } from './BannerItem';
 export { default as CartItem } from './CardItem';
-export { default as RowItem } from './RowItem';

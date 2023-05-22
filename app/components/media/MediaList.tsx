@@ -97,6 +97,15 @@ interface IMediaListProps {
    */
   isCoverCard?: boolean;
   /**
+   * Value is true if this is the list of people's credits
+   * @type {boolean}
+   * @memberof IMediaListProps
+   * @example
+   * true
+   * false
+   */
+  isCreditsCard?: boolean;
+  /**
    * Value is items to show
    * @type {Array<IMedia>}
    * @memberof IMediaListProps
@@ -222,6 +231,14 @@ interface IMediaListProps {
    * false
    */
   scrollToTopListAfterChangePage?: boolean;
+  /**
+   * Value is true if the sort by select is active
+   * @type {boolean}
+   * @memberof IMediaListProps
+   * @example
+   * true
+   * false
+   */
   showSortBySelect?: boolean;
 }
 
@@ -253,6 +270,7 @@ const MediaList = (props: IMediaListProps) => {
     genresTv,
     hasNextPage,
     isCoverCard,
+    isCreditsCard,
     items,
     itemsType,
     languages,
@@ -314,6 +332,7 @@ const MediaList = (props: IMediaListProps) => {
           currentPage={currentPage}
           listType={listType}
           scrollToTopListAfterChangePage={scrollToTopListAfterChangePage}
+          isCreditsCard={isCreditsCard}
         />
       );
       break;

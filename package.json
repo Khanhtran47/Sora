@@ -28,6 +28,7 @@
     "@lottiefiles/react-lottie-player": "^3.4.9",
     "@next-boost/hybrid-disk-cache": "^0.3.0",
     "@nextui-org/accordion": "dev-v2",
+    "@nextui-org/avatar": "dev-v2",
     "@nextui-org/badge": "dev-v2",
     "@nextui-org/button": "dev-v2",
     "@nextui-org/card": "dev-v2",

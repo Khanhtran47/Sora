@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { Avatar } from '@nextui-org/avatar';
 import { Button } from '@nextui-org/button';
 import { Card, CardBody, CardFooter } from '@nextui-org/card';
-import { Avatar, Tooltip } from '@nextui-org/react';
+import { Tooltip } from '@nextui-org/react';
 import { useIntersectionObserver, useMeasure } from '@react-hookz/web';
 import { Link, useFetcher, useNavigate } from '@remix-run/react';
 import { motion } from 'framer-motion';
@@ -39,6 +40,7 @@ interface ICardItemProps {
   genresTv?: { [id: string]: string };
   id: number;
   isCoverCard?: boolean;
+  isCreditsCard?: boolean;
   isEpisodeCard?: boolean;
   isSliderCard?: boolean;
   job: string;
@@ -85,7 +87,7 @@ const cardItemStyles = tv({
         base: '!w-full hover:shadow-[0_0_0_1px] hover:shadow-primary-200',
         body: 'flex !h-[174px] w-full !flex-row !overflow-hidden p-0',
         imageContainer: 'w-[116px]',
-        image: 'z-0 !h-[174px] !min-h-[auto]',
+        image: 'z-0 !h-[174px] !min-h-[auto] !min-w-[116px]',
         content: 'flex grow flex-col gap-y-4 p-3',
         footer: '',
       },
@@ -124,6 +126,7 @@ const CardItem = (props: ICardItemProps) => {
     genresTv,
     id,
     isCoverCard,
+    isCreditsCard,
     isEpisodeCard,
     isSliderCard,
     job,
@@ -175,6 +178,8 @@ const CardItem = (props: ICardItemProps) => {
       ? 'people'
       : isSliderCard || isEpisodeCard
       ? 'card'
+      : isCreditsCard
+      ? 'table'
       : listViewType?.value === 'card'
       ? 'card'
       : listViewType?.value === 'detail'
@@ -246,7 +251,9 @@ const CardItem = (props: ICardItemProps) => {
                 decoding={inView ? 'async' : 'auto'}
                 disableSkeleton={false}
                 isZoomed={
-                  (listViewType.value === 'card' || mediaType === 'people') && !isSliderCard
+                  (listViewType.value === 'card' || mediaType === 'people') &&
+                  !isSliderCard &&
+                  !isCreditsCard
                 }
                 loaderUrl="/api/image"
                 placeholder="empty"
@@ -262,20 +269,17 @@ const CardItem = (props: ICardItemProps) => {
               />
             ) : (
               <Avatar
+                radius="xl"
                 icon={<PhotoIcon width={48} height={48} />}
-                pointer
-                css={{
-                  size: '$20',
-                  borderRadius: '0 !important',
-                  width: '100%',
-                  height: 'auto',
-                  aspectRatio: '2 / 3',
+                classNames={{
+                  base: 'z-0 w-full h-full aspect-[2/3]',
                 }}
               />
             )
           ) : null}
         </Link>
         {listViewType.value === 'detail' &&
+        !isCreditsCard &&
         !isSliderCard &&
         !isEpisodeCard &&
         mediaType !== 'people' &&
@@ -352,7 +356,7 @@ const CardItem = (props: ICardItemProps) => {
                   })}
             </div>
           </div>
-        ) : listViewType.value === 'table' &&
+        ) : (listViewType.value === 'table' || isCreditsCard) &&
           !isSliderCard &&
           !isEpisodeCard &&
           mediaType !== 'people' &&
@@ -442,6 +446,7 @@ const CardItem = (props: ICardItemProps) => {
         ) : null}
       </CardBody>
       {(listViewType.value === 'card' || mediaType === 'people' || isSliderCard || isEpisodeCard) &&
+      !isCreditsCard &&
       inView ? (
         <Tooltip
           placement="top"
@@ -534,7 +539,11 @@ const CardItem = (props: ICardItemProps) => {
             ) : null}
           </CardFooter>
         </Tooltip>
-      ) : listViewType.value === 'detail' && !isSliderCard && !isEpisodeCard && inView ? (
+      ) : listViewType.value === 'detail' &&
+        !isSliderCard &&
+        !isEpisodeCard &&
+        !isCreditsCard &&
+        inView ? (
         <Link to={linkTo || '/'}>
           <CardFooter className={footer()}>
             <h5 className="line-clamp-2">{titleItem}</h5>
