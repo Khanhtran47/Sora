@@ -41,7 +41,7 @@ export const loader = async ({ request }: LoaderArgs) => {
       | 'MOVIE'
       | 'SPECIAL'
       | 'MUSIC') || undefined;
-  const sort = url.searchParams.get('sort')?.split(',') || undefined;
+  const sort = url.searchParams.get('sort') || undefined;
   const status =
     (url.searchParams.get('status') as
       | 'RELEASING'
@@ -61,7 +61,7 @@ export const loader = async ({ request }: LoaderArgs) => {
       20,
       season,
       format,
-      sort,
+      sort ? [sort.toUpperCase()] : undefined,
       genres,
       id,
       year,
@@ -135,6 +135,7 @@ const DiscoverAnime = () => {
         listType="grid"
         showFilterButton
         showListTypeChangeButton
+        showSortBySelect
       />
     </motion.div>
   );

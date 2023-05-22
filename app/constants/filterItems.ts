@@ -1,9 +1,15 @@
-export const sortMovieItems = ['popularity', 'release_date', 'original_title', 'vote_average'];
-
-export const sortTvItems = ['popularity', 'first_air_date', 'vote_average'];
+export const sortMovieTvItems = [
+  'popularity.desc',
+  'popularity.asc',
+  'primary_release_date.desc',
+  'primary_release_date.asc',
+  'title.asc',
+  'title.desc',
+  'vote_average.desc',
+  'vote_average.asc',
+];
 
 export const tvStatus: { [id: string]: string } = {
-  All: 'All',
   0: 'Returning Series',
   1: 'Planned',
   2: 'In Production',
@@ -46,14 +52,13 @@ export const animeGenres: string[] = [
 export const animeFormat: string[] = ['MOVIE', 'MUSIC', 'ONA', 'OVA', 'SPECIAL', 'TV_SHORT', 'TV'];
 
 export const animeSort: string[] = [
-  'popularity',
-  'title-english',
-  'score',
-  'trending',
-  'favourites',
-  'episodes',
-  'start-date',
-  'updated-at',
+  'title_english',
+  'title_romaji',
+  'popularity_desc',
+  'score_desc',
+  'trending_desc',
+  'favourites_desc',
+  'start_date_desc',
 ];
 
 export const animeSeason = ['FALL', 'SPRING', 'SUMMER', 'WINTER'];

@@ -55,6 +55,10 @@ const Filter: React.FC<IFilterProps> = (props: IFilterProps) => {
       }) || [];
     return [{ iso_639_1: 'All', english_name: t('all'), name: t('all') }, ...languagesSorted];
   }, [languages, t]);
+  const tvStatusItems: typeof tvStatus = {
+    All: t('all'),
+    ...tvStatus,
+  };
   const animeYearItems = [
     t('all'),
     ...Array.from(new Array(currentYear - 1938), (_, i) => (i + 1940).toString()).reverse(),
@@ -101,16 +105,16 @@ const Filter: React.FC<IFilterProps> = (props: IFilterProps) => {
     currentSearchParams?.genres?.split(',') || [],
   );
   const [animeYearSelected, setAnimeYearSelected] = useState<string>(
-    currentSearchParams?.year || 'All',
+    currentSearchParams?.year || t('all'),
   );
   const [animeSeasonSelected, setAnimeSeasonSelected] = useState<string>(
-    currentSearchParams?.season || 'All',
+    currentSearchParams?.season || t('all'),
   );
   const [animeFormatSelected, setAnimeFormatSelected] = useState<string>(
-    currentSearchParams?.format || 'All',
+    currentSearchParams?.format || t('all'),
   );
   const [animeAiringStatusSelected, setAnimeAiringStatusSelected] = useState<string>(
-    currentSearchParams?.status || 'All',
+    currentSearchParams?.status || t('all'),
   );
   const {
     value: animeQuery,
@@ -153,6 +157,7 @@ const Filter: React.FC<IFilterProps> = (props: IFilterProps) => {
     let params: { [key: string]: string } = {};
     if (mediaType === 'movie' || mediaType === 'tv') {
       params = {
+        ...(currentSearchParams?.sort_by ? { sort_by: currentSearchParams?.sort_by } : {}),
         ...(genresSelected && genresSelected.length > 0
           ? { with_genres: genresSelected?.join(',') }
           : {}),
@@ -179,17 +184,18 @@ const Filter: React.FC<IFilterProps> = (props: IFilterProps) => {
     }
     if (mediaType === 'anime') {
       params = {
+        ...(currentSearchParams?.sort ? { sort: currentSearchParams?.sort } : {}),
         ...(animeGenresSelected && animeGenresSelected.length > 0
           ? { genres: animeGenresSelected?.join(',') }
           : {}),
-        ...(animeYearSelected && animeYearSelected !== 'All' ? { year: animeYearSelected } : {}),
-        ...(animeSeasonSelected && animeSeasonSelected !== 'All'
+        ...(animeYearSelected && animeYearSelected !== t('all') ? { year: animeYearSelected } : {}),
+        ...(animeSeasonSelected && animeSeasonSelected !== t('all')
           ? { season: animeSeasonSelected }
           : {}),
-        ...(animeFormatSelected && animeFormatSelected !== 'All'
+        ...(animeFormatSelected && animeFormatSelected !== t('all')
           ? { format: animeFormatSelected }
           : {}),
-        ...(animeAiringStatusSelected && animeAiringStatusSelected !== 'All'
+        ...(animeAiringStatusSelected && animeAiringStatusSelected !== t('all')
           ? { status: animeAiringStatusSelected }
           : {}),
         ...(animeQuery && animeQuery !== '' ? { query: animeQuery } : {}),
@@ -241,15 +247,15 @@ const Filter: React.FC<IFilterProps> = (props: IFilterProps) => {
                 {mediaType === 'tv' ? (
                   <div className="flex w-full flex-col items-start justify-start gap-3">
                     <h6>{t('status')}</h6>
-                    {tvStatus ? (
+                    {tvStatusItems ? (
                       <Select value={tvStatusSelected} onValueChange={setTvStatusSelected}>
                         <SelectTrigger aria-label="status">
                           <SelectValue placeholder={t('status')} />
                         </SelectTrigger>
                         <SelectContent>
-                          {Object.keys(tvStatus).map((id) => (
+                          {Object.keys(tvStatusItems).map((id) => (
                             <SelectItem key={id} value={id}>
-                              {tvStatus[id]}
+                              {tvStatusItems[id]}
                             </SelectItem>
                           ))}
                         </SelectContent>

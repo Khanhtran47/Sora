@@ -154,6 +154,7 @@ const DiscoverTvShows = () => {
         listType="grid"
         showFilterButton
         showListTypeChangeButton
+        showSortBySelect
         totalPages={shows.totalPages}
       />
     </motion.div>

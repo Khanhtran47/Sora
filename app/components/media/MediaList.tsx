@@ -1,12 +1,21 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Button } from '@nextui-org/button';
 import { Spacer, Tooltip } from '@nextui-org/react';
 import { useMediaQuery } from '@react-hookz/web';
+import { useSearchParams } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 import { tv } from 'tailwind-variants';
 
 import type { IMedia } from '~/types/media';
 import type { ILanguage } from '~/services/tmdb/tmdb.types';
+import { animeSort, sortMovieTvItems } from '~/constants/filterItems';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '~/components/elements/Select';
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '~/components/elements/Sheet';
 import Filter from '~/components/elements/shared/Filter';
 import ListViewChangeButton from '~/components/elements/shared/ListViewChangeButton';
@@ -213,6 +222,7 @@ interface IMediaListProps {
    * false
    */
   scrollToTopListAfterChangePage?: boolean;
+  showSortBySelect?: boolean;
 }
 
 const mediaListStyles = tv({
@@ -247,6 +257,7 @@ const MediaList = (props: IMediaListProps) => {
     itemsType,
     languages,
     listName,
+    listType,
     navigationButtons,
     onClickViewMore,
     provider,
@@ -254,8 +265,8 @@ const MediaList = (props: IMediaListProps) => {
     showFilterButton,
     showListTypeChangeButton,
     showMoreList,
+    showSortBySelect,
     totalPages,
-    listType,
   } = props;
   let list;
   const { t } = useTranslation();
@@ -264,6 +275,28 @@ const MediaList = (props: IMediaListProps) => {
   const [slideProgress, setSlideProgress] = useState<number>(0);
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentSearchParams = useMemo<{ [key: string]: string }>(() => {
+    const params: { [key: string]: string } = {};
+    searchParams.forEach((value, key) => {
+      params[key] = value;
+    });
+    return params;
+  }, [searchParams]);
+  const [sortBySelected, setSortBySelected] = useState(() =>
+    itemsType === 'anime'
+      ? currentSearchParams?.sort
+      : itemsType === 'movie' || itemsType === 'tv'
+      ? currentSearchParams?.sort_by
+      : undefined,
+  );
+
+  const sortItems =
+    itemsType === 'movie' || itemsType === 'tv'
+      ? sortMovieTvItems
+      : itemsType === 'anime'
+      ? animeSort
+      : undefined;
 
   switch (listType) {
     case 'grid':
@@ -305,6 +338,16 @@ const MediaList = (props: IMediaListProps) => {
     default:
   }
 
+  const handleSelectChange = (value: string) => {
+    setSortBySelected(value);
+    if (itemsType === 'movie' || itemsType === 'tv') {
+      setSearchParams({ ...currentSearchParams, sort_by: value, page: '1' });
+    }
+    if (itemsType === 'anime') {
+      setSearchParams({ ...currentSearchParams, sort: value, page: '1' });
+    }
+  };
+
   return (
     <div
       className={mediaListStyles({
@@ -323,7 +366,7 @@ const MediaList = (props: IMediaListProps) => {
                     <SheetTrigger asChild>
                       <Button
                         type="button"
-                        color="primary"
+                        radius="xl"
                         variant={showFilter ? 'flat' : 'solid'}
                         isIconOnly
                       >
@@ -349,6 +392,23 @@ const MediaList = (props: IMediaListProps) => {
                     />
                   </SheetContent>
                 </Sheet>
+              ) : null}
+              {showSortBySelect && sortItems && sortItems?.length > 0 ? (
+                <Select
+                  value={sortBySelected}
+                  onValueChange={(value: string) => handleSelectChange(value)}
+                >
+                  <SelectTrigger aria-label="Select Sort">
+                    <SelectValue placeholder="Sort by" />
+                  </SelectTrigger>
+                  <SelectContent position="popper">
+                    {sortItems.map((sort) => (
+                      <SelectItem key={sort} value={sort}>
+                        {t(sort)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               ) : null}
               {showListTypeChangeButton ? <ListViewChangeButton /> : null}
             </div>

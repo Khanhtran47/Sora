@@ -152,6 +152,7 @@ const DiscoverMovies = () => {
         listType="grid"
         showFilterButton
         showListTypeChangeButton
+        showSortBySelect
         totalPages={movies.totalPages}
       />
     </motion.div>

@@ -101,6 +101,7 @@ export const getAnimeAdvancedSearch = async (
   year?: number,
   status?: 'RELEASING' | 'NOT_YET_RELEASED' | 'FINISHED' | 'CANCELLED' | 'HIATUS',
 ): Promise<IAnimeList | undefined> => {
+  console.log('🚀 ~ file: anilist.server.ts:104 ~ sort:', sort);
   const anilist = generateAnilistMeta();
   const results = await cachified({
     key: `anilist-advanced-search-${query}-${type}-${page}-${perPage}-${season}-${format}-${sort}-${genres}-${id}-${year}-${status}`,
