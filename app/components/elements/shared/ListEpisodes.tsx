@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 import { Button, ButtonGroup } from '@nextui-org/button';
 import { Card, CardBody } from '@nextui-org/card';
 import { Pagination } from '@nextui-org/pagination';
-import { Avatar, Dropdown, Row, Spacer } from '@nextui-org/react';
+import { Avatar, Dropdown, Spacer } from '@nextui-org/react';
 import { useMediaQuery } from '@react-hookz/web';
 import { useNavigate } from '@remix-run/react';
 import { MimeType } from 'remix-image';
@@ -103,7 +103,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
 
   return (
     <>
-      <div className="my-5 flex flex-row flex-wrap items-center justify-between gap-4">
+      <div className="my-5 flex w-full flex-row flex-wrap items-center justify-between gap-4">
         <h3>Episodes</h3>
         <div className="flex flex-row items-center justify-end gap-2">
           {providers ? (
@@ -146,7 +146,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
       </div>
       {currentData && currentData.length > 0 && (
         <div
-          className={`flex ${
+          className={`flex w-full ${
             activeType === 0 ? 'flex-row flex-wrap items-center justify-start' : 'flex-col'
           }`}
         >
@@ -266,13 +266,13 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                       {type === 'tv' && !isSm && (
                         <>
                           <Spacer y={0.25} />
-                          <Row align="center">
+                          <div className="flex items-center">
                             <Rating rating={episode?.vote_average.toFixed(1)} ratingType="tv" />
                             <Spacer x={0.5} />
                             <h5>
                               {episode.air_date} | {episode?.runtime} min
                             </h5>
-                          </Row>
+                          </div>
                           <Spacer y={0.25} />
                           <h6 className="!line-clamp-1">{episode.overview}</h6>
                         </>

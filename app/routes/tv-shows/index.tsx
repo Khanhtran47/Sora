@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/indent */
 import * as React from 'react';
-import { Container, Loading } from '@nextui-org/react';
+import { Loading } from '@nextui-org/react';
 import { useMeasure } from '@react-hookz/web';
 import { json, type LoaderArgs } from '@remix-run/node';
 import { useFetcher, useLoaderData, useLocation, useNavigate } from '@remix-run/react';
@@ -187,23 +186,7 @@ const TvIndexPage = () => {
         genresMovie={rootData?.genresMovie}
         genresTv={rootData?.genresTv}
       />
-      <Container
-        fluid
-        responsive={false}
-        display="flex"
-        justify="flex-start"
-        alignItems="center"
-        direction="column"
-        css={{
-          padding: 0,
-          marginTop: '48px',
-          minHeight: '564px',
-          '@xsMax': {
-            paddingLeft: 'var(--nextui-space-sm)',
-            paddingRight: 'var(--nextui-space-sm)',
-          },
-        }}
-      >
+      <div className="mt-9 flex w-full flex-col items-center justify-start px-3 sm:px-5">
         {airingToday?.items && airingToday.items.length > 0 && (
           <MediaList
             genresMovie={rootData?.genresMovie}
@@ -282,7 +265,7 @@ const TvIndexPage = () => {
             />
           ) : null}
         </AnimatePresence>
-      </Container>
+      </div>
     </motion.div>
   );
 };

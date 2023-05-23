@@ -160,41 +160,43 @@ const TvOverview = () => {
                     role="figure"
                   >
                     <CardBody className="flex flex-row flex-nowrap justify-start overflow-hidden p-0">
-                      {season.poster_path ? (
-                        <Image
-                          src={TMDB.posterUrl(season?.poster_path, 'w154')}
-                          width="130px"
-                          height="100%"
-                          className="m-0 min-h-[195px] min-w-[130px] overflow-hidden"
-                          alt={season.name}
-                          title={season.name}
-                          loaderUrl="/api/image"
-                          placeholder="empty"
-                          options={{
-                            contentType: MimeType.WEBP,
-                          }}
-                          responsive={[
-                            {
-                              size: {
-                                width: 130,
-                                height: 195,
+                      <div className="w-[130px]">
+                        {season.poster_path ? (
+                          <Image
+                            src={TMDB.posterUrl(season?.poster_path, 'w154')}
+                            width="130px"
+                            height="100%"
+                            className="m-0 aspect-[2/3] min-h-[195px] min-w-[130px] overflow-hidden"
+                            alt={season.name}
+                            title={season.name}
+                            loaderUrl="/api/image"
+                            placeholder="empty"
+                            options={{
+                              contentType: MimeType.WEBP,
+                            }}
+                            responsive={[
+                              {
+                                size: {
+                                  width: 130,
+                                  height: 195,
+                                },
                               },
-                            },
-                          ]}
-                        />
-                      ) : (
-                        <Avatar
-                          icon={<PhotoIcon width={48} height={48} />}
-                          pointer
-                          squared
-                          css={{
-                            minWidth: '130px !important',
-                            minHeight: '195px !important',
-                            size: '$20',
-                            borderRadius: '0 !important',
-                          }}
-                        />
-                      )}
+                            ]}
+                          />
+                        ) : (
+                          <Avatar
+                            icon={<PhotoIcon width={48} height={48} />}
+                            pointer
+                            squared
+                            css={{
+                              minWidth: '130px !important',
+                              minHeight: '195px !important',
+                              size: '$20',
+                              borderRadius: '0 !important',
+                            }}
+                          />
+                        )}
+                      </div>
                       <div className="flex flex-col justify-start p-5">
                         <h4>{season.name}</h4>
                         <h5>

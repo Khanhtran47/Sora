@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/indent */
 import { useEffect, useState } from 'react';
-import { Container, Loading } from '@nextui-org/react';
+import { Loading } from '@nextui-org/react';
 import { useMeasure } from '@react-hookz/web';
 import { json, type LoaderArgs } from '@remix-run/node';
 import { useFetcher, useLoaderData, useLocation, useNavigate } from '@remix-run/react';
@@ -143,23 +142,7 @@ const MoviesIndexPage = () => {
         genresMovie={rootData?.genresMovie}
         genresTv={rootData?.genresTv}
       />
-      <Container
-        fluid
-        responsive={false}
-        display="flex"
-        justify="flex-start"
-        direction="column"
-        alignItems="center"
-        css={{
-          padding: 0,
-          marginTop: '48px',
-          minHeight: '564px',
-          '@xsMax': {
-            paddingLeft: '$sm',
-            paddingRight: '$sm',
-          },
-        }}
-      >
+      <div className="mt-9 flex w-full flex-col items-center justify-start px-3 sm:px-5">
         {topRated?.items && topRated?.items?.length > 0 ? (
           <MediaList
             genresMovie={rootData?.genresMovie}
@@ -239,7 +222,7 @@ const MoviesIndexPage = () => {
             />
           ) : null}
         </AnimatePresence>
-      </Container>
+      </div>
     </motion.div>
   );
 };

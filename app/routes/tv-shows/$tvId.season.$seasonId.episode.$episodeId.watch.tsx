@@ -1,5 +1,5 @@
 import type { IMovieInfo, ISource } from '@consumet/extensions';
-import { Badge, Container, Spacer } from '@nextui-org/react';
+import { Badge, Spacer } from '@nextui-org/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { NavLink, useCatch, useLoaderData, type RouteMatch } from '@remix-run/react';
 import Vibrant from 'node-vibrant';
@@ -485,25 +485,7 @@ const EpisodeWatch = () => {
   const rootData = useTypedRouteLoaderData('root');
   const id = detail && detail.id;
   return (
-    <Container
-      fluid
-      responsive={false}
-      alignItems="stretch"
-      justify="center"
-      css={{
-        marginTop: '0.75rem',
-        padding: '0 0.75rem',
-        '@xs': {
-          padding: '0 3vw',
-        },
-        '@sm': {
-          padding: '0 6vw',
-        },
-        '@md': {
-          padding: '0 12vw',
-        },
-      }}
-    >
+    <div className="mt-3 flex w-full flex-col items-center justify-center px-3 sm:px-0">
       <WatchDetail
         id={Number(id)}
         type="tv"
@@ -522,7 +504,7 @@ const EpisodeWatch = () => {
         providers={providers}
         color={color}
       />
-    </Container>
+    </div>
   );
 };
 

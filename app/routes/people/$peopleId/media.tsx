@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/no-throw-literal */
 import * as React from 'react';
-import { Badge, Image as NextImage, Row, Spacer } from '@nextui-org/react';
+import { Badge, Image as NextImage, Spacer } from '@nextui-org/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { NavLink, useLoaderData, type RouteMatch } from '@remix-run/react';
 import { Gallery, Item, type GalleryProps } from 'react-photoswipe-gallery';
@@ -106,11 +104,9 @@ const MediaPage = () => {
   ];
   return (
     <>
-      <Row justify="flex-start" fluid>
-        <h5>
-          <strong>Profiles</strong>
-        </h5>
-      </Row>
+      <h5 className="w-full">
+        <strong>Profiles</strong>
+      </h5>
       <Spacer y={0.5} />
       <Gallery withCaption withDownloadButton uiElements={uiElements}>
         <div className="grid grid-cols-1 gap-3 xs:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 5xl:grid-cols-5">

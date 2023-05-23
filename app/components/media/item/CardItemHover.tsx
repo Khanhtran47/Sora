@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useCallback, useEffect, useState } from 'react';
 import { Button } from '@nextui-org/button';
-import { Container, Loading, Image as NextImage, Row, Spacer } from '@nextui-org/react';
+import { Loading, Image as NextImage, Spacer } from '@nextui-org/react';
 import { useColor } from 'color-thief-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import YouTube from 'react-youtube';
@@ -77,17 +77,7 @@ const CardItemHover = (props: ICardItemHoverProps) => {
   }, [isPlayTrailer.value]);
 
   return (
-    <Container
-      responsive={false}
-      justify="center"
-      alignItems="center"
-      css={{
-        padding: '0.75rem 0.75rem',
-        minWidth: '350px',
-        maxWidth: '400px',
-        width: 'inherit',
-      }}
-    >
+    <div className="flex w-[inherit] min-w-[350px] max-w-[400px] flex-col items-start justify-center p-3">
       <AnimatePresence>
         {backdropPath && !showTrailer && (
           <motion.div
@@ -192,9 +182,9 @@ const CardItemHover = (props: ICardItemHoverProps) => {
         }}
       </ClientOnly>
       <Spacer y={0.5} />
-      <Row justify="center" align="center">
-        <h4 style={{ color: saturatedColor }}>{title}</h4>
-      </Row>
+      <h4 className="w-full text-center" style={{ color: saturatedColor }}>
+        {title}
+      </h4>
       <Spacer y={0.5} />
       {genreIds || genresAnime ? (
         <>
@@ -250,7 +240,7 @@ const CardItemHover = (props: ICardItemHoverProps) => {
           <Spacer y={0.5} />
         </>
       ) : null}
-      <Row justify="space-between" align="center">
+      <div className="flex w-full items-center justify-between">
         {releaseDate ? (
           <h5>{`${mediaType.charAt(0).toUpperCase()}${mediaType.slice(1)} • ${releaseDate}`}</h5>
         ) : null}
@@ -262,7 +252,7 @@ const CardItemHover = (props: ICardItemHoverProps) => {
             />
           </div>
         ) : null}
-      </Row>
+      </div>
       {showTrailer ? (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
           <Button
@@ -283,7 +273,7 @@ const CardItemHover = (props: ICardItemHoverProps) => {
           </Button>
         </motion.div>
       ) : null}
-    </Container>
+    </div>
   );
 };
 

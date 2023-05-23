@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/no-throw-literal */
-
 import { env } from 'process';
-import { Badge, Container, Spacer } from '@nextui-org/react';
+import { Badge, Spacer } from '@nextui-org/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { NavLink, useCatch, useLoaderData, type RouteMatch } from '@remix-run/react';
 
@@ -800,25 +798,7 @@ export const handle = {
 const AnimeEpisodeWatch = () => {
   const { detail, episodes, providers } = useLoaderData<typeof loader>();
   return (
-    <Container
-      fluid
-      responsive={false}
-      alignItems="stretch"
-      justify="center"
-      css={{
-        marginTop: '0.75rem',
-        padding: '0 0.75rem',
-        '@xs': {
-          padding: '0 3vw',
-        },
-        '@sm': {
-          padding: '0 6vw',
-        },
-        '@md': {
-          padding: '0 12vw',
-        },
-      }}
-    >
+    <div className="mt-3 flex w-full flex-col items-center justify-center px-3 sm:px-0">
       <WatchDetail
         type="anime"
         id={detail?.id}
@@ -832,7 +812,7 @@ const AnimeEpisodeWatch = () => {
         color={detail?.color}
         providers={providers}
       />
-    </Container>
+    </div>
   );
 };
 

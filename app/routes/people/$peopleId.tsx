@@ -1,4 +1,4 @@
-import { Badge, Col, Container, Row, Spacer } from '@nextui-org/react';
+import { Badge, Spacer } from '@nextui-org/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { NavLink, Outlet, useCatch, useLoaderData, type RouteMatch } from '@remix-run/react';
 import i18next from '~/i18n/i18next.server';
@@ -120,53 +120,15 @@ export const handle = {
 const PeopleDetailPage = () => {
   const { detail, externalIds } = useLoaderData<typeof loader>();
   return (
-    <Container
-      as="div"
-      fluid
-      responsive={false}
-      css={{
-        margin: 0,
-        padding: 0,
-      }}
-    >
-      <Row
-        fluid
-        align="stretch"
-        justify="center"
-        wrap="wrap"
-        css={{
-          marginTop: '0.75rem',
-          padding: '0 0.75rem',
-          '@xs': {
-            padding: '0 3vw',
-          },
-          '@sm': {
-            padding: '0 6vw',
-          },
-          '@md': {
-            padding: '0 12vw',
-          },
-        }}
-      >
-        <Col
-          css={{
-            width: '100%',
-            '@xs': { width: '33.3333%' },
-          }}
-        >
-          <PeopleDetail detail={detail} externalIds={externalIds} />
-          <Spacer y={1} />
-        </Col>
-        <Col
-          css={{
-            width: '100%',
-            '@xs': { width: '66.6667%' },
-          }}
-        >
-          <Outlet />
-        </Col>
-      </Row>
-    </Container>
+    <div className="mt-9 flex w-full flex-row flex-wrap items-stretch justify-center px-3 sm:px-5">
+      <div className="w-full sm:w-1/3">
+        <PeopleDetail detail={detail} externalIds={externalIds} />
+        <Spacer y={1} />
+      </div>
+      <div className="w-full sm:w-2/3">
+        <Outlet />
+      </div>
+    </div>
   );
 };
 

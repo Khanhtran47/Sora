@@ -205,7 +205,7 @@ const CardItem = (props: ICardItemProps) => {
                 placeholder="empty"
                 loading="lazy"
                 disableSkeleton={false}
-                isZoomed
+                isZoomed={!isSliderCard}
                 decoding={inView ? 'async' : 'auto'}
                 options={{ contentType: MimeType.WEBP }}
                 responsive={[

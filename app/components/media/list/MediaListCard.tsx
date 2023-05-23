@@ -55,7 +55,16 @@ const MediaListCard = (props: IMediaListCardProps) => {
             className={swiperStyles()}
             modules={[Navigation, FreeMode]}
             grabCursor
-            freeMode
+            freeMode={{
+              enabled: isMobile,
+              sticky: true,
+              minimumVelocity: 0.1,
+              momentum: true,
+              momentumVelocityRatio: 1,
+              momentumRatio: 1,
+              momentumBounce: true,
+              momentumBounceRatio: 1,
+            }}
             spaceBetween={10}
             slidesPerView="auto"
             slidesPerGroup={1}
@@ -81,6 +90,7 @@ const MediaListCard = (props: IMediaListCardProps) => {
                       <MediaItem
                         backdropPath={item?.backdropPath}
                         isCoverCard={isCoverCard}
+                        isSliderCard
                         key={item.id}
                         linkTo={href}
                         title={item?.name}

@@ -57,7 +57,7 @@
   .custom-player-subtitle {
     .art-subtitle {
       p {
-        @apply bg-player-subtitle-background-color p-1 m-0 !text-player-subtitle-font-size;
+        @apply bg-player-subtitle-background-color p-1 m-0 !text-player-subtitle-font-size !leading-normal;
       }
     }
   }

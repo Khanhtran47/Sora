@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Badge, Image as NextImage, Row, Spacer } from '@nextui-org/react';
+import { Badge, Image as NextImage, Spacer } from '@nextui-org/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { NavLink, useLoaderData, type RouteMatch } from '@remix-run/react';
 import { Gallery, Item, type GalleryProps } from 'react-photoswipe-gallery';
@@ -109,27 +109,13 @@ const TvPhotosPage = () => {
   const tvData = useTypedRouteLoaderData('routes/tv-shows/$tvId');
 
   return (
-    <Row
-      fluid
-      justify="center"
-      align="center"
-      css={{
-        display: 'flex',
-        flexDirection: 'column',
-        '@xsMax': {
-          paddingLeft: '$sm',
-          paddingRight: '$sm',
-        },
-      }}
-    >
+    <div className="flex w-full flex-col items-center justify-center px-3 sm:px-0">
       <Spacer y={1} />
       {images?.backdrops && images.backdrops.length > 0 && (
         <>
-          <Row justify="center" fluid>
-            <h5>
-              <strong>Backdrops</strong>
-            </h5>
-          </Row>
+          <h5 className="flex w-full justify-center">
+            <strong>Backdrops</strong>
+          </h5>
           <Spacer y={0.5} />
           <Gallery withCaption withDownloadButton uiElements={uiElements}>
             <div className="grid grid-cols-1 justify-center gap-3 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
@@ -176,11 +162,9 @@ const TvPhotosPage = () => {
       )}
       {images?.logos && images.logos.length > 0 && (
         <>
-          <Row justify="center" fluid>
-            <h5>
-              <strong>Logos</strong>
-            </h5>
-          </Row>
+          <h5 className="flex w-full justify-center">
+            <strong>Logos</strong>
+          </h5>
           <Spacer y={0.5} />
           <Gallery withCaption withDownloadButton uiElements={uiElements}>
             <div className="grid grid-cols-1 justify-center gap-3 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
@@ -227,11 +211,9 @@ const TvPhotosPage = () => {
       )}
       {images?.posters && images.posters.length > 0 && (
         <>
-          <Row justify="center" fluid>
-            <h5>
-              <strong>Posters</strong>
-            </h5>
-          </Row>
+          <h5 className="flex w-full justify-center">
+            <strong>Posters</strong>
+          </h5>
           <Spacer y={0.5} />
           <Gallery withCaption withDownloadButton uiElements={uiElements}>
             <div className="grid grid-cols-1 justify-center gap-3 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
@@ -275,7 +257,7 @@ const TvPhotosPage = () => {
           </Gallery>
         </>
       )}
-    </Row>
+    </div>
   );
 };
 

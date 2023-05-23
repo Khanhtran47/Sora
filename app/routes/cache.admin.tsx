@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useMemo, useState } from 'react';
 import { Button } from '@nextui-org/button';
-import { Badge, Container, Modal, Spacer } from '@nextui-org/react';
+import { Badge, Modal, Spacer } from '@nextui-org/react';
 import { useWindowSize } from '@react-hookz/web';
 import {
   json,
@@ -161,18 +160,7 @@ const CacheAdminRoute = () => {
       exit={{ x: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <Container
-        fluid
-        responsive={false}
-        display="flex"
-        justify="flex-start"
-        direction="column"
-        css={{
-          maxWidth: '1920px',
-          padding: '0 $sm',
-          '@xs': { padding: 0 },
-        }}
-      >
+      <div className="flex w-full max-w-screen-4xl flex-col justify-start px-3 sm:px-0">
         <h2>Cache Admin</h2>
         <SearchForm
           onSubmit={onSubmit}
@@ -190,7 +178,7 @@ const CacheAdminRoute = () => {
             />
           ))}
         </div>
-      </Container>
+      </div>
       <Modal
         closeButton
         scroll

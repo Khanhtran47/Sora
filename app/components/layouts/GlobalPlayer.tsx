@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '@nextui-org/button';
-import { Container, Tooltip } from '@nextui-org/react';
+import { Tooltip } from '@nextui-org/react';
 import { useMeasure } from '@react-hookz/web';
 import {
   useFetcher,
@@ -530,11 +529,7 @@ const GlobalPlayer = () => {
   }, [playerData]);
 
   return (
-    <Container
-      fluid
-      responsive={false}
-      css={{ margin: 0, padding: 0, width: isMini ? '20rem' : '100%' }}
-    >
+    <div className="w-full" style={{ margin: 0, padding: 0, width: isMini ? '20rem' : '100%' }}>
       <div className="pointer-events-none fixed inset-0" ref={constraintsRef} />
       <AnimatePresence initial={false}>
         {shouldShowPlayer ? (
@@ -981,7 +976,7 @@ const GlobalPlayer = () => {
           </motion.div>
         ) : null}
       </AnimatePresence>
-      {/* Creating a portal for the player layers */}
+      {/* Creating portal for the player layers */}
       {isMini && artplayer
         ? createPortal(<div className="z-[1] h-full w-full" />, artplayer.layers.mask)
         : null}
@@ -1159,7 +1154,7 @@ const GlobalPlayer = () => {
           closeHandler={closeWatchTrailerModalHandler}
         />
       ) : null}
-    </Container>
+    </div>
   );
 };
 

@@ -1,7 +1,4 @@
-/* eslint-disable @typescript-eslint/indent */
-/* eslint-disable @typescript-eslint/no-throw-literal */
-
-import { Badge, Col, Row } from '@nextui-org/react';
+import { Badge } from '@nextui-org/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { NavLink, useLoaderData, type RouteMatch } from '@remix-run/react';
 
@@ -71,38 +68,14 @@ const EpisodesPage = () => {
   const detail = animeData && animeData.detail;
 
   return (
-    <Row
-      fluid
-      align="stretch"
-      justify="center"
-      css={{
-        marginTop: '0.75rem',
-        padding: '0 0.75rem',
-        '@xs': {
-          padding: '0 3vw',
-        },
-        '@sm': {
-          padding: '0 6vw',
-        },
-        '@md': {
-          padding: '0 12vw',
-        },
-      }}
-    >
-      <Col
-        css={{
-          width: '100%',
-          '@xs': { width: '66.6667%' },
-        }}
-      >
-        <ListEpisodes
-          type="anime"
-          id={detail?.id}
-          episodes={episodes}
-          providers={animeData?.providers || []}
-        />
-      </Col>
-    </Row>
+    <div className="flex w-full flex-col items-center justify-center px-3 sm:w-2/3 sm:px-5">
+      <ListEpisodes
+        type="anime"
+        id={detail?.id}
+        episodes={episodes}
+        providers={animeData?.providers || []}
+      />
+    </div>
   );
 };
 

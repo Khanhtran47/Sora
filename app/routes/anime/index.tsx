@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Container, Loading } from '@nextui-org/react';
+import { Loading } from '@nextui-org/react';
 import { useMeasure } from '@react-hookz/web';
 import { json, type LoaderArgs } from '@remix-run/node';
 import { useFetcher, useLoaderData, useLocation, useNavigate } from '@remix-run/react';
@@ -135,23 +135,7 @@ const AnimePage = () => {
       {trending && trending.results && trending.results.length > 0 && (
         <MediaList listType="slider-banner" items={trending?.results as IMedia[]} />
       )}
-      <Container
-        fluid
-        responsive={false}
-        display="flex"
-        justify="flex-start"
-        direction="column"
-        alignItems="center"
-        css={{
-          padding: 0,
-          marginTop: '48px',
-          minHeight: '564px',
-          '@xsMax': {
-            paddingLeft: '$sm',
-            paddingRight: '$sm',
-          },
-        }}
-      >
+      <div className="mt-9 flex w-full flex-col items-center justify-start px-3 sm:px-5">
         {popular && popular.results && popular.results.length > 0 && (
           <MediaList
             items={popular.results as IMedia[]}
@@ -209,7 +193,7 @@ const AnimePage = () => {
             />
           ) : null}
         </AnimatePresence>
-      </Container>
+      </div>
     </motion.div>
   );
 };
