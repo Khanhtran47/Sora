@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Button } from '@nextui-org/button';
-import { Spacer, Tooltip } from '@nextui-org/react';
+import { Tooltip } from '@nextui-org/react';
+import { Spacer } from '@nextui-org/spacer';
 import { useMediaQuery } from '@react-hookz/web';
 import { useSearchParams } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
@@ -403,7 +404,7 @@ const MediaList = (props: IMediaListProps) => {
                     className="!px-0 md:!px-0"
                   >
                     <SheetTitle className="px-0 md:px-6">Filters</SheetTitle>
-                    <Spacer y={0.5} />
+                    <Spacer y={2.5} />
                     <Filter
                       genres={itemsType === 'movie' ? genresMovie : genresTv}
                       mediaType={itemsType as 'movie' | 'tv' | 'anime'}

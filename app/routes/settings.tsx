@@ -8,13 +8,12 @@ import {
   Collapse,
   Dropdown,
   Loading,
-  Image as NextImage,
   Radio,
-  Spacer,
   Switch,
   Tooltip,
   type SwitchEvent,
 } from '@nextui-org/react';
+import { Spacer } from '@nextui-org/spacer';
 import { useLocalStorageValue, useMediaQuery } from '@react-hookz/web';
 import type { MetaFunction } from '@remix-run/node';
 import { NavLink, Link as RemixLink, useLocation, useNavigate } from '@remix-run/react';
@@ -22,7 +21,7 @@ import { AnimatePresence, motion, type PanInfo } from 'framer-motion';
 import { useTheme } from 'next-themes';
 import { isMobile } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
-import Image, { MimeType } from 'remix-image';
+import { MimeType } from 'remix-image';
 import { ClientOnly } from 'remix-utils';
 
 import { useSoraSettings } from '~/hooks/useLocalStorage';
@@ -42,6 +41,7 @@ import {
   listThemes,
   settingsTab,
 } from '~/constants/settings';
+import Image from '~/components/elements/Image';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/elements/tab/Tabs';
 import Brush from '~/assets/icons/BrushIcon';
 import Info from '~/assets/icons/InfoIcon';
@@ -397,7 +397,7 @@ const Settings = () => {
       className="flex w-full max-w-screen-4xl flex-col justify-start py-3 sm:py-0"
     >
       <h2>{t('settings')}</h2>
-      <Spacer y={0.5} />
+      <Spacer y={2.5} />
       <ClientOnly fallback={<Loading type="default" />}>
         {() => (
           <Tabs
@@ -588,7 +588,7 @@ const Settings = () => {
                         }}
                         selectItems={listListViewType}
                       />
-                      <Spacer y={0.25} />
+                      <Spacer y={2.5} />
                       <SettingBlock
                         type="select"
                         title={t('list-loading-type')}
@@ -616,7 +616,7 @@ const Settings = () => {
                         checked={isPlayTrailer.value}
                         onChange={(e) => isPlayTrailer.set(e.target.checked)}
                       />
-                      <Spacer y={0.25} />
+                      <Spacer y={2.5} />
                       <SettingBlock
                         type="switch"
                         title={t('mute-trailer')}
@@ -668,7 +668,7 @@ const Settings = () => {
                         checked={isPicInPic.value}
                         onChange={(e) => isPicInPic.set(e.target.checked)}
                       />
-                      <Spacer y={0.25} />
+                      <Spacer y={2.5} />
                       <SettingBlock
                         type="switch"
                         title={t('muted')}
@@ -676,7 +676,7 @@ const Settings = () => {
                         checked={isMuted.value}
                         onChange={(e) => isMuted.set(e.target.checked)}
                       />
-                      <Spacer y={0.25} />
+                      <Spacer y={2.5} />
                       <SettingBlock
                         type="switch"
                         title={t('autoplay')}
@@ -684,7 +684,7 @@ const Settings = () => {
                         checked={isAutoPlay.value}
                         onChange={(e) => isAutoPlay.set(e.target.checked)}
                       />
-                      <Spacer y={0.25} />
+                      <Spacer y={2.5} />
                       <SettingBlock
                         type="switch"
                         title={t('loop')}
@@ -708,7 +708,7 @@ const Settings = () => {
                         checked={autoShowSubtitle.value}
                         onChange={(e) => autoShowSubtitle.set(e.target.checked)}
                       />
-                      <Spacer y={0.25} />
+                      <Spacer y={2.5} />
                       <SettingBlock
                         type="switch"
                         title={t('auto-switch-subtitle')}
@@ -716,7 +716,7 @@ const Settings = () => {
                         checked={autoSwitchSubtitle.value}
                         onChange={(e) => autoSwitchSubtitle.set(e.target.checked)}
                       />
-                      <Spacer y={0.25} />
+                      <Spacer y={2.5} />
                       <SettingBlock
                         type="select"
                         title={t('subtitle-font-color')}
@@ -729,7 +729,7 @@ const Settings = () => {
                         }}
                         selectItems={listSubtitleFontColor}
                       />
-                      <Spacer y={0.25} />
+                      <Spacer y={2.5} />
                       <SettingBlock
                         type="select"
                         title={t('subtitle-font-size')}
@@ -742,7 +742,7 @@ const Settings = () => {
                         }}
                         selectItems={listSubtitleFontSize}
                       />
-                      <Spacer y={0.25} />
+                      <Spacer y={2.5} />
                       <SettingBlock
                         type="select"
                         title={t('subtitle-background-color')}
@@ -755,7 +755,7 @@ const Settings = () => {
                         }}
                         selectItems={listSubtitleBackgroundColor}
                       />
-                      <Spacer y={0.25} />
+                      <Spacer y={2.5} />
                       <SettingBlock
                         type="select"
                         title={t('subtitle-background-opacity')}
@@ -768,7 +768,7 @@ const Settings = () => {
                         }}
                         selectItems={listSubtitleBackgroundOpacity}
                       />
-                      <Spacer y={0.25} />
+                      <Spacer y={2.5} />
                       <SettingBlock
                         type="select"
                         title={t('subtitle-window-color')}
@@ -781,7 +781,7 @@ const Settings = () => {
                         }}
                         selectItems={listSubtitleWindowColor}
                       />
-                      <Spacer y={0.25} />
+                      <Spacer y={2.5} />
                       <SettingBlock
                         type="select"
                         title={t('subtitle-window-opacity')}
@@ -794,7 +794,7 @@ const Settings = () => {
                         }}
                         selectItems={listSubtitleWindowOpacity}
                       />
-                      <Spacer y={0.25} />
+                      <Spacer y={2.5} />
                       <SettingBlock
                         type="select"
                         title={t('subtitle-text-effects')}
@@ -823,7 +823,7 @@ const Settings = () => {
                         checked={isAutoSize.value}
                         onChange={(e) => isAutoSize.set(e.target.checked)}
                       />
-                      <Spacer y={0.25} />
+                      <Spacer y={2.5} />
                       <SettingBlock
                         type="switch"
                         title={t('auto-mini')}
@@ -831,7 +831,7 @@ const Settings = () => {
                         checked={isAutoMini.value}
                         onChange={(e) => isAutoMini.set(e.target.checked)}
                       />
-                      <Spacer y={0.25} />
+                      <Spacer y={2.5} />
                       <SettingBlock
                         type="switch"
                         title={t('screenshot')}
@@ -839,7 +839,7 @@ const Settings = () => {
                         checked={isScreenshot.value}
                         onChange={(e) => isScreenshot.set(e.target.checked)}
                       />
-                      <Spacer y={0.25} />
+                      <Spacer y={2.5} />
                       <SettingBlock
                         type="switch"
                         title={t('mini-progressbar')}
@@ -847,7 +847,7 @@ const Settings = () => {
                         checked={isMiniProgressbar.value}
                         onChange={(e) => isMiniProgressbar.set(e.target.checked)}
                       />
-                      <Spacer y={0.25} />
+                      <Spacer y={2.5} />
                       <SettingBlock
                         type="switch"
                         title={t('auto-playback')}
@@ -855,7 +855,7 @@ const Settings = () => {
                         checked={isAutoPlayback.value}
                         onChange={(e) => isAutoPlayback.set(e.target.checked)}
                       />
-                      <Spacer y={0.25} />
+                      <Spacer y={2.5} />
                       <SettingBlock
                         type="switch"
                         title={t('fast-forward')}
@@ -863,7 +863,7 @@ const Settings = () => {
                         checked={isFastForward.value}
                         onChange={(e) => isFastForward.set(e.target.checked)}
                       />
-                      <Spacer y={0.25} />
+                      <Spacer y={2.5} />
                       <SettingBlock
                         type="switch"
                         title={t('auto-play-next-episode')}
@@ -871,7 +871,7 @@ const Settings = () => {
                         checked={isAutoPlayNextEpisode.value}
                         onChange={(e) => isAutoPlayNextEpisode.set(e.target.checked)}
                       />
-                      <Spacer y={0.25} />
+                      <Spacer y={2.5} />
                       <SettingBlock
                         type="switch"
                         title={t('show-skip-op-ed-button')}
@@ -892,7 +892,7 @@ const Settings = () => {
                             exit={{ y: -20, opacity: 0 }}
                             transition={{ duration: 0.3 }}
                           >
-                            <Spacer y={0.25} />
+                            <Spacer y={2.5} />
                             <SettingBlock
                               type="switch"
                               title={t('auto-skip-op-ed')}
@@ -913,13 +913,13 @@ const Settings = () => {
                       }}
                     >
                       <SettingBlock type="kbd" title={t('volume-up')} keys="up" />
-                      <Spacer y={0.25} />
+                      <Spacer y={2.5} />
                       <SettingBlock type="kbd" title={t('volume-down')} keys="down" />
-                      <Spacer y={0.25} />
+                      <Spacer y={2.5} />
                       <SettingBlock type="kbd" title={t('fast-rewind-5s')} keys="left" />
-                      <Spacer y={0.25} />
+                      <Spacer y={2.5} />
                       <SettingBlock type="kbd" title={t('fast-forward-5s')} keys="right" />
-                      <Spacer y={0.25} />
+                      <Spacer y={2.5} />
                       <SettingBlock
                         type="kbd"
                         title={t('toggle-play-pause')}
@@ -929,7 +929,7 @@ const Settings = () => {
                         ]}
                         betweenKeys={t('or')}
                       />
-                      <Spacer y={0.25} />
+                      <Spacer y={2.5} />
                       <SettingBlock
                         type="kbd"
                         title={t('seek-to-start')}
@@ -939,9 +939,9 @@ const Settings = () => {
                         ]}
                         betweenKeys={t('or')}
                       />
-                      <Spacer y={0.25} />
+                      <Spacer y={2.5} />
                       <SettingBlock type="kbd" title={t('seek-to-end')} keys="end" />
-                      <Spacer y={0.25} />
+                      <Spacer y={2.5} />
                       <SettingBlock
                         type="kbd"
                         title={t('seek-to-percent')}
@@ -951,15 +951,15 @@ const Settings = () => {
                         ]}
                         betweenKeys="..."
                       />
-                      <Spacer y={0.25} />
+                      <Spacer y={2.5} />
                       <SettingBlock type="kbd" title={t('toggle-subtitle')} kbd="C" />
-                      <Spacer y={0.25} />
+                      <Spacer y={2.5} />
                       <SettingBlock type="kbd" title={t('toggle-fullscreen')} kbd="F" />
-                      <Spacer y={0.25} />
+                      <Spacer y={2.5} />
                       <SettingBlock type="kbd" title={t('fast-rewind-10s')} kbd="J" />
-                      <Spacer y={0.25} />
+                      <Spacer y={2.5} />
                       <SettingBlock type="kbd" title={t('fast-forward-10s')} kbd="L" />
-                      <Spacer y={0.25} />
+                      <Spacer y={2.5} />
                       <SettingBlock type="kbd" title={t('mute-unmute')} kbd="M" />
                     </Collapse>
                   </Collapse.Group>
@@ -979,18 +979,13 @@ const Settings = () => {
                 >
                   <div className="w-full rounded-xl bg-content1 p-5 shadow-lg shadow-neutral/10">
                     <div className="flex flex-col items-center justify-center">
-                      <NextImage
-                        // @ts-ignore
-                        as={Image}
+                      <Image
                         alt="About Logo"
                         title="About Logo"
                         src={LogoFooter}
                         width="76px"
                         height="76px"
-                        containerCss={{ margin: 0 }}
-                        css={{
-                          borderRadius: '50%',
-                        }}
+                        radius="full"
                         loaderUrl="/api/image"
                         placeholder="empty"
                         responsive={[

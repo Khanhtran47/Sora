@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { Pagination } from '@nextui-org/pagination';
-import { Badge, Spacer } from '@nextui-org/react';
+import { Badge } from '@nextui-org/react';
+import { Spacer } from '@nextui-org/spacer';
 import { useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { NavLink, useLoaderData, useLocation, type RouteMatch } from '@remix-run/react';
@@ -67,9 +68,9 @@ export const handle = {
           </Badge>
         )}
       </NavLink>
-      <Spacer x={0.25} />
+      <Spacer x={2.5} />
       <span> ❱ </span>
-      <Spacer x={0.25} />
+      <Spacer x={2.5} />
       <NavLink
         to={`/collections/${match.params.collectionsId}`}
         aria-label={match.data?.detail?.name || match.params.collectionsId}
@@ -127,7 +128,7 @@ const CollectionDetail = () => {
         genresTv={rootData?.genresTv}
         itemsType="movie-tv"
       />
-      <Spacer y={1} />
+      <Spacer y={5} />
       {maxPage > 1 && (
         <div className="mt-7 flex flex-row items-center">
           <Pagination

@@ -3,7 +3,8 @@ import { useMemo, useState } from 'react';
 import { Button, ButtonGroup } from '@nextui-org/button';
 import { Card, CardBody } from '@nextui-org/card';
 import { Pagination } from '@nextui-org/pagination';
-import { Avatar, Dropdown, Spacer } from '@nextui-org/react';
+import { Avatar, Dropdown } from '@nextui-org/react';
+import { Spacer } from '@nextui-org/spacer';
 import { useMediaQuery } from '@react-hookz/web';
 import { useNavigate } from '@remix-run/react';
 import { MimeType } from 'remix-image';
@@ -249,7 +250,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                           }}
                         />
                       ))}
-                    <div className="flex flex-col justify-start p-4">
+                    <div className="flex flex-col justify-start gap-y-1 p-4">
                       <h5 className="line-clamp-1">
                         Episode{' '}
                         {type === 'tv'
@@ -265,34 +266,28 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                       </h5>
                       {type === 'tv' && !isSm && (
                         <>
-                          <Spacer y={0.25} />
-                          <div className="flex items-center">
+                          <div className="flex items-center gap-x-4">
                             <Rating rating={episode?.vote_average.toFixed(1)} ratingType="tv" />
-                            <Spacer x={0.5} />
                             <h5>
                               {episode.air_date} | {episode?.runtime} min
                             </h5>
                           </div>
-                          <Spacer y={0.25} />
                           <h6 className="!line-clamp-1">{episode.overview}</h6>
                         </>
                       )}
                       {type === 'anime' && !isSm && episode.description && (
-                        <>
-                          <Spacer y={0.25} />
-                          <h6 className="!line-clamp-2">{episode.description}</h6>
-                        </>
+                        <h6 className="!line-clamp-2">{episode.description}</h6>
                       )}
                     </div>
                   </CardBody>
                 </Card>
-                <Spacer y={1} />
+                <Spacer y={5} />
               </div>
             ) : null,
           )}
         </div>
       )}
-      <Spacer y={1.25} />
+      <Spacer y={6} />
       {maxPage > 1 ? (
         <div className="flex flex-row justify-center">
           <Pagination

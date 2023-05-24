@@ -1,5 +1,6 @@
 import { Button } from '@nextui-org/button';
-import { Badge, Spacer } from '@nextui-org/react';
+import { Badge } from '@nextui-org/react';
+import { Spacer } from '@nextui-org/spacer';
 import { NavLink, useLocation, useNavigate } from '@remix-run/react';
 import { motion, type PanInfo } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
@@ -63,7 +64,7 @@ const AnimeGenresPage = () => {
       draggable={isMobile && isHydrated}
     >
       <h4>{t('anime-genres')}</h4>
-      <Spacer y={1} />
+      <Spacer y={5} />
       <div className="grid grid-cols-1 justify-center gap-3 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
         {animeGenres.map((genre) => (
           <Button

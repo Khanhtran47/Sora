@@ -1,5 +1,6 @@
 import { Card, CardBody, CardFooter, CardHeader } from '@nextui-org/card';
-import { Link, Loading, Tooltip } from '@nextui-org/react';
+import { Link } from '@nextui-org/link';
+import { Loading, Tooltip } from '@nextui-org/react';
 import { useHover } from '@react-aria/interactions';
 import { NavLink } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
@@ -473,7 +474,8 @@ const SideBar = () => {
                         <Link
                           as="h6"
                           isExternal
-                          className="!w-full !max-w-none !text-white [&_.nextui-link-icon]:ml-auto"
+                          showAnchorIcon
+                          className="!w-full !max-w-none justify-between !text-white [&_.nextui-link-icon]:ml-auto"
                         >
                           {t('movies-discover')}
                         </Link>
@@ -652,7 +654,8 @@ const SideBar = () => {
                         <Link
                           as="h6"
                           isExternal
-                          className="!w-full !max-w-none !text-white [&_.nextui-link-icon]:ml-auto"
+                          showAnchorIcon
+                          className="!w-full !max-w-none justify-between !text-white [&_.nextui-link-icon]:ml-auto"
                         >
                           {t('tv-shows-discover')}
                         </Link>
@@ -831,7 +834,8 @@ const SideBar = () => {
                         <Link
                           as="h6"
                           isExternal
-                          className="!w-full !max-w-none !text-white [&_.nextui-link-icon]:ml-auto"
+                          showAnchorIcon
+                          className="!w-full !max-w-none justify-between !text-white [&_.nextui-link-icon]:ml-auto"
                         >
                           {t('anime-discover')}
                         </Link>

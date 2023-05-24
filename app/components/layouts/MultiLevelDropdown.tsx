@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Player } from '@lottiefiles/react-lottie-player';
 import { Button } from '@nextui-org/button';
-import { Avatar, Divider, Spacer } from '@nextui-org/react';
+import { Divider } from '@nextui-org/divider';
+import { Avatar } from '@nextui-org/react';
+import { Spacer } from '@nextui-org/spacer';
 import { useLocation, useNavigate, useSearchParams } from '@remix-run/react';
 import type { User } from '@supabase/supabase-js';
 import type { AnimationItem } from 'lottie-web';
@@ -179,7 +181,7 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
           )?.isCurrent ? (
           <Tick />
         ) : (
-          <Spacer x={1.15} />
+          <Spacer x={6} />
         )}
         <h6 className="!line-clamp-1 !text-neutral-foreground">{item.title}</h6>
       </div>
@@ -266,7 +268,7 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
                       </h6>
                     ) : null}
                   </Button>
-                  <Divider css={{ m: 0 }} />
+                  <Divider />
                 </>
               ) : null}
             </div>

@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
 import { Button } from '@nextui-org/button';
 import { Card, CardBody, CardFooter, CardHeader } from '@nextui-org/card';
-import { Checkbox, Input, Spacer, useInput } from '@nextui-org/react';
+import { Checkbox, Input, useInput } from '@nextui-org/react';
+import { Spacer } from '@nextui-org/spacer';
 import { Form, Link, useLocation } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 
@@ -73,7 +74,7 @@ const AuthForm = ({ type, error, code, errorCode }: IAuthForm) => {
             aria-label="Email"
             contentLeft={<MailEdit fill="currentColor" />}
           />
-          <Spacer y={0.5} />
+          <Spacer y={2.5} />
           <Input.Password
             name="password"
             type="password"
@@ -88,7 +89,7 @@ const AuthForm = ({ type, error, code, errorCode }: IAuthForm) => {
           />
           {type === 'sign-up' && (
             <>
-              <Spacer y={0.5} />
+              <Spacer y={2.5} />
               <Input.Password
                 name="re-password"
                 type="password"
@@ -125,7 +126,7 @@ const AuthForm = ({ type, error, code, errorCode }: IAuthForm) => {
           </div>
         </CardBody>
         <CardFooter className="flex justify-end p-5">
-          <Button color="primary" type="submit">
+          <Button color="primary" type="submit" size="lg">
             {type === 'sign-in' ? t('signIn') : t('signUp')}
           </Button>
         </CardFooter>

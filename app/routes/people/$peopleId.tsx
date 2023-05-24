@@ -1,4 +1,5 @@
-import { Badge, Spacer } from '@nextui-org/react';
+import { Badge } from '@nextui-org/react';
+import { Spacer } from '@nextui-org/spacer';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { NavLink, Outlet, useCatch, useLoaderData, type RouteMatch } from '@remix-run/react';
 import i18next from '~/i18n/i18next.server';
@@ -82,9 +83,9 @@ export const handle = {
           </Badge>
         )}
       </NavLink>
-      <Spacer x={0.25} />
+      <Spacer x={2.5} />
       <span> ❱ </span>
-      <Spacer x={0.25} />
+      <Spacer x={2.5} />
       <NavLink
         to={`/people/${match.params.peopleId}`}
         aria-label={match.data?.detail?.name || match.params.peopleId}
@@ -123,7 +124,7 @@ const PeopleDetailPage = () => {
     <div className="mt-9 flex w-full flex-row flex-wrap items-stretch justify-center px-3 sm:px-5">
       <div className="w-full sm:w-1/3">
         <PeopleDetail detail={detail} externalIds={externalIds} />
-        <Spacer y={1} />
+        <Spacer y={5} />
       </div>
       <div className="w-full sm:w-2/3">
         <Outlet />

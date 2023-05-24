@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react';
 import { Button } from '@nextui-org/button';
-import { Divider, Spacer, Switch, type SwitchEvent } from '@nextui-org/react';
+import { Divider } from '@nextui-org/divider';
+import { Switch, type SwitchEvent } from '@nextui-org/react';
+import { Spacer } from '@nextui-org/spacer';
 import { isMobileOnly } from 'react-device-detect';
 
 import { useSoraSettings } from '~/hooks/useLocalStorage';
@@ -1469,7 +1471,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
           )?.isCurrent ? (
           <Tick />
         ) : (
-          <Spacer x={1.15} />
+          <Spacer x={6} />
         )}
         <h6 className="!line-clamp-1 !text-neutral-foreground">{item.title}</h6>
       </div>
@@ -1661,7 +1663,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                         </Button>
                       ) : null}
                     </div>
-                    <Divider css={{ m: 0 }} />
+                    <Divider />
                   </>
                 ) : null}
                 <div className="flex w-full flex-col items-start justify-start gap-y-2">

@@ -1,4 +1,4 @@
-import { Image } from '@nextui-org/react';
+import { Image } from '@nextui-org/image';
 import { type ThrownResponse } from '@remix-run/react';
 
 import pageNotFound from '~/assets/images/404.gif';
@@ -19,18 +19,9 @@ const CatchBoundaryView = ({ caught }: { caught: ThrownResponse<number, any> }) 
   }
 
   return (
-    <div className="flex flex-col items-center justify-center gap-y-4">
-      <Image
-        autoResize
-        width={480}
-        src={pageNotFound}
-        alt="404"
-        objectFit="cover"
-        css={{
-          marginTop: '20px',
-        }}
-      />
-      <h1 className="mt-14 text-center text-warning">
+    <div className="mt-32 flex flex-col items-center justify-center gap-y-4">
+      <Image width={480} src={pageNotFound} alt="404" className="object-cover" />
+      <h1 className="text-center text-warning">
         {caught.status} {caught.statusText} {message}
       </h1>
     </div>

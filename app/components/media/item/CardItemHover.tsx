@@ -1,17 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useCallback, useEffect, useState } from 'react';
 import { Button } from '@nextui-org/button';
-import { Loading, Image as NextImage, Spacer } from '@nextui-org/react';
+import { Loading } from '@nextui-org/react';
+import { Spacer } from '@nextui-org/spacer';
 import { useColor } from 'color-thief-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import YouTube from 'react-youtube';
-import Image, { MimeType } from 'remix-image';
+import { MimeType } from 'remix-image';
 import { ClientOnly } from 'remix-utils';
 
 import { type ITrailer } from '~/services/consumet/anilist/anilist.types';
 import useCardHoverStore from '~/store/card/useCardHoverStore';
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
+import Image from '~/components/elements/Image';
 import { type Trailer } from '~/components/elements/dialog/WatchTrailerModal';
 import Rating from '~/components/elements/shared/Rating';
 import VolumeOff from '~/assets/icons/VolumeOffIcon';
@@ -77,7 +79,7 @@ const CardItemHover = (props: ICardItemHoverProps) => {
   }, [isPlayTrailer.value]);
 
   return (
-    <div className="flex w-[inherit] min-w-[350px] max-w-[400px] flex-col items-start justify-center p-3">
+    <div className="flex w-[inherit] min-w-[350px] max-w-[400px] flex-col items-start justify-center gap-y-2 p-3">
       <AnimatePresence>
         {backdropPath && !showTrailer && (
           <motion.div
@@ -86,19 +88,16 @@ const CardItemHover = (props: ICardItemHoverProps) => {
             exit={{ opacity: 0 }}
             style={{ overflow: 'hidden' }}
           >
-            <NextImage
-              // @ts-ignore
-              as={Image}
+            <Image
               src={backdropPath || ''}
-              objectFit="cover"
               width="100%"
               height="auto"
               alt={title}
               title={title}
               loading="lazy"
               decoding="async"
-              containerCss={{ borderRadius: '0.5rem' }}
-              css={{ aspectRatio: '16/9' }}
+              radius="md"
+              className="aspect-video object-cover"
               loaderUrl="/api/image"
               placeholder="empty"
               options={{
@@ -107,8 +106,8 @@ const CardItemHover = (props: ICardItemHoverProps) => {
               responsive={[
                 {
                   size: {
-                    width: 388,
-                    height: 218,
+                    width: 376,
+                    height: 212,
                   },
                 },
               ]}
@@ -181,11 +180,9 @@ const CardItemHover = (props: ICardItemHoverProps) => {
             );
         }}
       </ClientOnly>
-      <Spacer y={0.5} />
       <h4 className="w-full text-center" style={{ color: saturatedColor }}>
         {title}
       </h4>
-      <Spacer y={0.5} />
       {genreIds || genresAnime ? (
         <>
           <div className="flex flex-row gap-x-2">
@@ -235,10 +232,7 @@ const CardItemHover = (props: ICardItemHoverProps) => {
         </>
       ) : null}
       {overview ? (
-        <>
-          <p className="!line-clamp-2" dangerouslySetInnerHTML={{ __html: overview || '' }} />
-          <Spacer y={0.5} />
-        </>
+        <p className="!line-clamp-2" dangerouslySetInnerHTML={{ __html: overview || '' }} />
       ) : null}
       <div className="flex w-full items-center justify-between">
         {releaseDate ? (

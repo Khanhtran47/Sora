@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { Button } from '@nextui-org/button';
-import { Avatar, Spacer } from '@nextui-org/react';
+import { Avatar } from '@nextui-org/react';
+import { Spacer } from '@nextui-org/spacer';
 import { useMediaQuery } from '@react-hookz/web';
 import { useNavigate } from '@remix-run/react';
 import { MimeType } from 'remix-image';
@@ -95,7 +96,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
               providers={providers || []}
             />
           ) : null}
-          <Spacer y={2} />
+          <Spacer y={10} />
         </>
       ) : null}
       <div className="flex flex-row items-start justify-start gap-3 rounded-xl bg-content1 p-2 sm:p-4">
@@ -161,83 +162,66 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
               />
             </div>
           ))}
-        <div className="flex w-full flex-col items-start justify-start">
+        <div className="flex w-full flex-col items-start justify-start gap-y-4">
           <h3 className="font-semibold text-neutral-900">{title}</h3>
-          <Spacer y={0.5} />
           {type === 'movie' || type === 'tv' ? (
-            <>
-              <div className="flex flex-row">
-                <Rating rating={tmdbRating?.toFixed(1)} ratingType="movie" />
-                {imdbRating && (
-                  <>
-                    <Spacer x={0.75} />
-                    <p className="mr-2 rounded-lg bg-[#ddb600] px-1 font-semibold text-black">
-                      IMDb
-                    </p>
-                    <p className="font-semibold">{imdbRating}</p>
-                  </>
-                )}
-              </div>
-              <Spacer y={1} />
-            </>
+            <div className="flex flex-row gap-x-3">
+              <Rating rating={tmdbRating?.toFixed(1)} ratingType="movie" />
+              {imdbRating && (
+                <>
+                  <p className="mr-2 rounded-lg bg-[#ddb600] px-1 font-semibold text-black">IMDb</p>
+                  <p className="font-semibold">{imdbRating}</p>
+                </>
+              )}
+            </div>
           ) : null}
           {type === 'anime' && anilistRating ? (
-            <>
-              <Rating rating={anilistRating} ratingType="anime" />
-              <Spacer y={1} />
-            </>
+            <Rating rating={anilistRating} ratingType="anime" />
           ) : null}
-          <div className="flex w-full flex-row flex-wrap items-center justify-start">
+          <div className="flex w-full flex-row flex-wrap items-center justify-start gap-x-3">
             {(type === 'movie' || type === 'tv') &&
               genresMedia &&
               genresMedia.map((genre) => (
-                <>
-                  <Button
-                    key={genre?.id}
-                    type="button"
-                    size={isSm ? 'sm' : 'md'}
-                    className="hover:opacity-80"
-                    style={{
-                      marginBottom: '0.125rem',
-                      background: color,
-                      color: colorBackground,
-                    }}
-                    onPress={() =>
-                      navigate(
-                        `/discover/${type === 'movie' ? 'movies' : 'tv-shows'}?with_genres=${
-                          genre?.id
-                        }`,
-                      )
-                    }
-                  >
-                    {genre?.name}
-                  </Button>
-                  <Spacer x={0.5} />
-                </>
+                <Button
+                  key={genre?.id}
+                  type="button"
+                  size={isSm ? 'sm' : 'md'}
+                  className="hover:opacity-80"
+                  style={{
+                    marginBottom: '0.125rem',
+                    background: color,
+                    color: colorBackground,
+                  }}
+                  onPress={() =>
+                    navigate(
+                      `/discover/${type === 'movie' ? 'movies' : 'tv-shows'}?with_genres=${
+                        genre?.id
+                      }`,
+                    )
+                  }
+                >
+                  {genre?.name}
+                </Button>
               ))}
             {type === 'anime' &&
               genresAnime &&
               genresAnime.map((genre, index) => (
-                <>
-                  <Button
-                    key={index}
-                    type="button"
-                    size={isSm ? 'sm' : 'md'}
-                    className="hover:opacity-80"
-                    onPress={() => navigate(`/discover/anime?genres=${genre}`)}
-                    style={{
-                      marginBottom: '0.125rem',
-                      background: color,
-                      color: colorBackground,
-                    }}
-                  >
-                    {genre}
-                  </Button>
-                  <Spacer x={1} />
-                </>
+                <Button
+                  key={index}
+                  type="button"
+                  size={isSm ? 'sm' : 'md'}
+                  className="hover:opacity-80"
+                  onPress={() => navigate(`/discover/anime?genres=${genre}`)}
+                  style={{
+                    marginBottom: '0.125rem',
+                    background: color,
+                    color: colorBackground,
+                  }}
+                >
+                  {genre}
+                </Button>
               ))}
           </div>
-          <Spacer y={1} />
           {type === 'movie' || type === 'tv' ? (
             <p style={{ textAlign: 'justify' }}>{overview}</p>
           ) : null}
@@ -247,10 +231,9 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
               dangerouslySetInnerHTML={{ __html: overview || '' }}
             />
           ) : null}
-          <Spacer y={1} />
         </div>
       </div>
-      <Spacer y={2} />
+      <Spacer y={10} />
       {(type === 'movie' || type === 'tv') &&
       recommendationsMovies &&
       recommendationsMovies.length > 0 ? (
@@ -268,7 +251,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
             }
             showMoreList
           />
-          <Spacer y={2} />
+          <Spacer y={10} />
         </>
       ) : null}
       {type === 'anime' && recommendationsAnime && recommendationsAnime.length > 0 ? (
@@ -280,7 +263,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
             listType="slider-card"
             navigationButtons
           />
-          <Spacer y={2} />
+          <Spacer y={10} />
         </>
       ) : null}
     </>

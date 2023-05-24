@@ -221,7 +221,7 @@ const CardItem = (props: ICardItemProps) => {
           </Link>
         </CardBody>
         <CardFooter className={footer()}>
-          <h5>{titleItem}</h5>
+          <h5 className="font-semibold">{titleItem}</h5>
         </CardFooter>
       </Card>
     );
@@ -502,7 +502,7 @@ const CardItem = (props: ICardItemProps) => {
         >
           <CardFooter className={footer()}>
             <h5
-              className="!line-clamp-2 w-full"
+              className="!line-clamp-2 w-full font-semibold"
               style={{
                 ...(color ? { color } : null),
                 minWidth: `${mediaType === 'people' ? '100px' : '150px'}`,
@@ -546,7 +546,7 @@ const CardItem = (props: ICardItemProps) => {
         inView ? (
         <Link to={linkTo || '/'}>
           <CardFooter className={footer()}>
-            <h5 className="line-clamp-2">{titleItem}</h5>
+            <h5 className="line-clamp-2 font-semibold">{titleItem}</h5>
           </CardFooter>
         </Link>
       ) : null}

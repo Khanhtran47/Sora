@@ -1,5 +1,5 @@
 import { Button } from '@nextui-org/button';
-import { Spacer } from '@nextui-org/react';
+import { Spacer } from '@nextui-org/spacer';
 import { useLocation, useNavigate } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -78,7 +78,7 @@ const DiscoverPage = () => {
       className="flex w-full flex-col items-start justify-center px-3"
     >
       <h1>{t('discover')}</h1>
-      <Spacer y={0.5} />
+      <Spacer y={2.5} />
       <Button
         startIcon={<Search fill="currentColor" />}
         type="button"
@@ -89,7 +89,7 @@ const DiscoverPage = () => {
       >
         {t('search')}
       </Button>
-      <Spacer y={0.75} />
+      <Spacer y={3} />
       <Button
         startIcon={<Filter fill="currentColor" />}
         type="button"
@@ -99,10 +99,10 @@ const DiscoverPage = () => {
       >
         {t('filter')}
       </Button>
-      <Spacer y={1.5} />
+      <Spacer y={7} />
       <div className="flex w-full flex-col items-start justify-center">
         <h4>{t('categories')}</h4>
-        <Spacer y={0.5} />
+        <Spacer y={2.5} />
         <div className="flex w-full flex-wrap gap-x-2 gap-y-4">
           {categoryPages.map((page) => (
             <Button
@@ -118,10 +118,10 @@ const DiscoverPage = () => {
           ))}
         </div>
       </div>
-      <Spacer y={1.5} />
+      <Spacer y={7} />
       <div className="flex w-full flex-col items-start justify-center">
         <h4>{t('general')}</h4>
-        <Spacer y={0.5} />
+        <Spacer y={2.5} />
         <div className="flex w-full flex-wrap gap-x-2 gap-y-4">
           {generalPages.map((page) => (
             <Button

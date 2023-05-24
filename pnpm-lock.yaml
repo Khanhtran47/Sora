@@ -34,6 +34,9 @@ dependencies:
   '@nextui-org/chip':
     specifier: dev-v2
     version: 0.0.0-dev-v2-20230514151437(react-dom@17.0.2)(react@17.0.2)(tailwindcss@3.3.2)
+  '@nextui-org/divider':
+    specifier: dev-v2
+    version: 0.0.0-dev-v2-20230521141624(react-dom@17.0.2)(react@17.0.2)(tailwindcss@3.3.2)
   '@nextui-org/image':
     specifier: dev-v2
     version: 0.0.0-dev-v2-20230514151437(react-dom@17.0.2)(react@17.0.2)(tailwindcss@3.3.2)
@@ -52,6 +55,9 @@ dependencies:
   '@nextui-org/react':
     specifier: ^1.0.0-beta.12
     version: 1.0.0-beta.12(react-dom@17.0.2)(react@17.0.2)
+  '@nextui-org/spacer':
+    specifier: dev-v2
+    version: 0.0.0-dev-v2-20230505232443(react-dom@17.0.2)(react@17.0.2)(tailwindcss@3.3.2)
   '@nextui-org/spinner':
     specifier: dev-v2
     version: 0.0.0-dev-v2-20230514151437(react-dom@17.0.2)(react@17.0.2)(tailwindcss@3.3.2)
@@ -60,10 +66,10 @@ dependencies:
     version: 0.0.0-dev-v2-20230514151437(react-dom@17.0.2)(react@17.0.2)(tailwindcss@3.3.2)
   '@nextui-org/system':
     specifier: dev-v2
-    version: 0.0.0-dev-v2-20230514151437(react-dom@17.0.2)(react@17.0.2)
+    version: 0.0.0-dev-v2-20230521141624(react-dom@17.0.2)(react@17.0.2)
   '@nextui-org/theme':
     specifier: dev-v2
-    version: 0.0.0-dev-v2-20230514151437(tailwindcss@3.3.2)
+    version: 0.0.0-dev-v2-20230521141624(tailwindcss@3.3.2)
   '@radix-ui/react-aspect-ratio':
     specifier: ^1.0.2
     version: 1.0.2(react-dom@17.0.2)(react@17.0.2)
@@ -2783,6 +2789,31 @@ packages:
       - tailwindcss
     dev: false
 
+  /@nextui-org/divider@0.0.0-dev-v2-20230521141624(react-dom@17.0.2)(react@17.0.2)(tailwindcss@3.3.2):
+    resolution: {integrity: sha512-j2V0AYOpfCxLmn6+uUUgsItjM/ckZSKTsQ2z5LvCYOHcbdw3dlaPIsi7Ht2ZhHvEBje0LOfmbNQ/QTS+GQ6VBA==}
+    peerDependencies:
+      react: '>=18'
+    dependencies:
+      '@nextui-org/dom-utils': 0.0.0-dev-v2-20230521141624(react@17.0.2)
+      '@nextui-org/shared-utils': 0.0.0-dev-v2-20230521141624(react@17.0.2)
+      '@nextui-org/system': 0.0.0-dev-v2-20230521141624(react-dom@17.0.2)(react@17.0.2)
+      '@nextui-org/theme': 0.0.0-dev-v2-20230521141624(tailwindcss@3.3.2)
+      '@react-aria/separator': 3.3.1(react@17.0.2)
+      '@react-aria/utils': 3.16.0(react@17.0.2)
+      react: 17.0.2
+    transitivePeerDependencies:
+      - react-dom
+      - tailwindcss
+    dev: false
+
+  /@nextui-org/dom-utils@0.0.0-dev-v2-20230505232443(react@17.0.2):
+    resolution: {integrity: sha512-KFPnJqjIy/cyoEdskIerKxumlAQtHBG+AK9A2jhCMZx9HXyUCKaqnT3EO4LGPasBciX76MgVw3eHd+dMy1dfKg==}
+    peerDependencies:
+      react: '>=18'
+    dependencies:
+      react: 17.0.2
+    dev: false
+
   /@nextui-org/dom-utils@0.0.0-dev-v2-20230514151437(react@17.0.2):
     resolution: {integrity: sha512-nk2zxUJOkC35fLZnFJoMhcLtXC63dkK1VqCHoi/qoOdsoku0chyKCu+UY4aDhQR334kE+Re4BYV+WuGycHvH9A==}
     peerDependencies:
@@ -2969,6 +3000,14 @@ packages:
       react: 17.0.2
     dev: false
 
+  /@nextui-org/shared-utils@0.0.0-dev-v2-20230505232443(react@17.0.2):
+    resolution: {integrity: sha512-oNChHfE3u/Z7be9+0A9YEsiKrKyy6OLaTip9hq6uyfhfHUWwPh4Fo2og5Iuc1u1q7K/mEDZ65FHHyPRdjDjIpQ==}
+    peerDependencies:
+      react: '>=18'
+    dependencies:
+      react: 17.0.2
+    dev: false
+
   /@nextui-org/shared-utils@0.0.0-dev-v2-20230514151437(react@17.0.2):
     resolution: {integrity: sha512-nqoqHzypNje9ptk2P4zrbmcxca3VydjAA0SCc9fXLPhagxc5G9mdHtd+1GlcxSHn58PzJdtiC9eHKI9fqK5P+g==}
     peerDependencies:
@@ -2983,6 +3022,21 @@ packages:
       react: '>=18'
     dependencies:
       react: 17.0.2
+    dev: false
+
+  /@nextui-org/spacer@0.0.0-dev-v2-20230505232443(react-dom@17.0.2)(react@17.0.2)(tailwindcss@3.3.2):
+    resolution: {integrity: sha512-OiKHHGLSanicdhoBD7jQ5lW70tV8OrYTv/dJXNqfFkpKS1qxi5PDLjAqU7rVeq+ZGsaf4z00NDpJ9HR3s0yU+w==}
+    peerDependencies:
+      react: '>=18'
+    dependencies:
+      '@nextui-org/dom-utils': 0.0.0-dev-v2-20230505232443(react@17.0.2)
+      '@nextui-org/shared-utils': 0.0.0-dev-v2-20230505232443(react@17.0.2)
+      '@nextui-org/system': 0.0.0-dev-v2-20230505232443(react-dom@17.0.2)(react@17.0.2)
+      '@nextui-org/theme': 0.0.0-dev-v2-20230505232443(tailwindcss@3.3.2)
+      react: 17.0.2
+    transitivePeerDependencies:
+      - react-dom
+      - tailwindcss
     dev: false
 
   /@nextui-org/spinner@0.0.0-dev-v2-20230514151437(react-dom@17.0.2)(react@17.0.2)(tailwindcss@3.3.2):
@@ -3022,6 +3076,18 @@ packages:
       - tailwindcss
     dev: false
 
+  /@nextui-org/system@0.0.0-dev-v2-20230505232443(react-dom@17.0.2)(react@17.0.2):
+    resolution: {integrity: sha512-bX8lV7/nwVLMrBNab2C5C+CQbu/PjNS+3S3fcriLKkcS35SkYYLDmKiv5HfoL0PvO+t9lIb8JfzMUMlLVg/8rA==}
+    peerDependencies:
+      react: '>=18'
+    dependencies:
+      '@react-aria/overlays': 3.14.0(react-dom@17.0.2)(react@17.0.2)
+      '@react-aria/ssr': 3.6.0(react@17.0.2)
+      react: 17.0.2
+    transitivePeerDependencies:
+      - react-dom
+    dev: false
+
   /@nextui-org/system@0.0.0-dev-v2-20230514151437(react-dom@17.0.2)(react@17.0.2):
     resolution: {integrity: sha512-y8q0mA/epIrdmJ2oK8psb1iTiDNwrWKoVP7uhwAevR6JEq7EuSIbq1cagGZtm2RbVPWjZnrdiilZMB4x2rOKUA==}
     peerDependencies:
@@ -3044,6 +3110,24 @@ packages:
       react: 17.0.2
     transitivePeerDependencies:
       - react-dom
+    dev: false
+
+  /@nextui-org/theme@0.0.0-dev-v2-20230505232443(tailwindcss@3.3.2):
+    resolution: {integrity: sha512-euWfDiEEa5JfD3BUIqN4aXkIeLogCi4Irr9dUyVnY6VzSu+6MCxpWMHxlACBV+V9a8V4pm3LocQvMuRyPn/CFw==}
+    peerDependencies:
+      tailwindcss: '*'
+    dependencies:
+      '@types/lodash.omit': 4.5.7
+      color: 4.2.3
+      color2k: 2.0.2
+      deepmerge: 4.3.0
+      flat: 5.0.2
+      lodash.foreach: 4.5.0
+      lodash.get: 4.4.2
+      lodash.isempty: 4.4.0
+      lodash.omit: 4.5.0
+      tailwind-variants: 0.1.5(tailwindcss@3.3.2)
+      tailwindcss: 3.3.2
     dev: false
 
   /@nextui-org/theme@0.0.0-dev-v2-20230514151437(tailwindcss@3.3.2):
@@ -4132,6 +4216,17 @@ packages:
       '@react-aria/utils': 3.16.0(react@17.0.2)
       '@react-stately/collections': 3.7.0(react@17.0.2)
       '@react-stately/selection': 3.13.0(react@17.0.2)
+      '@react-types/shared': 3.18.0(react@17.0.2)
+      '@swc/helpers': 0.4.14
+      react: 17.0.2
+    dev: false
+
+  /@react-aria/separator@3.3.1(react@17.0.2):
+    resolution: {integrity: sha512-BNiJpkzHDnNBeZFGud9MSLzUkYevq7WT0+XO60SMvD/OhDBoBPp26b6fK1W81HKTbs+bk/dvmlnnbx9ViGsLzw==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+    dependencies:
+      '@react-aria/utils': 3.16.0(react@17.0.2)
       '@react-types/shared': 3.18.0(react@17.0.2)
       '@swc/helpers': 0.4.14
       react: 17.0.2

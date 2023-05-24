@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Button } from '@nextui-org/button';
-import { Badge, Modal, Spacer } from '@nextui-org/react';
+import { Badge, Modal } from '@nextui-org/react';
+import { Spacer } from '@nextui-org/spacer';
 import { useWindowSize } from '@react-hookz/web';
 import {
   json,
@@ -168,7 +169,7 @@ const CacheAdminRoute = () => {
           textPlaceHolder="Search cache key"
           defaultValue={query}
         />
-        <Spacer x={1} />
+        <Spacer x={5} />
         <div className="flex flex-col gap-4">
           {cacheKeys.map((cacheKey) => (
             <CacheKeyRow

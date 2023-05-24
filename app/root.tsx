@@ -11,7 +11,8 @@ import FontStyles700 from '@fontsource/inter/700.css';
 import FontStyles800 from '@fontsource/inter/800.css';
 import FontStyles900 from '@fontsource/inter/900.css';
 import { Button } from '@nextui-org/button';
-import { Badge, Image as NextImage, NextUIProvider, useSSR } from '@nextui-org/react';
+import { Image as NextUIImage } from '@nextui-org/image';
+import { Badge, NextUIProvider, useSSR } from '@nextui-org/react';
 import { NextUIProvider as NextUIv2Provider } from '@nextui-org/system';
 import { json, type LinksFunction, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import {
@@ -443,7 +444,7 @@ const Document = ({ children, title, lang, dir, gaTrackingId, ENV }: DocumentPro
   }, [location]);
 
   return (
-    <html lang={lang} dir={dir}>
+    <html lang={lang} dir={dir} suppressHydrationWarning>
       <head>
         {title ? <title>{title}</title> : null}
         <Meta />
@@ -686,16 +687,7 @@ export const CatchBoundary = () => {
       >
         <NextUIProvider>
           <div className="flex h-screen flex-col items-center justify-center gap-y-4">
-            <NextImage
-              autoResize
-              width={480}
-              src={pageNotFound}
-              alt="404"
-              objectFit="cover"
-              css={{
-                marginTop: '20px',
-              }}
-            />
+            <NextUIImage width={480} src={pageNotFound} alt="404" className="object-cover" />
             <h1 className="text-center text-warning">
               {caught.status} {caught.statusText} {message}
             </h1>
@@ -733,7 +725,7 @@ export const CatchBoundary = () => {
 };
 
 export const ErrorBoundary = ({ error }: { error: Error }) => {
-  const isProd = process.env.NODE_ENV === 'production' && process.env.DEPLOY_ENV === 'production';
+  const isProd = process.env.NODE_ENV === 'production';
   // eslint-disable-next-line no-console
   console.log(error);
   return (
@@ -757,16 +749,7 @@ export const ErrorBoundary = ({ error }: { error: Error }) => {
       >
         <NextUIProvider>
           <div className="flex h-screen flex-col items-center justify-center gap-y-4">
-            <NextImage
-              autoResize
-              width={480}
-              src={pageNotFound}
-              alt="404"
-              objectFit="cover"
-              css={{
-                marginTop: '20px',
-              }}
-            />
+            <NextUIImage width={480} src={pageNotFound} alt="404" className="object-cover" />
             <h1 className="text-center text-danger">
               {isProd
                 ? 'Some thing went wrong'

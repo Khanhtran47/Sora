@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Button } from '@nextui-org/button';
 import { Card, CardBody } from '@nextui-org/card';
-import { Avatar, Badge, Spacer, Tooltip } from '@nextui-org/react';
+import { Avatar, Badge, Tooltip } from '@nextui-org/react';
+import { Spacer } from '@nextui-org/spacer';
 import { useMeasure, useMediaQuery } from '@react-hookz/web';
 import { useFetcher, useLocation, useNavigate } from '@remix-run/react';
 import { motion, useTransform } from 'framer-motion';
@@ -201,7 +202,7 @@ export const MediaDetail = (props: IMediaDetail) => {
                   />
                 </div>
               )}
-              {isSm ? null : <Spacer y={2} />}
+              {isSm ? null : <Spacer y={10} />}
             </div>
             <div className="flex w-full flex-col items-start justify-start grid-in-title">
               <h1 className="!text-3xl md:!text-4xl">
@@ -296,12 +297,13 @@ export const MediaDetail = (props: IMediaDetail) => {
                   type="button"
                   // shadow
                   onPress={() => setVisible(true)}
-                  className="w-full bg-gradient-to-r from-primary to-secondary sm:w-auto"
+                  className="w-full bg-gradient-to-r from-primary to-secondary font-bold sm:w-auto"
+                  size="lg"
                 >
                   Watch now
                 </Button>
               )}
-              <div className="flex flex-row flex-wrap items-center justify-start">
+              <div className="flex flex-row flex-wrap items-center justify-start gap-x-4">
                 <Button
                   type="button"
                   size={isSm ? 'sm' : 'md'}
@@ -309,7 +311,6 @@ export const MediaDetail = (props: IMediaDetail) => {
                 >
                   Watch Trailer
                 </Button>
-                <Spacer x={0.5} />
                 <Tooltip content="Share" placement="top" isDisabled={isSm}>
                   <Button
                     type="button"
@@ -450,7 +451,7 @@ export const AnimeDetail = (props: IAnimeDetail) => {
                   />
                 </div>
               )}
-              {isSm ? null : <Spacer y={2} />}
+              {isSm ? null : <Spacer y={10} />}
             </div>
             <div className="flex w-full flex-col items-start justify-start grid-in-title">
               <h1 className="!text-3xl md:!text-4xl">
@@ -528,11 +529,12 @@ export const AnimeDetail = (props: IAnimeDetail) => {
               <Button
                 type="button"
                 onPress={() => setVisible(true)}
-                className="w-full bg-gradient-to-r from-primary to-secondary sm:w-auto"
+                size="lg"
+                className="w-full bg-gradient-to-r from-primary to-secondary font-bold sm:w-auto"
               >
                 Watch now
               </Button>
-              <div className="flex flex-row flex-wrap items-center justify-start">
+              <div className="flex flex-row flex-wrap items-center justify-start gap-x-4">
                 <Button
                   type="button"
                   size={isSm ? 'sm' : 'md'}
@@ -540,7 +542,6 @@ export const AnimeDetail = (props: IAnimeDetail) => {
                 >
                   Watch Trailer
                 </Button>
-                <Spacer x={0.5} />
                 <Tooltip content="Share" placement="top" isDisabled={isSm}>
                   <Button
                     type="button"

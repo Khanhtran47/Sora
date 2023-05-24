@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
-import { Spacer } from '@nextui-org/react';
+import { Spacer } from '@nextui-org/spacer';
 import type { MetaFunction } from '@remix-run/node';
 import { useFetcher } from '@remix-run/react';
 
@@ -42,13 +42,13 @@ const OverviewPage = () => {
               {peopleData?.detail?.biography}
             </p>
           </div>
-          <Spacer y={1.5} />
+          <Spacer y={7} />
         </>
       ) : null}
       {knownFor && knownFor.length > 0 ? (
         <>
           <h4>Known For</h4>
-          <Spacer y={0.5} />
+          <Spacer y={2.5} />
           <MediaList
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}

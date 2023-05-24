@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useEffect, useState } from 'react';
 import { Button } from '@nextui-org/button';
 import { Pagination } from '@nextui-org/pagination';

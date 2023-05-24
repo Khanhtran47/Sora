@@ -1,4 +1,4 @@
-import { Spacer } from '@nextui-org/react';
+import { Spacer } from '@nextui-org/spacer';
 import { useLocation, useMatches } from '@remix-run/react';
 
 const BreadCrumb = () => {
@@ -24,9 +24,9 @@ const BreadCrumb = () => {
           >
             {index ? (
               <>
-                <Spacer x={0.25} />
+                <Spacer x={4} />
                 <span> ❱ </span>
-                <Spacer x={0.25} />
+                <Spacer x={4} />
               </>
             ) : null}
             {match?.handle?.breadcrumb(match)}

@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { Badge, Image as NextImage, Spacer } from '@nextui-org/react';
+import { Badge } from '@nextui-org/react';
+import { Spacer } from '@nextui-org/spacer';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { NavLink, useLoaderData, type RouteMatch } from '@remix-run/react';
 import { Gallery, Item, type GalleryProps } from 'react-photoswipe-gallery';
-import Image, { MimeType } from 'remix-image';
+import { MimeType } from 'remix-image';
 import i18next from '~/i18n/i18next.server';
 
 import { authenticate } from '~/services/supabase';
@@ -11,6 +12,7 @@ import { getImages } from '~/services/tmdb/tmdb.server';
 import TMDB from '~/utils/media';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
+import Image from '~/components/elements/Image';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const [, locale] = await Promise.all([
@@ -110,13 +112,13 @@ const TvPhotosPage = () => {
 
   return (
     <div className="flex w-full flex-col items-center justify-center px-3 sm:px-0">
-      <Spacer y={1} />
+      <Spacer y={5} />
       {images?.backdrops && images.backdrops.length > 0 && (
         <>
           <h5 className="flex w-full justify-center">
             <strong>Backdrops</strong>
           </h5>
-          <Spacer y={0.5} />
+          <Spacer y={2.5} />
           <Gallery withCaption withDownloadButton uiElements={uiElements}>
             <div className="grid grid-cols-1 justify-center gap-3 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
               {images?.backdrops?.map((image) => (
@@ -131,23 +133,16 @@ const TvPhotosPage = () => {
                   height={image.height}
                 >
                   {({ ref, open }) => (
-                    <NextImage
-                      // @ts-ignore
-                      as={Image}
+                    <Image
                       src={TMDB.profileUrl(image?.file_path, 'w185')}
                       ref={ref as React.MutableRefObject<HTMLImageElement>}
                       onClick={open}
                       alt={`Backdrop of ${tvData?.detail?.name} image size ${image.width}x${image.height}`}
-                      containerCss={{ borderRadius: 10 }}
-                      className="min-w-[120px] 2xs:min-w-[185px]"
-                      css={{
-                        cursor: 'pointer',
-                        objectFit: 'cover',
-                        height: 'auto',
-                      }}
+                      radius="xl"
+                      className="h-auto min-w-[120px] cursor-pointer object-cover 2xs:min-w-[185px]"
                       title={tvData?.detail?.name}
                       loaderUrl="/api/image"
-                      placeholder="blur"
+                      placeholder="empty"
                       options={{
                         contentType: MimeType.WEBP,
                       }}
@@ -157,7 +152,7 @@ const TvPhotosPage = () => {
               ))}
             </div>
           </Gallery>
-          <Spacer y={1} />
+          <Spacer y={5} />
         </>
       )}
       {images?.logos && images.logos.length > 0 && (
@@ -165,7 +160,7 @@ const TvPhotosPage = () => {
           <h5 className="flex w-full justify-center">
             <strong>Logos</strong>
           </h5>
-          <Spacer y={0.5} />
+          <Spacer y={2.5} />
           <Gallery withCaption withDownloadButton uiElements={uiElements}>
             <div className="grid grid-cols-1 justify-center gap-3 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
               {images?.logos?.map((image) => (
@@ -180,23 +175,16 @@ const TvPhotosPage = () => {
                   height={image.height}
                 >
                   {({ ref, open }) => (
-                    <NextImage
-                      // @ts-ignore
-                      as={Image}
+                    <Image
                       src={TMDB.logoUrl(image?.file_path, 'w185')}
                       ref={ref as React.MutableRefObject<HTMLImageElement>}
                       onClick={open}
                       alt={`Logo of ${tvData?.detail?.name} image size ${image.width}x${image.height}`}
-                      containerCss={{ borderRadius: 10 }}
-                      className="min-w-[120px] 2xs:min-w-[185px]"
-                      css={{
-                        cursor: 'pointer',
-                        objectFit: 'cover',
-                        height: 'auto',
-                      }}
+                      radius="xl"
+                      className="h-auto min-w-[120px] cursor-pointer object-cover 2xs:min-w-[185px]"
                       title={tvData?.detail?.name}
                       loaderUrl="/api/image"
-                      placeholder="blur"
+                      placeholder="empty"
                       options={{
                         contentType: MimeType.WEBP,
                       }}
@@ -206,7 +194,7 @@ const TvPhotosPage = () => {
               ))}
             </div>
           </Gallery>
-          <Spacer y={1} />
+          <Spacer y={5} />
         </>
       )}
       {images?.posters && images.posters.length > 0 && (
@@ -214,7 +202,7 @@ const TvPhotosPage = () => {
           <h5 className="flex w-full justify-center">
             <strong>Posters</strong>
           </h5>
-          <Spacer y={0.5} />
+          <Spacer y={2.5} />
           <Gallery withCaption withDownloadButton uiElements={uiElements}>
             <div className="grid grid-cols-1 justify-center gap-3 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
               {images?.posters?.map((image) => (
@@ -229,23 +217,16 @@ const TvPhotosPage = () => {
                   height={image.height}
                 >
                   {({ ref, open }) => (
-                    <NextImage
-                      // @ts-ignore
-                      as={Image}
+                    <Image
                       src={TMDB.profileUrl(image?.file_path, 'w185')}
                       ref={ref as React.MutableRefObject<HTMLImageElement>}
                       onClick={open}
                       alt={`Poster of ${tvData?.detail?.name} image size ${image.width}x${image.height}`}
-                      containerCss={{ borderRadius: 10 }}
-                      className="min-w-[120px] 2xs:min-w-[185px]"
-                      css={{
-                        cursor: 'pointer',
-                        objectFit: 'cover',
-                        height: 'auto',
-                      }}
+                      radius="xl"
+                      className="h-auto min-w-[120px] cursor-pointer object-cover 2xs:min-w-[185px]"
                       title={tvData?.detail?.name}
                       loaderUrl="/api/image"
-                      placeholder="blur"
+                      placeholder="empty"
                       options={{
                         contentType: MimeType.WEBP,
                       }}

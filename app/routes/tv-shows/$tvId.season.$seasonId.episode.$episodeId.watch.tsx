@@ -1,5 +1,6 @@
 import type { IMovieInfo, ISource } from '@consumet/extensions';
-import { Badge, Spacer } from '@nextui-org/react';
+import { Badge } from '@nextui-org/react';
+import { Spacer } from '@nextui-org/spacer';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { NavLink, useCatch, useLoaderData, type RouteMatch } from '@remix-run/react';
 import Vibrant from 'node-vibrant';
@@ -423,9 +424,9 @@ export const handle = {
           </Badge>
         )}
       </NavLink>
-      <Spacer x={0.25} />
+      <Spacer x={2.5} />
       <span> ❱ </span>
-      <Spacer x={0.25} />
+      <Spacer x={2.5} />
       <NavLink
         to={`/tv-shows/${match.params.tvId}/season/${match.params.seasonId}`}
         aria-label={`Season ${match.params.seasonId}`}
@@ -444,9 +445,9 @@ export const handle = {
           </Badge>
         )}
       </NavLink>
-      <Spacer x={0.25} />
+      <Spacer x={2.5} />
       <span> ❱ </span>
-      <Spacer x={0.25} />
+      <Spacer x={2.5} />
       <NavLink
         to={`/tv-shows/${match.params.tvId}/season/${match.params.seasonId}/episode/${match.params.episodeId}`}
         aria-label={`Episode ${match.params.episodeId}`}

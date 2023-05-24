@@ -1,10 +1,13 @@
 import { Player } from '@lottiefiles/react-lottie-player';
-import { Avatar, Image as NextImage, Link as NextLink, Spacer, useTheme } from '@nextui-org/react';
+import { Link } from '@nextui-org/link';
+import { Avatar, useTheme } from '@nextui-org/react';
+import { Spacer } from '@nextui-org/spacer';
 import { useMeasure } from '@react-hookz/web';
-import Image, { MimeType } from 'remix-image';
+import { MimeType } from 'remix-image';
 
 import type { IPeopleDetail } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
+import Image from '~/components/elements/Image';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 import ExternalLinkBlack from '~/assets/lotties/external-link-black.json';
 import ExternalLinkWhite from '~/assets/lotties/external-link-white.json';
@@ -50,42 +53,31 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
   return (
     <>
       {profilePath ? (
-        <NextImage
-          // @ts-ignore
-          as={Image}
-          ref={imageRef}
-          src={profilePath}
-          objectFit="cover"
-          width="100%"
-          height="auto"
-          alt={detail?.name}
-          maxDelay={10000}
-          loading="lazy"
-          title={detail?.name}
-          css={{
-            aspectRatio: '2 / 3',
-            minWidth: '100% !important',
-            minHeight: 'auto !important',
-          }}
-          containerCss={{
-            borderRadius: '0.75rem',
-            width: '50% !important',
-            '@xs': { width: '70% !important' },
-          }}
-          loaderUrl="/api/image"
-          placeholder="empty"
-          responsive={[
-            {
-              size: {
-                width: Math.round(size?.width || 0),
-                height: Math.round(size?.height || 0),
+        <div className="flex w-full justify-center">
+          <Image
+            ref={imageRef}
+            src={profilePath}
+            width="100%"
+            height="auto"
+            alt={detail?.name}
+            loading="lazy"
+            title={detail?.name}
+            className="aspect-[2/3] min-h-[auto] w-1/2 sm:w-[70%]"
+            loaderUrl="/api/image"
+            placeholder="empty"
+            responsive={[
+              {
+                size: {
+                  width: Math.round(size?.width || 0),
+                  height: Math.round(size?.height || 0),
+                },
               },
-            },
-          ]}
-          options={{
-            contentType: MimeType.WEBP,
-          }}
-        />
+            ]}
+            options={{
+              contentType: MimeType.WEBP,
+            }}
+          />
+        </div>
       ) : (
         <div className="flex items-center justify-center">
           <Avatar
@@ -104,9 +96,9 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
           />
         </div>
       )}
-      <Spacer y={1} />
+      <Spacer y={5} />
       <h3 className="text-center">{detail?.name}</h3>
-      <Spacer y={1} />
+      <Spacer y={5} />
       {externalIds &&
         detail &&
         (externalIds.facebookId ||
@@ -116,11 +108,7 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
           <>
             <div className="flex w-full justify-center gap-4">
               {externalIds.facebookId ? (
-                <NextLink
-                  href={`https://facebook.com/${externalIds.facebookId}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <Link href={`https://facebook.com/${externalIds.facebookId}`} isExternal>
                   <Player
                     src={isDark ? FacebookWhite : FacebookBlack}
                     hover
@@ -129,14 +117,10 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
                     className="h-7 w-7"
                     loop
                   />
-                </NextLink>
+                </Link>
               ) : null}
               {externalIds.instagramId ? (
-                <NextLink
-                  href={`https://instagram.com/${externalIds.instagramId}/`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <Link href={`https://instagram.com/${externalIds.instagramId}/`} isExternal>
                   <Player
                     src={isDark ? InstagramWhite : InstagramBlack}
                     hover
@@ -145,14 +129,10 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
                     className="h-7 w-7"
                     loop
                   />
-                </NextLink>
+                </Link>
               ) : null}
               {externalIds.twitterId ? (
-                <NextLink
-                  href={`https://twitter.com/${externalIds.twitterId}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <Link href={`https://twitter.com/${externalIds.twitterId}`} isExternal>
                   <Player
                     src={isDark ? TwitterWhite : TwitterBlack}
                     hover
@@ -161,10 +141,10 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
                     className="h-7 w-7"
                     loop
                   />
-                </NextLink>
+                </Link>
               ) : null}
               {detail.homepage ? (
-                <NextLink href={detail?.homepage} target="_blank" rel="noopener noreferrer">
+                <Link href={detail?.homepage} isExternal>
                   <Player
                     src={isDark ? ExternalLinkWhite : ExternalLinkBlack}
                     hover
@@ -173,18 +153,18 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
                     className="h-7 w-7"
                     loop
                   />
-                </NextLink>
+                </Link>
               ) : null}
             </div>
-            <Spacer y={1} />
+            <Spacer y={5} />
           </>
         )}
-      <div className="flex w-full justify-start sm:justify-center ">
+      <div className="flex w-full justify-start sm:justify-center">
         <h4 className="w-full sm:w-[70%]">
           <strong>Personal Info</strong>
         </h4>
       </div>
-      <Spacer y={1} />
+      <Spacer y={5} />
       <div className="flex flex-col flex-wrap items-start justify-start gap-y-4 sm:items-center">
         <div className="mb-2 flex flex-row items-center justify-start gap-x-6 sm:m-0 sm:w-[70%] sm:flex-col sm:items-start">
           <h5>Known For</h5>

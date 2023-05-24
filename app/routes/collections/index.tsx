@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/indent */
 import { useRef } from 'react';
 import { Pagination } from '@nextui-org/pagination';
-import { Badge, Spacer } from '@nextui-org/react';
+import { Badge } from '@nextui-org/react';
+import { Spacer } from '@nextui-org/spacer';
 import { useMediaQuery } from '@react-hookz/web';
 import type { MetaFunction } from '@remix-run/node';
 import { NavLink, useLocation } from '@remix-run/react';
@@ -68,7 +68,7 @@ const Collections = () => {
         isCoverCard
         coverItem={currentData}
       />
-      <Spacer y={1} />
+      <Spacer y={5} />
       {maxPage > 1 && (
         <div className="mt-7 flex flex-row justify-center">
           <Pagination

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '@nextui-org/button';
 import { Pagination } from '@nextui-org/pagination';
-import { Spacer } from '@nextui-org/react';
+import { Spacer } from '@nextui-org/spacer';
 import { useIntersectionObserver, useMediaQuery } from '@react-hookz/web';
 import { Link, useFetcher, useLocation, useSearchParams } from '@remix-run/react';
 import { motion } from 'framer-motion';
@@ -212,7 +212,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
               <Arrow direction="right" />
             </Button>
           </div>
-          <Spacer y={0.25} />
+          <Spacer y={2.5} />
         </>
       ) : totalPages && totalPages > 1 ? (
         <>
@@ -224,7 +224,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
             onChange={(page) => handlePageChange({ page })}
             {...(isSm && !is2Xs ? { size: 'sm' } : isSm && is2Xs ? { size: 'xs' } : {})}
           />
-          <Spacer y={0.25} />
+          <Spacer y={2.5} />
         </>
       ) : null
     ) : null;
@@ -347,7 +347,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
           <h4 className="opacity-70">No results</h4>
         </div>
       )}
-      <Spacer y={1} />
+      <Spacer y={5} />
       {!shouldFetch &&
       (hasNextPage || (currentPage && totalPages && currentPage < totalPages)) &&
       showLoadMore &&

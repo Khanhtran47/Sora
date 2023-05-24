@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Card, CardBody, CardHeader } from '@nextui-org/card';
-import { Avatar, Badge, Spacer } from '@nextui-org/react';
+import { Avatar, Badge } from '@nextui-org/react';
+import { Spacer } from '@nextui-org/spacer';
 import { useIntersectionObserver, useMeasure, useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import {
@@ -165,9 +166,9 @@ export const handle = {
           </Badge>
         )}
       </NavLink>
-      <Spacer x={0.25} />
+      <Spacer x={2.5} />
       <span> ❱ </span>
-      <Spacer x={0.25} />
+      <Spacer x={2.5} />
       <NavLink
         to={`/tv-shows/${match.params.tvId}/season/${match.params.seasonId}/`}
         aria-label={`Season ${match.params.seasonId}`}
