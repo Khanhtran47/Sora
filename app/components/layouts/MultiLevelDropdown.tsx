@@ -7,7 +7,7 @@ import { Spacer } from '@nextui-org/spacer';
 import { useLocation, useNavigate, useSearchParams } from '@remix-run/react';
 import type { User } from '@supabase/supabase-js';
 import type { AnimationItem } from 'lottie-web';
-import { useTheme as useRemixTheme } from 'next-themes';
+import { useTheme } from 'next-themes';
 import { useTranslation } from 'react-i18next';
 
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
@@ -30,7 +30,7 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
   const { user } = props;
   const rootData = useTypedRouteLoaderData('root');
   const { locale } = rootData || { locale: 'en' };
-  const { setTheme, theme: currentTheme } = useRemixTheme();
+  const { setTheme, theme: currentTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
   const [search] = useSearchParams();

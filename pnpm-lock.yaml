@@ -245,8 +245,8 @@ dependencies:
     specifier: ^0.31.3
     version: 0.31.3
   sonner:
-    specifier: ^0.3.0
-    version: 0.3.0(react-dom@17.0.2)(react@17.0.2)
+    specifier: ^0.4.0
+    version: 0.4.0(react-dom@17.0.2)(react@17.0.2)
   swiper:
     specifier: ^9.3.2
     version: 9.3.2
@@ -12941,8 +12941,8 @@ packages:
       smart-buffer: 4.2.0
     dev: true
 
-  /sonner@0.3.0(react-dom@17.0.2)(react@17.0.2):
-    resolution: {integrity: sha512-PJ/3k97N+/Kt/uu5tnPp3HFpFGF/iQs+hq+lAEtEQcEMc7o9S4axOV8pd7RKpFJoKt199aMUqHIgzs2re4MPbw==}
+  /sonner@0.4.0(react-dom@17.0.2)(react@17.0.2):
+    resolution: {integrity: sha512-zEU/Mzur39xYPpyQOOCmN6YQftl5v+TSmdsmWEbWf6ovnOvnHyRwR7+/6BIBbzwRa8+3v06FJlpF7J3KS4Ll9Q==}
     peerDependencies:
       react: ^18.0.0
       react-dom: ^18.0.0

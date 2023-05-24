@@ -219,7 +219,7 @@ module.exports = withTV({
           'background-body': '#000000',
           'background-title-bar': '#000000',
         },
-        'bumblebee-theme': {
+        bumblebee: {
           'background-title-bar': '#fefcf4',
           'background-body': '#ffffff',
           background: {
@@ -332,7 +332,7 @@ module.exports = withTV({
             DEFAULT: '#EE7372',
           },
         },
-        'autumn-theme': {
+        autumn: {
           'background-title-bar': '#fcf2f1',
           'background-body': '#ffffff',
           background: {
@@ -445,7 +445,7 @@ module.exports = withTV({
             foreground: '#facbd1',
           },
         },
-        'retro-theme': {
+        retro: {
           'background-title-bar': '#f0ebd8',
           'background-body': '#ffffff',
           background: {
@@ -558,7 +558,7 @@ module.exports = withTV({
             foreground: '#facdcd',
           },
         },
-        'synthwave-theme': {
+        synthwave: {
           'background-title-bar': '#1b1140',
           'background-body': '#000000',
           background: {
@@ -671,7 +671,7 @@ module.exports = withTV({
             foreground: '#f9f7fd',
           },
         },
-        'dracula-theme': {
+        dracula: {
           'background-title-bar': '#181921',
           'background-body': '#000000',
           background: {
@@ -784,7 +784,7 @@ module.exports = withTV({
             foreground: '#401d23',
           },
         },
-        'night-theme': {
+        night: {
           'background-title-bar': '#0a0e19',
           'background-body': '#000000',
           background: {

@@ -79,7 +79,7 @@ export const bumblebeeTheme = createTheme({
       link: '#A16C17',
     },
   },
-  className: 'bumblebee-theme',
+  className: 'bumblebee',
 });
 
 export const autumnTheme = createTheme({
@@ -129,7 +129,7 @@ export const autumnTheme = createTheme({
       link: '#64012E',
     },
   },
-  className: 'autumn-theme',
+  className: 'autumn',
 });
 
 export const retroTheme = createTheme({
@@ -179,7 +179,7 @@ export const retroTheme = createTheme({
       link: '#AC4B57',
     },
   },
-  className: 'retro-theme',
+  className: 'retro',
 });
 
 export const synthwaveTheme = createTheme({
@@ -229,7 +229,7 @@ export const synthwaveTheme = createTheme({
       link: '#B11B98',
     },
   },
-  className: 'synthwave-theme',
+  className: 'synthwave',
 });
 
 export const nightTheme = createTheme({
@@ -280,7 +280,7 @@ export const nightTheme = createTheme({
       link: '#1C70B2',
     },
   },
-  className: 'night-theme',
+  className: 'night',
 });
 
 export const draculaTheme = createTheme({
@@ -330,5 +330,5 @@ export const draculaTheme = createTheme({
       link: '#B73C9B',
     },
   },
-  className: 'dracula-theme',
+  className: 'dracula',
 });

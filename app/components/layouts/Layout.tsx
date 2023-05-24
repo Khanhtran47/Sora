@@ -4,6 +4,7 @@ import { useMediaQuery, useThrottledCallback } from '@react-hookz/web';
 import { useLocation, useMatches, useNavigationType, useOutlet, useParams } from '@remix-run/react';
 import type { User } from '@supabase/supabase-js';
 import { AnimatePresence, motion, useScroll } from 'framer-motion';
+import { useTheme } from 'next-themes';
 import { useHydrated } from 'remix-utils';
 import { Toaster } from 'sonner';
 import { tv } from 'tailwind-variants';
@@ -158,6 +159,7 @@ const Layout = (props: ILayout) => {
   const params = useParams();
   const isHydrated = useHydrated();
   const navigationType = useNavigationType();
+  const { theme } = useTheme();
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const isMd = useMediaQuery('(max-width: 1280px)', { initializeWithValue: false });
   const { sidebarMiniMode, sidebarBoxedMode, sidebarHoverMode } = useSoraSettings();
@@ -336,30 +338,34 @@ const Layout = (props: ILayout) => {
             >
               {/* <BreadCrumb /> */}
               <GlobalPlayer />
-              <Toaster
-                position="bottom-right"
-                richColors
-                closeButton
-                toastOptions={{
-                  style: {
-                    // @ts-ignore
-                    '--normal-bg': 'var(--nextui-colors-backgroundContrast)',
-                    '--normal-text': 'var(--nextui-colors-text)',
-                    '--normal-border': 'var(--nextui-colors-border)',
-                    '--success-bg': 'var(--nextui-colors-backgroundContrast)',
-                    '--success-border': 'var(--nextui-colors-border)',
-                    '--success-text': 'var(--nextui-colors-success)',
-                    '--error-bg': 'var(--nextui-colors-backgroundContrast)',
-                    '--error-border': 'var(--nextui-colors-border)',
-                    '--error-text': 'var(--nextui-colors-error)',
-                    '--gray1': 'var(--nextui-colors-accents0)',
-                    '--gray2': 'var(--nextui-colors-accents1)',
-                    '--gray4': 'var(--nextui-colors-accents3)',
-                    '--gray5': 'var(--nextui-colors-accents4)',
-                    '--gray12': 'var(--nextui-colors-accents9)',
-                  },
-                }}
-              />
+              {isHydrated ? (
+                <Toaster
+                  // @ts-ignore
+                  theme={theme}
+                  position="bottom-right"
+                  richColors
+                  closeButton
+                  toastOptions={{
+                    style: {
+                      // @ts-ignore
+                      '--normal-bg': 'hsl(var(--colors-neutral))',
+                      '--normal-text': 'hsl(var(--colors-neutral-foreground))',
+                      '--normal-border': 'hsl(var(--colors-border))',
+                      '--success-bg': 'hsl(var(--colors-success))',
+                      '--success-border': 'hsl(var(--colors-border))',
+                      '--success-text': 'hsl(var(--colors-success-foreground))',
+                      '--error-bg': 'hsl(var(--colors-danger))',
+                      '--error-border': 'hsl(var(--colors-border))',
+                      '--error-text': 'hsl(var(--colors-danger-foreground))',
+                      '--gray1': 'hsl(var(--colors-neutral-50))',
+                      '--gray2': 'hsl(var(--colors-neutral-100))',
+                      '--gray4': 'hsl(var(--colors-neutral-300))',
+                      '--gray5': 'hsl(var(--colors-neutral-400))',
+                      '--gray12': 'hsl(var(--colors-neutral-900))',
+                    },
+                  }}
+                />
+              ) : null}
               <AnimatePresence exitBeforeEnter initial={false}>
                 {outlet}
               </AnimatePresence>
