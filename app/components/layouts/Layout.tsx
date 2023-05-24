@@ -21,13 +21,13 @@ import {
 import TabLink from '~/components/elements/tab/TabLink';
 
 import ActionButtons from './ActionButtons';
-// import Footer from './Footer';
 import BottomNav from './BottomNav';
 // import BreadCrumb from './BreadCrumb';
 import GlobalPlayer from './GlobalPlayer';
 import Header from './Header';
 import MobileHeader from './MobileHeader';
 import SideBar from './SideBar';
+import TailwindIndicator from './TailwindIndicator';
 
 interface ILayout {
   user?: User;
@@ -307,6 +307,7 @@ const Layout = (props: ILayout) => {
         })}
       >
         {isSm ? <MobileHeader /> : <Header user={user} />}
+        {<TailwindIndicator />}
         {isShowTabLink && !hideTabLinkWithLocation ? (
           <div
             className={tabLinkWrapperStyles({

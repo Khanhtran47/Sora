@@ -38,7 +38,7 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
     genresAnime,
   } = props;
   const { viewportRef } = useLayout((state) => state);
-  const cardRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLAnchorElement>(null);
   const cardIntersection = useIntersectionObserver(cardRef, { root: viewportRef });
   const [size, bannerRef] = useMeasure<HTMLDivElement>();
   const titleItem =
@@ -48,83 +48,82 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
 
   return (
     <AspectRatio ratio={4 / 5} ref={bannerRef} className="mt-8">
-      <Link
+      <Card
+        as={Link}
+        // @ts-ignore
+        ref={cardRef}
+        isPressable
+        className={`h-full w-full rounded-b-none border-0 !transition-[margin,_transform,_background] !duration-300 !ease-in ${
+          !active ? 'mt-6' : ''
+        }`}
         to={`/${
           mediaType === 'movie' ? 'movies/' : mediaType === 'tv' ? 'tv-shows/' : 'anime/'
         }${id}/${mediaType === 'anime' ? 'overview' : ''}`}
       >
-        <Card
-          as="div"
-          ref={cardRef}
-          isPressable
-          className={`h-full w-full rounded-b-none border-0 ${!active ? 'mt-6' : ''}`}
-          role="figure"
-        >
-          <CardBody className="overflow-hidden p-0 after:absolute after:bottom-0 after:left-0 after:h-[calc(100%/2)] after:w-full after:bg-gradient-to-b after:from-transparent after:to-background after:content-['']">
-            <AnimatePresence>
-              {size ? (
-                <motion.div
-                  initial={{ opacity: 0, scale: 1.2, y: 40 }}
-                  animate={
-                    active ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0.3, scale: 1.2, y: 40 }
-                  }
-                  exit={{ opacity: 0, scale: 1.2, y: 40 }}
-                  transition={{ duration: 0.5 }}
-                  style={{ overflow: 'hidden' }}
-                >
-                  <Image
-                    src={posterPath || ''}
-                    loading="lazy"
-                    decoding={cardIntersection?.isIntersecting ? 'auto' : 'async'}
-                    width="100%"
-                    height="auto"
-                    className="aspect-[4/5] object-cover opacity-80"
-                    alt={titleItem}
-                    title={titleItem}
-                    loaderUrl="/api/image"
-                    placeholder="empty"
-                    responsive={[
-                      {
-                        size: {
-                          width: size?.width,
-                          height: (size?.width || 0) * (5 / 4),
-                        },
+        <CardBody className="overflow-hidden p-0 after:absolute after:bottom-0 after:left-0 after:h-[calc(100%/2)] after:w-full after:bg-gradient-to-b after:from-transparent after:to-background after:content-['']">
+          <AnimatePresence>
+            {size ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 1.2, y: 40 }}
+                animate={
+                  active ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0.3, scale: 1.2, y: 40 }
+                }
+                exit={{ opacity: 0, scale: 1.2, y: 40 }}
+                transition={{ duration: 0.5 }}
+                style={{ overflow: 'hidden' }}
+              >
+                <Image
+                  src={posterPath || ''}
+                  loading="lazy"
+                  decoding={cardIntersection?.isIntersecting ? 'auto' : 'async'}
+                  width="100%"
+                  height="auto"
+                  className="aspect-[4/5] object-cover opacity-80"
+                  alt={titleItem}
+                  title={titleItem}
+                  loaderUrl="/api/image"
+                  placeholder="empty"
+                  responsive={[
+                    {
+                      size: {
+                        width: size?.width,
+                        height: (size?.width || 0) * (5 / 4),
                       },
-                    ]}
-                    options={{
-                      contentType: MimeType.WEBP,
-                    }}
-                  />
-                </motion.div>
-              ) : null}
-            </AnimatePresence>
-          </CardBody>
-          <CardFooter className="absolute bottom-1 z-[1]">
-            <div className="flex w-full flex-col items-center justify-center gap-4 py-3">
-              <h2 className="mb-0 text-center font-semibold">{titleItem}</h2>
-              <div className="m-0 flex w-full flex-row gap-x-2">
+                    },
+                  ]}
+                  options={{
+                    contentType: MimeType.WEBP,
+                  }}
+                />
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
+        </CardBody>
+        <CardFooter className="absolute bottom-1 z-[1]">
+          <div className="flex w-full flex-col items-center justify-center gap-4 py-3">
+            <h2 className="mb-0 text-center font-semibold">{titleItem}</h2>
+            <div className="m-0 flex w-full flex-row gap-x-2">
+              <Badge variant="flat" color="primary" css={{ border: 0 }}>
+                <Star filled width={16} height={16} />
+                {mediaType === 'anime' ? voteAverage : Number(voteAverage.toFixed(1))}
+              </Badge>
+              {mediaType === 'anime' ? (
                 <Badge variant="flat" color="primary" css={{ border: 0 }}>
-                  <Star filled width={16} height={16} />
-                  {mediaType === 'anime' ? voteAverage : Number(voteAverage.toFixed(1))}
+                  {genresAnime[0]}
                 </Badge>
-                {mediaType === 'anime' ? (
-                  <Badge variant="flat" color="primary" css={{ border: 0 }}>
-                    {genresAnime[0]}
-                  </Badge>
-                ) : mediaType === 'movie' ? (
-                  <Badge variant="flat" color="primary" css={{ border: 0 }}>
-                    {genresMovie?.[genreIds[0]]}
-                  </Badge>
-                ) : (
-                  <Badge variant="flat" color="primary" css={{ border: 0 }}>
-                    {genresTv?.[genreIds[0]]}
-                  </Badge>
-                )}
-              </div>
+              ) : mediaType === 'movie' ? (
+                <Badge variant="flat" color="primary" css={{ border: 0 }}>
+                  {genresMovie?.[genreIds[0]]}
+                </Badge>
+              ) : (
+                <Badge variant="flat" color="primary" css={{ border: 0 }}>
+                  {genresTv?.[genreIds[0]]}
+                </Badge>
+              )}
             </div>
-          </CardFooter>
-        </Card>
-      </Link>
+          </div>
+        </CardFooter>
+      </Card>
     </AspectRatio>
   );
 };
