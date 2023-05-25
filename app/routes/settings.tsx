@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Fragment, useEffect, useMemo, useRef, useState, type Key } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { Kbd, type KbdKey } from '@nextui-org/kbd';
 import { Link } from '@nextui-org/link';
 import {
   Badge,
   Collapse,
-  Dropdown,
   Loading,
   Radio,
   Switch,
@@ -30,6 +29,7 @@ import languages from '~/constants/languages';
 import {
   listListLoadingType,
   listListViewType,
+  listNavigationType,
   listSubtitleBackgroundColor,
   listSubtitleBackgroundOpacity,
   listSubtitleFontColor,
@@ -42,6 +42,13 @@ import {
   settingsTab,
 } from '~/constants/settings';
 import Image from '~/components/elements/Image';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '~/components/elements/Select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/elements/tab/Tabs';
 import Brush from '~/assets/icons/BrushIcon';
 import Info from '~/assets/icons/InfoIcon';
@@ -110,9 +117,8 @@ interface SettingBlockCommonProps {
 
 interface SettingBlockSelectProps extends SettingBlockCommonProps {
   type: 'select';
-  selectedValue: string;
-  selectedKeys: Set<string>;
-  onSelectionChange: ((keys: 'all' | Set<Key>) => any) | undefined;
+  selectedValue?: string;
+  onSelectionChange: (value: string) => void;
   selectItems: string[];
 }
 
@@ -159,25 +165,24 @@ const SettingBlock = (props: SettingBlockProps) => {
     );
   }
   if (type === 'select') {
-    const { title, selectedValue, selectedKeys, onSelectionChange, selectItems } = props;
+    const { title, selectedValue, onSelectionChange, selectItems } = props;
     return (
       <div className="flex flex-row items-center justify-between rounded-md bg-content2 p-3">
         <h6>{title}</h6>
-        <Dropdown isBordered>
-          <Dropdown.Button color="primary">{selectedValue}</Dropdown.Button>
-          <Dropdown.Menu
-            aria-label="Select language"
-            color="primary"
-            selectionMode="single"
-            disallowEmptySelection
-            selectedKeys={selectedKeys}
-            onSelectionChange={onSelectionChange}
-          >
-            {selectItems.map((item) => (
-              <Dropdown.Item key={item}>{t(item)}</Dropdown.Item>
-            ))}
-          </Dropdown.Menu>
-        </Dropdown>
+        {selectItems && selectItems.length > 0 ? (
+          <Select value={selectedValue} onValueChange={(value) => onSelectionChange(value)}>
+            <SelectTrigger arial-label={title} className="!w-fit">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {selectItems.map((item) => (
+                <SelectItem key={item} value={item}>
+                  {t(item)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        ) : null}
       </div>
     );
   }
@@ -277,82 +282,36 @@ const Settings = () => {
   const listLoadingType = useLocalStorageValue('sora-settings_layout_list-loading-type', {
     defaultValue: 'pagination',
   });
+  const navigationType = useLocalStorageValue('sora-settings_layout_header-navigation-type', {
+    defaultValue: 'back-forward',
+  });
 
   const [activeTab, setActiveTab] = useState('general-tab');
-  const [selectedLang, setSelectedLang] = useState(new Set([locale]));
+  const [selectedLang, setSelectedLang] = useState(locale);
   const [selectedSubtitleFontColor, setSelectedSubtitleFontColor] = useState(
-    new Set([currentSubtitleFontColor.value!]),
+    currentSubtitleFontColor.value,
   );
   const [selectedSubtitleFontSize, setSelectedSubtitleFontSize] = useState(
-    new Set([currentSubtitleFontSize.value!]),
+    currentSubtitleFontSize.value,
   );
   const [selectedSubtitleBackgroundColor, setSelectedSubtitleBackgroundColor] = useState(
-    new Set([currentSubtitleBackgroundColor.value!]),
+    currentSubtitleBackgroundColor.value,
   );
   const [selectedSubtitleBackgroundOpacity, setSelectedSubtitleBackgroundOpacity] = useState(
-    new Set([currentSubtitleBackgroundOpacity.value!]),
+    currentSubtitleBackgroundOpacity.value,
   );
   const [selectedSubtitleWindowColor, setSelectedSubtitleWindowColor] = useState(
-    new Set([currentSubtitleWindowColor.value!]),
+    currentSubtitleWindowColor.value,
   );
   const [selectedSubtitleWindowOpacity, setSelectedSubtitleWindowOpacity] = useState(
-    new Set([currentSubtitleWindowOpacity.value!]),
+    currentSubtitleWindowOpacity.value,
   );
   const [selectedSubtitleTextEffects, setSelectedSubtitleTextEffects] = useState(
-    new Set([currentSubtitleTextEffects.value!]),
+    currentSubtitleTextEffects.value,
   );
-  const [selectedListViewType, setSelectedListViewType] = useState(new Set([listViewType.value!]));
-  const [selectedListLoadingType, setSelectedListLoadingType] = useState(
-    new Set([listLoadingType.value!]),
-  );
-  // const [selectedSidebarStyleMode, setSelectedSidebarStyleMode] = useState(
-  //   new Set([sidebarStyleMode.value!]),
-  // );
-
-  const selectedLangValue = useMemo(
-    () => Array.from(selectedLang).join(', ').replaceAll('_', ' '),
-    [selectedLang],
-  );
-  const selectedSubtitleFontColorValue = useMemo(
-    () => Array.from(selectedSubtitleFontColor).join(', '),
-    [selectedSubtitleFontColor],
-  );
-  const selectedSubtitleFontSizeValue = useMemo(
-    () => Array.from(selectedSubtitleFontSize).join(', '),
-    [selectedSubtitleFontSize],
-  );
-  const selectedSubtitleBackgroundColorValue = useMemo(
-    () => Array.from(selectedSubtitleBackgroundColor).join(', '),
-    [selectedSubtitleBackgroundColor],
-  );
-  const selectedSubtitleBackgroundOpacityValue = useMemo(
-    () => Array.from(selectedSubtitleBackgroundOpacity).join(', '),
-    [selectedSubtitleBackgroundOpacity],
-  );
-  const selectedSubtitleWindowColorValue = useMemo(
-    () => Array.from(selectedSubtitleWindowColor).join(', '),
-    [selectedSubtitleWindowColor],
-  );
-  const selectedSubtitleWindowOpacityValue = useMemo(
-    () => Array.from(selectedSubtitleWindowOpacity).join(', '),
-    [selectedSubtitleWindowOpacity],
-  );
-  const selectedSubtitleTextEffectsValue = useMemo(
-    () => Array.from(selectedSubtitleTextEffects).join(', '),
-    [selectedSubtitleTextEffects],
-  );
-  const selectedListViewTypeValue = useMemo(
-    () => Array.from(selectedListViewType).join(', '),
-    [selectedListViewType],
-  );
-  const selectedListLoadingTypeValue = useMemo(
-    () => Array.from(selectedListLoadingType).join(', '),
-    [selectedListLoadingType],
-  );
-  // const selectedSidebarStyleModeValue = useMemo(
-  //   () => Array.from(selectedSidebarStyleMode).join(', '),
-  //   [selectedSidebarStyleMode],
-  // );
+  const [selectedListViewType, setSelectedListViewType] = useState(listViewType.value);
+  const [selectedListLoadingType, setSelectedListLoadingType] = useState(listLoadingType.value);
+  const [selectedNavigationType, setSelectedNavigationType] = useState(navigationType.value);
 
   useEffect(() => {
     if (underlineRef.current) {
@@ -383,6 +342,66 @@ const Settings = () => {
       } else {
         const index = settingsTab.findIndex((tab) => tab.id === activeTab);
         setActiveTab(settingsTab[index + 1].id);
+      }
+    }
+  };
+
+  const handleSelect = (value: string, type: string) => {
+    switch (type) {
+      case 'navigation-type': {
+        setSelectedNavigationType(value);
+        navigationType.set(value);
+        break;
+      }
+      case 'language': {
+        setSelectedLang(value);
+        navigate(`${location.pathname}?lng=${value}`);
+        break;
+      }
+      case 'list-view-type': {
+        setSelectedListViewType(value);
+        listViewType.set(value);
+        break;
+      }
+      case 'list-loading-type': {
+        setSelectedListLoadingType(value);
+        listLoadingType.set(value);
+        break;
+      }
+      case 'subtitle-font-color': {
+        setSelectedSubtitleFontColor(value);
+        currentSubtitleFontColor.set(value);
+        break;
+      }
+      case 'subtitle-font-size': {
+        setSelectedSubtitleFontSize(value);
+        currentSubtitleFontSize.set(value);
+        break;
+      }
+      case 'subtitle-background-color': {
+        setSelectedSubtitleBackgroundColor(value);
+        currentSubtitleBackgroundColor.set(value);
+        break;
+      }
+      case 'subtitle-background-opacity': {
+        setSelectedSubtitleBackgroundOpacity(value);
+        currentSubtitleBackgroundOpacity.set(value);
+        break;
+      }
+      case 'subtitle-window-color': {
+        setSelectedSubtitleWindowColor(value);
+        currentSubtitleWindowColor.set(value);
+        break;
+      }
+      case 'subtitle-window-opacity': {
+        setSelectedSubtitleWindowOpacity(value);
+        currentSubtitleWindowOpacity.set(value);
+        break;
+      }
+      case 'subtitle-text-effects': {
+        setSelectedSubtitleTextEffects(value);
+        currentSubtitleTextEffects.set(value);
+        break;
       }
     }
   };
@@ -439,19 +458,13 @@ const Settings = () => {
                   dragElastic={0.4}
                   onDragEnd={handleDragEnd}
                   dragDirectionLock
-                  // onDirectionLock={(axis) => console.log(axis)}
                 >
                   <div className="flex w-full flex-col justify-start rounded-xl bg-content1 p-5 shadow-lg shadow-neutral/10">
                     <SettingBlock
                       type="select"
                       title={t('language')}
-                      selectedValue={t(selectedLangValue)}
-                      selectedKeys={selectedLang}
-                      onSelectionChange={(keys: any) => {
-                        const lang = Array.from(keys).join(', ').replaceAll('_', ' ');
-                        setSelectedLang(keys);
-                        navigate(`${location.pathname}?lng=${lang}`);
-                      }}
+                      selectedValue={selectedLang}
+                      onSelectionChange={(value) => handleSelect(value, 'language')}
                       selectItems={languages}
                     />
                   </div>
@@ -520,53 +533,71 @@ const Settings = () => {
                       </Radio.Group>
                     </Collapse>
                     {isSm ? null : (
-                      <Collapse
-                        title={t('sidebar')}
-                        subtitle={t('sidebar-subtitle')}
-                        css={{
-                          backgroundColor: 'hsl(var(--colors-content1)) !important',
-                          borderRadius: '0.75rem !important',
-                        }}
-                      >
-                        <div className="flex flex-col items-start justify-center gap-y-4 rounded-md bg-content2 p-3">
-                          <h5 className="my-1">{t('sidebar-mode')}</h5>
-                          {isMd ? null : (
-                            <>
-                              <div className="flex w-full flex-row items-center justify-between gap-x-2">
-                                <h6>{t('sidebar-mini-mode')}</h6>
-                                <Switch
-                                  checked={sidebarMiniMode.value}
-                                  onChange={(e) => {
-                                    sidebarMiniMode.set(e.target.checked);
-                                    if (sidebarMiniMode.value) {
-                                      sidebarHoverMode.set(false);
-                                    }
-                                  }}
-                                />
-                              </div>
-                              <div className="flex w-full flex-row items-center justify-between gap-x-2">
-                                <h6>{t('sidebar-hover-mode')}</h6>
-                                <Switch
-                                  checked={sidebarHoverMode.value}
-                                  onChange={(e) => {
-                                    sidebarHoverMode.set(e.target.checked);
-                                    if (!sidebarHoverMode.value) {
-                                      sidebarMiniMode.set(true);
-                                    }
-                                  }}
-                                />
-                              </div>
-                            </>
-                          )}
-                          <div className="flex w-full flex-row items-center justify-between gap-x-2">
-                            <h6>{t('sidebar-boxed-mode')}</h6>
-                            <Switch
-                              checked={sidebarBoxedMode.value}
-                              onChange={(e) => sidebarBoxedMode.set(e.target.checked)}
-                            />
+                      <>
+                        <Collapse
+                          title={t('sidebar')}
+                          subtitle={t('sidebar-subtitle')}
+                          css={{
+                            backgroundColor: 'hsl(var(--colors-content1)) !important',
+                            borderRadius: '0.75rem !important',
+                          }}
+                        >
+                          <div className="flex flex-col items-start justify-center gap-y-4 rounded-md bg-content2 p-3">
+                            <h5 className="my-1">{t('sidebar-mode')}</h5>
+                            {isMd ? null : (
+                              <>
+                                <div className="flex w-full flex-row items-center justify-between gap-x-2">
+                                  <h6>{t('sidebar-mini-mode')}</h6>
+                                  <Switch
+                                    checked={sidebarMiniMode.value}
+                                    onChange={(e) => {
+                                      sidebarMiniMode.set(e.target.checked);
+                                      if (sidebarMiniMode.value) {
+                                        sidebarHoverMode.set(false);
+                                      }
+                                    }}
+                                  />
+                                </div>
+                                <div className="flex w-full flex-row items-center justify-between gap-x-2">
+                                  <h6>{t('sidebar-hover-mode')}</h6>
+                                  <Switch
+                                    checked={sidebarHoverMode.value}
+                                    onChange={(e) => {
+                                      sidebarHoverMode.set(e.target.checked);
+                                      if (!sidebarHoverMode.value) {
+                                        sidebarMiniMode.set(true);
+                                      }
+                                    }}
+                                  />
+                                </div>
+                              </>
+                            )}
+                            <div className="flex w-full flex-row items-center justify-between gap-x-2">
+                              <h6>{t('sidebar-boxed-mode')}</h6>
+                              <Switch
+                                checked={sidebarBoxedMode.value}
+                                onChange={(e) => sidebarBoxedMode.set(e.target.checked)}
+                              />
+                            </div>
                           </div>
-                        </div>
-                      </Collapse>
+                        </Collapse>
+                        <Collapse
+                          title={t('header')}
+                          subtitle={t('header-subtitle')}
+                          css={{
+                            backgroundColor: 'hsl(var(--colors-content1)) !important',
+                            borderRadius: '0.75rem !important',
+                          }}
+                        >
+                          <SettingBlock
+                            type="select"
+                            title={t('navigation-type')}
+                            selectedValue={selectedNavigationType}
+                            onSelectionChange={(value) => handleSelect(value, 'navigation-type')}
+                            selectItems={listNavigationType}
+                          />
+                        </Collapse>
+                      </>
                     )}
                     <Collapse
                       title={t('media-list-grid')}
@@ -579,26 +610,16 @@ const Settings = () => {
                       <SettingBlock
                         type="select"
                         title={t('list-view-type')}
-                        selectedValue={t(selectedListViewTypeValue)}
-                        selectedKeys={selectedListViewType}
-                        onSelectionChange={(keys: any) => {
-                          const viewType = Array.from(keys).join(', ');
-                          setSelectedListViewType(keys);
-                          listViewType.set(viewType);
-                        }}
+                        selectedValue={selectedListViewType}
+                        onSelectionChange={(value) => handleSelect(value, 'list-view-type')}
                         selectItems={listListViewType}
                       />
                       <Spacer y={2.5} />
                       <SettingBlock
                         type="select"
                         title={t('list-loading-type')}
-                        selectedValue={t(selectedListLoadingTypeValue)}
-                        selectedKeys={selectedListLoadingType}
-                        onSelectionChange={(keys: any) => {
-                          const loadingType = Array.from(keys).join(', ');
-                          setSelectedListLoadingType(keys);
-                          listLoadingType.set(loadingType);
-                        }}
+                        selectedValue={selectedListLoadingType}
+                        onSelectionChange={(value) => handleSelect(value, 'list-loading-type')}
                         selectItems={listListLoadingType}
                       />
                     </Collapse>
@@ -720,91 +741,62 @@ const Settings = () => {
                       <SettingBlock
                         type="select"
                         title={t('subtitle-font-color')}
-                        selectedValue={t(selectedSubtitleFontColorValue)}
-                        selectedKeys={selectedSubtitleFontColor}
-                        onSelectionChange={(keys: any) => {
-                          const color = Array.from(keys).join(', ');
-                          setSelectedSubtitleFontColor(keys);
-                          currentSubtitleFontColor.set(color);
-                        }}
+                        selectedValue={selectedSubtitleFontColor}
+                        onSelectionChange={(value) => handleSelect(value, 'subtitle-font-color')}
                         selectItems={listSubtitleFontColor}
                       />
                       <Spacer y={2.5} />
                       <SettingBlock
                         type="select"
                         title={t('subtitle-font-size')}
-                        selectedValue={t(selectedSubtitleFontSizeValue)}
-                        selectedKeys={selectedSubtitleFontSize}
-                        onSelectionChange={(keys: any) => {
-                          const size = Array.from(keys).join(', ');
-                          setSelectedSubtitleFontSize(keys);
-                          currentSubtitleFontSize.set(size);
-                        }}
+                        selectedValue={selectedSubtitleFontSize}
+                        onSelectionChange={(value) => handleSelect(value, 'subtitle-font-size')}
                         selectItems={listSubtitleFontSize}
                       />
                       <Spacer y={2.5} />
                       <SettingBlock
                         type="select"
                         title={t('subtitle-background-color')}
-                        selectedValue={t(selectedSubtitleBackgroundColorValue)}
-                        selectedKeys={selectedSubtitleBackgroundColor}
-                        onSelectionChange={(keys: any) => {
-                          const color = Array.from(keys).join(', ');
-                          setSelectedSubtitleBackgroundColor(keys);
-                          currentSubtitleBackgroundColor.set(color);
-                        }}
+                        selectedValue={selectedSubtitleBackgroundColor}
+                        onSelectionChange={(value) =>
+                          handleSelect(value, 'subtitle-background-color')
+                        }
                         selectItems={listSubtitleBackgroundColor}
                       />
                       <Spacer y={2.5} />
                       <SettingBlock
                         type="select"
                         title={t('subtitle-background-opacity')}
-                        selectedValue={t(selectedSubtitleBackgroundOpacityValue)}
-                        selectedKeys={selectedSubtitleBackgroundOpacity}
-                        onSelectionChange={(keys: any) => {
-                          const opacity = Array.from(keys).join(', ');
-                          setSelectedSubtitleBackgroundOpacity(keys);
-                          currentSubtitleBackgroundOpacity.set(opacity);
-                        }}
+                        selectedValue={selectedSubtitleBackgroundOpacity}
+                        onSelectionChange={(value) =>
+                          handleSelect(value, 'subtitle-background-opacity')
+                        }
                         selectItems={listSubtitleBackgroundOpacity}
                       />
                       <Spacer y={2.5} />
                       <SettingBlock
                         type="select"
                         title={t('subtitle-window-color')}
-                        selectedValue={t(selectedSubtitleWindowColorValue)}
-                        selectedKeys={selectedSubtitleWindowColor}
-                        onSelectionChange={(keys: any) => {
-                          const color = Array.from(keys).join(', ');
-                          setSelectedSubtitleWindowColor(keys);
-                          currentSubtitleWindowColor.set(color);
-                        }}
+                        selectedValue={selectedSubtitleWindowColor}
+                        onSelectionChange={(value) => handleSelect(value, 'subtitle-window-color')}
                         selectItems={listSubtitleWindowColor}
                       />
                       <Spacer y={2.5} />
                       <SettingBlock
                         type="select"
                         title={t('subtitle-window-opacity')}
-                        selectedValue={t(selectedSubtitleWindowOpacityValue)}
-                        selectedKeys={selectedSubtitleWindowOpacity}
-                        onSelectionChange={(keys: any) => {
-                          const opacity = Array.from(keys).join(', ');
-                          setSelectedSubtitleWindowOpacity(keys);
-                          currentSubtitleWindowOpacity.set(opacity);
-                        }}
+                        selectedValue={selectedSubtitleWindowOpacity}
+                        onSelectionChange={(value) =>
+                          handleSelect(value, 'subtitle-window-opacity')
+                        }
                         selectItems={listSubtitleWindowOpacity}
                       />
                       <Spacer y={2.5} />
                       <SettingBlock
                         type="select"
                         title={t('subtitle-text-effects')}
-                        selectedValue={t(selectedSubtitleTextEffectsValue)}
-                        selectedKeys={selectedSubtitleTextEffects}
-                        onSelectionChange={(keys: any) => {
-                          const effect = Array.from(keys).join(', ');
-                          setSelectedSubtitleTextEffects(keys);
-                          currentSubtitleTextEffects.set(effect);
-                        }}
+                        selectedValue={selectedSubtitleTextEffects}
+                        onSelectionChange={(value) => handleSelect(value, 'subtitle-text-effects')}
                         selectItems={listSubtitleTextEffects}
                       />
                     </Collapse>

@@ -121,6 +121,10 @@ function useSoraSettings() {
   const autoSwitchSubtitle = useLocalStorageValue('sora-settings_subtitle_auto-switch', {
     defaultValue: true,
   });
+  const navigationType = useLocalStorageValue('sora-settings_layout_header-navigation-type', {
+    defaultValue: 'back-forward',
+    initializeWithValue: false,
+  });
 
   return {
     currentSubtitleFontColor,
@@ -156,6 +160,7 @@ function useSoraSettings() {
     listViewType,
     listLoadingType,
     autoSwitchSubtitle,
+    navigationType,
   };
 }
 
