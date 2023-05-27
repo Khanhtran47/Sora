@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Button } from '@nextui-org/button';
 import { Pagination } from '@nextui-org/pagination';
-import { Input, Loading, useInput } from '@nextui-org/react';
+import { Input, useInput } from '@nextui-org/react';
 import { useMediaQuery } from '@react-hookz/web';
 import { useFetcher } from '@remix-run/react';
 import { toast } from 'sonner';
@@ -232,14 +232,11 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
             type="button"
             color="primary"
             isDisabled={fetcher.type === 'normalLoad' && !isGetSubtitleLink}
+            isLoading={fetcher.type === 'normalLoad' && !isGetSubtitleLink}
             className="!px-3"
             onPress={searchSubtitles}
           >
-            {fetcher.type === 'normalLoad' && !isGetSubtitleLink ? (
-              <Loading type="points" color="currentColor" size="sm" />
-            ) : (
-              'Search'
-            )}
+            {fetcher.type === 'normalLoad' && !isGetSubtitleLink ? null : 'Search'}
           </Button>
         </div>
       </DialogHeader>

@@ -1,4 +1,3 @@
-import { Badge } from '@nextui-org/react';
 import { json, type LoaderArgs } from '@remix-run/node';
 import { NavLink, useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 import { motion, type PanInfo } from 'framer-motion';

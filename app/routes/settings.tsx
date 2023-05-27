@@ -1,8 +1,9 @@
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { Kbd, type KbdKey } from '@nextui-org/kbd';
 import { Link } from '@nextui-org/link';
-import { Collapse, Loading, Radio, Switch, Tooltip, type SwitchEvent } from '@nextui-org/react';
+import { Collapse, Radio, Switch, Tooltip, type SwitchEvent } from '@nextui-org/react';
 import { Spacer } from '@nextui-org/spacer';
+import { Spinner } from '@nextui-org/spinner';
 import { useLocalStorageValue, useMediaQuery } from '@react-hookz/web';
 import type { MetaFunction } from '@remix-run/node';
 import { NavLink, Link as RemixLink, useLocation, useNavigate } from '@remix-run/react';
@@ -386,7 +387,7 @@ const Settings = () => {
     >
       <h2>{t('settings')}</h2>
       <Spacer y={2.5} />
-      <ClientOnly fallback={<Loading type="default" />}>
+      <ClientOnly fallback={<Spinner />}>
         {() => (
           <Tabs
             defaultValue={activeTab}

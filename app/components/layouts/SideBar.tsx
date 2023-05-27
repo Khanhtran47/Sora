@@ -1,6 +1,7 @@
 import { Card, CardBody, CardFooter, CardHeader } from '@nextui-org/card';
 import { Link } from '@nextui-org/link';
-import { Loading, Tooltip } from '@nextui-org/react';
+import { Tooltip } from '@nextui-org/react';
+import { Spinner } from '@nextui-org/spinner';
 import { useHover } from '@react-aria/interactions';
 import { NavLink } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
@@ -233,13 +234,13 @@ const SideBar = () => {
                         {!sidebarMiniMode.value || (sidebarHoverMode && isHovered)
                           ? t('home')
                           : null}
-                        <Loading
+                        <Spinner
+                          size="sm"
                           className={
                             isPending && (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))
                               ? 'ml-auto'
                               : '!hidden'
                           }
-                          type="points-opacity"
                         />
                       </>
                     )}
@@ -276,13 +277,13 @@ const SideBar = () => {
                         {!sidebarMiniMode.value || (sidebarHoverMode && isHovered)
                           ? t('trending')
                           : null}
-                        <Loading
+                        <Spinner
+                          size="sm"
                           className={
                             isPending && (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))
                               ? 'ml-auto'
                               : '!hidden'
                           }
-                          type="points-opacity"
                         />
                       </>
                     )}
@@ -319,13 +320,13 @@ const SideBar = () => {
                         {!sidebarMiniMode.value || (sidebarHoverMode && isHovered)
                           ? t('discover')
                           : null}
-                        <Loading
+                        <Spinner
+                          size="sm"
                           className={
                             isPending && (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))
                               ? 'ml-auto'
                               : '!hidden'
                           }
-                          type="points-opacity"
                         />
                       </>
                     )}
@@ -366,10 +367,7 @@ const SideBar = () => {
                           <>
                             <Search className="mr-2 h-5 w-5" filled={isActive} />
                             {t('search-movies')}
-                            <Loading
-                              className={isPending ? 'ml-auto' : '!hidden'}
-                              type="points-opacity"
-                            />
+                            <Spinner size="sm" className={isPending ? 'ml-auto' : '!hidden'} />
                           </>
                         )}
                       </NavLink>
@@ -386,10 +384,7 @@ const SideBar = () => {
                           <>
                             <Search className="mr-2 h-5 w-5" filled={isActive} />
                             {t('search-tv-shows')}
-                            <Loading
-                              className={isPending ? 'ml-auto' : '!hidden'}
-                              type="points-opacity"
-                            />
+                            <Spinner size="sm" className={isPending ? 'ml-auto' : '!hidden'} />
                           </>
                         )}
                       </NavLink>
@@ -406,10 +401,7 @@ const SideBar = () => {
                           <>
                             <Search className="mr-2 h-5 w-5" filled={isActive} />
                             {t('search-anime')}
-                            <Loading
-                              className={isPending ? 'ml-auto' : '!hidden'}
-                              type="points-opacity"
-                            />
+                            <Spinner size="sm" className={isPending ? 'ml-auto' : '!hidden'} />
                           </>
                         )}
                       </NavLink>
@@ -426,10 +418,7 @@ const SideBar = () => {
                           <>
                             <Search className="mr-2 h-5 w-5" filled={isActive} />
                             {t('search-people')}
-                            <Loading
-                              className={isPending ? 'ml-auto' : '!hidden'}
-                              type="points-opacity"
-                            />
+                            <Spinner size="sm" className={isPending ? 'ml-auto' : '!hidden'} />
                           </>
                         )}
                       </NavLink>
@@ -527,10 +516,7 @@ const SideBar = () => {
                             <div className="mb-2 flex w-full flex-row items-center justify-start">
                               <Discover className="mr-2 h-5 w-5" filled={isActive} />
                               {t('movies-popular')}
-                              <Loading
-                                className={isPending ? 'ml-auto' : '!hidden'}
-                                type="points-opacity"
-                              />
+                              <Spinner size="sm" className={isPending ? 'ml-auto' : '!hidden'} />
                             </div>
                             <p className="w-full text-xs text-foreground">
                               {t('movies-popular-subtitle')}
@@ -552,10 +538,7 @@ const SideBar = () => {
                             <div className="mb-2 flex w-full flex-row items-center justify-start">
                               <Discover className="mr-2 h-5 w-5" filled={isActive} />
                               {t('movies-now-playing')}
-                              <Loading
-                                className={isPending ? 'ml-auto' : '!hidden'}
-                                type="points-opacity"
-                              />
+                              <Spinner size="sm" className={isPending ? 'ml-auto' : '!hidden'} />
                             </div>
                             <p className="w-full text-xs text-foreground">
                               {t('movies-now-playing-subtitle')}
@@ -577,10 +560,7 @@ const SideBar = () => {
                             <div className="mb-2 flex w-full flex-row items-center justify-start">
                               <Discover className="mr-2 h-5 w-5" filled={isActive} />
                               {t('movies-upcoming')}
-                              <Loading
-                                className={isPending ? 'ml-auto' : '!hidden'}
-                                type="points-opacity"
-                              />
+                              <Spinner size="sm" className={isPending ? 'ml-auto' : '!hidden'} />
                             </div>
                             <p className="w-full text-xs text-foreground">
                               {t('movies-upcoming-subtitle')}
@@ -602,10 +582,7 @@ const SideBar = () => {
                             <div className="mb-2 flex w-full flex-row items-center justify-start">
                               <Discover className="mr-2 h-5 w-5" filled={isActive} />
                               {t('movies-top-rated')}
-                              <Loading
-                                className={isPending ? 'ml-auto' : '!hidden'}
-                                type="points-opacity"
-                              />
+                              <Spinner size="sm" className={isPending ? 'ml-auto' : '!hidden'} />
                             </div>
                             <p className="w-full text-xs text-foreground">
                               {t('movies-top-rated-subtitle')}
@@ -707,10 +684,7 @@ const SideBar = () => {
                             <div className="mb-2 flex w-full flex-row items-center justify-start">
                               <Discover className="mr-2 h-5 w-5" filled={isActive} />
                               {t('tv-shows-popular')}
-                              <Loading
-                                className={isPending ? 'ml-auto' : '!hidden'}
-                                type="points-opacity"
-                              />
+                              <Spinner size="sm" className={isPending ? 'ml-auto' : '!hidden'} />
                             </div>
                             <p className="w-full text-xs text-foreground">
                               {t('tv-shows-popular-subtitle')}
@@ -732,10 +706,7 @@ const SideBar = () => {
                             <div className="mb-2 flex w-full flex-row items-center justify-start">
                               <Discover className="mr-2 h-5 w-5" filled={isActive} />
                               {t('tv-shows-airing-today')}
-                              <Loading
-                                className={isPending ? 'ml-auto' : '!hidden'}
-                                type="points-opacity"
-                              />
+                              <Spinner size="sm" className={isPending ? 'ml-auto' : '!hidden'} />
                             </div>
                             <p className="w-full text-xs text-foreground">
                               {t('tv-shows-airing-today-subtitle')}
@@ -757,10 +728,7 @@ const SideBar = () => {
                             <div className="mb-2 flex w-full flex-row items-center justify-start">
                               <Discover className="mr-2 h-5 w-5" filled={isActive} />
                               {t('tv-shows-on-the-air')}
-                              <Loading
-                                className={isPending ? 'ml-auto' : '!hidden'}
-                                type="points-opacity"
-                              />
+                              <Spinner size="sm" className={isPending ? 'ml-auto' : '!hidden'} />
                             </div>
                             <p className="w-full text-xs text-foreground">
                               {t('tv-shows-on-the-air-subtitle')}
@@ -782,10 +750,7 @@ const SideBar = () => {
                             <div className="mb-2 flex w-full flex-row items-center justify-start">
                               <Discover className="mr-2 h-5 w-5" filled={isActive} />
                               {t('tv-shows-top-rated')}
-                              <Loading
-                                className={isPending ? 'ml-auto' : '!hidden'}
-                                type="points-opacity"
-                              />
+                              <Spinner size="sm" className={isPending ? 'ml-auto' : '!hidden'} />
                             </div>
                             <p className="w-full text-xs text-foreground">
                               {t('tv-shows-top-rated-subtitle')}
@@ -887,10 +852,7 @@ const SideBar = () => {
                             <div className="mb-2 flex w-full flex-row items-center justify-start">
                               <Discover className="mr-2 h-5 w-5" filled={isActive} />
                               {t('anime-popular')}
-                              <Loading
-                                className={isPending ? 'ml-auto' : '!hidden'}
-                                type="points-opacity"
-                              />
+                              <Spinner size="sm" className={isPending ? 'ml-auto' : '!hidden'} />
                             </div>
                             <p className="w-full text-xs text-foreground">
                               {t('anime-popular-subtitle')}
@@ -912,10 +874,7 @@ const SideBar = () => {
                             <div className="mb-2 flex w-full flex-row items-center justify-start">
                               <Discover className="mr-2 h-5 w-5" filled={isActive} />
                               {t('anime-trending')}
-                              <Loading
-                                className={isPending ? 'ml-auto' : '!hidden'}
-                                type="points-opacity"
-                              />
+                              <Spinner size="sm" className={isPending ? 'ml-auto' : '!hidden'} />
                             </div>
                             <p className="w-full text-xs text-foreground">
                               {t('anime-trending-subtitle')}
@@ -937,10 +896,7 @@ const SideBar = () => {
                             <div className="mb-2 flex w-full flex-row items-center justify-start">
                               <Discover className="mr-2 h-5 w-5" filled={isActive} />
                               {t('anime-recent-episodes')}
-                              <Loading
-                                className={isPending ? 'ml-auto' : '!hidden'}
-                                type="points-opacity"
-                              />
+                              <Spinner size="sm" className={isPending ? 'ml-auto' : '!hidden'} />
                             </div>
                             <p className="w-full text-xs text-foreground">
                               {t('anime-recent-episodes-subtitle')}
@@ -962,10 +918,7 @@ const SideBar = () => {
                             <div className="mb-2 flex w-full flex-row items-center justify-start">
                               <Discover className="mr-2 h-5 w-5" />
                               {t('anime-random')}
-                              <Loading
-                                className={isPending ? 'ml-auto' : '!hidden'}
-                                type="points-opacity"
-                              />
+                              <Spinner size="sm" className={isPending ? 'ml-auto' : '!hidden'} />
                             </div>
                             <p className="w-full text-xs text-foreground">
                               {t('anime-random-subtitle')}
@@ -1007,13 +960,13 @@ const SideBar = () => {
                         {!sidebarMiniMode.value || (sidebarHoverMode && isHovered)
                           ? t('collections')
                           : null}
-                        <Loading
+                        <Spinner
+                          size="sm"
                           className={
                             isPending && (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))
                               ? 'ml-auto'
                               : '!hidden'
                           }
-                          type="points-opacity"
                         />
                       </>
                     )}
@@ -1050,13 +1003,13 @@ const SideBar = () => {
                         {!sidebarMiniMode.value || (sidebarHoverMode && isHovered)
                           ? t('people')
                           : null}
-                        <Loading
+                        <Spinner
+                          size="sm"
                           className={
                             isPending && (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))
                               ? 'ml-auto'
                               : '!hidden'
                           }
-                          type="points-opacity"
                         />
                       </>
                     )}
@@ -1093,13 +1046,13 @@ const SideBar = () => {
                         {!sidebarMiniMode.value || (sidebarHoverMode && isHovered)
                           ? t('history')
                           : null}
-                        <Loading
+                        <Spinner
+                          size="sm"
                           className={
                             isPending && (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))
                               ? 'ml-auto'
                               : '!hidden'
                           }
-                          type="points-opacity"
                         />
                       </>
                     )}
@@ -1136,13 +1089,13 @@ const SideBar = () => {
                         {!sidebarMiniMode.value || (sidebarHoverMode && isHovered)
                           ? t('settings')
                           : null}
-                        <Loading
+                        <Spinner
+                          size="sm"
                           className={
                             isPending && (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))
                               ? 'ml-auto'
                               : '!hidden'
                           }
-                          type="points-opacity"
                         />
                       </>
                     )}

@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useCallback, useEffect, useState } from 'react';
 import { Button } from '@nextui-org/button';
-import { Loading } from '@nextui-org/react';
 import { Spacer } from '@nextui-org/spacer';
+import { Spinner } from '@nextui-org/spinner';
 import { useColor } from 'color-thief-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import YouTube from 'react-youtube';
@@ -115,7 +115,7 @@ const CardItemHover = (props: ICardItemHoverProps) => {
           </motion.div>
         )}
       </AnimatePresence>
-      <ClientOnly fallback={<Loading type="default" />}>
+      <ClientOnly fallback={<Spinner />}>
         {() => {
           if (
             ((trailer as Trailer)?.key ||

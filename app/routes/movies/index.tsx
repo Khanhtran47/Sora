@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Loading } from '@nextui-org/react';
+import { Spinner } from '@nextui-org/spinner';
 import { useMeasure } from '@react-hookz/web';
 import { json, type LoaderArgs } from '@remix-run/node';
 import { useFetcher, useLoaderData, useLocation, useNavigate } from '@remix-run/react';
@@ -208,16 +208,15 @@ const MoviesIndexPage = () => {
           })}
         <AnimatePresence>
           {fetcher.type === 'normalLoad' ? (
-            <Loading
+            <Spinner
               // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
               as={motion.div}
-              type="gradient"
               size="lg"
-              css={{ my: '$17' }}
+              className="mt-10"
               initial={{ y: -40, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -40, opacity: 0 }}
+              // @ts-ignore
               transition={{ duration: 0.3 }}
             />
           ) : null}
