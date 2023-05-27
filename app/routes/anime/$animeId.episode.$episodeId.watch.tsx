@@ -1,8 +1,6 @@
 import { env } from 'process';
-import { Badge } from '@nextui-org/react';
-import { Spacer } from '@nextui-org/spacer';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { NavLink, useCatch, useLoaderData, type RouteMatch } from '@remix-run/react';
+import { useCatch, useLoaderData, type RouteMatch } from '@remix-run/react';
 
 import type { IMedia } from '~/types/media';
 import { getAniskip, type IAniSkipResponse } from '~/services/aniskip/aniskip.server';
@@ -23,6 +21,7 @@ import { LOKLOK_URL } from '~/services/loklok/utils.server';
 import getProviderList from '~/services/provider.server';
 import { authenticate, insertHistory } from '~/services/supabase';
 import { CACHE_CONTROL } from '~/utils/server/http';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import CatchBoundaryView from '~/components/elements/shared/CatchBoundaryView';
 import ErrorBoundaryView from '~/components/elements/shared/ErrorBoundaryView';
 import WatchDetail from '~/components/elements/shared/WatchDetail';
@@ -738,45 +737,18 @@ export const meta: MetaFunction = ({ data, params }) => {
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
     <>
-      <NavLink
+      <BreadcrumbItem
         to={`/anime/${match.params.animeId}/`}
-        aria-label={match.data?.detail?.title?.english || match.data?.detail?.title?.romaji}
+        key={`anime-${match.params.animeId}-overview`}
       >
-        {({ isActive }) => (
-          <Badge
-            color="primary"
-            variant="flat"
-            css={{
-              opacity: isActive ? 1 : 0.7,
-              transition: 'opacity 0.25s ease 0s',
-              '&:hover': { opacity: 0.8 },
-            }}
-          >
-            {match.data?.detail?.title?.english || match.data?.detail?.title?.romaji}
-          </Badge>
-        )}
-      </NavLink>
-      <Spacer x={2.5} />
-      <span> ❱ </span>
-      <Spacer x={2.5} />
-      <NavLink
+        {match.data?.detail?.title?.english || match.data?.detail?.title?.romaji}
+      </BreadcrumbItem>
+      <BreadcrumbItem
         to={`/anime/${match.params.animeId}/episode/${match.params.episodeId}`}
-        aria-label={match?.data?.episodeInfo?.title || match.params.episodeId}
+        key={`anime-${match.params.animeId}-episode-${match.params.episodeId}`}
       >
-        {({ isActive }) => (
-          <Badge
-            color="primary"
-            variant="flat"
-            css={{
-              opacity: isActive ? 1 : 0.7,
-              transition: 'opacity 0.25s ease 0s',
-              '&:hover': { opacity: 0.8 },
-            }}
-          >
-            {match?.data?.episodeInfo?.title || match.params.episodeId}
-          </Badge>
-        )}
-      </NavLink>
+        {match?.data?.episodeInfo?.title || match.params.episodeId}
+      </BreadcrumbItem>
     </>
   ),
   miniTitle: (match: RouteMatch) => ({

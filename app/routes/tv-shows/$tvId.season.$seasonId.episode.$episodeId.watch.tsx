@@ -1,8 +1,6 @@
 import type { IMovieInfo, ISource } from '@consumet/extensions';
-import { Badge } from '@nextui-org/react';
-import { Spacer } from '@nextui-org/spacer';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { NavLink, useCatch, useLoaderData, type RouteMatch } from '@remix-run/react';
+import { useCatch, useLoaderData, type RouteMatch } from '@remix-run/react';
 import Vibrant from 'node-vibrant';
 
 import {
@@ -27,6 +25,7 @@ import { TMDB as TmdbUtils } from '~/services/tmdb/utils.server';
 import TMDB from '~/utils/media';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import CatchBoundaryView from '~/components/elements/shared/CatchBoundaryView';
 import ErrorBoundaryView from '~/components/elements/shared/ErrorBoundaryView';
 import WatchDetail from '~/components/elements/shared/WatchDetail';
@@ -404,68 +403,24 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
     <>
-      <NavLink
-        to={`/tv-shows/${match.params.tvId}`}
-        aria-label={
-          match.data?.detail?.name || match.data?.detail?.original_name || match.params.tvId
-        }
+      <BreadcrumbItem
+        to={`/tv-shows/${match.params.tvId}/`}
+        key={`tv-shows-${match.params.tvId}-overview`}
       >
-        {({ isActive }) => (
-          <Badge
-            color="primary"
-            variant="flat"
-            css={{
-              opacity: isActive ? 1 : 0.7,
-              transition: 'opacity 0.25s ease 0s',
-              '&:hover': { opacity: 0.8 },
-            }}
-          >
-            {match.data?.detail?.name || match.data?.detail?.original_name || match.params.tvId}
-          </Badge>
-        )}
-      </NavLink>
-      <Spacer x={2.5} />
-      <span> ❱ </span>
-      <Spacer x={2.5} />
-      <NavLink
-        to={`/tv-shows/${match.params.tvId}/season/${match.params.seasonId}`}
-        aria-label={`Season ${match.params.seasonId}`}
+        {match.data?.detail?.name || match.data?.detail?.original_name || match.params.tvId}
+      </BreadcrumbItem>
+      <BreadcrumbItem
+        to={`/tv-shows/${match.params.tvId}/season/${match.params.seasonId}/`}
+        key={`tv-shows-${match.params.tvId}-season-${match.params.seasonId}-episodes`}
       >
-        {({ isActive }) => (
-          <Badge
-            color="primary"
-            variant="flat"
-            css={{
-              opacity: isActive ? 1 : 0.7,
-              transition: 'opacity 0.25s ease 0s',
-              '&:hover': { opacity: 0.8 },
-            }}
-          >
-            Season {match.params.seasonId}
-          </Badge>
-        )}
-      </NavLink>
-      <Spacer x={2.5} />
-      <span> ❱ </span>
-      <Spacer x={2.5} />
-      <NavLink
+        Season {match.params.seasonId}
+      </BreadcrumbItem>
+      <BreadcrumbItem
         to={`/tv-shows/${match.params.tvId}/season/${match.params.seasonId}/episode/${match.params.episodeId}`}
-        aria-label={`Episode ${match.params.episodeId}`}
+        key={`tv-shows-${match.params.tvId}-season-${match.params.seasonId}-episode-${match.params.episodeId}`}
       >
-        {({ isActive }) => (
-          <Badge
-            color="primary"
-            variant="flat"
-            css={{
-              opacity: isActive ? 1 : 0.7,
-              transition: 'opacity 0.25s ease 0s',
-              '&:hover': { opacity: 0.8 },
-            }}
-          >
-            Episode {match.params.episodeId}
-          </Badge>
-        )}
-      </NavLink>
+        Episode {match.params.episodeId}
+      </BreadcrumbItem>
     </>
   ),
   playerSettings: {

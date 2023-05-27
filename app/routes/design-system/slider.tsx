@@ -1,26 +1,14 @@
 import { useState } from 'react';
-import { Chip } from '@nextui-org/chip';
 import { Link } from '@nextui-org/link';
-import { NavLink } from '@remix-run/react';
 
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import Slider from '~/components/elements/Slider';
 
 export const handle = {
   breadcrumb: () => (
-    <NavLink to="/design-system/slider" aria-label="Slider Page">
-      {({ isActive }) => (
-        <Chip
-          color="primary"
-          variant="flat"
-          size="sm"
-          className={`${
-            isActive ? 'opacity-100' : 'opacity-70'
-          } duration-250 ease-in-out transition-opacity hover:opacity-80`}
-        >
-          Slider
-        </Chip>
-      )}
-    </NavLink>
+    <BreadcrumbItem to="/design-system/slider" key="design-slider">
+      Slider
+    </BreadcrumbItem>
   ),
   miniTitle: () => ({
     title: 'Slider',

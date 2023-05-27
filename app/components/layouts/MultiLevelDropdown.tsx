@@ -218,7 +218,7 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
           radius="full"
           aria-label="dropdown"
           isIconOnly
-          className="h-9 w-10"
+          className="h-9 w-9"
         >
           <Player
             lottieRef={(instance) => {

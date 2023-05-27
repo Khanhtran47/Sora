@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Button } from '@nextui-org/button';
-import { Badge, Modal } from '@nextui-org/react';
+import { Modal } from '@nextui-org/react';
 import { Spacer } from '@nextui-org/spacer';
 import { useWindowSize } from '@react-hookz/web';
 import {
@@ -11,7 +11,6 @@ import {
   type MetaFunction,
 } from '@remix-run/node';
 import {
-  NavLink,
   useFetcher,
   useLoaderData,
   useLocation,
@@ -24,6 +23,7 @@ import { badRequest } from 'remix-utils';
 
 import { getAllCacheKeys, lruCache, searchCacheKeys } from '~/services/lru-cache';
 import { getUserFromCookie } from '~/services/supabase';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import SearchForm from '~/components/elements/SearchForm';
 import ErrorBoundaryView from '~/components/elements/shared/ErrorBoundaryView';
 
@@ -68,21 +68,9 @@ const meta: MetaFunction = () => ({
 
 const handle = {
   breadcrumb: () => (
-    <NavLink to="/cache/admin" arial-lable="Cache Admin">
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          Cache Admin
-        </Badge>
-      )}
-    </NavLink>
+    <BreadcrumbItem to="/cache/admin" key="cache-admin">
+      Cache Admin
+    </BreadcrumbItem>
   ),
   miniTitle: () => ({
     title: 'Cache Management',

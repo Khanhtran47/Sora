@@ -1,21 +1,31 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-
 import { useMemo } from 'react';
 import { Card, CardBody } from '@nextui-org/card';
 import { Avatar } from '@nextui-org/react';
 import type { MetaFunction } from '@remix-run/node';
-import { useParams } from '@remix-run/react';
+import { useParams, type RouteMatch } from '@remix-run/react';
 import { MimeType } from 'remix-image';
 
 import type { IMedia } from '~/types/media';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import Image from '~/components/elements/Image';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 
 export const meta: MetaFunction = ({ params }) => ({
   'og:url': `https://sora-anime.vercel.app/anime/${params.animeId}/`,
 });
+
+export const handle = {
+  breadcrumb: (match: RouteMatch) => (
+    <BreadcrumbItem
+      to={`/anime/${match.params.animeId}/`}
+      key={`anime-${match.params.animeId}-overview`}
+    >
+      Overview
+    </BreadcrumbItem>
+  ),
+};
 
 const AnimeOverview = () => {
   const animeData = useTypedRouteLoaderData('routes/anime/$animeId');

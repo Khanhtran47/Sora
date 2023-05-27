@@ -1,6 +1,5 @@
-import { Badge } from '@nextui-org/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { NavLink, useLoaderData, useLocation, useNavigate } from '@remix-run/react';
+import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 import { motion, type PanInfo } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
 import { useHydrated } from 'remix-utils';
@@ -9,6 +8,7 @@ import type { IMedia } from '~/types/media';
 import { getAnimeAdvancedSearch } from '~/services/consumet/anilist/anilist.server';
 import { authenticate } from '~/services/supabase';
 import MediaList from '~/components/media/MediaList';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
 export const meta: MetaFunction = () => ({
   title: 'Discover and watch anime for free | Sora',
@@ -72,21 +72,9 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export const handle = {
   breadcrumb: () => (
-    <NavLink to="/discover/anime" aria-label="Discover Anime">
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          Discover Anime
-        </Badge>
-      )}
-    </NavLink>
+    <BreadcrumbItem to="/discover/anime" key="discover-anime">
+      Anime
+    </BreadcrumbItem>
   ),
   miniTitle: () => ({
     title: 'Discover',

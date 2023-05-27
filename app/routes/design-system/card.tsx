@@ -1,28 +1,16 @@
 import { Button } from '@nextui-org/button';
 import { Card, CardBody, CardFooter, CardHeader } from '@nextui-org/card';
-import { Chip } from '@nextui-org/chip';
 import { Link } from '@nextui-org/link';
-import { NavLink } from '@remix-run/react';
 import { MimeType } from 'remix-image';
 
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import Image from '~/components/elements/Image';
 
 export const handle = {
   breadcrumb: () => (
-    <NavLink to="/design-system/card" aria-label="Card Page">
-      {({ isActive }) => (
-        <Chip
-          color="primary"
-          variant="flat"
-          size="sm"
-          className={`${
-            isActive ? 'opacity-100' : 'opacity-70'
-          } duration-250 ease-in-out transition-opacity hover:opacity-80`}
-        >
-          Card
-        </Chip>
-      )}
-    </NavLink>
+    <BreadcrumbItem to="/design-system/card" key="design-card">
+      Card
+    </BreadcrumbItem>
   ),
   miniTitle: () => ({
     title: 'Card',

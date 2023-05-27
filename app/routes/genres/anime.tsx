@@ -1,31 +1,19 @@
 import { Button } from '@nextui-org/button';
-import { Badge } from '@nextui-org/react';
 import { Spacer } from '@nextui-org/spacer';
-import { NavLink, useLocation, useNavigate } from '@remix-run/react';
+import { useLocation, useNavigate } from '@remix-run/react';
 import { motion, type PanInfo } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
 import { useHydrated } from 'remix-utils';
 
 import { animeGenres } from '~/constants/filterItems';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
 export const handle = {
   breadcrumb: () => (
-    <NavLink to="/genres/anime" aria-label="Anime Genres">
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          Anime Genres
-        </Badge>
-      )}
-    </NavLink>
+    <BreadcrumbItem to="/genres/anime" key="genres-anime">
+      Anime
+    </BreadcrumbItem>
   ),
   miniTitle: () => ({
     title: 'Genres',

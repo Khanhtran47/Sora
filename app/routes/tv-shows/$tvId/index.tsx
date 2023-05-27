@@ -2,7 +2,7 @@ import { Card, CardBody } from '@nextui-org/card';
 import { Avatar } from '@nextui-org/react';
 import { useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs } from '@remix-run/node';
-import { Link, useLoaderData, useNavigate, useParams } from '@remix-run/react';
+import { Link, useLoaderData, useNavigate, useParams, type RouteMatch } from '@remix-run/react';
 import { MimeType } from 'remix-image';
 
 import { authenticate } from '~/services/supabase';
@@ -12,6 +12,7 @@ import TMDB from '~/utils/media';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import Image from '~/components/elements/Image';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 
@@ -44,6 +45,16 @@ export const loader = async ({ request, params }: LoaderArgs) => {
       },
     },
   );
+};
+export const handle = {
+  breadcrumb: (match: RouteMatch) => (
+    <BreadcrumbItem
+      to={`/tv-shows/${match.params.tvId}/`}
+      key={`tv-shows-${match.params.tvId}-overview`}
+    >
+      Overview
+    </BreadcrumbItem>
+  ),
 };
 
 const TvOverview = () => {

@@ -1,11 +1,11 @@
-import { Badge } from '@nextui-org/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { NavLink, useLoaderData, type RouteMatch } from '@remix-run/react';
+import { useLoaderData, type RouteMatch } from '@remix-run/react';
 
 import { getAnimeEpisodeInfo } from '~/services/consumet/anilist/anilist.server';
 import { authenticate } from '~/services/supabase';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import ListEpisodes from '~/components/elements/shared/ListEpisodes';
 
 export const loader = async ({ params, request }: LoaderArgs) => {
@@ -25,24 +25,9 @@ export const meta: MetaFunction = ({ params }) => ({
 
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
-    <NavLink
-      to={`/anime/${match.params.animeId}/`}
-      aria-label={match.data?.detail?.title?.english || match.data?.detail?.title?.romaji}
-    >
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          {match.data?.detail?.title?.english || match.data?.detail?.title?.romaji}
-        </Badge>
-      )}
-    </NavLink>
+    <BreadcrumbItem to={`/anime/${match.params.animeId}/`} key={`anime-${match.params.animeId}`}>
+      {match.data?.detail?.title?.english || match.data?.detail?.title?.romaji}
+    </BreadcrumbItem>
   ),
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   miniTitle: (match: RouteMatch, parentMatch?: RouteMatch) => ({

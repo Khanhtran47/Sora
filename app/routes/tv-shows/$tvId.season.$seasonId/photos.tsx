@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { Badge } from '@nextui-org/react';
 import { Spacer } from '@nextui-org/spacer';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { NavLink, useLoaderData, type RouteMatch } from '@remix-run/react';
+import { useLoaderData, type RouteMatch } from '@remix-run/react';
 import { Gallery, Item, type GalleryProps } from 'react-photoswipe-gallery';
 import { MimeType } from 'remix-image';
 import i18next from '~/i18n/i18next.server';
@@ -12,6 +11,7 @@ import { getTvSeasonImages } from '~/services/tmdb/tmdb.server';
 import TMDB from '~/utils/media';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import Image from '~/components/elements/Image';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
@@ -36,25 +36,12 @@ export const meta: MetaFunction = ({ params }) => ({
 
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
-    // eslint-disable-next-line react/jsx-no-undef
-    <NavLink
+    <BreadcrumbItem
       to={`/tv-shows/${match.params.tvId}/season/${match.params.seasonId}/photos`}
-      aria-label="Photos"
+      key={`tv-shows-${match.params.tvId}-season-${match.params.seasonId}-photos`}
     >
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          Photos
-        </Badge>
-      )}
-    </NavLink>
+      Photos
+    </BreadcrumbItem>
   ),
   miniTitle: (_match: RouteMatch, parentMatch: RouteMatch) => ({
     title: `${parentMatch.data?.detail?.name || parentMatch.data?.detail?.original_name} - ${

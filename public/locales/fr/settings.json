@@ -97,5 +97,8 @@
   "fast-forward": "Avance rapide",
   "fast-forward-subtitle": "Appuyez longuement sur la vidéo pour avancer rapidement sur mobile",
   "auto-switch-subtitle": "Changer automatiquement de sous-titre",
-  "auto-switch-subtitle-subtitle": "Changer automatiquement le sous-titre après avoir ajouté le sous-titre à la liste."
+  "auto-switch-subtitle-subtitle": "Changer automatiquement le sous-titre après avoir ajouté le sous-titre à la liste.",
+  "header": "L'en-tête",
+  "header-subtitle": "Personnalisation des paramètres d'en-tête",
+  "show-breadcrumb": "Show breadcrumb"
 }

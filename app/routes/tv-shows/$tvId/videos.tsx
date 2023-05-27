@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Card, CardBody, CardFooter } from '@nextui-org/card';
-import { Badge } from '@nextui-org/react';
 import { useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { NavLink, useFetcher, useLoaderData, type RouteMatch } from '@remix-run/react';
+import { useFetcher, useLoaderData, type RouteMatch } from '@remix-run/react';
 import { AnimatePresence, motion, type PanInfo } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
 import { MimeType } from 'remix-image';
@@ -13,6 +12,7 @@ import { getVideos } from '~/services/tmdb/tmdb.server';
 import type { Item } from '~/services/youtube/youtube.types';
 import TMDB from '~/utils/media';
 import { CACHE_CONTROL } from '~/utils/server/http';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import Image from '~/components/elements/Image';
 import WatchTrailerModal, { type Trailer } from '~/components/elements/dialog/WatchTrailerModal';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/elements/tab/Tabs';
@@ -40,21 +40,12 @@ export const meta: MetaFunction = ({ params }) => ({
 
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
-    <NavLink to={`/tv-shows/${match.params.tvId}/videos`} aria-label="Videos">
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          Videos
-        </Badge>
-      )}
-    </NavLink>
+    <BreadcrumbItem
+      to={`/tv-shows/${match.params.tvId}/videos`}
+      key={`tv-shows-${match.params.tvId}-videos`}
+    >
+      Videos
+    </BreadcrumbItem>
   ),
   miniTitle: (_match: RouteMatch, parentMatch: RouteMatch) => ({
     title: parentMatch.data?.detail?.name,

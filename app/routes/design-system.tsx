@@ -1,9 +1,9 @@
-import { Badge } from '@nextui-org/react';
 import type { MetaFunction } from '@remix-run/node';
-import { NavLink, Outlet, useLocation } from '@remix-run/react';
+import { Outlet, useLocation } from '@remix-run/react';
 import { motion } from 'framer-motion';
 
 import { designSystemPages } from '~/constants/tabLinks';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
 export const meta: MetaFunction = () => ({
   title: 'Design System',
@@ -14,21 +14,9 @@ export const meta: MetaFunction = () => ({
 
 export const handle = {
   breadcrumb: () => (
-    <NavLink to="/design-system" aria-label="Design system Page">
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          Design System
-        </Badge>
-      )}
-    </NavLink>
+    <BreadcrumbItem to="/design-system" key="design-system">
+      Design System
+    </BreadcrumbItem>
   ),
   showTabLink: true,
   tabLinkPages: designSystemPages,

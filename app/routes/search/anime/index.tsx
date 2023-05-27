@@ -33,19 +33,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 export const handle = {
   breadcrumb: () => (
     <NavLink to="/search/anime" aria-label="Search Anime">
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          Search Anime
-        </Badge>
-      )}
+      Search Anime
     </NavLink>
   ),
   miniTitle: () => ({

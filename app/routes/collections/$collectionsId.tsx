@@ -1,10 +1,9 @@
 import { useRef } from 'react';
 import { Pagination } from '@nextui-org/pagination';
-import { Badge } from '@nextui-org/react';
 import { Spacer } from '@nextui-org/spacer';
 import { useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { NavLink, useLoaderData, useLocation, type RouteMatch } from '@remix-run/react';
+import { useLoaderData, useLocation, type RouteMatch } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import i18next from '~/i18n/i18next.server';
 
@@ -14,6 +13,7 @@ import { CACHE_CONTROL } from '~/utils/server/http';
 import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
 export const meta: MetaFunction = ({ data, params }) => {
   if (!data) {
@@ -53,42 +53,15 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
     <>
-      <NavLink to="/collections" aria-label="Collections">
-        {({ isActive }) => (
-          <Badge
-            color="primary"
-            variant="flat"
-            css={{
-              opacity: isActive ? 1 : 0.7,
-              transition: 'opacity 0.25s ease 0s',
-              '&:hover': { opacity: 0.8 },
-            }}
-          >
-            Collections
-          </Badge>
-        )}
-      </NavLink>
-      <Spacer x={2.5} />
-      <span> ❱ </span>
-      <Spacer x={2.5} />
-      <NavLink
+      <BreadcrumbItem to="/collections" key="collections">
+        Collections
+      </BreadcrumbItem>
+      <BreadcrumbItem
         to={`/collections/${match.params.collectionsId}`}
-        aria-label={match.data?.detail?.name || match.params.collectionsId}
+        key={`collections-${match.params.collectionsId}`}
       >
-        {({ isActive }) => (
-          <Badge
-            color="primary"
-            variant="flat"
-            css={{
-              opacity: isActive ? 1 : 0.7,
-              transition: 'opacity 0.25s ease 0s',
-              '&:hover': { opacity: 0.8 },
-            }}
-          >
-            {match.data?.detail?.name || match.params.collectionsId}
-          </Badge>
-        )}
-      </NavLink>
+        {match.data?.detail?.name || match.params.collectionsId}
+      </BreadcrumbItem>
     </>
   ),
   miniTitle: (match: RouteMatch) => ({

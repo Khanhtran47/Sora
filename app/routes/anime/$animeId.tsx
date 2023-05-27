@@ -1,15 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { Badge } from '@nextui-org/react';
 import { useIntersectionObserver } from '@react-hookz/web';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import {
-  NavLink,
-  Outlet,
-  useCatch,
-  useLoaderData,
-  useLocation,
-  type RouteMatch,
-} from '@remix-run/react';
+import { Outlet, useCatch, useLoaderData, useLocation, type RouteMatch } from '@remix-run/react';
 import { motion, useTransform } from 'framer-motion';
 
 import { getAnimeInfo } from '~/services/consumet/anilist/anilist.server';
@@ -23,6 +15,7 @@ import { useCustomHeaderChangePosition } from '~/hooks/useHeader';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { animeDetailsPages } from '~/constants/tabLinks';
 import { AnimeDetail, MediaBackgroundImage } from '~/components/media/MediaDetail';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import WatchTrailerModal from '~/components/elements/dialog/WatchTrailerModal';
 import CatchBoundaryView from '~/components/elements/shared/CatchBoundaryView';
 import ErrorBoundaryView from '~/components/elements/shared/ErrorBoundaryView';
@@ -124,24 +117,9 @@ export const meta: MetaFunction = ({ data, params }) => {
 
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
-    <NavLink
-      to={`/anime/${match.params.animeId}/`}
-      aria-label={match.data?.detail?.title?.english || match.data?.detail?.title?.romaji}
-    >
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          {match.data?.detail?.title?.english || match.data?.detail?.title?.romaji}
-        </Badge>
-      )}
-    </NavLink>
+    <BreadcrumbItem to={`/anime/${match.params.animeId}`} key={`anime-${match.params.animeId}`}>
+      {match.data?.detail?.title?.english || match.data?.detail?.title?.romaji}
+    </BreadcrumbItem>
   ),
   miniTitle: (match: RouteMatch) => ({
     title:

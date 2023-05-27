@@ -1,6 +1,6 @@
-import { Badge } from '@nextui-org/react';
 import { json, type MetaFunction } from '@remix-run/node';
-import { NavLink } from '@remix-run/react';
+
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
 export const meta: MetaFunction = () => ({
   title: 'Video Player',
@@ -61,21 +61,9 @@ export const loader = async () =>
 
 export const handle = {
   breadcrumb: () => (
-    <NavLink to="/design-system/video-player" aria-label="Player Page">
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          Player
-        </Badge>
-      )}
-    </NavLink>
+    <BreadcrumbItem to="/design-system/video-player" key="design-player">
+      Player
+    </BreadcrumbItem>
   ),
   playerSettings: {
     isMini: false,

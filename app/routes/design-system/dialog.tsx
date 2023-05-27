@@ -1,8 +1,7 @@
 import { Button } from '@nextui-org/button';
-import { Chip } from '@nextui-org/chip';
 import { Link } from '@nextui-org/link';
-import { NavLink } from '@remix-run/react';
 
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import {
   Dialog,
   DialogContent,
@@ -21,20 +20,9 @@ import {
 
 export const handle = {
   breadcrumb: () => (
-    <NavLink to="/design-system/dialog" aria-label="Dialog Page">
-      {({ isActive }) => (
-        <Chip
-          color="primary"
-          variant="flat"
-          size="sm"
-          className={`${
-            isActive ? 'opacity-100' : 'opacity-70'
-          } duration-250 ease-in-out transition-opacity hover:opacity-80`}
-        >
-          Dialog
-        </Chip>
-      )}
-    </NavLink>
+    <BreadcrumbItem to="/design-system/dialog" key="design-dialog">
+      Dialog
+    </BreadcrumbItem>
   ),
   miniTitle: () => ({
     title: 'Dialog',

@@ -1,12 +1,5 @@
-import { Badge } from '@nextui-org/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import {
-  NavLink,
-  useLoaderData,
-  useLocation,
-  useNavigate,
-  type RouteMatch,
-} from '@remix-run/react';
+import { useLoaderData, useLocation, useNavigate, type RouteMatch } from '@remix-run/react';
 import { motion, type PanInfo } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
@@ -17,6 +10,7 @@ import { authenticate } from '~/services/supabase';
 import { getSearchPerson } from '~/services/tmdb/tmdb.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import MediaList from '~/components/media/MediaList';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import SearchForm from '~/components/elements/SearchForm';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
@@ -55,24 +49,12 @@ export const meta: MetaFunction = ({ data, params }) => {
 
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
-    <NavLink
+    <BreadcrumbItem
       to={`/search/people/${match.params.peopleKeyword}`}
-      aria-label={match.params.peopleKeyword}
+      key={`search-people-${match.params.peopleKeyword}`}
     >
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          {match.params.peopleKeyword}
-        </Badge>
-      )}
-    </NavLink>
+      {match.params.peopleKeyword}
+    </BreadcrumbItem>
   ),
   miniTitle: (match: RouteMatch) => ({
     title: 'Search results',

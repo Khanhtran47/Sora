@@ -1,6 +1,5 @@
-import { Badge } from '@nextui-org/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { NavLink, useLoaderData, type RouteMatch } from '@remix-run/react';
+import { useLoaderData, type RouteMatch } from '@remix-run/react';
 import i18next from '~/i18n/i18next.server';
 
 import { authenticate } from '~/services/supabase';
@@ -9,6 +8,7 @@ import TMDB from '~/utils/media';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   await authenticate(request, undefined, true);
@@ -37,21 +37,12 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
-    <NavLink to={`/tv-shows/${match.params.tvId}/recommendations`} aria-label="Recommendations">
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          Recommendations
-        </Badge>
-      )}
-    </NavLink>
+    <BreadcrumbItem
+      to={`/tv-shows/${match.params.tvId}/recommendations`}
+      key={`tv-shows-${match.params.tvId}-recommendations`}
+    >
+      Recommendations
+    </BreadcrumbItem>
   ),
   miniTitle: (_match: RouteMatch, parentMatch: RouteMatch) => ({
     title: parentMatch.data?.detail?.name,

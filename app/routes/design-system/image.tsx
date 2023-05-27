@@ -1,26 +1,14 @@
-import { Chip } from '@nextui-org/chip';
 import { Link } from '@nextui-org/link';
-import { NavLink } from '@remix-run/react';
 import { MimeType } from 'remix-image';
 
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import Image from '~/components/elements/Image';
 
 export const handle = {
   breadcrumb: () => (
-    <NavLink to="/design-system/card" aria-label="Image Page">
-      {({ isActive }) => (
-        <Chip
-          color="primary"
-          variant="flat"
-          size="sm"
-          className={`${
-            isActive ? 'opacity-100' : 'opacity-70'
-          } duration-250 ease-in-out transition-opacity hover:opacity-80`}
-        >
-          Image
-        </Chip>
-      )}
-    </NavLink>
+    <BreadcrumbItem to="/design-system/image" key="design-image">
+      Image
+    </BreadcrumbItem>
   ),
   miniTitle: () => ({
     title: 'Image',

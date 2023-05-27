@@ -12,14 +12,13 @@ import FontStyles800 from '@fontsource/inter/800.css';
 import FontStyles900 from '@fontsource/inter/900.css';
 import { Button } from '@nextui-org/button';
 import { Image as NextUIImage } from '@nextui-org/image';
-import { Badge, NextUIProvider, useSSR } from '@nextui-org/react';
+import { NextUIProvider, useSSR } from '@nextui-org/react';
 import { NextUIProvider as NextUIv2Provider } from '@nextui-org/system';
 import { json, type LinksFunction, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import {
   Links,
   LiveReload,
   Meta,
-  NavLink,
   Scripts,
   useCatch,
   useFetchers,
@@ -58,6 +57,7 @@ import { getListGenre, getListLanguages } from '~/services/tmdb/tmdb.server';
 import * as gtag from '~/utils/client/gtags.client';
 import { useIsBot } from '~/context/isbot.context';
 import Layout from '~/components/layouts/Layout';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import nProgressStyles from '~/components/styles/nprogress.css';
 import Home from '~/assets/icons/HomeIcon';
 import Refresh from '~/assets/icons/RefreshIcon';
@@ -353,21 +353,9 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export const handle = {
   breadcrumb: () => (
-    <NavLink to="/" aria-label="Home Page">
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          <Home width={16} height={16} />
-        </Badge>
-      )}
-    </NavLink>
+    <BreadcrumbItem to="/" key="home">
+      <Home width={16} height={16} />
+    </BreadcrumbItem>
   ),
 };
 

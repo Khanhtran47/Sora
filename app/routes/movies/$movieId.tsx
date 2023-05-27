@@ -1,9 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { Badge } from '@nextui-org/react';
 import { useIntersectionObserver } from '@react-hookz/web';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import {
-  NavLink,
   Outlet,
   useCatch,
   useFetcher,
@@ -26,6 +24,7 @@ import { useCustomHeaderChangePosition } from '~/hooks/useHeader';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { movieTvDetailsPages } from '~/constants/tabLinks';
 import { MediaBackgroundImage, MediaDetail } from '~/components/media/MediaDetail';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import WatchTrailerModal, { type Trailer } from '~/components/elements/dialog/WatchTrailerModal';
 import CatchBoundaryView from '~/components/elements/shared/CatchBoundaryView';
 import ErrorBoundaryView from '~/components/elements/shared/ErrorBoundaryView';
@@ -159,24 +158,9 @@ export const meta: MetaFunction = ({ data, params }) => {
 
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
-    <NavLink
-      to={`/movies/${match.params.movieId}`}
-      aria-label={match.data?.detail?.title || match.params.movieId}
-    >
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          {match.data?.detail?.title || match.params.movieId}
-        </Badge>
-      )}
-    </NavLink>
+    <BreadcrumbItem to={`/movies/${match.params.movieId}`} key={`movies-${match.params.movieId}`}>
+      {match.data?.detail?.title || match.params.movieId}
+    </BreadcrumbItem>
   ),
   miniTitle: (match: RouteMatch) => ({
     title: match.data?.detail?.title,

@@ -23,7 +23,6 @@ import TabLink from '~/components/elements/tab/TabLink';
 
 import ActionButtons from './ActionButtons';
 import BottomNav from './BottomNav';
-// import BreadCrumb from './BreadCrumb';
 import GlobalPlayer from './GlobalPlayer';
 import Header from './Header';
 import MobileHeader from './MobileHeader';
@@ -336,7 +335,6 @@ const Layout = (props: ILayout) => {
                 isShowTabLink: isShowTabLink && !hideTabLinkWithLocation,
               })}
             >
-              {/* <BreadCrumb /> */}
               <GlobalPlayer />
               {isHydrated ? (
                 <Toaster

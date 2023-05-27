@@ -1,6 +1,5 @@
-import { Badge } from '@nextui-org/react';
 import { json, redirect, type ActionArgs, type LoaderArgs } from '@remix-run/node';
-import { NavLink, useActionData, useLocation } from '@remix-run/react';
+import { useActionData, useLocation } from '@remix-run/react';
 
 import {
   commitAuthCookie,
@@ -8,6 +7,7 @@ import {
   requestPayload,
   signInWithPassword,
 } from '~/services/supabase';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import AuthForm from '~/components/elements/shared/AuthForm';
 
 type ActionData = {
@@ -79,21 +79,9 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export const handle = {
   breadcrumb: () => (
-    <NavLink to="/sign-in" aria-label="Sign In Page">
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          Sign In
-        </Badge>
-      )}
-    </NavLink>
+    <BreadcrumbItem to="/sign-in" key="sign-in">
+      Sign In
+    </BreadcrumbItem>
   ),
   miniTitle: () => ({
     title: 'Sign In',

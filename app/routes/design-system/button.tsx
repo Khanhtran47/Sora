@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Button } from '@nextui-org/button';
-import { Chip } from '@nextui-org/chip';
 import { Spinner } from '@nextui-org/spinner';
+
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 // import { Switch } from '@nextui-org/switch';
-import { NavLink } from '@remix-run/react';
 
 import {
   Select,
@@ -17,20 +17,9 @@ import Settings from '~/assets/icons/SettingsIcon';
 
 export const handle = {
   breadcrumb: () => (
-    <NavLink to="/design-system/button" aria-label="Player Page">
-      {({ isActive }) => (
-        <Chip
-          color="primary"
-          variant="flat"
-          size="sm"
-          className={`${
-            isActive ? 'opacity-100' : 'opacity-70'
-          } duration-250 ease-in-out transition-opacity hover:opacity-80`}
-        >
-          Button
-        </Chip>
-      )}
-    </NavLink>
+    <BreadcrumbItem to="/design-system/button" key="design-button">
+      Button
+    </BreadcrumbItem>
   ),
   miniTitle: () => ({
     title: 'Button',

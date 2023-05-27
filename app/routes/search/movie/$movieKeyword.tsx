@@ -60,19 +60,7 @@ export const handle = {
       to={`/search/movie/${match.params.movieKeyword}`}
       aria-label={match.params.movieKeyword}
     >
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          {match.params.movieKeyword}
-        </Badge>
-      )}
+      {match.params.movieKeyword}
     </NavLink>
   ),
   miniTitle: (match: RouteMatch) => ({

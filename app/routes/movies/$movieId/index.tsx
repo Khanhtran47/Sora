@@ -1,5 +1,5 @@
 import { json, type LoaderArgs } from '@remix-run/node';
-import { Link, useLoaderData, useNavigate, useParams } from '@remix-run/react';
+import { Link, useLoaderData, useNavigate, useParams, type RouteMatch } from '@remix-run/react';
 
 import { authenticate } from '~/services/supabase';
 import { getCredits, getRecommendation, getSimilar, getVideos } from '~/services/tmdb/tmdb.server';
@@ -7,6 +7,7 @@ import { postFetchDataHandler } from '~/services/tmdb/utils.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   await authenticate(request, undefined, true);
@@ -41,6 +42,17 @@ export const loader = async ({ request, params }: LoaderArgs) => {
       },
     },
   );
+};
+
+export const handle = {
+  breadcrumb: (match: RouteMatch) => (
+    <BreadcrumbItem
+      to={`/movies/${match.params.movieId}/`}
+      key={`movies-${match.params.movieId}-overview`}
+    >
+      Overview
+    </BreadcrumbItem>
+  ),
 };
 
 const MovieOverview = () => {

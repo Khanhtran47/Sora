@@ -1,7 +1,6 @@
-import { Badge } from '@nextui-org/react';
 import { Spacer } from '@nextui-org/spacer';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { NavLink, Outlet, useCatch, useLoaderData, type RouteMatch } from '@remix-run/react';
+import { Outlet, useCatch, useLoaderData, type RouteMatch } from '@remix-run/react';
 import i18next from '~/i18n/i18next.server';
 
 import { authenticate } from '~/services/supabase';
@@ -10,6 +9,7 @@ import TMDB from '~/utils/media';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { peopleDetailPages } from '~/constants/tabLinks';
 import PeopleDetail from '~/components/media/PeopleDetail';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import CatchBoundaryView from '~/components/elements/shared/CatchBoundaryView';
 import ErrorBoundaryView from '~/components/elements/shared/ErrorBoundaryView';
 
@@ -68,42 +68,15 @@ export const meta: MetaFunction = ({ data, params }) => {
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
     <>
-      <NavLink to="/people" aria-label="Popular People">
-        {({ isActive }) => (
-          <Badge
-            color="primary"
-            variant="flat"
-            css={{
-              opacity: isActive ? 1 : 0.7,
-              transition: 'opacity 0.25s ease 0s',
-              '&:hover': { opacity: 0.8 },
-            }}
-          >
-            Popular People
-          </Badge>
-        )}
-      </NavLink>
-      <Spacer x={2.5} />
-      <span> ❱ </span>
-      <Spacer x={2.5} />
-      <NavLink
+      <BreadcrumbItem to="/people" key="people">
+        Popular People
+      </BreadcrumbItem>
+      <BreadcrumbItem
         to={`/people/${match.params.peopleId}`}
-        aria-label={match.data?.detail?.name || match.params.peopleId}
+        key={`people-${match.params.peopleId}`}
       >
-        {({ isActive }) => (
-          <Badge
-            color="primary"
-            variant="flat"
-            css={{
-              opacity: isActive ? 1 : 0.7,
-              transition: 'opacity 0.25s ease 0s',
-              '&:hover': { opacity: 0.8 },
-            }}
-          >
-            {match.data?.detail?.name || match.params.peopleId}
-          </Badge>
-        )}
-      </NavLink>
+        {match.data?.detail?.name || match.params.peopleId}
+      </BreadcrumbItem>
     </>
   ),
   showTabLink: true,

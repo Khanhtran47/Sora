@@ -1,8 +1,8 @@
-import { Badge } from '@nextui-org/react';
 import type { MetaFunction } from '@remix-run/node';
-import { NavLink, Outlet } from '@remix-run/react';
+import { Outlet } from '@remix-run/react';
 
 import { animePages } from '~/constants/tabLinks';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
 export const meta: MetaFunction = () => ({
   title: 'Free Anime HD - Watch Anime HD Online on Sora',
@@ -18,21 +18,9 @@ export const meta: MetaFunction = () => ({
 
 export const handle = {
   breadcrumb: () => (
-    <NavLink to="/anime" aria-label="Anime Page">
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          Anime
-        </Badge>
-      )}
-    </NavLink>
+    <BreadcrumbItem to="/anime" key="anime-index">
+      Anime
+    </BreadcrumbItem>
   ),
   showTabLink: true,
   tabLinkPages: animePages,

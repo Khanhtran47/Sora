@@ -132,7 +132,6 @@ const listSubtitleTextEffects = ['None', 'Drop Shadow', 'Raised', 'Depressed', '
 const listSidebarActiveStyleMode = ['rounded-all', 'rounded-one-side', 'pill-all', 'pill-one-side'];
 const listListViewType = ['card', 'detail', 'table'];
 const listListLoadingType = ['pagination', 'infinite-scroll'];
-const listNavigationType = ['back-forward', 'breadcrumbs'];
 
 export {
   settingsTab,
@@ -147,5 +146,4 @@ export {
   listSidebarActiveStyleMode,
   listListViewType,
   listListLoadingType,
-  listNavigationType,
 };

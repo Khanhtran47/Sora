@@ -2,6 +2,7 @@ import { type MetaFunction } from '@remix-run/node';
 import { Outlet } from '@remix-run/react';
 
 import { trendingPages } from '~/constants/tabLinks';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
 export const meta: MetaFunction = () => ({
   title: 'Watch Top Trending movies and tv shows free | Sora',
@@ -16,6 +17,11 @@ export const meta: MetaFunction = () => ({
 });
 
 export const handle = {
+  breadcrumb: () => (
+    <BreadcrumbItem to="/trending" key="trending">
+      Trending
+    </BreadcrumbItem>
+  ),
   showTabLink: true,
   tabLinkPages: trendingPages,
   tabLinkTo: () => '/trending',

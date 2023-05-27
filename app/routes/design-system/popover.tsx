@@ -1,27 +1,15 @@
 import { useState } from 'react';
 import { Button } from '@nextui-org/button';
-import { Chip } from '@nextui-org/chip';
 import { Link } from '@nextui-org/link';
-import { NavLink } from '@remix-run/react';
 
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/elements/Popover';
 
 export const handle = {
   breadcrumb: () => (
-    <NavLink to="/design-system/popover" aria-label="Popover Page">
-      {({ isActive }) => (
-        <Chip
-          color="primary"
-          variant="flat"
-          size="sm"
-          className={`${
-            isActive ? 'opacity-100' : 'opacity-70'
-          } duration-250 ease-in-out transition-opacity hover:opacity-80`}
-        >
-          Popover
-        </Chip>
-      )}
-    </NavLink>
+    <BreadcrumbItem to="/design-system/popover" key="design-popover">
+      Popover
+    </BreadcrumbItem>
   ),
   miniTitle: () => ({
     title: 'Popover',

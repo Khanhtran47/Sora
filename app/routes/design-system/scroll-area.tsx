@@ -1,7 +1,6 @@
-import { Chip } from '@nextui-org/chip';
 import { Link } from '@nextui-org/link';
-import { NavLink } from '@remix-run/react';
 
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import {
   ScrollArea,
   ScrollBar,
@@ -11,20 +10,9 @@ import {
 
 export const handle = {
   breadcrumb: () => (
-    <NavLink to="/design-system/scroll-area" aria-label="Scroll Area Page">
-      {({ isActive }) => (
-        <Chip
-          color="primary"
-          variant="flat"
-          size="sm"
-          className={`${
-            isActive ? 'opacity-100' : 'opacity-70'
-          } duration-250 ease-in-out transition-opacity hover:opacity-80`}
-        >
-          Scroll Area
-        </Chip>
-      )}
-    </NavLink>
+    <BreadcrumbItem to="/design-system/scroll-area" key="design-scroll-area">
+      Scroll Area
+    </BreadcrumbItem>
   ),
   miniTitle: () => ({
     title: 'Scroll Area',

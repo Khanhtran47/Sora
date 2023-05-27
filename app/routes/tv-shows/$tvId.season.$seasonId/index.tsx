@@ -1,6 +1,20 @@
+import { type RouteMatch } from '@remix-run/react';
+
 import type { IEpisode } from '~/services/tmdb/tmdb.types';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import ListEpisodes from '~/components/elements/shared/ListEpisodes';
+
+export const handle = {
+  breadcrumb: (match: RouteMatch) => (
+    <BreadcrumbItem
+      to={`/tv-shows/${match.params.tvId}/season/${match.params.seasonId}/`}
+      key={`tv-shows-${match.params.tvId}-season-${match.params.seasonId}-episodes`}
+    >
+      Episodes
+    </BreadcrumbItem>
+  ),
+};
 
 const Episodes = () => {
   const seasonData = useTypedRouteLoaderData('routes/tv-shows/$tvId.season.$seasonId');

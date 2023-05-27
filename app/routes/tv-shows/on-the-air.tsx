@@ -1,6 +1,5 @@
-import { Badge } from '@nextui-org/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { NavLink, useLoaderData, useLocation, useNavigate } from '@remix-run/react';
+import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 import dayjs from 'dayjs';
 import { motion, type PanInfo } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
@@ -13,6 +12,7 @@ import { getListDiscover } from '~/services/tmdb/tmdb.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
 export const meta: MetaFunction = () => ({
   title: 'On the air TV shows | Sora',
@@ -82,21 +82,9 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export const handle = {
   breadcrumb: () => (
-    <NavLink to="/tv-shows/on-the-air" aria-label="On the air Tv">
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          On the air Tv
-        </Badge>
-      )}
-    </NavLink>
+    <BreadcrumbItem to="/tv-shows/on-the-air" key="tv-shows-on-air">
+      On the air Tv
+    </BreadcrumbItem>
   ),
   miniTitle: () => ({
     title: 'On the air Tv',

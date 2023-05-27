@@ -1,17 +1,7 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { Kbd, type KbdKey } from '@nextui-org/kbd';
 import { Link } from '@nextui-org/link';
-import {
-  Badge,
-  Collapse,
-  Loading,
-  Radio,
-  Switch,
-  Tooltip,
-  type SwitchEvent,
-} from '@nextui-org/react';
+import { Collapse, Loading, Radio, Switch, Tooltip, type SwitchEvent } from '@nextui-org/react';
 import { Spacer } from '@nextui-org/spacer';
 import { useLocalStorageValue, useMediaQuery } from '@react-hookz/web';
 import type { MetaFunction } from '@remix-run/node';
@@ -29,7 +19,6 @@ import languages from '~/constants/languages';
 import {
   listListLoadingType,
   listListViewType,
-  listNavigationType,
   listSubtitleBackgroundColor,
   listSubtitleBackgroundOpacity,
   listSubtitleFontColor,
@@ -41,6 +30,7 @@ import {
   listThemes,
   settingsTab,
 } from '~/constants/settings';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import Image from '~/components/elements/Image';
 import {
   Select,
@@ -66,21 +56,9 @@ export const meta: MetaFunction = () => ({
 
 export const handle = {
   breadcrumb: () => (
-    <NavLink to="/settings" aria-label="Settings Page">
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          Settings
-        </Badge>
-      )}
-    </NavLink>
+    <BreadcrumbItem to="/settings" key="settings">
+      Settings
+    </BreadcrumbItem>
   ),
   miniTitle: () => ({
     title: 'Settings',
@@ -275,15 +253,13 @@ const Settings = () => {
     sidebarBoxedMode,
     // sidebarSheetMode,
     autoSwitchSubtitle,
+    isShowBreadcrumb,
   } = useSoraSettings();
   const listViewType = useLocalStorageValue('sora-settings_layout_list-view', {
     defaultValue: 'card',
   });
   const listLoadingType = useLocalStorageValue('sora-settings_layout_list-loading-type', {
     defaultValue: 'pagination',
-  });
-  const navigationType = useLocalStorageValue('sora-settings_layout_header-navigation-type', {
-    defaultValue: 'back-forward',
   });
 
   const [activeTab, setActiveTab] = useState('general-tab');
@@ -311,7 +287,6 @@ const Settings = () => {
   );
   const [selectedListViewType, setSelectedListViewType] = useState(listViewType.value);
   const [selectedListLoadingType, setSelectedListLoadingType] = useState(listLoadingType.value);
-  const [selectedNavigationType, setSelectedNavigationType] = useState(navigationType.value);
 
   useEffect(() => {
     if (underlineRef.current) {
@@ -323,8 +298,7 @@ const Settings = () => {
     }
   }, [activeTab]);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleDragEnd = (event: MouseEvent | PointerEvent | TouchEvent, info: PanInfo) => {
+  const handleDragEnd = (_event: MouseEvent | PointerEvent | TouchEvent, info: PanInfo) => {
     const currentTab = settingsTab.find((tab) => tab.id === activeTab);
     if (info.offset?.x > 100) {
       // swipe right
@@ -348,11 +322,6 @@ const Settings = () => {
 
   const handleSelect = (value: string, type: string) => {
     switch (type) {
-      case 'navigation-type': {
-        setSelectedNavigationType(value);
-        navigationType.set(value);
-        break;
-      }
       case 'language': {
         setSelectedLang(value);
         navigate(`${location.pathname}?lng=${value}`);
@@ -533,71 +502,70 @@ const Settings = () => {
                       </Radio.Group>
                     </Collapse>
                     {isSm ? null : (
-                      <>
-                        <Collapse
-                          title={t('sidebar')}
-                          subtitle={t('sidebar-subtitle')}
-                          css={{
-                            backgroundColor: 'hsl(var(--colors-content1)) !important',
-                            borderRadius: '0.75rem !important',
-                          }}
-                        >
-                          <div className="flex flex-col items-start justify-center gap-y-4 rounded-md bg-content2 p-3">
-                            <h5 className="my-1">{t('sidebar-mode')}</h5>
-                            {isMd ? null : (
-                              <>
-                                <div className="flex w-full flex-row items-center justify-between gap-x-2">
-                                  <h6>{t('sidebar-mini-mode')}</h6>
-                                  <Switch
-                                    checked={sidebarMiniMode.value}
-                                    onChange={(e) => {
-                                      sidebarMiniMode.set(e.target.checked);
-                                      if (sidebarMiniMode.value) {
-                                        sidebarHoverMode.set(false);
-                                      }
-                                    }}
-                                  />
-                                </div>
-                                <div className="flex w-full flex-row items-center justify-between gap-x-2">
-                                  <h6>{t('sidebar-hover-mode')}</h6>
-                                  <Switch
-                                    checked={sidebarHoverMode.value}
-                                    onChange={(e) => {
-                                      sidebarHoverMode.set(e.target.checked);
-                                      if (!sidebarHoverMode.value) {
-                                        sidebarMiniMode.set(true);
-                                      }
-                                    }}
-                                  />
-                                </div>
-                              </>
-                            )}
-                            <div className="flex w-full flex-row items-center justify-between gap-x-2">
-                              <h6>{t('sidebar-boxed-mode')}</h6>
-                              <Switch
-                                checked={sidebarBoxedMode.value}
-                                onChange={(e) => sidebarBoxedMode.set(e.target.checked)}
-                              />
-                            </div>
+                      <Collapse
+                        title={t('sidebar')}
+                        subtitle={t('sidebar-subtitle')}
+                        css={{
+                          backgroundColor: 'hsl(var(--colors-content1)) !important',
+                          borderRadius: '0.75rem !important',
+                        }}
+                      >
+                        <div className="flex flex-col items-start justify-center gap-y-4 rounded-md bg-content2 p-3">
+                          <h5 className="my-1">{t('sidebar-mode')}</h5>
+                          {isMd ? null : (
+                            <>
+                              <div className="flex w-full flex-row items-center justify-between gap-x-2">
+                                <h6>{t('sidebar-mini-mode')}</h6>
+                                <Switch
+                                  checked={sidebarMiniMode.value}
+                                  onChange={(e) => {
+                                    sidebarMiniMode.set(e.target.checked);
+                                    if (sidebarMiniMode.value) {
+                                      sidebarHoverMode.set(false);
+                                    }
+                                  }}
+                                />
+                              </div>
+                              <div className="flex w-full flex-row items-center justify-between gap-x-2">
+                                <h6>{t('sidebar-hover-mode')}</h6>
+                                <Switch
+                                  checked={sidebarHoverMode.value}
+                                  onChange={(e) => {
+                                    sidebarHoverMode.set(e.target.checked);
+                                    if (!sidebarHoverMode.value) {
+                                      sidebarMiniMode.set(true);
+                                    }
+                                  }}
+                                />
+                              </div>
+                            </>
+                          )}
+                          <div className="flex w-full flex-row items-center justify-between gap-x-2">
+                            <h6>{t('sidebar-boxed-mode')}</h6>
+                            <Switch
+                              checked={sidebarBoxedMode.value}
+                              onChange={(e) => sidebarBoxedMode.set(e.target.checked)}
+                            />
                           </div>
-                        </Collapse>
-                        <Collapse
-                          title={t('header')}
-                          subtitle={t('header-subtitle')}
-                          css={{
-                            backgroundColor: 'hsl(var(--colors-content1)) !important',
-                            borderRadius: '0.75rem !important',
-                          }}
-                        >
-                          <SettingBlock
-                            type="select"
-                            title={t('navigation-type')}
-                            selectedValue={selectedNavigationType}
-                            onSelectionChange={(value) => handleSelect(value, 'navigation-type')}
-                            selectItems={listNavigationType}
-                          />
-                        </Collapse>
-                      </>
+                        </div>
+                      </Collapse>
+                    )}
+                    {isSm ? null : (
+                      <Collapse
+                        title={t('header')}
+                        subtitle={t('header-subtitle')}
+                        css={{
+                          backgroundColor: 'hsl(var(--colors-content1)) !important',
+                          borderRadius: '0.75rem !important',
+                        }}
+                      >
+                        <SettingBlock
+                          type="switch"
+                          title={t('show-breadcrumb')}
+                          checked={isShowBreadcrumb.value}
+                          onChange={(e) => isShowBreadcrumb.set(e.target.checked)}
+                        />
+                      </Collapse>
                     )}
                     <Collapse
                       title={t('media-list-grid')}

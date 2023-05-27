@@ -121,8 +121,8 @@ function useSoraSettings() {
   const autoSwitchSubtitle = useLocalStorageValue('sora-settings_subtitle_auto-switch', {
     defaultValue: true,
   });
-  const navigationType = useLocalStorageValue('sora-settings_layout_header-navigation-type', {
-    defaultValue: 'back-forward',
+  const isShowBreadcrumb = useLocalStorageValue('sora-settings_layout_header-show-breadcrumb', {
+    defaultValue: true,
     initializeWithValue: false,
   });
 
@@ -160,7 +160,7 @@ function useSoraSettings() {
     listViewType,
     listLoadingType,
     autoSwitchSubtitle,
-    navigationType,
+    isShowBreadcrumb,
   };
 }
 

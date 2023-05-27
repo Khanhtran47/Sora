@@ -1,32 +1,21 @@
 import { useState } from 'react';
 import { Button } from '@nextui-org/button';
 import { Pagination } from '@nextui-org/pagination';
-import { Badge, Checkbox, Input } from '@nextui-org/react';
+import { Checkbox, Input } from '@nextui-org/react';
 import { useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs } from '@remix-run/node';
-import { NavLink, useLoaderData, useLocation, useNavigate } from '@remix-run/react';
+import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 
 import { authenticate, getCountHistory, getHistory, type IHistory } from '~/services/supabase';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import HistoryItem from '~/components/media/item/HistoryItem';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
 export const handle = {
   breadcrumb: () => (
-    <NavLink to="/watch-history" aria-label="Watch History Page">
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          History
-        </Badge>
-      )}
-    </NavLink>
+    <BreadcrumbItem to="/watch-history" key="watch-history">
+      History
+    </BreadcrumbItem>
   ),
   getSitemapEntries: () => null,
   miniTitle: () => ({

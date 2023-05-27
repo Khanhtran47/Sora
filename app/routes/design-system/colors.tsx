@@ -1,22 +1,10 @@
-import { Chip } from '@nextui-org/chip';
-import { NavLink } from '@remix-run/react';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
 export const handle = {
   breadcrumb: () => (
-    <NavLink to="/design-system/colors" aria-label="Colors Page">
-      {({ isActive }) => (
-        <Chip
-          color="primary"
-          variant="flat"
-          size="sm"
-          className={`${
-            isActive ? 'opacity-100' : 'opacity-70'
-          } duration-250 ease-in-out transition-opacity hover:opacity-80`}
-        >
-          Colors
-        </Chip>
-      )}
-    </NavLink>
+    <BreadcrumbItem to="/design-system/colors" key="desgin-colors">
+      Colors
+    </BreadcrumbItem>
   ),
   miniTitle: () => ({
     title: 'Colors',

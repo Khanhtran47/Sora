@@ -1,6 +1,5 @@
-import { Badge } from '@nextui-org/react';
 import { json, redirect, type ActionArgs, type LoaderArgs } from '@remix-run/node';
-import { NavLink, useActionData } from '@remix-run/react';
+import { useActionData } from '@remix-run/react';
 
 import sgConfigs from '~/services/configs.server';
 import {
@@ -10,6 +9,7 @@ import {
   signUp,
 } from '~/services/supabase';
 import encode from '~/utils/encode';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import AuthForm from '~/components/elements/shared/AuthForm';
 
 type ActionData = {
@@ -93,21 +93,9 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export const handle = {
   breadcrumb: () => (
-    <NavLink to="/sign-up" aria-label="Sign Up Page">
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          Sign Up
-        </Badge>
-      )}
-    </NavLink>
+    <BreadcrumbItem to="/sign-up" key="sign-up">
+      Sign Up
+    </BreadcrumbItem>
   ),
   miniTitle: () => ({
     title: 'Sign Up',

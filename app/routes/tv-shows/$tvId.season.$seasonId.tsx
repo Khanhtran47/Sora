@@ -1,17 +1,9 @@
 import { useEffect, useRef } from 'react';
 import { Card, CardBody, CardHeader } from '@nextui-org/card';
-import { Avatar, Badge } from '@nextui-org/react';
-import { Spacer } from '@nextui-org/spacer';
+import { Avatar } from '@nextui-org/react';
 import { useIntersectionObserver, useMeasure, useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import {
-  NavLink,
-  Outlet,
-  useCatch,
-  useLoaderData,
-  useParams,
-  type RouteMatch,
-} from '@remix-run/react';
+import { Outlet, useCatch, useLoaderData, useParams, type RouteMatch } from '@remix-run/react';
 import { motion, useTransform } from 'framer-motion';
 import Vibrant from 'node-vibrant';
 import { MimeType } from 'remix-image';
@@ -28,6 +20,7 @@ import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { useCustomHeaderChangePosition } from '~/hooks/useHeader';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { tvSeasonDetailPages } from '~/constants/tabLinks';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import Image from '~/components/elements/Image';
 import CatchBoundaryView from '~/components/elements/shared/CatchBoundaryView';
 import ErrorBoundaryView from '~/components/elements/shared/ErrorBoundaryView';
@@ -146,47 +139,18 @@ export const meta: MetaFunction = ({ data, params }) => {
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
     <>
-      <NavLink
-        to={`/tv-shows/${match.params.tvId}`}
-        aria-label={
-          match.data?.detail?.name || match.data?.detail?.original_name || match.params.tvId
-        }
+      <BreadcrumbItem
+        to={`/tv-shows/${match.params.tvId}/`}
+        key={`tv-show-${match.params.tvId}-overview`}
       >
-        {({ isActive }) => (
-          <Badge
-            color="primary"
-            variant="flat"
-            css={{
-              opacity: isActive ? 1 : 0.7,
-              transition: 'opacity 0.25s ease 0s',
-              '&:hover': { opacity: 0.8 },
-            }}
-          >
-            {match.data?.detail?.name || match.data?.detail?.original_name || match.params.tvId}
-          </Badge>
-        )}
-      </NavLink>
-      <Spacer x={2.5} />
-      <span> ❱ </span>
-      <Spacer x={2.5} />
-      <NavLink
-        to={`/tv-shows/${match.params.tvId}/season/${match.params.seasonId}/`}
-        aria-label={`Season ${match.params.seasonId}`}
+        {match.data?.detail?.name || match.data?.detail?.original_name || match.params.tvId}
+      </BreadcrumbItem>
+      <BreadcrumbItem
+        to={`/tv-shows/${match.params.tvId}/season/${match.params.seasonId}`}
+        key={`tv-shows-${match.params.tvId}-season-${match.params.seasonId}`}
       >
-        {({ isActive }) => (
-          <Badge
-            color="primary"
-            variant="flat"
-            css={{
-              opacity: isActive ? 1 : 0.7,
-              transition: 'opacity 0.25s ease 0s',
-              '&:hover': { opacity: 0.8 },
-            }}
-          >
-            Season {match.params.seasonId}
-          </Badge>
-        )}
-      </NavLink>
+        Season {match.params.seasonId}
+      </BreadcrumbItem>
     </>
   ),
   miniTitle: (match: RouteMatch) => ({
