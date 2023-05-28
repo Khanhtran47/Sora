@@ -1,11 +1,5 @@
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import {
-  NavLink,
-  useLoaderData,
-  useLocation,
-  useNavigate,
-  type RouteMatch,
-} from '@remix-run/react';
+import { useLoaderData, useLocation, useNavigate, type RouteMatch } from '@remix-run/react';
 import { motion, type PanInfo } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
@@ -17,6 +11,7 @@ import { getSearchMovies } from '~/services/tmdb/tmdb.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import SearchForm from '~/components/elements/SearchForm';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
@@ -55,12 +50,12 @@ export const meta: MetaFunction = ({ data, params }) => {
 
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
-    <NavLink
+    <BreadcrumbItem
       to={`/search/movie/${match.params.movieKeyword}`}
       aria-label={match.params.movieKeyword}
     >
       {match.params.movieKeyword}
-    </NavLink>
+    </BreadcrumbItem>
   ),
   miniTitle: (match: RouteMatch) => ({
     title: 'Search results',

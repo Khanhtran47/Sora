@@ -61,6 +61,9 @@ dependencies:
   '@nextui-org/react':
     specifier: 1.0.0-beta.13
     version: 1.0.0-beta.13(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)
+  '@nextui-org/shared-icons':
+    specifier: 0.0.0-dev-v2-20230528191554
+    version: 0.0.0-dev-v2-20230528191554(react@18.3.0-canary-0210f0b08-20230525)
   '@nextui-org/spacer':
     specifier: 0.0.0-dev-v2-20230528153341
     version: 0.0.0-dev-v2-20230528153341(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.2)
@@ -3025,6 +3028,14 @@ packages:
       react: 18.3.0-canary-0210f0b08-20230525
     dev: false
 
+  /@nextui-org/shared-icons@0.0.0-dev-v2-20230528191554(react@18.3.0-canary-0210f0b08-20230525):
+    resolution: {integrity: sha512-mR9Jkw3YCvzjT7KsjdLcuVxkaQ4WXt/4yJfsn0RcszxuElo/JVG9t4Ix6yHMaPe+5eaPwcf0bxchiuhj8RhCVg==}
+    peerDependencies:
+      react: '>=18'
+    dependencies:
+      react: 18.3.0-canary-0210f0b08-20230525
+    dev: false
+
   /@nextui-org/shared-utils@0.0.0-dev-v2-20230528153341(react@18.3.0-canary-0210f0b08-20230525):
     resolution: {integrity: sha512-TdRWrPtDx96+On+7gZBNAHctz9gBT+WJuRAfZulinsvVTI4NeJ/PhDVaDzA8A1bxcAzwjsDbmrnIpVViuh4frQ==}
     peerDependencies:
@@ -5883,7 +5894,7 @@ packages:
   /@types/node-fetch@2.6.3:
     resolution: {integrity: sha512-ETTL1mOEdq/sxUtgtOhKjyB2Irra4cjxksvcMUR5Zr4n+PxVhsCD9WS46oPbHL3et9Zde7CNRr+WUNlcHvsX+w==}
     dependencies:
-      '@types/node': 14.18.33
+      '@types/node': 18.11.18
       form-data: 3.0.1
     dev: false
 
@@ -5907,7 +5918,6 @@ packages:
 
   /@types/node@18.11.18:
     resolution: {integrity: sha512-DHQpWGjyQKSHj3ebjFI/wRKcqQcdR+MoFBygntYOZytCqNfkd2ZC4ARDJ2DQqhjH5p85Nnd3jhUJIXrszFX/JA==}
-    dev: true
 
   /@types/nprogress@0.2.0:
     resolution: {integrity: sha512-1cYJrqq9GezNFPsWTZpFut/d4CjpZqA0vhqDUPFWYKF1oIyBz5qnoYMzR+0C/T96t3ebLAC1SSnwrVOm5/j74A==}

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Button } from '@nextui-org/button';
+import { Input } from '@nextui-org/input';
 import { Pagination } from '@nextui-org/pagination';
-import { Input, useInput } from '@nextui-org/react';
 import { useMediaQuery } from '@react-hookz/web';
 import { useFetcher } from '@remix-run/react';
 import { toast } from 'sonner';
@@ -53,7 +53,7 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
         } ${subtitleOptions?.episode_number ? `E${subtitleOptions?.episode_number}` : ''}`
       : '';
 
-  const { value, bindings } = useInput(preInput || '');
+  const [value, setValue] = useState<string>(preInput || '');
   const [language, setLanguage] = useState<string>();
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
@@ -199,17 +199,18 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
         <div className="!mb-5 flex w-full flex-col items-end justify-start gap-6 sm:flex-row sm:items-center">
           <div className="flex w-full flex-col items-center justify-start gap-4 sm:flex-row sm:flex-wrap">
             <Input
-              {...bindings}
-              size="sm"
+              value={value}
+              onValueChange={setValue}
+              onClear={() => setValue('')}
+              size="xs"
               placeholder="Search Subtitle"
-              clearable
-              bordered
-              color="primary"
+              variant="faded"
+              color="default"
               type="text"
-              css={{ w: '100%', '@xs': { w: 'auto' } }}
+              className="w-full sm:w-auto"
             />
             <Select value={language} onValueChange={(value: string) => setLanguage(value)}>
-              <SelectTrigger aria-label="Language" className="h-8 sm:w-fit">
+              <SelectTrigger aria-label="Language" className="h-10 sm:w-fit">
                 <SelectValue placeholder="Select language" />
               </SelectTrigger>
               <SelectContent container={containerPortal}>
@@ -236,7 +237,7 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
             className="!px-3"
             onPress={searchSubtitles}
           >
-            {fetcher.type === 'normalLoad' && !isGetSubtitleLink ? null : 'Search'}
+            Search
           </Button>
         </div>
       </DialogHeader>
@@ -258,7 +259,6 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
               key={subtitle.id}
               type="button"
               variant="light"
-              color="primary"
               className="!px-3"
               onPress={() => handleSubtitleClick(subtitle)}
             >

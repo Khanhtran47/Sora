@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Button } from '@nextui-org/button';
-import { Input, Tooltip, useInput } from '@nextui-org/react';
+import { Input } from '@nextui-org/input';
+import { Tooltip } from '@nextui-org/react';
 import { Form, useSearchParams } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 
@@ -116,11 +117,7 @@ const Filter: React.FC<IFilterProps> = (props: IFilterProps) => {
   const [animeAiringStatusSelected, setAnimeAiringStatusSelected] = useState<string>(
     currentSearchParams?.status || t('all'),
   );
-  const {
-    value: animeQuery,
-    setValue: setAnimeQuery,
-    bindings: animeQueryBindings,
-  } = useInput(currentSearchParams?.query || '');
+  const [animeQueryInput, setAnimeQueryInput] = useState<string>(currentSearchParams?.query || '');
 
   const handleGenrePress = (genreId: string) => {
     setGenresSelected((prev) => {
@@ -150,7 +147,7 @@ const Filter: React.FC<IFilterProps> = (props: IFilterProps) => {
     setAnimeSeasonSelected('All');
     setAnimeFormatSelected('All');
     setAnimeAiringStatusSelected('All');
-    setAnimeQuery('');
+    setAnimeQueryInput('');
   };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -198,7 +195,7 @@ const Filter: React.FC<IFilterProps> = (props: IFilterProps) => {
         ...(animeAiringStatusSelected && animeAiringStatusSelected !== t('all')
           ? { status: animeAiringStatusSelected }
           : {}),
-        ...(animeQuery && animeQuery !== '' ? { query: animeQuery } : {}),
+        ...(animeQueryInput && animeQueryInput !== '' ? { query: animeQueryInput } : {}),
       };
     }
     setSearchParams(params);
@@ -217,7 +214,7 @@ const Filter: React.FC<IFilterProps> = (props: IFilterProps) => {
                       {Object.keys(genres).map((id) => (
                         <Button
                           key={id}
-                          color={genresSelected?.includes(id) ? 'primary' : 'neutral'}
+                          color={genresSelected?.includes(id) ? 'primary' : 'default'}
                           variant={genresSelected?.includes(id) ? 'flat' : 'solid'}
                           onPress={() => handleGenrePress(id)}
                         >
@@ -325,13 +322,14 @@ const Filter: React.FC<IFilterProps> = (props: IFilterProps) => {
                 <div className="flex w-full flex-col items-start justify-start gap-3">
                   <h6>{t('search.title.anime')}</h6>
                   <Input
-                    {...animeQueryBindings}
-                    clearable
-                    bordered
-                    color="primary"
-                    helperText={t('search.helper.anime')}
+                    value={animeQueryInput}
+                    onValueChange={setAnimeQueryInput}
+                    onClear={() => setAnimeQueryInput('')}
+                    variant="faded"
+                    description={t('search.helper.anime')}
                     type="text"
-                    css={{ width: '100%' }}
+                    fullWidth
+                    labelPosition="outside"
                   />
                 </div>
                 <div className="flex w-full flex-col items-start justify-start gap-3">
@@ -341,7 +339,7 @@ const Filter: React.FC<IFilterProps> = (props: IFilterProps) => {
                       {animeGenres.map((genre) => (
                         <Button
                           key={genre}
-                          color={animeGenresSelected?.includes(genre) ? 'primary' : 'neutral'}
+                          color={animeGenresSelected?.includes(genre) ? 'primary' : 'default'}
                           variant={animeGenresSelected?.includes(genre) ? 'flat' : 'solid'}
                           onPress={() => handleAnimeGenrePress(genre)}
                         >
