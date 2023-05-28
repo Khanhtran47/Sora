@@ -2,7 +2,8 @@ import { Fragment, useEffect, useRef, useState } from 'react';
 import { Accordion, AccordionItem } from '@nextui-org/accordion';
 import { Kbd, type KbdKey } from '@nextui-org/kbd';
 import { Link } from '@nextui-org/link';
-import { Radio, Tooltip } from '@nextui-org/react';
+import { Radio, RadioGroup } from '@nextui-org/radio';
+import { Tooltip } from '@nextui-org/react';
 import { Spacer } from '@nextui-org/spacer';
 import { Spinner } from '@nextui-org/spinner';
 import { Switch } from '@nextui-org/switch';
@@ -260,6 +261,7 @@ const Settings = () => {
     autoSwitchSubtitle,
     isShowBreadcrumb,
   } = useSoraSettings();
+  const [selectedTheme, setSelectedTheme] = useState(theme);
   const listViewType = useLocalStorageValue('sora-settings_layout_list-view', {
     defaultValue: 'card',
   });
@@ -457,7 +459,7 @@ const Settings = () => {
                   className="w-full"
                 >
                   {/* @ts-ignore */}
-                  <Accordion variant="splitted" selectionMode="multiple">
+                  <Accordion variant="splitted" selectionMode="multiple" className="px-0">
                     <AccordionItem
                       title={t('theme')}
                       subtitle={t('theme-subtitle')}
@@ -466,11 +468,13 @@ const Settings = () => {
                         subtitle: 'text-base',
                       }}
                     >
-                      <Radio.Group
+                      <RadioGroup
                         orientation={isXs ? 'vertical' : 'horizontal'}
                         defaultValue={theme}
-                        size="sm"
-                        onChange={async (value) => {
+                        size="md"
+                        value={selectedTheme}
+                        onValueChange={async (value) => {
+                          setSelectedTheme(value);
                           if (value === 'light' || value === 'dark') {
                             await setTheme(value);
                           } else if (['bumblebee', 'retro', 'autumn'].includes(value)) {
@@ -491,23 +495,26 @@ const Settings = () => {
                             rounded
                             color="primary"
                             hideArrow
-                            offset={0}
+                            offset={10}
                           >
                             <Radio
                               key={themeItem.id}
                               value={themeItem.id}
-                              css={{
-                                p: '$xs',
-                                '--nextui--radioColor': themeItem.color,
-                                '--nextui-colors-border': themeItem.color,
-                                '--nextui--radioColorHover': themeItem.colorHover,
+                              style={{
+                                // @ts-ignore
+                                '--colors-radioColor': themeItem.color,
+                                '--colors-radioColorHover': themeItem.colorHover,
+                              }}
+                              classNames={{
+                                wrapper:
+                                  'border-theme-radio-color group-data-[hover-unchecked=true]:bg-theme-radio-color-hover',
                               }}
                             >
                               {isXs ? themeItem.title : null}
                             </Radio>
                           </Tooltip>
                         ))}
-                      </Radio.Group>
+                      </RadioGroup>
                     </AccordionItem>
                     {isSm ? null : (
                       <AccordionItem
@@ -651,7 +658,7 @@ const Settings = () => {
                   onDragEnd={handleDragEnd}
                   className="w-full"
                 >
-                  <Accordion variant="splitted" selectionMode="multiple">
+                  <Accordion variant="splitted" selectionMode="multiple" className="px-0">
                     <AccordionItem
                       title={t('defaults')}
                       subtitle={t('defaults-subtitle')}

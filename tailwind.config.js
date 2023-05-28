@@ -14,6 +14,8 @@ module.exports = withTV({
         'player-subtitle-window-color': 'var(--art-subtitle-window-color)',
         'player-subtitle-background-color': 'var(--art-subtitle-background-color)',
         'movie-brand-color': 'var(--colors-movie-brand)',
+        'theme-radio-color': 'var(--colors-radioColor)',
+        'theme-radio-color-hover': 'var(--colors-radioColorHover)',
       },
       keyframes: {
         enterFromRight: {

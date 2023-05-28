@@ -1,6 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useMemo, useRef } from 'react';
-import { useMediaQuery, useThrottledCallback } from '@react-hookz/web';
+import {
+  useMediaQuery,
+  // useThrottledCallback
+} from '@react-hookz/web';
 import { useLocation, useMatches, useNavigationType, useOutlet, useParams } from '@remix-run/react';
 import type { User } from '@supabase/supabase-js';
 import { AnimatePresence, motion, useScroll } from 'framer-motion';
@@ -167,8 +170,8 @@ const Layout = (props: ILayout) => {
     setViewportRef,
     setScrollY,
     setScrollYProgress,
-    scrollDirection,
-    setScrollDirection,
+    // scrollDirection,
+    // setScrollDirection,
     isShowOverlay,
   } = useLayout((state) => state);
   const { scrollY, scrollYProgress } = useScroll({ container: viewportRef });
@@ -269,26 +272,26 @@ const Layout = (props: ILayout) => {
     }
   }, [isMd, isSm, sidebarMiniMode.value, sidebarHoverMode.value, sidebarBoxedMode.value]);
 
-  let lastScrollY = viewportRef.current?.scrollTop || 0;
+  // let lastScrollY = viewportRef.current?.scrollTop || 0;
 
-  const handleScroll = useThrottledCallback(
-    (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
-      if (isSm) {
-        // @ts-ignore
-        const scrollY = e?.target?.scrollTop || 0;
-        const direction = scrollY > lastScrollY ? 'down' : 'up';
-        if (
-          direction !== scrollDirection &&
-          (scrollY - lastScrollY > 10 || scrollY - lastScrollY < -10)
-        ) {
-          setScrollDirection(direction);
-        }
-        lastScrollY = scrollY > 0 ? scrollY : 0;
-      }
-    },
-    [scrollDirection, isSm, viewportRef],
-    50,
-  );
+  // const handleScroll = useThrottledCallback(
+  //   (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
+  //     if (isSm) {
+  //       // @ts-ignore
+  //       const scrollY = e?.target?.scrollTop || 0;
+  //       const direction = scrollY > lastScrollY ? 'down' : 'up';
+  //       if (
+  //         direction !== scrollDirection &&
+  //         (scrollY - lastScrollY > 10 || scrollY - lastScrollY < -10)
+  //       ) {
+  //         setScrollDirection(direction);
+  //       }
+  //       lastScrollY = scrollY > 0 ? scrollY : 0;
+  //     }
+  //   },
+  //   [scrollDirection, isSm, viewportRef],
+  //   50,
+  // );
 
   return (
     <div className={layoutStyles({ boxed: sidebarBoxedMode.value })}>
@@ -326,7 +329,7 @@ const Layout = (props: ILayout) => {
           className={`w-full ${sidebarBoxedMode.value ? 'h-[calc(100vh-15px)]' : 'h-screen'}`}
           key="scroll-area-main"
         >
-          <ScrollViewport ref={viewportRef} onScroll={(e) => handleScroll(e)}>
+          <ScrollViewport ref={viewportRef}>
             <main
               className={scrollAreaViewportStyles({
                 mini: sidebarMiniMode.value,
