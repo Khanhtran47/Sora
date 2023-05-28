@@ -298,7 +298,7 @@ export const MediaDetail = (props: IMediaDetail) => {
                   type="button"
                   // shadow
                   onPress={() => setVisible(true)}
-                  className="w-full bg-gradient-to-r from-primary to-secondary font-bold sm:w-auto"
+                  className="w-full bg-gradient-to-r from-primary to-secondary text-lg font-bold sm:w-auto"
                   size="lg"
                 >
                   Watch now
@@ -527,7 +527,7 @@ export const AnimeDetail = (props: IAnimeDetail) => {
                 type="button"
                 onPress={() => setVisible(true)}
                 size="lg"
-                className="w-full bg-gradient-to-r from-primary to-secondary font-bold sm:w-auto"
+                className="w-full bg-gradient-to-r from-primary to-secondary text-lg font-bold sm:w-auto"
               >
                 Watch now
               </Button>
