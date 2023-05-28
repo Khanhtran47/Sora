@@ -12,8 +12,9 @@ import { useTheme } from 'next-themes';
 import { isMobile } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
 import { MimeType } from 'remix-image';
-import { ClientOnly } from 'remix-utils';
+import { ClientOnly, useHydrated } from 'remix-utils';
 
+import { getBackgroundTitleBarColor, setMetaThemeColor } from '~/utils/client/meta-tags.client';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import languages from '~/constants/languages';
@@ -213,6 +214,7 @@ const SettingBlock = (props: SettingBlockProps) => {
 const Settings = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const isHydrated = useHydrated();
   const rootData = useTypedRouteLoaderData('root');
   const { locale } = rootData || { locale: 'en' };
   const { t } = useTranslation('settings');
@@ -465,16 +467,18 @@ const Settings = () => {
                         orientation={isXs ? 'vertical' : 'horizontal'}
                         defaultValue={theme}
                         size="sm"
-                        onChange={(value) => {
+                        onChange={async (value) => {
                           if (value === 'light' || value === 'dark') {
-                            setTheme(value);
+                            await setTheme(value);
                           } else if (['bumblebee', 'retro', 'autumn'].includes(value)) {
-                            setTheme('light');
-                            setTheme(value);
+                            await setTheme('light');
+                            await setTheme(value);
                           } else {
-                            setTheme('dark');
-                            setTheme(value);
+                            await setTheme('dark');
+                            await setTheme(value);
                           }
+                          const color = await getBackgroundTitleBarColor(isHydrated);
+                          await setMetaThemeColor(`hsl(${color})`);
                         }}
                       >
                         {listThemes.map((themeItem) => (

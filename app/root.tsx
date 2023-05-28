@@ -12,7 +12,7 @@ import FontStyles800 from '@fontsource/inter/800.css';
 import FontStyles900 from '@fontsource/inter/900.css';
 import { Button } from '@nextui-org/button';
 import { Image as NextUIImage } from '@nextui-org/image';
-import { NextUIProvider, useSSR } from '@nextui-org/react';
+import { NextUIProvider } from '@nextui-org/react';
 import { NextUIProvider as NextUIv2Provider } from '@nextui-org/system';
 import { json, type LinksFunction, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import {
@@ -36,7 +36,7 @@ import { useTranslation } from 'react-i18next';
 import { useChangeLanguage } from 'remix-i18next';
 import Image, { MimeType } from 'remix-image';
 import remixImageStyles from 'remix-image/remix-image.css';
-import { getClientIPAddress, getClientLocales } from 'remix-utils';
+import { getClientIPAddress, getClientLocales, useHydrated } from 'remix-utils';
 import { toast } from 'sonner';
 // @ts-ignore
 import swiperStyles from 'swiper/css';
@@ -63,7 +63,6 @@ import Home from '~/assets/icons/HomeIcon';
 import Refresh from '~/assets/icons/RefreshIcon';
 import pageNotFound from '~/assets/images/404.gif';
 import logoLoading from '~/assets/images/logo_loading.png';
-import globalStyles from '~/styles/global.stitches';
 import {
   autumnTheme,
   bumblebeeTheme,
@@ -262,38 +261,8 @@ export const links: LinksFunction = () => [
 ];
 
 export const meta: MetaFunction = () => {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const { isBrowser } = useSSR();
-  if (isBrowser) {
-    const color = getComputedStyle(document.documentElement).getPropertyValue(
-      '--nextui-colors-backgroundTitleBar',
-    );
-    return {
-      charset: 'utf-8',
-      title: 'Sora - Free Movies and Free Series',
-      viewport: 'width=device-width,initial-scale=1',
-      description:
-        'Watch Sora Online For Free! Sora is a multinational website for movies, series and anime fans. ',
-      keywords:
-        'Sora, Sora movie, sora movies, Watch movies online, watch series online, watch free movies, free movies to watch online, watch movies online free, free movies streaming, free movies full, free movies download, watch movies hd, movies to watch, watch movies, anime free to watch and download, free anime, watch anime online, watch anime, anime, watch anime online free, watch anime free, watchsub',
-      'theme-color': color,
-      'og:type': 'website',
-      'og:site_name': 'Sora',
-      'og:url': 'https://sora-anime.vercel.app',
-      'og:title': 'Sora - Free Movies and Free Series',
-      'og:image': 'https://sora-anime.vercel.app/api/ogimage?it=home',
-      'og:image:width': '1200',
-      'og:image:height': '630',
-      'og:description':
-        'Watch Sora Online For Free! Sora is a multinational website for movies, series and anime fans - Very fast streaming - Click NOW',
-      'msvalidate.01': '1445DD7580898781011249BF246A21AD',
-      'darkreader-lock': 'disable darkreader',
-    };
-  }
   return {
-    charset: 'utf-8',
     title: 'Sora - Free Movies and Free Series',
-    viewport: 'width=device-width,initial-scale=1',
     description:
       'Watch Sora Online For Free! Sora is a multinational website for movies, series and anime fans. ',
     keywords:
@@ -307,8 +276,6 @@ export const meta: MetaFunction = () => {
     'og:image:height': '630',
     'og:description':
       'Watch Sora Online For Free! Sora is a multinational website for movies, series and anime fans - Very fast streaming - Click NOW',
-    'msvalidate.01': '1445DD7580898781011249BF246A21AD',
-    'darkreader-lock': 'disable darkreader',
   };
 };
 
@@ -365,6 +332,21 @@ const Document = ({ children, title, lang, dir, gaTrackingId, ENV }: DocumentPro
   const location = useLocation();
   const matches = useMatches();
   const isBot = useIsBot();
+  const isHydrated = useHydrated();
+  const color = React.useMemo(() => {
+    if (isHydrated) {
+      return getComputedStyle(document.documentElement).getPropertyValue(
+        '--colors-background-title-bar',
+      );
+    }
+    return '0 0 0';
+  }, [isHydrated]);
+
+  React.useEffect(() => {
+    if (gaTrackingId?.length) {
+      gtag.pageview(location.pathname, gaTrackingId);
+    }
+  }, [location, gaTrackingId]);
 
   /**
    * It takes an object and returns a clone of that object, using for deleting handlers in matches.
@@ -386,12 +368,6 @@ const Document = ({ children, title, lang, dir, gaTrackingId, ENV }: DocumentPro
     }
     return clone;
   }
-
-  React.useEffect(() => {
-    if (gaTrackingId?.length) {
-      gtag.pageview(location.pathname, gaTrackingId);
-    }
-  }, [location, gaTrackingId]);
 
   React.useEffect(() => {
     const mounted = isMount;
@@ -437,6 +413,11 @@ const Document = ({ children, title, lang, dir, gaTrackingId, ENV }: DocumentPro
     <html lang={lang} dir={dir} suppressHydrationWarning>
       <head>
         {title ? <title>{title}</title> : null}
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="darkreader-lock" content="disable darkreader" />
+        <meta name="msvalidate.01" content="1445DD7580898781011249BF246A21AD" />
+        <meta name="theme-color" content={`hsl(${color})`} />
         <Meta />
         <Links />
       </head>
@@ -477,7 +458,6 @@ const Document = ({ children, title, lang, dir, gaTrackingId, ENV }: DocumentPro
 };
 
 const App = () => {
-  globalStyles();
   const fetchers = useFetchers();
   const navigation = useNavigation();
   const { user, locale, gaTrackingId, ENV } = useLoaderData<typeof loader>();

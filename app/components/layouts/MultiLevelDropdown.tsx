@@ -9,7 +9,9 @@ import type { User } from '@supabase/supabase-js';
 import type { AnimationItem } from 'lottie-web';
 import { useTheme } from 'next-themes';
 import { useTranslation } from 'react-i18next';
+import { useHydrated } from 'remix-utils';
 
+import { getBackgroundTitleBarColor, setMetaThemeColor } from '~/utils/client/meta-tags.client';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import languages from '~/constants/languages';
 import { listThemes } from '~/constants/settings';
@@ -33,6 +35,7 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
   const { setTheme, theme: currentTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
+  const isHydrated = useHydrated();
   const [search] = useSearchParams();
   const [currentLevel, setCurrentLevel] = useState('general');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -133,6 +136,8 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
           action: async () => {
             await setTheme(theme.themeType);
             await setTheme(theme.id);
+            const color = await getBackgroundTitleBarColor(isHydrated);
+            await setMetaThemeColor(`hsl(${color})`);
           },
           currentValue: null,
           isCurrent: currentTheme === theme.id,

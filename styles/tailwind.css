@@ -3,6 +3,19 @@
 @tailwind utilities;
 @tailwind variants;
 
+* {
+  @apply box-border m-0 p-0;
+}
+
+body {
+  @apply !bg-background-body;
+}
+
+:root {
+  --swiper-theme-color: var(--colors-primary) !important;
+  --swiper-pagination-bullet-inactive-color: var(--colors-primary-700) !important;
+}
+
 @layer base {
   .h0 {
     @apply text-5xl font-bold md:text-6xl !tracking-tighter text-foreground !font-[Inter];
