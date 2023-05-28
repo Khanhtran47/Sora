@@ -1,6 +1,7 @@
 import { Player } from '@lottiefiles/react-lottie-player';
+import { Avatar } from '@nextui-org/avatar';
 import { Link } from '@nextui-org/link';
-import { Avatar, useTheme } from '@nextui-org/react';
+import { useTheme } from '@nextui-org/react';
 import { Spacer } from '@nextui-org/spacer';
 import { useMeasure } from '@react-hookz/web';
 import { MimeType } from 'remix-image';
@@ -62,7 +63,7 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
             alt={detail?.name}
             loading="lazy"
             title={detail?.name}
-            className="aspect-[2/3] min-h-[auto] w-1/2 sm:w-[70%]"
+            className="aspect-[2/3] min-h-[auto] w-1/2"
             loaderUrl="/api/image"
             placeholder="empty"
             responsive={[
@@ -79,19 +80,12 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
           />
         </div>
       ) : (
-        <div className="flex items-center justify-center">
+        <div className="flex w-full items-center justify-center">
           <Avatar
             icon={<PhotoIcon width={48} height={48} />}
-            pointer
-            css={{
-              width: '50% !important',
-              minWidth: 'auto !important',
-              minHeight: 'auto !important',
-              height: 'auto !important',
-              size: '$20',
-              borderRadius: '0.75rem !important',
-              '@xs': { width: '70% !important' },
-              aspectRatio: '2 / 3',
+            radius="xl"
+            classNames={{
+              base: 'w-1/2 h-auto aspect-[2/3]',
             }}
           />
         </div>

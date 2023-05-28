@@ -1,5 +1,5 @@
+import { Avatar } from '@nextui-org/avatar';
 import { Card, CardBody } from '@nextui-org/card';
-import { Avatar } from '@nextui-org/react';
 import { useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs } from '@remix-run/node';
 import { Link, useLoaderData, useNavigate, useParams, type RouteMatch } from '@remix-run/react';
@@ -197,13 +197,9 @@ const TvOverview = () => {
                         ) : (
                           <Avatar
                             icon={<PhotoIcon width={48} height={48} />}
-                            pointer
-                            squared
-                            css={{
-                              minWidth: '130px !important',
-                              minHeight: '195px !important',
-                              size: '$20',
-                              borderRadius: '0 !important',
+                            radius="xl"
+                            classNames={{
+                              base: 'z-0 w-full h-full aspect-[2/3]',
                             }}
                           />
                         )}

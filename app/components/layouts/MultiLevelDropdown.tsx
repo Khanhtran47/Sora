@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Player } from '@lottiefiles/react-lottie-player';
+import { Avatar } from '@nextui-org/avatar';
 import { Button } from '@nextui-org/button';
 import { Divider } from '@nextui-org/divider';
-import { Avatar } from '@nextui-org/react';
 import { Spacer } from '@nextui-org/spacer';
 import { useLocation, useNavigate, useSearchParams } from '@remix-run/react';
 import type { User } from '@supabase/supabase-js';
@@ -265,7 +265,14 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
                   >
                     {currentDropdownLevel?.showBackButton ? <Arrow direction="left" /> : null}
                     {currentDropdownLevel?.showAvatar ? (
-                      <Avatar size="md" alt="Avatar" src={avatar} color="primary" bordered />
+                      <Avatar
+                        size="sm"
+                        alt="Avatar"
+                        src={avatar}
+                        color="primary"
+                        radius="full"
+                        isBordered
+                      />
                     ) : null}
                     {currentDropdownLevel?.showTitle ? (
                       <h6 className="px-3 !text-neutral-foreground">

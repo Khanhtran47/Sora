@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMemo, useState } from 'react';
+import { Avatar } from '@nextui-org/avatar';
 import { Button, ButtonGroup } from '@nextui-org/button';
 import { Card, CardBody } from '@nextui-org/card';
 import { Pagination } from '@nextui-org/pagination';
-import { Avatar, Dropdown } from '@nextui-org/react';
+import { Dropdown } from '@nextui-org/react';
 import { Spacer } from '@nextui-org/spacer';
 import { useMediaQuery } from '@react-hookz/web';
 import { useNavigate } from '@remix-run/react';
@@ -185,7 +186,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                           alt={episode?.name || ''}
                           title={episode?.name || ''}
                           classNames={{
-                            base: 'm-0 min-w-[227px] max-h-[127px] overflow-hidden !transition-[transform,_opacity]',
+                            base: 'm-0 min-w-[227px] max-h-[125px] overflow-hidden !transition-[transform,_opacity]',
                           }}
                           loaderUrl="/api/image"
                           placeholder="empty"
@@ -202,12 +203,9 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                       ) : (
                         <Avatar
                           icon={<PhotoIcon width={48} height={48} />}
-                          pointer
-                          css={{
-                            minWidth: '227px !important',
-                            minHeight: '127px !important',
-                            size: '$20',
-                            borderRadius: '0 !important',
+                          radius="xl"
+                          classNames={{
+                            base: 'z-0 aspect-[16/9] min-w-[227px] min-h-[125px] overflow-hidden',
                           }}
                         />
                       ))}
@@ -224,7 +222,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                           isZoomed
                           disableSkeleton={false}
                           classNames={{
-                            base: 'm-0 min-w-[227px] max-h-[127px] overflow-hidden !transition-[transform,_opacity]',
+                            base: 'm-0 min-w-[227px] max-h-[125px] overflow-hidden !transition-[transform,_opacity]',
                           }}
                           loaderUrl="/api/image"
                           placeholder="empty"
@@ -241,12 +239,9 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                       ) : (
                         <Avatar
                           icon={<PhotoIcon width={48} height={48} />}
-                          pointer
-                          css={{
-                            minWidth: '227px !important',
-                            minHeight: '127px !important',
-                            size: '$20',
-                            borderRadius: '0 !important',
+                          radius="xl"
+                          classNames={{
+                            base: 'z-0 aspect-[16/9] min-w-[227px] min-h-[125px] overflow-hidden',
                           }}
                         />
                       ))}

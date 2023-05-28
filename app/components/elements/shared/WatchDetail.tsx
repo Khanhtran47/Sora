@@ -1,6 +1,6 @@
 import { memo } from 'react';
+import { Avatar } from '@nextui-org/avatar';
 import { Button } from '@nextui-org/button';
-import { Avatar } from '@nextui-org/react';
 import { Spacer } from '@nextui-org/spacer';
 import { useMediaQuery } from '@react-hookz/web';
 import { useNavigate } from '@remix-run/react';
@@ -120,7 +120,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
                     width: 137,
                     height: 205,
                   },
-                  maxWidth: 960,
+                  maxWidth: 1024,
                 },
                 {
                   size: {
@@ -151,13 +151,9 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
             <div className="flex items-center justify-center">
               <Avatar
                 icon={<PhotoIcon width={48} height={48} />}
-                css={{
-                  width: '50% !important',
-                  size: '$20',
-                  minWidth: 'auto !important',
-                  minHeight: '205px !important',
-                  marginTop: '10vh',
-                  borderRadius: '24px !important',
+                radius="xl"
+                classNames={{
+                  base: 'z-0 w-[137px] h-auto aspect-[2/3] lg:w-[158px] xl:w-[173px] 2xl:w-[239px]',
                 }}
               />
             </div>

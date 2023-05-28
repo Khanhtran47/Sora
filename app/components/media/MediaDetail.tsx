@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
+import { Avatar } from '@nextui-org/avatar';
 import { Button } from '@nextui-org/button';
 import { Card, CardBody } from '@nextui-org/card';
-import { Avatar, Badge, Tooltip } from '@nextui-org/react';
+import { Badge, Tooltip } from '@nextui-org/react';
 import { Spacer } from '@nextui-org/spacer';
 import { useMeasure, useMediaQuery } from '@react-hookz/web';
 import { useFetcher, useLocation, useNavigate } from '@remix-run/react';
@@ -186,18 +187,12 @@ export const MediaDetail = (props: IMediaDetail) => {
                   />
                 </div>
               ) : (
-                <div className="flex items-center justify-center">
+                <div className="flex w-full items-center justify-center">
                   <Avatar
                     icon={<PhotoIcon width={48} height={48} />}
-                    css={{
-                      width: '100% !important',
-                      height: 'auto !important',
-                      size: '$20',
-                      borderRadius: '$sm',
-                      aspectRatio: '2 / 3',
-                      '@xs': { width: '75% !important' },
-                      '@sm': { borderRadius: '$md' },
-                      '@md': { width: '50% !important' },
+                    radius="xl"
+                    classNames={{
+                      base: 'w-full h-auto aspect-[2/3] sm:w-3/4 xl:w-1/2',
                     }}
                   />
                 </div>
@@ -435,18 +430,12 @@ export const AnimeDetail = (props: IAnimeDetail) => {
                   />
                 </div>
               ) : (
-                <div className="flex items-center justify-center">
+                <div className="flex w-full items-center justify-center">
                   <Avatar
                     icon={<PhotoIcon width={48} height={48} />}
-                    css={{
-                      width: '100% !important',
-                      height: 'auto !important',
-                      size: '$20',
-                      borderRadius: '$sm',
-                      aspectRatio: '2 / 3',
-                      '@xs': { width: '75% !important' },
-                      '@sm': { borderRadius: '$md' },
-                      '@md': { width: '50% !important' },
+                    radius="xl"
+                    classNames={{
+                      base: 'w-full h-auto aspect-[2/3] sm:w-3/4 xl:w-1/2',
                     }}
                   />
                 </div>

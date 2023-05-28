@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
+import { Avatar } from '@nextui-org/avatar';
 import { Card, CardBody } from '@nextui-org/card';
-import { Avatar } from '@nextui-org/react';
 import type { MetaFunction } from '@remix-run/node';
 import { useParams, type RouteMatch } from '@remix-run/react';
 import { MimeType } from 'remix-image';
@@ -177,15 +177,10 @@ const AnimeOverview = () => {
                         />
                       ) : (
                         <Avatar
-                          icon={<PhotoIcon width={48} height={48} />}
-                          pointer
-                          squared
-                          css={{
-                            minWidth: '60px !important',
-                            minHeight: '80px !important',
-                            size: '$20',
-                            borderRadius: '0 !important',
-                            flexBasis: '60px',
+                          icon={<PhotoIcon width={24} height={24} />}
+                          radius="xl"
+                          classNames={{
+                            base: 'min-h-[80px] min-w-[60px] basis-[60px]',
                           }}
                         />
                       )}
@@ -228,15 +223,10 @@ const AnimeOverview = () => {
                         />
                       ) : (
                         <Avatar
-                          icon={<PhotoIcon width={48} height={48} />}
-                          pointer
-                          squared
-                          css={{
-                            minWidth: '60px !important',
-                            minHeight: '80px !important',
-                            size: '$20',
-                            borderRadius: '0 !important',
-                            flexBasis: '60px',
+                          icon={<PhotoIcon width={24} height={24} />}
+                          radius="xl"
+                          classNames={{
+                            base: 'min-h-[80px] min-w-[60px] basis-[60px]',
                           }}
                         />
                       )}
