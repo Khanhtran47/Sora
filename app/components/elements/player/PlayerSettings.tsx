@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react';
 import { Button } from '@nextui-org/button';
 import { Divider } from '@nextui-org/divider';
-import { Switch, type SwitchEvent } from '@nextui-org/react';
 import { Spacer } from '@nextui-org/spacer';
+import { Switch } from '@nextui-org/switch';
 import { isMobileOnly } from 'react-device-detect';
 
 import { useSoraSettings } from '~/hooks/useLocalStorage';
@@ -64,7 +64,7 @@ type SettingsOption = {
   isSwitch?: boolean;
   isSwitchOn?: boolean;
   isTriggerDialog?: boolean;
-  switchAction?: (e: SwitchEvent) => void;
+  switchAction?: (isSelected: boolean) => void;
   dialogName?: string;
 };
 
@@ -396,10 +396,10 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
               action: undefined,
               isSwitch: true,
               isSwitchOn: showSubtitle,
-              switchAction: (e: SwitchEvent) => {
+              switchAction: (isSelected: boolean) => {
                 if (artplayer) {
-                  artplayer.subtitle.show = e.target.checked;
-                  setShowSubtitle(e.target.checked);
+                  artplayer.subtitle.show = isSelected;
+                  setShowSubtitle(isSelected);
                 }
               },
             },
@@ -1477,7 +1477,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
       </div>
       <div className="flex shrink-0 grow flex-row items-center justify-end gap-x-2">
         {item?.isSwitch ? (
-          <Switch checked={showSubtitle} onChange={item.switchAction} />
+          <Switch isSelected={showSubtitle} onValueChange={item.switchAction} />
         ) : (
           <>
             <h6 className="!text-default-foreground">
