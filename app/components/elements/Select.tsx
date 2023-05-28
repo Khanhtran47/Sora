@@ -19,7 +19,7 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cnBase(
-      'flex h-10 w-full items-center justify-between gap-3 rounded-lg bg-neutral !px-3 !py-2 text-sm text-neutral-foreground placeholder:text-neutral-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50',
+      'flex h-10 w-full items-center justify-between gap-3 rounded-lg bg-default !px-3 !py-2 text-sm text-default-foreground placeholder:text-default-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50',
       className,
     )}
     {...props}
@@ -42,7 +42,7 @@ const SelectContent = React.forwardRef<
     <SelectPrimitive.Content
       ref={ref}
       className={cnBase(
-        'relative z-[9999] min-w-[8rem] overflow-hidden rounded-lg border border-border bg-content1 text-neutral-foreground shadow-xl shadow-neutral/10 animate-in fade-in-80',
+        'relative z-[9999] min-w-[8rem] overflow-hidden rounded-lg border border-border bg-content1 text-default-foreground shadow-xl shadow-default/10 animate-in fade-in-80',
         position === 'popper' ? 'translate-y-1' : '!p-1.5',
         className,
       )}
@@ -50,7 +50,7 @@ const SelectContent = React.forwardRef<
       {...props}
     >
       {position === 'item-aligned' ? (
-        <SelectPrimitive.ScrollUpButton className="flex h-6 cursor-default items-center justify-center bg-content1 text-neutral-foreground">
+        <SelectPrimitive.ScrollUpButton className="flex h-6 cursor-default items-center justify-center bg-content1 text-default-foreground">
           <ChevronUp className="h-4 w-4" />
         </SelectPrimitive.ScrollUpButton>
       ) : null}
@@ -65,7 +65,7 @@ const SelectContent = React.forwardRef<
         {children}
       </SelectPrimitive.Viewport>
       {position === 'item-aligned' ? (
-        <SelectPrimitive.ScrollDownButton className="flex h-6 cursor-default items-center justify-center bg-neutral text-neutral-foreground">
+        <SelectPrimitive.ScrollDownButton className="flex h-6 cursor-default items-center justify-center bg-default text-default-foreground">
           <ChevronDown className="h-4 w-4" />
         </SelectPrimitive.ScrollDownButton>
       ) : null}
@@ -93,7 +93,7 @@ const SelectItem = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cnBase(
-      'relative flex w-full cursor-default select-none items-center rounded-md !py-1.5 !pl-8 !pr-2 text-sm outline-none data-[disabled]:pointer-events-none data-[highlighted]:bg-neutral data-[highlighted]:text-neutral-foreground data-[disabled]:opacity-50',
+      'relative flex w-full cursor-default select-none items-center rounded-md !py-1.5 !pl-8 !pr-2 text-sm outline-none data-[disabled]:pointer-events-none data-[highlighted]:bg-default data-[highlighted]:text-default-foreground data-[disabled]:opacity-50',
       className,
     )}
     {...props}

@@ -63,7 +63,7 @@ const ControlNavigation = () => {
         <ChevronRight />
       </Button>
       {isShowBreadcrumb.value ? (
-        <Chip color="neutral" variant="faded" size="xl">
+        <Chip color="default" variant="faded" size="xl">
           <Breadcrumb>
             {matches
               // skip routes that don't have a breadcrumb

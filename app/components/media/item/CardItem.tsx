@@ -456,7 +456,7 @@ const CardItem = (props: ICardItemProps) => {
               initial={{ scaleX: 0.6, scaleY: 1.1 }}
               animate={{ scaleX: 1, scaleY: 1 }}
               transition={{ duration: 0.2 }}
-              className="rounded-xl bg-neutral/60 shadow-md backdrop-blur-md"
+              className="rounded-xl bg-default/60 shadow-md backdrop-blur-md"
             >
               <CardItemHover
                 backdropPath={backdropPath}

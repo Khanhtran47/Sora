@@ -61,7 +61,7 @@ const SliderPage = () => {
         value={multipleValue}
       />
       <p className="text-base tracking-wide md:text-lg">Colors</p>
-      <Slider defaultValue={[33]} max={100} step={1} color="neutral" />
+      <Slider defaultValue={[33]} max={100} step={1} color="default" />
       <Slider defaultValue={[33]} max={100} step={1} color="primary" />
       <Slider defaultValue={[33]} max={100} step={1} color="secondary" />
       <Slider defaultValue={[33]} max={100} step={1} color="success" />

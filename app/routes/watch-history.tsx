@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Button } from '@nextui-org/button';
+import { Checkbox, CheckboxGroup } from '@nextui-org/checkbox';
+import { Input } from '@nextui-org/input';
 import { Pagination } from '@nextui-org/pagination';
-import { Checkbox, Input } from '@nextui-org/react';
 import { useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
@@ -76,33 +77,34 @@ const History = () => {
   return (
     <div className="flex w-full flex-col justify-start gap-6">
       <h2>Your watch history</h2>
-      <div className="flex flex-row flex-wrap items-center justify-start gap-4">
-        <Checkbox.Group
+      <div className="flex flex-row flex-wrap items-center justify-start gap-6">
+        <CheckboxGroup
           label="Select media types"
           orientation="horizontal"
-          color="secondary"
+          color="primary"
           defaultValue={types}
           onChange={(values) => setTypes(values)}
         >
           <Checkbox value="movie">Movie</Checkbox>
           <Checkbox value="tv">TV Show</Checkbox>
           <Checkbox value="anime">Anime</Checkbox>
-        </Checkbox.Group>
-        <Input
-          width="186px"
-          label="From"
-          type="date"
-          css={{ marginRight: '1rem' }}
-          value={from || undefined}
-          onChange={(e) => setFrom(e.target.value)}
-        />
-        <Input
-          width="186px"
-          label="To"
-          type="date"
-          value={to || undefined}
-          onChange={(e) => setTo(e.target.value)}
-        />
+        </CheckboxGroup>
+        <div className="flex gap-x-2">
+          <Input
+            label="From"
+            type="date"
+            placeholder="Enter your date"
+            value={from || undefined}
+            onValueChange={setFrom}
+          />
+          <Input
+            label="To"
+            type="date"
+            placeholder="Enter your date"
+            value={to || undefined}
+            onValueChange={setTo}
+          />
+        </div>
       </div>
       <Button
         type="button"

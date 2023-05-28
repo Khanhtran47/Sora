@@ -159,7 +159,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
             </div>
           ))}
         <div className="flex w-full flex-col items-start justify-start gap-y-4">
-          <h3 className="font-semibold text-neutral-900">{title}</h3>
+          <h3 className="font-semibold text-default-900">{title}</h3>
           {type === 'movie' || type === 'tv' ? (
             <div className="flex flex-row gap-x-3">
               <Rating rating={tmdbRating?.toFixed(1)} ratingType="movie" />

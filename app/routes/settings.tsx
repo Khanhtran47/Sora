@@ -409,7 +409,7 @@ const Settings = () => {
                   <h6 className="ml-2">{t(tab.title)}</h6>
                   {activeTab === tab.id ? (
                     <motion.div
-                      className="absolute overflow-hidden rounded-md bg-neutral-foreground data-[orientation=horizontal]:bottom-0 data-[orientation=vertical]:left-0 data-[orientation=horizontal]:h-1 data-[orientation=vertical]:h-1/2 data-[orientation=horizontal]:w-1/2 data-[orientation=vertical]:w-1"
+                      className="absolute overflow-hidden rounded-md bg-default-foreground data-[orientation=horizontal]:bottom-0 data-[orientation=vertical]:left-0 data-[orientation=horizontal]:h-1 data-[orientation=vertical]:h-1/2 data-[orientation=horizontal]:w-1/2 data-[orientation=vertical]:w-1"
                       layoutId="underline"
                       data-orientation={isSm ? 'horizontal' : 'vertical'}
                       ref={underlineRef}
@@ -431,7 +431,7 @@ const Settings = () => {
                   onDragEnd={handleDragEnd}
                   dragDirectionLock
                 >
-                  <div className="flex w-full flex-col justify-start rounded-xl bg-content1 p-5 shadow-lg shadow-neutral/10">
+                  <div className="flex w-full flex-col justify-start rounded-xl bg-content1 p-5 shadow-lg shadow-default/10">
                     <SettingBlock
                       type="select"
                       title={t('language')}
@@ -942,7 +942,7 @@ const Settings = () => {
                   onDragEnd={handleDragEnd}
                   className="w-full"
                 >
-                  <div className="w-full rounded-xl bg-content1 p-5 shadow-lg shadow-neutral/10">
+                  <div className="w-full rounded-xl bg-content1 p-5 shadow-lg shadow-default/10">
                     <div className="flex flex-col items-center justify-center">
                       <Image
                         alt="About Logo"
@@ -987,7 +987,7 @@ const Settings = () => {
                       <Link href="#">Contact ✉️</Link>
                     </div>
                     <Spacer y={1} />
-                    <h6 className="text-center !text-neutral-900">
+                    <h6 className="text-center !text-default-900">
                       This site does not store any files on its server. All contents are provided by
                       non-affiliated third parties.
                     </h6>

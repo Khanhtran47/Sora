@@ -212,7 +212,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
             background: useMotionTemplate`
               radial-gradient(
                 ${mouseRadius}px circle at ${mouseX}px ${mouseY}px,
-                hsl(var(--colors-neutral-400) / 15),
+                hsl(var(--colors-default-400) / 15),
                 transparent 80%
               )
             `,
@@ -391,7 +391,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                 title={titleItem}
                 width="100%"
                 disableSkeleton={false}
-                className="min-h-[390px] min-w-[270px] rounded-xl shadow-xl shadow-neutral 2xl:min-h-[477px] 2xl:min-w-[318px]"
+                className="min-h-[390px] min-w-[270px] rounded-xl shadow-xl shadow-default 2xl:min-h-[477px] 2xl:min-w-[318px]"
                 loading="eager"
                 loaderUrl="/api/image"
                 placeholder="empty"

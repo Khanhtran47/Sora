@@ -91,10 +91,10 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
         {...rest}
       />
       {isMini ? (
-        <div className="inset-x-0 bottom-[-64px] flex h-16 flex-row items-center justify-between rounded-b-lg bg-neutral p-3">
+        <div className="inset-x-0 bottom-[-64px] flex h-16 flex-row items-center justify-between rounded-b-lg bg-default p-3">
           <Link
             to={routePlayer}
-            className="line-clamp-1 !text-neutral-foreground"
+            className="line-clamp-1 !text-default-foreground"
             title={titlePlayer}
           >
             {titlePlayer}

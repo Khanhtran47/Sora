@@ -47,7 +47,7 @@ const ColorsPage = () => {
         </div>
         Base:
         <div className="mb-4 flex flex-row flex-wrap gap-4">
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-neutral text-neutral-foreground shadow-lg">
+          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-default text-default-foreground shadow-lg">
             neutral
           </div>
           <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-lg">
@@ -68,34 +68,34 @@ const ColorsPage = () => {
         </div>
         Neutral:
         <div className="mb-4 flex flex-row flex-wrap gap-4">
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-neutral-50 text-neutral-900 shadow-lg">
+          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-default-50 text-default-900 shadow-lg">
             neutral-50
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-neutral-100 text-neutral-900 shadow-lg">
+          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-default-100 text-default-900 shadow-lg">
             neutral-100
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-neutral-200 text-neutral-800 shadow-lg">
+          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-default-200 text-default-800 shadow-lg">
             neutral-200
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-neutral-300 text-neutral-800 shadow-lg">
+          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-default-300 text-default-800 shadow-lg">
             neutral-300
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-neutral-400 text-neutral-800 shadow-lg">
+          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-default-400 text-default-800 shadow-lg">
             neutral-400
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-neutral-500 text-neutral-foreground shadow-lg">
+          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-default-500 text-default-foreground shadow-lg">
             neutral-500
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-neutral-600 text-neutral-50 shadow-lg">
+          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-default-600 text-default-50 shadow-lg">
             neutral-600
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-neutral-700 text-neutral-100 shadow-lg">
+          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-default-700 text-default-100 shadow-lg">
             neutral-700
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-neutral-800 text-neutral-100 shadow-lg">
+          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-default-800 text-default-100 shadow-lg">
             neutral-800
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-neutral-900 text-neutral-100 shadow-lg">
+          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-default-900 text-default-100 shadow-lg">
             neutral-900
           </div>
         </div>

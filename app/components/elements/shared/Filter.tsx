@@ -266,7 +266,7 @@ const Filter: React.FC<IFilterProps> = (props: IFilterProps) => {
                 <div className="flex w-full flex-col items-start justify-start gap-3">
                   <div className="flex w-full flex-row items-center justify-between">
                     <h6>{t('minimum-user-votes')}</h6>
-                    <p className="text-neutral-foreground/80">{voteCountSelected[0]}</p>
+                    <p className="text-default-foreground/80">{voteCountSelected[0]}</p>
                   </div>
                   <Slider
                     defaultValue={voteCountSelected}
@@ -283,7 +283,7 @@ const Filter: React.FC<IFilterProps> = (props: IFilterProps) => {
                 <div className="flex w-full flex-col items-start justify-start gap-3">
                   <div className="flex w-full flex-row items-center justify-between">
                     <h6>{t('user-score')}</h6>
-                    <p className="text-neutral-foreground/80">
+                    <p className="text-default-foreground/80">
                       {t('rated')} {userScoreSelected[0]} - {userScoreSelected[1]}
                     </p>
                   </div>
@@ -302,7 +302,7 @@ const Filter: React.FC<IFilterProps> = (props: IFilterProps) => {
                 <div className="flex w-full flex-col items-start justify-start gap-3">
                   <div className="flex w-full flex-row items-center justify-between">
                     <h6>{t('runtime')}</h6>
-                    <p className="text-neutral-foreground/80">
+                    <p className="text-default-foreground/80">
                       {runtimeSelected[0]} {t('minutes')} - {runtimeSelected[1]} {t('minutes')}
                     </p>
                   </div>
@@ -431,7 +431,7 @@ const Filter: React.FC<IFilterProps> = (props: IFilterProps) => {
       </ScrollArea>
       <SheetFooter className="px-1 md:px-6">
         <Tooltip content={t('reset-tooltip')}>
-          <Button color="neutral" type="button" onPress={() => handleReset()}>
+          <Button color="default" type="button" onPress={() => handleReset()}>
             {t('reset')}
           </Button>
         </Tooltip>

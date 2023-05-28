@@ -497,8 +497,8 @@ const SideBar = () => {
                           }}
                         />
                       </CardBody>
-                      <CardFooter className="absolute bottom-0 z-[10] justify-start bg-neutral/60 backdrop-blur-sm">
-                        <h4 className="text-neutral-foreground">{t('movies-footer')}</h4>
+                      <CardFooter className="absolute bottom-0 z-[10] justify-start bg-default/60 backdrop-blur-sm">
+                        <h4 className="text-default-foreground">{t('movies-footer')}</h4>
                       </CardFooter>
                     </Card>
                   </li>
@@ -665,8 +665,8 @@ const SideBar = () => {
                           }}
                         />
                       </CardBody>
-                      <CardFooter className="absolute bottom-0 z-[10] justify-start bg-neutral/60 backdrop-blur-sm">
-                        <h4 className="text-neutral-foreground">{t('tv-shows-footer')}</h4>
+                      <CardFooter className="absolute bottom-0 z-[10] justify-start bg-default/60 backdrop-blur-sm">
+                        <h4 className="text-default-foreground">{t('tv-shows-footer')}</h4>
                       </CardFooter>
                     </Card>
                   </li>
@@ -833,8 +833,8 @@ const SideBar = () => {
                           }}
                         />
                       </CardBody>
-                      <CardFooter className="absolute bottom-0 z-[10] justify-start bg-neutral/60 backdrop-blur-sm">
-                        <h4 className="text-neutral-foreground">{t('anime-footer')}</h4>
+                      <CardFooter className="absolute bottom-0 z-[10] justify-start bg-default/60 backdrop-blur-sm">
+                        <h4 className="text-default-foreground">{t('anime-footer')}</h4>
                       </CardFooter>
                     </Card>
                   </li>

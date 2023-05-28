@@ -15,8 +15,8 @@ const sliderStyles = tv({
   variants: {
     color: {
       neutral: {
-        track: 'bg-neutral-50',
-        range: 'bg-neutral',
+        track: 'bg-default-50',
+        range: 'bg-default',
         thumb: 'border-foreground',
       },
       primary: {
@@ -45,7 +45,7 @@ const sliderStyles = tv({
         thumb: 'border-foreground',
       },
       gradient: {
-        track: 'bg-neutral',
+        track: 'bg-default',
         range: 'bg-gradient-to-r from-primary to-secondary',
         thumb: 'border-foreground',
       },
