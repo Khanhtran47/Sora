@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '@nextui-org/button';
 import { Card, CardBody, CardHeader } from '@nextui-org/card';
-import { Badge } from '@nextui-org/react';
+import { Chip } from '@nextui-org/chip';
 import { useIntersectionObserver, useMeasure, useMediaQuery } from '@react-hookz/web';
 import { useFetcher, useNavigate } from '@remix-run/react';
 import { AnimatePresence, motion, useMotionTemplate, useMotionValue } from 'framer-motion';
@@ -293,32 +293,32 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                   <div className="flex flex-row gap-x-2">
                     {mediaType === 'anime'
                       ? genresAnime?.slice(0, 3).map((genre) => (
-                          <Badge key={genre} variant="flat" color="primary" css={{ border: 0 }}>
+                          <Chip key={genre} variant="flat" color="primary" radius="full">
                             {genre}
-                          </Badge>
+                          </Chip>
                         ))
                       : genreIds?.slice(0, 3).map((genreId) => {
                           if (mediaType === 'movie') {
                             return (
-                              <Badge
+                              <Chip
                                 key={genresMovie?.[genreId]}
                                 variant="flat"
                                 color="primary"
-                                css={{ border: 0 }}
+                                radius="full"
                               >
                                 {genresMovie?.[genreId]}
-                              </Badge>
+                              </Chip>
                             );
                           }
                           return (
-                            <Badge
+                            <Chip
                               key={genresTv?.[genreId]}
                               variant="flat"
                               color="primary"
-                              css={{ border: 0 }}
+                              radius="full"
                             >
                               {genresTv?.[genreId]}
-                            </Badge>
+                            </Chip>
                           );
                         })}
                   </div>

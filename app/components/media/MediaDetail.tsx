@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { Avatar } from '@nextui-org/avatar';
 import { Button } from '@nextui-org/button';
 import { Card, CardBody } from '@nextui-org/card';
-import { Badge, Tooltip } from '@nextui-org/react';
+import { Chip } from '@nextui-org/chip';
+import { Tooltip } from '@nextui-org/react';
 import { Spacer } from '@nextui-org/spacer';
 import { useMeasure, useMediaQuery } from '@react-hookz/web';
 import { useFetcher, useLocation, useNavigate } from '@remix-run/react';
@@ -207,12 +208,12 @@ export const MediaDetail = (props: IMediaDetail) => {
             </div>
             <div className="flex flex-col gap-y-3 grid-in-info sm:gap-y-6">
               <div className="flex flex-row flex-wrap gap-3">
-                <Badge
-                  size={isSm ? 'sm' : 'md'}
+                <Chip
+                  size="xl"
                   color="primary"
+                  radius="full"
                   variant="flat"
-                  className="duration-200 ease-in-out transition-all"
-                  css={
+                  style={
                     colorPalette
                       ? {
                           backgroundColor: colorPalette[200],
@@ -220,6 +221,10 @@ export const MediaDetail = (props: IMediaDetail) => {
                         }
                       : { borderColor: '$primaryLightActive' }
                   }
+                  classNames={{
+                    base: 'duration-200 ease-in-out transition-all',
+                    content: 'flex flex-row items-center gap-x-2',
+                  }}
                 >
                   <Rating
                     rating={item?.vote_average?.toFixed(1)}
@@ -234,13 +239,14 @@ export const MediaDetail = (props: IMediaDetail) => {
                       </h6>
                     </div>
                   ) : null}
-                </Badge>
-                <Badge
-                  size={isSm ? 'sm' : 'md'}
+                </Chip>
+                <Chip
+                  size="xl"
                   color="primary"
+                  radius="full"
                   variant="flat"
                   className="flex flex-row duration-200 ease-in-out transition-all"
-                  css={
+                  style={
                     colorPalette
                       ? {
                           backgroundColor: colorPalette[200],
@@ -253,7 +259,7 @@ export const MediaDetail = (props: IMediaDetail) => {
                     {releaseDate}
                     {runtime ? ` • ${Math.floor(runtime / 60)}h ${runtime % 60}m` : null}
                   </h6>
-                </Badge>
+                </Chip>
               </div>
               <div className="flex w-full flex-row flex-wrap items-center justify-start gap-3">
                 {genres &&
@@ -449,12 +455,13 @@ export const AnimeDetail = (props: IAnimeDetail) => {
             </div>
             <div className="flex flex-col gap-y-3 grid-in-info sm:gap-y-6">
               <div className="flex flex-row flex-wrap gap-3">
-                <Badge
-                  size={isSm ? 'sm' : 'md'}
+                <Chip
+                  size="xl"
                   color="primary"
+                  radius="full"
                   variant="flat"
                   className="duration-200 ease-in-out transition-all"
-                  css={
+                  style={
                     colorPalette
                       ? {
                           backgroundColor: colorPalette[200],
@@ -468,13 +475,14 @@ export const AnimeDetail = (props: IAnimeDetail) => {
                     ratingType="anime"
                     color={colorPalette ? colorPalette[600] : undefined}
                   />
-                </Badge>
-                <Badge
-                  size={isSm ? 'sm' : 'md'}
+                </Chip>
+                <Chip
+                  size="xl"
                   color="primary"
+                  radius="full"
                   variant="flat"
                   className="flex flex-row duration-200 ease-in-out transition-all"
-                  css={
+                  style={
                     colorPalette
                       ? {
                           backgroundColor: colorPalette[200],
@@ -487,7 +495,7 @@ export const AnimeDetail = (props: IAnimeDetail) => {
                     {type}
                     {releaseDate ? ` • ${releaseDate}` : ''}
                   </h6>
-                </Badge>
+                </Chip>
               </div>
               <div className="flex w-full flex-row flex-wrap items-center justify-start gap-3">
                 {genres &&

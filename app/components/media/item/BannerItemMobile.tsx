@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { Card, CardBody, CardFooter } from '@nextui-org/card';
-import { Badge } from '@nextui-org/react';
+import { Chip } from '@nextui-org/chip';
 import { useIntersectionObserver, useMeasure } from '@react-hookz/web';
 import { Link } from '@remix-run/react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -103,22 +103,29 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
           <div className="flex w-full flex-col items-center justify-center gap-4 py-3">
             <h2 className="mb-0 text-center font-semibold">{titleItem}</h2>
             <div className="m-0 flex w-full flex-row gap-x-2">
-              <Badge variant="flat" color="primary" css={{ border: 0 }}>
+              <Chip
+                variant="flat"
+                color="primary"
+                radius="full"
+                classNames={{
+                  content: 'flex items-center gap-x-1',
+                }}
+              >
                 <Star filled width={16} height={16} />
                 {mediaType === 'anime' ? voteAverage : Number(voteAverage.toFixed(1))}
-              </Badge>
+              </Chip>
               {mediaType === 'anime' ? (
-                <Badge variant="flat" color="primary" css={{ border: 0 }}>
+                <Chip variant="flat" color="primary" radius="full">
                   {genresAnime[0]}
-                </Badge>
+                </Chip>
               ) : mediaType === 'movie' ? (
-                <Badge variant="flat" color="primary" css={{ border: 0 }}>
+                <Chip variant="flat" color="primary" radius="full">
                   {genresMovie?.[genreIds[0]]}
-                </Badge>
+                </Chip>
               ) : (
-                <Badge variant="flat" color="primary" css={{ border: 0 }}>
+                <Chip variant="flat" color="primary" radius="full">
                   {genresTv?.[genreIds[0]]}
-                </Badge>
+                </Chip>
               )}
             </div>
           </div>
