@@ -1,15 +1,16 @@
 import { useMemo } from 'react';
-import { useTheme } from '@nextui-org/react';
+import { useTheme } from 'next-themes';
 import tinycolor from 'tinycolor2';
 
-/**
- * It takes a color and returns a darkenLightenColor, backgroundColor, backgroundInvestColor, and
- * saturatedColor based on the color's brightness and the theme's isDark value.
- * @param {string} [color] - the color you want to darken or lighten
- * @returns An object with the following properties:
- */
 export default function useColorDarkenLighten(color?: string) {
-  const { isDark } = useTheme();
+  const { theme } = useTheme();
+  const isDark = useMemo(() => {
+    const darkTheme = ['dark', 'synthwave', 'dracula', 'night'];
+    if (theme) {
+      return darkTheme.includes(theme);
+    }
+    return false;
+  }, [theme]);
   const brightnessColor = (tinycolor(color).getBrightness() / 255) * 100;
   const darkenLightenColor = useMemo(() => {
     if (isDark) {
