@@ -57,7 +57,7 @@ function useHeaderOptions() {
     if (customHeaderBackgroundColor) {
       return backgroundColor;
     }
-    return 'var(--nextui-colors-backgroundContrastAlpha)';
+    return 'hsl(var(--colors-content1) / 0.6)';
   }, [customHeaderBackgroundColor, backgroundColor]);
 
   const isShowListViewChangeButton = useMemo(

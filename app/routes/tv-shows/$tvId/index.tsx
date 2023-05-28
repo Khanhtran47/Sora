@@ -112,7 +112,7 @@ const TvOverview = () => {
                       key={`director-item-${creator.id}}`}
                       to={`/people/${creator.id}/`}
                       style={{ lineHeight: '1.75rem' }}
-                      className="text-[var(--nextui-color-text)] hover:text-primary"
+                      className="text-foreground hover:text-primary"
                     >
                       {creator.name}
                     </Link>
