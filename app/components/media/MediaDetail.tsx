@@ -3,8 +3,8 @@ import { Avatar } from '@nextui-org/avatar';
 import { Button } from '@nextui-org/button';
 import { Card, CardBody } from '@nextui-org/card';
 import { Chip } from '@nextui-org/chip';
-import { Tooltip } from '@nextui-org/react';
 import { Spacer } from '@nextui-org/spacer';
+import { Tooltip } from '@nextui-org/tooltip';
 import { useMeasure, useMediaQuery } from '@react-hookz/web';
 import { useFetcher, useLocation, useNavigate } from '@remix-run/react';
 import { motion, useTransform } from 'framer-motion';
@@ -347,7 +347,7 @@ export const MediaDetail = (props: IMediaDetail) => {
                     <WatchTrailer trailer={trailer} currentTime={trailerTime} />
                   </DialogContent>
                 </Dialog>
-                <Tooltip content="Share" placement="top" isDisabled={isSm}>
+                <Tooltip content="Share" placement="top" isDisabled={isSm} showArrow closeDelay={0}>
                   <Button
                     type="button"
                     size={isSm ? 'sm' : 'md'}

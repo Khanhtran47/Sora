@@ -23,6 +23,7 @@ const SliderPage = () => {
   const [multipleValue, setMultipleValue] = useState([33, 66]);
   return (
     <>
+      <h2>Slider</h2>
       <Link
         showAnchorIcon
         underline="hover"

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/indent */
 import { json, type LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 import { motion } from 'framer-motion';

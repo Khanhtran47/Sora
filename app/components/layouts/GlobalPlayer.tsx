@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '@nextui-org/button';
-import { Tooltip } from '@nextui-org/react';
+import { Tooltip } from '@nextui-org/tooltip';
 import { useMeasure } from '@react-hookz/web';
 import {
   useFetcher,
@@ -993,7 +993,7 @@ const GlobalPlayer = () => {
       {isMini && artplayer
         ? createPortal(
             <div className="flex h-full w-full flex-row items-center justify-center">
-              <Tooltip content={isPlayerPlaying ? 'Pause' : 'Play'}>
+              <Tooltip content={isPlayerPlaying ? 'Pause' : 'Play'} showArrow closeDelay={0}>
                 <Button
                   type="button"
                   variant="light"
@@ -1022,7 +1022,7 @@ const GlobalPlayer = () => {
         ? createPortal(
             <div className="flex flex-row items-center justify-between">
               <div className="flex flex-row items-center justify-center gap-x-1">
-                <Tooltip content="Expand">
+                <Tooltip content="Expand" showArrow closeDelay={0}>
                   <Button
                     type="button"
                     variant="light"

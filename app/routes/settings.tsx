@@ -3,10 +3,10 @@ import { Accordion, AccordionItem } from '@nextui-org/accordion';
 import { Kbd, type KbdKey } from '@nextui-org/kbd';
 import { Link } from '@nextui-org/link';
 import { Radio, RadioGroup } from '@nextui-org/radio';
-import { Tooltip } from '@nextui-org/react';
 import { Spacer } from '@nextui-org/spacer';
 import { Spinner } from '@nextui-org/spinner';
 import { Switch } from '@nextui-org/switch';
+import { Tooltip } from '@nextui-org/tooltip';
 import { useLocalStorageValue, useMediaQuery } from '@react-hookz/web';
 import type { MetaFunction } from '@remix-run/node';
 import { NavLink, Link as RemixLink, useLocation, useNavigate } from '@remix-run/react';
@@ -466,6 +466,7 @@ const Settings = () => {
                       classNames={{
                         title: 'text-2xl',
                         subtitle: 'text-base',
+                        content: 'pb-4',
                       }}
                     >
                       <RadioGroup
@@ -492,9 +493,7 @@ const Settings = () => {
                           <Tooltip
                             key={themeItem.id}
                             content={isXs ? null : themeItem.title}
-                            rounded
-                            color="primary"
-                            hideArrow
+                            closeDelay={0}
                             offset={10}
                           >
                             <Radio
@@ -523,6 +522,7 @@ const Settings = () => {
                         classNames={{
                           title: 'text-2xl',
                           subtitle: 'text-base',
+                          content: 'pb-4',
                         }}
                       >
                         <div className="flex flex-col items-start justify-center gap-y-4 rounded-md bg-content2 p-3">
@@ -574,6 +574,7 @@ const Settings = () => {
                         classNames={{
                           title: 'text-2xl',
                           subtitle: 'text-base',
+                          content: 'pb-4',
                         }}
                       >
                         <SettingBlock
@@ -590,6 +591,7 @@ const Settings = () => {
                       classNames={{
                         title: 'text-2xl',
                         subtitle: 'text-base',
+                        content: 'pb-4',
                       }}
                     >
                       <SettingBlock
@@ -614,6 +616,7 @@ const Settings = () => {
                       classNames={{
                         title: 'text-2xl',
                         subtitle: 'text-base',
+                        content: 'pb-4',
                       }}
                     >
                       <SettingBlock
@@ -665,6 +668,7 @@ const Settings = () => {
                       classNames={{
                         title: 'text-2xl',
                         subtitle: 'text-base',
+                        content: 'pb-4',
                       }}
                     >
                       <SettingBlock
@@ -705,6 +709,7 @@ const Settings = () => {
                       classNames={{
                         title: 'text-2xl',
                         subtitle: 'text-base',
+                        content: 'pb-4',
                       }}
                     >
                       <SettingBlock
@@ -791,6 +796,7 @@ const Settings = () => {
                       classNames={{
                         title: 'text-2xl',
                         subtitle: 'text-base',
+                        content: 'pb-4',
                       }}
                     >
                       <SettingBlock
@@ -887,6 +893,7 @@ const Settings = () => {
                       classNames={{
                         title: 'text-2xl',
                         subtitle: 'text-base',
+                        content: 'pb-4',
                       }}
                     >
                       <SettingBlock type="kbd" title={t('volume-up')} keys="up" />

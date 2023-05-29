@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Button } from '@nextui-org/button';
 import { Input } from '@nextui-org/input';
-import { Tooltip } from '@nextui-org/react';
+import { Tooltip } from '@nextui-org/tooltip';
 import { Form, useSearchParams } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 
@@ -10,10 +10,7 @@ import {
   animeFormat,
   animeGenres,
   animeSeason,
-  // animeSort,
   animeStatus,
-  // sortMovieItems,
-  // sortTvItems,
   tvStatus,
 } from '~/constants/filterItems';
 import {
@@ -428,7 +425,7 @@ const Filter: React.FC<IFilterProps> = (props: IFilterProps) => {
         <ScrollCorner />
       </ScrollArea>
       <SheetFooter className="px-1 md:px-6">
-        <Tooltip content={t('reset-tooltip')}>
+        <Tooltip content={t('reset-tooltip')} showArrow closeDelay={0}>
           <Button color="default" type="button" onPress={() => handleReset()}>
             {t('reset')}
           </Button>

@@ -34,6 +34,7 @@ export const handle = {
 const DialogPage = () => {
   return (
     <>
+      <h2>Dialog</h2>
       <Link
         showAnchorIcon
         underline="hover"
