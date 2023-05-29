@@ -21,8 +21,10 @@ import TMDB from '~/utils/media';
 import { useLayout } from '~/store/layout/useLayout';
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
+import { Dialog, DialogContent, DialogTrigger } from '~/components/elements/Dialog';
 import Image from '~/components/elements/Image';
-import SelectProviderModal from '~/components/elements/dialog/SelectProviderModal';
+import SelectProvider from '~/components/elements/dialog/SelectProviderDialog';
+import WatchTrailer, { type Trailer } from '~/components/elements/dialog/WatchTrailerDialog';
 import Rating from '~/components/elements/shared/Rating';
 import { backgroundStyles } from '~/components/styles/primitives';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
@@ -31,10 +33,10 @@ import ShareIcon from '~/assets/icons/ShareIcon';
 interface IMediaDetail {
   type: 'movie' | 'tv';
   item: IMovieDetail | ITvShowDetail | undefined;
-  handler?: (id: number) => void;
   translations?: IMovieTranslations | undefined;
   imdbRating: { count: number; star: number } | undefined;
   color: string | undefined;
+  trailerTime?: number;
 }
 
 interface IMediaBackground {
@@ -44,7 +46,7 @@ interface IMediaBackground {
 
 interface IAnimeDetail {
   item: IAnimeInfo | undefined;
-  handler?: (id: number) => void;
+  trailerTime?: number;
 }
 
 const backgroundImageStyles = tv({
@@ -73,7 +75,7 @@ const backgroundImageStyles = tv({
 
 export const MediaDetail = (props: IMediaDetail) => {
   // const { t } = useTranslation();
-  const { type, item, handler, imdbRating, color } = props;
+  const { type, item, imdbRating, color, trailerTime } = props;
   const [size, ref] = useMeasure<HTMLDivElement>();
   const [imageSize, imageRef] = useMeasure<HTMLDivElement>();
   const navigate = useNavigate();
@@ -82,11 +84,10 @@ export const MediaDetail = (props: IMediaDetail) => {
   const { backgroundColor } = useColorDarkenLighten(color);
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const isXl = useMediaQuery('(max-width: 1280px)', { initializeWithValue: false });
-  const [visible, setVisible] = useState(false);
+  const [showProvidereDialog, setShowProvidereDialog] = useState(false);
+  const [showTrailerDialog, setShowTrailerDialog] = useState(false);
+  const [trailer, setTrailer] = useState<Trailer>({});
   const [colorPalette, setColorPalette] = useState<ColorPalette>();
-  const closeHandler = () => {
-    setVisible(false);
-  };
   const { id, tagline, genres, status } = item || {};
   const title = (item as IMovieDetail)?.title || (item as ITvShowDetail)?.name || '';
   const titleEng = (item as IMovieDetail)?.titleEng || (item as ITvShowDetail)?.nameEng || '';
@@ -127,7 +128,19 @@ export const MediaDetail = (props: IMediaDetail) => {
     if (fetcher.data && fetcher.data.color) {
       setColorPalette(fetcher.data.color);
     }
+    if (fetcher.data && fetcher.data.videos) {
+      const { results } = fetcher.data.videos;
+      const officialTrailer = results.find((result: Trailer) => result.type === 'Trailer');
+      setTrailer(officialTrailer);
+    }
   }, [fetcher.data]);
+
+  const handleShowTrailerDialog = (value: boolean) => {
+    setShowTrailerDialog(value);
+    if (value === true) {
+      fetcher.load(`/${type === 'movie' ? 'movies' : 'tv-shows'}/${id}/videos`);
+    }
+  };
 
   return (
     <>
@@ -294,24 +307,46 @@ export const MediaDetail = (props: IMediaDetail) => {
             </div>
             <div className="mb-10 flex w-full flex-row flex-wrap items-center justify-between gap-4 grid-in-buttons">
               {(status === 'Released' || status === 'Ended' || status === 'Returning Series') && (
-                <Button
-                  type="button"
-                  // shadow
-                  onPress={() => setVisible(true)}
-                  className="w-full bg-gradient-to-r from-primary to-secondary text-lg font-bold sm:w-auto"
-                  size="lg"
-                >
-                  Watch now
-                </Button>
+                <Dialog open={showProvidereDialog} onOpenChange={setShowProvidereDialog}>
+                  <DialogTrigger asChild>
+                    <Button
+                      type="button"
+                      // shadow
+                      className="w-full bg-gradient-to-r from-primary to-secondary text-lg font-bold sm:w-auto"
+                      size="lg"
+                    >
+                      Watch now
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <SelectProvider
+                      visible={showProvidereDialog}
+                      closeHandler={() => setShowProvidereDialog(false)}
+                      type={type}
+                      title={titleEng}
+                      origTitle={orgTitle}
+                      year={releaseYear}
+                      id={item?.id}
+                      {...(type === 'tv' && { season: 1, episode: 1, isEnded: status === 'Ended' })}
+                      {...(type === 'movie' && { isEnded: status === 'Released' })}
+                    />
+                  </DialogContent>
+                </Dialog>
               )}
               <div className="flex flex-row flex-wrap items-center justify-start gap-x-4">
-                <Button
-                  type="button"
-                  size={isSm ? 'sm' : 'md'}
-                  onPress={() => handler && handler(Number(id))}
+                <Dialog
+                  open={showTrailerDialog}
+                  onOpenChange={(value: boolean) => handleShowTrailerDialog(value)}
                 >
-                  Watch Trailer
-                </Button>
+                  <DialogTrigger asChild>
+                    <Button type="button" size={isSm ? 'sm' : 'md'}>
+                      Watch Trailer
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="overflow-hidden !p-0">
+                    <WatchTrailer trailer={trailer} currentTime={trailerTime} />
+                  </DialogContent>
+                </Dialog>
                 <Tooltip content="Share" placement="top" isDisabled={isSm}>
                   <Button
                     type="button"
@@ -327,26 +362,26 @@ export const MediaDetail = (props: IMediaDetail) => {
           </div>
         </CardBody>
       </Card>
-      <SelectProviderModal
-        visible={visible}
-        closeHandler={closeHandler}
-        type={type}
-        title={titleEng}
-        origTitle={orgTitle}
-        year={releaseYear}
-        id={item?.id}
-        {...(type === 'tv' && { season: 1, episode: 1, isEnded: status === 'Ended' })}
-        {...(type === 'movie' && { isEnded: status === 'Released' })}
-      />
     </>
   );
 };
 
 export const AnimeDetail = (props: IAnimeDetail) => {
   // const { t } = useTranslation();
-  const { item, handler } = props;
-  const { id, genres, title, releaseDate, rating, image, type, color, description, status } =
-    item || {};
+  const { item, trailerTime } = props;
+  const {
+    id,
+    genres,
+    title,
+    releaseDate,
+    rating,
+    image,
+    type,
+    color,
+    description,
+    status,
+    trailer,
+  } = item || {};
   const navigate = useNavigate();
   const location = useLocation();
   const fetcher = useFetcher();
@@ -355,11 +390,9 @@ export const AnimeDetail = (props: IAnimeDetail) => {
   const { backgroundColor } = useColorDarkenLighten(color);
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const isXl = useMediaQuery('(max-width: 1280px)', { initializeWithValue: false });
-  const [visible, setVisible] = useState(false);
+  const [showProvidereDialog, setShowProvidereDialog] = useState(false);
+  const [showTrailerDialog, setShowTrailerDialog] = useState(false);
   const [colorPalette, setColorPalette] = useState<ColorPalette>();
-  const closeHandler = () => {
-    setVisible(false);
-  };
 
   useEffect(() => {
     if (ref.current) {
@@ -523,22 +556,45 @@ export const AnimeDetail = (props: IAnimeDetail) => {
               </div>
             </div>
             <div className="mb-10 flex w-full flex-row flex-wrap items-center justify-between gap-4 grid-in-buttons">
-              <Button
-                type="button"
-                onPress={() => setVisible(true)}
-                size="lg"
-                className="w-full bg-gradient-to-r from-primary to-secondary text-lg font-bold sm:w-auto"
-              >
-                Watch now
-              </Button>
+              <Dialog open={showProvidereDialog} onOpenChange={setShowProvidereDialog}>
+                <DialogTrigger asChild>
+                  <Button
+                    type="button"
+                    size="lg"
+                    className="w-full bg-gradient-to-r from-primary to-secondary text-lg font-bold sm:w-auto"
+                  >
+                    Watch now
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <SelectProvider
+                    visible={showProvidereDialog}
+                    closeHandler={() => setShowProvidereDialog(false)}
+                    type="anime"
+                    id={id}
+                    title={title?.english || ''}
+                    origTitle={title?.native || ''}
+                    year={Number(releaseDate)}
+                    episode={1}
+                    season={undefined}
+                    animeType={type?.toLowerCase() || 'tv'}
+                    isEnded={status === 'FINISHED'}
+                  />
+                </DialogContent>
+              </Dialog>
               <div className="flex flex-row flex-wrap items-center justify-start gap-x-4">
-                <Button
-                  type="button"
-                  size={isSm ? 'sm' : 'md'}
-                  onPress={() => handler && handler(Number(id))}
-                >
-                  Watch Trailer
-                </Button>
+                {trailer ? (
+                  <Dialog open={showTrailerDialog} onOpenChange={setShowTrailerDialog}>
+                    <DialogTrigger asChild>
+                      <Button type="button" size={isSm ? 'sm' : 'md'}>
+                        Watch Trailer
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="overflow-hidden !p-0">
+                      <WatchTrailer trailer={trailer} currentTime={trailerTime} />
+                    </DialogContent>
+                  </Dialog>
+                ) : null}
                 <Tooltip content="Share" placement="top" isDisabled={isSm}>
                   <Button
                     type="button"
@@ -549,24 +605,12 @@ export const AnimeDetail = (props: IAnimeDetail) => {
                     <ShareIcon />
                   </Button>
                 </Tooltip>
+                D
               </div>
             </div>
           </div>
         </CardBody>
       </Card>
-      <SelectProviderModal
-        visible={visible}
-        closeHandler={closeHandler}
-        type="anime"
-        id={id}
-        title={title?.english || ''}
-        origTitle={title?.native || ''}
-        year={Number(releaseDate)}
-        episode={1}
-        season={undefined}
-        animeType={type?.toLowerCase() || 'tv'}
-        isEnded={status === 'FINISHED'}
-      />
     </>
   );
 };

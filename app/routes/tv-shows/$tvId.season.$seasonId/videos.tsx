@@ -14,8 +14,9 @@ import type { Item } from '~/services/youtube/youtube.types';
 import TMDB from '~/utils/media';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
+import { Dialog, DialogContent, DialogTrigger } from '~/components/elements/Dialog';
 import Image from '~/components/elements/Image';
-import WatchTrailerModal, { type Trailer } from '~/components/elements/dialog/WatchTrailerModal';
+import WatchTrailer, { type Trailer } from '~/components/elements/dialog/WatchTrailerDialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/elements/tab/Tabs';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
@@ -67,10 +68,6 @@ const VideosPage = () => {
   const [trailer, setTrailer] = useState<Trailer>({});
   const underlineRef = useRef<HTMLDivElement>(null);
 
-  const closeHandler = () => {
-    setVisible(false);
-    setTrailer({});
-  };
   const typesVideo = [
     {
       id: 'trailer',
@@ -165,63 +162,71 @@ const VideosPage = () => {
             </TabsTrigger>
           ))}
         </TabsList>
-        <AnimatePresence exitBeforeEnter>
-          <TabsContent value={activeType}>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ ease: 'easeInOut', duration: 0.3 }}
-              drag={isMobile ? 'x' : false}
-              dragConstraints={{ left: 0, right: 0 }}
-              dragElastic={0.4}
-              onDragEnd={handleDragEnd}
-              dragDirectionLock
-            >
-              <div className="grid w-full grid-cols-1 justify-items-center gap-4 lg:grid-cols-2 3xl:grid-cols-3 4xl:grid-cols-4">
-                {activeTypeVideos
-                  ? activeTypeVideos.map((video) => (
-                      <Card
-                        key={video?.id}
-                        isPressable
-                        isHoverable
-                        role="figure"
-                        className="w-[320px] hover:shadow-[0_0_0_1px] hover:shadow-primary-200"
-                        onPress={() => {
-                          const videoPlay = videos?.results?.find((item) => item.key === video.id);
-                          if (videoPlay) {
-                            setVisible(true);
-                            setTrailer(videoPlay);
-                          }
-                        }}
-                      >
-                        <CardBody className="shrink-0 grow-0 overflow-hidden p-0">
-                          <Image
-                            src={video?.snippet?.thumbnails?.medium?.url}
-                            width={320}
-                            height={180}
-                            alt={video?.snippet?.title}
-                            loading="lazy"
-                            title={video?.snippet?.title}
-                            placeholder="empty"
-                            loaderUrl="/api/image"
-                            options={{ contentType: MimeType.WEBP }}
-                            responsive={[{ size: { width: 320, height: 180 } }]}
-                          />
-                        </CardBody>
-                        <CardFooter className="flex flex-col items-start justify-start">
-                          <h6 className="!m-0 text-left font-semibold">{video?.snippet?.title}</h6>
-                          <p className="opacity-70">{video?.snippet?.channelTitle}</p>
-                        </CardFooter>
-                      </Card>
-                    ))
-                  : null}
-              </div>
-            </motion.div>
-          </TabsContent>
-        </AnimatePresence>
+        <Dialog open={visible} onOpenChange={setVisible}>
+          <AnimatePresence exitBeforeEnter>
+            <TabsContent value={activeType}>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ ease: 'easeInOut', duration: 0.3 }}
+                drag={isMobile ? 'x' : false}
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.4}
+                onDragEnd={handleDragEnd}
+                dragDirectionLock
+              >
+                <div className="grid w-full grid-cols-1 justify-items-center gap-4 lg:grid-cols-2 3xl:grid-cols-3 4xl:grid-cols-4">
+                  {activeTypeVideos
+                    ? activeTypeVideos.map((video) => (
+                        <DialogTrigger asChild key={video?.id}>
+                          <Card
+                            isPressable
+                            isHoverable
+                            role="figure"
+                            className="w-[320px] hover:shadow-[0_0_0_1px] hover:shadow-primary-200"
+                            onPress={() => {
+                              const videoPlay = videos?.results?.find(
+                                (item) => item.key === video.id,
+                              );
+                              if (videoPlay) {
+                                setTrailer(videoPlay);
+                              }
+                            }}
+                          >
+                            <CardBody className="shrink-0 grow-0 overflow-hidden p-0">
+                              <Image
+                                src={video?.snippet?.thumbnails?.medium?.url}
+                                width={320}
+                                height={180}
+                                alt={video?.snippet?.title}
+                                loading="lazy"
+                                title={video?.snippet?.title}
+                                placeholder="empty"
+                                loaderUrl="/api/image"
+                                options={{ contentType: MimeType.WEBP }}
+                                responsive={[{ size: { width: 320, height: 180 } }]}
+                              />
+                            </CardBody>
+                            <CardFooter className="flex flex-col items-start justify-start">
+                              <h6 className="!m-0 text-left font-semibold">
+                                {video?.snippet?.title}
+                              </h6>
+                              <p className="opacity-70">{video?.snippet?.channelTitle}</p>
+                            </CardFooter>
+                          </Card>
+                        </DialogTrigger>
+                      ))
+                    : null}
+                </div>
+              </motion.div>
+            </TabsContent>
+          </AnimatePresence>
+          <DialogContent className="overflow-hidden !p-0">
+            <WatchTrailer trailer={trailer} />
+          </DialogContent>
+        </Dialog>
       </Tabs>
-      <WatchTrailerModal trailer={trailer} visible={visible} closeHandler={closeHandler} />
     </div>
   );
 };

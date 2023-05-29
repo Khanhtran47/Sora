@@ -1,14 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useIntersectionObserver } from '@react-hookz/web';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import {
-  Outlet,
-  useCatch,
-  useFetcher,
-  useLoaderData,
-  useLocation,
-  type RouteMatch,
-} from '@remix-run/react';
+import { Outlet, useCatch, useLoaderData, useLocation, type RouteMatch } from '@remix-run/react';
 import { motion, useTransform } from 'framer-motion';
 import Vibrant from 'node-vibrant';
 import i18next from '~/i18n/i18next.server';
@@ -25,7 +18,6 @@ import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { movieTvDetailsPages } from '~/constants/tabLinks';
 import { MediaBackgroundImage, MediaDetail } from '~/components/media/MediaDetail';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
-import WatchTrailerModal, { type Trailer } from '~/components/elements/dialog/WatchTrailerModal';
 import CatchBoundaryView from '~/components/elements/shared/CatchBoundaryView';
 import ErrorBoundaryView from '~/components/elements/shared/ErrorBoundaryView';
 import TabLink from '~/components/elements/tab/TabLink';
@@ -168,10 +160,7 @@ export const handle = {
 
 const TvShowDetail = () => {
   const { detail, imdbRating } = useLoaderData<typeof loader>();
-  const fetcher = useFetcher();
   const { state } = useLocation();
-  const [visible, setVisible] = useState(false);
-  const [trailer, setTrailer] = useState<Trailer>({});
   const { backgroundColor } = useColorDarkenLighten(detail?.color);
   const { sidebarBoxedMode } = useSoraSettings();
   const { viewportRef, scrollY } = useLayout((scrollState) => scrollState);
@@ -194,13 +183,6 @@ const TvShowDetail = () => {
     [0, startChangeScrollPosition, startChangeScrollPosition + 100],
     [32, 32, startChangeScrollPosition ? 0 : 32],
   );
-  useEffect(() => {
-    if (fetcher.data && fetcher.data.videos) {
-      const { results } = fetcher.data.videos;
-      const officialTrailer = results.find((result: Trailer) => result.type === 'Trailer');
-      setTrailer(officialTrailer);
-    }
-  }, [fetcher.data]);
 
   useCustomHeaderChangePosition(tablinkIntersection);
 
@@ -215,14 +197,6 @@ const TvShowDetail = () => {
   const backdropPath = detail?.backdrop_path
     ? TMDB?.backdropUrl(detail?.backdrop_path || '', 'w1280')
     : undefined;
-  const Handler = (id: number) => {
-    setVisible(true);
-    fetcher.load(`/tv-shows/${id}/videos`);
-  };
-  const closeHandler = () => {
-    setVisible(false);
-    setTrailer({});
-  };
 
   return (
     <>
@@ -231,9 +205,9 @@ const TvShowDetail = () => {
         <MediaDetail
           type="tv"
           item={detail}
-          handler={Handler}
           imdbRating={imdbRating}
           color={detail.color}
+          trailerTime={currentTime}
         />
         <div className="flex w-full flex-col items-center justify-center">
           <motion.div
@@ -251,12 +225,6 @@ const TvShowDetail = () => {
           <Outlet />
         </div>
       </div>
-      <WatchTrailerModal
-        trailer={trailer}
-        visible={visible}
-        closeHandler={closeHandler}
-        currentTime={Number(currentTime)}
-      />
     </>
   );
 };

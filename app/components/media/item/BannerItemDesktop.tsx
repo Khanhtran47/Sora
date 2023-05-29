@@ -20,7 +20,7 @@ import { useLayout } from '~/store/layout/useLayout';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import AspectRatio from '~/components/elements/AspectRatio';
 import Image from '~/components/elements/Image';
-import type { Trailer } from '~/components/elements/dialog/WatchTrailerModal';
+import type { Trailer } from '~/components/elements/dialog/WatchTrailerDialog';
 import Rating from '~/components/elements/shared/Rating';
 import VolumeOff from '~/assets/icons/VolumeOffIcon';
 import VolumeUp from '~/assets/icons/VolumeUpIcon';

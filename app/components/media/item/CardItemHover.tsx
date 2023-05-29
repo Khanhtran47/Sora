@@ -14,7 +14,7 @@ import useCardHoverStore from '~/store/card/useCardHoverStore';
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import Image from '~/components/elements/Image';
-import { type Trailer } from '~/components/elements/dialog/WatchTrailerModal';
+import { type Trailer } from '~/components/elements/dialog/WatchTrailerDialog';
 import Rating from '~/components/elements/shared/Rating';
 import VolumeOff from '~/assets/icons/VolumeOffIcon';
 import VolumeUp from '~/assets/icons/VolumeUpIcon';

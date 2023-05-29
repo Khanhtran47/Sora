@@ -25,7 +25,8 @@ import updateHistory from '~/utils/client/update-history';
 import { useLayout } from '~/store/layout/useLayout';
 import usePlayerState, { type PlayerData } from '~/store/player/usePlayerState';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
-import WatchTrailerModal, { type Trailer } from '~/components/elements/dialog/WatchTrailerModal';
+import { Dialog, DialogContent, DialogTrigger } from '~/components/elements/Dialog';
+import WatchTrailer, { type Trailer } from '~/components/elements/dialog/WatchTrailerDialog';
 import Player from '~/components/elements/player/ArtPlayer';
 import PlayerError from '~/components/elements/player/PlayerError';
 import PlayerHotKey from '~/components/elements/player/PlayerHotkey';
@@ -442,13 +443,8 @@ const GlobalPlayer = () => {
     }
   }, [isVideoEnded]);
 
-  const [isWatchTrailerModalVisible, setWatchTrailerModalVisible] = useState(false);
+  const [isWatchTrailerDialogVisible, setWatchTrailerDialogVisible] = useState(false);
   const [trailer, setTrailer] = useState<Trailer>({});
-  const closeWatchTrailerModalHandler = () => {
-    setWatchTrailerModalVisible(false);
-    artplayer?.play();
-    if (typeVideo === 'movie' || typeVideo === 'tv') setTrailer({});
-  };
   useEffect(() => {
     if (fetcher.data && fetcher.data.videos) {
       const { results } = fetcher.data.videos;
@@ -949,21 +945,35 @@ const GlobalPlayer = () => {
                     >
                       Toggle Light
                     </Button>
-                    <Button
-                      type="button"
-                      size="sm"
-                      onPress={() => {
-                        artplayer?.pause();
-                        setWatchTrailerModalVisible(true);
-                        if (typeVideo === 'movie' || typeVideo === 'tv')
-                          fetcher.load(
-                            `/${typeVideo === 'movie' ? 'movies' : 'tv-shows'}/${id}/videos`,
-                          );
-                      }}
-                      className="mb-3"
+                    <Dialog
+                      open={isWatchTrailerDialogVisible}
+                      onOpenChange={setWatchTrailerDialogVisible}
                     >
-                      Watch Trailer
-                    </Button>
+                      <DialogTrigger asChild>
+                        <Button
+                          type="button"
+                          size="sm"
+                          onPress={() => {
+                            artplayer?.pause();
+                            if (typeVideo === 'movie' || typeVideo === 'tv')
+                              fetcher.load(
+                                `/${typeVideo === 'movie' ? 'movies' : 'tv-shows'}/${id}/videos`,
+                              );
+                          }}
+                          className="mb-3"
+                        >
+                          Watch Trailer
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="overflow-hidden !p-0">
+                        {typeVideo === 'movie' || typeVideo === 'tv' ? (
+                          <WatchTrailer trailer={trailer} />
+                        ) : null}
+                        {typeVideo === 'anime' && trailerAnime ? (
+                          <WatchTrailer trailer={trailerAnime} />
+                        ) : null}
+                      </DialogContent>
+                    </Dialog>
                   </div>
                 ) : null}
               </>
@@ -1140,20 +1150,6 @@ const GlobalPlayer = () => {
             artplayer.controls.topControlButtons,
           )
         : null}
-      {typeVideo === 'movie' || typeVideo === 'tv' ? (
-        <WatchTrailerModal
-          trailer={trailer}
-          visible={isWatchTrailerModalVisible}
-          closeHandler={closeWatchTrailerModalHandler}
-        />
-      ) : null}
-      {typeVideo === 'anime' && trailerAnime ? (
-        <WatchTrailerModal
-          trailer={trailerAnime}
-          visible={isWatchTrailerModalVisible}
-          closeHandler={closeWatchTrailerModalHandler}
-        />
-      ) : null}
     </div>
   );
 };

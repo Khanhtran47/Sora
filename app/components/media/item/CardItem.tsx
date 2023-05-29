@@ -22,7 +22,7 @@ import {
   ScrollCorner,
   ScrollViewport,
 } from '~/components/elements/ScrollArea';
-import type { Trailer } from '~/components/elements/dialog/WatchTrailerModal';
+import type { Trailer } from '~/components/elements/dialog/WatchTrailerDialog';
 import Rating from '~/components/elements/shared/Rating';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 
