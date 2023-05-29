@@ -25,8 +25,11 @@ export const meta: MetaFunction = ({ params }) => ({
 
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
-    <BreadcrumbItem to={`/anime/${match.params.animeId}/`} key={`anime-${match.params.animeId}`}>
-      {match.data?.detail?.title?.english || match.data?.detail?.title?.romaji}
+    <BreadcrumbItem
+      to={`/anime/${match.params.animeId}/episodes`}
+      key={`anime-${match.params.animeId}-episodes`}
+    >
+      Episodes
     </BreadcrumbItem>
   ),
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
