@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Button } from '@nextui-org/button';
-import { Input, Tooltip, useInput } from '@nextui-org/react';
+import { Input } from '@nextui-org/input';
+import { Tooltip } from '@nextui-org/tooltip';
 import { Form, useSearchParams } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 
@@ -9,10 +10,7 @@ import {
   animeFormat,
   animeGenres,
   animeSeason,
-  // animeSort,
   animeStatus,
-  // sortMovieItems,
-  // sortTvItems,
   tvStatus,
 } from '~/constants/filterItems';
 import {
@@ -116,11 +114,7 @@ const Filter: React.FC<IFilterProps> = (props: IFilterProps) => {
   const [animeAiringStatusSelected, setAnimeAiringStatusSelected] = useState<string>(
     currentSearchParams?.status || t('all'),
   );
-  const {
-    value: animeQuery,
-    setValue: setAnimeQuery,
-    bindings: animeQueryBindings,
-  } = useInput(currentSearchParams?.query || '');
+  const [animeQueryInput, setAnimeQueryInput] = useState<string>(currentSearchParams?.query || '');
 
   const handleGenrePress = (genreId: string) => {
     setGenresSelected((prev) => {
@@ -150,7 +144,7 @@ const Filter: React.FC<IFilterProps> = (props: IFilterProps) => {
     setAnimeSeasonSelected('All');
     setAnimeFormatSelected('All');
     setAnimeAiringStatusSelected('All');
-    setAnimeQuery('');
+    setAnimeQueryInput('');
   };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -198,7 +192,7 @@ const Filter: React.FC<IFilterProps> = (props: IFilterProps) => {
         ...(animeAiringStatusSelected && animeAiringStatusSelected !== t('all')
           ? { status: animeAiringStatusSelected }
           : {}),
-        ...(animeQuery && animeQuery !== '' ? { query: animeQuery } : {}),
+        ...(animeQueryInput && animeQueryInput !== '' ? { query: animeQueryInput } : {}),
       };
     }
     setSearchParams(params);
@@ -217,7 +211,7 @@ const Filter: React.FC<IFilterProps> = (props: IFilterProps) => {
                       {Object.keys(genres).map((id) => (
                         <Button
                           key={id}
-                          color={genresSelected?.includes(id) ? 'primary' : 'neutral'}
+                          color={genresSelected?.includes(id) ? 'primary' : 'default'}
                           variant={genresSelected?.includes(id) ? 'flat' : 'solid'}
                           onPress={() => handleGenrePress(id)}
                         >
@@ -266,7 +260,7 @@ const Filter: React.FC<IFilterProps> = (props: IFilterProps) => {
                 <div className="flex w-full flex-col items-start justify-start gap-3">
                   <div className="flex w-full flex-row items-center justify-between">
                     <h6>{t('minimum-user-votes')}</h6>
-                    <p className="text-neutral-foreground/80">{voteCountSelected[0]}</p>
+                    <p className="text-default-foreground/80">{voteCountSelected[0]}</p>
                   </div>
                   <Slider
                     defaultValue={voteCountSelected}
@@ -283,7 +277,7 @@ const Filter: React.FC<IFilterProps> = (props: IFilterProps) => {
                 <div className="flex w-full flex-col items-start justify-start gap-3">
                   <div className="flex w-full flex-row items-center justify-between">
                     <h6>{t('user-score')}</h6>
-                    <p className="text-neutral-foreground/80">
+                    <p className="text-default-foreground/80">
                       {t('rated')} {userScoreSelected[0]} - {userScoreSelected[1]}
                     </p>
                   </div>
@@ -302,7 +296,7 @@ const Filter: React.FC<IFilterProps> = (props: IFilterProps) => {
                 <div className="flex w-full flex-col items-start justify-start gap-3">
                   <div className="flex w-full flex-row items-center justify-between">
                     <h6>{t('runtime')}</h6>
-                    <p className="text-neutral-foreground/80">
+                    <p className="text-default-foreground/80">
                       {runtimeSelected[0]} {t('minutes')} - {runtimeSelected[1]} {t('minutes')}
                     </p>
                   </div>
@@ -325,13 +319,14 @@ const Filter: React.FC<IFilterProps> = (props: IFilterProps) => {
                 <div className="flex w-full flex-col items-start justify-start gap-3">
                   <h6>{t('search.title.anime')}</h6>
                   <Input
-                    {...animeQueryBindings}
-                    clearable
-                    bordered
-                    color="primary"
-                    helperText={t('search.helper.anime')}
+                    value={animeQueryInput}
+                    onValueChange={setAnimeQueryInput}
+                    onClear={() => setAnimeQueryInput('')}
+                    variant="faded"
+                    description={t('search.helper.anime')}
                     type="text"
-                    css={{ width: '100%' }}
+                    fullWidth
+                    labelPosition="outside"
                   />
                 </div>
                 <div className="flex w-full flex-col items-start justify-start gap-3">
@@ -341,7 +336,7 @@ const Filter: React.FC<IFilterProps> = (props: IFilterProps) => {
                       {animeGenres.map((genre) => (
                         <Button
                           key={genre}
-                          color={animeGenresSelected?.includes(genre) ? 'primary' : 'neutral'}
+                          color={animeGenresSelected?.includes(genre) ? 'primary' : 'default'}
                           variant={animeGenresSelected?.includes(genre) ? 'flat' : 'solid'}
                           onPress={() => handleAnimeGenrePress(genre)}
                         >
@@ -430,8 +425,8 @@ const Filter: React.FC<IFilterProps> = (props: IFilterProps) => {
         <ScrollCorner />
       </ScrollArea>
       <SheetFooter className="px-1 md:px-6">
-        <Tooltip content={t('reset-tooltip')}>
-          <Button color="neutral" type="button" onPress={() => handleReset()}>
+        <Tooltip content={t('reset-tooltip')} showArrow closeDelay={0}>
+          <Button color="default" type="button" onPress={() => handleReset()}>
             {t('reset')}
           </Button>
         </Tooltip>

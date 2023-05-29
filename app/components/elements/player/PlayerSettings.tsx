@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react';
 import { Button } from '@nextui-org/button';
 import { Divider } from '@nextui-org/divider';
-import { Switch, type SwitchEvent } from '@nextui-org/react';
 import { Spacer } from '@nextui-org/spacer';
+import { Switch } from '@nextui-org/switch';
 import { isMobileOnly } from 'react-device-detect';
 
 import { useSoraSettings } from '~/hooks/useLocalStorage';
@@ -64,7 +64,7 @@ type SettingsOption = {
   isSwitch?: boolean;
   isSwitchOn?: boolean;
   isTriggerDialog?: boolean;
-  switchAction?: (e: SwitchEvent) => void;
+  switchAction?: (isSelected: boolean) => void;
   dialogName?: string;
 };
 
@@ -396,10 +396,10 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
               action: undefined,
               isSwitch: true,
               isSwitchOn: showSubtitle,
-              switchAction: (e: SwitchEvent) => {
+              switchAction: (isSelected: boolean) => {
                 if (artplayer) {
-                  artplayer.subtitle.show = e.target.checked;
-                  setShowSubtitle(e.target.checked);
+                  artplayer.subtitle.show = isSelected;
+                  setShowSubtitle(isSelected);
                 }
               },
             },
@@ -1445,7 +1445,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
       fullWidth
       variant="light"
       onPress={item.action}
-      className="flex h-14 flex-row items-center justify-between gap-x-8 !p-2 data-[hover=true]:bg-neutral/[.6]"
+      className="flex h-14 flex-row items-center justify-between gap-x-8 !p-2 data-[hover=true]:bg-default/[.6]"
     >
       <div className="flex shrink-0 grow flex-row items-center gap-x-2">
         {item?.showIcon ? (
@@ -1473,14 +1473,14 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
         ) : (
           <Spacer x={6} />
         )}
-        <h6 className="!line-clamp-1 !text-neutral-foreground">{item.title}</h6>
+        <h6 className="!line-clamp-1 !text-default-foreground">{item.title}</h6>
       </div>
       <div className="flex shrink-0 grow flex-row items-center justify-end gap-x-2">
         {item?.isSwitch ? (
-          <Switch checked={showSubtitle} onChange={item.switchAction} />
+          <Switch isSelected={showSubtitle} onValueChange={item.switchAction} />
         ) : (
           <>
-            <h6 className="!text-neutral-foreground">
+            <h6 className="!text-default-foreground">
               {(
                 item as {
                   id: string;
@@ -1524,7 +1524,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
             open={isSettingsOpen}
             onOpenChange={() => handleOpenChange(!isSettingsOpen)}
             container={isPlayerFullScreen ? artplayer?.template?.$player : document.body}
-            className="!bg-neutral"
+            className="!bg-default"
           >
             <ResizablePanel contentWidth="full">
               {currentDropdownLevel ? (
@@ -1545,7 +1545,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                             </Button>
                           ) : null}
                           {currentDropdownLevel?.showTitle ? (
-                            <h6 className="!text-neutral-foreground">
+                            <h6 className="!text-default-foreground">
                               {currentDropdownLevel?.title}
                             </h6>
                           ) : null}
@@ -1624,7 +1624,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
         <PopoverContent
           side="top"
           container={containerPortal}
-          className="z-[1000] bg-neutral/60 backdrop-blur-2xl backdrop-contrast-125 backdrop-saturate-200"
+          className="z-[1000] bg-default/60 backdrop-blur-2xl backdrop-contrast-125 backdrop-saturate-200"
         >
           <ResizablePanel contentWidth="fit">
             {currentDropdownLevel ? (
@@ -1645,7 +1645,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                           </Button>
                         ) : null}
                         {currentDropdownLevel?.showTitle ? (
-                          <h6 className="!text-neutral-foreground">
+                          <h6 className="!text-default-foreground">
                             {currentDropdownLevel?.title}
                           </h6>
                         ) : null}

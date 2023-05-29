@@ -52,7 +52,7 @@ const MobileHeader = () => {
         initial={{ y: 0 }}
         animate={{ y: scrollDirection === 'down' ? -65 : 0 }}
         transition={{ duration: 0.5 }}
-        className="fixed top-0 z-[1000] flex h-[64px] w-full flex-row items-center justify-between bg-neutral/60 px-6 shadow-lg backdrop-blur-md sm:hidden"
+        className="fixed top-0 z-[1000] flex h-[64px] w-full flex-row items-center justify-between bg-default/60 px-6 shadow-lg backdrop-blur-md sm:hidden"
       >
         <NavLink
           to="/"

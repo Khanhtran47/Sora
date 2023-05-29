@@ -1,5 +1,5 @@
 import { json, type LoaderArgs } from '@remix-run/node';
-import { NavLink, useLoaderData, useLocation, useNavigate } from '@remix-run/react';
+import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 import { motion, type PanInfo } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +10,7 @@ import { getAnimeTrending } from '~/services/consumet/anilist/anilist.server';
 import { authenticate } from '~/services/supabase';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import MediaList from '~/components/media/MediaList';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import SearchForm from '~/components/elements/SearchForm';
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -31,9 +32,9 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export const handle = {
   breadcrumb: () => (
-    <NavLink to="/search/anime" aria-label="Search Anime">
+    <BreadcrumbItem to="/search/anime" aria-label="Search Anime">
       Search Anime
-    </NavLink>
+    </BreadcrumbItem>
   ),
   miniTitle: () => ({
     title: 'Search',

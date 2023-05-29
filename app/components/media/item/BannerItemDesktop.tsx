@@ -20,7 +20,7 @@ import { useLayout } from '~/store/layout/useLayout';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import AspectRatio from '~/components/elements/AspectRatio';
 import Image from '~/components/elements/Image';
-import type { Trailer } from '~/components/elements/dialog/WatchTrailerModal';
+import type { Trailer } from '~/components/elements/dialog/WatchTrailerDialog';
 import Rating from '~/components/elements/shared/Rating';
 import VolumeOff from '~/assets/icons/VolumeOffIcon';
 import VolumeUp from '~/assets/icons/VolumeUpIcon';
@@ -212,7 +212,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
             background: useMotionTemplate`
               radial-gradient(
                 ${mouseRadius}px circle at ${mouseX}px ${mouseY}px,
-                hsl(var(--colors-neutral-400) / 15),
+                hsl(var(--colors-default-400) / 15),
                 transparent 80%
               )
             `,
@@ -391,7 +391,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                 title={titleItem}
                 width="100%"
                 disableSkeleton={false}
-                className="min-h-[390px] min-w-[270px] rounded-xl shadow-xl shadow-neutral 2xl:min-h-[477px] 2xl:min-w-[318px]"
+                className="min-h-[390px] min-w-[270px] rounded-xl shadow-xl shadow-default 2xl:min-h-[477px] 2xl:min-w-[318px]"
                 loading="eager"
                 loaderUrl="/api/image"
                 placeholder="empty"

@@ -60,7 +60,7 @@ const CardPage = () => {
           />
           <div className="flex flex-col">
             <b className="text-lg">NextUI</b>
-            <p className="text-neutral-500">nextui.org</p>
+            <p className="text-default-500">nextui.org</p>
           </div>
         </CardHeader>
         <CardBody className="py-2">
@@ -140,7 +140,7 @@ const CardPage = () => {
       <Card className="max-w-fit px-0 py-4">
         <CardHeader className="flex-col !items-start px-4 pb-0 pt-2">
           <p className="text-xs font-bold uppercase">Daily Mix</p>
-          <small className="text-neutral-500">12 Tracks</small>
+          <small className="text-default-500">12 Tracks</small>
           <h4 className="text-lg font-bold">Frontend Radio</h4>
         </CardHeader>
         <CardBody className="overflow-visible py-2">

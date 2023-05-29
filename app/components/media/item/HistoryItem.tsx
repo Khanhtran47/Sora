@@ -1,5 +1,5 @@
 import { Card, CardBody } from '@nextui-org/card';
-import { Progress } from '@nextui-org/react';
+import { Progress } from '@nextui-org/progress';
 import { Link } from '@remix-run/react';
 import { MimeType } from 'remix-image';
 
@@ -24,7 +24,7 @@ const HistoryItem = ({ item }: IHistoryItem) => {
       <Card
         isPressable
         isHoverable
-        className="hover:shadow-[0_0_0_1px] hover:shadow-primary-200 sm:!max-h-[171px]"
+        className="hover:shadow-[0_0_0_1px] hover:shadow-primary-200 sm:!max-h-[171px] sm:w-full"
       >
         <CardBody className="flex flex-col flex-nowrap justify-start overflow-hidden p-0 sm:flex-row">
           <Image

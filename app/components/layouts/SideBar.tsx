@@ -1,7 +1,7 @@
 import { Card, CardBody, CardFooter, CardHeader } from '@nextui-org/card';
 import { Link } from '@nextui-org/link';
-import { Tooltip } from '@nextui-org/react';
 import { Spinner } from '@nextui-org/spinner';
+import { Tooltip } from '@nextui-org/tooltip';
 import { useHover } from '@react-aria/interactions';
 import { NavLink } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
@@ -213,8 +213,8 @@ const SideBar = () => {
                 content={t('home')}
                 isDisabled={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
                 placement="right"
-                color="primary"
                 offset={10}
+                showArrow
               >
                 <NavigationMenuLink asChild>
                   <NavLink
@@ -256,7 +256,7 @@ const SideBar = () => {
                 content={t('trending')}
                 isDisabled={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
                 placement="right"
-                color="primary"
+                showArrow
                 offset={10}
               >
                 <NavigationMenuLink asChild>
@@ -299,7 +299,7 @@ const SideBar = () => {
                 content={t('discover')}
                 isDisabled={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
                 placement="right"
-                color="primary"
+                showArrow
                 offset={10}
               >
                 <NavigationMenuLink asChild>
@@ -497,8 +497,8 @@ const SideBar = () => {
                           }}
                         />
                       </CardBody>
-                      <CardFooter className="absolute bottom-0 z-[10] justify-start bg-neutral/60 backdrop-blur-sm">
-                        <h4 className="text-neutral-foreground">{t('movies-footer')}</h4>
+                      <CardFooter className="absolute bottom-0 z-[10] justify-start bg-default/60 backdrop-blur-sm">
+                        <h4 className="text-default-foreground">{t('movies-footer')}</h4>
                       </CardFooter>
                     </Card>
                   </li>
@@ -665,8 +665,8 @@ const SideBar = () => {
                           }}
                         />
                       </CardBody>
-                      <CardFooter className="absolute bottom-0 z-[10] justify-start bg-neutral/60 backdrop-blur-sm">
-                        <h4 className="text-neutral-foreground">{t('tv-shows-footer')}</h4>
+                      <CardFooter className="absolute bottom-0 z-[10] justify-start bg-default/60 backdrop-blur-sm">
+                        <h4 className="text-default-foreground">{t('tv-shows-footer')}</h4>
                       </CardFooter>
                     </Card>
                   </li>
@@ -833,8 +833,8 @@ const SideBar = () => {
                           }}
                         />
                       </CardBody>
-                      <CardFooter className="absolute bottom-0 z-[10] justify-start bg-neutral/60 backdrop-blur-sm">
-                        <h4 className="text-neutral-foreground">{t('anime-footer')}</h4>
+                      <CardFooter className="absolute bottom-0 z-[10] justify-start bg-default/60 backdrop-blur-sm">
+                        <h4 className="text-default-foreground">{t('anime-footer')}</h4>
                       </CardFooter>
                     </Card>
                   </li>
@@ -939,7 +939,7 @@ const SideBar = () => {
                 content={t('collections')}
                 isDisabled={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
                 placement="right"
-                color="primary"
+                showArrow
                 offset={10}
               >
                 <NavigationMenuLink asChild>
@@ -982,7 +982,7 @@ const SideBar = () => {
                 content={t('people')}
                 isDisabled={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
                 placement="right"
-                color="primary"
+                showArrow
                 offset={10}
               >
                 <NavigationMenuLink asChild>
@@ -1025,7 +1025,7 @@ const SideBar = () => {
                 content={t('history')}
                 isDisabled={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
                 placement="right"
-                color="primary"
+                showArrow
                 offset={10}
               >
                 <NavigationMenuLink asChild>
@@ -1068,7 +1068,7 @@ const SideBar = () => {
                 content={t('settings')}
                 isDisabled={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
                 placement="right"
-                color="primary"
+                showArrow
                 offset={10}
               >
                 <NavigationMenuLink asChild>

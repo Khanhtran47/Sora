@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useIntersectionObserver } from '@react-hookz/web';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { Outlet, useCatch, useLoaderData, useLocation, type RouteMatch } from '@remix-run/react';
@@ -16,7 +16,6 @@ import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { animeDetailsPages } from '~/constants/tabLinks';
 import { AnimeDetail, MediaBackgroundImage } from '~/components/media/MediaDetail';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
-import WatchTrailerModal from '~/components/elements/dialog/WatchTrailerModal';
 import CatchBoundaryView from '~/components/elements/shared/CatchBoundaryView';
 import ErrorBoundaryView from '~/components/elements/shared/ErrorBoundaryView';
 import TabLink from '~/components/elements/tab/TabLink';
@@ -141,7 +140,6 @@ export const handle = {
 const AnimeDetailPage = () => {
   const { detail } = useLoaderData<typeof loader>();
   const { state } = useLocation();
-  const [visible, setVisible] = useState(false);
   const { backgroundColor } = useColorDarkenLighten(detail?.color);
   const { sidebarBoxedMode } = useSoraSettings();
   const { viewportRef, scrollY } = useLayout((scrollState) => scrollState);
@@ -174,18 +172,12 @@ const AnimeDetailPage = () => {
   }, [backgroundColor, startChangeScrollPosition]);
 
   const currentTime = state && (state as { currentTime: number | undefined }).currentTime;
-  const Handler = () => {
-    setVisible(true);
-  };
-  const closeHandler = () => {
-    setVisible(false);
-  };
 
   return (
     <>
       <MediaBackgroundImage backdropPath={detail?.cover} backgroundColor={backgroundColor} />
       <div className="relative top-[-80px] w-full sm:top-[-200px]">
-        <AnimeDetail item={detail} handler={Handler} />
+        <AnimeDetail item={detail} trailerTime={currentTime} />
         <div className="flex w-full flex-col items-center justify-center">
           <motion.div
             className="sticky top-[64px] z-[1000] flex w-full justify-center transition-[padding] duration-100 ease-in-out"
@@ -202,14 +194,6 @@ const AnimeDetailPage = () => {
           <Outlet />
         </div>
       </div>
-      {detail && detail.trailer ? (
-        <WatchTrailerModal
-          trailer={detail.trailer}
-          visible={visible}
-          closeHandler={closeHandler}
-          currentTime={Number(currentTime)}
-        />
-      ) : null}
     </>
   );
 };

@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Button } from '@nextui-org/button';
-import { Tooltip } from '@nextui-org/react';
 import { Spacer } from '@nextui-org/spacer';
+import { Tooltip } from '@nextui-org/tooltip';
 import { useMediaQuery } from '@react-hookz/web';
 import { useSearchParams } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
@@ -141,7 +141,7 @@ interface IMediaListProps {
    * 'Popular Movies'
    * t('Popular Movies')
    */
-  listName?: string | (() => never);
+  listName?: string;
   /**
    * Value is type of list to show
    * @type {'slider-card' | 'slider-banner' | 'grid'}
@@ -382,7 +382,7 @@ const MediaList = (props: IMediaListProps) => {
             <div className="flex flex-row items-center justify-end gap-3">
               {showFilterButton ? (
                 <Sheet open={showFilter} onOpenChange={setShowFilter}>
-                  <Tooltip content={t('show-hide-filter')}>
+                  <Tooltip content={t('show-hide-filter')} showArrow closeDelay={0}>
                     <SheetTrigger asChild>
                       <Button
                         type="button"

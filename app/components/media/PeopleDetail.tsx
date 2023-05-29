@@ -1,9 +1,10 @@
+import { useMemo } from 'react';
 import { Player } from '@lottiefiles/react-lottie-player';
 import { Avatar } from '@nextui-org/avatar';
 import { Link } from '@nextui-org/link';
-import { useTheme } from '@nextui-org/react';
 import { Spacer } from '@nextui-org/spacer';
 import { useMeasure } from '@react-hookz/web';
+import { useTheme } from 'next-themes';
 import { MimeType } from 'remix-image';
 
 import type { IPeopleDetail } from '~/services/tmdb/tmdb.types';
@@ -30,7 +31,14 @@ interface IPeopleDetailProps {
 
 const PeopleDetail = (props: IPeopleDetailProps) => {
   const { detail, externalIds } = props;
-  const { isDark } = useTheme();
+  const { theme } = useTheme();
+  const isDark = useMemo(() => {
+    const darkTheme = ['dark', 'synthwave', 'dracula', 'night'];
+    if (theme) {
+      return darkTheme.includes(theme);
+    }
+    return false;
+  }, [theme]);
   const [size, imageRef] = useMeasure<HTMLImageElement>();
   const profilePath = detail?.profile_path
     ? TMDB?.profileUrl(detail?.profile_path || '', 'h632')

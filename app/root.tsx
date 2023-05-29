@@ -12,7 +12,6 @@ import FontStyles800 from '@fontsource/inter/800.css';
 import FontStyles900 from '@fontsource/inter/900.css';
 import { Button } from '@nextui-org/button';
 import { Image as NextUIImage } from '@nextui-org/image';
-import { NextUIProvider } from '@nextui-org/react';
 import { NextUIProvider as NextUIv2Provider } from '@nextui-org/system';
 import { json, type LinksFunction, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import {
@@ -63,16 +62,6 @@ import Home from '~/assets/icons/HomeIcon';
 import Refresh from '~/assets/icons/RefreshIcon';
 import pageNotFound from '~/assets/images/404.gif';
 import logoLoading from '~/assets/images/logo_loading.png';
-import {
-  autumnTheme,
-  bumblebeeTheme,
-  darkTheme,
-  draculaTheme,
-  lightTheme,
-  nightTheme,
-  retroTheme,
-  synthwaveTheme,
-} from '~/styles/nextui.config';
 import styles from '~/styles/tailwind.css';
 
 interface DocumentProps {
@@ -557,14 +546,14 @@ const App = () => {
         enableSystem
         themes={['light', 'dark', 'bumblebee', 'synthwave', 'retro', 'dracula', 'autumn', 'night']}
         value={{
-          light: lightTheme.className,
-          dark: darkTheme.className,
-          bumblebee: bumblebeeTheme.className,
-          synthwave: synthwaveTheme.className,
-          retro: retroTheme.className,
-          dracula: draculaTheme.className,
-          autumn: autumnTheme.className,
-          night: nightTheme.className,
+          light: 'light',
+          dark: 'dark',
+          bumblebee: 'bumblebee',
+          synthwave: 'synthwave',
+          retro: 'retro',
+          dracula: 'dracula',
+          autumn: 'autumn',
+          night: 'night',
         }}
       >
         <AnimatePresence>
@@ -611,9 +600,7 @@ const App = () => {
           ) : null}
         </AnimatePresence>
         <NextUIv2Provider>
-          <NextUIProvider disableBaseline>
-            <Layout user={user} />
-          </NextUIProvider>
+          <Layout user={user} />
         </NextUIv2Provider>
       </RemixThemesProvider>
     </Document>
@@ -645,50 +632,48 @@ export const CatchBoundary = () => {
         enableSystem
         themes={['light', 'dark', 'bumblebee', 'synthwave', 'retro', 'dracula', 'autumn', 'night']}
         value={{
-          light: lightTheme.className,
-          dark: darkTheme.className,
-          bumblebee: bumblebeeTheme.className,
-          synthwave: synthwaveTheme.className,
-          retro: retroTheme.className,
-          dracula: draculaTheme.className,
-          autumn: autumnTheme.className,
-          night: nightTheme.className,
+          light: 'light',
+          dark: 'dark',
+          bumblebee: 'bumblebee',
+          synthwave: 'synthwave',
+          retro: 'retro',
+          dracula: 'dracula',
+          autumn: 'autumn',
+          night: 'night',
         }}
       >
-        <NextUIProvider>
-          <div className="flex h-screen flex-col items-center justify-center gap-y-4">
-            <NextUIImage width={480} src={pageNotFound} alt="404" className="object-cover" />
-            <h1 className="text-center text-warning">
-              {caught.status} {caught.statusText} {message}
-            </h1>
-            <div className="flex w-full flex-row items-center justify-center gap-x-4">
-              <Button
-                size="md"
-                variant="ghost"
-                color="success"
-                startIcon={<Home />}
-                type="button"
-                onPress={() => {
-                  window.location.href = '/';
-                }}
-              >
-                Back to Home
-              </Button>
-              <Button
-                size="md"
-                variant="ghost"
-                color="warning"
-                startIcon={<Refresh filled />}
-                type="button"
-                onPress={() => {
-                  window.location.reload();
-                }}
-              >
-                Reload Page
-              </Button>
-            </div>
+        <div className="flex h-screen flex-col items-center justify-center gap-y-4">
+          <NextUIImage width={480} src={pageNotFound} alt="404" className="object-cover" />
+          <h1 className="text-center text-warning">
+            {caught.status} {caught.statusText} {message}
+          </h1>
+          <div className="flex w-full flex-row items-center justify-center gap-x-4">
+            <Button
+              size="md"
+              variant="ghost"
+              color="success"
+              startIcon={<Home />}
+              type="button"
+              onPress={() => {
+                window.location.href = '/';
+              }}
+            >
+              Back to Home
+            </Button>
+            <Button
+              size="md"
+              variant="ghost"
+              color="warning"
+              startIcon={<Refresh filled />}
+              type="button"
+              onPress={() => {
+                window.location.reload();
+              }}
+            >
+              Reload Page
+            </Button>
           </div>
-        </NextUIProvider>
+        </div>
       </RemixThemesProvider>
     </Document>
   );
@@ -707,52 +692,50 @@ export const ErrorBoundary = ({ error }: { error: Error }) => {
         enableSystem
         themes={['light', 'dark', 'bumblebee', 'synthwave', 'retro', 'dracula', 'autumn', 'night']}
         value={{
-          light: lightTheme.className,
-          dark: darkTheme.className,
-          bumblebee: bumblebeeTheme.className,
-          synthwave: synthwaveTheme.className,
-          retro: retroTheme.className,
-          dracula: draculaTheme.className,
-          autumn: autumnTheme.className,
-          night: nightTheme.className,
+          light: 'light',
+          dark: 'dark',
+          bumblebee: 'bumblebee',
+          synthwave: 'synthwave',
+          retro: 'retro',
+          dracula: 'dracula',
+          autumn: 'autumn',
+          night: 'night',
         }}
       >
-        <NextUIProvider>
-          <div className="flex h-screen flex-col items-center justify-center gap-y-4">
-            <NextUIImage width={480} src={pageNotFound} alt="404" className="object-cover" />
-            <h1 className="text-center text-danger">
-              {isProd
-                ? 'Some thing went wrong'
-                : `[ErrorBoundary]: There was an error: ${error.message}`}
-            </h1>
-            <div className="flex w-full flex-row items-center justify-center gap-x-4">
-              <Button
-                size="md"
-                variant="ghost"
-                color="success"
-                startIcon={<Home />}
-                type="button"
-                onPress={() => {
-                  window.location.href = '/';
-                }}
-              >
-                Back to Home
-              </Button>
-              <Button
-                size="md"
-                variant="ghost"
-                color="warning"
-                startIcon={<Refresh filled />}
-                type="button"
-                onPress={() => {
-                  window.location.reload();
-                }}
-              >
-                Reload Page
-              </Button>
-            </div>
+        <div className="flex h-screen flex-col items-center justify-center gap-y-4">
+          <NextUIImage width={480} src={pageNotFound} alt="404" className="object-cover" />
+          <h1 className="text-center text-danger">
+            {isProd
+              ? 'Some thing went wrong'
+              : `[ErrorBoundary]: There was an error: ${error.message}`}
+          </h1>
+          <div className="flex w-full flex-row items-center justify-center gap-x-4">
+            <Button
+              size="md"
+              variant="ghost"
+              color="success"
+              startIcon={<Home />}
+              type="button"
+              onPress={() => {
+                window.location.href = '/';
+              }}
+            >
+              Back to Home
+            </Button>
+            <Button
+              size="md"
+              variant="ghost"
+              color="warning"
+              startIcon={<Refresh filled />}
+              type="button"
+              onPress={() => {
+                window.location.reload();
+              }}
+            >
+              Reload Page
+            </Button>
           </div>
-        </NextUIProvider>
+        </div>
       </RemixThemesProvider>
     </Document>
   );

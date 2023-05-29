@@ -1,6 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useMemo, useRef } from 'react';
-import { useMediaQuery, useThrottledCallback } from '@react-hookz/web';
+import {
+  useMediaQuery,
+  // useThrottledCallback
+} from '@react-hookz/web';
 import { useLocation, useMatches, useNavigationType, useOutlet, useParams } from '@remix-run/react';
 import type { User } from '@supabase/supabase-js';
 import { AnimatePresence, motion, useScroll } from 'framer-motion';
@@ -123,7 +126,7 @@ const scrollAreaViewportStyles = tv({
 });
 
 const tabLinkWrapperStyles = tv({
-  base: 'fixed z-[1000] flex h-[56px] w-[100vw] items-end shadow-md shadow-neutral/10',
+  base: 'fixed z-[1000] flex h-[56px] w-[100vw] items-end shadow-md shadow-default/10',
   variants: {
     miniSidebar: {
       true: 'top-[56px] sm:w-[calc(100vw_-_80px)]',
@@ -167,8 +170,8 @@ const Layout = (props: ILayout) => {
     setViewportRef,
     setScrollY,
     setScrollYProgress,
-    scrollDirection,
-    setScrollDirection,
+    // scrollDirection,
+    // setScrollDirection,
     isShowOverlay,
   } = useLayout((state) => state);
   const { scrollY, scrollYProgress } = useScroll({ container: viewportRef });
@@ -269,26 +272,26 @@ const Layout = (props: ILayout) => {
     }
   }, [isMd, isSm, sidebarMiniMode.value, sidebarHoverMode.value, sidebarBoxedMode.value]);
 
-  let lastScrollY = viewportRef.current?.scrollTop || 0;
+  // let lastScrollY = viewportRef.current?.scrollTop || 0;
 
-  const handleScroll = useThrottledCallback(
-    (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
-      if (isSm) {
-        // @ts-ignore
-        const scrollY = e?.target?.scrollTop || 0;
-        const direction = scrollY > lastScrollY ? 'down' : 'up';
-        if (
-          direction !== scrollDirection &&
-          (scrollY - lastScrollY > 10 || scrollY - lastScrollY < -10)
-        ) {
-          setScrollDirection(direction);
-        }
-        lastScrollY = scrollY > 0 ? scrollY : 0;
-      }
-    },
-    [scrollDirection, isSm, viewportRef],
-    50,
-  );
+  // const handleScroll = useThrottledCallback(
+  //   (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
+  //     if (isSm) {
+  //       // @ts-ignore
+  //       const scrollY = e?.target?.scrollTop || 0;
+  //       const direction = scrollY > lastScrollY ? 'down' : 'up';
+  //       if (
+  //         direction !== scrollDirection &&
+  //         (scrollY - lastScrollY > 10 || scrollY - lastScrollY < -10)
+  //       ) {
+  //         setScrollDirection(direction);
+  //       }
+  //       lastScrollY = scrollY > 0 ? scrollY : 0;
+  //     }
+  //   },
+  //   [scrollDirection, isSm, viewportRef],
+  //   50,
+  // );
 
   return (
     <div className={layoutStyles({ boxed: sidebarBoxedMode.value })}>
@@ -326,7 +329,7 @@ const Layout = (props: ILayout) => {
           className={`w-full ${sidebarBoxedMode.value ? 'h-[calc(100vh-15px)]' : 'h-screen'}`}
           key="scroll-area-main"
         >
-          <ScrollViewport ref={viewportRef} onScroll={(e) => handleScroll(e)}>
+          <ScrollViewport ref={viewportRef}>
             <main
               className={scrollAreaViewportStyles({
                 mini: sidebarMiniMode.value,
@@ -346,8 +349,8 @@ const Layout = (props: ILayout) => {
                   toastOptions={{
                     style: {
                       // @ts-ignore
-                      '--normal-bg': 'hsl(var(--colors-neutral))',
-                      '--normal-text': 'hsl(var(--colors-neutral-foreground))',
+                      '--normal-bg': 'hsl(var(--colors-default))',
+                      '--normal-text': 'hsl(var(--colors-default-foreground))',
                       '--normal-border': 'hsl(var(--colors-border))',
                       '--success-bg': 'hsl(var(--colors-success))',
                       '--success-border': 'hsl(var(--colors-border))',
@@ -355,11 +358,11 @@ const Layout = (props: ILayout) => {
                       '--error-bg': 'hsl(var(--colors-danger))',
                       '--error-border': 'hsl(var(--colors-border))',
                       '--error-text': 'hsl(var(--colors-danger-foreground))',
-                      '--gray1': 'hsl(var(--colors-neutral-50))',
-                      '--gray2': 'hsl(var(--colors-neutral-100))',
-                      '--gray4': 'hsl(var(--colors-neutral-300))',
-                      '--gray5': 'hsl(var(--colors-neutral-400))',
-                      '--gray12': 'hsl(var(--colors-neutral-900))',
+                      '--gray1': 'hsl(var(--colors-default-50))',
+                      '--gray2': 'hsl(var(--colors-default-100))',
+                      '--gray4': 'hsl(var(--colors-default-300))',
+                      '--gray5': 'hsl(var(--colors-default-400))',
+                      '--gray12': 'hsl(var(--colors-default-900))',
                     },
                   }}
                 />

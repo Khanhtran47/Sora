@@ -162,7 +162,7 @@ const SheetContent = React.forwardRef<
             dragTransition={{ bounceStiffness: 1000, bounceDamping: 50 }}
           >
             {swipeDownToClose && side === 'bottom' ? (
-              <div className="!m-[1rem_auto_0] h-1 w-[75px] rounded-md bg-neutral-foreground" />
+              <div className="!m-[1rem_auto_0] h-1 w-[75px] rounded-md bg-default-foreground" />
             ) : null}
             {!hideCloseButton ? (
               <DialogPrimitive.Close className="absolute right-4 top-4 flex h-5 w-5 items-center justify-center rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-primary-200 focus:ring-offset-2 disabled:pointer-events-none">
@@ -210,7 +210,7 @@ const SheetTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    className={cnBase('font-semibold text-neutral-foreground', className)}
+    className={cnBase('font-semibold text-default-foreground', className)}
     {...props}
   />
 ));

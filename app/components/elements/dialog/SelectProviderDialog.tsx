@@ -1,13 +1,11 @@
-/* eslint-disable @typescript-eslint/indent */
 import { useEffect, useState } from 'react';
 import { Button } from '@nextui-org/button';
-import { Modal } from '@nextui-org/react';
-import { useWindowSize } from '@react-hookz/web';
 import { useFetcher, useNavigate } from '@remix-run/react';
 
 import { useSoraSettings } from '~/hooks/useLocalStorage';
+import { DialogHeader, DialogTitle } from '~/components/elements/Dialog';
 
-type SelectProviderModalProps = {
+type SelectProviderProps = {
   id: number | string | undefined;
   visible: boolean;
   closeHandler: () => void;
@@ -21,7 +19,7 @@ type SelectProviderModalProps = {
   isEnded?: boolean;
 };
 
-const SelectProviderModal = (props: SelectProviderModalProps) => {
+const SelectProvider = (props: SelectProviderProps) => {
   const {
     id,
     visible,
@@ -45,7 +43,6 @@ const SelectProviderModal = (props: SelectProviderModalProps) => {
       episodesCount?: number;
     }[]
   >();
-  const { width } = useWindowSize();
   const handleProvider = (item: {
     id?: string | number | null;
     provider: string;
@@ -88,50 +85,34 @@ const SelectProviderModal = (props: SelectProviderModalProps) => {
   }, [fetcher.data]);
 
   return (
-    <Modal
-      closeButton
-      blur
-      scroll
-      aria-labelledby="Select Provider"
-      open={visible}
-      onClose={closeHandler}
-      width={width && width < 720 ? `${width}px` : '720px'}
-    >
-      <Modal.Header css={{ display: 'flex', flexFlow: 'row wrap' }}>
-        <h3 className="mb-4">Select Provider</h3>
-      </Modal.Header>
-      <Modal.Body
-        css={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
+    <>
+      <DialogHeader>
+        <DialogTitle>Select Provider</DialogTitle>
+      </DialogHeader>
+      <div className="mt-4 flex w-full flex-col items-center justify-center">
         {provider && Array.isArray(provider)
           ? provider.map((item) => (
               <Button
                 type="button"
                 key={item.id}
                 variant="light"
-                color="primary"
                 onPress={() => handleProvider(item)}
               >
                 {item.provider}
               </Button>
             ))
           : null}
-        {fetcher.type === 'normalLoad' && (
+        {fetcher.type === 'normalLoad' ? (
           <div role="status" className="max-w-sm animate-pulse">
             <div className="mb-4 h-2.5 w-48 rounded-full bg-gray-200 dark:bg-gray-700" />
             <div className="mb-4 h-2.5 w-48 rounded-full bg-gray-200 dark:bg-gray-700" />
             <div className="mb-4 h-2.5 w-48 rounded-full bg-gray-200 dark:bg-gray-700" />
             <span className="sr-only">Loading...</span>
           </div>
-        )}
-      </Modal.Body>
-    </Modal>
+        ) : null}
+      </div>
+    </>
   );
 };
 
-export default SelectProviderModal;
+export default SelectProvider;

@@ -99,13 +99,13 @@ const ButtonPage = () => {
       <Button fullWidth={isFullWidth}>Button</Button>
       <p className="text-base tracking-wide md:text-lg">Colors</p>
       <div className="flex flex-row flex-wrap items-center justify-start gap-4">
-        <Button>Neutral</Button>
+        <Button>Default</Button>
         <Button color="primary">Primary</Button>
         <Button color="secondary">Secondary</Button>
         <Button color="success">Success</Button>
         <Button color="warning">Warning</Button>
         <Button color="danger">Danger</Button>
-        <Button className="bg-gradient-to-tr from-primary via-neutral-600 to-secondary">
+        <Button className="bg-gradient-to-tr from-primary via-default-600 to-secondary">
           Custom colors
         </Button>
       </div>

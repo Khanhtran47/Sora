@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { Button } from '@nextui-org/button';
-import { Input, useInput } from '@nextui-org/react';
+import { Input } from '@nextui-org/input';
 import { Form } from '@remix-run/react';
 
 interface ISearchForm {
@@ -12,7 +13,7 @@ interface ISearchForm {
 
 const SearchForm = (props: ISearchForm) => {
   const { onSubmit, textOnButton, textHelper, textPlaceHolder, defaultValue } = props;
-  const { value, bindings } = useInput(defaultValue || '');
+  const [value, setValue] = useState(defaultValue ?? '');
 
   const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -22,18 +23,19 @@ const SearchForm = (props: ISearchForm) => {
   return (
     <Form
       onSubmit={submitHandler}
-      className="mb-4 mt-10 flex w-full flex-row items-center justify-center gap-4"
+      className="mb-4 mt-10 flex w-full flex-row items-start justify-center gap-4"
     >
       <Input
-        {...bindings}
-        labelPlaceholder={textPlaceHolder}
-        clearable
-        bordered
-        color="primary"
+        value={value}
+        onValueChange={setValue}
+        onClear={() => setValue('')}
+        label={textPlaceHolder}
+        variant="faded"
+        color="default"
         fullWidth
-        helperText={textHelper}
+        description={textHelper}
       />
-      <Button color="primary" type="submit">
+      <Button color="primary" type="submit" size="lg" className="h-[3.4rem]">
         {textOnButton}
       </Button>
     </Form>

@@ -224,7 +224,7 @@ const TvSeasonDetail = () => {
                     src={TMDB.posterUrl(seasonDetail?.poster_path)}
                     alt={seasonDetail?.name}
                     title={seasonDetail?.name}
-                    className="aspect-[2/3] !min-h-[auto] !min-w-[auto] shadow-xl shadow-neutral"
+                    className="aspect-[2/3] !min-h-[auto] !min-w-[auto] shadow-xl shadow-default"
                     loaderUrl="/api/image"
                     placeholder="empty"
                     responsive={[
@@ -260,7 +260,7 @@ const TvSeasonDetail = () => {
                     icon={<PhotoIcon width={48} height={48} />}
                     radius="xl"
                     classNames={{
-                      base: 'w-full h-auto aspect-[2/3] sm:w-3/4 xl:w-1/2 shadow-xl shadow-neutral',
+                      base: 'w-full h-auto aspect-[2/3] sm:w-3/4 xl:w-1/2 shadow-xl shadow-default',
                     }}
                   />
                 </div>

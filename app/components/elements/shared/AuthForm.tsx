@@ -1,7 +1,9 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Button } from '@nextui-org/button';
 import { Card, CardBody, CardFooter, CardHeader } from '@nextui-org/card';
-import { Checkbox, Input, useInput } from '@nextui-org/react';
+import { Checkbox } from '@nextui-org/checkbox';
+import { Input } from '@nextui-org/input';
+import { EyeFilledIcon, EyeSlashFilledIcon } from '@nextui-org/shared-icons';
 import { Spacer } from '@nextui-org/spacer';
 import { Form, Link, useLocation } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
@@ -26,26 +28,18 @@ const AuthForm = ({ type, error, code, errorCode }: IAuthForm) => {
 
   const hasMessage = code === '201-email';
   const inviteCode = new URLSearchParams(location.search).get('code') ?? '';
-
-  const { value, reset, bindings } = useInput('');
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isRePasswordVisible, setIsRePasswordVisible] = useState(false);
+  const [value, setValue] = useState('');
 
   const validateEmail = (text: string) => text.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i);
+  const validationState = useMemo(() => {
+    if (value === '') return undefined;
 
-  const helper: {
-    text: string;
-    color: 'error' | 'default' | 'primary' | 'secondary' | 'success' | 'warning' | undefined;
-  } = useMemo(() => {
-    if (!value)
-      return {
-        text: '',
-        color: undefined,
-      };
-    const isValid = validateEmail(value);
-    return {
-      text: isValid ? 'Correct email' : 'Enter a valid email',
-      color: isValid ? 'success' : 'error',
-    };
+    return validateEmail(value) ? 'valid' : 'invalid';
   }, [value]);
+  const togglePasswordVisibility = () => setIsPasswordVisible(!isPasswordVisible);
+  const toggleRePasswordVisibility = () => setIsRePasswordVisible(!isRePasswordVisible);
 
   return (
     <Form method="post" className="flex w-full justify-center">
@@ -57,54 +51,82 @@ const AuthForm = ({ type, error, code, errorCode }: IAuthForm) => {
         </CardHeader>
         <CardBody className="flex flex-col gap-y-3 py-4">
           <Input
-            {...bindings}
-            clearable
-            shadow={false}
-            onClearClick={reset}
-            status={helper.color}
-            color={helper.color}
-            helperColor={helper.color}
-            helperText={helper.text}
+            value={value}
+            onValueChange={setValue}
+            onClear={() => setValue('')}
+            color={
+              validationState === 'invalid'
+                ? 'error'
+                : validationState === 'valid'
+                ? 'success'
+                : 'default'
+            }
             name="email"
             type="email"
-            bordered
+            variant="faded"
             fullWidth
             size="lg"
             placeholder={t('email')}
             aria-label="Email"
-            contentLeft={<MailEdit fill="currentColor" />}
+            startContent={<MailEdit fill="currentColor" />}
+            errorMessage={validationState === 'invalid' && 'Please enter a valid email'}
+            validationState={validationState}
           />
           <Spacer y={2.5} />
-          <Input.Password
+          <Input
+            endContent={
+              <button
+                className="focus:outline-none"
+                type="button"
+                onClick={togglePasswordVisibility}
+              >
+                {isPasswordVisible ? (
+                  <EyeSlashFilledIcon className="pointer-events-none text-2xl text-default-400" />
+                ) : (
+                  <EyeFilledIcon className="pointer-events-none text-2xl text-default-400" />
+                )}
+              </button>
+            }
+            type={isPasswordVisible ? 'text' : 'password'}
             name="password"
-            type="password"
-            clearable
-            bordered
+            variant="faded"
             fullWidth
-            color="primary"
+            color="default"
             size="lg"
             placeholder={t('password')}
             aria-label="Password"
-            contentLeft={<Password fill="currentColor" />}
+            startContent={<Password fill="currentColor" />}
           />
-          {type === 'sign-up' && (
+          {type === 'sign-up' ? (
             <>
               <Spacer y={2.5} />
-              <Input.Password
+              <Input
+                endContent={
+                  <button
+                    className="focus:outline-none"
+                    type="button"
+                    onClick={toggleRePasswordVisibility}
+                  >
+                    {isRePasswordVisible ? (
+                      <EyeSlashFilledIcon className="pointer-events-none text-2xl text-default-400" />
+                    ) : (
+                      <EyeFilledIcon className="pointer-events-none text-2xl text-default-400" />
+                    )}
+                  </button>
+                }
+                type={isRePasswordVisible ? 'text' : 'password'}
                 name="re-password"
-                type="password"
-                clearable
-                bordered
+                variant="faded"
                 fullWidth
-                color="primary"
+                color="default"
                 size="lg"
                 placeholder={t('confirmPwd')}
                 aria-label="Confirm Password"
-                contentLeft={<Password fill="currentColor" />}
+                startContent={<Password fill="currentColor" />}
               />
               <input type="hidden" name="invite-code" hidden value={inviteCode} />
             </>
-          )}
+          ) : null}
           {error ? <h4 className="text-danger">{error}</h4> : null}
           {errorCode ? <h4 className="text-danger">{t(errorCode)}</h4> : null}
           {!error && hasMessage ? <h4 className="text-success">{t(code)}</h4> : null}

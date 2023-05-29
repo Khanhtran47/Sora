@@ -17,7 +17,7 @@ interface IBannerItemCompactProps {
 }
 
 const bannerCompactStyles = tv({
-  base: "min-h-[135px] min-w-[240px] origin-center overflow-hidden border-0 after:absolute after:left-0 after:top-0 after:z-10 after:h-[135px] after:bg-gradient-to-r after:from-neutral after:to-transparent after:content-[''] after:duration-400 after:ease-in-out after:transition-all",
+  base: "min-h-[135px] min-w-[240px] origin-center overflow-hidden border-0 after:absolute after:left-0 after:top-0 after:z-10 after:h-[135px] after:bg-gradient-to-r after:from-default after:to-transparent after:content-[''] after:duration-400 after:ease-in-out after:transition-all",
   variants: {
     active: {
       true: 'after:w-[200px] after:opacity-100',
@@ -87,7 +87,7 @@ const BannerItemCompact = forwardRef<HTMLDivElement, IBannerItemCompactProps>(
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.1, ease: 'easeOut' }}
-                  className="m-0 line-clamp-3 font-bold text-neutral-foreground"
+                  className="m-0 line-clamp-3 font-bold text-default-foreground"
                 >
                   {titleItem?.length && titleItem.length > 40
                     ? `${titleItem?.slice(0, 40)}...`

@@ -1,9 +1,12 @@
 import { Fragment, useEffect, useRef, useState } from 'react';
+import { Accordion, AccordionItem } from '@nextui-org/accordion';
 import { Kbd, type KbdKey } from '@nextui-org/kbd';
 import { Link } from '@nextui-org/link';
-import { Collapse, Radio, Switch, Tooltip, type SwitchEvent } from '@nextui-org/react';
+import { Radio, RadioGroup } from '@nextui-org/radio';
 import { Spacer } from '@nextui-org/spacer';
 import { Spinner } from '@nextui-org/spinner';
+import { Switch } from '@nextui-org/switch';
+import { Tooltip } from '@nextui-org/tooltip';
 import { useLocalStorageValue, useMediaQuery } from '@react-hookz/web';
 import type { MetaFunction } from '@remix-run/node';
 import { NavLink, Link as RemixLink, useLocation, useNavigate } from '@remix-run/react';
@@ -105,8 +108,8 @@ interface SettingBlockSelectProps extends SettingBlockCommonProps {
 interface SettingBlockSwitchProps extends SettingBlockCommonProps {
   type: 'switch';
   description?: string;
-  checked?: boolean;
-  onChange: ((ev: SwitchEvent) => void) | undefined;
+  isSelected?: boolean;
+  onValueChange?: (isSelected: boolean) => void;
 }
 
 interface SettingBlockKbdProps extends SettingBlockCommonProps {
@@ -129,7 +132,7 @@ const SettingBlock = (props: SettingBlockProps) => {
   const { type } = props;
   const { t } = useTranslation('settings');
   if (type === 'switch') {
-    const { checked, onChange, title, description } = props;
+    const { isSelected, onValueChange, title, description } = props;
     return (
       <div className="flex flex-row items-center justify-between gap-x-2 rounded-md bg-content2 p-3">
         {description ? (
@@ -140,7 +143,7 @@ const SettingBlock = (props: SettingBlockProps) => {
         ) : (
           <h6>{title}</h6>
         )}
-        <Switch checked={checked} onChange={onChange} />
+        <Switch isSelected={isSelected} onValueChange={onValueChange} />
       </div>
     );
   }
@@ -258,6 +261,7 @@ const Settings = () => {
     autoSwitchSubtitle,
     isShowBreadcrumb,
   } = useSoraSettings();
+  const [selectedTheme, setSelectedTheme] = useState(theme);
   const listViewType = useLocalStorageValue('sora-settings_layout_list-view', {
     defaultValue: 'card',
   });
@@ -409,7 +413,7 @@ const Settings = () => {
                   <h6 className="ml-2">{t(tab.title)}</h6>
                   {activeTab === tab.id ? (
                     <motion.div
-                      className="absolute overflow-hidden rounded-md bg-neutral-foreground data-[orientation=horizontal]:bottom-0 data-[orientation=vertical]:left-0 data-[orientation=horizontal]:h-1 data-[orientation=vertical]:h-1/2 data-[orientation=horizontal]:w-1/2 data-[orientation=vertical]:w-1"
+                      className="absolute overflow-hidden rounded-md bg-default-foreground data-[orientation=horizontal]:bottom-0 data-[orientation=vertical]:left-0 data-[orientation=horizontal]:h-1 data-[orientation=vertical]:h-1/2 data-[orientation=horizontal]:w-1/2 data-[orientation=vertical]:w-1"
                       layoutId="underline"
                       data-orientation={isSm ? 'horizontal' : 'vertical'}
                       ref={underlineRef}
@@ -431,7 +435,7 @@ const Settings = () => {
                   onDragEnd={handleDragEnd}
                   dragDirectionLock
                 >
-                  <div className="flex w-full flex-col justify-start rounded-xl bg-content1 p-5 shadow-lg shadow-neutral/10">
+                  <div className="flex w-full flex-col justify-start rounded-xl bg-content1 p-5 shadow-lg shadow-default/10">
                     <SettingBlock
                       type="select"
                       title={t('language')}
@@ -454,20 +458,24 @@ const Settings = () => {
                   onDragEnd={handleDragEnd}
                   className="w-full"
                 >
-                  <Collapse.Group splitted accordion={false} css={{ p: 0 }}>
-                    <Collapse
+                  {/* @ts-ignore */}
+                  <Accordion variant="splitted" selectionMode="multiple" className="px-0">
+                    <AccordionItem
                       title={t('theme')}
                       subtitle={t('theme-subtitle')}
-                      css={{
-                        backgroundColor: 'hsl(var(--colors-content1)) !important',
-                        borderRadius: '0.75rem !important',
+                      classNames={{
+                        title: 'text-2xl',
+                        subtitle: 'text-base',
+                        content: 'pb-4',
                       }}
                     >
-                      <Radio.Group
+                      <RadioGroup
                         orientation={isXs ? 'vertical' : 'horizontal'}
                         defaultValue={theme}
-                        size="sm"
-                        onChange={async (value) => {
+                        size="md"
+                        value={selectedTheme}
+                        onValueChange={async (value) => {
+                          setSelectedTheme(value);
                           if (value === 'light' || value === 'dark') {
                             await setTheme(value);
                           } else if (['bumblebee', 'retro', 'autumn'].includes(value)) {
@@ -485,34 +493,36 @@ const Settings = () => {
                           <Tooltip
                             key={themeItem.id}
                             content={isXs ? null : themeItem.title}
-                            rounded
-                            color="primary"
-                            hideArrow
-                            offset={0}
+                            closeDelay={0}
+                            offset={10}
                           >
                             <Radio
                               key={themeItem.id}
                               value={themeItem.id}
-                              css={{
-                                p: '$xs',
-                                '--nextui--radioColor': themeItem.color,
-                                '--nextui-colors-border': themeItem.color,
-                                '--nextui--radioColorHover': themeItem.colorHover,
+                              style={{
+                                // @ts-ignore
+                                '--colors-radioColor': themeItem.color,
+                                '--colors-radioColorHover': themeItem.colorHover,
+                              }}
+                              classNames={{
+                                wrapper:
+                                  'border-theme-radio-color group-data-[hover-unchecked=true]:bg-theme-radio-color-hover',
                               }}
                             >
                               {isXs ? themeItem.title : null}
                             </Radio>
                           </Tooltip>
                         ))}
-                      </Radio.Group>
-                    </Collapse>
+                      </RadioGroup>
+                    </AccordionItem>
                     {isSm ? null : (
-                      <Collapse
+                      <AccordionItem
                         title={t('sidebar')}
                         subtitle={t('sidebar-subtitle')}
-                        css={{
-                          backgroundColor: 'hsl(var(--colors-content1)) !important',
-                          borderRadius: '0.75rem !important',
+                        classNames={{
+                          title: 'text-2xl',
+                          subtitle: 'text-base',
+                          content: 'pb-4',
                         }}
                       >
                         <div className="flex flex-col items-start justify-center gap-y-4 rounded-md bg-content2 p-3">
@@ -522,9 +532,9 @@ const Settings = () => {
                               <div className="flex w-full flex-row items-center justify-between gap-x-2">
                                 <h6>{t('sidebar-mini-mode')}</h6>
                                 <Switch
-                                  checked={sidebarMiniMode.value}
-                                  onChange={(e) => {
-                                    sidebarMiniMode.set(e.target.checked);
+                                  isSelected={sidebarMiniMode.value}
+                                  onValueChange={(isSelected: boolean) => {
+                                    sidebarMiniMode.set(isSelected);
                                     if (sidebarMiniMode.value) {
                                       sidebarHoverMode.set(false);
                                     }
@@ -534,9 +544,9 @@ const Settings = () => {
                               <div className="flex w-full flex-row items-center justify-between gap-x-2">
                                 <h6>{t('sidebar-hover-mode')}</h6>
                                 <Switch
-                                  checked={sidebarHoverMode.value}
-                                  onChange={(e) => {
-                                    sidebarHoverMode.set(e.target.checked);
+                                  isSelected={sidebarHoverMode.value}
+                                  onValueChange={(isSelected: boolean) => {
+                                    sidebarHoverMode.set(isSelected);
                                     if (!sidebarHoverMode.value) {
                                       sidebarMiniMode.set(true);
                                     }
@@ -548,36 +558,40 @@ const Settings = () => {
                           <div className="flex w-full flex-row items-center justify-between gap-x-2">
                             <h6>{t('sidebar-boxed-mode')}</h6>
                             <Switch
-                              checked={sidebarBoxedMode.value}
-                              onChange={(e) => sidebarBoxedMode.set(e.target.checked)}
+                              isSelected={sidebarBoxedMode.value}
+                              onValueChange={(isSelected: boolean) =>
+                                sidebarBoxedMode.set(isSelected)
+                              }
                             />
                           </div>
                         </div>
-                      </Collapse>
+                      </AccordionItem>
                     )}
                     {isSm ? null : (
-                      <Collapse
+                      <AccordionItem
                         title={t('header')}
                         subtitle={t('header-subtitle')}
-                        css={{
-                          backgroundColor: 'hsl(var(--colors-content1)) !important',
-                          borderRadius: '0.75rem !important',
+                        classNames={{
+                          title: 'text-2xl',
+                          subtitle: 'text-base',
+                          content: 'pb-4',
                         }}
                       >
                         <SettingBlock
                           type="switch"
                           title={t('show-breadcrumb')}
-                          checked={isShowBreadcrumb.value}
-                          onChange={(e) => isShowBreadcrumb.set(e.target.checked)}
+                          isSelected={isShowBreadcrumb.value}
+                          onValueChange={(isSelected) => isShowBreadcrumb.set(isSelected)}
                         />
-                      </Collapse>
+                      </AccordionItem>
                     )}
-                    <Collapse
+                    <AccordionItem
                       title={t('media-list-grid')}
                       subtitle={t('media-list-grid-subtitle')}
-                      css={{
-                        backgroundColor: 'hsl(var(--colors-content1)) !important',
-                        borderRadius: '0.75rem !important',
+                      classNames={{
+                        title: 'text-2xl',
+                        subtitle: 'text-base',
+                        content: 'pb-4',
                       }}
                     >
                       <SettingBlock
@@ -595,30 +609,31 @@ const Settings = () => {
                         onSelectionChange={(value) => handleSelect(value, 'list-loading-type')}
                         selectItems={listListLoadingType}
                       />
-                    </Collapse>
-                    <Collapse
+                    </AccordionItem>
+                    <AccordionItem
                       title={t('experiments')}
                       subtitle={t('experiments-subtitle')}
-                      css={{
-                        backgroundColor: 'hsl(var(--colors-content1)) !important',
-                        borderRadius: '0.75rem !important',
+                      classNames={{
+                        title: 'text-2xl',
+                        subtitle: 'text-base',
+                        content: 'pb-4',
                       }}
                     >
                       <SettingBlock
                         type="switch"
                         title={t('play-trailer')}
-                        checked={isPlayTrailer.value}
-                        onChange={(e) => isPlayTrailer.set(e.target.checked)}
+                        isSelected={isPlayTrailer.value}
+                        onValueChange={(isSelected) => isPlayTrailer.set(isSelected)}
                       />
                       <Spacer y={2.5} />
                       <SettingBlock
                         type="switch"
                         title={t('mute-trailer')}
-                        checked={isMutedTrailer.value}
-                        onChange={(e) => isMutedTrailer.set(e.target.checked)}
+                        isSelected={isMutedTrailer.value}
+                        onValueChange={(isSelected) => isMutedTrailer.set(isSelected)}
                       />
-                    </Collapse>
-                  </Collapse.Group>
+                    </AccordionItem>
+                  </Accordion>
                 </motion.div>
               </TabsContent>
               <TabsContent value="account-tab" asChild>
@@ -646,69 +661,71 @@ const Settings = () => {
                   onDragEnd={handleDragEnd}
                   className="w-full"
                 >
-                  <Collapse.Group splitted accordion={false} css={{ p: 0 }}>
-                    <Collapse
+                  <Accordion variant="splitted" selectionMode="multiple" className="px-0">
+                    <AccordionItem
                       title={t('defaults')}
                       subtitle={t('defaults-subtitle')}
-                      css={{
-                        backgroundColor: 'hsl(var(--colors-content1)) !important',
-                        borderRadius: '0.75rem !important',
+                      classNames={{
+                        title: 'text-2xl',
+                        subtitle: 'text-base',
+                        content: 'pb-4',
                       }}
                     >
                       <SettingBlock
                         type="switch"
                         title={t('mute-trailer')}
                         description={t('pic-in-pic-subtitle')}
-                        checked={isPicInPic.value}
-                        onChange={(e) => isPicInPic.set(e.target.checked)}
+                        isSelected={isPicInPic.value}
+                        onValueChange={(isSelected) => isPicInPic.set(isSelected)}
                       />
                       <Spacer y={2.5} />
                       <SettingBlock
                         type="switch"
                         title={t('muted')}
                         description={t('muted-subtitle')}
-                        checked={isMuted.value}
-                        onChange={(e) => isMuted.set(e.target.checked)}
+                        isSelected={isMuted.value}
+                        onValueChange={(isSelected) => isMuted.set(isSelected)}
                       />
                       <Spacer y={2.5} />
                       <SettingBlock
                         type="switch"
                         title={t('autoplay')}
                         description={t('autoplay-subtitle')}
-                        checked={isAutoPlay.value}
-                        onChange={(e) => isAutoPlay.set(e.target.checked)}
+                        isSelected={isAutoPlay.value}
+                        onValueChange={(isSelected) => isAutoPlay.set(isSelected)}
                       />
                       <Spacer y={2.5} />
                       <SettingBlock
                         type="switch"
                         title={t('loop')}
                         description={t('loop-subtitle')}
-                        checked={isLoop.value}
-                        onChange={(e) => isLoop.set(e.target.checked)}
+                        isSelected={isLoop.value}
+                        onValueChange={(isSelected) => isLoop.set(isSelected)}
                       />
-                    </Collapse>
-                    <Collapse
+                    </AccordionItem>
+                    <AccordionItem
                       title={t('subtitles')}
                       subtitle={t('subtitles-subtitle')}
-                      css={{
-                        backgroundColor: 'hsl(var(--colors-content1)) !important',
-                        borderRadius: '0.75rem !important',
+                      classNames={{
+                        title: 'text-2xl',
+                        subtitle: 'text-base',
+                        content: 'pb-4',
                       }}
                     >
                       <SettingBlock
                         type="switch"
                         title={t('show-subtitle')}
                         description={t('show-subtitle-subtitle')}
-                        checked={autoShowSubtitle.value}
-                        onChange={(e) => autoShowSubtitle.set(e.target.checked)}
+                        isSelected={autoShowSubtitle.value}
+                        onValueChange={(isSelected) => autoShowSubtitle.set(isSelected)}
                       />
                       <Spacer y={2.5} />
                       <SettingBlock
                         type="switch"
                         title={t('auto-switch-subtitle')}
                         description={t('auto-switch-subtitle-subtitle')}
-                        checked={autoSwitchSubtitle.value}
-                        onChange={(e) => autoSwitchSubtitle.set(e.target.checked)}
+                        isSelected={autoSwitchSubtitle.value}
+                        onValueChange={(isSelected) => autoSwitchSubtitle.set(isSelected)}
                       />
                       <Spacer y={2.5} />
                       <SettingBlock
@@ -772,78 +789,79 @@ const Settings = () => {
                         onSelectionChange={(value) => handleSelect(value, 'subtitle-text-effects')}
                         selectItems={listSubtitleTextEffects}
                       />
-                    </Collapse>
-                    <Collapse
+                    </AccordionItem>
+                    <AccordionItem
                       title={t('player-features')}
                       subtitle={t('player-features-subtitle')}
-                      css={{
-                        backgroundColor: 'hsl(var(--colors-content1)) !important',
-                        borderRadius: '0.75rem !important',
+                      classNames={{
+                        title: 'text-2xl',
+                        subtitle: 'text-base',
+                        content: 'pb-4',
                       }}
                     >
                       <SettingBlock
                         type="switch"
                         title={t('auto-size')}
                         description={t('auto-size-subtitle')}
-                        checked={isAutoSize.value}
-                        onChange={(e) => isAutoSize.set(e.target.checked)}
+                        isSelected={isAutoSize.value}
+                        onValueChange={(isSelected) => isAutoSize.set(isSelected)}
                       />
                       <Spacer y={2.5} />
                       <SettingBlock
                         type="switch"
                         title={t('auto-mini')}
                         description={t('auto-mini-subtitle')}
-                        checked={isAutoMini.value}
-                        onChange={(e) => isAutoMini.set(e.target.checked)}
+                        isSelected={isAutoMini.value}
+                        onValueChange={(isSelected) => isAutoMini.set(isSelected)}
                       />
                       <Spacer y={2.5} />
                       <SettingBlock
                         type="switch"
                         title={t('screenshot')}
                         description={t('screenshot-subtitle')}
-                        checked={isScreenshot.value}
-                        onChange={(e) => isScreenshot.set(e.target.checked)}
+                        isSelected={isScreenshot.value}
+                        onValueChange={(isSelected) => isScreenshot.set(isSelected)}
                       />
                       <Spacer y={2.5} />
                       <SettingBlock
                         type="switch"
                         title={t('mini-progressbar')}
                         description={t('mini-progressbar-subtitle')}
-                        checked={isMiniProgressbar.value}
-                        onChange={(e) => isMiniProgressbar.set(e.target.checked)}
+                        isSelected={isMiniProgressbar.value}
+                        onValueChange={(isSelected) => isMiniProgressbar.set(isSelected)}
                       />
                       <Spacer y={2.5} />
                       <SettingBlock
                         type="switch"
                         title={t('auto-playback')}
                         description={t('auto-playback-subtitle')}
-                        checked={isAutoPlayback.value}
-                        onChange={(e) => isAutoPlayback.set(e.target.checked)}
+                        isSelected={isAutoPlayback.value}
+                        onValueChange={(isSelected) => isAutoPlayback.set(isSelected)}
                       />
                       <Spacer y={2.5} />
                       <SettingBlock
                         type="switch"
                         title={t('fast-forward')}
                         description={t('fast-forward-subtitle')}
-                        checked={isFastForward.value}
-                        onChange={(e) => isFastForward.set(e.target.checked)}
+                        isSelected={isFastForward.value}
+                        onValueChange={(isSelected) => isFastForward.set(isSelected)}
                       />
                       <Spacer y={2.5} />
                       <SettingBlock
                         type="switch"
                         title={t('auto-play-next-episode')}
                         description={t('auto-play-next-episode-subtitle')}
-                        checked={isAutoPlayNextEpisode.value}
-                        onChange={(e) => isAutoPlayNextEpisode.set(e.target.checked)}
+                        isSelected={isAutoPlayNextEpisode.value}
+                        onValueChange={(isSelected) => isAutoPlayNextEpisode.set(isSelected)}
                       />
                       <Spacer y={2.5} />
                       <SettingBlock
                         type="switch"
                         title={t('show-skip-op-ed-button')}
                         description={t('show-skip-op-ed-button-subtitle')}
-                        checked={isShowSkipOpEdButton.value}
-                        onChange={(e) => {
-                          isShowSkipOpEdButton.set(e.target.checked);
+                        isSelected={isShowSkipOpEdButton.value}
+                        onValueChange={(isSelected) => {
+                          isShowSkipOpEdButton.set(isSelected);
                           if (!isShowSkipOpEdButton.value) {
                             isAutoSkipOpEd.set(false);
                           }
@@ -862,19 +880,20 @@ const Settings = () => {
                               type="switch"
                               title={t('auto-skip-op-ed')}
                               description={t('auto-skip-op-ed-subtitle')}
-                              checked={isAutoSkipOpEd.value}
-                              onChange={(e) => isAutoSkipOpEd.set(e.target.checked)}
+                              isSelected={isAutoSkipOpEd.value}
+                              onValueChange={(isSelected) => isAutoSkipOpEd.set(isSelected)}
                             />
                           </motion.div>
                         ) : null}
                       </AnimatePresence>
-                    </Collapse>
-                    <Collapse
+                    </AccordionItem>
+                    <AccordionItem
                       title={t('keyboard')}
                       subtitle={t('keyboard-subtitle')}
-                      css={{
-                        backgroundColor: 'hsl(var(--colors-content1)) !important',
-                        borderRadius: '0.75rem !important',
+                      classNames={{
+                        title: 'text-2xl',
+                        subtitle: 'text-base',
+                        content: 'pb-4',
                       }}
                     >
                       <SettingBlock type="kbd" title={t('volume-up')} keys="up" />
@@ -926,8 +945,8 @@ const Settings = () => {
                       <SettingBlock type="kbd" title={t('fast-forward-10s')} kbd="L" />
                       <Spacer y={2.5} />
                       <SettingBlock type="kbd" title={t('mute-unmute')} kbd="M" />
-                    </Collapse>
-                  </Collapse.Group>
+                    </AccordionItem>
+                  </Accordion>
                 </motion.div>
               </TabsContent>
               <TabsContent value="about-tab" asChild>
@@ -942,7 +961,7 @@ const Settings = () => {
                   onDragEnd={handleDragEnd}
                   className="w-full"
                 >
-                  <div className="w-full rounded-xl bg-content1 p-5 shadow-lg shadow-neutral/10">
+                  <div className="w-full rounded-xl bg-content1 p-5 shadow-lg shadow-default/10">
                     <div className="flex flex-col items-center justify-center">
                       <Image
                         alt="About Logo"
@@ -987,7 +1006,7 @@ const Settings = () => {
                       <Link href="#">Contact ✉️</Link>
                     </div>
                     <Spacer y={1} />
-                    <h6 className="text-center !text-neutral-900">
+                    <h6 className="text-center !text-default-900">
                       This site does not store any files on its server. All contents are provided by
                       non-affiliated third parties.
                     </h6>

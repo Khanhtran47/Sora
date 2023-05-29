@@ -1,10 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMemo, useState } from 'react';
 import { Avatar } from '@nextui-org/avatar';
 import { Button, ButtonGroup } from '@nextui-org/button';
 import { Card, CardBody } from '@nextui-org/card';
 import { Pagination } from '@nextui-org/pagination';
-import { Dropdown } from '@nextui-org/react';
 import { Spacer } from '@nextui-org/spacer';
 import { useMediaQuery } from '@react-hookz/web';
 import { useNavigate } from '@remix-run/react';
@@ -16,6 +14,13 @@ import TMDB from '~/utils/media';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
 import episodeTypes from '~/constants/episodeTypes';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '~/components/elements/Select';
 import Rating from '~/components/elements/shared/Rating';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 import ViewGrid from '~/assets/icons/ViewGridCardIcon';
@@ -40,9 +45,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
   const { isShowSkipOpEdButton } = useSoraSettings();
   const episodesCountAvailable = useMemo(() => episodes && episodes.length, [episodes]);
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
-  const [selectedProvider, setSelectedProvider] = useState<Set<string>>(
-    new Set([providers[0].provider]),
-  );
+  const [selectedProvider, setSelectedProvider] = useState(providers[0].provider);
   const [episodesCountProvider, setEpisodesCountProvider] = useState<number>(
     providers[0].episodesCount || 0,
   );
@@ -60,16 +63,10 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
     episodesAvailable || [],
     50,
   );
-  const selectedValue = useMemo(() => {
-    if (selectedProvider) {
-      return Array.from(selectedProvider).join(', ').replaceAll('_', ' ');
-    }
-  }, [selectedProvider]);
 
-  const handleProviderChange = async (keys: any) => {
-    setSelectedProvider(keys);
-    const provider = Array.from(keys).join(', ').replaceAll('_', ' ');
-    const providerData = providers.find((p) => p.provider === provider);
+  const handleProviderChange = async (value: string) => {
+    setSelectedProvider(value);
+    const providerData = providers.find((p) => p.provider === value);
     if (providerData) {
       setEpisodesCountProvider(providerData.episodesCount || 0);
       if (episodesCountAvailable && episodesCountAvailable >= (providerData?.episodesCount || 0)) {
@@ -86,17 +83,16 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
   };
 
   const handleSelectEpisode = (index: number) => {
-    const provider = Array.from(selectedProvider).join(', ').replaceAll('_', ' ');
-    const providerData = providers.find((p) => p.provider === provider);
+    const providerData = providers.find((p) => p.provider === selectedProvider);
     if (type === 'tv')
       navigate(
-        `/tv-shows/${id}/season/${season}/episode/${index + 1}/watch?provider=${provider}&id=${
-          providerData?.id
-        }`,
+        `/tv-shows/${id}/season/${season}/episode/${
+          index + 1
+        }/watch?provider=${selectedProvider}&id=${providerData?.id}`,
       );
     else if (type === 'anime') {
       navigate(
-        `/anime/${id}/episode/${index + 1}/watch?provider=${provider}&id=${
+        `/anime/${id}/episode/${index + 1}/watch?provider=${selectedProvider}&id=${
           providerData?.id
         }&skipOpEd=${isShowSkipOpEdButton.value}`,
       );
@@ -109,21 +105,18 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
         <h3>Episodes</h3>
         <div className="flex flex-row items-center justify-end gap-2">
           {providers ? (
-            <Dropdown isBordered>
-              <Dropdown.Button css={{ tt: 'capitalize' }}>{selectedValue}</Dropdown.Button>
-              <Dropdown.Menu
-                aria-label="Provider Selection"
-                color="primary"
-                disallowEmptySelection
-                selectionMode="single"
-                selectedKeys={selectedProvider}
-                onSelectionChange={(keys: any) => handleProviderChange(keys)}
-              >
+            <Select value={selectedProvider} onValueChange={(value) => handleProviderChange(value)}>
+              <SelectTrigger aria-label="provider">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
                 {providers.map((provider) => (
-                  <Dropdown.Item key={provider.provider}>{provider.provider}</Dropdown.Item>
+                  <SelectItem key={provider.provider} value={provider.provider}>
+                    {provider.provider}
+                  </SelectItem>
                 ))}
-              </Dropdown.Menu>
-            </Dropdown>
+              </SelectContent>
+            </Select>
           ) : null}
           {episodesCountAvailable && episodesCountAvailable >= episodesCountProvider ? (
             <ButtonGroup>

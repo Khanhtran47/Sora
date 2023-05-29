@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '@nextui-org/button';
-import { Tooltip } from '@nextui-org/react';
+import { Tooltip } from '@nextui-org/tooltip';
 import { useMeasure } from '@react-hookz/web';
 import {
   useFetcher,
@@ -25,7 +25,8 @@ import updateHistory from '~/utils/client/update-history';
 import { useLayout } from '~/store/layout/useLayout';
 import usePlayerState, { type PlayerData } from '~/store/player/usePlayerState';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
-import WatchTrailerModal, { type Trailer } from '~/components/elements/dialog/WatchTrailerModal';
+import { Dialog, DialogContent, DialogTrigger } from '~/components/elements/Dialog';
+import WatchTrailer, { type Trailer } from '~/components/elements/dialog/WatchTrailerDialog';
 import Player from '~/components/elements/player/ArtPlayer';
 import PlayerError from '~/components/elements/player/PlayerError';
 import PlayerHotKey from '~/components/elements/player/PlayerHotkey';
@@ -43,7 +44,7 @@ type Highlight = {
 };
 
 const playerStyles = tv({
-  base: "custom-player-subtitle custom-player-layer-auto-playback custom-player-contextmenus custom-player-info custom-player-notice-inner custom-player-volume-control custom-player-icon-after custom-player-icon-before custom-player-control-after custom-player-control-before [&_.art-bottom]:!bg-gradient-to-b [&_.art-bottom]:from-transparent [&_.art-bottom]:via-neutral/60 [&_.art-bottom]:to-neutral [&_.art-contextmenu]:!border-border [&_.art-contextmenu]:!text-shadow-none [&_.art-control-topControlButtons]:!opacity-100 [&_.art-control-topControlButtons]:before:absolute [&_.art-control-topControlButtons]:before:left-0 [&_.art-control-topControlButtons]:before:top-0 [&_.art-control-topControlButtons]:before:h-[100px] [&_.art-control-topControlButtons]:before:w-full [&_.art-control-topControlButtons]:before:bg-gradient-to-t [&_.art-control-topControlButtons]:before:from-transparent [&_.art-control-topControlButtons]:before:via-neutral/[0.6] [&_.art-control-topControlButtons]:before:to-neutral [&_.art-control-topControlButtons]:before:bg-top [&_.art-control-topControlButtons]:before:bg-repeat-x [&_.art-control-topControlButtons]:before:content-[''] [&_.art-layer-lock]:bg-background/[0.6] [&_.art-layer-mask]:hidden [&_.art-layer-mask]:bg-transparent [&_.art-layer-mask]:duration-300 [&_.art-layer-mask]:ease-in-out [&_.art-layer-mask]:transition-all [&_.art-layer-miniTopControlButtons]:hidden [&_.art-layer-miniTopControlButtons]:duration-300 [&_.art-layer-miniTopControlButtons]:ease-in-out [&_.art-layer-miniTopControlButtons]:transition-all [&_.art-layer-playPauseButton]:hidden [&_.art-layer-playPauseButton]:duration-300 [&_.art-layer-playPauseButton]:ease-in-out [&_.art-layer-playPauseButton]:transition-all [&_.art-notice]:!justify-center [&_.art-subtitle]:bg-player-subtitle-window-color [&_.art-subtitle]:!text-shadow-player [&_.art-video-player]:!font-[Inter]",
+  base: "custom-player-subtitle custom-player-layer-auto-playback custom-player-contextmenus custom-player-info custom-player-notice-inner custom-player-volume-control custom-player-icon-after custom-player-icon-before custom-player-control-after custom-player-control-before [&_.art-bottom]:!bg-gradient-to-b [&_.art-bottom]:from-transparent [&_.art-bottom]:via-default/60 [&_.art-bottom]:to-default [&_.art-contextmenu]:!border-border [&_.art-contextmenu]:!text-shadow-none [&_.art-control-topControlButtons]:!opacity-100 [&_.art-control-topControlButtons]:before:absolute [&_.art-control-topControlButtons]:before:left-0 [&_.art-control-topControlButtons]:before:top-0 [&_.art-control-topControlButtons]:before:h-[100px] [&_.art-control-topControlButtons]:before:w-full [&_.art-control-topControlButtons]:before:bg-gradient-to-t [&_.art-control-topControlButtons]:before:from-transparent [&_.art-control-topControlButtons]:before:via-default/[0.6] [&_.art-control-topControlButtons]:before:to-default [&_.art-control-topControlButtons]:before:bg-top [&_.art-control-topControlButtons]:before:bg-repeat-x [&_.art-control-topControlButtons]:before:content-[''] [&_.art-layer-lock]:bg-background/[0.6] [&_.art-layer-mask]:hidden [&_.art-layer-mask]:bg-transparent [&_.art-layer-mask]:duration-300 [&_.art-layer-mask]:ease-in-out [&_.art-layer-mask]:transition-all [&_.art-layer-miniTopControlButtons]:hidden [&_.art-layer-miniTopControlButtons]:duration-300 [&_.art-layer-miniTopControlButtons]:ease-in-out [&_.art-layer-miniTopControlButtons]:transition-all [&_.art-layer-playPauseButton]:hidden [&_.art-layer-playPauseButton]:duration-300 [&_.art-layer-playPauseButton]:ease-in-out [&_.art-layer-playPauseButton]:transition-all [&_.art-notice]:!justify-center [&_.art-subtitle]:bg-player-subtitle-window-color [&_.art-subtitle]:!text-shadow-player [&_.art-video-player]:!font-[Inter]",
   variants: {
     isMini: {
       true: 'custom-mini-player-hover h-[14.0625rem] w-[25rem] rounded-t-lg [&_.art-bottom]:!visible [&_.art-bottom]:!overflow-visible [&_.art-bottom]:!bg-none [&_.art-bottom]:!p-0 [&_.art-bottom]:!opacity-100 [&_.art-control-progress]:!h-[7px] [&_.art-control-progress]:!items-end [&_.art-controls]:hidden [&_.art-controls]:!transform-none [&_.art-mask]:!hidden [&_.art-progress]:!transform-none [&_.art-subtitle]:!bottom-[7px]',
@@ -442,13 +443,8 @@ const GlobalPlayer = () => {
     }
   }, [isVideoEnded]);
 
-  const [isWatchTrailerModalVisible, setWatchTrailerModalVisible] = useState(false);
+  const [isWatchTrailerDialogVisible, setWatchTrailerDialogVisible] = useState(false);
   const [trailer, setTrailer] = useState<Trailer>({});
-  const closeWatchTrailerModalHandler = () => {
-    setWatchTrailerModalVisible(false);
-    artplayer?.play();
-    if (typeVideo === 'movie' || typeVideo === 'tv') setTrailer({});
-  };
   useEffect(() => {
     if (fetcher.data && fetcher.data.videos) {
       const { results } = fetcher.data.videos;
@@ -801,9 +797,9 @@ const GlobalPlayer = () => {
                         : []),
                     ],
                     cssVar: {
-                      '--art-font-color': 'hsl(var(--colors-neutral-foreground))',
-                      '--art-progress-color': 'hsl(var(--colors-neutral-foreground) / 0.2)',
-                      '--art-loaded-color': 'hsl(var(--colors-neutral-foreground) / 0.4)',
+                      '--art-font-color': 'hsl(var(--colors-default-foreground))',
+                      '--art-progress-color': 'hsl(var(--colors-default-foreground) / 0.2)',
+                      '--art-loaded-color': 'hsl(var(--colors-default-foreground) / 0.4)',
                     },
                   }}
                   style={{
@@ -949,21 +945,35 @@ const GlobalPlayer = () => {
                     >
                       Toggle Light
                     </Button>
-                    <Button
-                      type="button"
-                      size="sm"
-                      onPress={() => {
-                        artplayer?.pause();
-                        setWatchTrailerModalVisible(true);
-                        if (typeVideo === 'movie' || typeVideo === 'tv')
-                          fetcher.load(
-                            `/${typeVideo === 'movie' ? 'movies' : 'tv-shows'}/${id}/videos`,
-                          );
-                      }}
-                      className="mb-3"
+                    <Dialog
+                      open={isWatchTrailerDialogVisible}
+                      onOpenChange={setWatchTrailerDialogVisible}
                     >
-                      Watch Trailer
-                    </Button>
+                      <DialogTrigger asChild>
+                        <Button
+                          type="button"
+                          size="sm"
+                          onPress={() => {
+                            artplayer?.pause();
+                            if (typeVideo === 'movie' || typeVideo === 'tv')
+                              fetcher.load(
+                                `/${typeVideo === 'movie' ? 'movies' : 'tv-shows'}/${id}/videos`,
+                              );
+                          }}
+                          className="mb-3"
+                        >
+                          Watch Trailer
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="overflow-hidden !p-0">
+                        {typeVideo === 'movie' || typeVideo === 'tv' ? (
+                          <WatchTrailer trailer={trailer} />
+                        ) : null}
+                        {typeVideo === 'anime' && trailerAnime ? (
+                          <WatchTrailer trailer={trailerAnime} />
+                        ) : null}
+                      </DialogContent>
+                    </Dialog>
                   </div>
                 ) : null}
               </>
@@ -983,7 +993,7 @@ const GlobalPlayer = () => {
       {isMini && artplayer
         ? createPortal(
             <div className="flex h-full w-full flex-row items-center justify-center">
-              <Tooltip content={isPlayerPlaying ? 'Pause' : 'Play'}>
+              <Tooltip content={isPlayerPlaying ? 'Pause' : 'Play'} showArrow closeDelay={0}>
                 <Button
                   type="button"
                   variant="light"
@@ -1012,7 +1022,7 @@ const GlobalPlayer = () => {
         ? createPortal(
             <div className="flex flex-row items-center justify-between">
               <div className="flex flex-row items-center justify-center gap-x-1">
-                <Tooltip content="Expand">
+                <Tooltip content="Expand" showArrow closeDelay={0}>
                   <Button
                     type="button"
                     variant="light"
@@ -1111,10 +1121,10 @@ const GlobalPlayer = () => {
               <div className="flex w-2/3 shrink grow-0 basis-2/3 flex-row items-center justify-start space-x-2">
                 {isPlayerFullScreen ? (
                   <div className="flex w-full flex-col items-start justify-center space-y-2">
-                    <h6 className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-start !text-neutral-foreground">
+                    <h6 className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-start !text-default-foreground">
                       {playerData?.titlePlayer}
                     </h6>
-                    <p className="!text-neutral-foreground/80">
+                    <p className="!text-default-foreground/80">
                       {seasonId ? ` Season ${seasonId}` : ''}
                       {episodeId ? ` Episode ${episodeId}` : ''}
                     </p>
@@ -1140,20 +1150,6 @@ const GlobalPlayer = () => {
             artplayer.controls.topControlButtons,
           )
         : null}
-      {typeVideo === 'movie' || typeVideo === 'tv' ? (
-        <WatchTrailerModal
-          trailer={trailer}
-          visible={isWatchTrailerModalVisible}
-          closeHandler={closeWatchTrailerModalHandler}
-        />
-      ) : null}
-      {typeVideo === 'anime' && trailerAnime ? (
-        <WatchTrailerModal
-          trailer={trailerAnime}
-          visible={isWatchTrailerModalVisible}
-          closeHandler={closeWatchTrailerModalHandler}
-        />
-      ) : null}
     </div>
   );
 };
