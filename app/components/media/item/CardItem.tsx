@@ -57,7 +57,7 @@ interface ICardItemProps {
 
 const cardItemStyles = tv({
   slots: {
-    base: '!w-[164px]',
+    base: 'my-4 !w-[164px] hover:shadow-[0_0_0_1px] hover:shadow-primary-200',
     body: 'aspect-[2/3]',
     imageContainer: '',
     image: 'aspect-[2/3]',
@@ -67,7 +67,7 @@ const cardItemStyles = tv({
   variants: {
     listViewType: {
       card: {
-        base: '!w-[164px] hover:shadow-[0_0_0_1px] hover:shadow-primary-200 sm:!w-[180px] md:!w-[200px] lg:!w-[244px] xl:!w-[264px]',
+        base: '!w-[164px] sm:!w-[180px] md:!w-[200px] lg:!w-[244px] xl:!w-[264px]',
         body: 'aspect-[2/3] w-full overflow-hidden p-0',
         imageContainer: 'w-full',
         image: 'z-0 aspect-[2/3] !min-h-[auto] !min-w-[auto] !transition-[transform,_opacity]',
@@ -75,7 +75,7 @@ const cardItemStyles = tv({
           'flex min-h-[4.875rem] max-w-[164px] flex-col items-start justify-start sm:max-w-[210px] md:max-w-[200px] lg:max-w-[244px] xl:max-w-[264px]',
       },
       detail: {
-        base: '!w-full hover:shadow-[0_0_0_1px] hover:shadow-primary-200 sm:!w-[480px]',
+        base: '!w-full sm:!w-[480px]',
         body: 'flex !h-[174px] w-full !flex-row !overflow-hidden p-0 sm:aspect-[5/3] sm:!h-[auto]',
         imageContainer: 'w-[116px] sm:w-2/5',
         image: 'z-0 !h-[174px] !min-h-[auto] !min-w-[116px] sm:aspect-[2/3] sm:!h-[auto]',
@@ -84,7 +84,7 @@ const cardItemStyles = tv({
           'absolute bottom-0 flex !w-[116px] justify-center !rounded-br-none border-t border-border bg-background/[0.6] backdrop-blur-md sm:!w-2/5',
       },
       table: {
-        base: '!w-full hover:shadow-[0_0_0_1px] hover:shadow-primary-200',
+        base: '!w-full',
         body: 'flex !h-[174px] w-full !flex-row !overflow-hidden p-0',
         imageContainer: 'w-[116px]',
         image: 'z-0 !h-[174px] !min-h-[auto] !min-w-[116px]',
@@ -92,7 +92,7 @@ const cardItemStyles = tv({
         footer: '',
       },
       coverCard: {
-        base: '!w-[280px] hover:shadow-[0_0_0_1px] hover:shadow-primary-200 sm:!w-[480px]',
+        base: '!w-[280px] sm:!w-[480px]',
         body: 'aspect-[16/9] w-full overflow-hidden p-0',
         image:
           'z-0 aspect-[16/9] !min-h-[auto] !min-w-[auto] overflow-hidden !transition-[transform,_opacity]',
@@ -100,7 +100,7 @@ const cardItemStyles = tv({
           'absolute bottom-0 flex justify-center border-t border-border bg-background/[0.6] backdrop-blur-md',
       },
       people: {
-        base: '!w-[164px] hover:shadow-[0_0_0_1px] hover:shadow-primary-200',
+        base: '!w-[164px]',
         body: 'aspect-[2/3] w-full overflow-hidden p-0',
         imageContainer: 'w-full',
         image:
@@ -152,7 +152,7 @@ const CardItem = (props: ICardItemProps) => {
     // isPlayTrailer,
     listViewType,
   } = useSoraSettings();
-  const [size, imageRef] = useMeasure<HTMLAnchorElement>();
+  const [size, imageRef] = useMeasure<HTMLDivElement>();
   const { viewportRef } = useLayout((scrollState) => scrollState);
   useEffect(() => {
     if (fetcher.data && fetcher.data.videos) {
@@ -197,34 +197,41 @@ const CardItem = (props: ICardItemProps) => {
 
   if (isCoverCard) {
     return (
-      <Card as="div" isHoverable isPressable className={base()} role="figure" ref={cardRef}>
-        <CardBody className={body()}>
-          <Link to={linkTo || '/'} ref={imageRef}>
-            {size ? (
-              <Image
-                src={backdropPath}
-                width="100%"
-                alt={titleItem}
-                title={titleItem}
-                className={image()}
-                loaderUrl="/api/image"
-                placeholder="empty"
-                loading="lazy"
-                disableSkeleton={false}
-                isZoomed={!isSliderCard}
-                decoding={inView ? 'async' : 'auto'}
-                options={{ contentType: MimeType.WEBP }}
-                responsive={[
-                  {
-                    size: {
-                      width: Math.round(size?.width),
-                      height: Math.round(size?.height),
-                    },
+      <Card
+        as={Link}
+        to={linkTo || '/'}
+        isHoverable
+        isPressable
+        className={base()}
+        role="figure"
+        // @ts-ignore
+        ref={cardRef}
+      >
+        <CardBody className={body()} ref={imageRef}>
+          {size ? (
+            <Image
+              src={backdropPath}
+              width="100%"
+              alt={titleItem}
+              title={titleItem}
+              className={image()}
+              loaderUrl="/api/image"
+              placeholder="empty"
+              loading="lazy"
+              disableSkeleton={false}
+              isZoomed={!isSliderCard}
+              decoding={inView ? 'async' : 'auto'}
+              options={{ contentType: MimeType.WEBP }}
+              responsive={[
+                {
+                  size: {
+                    width: Math.round(size?.width),
+                    height: Math.round(size?.height),
                   },
-                ]}
-              />
-            ) : null}
-          </Link>
+                },
+              ]}
+            />
+          ) : null}
         </CardBody>
         <CardFooter className={footer()}>
           <h5 className="font-semibold">{titleItem}</h5>
@@ -244,7 +251,12 @@ const CardItem = (props: ICardItemProps) => {
       ref={cardRef}
     >
       <CardBody className={body()}>
-        <Link to={linkTo || '/'} className={imageContainer()} ref={imageRef}>
+        <Link
+          className={imageContainer()}
+          to={linkTo || '/'}
+          // @ts-ignore
+          ref={imageRef}
+        >
           {size && !isTooltipVisible && inView ? (
             posterPath ? (
               <Image
@@ -506,7 +518,7 @@ const CardItem = (props: ICardItemProps) => {
         //     }
         //   }}
         // >
-        <CardFooter className={footer()}>
+        <CardFooter className={footer()} as={Link} to={linkTo || '/'}>
           <h5
             className="!line-clamp-2 w-full font-semibold"
             style={{
@@ -550,11 +562,9 @@ const CardItem = (props: ICardItemProps) => {
         !isEpisodeCard &&
         !isCreditsCard &&
         inView ? (
-        <Link to={linkTo || '/'}>
-          <CardFooter className={footer()}>
-            <h5 className="line-clamp-2 font-semibold">{titleItem}</h5>
-          </CardFooter>
-        </Link>
+        <CardFooter className={footer()} as={Link} to={linkTo || '/'}>
+          <h5 className="line-clamp-2 font-semibold">{titleItem}</h5>
+        </CardFooter>
       ) : null}
     </Card>
   );

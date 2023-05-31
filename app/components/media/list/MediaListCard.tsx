@@ -1,4 +1,3 @@
-import { Link } from '@remix-run/react';
 import { isMobile } from 'react-device-detect';
 import { FreeMode, Navigation } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -86,17 +85,15 @@ const MediaListCard = (props: IMediaListCardProps) => {
                     })}
                     key={`${item.id}-${index}-card`}
                   >
-                    <Link to={href} style={{ display: 'flex', padding: '0.5rem 0' }}>
-                      <MediaItem
-                        backdropPath={item?.backdropPath}
-                        isCoverCard={isCoverCard}
-                        isSliderCard
-                        key={item.id}
-                        linkTo={href}
-                        title={item?.name}
-                        type="card"
-                      />
-                    </Link>
+                    <MediaItem
+                      backdropPath={item?.backdropPath}
+                      isCoverCard={isCoverCard}
+                      isSliderCard
+                      key={item.id}
+                      linkTo={href}
+                      title={item?.name}
+                      type="card"
+                    />
                   </SwiperSlide>
                 );
               })}
@@ -160,33 +157,31 @@ const MediaListCard = (props: IMediaListCardProps) => {
                     cardType: item?.mediaType === 'people' ? 'peopleCard' : 'card',
                   })}
                 >
-                  <Link to={href} style={{ display: 'flex', padding: '0.5rem 0' }}>
-                    <MediaItem
-                      backdropPath={item?.backdropPath}
-                      character={item?.character}
-                      color={item?.color}
-                      episodeNumber={item?.episodeNumber}
-                      episodeTitle={item?.episodeTitle}
-                      genreIds={item?.genreIds}
-                      genresAnime={item?.genresAnime}
-                      genresMovie={genresMovie}
-                      genresTv={genresTv}
-                      id={item?.id}
-                      isSliderCard
-                      job={item?.job}
-                      key={item.id}
-                      linkTo={href}
-                      knownFor={item?.knownFor}
-                      mediaType={item?.mediaType}
-                      overview={item?.overview}
-                      posterPath={item?.posterPath}
-                      releaseDate={item?.releaseDate}
-                      title={item?.title}
-                      trailer={item?.trailer}
-                      type={itemsType === 'episode' ? itemsType : 'card'}
-                      voteAverage={item?.voteAverage}
-                    />
-                  </Link>
+                  <MediaItem
+                    backdropPath={item?.backdropPath}
+                    character={item?.character}
+                    color={item?.color}
+                    episodeNumber={item?.episodeNumber}
+                    episodeTitle={item?.episodeTitle}
+                    genreIds={item?.genreIds}
+                    genresAnime={item?.genresAnime}
+                    genresMovie={genresMovie}
+                    genresTv={genresTv}
+                    id={item?.id}
+                    isSliderCard
+                    job={item?.job}
+                    key={item.id}
+                    linkTo={href}
+                    knownFor={item?.knownFor}
+                    mediaType={item?.mediaType}
+                    overview={item?.overview}
+                    posterPath={item?.posterPath}
+                    releaseDate={item?.releaseDate}
+                    title={item?.title}
+                    trailer={item?.trailer}
+                    type={itemsType === 'episode' ? itemsType : 'card'}
+                    voteAverage={item?.voteAverage}
+                  />
                 </SwiperSlide>
               );
             })}

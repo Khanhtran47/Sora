@@ -386,9 +386,10 @@ const MediaList = (props: IMediaListProps) => {
                     <SheetTrigger asChild>
                       <Button
                         type="button"
+                        size="md"
                         radius="xl"
-                        variant={showFilter ? 'flat' : 'solid'}
                         isIconOnly
+                        className="h-10 min-w-[2.5rem]"
                       >
                         <FilterIcon />
                       </Button>
