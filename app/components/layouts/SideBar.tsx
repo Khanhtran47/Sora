@@ -1,3 +1,4 @@
+import { Button } from '@nextui-org/button';
 import { Card, CardBody, CardFooter, CardHeader } from '@nextui-org/card';
 import { Link } from '@nextui-org/link';
 import { Spinner } from '@nextui-org/spinner';
@@ -24,6 +25,7 @@ import CategoryIcon from '~/assets/icons/CategoryIcon';
 import Discover from '~/assets/icons/DiscoverIcon';
 import History from '~/assets/icons/HistoryIcon';
 import Home from '~/assets/icons/HomeIcon';
+import Menu from '~/assets/icons/MenuIcon';
 import Movie from '~/assets/icons/MovieIcon';
 import Search from '~/assets/icons/SearchIcon';
 import Settings from '~/assets/icons/SettingsIcon';
@@ -154,41 +156,49 @@ const SideBar = () => {
       })}
     >
       <div className="mb-3 ml-4 flex h-[65px] w-full flex-row items-center justify-start">
-        <div
+        <Button
           className={`${
-            sidebarMiniMode.value && !isHovered ? 'basis-[50px]' : 'basis-[65px]'
+            sidebarMiniMode.value && !isHovered ? 'basis-[50px]' : 'basis-[60px]'
           } flex shrink-0 grow-0 justify-center`}
+          isIconOnly
+          variant="light"
+          onPress={() => {
+            sidebarMiniMode.set(!sidebarMiniMode.value);
+          }}
         >
-          <Image
-            width="30px"
-            height="30px"
-            className="rounded-full"
-            loaderUrl="/api/image"
-            alt="Logo"
-            src={Logo}
-            placeholder="blur"
-            responsive={[
-              {
-                size: {
-                  width: 30,
-                  height: 30,
-                },
-              },
-            ]}
-            dprVariants={[1, 3]}
-            options={{
-              contentType: MimeType.WEBP,
-            }}
-          />
-        </div>
+          <Menu />
+        </Button>
         {sidebarMiniMode.value && !isHovered ? null : (
-          <NavLink
-            to="/"
-            arial-label="home-page"
-            className="bg-gradient-to-tr from-primary to-secondary to-50% bg-clip-text text-3xl font-bold tracking-normal text-transparent md:text-4xl"
-          >
-            SORA
-          </NavLink>
+          <div className="flex items-center gap-x-3">
+            <Image
+              width="30px"
+              height="30px"
+              className="rounded-full"
+              loaderUrl="/api/image"
+              alt="Logo"
+              src={Logo}
+              placeholder="blur"
+              responsive={[
+                {
+                  size: {
+                    width: 30,
+                    height: 30,
+                  },
+                },
+              ]}
+              dprVariants={[1, 3]}
+              options={{
+                contentType: MimeType.WEBP,
+              }}
+            />
+            <NavLink
+              to="/"
+              arial-label="home-page"
+              className="bg-gradient-to-tr from-primary to-secondary to-50% bg-clip-text text-3xl font-bold tracking-normal text-transparent md:text-4xl"
+            >
+              SORA
+            </NavLink>
+          </div>
         )}
       </div>
       <div
