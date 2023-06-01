@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Button } from '@nextui-org/button';
-import { Spinner } from '@nextui-org/spinner';
 
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 // import { Switch } from '@nextui-org/switch';
@@ -88,8 +87,8 @@ const ButtonPage = () => {
         <Settings />
       </Button>
       <p className="text-base tracking-wide md:text-lg">Loading</p>
-      <Button isDisabled>
-        <Spinner size="sm" />
+      <Button isDisabled isLoading>
+        Loading
       </Button>
       <p className="text-base tracking-wide md:text-lg">Disable Ripple Animation</p>
       <Button disableRipple>Button</Button>
