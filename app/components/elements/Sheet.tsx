@@ -1,7 +1,8 @@
 import * as React from 'react';
+import { cn } from '@nextui-org/theme';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { motion, type PanInfo } from 'framer-motion';
-import { cnBase, tv, type VariantProps } from 'tailwind-variants';
+import { tv, type VariantProps } from 'tailwind-variants';
 
 import Close from '~/assets/icons/CloseIcon';
 
@@ -14,7 +15,7 @@ const SheetOverlay = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Overlay
     ref={ref}
-    className={cnBase(
+    className={cn(
       'fixed inset-0 z-[9998] cursor-pointer bg-background/[0.6] backdrop-blur-lg duration-300 transition-all data-[state=closed]:animate-fadeOut data-[state=open]:animate-fadeIn',
       className,
     )}
@@ -147,7 +148,7 @@ const SheetContent = React.forwardRef<
       <DialogPrimitive.Portal container={container}>
         <SheetOverlay />
         <DialogPrimitive.Content
-          className={cnBase(sheetContentStyles({ side, size }), className)}
+          className={cn(sheetContentStyles({ side, size }), className)}
           {...props}
           ref={forwardedRef}
           asChild
@@ -189,16 +190,13 @@ const SheetContent = React.forwardRef<
 SheetContent.displayName = 'SheetContent';
 
 const SheetHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cnBase('flex flex-col gap-y-2 text-center sm:text-left', className)} {...props} />
+  <div className={cn('flex flex-col gap-y-2 text-center sm:text-left', className)} {...props} />
 );
 SheetHeader.displayName = 'SheetHeader';
 
 const SheetFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={cnBase(
-      'flex flex-col-reverse gap-y-2 sm:flex-row sm:justify-end sm:gap-x-2',
-      className,
-    )}
+    className={cn('flex flex-col-reverse gap-y-2 sm:flex-row sm:justify-end sm:gap-x-2', className)}
     {...props}
   />
 );
@@ -210,7 +208,7 @@ const SheetTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    className={cnBase('font-semibold text-default-foreground', className)}
+    className={cn('font-semibold text-default-foreground', className)}
     {...props}
   />
 ));
@@ -222,7 +220,7 @@ const SheetDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cnBase('text-muted-foreground text-sm', className)}
+    className={cn('text-muted-foreground text-sm', className)}
     {...props}
   />
 ));

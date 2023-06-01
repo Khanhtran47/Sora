@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { Badge } from '@nextui-org/badge';
+import { cn } from '@nextui-org/theme';
 import * as SliderPrimitive from '@radix-ui/react-slider';
 import { useHover } from '@react-aria/interactions';
-import { cnBase, tv } from 'tailwind-variants';
+import { tv } from 'tailwind-variants';
 
 const sliderStyles = tv({
   slots: {
@@ -83,7 +84,7 @@ const Slider = React.forwardRef<
     return (
       <SliderPrimitive.Root
         ref={ref}
-        className={cnBase(
+        className={cn(
           'relative flex w-full touch-none select-none items-center data-[orientation=horizontal]:h-10 data-[orientation=vertical]:h-24 data-[orientation=vertical]:w-10 data-[orientation=vertical]:flex-col',
           className,
         )}
@@ -102,7 +103,7 @@ const Slider = React.forwardRef<
                 variant="flat"
                 size="sm"
                 radius="md"
-                color={color === 'gradient' ? 'primary' : color}
+                color={color === 'gradient' ? 'default' : color}
                 isInvisible={index === 0 ? isFirstThumbInvisible : isSecondThumbInvisible}
                 disableOutline
                 placement="top-right"

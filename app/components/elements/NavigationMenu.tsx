@@ -1,6 +1,7 @@
 import { forwardRef, type ComponentPropsWithoutRef, type ElementRef } from 'react';
+import { cn } from '@nextui-org/theme';
 import * as NavigationMenuPrimitive from '@radix-ui/react-navigation-menu';
-import { cnBase, tv } from 'tailwind-variants';
+import { tv } from 'tailwind-variants';
 
 import ChevronRight from '~/assets/icons/ChevronRightIcon';
 
@@ -9,7 +10,7 @@ const NavigationMenuViewport = forwardRef<
   ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Viewport>
 >(({ className = '', ...props }, ref) => (
   <NavigationMenuPrimitive.Viewport
-    className={cnBase(
+    className={cn(
       'data-[state=open]:fadeIn data-[state=closed]:fadeOut relative h-[var(--radix-navigation-menu-viewport-height)] w-full origin-[top_center] overflow-hidden rounded-[12px] border border-border bg-default/60 shadow-lg backdrop-blur-2xl backdrop-contrast-125 backdrop-saturate-200 transition-[width,_height] duration-300 data-[orientation=horizontal]:mt-1.5 data-[orientation=vertical]:ml-[-8px] data-[state=closed]:animate-scaleOut data-[state=open]:animate-scaleIn sm:w-[var(--radix-navigation-menu-viewport-width)]',
       className,
     )}
@@ -28,13 +29,13 @@ const NavigationMenu = forwardRef<
   <NavigationMenuPrimitive.Root
     ref={ref}
     orientation={orientation}
-    className={cnBase('relative z-10 flex flex-1 items-center justify-center', className)}
+    className={cn('relative z-10 flex flex-1 items-center justify-center', className)}
     {...props}
   >
     {children}
     <div
       data-orientation={orientation}
-      className={cnBase(
+      className={cn(
         `absolute flex justify-center data-[orientation=horizontal]:left-0
       data-[orientation=horizontal]:top-full data-[orientation=vertical]:left-full`,
         viewportPositionClassName,

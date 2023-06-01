@@ -1,6 +1,6 @@
 import * as React from 'react';
+import { cn } from '@nextui-org/theme';
 import { NavLink } from '@remix-run/react';
-import { cnBase } from 'tailwind-variants';
 
 import ChevronRight from '~/assets/icons/ChevronRightIcon';
 
@@ -57,7 +57,7 @@ export const Breadcrumb = React.forwardRef<HTMLElement, BreadcrumbProps>(
 
     return (
       <nav
-        className={cnBase('relative break-words', className)}
+        className={cn('relative break-words', className)}
         aria-label="breadcrumb"
         {...props}
         ref={forwardedRef}
@@ -83,11 +83,11 @@ export const BreadcrumbItem = React.forwardRef<HTMLLIElement, BreadcrumbItemProp
     { children, className, classNames, isLastChild, separator, addSeparator, to, ...props },
     forwardedRef,
   ) => (
-    <li className={cnBase('inline-flex items-center', className)} {...props} ref={forwardedRef}>
+    <li className={cn('inline-flex items-center', className)} {...props} ref={forwardedRef}>
       <NavLink
         to={to}
         className={({ isActive }) =>
-          cnBase(
+          cn(
             `text-sm font-medium ${
               isActive
                 ? 'pointer-events-none aria-[current]:opacity-60'
@@ -114,7 +114,7 @@ export const BreadcrumbSeparator = React.forwardRef<HTMLSpanElement, BreadcrumbS
   ({ className, ...props }, forwardedRef) => {
     return (
       <span
-        className={cnBase('mx-2 opacity-50', className)}
+        className={cn('mx-2 opacity-50', className)}
         role="presentation"
         {...props}
         ref={forwardedRef}

@@ -1,6 +1,7 @@
 import * as React from 'react';
+import { cn } from '@nextui-org/theme';
 import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area';
-import { cnBase, tv } from 'tailwind-variants';
+import { tv } from 'tailwind-variants';
 
 const ScrollArea = React.forwardRef<
   React.ElementRef<typeof ScrollAreaPrimitive.Root>,
@@ -8,7 +9,7 @@ const ScrollArea = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <ScrollAreaPrimitive.Root
     ref={ref}
-    className={cnBase('relative overflow-hidden', className)}
+    className={cn('relative overflow-hidden', className)}
     {...props}
   >
     {children}
@@ -21,7 +22,7 @@ const ScrollViewport = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.ScrollAreaViewport>
 >(({ className, children, ...props }, ref) => (
   <ScrollAreaPrimitive.ScrollAreaViewport
-    className={cnBase('h-full w-full rounded-[inherit]', className)}
+    className={cn('h-full w-full rounded-[inherit]', className)}
     ref={ref}
     {...props}
   >

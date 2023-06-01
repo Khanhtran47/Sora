@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
+import { cn } from '@nextui-org/theme';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
-import { cnBase } from 'tailwind-variants';
 
 const Popover = PopoverPrimitive.Root;
 
@@ -17,7 +17,7 @@ const PopoverContent = forwardRef<
       ref={ref}
       align={align}
       sideOffset={sideOffset}
-      className={cnBase(
+      className={cn(
         'z-[9999] min-h-[50px] min-w-[100px] overflow-hidden rounded-xl border border-border bg-content1 p-1 text-default-foreground shadow-lg shadow-default/10 outline-none animate-in data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
         className,
       )}
