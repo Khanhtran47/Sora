@@ -34,7 +34,6 @@ import { getSelectorsByUserAgent } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
 import { useChangeLanguage } from 'remix-i18next';
 import Image, { MimeType } from 'remix-image';
-import remixImageStyles from 'remix-image/remix-image.css';
 import { getClientIPAddress, getClientLocales, useHydrated } from 'remix-utils';
 import { toast } from 'sonner';
 // @ts-ignore
@@ -124,11 +123,6 @@ export const links: LinksFunction = () => [
   {
     rel: 'preload',
     as: 'style',
-    href: remixImageStyles,
-  },
-  {
-    rel: 'preload',
-    as: 'style',
     href: FontStyles100,
   },
   {
@@ -206,10 +200,6 @@ export const links: LinksFunction = () => [
   {
     rel: 'stylesheet',
     href: photoSwipeStyles,
-  },
-  {
-    rel: 'stylesheet',
-    href: remixImageStyles,
   },
   {
     rel: 'stylesheet',

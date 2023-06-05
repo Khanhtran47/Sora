@@ -234,12 +234,13 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                 style={{ originX: 0 }}
               >
                 <Image
-                  removeWrapper
                   src={TMDB.logoUrl(logo.file_path, isMd ? 'w185' : 'w300')}
                   alt={titleItem}
                   title={titleItem}
                   radius="none"
-                  className="w-logo object-contain nextui-sm:w-logo-sm"
+                  classNames={{
+                    img: 'w-logo object-contain nextui-sm:w-logo-sm',
+                  }}
                   loading="eager"
                   disableSkeleton={false}
                   style={{

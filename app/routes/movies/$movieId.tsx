@@ -4,6 +4,7 @@ import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { Outlet, useCatch, useLoaderData, useLocation, type RouteMatch } from '@remix-run/react';
 import { motion, useTransform } from 'framer-motion';
 import Vibrant from 'node-vibrant';
+import { useHydrated } from 'remix-utils';
 import i18next from '~/i18n/i18next.server';
 
 import { authenticate } from '~/services/supabase';
@@ -169,6 +170,7 @@ export const handle = {
 const MovieDetail = () => {
   const { detail, imdbRating } = useLoaderData<typeof loader>();
   const { state } = useLocation();
+  const isHydrated = useHydrated();
   const { backgroundColor } = useColorDarkenLighten(detail?.color);
   const { sidebarBoxedMode } = useSoraSettings();
   const { viewportRef, scrollY } = useLayout((scrollState) => scrollState);
@@ -221,13 +223,16 @@ const MovieDetail = () => {
           <motion.div
             className="sticky top-[64px] z-[1000] flex w-full justify-center transition-[padding] duration-100 ease-in-out"
             style={{
-              backgroundColor,
+              backgroundColor: isHydrated ? backgroundColor : 'transparent',
               paddingTop,
               paddingBottom,
             }}
             ref={tabLinkRef}
           >
-            <div className={backgroundStyles({ tablink: true })} style={{ backgroundColor }} />
+            <div
+              className={backgroundStyles({ tablink: true })}
+              style={{ backgroundColor: isHydrated ? backgroundColor : 'transparent' }}
+            />
             <TabLink pages={movieTvDetailsPages} linkTo={`/movies/${detail?.id}`} />
           </motion.div>
           <Outlet />

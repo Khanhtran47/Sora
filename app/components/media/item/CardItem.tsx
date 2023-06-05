@@ -69,7 +69,7 @@ const cardItemStyles = tv({
       card: {
         base: '!w-[164px] sm:!w-[180px] md:!w-[200px] lg:!w-[244px] xl:!w-[264px]',
         body: 'aspect-[2/3] w-full overflow-hidden p-0',
-        imageContainer: 'w-full',
+        imageContainer: 'h-full w-full',
         image: 'z-0 aspect-[2/3] !min-h-[auto] !min-w-[auto] !transition-[transform,_opacity]',
         footer:
           'flex min-h-[4.875rem] max-w-[164px] flex-col items-start justify-start sm:max-w-[210px] md:max-w-[200px] lg:max-w-[244px] xl:max-w-[264px]',
@@ -102,7 +102,7 @@ const cardItemStyles = tv({
       people: {
         base: '!w-[164px]',
         body: 'aspect-[2/3] w-full overflow-hidden p-0',
-        imageContainer: 'w-full',
+        imageContainer: 'h-full w-full',
         image:
           'z-0 aspect-[2/3] !min-h-[auto] !min-w-[auto] overflow-hidden !transition-[transform,_opacity]',
         footer: 'flex min-h-[5.25rem] max-w-[164px] flex-col items-start justify-start',
@@ -214,7 +214,9 @@ const CardItem = (props: ICardItemProps) => {
               width="100%"
               alt={titleItem}
               title={titleItem}
-              className={image()}
+              classNames={{
+                img: image(),
+              }}
               loaderUrl="/api/image"
               placeholder="empty"
               loading="lazy"
@@ -265,7 +267,9 @@ const CardItem = (props: ICardItemProps) => {
                 alt={titleItem}
                 title={titleItem}
                 loading="lazy"
-                className={image()}
+                classNames={{
+                  img: image(),
+                }}
                 decoding={inView ? 'async' : 'auto'}
                 disableSkeleton={false}
                 isZoomed={

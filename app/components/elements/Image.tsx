@@ -7,26 +7,20 @@ type UseImageProps = NextuiImageProps & RemixImageProps;
 
 export interface ImageProps extends Omit<UseImageProps, 'ref' | 'isBlurred' | 'as'> {}
 
-const Image = forwardRef<React.ElementRef<typeof NextuiImage>, ImageProps>(
-  ({ style, ...props }, ref) => {
-    const [isLoading, setIsLoading] = useState(true);
+const Image = forwardRef<React.ElementRef<typeof NextuiImage>, ImageProps>(({ ...props }, ref) => {
+  const [isLoading, setIsLoading] = useState(true);
 
-    return (
-      <NextuiImage
-        ref={ref}
-        as={RemixImage}
-        isLoading={isLoading}
-        data-loaded={!isLoading}
-        onLoadingComplete={() => setIsLoading(false)}
-        style={{
-          transitionProperty: 'transform, opacity, filter !important',
-          ...style,
-        }}
-        {...props}
-      />
-    );
-  },
-);
+  return (
+    <NextuiImage
+      ref={ref}
+      as={RemixImage}
+      isLoading={isLoading}
+      data-loaded={!isLoading}
+      onLoadingComplete={() => setIsLoading(false)}
+      {...props}
+    />
+  );
+});
 Image.displayName = NextuiImage.displayName;
 
 export default Image;

@@ -123,7 +123,9 @@ const MoviePhotosPage = () => {
                       onClick={open}
                       alt={`Backdrop of ${movieData?.detail?.title} image size ${image.width}x${image.height}`}
                       radius="xl"
-                      className="h-auto min-w-[120px] cursor-pointer object-cover 2xs:min-w-[185px]"
+                      classNames={{
+                        img: 'h-auto min-w-[120px] cursor-pointer object-cover 2xs:min-w-[185px]',
+                      }}
                       title={movieData?.detail?.title}
                       loaderUrl="/api/image"
                       placeholder="empty"
@@ -165,7 +167,9 @@ const MoviePhotosPage = () => {
                       onClick={open}
                       alt={`Logo of ${movieData?.detail?.title} image size ${image.width}x${image.height}`}
                       radius="xl"
-                      className="h-auto min-w-[120px] cursor-pointer object-cover 2xs:min-w-[185px]"
+                      classNames={{
+                        img: 'h-auto min-w-[120px] cursor-pointer object-cover 2xs:min-w-[185px]',
+                      }}
                       title={movieData?.detail?.title}
                       loaderUrl="/api/image"
                       placeholder="empty"
@@ -207,7 +211,9 @@ const MoviePhotosPage = () => {
                       onClick={open}
                       alt={`Poster of ${movieData?.detail?.title} image size ${image.width}x${image.height}`}
                       radius="xl"
-                      className="h-auto min-w-[120px] cursor-pointer object-cover 2xs:min-w-[185px]"
+                      classNames={{
+                        img: 'h-auto min-w-[120px] cursor-pointer object-cover 2xs:min-w-[185px]',
+                      }}
                       loading="lazy"
                       title={movieData?.detail?.title}
                       loaderUrl="/api/image"

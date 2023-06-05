@@ -167,43 +167,44 @@ const TvOverview = () => {
                     to={`/tv-shows/${detail.id}/season/${season.season_number}/`}
                     isHoverable
                     isPressable
-                    className="!max-h-[195px] hover:shadow-[0_0_0_1px] hover:shadow-primary-200"
+                    className="!max-h-[193px] hover:shadow-[0_0_0_1px] hover:shadow-primary-200"
                     role="figure"
                   >
-                    <CardBody className="flex flex-row flex-nowrap justify-start overflow-hidden p-0">
-                      <div className="w-[130px]">
-                        {season.poster_path ? (
-                          <Image
-                            src={TMDB.posterUrl(season?.poster_path, 'w154')}
-                            width="130px"
-                            height="100%"
-                            className="m-0 aspect-[2/3] min-h-[195px] min-w-[130px] overflow-hidden"
-                            alt={season.name}
-                            title={season.name}
-                            loaderUrl="/api/image"
-                            placeholder="empty"
-                            options={{
-                              contentType: MimeType.WEBP,
-                            }}
-                            responsive={[
-                              {
-                                size: {
-                                  width: 130,
-                                  height: 195,
-                                },
+                    <CardBody className="flex flex-row flex-nowrap justify-start p-0">
+                      {season.poster_path ? (
+                        <Image
+                          src={TMDB.posterUrl(season?.poster_path, 'w154')}
+                          width="130px"
+                          height="100%"
+                          classNames={{
+                            base: 'z-0 aspect-[2/3] min-h-[195px] min-w-[130px]',
+                            img: 'm-0',
+                          }}
+                          alt={season.name}
+                          title={season.name}
+                          loaderUrl="/api/image"
+                          placeholder="empty"
+                          options={{
+                            contentType: MimeType.WEBP,
+                          }}
+                          responsive={[
+                            {
+                              size: {
+                                width: 130,
+                                height: 195,
                               },
-                            ]}
-                          />
-                        ) : (
-                          <Avatar
-                            icon={<PhotoIcon width={48} height={48} />}
-                            radius="xl"
-                            classNames={{
-                              base: 'z-0 w-full h-full aspect-[2/3]',
-                            }}
-                          />
-                        )}
-                      </div>
+                            },
+                          ]}
+                        />
+                      ) : (
+                        <Avatar
+                          icon={<PhotoIcon width={48} height={48} />}
+                          radius="xl"
+                          classNames={{
+                            base: 'z-0 aspect-[2/3] min-h-[195px] min-w-[130px]',
+                          }}
+                        />
+                      )}
                       <div className="flex flex-col justify-start p-5">
                         <h4>{season.name}</h4>
                         <h5>

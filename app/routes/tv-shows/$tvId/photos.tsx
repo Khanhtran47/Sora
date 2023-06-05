@@ -130,7 +130,9 @@ const TvPhotosPage = () => {
                       onClick={open}
                       alt={`Backdrop of ${tvData?.detail?.name} image size ${image.width}x${image.height}`}
                       radius="xl"
-                      className="h-auto min-w-[120px] cursor-pointer object-cover 2xs:min-w-[185px]"
+                      classNames={{
+                        img: 'h-auto min-w-[120px] cursor-pointer object-cover 2xs:min-w-[185px]',
+                      }}
                       title={tvData?.detail?.name}
                       loaderUrl="/api/image"
                       placeholder="empty"
@@ -172,7 +174,9 @@ const TvPhotosPage = () => {
                       onClick={open}
                       alt={`Logo of ${tvData?.detail?.name} image size ${image.width}x${image.height}`}
                       radius="xl"
-                      className="h-auto min-w-[120px] cursor-pointer object-cover 2xs:min-w-[185px]"
+                      classNames={{
+                        img: 'h-auto min-w-[120px] cursor-pointer object-cover 2xs:min-w-[185px]',
+                      }}
                       title={tvData?.detail?.name}
                       loaderUrl="/api/image"
                       placeholder="empty"
@@ -214,7 +218,9 @@ const TvPhotosPage = () => {
                       onClick={open}
                       alt={`Poster of ${tvData?.detail?.name} image size ${image.width}x${image.height}`}
                       radius="xl"
-                      className="h-auto min-w-[120px] cursor-pointer object-cover 2xs:min-w-[185px]"
+                      classNames={{
+                        img: 'h-auto min-w-[120px] cursor-pointer object-cover 2xs:min-w-[185px]',
+                      }}
                       title={tvData?.detail?.name}
                       loaderUrl="/api/image"
                       placeholder="empty"

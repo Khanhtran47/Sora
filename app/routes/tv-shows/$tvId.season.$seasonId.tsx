@@ -7,6 +7,7 @@ import { Outlet, useCatch, useLoaderData, useParams, type RouteMatch } from '@re
 import { motion, useTransform } from 'framer-motion';
 import Vibrant from 'node-vibrant';
 import { MimeType } from 'remix-image';
+import { useHydrated } from 'remix-utils';
 import i18next from '~/i18n/i18next.server';
 
 import getProviderList from '~/services/provider.server';
@@ -169,6 +170,7 @@ export const handle = {
 const TvSeasonDetail = () => {
   const { detail, seasonDetail, color } = useLoaderData<typeof loader>();
   const { tvId, seasonId } = useParams();
+  const isHydrated = useHydrated();
   const [size, ref] = useMeasure<HTMLDivElement>();
   const [imageSize, imageRef] = useMeasure<HTMLDivElement>();
   const { backgroundColor } = useColorDarkenLighten(color);
@@ -219,41 +221,36 @@ const TvSeasonDetail = () => {
           <div className="grid w-full max-w-[1920px] grid-cols-[1fr_2fr] grid-rows-[1fr_auto_auto] items-stretch justify-center gap-x-4 gap-y-6 px-3 pb-8 pt-5 grid-areas-small sm:grid-rows-[auto_1fr_auto] sm:px-3.5 sm:grid-areas-wide xl:px-4 2xl:px-5">
             <div className="flex flex-col items-center justify-center grid-in-image" ref={imageRef}>
               {seasonDetail?.poster_path ? (
-                <div className="w-full sm:w-3/4 xl:w-1/2">
-                  <Image
-                    src={TMDB.posterUrl(seasonDetail?.poster_path)}
-                    alt={seasonDetail?.name}
-                    title={seasonDetail?.name}
-                    className="aspect-[2/3] !min-h-[auto] !min-w-[auto] shadow-xl shadow-default"
-                    loaderUrl="/api/image"
-                    placeholder="empty"
-                    responsive={[
-                      {
-                        size: {
-                          width: Math.round(
-                            (imageSize?.width || 0) *
-                              (!isXl && !isSm ? 0.5 : isXl && !isSm ? 0.75 : isXl && isSm ? 1 : 1),
-                          ),
-                          height: Math.round(
-                            ((imageSize?.width || 0) *
-                              3 *
-                              (!isXl && !isSm
-                                ? 0.5
-                                : isXl && !isSm
-                                ? 0.75
-                                : isXl && isSm
-                                ? 1
-                                : 1)) /
-                              2,
-                          ),
-                        },
+                <Image
+                  src={TMDB.posterUrl(seasonDetail?.poster_path)}
+                  alt={seasonDetail?.name}
+                  title={seasonDetail?.name}
+                  classNames={{
+                    base: 'w-full sm:w-3/4 xl:w-1/2',
+                    img: 'aspect-[2/3] !min-h-[auto] !min-w-[auto] shadow-xl shadow-default',
+                  }}
+                  loaderUrl="/api/image"
+                  placeholder="empty"
+                  responsive={[
+                    {
+                      size: {
+                        width: Math.round(
+                          (imageSize?.width || 0) *
+                            (!isXl && !isSm ? 0.5 : isXl && !isSm ? 0.75 : isXl && isSm ? 1 : 1),
+                        ),
+                        height: Math.round(
+                          ((imageSize?.width || 0) *
+                            3 *
+                            (!isXl && !isSm ? 0.5 : isXl && !isSm ? 0.75 : isXl && isSm ? 1 : 1)) /
+                            2,
+                        ),
                       },
-                    ]}
-                    options={{
-                      contentType: MimeType.WEBP,
-                    }}
-                  />
-                </div>
+                    },
+                  ]}
+                  options={{
+                    contentType: MimeType.WEBP,
+                  }}
+                />
               ) : (
                 <div className="flex w-full items-center justify-center">
                   <Avatar
@@ -284,7 +281,7 @@ const TvSeasonDetail = () => {
         <CardBody
           style={{
             // @ts-ignore
-            '--colors-movie-brand': backgroundColor,
+            '--colors-movie-brand': isHydrated ? backgroundColor : 'transparent',
           }}
           className="absolute bottom-0 to-transparent p-0 after:absolute after:bottom-0 after:h-full after:w-full after:bg-gradient-to-t after:from-movie-brand-color after:opacity-70 after:content-['']"
         >
@@ -295,9 +292,11 @@ const TvSeasonDetail = () => {
                 : BackgroundDefault
             }
             radius="none"
-            className={`left-0 top-0 z-0 m-0 h-auto w-full object-cover opacity-30 ${
-              size ? 'visible' : 'invisible'
-            }'}`}
+            classNames={{
+              img: `left-0 top-0 z-0 m-0 h-auto w-full object-cover opacity-30 ${
+                size ? 'visible' : 'invisible'
+              }'}`,
+            }}
             title={seasonDetail?.name}
             alt={seasonDetail?.name}
             loaderUrl="/api/image"
@@ -321,13 +320,16 @@ const TvSeasonDetail = () => {
         <motion.div
           className="sticky top-[64px] z-[1000] flex w-full justify-center transition-[padding] duration-100 ease-in-out"
           style={{
-            backgroundColor,
+            backgroundColor: isHydrated ? backgroundColor : 'transparent',
             paddingTop,
             paddingBottom,
           }}
           ref={tabLinkRef}
         >
-          <div className={backgroundStyles({ tablink: true })} style={{ backgroundColor }} />
+          <div
+            className={backgroundStyles({ tablink: true })}
+            style={{ backgroundColor: isHydrated ? backgroundColor : 'transparent' }}
+          />
           <TabLink pages={tvSeasonDetailPages} linkTo={`/tv-shows/${tvId}/season/${seasonId}`} />
         </motion.div>
         <Outlet />

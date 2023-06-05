@@ -9,6 +9,7 @@ import { useMeasure, useMediaQuery } from '@react-hookz/web';
 import { useFetcher, useLocation, useNavigate } from '@remix-run/react';
 import { motion, useTransform } from 'framer-motion';
 import { MimeType } from 'remix-image';
+import { useHydrated } from 'remix-utils';
 // import { useTranslation } from 'react-i18next';
 import { tv } from 'tailwind-variants';
 import tinycolor from 'tinycolor2';
@@ -80,6 +81,7 @@ export const MediaDetail = (props: IMediaDetail) => {
   const [imageSize, imageRef] = useMeasure<HTMLDivElement>();
   const navigate = useNavigate();
   const location = useLocation();
+  const isHydrated = useHydrated();
   const fetcher = useFetcher();
   const { backgroundColor } = useColorDarkenLighten(color);
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
@@ -149,7 +151,7 @@ export const MediaDetail = (props: IMediaDetail) => {
         style={{
           height: `calc(${size?.height}px)`,
           // @ts-ignore
-          '--colors-movie-brand': backgroundColor,
+          '--colors-movie-brand': isHydrated ? backgroundColor : 'transparent',
         }}
         classNames={{
           base: 'flex flex-col w-full !bg-transparent bg-gradient-to-b !from-transparent from-[80px] !to-movie-brand-color border-0 to-[80px] sm:from-[200px] sm:to-[200px]',
@@ -163,43 +165,38 @@ export const MediaDetail = (props: IMediaDetail) => {
           <div className="grid w-full max-w-[1920px] grid-cols-[1fr_2fr] grid-rows-[1fr_auto_auto] items-stretch justify-center gap-x-4 gap-y-6 px-3 pt-5 grid-areas-small sm:grid-rows-[auto_1fr_auto] sm:px-3.5 sm:grid-areas-wide xl:px-4 2xl:px-5">
             <div className="flex flex-col items-center justify-center grid-in-image" ref={imageRef}>
               {posterPath ? (
-                <div className="w-full sm:w-3/4 xl:w-1/2">
-                  <Image
-                    src={posterPath}
-                    alt={title}
-                    radius="xl"
-                    shadow="xl"
-                    className="aspect-[2/3] !min-h-[auto] !min-w-[auto]"
-                    disableSkeleton={false}
-                    loaderUrl="/api/image"
-                    placeholder="empty"
-                    responsive={[
-                      {
-                        size: {
-                          width: Math.round(
-                            (imageSize?.width || 0) *
-                              (!isXl && !isSm ? 0.5 : isXl && !isSm ? 0.75 : isXl && isSm ? 1 : 1),
-                          ),
-                          height: Math.round(
-                            ((imageSize?.width || 0) *
-                              3 *
-                              (!isXl && !isSm
-                                ? 0.5
-                                : isXl && !isSm
-                                ? 0.75
-                                : isXl && isSm
-                                ? 1
-                                : 1)) /
-                              2,
-                          ),
-                        },
+                <Image
+                  src={posterPath}
+                  alt={title}
+                  radius="xl"
+                  shadow="xl"
+                  classNames={{
+                    base: 'w-full sm:w-3/4 xl:w-1/2',
+                    img: 'aspect-[2/3] !min-h-[auto] !min-w-[auto]',
+                  }}
+                  disableSkeleton={false}
+                  loaderUrl="/api/image"
+                  placeholder="empty"
+                  responsive={[
+                    {
+                      size: {
+                        width: Math.round(
+                          (imageSize?.width || 0) *
+                            (!isXl && !isSm ? 0.5 : isXl && !isSm ? 0.75 : isXl && isSm ? 1 : 1),
+                        ),
+                        height: Math.round(
+                          ((imageSize?.width || 0) *
+                            3 *
+                            (!isXl && !isSm ? 0.5 : isXl && !isSm ? 0.75 : isXl && isSm ? 1 : 1)) /
+                            2,
+                        ),
                       },
-                    ]}
-                    options={{
-                      contentType: MimeType.WEBP,
-                    }}
-                  />
-                </div>
+                    },
+                  ]}
+                  options={{
+                    contentType: MimeType.WEBP,
+                  }}
+                />
               ) : (
                 <div className="flex w-full items-center justify-center">
                   <Avatar
@@ -385,6 +382,7 @@ export const AnimeDetail = (props: IAnimeDetail) => {
   const navigate = useNavigate();
   const location = useLocation();
   const fetcher = useFetcher();
+  const isHydrated = useHydrated();
   const [size, ref] = useMeasure<HTMLDivElement>();
   const [imageSize, imageRef] = useMeasure<HTMLDivElement>();
   const { backgroundColor } = useColorDarkenLighten(color);
@@ -420,7 +418,7 @@ export const AnimeDetail = (props: IAnimeDetail) => {
         style={{
           height: `calc(${size?.height}px)`,
           // @ts-ignore
-          '--colors-movie-brand': backgroundColor,
+          '--colors-movie-brand': isHydrated ? backgroundColor : 'transparent',
         }}
         classNames={{
           base: 'flex flex-col w-full !bg-transparent bg-gradient-to-b !from-transparent from-[80px] !to-movie-brand-color border-0 to-[80px] sm:from-[200px] sm:to-[200px]',
@@ -431,43 +429,38 @@ export const AnimeDetail = (props: IAnimeDetail) => {
           <div className="grid w-full max-w-[1920px] grid-cols-[1fr_2fr] grid-rows-[1fr_auto_auto] items-stretch justify-center gap-x-4 gap-y-6 px-3 pt-5 grid-areas-small sm:grid-rows-[auto_1fr_auto] sm:px-3.5 sm:grid-areas-wide xl:px-4 2xl:px-5">
             <div className="flex flex-col items-center justify-center grid-in-image" ref={imageRef}>
               {image ? (
-                <div className="w-full sm:w-3/4 xl:w-1/2">
-                  <Image
-                    src={image}
-                    title={title?.userPreferred || title?.english || title?.romaji || title?.native}
-                    alt={title?.userPreferred || title?.english || title?.romaji || title?.native}
-                    radius="xl"
-                    className="aspect-[2/3] !min-h-[auto] !min-w-[auto]"
-                    disableSkeleton={false}
-                    loaderUrl="/api/image"
-                    placeholder="empty"
-                    responsive={[
-                      {
-                        size: {
-                          width: Math.round(
-                            (imageSize?.width || 0) *
-                              (!isXl && !isSm ? 0.5 : isXl && !isSm ? 0.75 : isXl && isSm ? 1 : 1),
-                          ),
-                          height: Math.round(
-                            ((imageSize?.width || 0) *
-                              3 *
-                              (!isXl && !isSm
-                                ? 0.5
-                                : isXl && !isSm
-                                ? 0.75
-                                : isXl && isSm
-                                ? 1
-                                : 1)) /
-                              2,
-                          ),
-                        },
+                <Image
+                  src={image}
+                  title={title?.userPreferred || title?.english || title?.romaji || title?.native}
+                  alt={title?.userPreferred || title?.english || title?.romaji || title?.native}
+                  radius="xl"
+                  classNames={{
+                    base: 'w-full sm:w-3/4 xl:w-1/2',
+                    img: 'aspect-[2/3] !min-h-[auto] !min-w-[auto]',
+                  }}
+                  disableSkeleton={false}
+                  loaderUrl="/api/image"
+                  placeholder="empty"
+                  responsive={[
+                    {
+                      size: {
+                        width: Math.round(
+                          (imageSize?.width || 0) *
+                            (!isXl && !isSm ? 0.5 : isXl && !isSm ? 0.75 : isXl && isSm ? 1 : 1),
+                        ),
+                        height: Math.round(
+                          ((imageSize?.width || 0) *
+                            3 *
+                            (!isXl && !isSm ? 0.5 : isXl && !isSm ? 0.75 : isXl && isSm ? 1 : 1)) /
+                            2,
+                        ),
                       },
-                    ]}
-                    options={{
-                      contentType: MimeType.WEBP,
-                    }}
-                  />
-                </div>
+                    },
+                  ]}
+                  options={{
+                    contentType: MimeType.WEBP,
+                  }}
+                />
               ) : (
                 <div className="flex w-full items-center justify-center">
                   <Avatar
@@ -618,6 +611,7 @@ export const AnimeDetail = (props: IAnimeDetail) => {
 export const MediaBackgroundImage = (props: IMediaBackground) => {
   const { backdropPath, backgroundColor } = props;
   const [size, backgroundRef] = useMeasure<HTMLDivElement>();
+  const isHydrated = useHydrated();
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const { sidebarMiniMode, sidebarBoxedMode } = useSoraSettings();
   const { scrollY } = useLayout((scrollState) => scrollState);
@@ -658,9 +652,11 @@ export const MediaBackgroundImage = (props: IMediaBackground) => {
           right: 0,
           width: '100%',
           height,
-          backgroundImage: `linear-gradient(to top, ${backgroundColor}, ${tinycolor(
-            backgroundColor,
-          ).setAlpha(0)})`,
+          backgroundImage: isHydrated
+            ? `linear-gradient(to top, ${backgroundColor}, ${tinycolor(backgroundColor).setAlpha(
+                0,
+              )})`
+            : 'none',
         }}
       />
     </div>

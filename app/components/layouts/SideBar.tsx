@@ -173,11 +173,11 @@ const SideBar = () => {
             <Image
               width="30px"
               height="30px"
-              className="rounded-full"
+              radius="full"
               loaderUrl="/api/image"
               alt="Logo"
               src={Logo}
-              placeholder="blur"
+              placeholder="empty"
               responsive={[
                 {
                   size: {

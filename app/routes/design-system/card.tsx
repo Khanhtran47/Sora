@@ -82,7 +82,9 @@ const CardPage = () => {
         </CardHeader>
         <Image
           alt="Card background"
-          className="h-[440px] w-full object-cover"
+          classNames={{
+            img: 'h-[440px] w-full object-cover',
+          }}
           height={440}
           src={'https://storiesv2.nextui.org/static/media/apple-event.64d9fae8.jpeg'}
           width={330}
@@ -102,7 +104,9 @@ const CardPage = () => {
         </CardHeader>
         <Image
           alt="Card background"
-          className="h-[440px] w-full object-contain pt-10"
+          classNames={{
+            img: 'h-[440px] w-full object-contain pt-10',
+          }}
           height={440}
           src={'https://storiesv2.nextui.org/static/media/homepod.1229711c.jpeg'}
           width={300}

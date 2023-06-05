@@ -152,6 +152,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                 type="button"
                 onPress={() => handleSelectEpisode(index)}
                 className="mb-2 mr-2 w-10 p-0"
+                isIconOnly
               >
                 {index + 1 + (currentPage - 1) * 50}
               </Button>
@@ -179,7 +180,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                           alt={episode?.name || ''}
                           title={episode?.name || ''}
                           classNames={{
-                            base: 'm-0 min-w-[227px] max-h-[125px] overflow-hidden !transition-[transform,_opacity]',
+                            base: 'm-0 min-w-[227px] max-h-[125px] overflow-hidden',
                           }}
                           loaderUrl="/api/image"
                           placeholder="empty"
@@ -215,7 +216,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                           isZoomed
                           disableSkeleton={false}
                           classNames={{
-                            base: 'm-0 min-w-[227px] max-h-[125px] overflow-hidden !transition-[transform,_opacity]',
+                            base: 'm-0 min-w-[227px] max-h-[125px] overflow-hidden',
                           }}
                           loaderUrl="/api/image"
                           placeholder="empty"
@@ -279,7 +280,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
       {maxPage > 1 ? (
         <div className="flex flex-row justify-center">
           <Pagination
-            showControls={!isSm}
+            // showControls={!isSm}
             total={maxPage}
             initialPage={currentPage}
             // shadow

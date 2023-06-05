@@ -124,7 +124,9 @@ const PhotosPage = () => {
                   onClick={open}
                   alt={`Photo of ${tvData?.detail?.name} image size ${image.width}x${image.height}`}
                   radius="xl"
-                  className="h-auto min-w-[120px] cursor-pointer object-cover 2xs:min-w-[185px]"
+                  classNames={{
+                    img: 'h-auto min-w-[120px] cursor-pointer object-cover 2xs:min-w-[185px]',
+                  }}
                   title={tvData?.detail?.name}
                   loaderUrl="/api/image"
                   placeholder="empty"

@@ -160,7 +160,6 @@ const AnimeOverview = () => {
                           height="100%"
                           alt={character?.name?.full}
                           title={character?.name?.full}
-                          className="min-h-[80px] min-w-[60px] object-cover"
                           loaderUrl="/api/image"
                           placeholder="empty"
                           options={{
@@ -203,10 +202,6 @@ const AnimeOverview = () => {
                           height="100%"
                           alt={character.voiceActors[0].name?.full}
                           title={character.voiceActors[0].name?.full}
-                          // css={{
-                          //   minWidth: '60px !important',
-                          //   minHeight: '80px !important',
-                          // }}
                           loaderUrl="/api/image"
                           placeholder="empty"
                           options={{

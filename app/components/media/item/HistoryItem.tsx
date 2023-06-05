@@ -33,7 +33,9 @@ const HistoryItem = ({ item }: IHistoryItem) => {
             src={item?.poster || notFound}
             alt={item?.title}
             title={item?.title}
-            className="z-0 m-0 min-h-[171px] min-w-[304px] overflow-hidden"
+            classNames={{
+              base: 'z-0 m-0 min-h-[171px] min-w-[304px] overflow-hidden',
+            }}
             placeholder="empty"
             loading="lazy"
             loaderUrl="/api/image"

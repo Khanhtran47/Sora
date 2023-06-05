@@ -62,31 +62,32 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
   return (
     <>
       {profilePath ? (
-        <div className="flex w-full justify-center">
-          <Image
-            ref={imageRef}
-            src={profilePath}
-            width="100%"
-            height="auto"
-            alt={detail?.name}
-            loading="lazy"
-            title={detail?.name}
-            className="aspect-[2/3] min-h-[auto] w-1/2"
-            loaderUrl="/api/image"
-            placeholder="empty"
-            responsive={[
-              {
-                size: {
-                  width: Math.round(size?.width || 0),
-                  height: Math.round(size?.height || 0),
-                },
+        <Image
+          ref={imageRef}
+          src={profilePath}
+          width="100%"
+          height="auto"
+          alt={detail?.name}
+          loading="lazy"
+          title={detail?.name}
+          classNames={{
+            base: 'flex w-full justify-center w-1/2 m-auto',
+            img: 'aspect-[2/3] min-h-[auto]',
+          }}
+          loaderUrl="/api/image"
+          placeholder="empty"
+          responsive={[
+            {
+              size: {
+                width: Math.round(size?.width || 0),
+                height: Math.round(size?.height || 0),
               },
-            ]}
-            options={{
-              contentType: MimeType.WEBP,
-            }}
-          />
-        </div>
+            },
+          ]}
+          options={{
+            contentType: MimeType.WEBP,
+          }}
+        />
       ) : (
         <div className="flex w-full items-center justify-center">
           <Avatar

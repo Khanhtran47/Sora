@@ -96,7 +96,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
           <div className="pointer-events-none h-full w-full bg-background/[0.2]" />
         ) : null}
       </motion.div>
-      {<ControlNavigation />}
+      <ControlNavigation />
       <div className="flex flex-row items-center justify-end gap-x-2">
         {isShowListViewChangeButton ? (
           <motion.div

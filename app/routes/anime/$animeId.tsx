@@ -3,6 +3,7 @@ import { useIntersectionObserver } from '@react-hookz/web';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { Outlet, useCatch, useLoaderData, useLocation, type RouteMatch } from '@remix-run/react';
 import { motion, useTransform } from 'framer-motion';
+import { useHydrated } from 'remix-utils';
 
 import { getAnimeInfo } from '~/services/consumet/anilist/anilist.server';
 import getProviderList from '~/services/provider.server';
@@ -140,6 +141,7 @@ export const handle = {
 const AnimeDetailPage = () => {
   const { detail } = useLoaderData<typeof loader>();
   const { state } = useLocation();
+  const isHydrated = useHydrated();
   const { backgroundColor } = useColorDarkenLighten(detail?.color);
   const { sidebarBoxedMode } = useSoraSettings();
   const { viewportRef, scrollY } = useLayout((scrollState) => scrollState);
@@ -182,13 +184,16 @@ const AnimeDetailPage = () => {
           <motion.div
             className="sticky top-[64px] z-[1000] flex w-full justify-center transition-[padding] duration-100 ease-in-out"
             style={{
-              backgroundColor,
+              backgroundColor: isHydrated ? backgroundColor : 'transparent',
               paddingTop,
               paddingBottom,
             }}
             ref={tabLinkRef}
           >
-            <div className={backgroundStyles({ tablink: true })} style={{ backgroundColor }} />
+            <div
+              className={backgroundStyles({ tablink: true })}
+              style={{ backgroundColor: isHydrated ? backgroundColor : 'transparent' }}
+            />
             <TabLink pages={animeDetailsPages} linkTo={`/anime/${detail?.id}`} />
           </motion.div>
           <Outlet />

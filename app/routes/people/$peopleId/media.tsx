@@ -121,7 +121,9 @@ const MediaPage = () => {
                   onClick={open}
                   alt={`Photo of ${peopleData?.detail?.name} image size ${image.width}x${image.height}`}
                   radius="xl"
-                  className="h-auto min-w-[120px] cursor-pointer object-cover 2xs:min-w-[185px]"
+                  classNames={{
+                    img: 'h-auto min-w-[120px] cursor-pointer object-cover 2xs:min-w-[185px]',
+                  }}
                   loading="lazy"
                   title={peopleData?.detail?.name}
                   loaderUrl="/api/image"
