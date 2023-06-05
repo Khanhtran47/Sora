@@ -268,7 +268,7 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
         {totalPages > 1 ? (
           <div className="!mb-5 flex w-full flex-row items-center justify-center">
             <Pagination
-              showControls={!isSm}
+              // showControls={!isSm}
               total={totalPages}
               initialPage={page}
               // shadow

@@ -217,7 +217,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
       ) : totalPages && totalPages > 1 ? (
         <>
           <Pagination
-            showControls={!isSm}
+            // showControls={!isSm}
             total={totalPages}
             initialPage={currentPage}
             // shadow

@@ -60,7 +60,7 @@ const Collections = () => {
       {maxPage > 1 && (
         <div className="mt-7 flex flex-row justify-center">
           <Pagination
-            showControls={!isSm}
+            // showControls={!isSm}
             total={maxPage}
             initialPage={currentPage}
             // shadow
