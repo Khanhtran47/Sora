@@ -464,7 +464,7 @@ const SideBar = () => {
                       isPressable
                       isFooterBlurred
                       classNames={{
-                        base: 'w-full',
+                        base: 'w-full border-border',
                       }}
                       to="/discover/movies"
                       role="link"
@@ -634,7 +634,7 @@ const SideBar = () => {
                       isPressable
                       isFooterBlurred
                       classNames={{
-                        base: 'w-full',
+                        base: 'w-full border-border',
                       }}
                     >
                       <CardHeader className="absolute top-0 z-20">
@@ -802,7 +802,7 @@ const SideBar = () => {
                       isPressable
                       isFooterBlurred
                       classNames={{
-                        base: 'w-full',
+                        base: 'w-full border-border',
                       }}
                     >
                       <CardHeader className="absolute top-0 z-20">

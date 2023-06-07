@@ -260,8 +260,8 @@ module.exports = withTV({
             700: '#0C0C22',
             800: '#07071B',
             900: '#040417',
-            DEFAULT: '#181830',
-            foreground: '#bab9ef',
+            DEFAULT: '#8787C0',
+            foreground: '#07071B',
           },
           primary: {
             50: '#FEF9E4',
@@ -373,8 +373,8 @@ module.exports = withTV({
             700: '#5D392E',
             800: '#4B251D',
             900: '#3E1711',
-            DEFAULT: '#826A5C',
-            foreground: '#fbdbc5',
+            DEFAULT: '#D9C6B3',
+            foreground: '#4B251D',
           },
           primary: {
             50: '#FED7E5',
@@ -486,8 +486,8 @@ module.exports = withTV({
             700: '#59492C',
             800: '#48361C',
             900: '#3B2911',
-            DEFAULT: '#7D7259',
-            foreground: '#e4d8b4',
+            DEFAULT: '#D8CEB2',
+            foreground: '#48361C',
           },
           primary: {
             50: '#FAF0F0',
@@ -599,7 +599,7 @@ module.exports = withTV({
             700: '#BAA5ED',
             800: '#DCD0F6',
             900: '#EDE5FC',
-            DEFAULT: '#1E293B',
+            DEFAULT: '#20134E',
             foreground: '#f9f7fd',
           },
           primary: {

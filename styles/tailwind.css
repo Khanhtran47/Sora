@@ -150,7 +150,7 @@ body {
   .lottie-color {
     svg {
       path {
-        @apply stroke-primary;
+        @apply stroke-default-foreground;
       }
     }
   }
