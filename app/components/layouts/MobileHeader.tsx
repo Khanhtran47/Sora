@@ -52,7 +52,7 @@ const MobileHeader = () => {
         initial={{ y: 0 }}
         animate={{ y: scrollDirection === 'down' ? -65 : 0 }}
         transition={{ duration: 0.5 }}
-        className="fixed top-0 z-[1000] flex h-[64px] w-full flex-row items-center justify-between bg-default/60 px-6 shadow-lg backdrop-blur-md sm:hidden"
+        className="fixed top-0 z-[1000] flex h-[64px] w-full flex-row items-center justify-between bg-default/60 px-6 shadow-lg backdrop-blur-2xl backdrop-contrast-125 backdrop-saturate-200 sm:hidden"
       >
         <NavLink
           to="/"
@@ -75,7 +75,7 @@ const MobileHeader = () => {
   return (
     <div className="fixed top-0 z-[1000] flex h-[64px] w-[100vw] flex-row items-center justify-start gap-x-3 px-3 py-2 shadow-none sm:hidden">
       <motion.div
-        className="absolute left-0 top-0 z-[-1] w-full backdrop-blur-md"
+        className="absolute left-0 top-0 z-[-1] w-full backdrop-blur-2xl backdrop-contrast-125 backdrop-saturate-200"
         style={{
           opacity,
           backgroundColor: headerBackgroundColor,

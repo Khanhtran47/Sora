@@ -85,7 +85,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       })}
     >
       <motion.div
-        className="pointer-events-none absolute left-0 top-0 z-[-1] w-full rounded-tl-xl backdrop-blur-md"
+        className="pointer-events-none absolute left-0 top-0 z-[-1] w-full rounded-tl-xl backdrop-blur-2xl backdrop-contrast-125 backdrop-saturate-200"
         style={{
           opacity,
           height: isShowTabLink && !hideTabLinkWithLocation ? 112 : 64,
