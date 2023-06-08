@@ -11,6 +11,7 @@ module.exports = withTV({
   theme: {
     extend: {
       colors: {
+        'player-subtitle-color': 'var(--art-subtitle-color)',
         'player-subtitle-window-color': 'var(--art-subtitle-window-color)',
         'player-subtitle-background-color': 'var(--art-subtitle-background-color)',
         'movie-brand-color': 'var(--colors-movie-brand)',

@@ -71,17 +71,6 @@ const playerStyles = tv({
       true: '[&_.art-subtitle]:!flex',
       false: '[&_.art-subtitle]:!hidden',
     },
-    subtitleColor: {
-      White: '[&_.art-subtitle]:text-[#fff]',
-      Blue: '[&_.art-subtitle]:text-[#0072F5]',
-      Purple: '[&_.art-subtitle]:text-[#7828C8]',
-      Green: '[&_.art-subtitle]:text-[#17C964]',
-      Yellow: '[&_.art-subtitle]:text-[#F5A524]',
-      Red: '[&_.art-subtitle]:text-[#F31260]',
-      Cyan: '[&_.art-subtitle]:text-[#06B7DB]',
-      Pink: '[&_.art-subtitle]:text-[#FF4ECD]',
-      Black: '[&_.art-subtitle]:text-[#000]',
-    },
   },
   compoundVariants: [
     {
@@ -190,6 +179,30 @@ const GlobalPlayer = () => {
   const [showSubtitle, setShowSubtitle] = useState(autoShowSubtitle.value!);
   const [showSkipButton, setShowSkipButton] = useState(false);
   const [currentHighlight, setCurrentHighlight] = useState<Highlight | null>(null);
+  const subtitleColor = useMemo(() => {
+    switch (currentSubtitleFontColor.value) {
+      case 'White':
+        return '#fff';
+      case 'Blue':
+        return '#0072F5';
+      case 'Purple':
+        return '#7828C8';
+      case 'Green':
+        return '#17C964';
+      case 'Yellow':
+        return '#F5A524';
+      case 'Red':
+        return '#F31260';
+      case 'Cyan':
+        return '#06B7DB';
+      case 'Pink':
+        return '#FF4ECD';
+      case 'Black':
+        return '#000';
+      default:
+        return '#fff';
+    }
+  }, [currentSubtitleFontColor.value]);
   const subtitleBackgroundColor = useMemo(() => {
     switch (currentSubtitleBackgroundColor.value) {
       case 'Black':
@@ -804,6 +817,7 @@ const GlobalPlayer = () => {
                   }}
                   style={{
                     // @ts-ignore
+                    '--art-subtitle-color': subtitleColor,
                     '--art-subtitle-background-color': subtitleBackgroundColor,
                     '--art-subtitle-window-color': subtitleWindowColor,
                     '--art-subtitle-custom-font-size': subtitleFontSize,
@@ -930,7 +944,6 @@ const GlobalPlayer = () => {
                     isMobile,
                     isPlayerFullScreen,
                     showSubtitle,
-                    subtitleColor: currentSubtitleFontColor.value,
                     isShowOverlay,
                   })}
                 />
