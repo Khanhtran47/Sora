@@ -60,7 +60,9 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     detail?.title?.english || detail?.title?.userPreferred || detail?.title?.romaji || '';
   const orgTitle = detail?.title?.native;
   const year = detail?.releaseDate;
-  const episodeIndex = episodes && episodes[Number(episodeId) - 1]?.id;
+  const episodeIndex = episodes
+    ? episodes.find((e) => e.number === Number(episodeId))?.id
+    : undefined;
   const totalEpisodes = Number(episodes?.length);
   const episodeInfo = episodes?.find((e: IEpisodeInfo) => e.number === Number(episodeId));
   const titlePlayer = title;
@@ -233,7 +235,9 @@ export const loader = async ({ request, params }: LoaderArgs) => {
       Number(episodeInfo?.number),
       totalEpisodes,
     );
-    const gogoEpisodeId = gogoEpisodes ? gogoEpisodes[Number(episodeId) - 1]?.id : undefined;
+    const gogoEpisodeId = gogoEpisodes
+      ? gogoEpisodes.find((e) => e.number === Number(episodeId))?.id
+      : undefined;
     if (aniskip) {
       const [, episodeDetail] = await Promise.all([
         getHighlights(aniskip),
@@ -328,7 +332,9 @@ export const loader = async ({ request, params }: LoaderArgs) => {
       Number(episodeInfo?.number),
       totalEpisodes,
     );
-    const zoroEpisodeId = zoroEpisodes ? zoroEpisodes[Number(episodeId) - 1]?.id : undefined;
+    const zoroEpisodeId = zoroEpisodes
+      ? zoroEpisodes.find((e) => e.number === Number(episodeId))?.id
+      : undefined;
     if (aniskip) {
       const [, episodeDetail] = await Promise.all([
         getHighlights(aniskip),
