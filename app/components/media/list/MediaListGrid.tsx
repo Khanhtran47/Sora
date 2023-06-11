@@ -74,7 +74,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
   const [page, setPage] = useState(2);
   const topRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
-  const { listLoadingType, listViewType } = useSoraSettings();
+  const { listLoadingType, listViewType, isShowTopPagination } = useSoraSettings();
   const is2Xs = useMediaQuery('(max-width: 320px)', { initializeWithValue: false });
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const currentSearchParams = useMemo<{ [key: string]: string }>(() => {
@@ -260,7 +260,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
   return (
     <>
       <div ref={topRef} />
-      {pagination}
+      {isShowTopPagination.value ? pagination : null}
       {listItems && listItems?.length > 0 ? (
         <div
           className={mediaListGridStyles({

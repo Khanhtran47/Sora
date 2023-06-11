@@ -100,5 +100,8 @@
   "auto-switch-subtitle-subtitle": "Whether to automatically switch the subtitle after adding subtitle to the list.",
   "header": "Header",
   "header-subtitle": "Header settings customization",
-  "show-breadcrumb": "Show breadcrumb"
+  "show-breadcrumb": "Show breadcrumb",
+  "show-top-pagination": "Show top pagination",
+  "media-list-banner": "Media list banner",
+  "media-list-banner-subtitle": "Media list banner settings customization"
 }

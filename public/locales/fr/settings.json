@@ -100,5 +100,8 @@
   "auto-switch-subtitle-subtitle": "Changer automatiquement le sous-titre après avoir ajouté le sous-titre à la liste.",
   "header": "L'en-tête",
   "header-subtitle": "Personnalisation des paramètres d'en-tête",
-  "show-breadcrumb": "Show breadcrumb"
+  "show-breadcrumb": "Show breadcrumb",
+  "show-top-pagination": "Afficher la pagination en haut",
+  "media-list-banner": "Media list banner",
+  "media-list-banner-subtitle": "Media list banner settings customization"
 }

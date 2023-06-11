@@ -246,7 +246,7 @@ const Settings = () => {
     isAutoMini,
     isLoop,
     isScreenshot,
-    isMiniProgressbar,
+    isMiniProgressBar,
     isAutoPlayback,
     isAutoPlayNextEpisode,
     isShowSkipOpEdButton,
@@ -260,12 +260,13 @@ const Settings = () => {
     // sidebarSheetMode,
     autoSwitchSubtitle,
     isShowBreadcrumb,
+    isShowTopPagination,
   } = useSoraSettings();
   const [selectedTheme, setSelectedTheme] = useState(theme);
-  const listViewType = useLocalStorageValue('sora-settings_layout_list-view', {
+  const listViewType = useLocalStorageValue('sora_settings-layout-list_view', {
     defaultValue: 'card',
   });
-  const listLoadingType = useLocalStorageValue('sora-settings_layout_list-loading-type', {
+  const listLoadingType = useLocalStorageValue('sora_settings-layout-list_loading_type', {
     defaultValue: 'pagination',
   });
 
@@ -586,6 +587,29 @@ const Settings = () => {
                       </AccordionItem>
                     )}
                     <AccordionItem
+                      title={t('media-list-banner')}
+                      subtitle={t('media-list-banner-subtitle')}
+                      classNames={{
+                        title: 'text-2xl',
+                        subtitle: 'text-base',
+                        content: 'pb-4',
+                      }}
+                    >
+                      <SettingBlock
+                        type="switch"
+                        title={t('play-trailer')}
+                        isSelected={isPlayTrailer.value}
+                        onValueChange={(isSelected) => isPlayTrailer.set(isSelected)}
+                      />
+                      <Spacer y={2.5} />
+                      <SettingBlock
+                        type="switch"
+                        title={t('mute-trailer')}
+                        isSelected={isMutedTrailer.value}
+                        onValueChange={(isSelected) => isMutedTrailer.set(isSelected)}
+                      />
+                    </AccordionItem>
+                    <AccordionItem
                       title={t('media-list-grid')}
                       subtitle={t('media-list-grid-subtitle')}
                       classNames={{
@@ -609,28 +633,12 @@ const Settings = () => {
                         onSelectionChange={(value) => handleSelect(value, 'list-loading-type')}
                         selectItems={listListLoadingType}
                       />
-                    </AccordionItem>
-                    <AccordionItem
-                      title={t('experiments')}
-                      subtitle={t('experiments-subtitle')}
-                      classNames={{
-                        title: 'text-2xl',
-                        subtitle: 'text-base',
-                        content: 'pb-4',
-                      }}
-                    >
-                      <SettingBlock
-                        type="switch"
-                        title={t('play-trailer')}
-                        isSelected={isPlayTrailer.value}
-                        onValueChange={(isSelected) => isPlayTrailer.set(isSelected)}
-                      />
                       <Spacer y={2.5} />
                       <SettingBlock
                         type="switch"
-                        title={t('mute-trailer')}
-                        isSelected={isMutedTrailer.value}
-                        onValueChange={(isSelected) => isMutedTrailer.set(isSelected)}
+                        title={t('show-top-pagination')}
+                        isSelected={isShowTopPagination.value}
+                        onValueChange={(isSelected) => isShowTopPagination.set(isSelected)}
                       />
                     </AccordionItem>
                   </Accordion>
@@ -827,8 +835,8 @@ const Settings = () => {
                         type="switch"
                         title={t('mini-progressbar')}
                         description={t('mini-progressbar-subtitle')}
-                        isSelected={isMiniProgressbar.value}
-                        onValueChange={(isSelected) => isMiniProgressbar.set(isSelected)}
+                        isSelected={isMiniProgressBar.value}
+                        onValueChange={(isSelected) => isMiniProgressBar.set(isSelected)}
                       />
                       <Spacer y={2.5} />
                       <SettingBlock
