@@ -79,7 +79,7 @@ body {
     .art-video-player {
       .art-layers {
         .art-layer-auto-playback {
-          @apply !rounded-lg !border !border-solid !border-border !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
+          @apply !rounded-lg !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
         }
       }
     }
@@ -88,7 +88,7 @@ body {
   .custom-player-contextmenus {
     .art-video-player.art-contextmenu-show {
       .art-contextmenus {
-        @apply !rounded-lg !border !border-solid !border-border !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
+        @apply !rounded-lg !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
       }
     }
   }
@@ -96,14 +96,14 @@ body {
   .custom-player-info {
     .art-video-player.art-info-show {
       .art-info {
-        @apply !rounded-lg !border !border-solid !border-border !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
+        @apply !rounded-lg !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
       }
     }
   }
 
   .custom-player-notice-inner {
     .art-notice-inner {
-      @apply !rounded-lg !border !border-solid !border-border !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
+      @apply !rounded-lg !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
     }
   }
 
@@ -117,7 +117,7 @@ body {
     .art-video-player {
       .art-volume-panel {
         .art-volume-inner {
-          @apply !rounded-lg !border !border-solid !border-border !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
+          @apply !rounded-lg !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
         }
       }
     }
@@ -125,7 +125,7 @@ body {
 
   .custom-player-icon-after {
     .art-icon::after {
-      @apply !rounded-lg !border !border-solid !border-border !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !text-default-foreground !font-[Inter] !bg-default/[0.6];
+      @apply !rounded-lg !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !text-default-foreground !font-[Inter] !bg-default/[0.6];
     }
   }
 
@@ -137,7 +137,7 @@ body {
 
   .custom-player-control-after {
     .art-control::after {
-      @apply !rounded-lg !border !border-solid !border-border !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !text-default-foreground !font-[Inter] !bg-default/[0.6];
+      @apply !rounded-lg !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !text-default-foreground !font-[Inter] !bg-default/[0.6];
     }
   }
 

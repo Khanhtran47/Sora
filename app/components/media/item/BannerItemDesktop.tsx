@@ -256,7 +256,6 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                         ? 100 * Number(logo.aspect_ratio)
                         : 300,
                   }}
-                  loaderUrl="/api/image"
                   placeholder="empty"
                   options={{ contentType: MimeType.WEBP }}
                 />
@@ -394,7 +393,6 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                 disableSkeleton={false}
                 className="min-h-[390px] min-w-[270px] rounded-xl shadow-xl shadow-default 2xl:min-h-[477px] 2xl:min-w-[318px]"
                 loading="eager"
-                loaderUrl="/api/image"
                 placeholder="empty"
                 responsive={[
                   {
@@ -440,7 +438,6 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                   loading="lazy"
                   alt={titleItem}
                   title={titleItem}
-                  loaderUrl="/api/image"
                   placeholder="empty"
                   responsive={[
                     {

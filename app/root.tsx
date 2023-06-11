@@ -288,6 +288,8 @@ export const loader = async ({ request }: LoaderArgs) => {
       ENV: {
         NODE_ENV: process.env.NODE_ENV,
         VERCEL_GIT_COMMIT_SHA: process.env.VERCEL_GIT_COMMIT_SHA,
+        RESPONSIVE_IMAGES: process.env.RESPONSIVE_IMAGES,
+        IMAGE_PROXY: process.env.IMAGE_PROXY,
       },
       ipAddress,
       locales,
@@ -560,11 +562,10 @@ const App = () => {
                     width="100px"
                     height="100px"
                     className="mr-5 rounded-full"
-                    loaderUrl="/api/image"
                     title="Logo Loading"
                     alt="Logo Loading"
                     src={logoLoading}
-                    placeholder="blur"
+                    placeholder="empty"
                     responsive={[
                       {
                         size: {

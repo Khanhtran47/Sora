@@ -134,7 +134,6 @@ const TvPhotosPage = () => {
                         img: 'h-auto min-w-[120px] cursor-pointer object-cover 2xs:min-w-[185px]',
                       }}
                       title={tvData?.detail?.name}
-                      loaderUrl="/api/image"
                       placeholder="empty"
                       options={{
                         contentType: MimeType.WEBP,
@@ -178,7 +177,6 @@ const TvPhotosPage = () => {
                         img: 'h-auto min-w-[120px] cursor-pointer object-cover 2xs:min-w-[185px]',
                       }}
                       title={tvData?.detail?.name}
-                      loaderUrl="/api/image"
                       placeholder="empty"
                       options={{
                         contentType: MimeType.WEBP,
@@ -222,7 +220,6 @@ const TvPhotosPage = () => {
                         img: 'h-auto min-w-[120px] cursor-pointer object-cover 2xs:min-w-[185px]',
                       }}
                       title={tvData?.detail?.name}
-                      loaderUrl="/api/image"
                       placeholder="empty"
                       options={{
                         contentType: MimeType.WEBP,

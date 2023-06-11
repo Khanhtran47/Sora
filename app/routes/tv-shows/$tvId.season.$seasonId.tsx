@@ -229,7 +229,6 @@ const TvSeasonDetail = () => {
                     base: 'w-full sm:w-3/4 xl:w-1/2',
                     img: 'aspect-[2/3] !min-h-[auto] !min-w-[auto] shadow-xl shadow-default',
                   }}
-                  loaderUrl="/api/image"
                   placeholder="empty"
                   responsive={[
                     {
@@ -293,13 +292,13 @@ const TvSeasonDetail = () => {
             }
             radius="none"
             classNames={{
-              img: `left-0 top-0 z-0 m-0 h-auto w-full object-cover opacity-30 ${
+              base: 'w-full h-auto object-cover max-w-full',
+              img: `left-0 top-0 z-0 m-0 object-cover opacity-30 blur-2xl ${
                 size ? 'visible' : 'invisible'
               }'}`,
             }}
             title={seasonDetail?.name}
             alt={seasonDetail?.name}
-            loaderUrl="/api/image"
             placeholder="empty"
             responsive={[
               {
@@ -312,6 +311,10 @@ const TvSeasonDetail = () => {
             options={{
               blurRadius: 80,
               contentType: MimeType.WEBP,
+            }}
+            style={{
+              width: Math.round(size?.width || 0),
+              height: Math.round(size?.height || 0) + 72,
             }}
           />
         </CardBody>

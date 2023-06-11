@@ -74,7 +74,6 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
             base: 'flex w-full justify-center w-1/2 m-auto',
             img: 'aspect-[2/3] min-h-[auto]',
           }}
-          loaderUrl="/api/image"
           placeholder="empty"
           responsive={[
             {

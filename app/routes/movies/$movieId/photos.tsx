@@ -127,7 +127,6 @@ const MoviePhotosPage = () => {
                         img: 'h-auto min-w-[120px] cursor-pointer object-cover 2xs:min-w-[185px]',
                       }}
                       title={movieData?.detail?.title}
-                      loaderUrl="/api/image"
                       placeholder="empty"
                       options={{
                         contentType: MimeType.WEBP,
@@ -171,7 +170,6 @@ const MoviePhotosPage = () => {
                         img: 'h-auto min-w-[120px] cursor-pointer object-cover 2xs:min-w-[185px]',
                       }}
                       title={movieData?.detail?.title}
-                      loaderUrl="/api/image"
                       placeholder="empty"
                       options={{
                         contentType: MimeType.WEBP,
@@ -216,7 +214,6 @@ const MoviePhotosPage = () => {
                       }}
                       loading="lazy"
                       title={movieData?.detail?.title}
-                      loaderUrl="/api/image"
                       placeholder="empty"
                       options={{
                         contentType: MimeType.WEBP,

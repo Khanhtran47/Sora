@@ -34,13 +34,13 @@ const CardPage = () => {
       </Card>
       <p className="text-base tracking-wide md:text-lg">With Divider</p>
       <Card className="max-w-md">
-        <CardHeader className="border-b border-border">
+        <CardHeader className="border-b border-default-200">
           <strong>Description</strong>
         </CardHeader>
         <CardBody className="py-8">
           <p>The Object constructor creates an object wrapper for the given value.</p>
         </CardBody>
-        <CardFooter className="border-t border-border">
+        <CardFooter className="border-t border-default-200">
           <p>
             When called in a non-constructor context, Object behaves identically to{' '}
             {/* <Code color="primary">new Object()</Code>. */}
@@ -154,7 +154,6 @@ const CardPage = () => {
             src={'https://storiesv2.nextui.org/static/media/local-image-1.35051865.jpeg'}
             width={300}
             loading="lazy"
-            loaderUrl="/api/image"
             placeholder="empty"
             options={{ contentType: MimeType.WEBP }}
             responsive={[{ size: { width: 300, height: 180 } }]}
@@ -178,7 +177,6 @@ const CardPage = () => {
           loading="lazy"
           height={440}
           width={330}
-          loaderUrl="/api/image"
           placeholder="empty"
           options={{ contentType: MimeType.WEBP }}
           responsive={[{ size: { width: 330, height: 440 } }]}

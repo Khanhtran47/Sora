@@ -160,7 +160,6 @@ const AnimeOverview = () => {
                           height="100%"
                           alt={character?.name?.full}
                           title={character?.name?.full}
-                          loaderUrl="/api/image"
                           placeholder="empty"
                           options={{
                             contentType: MimeType.WEBP,
@@ -202,7 +201,6 @@ const AnimeOverview = () => {
                           height="100%"
                           alt={character.voiceActors[0].name?.full}
                           title={character.voiceActors[0].name?.full}
-                          loaderUrl="/api/image"
                           placeholder="empty"
                           options={{
                             contentType: MimeType.WEBP,

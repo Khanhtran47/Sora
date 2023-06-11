@@ -7,20 +7,29 @@ type UseImageProps = NextuiImageProps & RemixImageProps;
 
 export interface ImageProps extends Omit<UseImageProps, 'ref' | 'isBlurred' | 'as'> {}
 
-const Image = forwardRef<React.ElementRef<typeof NextuiImage>, ImageProps>(({ ...props }, ref) => {
-  const [isLoading, setIsLoading] = useState(true);
-
-  return (
-    <NextuiImage
-      ref={ref}
-      as={RemixImage}
-      isLoading={isLoading}
-      data-loaded={!isLoading}
-      onLoadingComplete={() => setIsLoading(false)}
-      {...props}
-    />
-  );
-});
+const Image = forwardRef<React.ElementRef<typeof NextuiImage>, ImageProps>(
+  ({ loaderUrl, dprVariants, options, responsive, ...props }, ref) => {
+    const [isLoading, setIsLoading] = useState(true);
+    if (process.env.RESPONSIVE_IMAGES === 'ON') {
+      const loaderUrlImage = loaderUrl || window.process.env.IMAGE_PROXY;
+      return (
+        <NextuiImage
+          ref={ref}
+          as={RemixImage}
+          isLoading={isLoading}
+          data-loaded={!isLoading}
+          onLoadingComplete={() => setIsLoading(false)}
+          loaderUrl={loaderUrlImage}
+          dprVariants={dprVariants}
+          options={options}
+          responsive={responsive}
+          {...props}
+        />
+      );
+    }
+    return <NextuiImage ref={ref} {...props} />;
+  },
+);
 Image.displayName = NextuiImage.displayName;
 
 export default Image;

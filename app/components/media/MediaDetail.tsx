@@ -175,7 +175,6 @@ export const MediaDetail = (props: IMediaDetail) => {
                     img: 'aspect-[2/3] !min-h-[auto] !min-w-[auto]',
                   }}
                   disableSkeleton={false}
-                  loaderUrl="/api/image"
                   placeholder="empty"
                   responsive={[
                     {
@@ -439,7 +438,6 @@ export const AnimeDetail = (props: IAnimeDetail) => {
                     img: 'aspect-[2/3] !min-h-[auto] !min-w-[auto]',
                   }}
                   disableSkeleton={false}
-                  loaderUrl="/api/image"
                   placeholder="empty"
                   responsive={[
                     {
@@ -632,7 +630,7 @@ export const MediaBackgroundImage = (props: IMediaBackground) => {
         backgroundImage: `url(${
           process.env.NODE_ENV === 'development'
             ? 'http://localhost:3000'
-            : 'https://sora-anime.vercel.app'
+            : 'https://sora-proxy.pages.dev'
         }/api/image?src=${encodeURIComponent(
           backdropPath ||
             'https://raw.githubusercontent.com/Khanhtran47/Sora/master/app/assets/images/background-default.jpg',

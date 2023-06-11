@@ -182,7 +182,6 @@ const TvOverview = () => {
                           }}
                           alt={season.name}
                           title={season.name}
-                          loaderUrl="/api/image"
                           placeholder="empty"
                           options={{
                             contentType: MimeType.WEBP,

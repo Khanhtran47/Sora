@@ -967,10 +967,10 @@ const Settings = () => {
                         alt="About Logo"
                         title="About Logo"
                         src={LogoFooter}
+                        loaderUrl="/api/image"
                         width="76px"
                         height="76px"
                         radius="full"
-                        loaderUrl="/api/image"
                         placeholder="empty"
                         responsive={[
                           {

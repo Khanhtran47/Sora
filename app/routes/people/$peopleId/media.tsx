@@ -126,7 +126,6 @@ const MediaPage = () => {
                   }}
                   loading="lazy"
                   title={peopleData?.detail?.name}
-                  loaderUrl="/api/image"
                   placeholder="empty"
                   options={{
                     contentType: MimeType.WEBP,

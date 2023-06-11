@@ -98,7 +98,6 @@ const CardItemHover = (props: ICardItemHoverProps) => {
               decoding="async"
               radius="md"
               className="aspect-video object-cover"
-              loaderUrl="/api/image"
               placeholder="empty"
               options={{
                 contentType: MimeType.WEBP,

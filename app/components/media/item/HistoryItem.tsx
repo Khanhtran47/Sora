@@ -38,7 +38,6 @@ const HistoryItem = ({ item }: IHistoryItem) => {
             }}
             placeholder="empty"
             loading="lazy"
-            loaderUrl="/api/image"
             options={{ contentType: MimeType.WEBP }}
             responsive={[{ size: { width: 304, height: 171 } }]}
           />

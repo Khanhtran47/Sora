@@ -182,7 +182,6 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                           classNames={{
                             base: 'm-0 min-w-[227px] max-h-[125px] overflow-hidden',
                           }}
-                          loaderUrl="/api/image"
                           placeholder="empty"
                           options={{ contentType: MimeType.WEBP }}
                           responsive={[
@@ -218,7 +217,6 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                           classNames={{
                             base: 'm-0 min-w-[227px] max-h-[125px] overflow-hidden',
                           }}
-                          loaderUrl="/api/image"
                           placeholder="empty"
                           options={{ contentType: MimeType.WEBP }}
                           responsive={[

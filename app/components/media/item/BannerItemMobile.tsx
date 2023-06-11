@@ -81,7 +81,6 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
                   className="aspect-[4/5] object-cover opacity-80"
                   alt={titleItem}
                   title={titleItem}
-                  loaderUrl="/api/image"
                   placeholder="empty"
                   responsive={[
                     {

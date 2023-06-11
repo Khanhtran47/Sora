@@ -77,7 +77,7 @@ const BottomNav = (props: IBottomNavProps) => {
       initial={{ y: 0 }}
       animate={{ y: scrollDirection === 'down' ? 65 : 0 }}
       transition={{ duration: 0.5 }}
-      className="fixed bottom-0 z-[4000] flex h-16 w-full flex-row flex-nowrap items-center justify-around border-t border-border bg-background/[0.6] py-2 drop-shadow-md backdrop-blur-2xl backdrop-contrast-125 backdrop-saturate-200 sm:hidden"
+      className="fixed bottom-0 z-[4000] flex h-16 w-full flex-row flex-nowrap items-center justify-around border-t border-default-200 bg-background/[0.6] py-2 drop-shadow-md backdrop-blur-2xl backdrop-contrast-125 backdrop-saturate-200 sm:hidden"
     >
       <NavLink
         to="/"

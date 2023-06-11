@@ -203,7 +203,6 @@ const VideosPage = () => {
                                 loading="lazy"
                                 title={video?.snippet?.title}
                                 placeholder="empty"
-                                loaderUrl="/api/image"
                                 options={{ contentType: MimeType.WEBP }}
                                 responsive={[{ size: { width: 320, height: 180 } }]}
                               />

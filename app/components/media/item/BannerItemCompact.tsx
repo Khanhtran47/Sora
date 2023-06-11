@@ -64,7 +64,6 @@ const BannerItemCompact = forwardRef<HTMLDivElement, IBannerItemCompactProps>(
               alt={titleItem}
               title={titleItem}
               className="min-h-[135px] min-w-[240px]"
-              loaderUrl="/api/image"
               placeholder="empty"
               options={{
                 contentType: MimeType.WEBP,

@@ -34,7 +34,7 @@ const ScrollAreaPage = () => {
       >
         API Reference
       </Link>
-      <ScrollArea className="h-[200px] w-[350px] rounded-md border border-border p-4">
+      <ScrollArea className="h-[200px] w-[350px] rounded-md border border-default-200 p-4">
         <ScrollViewport>
           Jokester began sneaking into the castle in the middle of the night and leaving jokes all
           over the place: under the king's pillow, in his soup, even in the royal toilet. The king

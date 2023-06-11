@@ -50,7 +50,7 @@ const sidebarStyles = tv({
       false: 'left-0 top-0 h-screen',
     },
     sidebarHoverMode: {
-      true: 'w-full max-w-[250px] basis-[250px] rounded-r-xl border border-border bg-background shadow-2xl',
+      true: 'w-full max-w-[250px] basis-[250px] rounded-r-xl border border-default-200 bg-background shadow-2xl',
     },
   },
   compoundVariants: [{}],
@@ -174,7 +174,6 @@ const SideBar = () => {
               width="30px"
               height="30px"
               radius="full"
-              loaderUrl="/api/image"
               alt="Logo"
               src={Logo}
               placeholder="empty"
@@ -186,6 +185,7 @@ const SideBar = () => {
                   },
                 },
               ]}
+              loaderUrl="/api/image"
               dprVariants={[1, 3]}
               options={{
                 contentType: MimeType.WEBP,
@@ -464,7 +464,7 @@ const SideBar = () => {
                       isPressable
                       isFooterBlurred
                       classNames={{
-                        base: 'w-full border-border',
+                        base: 'w-full border-default-200',
                       }}
                       to="/discover/movies"
                       role="link"
@@ -488,7 +488,9 @@ const SideBar = () => {
                             aspectRatio: '2/3',
                             filter: 'brightness(0.8)',
                           }}
-                          loaderUrl="/api/image"
+                          classNames={{
+                            base: 'min-w-[215px]',
+                          }}
                           alt="Discover movies"
                           src="https://image.tmdb.org/t/p/w342_filter(duotone,190235,ad47dd)/wNB551TsEb7KFU3an5LwOrgvUpn.jpg"
                           loading="lazy"
@@ -634,7 +636,7 @@ const SideBar = () => {
                       isPressable
                       isFooterBlurred
                       classNames={{
-                        base: 'w-full border-border',
+                        base: 'w-full border-default-200',
                       }}
                     >
                       <CardHeader className="absolute top-0 z-20">
@@ -656,7 +658,9 @@ const SideBar = () => {
                             aspectRatio: '2/3',
                             filter: 'brightness(0.8)',
                           }}
-                          loaderUrl="/api/image"
+                          classNames={{
+                            base: 'min-w-[215px]',
+                          }}
                           alt="Discover tv shows"
                           src="https://image.tmdb.org/t/p/w342_filter(duotone,352302,ddd147)/ggFHVNu6YYI5L9pCfOacjizRGt.jpg"
                           loading="lazy"
@@ -802,7 +806,7 @@ const SideBar = () => {
                       isPressable
                       isFooterBlurred
                       classNames={{
-                        base: 'w-full border-border',
+                        base: 'w-full border-default-200',
                       }}
                     >
                       <CardHeader className="absolute top-0 z-20">
@@ -824,7 +828,9 @@ const SideBar = () => {
                             aspectRatio: '2/3',
                             filter: 'brightness(0.8)',
                           }}
-                          loaderUrl="/api/image"
+                          classNames={{
+                            base: 'min-w-[215px]',
+                          }}
                           alt="Discover anime"
                           src="https://image.tmdb.org/t/p/w342_filter(duotone,070235,dd4749)/iAld03IP69UEpqQbVWoRBvjqkqX.jpg"
                           loading="lazy"

@@ -73,7 +73,6 @@ const ImagePage = () => {
         radius="xl"
         loading="lazy"
         disableSkeleton={false}
-        loaderUrl="/api/image"
         placeholder="empty"
         options={{ contentType: MimeType.JPEG, quality: 100 }}
         responsive={[
