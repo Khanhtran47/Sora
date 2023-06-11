@@ -627,11 +627,7 @@ export const MediaBackgroundImage = (props: IMediaBackground) => {
         sidebarBoxedMode: sidebarBoxedMode.value,
       })}
       style={{
-        backgroundImage: `url(${
-          process.env.NODE_ENV === 'development'
-            ? 'http://localhost:3000'
-            : 'https://sora-proxy.pages.dev'
-        }/api/image?src=${encodeURIComponent(
+        backgroundImage: `url(/api/image?src=${encodeURIComponent(
           backdropPath ||
             'https://raw.githubusercontent.com/Khanhtran47/Sora/master/app/assets/images/background-default.jpg',
         )}&width=${size?.width}&height=${
