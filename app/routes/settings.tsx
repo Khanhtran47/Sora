@@ -266,7 +266,7 @@ const Settings = () => {
   const listViewType = useLocalStorageValue('sora_settings-layout-list_view', {
     defaultValue: 'card',
   });
-  const listLoadingType = useLocalStorageValue('sora_settings-layout-list_loading_type', {
+  const listLoadingType = useLocalStorageValue('sora_settings-layout-list-loading_type', {
     defaultValue: 'pagination',
   });
 
@@ -424,7 +424,7 @@ const Settings = () => {
               ))}
             </TabsList>
             <AnimatePresence exitBeforeEnter>
-              <TabsContent value="general-tab" asChild>
+              <TabsContent value="general-tab" key="general-tab" asChild>
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -447,7 +447,7 @@ const Settings = () => {
                   </div>
                 </motion.div>
               </TabsContent>
-              <TabsContent value="appearance-tab" asChild>
+              <TabsContent value="appearance-tab" key="appearance-tab" asChild>
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -634,17 +634,19 @@ const Settings = () => {
                         selectItems={listListLoadingType}
                       />
                       <Spacer y={2.5} />
-                      <SettingBlock
-                        type="switch"
-                        title={t('show-top-pagination')}
-                        isSelected={isShowTopPagination.value}
-                        onValueChange={(isSelected) => isShowTopPagination.set(isSelected)}
-                      />
+                      {selectedListLoadingType === 'pagination' ? (
+                        <SettingBlock
+                          type="switch"
+                          title={t('show-top-pagination')}
+                          isSelected={isShowTopPagination.value}
+                          onValueChange={(isSelected) => isShowTopPagination.set(isSelected)}
+                        />
+                      ) : null}
                     </AccordionItem>
                   </Accordion>
                 </motion.div>
               </TabsContent>
-              <TabsContent value="account-tab" asChild>
+              <TabsContent value="account-tab" key="account-tab" asChild>
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -657,7 +659,7 @@ const Settings = () => {
                   className="w-full"
                 ></motion.div>
               </TabsContent>
-              <TabsContent value="player-tab" asChild>
+              <TabsContent value="player-tab" key="player-tab" asChild>
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -957,7 +959,7 @@ const Settings = () => {
                   </Accordion>
                 </motion.div>
               </TabsContent>
-              <TabsContent value="about-tab" asChild>
+              <TabsContent value="about-tab" key="about-tab" asChild>
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
