@@ -203,8 +203,8 @@ dependencies:
     specifier: ^3.1.0
     version: 3.1.0
   node-vibrant:
-    specifier: ^3.2.1-alpha.1
-    version: 3.2.1-alpha.1
+    specifier: ^3.1.6
+    version: 3.1.6
   nprogress:
     specifier: ^0.2.0
     version: 0.2.0
@@ -2334,7 +2334,7 @@ packages:
     peerDependencies:
       '@jimp/custom': '>=0.3.5'
     dependencies:
-      '@babel/runtime': 7.20.13
+      '@babel/runtime': 7.22.3
       '@jimp/custom': 0.16.2
       '@jimp/utils': 0.16.2
       bmp-js: 0.1.0
@@ -2343,7 +2343,7 @@ packages:
   /@jimp/core@0.16.2:
     resolution: {integrity: sha512-dp7HcyUMzjXphXYodI6PaXue+I9PXAavbb+AN+1XqFbotN22Z12DosNPEyy+UhLY/hZiQQqUkEaJHkvV31rs+w==}
     dependencies:
-      '@babel/runtime': 7.20.13
+      '@babel/runtime': 7.22.3
       '@jimp/utils': 0.16.2
       any-base: 1.1.0
       buffer: 5.7.1
@@ -2359,7 +2359,7 @@ packages:
   /@jimp/custom@0.16.2:
     resolution: {integrity: sha512-GtNwOs4hcVS2GIbqRUf42rUuX07oLB92cj7cqxZb0ZGWwcwhnmSW0TFLAkNafXmqn9ug4VTpNvcJSUdiuECVKg==}
     dependencies:
-      '@babel/runtime': 7.20.13
+      '@babel/runtime': 7.22.3
       '@jimp/core': 0.16.2
     dev: false
 
@@ -2368,7 +2368,7 @@ packages:
     peerDependencies:
       '@jimp/custom': '>=0.3.5'
     dependencies:
-      '@babel/runtime': 7.20.13
+      '@babel/runtime': 7.22.3
       '@jimp/custom': 0.16.2
       '@jimp/utils': 0.16.2
       gifwrap: 0.9.4
@@ -2380,7 +2380,7 @@ packages:
     peerDependencies:
       '@jimp/custom': '>=0.3.5'
     dependencies:
-      '@babel/runtime': 7.20.13
+      '@babel/runtime': 7.22.3
       '@jimp/custom': 0.16.2
       '@jimp/utils': 0.16.2
       jpeg-js: 0.4.4
@@ -2391,7 +2391,7 @@ packages:
     peerDependencies:
       '@jimp/custom': '>=0.3.5'
     dependencies:
-      '@babel/runtime': 7.20.13
+      '@babel/runtime': 7.22.3
       '@jimp/custom': 0.16.2
       '@jimp/utils': 0.16.2
     dev: false
@@ -2401,7 +2401,7 @@ packages:
     peerDependencies:
       '@jimp/custom': '>=0.3.5'
     dependencies:
-      '@babel/runtime': 7.20.13
+      '@babel/runtime': 7.22.3
       '@jimp/custom': 0.16.2
       '@jimp/utils': 0.16.2
       pngjs: 3.4.0
@@ -2412,7 +2412,7 @@ packages:
     peerDependencies:
       '@jimp/custom': '>=0.3.5'
     dependencies:
-      '@babel/runtime': 7.20.13
+      '@babel/runtime': 7.22.3
       '@jimp/custom': 0.16.2
       utif: 2.0.1
     dev: false
@@ -2422,7 +2422,7 @@ packages:
     peerDependencies:
       '@jimp/custom': '>=0.3.5'
     dependencies:
-      '@babel/runtime': 7.20.13
+      '@babel/runtime': 7.22.3
       '@jimp/bmp': 0.16.2(@jimp/custom@0.16.2)
       '@jimp/custom': 0.16.2
       '@jimp/gif': 0.16.2(@jimp/custom@0.16.2)
@@ -2435,7 +2435,7 @@ packages:
   /@jimp/utils@0.16.2:
     resolution: {integrity: sha512-XENrPvmigiXZQ8E2nxJqO6UVvWBLzbNwyYi3Y8Q1IECoYhYI3kgOQ0fmy4G269Vz1V0omh1bNmC42r4OfXg1Jg==}
     dependencies:
-      '@babel/runtime': 7.20.13
+      '@babel/runtime': 7.22.3
       regenerator-runtime: 0.13.11
     dev: false
 
@@ -5438,83 +5438,6 @@ packages:
       ajv: 8.6.3
       json-schema-to-ts: 1.6.4
       ts-morph: 12.0.0
-    dev: false
-
-  /@vibrant/color@3.2.1-alpha.1:
-    resolution: {integrity: sha512-cvm+jAPwao2NerTr3d1JttYyLhp3eD/AQBeevxF7KT6HctToWZCwr2AeTr003/wKgbjzdOV1qySnbyOeu+R+Jw==}
-    dev: false
-
-  /@vibrant/core@3.2.1-alpha.1:
-    resolution: {integrity: sha512-X9Oa9WfPEQnZ6L+5dLRlh+IlsxJkYTw9b/g3stFKoNXbVRKCeXHmH48l7jIBBOg3VcXOGUdsYBqsTwPNkIveaA==}
-    dependencies:
-      '@vibrant/color': 3.2.1-alpha.1
-      '@vibrant/generator': 3.2.1-alpha.1
-      '@vibrant/image': 3.2.1-alpha.1
-      '@vibrant/quantizer': 3.2.1-alpha.1
-      '@vibrant/types': 3.2.1-alpha.1
-      '@vibrant/worker': 3.2.1-alpha.1
-    dev: false
-
-  /@vibrant/generator-default@3.2.1-alpha.1:
-    resolution: {integrity: sha512-BWnQhDaz92UhyHnpdAzKXHQecY+jvyMXtzjKYbveFxThm6+HVoLjwONlbck7oyOpFzV2OM7V11XuR85BxaHvjw==}
-    dependencies:
-      '@vibrant/color': 3.2.1-alpha.1
-      '@vibrant/generator': 3.2.1-alpha.1
-    dev: false
-
-  /@vibrant/generator@3.2.1-alpha.1:
-    resolution: {integrity: sha512-luS5YvMhwMqG01YTj1dJ+cmkuIw1VCByOR6zIaCOwQqI/mcOs88JBWcA1r2TywJTOPlVpjfnDvAlyaKBKh4dMA==}
-    dependencies:
-      '@vibrant/color': 3.2.1-alpha.1
-      '@vibrant/types': 3.2.1-alpha.1
-    dev: false
-
-  /@vibrant/image-browser@3.2.1-alpha.1:
-    resolution: {integrity: sha512-6xWvQfB20sE6YtCWylgEAHuee3iD8h3aFIDbCS2yj7jIelKcYTrrp5jg2d2BhOOB6pC5JzF+QfpCrm0DmAIlgQ==}
-    dependencies:
-      '@vibrant/image': 3.2.1-alpha.1
-    dev: false
-
-  /@vibrant/image-node@3.2.1-alpha.1:
-    resolution: {integrity: sha512-/Io/Rpo4EkO6AhaXdcxUXkbOFhSFtjm0LSAM4c0AyGA5EbC8PyZqjk8b11bQAEMCaYaweFQfTdGD7oVbXe21CQ==}
-    dependencies:
-      '@jimp/custom': 0.16.2
-      '@jimp/plugin-resize': 0.16.2(@jimp/custom@0.16.2)
-      '@jimp/types': 0.16.2(@jimp/custom@0.16.2)
-      '@vibrant/image': 3.2.1-alpha.1
-    dev: false
-
-  /@vibrant/image@3.2.1-alpha.1:
-    resolution: {integrity: sha512-4aF5k79QfyhZOqRovJpbnIjWfe3uuWhY8voqVdd4/qgu4o70/AwVlM+pYmCaJVzI45VWNWWHYA5QlYuKsXnBqQ==}
-    dependencies:
-      '@vibrant/color': 3.2.1-alpha.1
-      '@vibrant/types': 3.2.1-alpha.1
-    dev: false
-
-  /@vibrant/quantizer-mmcq@3.2.1-alpha.1:
-    resolution: {integrity: sha512-Wuk9PTZtxr8qsWTcgP6lcrrmrq36syVwxf+BUxdgQYntBcQ053SaN34lVGOJ0WPdK5vABoxbYljhceCgiILtZw==}
-    dependencies:
-      '@vibrant/color': 3.2.1-alpha.1
-      '@vibrant/image': 3.2.1-alpha.1
-      '@vibrant/quantizer': 3.2.1-alpha.1
-    dev: false
-
-  /@vibrant/quantizer@3.2.1-alpha.1:
-    resolution: {integrity: sha512-iHnPx/+n4iLtYLm1GClSfyg2fFbMatFG0ipCyp9M6tXNIPAg+pSvUJSGBnVnH7Nl/bR8Gkkj1h0pJ4RsKcdIrQ==}
-    dependencies:
-      '@vibrant/color': 3.2.1-alpha.1
-      '@vibrant/image': 3.2.1-alpha.1
-      '@vibrant/types': 3.2.1-alpha.1
-    dev: false
-
-  /@vibrant/types@3.2.1-alpha.1:
-    resolution: {integrity: sha512-ts9u7nsrENoYI5s0MmPOeY5kCLFKvQndKVDOPFCbTA0z493uhDp8mpiQhjFYTf3kPbS04z9zbHLE2luFC7x4KQ==}
-    dev: false
-
-  /@vibrant/worker@3.2.1-alpha.1:
-    resolution: {integrity: sha512-mtSlBdHkFNr4FOnMtqtHJxy9z5AsUcZzGlpiHzvWOoaoN9lNTDPwxOBd0q4VTYWuGPrIm6Fuq5m7aRbLv7KqiQ==}
-    dependencies:
-      '@vibrant/types': 3.2.1-alpha.1
     dev: false
 
   /@web3-storage/multipart-parser@1.0.0:
@@ -10771,15 +10694,15 @@ packages:
   /node-releases@2.0.8:
     resolution: {integrity: sha512-dFSmB8fFHEH/s81Xi+Y/15DQY6VHW81nXRj86EMSL3lmuTmK1e+aT4wrFCkTbm+gSwkw4KpX+rT/pMM2c1mF+A==}
 
-  /node-vibrant@3.2.1-alpha.1:
-    resolution: {integrity: sha512-EQergCp7fvbvUCE0VMCBnvaAV0lGWSP8SXLmuWQIBzQK5M5pIwcd9fIOXuzFkJx/8hUiiiLvAzzGDS/bIy2ikA==}
+  /node-vibrant@3.1.6:
+    resolution: {integrity: sha512-Wlc/hQmBMOu6xon12ZJHS2N3M+I6J8DhrD3Yo6m5175v8sFkVIN+UjhKVRcO+fqvre89ASTpmiFEP3nPO13SwA==}
     dependencies:
+      '@jimp/custom': 0.16.2
+      '@jimp/plugin-resize': 0.16.2(@jimp/custom@0.16.2)
+      '@jimp/types': 0.16.2(@jimp/custom@0.16.2)
+      '@types/lodash': 4.14.195
       '@types/node': 10.17.60
-      '@vibrant/core': 3.2.1-alpha.1
-      '@vibrant/generator-default': 3.2.1-alpha.1
-      '@vibrant/image-browser': 3.2.1-alpha.1
-      '@vibrant/image-node': 3.2.1-alpha.1
-      '@vibrant/quantizer-mmcq': 3.2.1-alpha.1
+      lodash: 4.17.21
       url: 0.11.0
     dev: false
 
