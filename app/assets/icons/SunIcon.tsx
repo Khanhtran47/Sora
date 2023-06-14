@@ -54,6 +54,12 @@ interface ISunProps {
    * @type number
    * */
   width?: number;
+  /**
+   * The className of the icon
+   * @default ''
+   * @type string
+   * */
+  className?: string;
 }
 
 const Sun = ({
@@ -62,13 +68,14 @@ const Sun = ({
   size = 24,
   height = 24,
   width = 24,
+  className = '',
   ...props
 }: ISunProps) => {
   switch (filled) {
     case false:
       return (
         <svg
-          className=""
+          className={className}
           width={width || size}
           height={height || size}
           viewBox="0 0 24 24"
@@ -84,7 +91,7 @@ const Sun = ({
     default:
       return (
         <svg
-          className=""
+          className={className}
           width={width || size}
           height={height || size}
           viewBox="0 0 24 24"

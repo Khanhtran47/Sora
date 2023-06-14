@@ -63,6 +63,8 @@ import pageNotFound from '~/assets/images/404.gif';
 import logoLoading from '~/assets/images/logo_loading.png';
 import styles from '~/styles/tailwind.css';
 
+import { listThemes } from './constants/settings';
+
 interface DocumentProps {
   children: React.ReactNode;
   title?: string;
@@ -536,10 +538,22 @@ const App = () => {
         attribute="class"
         enableColorScheme
         enableSystem
-        themes={['light', 'dark', 'bumblebee', 'synthwave', 'retro', 'dracula', 'autumn', 'night']}
+        themes={listThemes}
         value={{
           light: 'light',
           dark: 'dark',
+          'light-red': 'light-red',
+          'light-yellow': 'light-yellow',
+          'light-green': 'light-green',
+          'light-cyan': 'light-cyan',
+          'light-purple': 'light-purple',
+          'light-pink': 'light-pink',
+          'dark-red': 'dark-red',
+          'dark-yellow': 'dark-yellow',
+          'dark-green': 'dark-green',
+          'dark-cyan': 'dark-cyan',
+          'dark-purple': 'dark-purple',
+          'dark-pink': 'dark-pink',
           bumblebee: 'bumblebee',
           synthwave: 'synthwave',
           retro: 'retro',
@@ -554,7 +568,7 @@ const App = () => {
               initial={{ opacity: 1 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed left-0 top-0 z-[9999] block h-full w-full bg-background"
+              className="bg-background fixed left-0 top-0 z-[9999] block h-full w-full"
             >
               <div className="relative top-1/2 m-auto mt-[-77px] block h-0 w-0">
                 <div className="mb-5 flex	items-center justify-center">
@@ -579,12 +593,12 @@ const App = () => {
                       contentType: MimeType.WEBP,
                     }}
                   />
-                  <h1 className="bg-gradient-to-tr from-primary to-secondary to-50% bg-clip-text !text-3xl font-bold tracking-normal text-transparent md:!text-5xl">
+                  <h1 className="from-primary to-secondary bg-gradient-to-tr to-50% bg-clip-text !text-3xl font-bold tracking-normal text-transparent md:!text-5xl">
                     SORA
                   </h1>
                 </div>
                 <div className="h-9 w-9 animate-spin">
-                  <div className="h-full w-full rounded-[50%] border-4 border-y-primary" />
+                  <div className="border-y-primary h-full w-full rounded-[50%] border-4" />
                 </div>
               </div>
             </motion.div>
@@ -621,10 +635,22 @@ export const CatchBoundary = () => {
         attribute="class"
         enableColorScheme
         enableSystem
-        themes={['light', 'dark', 'bumblebee', 'synthwave', 'retro', 'dracula', 'autumn', 'night']}
+        themes={listThemes}
         value={{
           light: 'light',
           dark: 'dark',
+          'light-red': 'light-red',
+          'light-yellow': 'light-yellow',
+          'light-green': 'light-green',
+          'light-cyan': 'light-cyan',
+          'light-purple': 'light-purple',
+          'light-pink': 'light-pink',
+          'dark-red': 'dark-red',
+          'dark-yellow': 'dark-yellow',
+          'dark-green': 'dark-green',
+          'dark-cyan': 'dark-cyan',
+          'dark-purple': 'dark-purple',
+          'dark-pink': 'dark-pink',
           bumblebee: 'bumblebee',
           synthwave: 'synthwave',
           retro: 'retro',
@@ -635,7 +661,7 @@ export const CatchBoundary = () => {
       >
         <div className="flex h-screen flex-col items-center justify-center gap-y-4">
           <NextUIImage width={480} src={pageNotFound} alt="404" className="object-cover" />
-          <h1 className="text-center text-warning">
+          <h1 className="text-warning text-center">
             {caught.status} {caught.statusText} {message}
           </h1>
           <div className="flex w-full flex-row items-center justify-center gap-x-4">
@@ -681,10 +707,22 @@ export const ErrorBoundary = ({ error }: { error: Error }) => {
         attribute="class"
         enableColorScheme
         enableSystem
-        themes={['light', 'dark', 'bumblebee', 'synthwave', 'retro', 'dracula', 'autumn', 'night']}
+        themes={listThemes}
         value={{
           light: 'light',
           dark: 'dark',
+          'light-red': 'light-red',
+          'light-yellow': 'light-yellow',
+          'light-green': 'light-green',
+          'light-cyan': 'light-cyan',
+          'light-purple': 'light-purple',
+          'light-pink': 'light-pink',
+          'dark-red': 'dark-red',
+          'dark-yellow': 'dark-yellow',
+          'dark-green': 'dark-green',
+          'dark-cyan': 'dark-cyan',
+          'dark-purple': 'dark-purple',
+          'dark-pink': 'dark-pink',
           bumblebee: 'bumblebee',
           synthwave: 'synthwave',
           retro: 'retro',
@@ -695,7 +733,7 @@ export const ErrorBoundary = ({ error }: { error: Error }) => {
       >
         <div className="flex h-screen flex-col items-center justify-center gap-y-4">
           <NextUIImage width={480} src={pageNotFound} alt="404" className="object-cover" />
-          <h1 className="text-center text-danger">
+          <h1 className="text-danger text-center">
             {isProd
               ? 'Some thing went wrong'
               : `[ErrorBoundary]: There was an error: ${error.message}`}

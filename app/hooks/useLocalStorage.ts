@@ -132,6 +132,13 @@ function useSoraSettings() {
       initializeWithValue: false,
     },
   );
+  const isLightDarkThemeOnly = useLocalStorageValue('sora_settings-layout-theme-light_dark_only', {
+    defaultValue: true,
+  });
+  const currentThemeColor = useLocalStorageValue('sora_settings-layout-theme-color', {
+    defaultValue: 'blue',
+    initializeWithValue: false,
+  });
 
   return {
     currentSubtitleFontColor,
@@ -169,8 +176,9 @@ function useSoraSettings() {
     autoSwitchSubtitle,
     isShowBreadcrumb,
     isShowTopPagination,
+    isLightDarkThemeOnly,
+    currentThemeColor,
   };
 }
 
-// eslint-disable-next-line import/prefer-default-export
 export { useSoraSettings };

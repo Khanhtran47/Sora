@@ -1,14 +1,13 @@
-import { useMemo } from 'react';
 import { Player } from '@lottiefiles/react-lottie-player';
 import { Avatar } from '@nextui-org/avatar';
 import { Link } from '@nextui-org/link';
 import { Spacer } from '@nextui-org/spacer';
 import { useMeasure } from '@react-hookz/web';
-import { useTheme } from 'next-themes';
 import { MimeType } from 'remix-image';
 
 import type { IPeopleDetail } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
+import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import Image from '~/components/elements/Image';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 import ExternalLinkBlack from '~/assets/lotties/external-link-black.json';
@@ -31,14 +30,7 @@ interface IPeopleDetailProps {
 
 const PeopleDetail = (props: IPeopleDetailProps) => {
   const { detail, externalIds } = props;
-  const { theme } = useTheme();
-  const isDark = useMemo(() => {
-    const darkTheme = ['dark', 'synthwave', 'dracula', 'night'];
-    if (theme) {
-      return darkTheme.includes(theme);
-    }
-    return false;
-  }, [theme]);
+  const { isDark } = useColorDarkenLighten();
   const [size, imageRef] = useMeasure<HTMLImageElement>();
   const profilePath = detail?.profile_path
     ? TMDB?.profileUrl(detail?.profile_path || '', 'h632')
@@ -71,7 +63,7 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
           loading="lazy"
           title={detail?.name}
           classNames={{
-            base: 'flex w-full justify-center w-1/2 m-auto',
+            base: 'flex justify-center w-1/2 m-auto',
             img: 'aspect-[2/3] min-h-[auto]',
           }}
           placeholder="empty"

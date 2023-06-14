@@ -1,6 +1,6 @@
 import type { User } from '@supabase/supabase-js';
 import { motion, useTransform } from 'framer-motion';
-// import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { tv } from 'tailwind-variants';
 
 import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
@@ -12,12 +12,8 @@ import ListViewChangeButton from '~/components/elements/shared/ListViewChangeBut
 
 import ControlNavigation from './ControlNavigation';
 
-// import MenuIcon from '~/assets/icons/MenuIcon';
-
 interface IHeaderProps {
-  // open: boolean;
   user?: User;
-  // setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const handle = {
@@ -53,7 +49,7 @@ const headerStyles = tv({
 });
 
 const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
-  // const { t } = useTranslation('header');
+  const { t } = useTranslation('header');
   const { user } = props;
   const { sidebarMiniMode, sidebarBoxedMode } = useSoraSettings();
   const { scrollY } = useLayout((state) => state);
@@ -93,7 +89,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
         }}
       >
         {customHeaderBackgroundColor ? (
-          <div className="pointer-events-none h-full w-full bg-background/[0.2]" />
+          <div className="bg-background/[0.2] pointer-events-none h-full w-full" />
         ) : null}
       </motion.div>
       <ControlNavigation />
@@ -107,7 +103,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
             {isShowListViewChangeButton ? <ListViewChangeButton /> : null}
           </motion.div>
         ) : null}
-        <MultiLevelDropdown user={user} />
+        <MultiLevelDropdown user={user} t={t} />
       </div>
     </div>
   );

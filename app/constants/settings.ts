@@ -27,62 +27,26 @@ const settingsTab = [
 ];
 
 const listThemes = [
-  {
-    id: 'light',
-    title: 'Light',
-    themeType: 'light',
-    color: '#f6f7ff',
-    colorHover: '#7b81b7',
-  },
-  {
-    id: 'dark',
-    title: 'Dark',
-    themeType: 'dark',
-    color: '#16181a',
-    colorHover: '#0b0e12',
-  },
-  {
-    id: 'bumblebee',
-    title: 'Bumblebee',
-    themeType: 'light',
-    color: '#C08921',
-    colorHover: '#A16C17',
-  },
-  {
-    id: 'synthwave',
-    title: 'Synthwave',
-    themeType: 'dark',
-    color: '#D427A5',
-    colorHover: '#B11B98',
-  },
-  {
-    id: 'retro',
-    title: 'Retro',
-    themeType: 'light',
-    color: '#CD6C70',
-    colorHover: '#AC4B57',
-  },
-  {
-    id: 'dracula',
-    title: 'Dracula',
-    themeType: 'dark',
-    color: '#DB58B0',
-    colorHover: '#B73C9B',
-  },
-  {
-    id: 'autumn',
-    title: 'Autumn',
-    themeType: 'light',
-    color: '#78022C',
-    colorHover: '#64012E',
-  },
-  {
-    id: 'night',
-    title: 'Night',
-    themeType: 'dark',
-    color: '#2894D5',
-    colorHover: '#1C70B2',
-  },
+  'light',
+  'dark',
+  'light-red',
+  'light-yellow',
+  'light-green',
+  'light-cyan',
+  'light-purple',
+  'light-pink',
+  'dark-red',
+  'dark-yellow',
+  'dark-green',
+  'dark-cyan',
+  'dark-purple',
+  'dark-pink',
+  'bumblebee',
+  'synthwave',
+  'retro',
+  'dracula',
+  'autumn',
+  'night',
 ];
 
 const listSubtitleFontColor = [
@@ -132,6 +96,8 @@ const listSubtitleTextEffects = ['None', 'Drop Shadow', 'Raised', 'Depressed', '
 const listSidebarActiveStyleMode = ['rounded-all', 'rounded-one-side', 'pill-all', 'pill-one-side'];
 const listListViewType = ['card', 'detail', 'table'];
 const listListLoadingType = ['pagination', 'infinite-scroll'];
+const listDefaultThemeColors = ['red', 'yellow', 'green', 'cyan', 'purple', 'pink', 'blue'];
+const listCustomThemeColors = ['bumblebee', 'synthwave', 'retro', 'dracula', 'autumn', 'night'];
 
 export {
   settingsTab,
@@ -146,4 +112,6 @@ export {
   listSidebarActiveStyleMode,
   listListViewType,
   listListLoadingType,
+  listDefaultThemeColors,
+  listCustomThemeColors,
 };

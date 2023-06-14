@@ -7,7 +7,10 @@ export default function useColorDarkenLighten(color?: string) {
   const isDark = useMemo(() => {
     const darkTheme = ['dark', 'synthwave', 'dracula', 'night'];
     if (theme) {
-      return darkTheme.includes(theme);
+      if (theme === 'system') {
+        return window.matchMedia('(prefers-color-scheme: dark)').matches;
+      }
+      return darkTheme.includes(theme) || theme.includes('dark');
     }
     return false;
   }, [theme]);

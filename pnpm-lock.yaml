@@ -58,9 +58,6 @@ dependencies:
   '@nextui-org/progress':
     specifier: 0.0.0-dev-v2-20230610220209
     version: 0.0.0-dev-v2-20230610220209(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.2)
-  '@nextui-org/radio':
-    specifier: 0.0.0-dev-v2-20230610220209
-    version: 0.0.0-dev-v2-20230610220209(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.2)
   '@nextui-org/shared-icons':
     specifier: 0.0.0-dev-v2-20230610220209
     version: 0.0.0-dev-v2-20230610220209(react@18.3.0-canary-0210f0b08-20230525)
@@ -2980,29 +2977,6 @@ packages:
       - tailwindcss
     dev: false
 
-  /@nextui-org/radio@0.0.0-dev-v2-20230610220209(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.2):
-    resolution: {integrity: sha512-tGimA8ZdjmKV/VITljqLHO4228Q+E3Gt5QjOfLh4HCpBPzH5RQda5V8N72LHHZTL2ZH75TM8wtE5YB9GO7bn+A==}
-    peerDependencies:
-      react: '>=18'
-    dependencies:
-      '@nextui-org/dom-utils': 0.0.0-dev-v2-20230610220209(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/shared-utils': 0.0.0-dev-v2-20230610220209(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/system': 0.0.0-dev-v2-20230610220209(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/theme': 0.0.0-dev-v2-20230610220209(tailwindcss@3.3.2)
-      '@react-aria/focus': 3.12.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@react-aria/interactions': 3.15.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@react-aria/radio': 3.6.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@react-aria/utils': 3.17.0(react@18.3.0-canary-0210f0b08-20230525)
-      '@react-aria/visually-hidden': 3.8.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@react-stately/radio': 3.8.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@react-types/radio': 3.4.2(react@18.3.0-canary-0210f0b08-20230525)
-      '@react-types/shared': 3.18.1(react@18.3.0-canary-0210f0b08-20230525)
-      react: 18.3.0-canary-0210f0b08-20230525
-    transitivePeerDependencies:
-      - react-dom
-      - tailwindcss
-    dev: false
-
   /@nextui-org/shared-icons@0.0.0-dev-v2-20230610220209(react@18.3.0-canary-0210f0b08-20230525):
     resolution: {integrity: sha512-hRxIleeMpbSA0fKCpsRj0/LJ4jWiJWwzPqQ5i6bZjA/zTYKyryPjwll9PjgEoP3DzGpOjKytQtMOHaT1Rc0w8g==}
     peerDependencies:
@@ -4200,23 +4174,6 @@ packages:
       react: 18.3.0-canary-0210f0b08-20230525
     dev: false
 
-  /@react-aria/radio@3.6.1(react@18.3.0-canary-0210f0b08-20230525):
-    resolution: {integrity: sha512-paO2sCxvH8I0Iomzgmvw1TCvzd+0AcUylPSr34dhPmJIsRew7UVtmON9YU8tM/KELDv346n2v8KqzlgHJlLLvg==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
-    dependencies:
-      '@react-aria/focus': 3.12.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@react-aria/i18n': 3.7.2(react@18.3.0-canary-0210f0b08-20230525)
-      '@react-aria/interactions': 3.15.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@react-aria/label': 3.5.2(react@18.3.0-canary-0210f0b08-20230525)
-      '@react-aria/utils': 3.17.0(react@18.3.0-canary-0210f0b08-20230525)
-      '@react-stately/radio': 3.8.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@react-types/radio': 3.4.2(react@18.3.0-canary-0210f0b08-20230525)
-      '@react-types/shared': 3.18.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@swc/helpers': 0.4.14
-      react: 18.3.0-canary-0210f0b08-20230525
-    dev: false
-
   /@react-aria/selection@3.15.0(react@18.3.0-canary-0210f0b08-20230525):
     resolution: {integrity: sha512-v3AXsau6BobbM5Fu7X+HhX5K/Ey3drVBaoevGDiYX8kGS9jlFNDXENKYPtnMpcTCvSX0yuxTITukOEBokzkb6Q==}
     peerDependencies:
@@ -4375,18 +4332,6 @@ packages:
       react: 18.3.0-canary-0210f0b08-20230525
     dev: false
 
-  /@react-stately/radio@3.8.1(react@18.3.0-canary-0210f0b08-20230525):
-    resolution: {integrity: sha512-yhz6/2y/hkDW7dzjhNsxrVZ8T7n2/Y9LyVRKDCL7ZYOkpoVQGe0ELbU04ATJPHNx6Icg/jAfN0Z/uMov/q4VBQ==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
-    dependencies:
-      '@react-stately/utils': 3.6.0(react@18.3.0-canary-0210f0b08-20230525)
-      '@react-types/radio': 3.4.2(react@18.3.0-canary-0210f0b08-20230525)
-      '@react-types/shared': 3.18.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@swc/helpers': 0.4.14
-      react: 18.3.0-canary-0210f0b08-20230525
-    dev: false
-
   /@react-stately/selection@3.13.1(react@18.3.0-canary-0210f0b08-20230525):
     resolution: {integrity: sha512-0B+gT6hyei/pzUSmrNliphoztOPZJ7v/xVT9b4HViRTwuOUQlmwi5BQai84EbVtgQaQghc07sJ/Y/Ec8WXCRHA==}
     peerDependencies:
@@ -4502,15 +4447,6 @@ packages:
 
   /@react-types/progress@3.4.1(react@18.3.0-canary-0210f0b08-20230525):
     resolution: {integrity: sha512-Y6cTvvJjbfFBeB7Zb3PizhhO3+YLWXpIP8opto15RWu11ktgZVMUgsnlsJgE3dFeoZ7UHwXdCYf8JOzBw5VPHA==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
-    dependencies:
-      '@react-types/shared': 3.18.1(react@18.3.0-canary-0210f0b08-20230525)
-      react: 18.3.0-canary-0210f0b08-20230525
-    dev: false
-
-  /@react-types/radio@3.4.2(react@18.3.0-canary-0210f0b08-20230525):
-    resolution: {integrity: sha512-SE6sjZjZbyuJMJNNdlhoutVr+QFRt1Vz7DZj4UaOswW5SD/Xb+xFdW8i6ETKdRN17am/5SC89ltWe0R3q0pVkA==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:

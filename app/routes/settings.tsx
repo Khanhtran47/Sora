@@ -2,11 +2,9 @@ import { Fragment, useEffect, useRef, useState } from 'react';
 import { Accordion, AccordionItem } from '@nextui-org/accordion';
 import { Kbd, type KbdKey } from '@nextui-org/kbd';
 import { Link } from '@nextui-org/link';
-import { Radio, RadioGroup } from '@nextui-org/radio';
 import { Spacer } from '@nextui-org/spacer';
 import { Spinner } from '@nextui-org/spinner';
-import { Switch } from '@nextui-org/switch';
-import { Tooltip } from '@nextui-org/tooltip';
+import { Switch, type SwitchProps } from '@nextui-org/switch';
 import { useLocalStorageValue, useMediaQuery } from '@react-hookz/web';
 import type { MetaFunction } from '@remix-run/node';
 import { NavLink, Link as RemixLink, useLocation, useNavigate } from '@remix-run/react';
@@ -18,10 +16,13 @@ import { MimeType } from 'remix-image';
 import { ClientOnly, useHydrated } from 'remix-utils';
 
 import { getBackgroundTitleBarColor, setMetaThemeColor } from '~/utils/client/meta-tags.client';
+import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import languages from '~/constants/languages';
 import {
+  listCustomThemeColors,
+  listDefaultThemeColors,
   listListLoadingType,
   listListViewType,
   listSubtitleBackgroundColor,
@@ -32,7 +33,7 @@ import {
   // listSidebarActiveStyleMode,
   listSubtitleWindowColor,
   listSubtitleWindowOpacity,
-  listThemes,
+  // listThemes,
   settingsTab,
 } from '~/constants/settings';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
@@ -47,8 +48,10 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/elements/tab/Tabs';
 import Brush from '~/assets/icons/BrushIcon';
 import Info from '~/assets/icons/InfoIcon';
+import Moon from '~/assets/icons/MoonIcon';
 import Play from '~/assets/icons/PlayIcon';
 import SettingsIcon from '~/assets/icons/SettingsIcon';
+import Sun from '~/assets/icons/SunIcon';
 import User from '~/assets/icons/UserIcon';
 import LogoFooter from '~/assets/images/logo_footer.png';
 
@@ -108,8 +111,6 @@ interface SettingBlockSelectProps extends SettingBlockCommonProps {
 interface SettingBlockSwitchProps extends SettingBlockCommonProps {
   type: 'switch';
   description?: string;
-  isSelected?: boolean;
-  onValueChange?: (isSelected: boolean) => void;
 }
 
 interface SettingBlockKbdProps extends SettingBlockCommonProps {
@@ -126,15 +127,18 @@ interface SettingBlockKbdProps extends SettingBlockCommonProps {
   betweenKeys?: string;
 }
 
-type SettingBlockProps = SettingBlockSelectProps | SettingBlockSwitchProps | SettingBlockKbdProps;
+type SettingBlockProps =
+  | SettingBlockSelectProps
+  | (SettingBlockSwitchProps & SwitchProps)
+  | SettingBlockKbdProps;
 
 const SettingBlock = (props: SettingBlockProps) => {
   const { type } = props;
   const { t } = useTranslation('settings');
   if (type === 'switch') {
-    const { isSelected, onValueChange, title, description } = props;
+    const { title, description, ...rest } = props;
     return (
-      <div className="flex flex-row items-center justify-between gap-x-2 rounded-md bg-content2 p-3">
+      <div className="bg-content2 flex flex-row items-center justify-between gap-x-2 rounded-md p-3">
         {description ? (
           <div className="flex flex-col items-start justify-center">
             <h6>{title}</h6>
@@ -143,14 +147,14 @@ const SettingBlock = (props: SettingBlockProps) => {
         ) : (
           <h6>{title}</h6>
         )}
-        <Switch isSelected={isSelected} onValueChange={onValueChange} />
+        <Switch {...rest} />
       </div>
     );
   }
   if (type === 'select') {
     const { title, selectedValue, onSelectionChange, selectItems } = props;
     return (
-      <div className="flex flex-row items-center justify-between rounded-md bg-content2 p-3">
+      <div className="bg-content2 flex flex-row items-center justify-between rounded-md p-3">
         <h6>{title}</h6>
         {selectItems && selectItems.length > 0 ? (
           <Select value={selectedValue} onValueChange={(value) => onSelectionChange(value)}>
@@ -172,7 +176,7 @@ const SettingBlock = (props: SettingBlockProps) => {
   if (type === 'kbd') {
     const { keys, kbd, title, betweenKeys } = props;
     return (
-      <div className="flex flex-row items-center justify-between gap-x-2 rounded-md bg-content2 p-3">
+      <div className="bg-content2 flex flex-row items-center justify-between gap-x-2 rounded-md p-3">
         <h6>{title}</h6>
         {keys ? (
           Array.isArray(
@@ -222,10 +226,10 @@ const Settings = () => {
   const { locale } = rootData || { locale: 'en' };
   const { t } = useTranslation('settings');
   const { theme, setTheme } = useTheme();
-  const isXs = useMediaQuery('(max-width: 450px)', { initializeWithValue: false });
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const isMd = useMediaQuery('(max-width: 1280px)', { initializeWithValue: false });
   const underlineRef = useRef<HTMLDivElement>(null);
+  const { isDark } = useColorDarkenLighten();
 
   const {
     currentSubtitleFontColor,
@@ -261,13 +265,16 @@ const Settings = () => {
     autoSwitchSubtitle,
     isShowBreadcrumb,
     isShowTopPagination,
+    isLightDarkThemeOnly,
   } = useSoraSettings();
-  const [selectedTheme, setSelectedTheme] = useState(theme);
   const listViewType = useLocalStorageValue('sora_settings-layout-list_view', {
     defaultValue: 'card',
   });
   const listLoadingType = useLocalStorageValue('sora_settings-layout-list-loading_type', {
     defaultValue: 'pagination',
+  });
+  const currentThemeColor = useLocalStorageValue('sora_settings-layout-theme-color', {
+    defaultValue: 'blue',
   });
 
   const [activeTab, setActiveTab] = useState('general-tab');
@@ -295,6 +302,13 @@ const Settings = () => {
   );
   const [selectedListViewType, setSelectedListViewType] = useState(listViewType.value);
   const [selectedListLoadingType, setSelectedListLoadingType] = useState(listLoadingType.value);
+  const [selectedThemeColor, setSelectedThemeColor] = useState(() => {
+    if (!isLightDarkThemeOnly.value) {
+      return theme;
+    } else {
+      return currentThemeColor.value;
+    }
+  });
 
   useEffect(() => {
     if (underlineRef.current) {
@@ -328,7 +342,7 @@ const Settings = () => {
     }
   };
 
-  const handleSelect = (value: string, type: string) => {
+  const handleSelect = async (value: string, type: string) => {
     switch (type) {
       case 'language': {
         setSelectedLang(value);
@@ -380,6 +394,32 @@ const Settings = () => {
         currentSubtitleTextEffects.set(value);
         break;
       }
+      case 'theme-color': {
+        await setSelectedThemeColor(value);
+        await currentThemeColor.set(value);
+        if (isDark) {
+          if (value !== 'blue') {
+            await setTheme(`dark-${value}`);
+          } else {
+            await setTheme('dark');
+          }
+        } else {
+          if (value !== 'blue') {
+            await setTheme(`light-${value}`);
+          } else {
+            await setTheme('light');
+          }
+        }
+        const color = await getBackgroundTitleBarColor(isHydrated);
+        await setMetaThemeColor(`hsl(${color})`);
+        break;
+      }
+      case 'custom-theme-color': {
+        await setSelectedThemeColor(value);
+        await setTheme(value);
+        const color = await getBackgroundTitleBarColor(isHydrated);
+        await setMetaThemeColor(`hsl(${color})`);
+      }
     }
   };
 
@@ -390,7 +430,7 @@ const Settings = () => {
       animate={{ x: '0', opacity: 1 }}
       exit={{ y: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="flex w-full max-w-screen-4xl flex-col justify-start py-3 sm:py-0"
+      className="max-w-screen-4xl flex w-full flex-col justify-start py-3 sm:py-0"
     >
       <h2>{t('settings')}</h2>
       <Spacer y={2.5} />
@@ -414,7 +454,7 @@ const Settings = () => {
                   <h6 className="ml-2">{t(tab.title)}</h6>
                   {activeTab === tab.id ? (
                     <motion.div
-                      className="absolute overflow-hidden rounded-md bg-default-foreground data-[orientation=horizontal]:bottom-0 data-[orientation=vertical]:left-0 data-[orientation=horizontal]:h-1 data-[orientation=vertical]:h-1/2 data-[orientation=horizontal]:w-1/2 data-[orientation=vertical]:w-1"
+                      className="bg-default-foreground absolute overflow-hidden rounded-md data-[orientation=horizontal]:bottom-0 data-[orientation=vertical]:left-0 data-[orientation=horizontal]:h-1 data-[orientation=vertical]:h-1/2 data-[orientation=horizontal]:w-1/2 data-[orientation=vertical]:w-1"
                       layoutId="underline"
                       data-orientation={isSm ? 'horizontal' : 'vertical'}
                       ref={underlineRef}
@@ -436,7 +476,7 @@ const Settings = () => {
                   onDragEnd={handleDragEnd}
                   dragDirectionLock
                 >
-                  <div className="flex w-full flex-col justify-start rounded-xl bg-content1 p-5 shadow-lg shadow-default/10">
+                  <div className="bg-content1 shadow-default/10 flex w-full flex-col justify-start rounded-xl p-5 shadow-lg">
                     <SettingBlock
                       type="select"
                       title={t('language')}
@@ -470,51 +510,71 @@ const Settings = () => {
                         content: 'pb-4',
                       }}
                     >
-                      <RadioGroup
-                        orientation={isXs ? 'vertical' : 'horizontal'}
-                        defaultValue={theme}
-                        size="md"
-                        value={selectedTheme}
-                        onValueChange={async (value) => {
-                          setSelectedTheme(value);
-                          if (value === 'light' || value === 'dark') {
-                            await setTheme(value);
-                          } else if (['bumblebee', 'retro', 'autumn'].includes(value)) {
-                            await setTheme('light');
-                            await setTheme(value);
+                      <SettingBlock
+                        type="switch"
+                        title={t('light-dark-only')}
+                        isSelected={isLightDarkThemeOnly.value}
+                        onValueChange={(isSelected) => {
+                          isLightDarkThemeOnly.set(isSelected);
+                          if (isSelected) {
+                            setTheme('system');
+                            setSelectedThemeColor('blue');
                           } else {
-                            await setTheme('dark');
-                            await setTheme(value);
+                            setTheme('bumblebee');
+                            setSelectedThemeColor('bumblebee');
                           }
-                          const color = await getBackgroundTitleBarColor(isHydrated);
-                          await setMetaThemeColor(`hsl(${color})`);
                         }}
-                      >
-                        {listThemes.map((themeItem) => (
-                          <Tooltip
-                            key={themeItem.id}
-                            content={isXs ? null : themeItem.title}
-                            closeDelay={0}
-                            offset={10}
-                          >
-                            <Radio
-                              key={themeItem.id}
-                              value={themeItem.id}
-                              style={{
-                                // @ts-ignore
-                                '--colors-radioColor': themeItem.color,
-                                '--colors-radioColorHover': themeItem.colorHover,
-                              }}
-                              classNames={{
-                                wrapper:
-                                  'border-theme-radio-color group-data-[hover-unchecked=true]:bg-theme-radio-color-hover',
-                              }}
-                            >
-                              {isXs ? themeItem.title : null}
-                            </Radio>
-                          </Tooltip>
-                        ))}
-                      </RadioGroup>
+                      />
+                      <Spacer y={2.5} />
+                      {isLightDarkThemeOnly.value ? (
+                        <>
+                          <SettingBlock
+                            type="switch"
+                            title={t('dark-mode')}
+                            isSelected={isDark}
+                            onValueChange={async (isSelected) => {
+                              if (isSelected) {
+                                if (currentThemeColor.value !== 'blue') {
+                                  await setTheme(`dark-${currentThemeColor.value}`);
+                                } else await setTheme('dark');
+                              } else {
+                                if (currentThemeColor.value !== 'blue') {
+                                  await setTheme(`light-${currentThemeColor.value}`);
+                                } else await setTheme('light');
+                              }
+                              const color = await getBackgroundTitleBarColor(isHydrated);
+                              await setMetaThemeColor(`hsl(${color})`);
+                            }}
+                            color="primary"
+                            classNames={{
+                              thumbIcon: 'h-4 w-4',
+                            }}
+                            thumbIcon={({ isSelected, className }) =>
+                              isSelected ? (
+                                <Moon className={className} />
+                              ) : (
+                                <Sun className={className} />
+                              )
+                            }
+                          />
+                          <Spacer y={2.5} />
+                          <SettingBlock
+                            type="select"
+                            title={t('theme-color')}
+                            selectedValue={selectedThemeColor}
+                            onSelectionChange={(value) => handleSelect(value, 'theme-color')}
+                            selectItems={listDefaultThemeColors}
+                          />
+                        </>
+                      ) : (
+                        <SettingBlock
+                          type="select"
+                          title={t('custom-theme-color')}
+                          selectedValue={selectedThemeColor}
+                          onSelectionChange={(value) => handleSelect(value, 'custom-theme-color')}
+                          selectItems={listCustomThemeColors}
+                        />
+                      )}
                     </AccordionItem>
                     {isSm ? null : (
                       <AccordionItem
@@ -526,7 +586,7 @@ const Settings = () => {
                           content: 'pb-4',
                         }}
                       >
-                        <div className="flex flex-col items-start justify-center gap-y-4 rounded-md bg-content2 p-3">
+                        <div className="bg-content2 flex flex-col items-start justify-center gap-y-4 rounded-md p-3">
                           <h5 className="my-1">{t('sidebar-mode')}</h5>
                           {isMd ? null : (
                             <>
@@ -971,7 +1031,7 @@ const Settings = () => {
                   onDragEnd={handleDragEnd}
                   className="w-full"
                 >
-                  <div className="w-full rounded-xl bg-content1 p-5 shadow-lg shadow-default/10">
+                  <div className="bg-content1 shadow-default/10 w-full rounded-xl p-5 shadow-lg">
                     <div className="flex flex-col items-center justify-center">
                       <Image
                         alt="About Logo"
@@ -997,7 +1057,7 @@ const Settings = () => {
                       <NavLink
                         to="/"
                         arial-label="home-page"
-                        className="bg-gradient-to-tr from-primary to-secondary to-50% bg-clip-text text-3xl font-bold tracking-normal text-transparent md:text-4xl"
+                        className="from-primary to-secondary bg-gradient-to-tr to-50% bg-clip-text text-3xl font-bold tracking-normal text-transparent md:text-4xl"
                       >
                         SORA
                       </NavLink>
@@ -1016,7 +1076,7 @@ const Settings = () => {
                       <Link href="#">Contact ✉️</Link>
                     </div>
                     <Spacer y={1} />
-                    <h6 className="text-center !text-default-900">
+                    <h6 className="!text-default-900 text-center">
                       This site does not store any files on its server. All contents are provided by
                       non-affiliated third parties.
                     </h6>

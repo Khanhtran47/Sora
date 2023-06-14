@@ -321,7 +321,7 @@ const TvSeasonDetail = () => {
       </Card>
       <div className="flex w-full flex-col items-center justify-center">
         <motion.div
-          className="sticky top-[64px] z-[1000] flex w-full justify-center transition-[padding] duration-100 ease-in-out"
+          className="sticky top-[63px] z-[1000] flex w-full justify-center transition-[padding] duration-100 ease-in-out"
           style={{
             backgroundColor: isHydrated ? backgroundColor : 'transparent',
             paddingTop,

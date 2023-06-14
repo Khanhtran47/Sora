@@ -103,5 +103,22 @@
   "show-breadcrumb": "Hiển thị breadcrumb",
   "show-top-pagination": "Hiển thị phân trang trên cùng",
   "media-list-banner": "Media list banner",
-  "media-list-banner-subtitle": "Media list banner settings customization"
+  "media-list-banner-subtitle": "Media list banner settings customization",
+  "light-dark-only": "Chỉ sáng & tối",
+  "dark-mode": "Chế độ tối",
+  "theme-color": "Màu chủ đề",
+  "custom-theme-color": "Màu chủ đề tùy chỉnh",
+  "red": "Đỏ",
+  "pink": "Hồng",
+  "purple": "Tím",
+  "blue": "Xanh dương",
+  "cyan": "Xanh lam",
+  "green": "Xanh lá cây",
+  "yellow": "Vàng",
+  "bumblebee": "Bumblebee",
+  "synthwave": "Synthwave",
+  "retro": "Retro",
+  "dracula": "Dracula",
+  "autumn": "Autumn",
+  "night": "Night"
 }

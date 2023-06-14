@@ -99,7 +99,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
           <Spacer y={10} />
         </>
       ) : null}
-      <div className="flex flex-row items-start justify-start gap-3 rounded-xl bg-content1 p-2 sm:p-4">
+      <div className="bg-content1 flex flex-row items-start justify-start gap-3 rounded-xl p-2 sm:p-4">
         {!isMd &&
           (posterPath ? (
             <Image
@@ -158,7 +158,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
             </div>
           ))}
         <div className="flex w-full flex-col items-start justify-start gap-y-4">
-          <h3 className="font-semibold text-default-900">{title}</h3>
+          <h3 className="text-default-900 font-semibold">{title}</h3>
           {type === 'movie' || type === 'tv' ? (
             <div className="flex flex-row gap-x-3">
               <Rating rating={tmdbRating?.toFixed(1)} ratingType="movie" />

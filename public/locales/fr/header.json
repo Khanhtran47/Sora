@@ -1,45 +1,28 @@
 {
-  "movies": "Cinéma",
-  "popular": "Populaire",
-  "topRated": "Bien noté",
-  "upcoming": "Prochain",
-  "tv": "TV Shows",
-  "on-the-air-tv-shows": "On TV",
-  "people": "Personnes",
-  "description": "Anime",
   "sign-in": "Connexion",
-  "searchMovie": "Recherche de films",
-  "searchTv": "Recherche de TVs",
-  "searchPeople": "Recherche de personnes",
-  "signedInAs": "Identifiant",
-  "mySettings": "Paramètres",
-  "analytics": "Analytics",
-  "system": "Système",
-  "configs": "Configurations",
-  "help&feedback": "Aide et Commentaires",
-  "logout": "Déconnexion",
   "en": "Anglais",
   "fr": "Français",
   "vi": "Vietnamien",
-  "search": {
-    "title": {
-      "movie": "Recherche de films",
-      "tv": "Recherche de TVs",
-      "people": "Recherche de personnes",
-      "anime": "Recherche d'animé"
-    },
-    "action": "Recherchez",
-    "placeHolder": {
-      "movie": "Nom du film",
-      "tv": "Titre du TV",
-      "people": "Personne",
-      "anime": "Anime"
-    },
-    "helper": {
-      "movie": "Entrez le nom du film et recherchez",
-      "tv": "Entrez le titre du TV et recherchez",
-      "people": "Entrez le nom de la personne et recherchez",
-      "anime": "Entrez le nom de l'animé et recherchez"
-    }
-  }
+  "language": "Langue",
+  "display": "Affichage",
+  "log-out": "Déconnexion",
+  "sign-up": "Inscription",
+  "theme": "Thème",
+  "theme-color": "Couleur du thème",
+  "dark": "Sombre",
+  "light": "Clair",
+  "system": "Système par défaut",
+  "red": "Rouge",
+  "pink": "Rose",
+  "purple": "Violet",
+  "blue": "Bleu",
+  "cyan": "Cyan",
+  "green": "Vert",
+  "yellow": "Jaune",
+  "bumblebee": "Bumblebee",
+  "synthwave": "Synthwave",
+  "retro": "Retro",
+  "dracula": "Dracula",
+  "autumn": "Autumn",
+  "night": "Night"
 }

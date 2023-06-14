@@ -1445,7 +1445,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
       fullWidth
       variant="light"
       onPress={item.action}
-      className="flex h-14 flex-row items-center justify-between gap-x-8 !p-2 data-[hover=true]:bg-default/[.6]"
+      className="data-[hover=true]:bg-default/[.6] flex h-14 flex-row items-center justify-between gap-x-8 !p-2"
     >
       <div className="flex shrink-0 grow flex-row items-center gap-x-2">
         {item?.showIcon ? (
@@ -1473,7 +1473,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
         ) : (
           <Spacer x={6} />
         )}
-        <h6 className="!line-clamp-1 !text-default-foreground">{item.title}</h6>
+        <h6 className="!text-default-foreground !line-clamp-1">{item.title}</h6>
       </div>
       <div className="flex shrink-0 grow flex-row items-center justify-end gap-x-2">
         {item?.isSwitch ? (
@@ -1624,7 +1624,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
         <PopoverContent
           side="top"
           container={containerPortal}
-          className="z-[1000] bg-default/60 backdrop-blur-2xl backdrop-contrast-125 backdrop-saturate-200"
+          className="bg-default/60 z-[1000] backdrop-blur-2xl backdrop-contrast-125 backdrop-saturate-200"
         >
           <ResizablePanel contentWidth="fit">
             {currentDropdownLevel ? (
