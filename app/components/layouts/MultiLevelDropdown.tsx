@@ -219,6 +219,7 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
             showIcon: false,
             icon: null,
             action: async () => {
+              await currentThemeColor.set('blue');
               await setTheme('system');
               const color = await getBackgroundTitleBarColor(isHydrated);
               await setMetaThemeColor(`hsl(${color})`);
@@ -267,7 +268,17 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
       },
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentTheme, locale, user, username]);
+  }, [
+    currentTheme,
+    locale,
+    user,
+    username,
+    t,
+    currentThemeColor.value,
+    isDark,
+    isHydrated,
+    isLightDarkThemeOnly.value,
+  ]);
 
   const currentDropdownLevel = useMemo(
     () => dropdownLevel.find((level) => level.id === currentLevel),

@@ -11,7 +11,9 @@ const Image = forwardRef<React.ElementRef<typeof NextuiImage>, ImageProps>(
   ({ loaderUrl, dprVariants, options, responsive, ...props }, ref) => {
     const [isLoading, setIsLoading] = useState(true);
     if (process.env.RESPONSIVE_IMAGES === 'ON') {
-      const loaderUrlImage = loaderUrl || window.process.env.IMAGE_PROXY;
+      const loaderUrlImage =
+        loaderUrl ||
+        (process.env.NODE_ENV === 'development' ? '/api/image' : window.process.env.IMAGE_PROXY);
       return (
         <NextuiImage
           ref={ref}
@@ -27,7 +29,7 @@ const Image = forwardRef<React.ElementRef<typeof NextuiImage>, ImageProps>(
         />
       );
     }
-    return <NextuiImage ref={ref} {...props} />;
+    return <NextuiImage as="img" ref={ref} {...props} />;
   },
 );
 Image.displayName = NextuiImage.displayName;
