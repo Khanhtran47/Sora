@@ -593,7 +593,7 @@ const App = () => {
                       contentType: MimeType.WEBP,
                     }}
                   />
-                  <h1 className="from-primary to-secondary bg-gradient-to-tr to-50% bg-clip-text !text-3xl font-bold tracking-normal text-transparent md:!text-5xl">
+                  <h1 className="from-secondary to-primary bg-gradient-to-tr to-50% bg-clip-text !text-3xl font-bold tracking-normal text-transparent md:!text-5xl">
                     SORA
                   </h1>
                 </div>

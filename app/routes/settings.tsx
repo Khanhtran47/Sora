@@ -1057,7 +1057,7 @@ const Settings = () => {
                       <NavLink
                         to="/"
                         arial-label="home-page"
-                        className="from-primary to-secondary bg-gradient-to-tr to-50% bg-clip-text text-3xl font-bold tracking-normal text-transparent md:text-4xl"
+                        className="from-secondary to-primary bg-gradient-to-tr to-50% bg-clip-text text-3xl font-bold tracking-normal text-transparent md:text-4xl"
                       >
                         SORA
                       </NavLink>

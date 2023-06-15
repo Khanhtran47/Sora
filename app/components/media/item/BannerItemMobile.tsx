@@ -60,7 +60,7 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
           mediaType === 'movie' ? 'movies/' : mediaType === 'tv' ? 'tv-shows/' : 'anime/'
         }${id}/${mediaType === 'anime' ? 'overview' : ''}`}
       >
-        <CardBody className="overflow-hidden p-0 after:absolute after:bottom-0 after:left-0 after:h-[calc(100%/2)] after:w-full after:bg-gradient-to-b after:from-transparent after:to-background after:content-['']">
+        <CardBody className="after:to-background overflow-hidden p-0 after:absolute after:bottom-0 after:left-0 after:h-[calc(100%/2)] after:w-full after:bg-gradient-to-b after:from-transparent after:content-['']">
           <AnimatePresence>
             {size ? (
               <motion.div
@@ -98,13 +98,13 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
             ) : null}
           </AnimatePresence>
         </CardBody>
-        <CardFooter className="absolute bottom-1 z-[1]">
+        <CardFooter className="absolute bottom-6 z-[1]">
           <div className="flex w-full flex-col items-center justify-center gap-4 py-3">
             <h2 className="mb-0 text-center font-semibold">{titleItem}</h2>
             <div className="m-0 flex w-full flex-row gap-x-2">
               <Chip
                 variant="flat"
-                color="primary"
+                color="default"
                 radius="full"
                 classNames={{
                   content: 'flex items-center gap-x-1',
@@ -114,15 +114,15 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
                 {mediaType === 'anime' ? voteAverage : Number(voteAverage.toFixed(1))}
               </Chip>
               {mediaType === 'anime' ? (
-                <Chip variant="flat" color="primary" radius="full">
+                <Chip variant="flat" color="default" radius="full">
                   {genresAnime[0]}
                 </Chip>
               ) : mediaType === 'movie' ? (
-                <Chip variant="flat" color="primary" radius="full">
+                <Chip variant="flat" color="default" radius="full">
                   {genresMovie?.[genreIds[0]]}
                 </Chip>
               ) : (
-                <Chip variant="flat" color="primary" radius="full">
+                <Chip variant="flat" color="default" radius="full">
                   {genresTv?.[genreIds[0]]}
                 </Chip>
               )}

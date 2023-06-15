@@ -52,18 +52,18 @@ const MobileHeader = () => {
         initial={{ y: 0 }}
         animate={{ y: scrollDirection === 'down' ? -65 : 0 }}
         transition={{ duration: 0.5 }}
-        className="fixed top-0 z-[1000] flex h-[64px] w-full flex-row items-center justify-between bg-default/60 px-6 shadow-lg backdrop-blur-2xl backdrop-contrast-125 backdrop-saturate-200 sm:hidden"
+        className="bg-background/60 fixed top-0 z-[1000] flex h-[64px] w-full flex-row items-center justify-between px-6 shadow-lg backdrop-blur-2xl backdrop-contrast-125 backdrop-saturate-200 sm:hidden"
       >
         <NavLink
           to="/"
           arial-label="home-page"
-          className="bg-gradient-to-tr from-primary to-secondary to-50% bg-clip-text text-3xl font-bold tracking-normal text-transparent md:text-4xl"
+          className="from-secondary to-primary bg-gradient-to-tr to-50% bg-clip-text text-3xl font-bold tracking-normal text-transparent md:text-4xl"
         >
           SORA
         </NavLink>
         <Button
           variant="light"
-          color="primary"
+          color="default"
           isIconOnly
           onPress={() => navigate('/search/movie')}
         >
@@ -83,7 +83,7 @@ const MobileHeader = () => {
         }}
       >
         {customHeaderBackgroundColor ? (
-          <div className="pointer-events-none h-full w-full bg-background/[0.2]" />
+          <div className="bg-background/[0.2] pointer-events-none h-full w-full" />
         ) : null}
       </motion.div>
       <Button variant="faded" radius="full" isIconOnly onPress={() => handleBackButton()}>

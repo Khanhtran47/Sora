@@ -37,7 +37,7 @@ interface ILayout {
 }
 
 const layoutStyles = tv({
-  base: 'flex max-h-full min-h-screen max-w-full flex-nowrap justify-start bg-background/[0.6] font-[Inter] transition-[padding] duration-200',
+  base: 'bg-content1/[0.3] flex max-h-full min-h-screen max-w-full flex-nowrap justify-start font-[Inter] transition-[padding] duration-200',
   variants: {
     boxed: {
       true: 'min-h-[calc(100vh_-_115px)] pt-[15px]',
@@ -50,7 +50,7 @@ const layoutStyles = tv({
 });
 
 const contentAreaStyles = tv({
-  base: 'ml-0 flex w-full grow flex-col justify-end overflow-hidden !rounded-none bg-background shadow-xl shadow-foreground/10 transition-[margin] duration-200 sm:!rounded-tl-xl',
+  base: 'bg-background shadow-foreground/10 ml-0 flex w-full grow flex-col justify-end overflow-hidden !rounded-none shadow-xl transition-[margin] duration-200 sm:!rounded-tl-xl',
   variants: {
     mini: {
       true: 'sm:ml-[80px]',
@@ -126,7 +126,7 @@ const scrollAreaViewportStyles = tv({
 });
 
 const tabLinkWrapperStyles = tv({
-  base: 'fixed z-[1000] flex h-[56px] w-[100vw] items-end shadow-md shadow-default/10',
+  base: 'shadow-default/10 fixed z-[1000] flex h-[56px] w-[100vw] items-end shadow-md',
   variants: {
     miniSidebar: {
       true: 'top-[56px] sm:w-[calc(100vw_-_80px)]',

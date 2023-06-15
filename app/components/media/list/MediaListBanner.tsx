@@ -30,7 +30,7 @@ const CustomNavigation = forwardRef<HTMLDivElement, { slot: 'container-end' }>(
       <div slot={slot} className="hidden sm:block">
         <Button
           type="button"
-          color="primary"
+          color="default"
           radius="full"
           variant="ghost"
           isIconOnly
@@ -55,7 +55,7 @@ const CustomNavigation = forwardRef<HTMLDivElement, { slot: 'container-end' }>(
         <div className="hidden sm:block 2xl:hidden">
           <Button
             type="button"
-            color="primary"
+            color="default"
             radius="full"
             variant="ghost"
             isIconOnly
@@ -68,7 +68,7 @@ const CustomNavigation = forwardRef<HTMLDivElement, { slot: 'container-end' }>(
           </Button>
           <Button
             type="button"
-            color="primary"
+            color="default"
             radius="full"
             variant="ghost"
             isIconOnly
@@ -80,7 +80,7 @@ const CustomNavigation = forwardRef<HTMLDivElement, { slot: 'container-end' }>(
             <ChevronRightIcon fill="currentColor" />
           </Button>
           <div
-            className="absolute bottom-[150px] right-[35px] z-[90] flex h-12 w-12 items-center justify-center text-primary 2xl:bottom-[270px]"
+            className="text-default-foreground absolute bottom-[150px] right-[35px] z-[90] flex h-12 w-12 items-center justify-center 2xl:bottom-[270px]"
             ref={forwardedRef}
           >
             <svg
@@ -91,7 +91,7 @@ const CustomNavigation = forwardRef<HTMLDivElement, { slot: 'container-end' }>(
                 strokeDashoffset: 'calc(125.6 * (var(--progress)))',
                 strokeDasharray: '125.6',
               }}
-              className="absolute left-0 top-0 z-10 h-full w-full rotate-90 fill-none stroke-primary stroke-2"
+              className="stroke-default absolute left-0 top-0 z-10 h-full w-full rotate-90 fill-none stroke-2"
             >
               <circle cx="24" cy="24" r="20" />
             </svg>
@@ -111,9 +111,9 @@ const CustomNavigationThumbs = ({ slot }: { slot: 'container-end' }) => {
     <div slot={slot} className="hidden sm:block">
       <Button
         type="button"
-        color="primary"
+        color="default"
         variant="flat"
-        className="absolute left-[2px] top-[60px] z-[90] m-0 h-11 w-min cursor-pointer rounded-md bg-background/60 p-0 backdrop-blur-md"
+        className="bg-background/60 absolute left-[2px] top-[60px] z-[90] m-0 h-11 w-min cursor-pointer rounded-md p-0 backdrop-blur-md"
         isIconOnly
         onPress={() => swiper.slidePrev()}
         aria-label="Previous"
@@ -121,14 +121,14 @@ const CustomNavigationThumbs = ({ slot }: { slot: 'container-end' }) => {
         <ChevronLeftIcon
           fill="currentColor"
           filled
-          className="scale-75 opacity-80 duration-200 ease-linear transition-all hover:scale-100 hover:opacity-100"
+          className="scale-75 opacity-80 transition-all duration-200 ease-linear hover:scale-100 hover:opacity-100"
         />
       </Button>
       <Button
         type="button"
-        color="primary"
+        color="default"
         variant="flat"
-        className="absolute right-[2px] top-[60px] z-[90] m-0 h-11 w-min cursor-pointer rounded-md bg-background/60 p-0 backdrop-blur-md"
+        className="bg-background/60 absolute right-[2px] top-[60px] z-[90] m-0 h-11 w-min cursor-pointer rounded-md p-0 backdrop-blur-md"
         isIconOnly
         onPress={() => swiper.slideNext()}
         aria-label="Next"
@@ -136,7 +136,7 @@ const CustomNavigationThumbs = ({ slot }: { slot: 'container-end' }) => {
         <ChevronRightIcon
           fill="currentColor"
           filled
-          className="scale-75 opacity-80 duration-200 ease-linear transition-all hover:scale-100 hover:opacity-100"
+          className="scale-75 opacity-80 transition-all duration-200 ease-linear hover:scale-100 hover:opacity-100"
         />
       </Button>
     </div>
@@ -172,7 +172,7 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
   }, [isPlayTrailer.value, isXl]);
 
   return (
-    <section className="relative m-0 box-border flex h-full w-full max-w-screen-4xl flex-wrap items-center justify-center p-0">
+    <section className="max-w-screen-4xl relative m-0 box-border flex h-full w-full flex-wrap items-center justify-center p-0">
       {items && items?.length > 0 && (
         <>
           <SwiperReact
@@ -279,14 +279,14 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
             {items.map((item, index) => (
               <SwiperSlide
                 key={`${item.id}-${index}-banner-thumb`}
-                className={`mx-1 my-2 !h-[135px] !w-[240px] overflow-hidden rounded-xl border-4 duration-300 ease-out transition-opacity ${
+                className={`mx-1 my-2 !h-[135px] !w-[240px] overflow-hidden rounded-xl border-4 transition-opacity duration-300 ease-out ${
                   isPlayTrailer.value
                     ? `opacity-20 hover:opacity-70 ${activeIndex === index ? 'opacity-90' : ''}`
                     : 'opacity-100'
                 } ${
                   activeIndex === index
                     ? 'border-primary'
-                    : 'border-transparent hover:border-primary-600'
+                    : 'hover:border-primary-600 border-transparent'
                 }`}
               >
                 <BannerItemCompact

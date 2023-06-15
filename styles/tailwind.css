@@ -12,8 +12,8 @@ body {
 }
 
 :root {
-  --swiper-theme-color: var(--colors-primary) !important;
-  --swiper-pagination-bullet-inactive-color: var(--colors-primary-700) !important;
+  --swiper-theme-color: hsl(var(--colors-primary)) !important;
+  --swiper-pagination-bullet-inactive-color: hsl(var(--colors-primary-700)) !important;
 }
 
 @layer base {

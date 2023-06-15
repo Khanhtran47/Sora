@@ -43,7 +43,7 @@ const TabLink = (props: ITabProps) => {
     <ScrollArea
       type={isSm ? 'scroll' : 'hover'}
       scrollHideDelay={100}
-      className="z-[2] w-full border-b border-default-200"
+      className="border-default-200 z-[2] w-full border-b"
     >
       <ScrollViewport>
         <div className="flex focus:outline-none">
@@ -60,7 +60,7 @@ const TabLink = (props: ITabProps) => {
                     <motion.div
                       ref={underlineRef}
                       layoutId="underline"
-                      className="absolute bottom-0 h-1 w-1/2 overflow-hidden rounded-md bg-primary"
+                      className="bg-default-foreground absolute bottom-0 h-1 w-1/2 overflow-hidden rounded-md"
                     />
                   ) : null}
                 </>

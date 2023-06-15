@@ -207,7 +207,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
         onMouseMove={handleMouseMove}
       >
         <motion.div
-          className="pointer-events-none absolute -inset-px rounded-xl duration-300 transition group-hover:opacity-100"
+          className="pointer-events-none absolute -inset-px rounded-xl transition duration-300 group-hover:opacity-100"
           style={{
             background: useMotionTemplate`
               radial-gradient(
@@ -293,7 +293,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                   <div className="flex flex-row gap-x-2">
                     {mediaType === 'anime'
                       ? genresAnime?.slice(0, 3).map((genre) => (
-                          <Chip key={genre} variant="flat" color="primary" radius="full">
+                          <Chip key={genre} variant="flat" color="default" radius="full">
                             {genre}
                           </Chip>
                         ))
@@ -303,7 +303,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                               <Chip
                                 key={genresMovie?.[genreId]}
                                 variant="flat"
-                                color="primary"
+                                color="default"
                                 radius="full"
                               >
                                 {genresMovie?.[genreId]}
@@ -314,7 +314,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                             <Chip
                               key={genresTv?.[genreId]}
                               variant="flat"
-                              color="primary"
+                              color="default"
                               radius="full"
                             >
                               {genresTv?.[genreId]}
@@ -391,7 +391,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                 title={titleItem}
                 width="100%"
                 disableSkeleton={false}
-                className="min-h-[390px] min-w-[270px] rounded-xl shadow-xl shadow-default 2xl:min-h-[477px] 2xl:min-w-[318px]"
+                className="shadow-default min-h-[390px] min-w-[270px] rounded-xl shadow-xl 2xl:min-h-[477px] 2xl:min-w-[318px]"
                 loading="eager"
                 placeholder="empty"
                 responsive={[
@@ -417,7 +417,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
           ) : null}
           {/* </Row> */}
         </CardHeader>
-        <CardBody className="m-0 overflow-hidden p-0 after:absolute after:bottom-0 after:left-0 after:h-[100px] after:w-full after:bg-gradient-to-b after:from-transparent after:to-background after:content-[''] after:2xl:h-[250px]">
+        <CardBody className="after:to-background m-0 overflow-hidden p-0 after:absolute after:bottom-0 after:left-0 after:h-[100px] after:w-full after:bg-gradient-to-b after:from-transparent after:content-[''] after:2xl:h-[250px]">
           <AnimatePresence>
             {!showTrailer && size ? (
               <motion.div
@@ -570,7 +570,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <Button
               type="button"
-              color="primary"
+              color="default"
               radius="full"
               variant="ghost"
               isIconOnly
