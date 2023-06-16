@@ -43,6 +43,15 @@ export const loader = async ({ request }: LoaderArgs) => {
   );
 };
 
+export const handle = {
+  i18n: 'anime',
+  disableLayoutPadding: true,
+  miniTitle: () => ({
+    title: 'Anime',
+    showImage: false,
+  }),
+};
+
 const AnimePage = () => {
   const { trending, popular, recentEpisodes } = useLoaderData<typeof loader>() || {};
   const location = useLocation();

@@ -42,6 +42,15 @@ export const loader = async ({ request }: LoaderArgs) => {
   );
 };
 
+export const handle = {
+  i18n: 'movies',
+  disableLayoutPadding: true,
+  miniTitle: () => ({
+    title: 'Movies',
+    showImage: false,
+  }),
+};
+
 const MoviesIndexPage = () => {
   const { popular, topRated, upcoming, nowPlaying } = useLoaderData<typeof loader>();
   const rootData = useTypedRouteLoaderData('root');

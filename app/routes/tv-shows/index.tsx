@@ -86,6 +86,15 @@ export const loader = async ({ request }: LoaderArgs) => {
   );
 };
 
+export const handle = {
+  i18n: 'tv',
+  disableLayoutPadding: true,
+  miniTitle: () => ({
+    title: 'TV Shows',
+    showImage: false,
+  }),
+};
+
 const TvIndexPage = () => {
   const { popular, airingToday, onTheAir, topRated } = useLoaderData<typeof loader>();
   const rootData = useTypedRouteLoaderData('root');

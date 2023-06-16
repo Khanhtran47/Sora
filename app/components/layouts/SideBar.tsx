@@ -1,5 +1,5 @@
 import { Button } from '@nextui-org/button';
-import { Card, CardBody, CardFooter, CardHeader } from '@nextui-org/card';
+import { Card, CardBody, CardFooter } from '@nextui-org/card';
 import { Link } from '@nextui-org/link';
 import { Spinner } from '@nextui-org/spinner';
 import { Tooltip } from '@nextui-org/tooltip';
@@ -498,6 +498,16 @@ const SideBar = () => {
               <NavigationMenuContent>
                 <ul className="m-0 flex w-fit flex-row gap-x-[6px] p-[6px]">
                   <li className="m-0 shrink-0 grow-0 basis-[215px]">
+                    <Link
+                      as={NavLink}
+                      className="absolute top-4 z-20 mx-[10px] w-[198px] justify-between text-white after:rounded-md hover:after:bg-white/10"
+                      isBlock
+                      showAnchorIcon
+                      color="foreground"
+                      to="/discover/movies"
+                    >
+                      {t('movies-discover')}
+                    </Link>
                     <Card
                       as={NavLink}
                       radius="md"
@@ -506,19 +516,9 @@ const SideBar = () => {
                       classNames={{
                         base: 'w-full border-default-200',
                       }}
-                      to="/discover/movies"
+                      to="/movies"
                       role="link"
                     >
-                      <CardHeader className="absolute top-0 z-20">
-                        <Link
-                          as="h6"
-                          isExternal
-                          showAnchorIcon
-                          className="!w-full !max-w-none justify-between !text-white [&_.nextui-link-icon]:ml-auto"
-                        >
-                          {t('movies-discover')}
-                        </Link>
-                      </CardHeader>
                       <CardBody className="aspect-[2/3] w-full p-0">
                         <Image
                           radius="md"
@@ -696,10 +696,20 @@ const SideBar = () => {
               <NavigationMenuContent>
                 <ul className="m-0 flex w-fit flex-row gap-x-[6px] p-[6px]">
                   <li className="m-0 shrink-0 grow-0 basis-[215px]">
+                    <Link
+                      as={NavLink}
+                      className="absolute top-4 z-20 mx-[10px] w-[198px] justify-between text-white after:rounded-md hover:after:bg-white/10"
+                      isBlock
+                      showAnchorIcon
+                      color="foreground"
+                      to="/discover/tv-shows"
+                    >
+                      {t('tv-shows-discover')}
+                    </Link>
                     <Card
                       as={NavLink}
                       role="link"
-                      to="/discover/tv-shows"
+                      to="/tv-shows"
                       radius="md"
                       isPressable
                       isFooterBlurred
@@ -707,16 +717,6 @@ const SideBar = () => {
                         base: 'w-full border-default-200',
                       }}
                     >
-                      <CardHeader className="absolute top-0 z-20">
-                        <Link
-                          as="h6"
-                          isExternal
-                          showAnchorIcon
-                          className="!w-full !max-w-none justify-between !text-white [&_.nextui-link-icon]:ml-auto"
-                        >
-                          {t('tv-shows-discover')}
-                        </Link>
-                      </CardHeader>
                       <CardBody className="aspect-[2/3] w-full p-0">
                         <Image
                           radius="md"
@@ -894,10 +894,20 @@ const SideBar = () => {
               <NavigationMenuContent>
                 <ul className="m-0 flex w-fit flex-row gap-x-[6px] p-[6px]">
                   <li className="m-0 shrink-0 grow-0 basis-[215px]">
+                    <Link
+                      as={NavLink}
+                      className="absolute top-4 z-20 mx-[10px] w-[198px] justify-between text-white after:rounded-md hover:after:bg-white/10"
+                      isBlock
+                      showAnchorIcon
+                      color="foreground"
+                      to="/discover/anime"
+                    >
+                      {t('anime-discover')}
+                    </Link>
                     <Card
                       as={NavLink}
                       role="link"
-                      to="/discover/anime"
+                      to="/anime"
                       radius="md"
                       isPressable
                       isFooterBlurred
@@ -905,16 +915,6 @@ const SideBar = () => {
                         base: 'w-full border-default-200',
                       }}
                     >
-                      <CardHeader className="absolute top-0 z-20">
-                        <Link
-                          as="h6"
-                          isExternal
-                          showAnchorIcon
-                          className="!w-full !max-w-none justify-between !text-white [&_.nextui-link-icon]:ml-auto"
-                        >
-                          {t('anime-discover')}
-                        </Link>
-                      </CardHeader>
                       <CardBody className="aspect-[2/3] w-full p-0">
                         <Image
                           radius="md"

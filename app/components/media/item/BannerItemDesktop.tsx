@@ -391,7 +391,10 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                 title={titleItem}
                 width="100%"
                 disableSkeleton={false}
-                className="shadow-default min-h-[390px] min-w-[270px] rounded-xl shadow-xl 2xl:min-h-[477px] 2xl:min-w-[318px]"
+                classNames={{
+                  base: 'rounded-xl shadow-xl shadow-default aspect-[2/3] w-full h-auto min-h-[auto] min-w-[auto] !max-h-[390px] !max-w-[270px] 2xl:!max-h-[477px] 2xl:!max-w-[318px]',
+                  img: 'h-full object-cover',
+                }}
                 loading="eager"
                 placeholder="empty"
                 responsive={[
@@ -415,7 +418,6 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
               />
             </motion.div>
           ) : null}
-          {/* </Row> */}
         </CardHeader>
         <CardBody className="after:to-background m-0 overflow-hidden p-0 after:absolute after:bottom-0 after:left-0 after:h-[100px] after:w-full after:bg-gradient-to-b after:from-transparent after:content-[''] after:2xl:h-[250px]">
           <AnimatePresence>
