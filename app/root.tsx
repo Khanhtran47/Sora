@@ -32,6 +32,7 @@ import NProgress from 'nprogress';
 import photoSwipeStyles from 'photoswipe/dist/photoswipe.css';
 import { getSelectorsByUserAgent } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
+import { Provider as WrapBalancerProvider } from 'react-wrap-balancer';
 import { useChangeLanguage } from 'remix-i18next';
 import Image, { MimeType } from 'remix-image';
 import { getClientIPAddress, getClientLocales, useHydrated } from 'remix-utils';
@@ -533,81 +534,83 @@ const App = () => {
 
   return (
     <Document lang={locale} dir={i18n.dir()} gaTrackingId={gaTrackingId} ENV={ENV}>
-      <RemixThemesProvider
-        defaultTheme="system"
-        attribute="class"
-        enableColorScheme
-        enableSystem
-        themes={listThemes}
-        value={{
-          light: 'light',
-          dark: 'dark',
-          'light-red': 'light-red',
-          'light-yellow': 'light-yellow',
-          'light-green': 'light-green',
-          'light-cyan': 'light-cyan',
-          'light-purple': 'light-purple',
-          'light-pink': 'light-pink',
-          'dark-red': 'dark-red',
-          'dark-yellow': 'dark-yellow',
-          'dark-green': 'dark-green',
-          'dark-cyan': 'dark-cyan',
-          'dark-purple': 'dark-purple',
-          'dark-pink': 'dark-pink',
-          bumblebee: 'bumblebee',
-          synthwave: 'synthwave',
-          retro: 'retro',
-          dracula: 'dracula',
-          autumn: 'autumn',
-          night: 'night',
-        }}
-      >
-        <AnimatePresence>
-          {isLoading && process.env.NODE_ENV !== 'development' && !isBot ? (
-            <motion.div
-              initial={{ opacity: 1 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="bg-background fixed left-0 top-0 z-[9999] block h-full w-full"
-            >
-              <div className="relative top-1/2 m-auto mt-[-77px] block h-0 w-0">
-                <div className="mb-5 flex	items-center justify-center">
-                  <Image
-                    width="100px"
-                    height="100px"
-                    className="mr-5 rounded-full"
-                    title="Logo Loading"
-                    alt="Logo Loading"
-                    src={logoLoading}
-                    placeholder="empty"
-                    responsive={[
-                      {
-                        size: {
-                          width: 100,
-                          height: 100,
+      <WrapBalancerProvider>
+        <RemixThemesProvider
+          defaultTheme="system"
+          attribute="class"
+          enableColorScheme
+          enableSystem
+          themes={listThemes}
+          value={{
+            light: 'light',
+            dark: 'dark',
+            'light-red': 'light-red',
+            'light-yellow': 'light-yellow',
+            'light-green': 'light-green',
+            'light-cyan': 'light-cyan',
+            'light-purple': 'light-purple',
+            'light-pink': 'light-pink',
+            'dark-red': 'dark-red',
+            'dark-yellow': 'dark-yellow',
+            'dark-green': 'dark-green',
+            'dark-cyan': 'dark-cyan',
+            'dark-purple': 'dark-purple',
+            'dark-pink': 'dark-pink',
+            bumblebee: 'bumblebee',
+            synthwave: 'synthwave',
+            retro: 'retro',
+            dracula: 'dracula',
+            autumn: 'autumn',
+            night: 'night',
+          }}
+        >
+          <AnimatePresence>
+            {isLoading && process.env.NODE_ENV !== 'development' && !isBot ? (
+              <motion.div
+                initial={{ opacity: 1 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="bg-background fixed left-0 top-0 z-[9999] block h-full w-full"
+              >
+                <div className="relative top-1/2 m-auto mt-[-77px] block h-0 w-0">
+                  <div className="mb-5 flex	items-center justify-center">
+                    <Image
+                      width="100px"
+                      height="100px"
+                      className="mr-5 rounded-full"
+                      title="Logo Loading"
+                      alt="Logo Loading"
+                      src={logoLoading}
+                      placeholder="empty"
+                      responsive={[
+                        {
+                          size: {
+                            width: 100,
+                            height: 100,
+                          },
                         },
-                      },
-                    ]}
-                    dprVariants={[1, 3]}
-                    options={{
-                      contentType: MimeType.WEBP,
-                    }}
-                  />
-                  <h1 className="from-secondary to-primary bg-gradient-to-tr to-50% bg-clip-text !text-3xl font-bold tracking-normal text-transparent md:!text-5xl">
-                    SORA
-                  </h1>
+                      ]}
+                      dprVariants={[1, 3]}
+                      options={{
+                        contentType: MimeType.WEBP,
+                      }}
+                    />
+                    <h1 className="from-secondary to-primary bg-gradient-to-tr to-50% bg-clip-text !text-3xl font-bold tracking-normal text-transparent md:!text-5xl">
+                      SORA
+                    </h1>
+                  </div>
+                  <div className="h-9 w-9 animate-spin">
+                    <div className="border-y-primary h-full w-full rounded-[50%] border-4" />
+                  </div>
                 </div>
-                <div className="h-9 w-9 animate-spin">
-                  <div className="border-y-primary h-full w-full rounded-[50%] border-4" />
-                </div>
-              </div>
-            </motion.div>
-          ) : null}
-        </AnimatePresence>
-        <NextUIv2Provider>
-          <Layout user={user} />
-        </NextUIv2Provider>
-      </RemixThemesProvider>
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
+          <NextUIv2Provider>
+            <Layout user={user} />
+          </NextUIv2Provider>
+        </RemixThemesProvider>
+      </WrapBalancerProvider>
     </Document>
   );
 };

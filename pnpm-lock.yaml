@@ -229,6 +229,9 @@ dependencies:
   react-photoswipe-gallery:
     specifier: ^2.2.1
     version: 2.2.2(photoswipe@5.3.4)(prop-types@15.8.1)(react@18.3.0-canary-0210f0b08-20230525)
+  react-wrap-balancer:
+    specifier: ^1.0.0
+    version: 1.0.0(react@18.3.0-canary-0210f0b08-20230525)
   react-youtube:
     specifier: ^9.0.3
     version: 9.0.3(react@18.3.0-canary-0210f0b08-20230525)
@@ -11719,6 +11722,14 @@ packages:
       use-latest: 1.2.1(@types/react@18.2.7)(react@18.3.0-canary-0210f0b08-20230525)
     transitivePeerDependencies:
       - '@types/react'
+    dev: false
+
+  /react-wrap-balancer@1.0.0(react@18.3.0-canary-0210f0b08-20230525):
+    resolution: {integrity: sha512-yjDH+I8WGyDfh95gKhX/6ckfSBAltwQkxiYxtLPlyIRQNUVSjvz1uHR6Hpy+zHyOkJQw6GEC5RPglA41QXvzyw==}
+    peerDependencies:
+      react: '>=16.8.0 || ^17.0.0 || ^18'
+    dependencies:
+      react: 18.3.0-canary-0210f0b08-20230525
     dev: false
 
   /react-youtube@9.0.3(react@18.3.0-canary-0210f0b08-20230525):

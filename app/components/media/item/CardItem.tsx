@@ -7,6 +7,7 @@ import { useIntersectionObserver, useMeasure } from '@react-hookz/web';
 import { Link, useFetcher, useNavigate } from '@remix-run/react';
 // import { motion } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
+import Balancer from 'react-wrap-balancer';
 import { MimeType } from 'remix-image';
 import { tv } from 'tailwind-variants';
 
@@ -57,7 +58,7 @@ interface ICardItemProps {
 
 const cardItemStyles = tv({
   slots: {
-    base: 'my-4 !w-[164px] hover:shadow-[0_0_0_1px] hover:shadow-primary-200',
+    base: 'hover:shadow-primary-200 my-4 !w-[164px] hover:shadow-[0_0_0_1px]',
     body: 'aspect-[2/3]',
     imageContainer: '',
     image: 'aspect-[2/3]',
@@ -81,7 +82,7 @@ const cardItemStyles = tv({
         image: 'z-0 !h-[174px] !min-h-[auto] !min-w-[116px] sm:aspect-[2/3] sm:!h-[auto]',
         content: 'flex grow flex-col gap-y-4 p-3 sm:w-3/5',
         footer:
-          'absolute bottom-0 flex !w-[116px] justify-center !rounded-br-none border-t border-default-200 bg-background/[0.6] backdrop-blur-md sm:!w-2/5',
+          'border-default-200 bg-background/[0.6] absolute bottom-0 flex !w-[116px] justify-center !rounded-br-none border-t backdrop-blur-md sm:!w-2/5',
       },
       table: {
         base: '!w-full',
@@ -97,7 +98,7 @@ const cardItemStyles = tv({
         image:
           'z-0 aspect-[16/9] !min-h-[auto] !min-w-[auto] overflow-hidden !transition-[transform,_opacity]',
         footer:
-          'absolute bottom-0 flex justify-center border-t border-default-200 bg-background/[0.6] backdrop-blur-md',
+          'border-default-200 bg-background/[0.6] absolute bottom-0 flex justify-center border-t backdrop-blur-md',
       },
       people: {
         base: '!w-[164px]',
@@ -235,7 +236,9 @@ const CardItem = (props: ICardItemProps) => {
           ) : null}
         </CardBody>
         <CardFooter className={footer()}>
-          <h5 className="font-semibold">{titleItem}</h5>
+          <h5 className="text-center font-semibold">
+            <Balancer>{titleItem}</Balancer>
+          </h5>
         </CardFooter>
       </Card>
     );
@@ -306,7 +309,7 @@ const CardItem = (props: ICardItemProps) => {
         inView ? (
           <div className={content()}>
             <div className="flex h-6 flex-row items-center justify-between">
-              <h6 className="hidden 2xs:block">
+              <h6 className="2xs:block hidden">
                 {`${mediaType.charAt(0).toUpperCase()}${mediaType.slice(1)} • ${releaseDate}`}
               </h6>
               <Rating
@@ -334,8 +337,8 @@ const CardItem = (props: ICardItemProps) => {
                     <Button
                       key={genre}
                       type="button"
-                      color="primary"
-                      variant="flat"
+                      color="default"
+                      variant="solid"
                       size="xs"
                       onPress={() => navigate(`/discover/anime?genres=${genre}`)}
                     >
@@ -348,8 +351,8 @@ const CardItem = (props: ICardItemProps) => {
                         <Button
                           key={genreId}
                           type="button"
-                          color="primary"
-                          variant="flat"
+                          color="default"
+                          variant="solid"
                           size="xs"
                           onPress={() =>
                             navigate(`/discover/movies?with_genres=${genresMovie?.[genreId]}`)
@@ -363,8 +366,8 @@ const CardItem = (props: ICardItemProps) => {
                       <Button
                         key={genreId}
                         type="button"
-                        color="primary"
-                        variant="flat"
+                        color="default"
+                        variant="solid"
                         size="xs"
                         onPress={() =>
                           navigate(`/discover/tv-shows?with_genres=${genresTv?.[genreId]}`)
@@ -382,7 +385,7 @@ const CardItem = (props: ICardItemProps) => {
           mediaType !== 'people' &&
           inView ? (
           <div className={content()}>
-            <Link to={linkTo || '/'} className="text-lg font-bold text-foreground">
+            <Link to={linkTo || '/'} className="text-foreground line-clamp-1 text-lg font-bold">
               {titleItem}
             </Link>
             <div className="flex flex-row items-center justify-between">
@@ -392,8 +395,8 @@ const CardItem = (props: ICardItemProps) => {
                       <Button
                         key={genre}
                         type="button"
-                        color="primary"
-                        variant="flat"
+                        color="default"
+                        variant="solid"
                         size="xs"
                         onPress={() => navigate(`/discover/anime?genres=${genre}`)}
                         className={index === 1 ? '!hidden sm:!flex' : ''}
@@ -407,8 +410,8 @@ const CardItem = (props: ICardItemProps) => {
                           <Button
                             key={genreId}
                             type="button"
-                            color="primary"
-                            variant="flat"
+                            color="default"
+                            variant="solid"
                             size="xs"
                             onPress={() =>
                               navigate(`/discover/movies?with_genres=${genresMovie?.[genreId]}`)
@@ -423,8 +426,8 @@ const CardItem = (props: ICardItemProps) => {
                         <Button
                           key={genreId}
                           type="button"
-                          color="primary"
-                          variant="flat"
+                          color="default"
+                          variant="solid"
                           size="xs"
                           onPress={() =>
                             navigate(`/discover/tv-shows?with_genres=${genresTv?.[genreId]}`)
@@ -443,7 +446,7 @@ const CardItem = (props: ICardItemProps) => {
                 <Rating
                   ratingType={mediaType}
                   rating={mediaType === 'anime' ? voteAverage : voteAverage.toFixed(1)}
-                  className="hidden 2xs:flex"
+                  className="2xs:flex hidden"
                 />
               </div>
             </div>
@@ -531,14 +534,14 @@ const CardItem = (props: ICardItemProps) => {
             {titleItem}
           </h5>
           {isEpisodeCard ? (
-            <p className="line-clamp-2 w-full text-left text-sm text-foreground/60">
+            <p className="text-foreground/60 line-clamp-2 w-full text-left text-sm">
               EP {episodeNumber} - {episodeTitle}
             </p>
           ) : null}
           {mediaType === 'people' ? (
             <>
               {knownFor ? (
-                <p className="line-clamp-2 w-full text-left text-sm text-foreground/60">
+                <p className="text-foreground/60 line-clamp-2 w-full text-left text-sm">
                   {knownFor?.map((movie, index) => (
                     <>
                       {movie?.title || movie?.originalTitle || movie?.name || movie?.originalName}
@@ -548,12 +551,12 @@ const CardItem = (props: ICardItemProps) => {
                 </p>
               ) : null}
               {character ? (
-                <p className="line-clamp-2 w-full text-left text-sm text-foreground/60">
+                <p className="text-foreground/60 line-clamp-2 w-full text-left text-sm">
                   {character}
                 </p>
               ) : null}
               {job ? (
-                <p className="line-clamp-2 w-full text-left text-sm text-foreground/60">{job}</p>
+                <p className="text-foreground/60 line-clamp-2 w-full text-left text-sm">{job}</p>
               ) : null}
             </>
           ) : null}

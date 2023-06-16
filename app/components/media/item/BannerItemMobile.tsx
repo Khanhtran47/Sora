@@ -4,6 +4,7 @@ import { Chip } from '@nextui-org/chip';
 import { useIntersectionObserver, useMeasure } from '@react-hookz/web';
 import { Link } from '@remix-run/react';
 import { AnimatePresence, motion } from 'framer-motion';
+import Balancer from 'react-wrap-balancer';
 import Image, { MimeType } from 'remix-image';
 
 import type { Title } from '~/types/media';
@@ -100,7 +101,9 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
         </CardBody>
         <CardFooter className="absolute bottom-6 z-[1]">
           <div className="flex w-full flex-col items-center justify-center gap-4 py-3">
-            <h2 className="mb-0 text-center font-semibold">{titleItem}</h2>
+            <h2 className="mb-0 text-center font-semibold">
+              <Balancer>{titleItem}</Balancer>
+            </h2>
             <div className="m-0 flex w-full flex-row gap-x-2">
               <Chip
                 variant="flat"
