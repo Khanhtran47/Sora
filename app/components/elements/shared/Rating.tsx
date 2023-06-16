@@ -14,8 +14,8 @@ const Rating = (props: IRatingProps) => {
   if (ratingType === 'movie' || ratingType === 'tv') {
     return (
       <div className={cnBase('flex flex-row items-center gap-x-2', className)}>
-        <h6 className="rounded-xl bg-[#3ec2c2] px-1 text-white">TMDb</h6>
-        <h6 style={color ? { color } : {}}>{rating}</h6>
+        <p className="rounded-xl bg-[#3ec2c2] px-1 text-white">TMDb</p>
+        <p style={color ? { color } : {}}>{rating}</p>
       </div>
     );
   }
@@ -28,7 +28,7 @@ const Rating = (props: IRatingProps) => {
       ) : (
         <AnilistStatIcon stat="bad" />
       )}
-      <h6 style={color ? { color } : {}}>{rating}%</h6>
+      <p style={color ? { color } : {}}>{rating}%</p>
     </div>
   );
 };

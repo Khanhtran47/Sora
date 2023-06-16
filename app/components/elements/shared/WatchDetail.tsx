@@ -5,7 +5,6 @@ import { Spacer } from '@nextui-org/spacer';
 import { useMediaQuery } from '@react-hookz/web';
 import { useNavigate } from '@remix-run/react';
 import { MimeType } from 'remix-image';
-import tinycolor from 'tinycolor2';
 
 import type { IMedia } from '~/types/media';
 import type { IEpisodeInfo } from '~/services/consumet/anilist/anilist.types';
@@ -61,7 +60,6 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
     recommendationsAnime,
     genresMovie,
     genresTv,
-    color,
     episodes,
     season,
     providers,
@@ -69,9 +67,6 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
   const navigate = useNavigate();
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const isMd = useMediaQuery('(max-width: 768px)', { initializeWithValue: false });
-  const colorBackground = tinycolor(color).isDark()
-    ? tinycolor(color).brighten(40).saturate(70).spin(180).toString()
-    : tinycolor(color).darken(40).saturate(70).spin(180).toString();
 
   return (
     <>
@@ -109,7 +104,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
               disableSkeleton={false}
               radius="lg"
               classNames={{
-                base: 'w-full h-auto aspect-[2/3] min-w-[auto] min-h-[auto] max-w-[137px] lg:max-w-[158px] xl:max-w-[173px] 2xl:max-w-[239px]',
+                base: 'w-full h-auto aspect-[2/3] min-w-[auto] min-h-[auto] !max-w-[137px] lg:!max-w-[158px] xl:!max-w-[173px] 2xl:!max-w-[239px]',
               }}
               loading="lazy"
               placeholder="empty"
@@ -160,13 +155,13 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
         <div className="flex w-full flex-col items-start justify-start gap-y-4">
           <h3 className="text-default-900 font-semibold">{title}</h3>
           {type === 'movie' || type === 'tv' ? (
-            <div className="flex flex-row gap-x-3">
+            <div className="flex flex-row gap-x-6">
               <Rating rating={tmdbRating?.toFixed(1)} ratingType="movie" />
               {imdbRating && (
-                <>
-                  <p className="mr-2 rounded-lg bg-[#ddb600] px-1 font-semibold text-black">IMDb</p>
-                  <p className="font-semibold">{imdbRating}</p>
-                </>
+                <div className="flex flex-row items-center gap-x-2">
+                  <p className="rounded-xl bg-[#ddb600] px-1 text-black">IMDb</p>
+                  <p>{imdbRating}</p>
+                </div>
               )}
             </div>
           ) : null}
@@ -174,48 +169,39 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
             <Rating rating={anilistRating} ratingType="anime" />
           ) : null}
           <div className="flex w-full flex-row flex-wrap items-center justify-start gap-x-3">
-            {(type === 'movie' || type === 'tv') &&
-              genresMedia &&
-              genresMedia.map((genre) => (
-                <Button
-                  key={genre?.id}
-                  type="button"
-                  size={isSm ? 'sm' : 'md'}
-                  className="hover:opacity-80"
-                  style={{
-                    marginBottom: '0.125rem',
-                    background: color,
-                    color: colorBackground,
-                  }}
-                  onPress={() =>
-                    navigate(
-                      `/discover/${type === 'movie' ? 'movies' : 'tv-shows'}?with_genres=${
-                        genre?.id
-                      }`,
-                    )
-                  }
-                >
-                  {genre?.name}
-                </Button>
-              ))}
-            {type === 'anime' &&
-              genresAnime &&
-              genresAnime.map((genre, index) => (
-                <Button
-                  key={index}
-                  type="button"
-                  size={isSm ? 'sm' : 'md'}
-                  className="hover:opacity-80"
-                  onPress={() => navigate(`/discover/anime?genres=${genre}`)}
-                  style={{
-                    marginBottom: '0.125rem',
-                    background: color,
-                    color: colorBackground,
-                  }}
-                >
-                  {genre}
-                </Button>
-              ))}
+            {(type === 'movie' || type === 'tv') && genresMedia
+              ? genresMedia.map((genre) => (
+                  <Button
+                    key={genre?.id}
+                    type="button"
+                    size={isSm ? 'sm' : 'md'}
+                    className="mb-1 hover:opacity-80"
+                    onPress={() =>
+                      navigate(
+                        `/discover/${type === 'movie' ? 'movies' : 'tv-shows'}?with_genres=${
+                          genre?.id
+                        }`,
+                      )
+                    }
+                  >
+                    {genre?.name}
+                  </Button>
+                ))
+              : null}
+            {type === 'anime'
+              ? genresAnime &&
+                genresAnime.map((genre, index) => (
+                  <Button
+                    key={index}
+                    type="button"
+                    size={isSm ? 'sm' : 'md'}
+                    className="mb-1 hover:opacity-80"
+                    onPress={() => navigate(`/discover/anime?genres=${genre}`)}
+                  >
+                    {genre}
+                  </Button>
+                ))
+              : null}
           </div>
           {type === 'movie' || type === 'tv' ? (
             <p style={{ textAlign: 'justify' }}>{overview}</p>

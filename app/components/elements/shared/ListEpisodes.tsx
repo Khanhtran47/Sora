@@ -45,9 +45,9 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
   const { isShowSkipOpEdButton } = useSoraSettings();
   const episodesCountAvailable = useMemo(() => episodes && episodes.length, [episodes]);
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
-  const [selectedProvider, setSelectedProvider] = useState(providers[0].provider);
+  const [selectedProvider, setSelectedProvider] = useState(providers[0]?.provider);
   const [episodesCountProvider, setEpisodesCountProvider] = useState<number>(
-    providers[0].episodesCount || 0,
+    providers[0]?.episodesCount || 0,
   );
   const [episodesAvailable, setEpisodesAvailable] = useState<
     IEpisode[] | IEpisodeInfo[] | number[] | undefined
@@ -163,7 +163,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                 <Card
                   isHoverable
                   isPressable
-                  className="!max-h-[127px] hover:shadow-[0_0_0_1px] hover:shadow-primary-200"
+                  className="hover:shadow-primary-200 !max-h-[127px] w-full hover:shadow-[0_0_0_1px]"
                   onClick={() => handleSelectEpisode(index)}
                 >
                   <CardBody className="flex flex-row flex-nowrap justify-start p-0">

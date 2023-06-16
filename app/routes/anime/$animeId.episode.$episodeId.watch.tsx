@@ -56,6 +56,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     getAnimeInfo(animeId),
     getAnimeEpisodeInfo(animeId),
   ]);
+  const sortEpisodes = episodes?.sort((a, b) => a.number - b.number);
   const title =
     detail?.title?.english || detail?.title?.userPreferred || detail?.title?.romaji || '';
   const orgTitle = detail?.title?.native;
@@ -156,7 +157,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
           provider,
           idProvider,
           detail,
-          episodes,
+          episodes: sortEpisodes,
           hasNextEpisode,
           sources: tvDetail?.sources,
           subtitles: tvDetail?.subtitles.map((sub) => ({
@@ -188,7 +189,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         provider,
         idProvider,
         detail,
-        episodes,
+        episodes: sortEpisodes,
         hasNextEpisode,
         sources: tvDetail?.sources,
         subtitles: tvDetail?.subtitles.map((sub) => ({
@@ -247,7 +248,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         {
           provider,
           detail,
-          episodes,
+          episodes: sortEpisodes,
           hasNextEpisode,
           sources: episodeDetail?.sources.map((source) => ({
             ...source,
@@ -282,7 +283,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
       {
         provider,
         detail,
-        episodes,
+        episodes: sortEpisodes,
         hasNextEpisode,
         sources: episodeDetail?.sources.map((source) => ({
           ...source,
@@ -344,7 +345,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         {
           provider,
           detail,
-          episodes,
+          episodes: sortEpisodes,
           hasNextEpisode,
           sources: episodeDetail?.sources.map((source) => ({
             ...source,
@@ -380,7 +381,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
       {
         provider,
         detail,
-        episodes,
+        episodes: sortEpisodes,
         hasNextEpisode,
         sources: episodeDetail?.sources.map((source) => ({
           ...source,
@@ -442,7 +443,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
           provider,
           idProvider,
           detail,
-          episodes,
+          episodes: sortEpisodes,
           hasNextEpisode,
           sources: [
             {
@@ -482,7 +483,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         provider,
         idProvider,
         detail,
-        episodes,
+        episodes: sortEpisodes,
         hasNextEpisode,
         sources: [
           {
@@ -554,7 +555,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
           provider,
           idProvider,
           detail,
-          episodes,
+          episodes: sortEpisodes,
           hasNextEpisode,
           sources: [{ url: episodeStream?.Video || '', isM3U8: true, quality: 'auto' }],
           subtitles: episodeSubtitle?.map((sub) => ({
@@ -589,7 +590,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         provider,
         idProvider,
         detail,
-        episodes,
+        episodes: sortEpisodes,
         hasNextEpisode,
         sources: [{ url: episodeStream?.Video || '', isM3U8: true, quality: 'auto' }],
         subtitles: episodeSubtitle?.map((sub) => ({
@@ -637,7 +638,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     return json(
       {
         detail,
-        episodes,
+        episodes: sortEpisodes,
         sources: sources?.sources.map((source) => ({
           ...source,
           url: `${
@@ -670,7 +671,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   return json(
     {
       detail,
-      episodes,
+      episodes: sortEpisodes,
       sources: sources?.sources.map((source) => ({
         ...source,
         url: `${

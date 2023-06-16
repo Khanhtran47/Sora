@@ -16,7 +16,12 @@ export const loader = async ({ params, request }: LoaderArgs) => {
 
   const episodes = await getAnimeEpisodeInfo(animeId);
   if (!episodes) throw new Response('Not Found', { status: 404 });
-  return json({ episodes }, { headers: { 'Cache-Control': CACHE_CONTROL.episode } });
+  return json(
+    {
+      episodes: episodes.sort((a, b) => a.number - b.number),
+    },
+    { headers: { 'Cache-Control': CACHE_CONTROL.episode } },
+  );
 };
 
 export const meta: MetaFunction = ({ params }) => ({
@@ -32,8 +37,7 @@ export const handle = {
       Episodes
     </BreadcrumbItem>
   ),
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  miniTitle: (match: RouteMatch, parentMatch?: RouteMatch) => ({
+  miniTitle: (_match: RouteMatch, parentMatch?: RouteMatch) => ({
     title:
       parentMatch?.data?.detail?.title?.userPreferred ||
       parentMatch?.data?.detail?.title?.english ||
