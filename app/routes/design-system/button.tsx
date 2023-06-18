@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Button } from '@nextui-org/button';
+import { Link } from '@nextui-org/link';
+import { Switch } from '@nextui-org/switch';
 
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
-// import { Switch } from '@nextui-org/switch';
-
 import {
   Select,
   SelectContent,
@@ -30,13 +30,19 @@ export const handle = {
 const ButtonPage = () => {
   const [size, setSize] = useState('md');
   const [radius, setRadius] = useState('xl');
-  const [
-    isFullWidth,
-    // setIsFullWidth
-  ] = useState(true);
+  const [isFullWidth, setIsFullWidth] = useState(true);
   return (
     <>
       <h2>Button</h2>
+      <Link
+        showAnchorIcon
+        underline="hover"
+        isExternal
+        isBlock
+        href="https://nextui-docs-v2.vercel.app/docs/components/button#api"
+      >
+        API Reference
+      </Link>
       <p className="text-base tracking-wide md:text-lg">Default</p>
       <Button>Default</Button>
       <p className="text-base tracking-wide md:text-lg">Disabled</p>
@@ -93,8 +99,7 @@ const ButtonPage = () => {
       <p className="text-base tracking-wide md:text-lg">Disable Ripple Animation</p>
       <Button disableRipple>Button</Button>
       <p className="text-base tracking-wide md:text-lg">Full Width</p>
-      {/* need React 18's useId, fix after upgrade react */}
-      {/* <Switch isSelected={isFullWidth} onValueChange={(value) => setIsFullWidth(value)} /> */}
+      <Switch isSelected={isFullWidth} onValueChange={(value) => setIsFullWidth(value)} />
       <Button fullWidth={isFullWidth}>Button</Button>
       <p className="text-base tracking-wide md:text-lg">Colors</p>
       <div className="flex flex-row flex-wrap items-center justify-start gap-4">
@@ -104,7 +109,7 @@ const ButtonPage = () => {
         <Button color="success">Success</Button>
         <Button color="warning">Warning</Button>
         <Button color="danger">Danger</Button>
-        <Button className="bg-gradient-to-tr from-primary via-default-600 to-secondary">
+        <Button className="from-primary via-default-600 to-secondary bg-gradient-to-tr">
           Custom colors
         </Button>
       </div>

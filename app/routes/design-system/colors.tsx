@@ -2,7 +2,7 @@ import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
 export const handle = {
   breadcrumb: () => (
-    <BreadcrumbItem to="/design-system/colors" key="desgin-colors">
+    <BreadcrumbItem to="/design-system/colors" key="design-colors">
       Colors
     </BreadcrumbItem>
   ),
@@ -20,247 +20,247 @@ const ColorsPage = () => {
       <div className="flex flex-col gap-3">
         Layout:
         <div className="mb-4 flex flex-row flex-wrap gap-4">
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-background text-foreground shadow-lg">
+          <div className="bg-background text-foreground flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             background
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-foreground text-background shadow-lg">
+          <div className="bg-foreground text-background flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             foreground
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-border text-content3-foreground shadow-lg">
+          <div className="bg-border text-content3-foreground flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             border
           </div>
         </div>
         Content:
         <div className="mb-4 flex flex-row flex-wrap gap-4">
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-content1 text-content1-foreground shadow-lg">
+          <div className="bg-content1 text-content1-foreground flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             content1
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-content2 text-content2-foreground shadow-lg">
+          <div className="bg-content2 text-content2-foreground flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             content2
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-content3 text-content3-foreground shadow-lg">
+          <div className="bg-content3 text-content3-foreground flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             content3
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-content4 text-content4-foreground shadow-lg">
+          <div className="bg-content4 text-content4-foreground flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             content4
           </div>
         </div>
         Base:
         <div className="mb-4 flex flex-row flex-wrap gap-4">
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-default text-default-foreground shadow-lg">
+          <div className="bg-default text-default-foreground flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             default
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-lg">
+          <div className="bg-primary text-primary-foreground flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             primary
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-secondary text-secondary-foreground shadow-lg">
+          <div className="bg-secondary text-secondary-foreground flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             secondary
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-success text-success-foreground shadow-lg">
+          <div className="bg-success text-success-foreground flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             success
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-warning text-warning-foreground shadow-lg">
+          <div className="bg-warning text-warning-foreground flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             warning
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-danger text-danger-foreground shadow-lg">
+          <div className="bg-danger text-danger-foreground flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             danger
           </div>
         </div>
         Default:
         <div className="mb-4 flex flex-row flex-wrap gap-4">
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-default-50 text-default-900 shadow-lg">
+          <div className="bg-default-50 text-default-900 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             default-50
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-default-100 text-default-900 shadow-lg">
+          <div className="bg-default-100 text-default-900 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             default-100
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-default-200 text-default-800 shadow-lg">
+          <div className="bg-default-200 text-default-800 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             default-200
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-default-300 text-default-800 shadow-lg">
+          <div className="bg-default-300 text-default-800 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             default-300
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-default-400 text-default-800 shadow-lg">
+          <div className="bg-default-400 text-default-800 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             default-400
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-default-500 text-default-foreground shadow-lg">
+          <div className="bg-default-500 text-default-foreground flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             default-500
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-default-600 text-default-50 shadow-lg">
+          <div className="bg-default-600 text-default-50 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             default-600
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-default-700 text-default-100 shadow-lg">
+          <div className="bg-default-700 text-default-100 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             default-700
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-default-800 text-default-100 shadow-lg">
+          <div className="bg-default-800 text-default-100 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             default-800
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-default-900 text-default-100 shadow-lg">
+          <div className="bg-default-900 text-default-100 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             default-900
           </div>
         </div>
         Primary:
         <div className="mb-4 flex flex-row flex-wrap gap-4">
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-primary-50 text-primary-900 shadow-lg">
+          <div className="bg-primary-50 text-primary-900 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             primary-50
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-primary-100 text-primary-900 shadow-lg">
+          <div className="bg-primary-100 text-primary-900 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             primary-100
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-primary-200 text-primary-800 shadow-lg">
+          <div className="bg-primary-200 text-primary-800 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             primary-200
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-primary-300 text-primary-800 shadow-lg">
+          <div className="bg-primary-300 text-primary-800 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             primary-300
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-primary-400 text-primary-800 shadow-lg">
+          <div className="bg-primary-400 text-primary-800 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             primary-400
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-primary-500 text-primary-foreground shadow-lg">
+          <div className="bg-primary-500 text-primary-foreground flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             primary-500
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-primary-600 text-primary-50 shadow-lg">
+          <div className="bg-primary-600 text-primary-50 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             primary-600
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-primary-700 text-primary-100 shadow-lg">
+          <div className="bg-primary-700 text-primary-100 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             primary-700
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-primary-800 text-primary-100 shadow-lg">
+          <div className="bg-primary-800 text-primary-100 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             primary-800
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-primary-900 text-primary-100 shadow-lg">
+          <div className="bg-primary-900 text-primary-100 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             primary-900
           </div>
         </div>
         Secondary:
         <div className="mb-4 flex flex-row flex-wrap gap-4">
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-secondary-50 text-secondary-900 shadow-lg">
+          <div className="bg-secondary-50 text-secondary-900 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             secondary-50
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-secondary-100 text-secondary-900 shadow-lg">
+          <div className="bg-secondary-100 text-secondary-900 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             secondary-100
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-secondary-200 text-secondary-800 shadow-lg">
+          <div className="bg-secondary-200 text-secondary-800 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             secondary-200
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-secondary-300 text-secondary-800 shadow-lg">
+          <div className="bg-secondary-300 text-secondary-800 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             secondary-300
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-secondary-400 text-secondary-800 shadow-lg">
+          <div className="bg-secondary-400 text-secondary-800 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             secondary-400
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-secondary-500 text-secondary-foreground shadow-lg">
+          <div className="bg-secondary-500 text-secondary-foreground flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             secondary-500
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-secondary-600 text-secondary-50 shadow-lg">
+          <div className="bg-secondary-600 text-secondary-50 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             secondary-600
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-secondary-700 text-secondary-100 shadow-lg">
+          <div className="bg-secondary-700 text-secondary-100 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             secondary-700
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-secondary-800 text-secondary-100 shadow-lg">
+          <div className="bg-secondary-800 text-secondary-100 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             secondary-800
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-secondary-900 text-secondary-100 shadow-lg">
+          <div className="bg-secondary-900 text-secondary-100 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             secondary-900
           </div>
         </div>
         Success:
         <div className="mb-4 flex flex-row flex-wrap gap-4">
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-success-50 text-success-900 shadow-lg">
+          <div className="bg-success-50 text-success-900 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             success-50
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-success-100 text-success-900 shadow-lg">
+          <div className="bg-success-100 text-success-900 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             success-100
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-success-200 text-success-800 shadow-lg">
+          <div className="bg-success-200 text-success-800 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             success-200
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-success-300 text-success-800 shadow-lg">
+          <div className="bg-success-300 text-success-800 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             success-300
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-success-400 text-success-800 shadow-lg">
+          <div className="bg-success-400 text-success-800 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             success-400
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-success-500 text-success-foreground shadow-lg">
+          <div className="bg-success-500 text-success-foreground flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             success-500
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-success-600 text-success-50 shadow-lg">
+          <div className="bg-success-600 text-success-50 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             success-600
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-success-700 text-success-100 shadow-lg">
+          <div className="bg-success-700 text-success-100 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             success-700
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-success-800 text-success-100 shadow-lg">
+          <div className="bg-success-800 text-success-100 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             success-800
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-success-900 text-success-100 shadow-lg">
+          <div className="bg-success-900 text-success-100 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             success-900
           </div>
         </div>
         Warning:
         <div className="mb-4 flex flex-row flex-wrap gap-4">
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-warning-50 text-warning-900 shadow-lg">
+          <div className="bg-warning-50 text-warning-900 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             warning-50
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-warning-100 text-warning-900 shadow-lg">
+          <div className="bg-warning-100 text-warning-900 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             warning-100
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-warning-200 text-warning-800 shadow-lg">
+          <div className="bg-warning-200 text-warning-800 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             warning-200
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-warning-300 text-warning-800 shadow-lg">
+          <div className="bg-warning-300 text-warning-800 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             warning-300
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-warning-400 text-warning-800 shadow-lg">
+          <div className="bg-warning-400 text-warning-800 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             warning-400
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-warning-500 text-warning-foreground shadow-lg">
+          <div className="bg-warning-500 text-warning-foreground flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             warning-500
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-warning-600 text-warning-50 shadow-lg">
+          <div className="bg-warning-600 text-warning-50 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             warning-600
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-warning-700 text-warning-100 shadow-lg">
+          <div className="bg-warning-700 text-warning-100 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             warning-700
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-warning-800 text-warning-100 shadow-lg">
+          <div className="bg-warning-800 text-warning-100 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             warning-800
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-warning-900 text-warning-100 shadow-lg">
+          <div className="bg-warning-900 text-warning-100 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             warning-900
           </div>
         </div>
         Danger:
         <div className="mb-4 flex flex-row flex-wrap gap-4">
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-danger-50 text-danger-900 shadow-lg">
+          <div className="bg-danger-50 text-danger-900 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             danger-50
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-danger-100 text-danger-900 shadow-lg">
+          <div className="bg-danger-100 text-danger-900 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             danger-100
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-danger-200 text-danger-800 shadow-lg">
+          <div className="bg-danger-200 text-danger-800 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             danger-200
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-danger-300 text-danger-800 shadow-lg">
+          <div className="bg-danger-300 text-danger-800 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             danger-300
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-danger-400 text-danger-800 shadow-lg">
+          <div className="bg-danger-400 text-danger-800 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             danger-400
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-danger-500 text-danger-foreground shadow-lg">
+          <div className="bg-danger-500 text-danger-foreground flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             danger-500
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-danger-600 text-danger-50 shadow-lg">
+          <div className="bg-danger-600 text-danger-50 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             danger-600
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-danger-700 text-danger-100 shadow-lg">
+          <div className="bg-danger-700 text-danger-100 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             danger-700
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-danger-800 text-danger-100 shadow-lg">
+          <div className="bg-danger-800 text-danger-100 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             danger-800
           </div>
-          <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-danger-900 text-danger-100 shadow-lg">
+          <div className="bg-danger-900 text-danger-100 flex h-32 w-32 items-center justify-center rounded-lg shadow-lg">
             danger-900
           </div>
         </div>

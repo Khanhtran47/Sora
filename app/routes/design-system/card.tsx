@@ -23,7 +23,13 @@ const CardPage = () => {
   return (
     <>
       <h2>Card</h2>
-      <Link showAnchorIcon underline="hover" isExternal isBlock href="#">
+      <Link
+        showAnchorIcon
+        underline="hover"
+        isExternal
+        isBlock
+        href="https://nextui-docs-v2.vercel.app/docs/components/card#api"
+      >
         API Reference
       </Link>
       <p className="text-base tracking-wide md:text-lg">Default</p>
@@ -34,13 +40,13 @@ const CardPage = () => {
       </Card>
       <p className="text-base tracking-wide md:text-lg">With Divider</p>
       <Card className="max-w-md">
-        <CardHeader className="border-b border-default-200">
+        <CardHeader className="border-default-200 border-b">
           <strong>Description</strong>
         </CardHeader>
         <CardBody className="py-8">
           <p>The Object constructor creates an object wrapper for the given value.</p>
         </CardBody>
-        <CardFooter className="border-t border-default-200">
+        <CardFooter className="border-default-200 border-t">
           <p>
             When called in a non-constructor context, Object behaves identically to{' '}
             {/* <Code color="primary">new Object()</Code>. */}

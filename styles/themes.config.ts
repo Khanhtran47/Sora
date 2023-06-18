@@ -201,6 +201,9 @@ const bumblebeeTheme = {
   foreground: {
     DEFAULT: '#333333',
   },
+  divider: {
+    DEFAULT: 'rgb(51, 51, 51, 0.25)',
+  },
   content1: {
     DEFAULT: '#ECECFB',
     foreground: '#040417',
@@ -311,6 +314,9 @@ const autumnTheme = {
   },
   foreground: {
     DEFAULT: '#303030',
+  },
+  divider: {
+    DEFAULT: 'rgb(48, 48, 48, 0.25)',
   },
   content1: {
     DEFAULT: '#FDFAF4',
@@ -423,6 +429,9 @@ const retroTheme = {
   foreground: {
     DEFAULT: '#282425',
   },
+  divider: {
+    DEFAULT: 'rgba(40, 36, 37, 0.25)',
+  },
   content1: {
     DEFAULT: '#FDFBF4',
     foreground: '#3B2911',
@@ -533,6 +542,9 @@ const synthwaveTheme = {
   },
   foreground: {
     DEFAULT: '#f9f7fd',
+  },
+  divider: {
+    DEFAULT: 'rgba(249, 247, 253, 0.20)',
   },
   content1: {
     DEFAULT: '#080325',
@@ -645,6 +657,9 @@ const draculaTheme = {
   foreground: {
     DEFAULT: '#f8f8f2',
   },
+  divider: {
+    DEFAULT: 'rgba(248, 248, 242, 0.20)',
+  },
   content1: {
     DEFAULT: '#0C0F2A',
     foreground: '#F4F6FC',
@@ -755,6 +770,9 @@ const nightTheme = {
   },
   foreground: {
     DEFAULT: '#b7c6f0',
+  },
+  divider: {
+    DEFAULT: 'rgba(183, 198, 240, 0.20)',
   },
   content1: {
     DEFAULT: '#050A1C',
