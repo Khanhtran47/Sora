@@ -26,6 +26,7 @@ import {
   useMatches,
   useNavigation,
 } from '@remix-run/react';
+import i18next, { i18nCookie } from '~/i18n/i18next.server';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ThemeProvider as RemixThemesProvider } from 'next-themes';
 import NProgress from 'nprogress';
@@ -49,7 +50,6 @@ import swiperPaginationStyles from 'swiper/css/navigation';
 import swiperNavigationStyles from 'swiper/css/pagination';
 // @ts-ignore
 import swiperThumbsStyles from 'swiper/css/thumbs';
-import i18next, { i18nCookie } from '~/i18n/i18next.server';
 
 import { getUserFromCookie } from '~/services/supabase';
 import { getListGenre, getListLanguages } from '~/services/tmdb/tmdb.server';

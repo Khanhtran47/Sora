@@ -24,7 +24,7 @@ const HistoryItem = ({ item }: IHistoryItem) => {
       <Card
         isPressable
         isHoverable
-        className="hover:shadow-[0_0_0_1px] hover:shadow-primary-200 sm:!max-h-[171px] sm:w-full"
+        className="hover:shadow-primary-200 hover:shadow-[0_0_0_1px] sm:!max-h-[171px] sm:w-full"
       >
         <CardBody className="flex flex-col flex-nowrap justify-start overflow-hidden p-0 sm:flex-row">
           <Image

@@ -4,10 +4,10 @@ export const backgroundStyles = tv({
   base: 'absolute top-0 h-full w-full',
   variants: {
     tablink: {
-      true: 'z-[1] bg-gradient-to-b from-background/20 to-background',
+      true: 'from-background/20 to-background z-[1] bg-gradient-to-b',
     },
     content: {
-      true: 'z-[0] bg-gradient-to-b from-transparent to-background/20',
+      true: 'to-background/20 z-[0] bg-gradient-to-b from-transparent',
     },
   },
 });

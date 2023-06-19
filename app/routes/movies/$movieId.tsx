@@ -2,10 +2,10 @@ import { useEffect, useRef } from 'react';
 import { useIntersectionObserver } from '@react-hookz/web';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { Outlet, useCatch, useLoaderData, useLocation, type RouteMatch } from '@remix-run/react';
+import i18next from '~/i18n/i18next.server';
 import { motion, useTransform } from 'framer-motion';
 import Vibrant from 'node-vibrant';
 import { useHydrated } from 'remix-utils';
-import i18next from '~/i18n/i18next.server';
 
 import { authenticate } from '~/services/supabase';
 import { getImdbRating, getMovieDetail } from '~/services/tmdb/tmdb.server';

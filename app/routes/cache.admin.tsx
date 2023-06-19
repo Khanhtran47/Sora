@@ -154,7 +154,7 @@ const CacheAdminRoute = () => {
       exit={{ x: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="flex w-full max-w-screen-4xl flex-col justify-start px-3 sm:px-0">
+      <div className="max-w-screen-4xl flex w-full flex-col justify-start px-3 sm:px-0">
         <h2>Cache Admin</h2>
         <SearchForm
           onSubmit={onSubmit}

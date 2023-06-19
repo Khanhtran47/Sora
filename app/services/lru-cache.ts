@@ -15,11 +15,11 @@ const lruOptions = {
   sizeCalculation: (_value: unknown, _key: string) =>
     Math.ceil(JSON.stringify(_value).length / 1000),
 
-  // we won't cache object bigger than 50kb
-  maxSize: 50,
+  // we won't cache object bigger than 800kb
+  maxSize: 800,
 
-  // max nb of objects, less than 250mb
-  max: 5000,
+  // max nb of objects, less than 500mb
+  max: 640,
 };
 
 // eslint-disable-next-line no-multi-assign

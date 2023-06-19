@@ -1,8 +1,8 @@
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useLoaderData, useLocation } from '@remix-run/react';
+import i18next from '~/i18n/i18next.server';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import i18next from '~/i18n/i18next.server';
 
 import { authenticate } from '~/services/supabase';
 import { getListPeople } from '~/services/tmdb/tmdb.server';

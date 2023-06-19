@@ -21,7 +21,7 @@ const CatchBoundaryView = ({ caught }: { caught: ThrownResponse<number, any> }) 
   return (
     <div className="mt-32 flex flex-col items-center justify-center gap-y-4">
       <Image width={480} src={pageNotFound} alt="404" className="object-cover" />
-      <h1 className="text-center text-warning">
+      <h1 className="text-warning text-center">
         {caught.status} {caught.statusText} {message}
       </h1>
     </div>

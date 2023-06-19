@@ -54,7 +54,7 @@ const MovieGenresPage = () => {
     >
       <h4>{t('movie-genres')}</h4>
       <Spacer y={5} />
-      <div className="grid grid-cols-1 justify-center gap-3 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+      <div className="xs:grid-cols-2 grid grid-cols-1 justify-center gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
         {Object.entries(genresMovie).map(([id, name]) => (
           <Button
             key={id}

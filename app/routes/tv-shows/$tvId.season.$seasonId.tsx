@@ -4,11 +4,11 @@ import { Card, CardBody, CardHeader } from '@nextui-org/card';
 import { useIntersectionObserver, useMeasure, useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { Outlet, useCatch, useLoaderData, useParams, type RouteMatch } from '@remix-run/react';
+import i18next from '~/i18n/i18next.server';
 import { motion, useTransform } from 'framer-motion';
 import Vibrant from 'node-vibrant';
 import { MimeType } from 'remix-image';
 import { useHydrated } from 'remix-utils';
-import i18next from '~/i18n/i18next.server';
 
 import getProviderList from '~/services/provider.server';
 import { authenticate } from '~/services/supabase';
@@ -218,8 +218,8 @@ const TvSeasonDetail = () => {
           className="rounded-b-0 absolute bottom-0 z-10 flex grow flex-col justify-center p-0"
         >
           <div className={backgroundStyles({ content: true })} />
-          <div className="grid w-full max-w-[1920px] grid-cols-[1fr_2fr] grid-rows-[1fr_auto_auto] items-stretch justify-center gap-x-4 gap-y-6 px-3 pb-8 pt-5 grid-areas-small sm:grid-rows-[auto_1fr_auto] sm:px-3.5 sm:grid-areas-wide xl:px-4 2xl:px-5">
-            <div className="flex flex-col items-center justify-center grid-in-image" ref={imageRef}>
+          <div className="grid-areas-small sm:grid-areas-wide grid w-full max-w-[1920px] grid-cols-[1fr_2fr] grid-rows-[1fr_auto_auto] items-stretch justify-center gap-x-4 gap-y-6 px-3 pb-8 pt-5 sm:grid-rows-[auto_1fr_auto] sm:px-3.5 xl:px-4 2xl:px-5">
+            <div className="grid-in-image flex flex-col items-center justify-center" ref={imageRef}>
               {seasonDetail?.poster_path ? (
                 <Image
                   src={TMDB.posterUrl(seasonDetail?.poster_path)}
@@ -227,6 +227,7 @@ const TvSeasonDetail = () => {
                   title={seasonDetail?.name}
                   classNames={{
                     base: 'w-full sm:w-3/4 xl:w-1/2',
+                    // @ts-ignore
                     img: 'aspect-[2/3] !min-h-[auto] !min-w-[auto] shadow-xl shadow-default',
                   }}
                   placeholder="empty"
@@ -262,7 +263,7 @@ const TvSeasonDetail = () => {
                 </div>
               )}
             </div>
-            <div className="flex w-full flex-col items-start justify-start grid-in-title">
+            <div className="grid-in-title flex w-full flex-col items-start justify-start">
               <h2>
                 {detail?.name} {seasonDetail?.name}
               </h2>
@@ -271,7 +272,7 @@ const TvSeasonDetail = () => {
               </h5>
             </div>
             {seasonDetail?.overview ? (
-              <div className="flex flex-col gap-y-3 grid-in-info sm:gap-y-6">
+              <div className="grid-in-info flex flex-col gap-y-3 sm:gap-y-6">
                 <h6>{seasonDetail.overview}</h6>
               </div>
             ) : null}
@@ -282,7 +283,7 @@ const TvSeasonDetail = () => {
             // @ts-ignore
             '--colors-movie-brand': isHydrated ? backgroundColor : 'transparent',
           }}
-          className="absolute bottom-0 to-transparent p-0 after:absolute after:bottom-0 after:h-full after:w-full after:bg-gradient-to-t after:from-movie-brand-color after:opacity-70 after:content-['']"
+          className="after:from-movie-brand-color absolute bottom-0 to-transparent p-0 after:absolute after:bottom-0 after:h-full after:w-full after:bg-gradient-to-t after:opacity-70 after:content-['']"
         >
           <Image
             src={
@@ -293,6 +294,7 @@ const TvSeasonDetail = () => {
             radius="none"
             classNames={{
               base: 'w-full h-auto object-cover max-w-full',
+              // @ts-ignore
               img: `left-0 top-0 z-0 m-0 object-cover opacity-30 blur-2xl ${
                 size ? 'visible' : 'invisible'
               }'}`,

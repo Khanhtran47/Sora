@@ -14,8 +14,8 @@ import TMDB from '~/utils/media';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import { Dialog, DialogContent, DialogTrigger } from '~/components/elements/Dialog';
-import Image from '~/components/elements/Image';
 import WatchTrailer, { type Trailer } from '~/components/elements/dialog/WatchTrailerDialog';
+import Image from '~/components/elements/Image';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/elements/tab/Tabs';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
@@ -141,7 +141,7 @@ const MovieVideosPage = () => {
               <h6 className="!m-0">{type.activeVideo}</h6>
               {activeType === type.id ? (
                 <motion.div
-                  className="absolute overflow-hidden rounded-md bg-default-foreground data-[orientation=horizontal]:bottom-0 data-[orientation=vertical]:left-0 data-[orientation=horizontal]:h-1 data-[orientation=vertical]:h-1/2 data-[orientation=horizontal]:w-1/2 data-[orientation=vertical]:w-1"
+                  className="bg-default-foreground absolute overflow-hidden rounded-md data-[orientation=horizontal]:bottom-0 data-[orientation=vertical]:left-0 data-[orientation=horizontal]:h-1 data-[orientation=vertical]:h-1/2 data-[orientation=horizontal]:w-1/2 data-[orientation=vertical]:w-1"
                   layoutId="video-underline"
                   data-orientation={isSm ? 'horizontal' : 'vertical'}
                   ref={underlineRef}
@@ -164,7 +164,7 @@ const MovieVideosPage = () => {
                 onDragEnd={handleDragEnd}
                 dragDirectionLock
               >
-                <div className="grid w-full grid-cols-1 justify-items-center gap-4 lg:grid-cols-2 3xl:grid-cols-3 4xl:grid-cols-4">
+                <div className="3xl:grid-cols-3 4xl:grid-cols-4 grid w-full grid-cols-1 justify-items-center gap-4 lg:grid-cols-2">
                   {activeTypeVideos
                     ? activeTypeVideos.map((video) => (
                         <DialogTrigger asChild key={video?.id}>
@@ -172,7 +172,7 @@ const MovieVideosPage = () => {
                             isPressable
                             isHoverable
                             role="figure"
-                            className="w-[320px] hover:shadow-[0_0_0_1px] hover:shadow-primary-200"
+                            className="hover:shadow-primary-200 w-[320px] hover:shadow-[0_0_0_1px]"
                             onPress={() => {
                               const videoPlay = videos?.results?.find(
                                 (item) => item.key === video.id,

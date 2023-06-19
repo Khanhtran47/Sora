@@ -2,9 +2,9 @@ import * as React from 'react';
 import { Spacer } from '@nextui-org/spacer';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useLoaderData, type RouteMatch } from '@remix-run/react';
+import i18next from '~/i18n/i18next.server';
 import { Gallery, Item, type GalleryProps } from 'react-photoswipe-gallery';
 import { MimeType } from 'remix-image';
-import i18next from '~/i18n/i18next.server';
 
 import { authenticate } from '~/services/supabase';
 import { getImages } from '~/services/tmdb/tmdb.server';
@@ -70,28 +70,32 @@ const uiElements: GalleryProps['uiElements'] = [
     },
     appendTo: 'bar',
     onClick: (_, __, pswpInstance) => {
-      const item = pswpInstance.currSlide.content.element;
+      const item = pswpInstance.currSlide?.content.element;
 
-      const prevRotateAngle = Number(item.dataset.rotateAngel) || 0;
+      const prevRotateAngle = Number(item?.dataset.rotateAngel) || 0;
       const rotateAngle = prevRotateAngle === 270 ? 0 : prevRotateAngle + 90;
 
       // add slide rotation
-      item.style.transform = `${item.style.transform.replace(
-        `rotate(-${prevRotateAngle}deg)`,
-        '',
-      )} rotate(-${rotateAngle}deg)`;
-      item.dataset.rotateAngel = String(rotateAngle);
+      if (item) {
+        item.style.transform = `${item.style.transform?.replace(
+          `rotate(-${prevRotateAngle}deg)`,
+          '',
+        )} rotate(-${rotateAngle}deg)`;
+        item.dataset.rotateAngel = String(rotateAngle);
+      }
     },
     onInit: (_, pswpInstance) => {
       // remove applied rotation on slide change
       // https://photoswipe.com/events/#slide-content-events
       pswpInstance.on('contentRemove', () => {
-        const item = pswpInstance.currSlide.content.element;
-        item.style.transform = `${item.style.transform.replace(
-          `rotate(-${item.dataset.rotateAngel}deg)`,
-          '',
-        )}`;
-        delete item.dataset.rotateAngel;
+        const item = pswpInstance.currSlide?.content.element;
+        if (item) {
+          item.style.transform = `${item.style.transform?.replace(
+            `rotate(-${item.dataset.rotateAngel || 0}deg)`,
+            '',
+          )}`;
+          delete item.dataset.rotateAngel;
+        }
       });
     },
   },
@@ -111,7 +115,7 @@ const TvPhotosPage = () => {
           </h5>
           <Spacer y={2.5} />
           <Gallery withCaption withDownloadButton uiElements={uiElements}>
-            <div className="grid grid-cols-1 justify-center gap-3 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+            <div className="xs:grid-cols-2 grid grid-cols-1 justify-center gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
               {images?.backdrops?.map((image) => (
                 <Item
                   key={image.file_path}
@@ -131,6 +135,7 @@ const TvPhotosPage = () => {
                       alt={`Backdrop of ${tvData?.detail?.name} image size ${image.width}x${image.height}`}
                       radius="xl"
                       classNames={{
+                        // @ts-ignore
                         img: 'h-auto min-w-[120px] cursor-pointer object-cover 2xs:min-w-[185px]',
                       }}
                       title={tvData?.detail?.name}
@@ -154,7 +159,7 @@ const TvPhotosPage = () => {
           </h5>
           <Spacer y={2.5} />
           <Gallery withCaption withDownloadButton uiElements={uiElements}>
-            <div className="grid grid-cols-1 justify-center gap-3 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+            <div className="xs:grid-cols-2 grid grid-cols-1 justify-center gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
               {images?.logos?.map((image) => (
                 <Item
                   key={image.file_path}
@@ -174,6 +179,7 @@ const TvPhotosPage = () => {
                       alt={`Logo of ${tvData?.detail?.name} image size ${image.width}x${image.height}`}
                       radius="xl"
                       classNames={{
+                        // @ts-ignore
                         img: 'h-auto min-w-[120px] cursor-pointer object-cover 2xs:min-w-[185px]',
                       }}
                       title={tvData?.detail?.name}
@@ -197,7 +203,7 @@ const TvPhotosPage = () => {
           </h5>
           <Spacer y={2.5} />
           <Gallery withCaption withDownloadButton uiElements={uiElements}>
-            <div className="grid grid-cols-1 justify-center gap-3 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+            <div className="xs:grid-cols-2 grid grid-cols-1 justify-center gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
               {images?.posters?.map((image) => (
                 <Item
                   key={image.file_path}
@@ -217,6 +223,7 @@ const TvPhotosPage = () => {
                       alt={`Poster of ${tvData?.detail?.name} image size ${image.width}x${image.height}`}
                       radius="xl"
                       classNames={{
+                        // @ts-ignore
                         img: 'h-auto min-w-[120px] cursor-pointer object-cover 2xs:min-w-[185px]',
                       }}
                       title={tvData?.detail?.name}

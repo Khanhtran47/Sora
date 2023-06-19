@@ -25,7 +25,7 @@ import type {
   MediaType,
   TimeWindowType,
 } from './tmdb.types';
-import { TMDB, postFetchDataHandler } from './utils.server';
+import { postFetchDataHandler, TMDB } from './utils.server';
 
 // reusable function
 const getListFromTMDB = async (

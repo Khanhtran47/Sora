@@ -2,9 +2,9 @@ import * as React from 'react';
 import { Spacer } from '@nextui-org/spacer';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useLoaderData, type RouteMatch } from '@remix-run/react';
+import i18next from '~/i18n/i18next.server';
 import { Gallery, Item, type GalleryProps } from 'react-photoswipe-gallery';
 import { MimeType } from 'remix-image';
-import i18next from '~/i18n/i18next.server';
 
 import { getPeopleImages } from '~/services/tmdb/tmdb.server';
 import TMDB from '~/utils/media';
@@ -69,28 +69,32 @@ const MediaPage = () => {
       },
       appendTo: 'bar',
       onClick: (_, __, pswpInstance) => {
-        const item = pswpInstance.currSlide.content.element;
+        const item = pswpInstance.currSlide?.content.element;
 
-        const prevRotateAngle = Number(item.dataset.rotateAngel) || 0;
+        const prevRotateAngle = Number(item?.dataset.rotateAngel) || 0;
         const rotateAngle = prevRotateAngle === 270 ? 0 : prevRotateAngle + 90;
 
         // add slide rotation
-        item.style.transform = `${item.style.transform.replace(
-          `rotate(-${prevRotateAngle}deg)`,
-          '',
-        )} rotate(-${rotateAngle}deg)`;
-        item.dataset.rotateAngel = String(rotateAngle);
+        if (item) {
+          item.style.transform = `${item.style.transform?.replace(
+            `rotate(-${prevRotateAngle}deg)`,
+            '',
+          )} rotate(-${rotateAngle}deg)`;
+          item.dataset.rotateAngel = String(rotateAngle);
+        }
       },
       onInit: (_, pswpInstance) => {
         // remove applied rotation on slide change
         // https://photoswipe.com/events/#slide-content-events
         pswpInstance.on('contentRemove', () => {
-          const item = pswpInstance.currSlide.content.element;
-          item.style.transform = `${item.style.transform.replace(
-            `rotate(-${item.dataset.rotateAngel}deg)`,
-            '',
-          )}`;
-          delete item.dataset.rotateAngel;
+          const item = pswpInstance.currSlide?.content.element;
+          if (item) {
+            item.style.transform = `${item.style.transform?.replace(
+              `rotate(-${item.dataset.rotateAngel}deg)`,
+              '',
+            )}`;
+            delete item.dataset.rotateAngel;
+          }
         });
       },
     },
@@ -102,7 +106,7 @@ const MediaPage = () => {
       </h5>
       <Spacer y={2.5} />
       <Gallery withCaption withDownloadButton uiElements={uiElements}>
-        <div className="grid grid-cols-1 gap-3 xs:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 5xl:grid-cols-5">
+        <div className="xs:grid-cols-2 3xl:grid-cols-4 5xl:grid-cols-5 grid grid-cols-1 gap-3 xl:grid-cols-3">
           {images?.profiles?.map((image) => (
             <Item
               key={image.file_path}
@@ -122,6 +126,7 @@ const MediaPage = () => {
                   alt={`Photo of ${peopleData?.detail?.name} image size ${image.width}x${image.height}`}
                   radius="xl"
                   classNames={{
+                    // @ts-ignore
                     img: 'h-auto min-w-[120px] cursor-pointer object-cover 2xs:min-w-[185px]',
                   }}
                   loading="lazy"

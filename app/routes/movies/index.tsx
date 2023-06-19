@@ -3,9 +3,9 @@ import { Spinner } from '@nextui-org/spinner';
 import { useMeasure } from '@react-hookz/web';
 import { json, type LoaderArgs } from '@remix-run/node';
 import { useFetcher, useLoaderData, useLocation, useNavigate } from '@remix-run/react';
+import i18next from '~/i18n/i18next.server';
 import { AnimatePresence, motion } from 'framer-motion';
 import NProgress from 'nprogress';
-import i18next from '~/i18n/i18next.server';
 
 import type { IMedia } from '~/types/media';
 import { authenticate } from '~/services/supabase';

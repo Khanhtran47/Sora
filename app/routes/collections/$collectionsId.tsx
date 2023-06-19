@@ -4,8 +4,8 @@ import { Spacer } from '@nextui-org/spacer';
 import { useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useLoaderData, useLocation, type RouteMatch } from '@remix-run/react';
-import { motion } from 'framer-motion';
 import i18next from '~/i18n/i18next.server';
+import { motion } from 'framer-motion';
 
 import { authenticate } from '~/services/supabase';
 import { getListDetail } from '~/services/tmdb/tmdb.server';

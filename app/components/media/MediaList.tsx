@@ -17,9 +17,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '~/components/elements/Select';
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '~/components/elements/Sheet';
 import Filter from '~/components/elements/shared/Filter';
 import ListViewChangeButton from '~/components/elements/shared/ListViewChangeButton';
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '~/components/elements/Sheet';
 import ChevronLeftIcon from '~/assets/icons/ChevronLeftIcon';
 import ChevronRightIcon from '~/assets/icons/ChevronRightIcon';
 import FilterIcon from '~/assets/icons/FilterIcon';
@@ -244,7 +244,7 @@ interface IMediaListProps {
 }
 
 const mediaListStyles = tv({
-  base: 'flex w-full max-w-screen-4xl flex-col justify-center',
+  base: 'max-w-screen-4xl flex w-full flex-col justify-center',
   variants: {
     gap: {
       none: 'gap-0',

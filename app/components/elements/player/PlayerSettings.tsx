@@ -7,11 +7,11 @@ import { isMobileOnly } from 'react-device-detect';
 
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { Dialog, DialogContent, DialogTrigger } from '~/components/elements/Dialog';
-import { Popover, PopoverContent, PopoverTrigger } from '~/components/elements/Popover';
-import { Sheet, SheetContent, SheetTrigger } from '~/components/elements/Sheet';
 import AddSubtitles from '~/components/elements/dialog/AddSubtitleDialog';
 import SearchSubtitles from '~/components/elements/dialog/SearchSubtitleDialog';
+import { Popover, PopoverContent, PopoverTrigger } from '~/components/elements/Popover';
 import ResizablePanel from '~/components/elements/shared/ResizablePanel';
+import { Sheet, SheetContent, SheetTrigger } from '~/components/elements/Sheet';
 import Arrow from '~/assets/icons/ArrowIcon';
 import Filter from '~/assets/icons/FilterIcon';
 import Flip from '~/assets/icons/FlipIcon';

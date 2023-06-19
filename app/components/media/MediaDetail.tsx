@@ -7,13 +7,13 @@ import { Spacer } from '@nextui-org/spacer';
 import { Tooltip } from '@nextui-org/tooltip';
 import { useMeasure, useMediaQuery } from '@react-hookz/web';
 import { useFetcher, useLocation, useNavigate } from '@remix-run/react';
+import type { ColorPalette } from '~/routes/api/color-palette';
 import { motion, useTransform } from 'framer-motion';
 import { MimeType } from 'remix-image';
 import { useHydrated } from 'remix-utils';
 // import { useTranslation } from 'react-i18next';
 import { tv } from 'tailwind-variants';
 import tinycolor from 'tinycolor2';
-import type { ColorPalette } from '~/routes/api/color-palette';
 
 import type { IAnimeInfo } from '~/services/consumet/anilist/anilist.types';
 import type { IMovieDetail, IMovieTranslations, ITvShowDetail } from '~/services/tmdb/tmdb.types';
@@ -23,9 +23,9 @@ import { useLayout } from '~/store/layout/useLayout';
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { Dialog, DialogContent, DialogTrigger } from '~/components/elements/Dialog';
-import Image from '~/components/elements/Image';
 import SelectProvider from '~/components/elements/dialog/SelectProviderDialog';
 import WatchTrailer, { type Trailer } from '~/components/elements/dialog/WatchTrailerDialog';
+import Image from '~/components/elements/Image';
 import Rating from '~/components/elements/shared/Rating';
 import { backgroundStyles } from '~/components/styles/primitives';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
@@ -162,8 +162,8 @@ export const MediaDetail = (props: IMediaDetail) => {
           className="z-1 absolute bottom-0 flex grow flex-col items-center justify-center p-0"
         >
           <div className={backgroundStyles({ content: true })} />
-          <div className="grid w-full max-w-[1920px] grid-cols-[1fr_2fr] grid-rows-[1fr_auto_auto] items-stretch justify-center gap-x-4 gap-y-6 px-3 pt-5 grid-areas-small sm:grid-rows-[auto_1fr_auto] sm:px-3.5 sm:grid-areas-wide xl:px-4 2xl:px-5">
-            <div className="flex flex-col items-center justify-center grid-in-image" ref={imageRef}>
+          <div className="grid-areas-small sm:grid-areas-wide grid w-full max-w-[1920px] grid-cols-[1fr_2fr] grid-rows-[1fr_auto_auto] items-stretch justify-center gap-x-4 gap-y-6 px-3 pt-5 sm:grid-rows-[auto_1fr_auto] sm:px-3.5 xl:px-4 2xl:px-5">
+            <div className="grid-in-image flex flex-col items-center justify-center" ref={imageRef}>
               {posterPath ? (
                 <Image
                   src={posterPath}
@@ -172,6 +172,7 @@ export const MediaDetail = (props: IMediaDetail) => {
                   shadow="xl"
                   classNames={{
                     base: 'w-full sm:w-3/4 xl:w-1/2',
+                    // @ts-ignore
                     img: 'aspect-[2/3] !min-h-[auto] !min-w-[auto]',
                   }}
                   disableSkeleton={false}
@@ -209,13 +210,13 @@ export const MediaDetail = (props: IMediaDetail) => {
               )}
               {isSm ? null : <Spacer y={10} />}
             </div>
-            <div className="flex w-full flex-col items-start justify-start grid-in-title">
+            <div className="grid-in-title flex w-full flex-col items-start justify-start">
               <h1 className="!text-3xl md:!text-4xl">
                 {`${title}${isSm ? '' : ` (${releaseYear})`}`}
               </h1>
               {tagline ? <p className="italic">{tagline}</p> : null}
             </div>
-            <div className="flex flex-col gap-y-3 grid-in-info sm:gap-y-6">
+            <div className="grid-in-info flex flex-col gap-y-3 sm:gap-y-6">
               <div className="flex flex-row flex-wrap gap-3">
                 <Chip
                   size="xl"
@@ -254,7 +255,7 @@ export const MediaDetail = (props: IMediaDetail) => {
                   color="primary"
                   radius="full"
                   variant="flat"
-                  className="flex flex-row duration-200 ease-in-out transition-all"
+                  className="flex flex-row transition-all duration-200 ease-in-out"
                   style={
                     colorPalette
                       ? {
@@ -301,14 +302,14 @@ export const MediaDetail = (props: IMediaDetail) => {
                   ))}
               </div>
             </div>
-            <div className="mb-10 flex w-full flex-row flex-wrap items-center justify-between gap-4 grid-in-buttons">
+            <div className="grid-in-buttons mb-10 flex w-full flex-row flex-wrap items-center justify-between gap-4">
               {(status === 'Released' || status === 'Ended' || status === 'Returning Series') && (
                 <Dialog open={showProvidereDialog} onOpenChange={setShowProvidereDialog}>
                   <DialogTrigger asChild>
                     <Button
                       type="button"
                       // shadow
-                      className="w-full bg-gradient-to-r from-primary to-secondary text-lg font-bold sm:w-auto"
+                      className="from-primary to-secondary w-full bg-gradient-to-r text-lg font-bold sm:w-auto"
                       size="lg"
                     >
                       Watch now
@@ -425,8 +426,8 @@ export const AnimeDetail = (props: IAnimeDetail) => {
       >
         <CardBody ref={ref} className="z-1 absolute bottom-0 flex grow flex-col justify-center p-0">
           <div className={backgroundStyles({ content: true })} />
-          <div className="grid w-full max-w-[1920px] grid-cols-[1fr_2fr] grid-rows-[1fr_auto_auto] items-stretch justify-center gap-x-4 gap-y-6 px-3 pt-5 grid-areas-small sm:grid-rows-[auto_1fr_auto] sm:px-3.5 sm:grid-areas-wide xl:px-4 2xl:px-5">
-            <div className="flex flex-col items-center justify-center grid-in-image" ref={imageRef}>
+          <div className="grid-areas-small sm:grid-areas-wide grid w-full max-w-[1920px] grid-cols-[1fr_2fr] grid-rows-[1fr_auto_auto] items-stretch justify-center gap-x-4 gap-y-6 px-3 pt-5 sm:grid-rows-[auto_1fr_auto] sm:px-3.5 xl:px-4 2xl:px-5">
+            <div className="grid-in-image flex flex-col items-center justify-center" ref={imageRef}>
               {image ? (
                 <Image
                   src={image}
@@ -435,6 +436,7 @@ export const AnimeDetail = (props: IAnimeDetail) => {
                   radius="xl"
                   classNames={{
                     base: 'w-full sm:w-3/4 xl:w-1/2',
+                    // @ts-ignore
                     img: 'aspect-[2/3] !min-h-[auto] !min-w-[auto]',
                   }}
                   disableSkeleton={false}
@@ -472,19 +474,19 @@ export const AnimeDetail = (props: IAnimeDetail) => {
               )}
               {isSm ? null : <Spacer y={10} />}
             </div>
-            <div className="flex w-full flex-col items-start justify-start grid-in-title">
+            <div className="grid-in-title flex w-full flex-col items-start justify-start">
               <h1 className="!text-3xl md:!text-4xl">
                 {`${title?.userPreferred || title?.english || title?.romaji || title?.native}`}
               </h1>
             </div>
-            <div className="flex flex-col gap-y-3 grid-in-info sm:gap-y-6">
+            <div className="grid-in-info flex flex-col gap-y-3 sm:gap-y-6">
               <div className="flex flex-row flex-wrap gap-3">
                 <Chip
                   size="xl"
                   color="primary"
                   radius="full"
                   variant="flat"
-                  className="duration-200 ease-in-out transition-all"
+                  className="transition-all duration-200 ease-in-out"
                   style={
                     colorPalette
                       ? {
@@ -505,7 +507,7 @@ export const AnimeDetail = (props: IAnimeDetail) => {
                   color="primary"
                   radius="full"
                   variant="flat"
-                  className="flex flex-row duration-200 ease-in-out transition-all"
+                  className="flex flex-row transition-all duration-200 ease-in-out"
                   style={
                     colorPalette
                       ? {
@@ -546,13 +548,13 @@ export const AnimeDetail = (props: IAnimeDetail) => {
                   ))}
               </div>
             </div>
-            <div className="mb-10 flex w-full flex-row flex-wrap items-center justify-between gap-4 grid-in-buttons">
+            <div className="grid-in-buttons mb-10 flex w-full flex-row flex-wrap items-center justify-between gap-4">
               <Dialog open={showProvidereDialog} onOpenChange={setShowProvidereDialog}>
                 <DialogTrigger asChild>
                   <Button
                     type="button"
                     size="lg"
-                    className="w-full bg-gradient-to-r from-primary to-secondary text-lg font-bold sm:w-auto"
+                    className="from-primary to-secondary w-full bg-gradient-to-r text-lg font-bold sm:w-auto"
                   >
                     Watch now
                   </Button>
@@ -627,12 +629,15 @@ export const MediaBackgroundImage = (props: IMediaBackground) => {
         sidebarBoxedMode: sidebarBoxedMode.value,
       })}
       style={{
-        backgroundImage: `url(/api/image?src=${encodeURIComponent(
-          backdropPath ||
-            'https://raw.githubusercontent.com/Khanhtran47/Sora/master/app/assets/images/background-default.jpg',
-        )}&width=${size?.width}&height=${
-          size?.height
-        }&fit=cover&position=center&background[]=0&background[]=0&background[]=0&background[]=0&quality=80&compressionLevel=9&loop=0&delay=100&crop=null&contentType=image%2Fwebp)`,
+        backgroundImage:
+          size?.width !== undefined
+            ? `url(/api/image?src=${encodeURIComponent(
+                backdropPath ||
+                  'https://raw.githubusercontent.com/Khanhtran47/Sora/master/app/assets/images/background-default.jpg',
+              )}&width=${Math.round(size?.width)}&height=${Math.round(
+                size?.height,
+              )}&fit=cover&position=center&background[]=0&background[]=0&background[]=0&background[]=0&quality=80&compressionLevel=9&loop=0&delay=100&crop=null&contentType=image%2Fwebp)`
+            : 'none',
         aspectRatio: '2 / 1',
         visibility: size?.width !== undefined ? 'visible' : 'hidden',
         backgroundSize: `${size?.width}px auto`,

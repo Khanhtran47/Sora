@@ -110,10 +110,13 @@ function useSoraSettings() {
     defaultValue: false,
     initializeWithValue: false,
   });
-  const listViewType = useLocalStorageValue('sora_settings-layout-list_view', {
-    defaultValue: 'card',
-    initializeWithValue: false,
-  });
+  const listViewType = useLocalStorageValue<'table' | 'card' | 'detail'>(
+    'sora_settings-layout-list_view',
+    {
+      defaultValue: 'card',
+      initializeWithValue: false,
+    },
+  );
   const listLoadingType = useLocalStorageValue('sora_settings-layout-list-loading_type', {
     defaultValue: 'pagination',
     initializeWithValue: false,

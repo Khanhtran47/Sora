@@ -3,7 +3,6 @@ import i18next from '~/i18n/i18next.server';
 
 import { authenticate } from '~/services/supabase';
 
-// eslint-disable-next-line import/prefer-default-export, arrow-body-style
 export const loader = async ({ request }: LoaderArgs) => {
   const [, locale] = await Promise.all([
     authenticate(request, undefined, true),
