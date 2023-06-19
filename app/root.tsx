@@ -570,6 +570,7 @@ const App = () => {
                 initial={{ opacity: 1 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
                 className="bg-background fixed left-0 top-0 z-[9999] block h-full w-full"
               >
                 <div className="relative top-1/2 m-auto mt-[-77px] block h-0 w-0">

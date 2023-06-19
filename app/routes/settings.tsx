@@ -10,7 +10,7 @@ import type { MetaFunction } from '@remix-run/node';
 import { NavLink, Link as RemixLink, useLocation, useNavigate } from '@remix-run/react';
 import { AnimatePresence, motion, type PanInfo } from 'framer-motion';
 import { useTheme } from 'next-themes';
-import { isMobile } from 'react-device-detect';
+import { isMobileOnly } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
 import { MimeType } from 'remix-image';
 import { ClientOnly, useHydrated } from 'remix-utils';
@@ -463,14 +463,14 @@ const Settings = () => {
                 </TabsTrigger>
               ))}
             </TabsList>
-            <AnimatePresence exitBeforeEnter>
+            <AnimatePresence mode="wait">
               <TabsContent value="general-tab" key="general-tab" asChild>
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  drag={isMobile ? 'x' : false}
+                  transition={{ duration: 0.75 }}
+                  drag={isMobileOnly ? 'x' : false}
                   dragConstraints={{ left: 0, right: 0 }}
                   dragElastic={0.4}
                   onDragEnd={handleDragEnd}
@@ -492,8 +492,8 @@ const Settings = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  drag={isMobile ? 'x' : false}
+                  transition={{ duration: 0.75 }}
+                  drag={isMobileOnly ? 'x' : false}
                   dragConstraints={{ left: 0, right: 0 }}
                   dragElastic={0.4}
                   onDragEnd={handleDragEnd}
@@ -711,8 +711,8 @@ const Settings = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  drag={isMobile ? 'x' : false}
+                  transition={{ duration: 0.75 }}
+                  drag={isMobileOnly ? 'x' : false}
                   dragConstraints={{ left: 0, right: 0 }}
                   dragElastic={0.4}
                   onDragEnd={handleDragEnd}
@@ -724,8 +724,8 @@ const Settings = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  drag={isMobile ? 'x' : false}
+                  transition={{ duration: 0.75 }}
+                  drag={isMobileOnly ? 'x' : false}
                   dragConstraints={{ left: 0, right: 0 }}
                   dragElastic={0.4}
                   onDragEnd={handleDragEnd}
@@ -1024,8 +1024,8 @@ const Settings = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  drag={isMobile ? 'x' : false}
+                  transition={{ duration: 0.75 }}
+                  drag={isMobileOnly ? 'x' : false}
                   dragConstraints={{ left: 0, right: 0 }}
                   dragElastic={0.4}
                   onDragEnd={handleDragEnd}

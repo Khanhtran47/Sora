@@ -53,7 +53,7 @@ const ResizablePanel = ({
         height: panelHeight,
         width: size?.width || 'auto',
       }}
-      transition={{ duration: 0.25 }}
+      transition={{ duration: 0.3 }}
     >
       <AnimatePresence initial={false}>
         <motion.div // slide and fade effect
@@ -61,7 +61,7 @@ const ResizablePanel = ({
           initial={{ x: 382, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: -382, opacity: 0 }}
-          transition={{ duration: 0.25 }}
+          transition={{ duration: 0.3, ease: 'easeInOut' }}
           className={size?.height ? 'absolute' : 'relative'}
         >
           <ScrollArea

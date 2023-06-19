@@ -220,59 +220,72 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
         />
         <CardHeader className="absolute z-10 flex h-full flex-row items-center justify-center gap-5 md:gap-7 lg:gap-9 2xl:h-[calc(100%_-_160px)]">
           <div className="flex w-5/6 flex-col items-start justify-center gap-4 px-10 md:w-3/4 lg:w-2/3">
-            {logo ? (
-              <motion.div
-                animate={
-                  active && !showTrailer
-                    ? 'inView'
-                    : active && showTrailer
-                    ? 'showTrailer'
-                    : 'outView'
-                }
-                transition={{ duration: 0.5 }}
-                variants={variants}
-                style={{ originX: 0 }}
-              >
-                <Image
-                  src={TMDB.logoUrl(logo.file_path, isMd ? 'w185' : 'w300')}
-                  alt={titleItem}
-                  title={titleItem}
-                  radius="none"
-                  classNames={{
-                    img: 'w-logo object-contain nextui-sm:w-logo-sm',
-                  }}
-                  loading="eager"
-                  disableSkeleton={false}
-                  style={{
-                    aspectRatio: logo.aspect_ratio,
-                    mixBlendMode: 'color-burn',
-                    // @ts-ignore
-                    '--movie-logo-width':
-                      logo?.aspect_ratio && 185 / logo.aspect_ratio > 85
-                        ? 85 * Number(logo.aspect_ratio)
-                        : 185,
-                    '--movie-logo-width-sm':
-                      logo?.aspect_ratio && 300 / logo.aspect_ratio > 100
-                        ? 100 * Number(logo.aspect_ratio)
-                        : 300,
-                  }}
-                  placeholder="empty"
-                  options={{ contentType: MimeType.WEBP }}
-                />
-              </motion.div>
-            ) : (
-              <motion.h1
-                className="!line-clamp-2"
-                animate={active ? 'inView' : 'outView'}
-                transition={{ duration: 0.5 }}
-                variants={variants}
-              >
-                {titleItem}
-              </motion.h1>
-            )}
-            <AnimatePresence>
+            <AnimatePresence mode="popLayout">
+              {logo ? (
+                <motion.div
+                  key="logo"
+                  layout
+                  animate={
+                    active && !showTrailer
+                      ? 'inView'
+                      : active && showTrailer
+                      ? 'showTrailer'
+                      : 'outView'
+                  }
+                  transition={
+                    active && !showTrailer
+                      ? { duration: 0.5 }
+                      : active && showTrailer
+                      ? { duration: 0.5, delay: 0.5 }
+                      : { duration: 0.5 }
+                  }
+                  variants={variants}
+                  style={{ originX: 0 }}
+                >
+                  <Image
+                    src={TMDB.logoUrl(logo.file_path, isMd ? 'w185' : 'w300')}
+                    alt={titleItem}
+                    title={titleItem}
+                    radius="none"
+                    classNames={{
+                      // @ts-ignore
+                      img: 'w-logo object-contain nextui-sm:w-logo-sm',
+                    }}
+                    loading="eager"
+                    disableSkeleton={false}
+                    style={{
+                      aspectRatio: logo.aspect_ratio,
+                      mixBlendMode: 'color-burn',
+                      // @ts-ignore
+                      '--movie-logo-width':
+                        logo?.aspect_ratio && 185 / logo.aspect_ratio > 85
+                          ? 85 * Number(logo.aspect_ratio)
+                          : 185,
+                      '--movie-logo-width-sm':
+                        logo?.aspect_ratio && 300 / logo.aspect_ratio > 100
+                          ? 100 * Number(logo.aspect_ratio)
+                          : 300,
+                    }}
+                    placeholder="empty"
+                    options={{ contentType: MimeType.WEBP }}
+                  />
+                </motion.div>
+              ) : (
+                <motion.h1
+                  key="title"
+                  layout
+                  className="!line-clamp-2"
+                  animate={active ? 'inView' : 'outView'}
+                  transition={{ duration: 0.5 }}
+                  variants={variants}
+                >
+                  {titleItem}
+                </motion.h1>
+              )}
               {!showTrailer ? (
                 <motion.div
+                  key="info"
+                  layout
                   className="flex flex-row items-center gap-x-4"
                   initial={{ opacity: 0, x: 40 }}
                   animate={
@@ -283,7 +296,13 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                       : 'outView'
                   }
                   exit={{ opacity: 0, x: 40 }}
-                  transition={{ duration: 0.5, delay: 0.25 }}
+                  transition={
+                    active && !showTrailer
+                      ? { duration: 0.5, delay: 0.15 }
+                      : active && showTrailer
+                      ? { duration: 0.5 }
+                      : { duration: 0.5, delay: 0.15 }
+                  }
                   variants={variants}
                 >
                   <Rating
@@ -324,12 +343,11 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                   </div>
                 </motion.div>
               ) : null}
-            </AnimatePresence>
-            <AnimatePresence>
               {!isMd && !showTrailer ? (
                 <motion.p
+                  key="overview"
+                  layout
                   className="!line-clamp-6 text-justify"
-                  // @ts-ignore
                   initial={{ opacity: 0, x: 40 }}
                   animate={
                     active && !showTrailer
@@ -339,46 +357,54 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                       : 'outView'
                   }
                   exit={{ opacity: 0, x: 40 }}
-                  transition={{ duration: 0.5, delay: 0.5 }}
+                  transition={
+                    active && !showTrailer
+                      ? { duration: 0.5, delay: 0.3 }
+                      : active && showTrailer
+                      ? { duration: 0.5 }
+                      : { duration: 0.5, delay: 0.3 }
+                  }
                   variants={variants}
                   dangerouslySetInnerHTML={{ __html: overview || '' }}
                 />
               ) : null}
-            </AnimatePresence>
-            <motion.div
-              animate={active ? 'inView' : 'outView'}
-              transition={{ duration: 0.5, delay: 0.75 }}
-              variants={variants}
-            >
-              <Button
-                type="button"
-                color="primary"
-                className="font-bold"
-                onPress={() =>
-                  navigate(
-                    `/${
-                      mediaType === 'movie'
-                        ? 'movies/'
-                        : mediaType === 'tv'
-                        ? 'tv-shows/'
-                        : 'anime/'
-                    }${id}/${mediaType === 'anime' ? 'overview' : ''}`,
-                    {
-                      state: { currentTime: player ? player.playerInfo.currentTime : 0 },
-                    },
-                  )
-                }
+              <motion.div
+                key="buttons"
+                layout
+                animate={active ? 'inView' : 'outView'}
+                transition={{ duration: 0.5, delay: 0.45 }}
+                variants={variants}
               >
-                {t('moreDetails')}
-              </Button>
-            </motion.div>
+                <Button
+                  type="button"
+                  color="primary"
+                  className="font-bold"
+                  onPress={() =>
+                    navigate(
+                      `/${
+                        mediaType === 'movie'
+                          ? 'movies/'
+                          : mediaType === 'tv'
+                          ? 'tv-shows/'
+                          : 'anime/'
+                      }${id}/${mediaType === 'anime' ? 'overview' : ''}`,
+                      {
+                        state: { currentTime: player ? player.playerInfo.currentTime : 0 },
+                      },
+                    )
+                  }
+                >
+                  {t('moreDetails')}
+                </Button>
+              </motion.div>
+            </AnimatePresence>
           </div>
           {!isLg ? (
             <motion.div
               animate={
                 active && !showTrailer ? 'inView' : active && showTrailer ? 'outView' : 'outView'
               }
-              transition={{ duration: 0.75 }}
+              transition={{ duration: 1, ease: 'easeInOut' }}
               variants={{
                 inView: { opacity: 1, scale: 1, x: 0 },
                 outView: { opacity: 0, scale: 0, x: 0 },
@@ -393,6 +419,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                 disableSkeleton={false}
                 classNames={{
                   base: 'rounded-xl shadow-xl shadow-default aspect-[2/3] w-full h-auto min-h-[auto] min-w-[auto] !max-h-[390px] !max-w-[270px] 2xl:!max-h-[477px] 2xl:!max-w-[318px]',
+                  // @ts-ignore
                   img: 'h-full object-cover',
                 }}
                 loading="eager"
@@ -428,7 +455,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                   active ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0.3, scale: 1.2, y: 40 }
                 }
                 exit={{ opacity: 0, scale: 1.2, y: 40 }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 1, ease: 'easeIn' }}
                 style={{ overflow: 'hidden' }}
               >
                 <RemixImage

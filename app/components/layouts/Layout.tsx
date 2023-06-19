@@ -367,7 +367,7 @@ const Layout = (props: ILayout) => {
                   }}
                 />
               ) : null}
-              <AnimatePresence exitBeforeEnter initial={false}>
+              <AnimatePresence mode="wait" initial={false}>
                 {outlet}
               </AnimatePresence>
             </main>

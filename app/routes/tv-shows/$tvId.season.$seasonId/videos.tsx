@@ -163,7 +163,7 @@ const VideosPage = () => {
           ))}
         </TabsList>
         <Dialog open={visible} onOpenChange={setVisible}>
-          <AnimatePresence exitBeforeEnter>
+          <AnimatePresence mode="wait">
             <TabsContent value={activeType}>
               <motion.div
                 initial={{ opacity: 0 }}
