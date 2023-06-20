@@ -120,5 +120,7 @@
   "retro": "Retro",
   "dracula": "Dracula",
   "autumn": "Autumn",
-  "night": "Night"
+  "night": "Night",
+  "show-logo": "Hiển thị logo nếu có",
+  "show-spotlight": "Hiển thị spotlight"
 }

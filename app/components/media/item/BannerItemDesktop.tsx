@@ -80,7 +80,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
   const bannerIntersection = useIntersectionObserver(cardRef, { root: viewportRef });
   const [size, bannerRef] = useMeasure<HTMLDivElement>();
   const isCardPlaying = useCardHoverStore((state) => state.isCardPlaying);
-  const { isMutedTrailer, isPlayTrailer } = useSoraSettings();
+  const { isMutedTrailer, isPlayTrailer, isFetchLogo, isShowSpotlight } = useSoraSettings();
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const mouseRadius = useMotionValue(0);
@@ -156,14 +156,16 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
   useEffect(() => {
     // fetch logo and youtube trailer key from tmdb
     if (active === true && mediaType !== 'anime') {
-      if (isPlayTrailer.value === true) {
-        fetcher.load(`/api/media?id=${id}&type=${mediaType}&video=true`);
-      } else {
-        fetcher.load(`/api/media?id=${id}&type=${mediaType}`);
+      fetcher.load(
+        `/api/media?id=${id}&type=${mediaType}${isPlayTrailer.value ? '&video=true' : ''}${
+          isFetchLogo.value ? '&image=true' : ''
+        }`,
+      );
+      if (!isPlayTrailer.value) {
         setTrailerBanner({});
       }
     }
-  }, [active, isPlayTrailer.value]);
+  }, [active, isPlayTrailer.value, isFetchLogo.value]);
 
   useEffect(() => {
     if (
@@ -204,7 +206,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
         className="h-full w-full border-0"
         ref={cardRef}
         role="figure"
-        onMouseMove={handleMouseMove}
+        onMouseMove={isShowSpotlight.value ? handleMouseMove : undefined}
       >
         <motion.div
           className="pointer-events-none absolute -inset-px rounded-xl transition duration-300 group-hover:opacity-100"
@@ -387,7 +389,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                           : mediaType === 'tv'
                           ? 'tv-shows/'
                           : 'anime/'
-                      }${id}/${mediaType === 'anime' ? 'overview' : ''}`,
+                      }${id}/`,
                       {
                         state: { currentTime: player ? player.playerInfo.currentTime : 0 },
                       },

@@ -59,7 +59,7 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
         }`}
         to={`/${
           mediaType === 'movie' ? 'movies/' : mediaType === 'tv' ? 'tv-shows/' : 'anime/'
-        }${id}/${mediaType === 'anime' ? 'overview' : ''}`}
+        }${id}/`}
       >
         <CardBody className="after:to-background overflow-hidden p-0 after:absolute after:bottom-0 after:left-0 after:h-[calc(100%/2)] after:w-full after:bg-gradient-to-b after:from-transparent after:content-['']">
           <AnimatePresence>

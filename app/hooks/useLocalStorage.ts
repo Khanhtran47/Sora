@@ -46,6 +46,12 @@ function useSoraSettings() {
     defaultValue: false,
     initializeWithValue: false,
   });
+  const isFetchLogo = useLocalStorageValue('sora_settings-list-fetch_logo', {
+    defaultValue: false,
+  });
+  const isShowSpotlight = useLocalStorageValue('sora_settings-list-show_spotlight', {
+    defaultValue: false,
+  });
   const isAutoSize = useLocalStorageValue('sora_settings-player-auto_size', {
     defaultValue: false,
   });
@@ -181,6 +187,8 @@ function useSoraSettings() {
     isShowTopPagination,
     isLightDarkThemeOnly,
     currentThemeColor,
+    isFetchLogo,
+    isShowSpotlight,
   };
 }
 

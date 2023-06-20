@@ -120,5 +120,7 @@
   "retro": "Retro",
   "dracula": "Dracula",
   "autumn": "Autumn",
-  "night": "Night"
+  "night": "Night",
+  "show-logo": "Show logo if available",
+  "show-spotlight": "Show spotlight"
 }

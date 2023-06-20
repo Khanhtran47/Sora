@@ -266,6 +266,8 @@ const Settings = () => {
     isShowBreadcrumb,
     isShowTopPagination,
     isLightDarkThemeOnly,
+    isFetchLogo,
+    isShowSpotlight,
   } = useSoraSettings();
   const listViewType = useLocalStorageValue('sora_settings-layout-list_view', {
     defaultValue: 'card',
@@ -646,29 +648,45 @@ const Settings = () => {
                         />
                       </AccordionItem>
                     )}
-                    <AccordionItem
-                      title={t('media-list-banner')}
-                      subtitle={t('media-list-banner-subtitle')}
-                      classNames={{
-                        title: 'text-2xl',
-                        subtitle: 'text-base',
-                        content: 'pb-4',
-                      }}
-                    >
-                      <SettingBlock
-                        type="switch"
-                        title={t('play-trailer')}
-                        isSelected={isPlayTrailer.value}
-                        onValueChange={(isSelected) => isPlayTrailer.set(isSelected)}
-                      />
-                      <Spacer y={2.5} />
-                      <SettingBlock
-                        type="switch"
-                        title={t('mute-trailer')}
-                        isSelected={isMutedTrailer.value}
-                        onValueChange={(isSelected) => isMutedTrailer.set(isSelected)}
-                      />
-                    </AccordionItem>
+                    {isSm ? null : (
+                      <AccordionItem
+                        title={t('media-list-banner')}
+                        subtitle={t('media-list-banner-subtitle')}
+                        classNames={{
+                          title: 'text-2xl',
+                          subtitle: 'text-base',
+                          content: 'pb-4',
+                        }}
+                      >
+                        <SettingBlock
+                          type="switch"
+                          title={t('show-logo')}
+                          isSelected={isFetchLogo.value}
+                          onValueChange={(isSelected) => isFetchLogo.set(isSelected)}
+                        />
+                        <Spacer y={2.5} />
+                        <SettingBlock
+                          type="switch"
+                          title={t('show-spotlight')}
+                          isSelected={isShowSpotlight.value}
+                          onValueChange={(isSelected) => isShowSpotlight.set(isSelected)}
+                        />
+                        <Spacer y={2.5} />
+                        <SettingBlock
+                          type="switch"
+                          title={t('play-trailer')}
+                          isSelected={isPlayTrailer.value}
+                          onValueChange={(isSelected) => isPlayTrailer.set(isSelected)}
+                        />
+                        <Spacer y={2.5} />
+                        <SettingBlock
+                          type="switch"
+                          title={t('mute-trailer')}
+                          isSelected={isMutedTrailer.value}
+                          onValueChange={(isSelected) => isMutedTrailer.set(isSelected)}
+                        />
+                      </AccordionItem>
+                    )}
                     <AccordionItem
                       title={t('media-list-grid')}
                       subtitle={t('media-list-grid-subtitle')}

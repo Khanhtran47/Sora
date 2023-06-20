@@ -35,21 +35,28 @@ const BannerItemCompact = forwardRef<HTMLDivElement, IBannerItemCompactProps>(
         ? title
         : title?.userPreferred || title?.english || title?.romaji || title?.native;
     const variants = {
-      normal: { scaleX: 1.125, scaleY: 1.03, x: -10 },
-      hover: { scaleX: 1.075, scaleY: 1.015, x: -5 },
-      active: { scaleX: 1, scaleY: 1, x: 0 },
+      normal: {
+        scaleX: 1.125,
+        scaleY: 1.03,
+        x: -10,
+        transition: { duration: 0.1, ease: 'easeOut' },
+      },
+      hover: {
+        scaleX: 1.075,
+        scaleY: 1.015,
+        x: -5,
+        transition: { duration: 0.1, ease: 'easeOut' },
+      },
+      active: { scaleX: 1, scaleY: 1, x: 0, transition: { duration: 0.1, ease: 'easeOut' } },
     };
     return (
       <AspectRatio ratio={16 / 9} {...hoverProps}>
         <Card
           as={motion.div}
-          initial={{ scaleX: 1.125, scaleY: 1.03, x: -10 }}
           animate={
             active || (active && isHovered) ? 'active' : isHovered && !active ? 'hover' : 'normal'
           }
           variants={variants}
-          // @ts-ignore
-          transition={{ duration: 0.1, ease: 'easeOut' }}
           className={bannerCompactStyles({ active })}
           isPressable
           role="figure"
