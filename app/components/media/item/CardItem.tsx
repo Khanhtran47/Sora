@@ -207,7 +207,6 @@ const CardItem = (props: ICardItemProps) => {
               alt={titleItem}
               title={titleItem}
               classNames={{
-                // @ts-ignore
                 img: image(),
               }}
               placeholder="empty"
@@ -262,7 +261,6 @@ const CardItem = (props: ICardItemProps) => {
                 title={titleItem}
                 loading="lazy"
                 classNames={{
-                  // @ts-ignore
                   img: image(),
                 }}
                 decoding={inView ? 'async' : 'auto'}

@@ -171,8 +171,7 @@ export const MediaDetail = (props: IMediaDetail) => {
                   radius="xl"
                   shadow="xl"
                   classNames={{
-                    base: 'w-full sm:w-3/4 xl:w-1/2',
-                    // @ts-ignore
+                    wrapper: 'w-full sm:w-3/4 xl:w-1/2',
                     img: 'aspect-[2/3] !min-h-[auto] !min-w-[auto]',
                   }}
                   disableSkeleton={false}
@@ -435,8 +434,7 @@ export const AnimeDetail = (props: IAnimeDetail) => {
                   alt={title?.userPreferred || title?.english || title?.romaji || title?.native}
                   radius="xl"
                   classNames={{
-                    base: 'w-full sm:w-3/4 xl:w-1/2',
-                    // @ts-ignore
+                    wrapper: 'w-full sm:w-3/4 xl:w-1/2',
                     img: 'aspect-[2/3] !min-h-[auto] !min-w-[auto]',
                   }}
                   disableSkeleton={false}

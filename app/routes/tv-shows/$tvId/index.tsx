@@ -177,7 +177,7 @@ const TvOverview = () => {
                           width="130px"
                           height="100%"
                           classNames={{
-                            base: 'z-0 aspect-[2/3] max-h-[195px] min-w-[130px]',
+                            wrapper: 'z-0 aspect-[2/3] max-h-[195px] min-w-[130px]',
                             img: 'm-0 max-h-[193px]',
                           }}
                           alt={season.name}

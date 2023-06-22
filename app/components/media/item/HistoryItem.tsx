@@ -34,7 +34,7 @@ const HistoryItem = ({ item }: IHistoryItem) => {
             alt={item?.title}
             title={item?.title}
             classNames={{
-              base: 'z-0 m-0 min-h-[171px] min-w-[304px] overflow-hidden',
+              wrapper: 'z-0 m-0 min-h-[171px] min-w-[304px] overflow-hidden',
             }}
             placeholder="empty"
             loading="lazy"

@@ -250,7 +250,6 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                     title={titleItem}
                     radius="none"
                     classNames={{
-                      // @ts-ignore
                       img: 'w-logo object-contain nextui-sm:w-logo-sm',
                     }}
                     loading="eager"
@@ -420,8 +419,8 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                 width="100%"
                 disableSkeleton={false}
                 classNames={{
-                  base: 'rounded-xl shadow-xl shadow-default aspect-[2/3] w-full h-auto min-h-[auto] min-w-[auto] !max-h-[390px] !max-w-[270px] 2xl:!max-h-[477px] 2xl:!max-w-[318px]',
-                  // @ts-ignore
+                  wrapper:
+                    'rounded-xl shadow-xl shadow-default aspect-[2/3] w-full h-auto min-h-[auto] min-w-[auto] !max-h-[390px] !max-w-[270px] 2xl:!max-h-[477px] 2xl:!max-w-[318px]',
                   img: 'h-full object-cover',
                 }}
                 loading="eager"

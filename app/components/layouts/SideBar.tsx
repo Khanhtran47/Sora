@@ -529,7 +529,7 @@ const SideBar = () => {
                             filter: 'brightness(0.8)',
                           }}
                           classNames={{
-                            base: 'min-w-[215px]',
+                            wrapper: 'min-w-[215px]',
                           }}
                           alt="Discover movies"
                           src="https://image.tmdb.org/t/p/w342_filter(duotone,190235,ad47dd)/wNB551TsEb7KFU3an5LwOrgvUpn.jpg"
@@ -727,7 +727,7 @@ const SideBar = () => {
                             filter: 'brightness(0.8)',
                           }}
                           classNames={{
-                            base: 'min-w-[215px]',
+                            wrapper: 'min-w-[215px]',
                           }}
                           alt="Discover tv shows"
                           src="https://image.tmdb.org/t/p/w342_filter(duotone,352302,ddd147)/ggFHVNu6YYI5L9pCfOacjizRGt.jpg"
@@ -925,7 +925,7 @@ const SideBar = () => {
                             filter: 'brightness(0.8)',
                           }}
                           classNames={{
-                            base: 'min-w-[215px]',
+                            wrapper: 'min-w-[215px]',
                           }}
                           alt="Discover anime"
                           src="https://image.tmdb.org/t/p/w342_filter(duotone,070235,dd4749)/iAld03IP69UEpqQbVWoRBvjqkqX.jpg"

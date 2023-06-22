@@ -226,8 +226,7 @@ const TvSeasonDetail = () => {
                   alt={seasonDetail?.name}
                   title={seasonDetail?.name}
                   classNames={{
-                    base: 'w-full sm:w-3/4 xl:w-1/2',
-                    // @ts-ignore
+                    wrapper: 'w-full sm:w-3/4 xl:w-1/2',
                     img: 'aspect-[2/3] !min-h-[auto] !min-w-[auto] shadow-xl shadow-default',
                   }}
                   placeholder="empty"
@@ -293,8 +292,7 @@ const TvSeasonDetail = () => {
             }
             radius="none"
             classNames={{
-              base: 'w-full h-auto object-cover max-w-full',
-              // @ts-ignore
+              wrapper: 'w-full h-auto object-cover max-w-full',
               img: `left-0 top-0 z-0 m-0 object-cover opacity-30 blur-2xl ${
                 size ? 'visible' : 'invisible'
               }'}`,

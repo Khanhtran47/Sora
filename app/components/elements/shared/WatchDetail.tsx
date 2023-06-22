@@ -104,7 +104,8 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
               disableSkeleton={false}
               radius="lg"
               classNames={{
-                base: 'w-full h-auto aspect-[2/3] min-w-[auto] min-h-[auto] !max-w-[137px] lg:!max-w-[158px] xl:!max-w-[173px] 2xl:!max-w-[239px]',
+                wrapper:
+                  'w-full h-auto aspect-[2/3] min-w-[auto] min-h-[auto] !max-w-[137px] lg:!max-w-[158px] xl:!max-w-[173px] 2xl:!max-w-[239px]',
               }}
               loading="lazy"
               placeholder="empty"

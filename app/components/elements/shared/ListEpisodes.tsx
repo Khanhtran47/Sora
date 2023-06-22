@@ -180,7 +180,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                           alt={episode?.name || ''}
                           title={episode?.name || ''}
                           classNames={{
-                            base: 'm-0 min-w-[227px] max-h-[125px] overflow-hidden',
+                            wrapper: 'm-0 min-w-[227px] max-h-[125px] overflow-hidden',
                           }}
                           placeholder="empty"
                           options={{ contentType: MimeType.WEBP }}
@@ -215,7 +215,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                           isZoomed
                           disableSkeleton={false}
                           classNames={{
-                            base: 'm-0 min-w-[227px] max-h-[125px] overflow-hidden',
+                            wrapper: 'm-0 min-w-[227px] max-h-[125px] overflow-hidden',
                           }}
                           placeholder="empty"
                           options={{ contentType: MimeType.WEBP }}

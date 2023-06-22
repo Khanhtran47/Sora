@@ -126,7 +126,6 @@ const MediaPage = () => {
                   alt={`Photo of ${peopleData?.detail?.name} image size ${image.width}x${image.height}`}
                   radius="xl"
                   classNames={{
-                    // @ts-ignore
                     img: 'h-auto min-w-[120px] cursor-pointer object-cover 2xs:min-w-[185px]',
                   }}
                   loading="lazy"

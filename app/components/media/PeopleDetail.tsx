@@ -63,7 +63,7 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
           loading="lazy"
           title={detail?.name}
           classNames={{
-            base: 'flex justify-center w-1/2 m-auto',
+            wrapper: 'flex justify-center w-1/2 m-auto',
             img: 'aspect-[2/3] min-h-[auto]',
           }}
           placeholder="empty"
