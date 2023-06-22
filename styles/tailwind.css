@@ -147,6 +147,24 @@ body {
     }
   }
 
+  .custom-player-layer-lock {
+    .art-video-player {
+      .art-layers {
+        .art-layer-lock {
+          @apply !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
+        }
+      }
+    }
+  }
+
+  .custom-player-progress-tip {
+    .art-video-player {
+      .art-bottom .art-progress .art-control-progress .art-control-progress-inner .art-progress-tip {
+        @apply !rounded-lg !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
+      }
+    }
+  }
+
   .lottie-color {
     svg {
       path {
