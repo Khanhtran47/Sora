@@ -113,7 +113,7 @@ const CustomNavigationThumbs = ({ slot }: { slot: 'container-end' }) => {
         type="button"
         color="default"
         variant="flat"
-        className="bg-background/60 absolute left-[2px] top-[60px] z-[90] m-0 h-11 w-min cursor-pointer rounded-md p-0 backdrop-blur-md"
+        className="bg-background/60 absolute left-[2px] top-[60px] z-[90] m-0 h-11 w-min min-w-0 cursor-pointer rounded-md p-0 backdrop-blur-md"
         isIconOnly
         onPress={() => swiper.slidePrev()}
         aria-label="Previous"
@@ -128,7 +128,7 @@ const CustomNavigationThumbs = ({ slot }: { slot: 'container-end' }) => {
         type="button"
         color="default"
         variant="flat"
-        className="bg-background/60 absolute right-[2px] top-[60px] z-[90] m-0 h-11 w-min cursor-pointer rounded-md p-0 backdrop-blur-md"
+        className="bg-background/60 absolute right-[2px] top-[60px] z-[90] m-0 h-11 w-min min-w-0 cursor-pointer rounded-md p-0 backdrop-blur-md"
         isIconOnly
         onPress={() => swiper.slideNext()}
         aria-label="Next"
@@ -279,6 +279,7 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
             {items.map((item, index) => (
               <SwiperSlide
                 key={`${item.id}-${index}-banner-thumb`}
+                tag="button"
                 className={`mx-1 my-2 !h-[135px] !w-[240px] overflow-hidden rounded-xl border-4 transition-opacity duration-300 ease-out ${
                   isPlayTrailer.value
                     ? `opacity-20 hover:opacity-70 ${activeIndex === index ? 'opacity-90' : ''}`

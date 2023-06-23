@@ -70,7 +70,7 @@ const BannerItemCompact = forwardRef<HTMLDivElement, IBannerItemCompactProps>(
               height="auto"
               alt={titleItem}
               title={titleItem}
-              className="min-h-[135px] min-w-[240px]"
+              className="min-h-[135px] min-w-[240px] object-cover"
               placeholder="empty"
               options={{
                 contentType: MimeType.WEBP,
@@ -93,7 +93,7 @@ const BannerItemCompact = forwardRef<HTMLDivElement, IBannerItemCompactProps>(
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.1, ease: 'easeOut' }}
-                  className="text-default-foreground m-0 line-clamp-3 font-bold"
+                  className="text-default-foreground m-0 line-clamp-3 text-left font-bold"
                 >
                   {titleItem?.length && titleItem.length > 40
                     ? `${titleItem?.slice(0, 40)}...`

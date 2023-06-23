@@ -51,6 +51,7 @@ const ControlNavigation = () => {
         onPress={() => handleNavigationBackForward('back')}
         isDisabled={historyBack.length <= 1}
         className="h-9 w-9"
+        size="sm"
       >
         <ChevronLeft />
       </Button>
@@ -61,6 +62,7 @@ const ControlNavigation = () => {
         onPress={() => handleNavigationBackForward('forward')}
         isDisabled={historyForward.length <= 1}
         className="h-9 w-9"
+        size="sm"
       >
         <ChevronRight />
       </Button>

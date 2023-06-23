@@ -454,7 +454,7 @@ const MediaList = (props: IMediaListProps) => {
                 radius="full"
                 variant="solid"
                 ref={(node) => setPrevEl(node)}
-                className="h-8 w-8 cursor-pointer p-0 hover:opacity-80 sm:h-10 sm:w-10"
+                className="min-w-8 sm:min-w-10 h-8 w-8 cursor-pointer p-0 hover:opacity-80 sm:h-10"
                 aria-label="Previous"
                 isDisabled={slideProgress === 0}
                 isIconOnly
@@ -466,7 +466,7 @@ const MediaList = (props: IMediaListProps) => {
                 radius="full"
                 variant="solid"
                 ref={(node) => setNextEl(node)}
-                className="h-8 w-8 cursor-pointer p-0 hover:opacity-80 sm:h-10 sm:w-10"
+                className="min-w-8 sm:min-w-10 h-8 w-8 cursor-pointer p-0 hover:opacity-80 sm:h-10"
                 aria-label="Next"
                 isDisabled={slideProgress === 1}
                 isIconOnly

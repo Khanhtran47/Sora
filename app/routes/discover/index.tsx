@@ -45,17 +45,17 @@ const generalPages = [
   {
     name: 'movie-genres',
     path: '/genres/movie',
-    icon: false,
+    icon: <Movie fill="currentColor" />,
   },
   {
     name: 'tv-show-genres',
     path: '/genres/tv',
-    icon: false,
+    icon: <TvShows fill="currentColor" />,
   },
   {
     name: 'anime-genres',
     path: '/genres/anime',
-    icon: false,
+    icon: <Anime fill="currentColor" />,
   },
   {
     name: 'collections',
@@ -80,7 +80,7 @@ const DiscoverPage = () => {
       <h1>{t('discover')}</h1>
       <Spacer y={2.5} />
       <Button
-        startIcon={<Search fill="currentColor" />}
+        startContent={<Search fill="currentColor" />}
         type="button"
         fullWidth
         onPress={() => {
@@ -91,7 +91,7 @@ const DiscoverPage = () => {
       </Button>
       <Spacer y={3} />
       <Button
-        startIcon={<Filter fill="currentColor" />}
+        startContent={<Filter fill="currentColor" />}
         type="button"
         onPress={() => {
           navigate('/discover/movies');
@@ -107,7 +107,7 @@ const DiscoverPage = () => {
           {categoryPages.map((page) => (
             <Button
               key={page.name}
-              startIcon={page.icon}
+              startContent={page.icon}
               type="button"
               onPress={() => {
                 navigate(page.path);
@@ -126,7 +126,7 @@ const DiscoverPage = () => {
           {generalPages.map((page) => (
             <Button
               key={page.name}
-              startIcon={page.icon}
+              startContent={page.icon}
               type="button"
               onPress={() => {
                 navigate(page.path);

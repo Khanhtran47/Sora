@@ -1,6 +1,5 @@
 import type { User } from '@supabase/supabase-js';
 import { motion, useTransform } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
 import { tv } from 'tailwind-variants';
 
 import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
@@ -49,7 +48,6 @@ const headerStyles = tv({
 });
 
 const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
-  const { t } = useTranslation('header');
   const { user } = props;
   const { sidebarMiniMode, sidebarBoxedMode } = useSoraSettings();
   const { scrollY } = useLayout((state) => state);
@@ -103,7 +101,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
             {isShowListViewChangeButton ? <ListViewChangeButton /> : null}
           </motion.div>
         ) : null}
-        <MultiLevelDropdown user={user} t={t} />
+        <MultiLevelDropdown user={user} />
       </div>
     </div>
   );

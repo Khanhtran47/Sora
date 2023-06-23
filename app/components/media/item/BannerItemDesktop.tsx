@@ -220,7 +220,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
             `,
           }}
         />
-        <CardHeader className="absolute z-10 flex h-full flex-row items-center justify-center gap-5 md:gap-7 lg:gap-9 2xl:h-[calc(100%_-_160px)]">
+        <CardHeader className="absolute z-10 flex h-full flex-row items-center justify-start gap-5 md:gap-7 lg:gap-9 xl:justify-center 2xl:h-[calc(100%_-_160px)]">
           <div className="flex w-5/6 flex-col items-start justify-center gap-4 px-10 md:w-3/4 lg:w-2/3">
             <AnimatePresence mode="popLayout">
               {logo ? (

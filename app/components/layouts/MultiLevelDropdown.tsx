@@ -8,7 +8,7 @@ import { useLocation, useNavigate, useSearchParams } from '@remix-run/react';
 import type { User } from '@supabase/supabase-js';
 import type { AnimationItem } from 'lottie-web';
 import { useTheme } from 'next-themes';
-import { type TFunction } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useHydrated } from 'remix-utils';
 
 import { getBackgroundTitleBarColor, setMetaThemeColor } from '~/utils/client/meta-tags.client';
@@ -28,11 +28,11 @@ import dropdown from '~/assets/lotties/lottieflow-dropdown-03-0072F5-easey.json'
 
 interface IMultiLevelDropdownProps {
   user?: User | undefined;
-  t: TFunction<'header', undefined>;
 }
 
 const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
-  const { user, t } = props;
+  const { user } = props;
+  const { t } = useTranslation('header');
   const rootData = useTypedRouteLoaderData('root');
   const { locale } = rootData || { locale: 'en' };
   const { setTheme, theme: currentTheme } = useTheme();
@@ -357,6 +357,7 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
           aria-label="dropdown"
           isIconOnly
           className="h-9 w-9"
+          size="sm"
         >
           <Player
             lottieRef={(instance) => {

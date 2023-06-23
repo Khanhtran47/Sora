@@ -673,7 +673,7 @@ export const CatchBoundary = () => {
               size="md"
               variant="ghost"
               color="success"
-              startIcon={<Home />}
+              startContent={<Home />}
               type="button"
               onPress={() => {
                 window.location.href = '/';
@@ -685,7 +685,7 @@ export const CatchBoundary = () => {
               size="md"
               variant="ghost"
               color="warning"
-              startIcon={<Refresh filled />}
+              startContent={<Refresh filled />}
               type="button"
               onPress={() => {
                 window.location.reload();
@@ -747,7 +747,7 @@ export const ErrorBoundary = ({ error }: { error: Error }) => {
               size="md"
               variant="ghost"
               color="success"
-              startIcon={<Home />}
+              startContent={<Home />}
               type="button"
               onPress={() => {
                 window.location.href = '/';
@@ -759,7 +759,7 @@ export const ErrorBoundary = ({ error }: { error: Error }) => {
               size="md"
               variant="ghost"
               color="warning"
-              startIcon={<Refresh filled />}
+              startContent={<Refresh filled />}
               type="button"
               onPress={() => {
                 window.location.reload();

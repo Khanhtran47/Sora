@@ -86,7 +86,7 @@ const ButtonPage = () => {
         {radius}
       </Button>
       <p className="text-base tracking-wide md:text-lg">Icons</p>
-      <Button startIcon={<Search />} endIcon={<Settings />}>
+      <Button startContent={<Search />} endIcon={<Settings />}>
         Button
       </Button>
       <Button isIconOnly>
