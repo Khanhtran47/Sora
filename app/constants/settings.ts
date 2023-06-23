@@ -97,7 +97,7 @@ const listSidebarActiveStyleMode = ['rounded-all', 'rounded-one-side', 'pill-all
 const listListViewType = ['card', 'detail', 'table'];
 const listListLoadingType = ['pagination', 'infinite-scroll'];
 const listDefaultThemeColors = ['red', 'yellow', 'green', 'cyan', 'purple', 'pink', 'blue'];
-const listCustomThemeColors = ['bumblebee', 'synthwave', 'retro', 'dracula', 'autumn', 'night'];
+const listCustomThemeColors = ['bumblebee', 'autumn', 'retro', 'synthwave', 'dracula', 'night'];
 
 export {
   settingsTab,

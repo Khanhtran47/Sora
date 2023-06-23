@@ -1,15 +1,18 @@
+// custom themes is taken and customized from daisy ui themes
+// https://github.com/saadeghi/daisyui/blob/master/src/theming/themes.js
+
 import { commonColors, semanticColors } from '@nextui-org/theme';
 
 import { swapColorValues } from '../app/utils';
 
 const lightBase = {
   'background-body': '#ffffff',
-  'background-title-bar': '#ffffff',
+  'background-title-bar': '#fefefe',
 };
 
 const darkBase = {
   'background-body': '#000000',
-  'background-title-bar': '#000000',
+  'background-title-bar': '#070708',
 };
 
 const lightRedTheme = {
@@ -193,7 +196,7 @@ const darkPinkTheme = {
 };
 
 const bumblebeeTheme = {
-  'background-title-bar': '#fefcf4',
+  'background-title-bar': '#f9f9fe',
   'background-body': '#ffffff',
   background: {
     DEFAULT: '#ffffff',
@@ -307,7 +310,7 @@ const bumblebeeTheme = {
 };
 
 const autumnTheme = {
-  'background-title-bar': '#fcf2f1',
+  'background-title-bar': '#fffefc',
   'background-body': '#ffffff',
   background: {
     DEFAULT: '#f1f1f1',
@@ -421,7 +424,7 @@ const autumnTheme = {
 };
 
 const retroTheme = {
-  'background-title-bar': '#f0ebd8',
+  'background-title-bar': '#fffefc',
   'background-body': '#ffffff',
   background: {
     DEFAULT: '#e2d8b3',
@@ -535,7 +538,7 @@ const retroTheme = {
 };
 
 const synthwaveTheme = {
-  'background-title-bar': '#1b1140',
+  'background-title-bar': '#03010b',
   'background-body': '#000000',
   background: {
     DEFAULT: '#2d1b69',
@@ -649,7 +652,7 @@ const synthwaveTheme = {
 };
 
 const draculaTheme = {
-  'background-title-bar': '#181921',
+  'background-title-bar': '#04050d',
   'background-body': '#000000',
   background: {
     DEFAULT: '#282a36',
@@ -763,7 +766,7 @@ const draculaTheme = {
 };
 
 const nightTheme = {
-  'background-title-bar': '#0a0e19',
+  'background-title-bar': '#020308',
   'background-body': '#000000',
   background: {
     DEFAULT: '#101729',

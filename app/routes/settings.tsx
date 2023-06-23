@@ -516,15 +516,17 @@ const Settings = () => {
                         type="switch"
                         title={t('light-dark-only')}
                         isSelected={isLightDarkThemeOnly.value}
-                        onValueChange={(isSelected) => {
-                          isLightDarkThemeOnly.set(isSelected);
+                        onValueChange={async (isSelected) => {
+                          await isLightDarkThemeOnly.set(isSelected);
                           if (isSelected) {
-                            setTheme('system');
-                            setSelectedThemeColor('blue');
+                            await setTheme('system');
+                            await setSelectedThemeColor('blue');
                           } else {
-                            setTheme('bumblebee');
-                            setSelectedThemeColor('bumblebee');
+                            await setTheme('bumblebee');
+                            await setSelectedThemeColor('bumblebee');
                           }
+                          const color = await getBackgroundTitleBarColor(isHydrated);
+                          await setMetaThemeColor(`hsl(${color})`);
                         }}
                       />
                       <Spacer y={2.5} />
