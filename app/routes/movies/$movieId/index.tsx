@@ -1,16 +1,13 @@
 import { json, type LoaderArgs } from '@remix-run/node';
-import { Link, useLoaderData, useNavigate, useParams } from '@remix-run/react';
+import { Link, useLoaderData, useNavigate, useParams, type RouteMatch } from '@remix-run/react';
 
 import { authenticate } from '~/services/supabase';
 import { getCredits, getRecommendation, getSimilar, getVideos } from '~/services/tmdb/tmdb.server';
 import { postFetchDataHandler } from '~/services/tmdb/utils.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
-// import { Image as NextImage } from '@nextui-org/react';
-// import Image, { MimeType } from 'remix-image';
-
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
-import { H6, P } from '~/components/styles/Text.styles';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   await authenticate(request, undefined, true);
@@ -47,6 +44,17 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   );
 };
 
+export const handle = {
+  breadcrumb: (match: RouteMatch) => (
+    <BreadcrumbItem
+      to={`/movies/${match.params.movieId}/`}
+      key={`movies-${match.params.movieId}-overview`}
+    >
+      Overview
+    </BreadcrumbItem>
+  ),
+};
+
 const MovieOverview = () => {
   const { similar, recommendations, topBilledCast, directors } = useLoaderData<typeof loader>();
   const movieData = useTypedRouteLoaderData('routes/movies/$movieId');
@@ -60,85 +68,63 @@ const MovieOverview = () => {
   return (
     <div className="mt-3 flex w-full max-w-[1920px] flex-col gap-x-0 gap-y-4 px-3 sm:flex-row sm:items-stretch sm:justify-center sm:gap-x-4 sm:gap-y-0 sm:px-3.5 xl:px-4 2xl:px-5">
       <div className="flex w-full grow-0 flex-col sm:w-1/3 sm:items-center sm:justify-start">
-        <div className="flex w-full flex-col items-start justify-center gap-y-4 rounded-xl bg-background-contrast p-4 nextui-sm:w-3/4 xl:w-1/2">
+        <div className="bg-content1 nextui-sm:w-3/4 flex w-full flex-col items-start justify-center gap-y-4 rounded-xl p-4 xl:w-1/2">
           <div className="flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-            <H6 h6 weight="bold" className="grow-0 basis-1/3">
-              Original Title
-            </H6>
-            <P as="p" className="grow">
-              {detail?.original_title}
-            </P>
+            <h6 className="grow-0 basis-1/3">Original Title</h6>
+            <p className="grow">{detail?.original_title}</p>
           </div>
           <div className="flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-            <H6 h6 weight="bold" className="grow-0 basis-1/3">
-              Status
-            </H6>
-            <P as="p" className="grow">
-              {detail?.status}
-            </P>
+            <h6 className="grow-0 basis-1/3">Status</h6>
+            <p className="grow">{detail?.status}</p>
           </div>
           <div className="flex w-full flex-row items-start justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-            <H6 h6 weight="bold" className="grow-0 basis-1/3">
-              Production Companies
-            </H6>
+            <h6 className="grow-0 basis-1/3">Production Companies</h6>
             <div className="flex grow flex-col">
               {detail?.production_companies &&
                 detail.production_companies.map((company) => (
-                  <P key={`network-item-${company.id}`} as="p">
-                    {company?.name}
-                  </P>
+                  <p key={`network-item-${company.id}`}>{company?.name}</p>
                 ))}
             </div>
           </div>
           <div className="flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-            <H6 h6 weight="bold" className="grow-0 basis-1/3">
-              Original Language
-            </H6>
-            <P as="p" className="grow">
+            <h6 className="grow-0 basis-1/3">Original Language</h6>
+            <p className="grow">
               {rootData?.languages?.find((lang) => lang.iso_639_1 === detail?.original_language)
                 ?.english_name || detail?.original_language}
-            </P>
+            </p>
           </div>
           <div className="flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-            <H6 h6 weight="bold" className="grow-0 basis-1/3">
-              Budget
-            </H6>
-            <P as="p" className="grow">
+            <h6 className="grow-0 basis-1/3">Budget</h6>
+            <p className="grow">
               {detail?.budget
                 ? `$${detail?.budget?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
                 : '-'}
-            </P>
+            </p>
           </div>
           <div className=" flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-            <H6 h6 weight="bold" className="grow-0 basis-1/3">
-              Revenue
-            </H6>
-            <P as="p" className="grow">
+            <h6 className="grow-0 basis-1/3">Revenue</h6>
+            <p className="grow">
               {detail?.revenue
                 ? `$${detail?.revenue?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
                 : '-'}
-            </P>
+            </p>
           </div>
         </div>
       </div>
       <div className="flex w-full flex-col sm:w-2/3">
-        <div className="flex flex-col items-start justify-start gap-y-4 rounded-xl bg-background-contrast p-4">
-          <H6 h6 css={{ textAlign: 'justify' }}>
-            {detail?.overview}
-          </H6>
+        <div className="bg-content1 flex flex-col items-start justify-start gap-y-4 rounded-xl p-4">
+          <p className="text-justify">{detail?.overview}</p>
           <div className="flex flex-col flex-wrap gap-x-0 gap-y-4 sm:flex-row sm:gap-x-8">
             {directors && directors.length > 0 ? (
               <div className="flex w-full flex-row items-start justify-start gap-x-4 sm:w-fit sm:flex-col">
-                <H6 h6 weight="bold" className="grow-0 basis-1/3 sm:basis-auto">
-                  Director
-                </H6>
+                <h6 className="grow-0 basis-1/3 sm:basis-auto">Director</h6>
                 <div className="flex grow flex-col">
                   {directors.map((director) => (
                     <Link
                       key={`director-item-${director.id}`}
                       to={`/people/${director.id}/`}
                       style={{ lineHeight: '1.75rem' }}
-                      className="text-text hover:text-primary"
+                      className="text-foreground hover:text-primary"
                     >
                       {director.name}
                     </Link>
@@ -148,9 +134,7 @@ const MovieOverview = () => {
             ) : null}
             {detail?.production_countries && detail.production_countries.length > 0 ? (
               <div className="flex w-full flex-row items-start justify-start gap-x-4 sm:w-fit sm:flex-col">
-                <H6 h6 weight="bold" className="grow-0 basis-1/3 sm:basis-auto">
-                  Production Countries
-                </H6>
+                <h6 className="grow-0 basis-1/3 sm:basis-auto">Production Countries</h6>
                 <div className="flex grow flex-col">
                   {detail?.production_countries.map((country, index) => (
                     <p key={`country-item-${index}`}>{country.name}</p>
@@ -160,9 +144,7 @@ const MovieOverview = () => {
             ) : null}
             {detail?.spoken_languages && detail.spoken_languages.length > 0 ? (
               <div className="flex w-full flex-row items-start justify-start gap-x-4 sm:w-fit sm:flex-col">
-                <H6 h6 weight="bold" className="grow-0 basis-1/3 sm:basis-auto">
-                  Spoken Languages
-                </H6>
+                <h6 className="grow-0 basis-1/3 sm:basis-auto">Spoken Languages</h6>
                 <div className="flex grow flex-col">
                   {detail?.spoken_languages.map((language, index) => (
                     <p key={`language-item-${index}`}>{language.english_name}</p>

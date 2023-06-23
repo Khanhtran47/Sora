@@ -1,6 +1,5 @@
-import { Badge, Container } from '@nextui-org/react';
 import { json, redirect, type ActionArgs, type LoaderArgs } from '@remix-run/node';
-import { NavLink, useActionData } from '@remix-run/react';
+import { useActionData } from '@remix-run/react';
 
 import sgConfigs from '~/services/configs.server';
 import {
@@ -10,7 +9,8 @@ import {
   signUp,
 } from '~/services/supabase';
 import encode from '~/utils/encode';
-import AuthForm from '~/components/AuthForm';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
+import AuthForm from '~/components/elements/shared/AuthForm';
 
 type ActionData = {
   errorCode?: string | null;
@@ -62,7 +62,7 @@ export const action = async ({ request }: ActionArgs) => {
     return redirect(searchParams.get('ref') || '/');
   }
 
-  const payload = await requestPayload(request);
+  const payload = process.env.NODE_ENV === 'production' ? await requestPayload(request) : undefined;
   authCookie.set('auth_token', {
     access_token: session.access_token,
     refresh_token: session.refresh_token,
@@ -93,21 +93,9 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export const handle = {
   breadcrumb: () => (
-    <NavLink to="/sign-up" aria-label="Sign Up Page">
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          Sign Up
-        </Badge>
-      )}
-    </NavLink>
+    <BreadcrumbItem to="/sign-up" key="sign-up">
+      Sign Up
+    </BreadcrumbItem>
   ),
   miniTitle: () => ({
     title: 'Sign Up',
@@ -118,11 +106,7 @@ export const handle = {
 const SignUpPage = () => {
   const actionData = useActionData<ActionData>();
 
-  return (
-    <Container fluid responsive={false} justify="center" display="flex">
-      <AuthForm type="sign-up" error={actionData?.error} errorCode={actionData?.errorCode} />
-    </Container>
-  );
+  return <AuthForm type="sign-up" error={actionData?.error} errorCode={actionData?.errorCode} />;
 };
 
 export default SignUpPage;

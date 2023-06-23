@@ -1,5 +1,3 @@
-import Svg from '~/components/styles/Svg.styles';
-
 const Bold = ({ color, strokeWidth }: { color: string; strokeWidth: number }) => (
   <>
     <rect
@@ -151,35 +149,35 @@ const ViewGridCard = ({
   switch (filled) {
     case false:
       return (
-        <Svg
+        <svg
           className={className}
           width={width || size}
           height={height || size}
           viewBox="0 0 48 48"
           xmlns="http://www.w3.org/2000/svg"
-          css={{
+          style={{
             display: 'inline',
           }}
           {...props}
         >
           <Light color={fill} strokeWidth={1.5} />
-        </Svg>
+        </svg>
       );
     default:
       return (
-        <Svg
+        <svg
           className=""
           width={width || size}
           height={height || size}
           viewBox="0 0 48 48"
           xmlns="http://www.w3.org/2000/svg"
-          css={{
+          style={{
             display: 'inline',
           }}
           {...props}
         >
           <Bold color={fill} strokeWidth={1.5} />;
-        </Svg>
+        </svg>
       );
   }
 };

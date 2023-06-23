@@ -1,9 +1,9 @@
-import { Button, Spacer } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
+import { Spacer } from '@nextui-org/spacer';
 import { useLocation, useNavigate } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
-import { H1, H4 } from '~/components/styles/Text.styles';
 import Anime from '~/assets/icons/AnimeIcon';
 import Category from '~/assets/icons/CategoryIcon';
 import Filter from '~/assets/icons/FilterIcon';
@@ -45,17 +45,17 @@ const generalPages = [
   {
     name: 'movie-genres',
     path: '/genres/movie',
-    icon: false,
+    icon: <Movie fill="currentColor" />,
   },
   {
     name: 'tv-show-genres',
     path: '/genres/tv',
-    icon: false,
+    icon: <TvShows fill="currentColor" />,
   },
   {
     name: 'anime-genres',
     path: '/genres/anime',
-    icon: false,
+    icon: <Anime fill="currentColor" />,
   },
   {
     name: 'collections',
@@ -77,40 +77,38 @@ const DiscoverPage = () => {
       transition={{ duration: 0.3 }}
       className="flex w-full flex-col items-start justify-center px-3"
     >
-      <H1 h1>{t('discover')}</H1>
-      <Spacer y={0.5} />
+      <h1>{t('discover')}</h1>
+      <Spacer y={2.5} />
       <Button
-        icon={<Search fill="currentColor" />}
+        startContent={<Search fill="currentColor" />}
         type="button"
-        css={{ width: '100%' }}
+        fullWidth
         onPress={() => {
           navigate('/search/movie');
         }}
       >
         {t('search')}
       </Button>
-      <Spacer y={0.75} />
+      <Spacer y={3} />
       <Button
-        icon={<Filter fill="currentColor" />}
+        startContent={<Filter fill="currentColor" />}
         type="button"
-        auto
         onPress={() => {
           navigate('/discover/movies');
         }}
       >
         {t('filter')}
       </Button>
-      <Spacer y={1.5} />
+      <Spacer y={7} />
       <div className="flex w-full flex-col items-start justify-center">
-        <H4>{t('categories')}</H4>
-        <Spacer y={0.5} />
+        <h4>{t('categories')}</h4>
+        <Spacer y={2.5} />
         <div className="flex w-full flex-wrap gap-x-2 gap-y-4">
           {categoryPages.map((page) => (
             <Button
               key={page.name}
-              icon={page.icon}
+              startContent={page.icon}
               type="button"
-              auto
               onPress={() => {
                 navigate(page.path);
               }}
@@ -120,17 +118,16 @@ const DiscoverPage = () => {
           ))}
         </div>
       </div>
-      <Spacer y={1.5} />
+      <Spacer y={7} />
       <div className="flex w-full flex-col items-start justify-center">
-        <H4>{t('general')}</H4>
-        <Spacer y={0.5} />
+        <h4>{t('general')}</h4>
+        <Spacer y={2.5} />
         <div className="flex w-full flex-wrap gap-x-2 gap-y-4">
           {generalPages.map((page) => (
             <Button
               key={page.name}
-              icon={page.icon}
+              startContent={page.icon}
               type="button"
-              auto
               onPress={() => {
                 navigate(page.path);
               }}

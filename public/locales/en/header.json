@@ -1,45 +1,28 @@
 {
-  "movies": "Movies",
-  "popular": "Popular",
-  "topRated": "Top Rated",
-  "upcoming": "Upcoming",
-  "tv": "TV Shows",
-  "on-the-air-tv-shows": "On TV",
-  "people": "People",
-  "description": "Anime",
   "sign-in": "Sign In",
-  "searchMovie": "Search Movies",
-  "searchTv": "Search TV",
-  "searchPeople": "Search People",
-  "signedInAs": "Signed in as",
-  "settings": "My Settings",
-  "analytics": "Analytics",
-  "system": "System",
-  "configs": "Configurations",
-  "help&feedback": "Help & Feedback",
-  "logout": "Log Out",
   "en": "English",
   "fr": "French",
   "vi": "Vietnamese",
-  "search": {
-    "title": {
-      "movie": "Search Movies",
-      "tv": "Search TV Shows",
-      "people": "Search People",
-      "anime": "Search Anime"
-    },
-    "action": "Search",
-    "placeHolder": {
-      "movie": "Movie name",
-      "tv": "TV show title",
-      "people": "People",
-      "anime": "Anime"
-    },
-    "helper": {
-      "movie": "Enter movie name and search",
-      "tv": "Enter tv show title and search",
-      "people": "Enter people name and search",
-      "anime": "Enter anime name and search"
-    }
-  }
+  "language": "Language",
+  "display": "Display",
+  "log-out": "Log Out",
+  "sign-up": "Sign Up",
+  "theme": "Theme",
+  "theme-color": "Theme color",
+  "dark": "Dark",
+  "light": "Light",
+  "system": "System Default",
+  "red": "Red",
+  "pink": "Pink",
+  "purple": "Purple",
+  "blue": "Blue",
+  "cyan": "Cyan",
+  "green": "Green",
+  "yellow": "Yellow",
+  "bumblebee": "Bumblebee",
+  "synthwave": "Synthwave",
+  "retro": "Retro",
+  "dracula": "Dracula",
+  "autumn": "Autumn",
+  "night": "Night"
 }

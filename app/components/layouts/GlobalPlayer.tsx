@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/indent */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Button, Container, Tooltip } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
+import { Tooltip } from '@nextui-org/tooltip';
 import { useMeasure } from '@react-hookz/web';
 import {
   useFetcher,
@@ -18,19 +17,20 @@ import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
 import Hls from 'hls.js';
 import { isDesktop, isMobile, isMobileOnly } from 'react-device-detect';
 import { createPortal } from 'react-dom';
-import { tv } from 'tailwind-variants';
+import { toast } from 'sonner';
 import tinycolor from 'tinycolor2';
 
 import updateHistory from '~/utils/client/update-history';
 import { useLayout } from '~/store/layout/useLayout';
 import usePlayerState, { type PlayerData } from '~/store/player/usePlayerState';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
-import WatchTrailerModal, { type Trailer } from '~/components/elements/dialog/WatchTrailerModal';
+import { Dialog, DialogContent, DialogTrigger } from '~/components/elements/Dialog';
+import WatchTrailer, { type Trailer } from '~/components/elements/dialog/WatchTrailerDialog';
 import Player from '~/components/elements/player/ArtPlayer';
 import PlayerError from '~/components/elements/player/PlayerError';
 import PlayerHotKey from '~/components/elements/player/PlayerHotkey';
 import PlayerSettings from '~/components/elements/player/PlayerSettings';
-import { H6 } from '~/components/styles/Text.styles';
+import { playerStyles } from '~/components/elements/player/playerStyles';
 import Expand from '~/assets/icons/ExpandIcon';
 import Next from '~/assets/icons/NextIcon';
 import Pause from '~/assets/icons/PauseIcon';
@@ -42,66 +42,6 @@ type Highlight = {
   end: number;
   text: string;
 };
-
-const playerStyles = tv({
-  base: "custom-player-subtitle custom-player-layer-auto-playback custom-player-contextmenus custom-player-info custom-player-notice-inner custom-player-volume-control custom-player-icon-after custom-player-icon-before custom-player-control-after custom-player-control-before [&_.art-layer-mask]:hidden [&_.art-layer-mask]:bg-transparent [&_.art-layer-mask]:transition-all [&_.art-layer-mask]:duration-300 [&_.art-layer-mask]:ease-in-out [&_.art-layer-playPauseButton]:hidden [&_.art-layer-playPauseButton]:transition-all [&_.art-layer-playPauseButton]:duration-300 [&_.art-layer-playPauseButton]:ease-in-out [&_.art-layer-miniTopControlButtons]:hidden [&_.art-layer-miniTopControlButtons]:transition-all [&_.art-layer-miniTopControlButtons]:duration-300 [&_.art-layer-miniTopControlButtons]:ease-in-out [&_.art-bottom]:!bg-gradient-to-b [&_.art-bottom]:from-transparent [&_.art-bottom]:via-background-alpha [&_.art-bottom]:to-background-contrast [&_.art-layer-lock]:bg-background-alpha [&_.art-control-topControlButtons]:!opacity-100 [&_.art-control-topControlButtons]:before:absolute [&_.art-control-topControlButtons]:before:top-0 [&_.art-control-topControlButtons]:before:left-0 [&_.art-control-topControlButtons]:before:h-[100px] [&_.art-control-topControlButtons]:before:w-full [&_.art-control-topControlButtons]:before:bg-gradient-to-t [&_.art-control-topControlButtons]:before:from-transparent [&_.art-control-topControlButtons]:before:via-background-alpha [&_.art-control-topControlButtons]:before:to-background-contrast [&_.art-control-topControlButtons]:before:bg-top [&_.art-control-topControlButtons]:before:bg-repeat-x [&_.art-control-topControlButtons]:before:content-[''] [&_.art-subtitle]:bg-player-subtitle-window-color [&_.art-subtitle]:!text-shadow-player [&_.art-video-player]:!font-[Inter] [&_.art-notice]:!justify-center [&_.art-contextmenu]:!border-border [&_.art-contextmenu]:!text-shadow-none",
-  variants: {
-    isMini: {
-      true: 'custom-mini-player-hover h-[14.0625rem] w-[25rem] rounded-t-lg [&_.art-bottom]:!visible [&_.art-bottom]:!overflow-visible [&_.art-bottom]:!bg-none [&_.art-bottom]:!p-0 [&_.art-bottom]:!opacity-100 [&_.art-subtitle]:!bottom-[7px] [&_.art-controls]:hidden [&_.art-controls]:!transform-none [&_.art-control-progress]:!h-[7px] [&_.art-control-progress]:!items-end [&_.art-mask]:!hidden [&_.art-progress]:!transform-none',
-      false: 'h-full w-full rounded-none',
-    },
-    isMobile: {
-      true: '[&_.art-bottom]:!p-0 [&_.art-controls]:!px-[10px] [&_.art-progress-indicator]:!m-0',
-      false: '',
-    },
-    isShowOverlay: {
-      true: '[&_.art-video-player]:!z-[9999]',
-      false: '',
-    },
-    isSettingsOpen: {
-      true: '',
-      false: '',
-    },
-    isPlayerFullScreen: {
-      true: '[&_.art-control-topControlButtons]:block [&_.art-control-topControlButtons]:before:block',
-      false:
-        '[&_.art-control-topControlButtons]:hidden [&_.art-control-topControlButtons]:before:hidden',
-    },
-    showSubtitle: {
-      true: '[&_.art-subtitle]:!flex',
-      false: '[&_.art-subtitle]:!hidden',
-    },
-    subtitleColor: {
-      White: '[&_.art-subtitle]:text-[#fff]',
-      Blue: '[&_.art-subtitle]:text-[#0072F5]',
-      Purple: '[&_.art-subtitle]:text-[#7828C8]',
-      Green: '[&_.art-subtitle]:text-[#17C964]',
-      Yellow: '[&_.art-subtitle]:text-[#F5A524]',
-      Red: '[&_.art-subtitle]:text-[#F31260]',
-      Cyan: '[&_.art-subtitle]:text-[#06B7DB]',
-      Pink: '[&_.art-subtitle]:text-[#FF4ECD]',
-      Black: '[&_.art-subtitle]:text-[#000]',
-    },
-  },
-  compoundVariants: [
-    {
-      // @ts-ignore
-      isMini: true,
-      // @ts-ignores
-      isSettingsOpen: true,
-      class:
-        '[&_.art-layer-mask]:block [&_.art-layer-mask]:bg-background-alpha [&_.art-layer-miniTopControlButtons]:block',
-    },
-    {
-      // @ts-ignores
-      isMobile: true,
-      // @ts-ignores
-      isPlayerFullScreen: false,
-      class:
-        '[&_.art-bottom]:!flex-col-reverse [&_.art-bottom]:!justify-start [&_.art-bottom]:!overflow-visible',
-    },
-  ],
-});
 
 const GlobalPlayer = () => {
   const location = useLocation();
@@ -172,7 +112,7 @@ const GlobalPlayer = () => {
     isAutoMini,
     isLoop,
     isScreenshot,
-    isMiniProgressbar,
+    isMiniProgressBar,
     isAutoPlayback,
     isAutoPlayNextEpisode,
     isAutoSkipOpEd,
@@ -190,6 +130,30 @@ const GlobalPlayer = () => {
   const [showSubtitle, setShowSubtitle] = useState(autoShowSubtitle.value!);
   const [showSkipButton, setShowSkipButton] = useState(false);
   const [currentHighlight, setCurrentHighlight] = useState<Highlight | null>(null);
+  const subtitleColor = useMemo(() => {
+    switch (currentSubtitleFontColor.value) {
+      case 'White':
+        return '#fff';
+      case 'Blue':
+        return '#0072F5';
+      case 'Purple':
+        return '#7828C8';
+      case 'Green':
+        return '#17C964';
+      case 'Yellow':
+        return '#F5A524';
+      case 'Red':
+        return '#F31260';
+      case 'Cyan':
+        return '#06B7DB';
+      case 'Pink':
+        return '#FF4ECD';
+      case 'Black':
+        return '#000';
+      default:
+        return '#fff';
+    }
+  }, [currentSubtitleFontColor.value]);
   const subtitleBackgroundColor = useMemo(() => {
     switch (currentSubtitleBackgroundColor.value) {
       case 'Black':
@@ -443,13 +407,8 @@ const GlobalPlayer = () => {
     }
   }, [isVideoEnded]);
 
-  const [isWatchTrailerModalVisible, setWatchTrailerModalVisible] = useState(false);
+  const [isWatchTrailerDialogVisible, setWatchTrailerDialogVisible] = useState(false);
   const [trailer, setTrailer] = useState<Trailer>({});
-  const closeWatchTrailerModalHandler = () => {
-    setWatchTrailerModalVisible(false);
-    artplayer?.play();
-    if (typeVideo === 'movie' || typeVideo === 'tv') setTrailer({});
-  };
   useEffect(() => {
     if (fetcher.data && fetcher.data.videos) {
       const { results } = fetcher.data.videos;
@@ -530,11 +489,7 @@ const GlobalPlayer = () => {
   }, [playerData]);
 
   return (
-    <Container
-      fluid
-      responsive={false}
-      css={{ margin: 0, padding: 0, width: isMini ? '20rem' : '100%' }}
-    >
+    <div className="w-full" style={{ margin: 0, padding: 0, width: isMini ? '20rem' : '100%' }}>
       <div className="pointer-events-none fixed inset-0" ref={constraintsRef} />
       <AnimatePresence initial={false}>
         {shouldShowPlayer ? (
@@ -590,13 +545,12 @@ const GlobalPlayer = () => {
                     subtitleOffset: true,
                     fastForward: isMobile ? isFastForward.value : false,
                     lock: isMobile,
-                    miniProgressBar: isMiniProgressbar.value,
+                    miniProgressBar: isMiniProgressBar.value,
                     autoOrientation: isMobile,
                     isLive: false,
                     playsInline: true,
                     autoPlayback: isAutoPlayback.value,
-                    whitelist: ['*'],
-                    theme: 'var(--nextui-colors-primary)',
+                    theme: 'hsl(var(--colors-primary))',
                     autoMini: isAutoMini.value,
                     hotkey: true,
                     useSSR: false,
@@ -671,7 +625,6 @@ const GlobalPlayer = () => {
                           ? 'srt'
                           : '',
                     },
-                    title: titlePlayer,
                     poster: posterPlayer,
                     layers: [
                       {
@@ -717,7 +670,7 @@ const GlobalPlayer = () => {
                       },
                     ],
                     icons: {
-                      loading: `<div class="w-12 h-12 !m-auto relative before:content-[''] before:w-12 before:h-[5px] before:bg-primary-solid-hover before:absolute before:top-[60px] before:left-0 before:rounded-[50%] before:animate-shadow after:content-[''] after:w-full after:h-full after:bg-primary after:absolute after:top-0 after:left-0 after:rounded-md after:animate-jump"></div>`,
+                      loading: `<div class="w-12 h-12 !m-auto relative before:content-[''] before:w-12 before:h-[5px] before:bg-primary-700 before:absolute before:top-[60px] before:left-0 before:rounded-[50%] before:animate-shadow after:content-[''] after:w-full after:h-full after:bg-primary after:absolute after:top-0 after:left-0 after:rounded-md after:animate-jump"></div>`,
                       play: `
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                           <path d="M17.49 9.59965L5.6 16.7696C4.9 17.1896 4 16.6896 4 15.8696V7.86965C4 4.37965 7.77 2.19965 10.8 3.93965L15.39 6.57965L17.48 7.77965C18.17 8.18965 18.18 9.18965 17.49 9.59965Z" fill="currentColor"/>
@@ -808,13 +761,14 @@ const GlobalPlayer = () => {
                         : []),
                     ],
                     cssVar: {
-                      '--art-font-color': 'var(--nextui-colors-text)',
-                      '--art-progress-color': 'var(--nextui-colors-textLight)',
-                      '--art-loaded-color': 'var(--nextui-colors-textAlpha)',
+                      '--art-font-color': 'hsl(var(--colors-default-foreground))',
+                      '--art-progress-color': 'hsl(var(--colors-default-foreground) / 0.2)',
+                      '--art-loaded-color': 'hsl(var(--colors-default-foreground) / 0.4)',
                     },
                   }}
                   style={{
                     // @ts-ignore
+                    '--art-subtitle-color': subtitleColor,
                     '--art-subtitle-background-color': subtitleBackgroundColor,
                     '--art-subtitle-window-color': subtitleWindowColor,
                     '--art-subtitle-custom-font-size': subtitleFontSize,
@@ -839,6 +793,7 @@ const GlobalPlayer = () => {
                             padding: '0 7px 0 7px',
                             height: '55px',
                             cursor: 'default',
+                            zIndex: '50',
                           },
                         });
                       }
@@ -873,7 +828,7 @@ const GlobalPlayer = () => {
                           setStyles($item, {
                             left: `${left}%`,
                             width: `${width}%`,
-                            backgroundColor: 'var(--nextui-colors-secondary) !important',
+                            backgroundColor: 'hsl(var(--colors-secondary)) !important',
                           });
                           append($highlight, $item);
                         }
@@ -882,11 +837,13 @@ const GlobalPlayer = () => {
                     art.on('resize', () => {
                       // eslint-disable-next-line @typescript-eslint/dot-notation
                       const $topControlButtons = art.controls['topControlButtons'];
-                      // set top control buttons position when player resize
-                      $topControlButtons.style.bottom = `${
-                        Number(art?.height) - (isMobile && !art.fullscreen ? 70 : 55)
-                      }px`;
-                      $topControlButtons.style.width = `${Number(art?.width)}px`;
+                      if ($topControlButtons?.style) {
+                        // set top control buttons position when player resize
+                        $topControlButtons.style.bottom = `${
+                          Number(art?.height) - (isMobile && !art.fullscreen ? 70 : 55)
+                        }px`;
+                        $topControlButtons.style.width = `${Number(art?.width)}px`;
+                      }
                     });
                     art.on('video:timeupdate', () => {
                       /* Finding the current highlight and show skip button */
@@ -926,6 +883,11 @@ const GlobalPlayer = () => {
                         hls.destroy();
                       }
                     });
+                    art.on('error', (_error, _reconnectTime) => {
+                      toast.error('An error occurred while playing the video.', {
+                        description: 'Please try again later.',
+                      });
+                    });
                   }}
                   setIsPlayerPlaying={setIsPlayerPlaying}
                   className={playerStyles({
@@ -934,7 +896,6 @@ const GlobalPlayer = () => {
                     isMobile,
                     isPlayerFullScreen,
                     showSubtitle,
-                    subtitleColor: currentSubtitleFontColor.value,
                     isShowOverlay,
                   })}
                 />
@@ -943,34 +904,41 @@ const GlobalPlayer = () => {
                     <Button
                       type="button"
                       size="sm"
-                      color="primary"
-                      auto
-                      ghost={!isShowOverlay}
-                      flat={isShowOverlay}
-                      css={{ marginBottom: '0.75rem' }}
-                      className={isShowOverlay ? 'z-[9999]' : ''}
+                      variant={isShowOverlay ? 'flat' : 'solid'}
+                      className={isShowOverlay ? 'z-[9999] mb-3' : 'mb-3'}
                       onPress={() => setIsShowOverlay(!isShowOverlay)}
                     >
                       Toggle Light
                     </Button>
-                    <Button
-                      type="button"
-                      size="sm"
-                      color="primary"
-                      auto
-                      ghost
-                      onPress={() => {
-                        artplayer?.pause();
-                        setWatchTrailerModalVisible(true);
-                        if (typeVideo === 'movie' || typeVideo === 'tv')
-                          fetcher.load(
-                            `/${typeVideo === 'movie' ? 'movies' : 'tv-shows'}/${id}/videos`,
-                          );
-                      }}
-                      css={{ marginBottom: '0.75rem' }}
+                    <Dialog
+                      open={isWatchTrailerDialogVisible}
+                      onOpenChange={setWatchTrailerDialogVisible}
                     >
-                      Watch Trailer
-                    </Button>
+                      <DialogTrigger asChild>
+                        <Button
+                          type="button"
+                          size="sm"
+                          onPress={() => {
+                            artplayer?.pause();
+                            if (typeVideo === 'movie' || typeVideo === 'tv')
+                              fetcher.load(
+                                `/${typeVideo === 'movie' ? 'movies' : 'tv-shows'}/${id}/videos`,
+                              );
+                          }}
+                          className="mb-3"
+                        >
+                          Watch Trailer
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="overflow-hidden !p-0">
+                        {typeVideo === 'movie' || typeVideo === 'tv' ? (
+                          <WatchTrailer trailer={trailer} />
+                        ) : null}
+                        {typeVideo === 'anime' && trailerAnime ? (
+                          <WatchTrailer trailer={trailerAnime} />
+                        ) : null}
+                      </DialogContent>
+                    </Dialog>
                   </div>
                 ) : null}
               </>
@@ -983,18 +951,17 @@ const GlobalPlayer = () => {
           </motion.div>
         ) : null}
       </AnimatePresence>
-      {/* Creating a portal for the player layers */}
+      {/* Creating portal for the player layers */}
       {isMini && artplayer
         ? createPortal(<div className="z-[1] h-full w-full" />, artplayer.layers.mask)
         : null}
       {isMini && artplayer
         ? createPortal(
             <div className="flex h-full w-full flex-row items-center justify-center">
-              <Tooltip content={isPlayerPlaying ? 'Pause' : 'Play'}>
+              <Tooltip content={isPlayerPlaying ? 'Pause' : 'Play'} showArrow closeDelay={0}>
                 <Button
                   type="button"
-                  auto
-                  light
+                  variant="light"
                   onPress={() => {
                     if (isPlayerPlaying) {
                       artplayer.pause();
@@ -1002,15 +969,15 @@ const GlobalPlayer = () => {
                       artplayer.play();
                     }
                   }}
-                  icon={
-                    isPlayerPlaying ? (
-                      <Pause height={48} width={48} filled />
-                    ) : (
-                      <Play height={48} width={48} filled />
-                    )
-                  }
-                  css={{ height: '48px' }}
-                />
+                  isIconOnly
+                  className="h-12 data-[hover=true]:bg-transparent"
+                >
+                  {isPlayerPlaying ? (
+                    <Pause height={48} width={48} filled />
+                  ) : (
+                    <Play height={48} width={48} filled />
+                  )}
+                </Button>
               </Tooltip>
             </div>,
             artplayer.layers.playPauseButton,
@@ -1020,14 +987,16 @@ const GlobalPlayer = () => {
         ? createPortal(
             <div className="flex flex-row items-center justify-between">
               <div className="flex flex-row items-center justify-center gap-x-1">
-                <Tooltip content="Expand">
+                <Tooltip content="Expand" showArrow closeDelay={0}>
                   <Button
                     type="button"
-                    auto
-                    light
+                    variant="light"
                     onPress={() => navigate(routePlayer)}
-                    icon={<Expand filled />}
-                  />
+                    isIconOnly
+                    className="data-[hover=true]:bg-transparent"
+                  >
+                    <Expand filled />
+                  </Button>
                 </Tooltip>
               </div>
               <PlayerSettings
@@ -1054,8 +1023,6 @@ const GlobalPlayer = () => {
             >
               <Button
                 type="button"
-                auto
-                css={{ px: '$md !important' }}
                 onPress={() => {
                   if (currentHighlight?.end) {
                     artplayer.currentTime = currentHighlight?.end;
@@ -1089,12 +1056,13 @@ const GlobalPlayer = () => {
         ? createPortal(
             <Button
               type="button"
-              auto
-              light
+              variant="light"
               onPress={() => prevEpisodeUrl && navigate(prevEpisodeUrl)}
-              icon={<Previous filled />}
-              className="art-icon"
-            />,
+              isIconOnly
+              className="art-icon data-[hover=true]:bg-transparent"
+            >
+              <Previous filled />
+            </Button>,
             artplayer.controls.prev,
           )
         : null}
@@ -1102,37 +1070,34 @@ const GlobalPlayer = () => {
         ? createPortal(
             <Button
               type="button"
-              auto
-              light
+              variant="light"
               onPress={() => nextEpisodeUrl && navigate(nextEpisodeUrl)}
-              icon={<Next filled />}
-              className="art-icon"
-            />,
+              isIconOnly
+              className="art-icon data-[hover=true]:bg-transparent"
+            >
+              <Next filled />
+            </Button>,
             artplayer.controls.next,
           )
         : null}
       {artplayer?.controls.topControlButtons && !isMini
         ? createPortal(
-            <div className="z-10 flex w-full flex-row items-center justify-start gap-x-2">
-              <div className="flex w-2/3 shrink grow-0 basis-2/3 flex-row items-center justify-start space-x-2">
+            <div className="relative z-10 flex w-full flex-row items-center justify-start gap-x-2">
+              <div className="flex w-2/3 shrink grow-0 basis-2/3 flex-row items-center justify-start gap-x-2">
                 {isPlayerFullScreen ? (
-                  <div className="flex w-full flex-col items-start justify-center space-y-2">
-                    <H6
-                      h6
-                      weight="bold"
-                      className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-start"
-                    >
+                  <div className="flex w-full flex-col items-start justify-center">
+                    <h6 className="!text-default-foreground w-full overflow-hidden text-ellipsis whitespace-nowrap text-start">
                       {playerData?.titlePlayer}
-                    </H6>
-                    <H6 h6 weight="light" css={{ color: '$accents8' }}>
+                    </h6>
+                    <p className="!text-default-foreground/80">
                       {seasonId ? ` Season ${seasonId}` : ''}
                       {episodeId ? ` Episode ${episodeId}` : ''}
-                    </H6>
+                    </p>
                   </div>
                 ) : null}
               </div>
               {isMobile ? (
-                <div className="flex shrink-0 grow basis-1/3 flex-row items-center justify-end space-x-2">
+                <div className="flex shrink-0 grow basis-1/3 flex-row items-center justify-end gap-x-2">
                   <PlayerSettings
                     artplayer={artplayer}
                     qualitySelector={qualitySelector}
@@ -1150,21 +1115,7 @@ const GlobalPlayer = () => {
             artplayer.controls.topControlButtons,
           )
         : null}
-      {typeVideo === 'movie' || typeVideo === 'tv' ? (
-        <WatchTrailerModal
-          trailer={trailer}
-          visible={isWatchTrailerModalVisible}
-          closeHandler={closeWatchTrailerModalHandler}
-        />
-      ) : null}
-      {typeVideo === 'anime' && trailerAnime ? (
-        <WatchTrailerModal
-          trailer={trailerAnime}
-          visible={isWatchTrailerModalVisible}
-          closeHandler={closeWatchTrailerModalHandler}
-        />
-      ) : null}
-    </Container>
+    </div>
   );
 };
 

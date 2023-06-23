@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { Button } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
 import { toast } from 'sonner';
 
 import { getExt } from '~/utils/file';
 import usePlayerState from '~/store/player/usePlayerState';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
-import { DialogHeader, DialogTitle } from '~/components/elements/Dialog';
+import { DialogFooter, DialogHeader, DialogTitle } from '~/components/elements/Dialog';
 
 interface IAddSubtitlesProps {
   artplayer: Artplayer | null;
@@ -78,27 +78,28 @@ const AddSubtitles = (props: IAddSubtitlesProps) => {
       <DialogHeader>
         <DialogTitle className="!mb-3">Add Subtitle</DialogTitle>
       </DialogHeader>
-      <div className="w-full">
-        <div className="!mb-5 flex flex-col items-end justify-start gap-4 sm:flex-row sm:items-center">
-          <input
-            type="file"
-            id="subtitle"
-            name="subtitle"
-            accept=".srt,.vtt,.ass"
-            onChange={(e) => handleFileChange(e)}
-            className="flex h-10 w-full rounded-md border border-border bg-transparent !px-3 !py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-text-alpha focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-          />
-          <Button
-            type="submit"
-            auto
-            disabled={disabledSubmit}
-            onPress={() => handleSubtitleSubmit()}
-            className="!px-4"
-          >
-            Add
-          </Button>
-        </div>
+      <div className="mb-3 w-full">
+        <input
+          type="file"
+          id="subtitle"
+          name="subtitle"
+          accept=".srt,.vtt,.ass"
+          onChange={(e) => handleFileChange(e)}
+          className="border-default-200 ring-offset-background placeholder:text-foreground/60 focus-visible:ring-primary flex h-10 w-full rounded-md border bg-transparent !px-3 !py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+        />
       </div>
+      <DialogFooter>
+        <Button
+          type="submit"
+          size="md"
+          color="primary"
+          isDisabled={disabledSubmit}
+          onPress={() => handleSubtitleSubmit()}
+          className="!px-4"
+        >
+          Add
+        </Button>
+      </DialogFooter>
     </>
   );
 };

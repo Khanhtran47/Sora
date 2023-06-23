@@ -1,6 +1,6 @@
 import * as React from 'react';
+import { cn } from '@nextui-org/theme';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import { cnBase } from 'tailwind-variants';
 
 import Close from '~/assets/icons/CloseIcon';
 
@@ -13,8 +13,8 @@ const DialogOverlay = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Overlay
     ref={ref}
-    className={cnBase(
-      'fixed inset-0 z-[9998] bg-background-alpha backdrop-blur-lg transition-all duration-100 data-[state=closed]:animate-fadeOut data-[state=open]:animate-fadeIn',
+    className={cn(
+      'fixed inset-0 z-[9998] cursor-pointer bg-black/[0.6] backdrop-blur-2xl duration-100 transition-all data-[state=closed]:animate-fadeOut data-[state=open]:animate-fadeIn',
       className,
     )}
     {...props}
@@ -33,15 +33,15 @@ const DialogContent = React.forwardRef<
     <DialogOverlay />
     <DialogPrimitive.Content
       ref={ref}
-      className={cnBase(
-        'fixed top-1/2 left-1/2 z-[9999] mt-[-5vh] max-h-[85vh] min-h-[150px] min-w-[250px] translate-x-[-50%] translate-y-[-50%] rounded-lg bg-background-contrast !p-6 shadow-lg shadow-background-alpha will-change-transform focus:outline-none data-[state=closed]:animate-fadeOut data-[state=open]:animate-fadeIn',
+      className={cn(
+        'fixed left-1/2 top-1/2 z-[9999] mt-[-5vh] max-h-[85vh] min-h-[150px] min-w-[250px] translate-x-[-50%] translate-y-[-50%] rounded-lg border border-default-100 bg-content1 !p-6 shadow-lg shadow-background/[0.6] will-change-transform focus:outline-none data-[state=closed]:animate-fadeOut data-[state=open]:animate-fadeIn',
         className,
       )}
       {...props}
     >
       {children}
       {!hideCloseButton ? (
-        <DialogPrimitive.Close className="absolute right-4 top-4 flex h-5 w-5 items-center justify-center rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-primary-light-active focus:ring-offset-2 disabled:pointer-events-none">
+        <DialogPrimitive.Close className="ring-offset-background focus:ring-primary-200 absolute right-4 top-4 flex h-5 w-5 items-center justify-center rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none">
           <Close className="h-4 w-4" />
           <span className="sr-only">Close</span>
         </DialogPrimitive.Close>
@@ -52,16 +52,13 @@ const DialogContent = React.forwardRef<
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
 const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
-    className={cnBase('flex flex-col gap-y-1.5 text-center sm:text-left', className)}
-    {...props}
-  />
+  <div className={cn('flex flex-col gap-y-1.5 text-center sm:text-left', className)} {...props} />
 );
 DialogHeader.displayName = 'DialogHeader';
 
 const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={cnBase('flex flex-col-reverse sm:flex-row sm:justify-end sm:gap-x-2', className)}
+    className={cn('flex flex-col-reverse sm:flex-row sm:justify-end sm:gap-x-2', className)}
     {...props}
   />
 );
@@ -73,7 +70,7 @@ const DialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    className={cnBase('text-lg font-semibold leading-none tracking-tight', className)}
+    className={cn('text-lg font-semibold leading-none tracking-tight', className)}
     {...props}
   />
 ));
@@ -85,7 +82,7 @@ const DialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cnBase('text-sm text-text-alpha', className)}
+    className={cn('text-sm text-foreground/60', className)}
     {...props}
   />
 ));

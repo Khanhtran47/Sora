@@ -1,8 +1,8 @@
-import { Badge } from '@nextui-org/react';
 import type { MetaFunction } from '@remix-run/node';
-import { NavLink, Outlet } from '@remix-run/react';
+import { Outlet } from '@remix-run/react';
 
 import { discoverPages } from '~/constants/tabLinks';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
 export const meta: MetaFunction = () => ({
   title: 'Discover Movies, TV Shows, Anime, People and More - Sora',
@@ -15,21 +15,9 @@ export const meta: MetaFunction = () => ({
 
 export const handle = {
   breadcrumb: () => (
-    <NavLink to="/discover" aria-label="Discover Page">
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          Discover
-        </Badge>
-      )}
-    </NavLink>
+    <BreadcrumbItem to="/discover" key="discover">
+      Discover
+    </BreadcrumbItem>
   ),
   showTabLink: true,
   tabLinkPages: discoverPages,
@@ -46,10 +34,6 @@ export const handle = {
   }),
 };
 
-const DiscoverPage = () => (
-  <div className="w-full">
-    <Outlet />
-  </div>
-);
+const DiscoverPage = () => <Outlet />;
 
 export default DiscoverPage;

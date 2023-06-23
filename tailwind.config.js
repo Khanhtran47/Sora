@@ -1,42 +1,23 @@
 const { withTV } = require('tailwind-variants/transformer');
 const plugin = require('tailwindcss/plugin');
+const { nextui } = require('@nextui-org/theme');
+const themesConfig = require('./styles/themes.config');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = withTV({
-  content: ['./app/**/*.{js,ts,jsx,tsx}'],
+  content: [
+    './app/**/*.{js,ts,jsx,tsx}',
+    './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
+  ],
   theme: {
     extend: {
       colors: {
-        background: 'var(--nextui-colors-background)',
-        'background-alpha': 'var(--nextui-colors-backgroundAlpha)',
-        'background-light': 'var(--nextui-colors-backgroundLight)',
-        foreground: 'var(--nextui-colors-foreground)',
-        'background-contrast': 'var(--nextui-colors-backgroundContrast)',
-        'background-contrast-alpha': 'var(--nextui-colors-backgroundContrastAlpha)',
-        'background-contrast-light': 'var(--nextui-colors-backgroundContrastLight)',
-        'background-transparent': 'var(--nextui-colors-backgroundTransparent)',
-        primary: 'var(--nextui-colors-primary)',
-        'primary-light-hover': 'var(--nextui-colors-primaryLightHover)',
-        'primary-light-active': 'var(--nextui-colors-primaryLightActive)',
-        'primary-light-contrast': 'var(--nextui-colors-primaryLightContrast)',
-        'primary-border': 'var(--nextui-colors-primaryBorder)',
-        'primary-border-hover': 'var(--nextui-colors-primaryBorderHover)',
-        'primary-solid-hover': 'var(--nextui-colors-primarySolidHover)',
-        'primary-solid-contrast': 'var(--nextui-colors-primarySolidContrast)',
-        'primary-shadow': 'var(--nextui-colors-primaryShadow)',
-        gradient: 'var(--nextui-colors-gradient)',
-        text: 'var(--nextui-colors-text)',
-        'text-light': 'var(--nextui-colors-textLight)',
-        'text-alpha': 'var(--nextui-colors-textAlpha)',
-        success: 'var(--nextui-colors-success)',
-        warning: 'var(--nextui-colors-warning)',
-        error: 'var(--nextui-colors-error)',
-        link: 'var(--nextui-colors-link)',
-        border: 'var(--nextui-colors-border)',
-        selection: 'var(--nextui-colors-selection)',
-        code: 'var(--nextui-colors-code)',
+        'player-subtitle-color': 'var(--art-subtitle-color)',
         'player-subtitle-window-color': 'var(--art-subtitle-window-color)',
         'player-subtitle-background-color': 'var(--art-subtitle-background-color)',
+        'movie-brand-color': 'var(--colors-movie-brand)',
+        'theme-radio-color': 'var(--colors-radioColor)',
+        'theme-radio-color-hover': 'var(--colors-radioColorHover)',
       },
       keyframes: {
         enterFromRight: {
@@ -105,6 +86,10 @@ module.exports = withTV({
           from: { transform: 'translate3d(0,0,0)' },
           to: { transform: '$$transformValue' },
         },
+        progressBarStripes: {
+          '0%': { backgroundPosition: '40px 0' },
+          '100%': { backgroundPosition: '0 0' },
+        },
       },
       animation: {
         scaleIn: 'scaleIn 200ms ease',
@@ -117,12 +102,69 @@ module.exports = withTV({
         exitToRight: 'exitToRight 250ms ease',
         shadow: 'shadowAnimation 500ms linear infinite',
         jump: 'jumpAnimation 500ms linear infinite',
+        progressBarStripes: 'progressBarStripes 2s linear infinite',
       },
       gridTemplateAreas: {
         wide: ['image title', 'image info', 'image buttons'],
         small: ['image title', 'info info', 'buttons buttons'],
       },
       fontSize: {
+        xs: [
+          '0.75rem',
+          {
+            lineHeight: '1rem',
+            letterSpacing: '-0.05em',
+          },
+        ],
+        sm: [
+          '0.875rem',
+          {
+            lineHeight: '1.25rem',
+            letterSpacing: '-0.05em',
+          },
+        ],
+        base: [
+          '1rem',
+          {
+            lineHeight: '1.5rem',
+            letterSpacing: '-0.025em',
+          },
+        ],
+        lg: [
+          '1.125rem',
+          {
+            lineHeight: '1.75rem',
+            letterSpacing: '0',
+          },
+        ],
+        xl: [
+          '1.25rem',
+          {
+            lineHeight: '1.5',
+            letterSpacing: '0',
+          },
+        ],
+        '2xl': [
+          '1.5rem',
+          {
+            lineHeight: '1.5',
+            letterSpacing: '0',
+          },
+        ],
+        '3xl': [
+          '1.875rem',
+          {
+            lineHeight: '1.5',
+            letterSpacing: '0',
+          },
+        ],
+        '4xl': [
+          '2.25rem',
+          {
+            lineHeight: '1.5',
+            letterSpacing: '0',
+          },
+        ],
         'player-subtitle-font-size': 'var(--art-subtitle-custom-font-size)',
       },
       textShadow: {
@@ -131,6 +173,10 @@ module.exports = withTV({
         DEFAULT: '0 2px 4px var(--tw-shadow-color)',
         lg: '0 8px 16px var(--tw-shadow-color)',
         player: 'var(--art-subtitle-text-shadow)',
+      },
+      width: {
+        logo: 'calc(var(--movie-logo-width) * 1px)',
+        'logo-sm': 'calc(var(--movie-logo-width-sm) * 1px)',
       },
     },
     screens: {
@@ -162,11 +208,14 @@ module.exports = withTV({
         { values: theme('textShadow') },
       );
     }),
-    require('@tailwindcss/line-clamp'),
     require('tailwind-scrollbar-hide'),
     require('@savvywombat/tailwindcss-grid-areas'),
     require('prettier-plugin-tailwindcss'),
     require('tailwindcss-animate'),
+    nextui({
+      prefix: 'colors',
+      themes: themesConfig,
+    }),
   ],
   variants: {
     gridTemplateAreas: ['responsive'],

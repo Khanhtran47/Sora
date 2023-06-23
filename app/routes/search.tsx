@@ -1,8 +1,8 @@
-import { Badge, Container } from '@nextui-org/react';
 import type { MetaFunction } from '@remix-run/node';
-import { NavLink, Outlet } from '@remix-run/react';
+import { Outlet } from '@remix-run/react';
 
 import { searchPages } from '~/constants/tabLinks';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
 export const meta: MetaFunction = () => ({
   title:
@@ -21,21 +21,9 @@ export const meta: MetaFunction = () => ({
 
 export const handle = {
   breadcrumb: () => (
-    <NavLink to="/search" aria-label="Search Page">
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          Search
-        </Badge>
-      )}
-    </NavLink>
+    <BreadcrumbItem to="/search" key="search">
+      Search
+    </BreadcrumbItem>
   ),
   showTabLink: true,
   tabLinkPages: searchPages,
@@ -46,10 +34,6 @@ export const handle = {
   }),
 };
 
-const SearchPage = () => (
-  <Container fluid responsive={false} css={{ m: 0, p: 0 }}>
-    <Outlet />
-  </Container>
-);
+const SearchPage = () => <Outlet />;
 
 export default SearchPage;

@@ -1,15 +1,17 @@
-import { Badge } from '@nextui-org/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { NavLink, useLoaderData, useLocation } from '@remix-run/react';
-import { motion } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
+import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 import i18next from '~/i18n/i18next.server';
+import { motion, type PanInfo } from 'framer-motion';
+import { isMobile } from 'react-device-detect';
+import { useTranslation } from 'react-i18next';
+import { useHydrated } from 'remix-utils';
 
 import { authenticate } from '~/services/supabase';
 import { getListMovies } from '~/services/tmdb/tmdb.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
 export const meta: MetaFunction = () => ({
   title: 'Now Playing movies | Sora',
@@ -47,21 +49,9 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export const handle = {
   breadcrumb: () => (
-    <NavLink to="/movies/now-playing" aria-label="Now Playing Movies">
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          Now Playing Movies
-        </Badge>
-      )}
-    </NavLink>
+    <BreadcrumbItem to="/movies/now-playing" key={`movies-now-playing`}>
+      Now Playing Movies
+    </BreadcrumbItem>
   ),
   miniTitle: () => ({
     title: 'Movies',
@@ -75,30 +65,45 @@ const ListNowPlayingMovies = () => {
   const { movies } = useLoaderData<typeof loader>();
   const rootData = useTypedRouteLoaderData('root');
   const location = useLocation();
+  const navigate = useNavigate();
+  const isHydrated = useHydrated();
   const { t } = useTranslation();
+
+  const handleDragEnd = (_e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    if (info.offset?.x > 100) {
+      navigate('/movies/popular');
+    }
+    if (info.offset?.x < -100 && info.offset?.y > -50) {
+      navigate('/movies/upcoming');
+    }
+  };
 
   return (
     <motion.div
       key={location.key}
-      initial={{ x: '-10%', opacity: 0 }}
-      animate={{ x: '0', opacity: 1 }}
-      exit={{ y: '-10%', opacity: 0 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
       className="flex w-full flex-col items-center justify-center px-3 sm:px-0"
+      drag={isMobile && isHydrated ? 'x' : false}
+      dragConstraints={isMobile && isHydrated ? { left: 0, right: 0 } : false}
+      dragElastic={isMobile && isHydrated ? 0.7 : false}
+      onDragEnd={handleDragEnd}
+      dragDirectionLock={isMobile && isHydrated}
+      draggable={isMobile && isHydrated}
     >
-      {movies && movies.items && movies.items.length > 0 && (
-        <MediaList
-          currentPage={movies.page}
-          genresMovie={rootData?.genresMovie}
-          genresTv={rootData?.genresTv}
-          items={movies.items}
-          itemsType="movie"
-          listName={t('now-playing-movies')}
-          listType="grid"
-          showListTypeChangeButton
-          totalPages={movies.totalPages}
-        />
-      )}
+      <MediaList
+        currentPage={movies?.page}
+        genresMovie={rootData?.genresMovie}
+        genresTv={rootData?.genresTv}
+        items={movies?.items}
+        itemsType="movie"
+        listName={t('now-playing-movies')}
+        listType="grid"
+        showListTypeChangeButton
+        totalPages={movies?.totalPages}
+      />
     </motion.div>
   );
 };

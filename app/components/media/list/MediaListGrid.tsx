@@ -1,6 +1,7 @@
-/* eslint-disable @typescript-eslint/indent */
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Button, Pagination } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
+import { Pagination } from '@nextui-org/pagination';
+import { Spacer } from '@nextui-org/spacer';
 import { useIntersectionObserver, useMediaQuery } from '@react-hookz/web';
 import { Link, useFetcher, useLocation, useSearchParams } from '@remix-run/react';
 import { motion } from 'framer-motion';
@@ -21,24 +22,25 @@ interface IMediaListCardProps {
   genresTv?: { [id: string]: string };
   hasNextPage?: boolean;
   isCoverCard?: boolean;
+  isCreditsCard?: boolean;
   items?: IMedia[];
   itemsType?: 'movie' | 'tv' | 'anime' | 'people' | 'episode' | 'movie-tv';
   listType?: 'table' | 'slider-card' | 'slider-banner' | 'grid';
   provider?: string;
-  totalPages?: number;
   scrollToTopListAfterChangePage?: boolean;
+  totalPages?: number;
 }
 
 const MotionLink = motion(Link);
 
 const mediaListGridStyles = tv({
-  base: 'grid w-full max-w-screen-4xl items-stretch justify-items-center gap-5',
+  base: 'max-w-screen-4xl grid w-full items-stretch justify-items-center gap-5',
   variants: {
     listViewType: {
       table: 'grid-cols-1',
-      card: 'grid-cols-1 2xs:grid-cols-2 md:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6',
-      detail: 'grid-cols-1 xl:grid-cols-2 4xl:grid-cols-3',
-      coverCard: 'grid-cols-1 xl:grid-cols-2 4xl:grid-cols-3',
+      card: '2xs:grid-cols-2 3xl:grid-cols-5 4xl:grid-cols-6 grid-cols-1 md:grid-cols-3 2xl:grid-cols-4',
+      detail: '4xl:grid-cols-3 grid-cols-1 xl:grid-cols-2',
+      coverCard: '4xl:grid-cols-3 grid-cols-1 xl:grid-cols-2',
     },
   },
   defaultVariants: {
@@ -54,12 +56,13 @@ const MediaListGrid = (props: IMediaListCardProps) => {
     genresTv,
     hasNextPage,
     isCoverCard,
+    isCreditsCard,
     items,
     itemsType,
     listType,
     provider,
-    totalPages,
     scrollToTopListAfterChangePage = false,
+    totalPages,
   } = props;
   const fetcher = useFetcher();
   const location = useLocation();
@@ -71,7 +74,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
   const [page, setPage] = useState(2);
   const topRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
-  const { listLoadingType, listViewType } = useSoraSettings();
+  const { listLoadingType, listViewType, isShowTopPagination } = useSoraSettings();
   const is2Xs = useMediaQuery('(max-width: 320px)', { initializeWithValue: false });
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const currentSearchParams = useMemo<{ [key: string]: string }>(() => {
@@ -187,6 +190,45 @@ const MediaListGrid = (props: IMediaListCardProps) => {
     }
   };
 
+  const pagination =
+    listType === 'grid' && listLoadingType.value === 'pagination' ? (
+      itemsType === 'anime' || itemsType === 'episode' ? (
+        <>
+          <div className="flex flex-row gap-x-3">
+            <Button
+              color="primary"
+              isIconOnly
+              onPress={() => handlePageChange({ direction: 'prev' })}
+              isDisabled={currentPage === 1}
+            >
+              <Arrow direction="left" />
+            </Button>
+            <Button
+              color="primary"
+              isIconOnly
+              onPress={() => handlePageChange({ direction: 'next' })}
+              isDisabled={!hasNextPage}
+            >
+              <Arrow direction="right" />
+            </Button>
+          </div>
+          <Spacer y={2.5} />
+        </>
+      ) : totalPages && totalPages > 1 ? (
+        <>
+          <Pagination
+            // showControls={!isSm}
+            total={totalPages}
+            initialPage={currentPage}
+            // shadow
+            onChange={(page) => handlePageChange({ page })}
+            {...(isSm && !is2Xs ? { size: 'sm' } : isSm && is2Xs ? { size: 'xs' } : {})}
+          />
+          <Spacer y={2.5} />
+        </>
+      ) : null
+    ) : null;
+
   if (isCoverCard) {
     return (
       <div className={mediaListGridStyles({ listViewType: 'coverCard' })}>
@@ -218,15 +260,19 @@ const MediaListGrid = (props: IMediaListCardProps) => {
   return (
     <>
       <div ref={topRef} />
-      <div
-        className={mediaListGridStyles({
-          listViewType:
-            itemsType === 'episode' || itemsType === 'people' ? 'card' : listViewType.value,
-        })}
-      >
-        {listItems &&
-          listItems?.length > 0 &&
-          listItems.map((item, index) => {
+      {isShowTopPagination.value ? pagination : null}
+      {listItems && listItems?.length > 0 ? (
+        <div
+          className={mediaListGridStyles({
+            listViewType:
+              itemsType === 'episode' || itemsType === 'people'
+                ? 'card'
+                : isCreditsCard
+                ? 'table'
+                : listViewType.value,
+          })}
+        >
+          {listItems.map((item, index) => {
             const href =
               itemsType && itemsType === 'episode'
                 ? `/anime/${item.id}/episode/${item.episodeNumber}/watch?provider=${provider}`
@@ -243,7 +289,6 @@ const MediaListGrid = (props: IMediaListCardProps) => {
                 : itemsType === 'movie-tv' && item?.mediaType === 'tv'
                 ? `/tv-shows/${item.id}/`
                 : '/';
-
             return (
               <motion.div
                 key={`${item.id}-${index}-card-grid`}
@@ -255,9 +300,11 @@ const MediaListGrid = (props: IMediaListCardProps) => {
                     : { duration: 0.05 * index }
                 }
                 className={
-                  listViewType.value === 'table' &&
-                  itemsType !== 'episode' &&
-                  itemsType !== 'people'
+                  isCreditsCard
+                    ? 'w-full'
+                    : listViewType.value === 'table' &&
+                      itemsType !== 'episode' &&
+                      itemsType !== 'people'
                     ? 'w-full'
                     : listViewType.value === 'detail' &&
                       itemsType !== 'episode' &&
@@ -289,11 +336,18 @@ const MediaListGrid = (props: IMediaListCardProps) => {
                   trailer={item?.trailer}
                   type={itemsType === 'episode' ? itemsType : 'card'}
                   voteAverage={item?.voteAverage}
+                  isCreditsCard={isCreditsCard}
                 />
               </motion.div>
             );
           })}
-      </div>
+        </div>
+      ) : (
+        <div className="flex w-full items-center justify-center">
+          <h4 className="opacity-70">No results</h4>
+        </div>
+      )}
+      <Spacer y={5} />
       {!shouldFetch &&
       (hasNextPage || (currentPage && totalPages && currentPage < totalPages)) &&
       showLoadMore &&
@@ -301,6 +355,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
         <Button
           type="button"
           // shadow
+          fullWidth
           color="primary"
           onPress={() => {
             fetcher.load(
@@ -310,38 +365,11 @@ const MediaListGrid = (props: IMediaListCardProps) => {
             );
             setShowLoadMore(false);
           }}
-          css={{ marginTop: '$32' }}
         >
           Load More
         </Button>
       ) : null}
-      {listType === 'grid' && listLoadingType.value === 'pagination' ? (
-        itemsType === 'anime' || itemsType === 'episode' ? (
-          <div className="mt-[50px] flex flex-row gap-x-3">
-            <Button
-              auto
-              icon={<Arrow direction="left" />}
-              onPress={() => handlePageChange({ direction: 'prev' })}
-              disabled={currentPage === 1}
-            />
-            <Button
-              auto
-              icon={<Arrow direction="right" />}
-              onPress={() => handlePageChange({ direction: 'next' })}
-              disabled={!hasNextPage}
-            />
-          </div>
-        ) : totalPages && totalPages > 1 ? (
-          <Pagination
-            total={totalPages}
-            initialPage={currentPage}
-            // shadow
-            onChange={(page) => handlePageChange({ page })}
-            css={{ marginTop: '50px' }}
-            {...(isSm && !is2Xs ? { size: 'sm' } : isSm && is2Xs ? { size: 'xs' } : {})}
-          />
-        ) : null
-      ) : null}
+      {pagination}
       <div ref={bottomRef} />
     </>
   );

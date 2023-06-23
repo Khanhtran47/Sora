@@ -1,13 +1,16 @@
-import { Badge } from '@nextui-org/react';
 import { json, type LoaderArgs } from '@remix-run/node';
-import { NavLink, useLoaderData, useNavigate } from '@remix-run/react';
-import { useTranslation } from 'react-i18next';
+import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 import i18next from '~/i18n/i18next.server';
+import { motion, type PanInfo } from 'framer-motion';
+import { isMobile } from 'react-device-detect';
+import { useTranslation } from 'react-i18next';
+import { useHydrated } from 'remix-utils';
 
 import { authenticate } from '~/services/supabase';
 import { getListPeople } from '~/services/tmdb/tmdb.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import MediaList from '~/components/media/MediaList';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import SearchForm from '~/components/elements/SearchForm';
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -32,21 +35,9 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export const handle = {
   breadcrumb: () => (
-    <NavLink to="/search/people" aria-label="Search People">
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          Search People
-        </Badge>
-      )}
-    </NavLink>
+    <BreadcrumbItem to="/search/people" key="search-people">
+      Search People
+    </BreadcrumbItem>
   ),
   miniTitle: () => ({
     title: 'Search',
@@ -58,31 +49,53 @@ export const handle = {
 const SearchRoute = () => {
   const { people } = useLoaderData<typeof loader>() || {};
   const navigate = useNavigate();
+  const location = useLocation();
+  const isHydrated = useHydrated();
   const { t } = useTranslation();
+
+  const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    if (info.offset?.x > 100) {
+      navigate('/search/anime');
+    }
+    if (info.offset?.x < -100 && info.offset?.y > -50) {
+      return;
+    }
+  };
 
   const onSubmit = (value: string) => {
     navigate(`/search/people/${value}`);
   };
 
   return (
-    <div className="flex w-full flex-col items-center justify-center px-3 sm:px-0">
+    <motion.div
+      key={location.key}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+      className="flex w-full flex-col items-center justify-center px-3 sm:px-0"
+      drag={isMobile && isHydrated ? 'x' : false}
+      dragConstraints={isMobile && isHydrated ? { left: 0, right: 0 } : false}
+      dragElastic={isMobile && isHydrated ? 0.7 : false}
+      onDragEnd={handleDragEnd}
+      dragDirectionLock={isMobile && isHydrated}
+      draggable={isMobile && isHydrated}
+    >
       <SearchForm
         onSubmit={onSubmit}
         textHelper={t('search.helper.people')}
         textOnButton={t('search.action')}
         textPlaceHolder={t('search.placeHolder.people')}
       />
-      {people && people.items && people.items.length > 0 && (
-        <MediaList
-          currentPage={people.page}
-          items={people.items}
-          itemsType="people"
-          listName={t('popular-people')}
-          listType="grid"
-          totalPages={people.totalPages}
-        />
-      )}
-    </div>
+      <MediaList
+        currentPage={people?.page}
+        items={people?.items}
+        itemsType="people"
+        listName={t('popular-people')}
+        listType="grid"
+        totalPages={people?.totalPages}
+      />
+    </motion.div>
   );
 };
 

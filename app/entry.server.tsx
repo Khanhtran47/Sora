@@ -2,7 +2,6 @@
 /* eslint-disable no-restricted-syntax */
 
 import { resolve } from 'node:path';
-import { getCssText } from '@nextui-org/react';
 import type { EntryContext } from '@remix-run/node';
 import { RemixServer } from '@remix-run/react';
 import { createInstance } from 'i18next';
@@ -59,17 +58,12 @@ export default async function handleRequest(
     'Checkly/1.0 (https://www.checklyhq.com)',
   ]);
 
-  let markup = renderToString(
+  const markup = renderToString(
     <IsBotProvider isBot={isbot(request.headers.get('User-Agent') ?? '')}>
       <I18nextProvider i18n={instance}>
         <RemixServer context={remixContext} url={request.url} />
       </I18nextProvider>
     </IsBotProvider>,
-  );
-
-  markup = markup.replace(
-    /<style id="stitches">.*<\/style>/g,
-    `<style id="stitches">${getCssText()}</style>`,
   );
 
   responseHeaders.set('Content-Type', 'text/html');

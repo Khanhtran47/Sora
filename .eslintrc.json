@@ -21,7 +21,7 @@
     "es2021": true
   },
   "rules": {
-    "arrow-body-style": [2, "as-needed"],
+    "arrow-body-style": 0,
     "comma-dangle": 0,
     "consistent-return": 0,
     "func-names": 0,
@@ -60,6 +60,7 @@
     "react/require-default-props": 0,
     "space-before-function-paren": 0,
     // @typescript-eslint
+    "@typescript-eslint/no-empty-interface": "off",
     "@typescript-eslint/no-throw-literal": "off",
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/no-duplicate-imports": "error",
@@ -111,7 +112,7 @@
   "plugins": ["prettier", "react", "react-hooks", "@typescript-eslint", "jsx-a11y", "tailwindcss"],
   "settings": {
     "tailwindcss": {
-      "callees": ["cnBase", "tv"]
+      "callees": ["cnBase", "tv", "classNames"]
     },
     "import/resolver": { "typescript": {} },
     "react": { "version": "detect" }

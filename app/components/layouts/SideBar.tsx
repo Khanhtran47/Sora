@@ -1,13 +1,16 @@
-/* eslint-disable @typescript-eslint/indent */
-
-import { Card, Link, Loading, Tooltip } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
+import { Card, CardBody, CardFooter } from '@nextui-org/card';
+import { Link } from '@nextui-org/link';
+import { Spinner } from '@nextui-org/spinner';
+import { Tooltip } from '@nextui-org/tooltip';
 import { useHover } from '@react-aria/interactions';
 import { NavLink } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
-import Image, { MimeType } from 'remix-image';
+import { MimeType } from 'remix-image';
 import { tv } from 'tailwind-variants';
 
 import { useSoraSettings } from '~/hooks/useLocalStorage';
+import Image from '~/components/elements/Image';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -17,16 +20,15 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from '~/components/elements/NavigationMenu';
-import { H2, H4, H6 } from '~/components/styles/Text.styles';
 import Anime from '~/assets/icons/AnimeIcon';
 import CategoryIcon from '~/assets/icons/CategoryIcon';
 import Discover from '~/assets/icons/DiscoverIcon';
 import History from '~/assets/icons/HistoryIcon';
 import Home from '~/assets/icons/HomeIcon';
+import Menu from '~/assets/icons/MenuIcon';
 import Movie from '~/assets/icons/MovieIcon';
 import Search from '~/assets/icons/SearchIcon';
 import Settings from '~/assets/icons/SettingsIcon';
-/* icons */
 import TrendingUp from '~/assets/icons/TrendingUpIcon';
 import Tv from '~/assets/icons/TvIcon';
 import TwoUsers from '~/assets/icons/TwoUsersIcon';
@@ -44,11 +46,11 @@ const sidebarStyles = tv({
       false: 'w-full max-w-[250px] basis-[250px]',
     },
     sidebarBoxedMode: {
-      true: 'top-[15px] left-[15px] h-[calc(100vh_-_30px)] rounded-xl bg-background-contrast-alpha',
-      false: 'top-0 left-0 h-screen',
+      true: 'bg-background/60 left-[15px] top-[15px] h-[calc(100vh_-_30px)] rounded-xl',
+      false: 'left-0 top-0 h-screen',
     },
     sidebarHoverMode: {
-      true: 'w-full max-w-[250px] basis-[250px] rounded-r-xl border border-border bg-background-contrast shadow-2xl',
+      true: 'border-default-200 bg-background w-full max-w-[250px] basis-[250px] rounded-r-xl border shadow-2xl',
     },
   },
   compoundVariants: [{}],
@@ -124,7 +126,7 @@ const viewportPositionStyles = tv({
 });
 
 const navigationPartStyles = tv({
-  base: 'w-full overflow-x-visible overflow-y-scroll scrollbar-hide',
+  base: 'scrollbar-hide w-full overflow-x-visible overflow-y-scroll',
   variants: {
     sidebarBoxedMode: {
       true: 'h-[calc(100%_-_100px)]',
@@ -154,47 +156,49 @@ const SideBar = () => {
       })}
     >
       <div className="mb-3 ml-4 flex h-[65px] w-full flex-row items-center justify-start">
-        <div
+        <Button
           className={`${
-            sidebarMiniMode.value && !isHovered ? 'basis-[50px]' : 'basis-[65px]'
+            sidebarMiniMode.value && !isHovered ? 'basis-[50px]' : 'basis-[60px]'
           } flex shrink-0 grow-0 justify-center`}
+          isIconOnly
+          variant="light"
+          onPress={() => {
+            sidebarMiniMode.set(!sidebarMiniMode.value);
+          }}
         >
-          <Image
-            width="30px"
-            height="30px"
-            className="rounded-full"
-            loaderUrl="/api/image"
-            alt="Logo"
-            src={Logo}
-            placeholder="blur"
-            responsive={[
-              {
-                size: {
-                  width: 30,
-                  height: 30,
-                },
-              },
-            ]}
-            dprVariants={[1, 3]}
-            options={{
-              contentType: MimeType.WEBP,
-            }}
-          />
-        </div>
+          <Menu />
+        </Button>
         {sidebarMiniMode.value && !isHovered ? null : (
-          <NavLink to="/" arial-label="home-page">
-            <H2
-              h2
-              css={{
-                textGradient: '45deg, $primary, $secondary 50%',
-                fontFamily: 'monospace',
-                letterSpacing: '0.3rem',
-                textDecoration: 'none',
+          <div className="flex items-center gap-x-3">
+            <Image
+              width="30px"
+              height="30px"
+              radius="full"
+              alt="Logo"
+              src={Logo}
+              placeholder="empty"
+              responsive={[
+                {
+                  size: {
+                    width: 30,
+                    height: 30,
+                  },
+                },
+              ]}
+              loaderUrl="/api/image"
+              dprVariants={[1, 3]}
+              options={{
+                contentType: MimeType.WEBP,
               }}
+            />
+            <NavLink
+              to="/"
+              arial-label="home-page"
+              className="from-secondary to-primary bg-gradient-to-tr to-50% bg-clip-text text-3xl font-bold tracking-normal text-transparent md:text-4xl"
             >
               SORA
-            </H2>
-          </NavLink>
+            </NavLink>
+          </div>
         )}
       </div>
       <div
@@ -210,7 +214,7 @@ const SideBar = () => {
             sidebarBoxedMode: sidebarBoxedMode.value,
           })}
         >
-          <NavigationMenuList className="m-0 [&_.active]:bg-primary-light-active [&_.active]:text-primary">
+          <NavigationMenuList className="[&_.active]:bg-default [&_.active]:text-default-foreground m-0 gap-3">
             <NavigationMenuItem
               className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
               value="home"
@@ -219,8 +223,8 @@ const SideBar = () => {
                 content={t('home')}
                 isDisabled={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
                 placement="right"
-                color="primary"
                 offset={10}
+                showArrow
               >
                 <NavigationMenuLink asChild>
                   <NavLink
@@ -240,13 +244,17 @@ const SideBar = () => {
                         {!sidebarMiniMode.value || (sidebarHoverMode && isHovered)
                           ? t('home')
                           : null}
-                        <Loading
-                          className={
-                            isPending && (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))
-                              ? 'ml-auto'
-                              : '!hidden'
-                          }
-                          type="points-opacity"
+                        <Spinner
+                          size="sm"
+                          classNames={{
+                            base:
+                              isPending &&
+                              (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))
+                                ? 'ml-auto'
+                                : '!hidden',
+                            circle1: 'border-b-default-foreground',
+                            circle2: 'border-b-default-foreground',
+                          }}
                         />
                       </>
                     )}
@@ -254,7 +262,6 @@ const SideBar = () => {
                 </NavigationMenuLink>
               </Tooltip>
             </NavigationMenuItem>
-
             <NavigationMenuItem
               className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
               value="trending"
@@ -263,7 +270,7 @@ const SideBar = () => {
                 content={t('trending')}
                 isDisabled={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
                 placement="right"
-                color="primary"
+                showArrow
                 offset={10}
               >
                 <NavigationMenuLink asChild>
@@ -284,13 +291,17 @@ const SideBar = () => {
                         {!sidebarMiniMode.value || (sidebarHoverMode && isHovered)
                           ? t('trending')
                           : null}
-                        <Loading
-                          className={
-                            isPending && (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))
-                              ? 'ml-auto'
-                              : '!hidden'
-                          }
-                          type="points-opacity"
+                        <Spinner
+                          size="sm"
+                          classNames={{
+                            base:
+                              isPending &&
+                              (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))
+                                ? 'ml-auto'
+                                : '!hidden',
+                            circle1: 'border-b-default-foreground',
+                            circle2: 'border-b-default-foreground',
+                          }}
                         />
                       </>
                     )}
@@ -298,7 +309,6 @@ const SideBar = () => {
                 </NavigationMenuLink>
               </Tooltip>
             </NavigationMenuItem>
-
             <NavigationMenuItem
               className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
               value="discover"
@@ -307,7 +317,7 @@ const SideBar = () => {
                 content={t('discover')}
                 isDisabled={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
                 placement="right"
-                color="primary"
+                showArrow
                 offset={10}
               >
                 <NavigationMenuLink asChild>
@@ -328,13 +338,17 @@ const SideBar = () => {
                         {!sidebarMiniMode.value || (sidebarHoverMode && isHovered)
                           ? t('discover')
                           : null}
-                        <Loading
-                          className={
-                            isPending && (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))
-                              ? 'ml-auto'
-                              : '!hidden'
-                          }
-                          type="points-opacity"
+                        <Spinner
+                          size="sm"
+                          classNames={{
+                            base:
+                              isPending &&
+                              (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))
+                                ? 'ml-auto'
+                                : '!hidden',
+                            circle1: 'border-b-default-foreground',
+                            circle2: 'border-b-default-foreground',
+                          }}
                         />
                       </>
                     )}
@@ -342,7 +356,6 @@ const SideBar = () => {
                 </NavigationMenuLink>
               </Tooltip>
             </NavigationMenuItem>
-
             <NavigationMenuItem
               className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
               value="search"
@@ -363,22 +376,26 @@ const SideBar = () => {
               </NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="m-0 flex w-fit flex-row gap-x-[6px] p-[6px]">
-                  <li className="m-0 flex flex-col justify-between gap-y-[6px] [&_.active]:bg-background [&_.active]:text-primary">
+                  <li className="[&_.active]:bg-content1 [&_.active]:text-content1-foreground m-0 flex flex-col justify-between gap-y-[6px]">
                     <NavigationMenuLink asChild>
                       <NavLink
                         to="/search/movie"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[215px] h-auto flex flex-row px-2 justify-start items-center focus:bg-background-alpha hover:bg-background-alpha',
+                            'w-[215px] h-auto flex flex-row px-2 justify-start items-center focus:bg-background/[0.6] hover:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
                           <>
                             <Search className="mr-2 h-5 w-5" filled={isActive} />
                             {t('search-movies')}
-                            <Loading
-                              className={isPending ? 'ml-auto' : '!hidden'}
-                              type="points-opacity"
+                            <Spinner
+                              size="sm"
+                              classNames={{
+                                base: isPending ? 'ml-auto' : '!hidden',
+                                circle1: 'border-b-default-foreground',
+                                circle2: 'border-b-default-foreground',
+                              }}
                             />
                           </>
                         )}
@@ -389,16 +406,20 @@ const SideBar = () => {
                         to="/search/tv"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[215px] h-auto flex flex-row px-2 justify-start items-center focus:bg-background-alpha hover:bg-background-alpha',
+                            'w-[215px] h-auto flex flex-row px-2 justify-start items-center focus:bg-background/[0.6] hover:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
                           <>
                             <Search className="mr-2 h-5 w-5" filled={isActive} />
                             {t('search-tv-shows')}
-                            <Loading
-                              className={isPending ? 'ml-auto' : '!hidden'}
-                              type="points-opacity"
+                            <Spinner
+                              size="sm"
+                              classNames={{
+                                base: isPending ? 'ml-auto' : '!hidden',
+                                circle1: 'border-b-default-foreground',
+                                circle2: 'border-b-default-foreground',
+                              }}
                             />
                           </>
                         )}
@@ -409,16 +430,20 @@ const SideBar = () => {
                         to="/search/anime"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[215px] h-auto  flex flex-row px-2 justify-start items-center focus:bg-background-alpha hover:bg-background-alpha',
+                            'w-[215px] h-auto  flex flex-row px-2 justify-start items-center focus:bg-background/[0.6] hover:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
                           <>
                             <Search className="mr-2 h-5 w-5" filled={isActive} />
                             {t('search-anime')}
-                            <Loading
-                              className={isPending ? 'ml-auto' : '!hidden'}
-                              type="points-opacity"
+                            <Spinner
+                              size="sm"
+                              classNames={{
+                                base: isPending ? 'ml-auto' : '!hidden',
+                                circle1: 'border-b-default-foreground',
+                                circle2: 'border-b-default-foreground',
+                              }}
                             />
                           </>
                         )}
@@ -429,16 +454,20 @@ const SideBar = () => {
                         to="/search/people"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[215px] h-auto flex flex-row px-2 justify-start items-center focus:bg-background-alpha hover:bg-background-alpha',
+                            'w-[215px] h-auto flex flex-row px-2 justify-start items-center focus:bg-background/[0.6] hover:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
                           <>
                             <Search className="mr-2 h-5 w-5" filled={isActive} />
                             {t('search-people')}
-                            <Loading
-                              className={isPending ? 'ml-auto' : '!hidden'}
-                              type="points-opacity"
+                            <Spinner
+                              size="sm"
+                              classNames={{
+                                base: isPending ? 'ml-auto' : '!hidden',
+                                circle1: 'border-b-default-foreground',
+                                circle2: 'border-b-default-foreground',
+                              }}
                             />
                           </>
                         )}
@@ -448,7 +477,6 @@ const SideBar = () => {
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
-
             <NavigationMenuItem
               className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
               value="movies"
@@ -470,77 +498,69 @@ const SideBar = () => {
               <NavigationMenuContent>
                 <ul className="m-0 flex w-fit flex-row gap-x-[6px] p-[6px]">
                   <li className="m-0 shrink-0 grow-0 basis-[215px]">
-                    <NavLink to="/discover/movies">
-                      <Card
-                        as="div"
-                        isPressable
-                        css={{ w: '100%', borderWidth: 0, filter: 'unset', borderRadius: 6 }}
-                      >
-                        <Card.Header css={{ position: 'absolute', zIndex: 1 }}>
-                          <Link
-                            as={H6}
-                            isExternal
-                            className="!w-full !max-w-none text-text [&_.nextui-link-icon]:ml-auto"
-                          >
-                            {t('movies-discover')}
-                          </Link>
-                        </Card.Header>
-                        <Card.Body css={{ p: 0, w: '100%', aspectRatio: '2/3' }}>
-                          <Card.Image
-                            // @ts-ignore
-                            as={Image}
-                            width="215px"
-                            height="auto"
-                            objectFit="cover"
-                            css={{
-                              aspectRatio: '2/3',
-                              filter: 'brightness(0.5)',
-                            }}
-                            showSkeleton
-                            loaderUrl="/api/image"
-                            alt="Discover movies"
-                            src="https://image.tmdb.org/t/p/w342_filter(duotone,190235,ad47dd)/wNB551TsEb7KFU3an5LwOrgvUpn.jpg"
-                            loading="lazy"
-                            placeholder="empty"
-                            responsive={[
-                              {
-                                size: {
-                                  width: 215,
-                                  height: (215 / 2) * 3,
-                                },
-                              },
-                            ]}
-                            dprVariants={[1, 3]}
-                            options={{
-                              contentType: MimeType.WEBP,
-                            }}
-                          />
-                        </Card.Body>
-                        <Card.Footer
-                          isBlurred
-                          className="b-0 absolute z-[1] bg-background-contrast-alpha backdrop-blur-sm"
-                          css={{
-                            position: 'absolute',
-                            zIndex: 1,
-                            bottom: 0,
-                            backgroundColor: '$backgroundAlpha',
-                            justifyContent: 'flex-start',
-                            borderBottomLeftRadius: 6,
-                            borderBottomRightRadius: 6,
+                    <Link
+                      as={NavLink}
+                      className="absolute top-4 z-20 mx-[10px] w-[198px] justify-between text-white after:rounded-md hover:after:bg-white/10"
+                      isBlock
+                      showAnchorIcon
+                      color="foreground"
+                      to="/discover/movies"
+                    >
+                      {t('movies-discover')}
+                    </Link>
+                    <Card
+                      as={NavLink}
+                      radius="md"
+                      isPressable
+                      isFooterBlurred
+                      classNames={{
+                        base: 'w-full border-default-200',
+                      }}
+                      to="/movies"
+                      role="link"
+                    >
+                      <CardBody className="aspect-[2/3] w-full p-0">
+                        <Image
+                          radius="md"
+                          width="215px"
+                          height="auto"
+                          style={{
+                            aspectRatio: '2/3',
+                            filter: 'brightness(0.8)',
                           }}
-                        >
-                          <H4 className="text-white">{t('movies-footer')}</H4>
-                        </Card.Footer>
-                      </Card>
-                    </NavLink>
+                          classNames={{
+                            wrapper: 'min-w-[215px]',
+                          }}
+                          alt="Discover movies"
+                          src="https://image.tmdb.org/t/p/w342_filter(duotone,190235,ad47dd)/wNB551TsEb7KFU3an5LwOrgvUpn.jpg"
+                          loading="lazy"
+                          placeholder="empty"
+                          responsive={[
+                            {
+                              size: {
+                                width: 215,
+                                height: (215 / 2) * 3,
+                              },
+                            },
+                          ]}
+                          dprVariants={[1, 3]}
+                          options={{
+                            contentType: MimeType.WEBP,
+                          }}
+                        />
+                      </CardBody>
+                      <CardFooter className="bg-default/60 absolute bottom-0 z-[10] justify-start backdrop-blur-sm">
+                        <h4 className="text-default-foreground">{t('movies-footer')}</h4>
+                      </CardFooter>
+                    </Card>
                   </li>
-                  <li className="m-0 flex flex-col justify-between gap-y-[6px] [&_.active]:bg-background [&_.active]:text-primary">
+                  <li className="[&_.active]:bg-content1 [&_.active]:text-content1-foreground m-0 flex min-w-[215px] flex-col justify-between gap-y-[6px]">
                     <NavigationMenuLink asChild>
                       <NavLink
                         to="/movies/popular"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[215px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
+                            'w-[215px] h-auto flex flex-col px-2 justify-start focus:bg-background/[0.6] hover:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -548,12 +568,16 @@ const SideBar = () => {
                             <div className="mb-2 flex w-full flex-row items-center justify-start">
                               <Discover className="mr-2 h-5 w-5" filled={isActive} />
                               {t('movies-popular')}
-                              <Loading
-                                className={isPending ? 'ml-auto' : '!hidden'}
-                                type="points-opacity"
+                              <Spinner
+                                size="sm"
+                                classNames={{
+                                  base: isPending ? 'ml-auto' : '!hidden',
+                                  circle1: 'border-b-default-foreground',
+                                  circle2: 'border-b-default-foreground',
+                                }}
                               />
                             </div>
-                            <p className="w-full text-xs text-text">
+                            <p className="text-foreground w-full text-xs">
                               {t('movies-popular-subtitle')}
                             </p>
                           </>
@@ -565,7 +589,7 @@ const SideBar = () => {
                         to="/movies/now-playing"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[215px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
+                            'w-[215px] h-auto flex flex-col px-2 justify-start focus:bg-background/[0.6] hover:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -573,12 +597,16 @@ const SideBar = () => {
                             <div className="mb-2 flex w-full flex-row items-center justify-start">
                               <Discover className="mr-2 h-5 w-5" filled={isActive} />
                               {t('movies-now-playing')}
-                              <Loading
-                                className={isPending ? 'ml-auto' : '!hidden'}
-                                type="points-opacity"
+                              <Spinner
+                                size="sm"
+                                classNames={{
+                                  base: isPending ? 'ml-auto' : '!hidden',
+                                  circle1: 'border-b-default-foreground',
+                                  circle2: 'border-b-default-foreground',
+                                }}
                               />
                             </div>
-                            <p className="w-full text-xs text-text">
+                            <p className="text-foreground w-full text-xs">
                               {t('movies-now-playing-subtitle')}
                             </p>
                           </>
@@ -590,7 +618,7 @@ const SideBar = () => {
                         to="/movies/upcoming"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[215px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
+                            'w-[215px] h-auto flex flex-col px-2 justify-start focus:bg-background/[0.6] hover:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -598,12 +626,16 @@ const SideBar = () => {
                             <div className="mb-2 flex w-full flex-row items-center justify-start">
                               <Discover className="mr-2 h-5 w-5" filled={isActive} />
                               {t('movies-upcoming')}
-                              <Loading
-                                className={isPending ? 'ml-auto' : '!hidden'}
-                                type="points-opacity"
+                              <Spinner
+                                size="sm"
+                                classNames={{
+                                  base: isPending ? 'ml-auto' : '!hidden',
+                                  circle1: 'border-b-default-foreground',
+                                  circle2: 'border-b-default-foreground',
+                                }}
                               />
                             </div>
-                            <p className="w-full text-xs text-text">
+                            <p className="text-foreground w-full text-xs">
                               {t('movies-upcoming-subtitle')}
                             </p>
                           </>
@@ -615,7 +647,7 @@ const SideBar = () => {
                         to="/movies/top-rated"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[215px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
+                            'w-[215px] h-auto flex flex-col px-2 justify-start focus:bg-background/[0.6] hover:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -623,12 +655,16 @@ const SideBar = () => {
                             <div className="mb-2 flex w-full flex-row items-center justify-start">
                               <Discover className="mr-2 h-5 w-5" filled={isActive} />
                               {t('movies-top-rated')}
-                              <Loading
-                                className={isPending ? 'ml-auto' : '!hidden'}
-                                type="points-opacity"
+                              <Spinner
+                                size="sm"
+                                classNames={{
+                                  base: isPending ? 'ml-auto' : '!hidden',
+                                  circle1: 'border-b-default-foreground',
+                                  circle2: 'border-b-default-foreground',
+                                }}
                               />
                             </div>
-                            <p className="w-full text-xs text-text">
+                            <p className="text-foreground w-full text-xs">
                               {t('movies-top-rated-subtitle')}
                             </p>
                           </>
@@ -639,7 +675,6 @@ const SideBar = () => {
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
-
             <NavigationMenuItem
               className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
               value="tv-shows"
@@ -661,77 +696,69 @@ const SideBar = () => {
               <NavigationMenuContent>
                 <ul className="m-0 flex w-fit flex-row gap-x-[6px] p-[6px]">
                   <li className="m-0 shrink-0 grow-0 basis-[215px]">
-                    <NavLink to="/discover/tv-shows">
-                      <Card
-                        as="div"
-                        isPressable
-                        css={{ w: '100%', borderWidth: 0, filter: 'unset', borderRadius: 6 }}
-                      >
-                        <Card.Header css={{ position: 'absolute', zIndex: 1 }}>
-                          <Link
-                            as={H6}
-                            isExternal
-                            className="!w-full !max-w-none text-text [&_.nextui-link-icon]:ml-auto"
-                          >
-                            {t('tv-shows-discover')}
-                          </Link>
-                        </Card.Header>
-                        <Card.Body css={{ p: 0, w: '100%', aspectRatio: '2/3' }}>
-                          <Card.Image
-                            // @ts-ignore
-                            as={Image}
-                            width="215px"
-                            height="auto"
-                            objectFit="cover"
-                            css={{
-                              aspectRatio: '2/3',
-                              filter: 'brightness(0.5)',
-                            }}
-                            showSkeleton
-                            loaderUrl="/api/image"
-                            alt="Discover tv shows"
-                            src="https://image.tmdb.org/t/p/w342_filter(duotone,352302,ddd147)/ggFHVNu6YYI5L9pCfOacjizRGt.jpg"
-                            loading="lazy"
-                            placeholder="empty"
-                            responsive={[
-                              {
-                                size: {
-                                  width: 215,
-                                  height: (215 / 2) * 3,
-                                },
-                              },
-                            ]}
-                            dprVariants={[1, 3]}
-                            options={{
-                              contentType: MimeType.WEBP,
-                            }}
-                          />
-                        </Card.Body>
-                        <Card.Footer
-                          isBlurred
-                          className="b-0 absolute z-[1] bg-background-contrast-alpha backdrop-blur-sm"
-                          css={{
-                            position: 'absolute',
-                            zIndex: 1,
-                            bottom: 0,
-                            backgroundColor: '$backgroundAlpha',
-                            justifyContent: 'flex-start',
-                            borderBottomLeftRadius: 6,
-                            borderBottomRightRadius: 6,
+                    <Link
+                      as={NavLink}
+                      className="absolute top-4 z-20 mx-[10px] w-[198px] justify-between text-white after:rounded-md hover:after:bg-white/10"
+                      isBlock
+                      showAnchorIcon
+                      color="foreground"
+                      to="/discover/tv-shows"
+                    >
+                      {t('tv-shows-discover')}
+                    </Link>
+                    <Card
+                      as={NavLink}
+                      role="link"
+                      to="/tv-shows"
+                      radius="md"
+                      isPressable
+                      isFooterBlurred
+                      classNames={{
+                        base: 'w-full border-default-200',
+                      }}
+                    >
+                      <CardBody className="aspect-[2/3] w-full p-0">
+                        <Image
+                          radius="md"
+                          width="215px"
+                          height="auto"
+                          style={{
+                            aspectRatio: '2/3',
+                            filter: 'brightness(0.8)',
                           }}
-                        >
-                          <H4 className="text-white">{t('tv-shows-footer')}</H4>
-                        </Card.Footer>
-                      </Card>
-                    </NavLink>
+                          classNames={{
+                            wrapper: 'min-w-[215px]',
+                          }}
+                          alt="Discover tv shows"
+                          src="https://image.tmdb.org/t/p/w342_filter(duotone,352302,ddd147)/ggFHVNu6YYI5L9pCfOacjizRGt.jpg"
+                          loading="lazy"
+                          placeholder="empty"
+                          responsive={[
+                            {
+                              size: {
+                                width: 215,
+                                height: (215 / 2) * 3,
+                              },
+                            },
+                          ]}
+                          dprVariants={[1, 3]}
+                          options={{
+                            contentType: MimeType.WEBP,
+                          }}
+                        />
+                      </CardBody>
+                      <CardFooter className="bg-default/60 absolute bottom-0 z-[10] justify-start backdrop-blur-sm">
+                        <h4 className="text-default-foreground">{t('tv-shows-footer')}</h4>
+                      </CardFooter>
+                    </Card>
                   </li>
-                  <li className="m-0 flex flex-col justify-between gap-y-[6px] [&_.active]:bg-background [&_.active]:text-primary">
+                  <li className="[&_.active]:bg-content1 [&_.active]:text-content1-foreground m-0 flex min-w-[215px] flex-col justify-between gap-y-[6px]">
                     <NavigationMenuLink asChild>
                       <NavLink
                         to="/tv-shows/popular"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
+                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background/[0.6] hover:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -739,12 +766,16 @@ const SideBar = () => {
                             <div className="mb-2 flex w-full flex-row items-center justify-start">
                               <Discover className="mr-2 h-5 w-5" filled={isActive} />
                               {t('tv-shows-popular')}
-                              <Loading
-                                className={isPending ? 'ml-auto' : '!hidden'}
-                                type="points-opacity"
+                              <Spinner
+                                size="sm"
+                                classNames={{
+                                  base: isPending ? 'ml-auto' : '!hidden',
+                                  circle1: 'border-b-default-foreground',
+                                  circle2: 'border-b-default-foreground',
+                                }}
                               />
                             </div>
-                            <p className="w-full text-xs text-text">
+                            <p className="text-foreground w-full text-xs">
                               {t('tv-shows-popular-subtitle')}
                             </p>
                           </>
@@ -756,7 +787,7 @@ const SideBar = () => {
                         to="/tv-shows/airing-today"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
+                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background/[0.6] hover:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -764,12 +795,16 @@ const SideBar = () => {
                             <div className="mb-2 flex w-full flex-row items-center justify-start">
                               <Discover className="mr-2 h-5 w-5" filled={isActive} />
                               {t('tv-shows-airing-today')}
-                              <Loading
-                                className={isPending ? 'ml-auto' : '!hidden'}
-                                type="points-opacity"
+                              <Spinner
+                                size="sm"
+                                classNames={{
+                                  base: isPending ? 'ml-auto' : '!hidden',
+                                  circle1: 'border-b-default-foreground',
+                                  circle2: 'border-b-default-foreground',
+                                }}
                               />
                             </div>
-                            <p className="w-full text-xs text-text">
+                            <p className="text-foreground w-full text-xs">
                               {t('tv-shows-airing-today-subtitle')}
                             </p>
                           </>
@@ -781,7 +816,7 @@ const SideBar = () => {
                         to="/tv-shows/on-the-air"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
+                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background/[0.6] hover:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -789,12 +824,16 @@ const SideBar = () => {
                             <div className="mb-2 flex w-full flex-row items-center justify-start">
                               <Discover className="mr-2 h-5 w-5" filled={isActive} />
                               {t('tv-shows-on-the-air')}
-                              <Loading
-                                className={isPending ? 'ml-auto' : '!hidden'}
-                                type="points-opacity"
+                              <Spinner
+                                size="sm"
+                                classNames={{
+                                  base: isPending ? 'ml-auto' : '!hidden',
+                                  circle1: 'border-b-default-foreground',
+                                  circle2: 'border-b-default-foreground',
+                                }}
                               />
                             </div>
-                            <p className="w-full text-xs text-text">
+                            <p className="text-foreground w-full text-xs">
                               {t('tv-shows-on-the-air-subtitle')}
                             </p>
                           </>
@@ -806,7 +845,7 @@ const SideBar = () => {
                         to="/tv-shows/top-rated"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
+                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background/[0.6] hover:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -814,12 +853,16 @@ const SideBar = () => {
                             <div className="mb-2 flex w-full flex-row items-center justify-start">
                               <Discover className="mr-2 h-5 w-5" filled={isActive} />
                               {t('tv-shows-top-rated')}
-                              <Loading
-                                className={isPending ? 'ml-auto' : '!hidden'}
-                                type="points-opacity"
+                              <Spinner
+                                size="sm"
+                                classNames={{
+                                  base: isPending ? 'ml-auto' : '!hidden',
+                                  circle1: 'border-b-default-foreground',
+                                  circle2: 'border-b-default-foreground',
+                                }}
                               />
                             </div>
-                            <p className="w-full text-xs text-text">
+                            <p className="text-foreground w-full text-xs">
                               {t('tv-shows-top-rated-subtitle')}
                             </p>
                           </>
@@ -830,7 +873,6 @@ const SideBar = () => {
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
-
             <NavigationMenuItem
               className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
               value="anime"
@@ -852,77 +894,69 @@ const SideBar = () => {
               <NavigationMenuContent>
                 <ul className="m-0 flex w-fit flex-row gap-x-[6px] p-[6px]">
                   <li className="m-0 shrink-0 grow-0 basis-[215px]">
-                    <NavLink to="/discover/anime">
-                      <Card
-                        as="div"
-                        isPressable
-                        css={{ w: '100%', borderWidth: 0, filter: 'unset', borderRadius: 6 }}
-                      >
-                        <Card.Header css={{ position: 'absolute', zIndex: 1 }}>
-                          <Link
-                            as={H6}
-                            isExternal
-                            className="!w-full !max-w-none text-text [&_.nextui-link-icon]:ml-auto"
-                          >
-                            {t('anime-discover')}
-                          </Link>
-                        </Card.Header>
-                        <Card.Body css={{ p: 0, w: '100%', aspectRatio: '2/3' }}>
-                          <Card.Image
-                            // @ts-ignore
-                            as={Image}
-                            width="215px"
-                            height="auto"
-                            objectFit="cover"
-                            css={{
-                              aspectRatio: '2/3',
-                              filter: 'brightness(0.5)',
-                            }}
-                            showSkeleton
-                            loaderUrl="/api/image"
-                            alt="Discover anime"
-                            src="https://image.tmdb.org/t/p/w342_filter(duotone,070235,dd4749)/iAld03IP69UEpqQbVWoRBvjqkqX.jpg"
-                            loading="lazy"
-                            placeholder="empty"
-                            responsive={[
-                              {
-                                size: {
-                                  width: 215,
-                                  height: (215 / 2) * 3,
-                                },
-                              },
-                            ]}
-                            dprVariants={[1, 3]}
-                            options={{
-                              contentType: MimeType.WEBP,
-                            }}
-                          />
-                        </Card.Body>
-                        <Card.Footer
-                          isBlurred
-                          className="b-0 absolute z-[1] bg-background-contrast-alpha backdrop-blur-sm"
-                          css={{
-                            position: 'absolute',
-                            zIndex: 1,
-                            bottom: 0,
-                            backgroundColor: '$backgroundAlpha',
-                            justifyContent: 'flex-start',
-                            borderBottomLeftRadius: 6,
-                            borderBottomRightRadius: 6,
+                    <Link
+                      as={NavLink}
+                      className="absolute top-4 z-20 mx-[10px] w-[198px] justify-between text-white after:rounded-md hover:after:bg-white/10"
+                      isBlock
+                      showAnchorIcon
+                      color="foreground"
+                      to="/discover/anime"
+                    >
+                      {t('anime-discover')}
+                    </Link>
+                    <Card
+                      as={NavLink}
+                      role="link"
+                      to="/anime"
+                      radius="md"
+                      isPressable
+                      isFooterBlurred
+                      classNames={{
+                        base: 'w-full border-default-200',
+                      }}
+                    >
+                      <CardBody className="aspect-[2/3] w-full p-0">
+                        <Image
+                          radius="md"
+                          width="215px"
+                          height="auto"
+                          style={{
+                            aspectRatio: '2/3',
+                            filter: 'brightness(0.8)',
                           }}
-                        >
-                          <H4 className="text-white">{t('anime-footer')}</H4>
-                        </Card.Footer>
-                      </Card>
-                    </NavLink>
+                          classNames={{
+                            wrapper: 'min-w-[215px]',
+                          }}
+                          alt="Discover anime"
+                          src="https://image.tmdb.org/t/p/w342_filter(duotone,070235,dd4749)/iAld03IP69UEpqQbVWoRBvjqkqX.jpg"
+                          loading="lazy"
+                          placeholder="empty"
+                          responsive={[
+                            {
+                              size: {
+                                width: 215,
+                                height: (215 / 2) * 3,
+                              },
+                            },
+                          ]}
+                          dprVariants={[1, 3]}
+                          options={{
+                            contentType: MimeType.WEBP,
+                          }}
+                        />
+                      </CardBody>
+                      <CardFooter className="bg-default/60 absolute bottom-0 z-[10] justify-start backdrop-blur-sm">
+                        <h4 className="text-default-foreground">{t('anime-footer')}</h4>
+                      </CardFooter>
+                    </Card>
                   </li>
-                  <li className="m-0 flex flex-col justify-between gap-y-[6px] [&_.active]:bg-background [&_.active]:text-primary">
+                  <li className="[&_.active]:bg-content1 [&_.active]:text-content1-foreground m-0 flex min-w-[215px] flex-col justify-between gap-y-[6px]">
                     <NavigationMenuLink asChild>
                       <NavLink
                         to="/anime/popular"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
+                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background/[0.6] hover:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -930,12 +964,16 @@ const SideBar = () => {
                             <div className="mb-2 flex w-full flex-row items-center justify-start">
                               <Discover className="mr-2 h-5 w-5" filled={isActive} />
                               {t('anime-popular')}
-                              <Loading
-                                className={isPending ? 'ml-auto' : '!hidden'}
-                                type="points-opacity"
+                              <Spinner
+                                size="sm"
+                                classNames={{
+                                  base: isPending ? 'ml-auto' : '!hidden',
+                                  circle1: 'border-b-default-foreground',
+                                  circle2: 'border-b-default-foreground',
+                                }}
                               />
                             </div>
-                            <p className="w-full text-xs text-text">
+                            <p className="text-foreground w-full text-xs">
                               {t('anime-popular-subtitle')}
                             </p>
                           </>
@@ -947,7 +985,7 @@ const SideBar = () => {
                         to="/anime/trending"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
+                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background/[0.6] hover:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -955,12 +993,16 @@ const SideBar = () => {
                             <div className="mb-2 flex w-full flex-row items-center justify-start">
                               <Discover className="mr-2 h-5 w-5" filled={isActive} />
                               {t('anime-trending')}
-                              <Loading
-                                className={isPending ? 'ml-auto' : '!hidden'}
-                                type="points-opacity"
+                              <Spinner
+                                size="sm"
+                                classNames={{
+                                  base: isPending ? 'ml-auto' : '!hidden',
+                                  circle1: 'border-b-default-foreground',
+                                  circle2: 'border-b-default-foreground',
+                                }}
                               />
                             </div>
-                            <p className="w-full text-xs text-text">
+                            <p className="text-foreground w-full text-xs">
                               {t('anime-trending-subtitle')}
                             </p>
                           </>
@@ -972,7 +1014,7 @@ const SideBar = () => {
                         to="/anime/recent-episodes"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
+                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background/[0.6] hover:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -980,12 +1022,16 @@ const SideBar = () => {
                             <div className="mb-2 flex w-full flex-row items-center justify-start">
                               <Discover className="mr-2 h-5 w-5" filled={isActive} />
                               {t('anime-recent-episodes')}
-                              <Loading
-                                className={isPending ? 'ml-auto' : '!hidden'}
-                                type="points-opacity"
+                              <Spinner
+                                size="sm"
+                                classNames={{
+                                  base: isPending ? 'ml-auto' : '!hidden',
+                                  circle1: 'border-b-default-foreground',
+                                  circle2: 'border-b-default-foreground',
+                                }}
                               />
                             </div>
-                            <p className="w-full text-xs text-text">
+                            <p className="text-foreground w-full text-xs">
                               {t('anime-recent-episodes-subtitle')}
                             </p>
                           </>
@@ -997,7 +1043,7 @@ const SideBar = () => {
                         to="/anime/random"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background-alpha hover:bg-background-alpha',
+                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background/[0.6] hover:bg-background/[0.6]',
                         })}
                       >
                         {({ isPending }) => (
@@ -1005,12 +1051,18 @@ const SideBar = () => {
                             <div className="mb-2 flex w-full flex-row items-center justify-start">
                               <Discover className="mr-2 h-5 w-5" />
                               {t('anime-random')}
-                              <Loading
-                                className={isPending ? 'ml-auto' : '!hidden'}
-                                type="points-opacity"
+                              <Spinner
+                                size="sm"
+                                classNames={{
+                                  base: isPending ? 'ml-auto' : '!hidden',
+                                  circle1: 'border-b-default-foreground',
+                                  circle2: 'border-b-default-foreground',
+                                }}
                               />
                             </div>
-                            <p className="w-full text-xs text-text">{t('anime-random-subtitle')}</p>
+                            <p className="text-foreground w-full text-xs">
+                              {t('anime-random-subtitle')}
+                            </p>
                           </>
                         )}
                       </NavLink>
@@ -1019,7 +1071,6 @@ const SideBar = () => {
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
-
             <NavigationMenuItem
               className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
               value="collections"
@@ -1028,7 +1079,7 @@ const SideBar = () => {
                 content={t('collections')}
                 isDisabled={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
                 placement="right"
-                color="primary"
+                showArrow
                 offset={10}
               >
                 <NavigationMenuLink asChild>
@@ -1049,13 +1100,17 @@ const SideBar = () => {
                         {!sidebarMiniMode.value || (sidebarHoverMode && isHovered)
                           ? t('collections')
                           : null}
-                        <Loading
-                          className={
-                            isPending && (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))
-                              ? 'ml-auto'
-                              : '!hidden'
-                          }
-                          type="points-opacity"
+                        <Spinner
+                          size="sm"
+                          classNames={{
+                            base:
+                              isPending &&
+                              (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))
+                                ? 'ml-auto'
+                                : '!hidden',
+                            circle1: 'border-b-default-foreground',
+                            circle2: 'border-b-default-foreground',
+                          }}
                         />
                       </>
                     )}
@@ -1063,7 +1118,6 @@ const SideBar = () => {
                 </NavigationMenuLink>
               </Tooltip>
             </NavigationMenuItem>
-
             <NavigationMenuItem
               className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
               value="people"
@@ -1072,7 +1126,7 @@ const SideBar = () => {
                 content={t('people')}
                 isDisabled={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
                 placement="right"
-                color="primary"
+                showArrow
                 offset={10}
               >
                 <NavigationMenuLink asChild>
@@ -1093,13 +1147,17 @@ const SideBar = () => {
                         {!sidebarMiniMode.value || (sidebarHoverMode && isHovered)
                           ? t('people')
                           : null}
-                        <Loading
-                          className={
-                            isPending && (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))
-                              ? 'ml-auto'
-                              : '!hidden'
-                          }
-                          type="points-opacity"
+                        <Spinner
+                          size="sm"
+                          classNames={{
+                            base:
+                              isPending &&
+                              (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))
+                                ? 'ml-auto'
+                                : '!hidden',
+                            circle1: 'border-b-default-foreground',
+                            circle2: 'border-b-default-foreground',
+                          }}
                         />
                       </>
                     )}
@@ -1115,7 +1173,7 @@ const SideBar = () => {
                 content={t('history')}
                 isDisabled={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
                 placement="right"
-                color="primary"
+                showArrow
                 offset={10}
               >
                 <NavigationMenuLink asChild>
@@ -1136,13 +1194,17 @@ const SideBar = () => {
                         {!sidebarMiniMode.value || (sidebarHoverMode && isHovered)
                           ? t('history')
                           : null}
-                        <Loading
-                          className={
-                            isPending && (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))
-                              ? 'ml-auto'
-                              : '!hidden'
-                          }
-                          type="points-opacity"
+                        <Spinner
+                          size="sm"
+                          classNames={{
+                            base:
+                              isPending &&
+                              (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))
+                                ? 'ml-auto'
+                                : '!hidden',
+                            circle1: 'border-b-default-foreground',
+                            circle2: 'border-b-default-foreground',
+                          }}
                         />
                       </>
                     )}
@@ -1150,7 +1212,6 @@ const SideBar = () => {
                 </NavigationMenuLink>
               </Tooltip>
             </NavigationMenuItem>
-
             <NavigationMenuItem
               className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
               value="settings"
@@ -1159,7 +1220,7 @@ const SideBar = () => {
                 content={t('settings')}
                 isDisabled={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
                 placement="right"
-                color="primary"
+                showArrow
                 offset={10}
               >
                 <NavigationMenuLink asChild>
@@ -1180,13 +1241,17 @@ const SideBar = () => {
                         {!sidebarMiniMode.value || (sidebarHoverMode && isHovered)
                           ? t('settings')
                           : null}
-                        <Loading
-                          className={
-                            isPending && (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))
-                              ? 'ml-auto'
-                              : '!hidden'
-                          }
-                          type="points-opacity"
+                        <Spinner
+                          size="sm"
+                          classNames={{
+                            base:
+                              isPending &&
+                              (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))
+                                ? 'ml-auto'
+                                : '!hidden',
+                            circle1: 'border-b-default-foreground',
+                            circle2: 'border-b-default-foreground',
+                          }}
                         />
                       </>
                     )}

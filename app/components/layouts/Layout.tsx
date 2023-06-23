@@ -1,9 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useMemo, useRef } from 'react';
-import { useMediaQuery, useThrottledCallback } from '@react-hookz/web';
+import {
+  useMediaQuery,
+  // useThrottledCallback
+} from '@react-hookz/web';
 import { useLocation, useMatches, useNavigationType, useOutlet, useParams } from '@remix-run/react';
 import type { User } from '@supabase/supabase-js';
 import { AnimatePresence, motion, useScroll } from 'framer-motion';
+import { useTheme } from 'next-themes';
+import { useHydrated } from 'remix-utils';
 import { Toaster } from 'sonner';
 import { tv } from 'tailwind-variants';
 
@@ -13,28 +18,26 @@ import { useLayout } from '~/store/layout/useLayout';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import {
   ScrollArea,
-  ScrollAreaCorner,
-  ScrollAreaScrollbar,
-  ScrollAreaThumb,
-  ScrollAreaViewport,
-} from '~/components/elements/scroll-area/ScrollArea';
+  ScrollBar,
+  ScrollCorner,
+  ScrollViewport,
+} from '~/components/elements/ScrollArea';
 import TabLink from '~/components/elements/tab/TabLink';
 
 import ActionButtons from './ActionButtons';
-// import Footer from './Footer';
 import BottomNav from './BottomNav';
-// import BreadCrumb from './BreadCrumb';
 import GlobalPlayer from './GlobalPlayer';
 import Header from './Header';
 import MobileHeader from './MobileHeader';
 import SideBar from './SideBar';
+import TailwindIndicator from './TailwindIndicator';
 
 interface ILayout {
   user?: User;
 }
 
 const layoutStyles = tv({
-  base: 'flex max-h-full min-h-screen max-w-full flex-nowrap justify-start bg-background-alpha font-[Inter] transition-[padding] duration-200',
+  base: 'bg-content1/[0.3] flex max-h-full min-h-screen max-w-full flex-nowrap justify-start font-[Inter] transition-[padding] duration-200',
   variants: {
     boxed: {
       true: 'min-h-[calc(100vh_-_115px)] pt-[15px]',
@@ -47,7 +50,7 @@ const layoutStyles = tv({
 });
 
 const contentAreaStyles = tv({
-  base: 'ml-0 flex w-full grow flex-col justify-end overflow-hidden !rounded-none bg-background transition-[margin] duration-200 sm:!rounded-tl-xl',
+  base: 'bg-background shadow-foreground/10 ml-0 flex w-full grow flex-col justify-end overflow-hidden !rounded-none shadow-xl transition-[margin] duration-200 sm:!rounded-tl-xl',
   variants: {
     mini: {
       true: 'sm:ml-[80px]',
@@ -123,7 +126,7 @@ const scrollAreaViewportStyles = tv({
 });
 
 const tabLinkWrapperStyles = tv({
-  base: 'fixed z-[1000] flex h-[56px] w-[100vw] items-end shadow-lg',
+  base: 'shadow-default/10 fixed z-[1000] flex h-[56px] w-[100vw] items-end shadow-md',
   variants: {
     miniSidebar: {
       true: 'top-[56px] sm:w-[calc(100vw_-_80px)]',
@@ -156,7 +159,9 @@ const Layout = (props: ILayout) => {
   const matches = useMatches();
   const outlet = useOutlet();
   const params = useParams();
+  const isHydrated = useHydrated();
   const navigationType = useNavigationType();
+  const { theme } = useTheme();
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const isMd = useMediaQuery('(max-width: 1280px)', { initializeWithValue: false });
   const { sidebarMiniMode, sidebarBoxedMode, sidebarHoverMode } = useSoraSettings();
@@ -165,8 +170,8 @@ const Layout = (props: ILayout) => {
     setViewportRef,
     setScrollY,
     setScrollYProgress,
-    scrollDirection,
-    setScrollDirection,
+    // scrollDirection,
+    // setScrollDirection,
     isShowOverlay,
   } = useLayout((state) => state);
   const { scrollY, scrollYProgress } = useScroll({ container: viewportRef });
@@ -267,25 +272,26 @@ const Layout = (props: ILayout) => {
     }
   }, [isMd, isSm, sidebarMiniMode.value, sidebarHoverMode.value, sidebarBoxedMode.value]);
 
-  let lastScrollY = viewportRef.current?.scrollTop || 0;
+  // let lastScrollY = viewportRef.current?.scrollTop || 0;
 
-  const handleScroll = useThrottledCallback(
-    (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
-      if (isSm) {
-        const scrollY = e.currentTarget.scrollTop;
-        const direction = scrollY > lastScrollY ? 'down' : 'up';
-        if (
-          direction !== scrollDirection &&
-          (scrollY - lastScrollY > 10 || scrollY - lastScrollY < -10)
-        ) {
-          setScrollDirection(direction);
-        }
-        lastScrollY = scrollY > 0 ? scrollY : 0;
-      }
-    },
-    [scrollDirection, isSm],
-    130,
-  );
+  // const handleScroll = useThrottledCallback(
+  //   (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
+  //     if (isSm) {
+  //       // @ts-ignore
+  //       const scrollY = e?.target?.scrollTop || 0;
+  //       const direction = scrollY > lastScrollY ? 'down' : 'up';
+  //       if (
+  //         direction !== scrollDirection &&
+  //         (scrollY - lastScrollY > 10 || scrollY - lastScrollY < -10)
+  //       ) {
+  //         setScrollDirection(direction);
+  //       }
+  //       lastScrollY = scrollY > 0 ? scrollY : 0;
+  //     }
+  //   },
+  //   [scrollDirection, isSm, viewportRef],
+  //   50,
+  // );
 
   return (
     <div className={layoutStyles({ boxed: sidebarBoxedMode.value })}>
@@ -305,6 +311,7 @@ const Layout = (props: ILayout) => {
         })}
       >
         {isSm ? <MobileHeader /> : <Header user={user} />}
+        {<TailwindIndicator />}
         {isShowTabLink && !hideTabLinkWithLocation ? (
           <div
             className={tabLinkWrapperStyles({
@@ -315,18 +322,14 @@ const Layout = (props: ILayout) => {
             <TabLink pages={currentTabLinkPages} linkTo={currentTabLinkTo} />
           </div>
         ) : null}
-        <ActionButtons />
+        {isHydrated ? <ActionButtons /> : null}
         <ScrollArea
           type={isSm ? 'scroll' : 'always'}
           scrollHideDelay={500}
-          css={{
-            width: '100%',
-            height: sidebarBoxedMode.value ? 'calc(100vh - 15px)' : '100vh',
-            borderRadius: 0,
-          }}
+          className={`w-full ${sidebarBoxedMode.value ? 'h-[calc(100vh-15px)]' : 'h-screen'}`}
           key="scroll-area-main"
         >
-          <ScrollAreaViewport ref={viewportRef} onScroll={(e) => handleScroll(e)}>
+          <ScrollViewport ref={viewportRef}>
             <main
               className={scrollAreaViewportStyles({
                 mini: sidebarMiniMode.value,
@@ -335,53 +338,44 @@ const Layout = (props: ILayout) => {
                 isShowTabLink: isShowTabLink && !hideTabLinkWithLocation,
               })}
             >
-              {/* <BreadCrumb /> */}
               <GlobalPlayer />
-              <Toaster
-                position="bottom-right"
-                richColors
-                closeButton
-                toastOptions={{
-                  style: {
-                    // @ts-ignore
-                    '--normal-bg': 'var(--nextui-colors-backgroundContrast)',
-                    '--normal-text': 'var(--nextui-colors-text)',
-                    '--normal-border': 'var(--nextui-colors-border)',
-                    '--success-bg': 'var(--nextui-colors-backgroundContrast)',
-                    '--success-border': 'var(--nextui-colors-border)',
-                    '--success-text': 'var(--nextui-colors-success)',
-                    '--error-bg': 'var(--nextui-colors-backgroundContrast)',
-                    '--error-border': 'var(--nextui-colors-border)',
-                    '--error-text': 'var(--nextui-colors-error)',
-                    '--gray1': 'var(--nextui-colors-accents0)',
-                    '--gray2': 'var(--nextui-colors-accents1)',
-                    '--gray4': 'var(--nextui-colors-accents3)',
-                    '--gray5': 'var(--nextui-colors-accents4)',
-                    '--gray12': 'var(--nextui-colors-accents9)',
-                  },
-                }}
-              />
-              <AnimatePresence exitBeforeEnter initial={false}>
+              {isHydrated ? (
+                <Toaster
+                  // @ts-ignore
+                  theme={theme}
+                  position="bottom-right"
+                  richColors
+                  closeButton
+                  toastOptions={{
+                    style: {
+                      // @ts-ignore
+                      '--normal-bg': 'hsl(var(--colors-default))',
+                      '--normal-text': 'hsl(var(--colors-default-foreground))',
+                      '--normal-border': 'hsl(var(--colors-border))',
+                      '--success-bg': 'hsl(var(--colors-success))',
+                      '--success-border': 'hsl(var(--colors-border))',
+                      '--success-text': 'hsl(var(--colors-success-foreground))',
+                      '--error-bg': 'hsl(var(--colors-danger))',
+                      '--error-border': 'hsl(var(--colors-border))',
+                      '--error-text': 'hsl(var(--colors-danger-foreground))',
+                      '--gray1': 'hsl(var(--colors-default-50))',
+                      '--gray2': 'hsl(var(--colors-default-100))',
+                      '--gray4': 'hsl(var(--colors-default-300))',
+                      '--gray5': 'hsl(var(--colors-default-400))',
+                      '--gray12': 'hsl(var(--colors-default-900))',
+                    },
+                  }}
+                />
+              ) : null}
+              <AnimatePresence mode="wait" initial={false}>
                 {outlet}
               </AnimatePresence>
             </main>
             {/* <Footer /> */}
             {isSm ? <BottomNav user={user} /> : null}
-          </ScrollAreaViewport>
-          <ScrollAreaScrollbar
-            orientation="vertical"
-            css={{
-              padding: 0,
-              margin: 2,
-              backgroundColor: 'transparent',
-              '&:hover': { backgroundColor: 'transparent' },
-            }}
-          >
-            <ScrollAreaThumb
-              css={{ backgroundColor: '$accents8', '&:hover': { background: '$accents6' } }}
-            />
-          </ScrollAreaScrollbar>
-          <ScrollAreaCorner />
+          </ScrollViewport>
+          <ScrollBar />
+          <ScrollCorner />
         </ScrollArea>
       </div>
     </div>

@@ -1,5 +1,3 @@
-import Svg from '~/components/styles/Svg.styles';
-
 const Bold = ({ color }: { color: string }) => (
   <g>
     <path
@@ -147,134 +145,134 @@ const Play = ({
     case 'normal':
       if (filled) {
         return (
-          <Svg
+          <svg
             className=""
             width={width || size}
             height={height || size}
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
-            css={{
+            style={{
               display: 'inline',
             }}
             {...props}
           >
             <Bold color={fill} />
-          </Svg>
+          </svg>
         );
       }
       return (
-        <Svg
+        <svg
           className=""
           width={width || size}
           height={height || size}
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
-          css={{
+          style={{
             display: 'inline',
           }}
           {...props}
         >
           <Light color={fill} strokeWidth={1.5} />
-        </Svg>
+        </svg>
       );
     case 'circle1':
       if (filled) {
         return (
-          <Svg
+          <svg
             className=""
             width={width || size}
             height={height || size}
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
-            css={{
+            style={{
               display: 'inline',
             }}
             {...props}
           >
             <Circle1Bold color={fill} />
-          </Svg>
+          </svg>
         );
       }
       return (
-        <Svg
+        <svg
           className=""
           width={width || size}
           height={height || size}
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
-          css={{
+          style={{
             display: 'inline',
           }}
           {...props}
         >
           <Circle1Light color={fill} />
-        </Svg>
+        </svg>
       );
     case 'circle2':
       if (filled) {
         return (
-          <Svg
+          <svg
             className=""
             width={width || size}
             height={height || size}
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
-            css={{
+            style={{
               display: 'inline',
             }}
             {...props}
           >
             <Circle2Bold color={fill} />
-          </Svg>
+          </svg>
         );
       }
       return (
-        <Svg
+        <svg
           className=""
           width={width || size}
           height={height || size}
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
-          css={{
+          style={{
             display: 'inline',
           }}
           {...props}
         >
           <Circle2Light color={fill} />
-        </Svg>
+        </svg>
       );
     default:
       if (filled) {
         return (
-          <Svg
+          <svg
             className=""
             width={width || size}
             height={height || size}
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
-            css={{
+            style={{
               display: 'inline',
             }}
             {...props}
           >
             <Bold color={fill} />
-          </Svg>
+          </svg>
         );
       }
       return (
-        <Svg
+        <svg
           className=""
           width={width || size}
           height={height || size}
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
-          css={{
+          style={{
             display: 'inline',
           }}
           {...props}
         >
           <Light color={fill} strokeWidth={1.5} />
-        </Svg>
+        </svg>
       );
   }
 };

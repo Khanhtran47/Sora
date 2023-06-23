@@ -1,15 +1,14 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/indent */
-// import { Link } from '@remix-run/react';
-
 import { Player } from '@lottiefiles/react-lottie-player';
-import { Avatar, Image as NextImage, Link as NextLink, Spacer, useTheme } from '@nextui-org/react';
+import { Avatar } from '@nextui-org/avatar';
+import { Link } from '@nextui-org/link';
+import { Spacer } from '@nextui-org/spacer';
 import { useMeasure } from '@react-hookz/web';
-import Image, { MimeType } from 'remix-image';
+import { MimeType } from 'remix-image';
 
 import type { IPeopleDetail } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
-import { H3, H4, H5, H6 } from '~/components/styles/Text.styles';
+import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
+import Image from '~/components/elements/Image';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 import ExternalLinkBlack from '~/assets/lotties/external-link-black.json';
 import ExternalLinkWhite from '~/assets/lotties/external-link-white.json';
@@ -31,7 +30,7 @@ interface IPeopleDetailProps {
 
 const PeopleDetail = (props: IPeopleDetailProps) => {
   const { detail, externalIds } = props;
-  const { isDark } = useTheme();
+  const { isDark } = useColorDarkenLighten();
   const [size, imageRef] = useMeasure<HTMLImageElement>();
   const profilePath = detail?.profile_path
     ? TMDB?.profileUrl(detail?.profile_path || '', 'h632')
@@ -55,29 +54,18 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
   return (
     <>
       {profilePath ? (
-        <NextImage
-          // @ts-ignore
-          as={Image}
+        <Image
           ref={imageRef}
           src={profilePath}
-          objectFit="cover"
           width="100%"
           height="auto"
           alt={detail?.name}
-          maxDelay={10000}
           loading="lazy"
           title={detail?.name}
-          css={{
-            aspectRatio: '2 / 3',
-            minWidth: '100% !important',
-            minHeight: 'auto !important',
+          classNames={{
+            wrapper: 'flex justify-center w-1/2 m-auto',
+            img: 'aspect-[2/3] min-h-[auto]',
           }}
-          containerCss={{
-            borderRadius: '0.75rem',
-            width: '50% !important',
-            '@xs': { width: '70% !important' },
-          }}
-          loaderUrl="/api/image"
           placeholder="empty"
           responsive={[
             {
@@ -92,28 +80,19 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
           }}
         />
       ) : (
-        <div className="flex items-center justify-center">
+        <div className="flex w-full items-center justify-center">
           <Avatar
             icon={<PhotoIcon width={48} height={48} />}
-            pointer
-            css={{
-              width: '50% !important',
-              minWidth: 'auto !important',
-              minHeight: 'auto !important',
-              height: 'auto !important',
-              size: '$20',
-              borderRadius: '0.75rem !important',
-              '@xs': { width: '70% !important' },
-              aspectRatio: '2 / 3',
+            radius="xl"
+            classNames={{
+              base: 'w-1/2 h-auto aspect-[2/3]',
             }}
           />
         </div>
       )}
-      <Spacer y={1} />
-      <H3 h3 css={{ textAlign: 'center' }} weight="bold">
-        {detail?.name}
-      </H3>
-      <Spacer y={1} />
+      <Spacer y={5} />
+      <h3 className="text-center">{detail?.name}</h3>
+      <Spacer y={5} />
       {externalIds &&
         detail &&
         (externalIds.facebookId ||
@@ -123,11 +102,7 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
           <>
             <div className="flex w-full justify-center gap-4">
               {externalIds.facebookId ? (
-                <NextLink
-                  href={`https://facebook.com/${externalIds.facebookId}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <Link href={`https://facebook.com/${externalIds.facebookId}`} isExternal>
                   <Player
                     src={isDark ? FacebookWhite : FacebookBlack}
                     hover
@@ -136,14 +111,10 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
                     className="h-7 w-7"
                     loop
                   />
-                </NextLink>
+                </Link>
               ) : null}
               {externalIds.instagramId ? (
-                <NextLink
-                  href={`https://instagram.com/${externalIds.instagramId}/`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <Link href={`https://instagram.com/${externalIds.instagramId}/`} isExternal>
                   <Player
                     src={isDark ? InstagramWhite : InstagramBlack}
                     hover
@@ -152,14 +123,10 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
                     className="h-7 w-7"
                     loop
                   />
-                </NextLink>
+                </Link>
               ) : null}
               {externalIds.twitterId ? (
-                <NextLink
-                  href={`https://twitter.com/${externalIds.twitterId}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <Link href={`https://twitter.com/${externalIds.twitterId}`} isExternal>
                   <Player
                     src={isDark ? TwitterWhite : TwitterBlack}
                     hover
@@ -168,10 +135,10 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
                     className="h-7 w-7"
                     loop
                   />
-                </NextLink>
+                </Link>
               ) : null}
               {detail.homepage ? (
-                <NextLink href={detail?.homepage} target="_blank" rel="noopener noreferrer">
+                <Link href={detail?.homepage} isExternal>
                   <Player
                     src={isDark ? ExternalLinkWhite : ExternalLinkBlack}
                     hover
@@ -180,63 +147,45 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
                     className="h-7 w-7"
                     loop
                   />
-                </NextLink>
+                </Link>
               ) : null}
             </div>
-            <Spacer y={1} />
+            <Spacer y={5} />
           </>
         )}
-      <div className="flex w-full justify-start sm:justify-center ">
-        <H4
-          h4
-          css={{
-            width: '100%',
-            '@xs': {
-              width: '70%',
-            },
-          }}
-        >
+      <div className="flex w-full justify-start sm:justify-center">
+        <h4 className="w-full sm:w-[70%]">
           <strong>Personal Info</strong>
-        </H4>
+        </h4>
       </div>
-      <Spacer y={1} />
+      <Spacer y={5} />
       <div className="flex flex-col flex-wrap items-start justify-start gap-y-4 sm:items-center">
         <div className="mb-2 flex flex-row items-center justify-start gap-x-6 sm:m-0 sm:w-[70%] sm:flex-col sm:items-start">
-          <H5 h5 weight="bold">
-            Known For
-          </H5>
-          <H6 h6>{detail?.known_for_department}</H6>
+          <h5>Known For</h5>
+          <p>{detail?.known_for_department}</p>
         </div>
         <div className="mb-2 flex flex-row items-center justify-start gap-x-6 sm:m-0 sm:w-[70%] sm:flex-col sm:items-start">
-          <H5 h5 weight="bold">
-            Gender
-          </H5>
-          <H6 h6>{gender}</H6>
+          <h5>Gender</h5>
+          <p>{gender}</p>
         </div>
         <div className="mb-2 flex flex-row items-center justify-start gap-x-6 sm:m-0 sm:w-[70%] sm:flex-col sm:items-start">
-          <H5 h5 weight="bold">
-            Birthday
-          </H5>
-          <H6 h6>{detail?.birthday}</H6>
+          <h5>Birthday</h5>
+          <p>{detail?.birthday}</p>
         </div>
         <div className="mb-2 flex flex-row items-center justify-start gap-x-6 sm:m-0 sm:w-[70%] sm:flex-col sm:items-start">
-          <H5 h5 weight="bold">
-            Place of Birth
-          </H5>
-          <H6 h6>{detail?.place_of_birth}</H6>
+          <h5>Place of Birth</h5>
+          <p>{detail?.place_of_birth}</p>
         </div>
         <div className="mb-2 flex flex-row items-start justify-start gap-x-6 sm:m-0 sm:w-[70%] sm:flex-col">
-          <H5 h5 weight="bold">
-            Also Known As
-          </H5>
-          <H6 h6>
+          <h5>Also Known As</h5>
+          <p>
             {detail?.also_known_as?.map((name) => (
               <>
                 <span key={name}>{name}</span>
                 <br />
               </>
             ))}
-          </H6>
+          </p>
         </div>
       </div>
     </>

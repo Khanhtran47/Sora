@@ -1,4 +1,3 @@
-/* eslint-disable no-nested-ternary */
 import {
   memo,
   useEffect,
@@ -8,14 +7,13 @@ import {
   type Dispatch,
   type SetStateAction,
 } from 'react';
-import { Button } from '@nextui-org/react';
-import { useNavigate } from '@remix-run/react';
+import { Button } from '@nextui-org/button';
+import { Link } from '@remix-run/react';
 import Artplayer from 'artplayer';
 import { isMobile } from 'react-device-detect';
 
 import usePlayerState from '~/store/player/usePlayerState';
-import AspectRatio from '~/components/elements/aspect-ratio/AspectRatio';
-import { H5 } from '~/components/styles/Text.styles';
+import AspectRatio from '~/components/elements/AspectRatio';
 import Close from '~/assets/icons/CloseIcon';
 
 interface IPlayerProps {
@@ -29,7 +27,6 @@ interface IPlayerProps {
 
 const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
   const { option, getInstance, style, className, setIsPlayerPlaying, ...rest } = props;
-  const navigate = useNavigate();
   const {
     isMini,
     setIsMini,
@@ -77,7 +74,7 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
     [],
   );
   return (
-    <AspectRatio.Root
+    <AspectRatio
       ratio={isMini ? undefined : isMobile ? 16 / 9 : 7 / 3}
       className={isMini ? 'overflow-hidden rounded-lg' : ''}
     >
@@ -94,21 +91,19 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
         {...rest}
       />
       {isMini ? (
-        <div className="inset-x-0 bottom-[-64px] flex h-16 flex-row items-center justify-between rounded-b-lg bg-background-contrast p-3">
-          <H5
-            h5
-            weight="bold"
-            onClick={() => navigate(routePlayer)}
-            className="line-clamp-1"
-            css={{ cursor: 'pointer' }}
+        <div className="bg-default inset-x-0 bottom-[-64px] flex h-16 flex-row items-center justify-between rounded-b-lg p-3">
+          <Link
+            to={routePlayer}
+            className="!text-default-foreground line-clamp-1"
             title={titlePlayer}
           >
             {titlePlayer}
-          </H5>
+          </Link>
           <Button
             type="button"
-            auto
-            light
+            size="md"
+            variant="light"
+            isIconOnly
             onPress={() => {
               if (artplayer) artplayer.destroy();
               setShouldShowPlayer(false);
@@ -120,11 +115,12 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
               setSubtitleSelector([]);
               setIsPlayerPlaying(false);
             }}
-            icon={<Close />}
-          />
+          >
+            <Close />
+          </Button>
         </div>
       ) : null}
-    </AspectRatio.Root>
+    </AspectRatio>
   );
 };
 

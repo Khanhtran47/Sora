@@ -1,16 +1,15 @@
-import { NavLink } from '@remix-run/react';
+import { useRef } from 'react';
+import { useDebouncedEffect, useMediaQuery } from '@react-hookz/web';
+import { NavLink, useLocation } from '@remix-run/react';
+import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
 import {
   ScrollArea,
-  ScrollAreaCorner,
-  ScrollAreaScrollbar,
-  ScrollAreaThumb,
-  ScrollAreaViewport,
-} from '~/components/elements/scroll-area/ScrollArea';
-import { H5 } from '~/components/styles/Text.styles';
-
-import { Underline } from './Tabs';
+  ScrollBar,
+  ScrollCorner,
+  ScrollViewport,
+} from '~/components/elements/ScrollArea';
 
 interface ITabProps {
   pages?: {
@@ -23,66 +22,55 @@ interface ITabProps {
 const TabLink = (props: ITabProps) => {
   const { pages, linkTo } = props;
   const { t } = useTranslation();
+  const location = useLocation();
+  const underlineRef = useRef<HTMLDivElement>(null);
+  useDebouncedEffect(
+    // need to debounce this because the scrollIntoView is called before the underline is rendered
+    () => {
+      if (underlineRef.current) {
+        underlineRef.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+          inline: 'center',
+        });
+      }
+    },
+    [location],
+    350,
+  );
+  const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   return (
     <ScrollArea
-      type="scroll"
+      type={isSm ? 'scroll' : 'hover'}
       scrollHideDelay={100}
-      css={{
-        height: 55,
-        width: '100%',
-        borderBottom: '1px solid $border',
-        boxShadow: 'unset',
-        borderRadius: 0,
-        zIndex: 2,
-      }}
+      className="border-default-200 z-[2] w-full border-b"
     >
-      <ScrollAreaViewport>
-        <div className="flex shrink-0 p-[6px] focus:outline-none">
+      <ScrollViewport>
+        <div className="flex focus:outline-none">
           {pages?.map((page) => (
             <NavLink
               key={page.pageLink}
               to={`${linkTo}${page.pageLink}`}
-              className="relative z-10 flex h-12 shrink-0 items-center justify-center rounded-xl p-4 text-sm font-semibold text-text outline-none hover:text-primary-solid-hover hover:opacity-80 focus:bg-background-contrast"
+              className="relative z-10 flex h-12 shrink-0 items-center justify-center rounded-xl p-4 outline-none hover:opacity-80"
             >
               {({ isActive }) => (
                 <>
-                  <H5
-                    h5
-                    weight="bold"
-                    // transform="uppercase"
-                  >
-                    {t(page.pageName)}
-                  </H5>
-                  {isActive && (
-                    <Underline
+                  <h6 className="font-semibold">{t(page.pageName)}</h6>
+                  {isActive ? (
+                    <motion.div
+                      ref={underlineRef}
                       layoutId="underline"
-                      css={{
-                        height: 4,
-                        width: '50%',
-                        bottom: 0,
-                      }}
+                      className="bg-default-foreground absolute bottom-0 h-1 w-1/2 overflow-hidden rounded-md"
                     />
-                  )}
+                  ) : null}
                 </>
               )}
             </NavLink>
           ))}
         </div>
-      </ScrollAreaViewport>
-      <ScrollAreaScrollbar
-        orientation="horizontal"
-        css={{
-          padding: 0,
-          margin: 2,
-          backgroundColor: 'transparent',
-          '&:hover': { backgroundColor: 'transparent' },
-        }}
-      >
-        <ScrollAreaThumb
-          css={{ backgroundColor: '$accents8', '&:hover': { background: '$accents6' } }}
-        />
-      </ScrollAreaScrollbar>
-      <ScrollAreaCorner />
+      </ScrollViewport>
+      <ScrollBar orientation="horizontal" />
+      <ScrollCorner />
     </ScrollArea>
   );
 };

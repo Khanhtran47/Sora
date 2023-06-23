@@ -1,6 +1,5 @@
-import { Badge, Container } from '@nextui-org/react';
 import { json, redirect, type ActionArgs, type LoaderArgs } from '@remix-run/node';
-import { NavLink, useActionData, useLocation } from '@remix-run/react';
+import { useActionData, useLocation } from '@remix-run/react';
 
 import {
   commitAuthCookie,
@@ -8,7 +7,8 @@ import {
   requestPayload,
   signInWithPassword,
 } from '~/services/supabase';
-import AuthForm from '~/components/AuthForm';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
+import AuthForm from '~/components/elements/shared/AuthForm';
 
 type ActionData = {
   error: string | null;
@@ -47,7 +47,7 @@ export const action = async ({ request }: ActionArgs) => {
   if (authCookie.has('auth_token')) {
     return redirect(searchParams.get('ref') || '/');
   }
-  const payload = await requestPayload(request);
+  const payload = process.env.NODE_ENV === 'production' ? await requestPayload(request) : undefined;
 
   authCookie.set('auth_token', {
     access_token: session.access_token,
@@ -79,21 +79,9 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export const handle = {
   breadcrumb: () => (
-    <NavLink to="/sign-in" aria-label="Sign In Page">
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          Sign In
-        </Badge>
-      )}
-    </NavLink>
+    <BreadcrumbItem to="/sign-in" key="sign-in">
+      Sign In
+    </BreadcrumbItem>
   ),
   miniTitle: () => ({
     title: 'Sign In',
@@ -105,11 +93,7 @@ const SignInPage = () => {
   const actionData = useActionData<ActionData>();
   const location = useLocation();
   const code = new URLSearchParams(location.search).get('code');
-  return (
-    <Container fluid responsive={false} justify="center" display="flex">
-      <AuthForm type="sign-in" error={actionData?.error} code={code} />
-    </Container>
-  );
+  return <AuthForm type="sign-in" error={actionData?.error} code={code} />;
 };
 
 export default SignInPage;

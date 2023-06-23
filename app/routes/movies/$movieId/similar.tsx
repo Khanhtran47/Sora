@@ -1,6 +1,5 @@
-import { Badge } from '@nextui-org/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { NavLink, useLoaderData, type RouteMatch } from '@remix-run/react';
+import { useLoaderData, type RouteMatch } from '@remix-run/react';
 import i18next from '~/i18n/i18next.server';
 
 import { authenticate } from '~/services/supabase';
@@ -9,6 +8,7 @@ import TMDB from '~/utils/media';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const [, locale] = await Promise.all([
@@ -41,24 +41,14 @@ export const meta: MetaFunction = ({ params }) => ({
 
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
-    <NavLink to={`/movies/${match.params.movieId}/similar`} aria-label="Similar Movies">
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          Similar
-        </Badge>
-      )}
-    </NavLink>
+    <BreadcrumbItem
+      to={`/movies/${match.params.movieId}/similar`}
+      key={`movies-${match.params.movieId}-similar`}
+    >
+      Similar
+    </BreadcrumbItem>
   ),
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  miniTitle: (match: RouteMatch, parentMatch: RouteMatch) => ({
+  miniTitle: (_match: RouteMatch, parentMatch: RouteMatch) => ({
     title: parentMatch.data?.detail?.title,
     subtitle: 'Similar',
     showImage: parentMatch.data?.detail?.poster_path !== undefined,
@@ -73,20 +63,18 @@ const MovieSimilarPage = () => {
 
   return (
     <div className="mt-3 flex w-full max-w-[1920px] flex-col gap-y-4 px-3 sm:px-3.5 xl:px-4 2xl:px-5">
-      {similar && similar.items && similar.items.length > 0 ? (
-        <MediaList
-          currentPage={similar.page}
-          genresMovie={rootData?.genresMovie}
-          genresTv={rootData?.genresTv}
-          items={similar.items}
-          itemsType="movie"
-          listName="Similar Movies"
-          listType="grid"
-          scrollToTopListAfterChangePage
-          showListTypeChangeButton
-          totalPages={similar.totalPages}
-        />
-      ) : null}
+      <MediaList
+        currentPage={similar?.page}
+        genresMovie={rootData?.genresMovie}
+        genresTv={rootData?.genresTv}
+        items={similar?.items}
+        itemsType="movie"
+        listName="Similar Movies"
+        listType="grid"
+        scrollToTopListAfterChangePage
+        showListTypeChangeButton
+        totalPages={similar?.totalPages}
+      />
     </div>
   );
 };

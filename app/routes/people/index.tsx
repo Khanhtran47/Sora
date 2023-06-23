@@ -1,14 +1,14 @@
-import { Badge } from '@nextui-org/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { NavLink, useLoaderData, useLocation } from '@remix-run/react';
+import { useLoaderData, useLocation } from '@remix-run/react';
+import i18next from '~/i18n/i18next.server';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import i18next from '~/i18n/i18next.server';
 
 import { authenticate } from '~/services/supabase';
 import { getListPeople } from '~/services/tmdb/tmdb.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import MediaList from '~/components/media/MediaList';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
 export const meta: MetaFunction = () => ({
   title: 'Discover most popular celebs on Sora',
@@ -43,21 +43,9 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export const handle = {
   breadcrumb: () => (
-    <NavLink to="/people?index" aria-label="Popular People">
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          Popular People
-        </Badge>
-      )}
-    </NavLink>
+    <BreadcrumbItem to="/people" key="people">
+      Popular People
+    </BreadcrumbItem>
   ),
   miniTitle: () => ({
     title: 'People',
@@ -80,16 +68,14 @@ const ListPeoplePopular = () => {
       transition={{ duration: 0.3 }}
       className="flex w-full flex-col items-center justify-center px-3 sm:px-0"
     >
-      {people && people.items && people.items.length > 0 && (
-        <MediaList
-          currentPage={people.page}
-          items={people.items}
-          itemsType="people"
-          listName={t('popular-people')}
-          listType="grid"
-          totalPages={people.totalPages}
-        />
-      )}
+      <MediaList
+        currentPage={people?.page}
+        items={people?.items}
+        itemsType="people"
+        listName={t('popular-people')}
+        listType="grid"
+        totalPages={people?.totalPages}
+      />
     </motion.div>
   );
 };

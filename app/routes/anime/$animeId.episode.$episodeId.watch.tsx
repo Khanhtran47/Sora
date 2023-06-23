@@ -1,7 +1,6 @@
 import { env } from 'process';
-import { Badge, Container, Spacer } from '@nextui-org/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { NavLink, useCatch, useLoaderData, type RouteMatch } from '@remix-run/react';
+import { useCatch, useLoaderData, type RouteMatch } from '@remix-run/react';
 
 import type { IMedia } from '~/types/media';
 import { getAniskip, type IAniSkipResponse } from '~/services/aniskip/aniskip.server';
@@ -22,9 +21,10 @@ import { LOKLOK_URL } from '~/services/loklok/utils.server';
 import getProviderList from '~/services/provider.server';
 import { authenticate, insertHistory } from '~/services/supabase';
 import { CACHE_CONTROL } from '~/utils/server/http';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
+import CatchBoundaryView from '~/components/elements/shared/CatchBoundaryView';
+import ErrorBoundaryView from '~/components/elements/shared/ErrorBoundaryView';
 import WatchDetail from '~/components/elements/shared/WatchDetail';
-import CatchBoundaryView from '~/components/CatchBoundaryView';
-import ErrorBoundaryView from '~/components/ErrorBoundaryView';
 
 const checkHasNextEpisode = (
   provider: string,
@@ -56,6 +56,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     getAnimeInfo(animeId),
     getAnimeEpisodeInfo(animeId),
   ]);
+  const sortEpisodes = episodes?.sort((a, b) => a.number - b.number);
   const title =
     detail?.title?.english || detail?.title?.userPreferred || detail?.title?.romaji || '';
   const orgTitle = detail?.title?.native;
@@ -156,7 +157,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
           provider,
           idProvider,
           detail,
-          episodes,
+          episodes: sortEpisodes,
           hasNextEpisode,
           sources: tvDetail?.sources,
           subtitles: tvDetail?.subtitles.map((sub) => ({
@@ -188,7 +189,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         provider,
         idProvider,
         detail,
-        episodes,
+        episodes: sortEpisodes,
         hasNextEpisode,
         sources: tvDetail?.sources,
         subtitles: tvDetail?.subtitles.map((sub) => ({
@@ -247,7 +248,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         {
           provider,
           detail,
-          episodes,
+          episodes: sortEpisodes,
           hasNextEpisode,
           sources: episodeDetail?.sources.map((source) => ({
             ...source,
@@ -282,7 +283,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
       {
         provider,
         detail,
-        episodes,
+        episodes: sortEpisodes,
         hasNextEpisode,
         sources: episodeDetail?.sources.map((source) => ({
           ...source,
@@ -344,7 +345,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         {
           provider,
           detail,
-          episodes,
+          episodes: sortEpisodes,
           hasNextEpisode,
           sources: episodeDetail?.sources.map((source) => ({
             ...source,
@@ -380,7 +381,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
       {
         provider,
         detail,
-        episodes,
+        episodes: sortEpisodes,
         hasNextEpisode,
         sources: episodeDetail?.sources.map((source) => ({
           ...source,
@@ -442,7 +443,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
           provider,
           idProvider,
           detail,
-          episodes,
+          episodes: sortEpisodes,
           hasNextEpisode,
           sources: [
             {
@@ -482,7 +483,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         provider,
         idProvider,
         detail,
-        episodes,
+        episodes: sortEpisodes,
         hasNextEpisode,
         sources: [
           {
@@ -554,7 +555,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
           provider,
           idProvider,
           detail,
-          episodes,
+          episodes: sortEpisodes,
           hasNextEpisode,
           sources: [{ url: episodeStream?.Video || '', isM3U8: true, quality: 'auto' }],
           subtitles: episodeSubtitle?.map((sub) => ({
@@ -589,7 +590,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         provider,
         idProvider,
         detail,
-        episodes,
+        episodes: sortEpisodes,
         hasNextEpisode,
         sources: [{ url: episodeStream?.Video || '', isM3U8: true, quality: 'auto' }],
         subtitles: episodeSubtitle?.map((sub) => ({
@@ -637,7 +638,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     return json(
       {
         detail,
-        episodes,
+        episodes: sortEpisodes,
         sources: sources?.sources.map((source) => ({
           ...source,
           url: `${
@@ -670,7 +671,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   return json(
     {
       detail,
-      episodes,
+      episodes: sortEpisodes,
       sources: sources?.sources.map((source) => ({
         ...source,
         url: `${
@@ -743,45 +744,18 @@ export const meta: MetaFunction = ({ data, params }) => {
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
     <>
-      <NavLink
+      <BreadcrumbItem
         to={`/anime/${match.params.animeId}/`}
-        aria-label={match.data?.detail?.title?.english || match.data?.detail?.title?.romaji}
+        key={`anime-${match.params.animeId}-overview`}
       >
-        {({ isActive }) => (
-          <Badge
-            color="primary"
-            variant="flat"
-            css={{
-              opacity: isActive ? 1 : 0.7,
-              transition: 'opacity 0.25s ease 0s',
-              '&:hover': { opacity: 0.8 },
-            }}
-          >
-            {match.data?.detail?.title?.english || match.data?.detail?.title?.romaji}
-          </Badge>
-        )}
-      </NavLink>
-      <Spacer x={0.25} />
-      <span> ❱ </span>
-      <Spacer x={0.25} />
-      <NavLink
+        {match.data?.detail?.title?.english || match.data?.detail?.title?.romaji}
+      </BreadcrumbItem>
+      <BreadcrumbItem
         to={`/anime/${match.params.animeId}/episode/${match.params.episodeId}`}
-        aria-label={match?.data?.episodeInfo?.title || match.params.episodeId}
+        key={`anime-${match.params.animeId}-episode-${match.params.episodeId}`}
       >
-        {({ isActive }) => (
-          <Badge
-            color="primary"
-            variant="flat"
-            css={{
-              opacity: isActive ? 1 : 0.7,
-              transition: 'opacity 0.25s ease 0s',
-              '&:hover': { opacity: 0.8 },
-            }}
-          >
-            {match?.data?.episodeInfo?.title || match.params.episodeId}
-          </Badge>
-        )}
-      </NavLink>
+        {match?.data?.episodeInfo?.title || match.params.episodeId}
+      </BreadcrumbItem>
     </>
   ),
   miniTitle: (match: RouteMatch) => ({
@@ -804,25 +778,7 @@ export const handle = {
 const AnimeEpisodeWatch = () => {
   const { detail, episodes, providers } = useLoaderData<typeof loader>();
   return (
-    <Container
-      fluid
-      responsive={false}
-      alignItems="stretch"
-      justify="center"
-      css={{
-        marginTop: '0.75rem',
-        padding: '0 0.75rem',
-        '@xs': {
-          padding: '0 3vw',
-        },
-        '@sm': {
-          padding: '0 6vw',
-        },
-        '@md': {
-          padding: '0 12vw',
-        },
-      }}
-    >
+    <div className="mt-3 flex w-full flex-col items-center justify-center px-3 sm:px-0">
       <WatchDetail
         type="anime"
         id={detail?.id}
@@ -836,7 +792,7 @@ const AnimeEpisodeWatch = () => {
         color={detail?.color}
         providers={providers}
       />
-    </Container>
+    </div>
   );
 };
 

@@ -1,5 +1,3 @@
-import Svg from '~/components/styles/Svg.styles';
-
 const Bold = ({ color }: { color: string }) => (
   <g>
     <path
@@ -101,35 +99,35 @@ const Share = ({
   switch (filled) {
     case false:
       return (
-        <Svg
+        <svg
           className=""
           width={width || size}
           height={height || size}
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
-          css={{
+          style={{
             display: 'inline',
           }}
           {...props}
         >
           <Light color={fill} />
-        </Svg>
+        </svg>
       );
     default:
       return (
-        <Svg
+        <svg
           className=""
           width={width || size}
           height={height || size}
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
-          css={{
+          style={{
             display: 'inline',
           }}
           {...props}
         >
           <Bold color={fill} />;
-        </Svg>
+        </svg>
       );
   }
 };

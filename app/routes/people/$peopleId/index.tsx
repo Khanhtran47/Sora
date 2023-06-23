@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
-import { Spacer } from '@nextui-org/react';
+import { Spacer } from '@nextui-org/spacer';
 import type { MetaFunction } from '@remix-run/node';
 import { useFetcher } from '@remix-run/react';
 
@@ -9,7 +9,6 @@ import type { IPeople } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
-import { H4, P } from '~/components/styles/Text.styles';
 
 export const meta: MetaFunction = ({ params }) => ({
   'og:url': `https://sora-anime.vercel.app/people/${params.peopleId}/`,
@@ -37,24 +36,19 @@ const OverviewPage = () => {
       {peopleData?.detail?.biography ? (
         <>
           <div className="flex flex-col gap-y-2">
-            <H4 h4 weight="bold">
-              Biography
-            </H4>
-            <P css={{ whiteSpace: 'pre-line', textAlign: 'justify' }}>
+            <h4>Biography</h4>
+            <p style={{ whiteSpace: 'pre-line', textAlign: 'justify' }}>
               {/* TODO: add a read more button */}
               {peopleData?.detail?.biography}
-            </P>
+            </p>
           </div>
-          <Spacer y={1.5} />
+          <Spacer y={7} />
         </>
       ) : null}
-      {/* TODO: add a loading when "known for" part is loading */}
       {knownFor && knownFor.length > 0 ? (
         <>
-          <H4 h4 weight="bold">
-            Known For
-          </H4>
-          <Spacer y={0.5} />
+          <h4>Known For</h4>
+          <Spacer y={2.5} />
           <MediaList
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}

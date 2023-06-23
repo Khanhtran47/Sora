@@ -1,14 +1,11 @@
-/* eslint-disable @typescript-eslint/indent */
-/* eslint-disable @typescript-eslint/no-throw-literal */
-
-import { Badge, Col, Row } from '@nextui-org/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { NavLink, useLoaderData, type RouteMatch } from '@remix-run/react';
+import { useLoaderData, type RouteMatch } from '@remix-run/react';
 
 import { getAnimeEpisodeInfo } from '~/services/consumet/anilist/anilist.server';
 import { authenticate } from '~/services/supabase';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import ListEpisodes from '~/components/elements/shared/ListEpisodes';
 
 export const loader = async ({ params, request }: LoaderArgs) => {
@@ -19,7 +16,12 @@ export const loader = async ({ params, request }: LoaderArgs) => {
 
   const episodes = await getAnimeEpisodeInfo(animeId);
   if (!episodes) throw new Response('Not Found', { status: 404 });
-  return json({ episodes }, { headers: { 'Cache-Control': CACHE_CONTROL.episode } });
+  return json(
+    {
+      episodes: episodes.sort((a, b) => a.number - b.number),
+    },
+    { headers: { 'Cache-Control': CACHE_CONTROL.episode } },
+  );
 };
 
 export const meta: MetaFunction = ({ params }) => ({
@@ -28,27 +30,14 @@ export const meta: MetaFunction = ({ params }) => ({
 
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
-    <NavLink
-      to={`/anime/${match.params.animeId}/`}
-      aria-label={match.data?.detail?.title?.english || match.data?.detail?.title?.romaji}
+    <BreadcrumbItem
+      to={`/anime/${match.params.animeId}/episodes`}
+      key={`anime-${match.params.animeId}-episodes`}
     >
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          {match.data?.detail?.title?.english || match.data?.detail?.title?.romaji}
-        </Badge>
-      )}
-    </NavLink>
+      Episodes
+    </BreadcrumbItem>
   ),
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  miniTitle: (match: RouteMatch, parentMatch?: RouteMatch) => ({
+  miniTitle: (_match: RouteMatch, parentMatch?: RouteMatch) => ({
     title:
       parentMatch?.data?.detail?.title?.userPreferred ||
       parentMatch?.data?.detail?.title?.english ||
@@ -71,38 +60,14 @@ const EpisodesPage = () => {
   const detail = animeData && animeData.detail;
 
   return (
-    <Row
-      fluid
-      align="stretch"
-      justify="center"
-      css={{
-        marginTop: '0.75rem',
-        padding: '0 0.75rem',
-        '@xs': {
-          padding: '0 3vw',
-        },
-        '@sm': {
-          padding: '0 6vw',
-        },
-        '@md': {
-          padding: '0 12vw',
-        },
-      }}
-    >
-      <Col
-        css={{
-          width: '100%',
-          '@xs': { width: '66.6667%' },
-        }}
-      >
-        <ListEpisodes
-          type="anime"
-          id={detail?.id}
-          episodes={episodes}
-          providers={animeData?.providers || []}
-        />
-      </Col>
-    </Row>
+    <div className="flex w-full flex-col items-center justify-center px-3 sm:w-2/3 sm:px-5">
+      <ListEpisodes
+        type="anime"
+        id={detail?.id}
+        episodes={episodes}
+        providers={animeData?.providers || []}
+      />
+    </div>
   );
 };
 

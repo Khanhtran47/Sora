@@ -1,6 +1,7 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useEffect, useState } from 'react';
-import { Button, Input, Loading, Pagination, useInput } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
+import { Input } from '@nextui-org/input';
+import { Pagination } from '@nextui-org/pagination';
 import { useMediaQuery } from '@react-hookz/web';
 import { useFetcher } from '@remix-run/react';
 import { toast } from 'sonner';
@@ -52,7 +53,7 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
         } ${subtitleOptions?.episode_number ? `E${subtitleOptions?.episode_number}` : ''}`
       : '';
 
-  const { value, bindings } = useInput(preInput || '');
+  const [value, setValue] = useState<string>(preInput || '');
   const [language, setLanguage] = useState<string>();
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
@@ -198,17 +199,18 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
         <div className="!mb-5 flex w-full flex-col items-end justify-start gap-6 sm:flex-row sm:items-center">
           <div className="flex w-full flex-col items-center justify-start gap-4 sm:flex-row sm:flex-wrap">
             <Input
-              {...bindings}
-              size="sm"
+              value={value}
+              onValueChange={setValue}
+              onClear={() => setValue('')}
+              size="xs"
               placeholder="Search Subtitle"
-              clearable
-              bordered
-              color="primary"
+              variant="faded"
+              color="default"
               type="text"
-              css={{ w: '100%', '@xs': { w: 'auto' } }}
+              className="w-full sm:w-auto"
             />
             <Select value={language} onValueChange={(value: string) => setLanguage(value)}>
-              <SelectTrigger aria-label="Language" className="h-8 sm:w-fit">
+              <SelectTrigger aria-label="Language" className="h-10 sm:w-fit">
                 <SelectValue placeholder="Select language" />
               </SelectTrigger>
               <SelectContent container={containerPortal}>
@@ -229,21 +231,17 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
           </div>
           <Button
             type="button"
-            auto
-            size="sm"
-            onPress={searchSubtitles}
-            disabled={fetcher.type === 'normalLoad' && !isGetSubtitleLink}
+            color="primary"
+            isDisabled={fetcher.type === 'normalLoad' && !isGetSubtitleLink}
+            isLoading={fetcher.type === 'normalLoad' && !isGetSubtitleLink}
             className="!px-3"
+            onPress={searchSubtitles}
           >
-            {fetcher.type === 'normalLoad' && !isGetSubtitleLink ? (
-              <Loading type="points" color="currentColor" size="sm" />
-            ) : (
-              'Search'
-            )}
+            Search
           </Button>
         </div>
       </DialogHeader>
-      <div className="w-full">
+      <div className="flex w-full flex-col gap-y-2">
         {fetcher.type === 'normalLoad' && !isGetSubtitleLink && (
           <div role="status" className="max-w-sm animate-pulse">
             <div className="!mb-4 h-2.5 w-48 rounded-full bg-gray-200 dark:bg-gray-700" />
@@ -260,8 +258,8 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
             <Button
               key={subtitle.id}
               type="button"
-              light
-              css={{ '@hover': { color: '$primaryLightContrast' } }}
+              variant="light"
+              className="!px-3"
               onPress={() => handleSubtitleClick(subtitle)}
             >
               {subtitle.attributes.release} ({subtitle.attributes.language})
@@ -270,6 +268,7 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
         {totalPages > 1 ? (
           <div className="!mb-5 flex w-full flex-row items-center justify-center">
             <Pagination
+              // showControls={!isSm}
               total={totalPages}
               initialPage={page}
               // shadow

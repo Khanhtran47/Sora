@@ -19,14 +19,18 @@ export const loader = async ({ request }: LoaderArgs) => {
   if (!type) throw new Response('Not Found', { status: 404 });
 
   const isFetchVideos = url.searchParams.get('video') === 'true';
+  const isFetchImages = url.searchParams.get('image') === 'true';
 
   const [images, videos] = await Promise.all([
-    getImages(type, id, locale),
+    isFetchImages ? getImages(type, id, locale) : undefined,
     isFetchVideos ? getVideos(type, id) : undefined,
   ]);
 
   return json(
-    { images, videos },
+    {
+      ...(images && { images }),
+      ...(videos && { videos }),
+    },
     {
       headers: {
         'Cache-Control': CACHE_CONTROL.default,

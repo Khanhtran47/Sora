@@ -1,8 +1,7 @@
-/* eslint-disable tailwindcss/no-custom-classname */
-/* eslint-disable @typescript-eslint/indent */
 import { forwardRef, type ComponentPropsWithoutRef, type ElementRef } from 'react';
+import { cn } from '@nextui-org/theme';
 import * as NavigationMenuPrimitive from '@radix-ui/react-navigation-menu';
-import { cnBase, tv } from 'tailwind-variants';
+import { tv } from 'tailwind-variants';
 
 import ChevronRight from '~/assets/icons/ChevronRightIcon';
 
@@ -11,8 +10,8 @@ const NavigationMenuViewport = forwardRef<
   ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Viewport>
 >(({ className = '', ...props }, ref) => (
   <NavigationMenuPrimitive.Viewport
-    className={cnBase(
-      'data-[state=open]:fadeIn data-[state=closed]:fadeOut relative h-[var(--radix-navigation-menu-viewport-height)] w-full origin-[top_center] overflow-hidden rounded-[12px] border border-border bg-background-contrast-alpha shadow-lg backdrop-blur-md transition-[width,_height] duration-300 data-[orientation=horizontal]:mt-1.5 data-[orientation=vertical]:ml-[-8px] data-[state=open]:animate-scaleIn data-[state=closed]:animate-scaleOut sm:w-[var(--radix-navigation-menu-viewport-width)]',
+    className={cn(
+      'data-[state=open]:fadeIn data-[state=closed]:fadeOut relative h-[var(--radix-navigation-menu-viewport-height)] w-full origin-[top_center] overflow-hidden rounded-[12px] border border-default-200 bg-default/60 shadow-lg backdrop-blur-2xl backdrop-contrast-125 backdrop-saturate-200 transition-[width,_height] duration-300 data-[orientation=horizontal]:mt-1.5 data-[orientation=vertical]:ml-[-8px] data-[state=closed]:animate-scaleOut data-[state=open]:animate-scaleIn sm:w-[var(--radix-navigation-menu-viewport-width)]',
       className,
     )}
     ref={ref}
@@ -30,15 +29,15 @@ const NavigationMenu = forwardRef<
   <NavigationMenuPrimitive.Root
     ref={ref}
     orientation={orientation}
-    className={cnBase('relative z-10 flex flex-1 items-center justify-center', className)}
+    className={cn('relative z-10 flex flex-1 items-center justify-center', className)}
     {...props}
   >
     {children}
     <div
       data-orientation={orientation}
-      className={cnBase(
-        `absolute flex justify-center data-[orientation=vertical]:left-full
-      data-[orientation=horizontal]:top-full data-[orientation=horizontal]:left-0`,
+      className={cn(
+        `absolute flex justify-center data-[orientation=horizontal]:left-0
+      data-[orientation=horizontal]:top-full data-[orientation=vertical]:left-full`,
         viewportPositionClassName,
       )}
     >
@@ -66,12 +65,12 @@ NavigationMenuList.displayName = NavigationMenuPrimitive.List.displayName;
 const NavigationMenuItem = NavigationMenuPrimitive.Item;
 
 const navigationMenuTriggerStyle = tv({
-  base: `text-md group inline-flex h-10 w-max items-center justify-center
-  rounded-md bg-transparent px-4 py-2 font-medium text-text transition-colors hover:bg-primary-light-hover hover:text-primary hover:opacity-80 focus:bg-primary-light-hover focus:text-primary focus:outline-none disabled:pointer-events-none
-  disabled:opacity-50 data-[state=open]:bg-primary-light-active data-[active]:bg-primary-light-active data-[active]:text-primary data-[state=open]:text-primary`,
+  base: `text-md text-foreground hover:bg-default hover:text-default-foreground focus:bg-default focus:text-default-foreground data-[active]:bg-default
+  data-[state=open]:bg-default data-[active]:text-default-foreground data-[state=open]:text-default-foreground group inline-flex h-10 w-max items-center justify-center rounded-md bg-transparent px-4 py-2 font-medium
+  transition-colors hover:opacity-80 focus:outline-none disabled:pointer-events-none disabled:opacity-50`,
   variants: {
     active: {
-      true: 'bg-primary-light-active text-primary',
+      true: 'bg-default text-default-foreground',
       false: '',
     },
   },
@@ -100,9 +99,9 @@ const NavigationMenuTrigger = forwardRef<
 NavigationMenuTrigger.displayName = NavigationMenuPrimitive.Trigger.displayName;
 
 const navigationMenuContentStyle = tv({
-  base: `absolute top-0
-  left-0 w-full data-[motion=from-start]:animate-enterFromLeft data-[motion=from-end]:animate-enterFromRight data-[motion=to-start]:animate-exitToLeft
-  data-[motion=to-end]:animate-exitToRight sm:w-auto`,
+  base: `data-[motion=from-end]:animate-enterFromRight data-[motion=from-start]:animate-enterFromLeft
+  data-[motion=to-end]:animate-exitToRight data-[motion=to-start]:animate-exitToLeft absolute left-0 top-0
+  w-full sm:w-auto`,
 });
 const NavigationMenuContent = forwardRef<
   ElementRef<typeof NavigationMenuPrimitive.Content>,
@@ -119,8 +118,8 @@ NavigationMenuContent.displayName = NavigationMenuPrimitive.Content.displayName;
 const NavigationMenuLink = NavigationMenuPrimitive.Link;
 
 const navigationMenuIndicatorStyle = tv({
-  base: `data-[state=visible]:animate-in data-[state=hidden]:animate-out data-[state=visible]:fade-in
-  data-[state=hidden]:fade-out top-full z-[1] flex h-2.5 items-end justify-center overflow-hidden`,
+  base: `data-[state=visible]:animate-in data-[state=hidden]:animate-out data-[state=hidden]:fade-out
+  data-[state=visible]:fade-in top-full z-[1] flex h-2.5 items-end justify-center overflow-hidden`,
 });
 const NavigationMenuIndicator = forwardRef<
   ElementRef<typeof NavigationMenuPrimitive.Indicator>,

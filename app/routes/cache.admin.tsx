@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useMemo, useState } from 'react';
-import { Badge, Button, Container, Modal, Spacer } from '@nextui-org/react';
-import { useWindowSize } from '@react-hookz/web';
+import { Button } from '@nextui-org/button';
+import { Spacer } from '@nextui-org/spacer';
 import {
   json,
   redirect,
@@ -10,7 +9,6 @@ import {
   type MetaFunction,
 } from '@remix-run/node';
 import {
-  NavLink,
   useFetcher,
   useLoaderData,
   useLocation,
@@ -23,9 +21,17 @@ import { badRequest } from 'remix-utils';
 
 import { getAllCacheKeys, lruCache, searchCacheKeys } from '~/services/lru-cache';
 import { getUserFromCookie } from '~/services/supabase';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '~/components/elements/Dialog';
 import SearchForm from '~/components/elements/SearchForm';
-import { H2, H3, H5 } from '~/components/styles/Text.styles';
-import ErrorBoundaryView from '~/components/ErrorBoundaryView';
+import ErrorBoundaryView from '~/components/elements/shared/ErrorBoundaryView';
 
 const loader = async ({ request }: LoaderArgs) => {
   const cookie = request.headers.get('Cookie');
@@ -68,21 +74,9 @@ const meta: MetaFunction = () => ({
 
 const handle = {
   breadcrumb: () => (
-    <NavLink to="/cache/admin" arial-lable="Cache Admin">
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          Cache Admin
-        </Badge>
-      )}
-    </NavLink>
+    <BreadcrumbItem to="/cache/admin" key="cache-admin">
+      Cache Admin
+    </BreadcrumbItem>
   ),
   miniTitle: () => ({
     title: 'Cache Management',
@@ -105,9 +99,8 @@ const CacheKeyRow = ({
         <input type="hidden" name="cacheKey" value={cacheKey} />
         {/* @ts-ignore */}
         <Button
-          ghost
-          color="error"
-          auto
+          variant="ghost"
+          color="danger"
           onBlur={() => setDoubleCheck(false)}
           onPress={(e) => {
             const target = e.target as HTMLFormElement;
@@ -121,7 +114,7 @@ const CacheKeyRow = ({
           {fetcher.state === 'idle' ? (doubleCheck ? 'You sure?' : 'Delete') : 'Deleting...'}
         </Button>
       </fetcher.Form>
-      <Button auto light onPress={() => handleOpenDetailCache(cacheKey)}>
+      <Button variant="light" color="primary" onPress={() => handleOpenDetailCache(cacheKey)}>
         {cacheKey}
       </Button>
     </div>
@@ -135,7 +128,6 @@ const CacheAdminRoute = () => {
   const [searchParams] = useSearchParams();
   const location = useLocation();
   const navigate = useNavigate();
-  const { width } = useWindowSize();
   const query = searchParams.get('query') ?? '';
   const currentCache = useMemo(() => {
     if (currentCacheKey) {
@@ -162,83 +154,57 @@ const CacheAdminRoute = () => {
       exit={{ x: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <Container
-        fluid
-        responsive={false}
-        display="flex"
-        justify="flex-start"
-        direction="column"
-        css={{
-          maxWidth: '1920px',
-          padding: '0 $sm',
-          '@xs': { padding: 0 },
-        }}
-      >
-        <H2 h2 css={{ '@xsMax': { fontSize: '1.75rem !important' } }}>
-          Cache Admin
-        </H2>
+      <div className="max-w-screen-4xl flex w-full flex-col justify-start px-3 sm:px-0">
+        <h2>Cache Admin</h2>
         <SearchForm
           onSubmit={onSubmit}
           textOnButton="Search"
           textPlaceHolder="Search cache key"
           defaultValue={query}
         />
-        <Spacer x={1} />
-        <div className="flex flex-col gap-4">
-          {cacheKeys.map((cacheKey) => (
-            <CacheKeyRow
-              key={cacheKey.key}
-              cacheKey={cacheKey.key}
-              handleOpenDetailCache={(key) => handleShowDetailCache(key)}
-            />
-          ))}
-        </div>
-      </Container>
-      <Modal
-        closeButton
-        scroll
-        blur
-        aria-labelledby="modal-title"
-        aria-describedby="modal-description"
-        open={showDetailCache}
-        onClose={closeHandler}
-        className="!max-w-fit"
-        // noPadding
-        // autoMargin={false}
-        width={width && width < 720 ? `${width}px` : '720px'}
-      >
-        <Modal.Header css={{ display: 'flex', flexFlow: 'row wrap' }}>
-          <H3 h3 id="modal-title">
-            Cache detail
-          </H3>
-        </Modal.Header>
-        <Modal.Body>
-          {currentCache ? (
-            <div className="flex flex-col gap-4" id="modal-description">
-              <H5>
-                Cache Key: <span>{currentCache.key}</span>
-              </H5>
-              <H5>
-                Cache TTL: <span>{currentCache.data.metadata.ttl}</span>
-              </H5>
-              <H5>
-                Cache Stale While Revalidate: <span>{currentCache.data.metadata.swr}</span>
-              </H5>
-              <H5>
-                Cache Created At: <span>{currentCache.data.metadata.createdTime}</span>
-              </H5>
-              <H5>
-                Cache Data: <span>{JSON.stringify(currentCache.data.value)}</span>
-              </H5>
-            </div>
-          ) : null}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button auto flat color="error" onPress={closeHandler}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        <Spacer x={5} />
+        <Dialog open={showDetailCache} onOpenChange={setShowDetailCache}>
+          <div className="flex flex-col gap-4">
+            {cacheKeys.map((cacheKey) => (
+              <DialogTrigger key={cacheKey.key}>
+                <CacheKeyRow
+                  cacheKey={cacheKey.key}
+                  handleOpenDetailCache={(key) => handleShowDetailCache(key)}
+                />
+              </DialogTrigger>
+            ))}
+          </div>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle id="modal-title">Cache detail</DialogTitle>
+            </DialogHeader>
+            {currentCache ? (
+              <div className="flex flex-col gap-4" id="modal-description">
+                <h5>
+                  Cache Key: <span>{currentCache.key}</span>
+                </h5>
+                <h5>
+                  Cache TTL: <span>{currentCache.data.metadata.ttl}</span>
+                </h5>
+                <h5>
+                  Cache Stale While Revalidate: <span>{currentCache.data.metadata.swr}</span>
+                </h5>
+                <h5>
+                  Cache Created At: <span>{currentCache.data.metadata.createdTime}</span>
+                </h5>
+                <h5>
+                  Cache Data: <span>{JSON.stringify(currentCache.data.value)}</span>
+                </h5>
+              </div>
+            ) : null}
+            <DialogFooter>
+              <Button variant="flat" color="danger" onPress={closeHandler}>
+                Close
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
     </motion.div>
   );
 };

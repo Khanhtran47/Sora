@@ -1,7 +1,8 @@
 import * as React from 'react';
+import { cn } from '@nextui-org/theme';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { motion, type PanInfo } from 'framer-motion';
-import { cnBase, tv, type VariantProps } from 'tailwind-variants';
+import { tv, type VariantProps } from 'tailwind-variants';
 
 import Close from '~/assets/icons/CloseIcon';
 
@@ -14,8 +15,8 @@ const SheetOverlay = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Overlay
     ref={ref}
-    className={cnBase(
-      'fixed inset-0 z-[9998] bg-background-alpha backdrop-blur-lg transition-all duration-300 data-[state=closed]:animate-fadeOut data-[state=open]:animate-fadeIn',
+    className={cn(
+      'fixed inset-0 z-[9998] cursor-pointer bg-background/[0.6] backdrop-blur-2xl duration-300 transition-all data-[state=closed]:animate-fadeOut data-[state=open]:animate-fadeIn',
       className,
     )}
     {...props}
@@ -24,13 +25,13 @@ const SheetOverlay = React.forwardRef<
 SheetOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
 const sheetContentStyles = tv({
-  base: 'fixed inset-y-0 z-[9999] w-[250px] bg-background-contrast !p-1 shadow-lg shadow-background-alpha will-change-transform focus:outline-none sm:!p-6',
+  base: 'bg-content1 shadow-background/[0.6] fixed inset-y-0 z-[9999] w-[250px] !p-1 shadow-lg will-change-transform focus:outline-none sm:!p-6',
   variants: {
     side: {
-      top: 'bottom-auto w-full rounded-b-xl animate-in slide-in-from-top duration-300',
-      right: 'right-0 h-full rounded-l-xl animate-in slide-in-from-right duration-300',
-      bottom: 'bottom-0 top-auto w-full rounded-t-xl animate-in slide-in-from-bottom duration-300',
-      left: 'left-0 h-full rounded-r-xl animate-in slide-in-from-left duration-300',
+      top: 'animate-in slide-in-from-top bottom-auto w-full rounded-b-xl duration-300',
+      right: 'animate-in slide-in-from-right right-0 h-full rounded-l-xl duration-300',
+      bottom: 'animate-in slide-in-from-bottom bottom-0 top-auto w-full rounded-t-xl duration-300',
+      left: 'animate-in slide-in-from-left left-0 h-full rounded-r-xl duration-300',
     },
     size: {
       content: '',
@@ -138,9 +139,8 @@ const SheetContent = React.forwardRef<
     },
     forwardedRef,
   ) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
-      if (info.offset.y > 100 && open && onOpenChange && swipeDownToClose) {
+    const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+      if (info.offset.y > 100 && open && onOpenChange && swipeDownToClose && side === 'bottom') {
         onOpenChange();
       }
     };
@@ -148,23 +148,25 @@ const SheetContent = React.forwardRef<
       <DialogPrimitive.Portal container={container}>
         <SheetOverlay />
         <DialogPrimitive.Content
-          className={cnBase(sheetContentStyles({ side, size }), className)}
+          className={cn(sheetContentStyles({ side, size }), className)}
           {...props}
           ref={forwardedRef}
           asChild
         >
           <motion.div
-            drag={swipeDownToClose ? 'y' : false}
-            dragConstraints={{ top: 0, bottom: 0 }}
-            dragElastic={{ top: 0, bottom: 0.8 }}
+            drag={swipeDownToClose && side === 'bottom' ? 'y' : false}
+            dragDirectionLock
+            dragConstraints={{ top: 0, bottom: 300 }}
+            dragElastic={{ top: 0, bottom: 0.5 }}
             dragMomentum={false}
             onDragEnd={handleDragEnd}
+            dragTransition={{ bounceStiffness: 1000, bounceDamping: 50 }}
           >
-            {swipeDownToClose ? (
-              <div className="!m-[1rem_auto_0] h-1 w-[75px] rounded-md bg-border" />
+            {swipeDownToClose && side === 'bottom' ? (
+              <div className="bg-default-foreground !m-[1rem_auto_0] h-1 w-[75px] rounded-md" />
             ) : null}
             {!hideCloseButton ? (
-              <DialogPrimitive.Close className="absolute right-4 top-4 flex h-5 w-5 items-center justify-center rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-primary-light-active focus:ring-offset-2 disabled:pointer-events-none">
+              <DialogPrimitive.Close className="ring-offset-background focus:ring-primary-200 absolute right-4 top-4 flex h-5 w-5 items-center justify-center rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none">
                 <Close className="h-4 w-4" />
                 <span className="sr-only">Close</span>
               </DialogPrimitive.Close>
@@ -174,7 +176,7 @@ const SheetContent = React.forwardRef<
               dragConstraints={{ top: 0, bottom: 0 }}
               dragElastic={0}
               dragMomentum={false}
-              className={swipeDownToClose ? '!mt-2' : ''}
+              className={swipeDownToClose && side === 'bottom' ? '!mt-2' : ''}
             >
               {children}
             </motion.div>
@@ -188,16 +190,13 @@ const SheetContent = React.forwardRef<
 SheetContent.displayName = 'SheetContent';
 
 const SheetHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
-    className={cnBase('flex flex-col space-y-2 text-center sm:text-left', className)}
-    {...props}
-  />
+  <div className={cn('flex flex-col gap-y-2 text-center sm:text-left', className)} {...props} />
 );
 SheetHeader.displayName = 'SheetHeader';
 
 const SheetFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={cnBase('flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2', className)}
+    className={cn('flex flex-col-reverse gap-y-2 sm:flex-row sm:justify-end sm:gap-x-2', className)}
     {...props}
   />
 );
@@ -209,7 +208,7 @@ const SheetTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    className={cnBase('text-lg font-semibold text-foreground', className)}
+    className={cn('font-semibold text-default-foreground', className)}
     {...props}
   />
 ));
@@ -221,7 +220,7 @@ const SheetDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cnBase('text-muted-foreground text-sm', className)}
+    className={cn('text-muted-foreground text-sm', className)}
     {...props}
   />
 ));

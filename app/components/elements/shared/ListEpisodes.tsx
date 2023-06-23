@@ -1,10 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/indent */
 import { useMemo, useState } from 'react';
-import { Avatar, Button, Card, Dropdown, Pagination, Row, Spacer } from '@nextui-org/react';
+import { Avatar } from '@nextui-org/avatar';
+import { Button, ButtonGroup } from '@nextui-org/button';
+import { Card, CardBody } from '@nextui-org/card';
+import { Pagination } from '@nextui-org/pagination';
+import { Spacer } from '@nextui-org/spacer';
 import { useMediaQuery } from '@react-hookz/web';
 import { useNavigate } from '@remix-run/react';
-import Image, { MimeType } from 'remix-image';
+import { MimeType } from 'remix-image';
 
 import type { IEpisodeInfo } from '~/services/consumet/anilist/anilist.types';
 import type { IEpisode } from '~/services/tmdb/tmdb.types';
@@ -12,11 +14,18 @@ import TMDB from '~/utils/media';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
 import episodeTypes from '~/constants/episodeTypes';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '~/components/elements/Select';
 import Rating from '~/components/elements/shared/Rating';
-import Flex from '~/components/styles/Flex.styles';
-import { H3, H5, H6 } from '~/components/styles/Text.styles';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 import ViewGrid from '~/assets/icons/ViewGridCardIcon';
+
+import Image from '../Image';
 
 interface IListEpisodesProps {
   type: 'tv' | 'anime';
@@ -36,11 +45,9 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
   const { isShowSkipOpEdButton } = useSoraSettings();
   const episodesCountAvailable = useMemo(() => episodes && episodes.length, [episodes]);
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
-  const [selectedProvider, setSelectedProvider] = useState<Set<string>>(
-    new Set([providers[0].provider]),
-  );
+  const [selectedProvider, setSelectedProvider] = useState(providers[0]?.provider);
   const [episodesCountProvider, setEpisodesCountProvider] = useState<number>(
-    providers[0].episodesCount || 0,
+    providers[0]?.episodesCount || 0,
   );
   const [episodesAvailable, setEpisodesAvailable] = useState<
     IEpisode[] | IEpisodeInfo[] | number[] | undefined
@@ -56,16 +63,10 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
     episodesAvailable || [],
     50,
   );
-  const selectedValue = useMemo(() => {
-    if (selectedProvider) {
-      return Array.from(selectedProvider).join(', ').replaceAll('_', ' ');
-    }
-  }, [selectedProvider]);
 
-  const handleProviderChange = async (keys: any) => {
-    setSelectedProvider(keys);
-    const provider = Array.from(keys).join(', ').replaceAll('_', ' ');
-    const providerData = providers.find((p) => p.provider === provider);
+  const handleProviderChange = async (value: string) => {
+    setSelectedProvider(value);
+    const providerData = providers.find((p) => p.provider === value);
     if (providerData) {
       setEpisodesCountProvider(providerData.episodesCount || 0);
       if (episodesCountAvailable && episodesCountAvailable >= (providerData?.episodesCount || 0)) {
@@ -82,17 +83,16 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
   };
 
   const handleSelectEpisode = (index: number) => {
-    const provider = Array.from(selectedProvider).join(', ').replaceAll('_', ' ');
-    const providerData = providers.find((p) => p.provider === provider);
+    const providerData = providers.find((p) => p.provider === selectedProvider);
     if (type === 'tv')
       navigate(
-        `/tv-shows/${id}/season/${season}/episode/${index + 1}/watch?provider=${provider}&id=${
-          providerData?.id
-        }`,
+        `/tv-shows/${id}/season/${season}/episode/${
+          index + 1
+        }/watch?provider=${selectedProvider}&id=${providerData?.id}`,
       );
     else if (type === 'anime') {
       navigate(
-        `/anime/${id}/episode/${index + 1}/watch?provider=${provider}&id=${
+        `/anime/${id}/episode/${index + 1}/watch?provider=${selectedProvider}&id=${
           providerData?.id
         }&skipOpEd=${isShowSkipOpEdButton.value}`,
       );
@@ -101,77 +101,58 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
 
   return (
     <>
-      <Flex direction="row" justify="between" align="center" wrap="wrap" css={{ margin: '20px 0' }}>
-        <H3 h3>Episodes</H3>
-        <Flex direction="row" justify="end" align="center" className="space-x-2">
+      <div className="my-5 flex w-full flex-row flex-wrap items-center justify-between gap-4">
+        <h3>Episodes</h3>
+        <div className="flex flex-row items-center justify-end gap-2">
           {providers ? (
-            <Dropdown isBordered>
-              <Dropdown.Button css={{ tt: 'capitalize' }}>{selectedValue}</Dropdown.Button>
-              <Dropdown.Menu
-                aria-label="Provider Selection"
-                color="primary"
-                disallowEmptySelection
-                selectionMode="single"
-                selectedKeys={selectedProvider}
-                onSelectionChange={(keys: any) => handleProviderChange(keys)}
-              >
+            <Select value={selectedProvider} onValueChange={(value) => handleProviderChange(value)}>
+              <SelectTrigger aria-label="provider">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
                 {providers.map((provider) => (
-                  <Dropdown.Item key={provider.provider}>{provider.provider}</Dropdown.Item>
+                  <SelectItem key={provider.provider} value={provider.provider}>
+                    {provider.provider}
+                  </SelectItem>
                 ))}
-              </Dropdown.Menu>
-            </Dropdown>
+              </SelectContent>
+            </Select>
           ) : null}
           {episodesCountAvailable && episodesCountAvailable >= episodesCountProvider ? (
-            <Button.Group>
+            <ButtonGroup>
               {episodeTypes.map((episodeType) => (
                 <Button
                   key={`button-item-${episodeType.activeType}`}
                   type="button"
                   onPress={() => setActiveType(episodeType.activeType)}
-                  {...(activeType === episodeType.activeType ? {} : { ghost: true })}
-                  css={{
-                    '@xsMax': {
-                      flexGrow: '1',
-                      flexShrink: '0',
-                      dflex: 'center',
-                    },
-                  }}
-                  icon={
-                    episodeType.activeTypeName === 'Image' ? (
-                      <PhotoIcon />
-                    ) : (
-                      <ViewGrid width={36} height={36} />
-                    )
-                  }
-                />
+                  {...(activeType === episodeType.activeType ? {} : { variant: 'ghost' })}
+                  isIconOnly
+                >
+                  {episodeType.activeTypeName === 'Image' ? (
+                    <PhotoIcon />
+                  ) : (
+                    <ViewGrid width={36} height={36} />
+                  )}
+                </Button>
               ))}
-            </Button.Group>
+            </ButtonGroup>
           ) : null}
-        </Flex>
-      </Flex>
+        </div>
+      </div>
       {currentData && currentData.length > 0 && (
-        <Flex
-          direction={activeType === 0 ? 'row' : 'column'}
-          {...(activeType === 0
-            ? {
-                wrap: 'wrap',
-                justify: 'start',
-                align: 'center',
-              }
-            : {})}
+        <div
+          className={`flex w-full ${
+            activeType === 0 ? 'flex-row flex-wrap items-center justify-start' : 'flex-col'
+          }`}
         >
           {currentData.map((episode, index) =>
             activeType === 0 ? (
               <Button
                 key={episode.id}
-                auto
                 type="button"
                 onPress={() => handleSelectEpisode(index)}
-                css={{
-                  padding: 0,
-                  minWidth: '40px',
-                  margin: '0 0.5rem 0.5rem 0',
-                }}
+                className="mb-2 mr-2 w-10 p-0"
+                isIconOnly
               >
                 {index + 1 + (currentPage - 1) * 50}
               </Button>
@@ -180,52 +161,29 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
               episodesCountAvailable >= episodesCountProvider ? (
               <div key={episode.id}>
                 <Card
-                  as="div"
                   isHoverable
                   isPressable
-                  css={{
-                    maxHeight: '127px !important',
-                    borderWidth: 0,
-                    filter: 'unset',
-                    '&:hover': {
-                      boxShadow: '0 0 0 1px var(--nextui-colors-primarySolidHover)',
-                      filter:
-                        'drop-shadow(0 4px 12px rgb(104 112 118 / 0.15)) drop-shadow(0 20px 8px rgb(104 112 118 / 0.1))',
-                    },
-                  }}
-                  role="figure"
+                  className="hover:shadow-primary-200 !max-h-[127px] w-full hover:shadow-[0_0_0_1px]"
                   onClick={() => handleSelectEpisode(index)}
                 >
-                  <Card.Body
-                    css={{
-                      p: 0,
-                      flexFlow: 'row nowrap',
-                      justifyContent: 'flex-start',
-                    }}
-                  >
+                  <CardBody className="flex flex-row flex-nowrap justify-start p-0">
                     {type === 'tv' &&
                       (episode?.still_path ? (
-                        <Card.Image
-                          // @ts-ignore
-                          as={Image}
-                          src={TMDB.posterUrl(episode?.still_path, 'w185')}
-                          objectFit="cover"
-                          width="227px"
+                        <Image
+                          src={TMDB.posterUrl(episode?.still_path, 'w342')}
+                          width={227}
                           height="100%"
-                          showSkeleton
+                          isZoomed
+                          radius="xl"
                           loading="lazy"
+                          disableSkeleton={false}
                           alt={episode?.name || ''}
                           title={episode?.name || ''}
-                          css={{
-                            minWidth: '227px !important',
-                            minHeight: '127px !important',
+                          classNames={{
+                            wrapper: 'm-0 min-w-[227px] max-h-[125px] overflow-hidden',
                           }}
-                          loaderUrl="/api/image"
                           placeholder="empty"
-                          options={{
-                            contentType: MimeType.WEBP,
-                          }}
-                          containerCss={{ margin: 0, minWidth: '227px', borderRadius: '$lg' }}
+                          options={{ contentType: MimeType.WEBP }}
                           responsive={[
                             {
                               size: {
@@ -238,38 +196,29 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                       ) : (
                         <Avatar
                           icon={<PhotoIcon width={48} height={48} />}
-                          pointer
-                          css={{
-                            minWidth: '227px !important',
-                            minHeight: '127px !important',
-                            size: '$20',
-                            borderRadius: '0 !important',
+                          radius="xl"
+                          classNames={{
+                            base: 'z-0 aspect-[16/9] min-w-[227px] min-h-[125px] overflow-hidden',
                           }}
                         />
                       ))}
                     {type === 'anime' &&
                       (episode?.image ? (
-                        <Card.Image
-                          // @ts-ignore
-                          as={Image}
+                        <Image
                           src={episode.image}
-                          objectFit="cover"
-                          width="227px"
+                          width={227}
                           height="100%"
                           alt={episode?.title || ''}
                           title={episode?.title || ''}
-                          showSkeleton
                           loading="lazy"
-                          css={{
-                            minWidth: '227px !important',
-                            minHeight: '127px !important',
+                          radius="xl"
+                          isZoomed
+                          disableSkeleton={false}
+                          classNames={{
+                            wrapper: 'm-0 min-w-[227px] max-h-[125px] overflow-hidden',
                           }}
-                          loaderUrl="/api/image"
                           placeholder="empty"
-                          options={{
-                            contentType: MimeType.WEBP,
-                          }}
-                          containerCss={{ margin: 0, minWidth: '227px', borderRadius: '$lg' }}
+                          options={{ contentType: MimeType.WEBP }}
                           responsive={[
                             {
                               size: {
@@ -282,17 +231,14 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                       ) : (
                         <Avatar
                           icon={<PhotoIcon width={48} height={48} />}
-                          pointer
-                          css={{
-                            minWidth: '227px !important',
-                            minHeight: '127px !important',
-                            size: '$20',
-                            borderRadius: '0 !important',
+                          radius="xl"
+                          classNames={{
+                            base: 'z-0 aspect-[16/9] min-w-[227px] min-h-[125px] overflow-hidden',
                           }}
                         />
                       ))}
-                    <Flex direction="column" justify="start" css={{ p: '1rem' }}>
-                      <H5 h5 weight="bold" className="line-clamp-1">
+                    <div className="flex flex-col justify-start gap-y-1 p-4">
+                      <h5 className="line-clamp-1">
                         Episode{' '}
                         {type === 'tv'
                           ? isSm
@@ -304,53 +250,43 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                             ? `${episode?.number}`
                             : `${episode?.number}: ${episode?.title}`
                           : null}
-                      </H5>
+                      </h5>
                       {type === 'tv' && !isSm && (
                         <>
-                          <Spacer y={0.25} />
-                          <Row align="center">
+                          <div className="flex items-center gap-x-4">
                             <Rating rating={episode?.vote_average.toFixed(1)} ratingType="tv" />
-                            <Spacer x={0.5} />
-                            <H5 h5>
+                            <h5>
                               {episode.air_date} | {episode?.runtime} min
-                            </H5>
-                          </Row>
-                          <Spacer y={0.25} />
-                          <H6 h6 className="!line-clamp-1">
-                            {episode.overview}
-                          </H6>
+                            </h5>
+                          </div>
+                          <h6 className="!line-clamp-1">{episode.overview}</h6>
                         </>
                       )}
                       {type === 'anime' && !isSm && episode.description && (
-                        <>
-                          <Spacer y={0.25} />
-                          <H6 h6 className="!line-clamp-2">
-                            {episode.description}
-                          </H6>
-                        </>
+                        <h6 className="!line-clamp-2">{episode.description}</h6>
                       )}
-                    </Flex>
-                  </Card.Body>
+                    </div>
+                  </CardBody>
                 </Card>
-                <Spacer y={1} />
+                <Spacer y={5} />
               </div>
             ) : null,
           )}
-        </Flex>
+        </div>
       )}
-      <Spacer y={1} />
-      {maxPage > 1 && (
-        <Flex direction="row" justify="center">
+      <Spacer y={6} />
+      {maxPage > 1 ? (
+        <div className="flex flex-row justify-center">
           <Pagination
+            // showControls={!isSm}
             total={maxPage}
             initialPage={currentPage}
             // shadow
             onChange={(page) => gotoPage(page)}
-            css={{ marginTop: '2rem' }}
             {...(isSm && { size: 'xs' })}
           />
-        </Flex>
-      )}
+        </div>
+      ) : null}
     </>
   );
 };

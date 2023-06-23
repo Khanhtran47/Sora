@@ -1,13 +1,15 @@
-import { Badge } from '@nextui-org/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { NavLink, useLoaderData, useLocation } from '@remix-run/react';
-import { motion } from 'framer-motion';
+import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
+import { motion, type PanInfo } from 'framer-motion';
+import { isMobile } from 'react-device-detect';
+import { useHydrated } from 'remix-utils';
 
 import type { IMedia } from '~/types/media';
 import { getAnimeRecentEpisodes } from '~/services/consumet/anilist/anilist.server';
 import { authenticate } from '~/services/supabase';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import MediaList from '~/components/media/MediaList';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
 export const meta: MetaFunction = () => ({
   title: 'Watch Recent Anime Episodes | Sora',
@@ -43,21 +45,9 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export const handle = {
   breadcrumb: () => (
-    <NavLink to="/anime/recent-episodes" aria-label="Recent Episodes">
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          Recent Episodes
-        </Badge>
-      )}
-    </NavLink>
+    <BreadcrumbItem to="/anime/recent-episodes" key="anime-recent-episodes">
+      Recent Episodes
+    </BreadcrumbItem>
   ),
   miniTitle: () => ({
     title: 'Anime',
@@ -69,27 +59,42 @@ export const handle = {
 const RecentEpisodes = () => {
   const { items, provider } = useLoaderData<typeof loader>();
   const location = useLocation();
+  const navigate = useNavigate();
+  const isHydrated = useHydrated();
+
+  const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    if (info.offset?.x > 100) {
+      navigate('/anime/trending');
+    }
+    if (info.offset?.x < -100 && info.offset?.y > -50) {
+      return;
+    }
+  };
 
   return (
     <motion.div
       key={location.key}
-      initial={{ x: '-10%', opacity: 0 }}
-      animate={{ x: '0', opacity: 1 }}
-      exit={{ y: '-10%', opacity: 0 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
       className="flex w-full flex-col items-center justify-center px-3 sm:px-0"
+      drag={isMobile && isHydrated ? 'x' : false}
+      dragConstraints={isMobile && isHydrated ? { left: 0, right: 0 } : false}
+      dragElastic={isMobile && isHydrated ? 0.7 : false}
+      onDragEnd={handleDragEnd}
+      dragDirectionLock={isMobile && isHydrated}
+      draggable={isMobile && isHydrated}
     >
-      {items && items.results && items.results.length > 0 && (
-        <MediaList
-          currentPage={items?.currentPage || 1}
-          hasNextPage={items.hasNextPage || false}
-          items={items.results as IMedia[]}
-          itemsType="episode"
-          listName="Recent Episodes"
-          listType="grid"
-          provider={provider}
-        />
-      )}
+      <MediaList
+        currentPage={items?.currentPage || 1}
+        hasNextPage={items?.hasNextPage || false}
+        items={items?.results as IMedia[]}
+        itemsType="episode"
+        listName="Recent Episodes"
+        listType="grid"
+        provider={provider}
+      />
     </motion.div>
   );
 };

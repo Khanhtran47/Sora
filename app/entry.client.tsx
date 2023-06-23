@@ -2,11 +2,10 @@ import { RemixBrowser } from '@remix-run/react';
 import i18next from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import Backend from 'i18next-http-backend';
-import { hydrate } from 'react-dom';
+import { hydrateRoot } from 'react-dom/client';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { getInitialNamespaces } from 'remix-i18next';
 
-import { ClientCacheProvider } from './context/client.context';
 import i18n from './i18n/i18n.config';
 
 i18next
@@ -34,13 +33,11 @@ i18next
     // After i18next has been initialized, we can hydrate the app
     // We need to wait to ensure translations are loaded before the hydration
     // Here wrap RemixBrowser in I18nextProvider from react-i18next
-    hydrate(
-      <ClientCacheProvider>
-        <I18nextProvider i18n={i18next}>
-          <RemixBrowser />
-        </I18nextProvider>
-      </ClientCacheProvider>,
+    hydrateRoot(
       document,
+      <I18nextProvider i18n={i18next}>
+        <RemixBrowser />
+      </I18nextProvider>,
     ),
   );
 

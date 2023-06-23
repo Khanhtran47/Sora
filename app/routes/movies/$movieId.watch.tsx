@@ -1,7 +1,6 @@
 import type { ISource } from '@consumet/extensions';
-import { Badge, Container, Spacer } from '@nextui-org/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { NavLink, useCatch, useLoaderData, type RouteMatch } from '@remix-run/react';
+import { useCatch, useLoaderData, type RouteMatch } from '@remix-run/react';
 import Vibrant from 'node-vibrant';
 
 import {
@@ -24,9 +23,10 @@ import { TMDB as TmdbUtils } from '~/services/tmdb/utils.server';
 import TMDB from '~/utils/media';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
+import CatchBoundaryView from '~/components/elements/shared/CatchBoundaryView';
+import ErrorBoundaryView from '~/components/elements/shared/ErrorBoundaryView';
 import WatchDetail from '~/components/elements/shared/WatchDetail';
-import CatchBoundaryView from '~/components/CatchBoundaryView';
-import ErrorBoundaryView from '~/components/ErrorBoundaryView';
 
 export const meta: MetaFunction = ({ data, params }) => {
   if (!data) {
@@ -290,42 +290,18 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
     <>
-      <NavLink
-        to={`/movies/${match.params.movieId}`}
-        aria-label={match.data?.detail?.title || match.params.movieId}
+      <BreadcrumbItem
+        to={`/movies/${match.params.movieId}/`}
+        key={`movies-${match.params.movieId}-overview`}
       >
-        {({ isActive }) => (
-          <Badge
-            color="primary"
-            variant="flat"
-            css={{
-              opacity: isActive ? 1 : 0.7,
-              transition: 'opacity 0.25s ease 0s',
-              '&:hover': { opacity: 0.8 },
-            }}
-          >
-            {match.data?.detail?.title || match.params.movieId}
-          </Badge>
-        )}
-      </NavLink>
-      <Spacer x={0.25} />
-      <span> ❱ </span>
-      <Spacer x={0.25} />
-      <NavLink to={`/movies/${match.params.movieId}/watch`}>
-        {({ isActive }) => (
-          <Badge
-            color="primary"
-            variant="flat"
-            css={{
-              opacity: isActive ? 1 : 0.7,
-              transition: 'opacity 0.25s ease 0s',
-              '&:hover': { opacity: 0.8 },
-            }}
-          >
-            Watch
-          </Badge>
-        )}
-      </NavLink>
+        {match.data?.detail?.title || match.params.movieId}
+      </BreadcrumbItem>
+      <BreadcrumbItem
+        to={`/movies/${match.params.movieId}/watch`}
+        key={`movies-${match.params.movieId}-watch`}
+      >
+        Watch
+      </BreadcrumbItem>
     </>
   ),
   playerSettings: {
@@ -346,25 +322,7 @@ const MovieWatch = () => {
   const id = detail && detail.id;
   const releaseYear = new Date(detail?.release_date ?? '').getFullYear();
   return (
-    <Container
-      fluid
-      responsive={false}
-      alignItems="stretch"
-      justify="center"
-      css={{
-        marginTop: '0.75rem',
-        padding: '0 0.75rem',
-        '@xs': {
-          padding: '0 3vw',
-        },
-        '@sm': {
-          padding: '0 6vw',
-        },
-        '@md': {
-          padding: '0 12vw',
-        },
-      }}
-    >
+    <div className="mt-3 flex w-full flex-col items-center justify-center px-3 sm:px-0">
       <WatchDetail
         id={Number(id)}
         type="movie"
@@ -379,7 +337,7 @@ const MovieWatch = () => {
         recommendationsMovies={recommendations?.items}
         color={color}
       />
-    </Container>
+    </div>
   );
 };
 

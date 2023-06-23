@@ -2,7 +2,7 @@
 /* eslint-disable import/prefer-default-export */
 
 import Youtube from './utils.server';
-import type { IYoutubeVideo, Item } from './youtube.types';
+import type { Item, IYoutubeVideo } from './youtube.types';
 
 const fetcher = async <T = any>(url: URL): Promise<T> => {
   const res = await fetch(url);

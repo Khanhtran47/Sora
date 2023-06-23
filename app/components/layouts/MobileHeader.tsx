@@ -1,4 +1,4 @@
-import { Button } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
 import { NavLink, useLocation, useNavigate } from '@remix-run/react';
 import { motion, useTransform } from 'framer-motion';
 
@@ -6,7 +6,6 @@ import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
 import { useHistoryStack } from '~/store/layout/useHistoryStack';
 import { useLayout } from '~/store/layout/useLayout';
 import { useHeaderOptions } from '~/hooks/useHeader';
-import { H2 } from '~/components/styles/Text.styles';
 import Arrow from '~/assets/icons/ArrowIcon';
 import Search from '~/assets/icons/SearchIcon';
 
@@ -53,35 +52,30 @@ const MobileHeader = () => {
         initial={{ y: 0 }}
         animate={{ y: scrollDirection === 'down' ? -65 : 0 }}
         transition={{ duration: 0.5 }}
-        className="fixed top-0 z-[1000] flex h-[64px] w-full flex-row items-center justify-between bg-background-contrast-alpha px-6 shadow-lg backdrop-blur-md sm:hidden"
+        className="bg-background/60 fixed top-0 z-[1000] flex h-[64px] w-full flex-row items-center justify-between px-6 shadow-lg backdrop-blur-2xl backdrop-contrast-125 backdrop-saturate-200 sm:hidden"
       >
-        <NavLink to="/" arial-label="home-page">
-          <H2
-            h2
-            css={{
-              textGradient: '45deg, $primary, $secondary 50%',
-              fontFamily: 'monospace',
-              letterSpacing: '0.3rem',
-              textDecoration: 'none',
-            }}
-          >
-            SORA
-          </H2>
+        <NavLink
+          to="/"
+          arial-label="home-page"
+          className="from-secondary to-primary bg-gradient-to-tr to-50% bg-clip-text text-3xl font-bold tracking-normal text-transparent md:text-4xl"
+        >
+          SORA
         </NavLink>
         <Button
-          auto
-          light
-          color="primary"
-          icon={<Search filled />}
+          variant="light"
+          color="default"
+          isIconOnly
           onPress={() => navigate('/search/movie')}
-        />
+        >
+          <Search filled />
+        </Button>
       </motion.div>
     );
   }
   return (
     <div className="fixed top-0 z-[1000] flex h-[64px] w-[100vw] flex-row items-center justify-start gap-x-3 px-3 py-2 shadow-none sm:hidden">
       <motion.div
-        className="absolute top-0 left-0 z-[-1] w-full backdrop-blur-md"
+        className="absolute left-0 top-0 z-[-1] w-full backdrop-blur-2xl backdrop-contrast-125 backdrop-saturate-200"
         style={{
           opacity,
           backgroundColor: headerBackgroundColor,
@@ -89,17 +83,12 @@ const MobileHeader = () => {
         }}
       >
         {customHeaderBackgroundColor ? (
-          <div className="pointer-events-none h-full w-full bg-background-light" />
+          <div className="bg-background/[0.2] pointer-events-none h-full w-full" />
         ) : null}
       </motion.div>
-      <Button
-        auto
-        light
-        rounded
-        css={{ backgroundColor: '$backgroundAlpha', flexBasis: 40, flexShrink: 0 }}
-        icon={<Arrow direction="left" />}
-        onPress={() => handleBackButton()}
-      />
+      <Button variant="faded" radius="full" isIconOnly onPress={() => handleBackButton()}>
+        <Arrow direction="left" />
+      </Button>
       <div className="flex flex-row items-center justify-between">
         {currentMiniTitle ? (
           <motion.span
@@ -108,9 +97,9 @@ const MobileHeader = () => {
             className="flex flex-col items-start justify-center"
           >
             <div className="flex flex-col items-start justify-center">
-              <span className="text-xl font-semibold line-clamp-1">{currentMiniTitle.title}</span>
+              <span className="line-clamp-1 text-xl font-semibold">{currentMiniTitle.title}</span>
               {currentMiniTitle.subtitle ? (
-                <span className="text-xs font-medium opacity-75 line-clamp-1">
+                <span className="line-clamp-1 text-xs font-medium opacity-75">
                   {currentMiniTitle.subtitle}
                 </span>
               ) : null}

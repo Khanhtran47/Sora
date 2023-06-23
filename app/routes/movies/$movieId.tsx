@@ -1,19 +1,11 @@
-import { useEffect, useRef, useState } from 'react';
-import { Badge } from '@nextui-org/react';
+import { useEffect, useRef } from 'react';
 import { useIntersectionObserver } from '@react-hookz/web';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import {
-  NavLink,
-  Outlet,
-  useCatch,
-  useFetcher,
-  useLoaderData,
-  useLocation,
-  type RouteMatch,
-} from '@remix-run/react';
+import { Outlet, useCatch, useLoaderData, useLocation, type RouteMatch } from '@remix-run/react';
+import i18next from '~/i18n/i18next.server';
 import { motion, useTransform } from 'framer-motion';
 import Vibrant from 'node-vibrant';
-import i18next from '~/i18n/i18next.server';
+import { useHydrated } from 'remix-utils';
 
 import { authenticate } from '~/services/supabase';
 import { getImdbRating, getMovieDetail } from '~/services/tmdb/tmdb.server';
@@ -25,12 +17,12 @@ import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { useCustomHeaderChangePosition } from '~/hooks/useHeader';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { movieTvDetailsPages } from '~/constants/tabLinks';
-import { BackgroundTabLink } from '~/components/media/Media.styles';
 import { MediaBackgroundImage, MediaDetail } from '~/components/media/MediaDetail';
-import WatchTrailerModal, { type Trailer } from '~/components/elements/dialog/WatchTrailerModal';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
+import CatchBoundaryView from '~/components/elements/shared/CatchBoundaryView';
+import ErrorBoundaryView from '~/components/elements/shared/ErrorBoundaryView';
 import TabLink from '~/components/elements/tab/TabLink';
-import CatchBoundaryView from '~/components/CatchBoundaryView';
-import ErrorBoundaryView from '~/components/ErrorBoundaryView';
+import { backgroundStyles } from '~/components/styles/primitives';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const [, locale] = await Promise.all([
@@ -159,24 +151,9 @@ export const meta: MetaFunction = ({ data, params }) => {
 
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
-    <NavLink
-      to={`/movies/${match.params.movieId}`}
-      aria-label={match.data?.detail?.title || match.params.movieId}
-    >
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          {match.data?.detail?.title || match.params.movieId}
-        </Badge>
-      )}
-    </NavLink>
+    <BreadcrumbItem to={`/movies/${match.params.movieId}`} key={`movies-${match.params.movieId}`}>
+      {match.data?.detail?.title || match.params.movieId}
+    </BreadcrumbItem>
   ),
   miniTitle: (match: RouteMatch) => ({
     title: match.data?.detail?.title,
@@ -192,10 +169,8 @@ export const handle = {
 
 const MovieDetail = () => {
   const { detail, imdbRating } = useLoaderData<typeof loader>();
-  const fetcher = useFetcher();
   const { state } = useLocation();
-  const [visible, setVisible] = useState(false);
-  const [trailer, setTrailer] = useState<Trailer>({});
+  const isHydrated = useHydrated();
   const { backgroundColor } = useColorDarkenLighten(detail?.color);
   const { sidebarBoxedMode } = useSoraSettings();
   const { viewportRef, scrollY } = useLayout((scrollState) => scrollState);
@@ -218,13 +193,6 @@ const MovieDetail = () => {
     rootMargin: sidebarBoxedMode ? '-180px 0px 0px 0px' : '-165px 0px 0px 0px',
     threshold: [1],
   });
-  useEffect(() => {
-    if (fetcher.data && fetcher.data.videos) {
-      const { results } = fetcher.data.videos;
-      const officialTrailer = results.find((result: Trailer) => result.type === 'Trailer');
-      setTrailer(officialTrailer);
-    }
-  }, [fetcher.data]);
 
   useCustomHeaderChangePosition(tablinkIntersection);
 
@@ -239,14 +207,6 @@ const MovieDetail = () => {
   const backdropPath = detail?.backdrop_path
     ? TMDB?.backdropUrl(detail?.backdrop_path || '', 'w1280')
     : undefined;
-  const Handler = (id: number) => {
-    setVisible(true);
-    fetcher.load(`/movies/${id}/videos`);
-  };
-  const closeHandler = () => {
-    setVisible(false);
-    setTrailer({});
-  };
 
   return (
     <>
@@ -255,32 +215,29 @@ const MovieDetail = () => {
         <MediaDetail
           type="movie"
           item={detail}
-          handler={Handler}
           imdbRating={imdbRating}
           color={detail.color}
+          trailerTime={currentTime}
         />
         <div className="flex w-full flex-col items-center justify-center">
           <motion.div
-            className="sticky top-[64px] z-[1000] flex w-full justify-center transition-[padding] duration-100 ease-in-out"
+            className="sticky top-[63px] z-[1000] flex w-full justify-center transition-[padding] duration-100 ease-in-out"
             style={{
-              backgroundColor,
+              backgroundColor: isHydrated ? backgroundColor : 'transparent',
               paddingTop,
               paddingBottom,
             }}
             ref={tabLinkRef}
           >
-            <BackgroundTabLink css={{ backgroundColor, zIndex: 1 }} />
+            <div
+              className={backgroundStyles({ tablink: true })}
+              style={{ backgroundColor: isHydrated ? backgroundColor : 'transparent' }}
+            />
             <TabLink pages={movieTvDetailsPages} linkTo={`/movies/${detail?.id}`} />
           </motion.div>
           <Outlet />
         </div>
       </div>
-      <WatchTrailerModal
-        trailer={trailer}
-        visible={visible}
-        closeHandler={closeHandler}
-        currentTime={Number(currentTime)}
-      />
     </>
   );
 };

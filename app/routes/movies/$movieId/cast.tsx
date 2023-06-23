@@ -1,8 +1,8 @@
 import { useRef } from 'react';
-import { Badge, Pagination } from '@nextui-org/react';
+import { Pagination } from '@nextui-org/pagination';
 import { useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { NavLink, useLoaderData, type RouteMatch } from '@remix-run/react';
+import { useLoaderData, type RouteMatch } from '@remix-run/react';
 
 import { authenticate } from '~/services/supabase';
 import { getCredits } from '~/services/tmdb/tmdb.server';
@@ -11,6 +11,7 @@ import TMDB from '~/utils/media';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
 import MediaList from '~/components/media/MediaList';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   await authenticate(request, undefined, true);
@@ -35,24 +36,14 @@ export const meta: MetaFunction = ({ params }) => ({
 
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
-    <NavLink to={`/movies/${match.params.movieId}/cast`} aria-label="Cast">
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          Cast
-        </Badge>
-      )}
-    </NavLink>
+    <BreadcrumbItem
+      to={`/movies/${match.params.movieId}/cast`}
+      key={`movies-${match.params.movieId}-cast`}
+    >
+      Cast
+    </BreadcrumbItem>
   ),
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  miniTitle: (match: RouteMatch, parentMatch: RouteMatch) => ({
+  miniTitle: (_match: RouteMatch, parentMatch: RouteMatch) => ({
     title: parentMatch.data?.detail?.title,
     subtitle: 'Cast',
     showImage: parentMatch.data?.detail?.poster_path !== undefined,
@@ -69,12 +60,11 @@ const MovieCastPage = () => {
   return (
     <div className="mt-3 flex w-full max-w-[1920px] flex-col gap-y-4 px-3 sm:px-3.5 xl:px-4 2xl:px-5">
       <div ref={ref} />
-      {currentData && currentData.length > 0 ? (
-        <MediaList items={currentData} itemsType="people" listType="grid" />
-      ) : null}
+      <MediaList items={currentData} itemsType="people" listType="grid" />
       {maxPage > 1 ? (
-        <div className="flex flex-row justify-center">
+        <div className="mt-7 flex flex-row justify-center">
           <Pagination
+            // showControls={!isSm}
             total={maxPage}
             initialPage={currentPage}
             // shadow
@@ -86,7 +76,6 @@ const MovieCastPage = () => {
                 inline: 'nearest',
               });
             }}
-            css={{ marginTop: '2rem' }}
             {...(isSm && { size: 'sm' })}
           />
         </div>

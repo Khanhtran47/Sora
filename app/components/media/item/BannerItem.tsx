@@ -1,3 +1,4 @@
+import { Skeleton } from '@nextui-org/skeleton';
 import { useMediaQuery } from '@react-hookz/web';
 
 import type { Title } from '~/types/media';
@@ -39,7 +40,7 @@ const BannerItem = (props: IBannerItemProps) => {
     voteAverage,
   } = props;
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
-  if (isSm) {
+  if (isSm === true) {
     return (
       <BannerItemMobile
         active={active}
@@ -55,23 +56,26 @@ const BannerItem = (props: IBannerItemProps) => {
       />
     );
   }
-  return (
-    <BannerItemDesktop
-      active={active}
-      backdropPath={backdropPath}
-      genreIds={genreIds}
-      genresAnime={genresAnime}
-      genresMovie={genresMovie}
-      genresTv={genresTv}
-      id={id}
-      mediaType={mediaType}
-      overview={overview}
-      posterPath={posterPath}
-      title={title}
-      trailer={trailer}
-      voteAverage={voteAverage}
-    />
-  );
+  if (isSm === false) {
+    return (
+      <BannerItemDesktop
+        active={active}
+        backdropPath={backdropPath}
+        genreIds={genreIds}
+        genresAnime={genresAnime}
+        genresMovie={genresMovie}
+        genresTv={genresTv}
+        id={id}
+        mediaType={mediaType}
+        overview={overview}
+        posterPath={posterPath}
+        title={title}
+        trailer={trailer}
+        voteAverage={voteAverage}
+      />
+    );
+  }
+  return <Skeleton className="aspect-[4/5] w-full sm:aspect-[16/8]" />;
 };
 
 export default BannerItem;

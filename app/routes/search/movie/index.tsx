@@ -1,14 +1,17 @@
-import { Badge } from '@nextui-org/react';
 import { json, type LoaderArgs } from '@remix-run/node';
-import { NavLink, useLoaderData, useNavigate } from '@remix-run/react';
-import { useTranslation } from 'react-i18next';
+import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 import i18next from '~/i18n/i18next.server';
+import { motion, type PanInfo } from 'framer-motion';
+import { isMobile } from 'react-device-detect';
+import { useTranslation } from 'react-i18next';
+import { useHydrated } from 'remix-utils';
 
 import { authenticate } from '~/services/supabase';
 import { getTrending } from '~/services/tmdb/tmdb.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import SearchForm from '~/components/elements/SearchForm';
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -33,21 +36,9 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export const handle = {
   breadcrumb: () => (
-    <NavLink to="/search/movie" aria-label="Search Movies">
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          Search Movies
-        </Badge>
-      )}
-    </NavLink>
+    <BreadcrumbItem to="/search/movie" key="search-movies">
+      Search Movies
+    </BreadcrumbItem>
   ),
   miniTitle: () => ({
     title: 'Search',
@@ -61,34 +52,56 @@ const SearchRoute = () => {
   const { todayTrending } = useLoaderData<typeof loader>() || {};
   const rootData = useTypedRouteLoaderData('root');
   const navigate = useNavigate();
+  const location = useLocation();
+  const isHydrated = useHydrated();
   const { t } = useTranslation();
+
+  const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    if (info.offset?.x > 100) {
+      return;
+    }
+    if (info.offset?.x < -100 && info.offset?.y > -50) {
+      navigate('/search/tv');
+    }
+  };
 
   const onSubmit = (value: string) => {
     navigate(`/search/movie/${value}`);
   };
 
   return (
-    <div className="flex w-full flex-col items-center justify-center px-3 sm:px-0">
+    <motion.div
+      key={location.key}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+      className="flex w-full flex-col items-center justify-center px-3 sm:px-0"
+      drag={isMobile && isHydrated ? 'x' : false}
+      dragConstraints={isMobile && isHydrated ? { left: 0, right: 0 } : false}
+      dragElastic={isMobile && isHydrated ? 0.7 : false}
+      onDragEnd={handleDragEnd}
+      dragDirectionLock={isMobile && isHydrated}
+      draggable={isMobile && isHydrated}
+    >
       <SearchForm
         onSubmit={onSubmit}
         textHelper={t('search.helper.movie')}
         textOnButton={t('search.action')}
         textPlaceHolder={t('search.placeHolder.movie')}
       />
-      {todayTrending && todayTrending.items && todayTrending?.items.length > 0 && (
-        <MediaList
-          currentPage={todayTrending?.page}
-          genresMovie={rootData?.genresMovie}
-          genresTv={rootData?.genresTv}
-          items={todayTrending?.items}
-          itemsType="movie-tv"
-          listName={t('todayTrending')}
-          listType="grid"
-          showListTypeChangeButton
-          totalPages={todayTrending?.totalPages}
-        />
-      )}
-    </div>
+      <MediaList
+        currentPage={todayTrending?.page}
+        genresMovie={rootData?.genresMovie}
+        genresTv={rootData?.genresTv}
+        items={todayTrending?.items}
+        itemsType="movie-tv"
+        listName={t('todayTrending')}
+        listType="grid"
+        showListTypeChangeButton
+        totalPages={todayTrending?.totalPages}
+      />
+    </motion.div>
   );
 };
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Container, Loading } from '@nextui-org/react';
+import { Spinner } from '@nextui-org/spinner';
 import { useMeasure } from '@react-hookz/web';
 import { json, type LoaderArgs } from '@remix-run/node';
 import { useFetcher, useLoaderData, useLocation, useNavigate } from '@remix-run/react';
@@ -41,6 +41,15 @@ export const loader = async ({ request }: LoaderArgs) => {
       headers: { 'Cache-Control': CACHE_CONTROL.anime },
     },
   );
+};
+
+export const handle = {
+  i18n: 'anime',
+  disableLayoutPadding: true,
+  miniTitle: () => ({
+    title: 'Anime',
+    showImage: false,
+  }),
 };
 
 const AnimePage = () => {
@@ -135,23 +144,7 @@ const AnimePage = () => {
       {trending && trending.results && trending.results.length > 0 && (
         <MediaList listType="slider-banner" items={trending?.results as IMedia[]} />
       )}
-      <Container
-        fluid
-        responsive={false}
-        display="flex"
-        justify="flex-start"
-        direction="column"
-        alignItems="center"
-        css={{
-          padding: 0,
-          marginTop: '48px',
-          minHeight: '564px',
-          '@xsMax': {
-            paddingLeft: '$sm',
-            paddingRight: '$sm',
-          },
-        }}
-      >
+      <div className="mt-9 flex w-full flex-col items-center justify-start px-3 sm:px-5">
         {popular && popular.results && popular.results.length > 0 && (
           <MediaList
             items={popular.results as IMedia[]}
@@ -195,21 +188,20 @@ const AnimePage = () => {
           })}
         <AnimatePresence>
           {fetcher.type === 'normalLoad' ? (
-            <Loading
+            <Spinner
               // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
               as={motion.div}
-              type="gradient"
               size="lg"
-              css={{ my: '$17' }}
+              className="mt-10"
               initial={{ y: -40, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -40, opacity: 0 }}
+              // @ts-ignore
               transition={{ duration: 0.3 }}
             />
           ) : null}
         </AnimatePresence>
-      </Container>
+      </div>
     </motion.div>
   );
 };

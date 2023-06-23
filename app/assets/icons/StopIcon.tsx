@@ -1,5 +1,3 @@
-import Svg from '~/components/styles/Svg.styles';
-
 const Bold = ({ color }: { color: string }) => (
   <path
     d="M5 3C3.89543 3 3 3.89543 3 5V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V5C21 3.89543 20.1046 3 19 3H5Z"
@@ -59,35 +57,35 @@ const Stop = ({
   switch (filled) {
     case false:
       return (
-        <Svg
+        <svg
           className=""
           width={width || size}
           height={height || size}
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
-          css={{
+          style={{
             display: 'inline',
           }}
           {...props}
         >
           <Light color={fill} />
-        </Svg>
+        </svg>
       );
     default:
       return (
-        <Svg
+        <svg
           className=""
           width={width || size}
           height={height || size}
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
-          css={{
+          style={{
             display: 'inline',
           }}
           {...props}
         >
           <Bold color={fill} />;
-        </Svg>
+        </svg>
       );
   }
 };

@@ -1,20 +1,29 @@
-import { Suspense, useState } from 'react';
-import { Button, Loading, Tooltip } from '@nextui-org/react';
+import { useMemo, useState } from 'react';
+import { Button } from '@nextui-org/button';
+import { Spacer } from '@nextui-org/spacer';
+import { Tooltip } from '@nextui-org/tooltip';
 import { useMediaQuery } from '@react-hookz/web';
-import { AnimatePresence, motion } from 'framer-motion';
+import { useSearchParams } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
-import { ClientOnly } from 'remix-utils';
 import { tv } from 'tailwind-variants';
 
 import type { IMedia } from '~/types/media';
 import type { ILanguage } from '~/services/tmdb/tmdb.types';
+import { animeSort, sortMovieTvItems } from '~/constants/filterItems';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '~/components/elements/Select';
+import Filter from '~/components/elements/shared/Filter';
 import ListViewChangeButton from '~/components/elements/shared/ListViewChangeButton';
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '~/components/elements/Sheet';
 import ChevronLeftIcon from '~/assets/icons/ChevronLeftIcon';
 import ChevronRightIcon from '~/assets/icons/ChevronRightIcon';
 import FilterIcon from '~/assets/icons/FilterIcon';
 
-import Filter from '../elements/filter/Filter';
-import { H2 } from '../styles/Text.styles';
 import { MediaListBanner, MediaListCard, MediaListGrid } from './list';
 
 interface IMediaListProps {
@@ -89,6 +98,15 @@ interface IMediaListProps {
    */
   isCoverCard?: boolean;
   /**
+   * Value is true if this is the list of people's credits
+   * @type {boolean}
+   * @memberof IMediaListProps
+   * @example
+   * true
+   * false
+   */
+  isCreditsCard?: boolean;
+  /**
    * Value is items to show
    * @type {Array<IMedia>}
    * @memberof IMediaListProps
@@ -123,7 +141,7 @@ interface IMediaListProps {
    * 'Popular Movies'
    * t('Popular Movies')
    */
-  listName?: string | (() => never);
+  listName?: string;
   /**
    * Value is type of list to show
    * @type {'slider-card' | 'slider-banner' | 'grid'}
@@ -214,10 +232,19 @@ interface IMediaListProps {
    * false
    */
   scrollToTopListAfterChangePage?: boolean;
+  /**
+   * Value is true if the sort by select is active
+   * @type {boolean}
+   * @memberof IMediaListProps
+   * @example
+   * true
+   * false
+   */
+  showSortBySelect?: boolean;
 }
 
 const mediaListStyles = tv({
-  base: 'flex w-full max-w-screen-4xl flex-col justify-center',
+  base: 'max-w-screen-4xl flex w-full flex-col justify-center',
   variants: {
     gap: {
       none: 'gap-0',
@@ -244,10 +271,12 @@ const MediaList = (props: IMediaListProps) => {
     genresTv,
     hasNextPage,
     isCoverCard,
+    isCreditsCard,
     items,
     itemsType,
     languages,
     listName,
+    listType,
     navigationButtons,
     onClickViewMore,
     provider,
@@ -255,8 +284,8 @@ const MediaList = (props: IMediaListProps) => {
     showFilterButton,
     showListTypeChangeButton,
     showMoreList,
+    showSortBySelect,
     totalPages,
-    listType,
   } = props;
   let list;
   const { t } = useTranslation();
@@ -265,6 +294,28 @@ const MediaList = (props: IMediaListProps) => {
   const [slideProgress, setSlideProgress] = useState<number>(0);
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentSearchParams = useMemo<{ [key: string]: string }>(() => {
+    const params: { [key: string]: string } = {};
+    searchParams.forEach((value, key) => {
+      params[key] = value;
+    });
+    return params;
+  }, [searchParams]);
+  const [sortBySelected, setSortBySelected] = useState(() =>
+    itemsType === 'anime'
+      ? currentSearchParams?.sort
+      : itemsType === 'movie' || itemsType === 'tv'
+      ? currentSearchParams?.sort_by
+      : undefined,
+  );
+
+  const sortItems =
+    itemsType === 'movie' || itemsType === 'tv'
+      ? sortMovieTvItems
+      : itemsType === 'anime'
+      ? animeSort
+      : undefined;
 
   switch (listType) {
     case 'grid':
@@ -282,6 +333,7 @@ const MediaList = (props: IMediaListProps) => {
           currentPage={currentPage}
           listType={listType}
           scrollToTopListAfterChangePage={scrollToTopListAfterChangePage}
+          isCreditsCard={isCreditsCard}
         />
       );
       break;
@@ -306,6 +358,16 @@ const MediaList = (props: IMediaListProps) => {
     default:
   }
 
+  const handleSelectChange = (value: string) => {
+    setSortBySelected(value);
+    if (itemsType === 'movie' || itemsType === 'tv') {
+      setSearchParams({ ...currentSearchParams, sort_by: value, page: '1' });
+    }
+    if (itemsType === 'anime') {
+      setSearchParams({ ...currentSearchParams, sort: value, page: '1' });
+    }
+  };
+
   return (
     <div
       className={mediaListStyles({
@@ -315,31 +377,59 @@ const MediaList = (props: IMediaListProps) => {
     >
       {listName || showFilterButton || showListTypeChangeButton ? (
         <div className="mt-5 flex w-full flex-row flex-wrap items-center justify-between gap-3">
-          {listName ? (
-            <H2
-              h2
-              css={{
-                '@xsMax': {
-                  fontSize: '1.75rem !important',
-                },
-              }}
-            >
-              {listName}
-            </H2>
-          ) : null}
+          {listName ? <h2>{listName}</h2> : null}
           {showFilterButton || showListTypeChangeButton ? (
             <div className="flex flex-row items-center justify-end gap-3">
               {showFilterButton ? (
-                <Tooltip content={t('show-hide-filter')}>
-                  <Button
-                    type="button"
-                    auto
-                    color="primary"
-                    bordered={!showFilter}
-                    icon={<FilterIcon />}
-                    onPress={() => setShowFilter(!showFilter)}
-                  />
-                </Tooltip>
+                <Sheet open={showFilter} onOpenChange={setShowFilter}>
+                  <Tooltip content={t('show-hide-filter')} showArrow closeDelay={0}>
+                    <SheetTrigger asChild>
+                      <Button
+                        type="button"
+                        size="md"
+                        radius="xl"
+                        isIconOnly
+                        className="h-10 min-w-[2.5rem]"
+                      >
+                        <FilterIcon />
+                      </Button>
+                    </SheetTrigger>
+                  </Tooltip>
+                  <SheetContent
+                    swipeDownToClose={isSm}
+                    side={isSm ? 'bottom' : 'right'}
+                    size={isSm ? 'xl' : 'sm'}
+                    open={showFilter}
+                    hideCloseButton
+                    onOpenChange={() => setShowFilter(!showFilter)}
+                    className="!px-0 md:!px-0"
+                  >
+                    <SheetTitle className="px-0 md:px-6">Filters</SheetTitle>
+                    <Spacer y={2.5} />
+                    <Filter
+                      genres={itemsType === 'movie' ? genresMovie : genresTv}
+                      mediaType={itemsType as 'movie' | 'tv' | 'anime'}
+                      languages={languages}
+                    />
+                  </SheetContent>
+                </Sheet>
+              ) : null}
+              {showSortBySelect && sortItems && sortItems?.length > 0 ? (
+                <Select
+                  value={sortBySelected}
+                  onValueChange={(value: string) => handleSelectChange(value)}
+                >
+                  <SelectTrigger aria-label="Select Sort">
+                    <SelectValue placeholder="Sort by" />
+                  </SelectTrigger>
+                  <SelectContent position="popper">
+                    {sortItems.map((sort) => (
+                      <SelectItem key={sort} value={sort}>
+                        {t(sort)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               ) : null}
               {showListTypeChangeButton ? <ListViewChangeButton /> : null}
             </div>
@@ -350,14 +440,10 @@ const MediaList = (props: IMediaListProps) => {
         <div className="mb-2 flex w-full flex-row flex-wrap items-center justify-between">
           <Button
             type="button"
-            auto
             size={isSm ? 'sm' : 'md'}
-            rounded
-            ghost
+            radius="full"
+            variant="solid"
             onPress={onClickViewMore}
-            css={{
-              maxWidth: '$8',
-            }}
           >
             {t('viewMore')}
           </Button>
@@ -365,69 +451,32 @@ const MediaList = (props: IMediaListProps) => {
             <div className="flex flex-row gap-x-2">
               <Button
                 type="button"
-                auto
-                color="primary"
-                rounded
-                ghost
+                radius="full"
+                variant="solid"
                 ref={(node) => setPrevEl(node)}
-                css={{
-                  width: '32px',
-                  height: '32px',
-                  padding: 0,
-                  cursor: 'pointer',
-                  '&:hover': { opacity: '0.8' },
-                  '@xs': { width: '44px', height: '44px' },
-                }}
+                className="min-w-8 sm:min-w-10 h-8 w-8 cursor-pointer p-0 hover:opacity-80 sm:h-10"
                 aria-label="Previous"
-                disabled={slideProgress === 0}
-                icon={<ChevronLeftIcon height={isSm ? 18 : 24} width={isSm ? 18 : 24} />}
-              />
+                isDisabled={slideProgress === 0}
+                isIconOnly
+              >
+                <ChevronLeftIcon height={isSm ? 18 : 24} width={isSm ? 18 : 24} />
+              </Button>
               <Button
                 type="button"
-                auto
-                color="primary"
-                rounded
-                ghost
+                radius="full"
+                variant="solid"
                 ref={(node) => setNextEl(node)}
-                css={{
-                  width: '32px',
-                  height: '32px',
-                  padding: 0,
-                  cursor: 'pointer',
-                  '&:hover': { opacity: '0.8' },
-                  '@xs': { width: '44px', height: '44px' },
-                }}
+                className="min-w-8 sm:min-w-10 h-8 w-8 cursor-pointer p-0 hover:opacity-80 sm:h-10"
                 aria-label="Next"
-                disabled={slideProgress === 1}
-                icon={<ChevronRightIcon height={isSm ? 18 : 24} width={isSm ? 18 : 24} />}
-              />
+                isDisabled={slideProgress === 1}
+                isIconOnly
+              >
+                <ChevronRightIcon height={isSm ? 18 : 24} width={isSm ? 18 : 24} />
+              </Button>
             </div>
           ) : null}
         </div>
       ) : null}
-      <AnimatePresence>
-        {showFilter && itemsType ? (
-          <ClientOnly fallback={<Loading type="default" />}>
-            {() => (
-              <Suspense fallback={<Loading type="default" />}>
-                <motion.div
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.2 }}
-                  style={{ width: '100%' }}
-                >
-                  <Filter
-                    genres={itemsType === 'movie' ? genresMovie : genresTv}
-                    mediaType={itemsType as 'movie' | 'tv' | 'anime'}
-                    languages={languages}
-                  />
-                </motion.div>
-              </Suspense>
-            )}
-          </ClientOnly>
-        ) : null}
-      </AnimatePresence>
       {list}
     </div>
   );

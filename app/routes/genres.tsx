@@ -1,8 +1,14 @@
 import { Outlet } from '@remix-run/react';
 
 import { genrePages } from '~/constants/tabLinks';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
 export const handle = {
+  breadcrumb: () => (
+    <BreadcrumbItem to="/genres" key="genres">
+      Genres
+    </BreadcrumbItem>
+  ),
   showTabLink: true,
   tabLinkPages: genrePages,
   tabLinkTo: () => '/genres',
@@ -12,10 +18,6 @@ export const handle = {
   }),
 };
 
-const GenresPage = () => (
-  <div className="w-full">
-    <Outlet />
-  </div>
-);
+const GenresPage = () => <Outlet />;
 
 export default GenresPage;

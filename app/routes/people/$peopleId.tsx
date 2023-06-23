@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/no-throw-literal */
-
-import { Badge, Col, Container, Row, Spacer } from '@nextui-org/react';
+import { Spacer } from '@nextui-org/spacer';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { NavLink, Outlet, useCatch, useLoaderData, type RouteMatch } from '@remix-run/react';
+import { Outlet, useCatch, useLoaderData, type RouteMatch } from '@remix-run/react';
 import i18next from '~/i18n/i18next.server';
 
 import { authenticate } from '~/services/supabase';
@@ -11,8 +9,9 @@ import TMDB from '~/utils/media';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { peopleDetailPages } from '~/constants/tabLinks';
 import PeopleDetail from '~/components/media/PeopleDetail';
-import CatchBoundaryView from '~/components/CatchBoundaryView';
-import ErrorBoundaryView from '~/components/ErrorBoundaryView';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
+import CatchBoundaryView from '~/components/elements/shared/CatchBoundaryView';
+import ErrorBoundaryView from '~/components/elements/shared/ErrorBoundaryView';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const [, locale] = await Promise.all([
@@ -69,42 +68,15 @@ export const meta: MetaFunction = ({ data, params }) => {
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
     <>
-      <NavLink to="/people" aria-label="Popular People">
-        {({ isActive }) => (
-          <Badge
-            color="primary"
-            variant="flat"
-            css={{
-              opacity: isActive ? 1 : 0.7,
-              transition: 'opacity 0.25s ease 0s',
-              '&:hover': { opacity: 0.8 },
-            }}
-          >
-            Popular People
-          </Badge>
-        )}
-      </NavLink>
-      <Spacer x={0.25} />
-      <span> ❱ </span>
-      <Spacer x={0.25} />
-      <NavLink
+      <BreadcrumbItem to="/people" key="people">
+        Popular People
+      </BreadcrumbItem>
+      <BreadcrumbItem
         to={`/people/${match.params.peopleId}`}
-        aria-label={match.data?.detail?.name || match.params.peopleId}
+        key={`people-${match.params.peopleId}`}
       >
-        {({ isActive }) => (
-          <Badge
-            color="primary"
-            variant="flat"
-            css={{
-              opacity: isActive ? 1 : 0.7,
-              transition: 'opacity 0.25s ease 0s',
-              '&:hover': { opacity: 0.8 },
-            }}
-          >
-            {match.data?.detail?.name || match.params.peopleId}
-          </Badge>
-        )}
-      </NavLink>
+        {match.data?.detail?.name || match.params.peopleId}
+      </BreadcrumbItem>
     </>
   ),
   showTabLink: true,
@@ -122,53 +94,15 @@ export const handle = {
 const PeopleDetailPage = () => {
   const { detail, externalIds } = useLoaderData<typeof loader>();
   return (
-    <Container
-      as="div"
-      fluid
-      responsive={false}
-      css={{
-        margin: 0,
-        padding: 0,
-      }}
-    >
-      <Row
-        fluid
-        align="stretch"
-        justify="center"
-        wrap="wrap"
-        css={{
-          marginTop: '0.75rem',
-          padding: '0 0.75rem',
-          '@xs': {
-            padding: '0 3vw',
-          },
-          '@sm': {
-            padding: '0 6vw',
-          },
-          '@md': {
-            padding: '0 12vw',
-          },
-        }}
-      >
-        <Col
-          css={{
-            width: '100%',
-            '@xs': { width: '33.3333%' },
-          }}
-        >
-          <PeopleDetail detail={detail} externalIds={externalIds} />
-          <Spacer y={1} />
-        </Col>
-        <Col
-          css={{
-            width: '100%',
-            '@xs': { width: '66.6667%' },
-          }}
-        >
-          <Outlet />
-        </Col>
-      </Row>
-    </Container>
+    <div className="mt-9 flex w-full flex-row flex-wrap items-stretch justify-center px-3 sm:px-5">
+      <div className="w-full sm:w-1/3">
+        <PeopleDetail detail={detail} externalIds={externalIds} />
+        <Spacer y={5} />
+      </div>
+      <div className="w-full sm:w-2/3">
+        <Outlet />
+      </div>
+    </div>
   );
 };
 

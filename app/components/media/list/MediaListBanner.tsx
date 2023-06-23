@@ -1,16 +1,11 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/indent */
-/* eslint-disable arrow-body-style */
 import { forwardRef, useEffect, useRef, useState } from 'react';
-import { Button, Card, Grid, styled } from '@nextui-org/react';
+import { Button } from '@nextui-org/button';
 import { useMediaQuery } from '@react-hookz/web';
 import { Autoplay, Pagination, Thumbs, type Swiper } from 'swiper';
 import { Swiper as SwiperReact, SwiperSlide, useSwiper } from 'swiper/react';
 
 import type { IMedia } from '~/types/media';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
-import Svg from '~/components/styles/Svg.styles';
-import { H5 } from '~/components/styles/Text.styles';
 import ChevronLeftIcon from '~/assets/icons/ChevronLeftIcon';
 import ChevronRightIcon from '~/assets/icons/ChevronRightIcon';
 import PlayIcon from '~/assets/icons/PlayIcon';
@@ -18,34 +13,6 @@ import StopIcon from '~/assets/icons/StopIcon';
 
 import MediaItem from '../item';
 import BannerItemCompact from '../item/BannerItemCompact';
-
-const AutoplayProgressStyled = styled('div', {
-  position: 'absolute',
-  width: '48px',
-  height: '48px',
-  bottom: '150px',
-  right: '35px',
-  zIndex: '90',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  color: '$primary',
-  '@lgMin': { bottom: '270px' },
-  '& svg': {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    zIndex: 10,
-    width: '100%',
-    height: '100%',
-    strokeWidth: 2,
-    stroke: '$primary',
-    fill: 'none',
-    strokeDashoffset: 'calc(125.6 * (var(--progress)))',
-    strokeDasharray: '125.6',
-    transform: 'rotate(-90deg)',
-  },
-});
 
 const CustomNavigation = forwardRef<HTMLDivElement, { slot: 'container-end' }>(
   (props, forwardedRef) => {
@@ -63,17 +30,10 @@ const CustomNavigation = forwardRef<HTMLDivElement, { slot: 'container-end' }>(
       <div slot={slot} className="hidden sm:block">
         <Button
           type="button"
-          auto
-          color="primary"
-          rounded
-          ghost
-          icon={
-            isPlayTrailer.value ? (
-              <StopIcon fill="currentColor" />
-            ) : (
-              <PlayIcon fill="currentColor" filled />
-            )
-          }
+          color="default"
+          radius="full"
+          variant="ghost"
+          isIconOnly
           onPress={() => {
             isPlayTrailer.set(!isPlayTrailer.value);
             if (isPlayTrailer.value && !swiper.autoplay.running) {
@@ -83,77 +43,60 @@ const CustomNavigation = forwardRef<HTMLDivElement, { slot: 'container-end' }>(
               swiper.autoplay.stop();
             }
           }}
-          css={{
-            width: '44px',
-            height: '44px',
-            cursor: 'pointer',
-            position: 'absolute',
-            bottom: '80px',
-            right: '35px',
-            zIndex: '90',
-            '&:hover': {
-              opacity: '0.8',
-            },
-            '@lgMin': { bottom: '200px' },
-          }}
+          className="absolute bottom-20 right-[35px] z-[90] h-11 w-11 cursor-pointer hover:opacity-80 2xl:bottom-[200px]"
           aria-label="Play Trailer"
-        />
+        >
+          {isPlayTrailer.value ? (
+            <StopIcon fill="currentColor" />
+          ) : (
+            <PlayIcon fill="currentColor" filled />
+          )}
+        </Button>
         <div className="hidden sm:block 2xl:hidden">
           <Button
             type="button"
-            auto
-            color="primary"
-            rounded
-            ghost
-            icon={<ChevronLeftIcon fill="currentColor" />}
+            color="default"
+            radius="full"
+            variant="ghost"
+            isIconOnly
             onPress={() => swiper.slidePrev()}
-            css={{
-              width: '44px',
-              height: '44px',
-              cursor: 'pointer',
-              position: 'absolute',
-              bottom: '10px',
-              right: '85px',
-              zIndex: '90',
-              '&:hover': {
-                opacity: '0.8',
-              },
-              '@lgMin': { bottom: '200px' },
-            }}
+            className="absolute bottom-[10px] right-[85px] z-[90] h-11 w-11 cursor-pointer hover:opacity-80 2xl:bottom-[200px]"
             aria-label="Previous"
             disabled={slideProgress === 0}
-          />
+          >
+            <ChevronLeftIcon fill="currentColor" />
+          </Button>
           <Button
             type="button"
-            auto
-            color="primary"
-            rounded
-            ghost
-            icon={<ChevronRightIcon fill="currentColor" />}
+            color="default"
+            radius="full"
+            variant="ghost"
+            isIconOnly
             onPress={() => swiper.slideNext()}
-            css={{
-              width: '44px',
-              height: '44px',
-              cursor: 'pointer',
-              position: 'absolute',
-              bottom: '10px',
-              right: '35px',
-              zIndex: '90',
-              '&:hover': {
-                opacity: '0.8',
-              },
-              '@lgMin': { bottom: '200px' },
-            }}
+            className="absolute bottom-[10px] right-[35px] z-[90] h-11 w-11 cursor-pointer hover:opacity-80"
             aria-label="Next"
             disabled={slideProgress === 1}
-          />
-          <AutoplayProgressStyled className="autoplay-progress" ref={forwardedRef}>
-            {/* @ts-ignore */}
-            <svg viewBox="0 0 48 48" style={{ '--progress': 1 }}>
+          >
+            <ChevronRightIcon fill="currentColor" />
+          </Button>
+          <div
+            className="text-default-foreground absolute bottom-[150px] right-[35px] z-[90] flex h-12 w-12 items-center justify-center 2xl:bottom-[270px]"
+            ref={forwardedRef}
+          >
+            <svg
+              viewBox="0 0 48 48"
+              style={{
+                // @ts-ignore
+                '--progress': 1,
+                strokeDashoffset: 'calc(125.6 * (var(--progress)))',
+                strokeDasharray: '125.6',
+              }}
+              className="stroke-default absolute left-0 top-0 z-10 h-full w-full rotate-90 fill-none stroke-2"
+            >
               <circle cx="24" cy="24" r="20" />
             </svg>
             <span />
-          </AutoplayProgressStyled>
+          </div>
         </div>
       </div>
     );
@@ -168,157 +111,37 @@ const CustomNavigationThumbs = ({ slot }: { slot: 'container-end' }) => {
     <div slot={slot} className="hidden sm:block">
       <Button
         type="button"
-        auto
-        color="primary"
-        flat
-        className="backdrop-blur-md"
-        icon={<ChevronLeftIcon fill="currentColor" filled />}
+        color="default"
+        variant="flat"
+        className="bg-background/60 absolute left-[2px] top-[60px] z-[90] m-0 h-11 w-min min-w-0 cursor-pointer rounded-md p-0 backdrop-blur-md"
+        isIconOnly
         onPress={() => swiper.slidePrev()}
-        css={{
-          p: 0,
-          m: 0,
-          backgroundColor: '$backgroundAlpha',
-          borderRadius: '$xs',
-          width: 'min-content',
-          height: '44px',
-          cursor: 'pointer',
-          position: 'absolute',
-          top: '60px',
-          left: '2px',
-          zIndex: '90',
-          [`& ${Svg}`]: {
-            opacity: '0.8',
-            scale: '0.8',
-          },
-          '&:hover': {
-            [`& ${Svg}`]: {
-              opacity: 1,
-              scale: 1,
-            },
-          },
-        }}
         aria-label="Previous"
-      />
+      >
+        <ChevronLeftIcon
+          fill="currentColor"
+          filled
+          className="scale-75 opacity-80 transition-all duration-200 ease-linear hover:scale-100 hover:opacity-100"
+        />
+      </Button>
       <Button
         type="button"
-        auto
-        color="primary"
-        flat
-        className="backdrop-blur-md"
-        icon={<ChevronRightIcon fill="currentColor" filled />}
+        color="default"
+        variant="flat"
+        className="bg-background/60 absolute right-[2px] top-[60px] z-[90] m-0 h-11 w-min min-w-0 cursor-pointer rounded-md p-0 backdrop-blur-md"
+        isIconOnly
         onPress={() => swiper.slideNext()}
-        css={{
-          p: 0,
-          m: 0,
-          backgroundColor: '$backgroundAlpha',
-          borderRadius: '$xs',
-          width: 'min-content',
-          height: '44px',
-          cursor: 'pointer',
-          position: 'absolute',
-          top: '60px',
-          right: '2px',
-          zIndex: '90',
-          [`& ${Svg}`]: {
-            opacity: '0.8',
-            scale: '0.8',
-          },
-          '&:hover': {
-            [`& ${Svg}`]: {
-              opacity: 1,
-              scale: 1,
-            },
-          },
-        }}
         aria-label="Next"
-      />
+      >
+        <ChevronRightIcon
+          fill="currentColor"
+          filled
+          className="scale-75 opacity-80 transition-all duration-200 ease-linear hover:scale-100 hover:opacity-100"
+        />
+      </Button>
     </div>
   );
 };
-
-// target React components for Stitches
-Card.toString = () => '.card';
-Card.Image.toString = () => '.card-image';
-
-const SwiperSlideStyled = styled(SwiperSlide, {
-  overflow: 'hidden',
-  borderRadius: '$lg',
-  width: '240px',
-  height: 'auto',
-  margin: '8px 4px',
-  border: '4px solid transparent',
-  '&:hover': {
-    border: '4px solid var(--nextui-colors-primarySolidHover)',
-  },
-  [`& ${Card}`]: {
-    transition: 'all 0.4s ease',
-    transform: 'scale(1.125, 1.03) translateX(-10px)',
-    '&::after': {
-      transition: 'all 0.4s ease',
-      opacity: 0,
-      content: '',
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      width: '150px',
-      height: '135px',
-      backgroundImage: 'linear-gradient(90deg, $background, $backgroundTransparent)',
-    },
-    '&:hover': {
-      transform: 'scale(1.075, 1.015) translateX(-5px)',
-      [`& ${H5}`]: {
-        display: 'block',
-      },
-      [`& ${Card.Image}`]: {},
-      '&::after': {
-        content: '',
-        opacity: 1,
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '150px',
-        height: '135px',
-        backgroundImage: 'linear-gradient(90deg, $background, $backgroundTransparent)',
-      },
-    },
-  },
-  '&.swiper-slide-thumb-active': {
-    border: '4px solid var(--nextui-colors-primary)',
-    [`& ${Card}`]: {
-      transform: 'scale(1) translateX(0)',
-      [`& ${H5}`]: {
-        display: 'block',
-      },
-      '&::after': {
-        content: '',
-        opacity: 1,
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '200px',
-        height: '135px',
-        backgroundImage: 'linear-gradient(90deg, $background, $backgroundTransparent)',
-      },
-    },
-  },
-});
-
-const SwiperReactStyled = styled(SwiperReact, {
-  position: 'absolute',
-  bottom: '15px',
-  left: '0',
-  width: '100%',
-  minHeight: '150px',
-  display: 'none',
-  '@lg': {
-    display: 'block',
-  },
-  '& div': {
-    '&.swiper-wrapper': {
-      marginLeft: 7,
-    },
-  },
-});
 
 interface IMediaListBannerProps {
   genresMovie?: { [id: string]: string };
@@ -349,18 +172,7 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
   }, [isPlayTrailer.value, isXl]);
 
   return (
-    <Grid.Container
-      gap={1}
-      justify="center"
-      alignItems="center"
-      css={{
-        margin: 0,
-        padding: 0,
-        width: '100%',
-        maxWidth: '1920px',
-        position: 'relative',
-      }}
-    >
+    <section className="max-w-screen-4xl relative m-0 box-border flex h-full w-full flex-wrap items-center justify-center p-0">
       {items && items?.length > 0 && (
         <>
           <SwiperReact
@@ -452,7 +264,7 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
             ))}
             <CustomNavigation slot="container-end" ref={autoplayProgressRef} />
           </SwiperReact>
-          <SwiperReactStyled
+          <SwiperReact
             grabCursor
             cssMode
             spaceBetween={15}
@@ -462,20 +274,21 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
             watchSlidesProgress
             modules={[Thumbs]}
             onSwiper={setThumbsSwiper}
+            className="!absolute bottom-[15px] left-0 !hidden min-h-[150px] w-full 2xl:!block"
           >
             {items.map((item, index) => (
-              <SwiperSlideStyled
+              <SwiperSlide
                 key={`${item.id}-${index}-banner-thumb`}
-                {...(isPlayTrailer
-                  ? {
-                      css: {
-                        opacity: isPlayTrailer.value ? 0.2 : 1,
-                        '&:hover': { opacity: isPlayTrailer.value ? 0.7 : 1 },
-                        '&.swiper-slide-thumb-active': { opacity: isPlayTrailer.value ? 0.9 : 1 },
-                        transition: 'opacity 0.3s ease',
-                      },
-                    }
-                  : {})}
+                tag="button"
+                className={`mx-1 my-2 !h-[135px] !w-[240px] overflow-hidden rounded-xl border-4 transition-opacity duration-300 ease-out ${
+                  isPlayTrailer.value
+                    ? `opacity-20 hover:opacity-70 ${activeIndex === index ? 'opacity-90' : ''}`
+                    : 'opacity-100'
+                } ${
+                  activeIndex === index
+                    ? 'border-primary'
+                    : 'hover:border-primary-600 border-transparent'
+                }`}
               >
                 <BannerItemCompact
                   ref={progressRef}
@@ -483,13 +296,13 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
                   title={item?.title || ''}
                   active={activeIndex === index}
                 />
-              </SwiperSlideStyled>
+              </SwiperSlide>
             ))}
             <CustomNavigationThumbs slot="container-end" />
-          </SwiperReactStyled>
+          </SwiperReact>
         </>
       )}
-    </Grid.Container>
+    </section>
   );
 };
 

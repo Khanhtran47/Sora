@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { LoaderArgs, json } from '@remix-run/node';
+import { json, LoaderArgs } from '@remix-run/node';
 
 import { getSubtitlesSearch } from '~/services/open-subtitles/open-subtitles.server';
 import { authenticate } from '~/services/supabase';

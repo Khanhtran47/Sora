@@ -1,59 +1,58 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Player } from '@lottiefiles/react-lottie-player';
-import { Avatar, Button, Divider, Grid, Switch, styled, useTheme } from '@nextui-org/react';
+import { Avatar } from '@nextui-org/avatar';
+import { Button } from '@nextui-org/button';
+import { Divider } from '@nextui-org/divider';
+import { Spacer } from '@nextui-org/spacer';
 import { useLocation, useNavigate, useSearchParams } from '@remix-run/react';
 import type { User } from '@supabase/supabase-js';
-import { motion } from 'framer-motion';
-import { useTheme as useRemixTheme } from 'next-themes';
+import type { AnimationItem } from 'lottie-web';
+import { useTheme } from 'next-themes';
 import { useTranslation } from 'react-i18next';
+import { useHydrated } from 'remix-utils';
 
+import { getBackgroundTitleBarColor, setMetaThemeColor } from '~/utils/client/meta-tags.client';
+import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
+import { useSoraSettings } from '~/hooks/useLocalStorage';
+import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import languages from '~/constants/languages';
-/* Components */
-import { H5, H6 } from '~/components/styles/Text.styles';
+import { listCustomThemeColors, listDefaultThemeColors } from '~/constants/settings';
+import { Popover, PopoverContent, PopoverTrigger } from '~/components/elements/Popover';
+import ResizablePanel from '~/components/elements/shared/ResizablePanel';
+import Arrow from '~/assets/icons/ArrowIcon';
+import Brush from '~/assets/icons/BrushIcon';
 import GlobalIcon from '~/assets/icons/GlobalIcon';
-import MoonIcon from '~/assets/icons/MoonIcon';
-import SunIcon from '~/assets/icons/SunIcon';
-/* Assets */
-import kleeCute from '~/assets/images/avatar.png';
-import arrowLeft from '~/assets/lotties/lottieflow-arrow-08-1-0072F5-easey.json';
-
-const slideHorizontalAnimation = {
-  left: {
-    x: 0,
-    transition: {
-      duration: 0.3,
-    },
-  },
-  right: {
-    x: -250,
-    transition: {
-      duration: 0.3,
-    },
-  },
-};
+import Tick from '~/assets/icons/TickIcon';
+import avatar from '~/assets/images/avatar.png';
+import dropdown from '~/assets/lotties/lottieflow-dropdown-03-0072F5-easey.json';
 
 interface IMultiLevelDropdownProps {
   user?: User | undefined;
 }
 
-const PlayerStyled = styled(Player, {
-  '& path': {
-    stroke: '$primary',
-  },
-});
-
 const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
   const { user } = props;
-  const { isDark } = useTheme();
-  const { setTheme } = useRemixTheme();
+  const { t } = useTranslation('header');
+  const rootData = useTypedRouteLoaderData('root');
+  const { locale } = rootData || { locale: 'en' };
+  const { setTheme, theme: currentTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
+  const isHydrated = useHydrated();
   const [search] = useSearchParams();
-  const [isLeftMenu, setIsLeftMenu] = useState(true);
-  const [isLanguageTab, setIsLanguageTab] = useState(false);
-  const [isDisplayTab, setIsDisplayTab] = useState(false);
-  const { t } = useTranslation('header');
+  const [currentLevel, setCurrentLevel] = useState('general');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { isLightDarkThemeOnly, currentThemeColor } = useSoraSettings();
+  const { isDark } = useColorDarkenLighten();
+  const [lottie, setLottie] = useState<AnimationItem>();
+  useEffect(() => {
+    if (isDropdownOpen) {
+      lottie?.playSegments([0, 50], true);
+    } else {
+      lottie?.playSegments([50, 96], true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDropdownOpen]);
 
   const ref = (search.get('ref') || location.pathname + location.search)
     .replace('?', '_0x3F_')
@@ -61,360 +60,372 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
   const parts = user?.email?.split('@');
   const username = parts?.shift();
 
-  return (
-    <motion.div
-      className="dropdown"
-      initial="left"
-      animate={isLeftMenu ? 'left' : 'right'}
-      variants={slideHorizontalAnimation}
-      layout
-      style={{
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'flex-start',
-        height: '100%',
-        position: 'relative',
-        transition: 'height 0.3s',
-        width: '240px',
-        transform: `${isLeftMenu ? 'none' : ' translateZ(0px) translateX(-250px)'}`,
-      }}
-    >
-      <motion.div>
-        <Grid.Container css={{ flexDirection: 'column' }}>
-          <Grid css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}>
-            <Button
-              type="button"
-              light
-              color="primary"
-              size="md"
-              css={{ w: 220, h: 50 }}
-              icon={
-                <Avatar
-                  size="md"
-                  alt="Klee Cute"
-                  src={kleeCute}
-                  color="primary"
-                  bordered
-                  css={{ cursor: 'pointer' }}
-                />
+  const dropdownLevel = useMemo(() => {
+    return [
+      {
+        id: 'general',
+        key: 'general',
+        showTitle: true,
+        showAvatar: true,
+        showBackButton: false,
+        backButtonAction: () => null,
+        title: user ? username : t('sign-in'),
+        isTitleClickable: true,
+        titleAction: () => (user ? null : navigate(`/sign-in?ref=${ref}`)),
+        listItems: [
+          {
+            id: 'language',
+            title: t('language'),
+            description: 'Change the language of the website',
+            showIcon: true,
+            icon: <GlobalIcon />,
+            action: () => setCurrentLevel('language'),
+            currentValue: locale,
+          },
+          {
+            id: 'display',
+            title: t('display'),
+            description: 'Change the display of the website',
+            showIcon: true,
+            icon: <Brush />,
+            action: () => setCurrentLevel('display'),
+          },
+          {
+            id: 'sign-up-log-out',
+            title: user ? t('log-out') : t('sign-up'),
+            description: user ? 'Log out of your account' : 'Sign up for an account',
+            showIcon: false,
+            icon: null,
+            action: () => navigate(user ? `/sign-out?ref=${ref}` : `/sign-up?ref=${ref}`),
+          },
+        ],
+      },
+      {
+        id: 'language',
+        key: 'language',
+        showTitle: true,
+        showAvatar: false,
+        showBackButton: true,
+        backButtonAction: () => setCurrentLevel('general'),
+        title: t('language'),
+        isTitleClickable: false,
+        titleAction: () => null,
+        listItems: languages.map((language) => ({
+          id: language,
+          title: t(language),
+          showIcon: false,
+          icon: null,
+          action: () => navigate(`${location.pathname}?lng=${language}`),
+          currentValue: null,
+          isCurrent: locale === language,
+        })),
+      },
+      {
+        id: 'display',
+        key: 'display',
+        showTitle: true,
+        showAvatar: false,
+        showBackButton: true,
+        backButtonAction: () => setCurrentLevel('general'),
+        title: t('display'),
+        isTitleClickable: false,
+        titleAction: () => null,
+        listItems:
+          isLightDarkThemeOnly.value === true
+            ? [
+                {
+                  id: 'theme',
+                  title: t('theme'),
+                  description: 'Change the theme of the website',
+                  showIcon: true,
+                  icon: <Brush />,
+                  action: () => setCurrentLevel('theme'),
+                  currentValue:
+                    currentTheme === 'system' ? t('system') : isDark ? t('dark') : t('light'),
+                },
+                {
+                  id: 'theme-color',
+                  title: t('theme-color'),
+                  description: 'Change the colors of the theme',
+                  showIcon: true,
+                  icon: <Brush />,
+                  action: () => setCurrentLevel('theme-color'),
+                  currentValue: t(currentThemeColor.value || 'blue'),
+                },
+              ]
+            : listCustomThemeColors.map((theme) => ({
+                id: theme,
+                title: t(theme),
+                description: theme,
+                showIcon: false,
+                icon: null,
+                action: async () => {
+                  await setTheme(theme);
+                  const color = await getBackgroundTitleBarColor(isHydrated);
+                  await setMetaThemeColor(`hsl(${color})`);
+                },
+                currentValue: null,
+                isCurrent: currentTheme === theme,
+              })),
+      },
+      {
+        id: 'theme',
+        key: 'theme',
+        showTitle: true,
+        showAvatar: false,
+        showBackButton: true,
+        backButtonAction: () => setCurrentLevel('display'),
+        title: t('theme'),
+        isTitleClickable: false,
+        titleAction: () => null,
+        listItems: [
+          {
+            id: 'dark',
+            title: t('dark'),
+            showIcon: false,
+            icon: null,
+            action: async () => {
+              if (currentThemeColor.value !== 'blue') {
+                await setTheme(`dark-${currentThemeColor.value}`);
+              } else {
+                await setTheme('dark');
               }
-              onPress={() => {
-                if (!user) navigate(`/sign-in?ref=${ref}`);
-              }}
-            >
-              {user ? (
-                <H6
-                  h6
-                  weight="bold"
-                  color="primary"
-                  className="line-clamp-1"
-                  css={{ marginLeft: '3.5rem !important' }}
-                >
-                  {username ?? 'klee@example.com'}
-                </H6>
-              ) : (
-                <H6 h6 weight="bold" color="primary" css={{ textTransform: 'uppercase' }}>
-                  Sign In
-                </H6>
-              )}
-            </Button>
-            <Divider x={1} css={{ width: 220, margin: '10px 40px 0 0' }} />
-          </Grid>
-          <Grid css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}>
-            <Button
-              type="button"
-              flat
-              color="primary"
-              size="md"
-              onPress={() => {
-                setIsLanguageTab(true);
-                setIsLeftMenu(false);
-              }}
-              css={{ w: 220, h: 50 }}
-              icon={<GlobalIcon />}
-            >
-              <H6 h6 color="primary">
-                Language
-              </H6>
-            </Button>
-          </Grid>
-          <Grid css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}>
-            <Button
-              type="button"
-              flat
-              color="primary"
-              size="md"
-              onPress={() => {
-                setIsDisplayTab(true);
-                setIsLeftMenu(false);
-              }}
-              css={{ w: 220, h: 50 }}
-            >
-              <H6 h6 color="primary">
-                Display
-              </H6>
-            </Button>
-          </Grid>
-          <Grid css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}>
-            {user ? (
-              <Button
-                type="button"
-                flat
-                color="error"
-                size="md"
-                onPress={() => {
-                  navigate(`/sign-out?ref=${ref}`);
-                }}
-                css={{ w: 220, h: 50 }}
-              >
-                <H5 h5 color="error">
-                  Log out
-                </H5>
-              </Button>
-            ) : (
-              <Button
-                type="button"
-                flat
-                color="primary"
-                size="md"
-                onPress={() => {
-                  navigate(`/sign-up?ref=${ref}`);
-                }}
-                css={{ w: 220, h: 50 }}
-              >
-                Sign Up
-              </Button>
-            )}
-          </Grid>
-        </Grid.Container>
-      </motion.div>
-      <motion.div>
-        <Grid.Container css={{ flexDirection: 'column' }}>
-          {isLanguageTab && (
-            <>
-              <Grid css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}>
-                <Button
-                  type="button"
-                  light
-                  color="primary"
-                  size="md"
-                  onPress={() => {
-                    setIsLanguageTab(false);
-                    setIsLeftMenu(true);
-                  }}
-                  css={{ w: 220, h: 50 }}
-                  icon={
-                    <PlayerStyled
-                      src={arrowLeft}
-                      hover
-                      autoplay={false}
-                      speed={0.75}
-                      className="h-8 w-8"
-                      loop
-                    />
-                  }
-                >
-                  <H6 h6 color="primary">
-                    Language
-                  </H6>
-                </Button>
-                <Divider x={1} css={{ width: 220, margin: '10px 40px 0 0' }} />
-              </Grid>
-              {languages.map((lng) => (
-                <Grid
-                  key={lng}
-                  css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}
-                >
+              const color = await getBackgroundTitleBarColor(isHydrated);
+              await setMetaThemeColor(`hsl(${color})`);
+            },
+            currentValue: null,
+            isCurrent: isDark && currentTheme !== 'system',
+          },
+          {
+            id: 'light',
+            title: t('light'),
+            showIcon: false,
+            icon: null,
+            action: async () => {
+              if (currentThemeColor.value !== 'blue') {
+                await setTheme(`light-${currentThemeColor.value}`);
+              } else {
+                await setTheme('light');
+              }
+              const color = await getBackgroundTitleBarColor(isHydrated);
+              await setMetaThemeColor(`hsl(${color})`);
+            },
+            currentValue: null,
+            isCurrent: !isDark && currentTheme !== 'system',
+          },
+          {
+            id: 'system',
+            title: t('system'),
+            showIcon: false,
+            icon: null,
+            action: async () => {
+              await currentThemeColor.set('blue');
+              await setTheme('system');
+              const color = await getBackgroundTitleBarColor(isHydrated);
+              await setMetaThemeColor(`hsl(${color})`);
+            },
+            currentValue: null,
+            isCurrent: currentTheme === 'system',
+          },
+        ],
+      },
+      {
+        id: 'theme-color',
+        key: 'theme-color',
+        showTitle: true,
+        showAvatar: false,
+        showBackButton: true,
+        backButtonAction: () => setCurrentLevel('display'),
+        title: t('theme-color'),
+        isTitleClickable: false,
+        titleAction: () => null,
+        listItems: listDefaultThemeColors.map((theme) => ({
+          id: theme,
+          title: t(theme),
+          showIcon: false,
+          icon: null,
+          action: async () => {
+            await currentThemeColor.set(theme);
+            if (isDark) {
+              if (theme !== 'blue') {
+                await setTheme(`dark-${theme}`);
+              } else {
+                await setTheme('dark');
+              }
+            } else {
+              if (theme !== 'blue') {
+                await setTheme(`light-${theme}`);
+              } else {
+                await setTheme('light');
+              }
+            }
+            const color = await getBackgroundTitleBarColor(isHydrated);
+            await setMetaThemeColor(`hsl(${color})`);
+          },
+          currentValue: null,
+          isCurrent: currentThemeColor.value ? currentThemeColor.value === theme : theme === 'blue',
+        })),
+      },
+    ];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    currentTheme,
+    locale,
+    user,
+    username,
+    t,
+    currentThemeColor.value,
+    isDark,
+    isHydrated,
+    isLightDarkThemeOnly.value,
+  ]);
+
+  const currentDropdownLevel = useMemo(
+    () => dropdownLevel.find((level) => level.id === currentLevel),
+    [dropdownLevel, currentLevel],
+  );
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const settingsOptions = (item: any) => (
+    <Button
+      key={item.id}
+      type="button"
+      fullWidth
+      variant="light"
+      onPress={item.action}
+      className="data-[hover=true]:bg-default/[.6] flex h-14 flex-row items-center justify-between gap-x-8 !p-2"
+    >
+      <div className="flex shrink-0 grow flex-row items-center gap-x-2">
+        {item?.showIcon ? (
+          (
+            item as {
+              id: string;
+              title: string;
+              description: string;
+              showIcon: boolean;
+              icon: JSX.Element;
+              action: () => void;
+              currentValue: string;
+            }
+          )?.icon
+        ) : (
+            item as {
+              id: string;
+              title: string;
+              showIcon: boolean;
+              action: () => void;
+              isCurrent: boolean;
+            }
+          )?.isCurrent ? (
+          <Tick />
+        ) : (
+          <Spacer x={6} />
+        )}
+        <h6 className="!text-default-foreground !line-clamp-1">{item.title}</h6>
+      </div>
+      <div className="flex shrink-0 grow flex-row items-center justify-end gap-x-2">
+        <p className="!text-default-foreground/80">
+          {(
+            item as {
+              id: string;
+              title: string;
+              description: string;
+              showIcon: boolean;
+              icon: JSX.Element;
+              action: () => void;
+              currentValue: string;
+            }
+          )?.currentValue || ''}
+        </p>
+        {item.showIcon ? <Arrow direction="right" /> : null}
+      </div>
+    </Button>
+  );
+
+  const handleOpenChange = (open: boolean) => {
+    setIsDropdownOpen(open);
+    if (!open) setCurrentLevel('general');
+  };
+
+  return (
+    <Popover open={isDropdownOpen} onOpenChange={(open) => handleOpenChange(open)}>
+      <PopoverTrigger asChild>
+        <Button
+          type="button"
+          variant="faded"
+          radius="full"
+          aria-label="dropdown"
+          isIconOnly
+          className="h-9 w-9"
+          size="sm"
+        >
+          <Player
+            lottieRef={(instance) => {
+              setLottie(instance);
+            }}
+            src={dropdown}
+            autoplay={false}
+            keepLastFrame
+            speed={2.7}
+            className="lottie-color h-6 w-6"
+          />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent
+        side="bottom"
+        align="end"
+        alignOffset={-8}
+        className="bg-default/60 z-[1000] backdrop-blur-2xl backdrop-contrast-125 backdrop-saturate-200"
+      >
+        <ResizablePanel contentWidth="fit">
+          {currentDropdownLevel ? (
+            <div className="flex w-max flex-col items-start justify-start gap-y-2">
+              {currentDropdownLevel?.showBackButton ||
+              currentDropdownLevel?.showAvatar ||
+              currentDropdownLevel?.showTitle ? (
+                <>
                   <Button
                     type="button"
-                    flat
-                    color="primary"
+                    isIconOnly
+                    fullWidth
                     size="md"
-                    onPress={() => {
-                      setIsLanguageTab(false);
-                      setIsLeftMenu(true);
-                      navigate(`${location.pathname}?lng=${lng}`);
-                    }}
-                    css={{ w: 220, h: 50 }}
+                    variant="light"
+                    onPress={
+                      currentDropdownLevel?.isTitleClickable
+                        ? currentDropdownLevel?.titleAction
+                        : currentDropdownLevel?.backButtonAction
+                    }
+                    className="data-[hover=true]:bg-default/[.6] flex h-14 w-full flex-row items-center justify-between gap-x-2 p-2"
                   >
-                    <H6 h6 color="primary">
-                      {t(lng)}
-                    </H6>
+                    {currentDropdownLevel?.showBackButton ? <Arrow direction="left" /> : null}
+                    {currentDropdownLevel?.showAvatar ? (
+                      <Avatar
+                        size="sm"
+                        alt="Avatar"
+                        src={avatar}
+                        color="primary"
+                        radius="full"
+                        isBordered
+                      />
+                    ) : null}
+                    {currentDropdownLevel?.showTitle ? (
+                      <h6 className="!text-default-foreground px-3">
+                        {currentDropdownLevel?.title}
+                      </h6>
+                    ) : null}
+                    <div />
                   </Button>
-                </Grid>
-              ))}
-            </>
-          )}
-          {isDisplayTab && (
-            <>
-              <Grid css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}>
-                <Button
-                  type="button"
-                  light
-                  color="primary"
-                  size="md"
-                  onPress={() => {
-                    setIsDisplayTab(false);
-                    setIsLeftMenu(true);
-                  }}
-                  css={{ w: 220, h: 50 }}
-                  icon={
-                    <PlayerStyled
-                      src={arrowLeft}
-                      hover
-                      autoplay={false}
-                      speed={0.75}
-                      className="h-8 w-8"
-                      loop
-                    />
-                  }
-                >
-                  <H6 h6 color="primary">
-                    Display
-                  </H6>
-                </Button>
-                <Divider x={1} css={{ width: 220, margin: '10px 40px 0 0' }} />
-              </Grid>
-              <Grid
-                direction="row"
-                justify="space-around"
-                alignItems="center"
-                css={{
-                  display: 'flex',
-                  width: 240,
-                  minHeight: 65,
-                }}
-              >
-                <H6 h6>Light mode</H6>
-                <Switch
-                  checked={isDark}
-                  size="md"
-                  onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}
-                  iconOn={<MoonIcon filled />}
-                  iconOff={<SunIcon filled />}
-                  css={{ padding: 0 }}
-                />
-                <H6 h6>Dark mode</H6>
-              </Grid>
-              <Grid css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}>
-                <Button
-                  type="button"
-                  flat
-                  size="md"
-                  onPress={() => {
-                    setTheme('light');
-                    setTheme('bumblebee');
-                  }}
-                  css={{
-                    w: 220,
-                    h: 50,
-                    color: '#C08921 !important',
-                    backgroundColor: '#FBEAAB !important',
-                  }}
-                >
-                  Bumblebee
-                </Button>
-              </Grid>
-              <Grid css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}>
-                <Button
-                  type="button"
-                  flat
-                  size="md"
-                  onPress={() => {
-                    setTheme('dark');
-                    setTheme('synthwave');
-                  }}
-                  css={{
-                    w: 220,
-                    h: 50,
-                    color: '#D427A5 !important',
-                    backgroundColor: '#FEAEC9 !important',
-                  }}
-                >
-                  Synthwave
-                </Button>
-              </Grid>
-              <Grid css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}>
-                <Button
-                  type="button"
-                  flat
-                  size="md"
-                  onPress={() => {
-                    setTheme('light');
-                    setTheme('retro');
-                  }}
-                  css={{
-                    w: 220,
-                    h: 50,
-                    color: '#CD6C70 !important',
-                    backgroundColor: '#FDE2D7 !important',
-                  }}
-                >
-                  Retro
-                </Button>
-              </Grid>
-              <Grid css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}>
-                <Button
-                  type="button"
-                  flat
-                  size="md"
-                  onPress={() => {
-                    setTheme('dark');
-                    setTheme('dracula');
-                  }}
-                  css={{
-                    w: 220,
-                    h: 50,
-                    color: '#DB58B0 !important',
-                    backgroundColor: '#FFC9D8 !important',
-                  }}
-                >
-                  Dracula
-                </Button>
-              </Grid>
-              <Grid css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}>
-                <Button
-                  type="button"
-                  flat
-                  size="md"
-                  onPress={() => {
-                    setTheme('light');
-                    setTheme('autumn');
-                  }}
-                  css={{
-                    w: 220,
-                    h: 50,
-                    color: '#78022C !important',
-                    backgroundColor: '#F39694 !important',
-                  }}
-                >
-                  Autumn
-                </Button>
-              </Grid>
-              <Grid css={{ margin: '10px 0 0 10px', width: 240, minHeight: 65, display: 'block' }}>
-                <Button
-                  type="button"
-                  flat
-                  size="md"
-                  onPress={() => {
-                    setTheme('dark');
-                    setTheme('night');
-                  }}
-                  css={{
-                    w: 220,
-                    h: 50,
-                    color: '#2894D5 !important',
-                    backgroundColor: '#AFF5FE !important',
-                  }}
-                >
-                  Night
-                </Button>
-              </Grid>
-            </>
-          )}
-        </Grid.Container>
-      </motion.div>
-    </motion.div>
+                  <Divider />
+                </>
+              ) : null}
+              <div className="flex w-full flex-col items-start justify-start gap-y-2">
+                {currentDropdownLevel?.listItems.map((item) => settingsOptions(item))}
+              </div>
+            </div>
+          ) : null}
+        </ResizablePanel>
+      </PopoverContent>
+    </Popover>
   );
 };
 

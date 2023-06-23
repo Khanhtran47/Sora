@@ -1,20 +1,14 @@
 import { useEffect, useRef } from 'react';
-import { Avatar, Badge, Card, Spacer } from '@nextui-org/react';
+import { Avatar } from '@nextui-org/avatar';
+import { Card, CardBody, CardHeader } from '@nextui-org/card';
 import { useIntersectionObserver, useMeasure, useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import {
-  NavLink,
-  Outlet,
-  useCatch,
-  useLoaderData,
-  useParams,
-  type RouteMatch,
-} from '@remix-run/react';
+import { Outlet, useCatch, useLoaderData, useParams, type RouteMatch } from '@remix-run/react';
+import i18next from '~/i18n/i18next.server';
 import { motion, useTransform } from 'framer-motion';
 import Vibrant from 'node-vibrant';
-import Image, { MimeType } from 'remix-image';
-import tinycolor from 'tinycolor2';
-import i18next from '~/i18n/i18next.server';
+import { MimeType } from 'remix-image';
+import { useHydrated } from 'remix-utils';
 
 import getProviderList from '~/services/provider.server';
 import { authenticate } from '~/services/supabase';
@@ -27,11 +21,12 @@ import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { useCustomHeaderChangePosition } from '~/hooks/useHeader';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { tvSeasonDetailPages } from '~/constants/tabLinks';
-import { BackgroundContent, BackgroundTabLink } from '~/components/media/Media.styles';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
+import Image from '~/components/elements/Image';
+import CatchBoundaryView from '~/components/elements/shared/CatchBoundaryView';
+import ErrorBoundaryView from '~/components/elements/shared/ErrorBoundaryView';
 import TabLink from '~/components/elements/tab/TabLink';
-import { H2, H5, H6 } from '~/components/styles/Text.styles';
-import CatchBoundaryView from '~/components/CatchBoundaryView';
-import ErrorBoundaryView from '~/components/ErrorBoundaryView';
+import { backgroundStyles } from '~/components/styles/primitives';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 import BackgroundDefault from '~/assets/images/background-default.jpg';
 
@@ -145,47 +140,18 @@ export const meta: MetaFunction = ({ data, params }) => {
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
     <>
-      <NavLink
-        to={`/tv-shows/${match.params.tvId}`}
-        aria-label={
-          match.data?.detail?.name || match.data?.detail?.original_name || match.params.tvId
-        }
+      <BreadcrumbItem
+        to={`/tv-shows/${match.params.tvId}/`}
+        key={`tv-show-${match.params.tvId}-overview`}
       >
-        {({ isActive }) => (
-          <Badge
-            color="primary"
-            variant="flat"
-            css={{
-              opacity: isActive ? 1 : 0.7,
-              transition: 'opacity 0.25s ease 0s',
-              '&:hover': { opacity: 0.8 },
-            }}
-          >
-            {match.data?.detail?.name || match.data?.detail?.original_name || match.params.tvId}
-          </Badge>
-        )}
-      </NavLink>
-      <Spacer x={0.25} />
-      <span> ❱ </span>
-      <Spacer x={0.25} />
-      <NavLink
-        to={`/tv-shows/${match.params.tvId}/season/${match.params.seasonId}/`}
-        aria-label={`Season ${match.params.seasonId}`}
+        {match.data?.detail?.name || match.data?.detail?.original_name || match.params.tvId}
+      </BreadcrumbItem>
+      <BreadcrumbItem
+        to={`/tv-shows/${match.params.tvId}/season/${match.params.seasonId}`}
+        key={`tv-shows-${match.params.tvId}-season-${match.params.seasonId}`}
       >
-        {({ isActive }) => (
-          <Badge
-            color="primary"
-            variant="flat"
-            css={{
-              opacity: isActive ? 1 : 0.7,
-              transition: 'opacity 0.25s ease 0s',
-              '&:hover': { opacity: 0.8 },
-            }}
-          >
-            Season {match.params.seasonId}
-          </Badge>
-        )}
-      </NavLink>
+        Season {match.params.seasonId}
+      </BreadcrumbItem>
     </>
   ),
   miniTitle: (match: RouteMatch) => ({
@@ -204,6 +170,7 @@ export const handle = {
 const TvSeasonDetail = () => {
   const { detail, seasonDetail, color } = useLoaderData<typeof loader>();
   const { tvId, seasonId } = useParams();
+  const isHydrated = useHydrated();
   const [size, ref] = useMeasure<HTMLDivElement>();
   const [imageSize, imageRef] = useMeasure<HTMLDivElement>();
   const { backgroundColor } = useColorDarkenLighten(color);
@@ -242,70 +209,26 @@ const TvSeasonDetail = () => {
     <>
       <Card
         as="section"
-        variant="flat"
-        css={{
-          display: 'flex',
-          flexDirection: 'column',
-          borderBottomLeftRadius: 0,
-          borderBottomRightRadius: 0,
-          borderTopRightRadius: 0,
-          height: `calc(${size?.height}px + 72px)`,
-          width: '100%',
-          borderWidth: 0,
-          backgroundColor: 'transparent',
-          backgroundImage: `linear-gradient(to top, ${backgroundColor}, ${tinycolor(
-            backgroundColor,
-          ).setAlpha(0)})`,
-        }}
+        radius="none"
+        className="flex w-full flex-col border-0 !bg-transparent"
+        style={{ height: `calc(${size?.height}px + 72px)` }}
       >
-        <Card.Header
+        <CardHeader
           ref={ref}
-          css={{
-            position: 'absolute',
-            zIndex: 1,
-            flexGrow: 1,
-            display: 'flex',
-            justifyContent: 'center',
-            bottom: 0,
-            padding: 0,
-            borderBottomLeftRadius: 0,
-            borderBottomRightRadius: 0,
-            flexDirection: 'column',
-          }}
+          className="rounded-b-0 absolute bottom-0 z-10 flex grow flex-col justify-center p-0"
         >
-          <BackgroundContent />
-          <div className="grid w-full max-w-[1920px] grid-cols-[1fr_2fr] grid-rows-[1fr_auto_auto] items-stretch justify-center gap-x-4 gap-y-6 px-3 pt-5 pb-8 grid-areas-small sm:grid-rows-[auto_1fr_auto] sm:px-3.5 sm:grid-areas-wide xl:px-4 2xl:px-5">
-            <div className="flex flex-col grid-in-image" ref={imageRef}>
+          <div className={backgroundStyles({ content: true })} />
+          <div className="grid-areas-small sm:grid-areas-wide grid w-full max-w-[1920px] grid-cols-[1fr_2fr] grid-rows-[1fr_auto_auto] items-stretch justify-center gap-x-4 gap-y-6 px-3 pb-8 pt-5 sm:grid-rows-[auto_1fr_auto] sm:px-3.5 xl:px-4 2xl:px-5">
+            <div className="grid-in-image flex flex-col items-center justify-center" ref={imageRef}>
               {seasonDetail?.poster_path ? (
-                <Card.Image
-                  // @ts-ignore
-                  as={Image}
+                <Image
                   src={TMDB.posterUrl(seasonDetail?.poster_path)}
                   alt={seasonDetail?.name}
                   title={seasonDetail?.name}
-                  objectFit="cover"
-                  css={{
-                    minWidth: 'auto !important',
-                    minHeight: 'auto !important',
-                    borderRadius: '$sm',
-                    boxShadow: '12px 12px 30px 10px rgb(104 112 118 / 0.35)',
-                    aspectRatio: '2 / 3',
-                    '@sm': {
-                      borderRadius: '$md',
-                    },
+                  classNames={{
+                    wrapper: 'w-full sm:w-3/4 xl:w-1/2',
+                    img: 'aspect-[2/3] !min-h-[auto] !min-w-[auto] shadow-xl shadow-default',
                   }}
-                  containerCss={{
-                    overflow: 'visible',
-                    width: '100% !important',
-                    '@xs': {
-                      width: '75% !important',
-                    },
-                    '@md': {
-                      width: '50% !important',
-                    },
-                  }}
-                  showSkeleton
-                  loaderUrl="/api/image"
                   placeholder="empty"
                   responsive={[
                     {
@@ -328,60 +251,54 @@ const TvSeasonDetail = () => {
                   }}
                 />
               ) : (
-                <div className="flex items-center justify-center">
+                <div className="flex w-full items-center justify-center">
                   <Avatar
                     icon={<PhotoIcon width={48} height={48} />}
-                    css={{
-                      width: '100% !important',
-                      height: 'auto !important',
-                      size: '$20',
-                      borderRadius: '$sm',
-                      aspectRatio: '2 / 3',
-                      '@xs': { width: '75% !important' },
-                      '@sm': { borderRadius: '$md' },
-                      '@md': { width: '50% !important' },
+                    radius="xl"
+                    classNames={{
+                      base: 'w-full h-auto aspect-[2/3] sm:w-3/4 xl:w-1/2 shadow-xl shadow-default',
                     }}
                   />
                 </div>
               )}
             </div>
-            <div className="flex w-full flex-col items-start justify-start grid-in-title">
-              <H2 h2 weight="bold">
+            <div className="grid-in-title flex w-full flex-col items-start justify-start">
+              <h2>
                 {detail?.name} {seasonDetail?.name}
-              </H2>
-              <H5 h5 weight="bold">
+              </h2>
+              <h5>
                 {seasonDetail?.episodes?.length || 0} episodes &middot; {seasonDetail?.air_date}{' '}
-              </H5>
+              </h5>
             </div>
             {seasonDetail?.overview ? (
-              <div className="flex flex-col gap-y-3 grid-in-info sm:gap-y-6">
-                <H6 h6>{seasonDetail.overview}</H6>
+              <div className="grid-in-info flex flex-col gap-y-3 sm:gap-y-6">
+                <h6>{seasonDetail.overview}</h6>
               </div>
             ) : null}
           </div>
-        </Card.Header>
-        <Card.Body css={{ p: 0 }}>
-          <Card.Image
+        </CardHeader>
+        <CardBody
+          style={{
             // @ts-ignore
-            as={Image}
+            '--colors-movie-brand': isHydrated ? backgroundColor : 'transparent',
+          }}
+          className="after:from-movie-brand-color absolute bottom-0 to-transparent p-0 after:absolute after:bottom-0 after:h-full after:w-full after:bg-gradient-to-t after:opacity-70 after:content-['']"
+        >
+          <Image
             src={
               seasonDetail?.poster_path
                 ? TMDB.posterUrl(seasonDetail?.poster_path, 'w342')
                 : BackgroundDefault
             }
-            showSkeleton
-            css={{
-              width: '100%',
-              height: 'auto',
-              top: 0,
-              left: 0,
-              objectFit: 'cover',
-              opacity: 0.3,
+            radius="none"
+            classNames={{
+              wrapper: 'w-full h-auto object-cover max-w-full',
+              img: `left-0 top-0 z-0 m-0 object-cover opacity-30 blur-2xl ${
+                size ? 'visible' : 'invisible'
+              }'}`,
             }}
             title={seasonDetail?.name}
             alt={seasonDetail?.name}
-            containerCss={{ margin: 0, visibility: size ? 'visible' : 'hidden' }}
-            loaderUrl="/api/image"
             placeholder="empty"
             responsive={[
               {
@@ -395,20 +312,27 @@ const TvSeasonDetail = () => {
               blurRadius: 80,
               contentType: MimeType.WEBP,
             }}
+            style={{
+              width: Math.round(size?.width || 0),
+              height: Math.round(size?.height || 0) + 72,
+            }}
           />
-        </Card.Body>
+        </CardBody>
       </Card>
       <div className="flex w-full flex-col items-center justify-center">
         <motion.div
-          className="sticky top-[64px] z-[1000] flex w-full justify-center transition-[padding] duration-100 ease-in-out"
+          className="sticky top-[63px] z-[1000] flex w-full justify-center transition-[padding] duration-100 ease-in-out"
           style={{
-            backgroundColor,
+            backgroundColor: isHydrated ? backgroundColor : 'transparent',
             paddingTop,
             paddingBottom,
           }}
           ref={tabLinkRef}
         >
-          <BackgroundTabLink css={{ backgroundColor, zIndex: 1 }} />
+          <div
+            className={backgroundStyles({ tablink: true })}
+            style={{ backgroundColor: isHydrated ? backgroundColor : 'transparent' }}
+          />
           <TabLink pages={tvSeasonDetailPages} linkTo={`/tv-shows/${tvId}/season/${seasonId}`} />
         </motion.div>
         <Outlet />

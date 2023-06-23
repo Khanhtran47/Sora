@@ -1,16 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
-import { Badge } from '@nextui-org/react';
+import { useEffect, useRef } from 'react';
 import { useIntersectionObserver } from '@react-hookz/web';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import {
-  NavLink,
-  Outlet,
-  useCatch,
-  useLoaderData,
-  useLocation,
-  type RouteMatch,
-} from '@remix-run/react';
+import { Outlet, useCatch, useLoaderData, useLocation, type RouteMatch } from '@remix-run/react';
 import { motion, useTransform } from 'framer-motion';
+import { useHydrated } from 'remix-utils';
 
 import { getAnimeInfo } from '~/services/consumet/anilist/anilist.server';
 import getProviderList from '~/services/provider.server';
@@ -22,12 +15,12 @@ import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { useCustomHeaderChangePosition } from '~/hooks/useHeader';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { animeDetailsPages } from '~/constants/tabLinks';
-import { BackgroundTabLink } from '~/components/media/Media.styles';
 import { AnimeDetail, MediaBackgroundImage } from '~/components/media/MediaDetail';
-import WatchTrailerModal from '~/components/elements/dialog/WatchTrailerModal';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
+import CatchBoundaryView from '~/components/elements/shared/CatchBoundaryView';
+import ErrorBoundaryView from '~/components/elements/shared/ErrorBoundaryView';
 import TabLink from '~/components/elements/tab/TabLink';
-import CatchBoundaryView from '~/components/CatchBoundaryView';
-import ErrorBoundaryView from '~/components/ErrorBoundaryView';
+import { backgroundStyles } from '~/components/styles/primitives';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { animeId } = params;
@@ -124,24 +117,9 @@ export const meta: MetaFunction = ({ data, params }) => {
 
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
-    <NavLink
-      to={`/anime/${match.params.animeId}/`}
-      aria-label={match.data?.detail?.title?.english || match.data?.detail?.title?.romaji}
-    >
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          {match.data?.detail?.title?.english || match.data?.detail?.title?.romaji}
-        </Badge>
-      )}
-    </NavLink>
+    <BreadcrumbItem to={`/anime/${match.params.animeId}`} key={`anime-${match.params.animeId}`}>
+      {match.data?.detail?.title?.english || match.data?.detail?.title?.romaji}
+    </BreadcrumbItem>
   ),
   miniTitle: (match: RouteMatch) => ({
     title:
@@ -163,7 +141,7 @@ export const handle = {
 const AnimeDetailPage = () => {
   const { detail } = useLoaderData<typeof loader>();
   const { state } = useLocation();
-  const [visible, setVisible] = useState(false);
+  const isHydrated = useHydrated();
   const { backgroundColor } = useColorDarkenLighten(detail?.color);
   const { sidebarBoxedMode } = useSoraSettings();
   const { viewportRef, scrollY } = useLayout((scrollState) => scrollState);
@@ -196,42 +174,31 @@ const AnimeDetailPage = () => {
   }, [backgroundColor, startChangeScrollPosition]);
 
   const currentTime = state && (state as { currentTime: number | undefined }).currentTime;
-  const Handler = () => {
-    setVisible(true);
-  };
-  const closeHandler = () => {
-    setVisible(false);
-  };
 
   return (
     <>
       <MediaBackgroundImage backdropPath={detail?.cover} backgroundColor={backgroundColor} />
       <div className="relative top-[-80px] w-full sm:top-[-200px]">
-        <AnimeDetail item={detail} handler={Handler} />
+        <AnimeDetail item={detail} trailerTime={currentTime} />
         <div className="flex w-full flex-col items-center justify-center">
           <motion.div
-            className="sticky top-[64px] z-[1000] flex w-full justify-center transition-[padding] duration-100 ease-in-out"
+            className="sticky top-[63px] z-[1000] flex w-full justify-center transition-[padding] duration-100 ease-in-out"
             style={{
-              backgroundColor,
+              backgroundColor: isHydrated ? backgroundColor : 'transparent',
               paddingTop,
               paddingBottom,
             }}
             ref={tabLinkRef}
           >
-            <BackgroundTabLink css={{ backgroundColor, zIndex: 1 }} />
+            <div
+              className={backgroundStyles({ tablink: true })}
+              style={{ backgroundColor: isHydrated ? backgroundColor : 'transparent' }}
+            />
             <TabLink pages={animeDetailsPages} linkTo={`/anime/${detail?.id}`} />
           </motion.div>
           <Outlet />
         </div>
       </div>
-      {detail && detail.trailer ? (
-        <WatchTrailerModal
-          trailer={detail.trailer}
-          visible={visible}
-          closeHandler={closeHandler}
-          currentTime={Number(currentTime)}
-        />
-      ) : null}
     </>
   );
 };

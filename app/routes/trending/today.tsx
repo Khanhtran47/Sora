@@ -1,15 +1,17 @@
-import { Badge } from '@nextui-org/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { NavLink, useLoaderData, useLocation } from '@remix-run/react';
-import { motion } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
+import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 import i18next from '~/i18n/i18next.server';
+import { motion, type PanInfo } from 'framer-motion';
+import { isMobile } from 'react-device-detect';
+import { useTranslation } from 'react-i18next';
+import { useHydrated } from 'remix-utils';
 
 import { authenticate } from '~/services/supabase';
 import { getTrending } from '~/services/tmdb/tmdb.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
 export const meta: MetaFunction = () => ({
   'og:url': 'https://sora-anime.vercel.app/trending/today',
@@ -41,23 +43,11 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export const handle = {
-  breadcrumb: () => {
-    <NavLink to="/trending/today" aria-label="Today Trending">
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          Trending Today
-        </Badge>
-      )}
-    </NavLink>;
-  },
+  breadcrumb: () => (
+    <BreadcrumbItem to="/trending/today" key="today-trending">
+      Today
+    </BreadcrumbItem>
+  ),
   miniTitle: () => ({
     title: 'Trending',
     subtitle: 'Today',
@@ -70,30 +60,45 @@ const TrendingToday = () => {
   const { todayTrending } = useLoaderData<typeof loader>();
   const rootData = useTypedRouteLoaderData('root');
   const location = useLocation();
+  const navigate = useNavigate();
+  const isHydrated = useHydrated();
   const { t } = useTranslation();
+
+  const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    if (info.offset?.x > 100) {
+      return;
+    }
+    if (info.offset?.x < -100 && info.offset?.y > -50) {
+      navigate('/trending/week');
+    }
+  };
 
   return (
     <motion.div
       key={location.key}
-      initial={{ x: '-10%', opacity: 0 }}
-      animate={{ x: '0', opacity: 1 }}
-      exit={{ y: '-10%', opacity: 0 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
       className="flex w-full flex-col items-center justify-center px-3 sm:px-0"
+      drag={isMobile && isHydrated ? 'x' : false}
+      dragConstraints={isMobile && isHydrated ? { left: 0, right: 0 } : false}
+      dragElastic={isMobile && isHydrated ? 0.7 : false}
+      onDragEnd={handleDragEnd}
+      dragDirectionLock={isMobile && isHydrated}
+      draggable={isMobile && isHydrated}
     >
-      {todayTrending && todayTrending.items && todayTrending.items.length > 0 && (
-        <MediaList
-          currentPage={todayTrending?.page}
-          genresMovie={rootData?.genresMovie}
-          genresTv={rootData?.genresTv}
-          items={todayTrending?.items}
-          itemsType="movie-tv"
-          listName={t('todayTrending')}
-          listType="grid"
-          showListTypeChangeButton
-          totalPages={todayTrending?.totalPages}
-        />
-      )}
+      <MediaList
+        currentPage={todayTrending?.page}
+        genresMovie={rootData?.genresMovie}
+        genresTv={rootData?.genresTv}
+        items={todayTrending?.items}
+        itemsType="movie-tv"
+        listName={t('todayTrending')}
+        listType="grid"
+        showListTypeChangeButton
+        totalPages={todayTrending?.totalPages}
+      />
     </motion.div>
   );
 };

@@ -1,19 +1,22 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
-/* eslint-disable no-unused-expressions */
-/* eslint-disable @typescript-eslint/no-throw-literal */
-import { useEffect, useState } from 'react';
-import { Badge, Button, Card, Col, Grid, Row } from '@nextui-org/react';
+import { useEffect, useRef, useState } from 'react';
+import { Card, CardBody, CardFooter } from '@nextui-org/card';
 import { useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { NavLink, useFetcher, useLoaderData, type RouteMatch } from '@remix-run/react';
+import { useFetcher, useLoaderData, type RouteMatch } from '@remix-run/react';
+import { AnimatePresence, motion, type PanInfo } from 'framer-motion';
+import { isMobile } from 'react-device-detect';
+import { MimeType } from 'remix-image';
 
 import { authenticate } from '~/services/supabase';
 import { getVideos } from '~/services/tmdb/tmdb.server';
 import type { Item } from '~/services/youtube/youtube.types';
 import TMDB from '~/utils/media';
 import { CACHE_CONTROL } from '~/utils/server/http';
-import WatchTrailerModal, { type Trailer } from '~/components/elements/dialog/WatchTrailerModal';
-import { H5, H6 } from '~/components/styles/Text.styles';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
+import { Dialog, DialogContent, DialogTrigger } from '~/components/elements/Dialog';
+import WatchTrailer, { type Trailer } from '~/components/elements/dialog/WatchTrailerDialog';
+import Image from '~/components/elements/Image';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/elements/tab/Tabs';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   await authenticate(request, undefined, true);
@@ -38,24 +41,14 @@ export const meta: MetaFunction = ({ params }) => ({
 
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
-    <NavLink to={`/tv-shows/${match.params.tvId}/videos`} aria-label="Videos">
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          Videos
-        </Badge>
-      )}
-    </NavLink>
+    <BreadcrumbItem
+      to={`/tv-shows/${match.params.tvId}/videos`}
+      key={`tv-shows-${match.params.tvId}-videos`}
+    >
+      Videos
+    </BreadcrumbItem>
   ),
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  miniTitle: (match: RouteMatch, parentMatch: RouteMatch) => ({
+  miniTitle: (_match: RouteMatch, parentMatch: RouteMatch) => ({
     title: parentMatch.data?.detail?.name,
     subtitle: 'Videos',
     showImage: parentMatch.data?.detail?.poster_path !== undefined,
@@ -67,52 +60,49 @@ const TvVideosPage = () => {
   const { videos } = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
-  const [activeType, setActiveType] = useState<number>(0);
+  const [activeType, setActiveType] = useState('trailer');
   const [activeTypeVideos, setActiveTypeVideos] = useState<Item[] | []>([]);
   const [visible, setVisible] = useState(false);
   const [trailer, setTrailer] = useState<Trailer>({});
-
-  const closeHandler = () => {
-    setVisible(false);
-    setTrailer({});
-  };
-  const typeVideo = [
+  const underlineRef = useRef<HTMLDivElement>(null);
+  const typesVideo = [
     {
-      activeType: 0,
+      id: 'trailer',
       activeVideo: 'Trailer',
     },
     {
-      activeType: 1,
+      id: 'teaser',
       activeVideo: 'Teaser',
     },
     {
-      activeType: 2,
+      id: 'clip',
       activeVideo: 'Clip',
     },
     {
-      activeType: 3,
+      id: 'behind_the_scenes',
       activeVideo: 'Behind the Scenes',
     },
     {
-      activeType: 4,
+      id: 'bloopers',
       activeVideo: 'Bloopers',
     },
     {
-      activeType: 5,
+      id: 'featurette',
       activeVideo: 'Featurette',
     },
     {
-      activeType: 6,
+      id: 'opening_credits',
       activeVideo: 'Opening Credits',
     },
   ];
   useEffect(() => {
     if (videos) {
       let activeVideo = [];
-      const activeTypeVideo = typeVideo.find((item) => item.activeType === activeType);
+      const activeTypeVideo = typesVideo.find((item) => item.id === activeType);
       activeVideo = videos.results?.filter((video) => video.type === activeTypeVideo?.activeVideo);
       const keyVideo = activeVideo.map((item) => item.key).join(',');
-      keyVideo ? fetcher.load(`/api/youtube-video?id=${keyVideo}`) : setActiveTypeVideos([]);
+      if (keyVideo) fetcher.load(`/api/youtube-video?id=${keyVideo}`);
+      else setActiveTypeVideos([]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeType, videos]);
@@ -122,124 +112,118 @@ const TvVideosPage = () => {
     }
   }, [fetcher.data]);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleDragEnd = (event: MouseEvent | PointerEvent | TouchEvent, info: PanInfo) => {
+    const currentTab = typesVideo.find((type) => type.id === activeType);
+    if (info.offset?.x > 100) {
+      // swipe right
+      if (currentTab?.id === 'trailer') {
+        setActiveType('opening_credits');
+      } else {
+        const index = typesVideo.findIndex((type) => type.id === activeType);
+        setActiveType(typesVideo[index - 1].id);
+      }
+    }
+    if (info.offset?.x < -100 && info.offset?.y > -50) {
+      // swipe left
+      if (currentTab?.id === 'opening_credits') {
+        setActiveType('trailer');
+      } else {
+        const index = typesVideo.findIndex((type) => type.id === activeType);
+        setActiveType(typesVideo[index + 1].id);
+      }
+    }
+  };
+
   return (
-    <Row
-      fluid
-      align="stretch"
-      justify="center"
-      css={{
-        marginTop: '0.75rem',
-        maxWidth: '1920px',
-        flexDirection: 'column',
-        px: '0.75rem',
-        '@xs': {
-          flexDirection: 'row',
-          px: '3vw',
-        },
-        '@sm': {
-          px: '6vw',
-        },
-        '@md': {
-          px: '12vw',
-        },
-        '@lg': {
-          px: 'calc(0.75rem + 20px)',
-        },
-      }}
-    >
-      <Col
-        css={{
-          display: 'flex',
-          justifyContent: 'flex-start',
-          width: '100%',
-          '@xs': {
-            justifyContent: 'center',
-            width: '33.3333%',
-          },
-        }}
+    <div className="mt-3 flex w-full max-w-[1920px] flex-col gap-x-0 gap-y-4 px-3 sm:flex-row sm:items-stretch sm:justify-center sm:gap-x-4 sm:gap-y-0 sm:px-3.5 xl:px-4 2xl:px-5">
+      <Tabs
+        defaultValue={activeType}
+        value={activeType}
+        orientation={isSm ? 'horizontal' : 'vertical'}
+        onValueChange={(value) => setActiveType(value)}
+        className="w-full"
       >
-        <Button.Group
-          {...(isSm ? { vertical: false } : { vertical: true })}
-          css={{
-            '@xsMax': {
-              width: '100%',
-              overflowX: 'auto',
-              flexFlow: 'row nowrap',
-            },
-          }}
-        >
-          {typeVideo.map((item, index) => (
-            <Button
-              key={`button-item-${item.activeVideo}`}
-              type="button"
-              onPress={() => setActiveType(index)}
-              {...(activeType === item.activeType ? {} : { ghost: true })}
-              css={{
-                '@xsMax': {
-                  flexGrow: '1',
-                  flexShrink: '0',
-                  dflex: 'center',
-                },
-              }}
-            >
-              {item.activeVideo}
-            </Button>
+        <TabsList>
+          {typesVideo.map((type) => (
+            <TabsTrigger key={type.id} value={type.id} className="relative">
+              <h6 className="!m-0">{type.activeVideo}</h6>
+              {activeType === type.id ? (
+                <motion.div
+                  className="bg-default-foreground absolute overflow-hidden rounded-md data-[orientation=horizontal]:bottom-0 data-[orientation=vertical]:left-0 data-[orientation=horizontal]:h-1 data-[orientation=vertical]:h-1/2 data-[orientation=horizontal]:w-1/2 data-[orientation=vertical]:w-1"
+                  layoutId="video-underline"
+                  data-orientation={isSm ? 'horizontal' : 'vertical'}
+                  ref={underlineRef}
+                />
+              ) : null}
+            </TabsTrigger>
           ))}
-        </Button.Group>
-      </Col>
-      <Col css={{ width: '100%', '@xs': { width: '66.6667%' } }}>
-        <Grid.Container gap={1} justify="flex-start">
-          {activeTypeVideos &&
-            activeTypeVideos.map((video) => (
-              <Grid xs={12} sm={6} key={video.id}>
-                <Card
-                  as="div"
-                  isPressable
-                  isHoverable
-                  role="figure"
-                  css={{ borderWidth: 0 }}
-                  onPress={() => {
-                    const videoPlay = videos?.results?.find((item) => item.key === video.id);
-                    if (videoPlay) {
-                      setVisible(true);
-                      setTrailer(videoPlay);
-                    }
-                  }}
-                >
-                  <Card.Body css={{ p: 0 }}>
-                    <Card.Image
-                      src={video?.snippet?.thumbnails?.medium?.url}
-                      objectFit="cover"
-                      width="100%"
-                      height="auto"
-                      alt={video?.snippet?.title}
-                      showSkeleton
-                      maxDelay={10000}
-                      loading="lazy"
-                      title={video?.snippet?.title}
-                    />
-                  </Card.Body>
-                  <Card.Footer
-                    css={{
-                      justifyItems: 'flex-start',
-                      flexDirection: 'column',
-                      alignItems: 'flex-start',
-                    }}
-                  >
-                    <H5 h5 weight="bold">
-                      {video?.snippet?.title}
-                    </H5>
-                    <H6 h6 css={{ color: '$accents7', fontWeight: '$semibold', fontSize: '$sm' }}>
-                      {video?.snippet?.channelTitle}
-                    </H6>
-                  </Card.Footer>
-                </Card>
-              </Grid>
-            ))}
-        </Grid.Container>
-      </Col>
-      <WatchTrailerModal trailer={trailer} visible={visible} closeHandler={closeHandler} />
-    </Row>
+        </TabsList>
+        <Dialog open={visible} onOpenChange={setVisible}>
+          <AnimatePresence mode="wait">
+            <TabsContent value={activeType}>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ ease: 'easeInOut', duration: 0.3 }}
+                drag={isMobile ? 'x' : false}
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.4}
+                onDragEnd={handleDragEnd}
+                dragDirectionLock
+              >
+                <div className="3xl:grid-cols-3 4xl:grid-cols-4 grid w-full grid-cols-1 justify-items-center gap-4 lg:grid-cols-2">
+                  {activeTypeVideos
+                    ? activeTypeVideos.map((video) => (
+                        <DialogTrigger asChild key={video?.id}>
+                          <Card
+                            isPressable
+                            isHoverable
+                            role="figure"
+                            className="hover:shadow-primary-200 w-[320px] hover:shadow-[0_0_0_1px]"
+                            onPress={() => {
+                              const videoPlay = videos?.results?.find(
+                                (item) => item.key === video.id,
+                              );
+                              if (videoPlay) {
+                                setTrailer(videoPlay);
+                              }
+                            }}
+                          >
+                            <CardBody className="shrink-0 grow-0 overflow-hidden p-0">
+                              <Image
+                                src={video?.snippet?.thumbnails?.medium?.url}
+                                width={320}
+                                height={180}
+                                alt={video?.snippet?.title}
+                                loading="lazy"
+                                title={video?.snippet?.title}
+                                placeholder="empty"
+                                options={{ contentType: MimeType.WEBP }}
+                                responsive={[{ size: { width: 320, height: 180 } }]}
+                              />
+                            </CardBody>
+                            <CardFooter className="flex flex-col items-start justify-start">
+                              <h6 className="!m-0 text-left font-semibold">
+                                {video?.snippet?.title}
+                              </h6>
+                              <p className="opacity-70">{video?.snippet?.channelTitle}</p>
+                            </CardFooter>
+                          </Card>
+                        </DialogTrigger>
+                      ))
+                    : null}
+                </div>
+              </motion.div>
+            </TabsContent>
+          </AnimatePresence>
+          <DialogContent className="overflow-hidden !p-0">
+            <WatchTrailer trailer={trailer} />
+          </DialogContent>
+        </Dialog>
+      </Tabs>
+    </div>
   );
 };
 

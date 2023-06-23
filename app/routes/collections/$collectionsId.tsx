@@ -1,11 +1,11 @@
-/* eslint-disable @typescript-eslint/indent */
 import { useRef } from 'react';
-import { Badge, Pagination, Spacer } from '@nextui-org/react';
+import { Pagination } from '@nextui-org/pagination';
+import { Spacer } from '@nextui-org/spacer';
 import { useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { NavLink, useLoaderData, useLocation, type RouteMatch } from '@remix-run/react';
-import { motion } from 'framer-motion';
+import { useLoaderData, useLocation, type RouteMatch } from '@remix-run/react';
 import i18next from '~/i18n/i18next.server';
+import { motion } from 'framer-motion';
 
 import { authenticate } from '~/services/supabase';
 import { getListDetail } from '~/services/tmdb/tmdb.server';
@@ -13,7 +13,7 @@ import { CACHE_CONTROL } from '~/utils/server/http';
 import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
-import Flex from '~/components/styles/Flex.styles';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
 export const meta: MetaFunction = ({ data, params }) => {
   if (!data) {
@@ -53,42 +53,15 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 export const handle = {
   breadcrumb: (match: RouteMatch) => (
     <>
-      <NavLink to="/collections" aria-label="Collections">
-        {({ isActive }) => (
-          <Badge
-            color="primary"
-            variant="flat"
-            css={{
-              opacity: isActive ? 1 : 0.7,
-              transition: 'opacity 0.25s ease 0s',
-              '&:hover': { opacity: 0.8 },
-            }}
-          >
-            Collections
-          </Badge>
-        )}
-      </NavLink>
-      <Spacer x={0.25} />
-      <span> ❱ </span>
-      <Spacer x={0.25} />
-      <NavLink
+      <BreadcrumbItem to="/collections" key="collections">
+        Collections
+      </BreadcrumbItem>
+      <BreadcrumbItem
         to={`/collections/${match.params.collectionsId}`}
-        aria-label={match.data?.detail?.name || match.params.collectionsId}
+        key={`collections-${match.params.collectionsId}`}
       >
-        {({ isActive }) => (
-          <Badge
-            color="primary"
-            variant="flat"
-            css={{
-              opacity: isActive ? 1 : 0.7,
-              transition: 'opacity 0.25s ease 0s',
-              '&:hover': { opacity: 0.8 },
-            }}
-          >
-            {match.data?.detail?.name || match.params.collectionsId}
-          </Badge>
-        )}
-      </NavLink>
+        {match.data?.detail?.name || match.params.collectionsId}
+      </BreadcrumbItem>
     </>
   ),
   miniTitle: (match: RouteMatch) => ({
@@ -119,20 +92,20 @@ const CollectionDetail = () => {
       className="flex w-full flex-col items-center justify-center px-3 pb-16 sm:px-0"
     >
       <div ref={ref} />
-      {detail && detail.items && detail.items.length > 0 && (
-        <MediaList
-          listType="grid"
-          showListTypeChangeButton
-          items={currentData}
-          listName={detail?.name}
-          genresMovie={rootData?.genresMovie}
-          genresTv={rootData?.genresTv}
-        />
-      )}
-      <Spacer y={1} />
+      <MediaList
+        listType="grid"
+        showListTypeChangeButton
+        items={currentData}
+        listName={detail?.name}
+        genresMovie={rootData?.genresMovie}
+        genresTv={rootData?.genresTv}
+        itemsType="movie-tv"
+      />
+      <Spacer y={5} />
       {maxPage > 1 && (
-        <Flex direction="row" justify="center">
+        <div className="mt-7 flex flex-row items-center">
           <Pagination
+            // showControls={!isSm}
             total={maxPage}
             initialPage={currentPage}
             // shadow
@@ -144,10 +117,9 @@ const CollectionDetail = () => {
                 inline: 'nearest',
               });
             }}
-            css={{ marginTop: '2rem' }}
             {...(isSm && { size: 'xs' })}
           />
-        </Flex>
+        </div>
       )}
     </motion.div>
   );

@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-throw-literal */
-
 import { redirect } from '@remix-run/node';
 import type { Session } from '@supabase/supabase-js';
 import isbot from 'isbot';
@@ -7,11 +5,6 @@ import isbot from 'isbot';
 import sgConfigs from '../configs.server';
 import supabase from './client.server';
 import { commitAuthCookie, getSessionFromCookie } from './cookie.server';
-
-const userAgentBlock = [
-  'Mozilla/5.0 (compatible; SemrushBot/7~bl; +http://www.semrush.com/bot.html)',
-  'Mozilla/4.5 (compatible; HTTrack 3.0x; Windows 98)',
-];
 
 export const signUp = async (email: string, password: string) =>
   supabase.auth.signUp({
@@ -52,6 +45,16 @@ export async function authenticate(
   payloadCheckRequired?: boolean,
   headers = new Headers(),
 ) {
+  isbot.exclude([
+    'Checkly',
+    'Checkly, https://www.checklyhq.com',
+    'Checkly/1.0 (https://www.checklyhq.com)',
+    'chrome-lighthouse',
+    'googlebot',
+    'googlebot/2.1 (+http://www.google.com/bot.html)',
+    'bingbot',
+    'bingbot/2.0 (+http://www.bing.com/bingbot.htm)',
+  ]);
   // try to get the session (from cookie) and payload from request
   const [session, payload, botcheck] = await Promise.all([
     getSessionFromCookie(request.headers.get('Cookie')),
@@ -59,8 +62,7 @@ export async function authenticate(
     isbot(request.headers.get('User-Agent')),
   ]);
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  if (botcheck && botcheckRequired && userAgentBlock.includes(request.headers.get('User-Agent')!)) {
+  if (botcheck && botcheckRequired) {
     console.log('bot detected', request.headers.get('User-Agent'));
     throw new Response(null, { status: 500 });
   } else if (!session.has('auth_token')) {
@@ -102,7 +104,8 @@ export async function authenticate(
           access_token: data.session.access_token,
           refresh_token: data.session.refresh_token,
           expires_at: Date.now() + (data.session.expires_in - 10) * 1000,
-          req_payload: await requestPayload(request),
+          req_payload:
+            process.env.NODE_ENV === 'production' ? await requestPayload(request) : undefined,
         });
 
         headers.append('Set-Cookie', await commitAuthCookie(session));

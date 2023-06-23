@@ -1,5 +1,3 @@
-import Svg from '~/components/styles/Svg.styles';
-
 const Bold = ({ color }: { color: string }) => (
   <g transform="translate(7 6)">
     <path
@@ -54,6 +52,12 @@ interface IChevronLeftProps {
    * @type number
    * */
   width?: number;
+  /**
+   * The className of the icon
+   * @default ''
+   * @type string
+   * */
+  className?: string;
 }
 
 const ChevronLeft = ({
@@ -62,40 +66,41 @@ const ChevronLeft = ({
   size = 24,
   height = 24,
   width = 24,
+  className = '',
   ...props
 }: IChevronLeftProps) => {
   switch (filled) {
     case false:
       return (
-        <Svg
-          className=""
+        <svg
+          className={className}
           width={width || size}
           height={height || size}
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
-          css={{
+          style={{
             display: 'inline',
           }}
           {...props}
         >
           <Light color={fill} strokeWidth={1.5} />
-        </Svg>
+        </svg>
       );
     default:
       return (
-        <Svg
-          className=""
+        <svg
+          className={className}
           width={width || size}
           height={height || size}
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
-          css={{
+          style={{
             display: 'inline',
           }}
           {...props}
         >
           <Bold color={fill} />;
-        </Svg>
+        </svg>
       );
   }
 };

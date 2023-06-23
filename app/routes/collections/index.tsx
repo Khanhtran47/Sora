@@ -1,15 +1,15 @@
-/* eslint-disable @typescript-eslint/indent */
 import { useRef } from 'react';
-import { Badge, Pagination, Spacer } from '@nextui-org/react';
+import { Pagination } from '@nextui-org/pagination';
+import { Spacer } from '@nextui-org/spacer';
 import { useMediaQuery } from '@react-hookz/web';
 import type { MetaFunction } from '@remix-run/node';
-import { NavLink, useLocation } from '@remix-run/react';
+import { useLocation } from '@remix-run/react';
 import { motion } from 'framer-motion';
 
 import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
 import featuredList from '~/constants/featuredList';
 import MediaList from '~/components/media/MediaList';
-import Flex from '~/components/styles/Flex.styles';
+import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
 export const meta: MetaFunction = () => ({
   title: 'Movies and tv shows Collections | Sora',
@@ -25,21 +25,9 @@ export const meta: MetaFunction = () => ({
 
 export const handle = {
   breadcrumb: () => (
-    <NavLink to="/collections" aria-label="Collections">
-      {({ isActive }) => (
-        <Badge
-          color="primary"
-          variant="flat"
-          css={{
-            opacity: isActive ? 1 : 0.7,
-            transition: 'opacity 0.25s ease 0s',
-            '&:hover': { opacity: 0.8 },
-          }}
-        >
-          Collections
-        </Badge>
-      )}
-    </NavLink>
+    <BreadcrumbItem to="/collections" key="collections">
+      Collections
+    </BreadcrumbItem>
   ),
   miniTitle: () => ({
     title: 'Featured Collections',
@@ -62,18 +50,17 @@ const Collections = () => {
       className="flex w-full flex-col items-center justify-center px-3 sm:px-0"
     >
       <div ref={ref} />
-      {featuredList && featuredList.length > 0 && (
-        <MediaList
-          listType="grid"
-          listName="Featured Collections"
-          isCoverCard
-          coverItem={currentData}
-        />
-      )}
-      <Spacer y={1} />
+      <MediaList
+        listType="grid"
+        listName="Featured Collections"
+        isCoverCard
+        coverItem={currentData}
+      />
+      <Spacer y={5} />
       {maxPage > 1 && (
-        <Flex direction="row" justify="center">
+        <div className="mt-7 flex flex-row justify-center">
           <Pagination
+            // showControls={!isSm}
             total={maxPage}
             initialPage={currentPage}
             // shadow
@@ -85,10 +72,9 @@ const Collections = () => {
                 inline: 'center',
               });
             }}
-            css={{ marginTop: '2rem' }}
             {...(isSm && { size: 'xs' })}
           />
-        </Flex>
+        </div>
       )}
     </motion.div>
   );
