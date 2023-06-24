@@ -32,7 +32,12 @@ interface IPlayerSettingsProps {
     isM3U8?: boolean;
     isDASH?: boolean;
   }[];
-  subtitleSelector?: { html: string; url: string; default?: boolean; type?: string }[];
+  subtitleSelector?: {
+    html: string;
+    url: string;
+    default?: boolean;
+    type?: string;
+  }[];
   isPlayerFullScreen?: boolean;
   isSettingsOpen: boolean;
   showSubtitle: boolean;

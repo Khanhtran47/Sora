@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable import/prefer-default-export */
-
 import Youtube from './utils.server';
 import type { Item, IYoutubeVideo } from './youtube.types';
 

@@ -42,7 +42,13 @@
     "prefer-const": ["error", { "destructuring": "all" }],
     "prettier/prettier": [
       "error",
-      { "trailingComma": "all", "singleQuote": true, "printWidth": 100 }
+      {
+        "trailingComma": "all",
+        "singleQuote": true,
+        "semi": true,
+        "printWidth": 100,
+        "endOfLine": "auto"
+      }
     ],
     "quotes": [2, "single", { "avoidEscape": true, "allowTemplateLiterals": true }],
     "radix": 0,
@@ -81,6 +87,7 @@
     "import/prefer-default-export": "off",
     "import/extensions": ["error", "ignorePackages", { "ts": "never", "tsx": "never" }],
     "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
+    "sort-imports": "off",
     "tailwindcss/no-custom-classname": "off"
   },
   "ignorePatterns": [
