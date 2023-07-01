@@ -151,7 +151,7 @@ export const MediaDetail = (props: IMediaDetail) => {
         style={{
           height: `calc(${size?.height}px)`,
           // @ts-ignore
-          '--colors-movie-brand': isHydrated ? backgroundColor : 'transparent',
+          '--theme-movie-brand': isHydrated ? backgroundColor : 'transparent',
         }}
         classNames={{
           base: 'flex flex-col w-full !bg-transparent bg-gradient-to-b !from-transparent from-[80px] !to-movie-brand-color border-0 to-[80px] sm:from-[200px] sm:to-[200px]',
@@ -417,7 +417,7 @@ export const AnimeDetail = (props: IAnimeDetail) => {
         style={{
           height: `calc(${size?.height}px)`,
           // @ts-ignore
-          '--colors-movie-brand': isHydrated ? backgroundColor : 'transparent',
+          '--theme-movie-brand': isHydrated ? backgroundColor : 'transparent',
         }}
         classNames={{
           base: 'flex flex-col w-full !bg-transparent bg-gradient-to-b !from-transparent from-[80px] !to-movie-brand-color border-0 to-[80px] sm:from-[200px] sm:to-[200px]',

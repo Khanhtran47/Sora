@@ -550,7 +550,7 @@ const GlobalPlayer = () => {
                     isLive: false,
                     playsInline: true,
                     autoPlayback: isAutoPlayback.value,
-                    theme: 'hsl(var(--colors-primary))',
+                    theme: 'hsl(var(--theme-primary))',
                     autoMini: isAutoMini.value,
                     hotkey: true,
                     useSSR: false,
@@ -761,9 +761,9 @@ const GlobalPlayer = () => {
                         : []),
                     ],
                     cssVar: {
-                      '--art-font-color': 'hsl(var(--colors-default-foreground))',
-                      '--art-progress-color': 'hsl(var(--colors-default-foreground) / 0.2)',
-                      '--art-loaded-color': 'hsl(var(--colors-default-foreground) / 0.4)',
+                      '--art-font-color': 'hsl(var(--theme-default-foreground))',
+                      '--art-progress-color': 'hsl(var(--theme-default-foreground) / 0.2)',
+                      '--art-loaded-color': 'hsl(var(--theme-default-foreground) / 0.4)',
                     },
                   }}
                   style={{
@@ -828,7 +828,7 @@ const GlobalPlayer = () => {
                           setStyles($item, {
                             left: `${left}%`,
                             width: `${width}%`,
-                            backgroundColor: 'hsl(var(--colors-secondary)) !important',
+                            backgroundColor: 'hsl(var(--theme-secondary)) !important',
                           });
                           append($highlight, $item);
                         }

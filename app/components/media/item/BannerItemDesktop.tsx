@@ -214,7 +214,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
             background: useMotionTemplate`
               radial-gradient(
                 ${mouseRadius}px circle at ${mouseX}px ${mouseY}px,
-                hsl(var(--colors-default-400) / 15),
+                hsl(var(--theme-default-400) / 15),
                 transparent 80%
               )
             `,

@@ -5,7 +5,17 @@ import tinycolor from 'tinycolor2';
 export default function useColorDarkenLighten(color?: string) {
   const { theme } = useTheme();
   const isDark = useMemo(() => {
-    const darkTheme = ['dark', 'synthwave', 'dracula', 'night'];
+    const darkTheme = [
+      'dark',
+      'synthwave',
+      'dracula',
+      'night',
+      'halloween',
+      'forest',
+      'business',
+      'coffee',
+      'luxury',
+    ];
     if (theme) {
       if (theme === 'system') {
         return window.matchMedia('(prefers-color-scheme: dark)').matches;

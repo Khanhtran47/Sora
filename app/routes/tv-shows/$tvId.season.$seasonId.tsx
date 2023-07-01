@@ -280,7 +280,7 @@ const TvSeasonDetail = () => {
         <CardBody
           style={{
             // @ts-ignore
-            '--colors-movie-brand': isHydrated ? backgroundColor : 'transparent',
+            '--theme-movie-brand': isHydrated ? backgroundColor : 'transparent',
           }}
           className="after:from-movie-brand-color absolute bottom-0 to-transparent p-0 after:absolute after:bottom-0 after:h-full after:w-full after:bg-gradient-to-t after:opacity-70 after:content-['']"
         >

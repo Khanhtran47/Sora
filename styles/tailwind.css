@@ -3,66 +3,105 @@
 @tailwind utilities;
 @tailwind variants;
 
-* {
-  @apply box-border m-0 p-0;
-}
-
-body {
-  @apply !bg-background-body;
-}
-
-:root {
-  --swiper-theme-color: hsl(var(--colors-primary)) !important;
-  --swiper-pagination-bullet-inactive-color: hsl(var(--colors-primary-700)) !important;
-}
-
 @layer base {
+  * {
+    @apply box-border m-0 p-0;
+  }
+
+  body {
+    @apply !bg-background-body;
+  }
+
+  :root {
+    --swiper-theme-color: hsl(var(--theme-primary)) !important;
+    --swiper-pagination-bullet-inactive-color: hsl(var(--theme-primary-700)) !important;
+    --theme-rounded-base: 0.25rem;
+  }
+
   .h0 {
-    @apply text-5xl font-bold md:text-6xl !tracking-tighter text-foreground !font-[Inter];
+    @apply text-5xl font-bold md:text-6xl !tracking-tighter text-foreground;
   }
 
   h1,
   .h1 {
-    @apply text-4xl font-bold md:text-5xl !tracking-tighter text-foreground !font-[Inter];
+    @apply text-4xl font-bold md:text-5xl !tracking-tighter text-foreground;
   }
 
   h2,
   .h2 {
-    @apply text-3xl font-bold md:text-4xl !tracking-tighter text-foreground !font-[Inter];
+    @apply text-3xl font-bold md:text-4xl !tracking-tighter text-foreground;
   }
 
   h3,
   .h3 {
-    @apply text-2xl font-semibold md:text-3xl !tracking-normal text-foreground !font-[Inter];
+    @apply text-2xl font-semibold md:text-3xl !tracking-normal text-foreground;
   }
 
   h4,
   .h4 {
-    @apply text-xl font-semibold md:text-2xl !tracking-tight text-foreground !font-[Inter];
+    @apply text-xl font-semibold md:text-2xl !tracking-tight text-foreground;
   }
 
   h5,
   .h5 {
-    @apply text-lg font-medium md:text-xl !tracking-tight text-foreground !font-[Inter];
+    @apply text-lg font-medium md:text-xl !tracking-tight text-foreground;
   }
 
   h6,
   .h6 {
-    @apply text-base font-medium md:text-lg !tracking-tight text-foreground !font-[Inter];
+    @apply text-base font-medium md:text-lg !tracking-tight text-foreground;
   }
 
   body,
   p,
   .p {
-    @apply text-base !tracking-normal text-foreground !font-[Inter];
+    @apply text-base !tracking-normal text-foreground;
   }
 
   .text-display {
-    @apply text-inherit text-base !tracking-normal font-normal md:text-lg text-foreground !font-[Inter];
+    @apply text-inherit text-base !tracking-normal font-normal md:text-lg text-foreground;
   }
 
   .text-gradient {
     @apply bg-gradient-to-r from-primary via-default-600 to-secondary bg-clip-text text-transparent;
+  }
+
+  .cupcake {
+    --theme-rounded-base: 0.5rem;
+  }
+
+  .corporate {
+    --theme-rounded-base: 0.05rem;
+  }
+
+  .cyberpunk {
+    @apply font-mono;
+    --theme-rounded-base: 0px;
+  }
+
+  .retro {
+    --theme-rounded-base: 0.15rem;
+  }
+
+  .valentine {
+    --theme-rounded-base: 0.5rem;
+  }
+
+  .forest {
+    --theme-rounded-base: 0.5rem;
+  }
+
+  .pastel {
+    --theme-rounded-base: 0.5rem;
+  }
+
+  .wireframe {
+    font-family: Chalkboard,comic sans ms,sanssecondaryerif;
+    --theme-rounded-base: 0.1rem;
+  }
+
+  .business {
+    --theme-rounded-base: 0px;
   }
 }
 
@@ -125,7 +164,7 @@ body {
 
   .custom-player-icon-after {
     .art-icon::after {
-      @apply !rounded-lg !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !text-default-foreground !font-[Inter] !bg-default/[0.6];
+      @apply !rounded-lg !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !text-default-foreground !font-sans !bg-default/[0.6];
     }
   }
 
@@ -137,7 +176,7 @@ body {
 
   .custom-player-control-after {
     .art-control::after {
-      @apply !rounded-lg !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !text-default-foreground !font-[Inter] !bg-default/[0.6];
+      @apply !rounded-lg !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !text-default-foreground !font-sans !bg-default/[0.6];
     }
   }
 

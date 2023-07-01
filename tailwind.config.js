@@ -2,6 +2,7 @@ const { withTV } = require('tailwind-variants/transformer');
 const plugin = require('tailwindcss/plugin');
 const { nextui } = require('@nextui-org/theme');
 const themesConfig = require('./styles/themes.config');
+const defaultTheme = require('tailwindcss/defaultTheme');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = withTV({
@@ -15,9 +16,7 @@ module.exports = withTV({
         'player-subtitle-color': 'var(--art-subtitle-color)',
         'player-subtitle-window-color': 'var(--art-subtitle-window-color)',
         'player-subtitle-background-color': 'var(--art-subtitle-background-color)',
-        'movie-brand-color': 'var(--colors-movie-brand)',
-        'theme-radio-color': 'var(--colors-radioColor)',
-        'theme-radio-color-hover': 'var(--colors-radioColorHover)',
+        'movie-brand-color': 'var(--theme-movie-brand)',
       },
       keyframes: {
         enterFromRight: {
@@ -108,63 +107,30 @@ module.exports = withTV({
         wide: ['image title', 'image info', 'image buttons'],
         small: ['image title', 'info info', 'buttons buttons'],
       },
+      fontFamily: {
+        sans: ['Inter', ...defaultTheme.fontFamily.sans],
+        system: 'system-ui',
+      },
+      borderRadius: {
+        none: '0px',
+        sm: 'calc(var(--theme-rounded-base) / 2)',
+        DEFAULT: 'var(--theme-rounded-base)',
+        md: 'calc(var(--theme-rounded-base) * 1.5)',
+        lg: 'calc(var(--theme-rounded-base) * 2)',
+        xl: 'calc(var(--theme-rounded-base) * 3)',
+        '2xl': 'calc(var(--theme-rounded-base) * 4)',
+        '3xl': 'calc(var(--theme-rounded-base) * 5)',
+        full: '9999px',
+      },
       fontSize: {
-        xs: [
-          '0.75rem',
-          {
-            lineHeight: '1rem',
-            letterSpacing: '-0.05em',
-          },
-        ],
-        sm: [
-          '0.875rem',
-          {
-            lineHeight: '1.25rem',
-            letterSpacing: '-0.05em',
-          },
-        ],
-        base: [
-          '1rem',
-          {
-            lineHeight: '1.5rem',
-            letterSpacing: '-0.025em',
-          },
-        ],
-        lg: [
-          '1.125rem',
-          {
-            lineHeight: '1.75rem',
-            letterSpacing: '0',
-          },
-        ],
-        xl: [
-          '1.25rem',
-          {
-            lineHeight: '1.5',
-            letterSpacing: '0',
-          },
-        ],
-        '2xl': [
-          '1.5rem',
-          {
-            lineHeight: '1.5',
-            letterSpacing: '0',
-          },
-        ],
-        '3xl': [
-          '1.875rem',
-          {
-            lineHeight: '1.5',
-            letterSpacing: '0',
-          },
-        ],
-        '4xl': [
-          '2.25rem',
-          {
-            lineHeight: '1.5',
-            letterSpacing: '0',
-          },
-        ],
+        xs: ['0.75rem', { lineHeight: '1rem', letterSpacing: '-0.05em' }],
+        sm: ['0.875rem', { lineHeight: '1.25rem', letterSpacing: '-0.05em' }],
+        base: ['1rem', { lineHeight: '1.5rem', letterSpacing: '-0.025em' }],
+        lg: ['1.125rem', { lineHeight: '1.75rem', letterSpacing: '0' }],
+        xl: ['1.25rem', { lineHeight: '1.5', letterSpacing: '0' }],
+        '2xl': ['1.5rem', { lineHeight: '1.5', letterSpacing: '0' }],
+        '3xl': ['1.875rem', { lineHeight: '1.5', letterSpacing: '0' }],
+        '4xl': ['2.25rem', { lineHeight: '1.5', letterSpacing: '0' }],
         'player-subtitle-font-size': 'var(--art-subtitle-custom-font-size)',
       },
       textShadow: {
@@ -213,7 +179,7 @@ module.exports = withTV({
     require('prettier-plugin-tailwindcss'),
     require('tailwindcss-animate'),
     nextui({
-      prefix: 'colors',
+      prefix: 'theme',
       themes: themesConfig,
     }),
   ],
