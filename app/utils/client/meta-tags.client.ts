@@ -9,7 +9,7 @@ export function getBackgroundTitleBarColor(isHydrated: boolean) {
   if (isHydrated) {
     return window
       .getComputedStyle(document.documentElement)
-      .getPropertyValue('--colors-background-title-bar');
+      .getPropertyValue('--theme-background-title-bar');
   }
   return 'hsl(0, 0%, 0%)';
 }

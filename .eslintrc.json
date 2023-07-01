@@ -69,7 +69,6 @@
     "@typescript-eslint/no-empty-interface": "off",
     "@typescript-eslint/no-throw-literal": "off",
     "@typescript-eslint/ban-ts-comment": "off",
-    "@typescript-eslint/no-duplicate-imports": "error",
     "@typescript-eslint/consistent-type-imports": "error",
     "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/no-unused-vars": [
@@ -87,6 +86,7 @@
     "import/prefer-default-export": "off",
     "import/extensions": ["error", "ignorePackages", { "ts": "never", "tsx": "never" }],
     "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
+    "import/no-duplicates": "error",
     "sort-imports": "off",
     "tailwindcss/no-custom-classname": "off"
   },

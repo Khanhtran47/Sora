@@ -37,7 +37,7 @@ interface ILayout {
 }
 
 const layoutStyles = tv({
-  base: 'bg-content1/[0.3] flex max-h-full min-h-screen max-w-full flex-nowrap justify-start font-[Inter] transition-[padding] duration-200',
+  base: 'bg-content1/[0.3] flex max-h-full min-h-screen max-w-full flex-nowrap justify-start transition-[padding] duration-200',
   variants: {
     boxed: {
       true: 'min-h-[calc(100vh_-_115px)] pt-[15px]',
@@ -349,20 +349,20 @@ const Layout = (props: ILayout) => {
                   toastOptions={{
                     style: {
                       // @ts-ignore
-                      '--normal-bg': 'hsl(var(--colors-default))',
-                      '--normal-text': 'hsl(var(--colors-default-foreground))',
-                      '--normal-border': 'hsl(var(--colors-border))',
-                      '--success-bg': 'hsl(var(--colors-success))',
-                      '--success-border': 'hsl(var(--colors-border))',
-                      '--success-text': 'hsl(var(--colors-success-foreground))',
-                      '--error-bg': 'hsl(var(--colors-danger))',
-                      '--error-border': 'hsl(var(--colors-border))',
-                      '--error-text': 'hsl(var(--colors-danger-foreground))',
-                      '--gray1': 'hsl(var(--colors-default-50))',
-                      '--gray2': 'hsl(var(--colors-default-100))',
-                      '--gray4': 'hsl(var(--colors-default-300))',
-                      '--gray5': 'hsl(var(--colors-default-400))',
-                      '--gray12': 'hsl(var(--colors-default-900))',
+                      '--normal-bg': 'hsl(var(--theme-default))',
+                      '--normal-text': 'hsl(var(--theme-default-foreground))',
+                      '--normal-border': 'hsl(var(--theme-border))',
+                      '--success-bg': 'hsl(var(--theme-success))',
+                      '--success-border': 'hsl(var(--theme-border))',
+                      '--success-text': 'hsl(var(--theme-success-foreground))',
+                      '--error-bg': 'hsl(var(--theme-danger))',
+                      '--error-border': 'hsl(var(--theme-border))',
+                      '--error-text': 'hsl(var(--theme-danger-foreground))',
+                      '--gray1': 'hsl(var(--theme-default-50))',
+                      '--gray2': 'hsl(var(--theme-default-100))',
+                      '--gray4': 'hsl(var(--theme-default-300))',
+                      '--gray5': 'hsl(var(--theme-default-400))',
+                      '--gray12': 'hsl(var(--theme-default-900))',
                     },
                   }}
                 />

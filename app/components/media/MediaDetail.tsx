@@ -151,7 +151,7 @@ export const MediaDetail = (props: IMediaDetail) => {
         style={{
           height: `calc(${size?.height}px)`,
           // @ts-ignore
-          '--colors-movie-brand': isHydrated ? backgroundColor : 'transparent',
+          '--theme-movie-brand': isHydrated ? backgroundColor : 'transparent',
         }}
         classNames={{
           base: 'flex flex-col w-full !bg-transparent bg-gradient-to-b !from-transparent from-[80px] !to-movie-brand-color border-0 to-[80px] sm:from-[200px] sm:to-[200px]',
@@ -308,7 +308,7 @@ export const MediaDetail = (props: IMediaDetail) => {
                     <Button
                       type="button"
                       // shadow
-                      className="from-primary to-secondary w-full bg-gradient-to-r text-lg font-bold sm:w-auto"
+                      className="from-secondary to-primary text-primary-foreground w-full bg-gradient-to-br to-50% text-lg font-bold sm:w-auto"
                       size="lg"
                     >
                       Watch now
@@ -417,7 +417,7 @@ export const AnimeDetail = (props: IAnimeDetail) => {
         style={{
           height: `calc(${size?.height}px)`,
           // @ts-ignore
-          '--colors-movie-brand': isHydrated ? backgroundColor : 'transparent',
+          '--theme-movie-brand': isHydrated ? backgroundColor : 'transparent',
         }}
         classNames={{
           base: 'flex flex-col w-full !bg-transparent bg-gradient-to-b !from-transparent from-[80px] !to-movie-brand-color border-0 to-[80px] sm:from-[200px] sm:to-[200px]',
@@ -552,7 +552,7 @@ export const AnimeDetail = (props: IAnimeDetail) => {
                   <Button
                     type="button"
                     size="lg"
-                    className="from-primary to-secondary w-full bg-gradient-to-r text-lg font-bold sm:w-auto"
+                    className="from-secondary to-primary text-primary-foreground w-full bg-gradient-to-br to-50% text-lg font-bold sm:w-auto"
                   >
                     Watch now
                   </Button>

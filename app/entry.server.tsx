@@ -52,14 +52,26 @@ export default async function handleRequest(
     if (otherRouteResponse) return otherRouteResponse;
   }
 
-  isbot.exclude([
+  const isbotRender = isbot.spawn();
+  isbotRender.exclude([
     'Checkly',
     'Checkly, https://www.checklyhq.com',
     'Checkly/1.0 (https://www.checklyhq.com)',
+    'googlebot',
+    'googlebot/2.1 (+http://www.google.com/bot.html)',
+    'bingbot',
+    'bingbot/2.0 (+http://www.bing.com/bingbot.htm)',
+    'discordbot',
+    'Discordbot/2.0',
+    'twitterbot',
+    'Twitterbot/1.0',
+    'vercel',
+    'Vercel/1.0 (https://vercel.com/docs/bots)',
   ]);
+  isbotRender.extend(['chrome-lighthouse']);
 
   const markup = renderToString(
-    <IsBotProvider isBot={isbot(request.headers.get('User-Agent') ?? '')}>
+    <IsBotProvider isBot={isbotRender(request.headers.get('User-Agent') ?? '')}>
       <I18nextProvider i18n={instance}>
         <RemixServer context={remixContext} url={request.url} />
       </I18nextProvider>

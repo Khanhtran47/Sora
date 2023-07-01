@@ -50,7 +50,7 @@ export const playerStyles = tv({
     '[&_.art-layer-playPauseButton]:duration-300',
     '[&_.art-layer-playPauseButton]:ease-in-out',
     '[&_.art-notice]:!justify-center',
-    '[&_.art-video-player]:!font-[Inter]',
+    '[&_.art-video-player]:!font-sans',
   ],
   variants: {
     isMini: {

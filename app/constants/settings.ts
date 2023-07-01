@@ -41,12 +41,32 @@ const listThemes = [
   'dark-cyan',
   'dark-purple',
   'dark-pink',
+  'cupcake',
   'bumblebee',
+  'emerald',
+  'corporate',
   'synthwave',
   'retro',
+  'cyberpunk',
+  'valentine',
+  'halloween',
+  'garden',
+  'forest',
+  'aqua',
+  'lofi',
+  'pastel',
+  'fantasy',
+  'wireframe',
+  'luxury',
   'dracula',
+  'cmyk',
   'autumn',
+  'business',
+  'acid',
+  'lemonade',
   'night',
+  'coffee',
+  'winter',
 ];
 
 const listSubtitleFontColor = [
@@ -97,7 +117,34 @@ const listSidebarActiveStyleMode = ['rounded-all', 'rounded-one-side', 'pill-all
 const listListViewType = ['card', 'detail', 'table'];
 const listListLoadingType = ['pagination', 'infinite-scroll'];
 const listDefaultThemeColors = ['red', 'yellow', 'green', 'cyan', 'purple', 'pink', 'blue'];
-const listCustomThemeColors = ['bumblebee', 'autumn', 'retro', 'synthwave', 'dracula', 'night'];
+const listCustomThemeColors = [
+  'cupcake',
+  'bumblebee',
+  'emerald',
+  'corporate',
+  'synthwave',
+  'retro',
+  'cyberpunk',
+  'valentine',
+  'halloween',
+  'garden',
+  'forest',
+  'aqua',
+  'lofi',
+  'pastel',
+  'fantasy',
+  'wireframe',
+  'luxury',
+  'dracula',
+  'cmyk',
+  'autumn',
+  'business',
+  'acid',
+  'lemonade',
+  'night',
+  'coffee',
+  'winter',
+];
 
 export {
   settingsTab,

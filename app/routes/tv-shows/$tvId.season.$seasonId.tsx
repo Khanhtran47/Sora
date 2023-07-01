@@ -210,7 +210,7 @@ const TvSeasonDetail = () => {
       <Card
         as="section"
         radius="none"
-        className="flex w-full flex-col border-0 !bg-transparent"
+        className="flex w-full flex-col border-0"
         style={{ height: `calc(${size?.height}px + 72px)` }}
       >
         <CardHeader
@@ -262,7 +262,7 @@ const TvSeasonDetail = () => {
                 </div>
               )}
             </div>
-            <div className="grid-in-title flex w-full flex-col items-start justify-start">
+            <div className="grid-in-title z-50 flex w-full flex-col items-start justify-start">
               <h2>
                 {detail?.name} {seasonDetail?.name}
               </h2>
@@ -280,9 +280,9 @@ const TvSeasonDetail = () => {
         <CardBody
           style={{
             // @ts-ignore
-            '--colors-movie-brand': isHydrated ? backgroundColor : 'transparent',
+            '--theme-movie-brand': isHydrated ? backgroundColor : 'transparent',
           }}
-          className="after:from-movie-brand-color absolute bottom-0 to-transparent p-0 after:absolute after:bottom-0 after:h-full after:w-full after:bg-gradient-to-t after:opacity-70 after:content-['']"
+          className="after:from-movie-brand-color absolute bottom-0 p-0 after:absolute after:bottom-0 after:h-full after:w-full after:bg-gradient-to-t after:to-transparent after:content-['']"
         >
           <Image
             src={
@@ -293,7 +293,7 @@ const TvSeasonDetail = () => {
             radius="none"
             classNames={{
               wrapper: 'w-full h-auto object-cover max-w-full',
-              img: `left-0 top-0 z-0 m-0 object-cover opacity-30 blur-2xl ${
+              img: `left-0 top-0 z-0 m-0 object-cover !opacity-30 blur-2xl ${
                 size ? 'visible' : 'invisible'
               }'}`,
             }}

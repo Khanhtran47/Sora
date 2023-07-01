@@ -57,7 +57,7 @@ function useHeaderOptions() {
     if (customHeaderBackgroundColor) {
       return backgroundColor;
     }
-    return 'hsl(var(--colors-content1) / 0.6)';
+    return 'hsl(var(--theme-content1) / 0.6)';
   }, [customHeaderBackgroundColor, backgroundColor]);
 
   const isShowListViewChangeButton = useMemo(
