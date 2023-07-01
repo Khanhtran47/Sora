@@ -85,7 +85,7 @@ const BannerItemCompact = forwardRef<HTMLDivElement, IBannerItemCompactProps>(
               ]}
             />
           </CardBody>
-          <CardFooter className="absolute bottom-0 z-20 h-full w-[70%] items-center justify-start pl-6">
+          <CardFooter className="absolute bottom-0 z-20 h-full w-[160px] items-center justify-start pl-6">
             <AnimatePresence>
               {isHovered || active ? (
                 <motion.h6

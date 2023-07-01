@@ -196,7 +196,7 @@ const darkPinkTheme = {
 };
 
 const cupcakeTheme = {
-  'background-title-bar': '#f9f9fe',
+  'background-title-bar': '#f9f6fc',
   'background-body': '#ffffff',
   background: {
     DEFAULT: '#faf7f5',
@@ -424,7 +424,7 @@ const bumblebeeTheme = {
 };
 
 const emeraldTheme = {
-  'background-title-bar': '#f9f9fe',
+  'background-title-bar': '#f9fafb',
   'background-body': '#ffffff',
   background: {
     DEFAULT: '#ffffff',
@@ -538,7 +538,7 @@ const emeraldTheme = {
 };
 
 const corporateTheme = {
-  'background-title-bar': '#f9f9fe',
+  'background-title-bar': '#f7f7fa',
   'background-body': '#ffffff',
   background: {
     DEFAULT: '#ffffff',
@@ -994,7 +994,7 @@ const cyberpunkTheme = {
 };
 
 const valentineTheme = {
-  'background-title-bar': '#fffff1',
+  'background-title-bar': '#fdfafc',
   'background-body': '#ffffff',
   background: {
     DEFAULT: '#eed6e8',
@@ -1108,7 +1108,7 @@ const valentineTheme = {
 };
 
 const halloweenTheme = {
-  'background-title-bar': '#04050d',
+  'background-title-bar': '#020202',
   'background-body': '#000000',
   background: {
     DEFAULT: '#212121',
@@ -1222,7 +1222,7 @@ const halloweenTheme = {
 };
 
 const gardenTheme = {
-  'background-title-bar': '#f9f9fe',
+  'background-title-bar': '#fffcf1',
   'background-body': '#ffffff',
   background: {
     DEFAULT: '#e9e7e7',
@@ -1336,7 +1336,7 @@ const gardenTheme = {
 };
 
 const forestTheme = {
-  'background-title-bar': '#04050d',
+  'background-title-bar': '#020302',
   'background-body': '#000000',
   background: {
     DEFAULT: '#161212',
@@ -1450,7 +1450,7 @@ const forestTheme = {
 };
 
 const aquaTheme = {
-  'background-title-bar': '#fffff1',
+  'background-title-bar': '#fafcfe',
   'background-body': '#ffffff',
   background: {
     DEFAULT: '#3c5ca9',
@@ -1564,7 +1564,7 @@ const aquaTheme = {
 };
 
 const lofiTheme = {
-  'background-title-bar': '#fffff1',
+  'background-title-bar': '#f8f8f8',
   'background-body': '#ffffff',
   background: {
     DEFAULT: '#ffffff',
@@ -1678,7 +1678,7 @@ const lofiTheme = {
 };
 
 const pastelTheme = {
-  'background-title-bar': '#f9f9fe',
+  'background-title-bar': '#fbfdfe',
   'background-body': '#ffffff',
   background: {
     DEFAULT: '#ffffff',
@@ -1792,7 +1792,7 @@ const pastelTheme = {
 };
 
 const fantasyTheme = {
-  'background-title-bar': '#f9f9fe',
+  'background-title-bar': '#f8f9fb',
   'background-body': '#ffffff',
   background: {
     DEFAULT: '#ffffff',
@@ -1906,7 +1906,7 @@ const fantasyTheme = {
 };
 
 const wireframeTheme = {
-  'background-title-bar': '#f9f9fe',
+  'background-title-bar': '#fdfdfd',
   'background-body': '#ffffff',
   background: {
     DEFAULT: '#ffffff',
@@ -2020,7 +2020,7 @@ const wireframeTheme = {
 };
 
 const luxuryTheme = {
-  'background-title-bar': '#020308',
+  'background-title-bar': '#030100',
   'background-body': '#000000',
   background: {
     DEFAULT: '#09090b',
@@ -2248,7 +2248,7 @@ const draculaTheme = {
 };
 
 const cmykTheme = {
-  'background-title-bar': '#fffff1',
+  'background-title-bar': '#f9f9f9',
   'background-body': '#ffffff',
   background: {
     DEFAULT: '#ffffff',
@@ -2476,7 +2476,7 @@ const autumnTheme = {
 };
 
 const businessTheme = {
-  'background-title-bar': '#020308',
+  'background-title-bar': '#020203',
   'background-body': '#000000',
   background: {
     DEFAULT: '#212121',
@@ -2590,7 +2590,7 @@ const businessTheme = {
 };
 
 const acidTheme = {
-  'background-title-bar': '#fffff1',
+  'background-title-bar': '#f7f7fc',
   'background-body': '#ffffff',
   background: {
     DEFAULT: '#fafafa',
@@ -2704,7 +2704,7 @@ const acidTheme = {
 };
 
 const lemonadeTheme = {
-  'background-title-bar': '#fffff1',
+  'background-title-bar': '#f7f7fc',
   'background-body': '#ffffff',
   background: {
     DEFAULT: '#ffffff',
@@ -2932,7 +2932,7 @@ const nightTheme = {
 };
 
 const coffeeTheme = {
-  'background-title-bar': '#020308',
+  'background-title-bar': '#010101',
   'background-body': '#000000',
   background: {
     DEFAULT: '#211721',
@@ -3046,7 +3046,7 @@ const coffeeTheme = {
 };
 
 const winterTheme = {
-  'background-title-bar': '#fffff1',
+  'background-title-bar': '#f3f7fe',
   'background-body': '#ffffff',
   background: {
     DEFAULT: '#ffffff',
