@@ -45,7 +45,9 @@ export async function authenticate(
   payloadCheckRequired?: boolean,
   headers = new Headers(),
 ) {
-  isbot.exclude([
+  const isbotAuth = isbot.spawn();
+
+  isbotAuth.exclude([
     'Checkly',
     'Checkly, https://www.checklyhq.com',
     'Checkly/1.0 (https://www.checklyhq.com)',
@@ -54,12 +56,18 @@ export async function authenticate(
     'googlebot/2.1 (+http://www.google.com/bot.html)',
     'bingbot',
     'bingbot/2.0 (+http://www.bing.com/bingbot.htm)',
+    'discordbot',
+    'Discordbot/2.0',
+    'twitterbot',
+    'Twitterbot/1.0',
+    'vercel',
+    'Vercel/1.0 (https://vercel.com/docs/bots)',
   ]);
   // try to get the session (from cookie) and payload from request
   const [session, payload, botcheck] = await Promise.all([
     getSessionFromCookie(request.headers.get('Cookie')),
     process.env.NODE_ENV === 'production' ? requestPayload(request) : undefined,
-    isbot(request.headers.get('User-Agent')),
+    isbotAuth(request.headers.get('User-Agent')),
   ]);
 
   if (botcheck && botcheckRequired) {

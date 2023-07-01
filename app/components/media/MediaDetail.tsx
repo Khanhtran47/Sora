@@ -308,7 +308,7 @@ export const MediaDetail = (props: IMediaDetail) => {
                     <Button
                       type="button"
                       // shadow
-                      className="from-primary to-secondary w-full bg-gradient-to-r text-lg font-bold sm:w-auto"
+                      className="from-secondary to-primary text-primary-foreground w-full bg-gradient-to-br to-50% text-lg font-bold sm:w-auto"
                       size="lg"
                     >
                       Watch now
@@ -552,7 +552,7 @@ export const AnimeDetail = (props: IAnimeDetail) => {
                   <Button
                     type="button"
                     size="lg"
-                    className="from-primary to-secondary w-full bg-gradient-to-r text-lg font-bold sm:w-auto"
+                    className="from-secondary to-primary text-primary-foreground w-full bg-gradient-to-br to-50% text-lg font-bold sm:w-auto"
                   >
                     Watch now
                   </Button>
