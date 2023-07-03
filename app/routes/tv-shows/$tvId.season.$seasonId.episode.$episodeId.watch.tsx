@@ -1,6 +1,6 @@
 import type { IMovieInfo, ISource } from '@consumet/extensions';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { useCatch, useLoaderData, type RouteMatch } from '@remix-run/react';
+import { useLoaderData, type RouteMatch } from '@remix-run/react';
 import Vibrant from 'node-vibrant';
 
 import {
@@ -26,7 +26,6 @@ import TMDB from '~/utils/media';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
-import CatchBoundaryView from '~/components/elements/shared/CatchBoundaryView';
 import ErrorBoundaryView from '~/components/elements/shared/ErrorBoundaryView';
 import WatchDetail from '~/components/elements/shared/WatchDetail';
 
@@ -435,7 +434,7 @@ export const handle = {
   }),
 };
 
-const EpisodeWatch = () => {
+const TvEpisodeWatch = () => {
   const { detail, recommendations, imdbRating, seasonDetail, providers, color } =
     useLoaderData<typeof loader>();
   const rootData = useTypedRouteLoaderData('root');
@@ -464,12 +463,14 @@ const EpisodeWatch = () => {
   );
 };
 
-export const CatchBoundary = () => {
-  const caught = useCatch();
+export function ErrorBoundary() {
+  return (
+    <ErrorBoundaryView
+      statusHandlers={{
+        404: ({ params }) => <p>This series doesn't have episode {params.episodeId}</p>,
+      }}
+    />
+  );
+}
 
-  return <CatchBoundaryView caught={caught} />;
-};
-
-export const ErrorBoundary = ({ error }: { error: Error }) => <ErrorBoundaryView error={error} />;
-
-export default EpisodeWatch;
+export default TvEpisodeWatch;

@@ -150,7 +150,7 @@ const TvVideosPage = () => {
               <h6 className="!m-0">{type.activeVideo}</h6>
               {activeType === type.id ? (
                 <motion.div
-                  className="bg-default-foreground absolute overflow-hidden rounded-md data-[orientation=horizontal]:bottom-0 data-[orientation=vertical]:left-0 data-[orientation=horizontal]:h-1 data-[orientation=vertical]:h-1/2 data-[orientation=horizontal]:w-1/2 data-[orientation=vertical]:w-1"
+                  className="absolute overflow-hidden rounded-md bg-default-foreground data-[orientation=horizontal]:bottom-0 data-[orientation=vertical]:left-0 data-[orientation=horizontal]:h-1 data-[orientation=vertical]:h-1/2 data-[orientation=horizontal]:w-1/2 data-[orientation=vertical]:w-1"
                   layoutId="video-underline"
                   data-orientation={isSm ? 'horizontal' : 'vertical'}
                   ref={underlineRef}
@@ -173,7 +173,7 @@ const TvVideosPage = () => {
                 onDragEnd={handleDragEnd}
                 dragDirectionLock
               >
-                <div className="3xl:grid-cols-3 4xl:grid-cols-4 grid w-full grid-cols-1 justify-items-center gap-4 lg:grid-cols-2">
+                <div className="grid w-full grid-cols-1 justify-items-center gap-4 lg:grid-cols-2 3xl:grid-cols-3 4xl:grid-cols-4">
                   {activeTypeVideos
                     ? activeTypeVideos.map((video) => (
                         <DialogTrigger asChild key={video?.id}>
@@ -181,7 +181,7 @@ const TvVideosPage = () => {
                             isPressable
                             isHoverable
                             role="figure"
-                            className="hover:shadow-primary-200 w-[320px] hover:shadow-[0_0_0_1px]"
+                            className="w-[320px] hover:shadow-[0_0_0_1px] hover:shadow-primary-200"
                             onPress={() => {
                               const videoPlay = videos?.results?.find(
                                 (item) => item.key === video.id,

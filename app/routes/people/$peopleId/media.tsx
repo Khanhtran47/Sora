@@ -106,7 +106,7 @@ const MediaPage = () => {
       </h5>
       <Spacer y={2.5} />
       <Gallery withCaption withDownloadButton uiElements={uiElements}>
-        <div className="xs:grid-cols-2 3xl:grid-cols-4 5xl:grid-cols-5 grid grid-cols-1 gap-3 xl:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 xs:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 5xl:grid-cols-5">
           {images?.profiles?.map((image) => (
             <Item
               key={image.file_path}

@@ -50,7 +50,7 @@ const SelectContent = React.forwardRef<
       {...props}
     >
       {position === 'item-aligned' ? (
-        <SelectPrimitive.ScrollUpButton className="bg-content1 text-default-foreground flex h-6 cursor-default items-center justify-center">
+        <SelectPrimitive.ScrollUpButton className="flex h-6 cursor-default items-center justify-center bg-content1 text-default-foreground">
           <ChevronUp className="h-4 w-4" />
         </SelectPrimitive.ScrollUpButton>
       ) : null}
@@ -65,7 +65,7 @@ const SelectContent = React.forwardRef<
         {children}
       </SelectPrimitive.Viewport>
       {position === 'item-aligned' ? (
-        <SelectPrimitive.ScrollDownButton className="bg-default text-default-foreground flex h-6 cursor-default items-center justify-center">
+        <SelectPrimitive.ScrollDownButton className="flex h-6 cursor-default items-center justify-center bg-default text-default-foreground">
           <ChevronDown className="h-4 w-4" />
         </SelectPrimitive.ScrollDownButton>
       ) : null}

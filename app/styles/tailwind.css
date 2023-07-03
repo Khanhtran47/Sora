@@ -96,7 +96,7 @@
   }
 
   .wireframe {
-    font-family: Chalkboard,comic sans ms,sanssecondaryerif;
+    font-family: Chalkboard, comic sans ms, sanssecondaryerif;
     --theme-rounded-base: 0.1rem;
   }
 
@@ -148,7 +148,7 @@
 
   .custom-mini-player-hover {
     .art-video-player:hover {
-      @apply [&_.art-layer-mask]:block [&_.art-layer-mask]:!bg-default/[0.6] [&_.art-layer-playPauseButton]:block [&_.art-layer-miniTopControlButtons]:block
+      @apply [&_.art-layer-mask]:block [&_.art-layer-mask]:!bg-default/[0.6] [&_.art-layer-playPauseButton]:block [&_.art-layer-miniTopControlButtons]:block;
     }
   }
 
@@ -198,7 +198,11 @@
 
   .custom-player-progress-tip {
     .art-video-player {
-      .art-bottom .art-progress .art-control-progress .art-control-progress-inner .art-progress-tip {
+      .art-bottom
+        .art-progress
+        .art-control-progress
+        .art-control-progress-inner
+        .art-progress-tip {
         @apply !rounded-lg !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
       }
     }

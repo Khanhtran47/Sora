@@ -45,7 +45,7 @@ const AuthForm = ({ type, error, code, errorCode }: IAuthForm) => {
     <Form method="post" className="flex w-full justify-center">
       <Card className="w-full max-w-lg">
         <CardHeader className="flex w-full justify-center">
-          <h2 className="from-primary to-secondary bg-gradient-to-r bg-clip-text text-transparent">
+          <h2 className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
             {t('welcome')}
           </h2>
         </CardHeader>
@@ -81,9 +81,9 @@ const AuthForm = ({ type, error, code, errorCode }: IAuthForm) => {
                 onClick={togglePasswordVisibility}
               >
                 {isPasswordVisible ? (
-                  <EyeSlashFilledIcon className="text-default-400 pointer-events-none text-2xl" />
+                  <EyeSlashFilledIcon className="pointer-events-none text-2xl text-default-400" />
                 ) : (
-                  <EyeFilledIcon className="text-default-400 pointer-events-none text-2xl" />
+                  <EyeFilledIcon className="pointer-events-none text-2xl text-default-400" />
                 )}
               </button>
             }
@@ -108,9 +108,9 @@ const AuthForm = ({ type, error, code, errorCode }: IAuthForm) => {
                     onClick={toggleRePasswordVisibility}
                   >
                     {isRePasswordVisible ? (
-                      <EyeSlashFilledIcon className="text-default-400 pointer-events-none text-2xl" />
+                      <EyeSlashFilledIcon className="pointer-events-none text-2xl text-default-400" />
                     ) : (
-                      <EyeFilledIcon className="text-default-400 pointer-events-none text-2xl" />
+                      <EyeFilledIcon className="pointer-events-none text-2xl text-default-400" />
                     )}
                   </button>
                 }
@@ -133,7 +133,7 @@ const AuthForm = ({ type, error, code, errorCode }: IAuthForm) => {
           <div className="flex items-center justify-between">
             {type === 'sign-in' ? (
               <>
-                <Link to="/sign-up" className="text-primary font-semibold">
+                <Link to="/sign-up" className="font-semibold text-primary">
                   {t('signUp')}
                 </Link>
                 <Checkbox>
@@ -141,7 +141,7 @@ const AuthForm = ({ type, error, code, errorCode }: IAuthForm) => {
                 </Checkbox>
               </>
             ) : (
-              <Link to="/sign-in" className="text-primary font-semibold">
+              <Link to="/sign-in" className="font-semibold text-primary">
                 {t('signIn')}
               </Link>
             )}

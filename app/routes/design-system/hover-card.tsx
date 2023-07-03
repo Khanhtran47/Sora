@@ -61,7 +61,7 @@ const HoverCardPage = () => {
             <NavLink
               to="/"
               arial-label="home-page"
-              className="from-secondary to-primary bg-gradient-to-tr to-50% bg-clip-text text-3xl font-bold tracking-normal text-transparent md:text-4xl"
+              className="bg-gradient-to-tr from-secondary to-primary to-50% bg-clip-text text-3xl font-bold tracking-normal text-transparent md:text-4xl"
             >
               SORA
             </NavLink>

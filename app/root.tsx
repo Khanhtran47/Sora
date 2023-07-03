@@ -15,16 +15,17 @@ import { Image as NextUIImage } from '@nextui-org/image';
 import { NextUIProvider as NextUIv2Provider } from '@nextui-org/system';
 import { json, type LinksFunction, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import {
+  isRouteErrorResponse,
   Links,
   LiveReload,
   Meta,
   Scripts,
-  useCatch,
   useFetchers,
   useLoaderData,
   useLocation,
   useMatches,
   useNavigation,
+  useRouteError,
 } from '@remix-run/react';
 import i18next, { i18nCookie } from '~/i18n/i18next.server';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -51,20 +52,19 @@ import swiperNavigationStyles from 'swiper/css/pagination';
 // @ts-ignore
 import swiperThumbsStyles from 'swiper/css/thumbs';
 
-import { getUserFromCookie } from '~/services/supabase';
-import { getListGenre, getListLanguages } from '~/services/tmdb/tmdb.server';
-import * as gtag from '~/utils/client/gtags.client';
-import { useIsBot } from '~/context/isbot.context';
-import Layout from '~/components/layouts/Layout';
-import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
-import nProgressStyles from '~/components/styles/nprogress.css';
-import Home from '~/assets/icons/HomeIcon';
-import Refresh from '~/assets/icons/RefreshIcon';
-import pageNotFound from '~/assets/images/404.gif';
-import logoLoading from '~/assets/images/logo_loading.png';
-import styles from '~/styles/tailwind.css';
-
+import Home from './assets/icons/HomeIcon';
+import Refresh from './assets/icons/RefreshIcon';
+import pageNotFound from './assets/images/404.gif';
+import logoLoading from './assets/images/logo_loading.png';
+import { BreadcrumbItem } from './components/elements/Breadcrumb';
+import Layout from './components/layouts/Layout';
+import nProgressStyles from './components/styles/nprogress.css';
 import { listThemes } from './constants/settings';
+import { useIsBot } from './context/isbot.context';
+import { getUserFromCookie } from './services/supabase';
+import { getListGenre, getListLanguages } from './services/tmdb/tmdb.server';
+import styles from './styles/tailwind.css';
+import * as gtag from './utils/client/gtags.client';
 
 interface DocumentProps {
   children: React.ReactNode;
@@ -74,6 +74,49 @@ interface DocumentProps {
   gaTrackingId?: string;
   ENV?: unknown;
 }
+
+const themeValues = {
+  light: 'light',
+  dark: 'dark',
+  'light-red': 'light-red',
+  'light-yellow': 'light-yellow',
+  'light-green': 'light-green',
+  'light-cyan': 'light-cyan',
+  'light-purple': 'light-purple',
+  'light-pink': 'light-pink',
+  'dark-red': 'dark-red',
+  'dark-yellow': 'dark-yellow',
+  'dark-green': 'dark-green',
+  'dark-cyan': 'dark-cyan',
+  'dark-purple': 'dark-purple',
+  'dark-pink': 'dark-pink',
+  cupcake: 'cupcake',
+  bumblebee: 'bumblebee',
+  emerald: 'emerald',
+  corporate: 'corporate',
+  synthwave: 'synthwave',
+  retro: 'retro',
+  cyberpunk: 'cyberpunk',
+  valentine: 'valentine',
+  halloween: 'halloween',
+  garden: 'garden',
+  forest: 'forest',
+  aqua: 'aqua',
+  lofi: 'lofi',
+  pastel: 'pastel',
+  fantasy: 'fantasy',
+  wireframe: 'wireframe',
+  luxury: 'luxury',
+  dracula: 'dracula',
+  cmyk: 'cmyk',
+  autumn: 'autumn',
+  business: 'business',
+  acid: 'acid',
+  lemonade: 'lemonade',
+  night: 'night',
+  coffee: 'coffee',
+  winter: 'winter',
+};
 
 export const links: LinksFunction = () => [
   { rel: 'manifest', href: '/resources/manifest-v0.0.1.json' },
@@ -541,48 +584,7 @@ const App = () => {
           enableColorScheme
           enableSystem
           themes={listThemes}
-          value={{
-            light: 'light',
-            dark: 'dark',
-            'light-red': 'light-red',
-            'light-yellow': 'light-yellow',
-            'light-green': 'light-green',
-            'light-cyan': 'light-cyan',
-            'light-purple': 'light-purple',
-            'light-pink': 'light-pink',
-            'dark-red': 'dark-red',
-            'dark-yellow': 'dark-yellow',
-            'dark-green': 'dark-green',
-            'dark-cyan': 'dark-cyan',
-            'dark-purple': 'dark-purple',
-            'dark-pink': 'dark-pink',
-            cupcake: 'cupcake',
-            bumblebee: 'bumblebee',
-            emerald: 'emerald',
-            corporate: 'corporate',
-            synthwave: 'synthwave',
-            retro: 'retro',
-            cyberpunk: 'cyberpunk',
-            valentine: 'valentine',
-            halloween: 'halloween',
-            garden: 'garden',
-            forest: 'forest',
-            aqua: 'aqua',
-            lofi: 'lofi',
-            pastel: 'pastel',
-            fantasy: 'fantasy',
-            wireframe: 'wireframe',
-            luxury: 'luxury',
-            dracula: 'dracula',
-            cmyk: 'cmyk',
-            autumn: 'autumn',
-            business: 'business',
-            acid: 'acid',
-            lemonade: 'lemonade',
-            night: 'night',
-            coffee: 'coffee',
-            winter: 'winter',
-          }}
+          value={themeValues}
         >
           <AnimatePresence>
             {isLoading && process.env.NODE_ENV !== 'development' && !isBot ? (
@@ -591,7 +593,7 @@ const App = () => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.5 }}
-                className="bg-background fixed left-0 top-0 z-[9999] block h-full w-full"
+                className="fixed left-0 top-0 z-[9999] block h-full w-full bg-background"
               >
                 <div className="relative top-1/2 m-auto mt-[-77px] block h-0 w-0">
                   <div className="mb-5 flex	items-center justify-center">
@@ -616,12 +618,12 @@ const App = () => {
                         contentType: MimeType.WEBP,
                       }}
                     />
-                    <h1 className="from-secondary to-primary bg-gradient-to-tr to-50% bg-clip-text !text-3xl font-bold tracking-normal text-transparent md:!text-5xl">
+                    <h1 className="bg-gradient-to-tr from-secondary to-primary to-50% bg-clip-text !text-3xl font-bold tracking-normal text-transparent md:!text-5xl">
                       SORA
                     </h1>
                   </div>
                   <div className="h-9 w-9 animate-spin">
-                    <div className="border-y-primary h-full w-full rounded-[50%] border-4" />
+                    <div className="h-full w-full rounded-[50%] border-4 border-y-primary" />
                   </div>
                 </div>
               </motion.div>
@@ -636,202 +638,164 @@ const App = () => {
   );
 };
 
-export const CatchBoundary = () => {
-  const caught = useCatch();
-
-  let message;
-  switch (caught.status) {
-    case 401:
-      message = <p>Oops! Looks like you tried to visit a page that you do not have access to.</p>;
-      break;
-    case 404:
-      message = <p>Oops! Looks like you tried to visit a page that does not exist.</p>;
-      break;
-
-    default:
-      throw new Error(caught.data || caught.statusText);
-  }
-
-  return (
-    <Document title={`${caught.status} ${caught.statusText}`}>
-      <RemixThemesProvider
-        defaultTheme="system"
-        attribute="class"
-        enableColorScheme
-        enableSystem
-        themes={listThemes}
-        value={{
-          light: 'light',
-          dark: 'dark',
-          'light-red': 'light-red',
-          'light-yellow': 'light-yellow',
-          'light-green': 'light-green',
-          'light-cyan': 'light-cyan',
-          'light-purple': 'light-purple',
-          'light-pink': 'light-pink',
-          'dark-red': 'dark-red',
-          'dark-yellow': 'dark-yellow',
-          'dark-green': 'dark-green',
-          'dark-cyan': 'dark-cyan',
-          'dark-purple': 'dark-purple',
-          'dark-pink': 'dark-pink',
-          cupcake: 'cupcake',
-          bumblebee: 'bumblebee',
-          emerald: 'emerald',
-          corporate: 'corporate',
-          synthwave: 'synthwave',
-          retro: 'retro',
-          cyberpunk: 'cyberpunk',
-          valentine: 'valentine',
-          halloween: 'halloween',
-          garden: 'garden',
-          forest: 'forest',
-          aqua: 'aqua',
-          lofi: 'lofi',
-          pastel: 'pastel',
-          fantasy: 'fantasy',
-          wireframe: 'wireframe',
-          luxury: 'luxury',
-          dracula: 'dracula',
-          cmyk: 'cmyk',
-          autumn: 'autumn',
-          business: 'business',
-          acid: 'acid',
-          lemonade: 'lemonade',
-          night: 'night',
-          coffee: 'coffee',
-          winter: 'winter',
-        }}
-      >
-        <div className="flex h-screen flex-col items-center justify-center gap-y-4">
-          <NextUIImage width={480} src={pageNotFound} alt="404" className="object-cover" />
-          <h1 className="text-warning text-center">
-            {caught.status} {caught.statusText} {message}
-          </h1>
-          <div className="flex w-full flex-row items-center justify-center gap-x-4">
-            <Button
-              size="md"
-              variant="ghost"
-              color="success"
-              startContent={<Home />}
-              type="button"
-              onPress={() => {
-                window.location.href = '/';
-              }}
-            >
-              Back to Home
-            </Button>
-            <Button
-              size="md"
-              variant="ghost"
-              color="warning"
-              startContent={<Refresh filled />}
-              type="button"
-              onPress={() => {
-                window.location.reload();
-              }}
-            >
-              Reload Page
-            </Button>
-          </div>
-        </div>
-      </RemixThemesProvider>
-    </Document>
-  );
-};
-
-export const ErrorBoundary = ({ error }: { error: Error }) => {
+export function ErrorBoundary() {
+  const error = useRouteError();
   const isProd = process.env.NODE_ENV === 'production';
-  // eslint-disable-next-line no-console
-  console.log(error);
-  return (
-    <Document title="Error!">
-      <RemixThemesProvider
-        defaultTheme="system"
-        attribute="class"
-        enableColorScheme
-        enableSystem
-        themes={listThemes}
-        value={{
-          light: 'light',
-          dark: 'dark',
-          'light-red': 'light-red',
-          'light-yellow': 'light-yellow',
-          'light-green': 'light-green',
-          'light-cyan': 'light-cyan',
-          'light-purple': 'light-purple',
-          'light-pink': 'light-pink',
-          'dark-red': 'dark-red',
-          'dark-yellow': 'dark-yellow',
-          'dark-green': 'dark-green',
-          'dark-cyan': 'dark-cyan',
-          'dark-purple': 'dark-purple',
-          'dark-pink': 'dark-pink',
-          cupcake: 'cupcake',
-          bumblebee: 'bumblebee',
-          emerald: 'emerald',
-          corporate: 'corporate',
-          synthwave: 'synthwave',
-          retro: 'retro',
-          cyberpunk: 'cyberpunk',
-          valentine: 'valentine',
-          halloween: 'halloween',
-          garden: 'garden',
-          forest: 'forest',
-          aqua: 'aqua',
-          lofi: 'lofi',
-          pastel: 'pastel',
-          fantasy: 'fantasy',
-          wireframe: 'wireframe',
-          luxury: 'luxury',
-          dracula: 'dracula',
-          cmyk: 'cmyk',
-          autumn: 'autumn',
-          business: 'business',
-          acid: 'acid',
-          lemonade: 'lemonade',
-          night: 'night',
-          coffee: 'coffee',
-          winter: 'winter',
-        }}
-      >
-        <div className="flex h-screen flex-col items-center justify-center gap-y-4">
-          <NextUIImage width={480} src={pageNotFound} alt="404" className="object-cover" />
-          <h1 className="text-danger text-center">
-            {isProd
-              ? 'Some thing went wrong'
-              : `[ErrorBoundary]: There was an error: ${error.message}`}
-          </h1>
-          <div className="flex w-full flex-row items-center justify-center gap-x-4">
-            <Button
-              size="md"
-              variant="ghost"
-              color="success"
-              startContent={<Home />}
-              type="button"
-              onPress={() => {
-                window.location.href = '/';
-              }}
-            >
-              Back to Home
-            </Button>
-            <Button
-              size="md"
-              variant="ghost"
-              color="warning"
-              startContent={<Refresh filled />}
-              type="button"
-              onPress={() => {
-                window.location.reload();
-              }}
-            >
-              Reload Page
-            </Button>
+
+  if (isRouteErrorResponse(error)) {
+    let message;
+    switch (error.status) {
+      case 401:
+        message = isProd
+          ? 'Oops! Looks like you tried to visit a page that you do not have access to.'
+          : error.data;
+        break;
+      case 404:
+        message = isProd
+          ? 'Oops! Looks like you tried to visit a page that does not exist.'
+          : error.data;
+        break;
+      default:
+        throw new Error(error.data || error.statusText);
+    }
+    return (
+      <Document title={`${error.status} ${error.statusText}`}>
+        <RemixThemesProvider
+          defaultTheme="system"
+          attribute="class"
+          enableColorScheme
+          enableSystem
+          themes={listThemes}
+          value={themeValues}
+        >
+          <div className="flex h-screen flex-col items-center justify-center gap-y-4">
+            <NextUIImage width={480} src={pageNotFound} alt="404" className="object-cover" />
+            <h1 className="text-center text-warning">
+              {error.status} {error.statusText}
+            </h1>
+            <p>{message}</p>
+            <div className="flex w-full flex-row items-center justify-center gap-x-4">
+              <Button
+                size="md"
+                variant="ghost"
+                color="success"
+                startContent={<Home />}
+                type="button"
+                onPress={() => {
+                  window.location.href = '/';
+                }}
+              >
+                Back to Home
+              </Button>
+              <Button
+                size="md"
+                variant="ghost"
+                color="warning"
+                startContent={<Refresh filled />}
+                type="button"
+                onPress={() => {
+                  window.location.reload();
+                }}
+              >
+                Reload Page
+              </Button>
+            </div>
           </div>
-        </div>
-      </RemixThemesProvider>
-    </Document>
-  );
-};
+        </RemixThemesProvider>
+      </Document>
+    );
+  } else if (error instanceof Error) {
+    // eslint-disable-next-line no-console
+    console.log(error);
+    return (
+      <Document title="Error!">
+        <RemixThemesProvider
+          defaultTheme="system"
+          attribute="class"
+          enableColorScheme
+          enableSystem
+          themes={listThemes}
+          value={themeValues}
+        >
+          <div className="flex h-screen flex-col items-center justify-center gap-y-4">
+            <NextUIImage width={480} src={pageNotFound} alt="404" className="object-cover" />
+            <h1 className="text-center text-danger">There was an error</h1>
+            <p>{error.message}</p>
+            <div className="flex w-full flex-row items-center justify-center gap-x-4">
+              <Button
+                size="md"
+                variant="ghost"
+                color="success"
+                startContent={<Home />}
+                type="button"
+                onPress={() => {
+                  window.location.href = '/';
+                }}
+              >
+                Back to Home
+              </Button>
+              <Button
+                size="md"
+                variant="ghost"
+                color="warning"
+                startContent={<Refresh filled />}
+                type="button"
+                onPress={() => {
+                  window.location.reload();
+                }}
+              >
+                Reload Page
+              </Button>
+            </div>
+          </div>
+        </RemixThemesProvider>
+      </Document>
+    );
+  } else {
+    return (
+      <Document title="Error!">
+        <RemixThemesProvider
+          defaultTheme="system"
+          attribute="class"
+          enableColorScheme
+          enableSystem
+          themes={listThemes}
+          value={themeValues}
+        >
+          <div className="flex h-screen flex-col items-center justify-center gap-y-4">
+            <NextUIImage width={480} src={pageNotFound} alt="404" className="object-cover" />
+            <h1 className="text-center text-danger">Unknown error</h1>
+            <div className="flex w-full flex-row items-center justify-center gap-x-4">
+              <Button
+                size="md"
+                variant="ghost"
+                color="success"
+                startContent={<Home />}
+                type="button"
+                onPress={() => {
+                  window.location.href = '/';
+                }}
+              >
+                Back to Home
+              </Button>
+              <Button
+                size="md"
+                variant="ghost"
+                color="warning"
+                startContent={<Refresh filled />}
+                type="button"
+                onPress={() => {
+                  window.location.reload();
+                }}
+              >
+                Reload Page
+              </Button>
+            </div>
+          </div>
+        </RemixThemesProvider>
+      </Document>
+    );
+  }
+}
 
 export default App;

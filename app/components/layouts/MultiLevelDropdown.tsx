@@ -293,7 +293,7 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
       fullWidth
       variant="light"
       onPress={item.action}
-      className="data-[hover=true]:bg-default/[.6] flex h-14 flex-row items-center justify-between gap-x-8 !p-2"
+      className="flex h-14 flex-row items-center justify-between gap-x-8 !p-2 data-[hover=true]:bg-default/[.6]"
     >
       <div className="flex shrink-0 grow flex-row items-center gap-x-2">
         {item?.showIcon ? (
@@ -321,7 +321,7 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
         ) : (
           <Spacer x={6} />
         )}
-        <h6 className="!text-default-foreground !line-clamp-1">{item.title}</h6>
+        <h6 className="!line-clamp-1 !text-default-foreground">{item.title}</h6>
       </div>
       <div className="flex shrink-0 grow flex-row items-center justify-end gap-x-2">
         <p className="!text-default-foreground/80">
@@ -375,7 +375,7 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
         side="bottom"
         align="end"
         alignOffset={-8}
-        className="bg-default/60 z-[1000] backdrop-blur-2xl backdrop-contrast-125 backdrop-saturate-200"
+        className="z-[1000] bg-default/60 backdrop-blur-2xl backdrop-contrast-125 backdrop-saturate-200"
       >
         <ResizablePanel contentWidth="fit">
           {currentDropdownLevel ? (
@@ -395,7 +395,7 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
                         ? currentDropdownLevel?.titleAction
                         : currentDropdownLevel?.backButtonAction
                     }
-                    className="data-[hover=true]:bg-default/[.6] flex h-14 w-full flex-row items-center justify-between gap-x-2 p-2"
+                    className="flex h-14 w-full flex-row items-center justify-between gap-x-2 p-2 data-[hover=true]:bg-default/[.6]"
                   >
                     {currentDropdownLevel?.showBackButton ? <Arrow direction="left" /> : null}
                     {currentDropdownLevel?.showAvatar ? (
@@ -409,7 +409,7 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
                       />
                     ) : null}
                     {currentDropdownLevel?.showTitle ? (
-                      <h6 className="!text-default-foreground px-3">
+                      <h6 className="px-3 !text-default-foreground">
                         {currentDropdownLevel?.title}
                       </h6>
                     ) : null}

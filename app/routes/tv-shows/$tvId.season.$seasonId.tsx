@@ -3,7 +3,7 @@ import { Avatar } from '@nextui-org/avatar';
 import { Card, CardBody, CardHeader } from '@nextui-org/card';
 import { useIntersectionObserver, useMeasure, useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { Outlet, useCatch, useLoaderData, useParams, type RouteMatch } from '@remix-run/react';
+import { Outlet, useLoaderData, useParams, type RouteMatch } from '@remix-run/react';
 import i18next from '~/i18n/i18next.server';
 import { motion, useTransform } from 'framer-motion';
 import Vibrant from 'node-vibrant';
@@ -23,7 +23,6 @@ import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { tvSeasonDetailPages } from '~/constants/tabLinks';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import Image from '~/components/elements/Image';
-import CatchBoundaryView from '~/components/elements/shared/CatchBoundaryView';
 import ErrorBoundaryView from '~/components/elements/shared/ErrorBoundaryView';
 import TabLink from '~/components/elements/tab/TabLink';
 import { backgroundStyles } from '~/components/styles/primitives';
@@ -218,8 +217,8 @@ const TvSeasonDetail = () => {
           className="rounded-b-0 absolute bottom-0 z-10 flex grow flex-col justify-center p-0"
         >
           <div className={backgroundStyles({ content: true })} />
-          <div className="grid-areas-small sm:grid-areas-wide grid w-full max-w-[1920px] grid-cols-[1fr_2fr] grid-rows-[1fr_auto_auto] items-stretch justify-center gap-x-4 gap-y-6 px-3 pb-8 pt-5 sm:grid-rows-[auto_1fr_auto] sm:px-3.5 xl:px-4 2xl:px-5">
-            <div className="grid-in-image flex flex-col items-center justify-center" ref={imageRef}>
+          <div className="grid w-full max-w-[1920px] grid-cols-[1fr_2fr] grid-rows-[1fr_auto_auto] items-stretch justify-center gap-x-4 gap-y-6 px-3 pb-8 pt-5 grid-areas-small sm:grid-rows-[auto_1fr_auto] sm:px-3.5 sm:grid-areas-wide xl:px-4 2xl:px-5">
+            <div className="flex flex-col items-center justify-center grid-in-image" ref={imageRef}>
               {seasonDetail?.poster_path ? (
                 <Image
                   src={TMDB.posterUrl(seasonDetail?.poster_path)}
@@ -262,7 +261,7 @@ const TvSeasonDetail = () => {
                 </div>
               )}
             </div>
-            <div className="grid-in-title z-50 flex w-full flex-col items-start justify-start">
+            <div className="z-50 flex w-full flex-col items-start justify-start grid-in-title">
               <h2>
                 {detail?.name} {seasonDetail?.name}
               </h2>
@@ -271,7 +270,7 @@ const TvSeasonDetail = () => {
               </h5>
             </div>
             {seasonDetail?.overview ? (
-              <div className="grid-in-info flex flex-col gap-y-3 sm:gap-y-6">
+              <div className="flex flex-col gap-y-3 grid-in-info sm:gap-y-6">
                 <h6>{seasonDetail.overview}</h6>
               </div>
             ) : null}
@@ -282,7 +281,7 @@ const TvSeasonDetail = () => {
             // @ts-ignore
             '--theme-movie-brand': isHydrated ? backgroundColor : 'transparent',
           }}
-          className="after:from-movie-brand-color absolute bottom-0 p-0 after:absolute after:bottom-0 after:h-full after:w-full after:bg-gradient-to-t after:to-transparent after:content-['']"
+          className="absolute bottom-0 p-0 after:absolute after:bottom-0 after:h-full after:w-full after:bg-gradient-to-t after:from-movie-brand-color after:to-transparent after:content-['']"
         >
           <Image
             src={
@@ -341,12 +340,14 @@ const TvSeasonDetail = () => {
   );
 };
 
-export const CatchBoundary = () => {
-  const caught = useCatch();
-
-  return <CatchBoundaryView caught={caught} />;
-};
-
-export const ErrorBoundary = ({ error }: { error: Error }) => <ErrorBoundaryView error={error} />;
+export function ErrorBoundary() {
+  return (
+    <ErrorBoundaryView
+      statusHandlers={{
+        404: ({ params }) => <p>There is no series with the ID: {params.tvId}</p>,
+      }}
+    />
+  );
+}
 
 export default TvSeasonDetail;

@@ -1,3 +1,4 @@
+import { startTransition } from 'react';
 import { RemixBrowser } from '@remix-run/react';
 import i18next from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
@@ -30,15 +31,17 @@ i18next
     },
   })
   .then(() =>
-    // After i18next has been initialized, we can hydrate the app
-    // We need to wait to ensure translations are loaded before the hydration
-    // Here wrap RemixBrowser in I18nextProvider from react-i18next
-    hydrateRoot(
-      document,
-      <I18nextProvider i18n={i18next}>
-        <RemixBrowser />
-      </I18nextProvider>,
-    ),
+    startTransition(() => {
+      // After i18next has been initialized, we can hydrate the app
+      // We need to wait to ensure translations are loaded before the hydration
+      // Here wrap RemixBrowser in I18nextProvider from react-i18next
+      hydrateRoot(
+        document,
+        <I18nextProvider i18n={i18next}>
+          <RemixBrowser />
+        </I18nextProvider>,
+      );
+    }),
   );
 
 const urlBase64ToUint8Array = (base64String: string): Uint8Array => {

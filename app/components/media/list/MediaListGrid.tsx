@@ -34,13 +34,13 @@ interface IMediaListCardProps {
 const MotionLink = motion(Link);
 
 const mediaListGridStyles = tv({
-  base: 'max-w-screen-4xl grid w-full items-stretch justify-items-center gap-5',
+  base: 'grid w-full max-w-screen-4xl items-stretch justify-items-center gap-5',
   variants: {
     listViewType: {
       table: 'grid-cols-1',
-      card: '2xs:grid-cols-2 3xl:grid-cols-5 4xl:grid-cols-6 grid-cols-1 md:grid-cols-3 2xl:grid-cols-4',
-      detail: '4xl:grid-cols-3 grid-cols-1 xl:grid-cols-2',
-      coverCard: '4xl:grid-cols-3 grid-cols-1 xl:grid-cols-2',
+      card: 'grid-cols-1 2xs:grid-cols-2 md:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6',
+      detail: 'grid-cols-1 xl:grid-cols-2 4xl:grid-cols-3',
+      coverCard: 'grid-cols-1 xl:grid-cols-2 4xl:grid-cols-3',
     },
   },
   defaultVariants: {

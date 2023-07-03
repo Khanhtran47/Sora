@@ -31,9 +31,8 @@ import {
   DialogTrigger,
 } from '~/components/elements/Dialog';
 import SearchForm from '~/components/elements/SearchForm';
-import ErrorBoundaryView from '~/components/elements/shared/ErrorBoundaryView';
 
-const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const cookie = request.headers.get('Cookie');
   if (!cookie) {
     throw redirect('/sign-in');
@@ -57,7 +56,7 @@ const loader = async ({ request }: LoaderArgs) => {
   return json({ cacheKeys });
 };
 
-const action = async ({ request }: ActionArgs) => {
+export const action = async ({ request }: ActionArgs) => {
   const formData = await request.formData();
   const cacheKey = formData.get('cacheKey') as string;
   if (typeof cacheKey !== 'string') {
@@ -67,12 +66,12 @@ const action = async ({ request }: ActionArgs) => {
   return json({ success: true });
 };
 
-const meta: MetaFunction = () => ({
+export const meta: MetaFunction = () => ({
   title: 'Cache Admin',
   description: 'Cache Admin',
 });
 
-const handle = {
+export const handle = {
   breadcrumb: () => (
     <BreadcrumbItem to="/cache/admin" key="cache-admin">
       Cache Admin
@@ -154,7 +153,7 @@ const CacheAdminRoute = () => {
       exit={{ x: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="max-w-screen-4xl flex w-full flex-col justify-start px-3 sm:px-0">
+      <div className="flex w-full max-w-screen-4xl flex-col justify-start px-3 sm:px-0">
         <h2>Cache Admin</h2>
         <SearchForm
           onSubmit={onSubmit}
@@ -209,7 +208,4 @@ const CacheAdminRoute = () => {
   );
 };
 
-const ErrorBoundary = ({ error }: { error: Error }) => <ErrorBoundaryView error={error} />;
-
 export default CacheAdminRoute;
-export { loader, action, meta, handle, ErrorBoundary };

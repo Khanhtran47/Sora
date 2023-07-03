@@ -3,14 +3,12 @@ node_modules
 .cache
 .vercel
 .output
+.env
+.vscode
+.node-persist
 
+/server/index.js
 public/build
 public/entry.worker.js
 /api
 build
-
-.env
-.vscode
-app/styles/*.css
-yarn-error.log
-.node-persist

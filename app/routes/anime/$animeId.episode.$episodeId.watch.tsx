@@ -1,6 +1,6 @@
 import { env } from 'process';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { useCatch, useLoaderData, type RouteMatch } from '@remix-run/react';
+import { useLoaderData, type RouteMatch } from '@remix-run/react';
 
 import type { IMedia } from '~/types/media';
 import { getAniskip, type IAniSkipResponse } from '~/services/aniskip/aniskip.server';
@@ -22,7 +22,6 @@ import getProviderList from '~/services/provider.server';
 import { authenticate, insertHistory } from '~/services/supabase';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
-import CatchBoundaryView from '~/components/elements/shared/CatchBoundaryView';
 import ErrorBoundaryView from '~/components/elements/shared/ErrorBoundaryView';
 import WatchDetail from '~/components/elements/shared/WatchDetail';
 
@@ -796,12 +795,14 @@ const AnimeEpisodeWatch = () => {
   );
 };
 
+export function ErrorBoundary() {
+  return (
+    <ErrorBoundaryView
+      statusHandlers={{
+        404: ({ params }) => <p>This anime doesn't has episode {params.episodeId}</p>,
+      }}
+    />
+  );
+}
+
 export default AnimeEpisodeWatch;
-
-export const CatchBoundary = () => {
-  const caught = useCatch();
-
-  return <CatchBoundaryView caught={caught} />;
-};
-
-export const ErrorBoundary = ({ error }: { error: Error }) => <ErrorBoundaryView error={error} />;

@@ -3,7 +3,7 @@
 
 import { commonColors, semanticColors } from '@nextui-org/theme';
 
-import { swapColorValues } from '../app/utils';
+import { swapColorValues } from '../utils';
 
 const lightBase = {
   'background-body': '#ffffff',

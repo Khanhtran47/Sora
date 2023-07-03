@@ -1,6 +1,6 @@
 import type { ISource } from '@consumet/extensions';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { useCatch, useLoaderData, type RouteMatch } from '@remix-run/react';
+import { useLoaderData, type RouteMatch } from '@remix-run/react';
 import Vibrant from 'node-vibrant';
 
 import {
@@ -24,7 +24,6 @@ import TMDB from '~/utils/media';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
-import CatchBoundaryView from '~/components/elements/shared/CatchBoundaryView';
 import ErrorBoundaryView from '~/components/elements/shared/ErrorBoundaryView';
 import WatchDetail from '~/components/elements/shared/WatchDetail';
 
@@ -341,12 +340,14 @@ const MovieWatch = () => {
   );
 };
 
-export const CatchBoundary = () => {
-  const caught = useCatch();
-
-  return <CatchBoundaryView caught={caught} />;
-};
-
-export const ErrorBoundary = ({ error }: { error: Error }) => <ErrorBoundaryView error={error} />;
+export function ErrorBoundary() {
+  return (
+    <ErrorBoundaryView
+      statusHandlers={{
+        404: ({ params }) => <p>There is no movie with the ID: {params.movieId}</p>,
+      }}
+    />
+  );
+}
 
 export default MovieWatch;

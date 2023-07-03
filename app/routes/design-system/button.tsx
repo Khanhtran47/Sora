@@ -109,7 +109,7 @@ const ButtonPage = () => {
         <Button color="success">Success</Button>
         <Button color="warning">Warning</Button>
         <Button color="danger">Danger</Button>
-        <Button className="from-primary via-default-600 to-secondary bg-gradient-to-tr">
+        <Button className="bg-gradient-to-tr from-primary via-default-600 to-secondary">
           Custom colors
         </Button>
       </div>

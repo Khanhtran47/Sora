@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useIntersectionObserver } from '@react-hookz/web';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { Outlet, useCatch, useLoaderData, useLocation, type RouteMatch } from '@remix-run/react';
+import { Outlet, useLoaderData, useLocation, type RouteMatch } from '@remix-run/react';
 import i18next from '~/i18n/i18next.server';
 import { motion, useTransform } from 'framer-motion';
 import Vibrant from 'node-vibrant';
@@ -19,7 +19,6 @@ import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { movieTvDetailsPages } from '~/constants/tabLinks';
 import { MediaBackgroundImage, MediaDetail } from '~/components/media/MediaDetail';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
-import CatchBoundaryView from '~/components/elements/shared/CatchBoundaryView';
 import ErrorBoundaryView from '~/components/elements/shared/ErrorBoundaryView';
 import TabLink from '~/components/elements/tab/TabLink';
 import { backgroundStyles } from '~/components/styles/primitives';
@@ -242,12 +241,14 @@ const MovieDetail = () => {
   );
 };
 
-export const CatchBoundary = () => {
-  const caught = useCatch();
-
-  return <CatchBoundaryView caught={caught} />;
-};
-
-export const ErrorBoundary = ({ error }: { error: Error }) => <ErrorBoundaryView error={error} />;
+export function ErrorBoundary() {
+  return (
+    <ErrorBoundaryView
+      statusHandlers={{
+        404: ({ params }) => <p>There is no movie with the ID: {params.movieId}</p>,
+      }}
+    />
+  );
+}
 
 export default MovieDetail;

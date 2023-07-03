@@ -59,11 +59,11 @@ const TypographyPage = () => {
       <p className="text-xs">Almost before we knew it, we had left the ground.</p>
       <br />
       <p className="text-base tracking-wide md:text-lg">Colors</p>
-      <p className="text-primary text-lg">Almost before we knew it, we had left the ground.</p>
-      <p className="text-secondary text-lg">Almost before we knew it, we had left the ground.</p>
-      <p className="text-success text-lg">Almost before we knew it, we had left the ground.</p>
-      <p className="text-warning text-lg">Almost before we knew it, we had left the ground.</p>
-      <p className="text-danger text-lg">Almost before we knew it, we had left the ground.</p>
+      <p className="text-lg text-primary">Almost before we knew it, we had left the ground.</p>
+      <p className="text-lg text-secondary">Almost before we knew it, we had left the ground.</p>
+      <p className="text-lg text-success">Almost before we knew it, we had left the ground.</p>
+      <p className="text-lg text-warning">Almost before we knew it, we had left the ground.</p>
+      <p className="text-lg text-danger">Almost before we knew it, we had left the ground.</p>
       <p className="text-gradient text-lg">Almost before we knew it, we had left the ground.</p>
       <br />
       <p className="text-base tracking-wide md:text-lg">Strong</p>

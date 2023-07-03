@@ -109,7 +109,7 @@ const PhotosPage = () => {
       </h5>
       <Spacer y={2.5} />
       <Gallery withCaption withDownloadButton uiElements={uiElements}>
-        <div className="xs:grid-cols-2 grid grid-cols-1 justify-center gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+        <div className="grid grid-cols-1 justify-center gap-3 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
           {images?.posters?.map((image) => (
             <Item
               key={image.file_path}

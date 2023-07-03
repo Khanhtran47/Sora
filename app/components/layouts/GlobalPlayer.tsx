@@ -1086,7 +1086,7 @@ const GlobalPlayer = () => {
               <div className="flex w-2/3 shrink grow-0 basis-2/3 flex-row items-center justify-start gap-x-2">
                 {isPlayerFullScreen ? (
                   <div className="flex w-full flex-col items-start justify-center">
-                    <h6 className="!text-default-foreground w-full overflow-hidden text-ellipsis whitespace-nowrap text-start">
+                    <h6 className="w-full truncate text-start !text-default-foreground">
                       {playerData?.titlePlayer}
                     </h6>
                     <p className="!text-default-foreground/80">

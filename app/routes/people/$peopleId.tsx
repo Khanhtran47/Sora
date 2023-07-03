@@ -1,6 +1,6 @@
 import { Spacer } from '@nextui-org/spacer';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { Outlet, useCatch, useLoaderData, type RouteMatch } from '@remix-run/react';
+import { Outlet, useLoaderData, type RouteMatch } from '@remix-run/react';
 import i18next from '~/i18n/i18next.server';
 
 import { authenticate } from '~/services/supabase';
@@ -10,7 +10,6 @@ import { CACHE_CONTROL } from '~/utils/server/http';
 import { peopleDetailPages } from '~/constants/tabLinks';
 import PeopleDetail from '~/components/media/PeopleDetail';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
-import CatchBoundaryView from '~/components/elements/shared/CatchBoundaryView';
 import ErrorBoundaryView from '~/components/elements/shared/ErrorBoundaryView';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
@@ -106,12 +105,14 @@ const PeopleDetailPage = () => {
   );
 };
 
-export const CatchBoundary = () => {
-  const caught = useCatch();
-
-  return <CatchBoundaryView caught={caught} />;
-};
-
-export const ErrorBoundary = ({ error }: { error: Error }) => <ErrorBoundaryView error={error} />;
+export function ErrorBoundary() {
+  return (
+    <ErrorBoundaryView
+      statusHandlers={{
+        404: ({ params }) => <p>There is no people with the ID: {params.peopleId}</p>,
+      }}
+    />
+  );
+}
 
 export default PeopleDetailPage;

@@ -55,7 +55,7 @@
     "react-hooks/rules-of-hooks": "error",
     "react/display-name": 1,
     "react/forbid-prop-types": 0,
-    "react/function-component-definition": ["error", { "namedComponents": "arrow-function" }],
+    "react/function-component-definition": 0,
     "react/jsx-filename-extension": ["warn", { "extensions": [".tsx"] }],
     "react/jsx-props-no-spreading": 0,
     "react/no-array-index-key": 0,
@@ -100,7 +100,8 @@
     "*.lock",
     "*.json",
     "*.yaml",
-    "server.js"
+    "server.ts",
+    "build"
   ],
   "overrides": [
     {

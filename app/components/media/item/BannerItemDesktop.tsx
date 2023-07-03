@@ -209,7 +209,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
         onMouseMove={isShowSpotlight.value ? handleMouseMove : undefined}
       >
         <motion.div
-          className="pointer-events-none absolute -inset-px rounded-xl transition duration-300 group-hover:opacity-100"
+          className="pointer-events-none absolute -inset-px rounded-xl duration-300 transition group-hover:opacity-100"
           style={{
             background: useMotionTemplate`
               radial-gradient(
@@ -447,7 +447,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
             </motion.div>
           ) : null}
         </CardHeader>
-        <CardBody className="after:to-background m-0 overflow-hidden p-0 after:absolute after:bottom-0 after:left-0 after:h-[100px] after:w-full after:bg-gradient-to-b after:from-transparent after:content-[''] after:2xl:h-[250px]">
+        <CardBody className="m-0 overflow-hidden p-0 after:absolute after:bottom-0 after:left-0 after:h-[100px] after:w-full after:bg-gradient-to-b after:from-transparent after:to-background after:content-[''] after:2xl:h-[250px]">
           <AnimatePresence>
             {!showTrailer && size ? (
               <motion.div

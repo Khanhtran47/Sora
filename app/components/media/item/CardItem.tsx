@@ -56,7 +56,7 @@ interface ICardItemProps {
 
 const cardItemStyles = tv({
   slots: {
-    base: 'hover:shadow-primary-200 my-4 !w-[164px] hover:shadow-[0_0_0_1px]',
+    base: 'my-4 !w-[164px] hover:shadow-[0_0_0_1px] hover:shadow-primary-200',
     body: 'aspect-[2/3]',
     imageContainer: '',
     image: 'aspect-[2/3]',
@@ -80,7 +80,7 @@ const cardItemStyles = tv({
         image: 'z-0 !h-[174px] !min-h-[auto] !min-w-[116px] sm:aspect-[2/3] sm:!h-[auto]',
         content: 'flex grow flex-col gap-y-4 p-3 sm:w-3/5',
         footer:
-          'border-default-200 bg-background/[0.6] absolute bottom-0 flex !w-[116px] justify-center !rounded-br-none border-t backdrop-blur-md sm:!w-2/5',
+          'absolute bottom-0 flex !w-[116px] justify-center !rounded-br-none border-t border-default-200 bg-background/[0.6] backdrop-blur-md sm:!w-2/5',
       },
       table: {
         base: '!w-full',
@@ -96,7 +96,7 @@ const cardItemStyles = tv({
         image:
           'z-0 aspect-[16/9] !min-h-[auto] !min-w-[auto] overflow-hidden !transition-[transform,_opacity]',
         footer:
-          'border-default-200 bg-background/[0.6] absolute bottom-0 flex justify-center border-t backdrop-blur-md',
+          'absolute bottom-0 flex justify-center border-t border-default-200 bg-background/[0.6] backdrop-blur-md',
       },
       people: {
         base: '!w-[164px]',
@@ -305,7 +305,7 @@ const CardItem = (props: ICardItemProps) => {
         inView ? (
           <div className={content()}>
             <div className="flex h-6 flex-row items-center justify-between">
-              <h6 className="2xs:block hidden">
+              <h6 className="hidden 2xs:block">
                 {`${mediaType.charAt(0).toUpperCase()}${mediaType.slice(1)} • ${releaseDate}`}
               </h6>
               <Rating
@@ -381,7 +381,7 @@ const CardItem = (props: ICardItemProps) => {
           mediaType !== 'people' &&
           inView ? (
           <div className={content()}>
-            <Link to={linkTo || '/'} className="text-foreground line-clamp-1 text-lg font-bold">
+            <Link to={linkTo || '/'} className="line-clamp-1 text-lg font-bold text-foreground">
               {titleItem}
             </Link>
             <div className="flex flex-row items-center justify-between">
@@ -442,7 +442,7 @@ const CardItem = (props: ICardItemProps) => {
                 <Rating
                   ratingType={mediaType}
                   rating={mediaType === 'anime' ? voteAverage : voteAverage.toFixed(1)}
-                  className="2xs:flex hidden"
+                  className="hidden 2xs:flex"
                 />
               </div>
             </div>
@@ -478,14 +478,14 @@ const CardItem = (props: ICardItemProps) => {
             {titleItem}
           </h5>
           {isEpisodeCard ? (
-            <p className="text-foreground/60 line-clamp-2 w-full text-left text-sm">
+            <p className="line-clamp-2 w-full text-left text-sm text-foreground/60">
               EP {episodeNumber} - {episodeTitle}
             </p>
           ) : null}
           {mediaType === 'people' ? (
             <>
               {knownFor ? (
-                <p className="text-foreground/60 line-clamp-2 w-full text-left text-sm">
+                <p className="line-clamp-2 w-full text-left text-sm text-foreground/60">
                   {knownFor?.map((movie, index) => (
                     <>
                       {movie?.title || movie?.originalTitle || movie?.name || movie?.originalName}
@@ -495,12 +495,12 @@ const CardItem = (props: ICardItemProps) => {
                 </p>
               ) : null}
               {character ? (
-                <p className="text-foreground/60 line-clamp-2 w-full text-left text-sm">
+                <p className="line-clamp-2 w-full text-left text-sm text-foreground/60">
                   {character}
                 </p>
               ) : null}
               {job ? (
-                <p className="text-foreground/60 line-clamp-2 w-full text-left text-sm">{job}</p>
+                <p className="line-clamp-2 w-full text-left text-sm text-foreground/60">{job}</p>
               ) : null}
             </>
           ) : null}
