@@ -370,6 +370,9 @@ devDependencies:
   prettier-plugin-tailwindcss:
     specifier: ^0.3.0
     version: 0.3.0(@ianvs/prettier-plugin-sort-imports@4.0.2)(prettier@2.8.8)
+  prop-types:
+    specifier: ^15.8.1
+    version: 15.8.1
   rimraf:
     specifier: ^3.0.2
     version: 3.0.2
