@@ -6,6 +6,7 @@ import { useIntersectionObserver, useMediaQuery } from '@react-hookz/web';
 import { Link, useFetcher, useLocation, useSearchParams } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import NProgress from 'nprogress';
+import { useGlobalLoadingState } from 'remix-utils';
 import { tv } from 'tailwind-variants';
 
 import type { IMedia } from '~/types/media';
@@ -66,6 +67,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
   } = props;
   const fetcher = useFetcher();
   const location = useLocation();
+  const globalState = useGlobalLoadingState();
   const [searchParams, setSearchParams] = useSearchParams({});
   const { viewportRef } = useLayout((state) => state);
   const [listItems, setListItems] = useState<IMedia[]>(items || []);
@@ -157,13 +159,13 @@ const MediaListGrid = (props: IMediaListCardProps) => {
   }, [fetcher.data]);
 
   useEffect(() => {
-    if (fetcher.type === 'normalLoad') {
+    if (globalState === 'loading') {
       NProgress.configure({ showSpinner: false }).start();
     }
-    if (fetcher.type === 'done') {
+    if (globalState === 'idle') {
       NProgress.configure({ showSpinner: false }).done();
     }
-  }, [fetcher.type]);
+  }, [globalState]);
 
   const handlePageChange = ({
     direction,

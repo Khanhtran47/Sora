@@ -4,6 +4,7 @@ import { Input } from '@nextui-org/input';
 import { Pagination } from '@nextui-org/pagination';
 import { useMediaQuery } from '@react-hookz/web';
 import { useFetcher } from '@remix-run/react';
+import { useGlobalLoadingState } from 'remix-utils';
 import { toast } from 'sonner';
 
 import type { ISubtitle, ISubtitlesSearch } from '~/services/open-subtitles/open-subtitles.types';
@@ -42,6 +43,7 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
   const rootData = useTypedRouteLoaderData('root');
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const fetcher = useFetcher();
+  const globalState = useGlobalLoadingState();
   const { updateSubtitleSelector } = usePlayerState((state) => state);
 
   const preInput: string | undefined =
@@ -232,8 +234,8 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
           <Button
             type="button"
             color="primary"
-            isDisabled={fetcher.type === 'normalLoad' && !isGetSubtitleLink}
-            isLoading={fetcher.type === 'normalLoad' && !isGetSubtitleLink}
+            isDisabled={globalState === 'loading' && !isGetSubtitleLink}
+            isLoading={globalState === 'loading' && !isGetSubtitleLink}
             className="!px-3"
             onPress={searchSubtitles}
           >
@@ -242,7 +244,7 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
         </div>
       </DialogHeader>
       <div className="flex w-full flex-col gap-y-2">
-        {fetcher.type === 'normalLoad' && !isGetSubtitleLink && (
+        {globalState === 'loading' && !isGetSubtitleLink && (
           <div role="status" className="max-w-sm animate-pulse">
             <div className="!mb-4 h-2.5 w-48 rounded-full bg-gray-200 dark:bg-gray-700" />
             <div className="!mb-4 h-2 max-w-[360px] rounded-full bg-gray-200 dark:bg-gray-700" />

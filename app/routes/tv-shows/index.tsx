@@ -7,6 +7,7 @@ import i18next from '~/i18n/i18next.server';
 import dayjs from 'dayjs';
 import { AnimatePresence, motion } from 'framer-motion';
 import NProgress from 'nprogress';
+import { useGlobalLoadingState } from 'remix-utils';
 
 import type { IMedia } from '~/types/media';
 import { authenticate } from '~/services/supabase';
@@ -101,6 +102,7 @@ const TvIndexPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const fetcher = useFetcher();
+  const globalState = useGlobalLoadingState();
 
   const listGenresTv = Object.entries(rootData?.genresTv || {}).map((entry) => ({
     [entry[0]]: entry[1],
@@ -165,13 +167,13 @@ const TvIndexPage = () => {
   }, [fetcher.data]);
 
   React.useEffect(() => {
-    if (fetcher.type === 'normalLoad') {
+    if (globalState === 'loading') {
       NProgress.configure({ showSpinner: false }).start();
     }
-    if (fetcher.type === 'done') {
+    if (globalState === 'idle') {
       NProgress.configure({ showSpinner: false }).done();
     }
-  }, [fetcher.type]);
+  }, [globalState]);
 
   return (
     <motion.div
@@ -259,7 +261,7 @@ const TvIndexPage = () => {
             return null;
           })}
         <AnimatePresence>
-          {fetcher.type === 'normalLoad' ? (
+          {globalState === 'loading' ? (
             <Spinner
               as={motion.div}
               size="lg"

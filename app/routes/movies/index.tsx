@@ -6,6 +6,7 @@ import { useFetcher, useLoaderData, useLocation, useNavigate } from '@remix-run/
 import i18next from '~/i18n/i18next.server';
 import { AnimatePresence, motion } from 'framer-motion';
 import NProgress from 'nprogress';
+import { useGlobalLoadingState } from 'remix-utils';
 
 import type { IMedia } from '~/types/media';
 import { authenticate } from '~/services/supabase';
@@ -57,6 +58,7 @@ const MoviesIndexPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const fetcher = useFetcher();
+  const globalState = useGlobalLoadingState();
 
   const listGenresMovie = Object.entries(rootData?.genresMovie || {}).map((entry) => ({
     [entry[0]]: entry[1],
@@ -121,13 +123,13 @@ const MoviesIndexPage = () => {
   }, [fetcher.data]);
 
   useEffect(() => {
-    if (fetcher.type === 'normalLoad') {
+    if (globalState === 'loading') {
       NProgress.configure({ showSpinner: false }).start();
     }
-    if (fetcher.type === 'done') {
+    if (globalState === 'idle') {
       NProgress.configure({ showSpinner: false }).done();
     }
-  }, [fetcher.type]);
+  }, [globalState]);
 
   return (
     <motion.div
@@ -216,7 +218,7 @@ const MoviesIndexPage = () => {
             return null;
           })}
         <AnimatePresence>
-          {fetcher.type === 'normalLoad' ? (
+          {globalState === 'loading' ? (
             <Spinner
               // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               as={motion.div}

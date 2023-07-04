@@ -4,8 +4,9 @@ import { useMeasure } from '@react-hookz/web';
 import { json, type LoaderArgs } from '@remix-run/node';
 import { useFetcher, useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 import { AnimatePresence, motion } from 'framer-motion';
-// import { useTranslation } from 'react-i18next';
 import NProgress from 'nprogress';
+// import { useTranslation } from 'react-i18next';
+import { useGlobalLoadingState } from 'remix-utils';
 
 import type { IMedia } from '~/types/media';
 import {
@@ -57,6 +58,7 @@ const AnimePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const fetcher = useFetcher();
+  const globalState = useGlobalLoadingState();
 
   const [listItems, setListItems] = useState<IMedia[][] | undefined>([]);
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -117,13 +119,13 @@ const AnimePage = () => {
   }, [fetcher.data]);
 
   useEffect(() => {
-    if (fetcher.type === 'normalLoad') {
+    if (globalState === 'loading') {
       NProgress.configure({ showSpinner: false }).start();
     }
-    if (fetcher.type === 'done') {
+    if (globalState === 'idle') {
       NProgress.configure({ showSpinner: false }).done();
     }
-  }, [fetcher.type]);
+  }, [globalState]);
 
   return (
     <motion.div
@@ -187,7 +189,7 @@ const AnimePage = () => {
             return null;
           })}
         <AnimatePresence>
-          {fetcher.type === 'normalLoad' ? (
+          {globalState === 'loading' ? (
             <Spinner
               // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               as={motion.div}
