@@ -2,11 +2,11 @@ import { useEffect, useRef } from 'react';
 import { useIntersectionObserver } from '@react-hookz/web';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { Outlet, useLoaderData, useLocation, type RouteMatch } from '@remix-run/react';
-import i18next from '~/i18n/i18next.server';
 import { motion, useTransform } from 'framer-motion';
 import Vibrant from 'node-vibrant';
 import { useHydrated } from 'remix-utils';
 
+import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
 import { getImdbRating, getTvShowDetail, getTvShowIMDBId } from '~/services/tmdb/tmdb.server';
 import TMDB from '~/utils/media';
@@ -124,19 +124,19 @@ export const meta: MetaFunction = ({ data, params }) => {
     } HD, Online ${detail?.name || ''}, Streaming ${detail?.name || ''}, English, Subtitle ${
       detail?.name || ''
     }, English Subtitle`,
-    'og:url': `https://sora-anime.vercel.app/tv-shows/${params.tvId}`,
+    'og:url': `https://sorachill.vercel.app/tv-shows/${params.tvId}`,
     'og:title': `Watch ${detail?.name || ''} HD online Free - Sora`,
     'og:description':
       detail?.overview || `Watch ${detail?.name || ''} in full HD online with Subtitle`,
-    'og:image': `https://sora-anime.vercel.app/api/ogimage?m=${params.tvId}&mt=tv`,
+    'og:image': `https://sorachill.vercel.app/api/ogimage?m=${params.tvId}&mt=tv`,
     'twitter:card': 'summary_large_image',
     'twitter:site': '@sora_anime',
     'twitter:domain': 'sora-anime.vercel.app',
-    'twitter:url': `https://sora-anime.vercel.app/tv-shows/${params.tvId}`,
+    'twitter:url': `https://sorachill.vercel.app/tv-shows/${params.tvId}`,
     'twitter:title': `Watch ${detail?.name || ''} HD online Free - Sora`,
     'twitter:description':
       detail?.overview || `Watch ${detail?.name || ''} in full HD online with Subtitle`,
-    'twitter:image': `https://sora-anime.vercel.app/api/ogimage?m=${params.tvId}&mt=tv`,
+    'twitter:image': `https://sorachill.vercel.app/api/ogimage?m=${params.tvId}&mt=tv`,
   };
 };
 

@@ -2,11 +2,11 @@ import { useEffect, useRef } from 'react';
 import { useIntersectionObserver } from '@react-hookz/web';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { Outlet, useLoaderData, useLocation, type RouteMatch } from '@remix-run/react';
-import i18next from '~/i18n/i18next.server';
 import { motion, useTransform } from 'framer-motion';
 import Vibrant from 'node-vibrant';
 import { useHydrated } from 'remix-utils';
 
+import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
 import { getImdbRating, getMovieDetail } from '~/services/tmdb/tmdb.server';
 import TMDB from '~/utils/media';
@@ -132,19 +132,19 @@ export const meta: MetaFunction = ({ data, params }) => {
     } HD, Online ${detail?.title || ''}, Streaming ${detail?.title || ''}, English, Subtitle ${
       detail?.title || ''
     }, English Subtitle`,
-    'og:url': `https://sora-anime.vercel.app/movies/${params.movieId}`,
+    'og:url': `https://sorachill.vercel.app/movies/${params.movieId}`,
     'og:title': `Watch ${detail?.title || ''} HD online Free - Sora`,
     'og:description':
       detail?.overview || `Watch ${detail?.title || ''} in full HD online with Subtitle`,
-    'og:image': `https://sora-anime.vercel.app/api/ogimage?m=${params.movieId}&mt=movie`,
+    'og:image': `https://sorachill.vercel.app/api/ogimage?m=${params.movieId}&mt=movie`,
     'twitter:card': 'summary_large_image',
     'twitter:site': '@sora_anime',
     'twitter:domain': 'sora-anime.vercel.app',
-    'twitter:url': `https://sora-anime.vercel.app/movies/${params.movieId}`,
+    'twitter:url': `https://sorachill.vercel.app/movies/${params.movieId}`,
     'twitter:title': `Watch ${detail?.title || ''} HD online Free - Sora`,
     'twitter:description':
       detail?.overview || `Watch ${detail?.title || ''} in full HD online with Subtitle`,
-    'twitter:image': `https://sora-anime.vercel.app/api/ogimage?m=${params.movieId}&mt=movie`,
+    'twitter:image': `https://sorachill.vercel.app/api/ogimage?m=${params.movieId}&mt=movie`,
   };
 };
 

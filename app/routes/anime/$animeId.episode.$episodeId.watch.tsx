@@ -729,7 +729,7 @@ export const meta: MetaFunction = ({ data, params }) => {
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     } episode ${episodeInfo?.number || ''}, English Subtitle`,
     ...(color ? { 'theme-color': color } : null),
-    'og:url': `https://sora-anime.vercel.app/anime/${params.animeId}/episode/${params.episodeId}`,
+    'og:url': `https://sorachill.vercel.app/anime/${params.animeId}/episode/${params.episodeId}`,
     'og:title': `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     } episode ${episodeInfo?.number || ''} HD online Free - Sora`,

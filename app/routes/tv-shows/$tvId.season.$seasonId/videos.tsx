@@ -3,11 +3,11 @@ import { Card, CardBody, CardFooter } from '@nextui-org/card';
 import { useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useFetcher, useLoaderData, type RouteMatch } from '@remix-run/react';
-import i18next from '~/i18n/i18next.server';
 import { AnimatePresence, motion, type PanInfo } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
 import { MimeType } from 'remix-image';
 
+import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
 import { getTvSeasonVideos } from '~/services/tmdb/tmdb.server';
 import type { Item } from '~/services/youtube/youtube.types';
@@ -37,7 +37,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const meta: MetaFunction = ({ params }) => ({
-  'og:url': `https://sora-anime.vercel.app/tv-shows/${params.tvId}/season/${params.seasonId}/videos`,
+  'og:url': `https://sorachill.vercel.app/tv-shows/${params.tvId}/season/${params.seasonId}/videos`,
 });
 export const handle = {
   breadcrumb: (match: RouteMatch) => (

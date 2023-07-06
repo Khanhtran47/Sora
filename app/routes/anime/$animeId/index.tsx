@@ -13,7 +13,7 @@ import Image from '~/components/elements/Image';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 
 export const meta: MetaFunction = ({ params }) => ({
-  'og:url': `https://sora-anime.vercel.app/anime/${params.animeId}/`,
+  'og:url': `https://sorachill.vercel.app/anime/${params.animeId}/`,
 });
 
 export const handle = {

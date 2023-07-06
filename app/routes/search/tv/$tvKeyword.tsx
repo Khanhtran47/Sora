@@ -1,11 +1,11 @@
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useLoaderData, useLocation, useNavigate, type RouteMatch } from '@remix-run/react';
-import i18next from '~/i18n/i18next.server';
 import { motion, type PanInfo } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
 import { useHydrated } from 'remix-utils';
 
+import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
 import { getSearchTvShows } from '~/services/tmdb/tmdb.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
@@ -40,7 +40,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     title: `Search results for '${params.tvKeyword}' tv serie on Sora`,
     description: `Watch ${params.tvKeyword} in full HD online with Subtitle`,
     keywords: `Watch ${params.tvKeyword}, Stream ${params.tvKeyword}, Watch ${params.tvKeyword} HD, Online ${params.tvKeyword}, Streaming ${params.tvKeyword}, English, Subtitle ${params.tvKeyword}, English Subtitle`,
-    'og:url': `https://sora-anime.vercel.app/search/tv/${params.tvKeyword}`,
+    'og:url': `https://sorachill.vercel.app/search/tv/${params.tvKeyword}`,
     'og:title': `Search results for '${params.tvKeyword}' tv serie on Sora`,
     'og:description': `Watch ${params.tvKeyword} in full HD online with Subtitle`,
     'og:image': searchResults?.items[0]?.backdropPath || searchResults?.items[0]?.posterPath || '',

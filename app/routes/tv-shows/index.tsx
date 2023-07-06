@@ -3,13 +3,13 @@ import { Spinner } from '@nextui-org/spinner';
 import { useMeasure } from '@react-hookz/web';
 import { json, type LoaderArgs } from '@remix-run/node';
 import { useFetcher, useLoaderData, useLocation, useNavigate } from '@remix-run/react';
-import i18next from '~/i18n/i18next.server';
 import dayjs from 'dayjs';
 import { AnimatePresence, motion } from 'framer-motion';
 import NProgress from 'nprogress';
 import { useGlobalLoadingState } from 'remix-utils';
 
 import type { IMedia } from '~/types/media';
+import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
 import { getListDiscover, getListTvShows } from '~/services/tmdb/tmdb.server';
 import { CACHE_CONTROL } from '~/utils/server/http';

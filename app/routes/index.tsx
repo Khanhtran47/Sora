@@ -1,11 +1,11 @@
 import { json, type LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
-import i18next from '~/i18n/i18next.server';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
 import type { IMedia } from '~/types/media';
 import { getAnimePopular } from '~/services/consumet/anilist/anilist.server';
+import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
 import {
   getListDiscover,

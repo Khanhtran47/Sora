@@ -1,7 +1,7 @@
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useLoaderData, type RouteMatch } from '@remix-run/react';
-import i18next from '~/i18n/i18next.server';
 
+import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
 import { getRecommendation } from '~/services/tmdb/tmdb.server';
 import TMDB from '~/utils/media';
@@ -36,7 +36,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const meta: MetaFunction = ({ params }) => ({
-  'og:url': `https://sora-anime.vercel.app/movies/${params.movieId}/recomendations`,
+  'og:url': `https://sorachill.vercel.app/movies/${params.movieId}/recomendations`,
 });
 
 export const handle = {

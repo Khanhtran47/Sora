@@ -3,8 +3,8 @@ import { Pagination } from '@nextui-org/pagination';
 import { useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useLoaderData, type RouteMatch } from '@remix-run/react';
-import i18next from '~/i18n/i18next.server';
 
+import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
 import { getTvSeasonCredits } from '~/services/tmdb/tmdb.server';
 import { postFetchDataHandler } from '~/services/tmdb/utils.server';
@@ -33,7 +33,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const meta: MetaFunction = ({ params }) => ({
-  'og:url': `https://sora-anime.vercel.app/tv-shows/${params.tvId}/season/${params.seasonId}/cast`,
+  'og:url': `https://sorachill.vercel.app/tv-shows/${params.tvId}/season/${params.seasonId}/cast`,
 });
 
 export const handle = {

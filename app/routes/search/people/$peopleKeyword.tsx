@@ -1,11 +1,11 @@
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useLoaderData, useLocation, useNavigate, type RouteMatch } from '@remix-run/react';
-import i18next from '~/i18n/i18next.server';
 import { motion, type PanInfo } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
 import { useHydrated } from 'remix-utils';
 
+import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
 import { getSearchPerson } from '~/services/tmdb/tmdb.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
@@ -40,7 +40,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     title: `Search results for '${params.peopleKeyword}' on Sora`,
     description: `Watch ${params.peopleKeyword} movie, tv seris in full HD online with Subtitle`,
     keywords: `watch ${params.peopleKeyword} free, watch ${params.peopleKeyword} movies, watch ${params.peopleKeyword} series, stream ${params.peopleKeyword} series, ${params.peopleKeyword} movies online free`,
-    'og:url': `https://sora-anime.vercel.app/search/people/${params.peopleKeyword}`,
+    'og:url': `https://sorachill.vercel.app/search/people/${params.peopleKeyword}`,
     'og:title': `Search results for '${params.peopleKeyword}' on Sora`,
     'og:description': `Watch ${params.peopleKeyword} in full HD online with Subtitle`,
     'og:image': searchResults?.items[0]?.posterPath || '',

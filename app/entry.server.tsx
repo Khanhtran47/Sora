@@ -9,8 +9,7 @@ import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { otherRootRouteHandlers } from '~/services/other-root-routes.server';
 import { IsBotProvider } from '~/context/isbot.context';
 
-import i18n from './i18n/i18n.config';
-import i18next from './i18n/i18next.server';
+import { i18n, i18next } from './services/i18n';
 
 const handleRequest = async (
   request: Request,

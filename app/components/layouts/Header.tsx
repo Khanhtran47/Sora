@@ -1,5 +1,6 @@
 import type { User } from '@supabase/supabase-js';
 import { motion, useTransform } from 'framer-motion';
+import { useHydrated } from 'remix-utils';
 import { tv } from 'tailwind-variants';
 
 import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
@@ -52,6 +53,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   const { sidebarMiniMode, sidebarBoxedMode } = useSoraSettings();
   const { scrollY } = useLayout((state) => state);
   const { startChangeScrollPosition } = useHeaderStyle((state) => state);
+  const isHydrated = useHydrated();
   const {
     customHeaderBackgroundColor,
     customHeaderChangeColorOnScroll,
@@ -81,7 +83,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       <motion.div
         className="pointer-events-none absolute left-0 top-0 z-[-1] w-full rounded-tl-xl backdrop-blur-2xl backdrop-contrast-125 backdrop-saturate-200"
         style={{
-          opacity,
+          opacity: isHydrated ? opacity : 0,
           height: isShowTabLink && !hideTabLinkWithLocation ? 112 : 64,
           backgroundColor: headerBackgroundColor,
         }}
@@ -94,7 +96,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       <div className="flex flex-row items-center justify-end gap-x-2">
         {isShowListViewChangeButton ? (
           <motion.div
-            style={{ opacity, y }}
+            style={{ opacity: isHydrated ? opacity : 0, y }}
             transition={{ duration: 0.3 }}
             className="flex flex-row items-center justify-end gap-x-3"
           >

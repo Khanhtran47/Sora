@@ -57,7 +57,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     }, English, Subtitle ${detail?.name || ''} season ${params.seasonId || ''} episode ${
       params.episodeId || ''
     }, English Subtitle`,
-    'og:url': `https://sora-anime.vercel.app/tv-shows/${params.tvId}/season/${
+    'og:url': `https://sorachill.vercel.app/tv-shows/${params.tvId}/season/${
       params.seasonId
     }/episode/${params.episodeId || ''}`,
     'og:title': `Watch ${detail?.name || ''} season ${params.seasonId || ''} episode ${
@@ -66,7 +66,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     'og:description': `Watch ${detail?.name || ''} season ${params.seasonId || ''} episode ${
       params.episodeId
     } in full HD online with Subtitle`,
-    'og:image': `https://sora-anime.vercel.app/api/ogimage?m=${params.tvId}&mt=tv`,
+    'og:image': `https://sorachill.vercel.app/api/ogimage?m=${params.tvId}&mt=tv`,
   };
 };
 

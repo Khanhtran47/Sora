@@ -1,5 +1,3 @@
-/* eslint-disable import/no-unresolved */
-/* eslint-disable react/no-danger */
 import * as React from 'react';
 import FontStyles100 from '@fontsource/inter/100.css';
 import FontStyles200 from '@fontsource/inter/200.css';
@@ -13,6 +11,7 @@ import FontStyles900 from '@fontsource/inter/900.css';
 import { Button } from '@nextui-org/button';
 import { Image as NextUIImage } from '@nextui-org/image';
 import { NextUIProvider as NextUIv2Provider } from '@nextui-org/system';
+import { cssBundleHref } from '@remix-run/css-bundle';
 import { json, type LinksFunction, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import {
   isRouteErrorResponse,
@@ -27,7 +26,6 @@ import {
   useNavigation,
   useRouteError,
 } from '@remix-run/react';
-import i18next, { i18nCookie } from '~/i18n/i18next.server';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ThemeProvider as RemixThemesProvider } from 'next-themes';
 import NProgress from 'nprogress';
@@ -61,18 +59,15 @@ import Layout from './components/layouts/Layout';
 import nProgressStyles from './components/styles/nprogress.css';
 import { listThemes } from './constants/settings';
 import { useIsBot } from './context/isbot.context';
+import { i18nCookie, i18next } from './services/i18n';
 import { getUserFromCookie } from './services/supabase';
 import { getListGenre, getListLanguages } from './services/tmdb/tmdb.server';
-import styles from './styles/tailwind.css';
+import tailwindStylesheetUrl from './styles/tailwind.css';
 import * as gtag from './utils/client/gtags.client';
 
 interface DocumentProps {
   children: React.ReactNode;
   title?: string;
-  lang?: string;
-  dir?: 'ltr' | 'rtl';
-  gaTrackingId?: string;
-  ENV?: unknown;
 }
 
 const themeValues = {
@@ -118,172 +113,47 @@ const themeValues = {
   winter: 'winter',
 };
 
-export const links: LinksFunction = () => [
-  { rel: 'manifest', href: '/resources/manifest-v0.0.1.json' },
-  { rel: 'icon', href: '/favicon.ico' },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: styles,
-  },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: swiperStyles,
-  },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: swiperPaginationStyles,
-  },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: swiperNavigationStyles,
-  },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: swiperThumbsStyles,
-  },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: swiperAutoPlayStyles,
-  },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: swiperFreeModeStyles,
-  },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: nProgressStyles,
-  },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: photoSwipeStyles,
-  },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: FontStyles100,
-  },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: FontStyles200,
-  },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: FontStyles300,
-  },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: FontStyles400,
-  },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: FontStyles500,
-  },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: FontStyles600,
-  },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: FontStyles700,
-  },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: FontStyles800,
-  },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: FontStyles900,
-  },
-  {
-    rel: 'stylesheet',
-    href: styles,
-  },
-  {
-    rel: 'stylesheet',
-    href: swiperStyles,
-  },
-  {
-    rel: 'stylesheet',
-    href: swiperPaginationStyles,
-  },
-  {
-    rel: 'stylesheet',
-    href: swiperNavigationStyles,
-  },
-  {
-    rel: 'stylesheet',
-    href: swiperThumbsStyles,
-  },
-  {
-    rel: 'stylesheet',
-    href: swiperAutoPlayStyles,
-  },
-  {
-    rel: 'stylesheet',
-    href: swiperFreeModeStyles,
-  },
-  {
-    rel: 'stylesheet',
-    href: nProgressStyles,
-  },
-  {
-    rel: 'stylesheet',
-    href: photoSwipeStyles,
-  },
-  {
-    rel: 'stylesheet',
-    href: FontStyles100,
-  },
-  {
-    rel: 'stylesheet',
-    href: FontStyles200,
-  },
-  {
-    rel: 'stylesheet',
-    href: FontStyles300,
-  },
-  {
-    rel: 'stylesheet',
-    href: FontStyles400,
-  },
-  {
-    rel: 'stylesheet',
-    href: FontStyles500,
-  },
-  {
-    rel: 'stylesheet',
-    href: FontStyles600,
-  },
-  {
-    rel: 'stylesheet',
-    href: FontStyles700,
-  },
-  {
-    rel: 'stylesheet',
-    href: FontStyles800,
-  },
-  {
-    rel: 'stylesheet',
-    href: FontStyles900,
-  },
-];
+export const links: LinksFunction = () => {
+  return [
+    { rel: 'manifest', href: '/resources/manifest-v0.0.1.json' },
+    { rel: 'icon', href: '/favicon.ico', type: 'image/x-icon' },
+    // Preload CSS as a resource to avoid render blocking
+    {
+      rel: 'preload',
+      as: 'style',
+      href: tailwindStylesheetUrl,
+    },
+    ...(cssBundleHref ? [{ rel: 'preload', as: 'style', href: cssBundleHref }] : []),
+    { rel: 'preload', as: 'style', href: FontStyles100 },
+    { rel: 'preload', as: 'style', href: FontStyles200 },
+    { rel: 'preload', as: 'style', href: FontStyles300 },
+    { rel: 'preload', as: 'style', href: FontStyles400 },
+    { rel: 'preload', as: 'style', href: FontStyles500 },
+    { rel: 'preload', as: 'style', href: FontStyles600 },
+    { rel: 'preload', as: 'style', href: FontStyles700 },
+    { rel: 'preload', as: 'style', href: FontStyles800 },
+    { rel: 'preload', as: 'style', href: FontStyles900 },
+    { rel: 'stylesheet', href: tailwindStylesheetUrl },
+    ...(cssBundleHref ? [{ rel: 'stylesheet', href: cssBundleHref }] : []),
+    { rel: 'stylesheet', href: swiperStyles },
+    { rel: 'stylesheet', href: swiperPaginationStyles },
+    { rel: 'stylesheet', href: swiperNavigationStyles },
+    { rel: 'stylesheet', href: swiperThumbsStyles },
+    { rel: 'stylesheet', href: swiperAutoPlayStyles },
+    { rel: 'stylesheet', href: swiperFreeModeStyles },
+    { rel: 'stylesheet', href: nProgressStyles },
+    { rel: 'stylesheet', href: photoSwipeStyles },
+    { rel: 'stylesheet', href: FontStyles100 },
+    { rel: 'stylesheet', href: FontStyles200 },
+    { rel: 'stylesheet', href: FontStyles300 },
+    { rel: 'stylesheet', href: FontStyles400 },
+    { rel: 'stylesheet', href: FontStyles500 },
+    { rel: 'stylesheet', href: FontStyles600 },
+    { rel: 'stylesheet', href: FontStyles700 },
+    { rel: 'stylesheet', href: FontStyles800 },
+    { rel: 'stylesheet', href: FontStyles900 },
+  ];
+};
 
 export const meta: MetaFunction = () => {
   return {
@@ -294,9 +164,9 @@ export const meta: MetaFunction = () => {
       'Sora, Sora movie, sora movies, Watch movies online, watch series online, watch free movies, free movies to watch online, watch movies online free, free movies streaming, free movies full, free movies download, watch movies hd, movies to watch, watch movies, anime free to watch and download, free anime, watch anime online, watch anime, anime, watch anime online free, watch anime free, watchsub',
     'og:type': 'website',
     'og:site_name': 'Sora',
-    'og:url': 'https://sora-anime.vercel.app',
+    'og:url': 'https://sorachill.vercel.app',
     'og:title': 'Sora - Free Movies and Free Series',
-    'og:image': 'https://sora-anime.vercel.app/api/ogimage?it=home',
+    'og:image': 'https://sorachill.vercel.app/api/ogimage?it=home',
     'og:image:width': '1200',
     'og:image:height': '630',
     'og:description':
@@ -353,13 +223,42 @@ export const handle = {
   ),
 };
 
+function useLoadingIndicator() {
+  const navigation = useNavigation();
+
+  const fetchers = useFetchers();
+  /**
+   * This gets the state of every fetcher active on the app and combine it with
+   * the state of the global transition (Link and Form), then use them to
+   * determine if the app is idle or if it's loading.
+   * Here we consider both loading and submitting as loading.
+   */
+  const state = React.useMemo<'idle' | 'loading'>(() => {
+    const states = [navigation.state, ...fetchers.map((fetcher) => fetcher.state)];
+    if (states.every((item) => item === 'idle')) return 'idle';
+    return 'loading';
+  }, [navigation.state, fetchers]);
+
+  React.useEffect(() => {
+    // and when it's something else it means it's either submitting a form or
+    // waiting for the loaders of the next location so we start it
+    if (state === 'loading') NProgress.configure({ showSpinner: false }).start();
+    // when the state is idle then we can to complete the progress bar
+    if (state === 'idle') NProgress.configure({ showSpinner: false }).done();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigation.state]);
+}
+
 let isMount = true;
 
-const Document = ({ children, title, lang, dir, gaTrackingId, ENV }: DocumentProps) => {
+const Document = ({ children, title }: DocumentProps) => {
   const location = useLocation();
   const matches = useMatches();
+  const { locale, gaTrackingId, ENV } = useLoaderData<typeof loader>();
+  const { i18n } = useTranslation();
   const isBot = useIsBot();
   const isHydrated = useHydrated();
+  useLoadingIndicator();
   const color = React.useMemo(() => {
     if (isHydrated) {
       return getComputedStyle(document.documentElement).getPropertyValue(
@@ -375,11 +274,6 @@ const Document = ({ children, title, lang, dir, gaTrackingId, ENV }: DocumentPro
     }
   }, [location, gaTrackingId]);
 
-  /**
-   * It takes an object and returns a clone of that object, using for deleting handlers in matches.
-   * @param {T} obj - T - The object to be cloned.
-   * @returns A clone of the object.
-   */
   function cloneObject<T>(obj: T): T {
     const clone: T = {} as T;
     // eslint-disable-next-line no-restricted-syntax
@@ -437,7 +331,7 @@ const Document = ({ children, title, lang, dir, gaTrackingId, ENV }: DocumentPro
   }, [location]);
 
   return (
-    <html lang={lang} dir={dir} suppressHydrationWarning>
+    <html lang={locale} dir={i18n.dir()} suppressHydrationWarning>
       <head>
         {title ? <title>{title}</title> : null}
         <meta charSet="utf-8" />
@@ -485,13 +379,10 @@ const Document = ({ children, title, lang, dir, gaTrackingId, ENV }: DocumentPro
 };
 
 const App = () => {
-  const fetchers = useFetchers();
-  const navigation = useNavigation();
-  const { user, locale, gaTrackingId, ENV } = useLoaderData<typeof loader>();
-  const { i18n } = useTranslation();
+  const isHydrated = useHydrated();
+  const { user, locale } = useLoaderData<typeof loader>();
   const isBot = useIsBot();
   useChangeLanguage(locale);
-  const [isLoading, setIsLoading] = React.useState(true);
   const [waitingWorker, setWaitingWorker] = React.useState<ServiceWorker | null>(null);
   const [isUpdateAvailable, setIsUpdateAvailable] = React.useState(false);
 
@@ -541,42 +432,8 @@ const App = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isUpdateAvailable]);
 
-  /**
-   * This gets the state of every fetcher active on the app and combine it with
-   * the state of the global transition (Link and Form), then use them to
-   * determine if the app is idle or if it's loading.
-   * Here we consider both loading and submitting as loading.
-   */
-  const state = React.useMemo<'idle' | 'loading'>(() => {
-    const states = [navigation.state, ...fetchers.map((fetcher) => fetcher.state)];
-    if (states.every((item) => item === 'idle')) return 'idle';
-    return 'loading';
-  }, [navigation.state, fetchers]);
-
-  React.useEffect(() => {
-    // and when it's something else it means it's either submitting a form or
-    // waiting for the loaders of the next location so we start it
-    if (state === 'loading') NProgress.configure({ showSpinner: false }).start();
-    // when the state is idle then we can to complete the progress bar
-    if (state === 'idle') NProgress.configure({ showSpinner: false }).done();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [navigation.state]);
-
-  React.useEffect(() => {
-    const theme = localStorage.getItem('theme');
-    const d = document.documentElement;
-    if (theme === 'synthwave' || theme === 'dracula' || theme === 'night') {
-      d.style.colorScheme = 'dark';
-    }
-  }, []);
-
-  React.useEffect(() => {
-    if (state === 'idle') setIsLoading(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
-    <Document lang={locale} dir={i18n.dir()} gaTrackingId={gaTrackingId} ENV={ENV}>
+    <Document>
       <WrapBalancerProvider>
         <RemixThemesProvider
           defaultTheme="system"
@@ -587,7 +444,7 @@ const App = () => {
           value={themeValues}
         >
           <AnimatePresence>
-            {isLoading && process.env.NODE_ENV !== 'development' && !isBot ? (
+            {!isHydrated && process.env.NODE_ENV !== 'development' && !isBot ? (
               <motion.div
                 initial={{ opacity: 1 }}
                 animate={{ opacity: 1 }}

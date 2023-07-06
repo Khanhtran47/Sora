@@ -4,9 +4,9 @@ import { Spacer } from '@nextui-org/spacer';
 import { useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useLoaderData, useLocation, type RouteMatch } from '@remix-run/react';
-import i18next from '~/i18n/i18next.server';
 import { motion } from 'framer-motion';
 
+import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
 import { getListDetail } from '~/services/tmdb/tmdb.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
@@ -27,7 +27,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     title: `${detail?.name || ''} Collection | Sora`,
     description: `${detail?.description || ''}`,
     keywords: `${detail?.name || ''}`,
-    'og:url': `https://sora-anime.vercel.app/collections/${params.collectionsId}`,
+    'og:url': `https://sorachill.vercel.app/collections/${params.collectionsId}`,
     'og:title': `${detail?.name || ''} Collection | Sora`,
     'og:description': `${detail?.description || ''}`,
   };

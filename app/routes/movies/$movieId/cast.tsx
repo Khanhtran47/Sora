@@ -31,7 +31,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const meta: MetaFunction = ({ params }) => ({
-  'og:url': `https://sora-anime.vercel.app/movies/${params.movieId}/cast`,
+  'og:url': `https://sorachill.vercel.app/movies/${params.movieId}/cast`,
 });
 
 export const handle = {

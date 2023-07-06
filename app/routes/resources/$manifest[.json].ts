@@ -1,6 +1,6 @@
 import { json, type LoaderArgs } from '@remix-run/node';
-import i18next from '~/i18n/i18next.server';
 
+import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
 
 export const loader = async ({ request }: LoaderArgs) => {

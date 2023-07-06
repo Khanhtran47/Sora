@@ -11,7 +11,7 @@ import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
 
 export const meta: MetaFunction = ({ params }) => ({
-  'og:url': `https://sora-anime.vercel.app/people/${params.peopleId}/`,
+  'og:url': `https://sorachill.vercel.app/people/${params.peopleId}/`,
 });
 
 const OverviewPage = () => {

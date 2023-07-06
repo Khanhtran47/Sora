@@ -4,12 +4,12 @@ import { Card, CardBody, CardHeader } from '@nextui-org/card';
 import { useIntersectionObserver, useMeasure, useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { Outlet, useLoaderData, useParams, type RouteMatch } from '@remix-run/react';
-import i18next from '~/i18n/i18next.server';
 import { motion, useTransform } from 'framer-motion';
 import Vibrant from 'node-vibrant';
 import { MimeType } from 'remix-image';
 import { useHydrated } from 'remix-utils';
 
+import { i18next } from '~/services/i18n';
 import getProviderList from '~/services/provider.server';
 import { authenticate } from '~/services/supabase';
 import { getTvSeasonDetail, getTvShowDetail } from '~/services/tmdb/tmdb.server';
@@ -127,12 +127,12 @@ export const meta: MetaFunction = ({ data, params }) => {
     } HD, Online ${detail?.name || ''}, Streaming ${detail?.name || ''}, English, Subtitle ${
       detail?.name || ''
     }, English Subtitle`,
-    'og:url': `https://sora-anime.vercel.app/tv-shows/${params.tvId}/season/${params.seasonId}`,
+    'og:url': `https://sorachill.vercel.app/tv-shows/${params.tvId}/season/${params.seasonId}`,
     'og:title': `Watch ${detail?.name || ''} ${seasonDetail?.name || ''} HD online Free - Sora`,
     'og:description': `Watch ${detail?.name || ''} ${
       seasonDetail?.name || ''
     } in full HD online with Subtitle`,
-    'og:image': `https://sora-anime.vercel.app/api/ogimage?m=${params.tvId}&mt=tv`,
+    'og:image': `https://sorachill.vercel.app/api/ogimage?m=${params.tvId}&mt=tv`,
   };
 };
 

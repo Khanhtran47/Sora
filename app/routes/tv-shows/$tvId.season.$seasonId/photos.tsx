@@ -2,10 +2,10 @@ import * as React from 'react';
 import { Spacer } from '@nextui-org/spacer';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useLoaderData, type RouteMatch } from '@remix-run/react';
-import i18next from '~/i18n/i18next.server';
 import { Gallery, Item, type GalleryProps } from 'react-photoswipe-gallery';
 import { MimeType } from 'remix-image';
 
+import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
 import { getTvSeasonImages } from '~/services/tmdb/tmdb.server';
 import TMDB from '~/utils/media';
@@ -31,7 +31,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const meta: MetaFunction = ({ params }) => ({
-  'og:url': `https://sora-anime.vercel.app/tv-shows/${params.tvId}/season/${params.seasonId}/photos`,
+  'og:url': `https://sorachill.vercel.app/tv-shows/${params.tvId}/season/${params.seasonId}/photos`,
 });
 
 export const handle = {

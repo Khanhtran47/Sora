@@ -7,9 +7,9 @@ import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 export const meta: MetaFunction = () => ({
   title: 'Discover Movies, TV Shows, Anime, People and More - Sora',
   description: 'Discover Movies, TV Shows, Anime, People and More',
-  'og:url': 'https://sora-anime.vercel.app/discover',
+  'og:url': 'https://sorachill.vercel.app/discover',
   'og:title': 'Discover Movies, TV Shows, Anime, People and More - Sora',
-  'og:image': 'https://sora-anime.vercel.app/api/ogimage?it=discover',
+  'og:image': 'https://sorachill.vercel.app/api/ogimage?it=discover',
   'og:description': 'Discover Movies, TV Shows, Anime, People and More',
 });
 

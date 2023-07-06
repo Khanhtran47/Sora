@@ -43,10 +43,10 @@ export const meta: MetaFunction = ({ data, params }) => {
     } HD, Online ${detail?.title || ''}, Streaming ${detail?.title || ''}, English, Subtitle ${
       detail?.title || ''
     }, English Subtitle`,
-    'og:url': `https://sora-anime.vercel.app/movies/${params.movieId}/watch`,
+    'og:url': `https://sorachill.vercel.app/movies/${params.movieId}/watch`,
     'og:title': `Watch ${detail?.title || ''} HD online Free - Sora`,
     'og:description': `Watch ${detail?.title || ''} in full HD online with Subtitle`,
-    'og:image': `https://sora-anime.vercel.app/api/ogimage?m=${params.movieId}&mt=movie`,
+    'og:image': `https://sorachill.vercel.app/api/ogimage?m=${params.movieId}&mt=movie`,
   };
 };
 

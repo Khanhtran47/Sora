@@ -1,4 +1,3 @@
-// or "@remix-run/cloudflare"
 import { env } from 'process';
 import { createCookieSessionStorage } from '@remix-run/node';
 

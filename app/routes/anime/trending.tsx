@@ -17,7 +17,7 @@ export const meta: MetaFunction = () => ({
     'Official Sora website to watch anime online HD for free, Watch TV show & TV series and Download all anime FREE',
   keywords:
     'watch free anime, free anime to watch online, watch anime online free, free anime streaming, free anime full, free anime download, watch anime hd, anime to watch',
-  'og:url': 'https://sora-anime.vercel.app/anime/trending',
+  'og:url': 'https://sorachill.vercel.app/anime/trending',
   'og:title': 'Watch Top Trending anime free | Sora',
   'og:description':
     'Official Sora website to watch anime online HD for free, Watch TV show & TV series and Download all anime FREE',

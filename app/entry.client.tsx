@@ -7,7 +7,7 @@ import { hydrateRoot } from 'react-dom/client';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { getInitialNamespaces } from 'remix-i18next';
 
-import i18n from './i18n/i18n.config';
+import { i18n } from '~/services/i18n';
 
 i18next
   .use(initReactI18next) // Tell i18next to use the react-i18next plugin
@@ -42,7 +42,11 @@ i18next
         </I18nextProvider>,
       );
     }),
-  );
+  )
+  .catch((err) => {
+    // eslint-disable-next-line no-console
+    console.error(err);
+  });
 
 const urlBase64ToUint8Array = (base64String: string): Uint8Array => {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4);

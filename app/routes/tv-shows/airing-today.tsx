@@ -1,11 +1,11 @@
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
-import i18next from '~/i18n/i18next.server';
 import { motion, type PanInfo } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
 import { useHydrated } from 'remix-utils';
 
+import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
 import { getListTvShows } from '~/services/tmdb/tmdb.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
@@ -19,7 +19,7 @@ export const meta: MetaFunction = () => ({
     'Watch latest Tv series online in HD Quality. Unlimited streaming series for free now',
   keywords:
     'watch free movies, free movies to watch online, watch movies online free, free movies streaming, free movies full, free movies download, watch movies hd, movies to watch, hd movies, stream movies, movies to stream, watch movies free',
-  'og:url': 'https://sora-anime.vercel.app/tv-shows/airing-today',
+  'og:url': 'https://sorachill.vercel.app/tv-shows/airing-today',
   'og:title': 'Airing today Tv Shows | Sora',
   'og:description':
     'Watch latest Tv series online in HD Quality. Unlimited streaming series for free now',

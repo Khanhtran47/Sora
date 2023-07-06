@@ -88,7 +88,7 @@ export const meta: MetaFunction = ({ data, params }) => {
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     }, English Subtitle`,
     ...(color ? { 'theme-color': color } : null),
-    'og:url': `https://sora-anime.vercel.app/anime/${params.animeId}`,
+    'og:url': `https://sorachill.vercel.app/anime/${params.animeId}`,
     'og:title': `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     } HD online Free - Sora`,
@@ -101,7 +101,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     'twitter:card': 'summary_large_image',
     'twitter:site': '@sora_anime',
     'twitter:domain': 'sora-anime.vercel.app',
-    'twitter:url': `https://sora-anime.vercel.app/anime/${params.animeId}`,
+    'twitter:url': `https://sorachill.vercel.app/anime/${params.animeId}`,
     'twitter:title': `Watch ${
       title?.userPreferred || title?.english || title?.romaji || title?.native || ''
     } HD online Free - Sora`,

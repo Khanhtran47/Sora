@@ -1,8 +1,8 @@
 import { Spacer } from '@nextui-org/spacer';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { Outlet, useLoaderData, type RouteMatch } from '@remix-run/react';
-import i18next from '~/i18n/i18next.server';
 
+import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
 import { getPeopleDetail, getPeopleExternalIds } from '~/services/tmdb/tmdb.server';
 import TMDB from '~/utils/media';
@@ -55,7 +55,7 @@ export const meta: MetaFunction = ({ data, params }) => {
     keywords: `watch ${detail?.name || ''} free, watch ${detail?.name || ''} movies, watch ${
       detail?.name || ''
     } series, stream ${detail?.name || ''} series, ${detail?.name || ''} movies online free`,
-    'og:url': `https://sora-anime.vercel.app/people/${params.peopleId}`,
+    'og:url': `https://sorachill.vercel.app/people/${params.peopleId}`,
     'og:title': `${detail?.name || ''} | Sora - Watch The Best of Movies, TV Shows & Animes`,
     'og:description': `Watch ${
       detail?.name || ''
