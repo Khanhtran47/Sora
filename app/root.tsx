@@ -12,7 +12,7 @@ import { Button } from '@nextui-org/button';
 import { Image as NextUIImage } from '@nextui-org/image';
 import { NextUIProvider as NextUIv2Provider } from '@nextui-org/system';
 import { cssBundleHref } from '@remix-run/css-bundle';
-import { json, type LinksFunction, type LoaderArgs, type MetaFunction } from '@remix-run/node';
+import { json, type LinksFunction, type LoaderArgs, type V2_MetaFunction } from '@remix-run/node';
 import {
   isRouteErrorResponse,
   Links,
@@ -25,6 +25,7 @@ import {
   useMatches,
   useNavigation,
   useRouteError,
+  type ShouldRevalidateFunction,
 } from '@remix-run/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ThemeProvider as RemixThemesProvider } from 'next-themes';
@@ -113,6 +114,13 @@ const themeValues = {
   winter: 'winter',
 };
 
+export const shouldRevalidate: ShouldRevalidateFunction = ({ nextUrl }) => {
+  // reload on language change so the selected language gets set into the cookie
+  const lang = nextUrl.searchParams.get('lng');
+
+  return Boolean(lang);
+};
+
 export const links: LinksFunction = () => {
   return [
     { rel: 'manifest', href: '/resources/manifest-v0.0.1.json' },
@@ -155,25 +163,6 @@ export const links: LinksFunction = () => {
   ];
 };
 
-export const meta: MetaFunction = () => {
-  return {
-    title: 'Sora - Free Movies and Free Series',
-    description:
-      'Watch Sora Online For Free! Sora is a multinational website for movies, series and anime fans. ',
-    keywords:
-      'Sora, Sora movie, sora movies, Watch movies online, watch series online, watch free movies, free movies to watch online, watch movies online free, free movies streaming, free movies full, free movies download, watch movies hd, movies to watch, watch movies, anime free to watch and download, free anime, watch anime online, watch anime, anime, watch anime online free, watch anime free, watchsub',
-    'og:type': 'website',
-    'og:site_name': 'Sora',
-    'og:url': 'https://sorachill.vercel.app',
-    'og:title': 'Sora - Free Movies and Free Series',
-    'og:image': 'https://sorachill.vercel.app/api/ogimage?it=home',
-    'og:image:width': '1200',
-    'og:image:height': '630',
-    'og:description':
-      'Watch Sora Online For Free! Sora is a multinational website for movies, series and anime fans - Very fast streaming - Click NOW',
-  };
-};
-
 export const loader = async ({ request }: LoaderArgs) => {
   const locale = await i18next.getLocale(request);
   const gaTrackingId = process.env.GA_TRACKING_ID;
@@ -214,6 +203,29 @@ export const loader = async ({ request }: LoaderArgs) => {
     { headers },
   );
 };
+
+export const meta: V2_MetaFunction<typeof loader> = () => [
+  { title: 'Sora' },
+  { name: 'description', content: 'Watching movies, series, anime and more in Sora' },
+  {
+    name: 'keywords',
+    content:
+      'Sora, Sora Movies, Sora Series, Sora Anime, Sora Chill, SoraChill, watch movies, watch series, watch anime, watch movies online, watch series online, watch anime online, free movies, free series, free anime, free movies online, free series online, free anime online, watch movies free, watch series free, watch anime free, watch movies online free, watch series online free, watch anime online free',
+  },
+  { property: 'og:url', content: 'https://sorachill.vercel.app' },
+  { property: 'og:title', content: 'Sora' },
+  { property: 'og:image', content: 'https://sorachill.vercel.app/api/ogimage?it=home' },
+  { property: 'og:description', content: 'Watching movies, series, anime and more in Sora' },
+  { property: 'og:type', content: 'website' },
+  { property: 'og:site_name', content: 'Sora' },
+  { property: 'og:image:width', content: '1200' },
+  { property: 'og:image:height', content: '630' },
+  { name: 'twitter:card', content: 'summary_large_image' },
+  { name: 'twitter:site', content: '@sora' },
+  { name: 'twitter:image', content: 'https://sorachill.vercel.app/api/ogimage?it=home' },
+  { name: 'twitter:title', content: 'Sora' },
+  { name: 'twitter:description', content: 'Watching movies, series, anime and more in Sora' },
+];
 
 export const handle = {
   breadcrumb: () => (

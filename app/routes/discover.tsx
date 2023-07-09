@@ -1,17 +1,20 @@
-import type { MetaFunction } from '@remix-run/node';
 import { Outlet } from '@remix-run/react';
+import { mergeMeta } from '~/utils';
 
 import { discoverPages } from '~/constants/tabLinks';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
-export const meta: MetaFunction = () => ({
-  title: 'Discover Movies, TV Shows, Anime, People and More - Sora',
-  description: 'Discover Movies, TV Shows, Anime, People and More',
-  'og:url': 'https://sorachill.vercel.app/discover',
-  'og:title': 'Discover Movies, TV Shows, Anime, People and More - Sora',
-  'og:image': 'https://sorachill.vercel.app/api/ogimage?it=discover',
-  'og:description': 'Discover Movies, TV Shows, Anime, People and More',
-});
+export const meta = mergeMeta(() => [
+  { title: 'Sora - Discover' },
+  { name: 'description', content: 'Discover Movies, TV Shows, Anime, People and More' },
+  { property: 'og:url', content: 'https://sorachill.vercel.app/discover' },
+  { property: 'og:title', content: 'Sora - Discover' },
+  { property: 'og:image', content: 'https://sorachill.vercel.app/api/ogimage?it=discover' },
+  { property: 'og:description', content: 'Discover Movies, TV Shows, Anime, People and More' },
+  { name: 'twitter:title', content: 'Sora - Discover' },
+  { name: 'twitter:description', content: 'Discover Movies, TV Shows, Anime, People and More' },
+  { name: 'twitter:image', content: 'https://sorachill.vercel.app/api/ogimage?it=discover' },
+]);
 
 export const handle = {
   breadcrumb: () => (

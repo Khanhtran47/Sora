@@ -1,21 +1,18 @@
-import type { MetaFunction } from '@remix-run/node';
 import { Outlet } from '@remix-run/react';
+import { mergeMeta } from '~/utils';
 
 import { tvPages } from '~/constants/tabLinks';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
-export const meta: MetaFunction = () => ({
-  title: 'Free Series HD - Watch Series and Movies HD Online on Sora',
-  description:
-    'Watch latest Tv series online in HD Quality. Unlimited streaming series for free now',
-  keywords:
-    'watch free movies, free movies to watch online, watch movies online free, free movies streaming, free movies full, free movies download, watch movies hd, movies to watch, hd movies, stream movies, movies to stream, watch movies free',
-  'og:url': 'https://sorachill.vercel.app/tv-shows',
-  'og:title': 'Free Series HD - Watch Series and Movies HD Online on Sora',
-  'og:image': 'https://sorachill.vercel.app/api/ogimage?it=tvshows',
-  'og:description':
-    'Watch latest Tv series online in HD Quality. Unlimited streaming series for free now',
-});
+export const meta = mergeMeta(() => [
+  {
+    name: 'keywords',
+    content:
+      'watch free tv shows, free tv shows to watch online, watch tv shows online free, free tv shows streaming, free tv shows full, free tv shows download, watch tv shows hd, tv shows to watch, hd tv shows, stream tv shows, tv shows to stream, watch tv shows free',
+  },
+  { property: 'og:image', content: 'https://sorachill.vercel.app/api/ogimage?it=tvshows' },
+  { name: 'twitter:image', content: 'https://sorachill.vercel.app/api/ogimage?it=tvshows' },
+]);
 
 export const handle = {
   breadcrumb: () => (

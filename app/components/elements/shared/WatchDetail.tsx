@@ -94,7 +94,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
           <Spacer y={10} />
         </>
       ) : null}
-      <div className="flex flex-row items-start justify-start gap-3 rounded-xl bg-content1 p-2 sm:p-4">
+      <div className="flex w-full flex-row items-start justify-start gap-3 rounded-xl bg-content1 p-2 sm:p-4">
         {!isMd &&
           (posterPath ? (
             <Image

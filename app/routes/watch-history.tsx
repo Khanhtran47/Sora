@@ -6,6 +6,7 @@ import { Pagination } from '@nextui-org/pagination';
 import { useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
+import { mergeMeta } from '~/utils';
 
 import { authenticate, getCountHistory, getHistory, type IHistory } from '~/services/supabase';
 import { CACHE_CONTROL } from '~/utils/server/http';
@@ -24,6 +25,15 @@ export const handle = {
     showImage: false,
   }),
 };
+
+export const meta = mergeMeta(() => [
+  { title: 'Sora - Watch History' },
+  { name: 'description', content: 'Watch History' },
+  { property: 'og:title', content: 'Sora - Watch History' },
+  { property: 'og:description', content: 'Watch History' },
+  { name: 'twitter:title', content: 'Sora - Watch History' },
+  { name: 'twitter:description', content: 'Watch History' },
+]);
 
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await authenticate(request, true, true);

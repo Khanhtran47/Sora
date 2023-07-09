@@ -1,13 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Button } from '@nextui-org/button';
 import { Spacer } from '@nextui-org/spacer';
-import {
-  json,
-  redirect,
-  type ActionArgs,
-  type LoaderArgs,
-  type MetaFunction,
-} from '@remix-run/node';
+import { json, redirect, type ActionArgs, type LoaderArgs } from '@remix-run/node';
 import {
   useFetcher,
   useLoaderData,
@@ -15,6 +9,7 @@ import {
   useNavigate,
   useSearchParams,
 } from '@remix-run/react';
+import { mergeMeta } from '~/utils';
 import type { CacheEntry } from 'cachified';
 import { motion } from 'framer-motion';
 import { badRequest } from 'remix-utils';
@@ -66,10 +61,10 @@ export const action = async ({ request }: ActionArgs) => {
   return json({ success: true });
 };
 
-export const meta: MetaFunction = () => ({
-  title: 'Cache Admin',
-  description: 'Cache Admin',
-});
+export const meta = mergeMeta(() => [
+  { title: 'Cache Admin' },
+  { name: 'description', content: 'Cache Admin' },
+]);
 
 export const handle = {
   breadcrumb: () => (

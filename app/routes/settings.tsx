@@ -6,8 +6,8 @@ import { Spacer } from '@nextui-org/spacer';
 import { Spinner } from '@nextui-org/spinner';
 import { Switch, type SwitchProps } from '@nextui-org/switch';
 import { useLocalStorageValue, useMediaQuery } from '@react-hookz/web';
-import type { MetaFunction } from '@remix-run/node';
 import { NavLink, Link as RemixLink, useLocation, useNavigate } from '@remix-run/react';
+import { mergeMeta } from '~/utils';
 import { AnimatePresence, motion, type PanInfo } from 'framer-motion';
 import { useTheme } from 'next-themes';
 import { isMobileOnly } from 'react-device-detect';
@@ -55,12 +55,14 @@ import Sun from '~/assets/icons/SunIcon';
 import User from '~/assets/icons/UserIcon';
 import LogoFooter from '~/assets/images/logo_footer.png';
 
-export const meta: MetaFunction = () => ({
-  title: 'Settings',
-  description: 'Settings',
-  'og:title': 'Settings',
-  'og:description': 'Settings',
-});
+export const meta = mergeMeta(() => [
+  { title: 'Settings' },
+  { name: 'description', content: 'Settings' },
+  { property: 'og:title', content: 'Settings' },
+  { property: 'og:description', content: 'Settings' },
+  { name: 'twitter:title', content: 'Settings' },
+  { name: 'twitter:description', content: 'Settings' },
+]);
 
 export const handle = {
   breadcrumb: () => (
