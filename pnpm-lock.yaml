@@ -376,6 +376,9 @@ devDependencies:
   prop-types:
     specifier: ^15.8.1
     version: 15.8.1
+  remix-flat-routes:
+    specifier: ^0.5.10
+    version: 0.5.10(@remix-run/dev@1.18.1)
   rimraf:
     specifier: ^3.0.2
     version: 3.0.2
@@ -4587,6 +4590,15 @@ packages:
       cookie: 0.4.2
       set-cookie-parser: 2.5.1
       source-map: 0.7.4
+
+  /@remix-run/v1-route-convention@0.1.2(@remix-run/dev@1.18.1):
+    resolution: {integrity: sha512-vlcG2+uNVMf0euoFzM3BR3fgj0xYhjQPSufxK0sCCOXVGCteAqfXtcMQs2pZVYrKjeXLL+8ok2L9ThyZkhyt+A==}
+    peerDependencies:
+      '@remix-run/dev': ^1.15.0
+    dependencies:
+      '@remix-run/dev': 1.18.1(@remix-run/serve@1.18.1)(@types/node@20.2.5)
+      minimatch: 7.4.6
+    dev: true
 
   /@remix-run/web-blob@3.0.4:
     resolution: {integrity: sha512-AfegzZvSSDc+LwnXV+SwROTrDtoLiPxeFW+jxgvtDAnkuCX1rrzmVJ6CzqZ1Ai0bVfmJadkG5GxtAfYclpPmgw==}
@@ -9407,6 +9419,20 @@ packages:
     dependencies:
       brace-expansion: 1.1.11
 
+  /minimatch@5.1.6:
+    resolution: {integrity: sha512-lKwV/1brpG6mBUFHtb7NUmtABCb2WZZmm2wNiOA5hAb8VdCS4B3dtMWyvcoViccwAW/COERjXLt0zP1zXUN26g==}
+    engines: {node: '>=10'}
+    dependencies:
+      brace-expansion: 2.0.1
+    dev: true
+
+  /minimatch@7.4.6:
+    resolution: {integrity: sha512-sBz8G/YjVniEz6lKPNpKxXwazJe4c19fEfV2GDMX6AjFz+MX9uDWIZW8XreVhkFW3fkIdTv/gxWr/Kks5FFAVw==}
+    engines: {node: '>=10'}
+    dependencies:
+      brace-expansion: 2.0.1
+    dev: true
+
   /minimatch@9.0.2:
     resolution: {integrity: sha512-PZOT9g5v2ojiTL7r1xF6plNHLtOeTpSlDI007As2NlA2aYBMfVom17yqa6QzhmDP8QOhn7LjHTg7DFCVSSa6yg==}
     engines: {node: '>=16 || 14 >=14.17'}
@@ -10950,6 +10976,17 @@ packages:
       '@types/mdast': 3.0.10
       mdast-util-to-hast: 11.3.0
       unified: 10.1.2
+    dev: true
+
+  /remix-flat-routes@0.5.10(@remix-run/dev@1.18.1):
+    resolution: {integrity: sha512-9pn3vx8q66wmWmaEEUDqFKobKVD6EtC9K/gsZsPAUfRVyzWfcS6GkPq9IKZm/nJ+7WuTpiDOVxvx2j22kbReXw==}
+    hasBin: true
+    peerDependencies:
+      '@remix-run/dev': ^1.15.0
+    dependencies:
+      '@remix-run/dev': 1.18.1(@remix-run/serve@1.18.1)(@types/node@20.2.5)
+      '@remix-run/v1-route-convention': 0.1.2(@remix-run/dev@1.18.1)
+      minimatch: 5.1.6
     dev: true
 
   /remix-i18next@5.3.0(@remix-run/react@1.18.1)(@remix-run/server-runtime@1.18.1)(i18next@23.2.6)(react-i18next@13.0.1)(react@18.3.0-canary-0210f0b08-20230525):
