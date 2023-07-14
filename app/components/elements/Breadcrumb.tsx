@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { cn } from '@nextui-org/theme';
 import { NavLink } from '@remix-run/react';
+import { cn } from '~/utils';
 
 import ChevronRight from '~/assets/icons/ChevronRightIcon';
 

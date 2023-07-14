@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { cn } from '@nextui-org/theme';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
+import { cn } from '~/utils';
 
 import Close from '~/assets/icons/CloseIcon';
 

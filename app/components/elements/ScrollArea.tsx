@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { cn } from '@nextui-org/theme';
 import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area';
+import { cn } from '~/utils';
 import { tv } from 'tailwind-variants';
 
 const ScrollArea = React.forwardRef<

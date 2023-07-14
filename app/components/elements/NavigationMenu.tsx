@@ -1,6 +1,6 @@
 import { forwardRef, type ComponentPropsWithoutRef, type ElementRef } from 'react';
-import { cn } from '@nextui-org/theme';
 import * as NavigationMenuPrimitive from '@radix-ui/react-navigation-menu';
+import { cn } from '~/utils';
 import { tv } from 'tailwind-variants';
 
 import ChevronRight from '~/assets/icons/ChevronRightIcon';

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { cn } from '@nextui-org/theme';
 import * as SelectPrimitive from '@radix-ui/react-select';
+import { cn } from '~/utils';
 
 import ChevronDown from '~/assets/icons/ChevronDownIcon';
 import ChevronUp from '~/assets/icons/ChevronUpIcon';

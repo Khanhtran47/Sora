@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Badge } from '@nextui-org/badge';
-import { cn } from '@nextui-org/theme';
 import * as SliderPrimitive from '@radix-ui/react-slider';
 import { useHover } from '@react-aria/interactions';
+import { cn } from '~/utils';
 import { tv } from 'tailwind-variants';
 
 const sliderStyles = tv({
