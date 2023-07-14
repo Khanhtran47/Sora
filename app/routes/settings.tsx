@@ -480,7 +480,7 @@ const Settings = () => {
                   onDragEnd={handleDragEnd}
                   dragDirectionLock
                 >
-                  <div className="flex w-full flex-col justify-start rounded-xl bg-content1 p-5 shadow-lg shadow-default/10">
+                  <div className="flex w-full flex-col justify-start rounded-xl bg-content1 p-5 shadow-lg">
                     <SettingBlock
                       type="select"
                       title={t('language')}
@@ -504,7 +504,7 @@ const Settings = () => {
                   className="w-full"
                 >
                   {/* @ts-ignore */}
-                  <Accordion variant="splitted" selectionMode="multiple" className="px-0">
+                  <Accordion variant="shadow" selectionMode="multiple">
                     <AccordionItem
                       title={t('theme')}
                       subtitle={t('theme-subtitle')}
@@ -728,19 +728,6 @@ const Settings = () => {
                   </Accordion>
                 </motion.div>
               </TabsContent>
-              <TabsContent value="account-tab" key="account-tab" asChild>
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.75 }}
-                  drag={isMobileOnly ? 'x' : false}
-                  dragConstraints={{ left: 0, right: 0 }}
-                  dragElastic={0.4}
-                  onDragEnd={handleDragEnd}
-                  className="w-full"
-                ></motion.div>
-              </TabsContent>
               <TabsContent value="player-tab" key="player-tab" asChild>
                 <motion.div
                   initial={{ opacity: 0 }}
@@ -753,7 +740,7 @@ const Settings = () => {
                   onDragEnd={handleDragEnd}
                   className="w-full"
                 >
-                  <Accordion variant="splitted" selectionMode="multiple" className="px-0">
+                  <Accordion variant="shadow" selectionMode="multiple">
                     <AccordionItem
                       title={t('defaults')}
                       subtitle={t('defaults-subtitle')}
@@ -1053,7 +1040,7 @@ const Settings = () => {
                   onDragEnd={handleDragEnd}
                   className="w-full"
                 >
-                  <div className="w-full rounded-xl bg-content1 p-5 shadow-lg shadow-default/10">
+                  <div className="w-full rounded-xl bg-content1 p-5 shadow-lg">
                     <div className="flex flex-col items-center justify-center">
                       <Image
                         alt="About Logo"
