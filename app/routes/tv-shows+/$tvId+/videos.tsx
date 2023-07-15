@@ -202,7 +202,7 @@ const TvVideosPage = () => {
                             isPressable
                             isHoverable
                             role="figure"
-                            className="w-[320px] hover:shadow-[0_0_0_1px] hover:shadow-primary-200"
+                            className="w-[320px] hover:ring-2 hover:ring-primary"
                             onPress={() => {
                               const videoPlay = videos?.results?.find(
                                 (item) => item.key === video.id,

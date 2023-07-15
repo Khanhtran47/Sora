@@ -135,7 +135,7 @@ const TvOverview = () => {
                       key={`director-item-${creator.id}}`}
                       to={`/people/${creator.id}/`}
                       style={{ lineHeight: '1.75rem' }}
-                      className="text-foreground hover:text-primary"
+                      className="text-foreground hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary"
                     >
                       {creator.name}
                     </Link>
@@ -190,7 +190,7 @@ const TvOverview = () => {
                     to={`/tv-shows/${detail.id}/season/${season.season_number}/`}
                     isHoverable
                     isPressable
-                    className="hover:shadow-[0_0_0_1px] hover:shadow-primary-200"
+                    className="hover:ring-2 hover:ring-primary"
                     role="figure"
                   >
                     <CardBody className="flex flex-row flex-nowrap justify-start p-0">

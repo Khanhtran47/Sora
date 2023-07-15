@@ -186,7 +186,7 @@ const AnimeOverview = () => {
                   key={character.id}
                   isHoverable
                   isPressable
-                  className="max-h-[80px] hover:shadow-[0_0_0_1px] hover:shadow-primary-200"
+                  className="max-h-[80px] hover:ring-2 hover:ring-primary"
                 >
                   <CardBody className="flex flex-row flex-nowrap items-center justify-start overflow-hidden p-0">
                     <div className="flex grow justify-start gap-x-2">

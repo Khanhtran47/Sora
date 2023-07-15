@@ -133,7 +133,10 @@ const AuthForm = ({ type, error, code, errorCode }: IAuthForm) => {
           <div className="flex items-center justify-between">
             {type === 'sign-in' ? (
               <>
-                <Link to="/sign-up" className="font-semibold text-primary">
+                <Link
+                  to="/sign-up"
+                  className="font-semibold text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                >
                   {t('signUp')}
                 </Link>
                 <Checkbox>
@@ -141,7 +144,10 @@ const AuthForm = ({ type, error, code, errorCode }: IAuthForm) => {
                 </Checkbox>
               </>
             ) : (
-              <Link to="/sign-in" className="font-semibold text-primary">
+              <Link
+                to="/sign-in"
+                className="font-semibold text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+              >
                 {t('signIn')}
               </Link>
             )}

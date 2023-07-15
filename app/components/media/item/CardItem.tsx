@@ -56,7 +56,7 @@ interface ICardItemProps {
 
 const cardItemStyles = tv({
   slots: {
-    base: 'my-4 !w-[164px] hover:shadow-[0_0_0_1px] hover:shadow-primary-200',
+    base: '!w-[164px] data-[hover=true]:ring-2 data-[hover=true]:ring-primary',
     body: 'aspect-[2/3]',
     imageContainer: '',
     image: 'aspect-[2/3]',
@@ -68,24 +68,24 @@ const cardItemStyles = tv({
       card: {
         base: '!w-[164px] sm:!w-[180px] md:!w-[200px] lg:!w-[244px] xl:!w-[264px]',
         body: 'aspect-[2/3] w-full overflow-hidden p-0',
-        imageContainer: 'h-full w-full focus:ring-inset',
+        imageContainer: 'h-full w-full focus:outline-none',
         image: 'z-0 aspect-[2/3] !min-h-[auto] !min-w-[auto] !transition-[transform,_opacity]',
         footer:
-          'flex min-h-[4.875rem] max-w-[164px] flex-col items-start justify-start focus:ring-2 focus:ring-inset sm:max-w-[210px] md:max-w-[200px] lg:max-w-[244px] xl:max-w-[264px]',
+          'flex min-h-[4.875rem] max-w-[164px] flex-col items-start justify-start focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary sm:max-w-[210px] md:max-w-[200px] lg:max-w-[244px] xl:max-w-[264px]',
       },
       detail: {
         base: '!w-full sm:!w-[480px]',
         body: 'flex !h-[174px] w-full !flex-row !overflow-hidden p-0 sm:aspect-[5/3] sm:!h-[auto]',
-        imageContainer: 'w-[116px] sm:w-2/5',
+        imageContainer: 'w-[116px] focus:outline-none sm:w-2/5',
         image: 'z-0 !h-[174px] !min-h-[auto] !min-w-[116px] sm:aspect-[2/3] sm:!h-[auto]',
         content: 'flex grow flex-col gap-y-4 p-3 sm:w-3/5',
         footer:
-          'absolute bottom-0 flex !w-[116px] justify-center !rounded-br-none border-t border-default-200 bg-background/[0.6] backdrop-blur-md sm:!w-2/5',
+          'absolute bottom-0 flex !w-[116px] justify-center border-t border-default-200 bg-background/[0.6] backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary sm:!w-2/5',
       },
       table: {
         base: '!w-full',
         body: 'flex !h-[174px] w-full !flex-row !overflow-hidden p-0',
-        imageContainer: 'w-[116px]',
+        imageContainer: 'w-[116px] focus:outline-none',
         image: 'z-0 !h-[174px] !min-h-[auto] !min-w-[116px]',
         content: 'flex grow flex-col gap-y-4 p-3',
         footer: '',
@@ -101,7 +101,7 @@ const cardItemStyles = tv({
       people: {
         base: '!w-[164px]',
         body: 'aspect-[2/3] w-full overflow-hidden p-0',
-        imageContainer: 'h-full w-full',
+        imageContainer: 'h-full w-full focus:outline-none',
         image:
           'z-0 aspect-[2/3] !min-h-[auto] !min-w-[auto] overflow-hidden !transition-[transform,_opacity]',
         footer: 'flex min-h-[5.25rem] max-w-[164px] flex-col items-start justify-start',
@@ -194,7 +194,7 @@ const CardItem = (props: ICardItemProps) => {
         to={linkTo || '/'}
         isHoverable
         isPressable
-        className={base()}
+        className={`${base()} ${isSliderCard ? 'my-4' : ''}`}
         role="figure"
         // @ts-ignore
         ref={cardRef}
@@ -240,7 +240,7 @@ const CardItem = (props: ICardItemProps) => {
       as="div"
       isHoverable
       isPressable
-      className={base()}
+      className={`${base()} ${isSliderCard ? 'my-4' : ''}`}
       role="figure"
       style={{ opacity: isTooltipVisible && !isMobile ? 0 : 1 }}
       ref={cardRef}
@@ -381,7 +381,10 @@ const CardItem = (props: ICardItemProps) => {
           mediaType !== 'people' &&
           inView ? (
           <div className={content()}>
-            <Link to={linkTo || '/'} className="line-clamp-1 text-lg font-bold text-foreground">
+            <Link
+              to={linkTo || '/'}
+              className="line-clamp-1 text-lg font-bold text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+            >
               {titleItem}
             </Link>
             <div className="flex flex-row items-center justify-between">

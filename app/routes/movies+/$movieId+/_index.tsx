@@ -146,7 +146,7 @@ const MovieOverview = () => {
                       key={`director-item-${director.id}`}
                       to={`/people/${director.id}/`}
                       style={{ lineHeight: '1.75rem' }}
-                      className="text-foreground hover:text-primary"
+                      className="text-foreground hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary"
                     >
                       {director.name}
                     </Link>

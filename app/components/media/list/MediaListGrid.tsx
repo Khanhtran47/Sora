@@ -3,7 +3,7 @@ import { Button } from '@nextui-org/button';
 import { Pagination } from '@nextui-org/pagination';
 import { Spacer } from '@nextui-org/spacer';
 import { useIntersectionObserver, useMediaQuery } from '@react-hookz/web';
-import { Link, useFetcher, useLocation, useSearchParams } from '@remix-run/react';
+import { useFetcher, useLocation, useSearchParams } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import NProgress from 'nprogress';
 import { useGlobalLoadingState } from 'remix-utils';
@@ -31,8 +31,6 @@ interface IMediaListCardProps {
   scrollToTopListAfterChangePage?: boolean;
   totalPages?: number;
 }
-
-const MotionLink = motion(Link);
 
 const mediaListGridStyles = tv({
   base: 'grid w-full max-w-screen-4xl items-stretch justify-items-center gap-5',
@@ -239,8 +237,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
           coverItem.map((item, index) => {
             const href = `/collections/${item.id}`;
             return (
-              <MotionLink
-                to={href}
+              <motion.div
                 key={`${item.id}-${index}-covercard-grid`}
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -253,7 +250,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
                   type="card"
                   linkTo={href}
                 />
-              </MotionLink>
+              </motion.div>
             );
           })}
       </div>

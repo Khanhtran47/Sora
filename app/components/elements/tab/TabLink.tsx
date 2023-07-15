@@ -51,7 +51,7 @@ const TabLink = (props: ITabProps) => {
             <NavLink
               key={page.pageLink}
               to={`${linkTo}${page.pageLink}`}
-              className="relative z-10 flex h-12 shrink-0 items-center justify-center rounded-xl p-4 outline-none hover:opacity-80"
+              className="relative z-10 flex h-12 shrink-0 items-center justify-center rounded-xl p-4 outline-none hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
             >
               {({ isActive }) => (
                 <>

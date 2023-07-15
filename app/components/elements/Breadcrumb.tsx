@@ -92,7 +92,7 @@ export const BreadcrumbItem = React.forwardRef<HTMLLIElement, BreadcrumbItemProp
               isActive
                 ? 'pointer-events-none aria-[current]:opacity-60'
                 : 'underline-offset-4 hover:underline'
-            }`,
+            } focus:outline-none focus:ring-2 focus:ring-primary`,
             classNames?.navlink,
           )
         }
