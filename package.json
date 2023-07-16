@@ -4,7 +4,7 @@
   "sideEffects": false,
   "license": "GPL-3.0",
   "scripts": {
-    "cleanup": "rimraf .cache ./public/build",
+    "cleanup": "rimraf .cache ./public/build ./public/entry.worker.js ./build",
     "prebuild": "pnpm cleanup",
     "postinstall": "remix setup node",
     "build": "run-s \"build:*\"",

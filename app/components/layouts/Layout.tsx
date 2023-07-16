@@ -329,7 +329,7 @@ const Layout = (props: ILayout) => {
           className={`w-full ${sidebarBoxedMode.value ? 'h-[calc(100vh-15px)]' : 'h-screen'}`}
           key="scroll-area-main"
         >
-          <ScrollViewport ref={viewportRef}>
+          <ScrollViewport ref={viewportRef} data-restore-scroll="true">
             <main
               className={scrollAreaViewportStyles({
                 mini: sidebarMiniMode.value,
