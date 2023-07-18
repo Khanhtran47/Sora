@@ -39,18 +39,18 @@ export const handle = {
 };
 
 const sidebarStyles = tv({
-  base: 'duration-400 fixed z-[1999] box-border hidden shrink-0 grow-0 transition-[max-width] sm:block',
+  base: 'fixed z-[1999] box-border hidden shrink-0 grow-0 transition-[max-width] duration-400 sm:block',
   variants: {
     sidebarMiniMode: {
       true: 'w-full max-w-[80px] basis-[80px]',
       false: 'w-full max-w-[250px] basis-[250px]',
     },
     sidebarBoxedMode: {
-      true: 'bg-background/60 left-[15px] top-[15px] h-[calc(100vh_-_30px)] rounded-xl',
+      true: 'left-[15px] top-[15px] h-[calc(100vh_-_30px)] rounded-xl bg-background/60',
       false: 'left-0 top-0 h-screen',
     },
     sidebarHoverMode: {
-      true: 'border-default-200 bg-background w-full max-w-[250px] basis-[250px] rounded-r-xl border shadow-2xl',
+      true: 'w-full max-w-[250px] basis-[250px] rounded-r-xl border border-default-200 bg-background shadow-2xl',
     },
   },
   compoundVariants: [{}],
@@ -61,7 +61,7 @@ const sidebarStyles = tv({
 });
 
 const sidebarActiveStyles = tv({
-  base: 'duration-400 h-[56px] justify-start transition-[width]',
+  base: 'h-[56px] justify-start transition-[width] duration-400',
   variants: {
     sidebarMiniMode: {
       true: 'w-[56px]',
@@ -126,7 +126,7 @@ const viewportPositionStyles = tv({
 });
 
 const navigationPartStyles = tv({
-  base: 'scrollbar-hide w-full overflow-x-visible overflow-y-scroll',
+  base: 'w-full overflow-x-visible overflow-y-scroll scrollbar-hide',
   variants: {
     sidebarBoxedMode: {
       true: 'h-[calc(100%_-_100px)]',
@@ -194,7 +194,7 @@ const SideBar = () => {
             <NavLink
               to="/"
               arial-label="home-page"
-              className="from-secondary to-primary bg-gradient-to-tr to-50% bg-clip-text text-3xl font-bold tracking-normal text-transparent md:text-4xl"
+              className="bg-gradient-to-tr from-secondary to-primary to-50% bg-clip-text text-3xl font-bold tracking-normal text-transparent focus:outline-none focus:ring-2 focus:ring-primary md:text-4xl"
             >
               SORA
             </NavLink>
@@ -214,7 +214,7 @@ const SideBar = () => {
             sidebarBoxedMode: sidebarBoxedMode.value,
           })}
         >
-          <NavigationMenuList className="[&_.active]:bg-default [&_.active]:text-default-foreground m-0 gap-3">
+          <NavigationMenuList className="m-0 gap-3 [&_.active]:bg-default [&_.active]:text-default-foreground">
             <NavigationMenuItem
               className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
               value="home"
@@ -376,13 +376,13 @@ const SideBar = () => {
               </NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="m-0 flex w-fit flex-row gap-x-[6px] p-[6px]">
-                  <li className="[&_.active]:bg-content1 [&_.active]:text-content1-foreground m-0 flex flex-col justify-between gap-y-[6px]">
+                  <li className="m-0 flex flex-col justify-between gap-y-[6px] [&_.active]:bg-content1 [&_.active]:text-content1-foreground">
                     <NavigationMenuLink asChild>
                       <NavLink
                         to="/search/movie"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[215px] h-auto flex flex-row px-2 justify-start items-center focus:bg-background/[0.6] hover:bg-background/[0.6]',
+                            'flex h-auto w-[215px] flex-row items-center justify-start px-2 hover:bg-background/[0.6] focus:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -406,7 +406,7 @@ const SideBar = () => {
                         to="/search/tv"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[215px] h-auto flex flex-row px-2 justify-start items-center focus:bg-background/[0.6] hover:bg-background/[0.6]',
+                            'flex h-auto w-[215px] flex-row items-center justify-start px-2 hover:bg-background/[0.6] focus:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -430,7 +430,7 @@ const SideBar = () => {
                         to="/search/anime"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[215px] h-auto  flex flex-row px-2 justify-start items-center focus:bg-background/[0.6] hover:bg-background/[0.6]',
+                            'flex h-auto  w-[215px] flex-row items-center justify-start px-2 hover:bg-background/[0.6] focus:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -454,7 +454,7 @@ const SideBar = () => {
                         to="/search/people"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[215px] h-auto flex flex-row px-2 justify-start items-center focus:bg-background/[0.6] hover:bg-background/[0.6]',
+                            'flex h-auto w-[215px] flex-row items-center justify-start px-2 hover:bg-background/[0.6] focus:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -549,18 +549,18 @@ const SideBar = () => {
                           }}
                         />
                       </CardBody>
-                      <CardFooter className="bg-default/60 absolute bottom-0 z-[10] justify-start backdrop-blur-sm">
+                      <CardFooter className="absolute bottom-0 z-[10] justify-start bg-default/60 backdrop-blur-sm">
                         <h4 className="text-default-foreground">{t('movies-footer')}</h4>
                       </CardFooter>
                     </Card>
                   </li>
-                  <li className="[&_.active]:bg-content1 [&_.active]:text-content1-foreground m-0 flex min-w-[215px] flex-col justify-between gap-y-[6px]">
+                  <li className="m-0 flex min-w-[215px] flex-col justify-between gap-y-[6px] [&_.active]:bg-content1 [&_.active]:text-content1-foreground">
                     <NavigationMenuLink asChild>
                       <NavLink
                         to="/movies/popular"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[215px] h-auto flex flex-col px-2 justify-start focus:bg-background/[0.6] hover:bg-background/[0.6]',
+                            'flex h-auto w-[215px] flex-col justify-start px-2 hover:bg-background/[0.6] focus:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -577,7 +577,7 @@ const SideBar = () => {
                                 }}
                               />
                             </div>
-                            <p className="text-foreground w-full text-xs">
+                            <p className="w-full text-xs text-foreground">
                               {t('movies-popular-subtitle')}
                             </p>
                           </>
@@ -589,7 +589,7 @@ const SideBar = () => {
                         to="/movies/now-playing"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[215px] h-auto flex flex-col px-2 justify-start focus:bg-background/[0.6] hover:bg-background/[0.6]',
+                            'flex h-auto w-[215px] flex-col justify-start px-2 hover:bg-background/[0.6] focus:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -606,7 +606,7 @@ const SideBar = () => {
                                 }}
                               />
                             </div>
-                            <p className="text-foreground w-full text-xs">
+                            <p className="w-full text-xs text-foreground">
                               {t('movies-now-playing-subtitle')}
                             </p>
                           </>
@@ -618,7 +618,7 @@ const SideBar = () => {
                         to="/movies/upcoming"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[215px] h-auto flex flex-col px-2 justify-start focus:bg-background/[0.6] hover:bg-background/[0.6]',
+                            'flex h-auto w-[215px] flex-col justify-start px-2 hover:bg-background/[0.6] focus:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -635,7 +635,7 @@ const SideBar = () => {
                                 }}
                               />
                             </div>
-                            <p className="text-foreground w-full text-xs">
+                            <p className="w-full text-xs text-foreground">
                               {t('movies-upcoming-subtitle')}
                             </p>
                           </>
@@ -647,7 +647,7 @@ const SideBar = () => {
                         to="/movies/top-rated"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[215px] h-auto flex flex-col px-2 justify-start focus:bg-background/[0.6] hover:bg-background/[0.6]',
+                            'flex h-auto w-[215px] flex-col justify-start px-2 hover:bg-background/[0.6] focus:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -664,7 +664,7 @@ const SideBar = () => {
                                 }}
                               />
                             </div>
-                            <p className="text-foreground w-full text-xs">
+                            <p className="w-full text-xs text-foreground">
                               {t('movies-top-rated-subtitle')}
                             </p>
                           </>
@@ -747,18 +747,18 @@ const SideBar = () => {
                           }}
                         />
                       </CardBody>
-                      <CardFooter className="bg-default/60 absolute bottom-0 z-[10] justify-start backdrop-blur-sm">
+                      <CardFooter className="absolute bottom-0 z-[10] justify-start bg-default/60 backdrop-blur-sm">
                         <h4 className="text-default-foreground">{t('tv-shows-footer')}</h4>
                       </CardFooter>
                     </Card>
                   </li>
-                  <li className="[&_.active]:bg-content1 [&_.active]:text-content1-foreground m-0 flex min-w-[215px] flex-col justify-between gap-y-[6px]">
+                  <li className="m-0 flex min-w-[215px] flex-col justify-between gap-y-[6px] [&_.active]:bg-content1 [&_.active]:text-content1-foreground">
                     <NavigationMenuLink asChild>
                       <NavLink
                         to="/tv-shows/popular"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background/[0.6] hover:bg-background/[0.6]',
+                            'flex h-auto w-[225px] flex-col justify-start px-2 hover:bg-background/[0.6] focus:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -775,7 +775,7 @@ const SideBar = () => {
                                 }}
                               />
                             </div>
-                            <p className="text-foreground w-full text-xs">
+                            <p className="w-full text-xs text-foreground">
                               {t('tv-shows-popular-subtitle')}
                             </p>
                           </>
@@ -787,7 +787,7 @@ const SideBar = () => {
                         to="/tv-shows/airing-today"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background/[0.6] hover:bg-background/[0.6]',
+                            'flex h-auto w-[225px] flex-col justify-start px-2 hover:bg-background/[0.6] focus:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -804,7 +804,7 @@ const SideBar = () => {
                                 }}
                               />
                             </div>
-                            <p className="text-foreground w-full text-xs">
+                            <p className="w-full text-xs text-foreground">
                               {t('tv-shows-airing-today-subtitle')}
                             </p>
                           </>
@@ -816,7 +816,7 @@ const SideBar = () => {
                         to="/tv-shows/on-the-air"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background/[0.6] hover:bg-background/[0.6]',
+                            'flex h-auto w-[225px] flex-col justify-start px-2 hover:bg-background/[0.6] focus:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -833,7 +833,7 @@ const SideBar = () => {
                                 }}
                               />
                             </div>
-                            <p className="text-foreground w-full text-xs">
+                            <p className="w-full text-xs text-foreground">
                               {t('tv-shows-on-the-air-subtitle')}
                             </p>
                           </>
@@ -845,7 +845,7 @@ const SideBar = () => {
                         to="/tv-shows/top-rated"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background/[0.6] hover:bg-background/[0.6]',
+                            'flex h-auto w-[225px] flex-col justify-start px-2 hover:bg-background/[0.6] focus:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -862,7 +862,7 @@ const SideBar = () => {
                                 }}
                               />
                             </div>
-                            <p className="text-foreground w-full text-xs">
+                            <p className="w-full text-xs text-foreground">
                               {t('tv-shows-top-rated-subtitle')}
                             </p>
                           </>
@@ -945,18 +945,18 @@ const SideBar = () => {
                           }}
                         />
                       </CardBody>
-                      <CardFooter className="bg-default/60 absolute bottom-0 z-[10] justify-start backdrop-blur-sm">
+                      <CardFooter className="absolute bottom-0 z-[10] justify-start bg-default/60 backdrop-blur-sm">
                         <h4 className="text-default-foreground">{t('anime-footer')}</h4>
                       </CardFooter>
                     </Card>
                   </li>
-                  <li className="[&_.active]:bg-content1 [&_.active]:text-content1-foreground m-0 flex min-w-[215px] flex-col justify-between gap-y-[6px]">
+                  <li className="m-0 flex min-w-[215px] flex-col justify-between gap-y-[6px] [&_.active]:bg-content1 [&_.active]:text-content1-foreground">
                     <NavigationMenuLink asChild>
                       <NavLink
                         to="/anime/popular"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background/[0.6] hover:bg-background/[0.6]',
+                            'flex h-auto w-[225px] flex-col justify-start px-2 hover:bg-background/[0.6] focus:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -973,7 +973,7 @@ const SideBar = () => {
                                 }}
                               />
                             </div>
-                            <p className="text-foreground w-full text-xs">
+                            <p className="w-full text-xs text-foreground">
                               {t('anime-popular-subtitle')}
                             </p>
                           </>
@@ -985,7 +985,7 @@ const SideBar = () => {
                         to="/anime/trending"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background/[0.6] hover:bg-background/[0.6]',
+                            'flex h-auto w-[225px] flex-col justify-start px-2 hover:bg-background/[0.6] focus:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -1002,7 +1002,7 @@ const SideBar = () => {
                                 }}
                               />
                             </div>
-                            <p className="text-foreground w-full text-xs">
+                            <p className="w-full text-xs text-foreground">
                               {t('anime-trending-subtitle')}
                             </p>
                           </>
@@ -1014,7 +1014,7 @@ const SideBar = () => {
                         to="/anime/recent-episodes"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background/[0.6] hover:bg-background/[0.6]',
+                            'flex h-auto w-[225px] flex-col justify-start px-2 hover:bg-background/[0.6] focus:bg-background/[0.6]',
                         })}
                       >
                         {({ isActive, isPending }) => (
@@ -1031,7 +1031,7 @@ const SideBar = () => {
                                 }}
                               />
                             </div>
-                            <p className="text-foreground w-full text-xs">
+                            <p className="w-full text-xs text-foreground">
                               {t('anime-recent-episodes-subtitle')}
                             </p>
                           </>
@@ -1043,7 +1043,7 @@ const SideBar = () => {
                         to="/anime/random"
                         className={navigationMenuTriggerStyle({
                           class:
-                            'w-[225px] h-auto flex flex-col px-2 justify-start focus:bg-background/[0.6] hover:bg-background/[0.6]',
+                            'flex h-auto w-[225px] flex-col justify-start px-2 hover:bg-background/[0.6] focus:bg-background/[0.6]',
                         })}
                       >
                         {({ isPending }) => (
@@ -1060,7 +1060,7 @@ const SideBar = () => {
                                 }}
                               />
                             </div>
-                            <p className="text-foreground w-full text-xs">
+                            <p className="w-full text-xs text-foreground">
                               {t('anime-random-subtitle')}
                             </p>
                           </>

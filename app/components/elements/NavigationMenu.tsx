@@ -1,6 +1,6 @@
 import { forwardRef, type ComponentPropsWithoutRef, type ElementRef } from 'react';
-import { cn } from '@nextui-org/theme';
 import * as NavigationMenuPrimitive from '@radix-ui/react-navigation-menu';
+import { cn } from '~/utils';
 import { tv } from 'tailwind-variants';
 
 import ChevronRight from '~/assets/icons/ChevronRightIcon';
@@ -65,9 +65,9 @@ NavigationMenuList.displayName = NavigationMenuPrimitive.List.displayName;
 const NavigationMenuItem = NavigationMenuPrimitive.Item;
 
 const navigationMenuTriggerStyle = tv({
-  base: `text-md text-foreground hover:bg-default hover:text-default-foreground focus:bg-default focus:text-default-foreground data-[active]:bg-default
-  data-[state=open]:bg-default data-[active]:text-default-foreground data-[state=open]:text-default-foreground group inline-flex h-10 w-max items-center justify-center rounded-md bg-transparent px-4 py-2 font-medium
-  transition-colors hover:opacity-80 focus:outline-none disabled:pointer-events-none disabled:opacity-50`,
+  base: `text-md group inline-flex h-10 w-max items-center justify-center
+  rounded-md bg-transparent px-4 py-2 font-medium text-foreground transition-colors hover:bg-default hover:text-default-foreground hover:opacity-80 focus:bg-default focus:text-default-foreground focus:outline-none disabled:pointer-events-none
+  disabled:opacity-50 data-[active]:bg-default data-[state=open]:bg-default data-[active]:text-default-foreground data-[state=open]:text-default-foreground`,
   variants: {
     active: {
       true: 'bg-default text-default-foreground',
@@ -90,7 +90,7 @@ const NavigationMenuTrigger = forwardRef<
     {children}{' '}
     {showArrow ? (
       <ChevronRight
-        className="duration-400 relative top-[1px] ml-auto h-5 w-5 transition group-data-[state=open]:rotate-180"
+        className="relative top-[1px] ml-auto h-5 w-5 duration-400 transition group-data-[state=open]:rotate-180"
         aria-hidden="true"
       />
     ) : null}
@@ -99,9 +99,9 @@ const NavigationMenuTrigger = forwardRef<
 NavigationMenuTrigger.displayName = NavigationMenuPrimitive.Trigger.displayName;
 
 const navigationMenuContentStyle = tv({
-  base: `data-[motion=from-end]:animate-enterFromRight data-[motion=from-start]:animate-enterFromLeft
-  data-[motion=to-end]:animate-exitToRight data-[motion=to-start]:animate-exitToLeft absolute left-0 top-0
-  w-full sm:w-auto`,
+  base: `absolute left-0
+  top-0 w-full data-[motion=from-end]:animate-enterFromRight data-[motion=from-start]:animate-enterFromLeft data-[motion=to-end]:animate-exitToRight
+  data-[motion=to-start]:animate-exitToLeft sm:w-auto`,
 });
 const NavigationMenuContent = forwardRef<
   ElementRef<typeof NavigationMenuPrimitive.Content>,
@@ -118,8 +118,8 @@ NavigationMenuContent.displayName = NavigationMenuPrimitive.Content.displayName;
 const NavigationMenuLink = NavigationMenuPrimitive.Link;
 
 const navigationMenuIndicatorStyle = tv({
-  base: `data-[state=visible]:animate-in data-[state=hidden]:animate-out data-[state=hidden]:fade-out
-  data-[state=visible]:fade-in top-full z-[1] flex h-2.5 items-end justify-center overflow-hidden`,
+  base: `top-full z-[1] flex
+  h-2.5 items-end justify-center overflow-hidden data-[state=visible]:animate-in data-[state=hidden]:animate-out data-[state=hidden]:fade-out data-[state=visible]:fade-in`,
 });
 const NavigationMenuIndicator = forwardRef<
   ElementRef<typeof NavigationMenuPrimitive.Indicator>,

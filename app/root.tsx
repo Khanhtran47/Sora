@@ -1,5 +1,4 @@
-/* eslint-disable import/no-unresolved */
-/* eslint-disable react/no-danger */
+/* eslint-disable no-console */
 import * as React from 'react';
 import FontStyles100 from '@fontsource/inter/100.css';
 import FontStyles200 from '@fontsource/inter/200.css';
@@ -13,20 +12,23 @@ import FontStyles900 from '@fontsource/inter/900.css';
 import { Button } from '@nextui-org/button';
 import { Image as NextUIImage } from '@nextui-org/image';
 import { NextUIProvider as NextUIv2Provider } from '@nextui-org/system';
-import { json, type LinksFunction, type LoaderArgs, type MetaFunction } from '@remix-run/node';
+import { cssBundleHref } from '@remix-run/css-bundle';
+import { json, type LinksFunction, type LoaderArgs, type V2_MetaFunction } from '@remix-run/node';
 import {
+  isRouteErrorResponse,
   Links,
   LiveReload,
   Meta,
   Scripts,
-  useCatch,
+  useBeforeUnload,
   useFetchers,
   useLoaderData,
   useLocation,
   useMatches,
   useNavigation,
+  useRouteError,
+  type ShouldRevalidateFunction,
 } from '@remix-run/react';
-import i18next, { i18nCookie } from '~/i18n/i18next.server';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ThemeProvider as RemixThemesProvider } from 'next-themes';
 import NProgress from 'nprogress';
@@ -51,214 +53,116 @@ import swiperNavigationStyles from 'swiper/css/pagination';
 // @ts-ignore
 import swiperThumbsStyles from 'swiper/css/thumbs';
 
-import { getUserFromCookie } from '~/services/supabase';
-import { getListGenre, getListLanguages } from '~/services/tmdb/tmdb.server';
-import * as gtag from '~/utils/client/gtags.client';
-import { useIsBot } from '~/context/isbot.context';
-import Layout from '~/components/layouts/Layout';
-import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
-import nProgressStyles from '~/components/styles/nprogress.css';
-import Home from '~/assets/icons/HomeIcon';
-import Refresh from '~/assets/icons/RefreshIcon';
-import pageNotFound from '~/assets/images/404.gif';
-import logoLoading from '~/assets/images/logo_loading.png';
-import styles from '~/styles/tailwind.css';
-
+import Home from './assets/icons/HomeIcon';
+import Refresh from './assets/icons/RefreshIcon';
+import pageNotFound from './assets/images/404.gif';
+import logoLoading from './assets/images/logo_loading.png';
+import { BreadcrumbItem } from './components/elements/Breadcrumb';
+import Layout from './components/layouts/Layout';
+import nProgressStyles from './components/styles/nprogress.css';
 import { listThemes } from './constants/settings';
+import { useIsBot } from './context/isbot.context';
+import { i18nCookie, i18next } from './services/i18n';
+import { getUserFromCookie } from './services/supabase';
+import { getListGenre, getListLanguages } from './services/tmdb/tmdb.server';
+import tailwindStylesheetUrl from './styles/tailwind.css';
+import * as gtag from './utils/client/gtags.client';
 
 interface DocumentProps {
   children: React.ReactNode;
   title?: string;
-  lang?: string;
-  dir?: 'ltr' | 'rtl';
-  gaTrackingId?: string;
-  ENV?: unknown;
 }
 
-export const links: LinksFunction = () => [
-  { rel: 'manifest', href: '/resources/manifest-v0.0.1.json' },
-  { rel: 'icon', href: '/favicon.ico' },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: styles,
-  },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: swiperStyles,
-  },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: swiperPaginationStyles,
-  },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: swiperNavigationStyles,
-  },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: swiperThumbsStyles,
-  },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: swiperAutoPlayStyles,
-  },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: swiperFreeModeStyles,
-  },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: nProgressStyles,
-  },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: photoSwipeStyles,
-  },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: FontStyles100,
-  },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: FontStyles200,
-  },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: FontStyles300,
-  },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: FontStyles400,
-  },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: FontStyles500,
-  },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: FontStyles600,
-  },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: FontStyles700,
-  },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: FontStyles800,
-  },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: FontStyles900,
-  },
-  {
-    rel: 'stylesheet',
-    href: styles,
-  },
-  {
-    rel: 'stylesheet',
-    href: swiperStyles,
-  },
-  {
-    rel: 'stylesheet',
-    href: swiperPaginationStyles,
-  },
-  {
-    rel: 'stylesheet',
-    href: swiperNavigationStyles,
-  },
-  {
-    rel: 'stylesheet',
-    href: swiperThumbsStyles,
-  },
-  {
-    rel: 'stylesheet',
-    href: swiperAutoPlayStyles,
-  },
-  {
-    rel: 'stylesheet',
-    href: swiperFreeModeStyles,
-  },
-  {
-    rel: 'stylesheet',
-    href: nProgressStyles,
-  },
-  {
-    rel: 'stylesheet',
-    href: photoSwipeStyles,
-  },
-  {
-    rel: 'stylesheet',
-    href: FontStyles100,
-  },
-  {
-    rel: 'stylesheet',
-    href: FontStyles200,
-  },
-  {
-    rel: 'stylesheet',
-    href: FontStyles300,
-  },
-  {
-    rel: 'stylesheet',
-    href: FontStyles400,
-  },
-  {
-    rel: 'stylesheet',
-    href: FontStyles500,
-  },
-  {
-    rel: 'stylesheet',
-    href: FontStyles600,
-  },
-  {
-    rel: 'stylesheet',
-    href: FontStyles700,
-  },
-  {
-    rel: 'stylesheet',
-    href: FontStyles800,
-  },
-  {
-    rel: 'stylesheet',
-    href: FontStyles900,
-  },
-];
+const themeValues = {
+  light: 'light',
+  dark: 'dark',
+  'light-red': 'light-red',
+  'light-yellow': 'light-yellow',
+  'light-green': 'light-green',
+  'light-cyan': 'light-cyan',
+  'light-purple': 'light-purple',
+  'light-pink': 'light-pink',
+  'dark-red': 'dark-red',
+  'dark-yellow': 'dark-yellow',
+  'dark-green': 'dark-green',
+  'dark-cyan': 'dark-cyan',
+  'dark-purple': 'dark-purple',
+  'dark-pink': 'dark-pink',
+  cupcake: 'cupcake',
+  bumblebee: 'bumblebee',
+  emerald: 'emerald',
+  corporate: 'corporate',
+  synthwave: 'synthwave',
+  retro: 'retro',
+  cyberpunk: 'cyberpunk',
+  valentine: 'valentine',
+  halloween: 'halloween',
+  garden: 'garden',
+  forest: 'forest',
+  aqua: 'aqua',
+  lofi: 'lofi',
+  pastel: 'pastel',
+  fantasy: 'fantasy',
+  wireframe: 'wireframe',
+  luxury: 'luxury',
+  dracula: 'dracula',
+  cmyk: 'cmyk',
+  autumn: 'autumn',
+  business: 'business',
+  acid: 'acid',
+  lemonade: 'lemonade',
+  night: 'night',
+  coffee: 'coffee',
+  winter: 'winter',
+};
 
-export const meta: MetaFunction = () => {
-  return {
-    title: 'Sora - Free Movies and Free Series',
-    description:
-      'Watch Sora Online For Free! Sora is a multinational website for movies, series and anime fans. ',
-    keywords:
-      'Sora, Sora movie, sora movies, Watch movies online, watch series online, watch free movies, free movies to watch online, watch movies online free, free movies streaming, free movies full, free movies download, watch movies hd, movies to watch, watch movies, anime free to watch and download, free anime, watch anime online, watch anime, anime, watch anime online free, watch anime free, watchsub',
-    'og:type': 'website',
-    'og:site_name': 'Sora',
-    'og:url': 'https://sora-anime.vercel.app',
-    'og:title': 'Sora - Free Movies and Free Series',
-    'og:image': 'https://sora-anime.vercel.app/api/ogimage?it=home',
-    'og:image:width': '1200',
-    'og:image:height': '630',
-    'og:description':
-      'Watch Sora Online For Free! Sora is a multinational website for movies, series and anime fans - Very fast streaming - Click NOW',
-  };
+export const shouldRevalidate: ShouldRevalidateFunction = ({ nextUrl }) => {
+  // reload on language change so the selected language gets set into the cookie
+  const lang = nextUrl.searchParams.get('lng');
+
+  return Boolean(lang);
+};
+
+export const links: LinksFunction = () => {
+  return [
+    { rel: 'manifest', href: '/resources/manifest-v0.0.1.json' },
+    { rel: 'icon', href: '/favicon.ico', type: 'image/x-icon' },
+    // Preload CSS as a resource to avoid render blocking
+    {
+      rel: 'preload',
+      as: 'style',
+      href: tailwindStylesheetUrl,
+    },
+    ...(cssBundleHref ? [{ rel: 'preload', as: 'style', href: cssBundleHref }] : []),
+    { rel: 'preload', as: 'style', href: FontStyles100 },
+    { rel: 'preload', as: 'style', href: FontStyles200 },
+    { rel: 'preload', as: 'style', href: FontStyles300 },
+    { rel: 'preload', as: 'style', href: FontStyles400 },
+    { rel: 'preload', as: 'style', href: FontStyles500 },
+    { rel: 'preload', as: 'style', href: FontStyles600 },
+    { rel: 'preload', as: 'style', href: FontStyles700 },
+    { rel: 'preload', as: 'style', href: FontStyles800 },
+    { rel: 'preload', as: 'style', href: FontStyles900 },
+    { rel: 'stylesheet', href: tailwindStylesheetUrl },
+    ...(cssBundleHref ? [{ rel: 'stylesheet', href: cssBundleHref }] : []),
+    { rel: 'stylesheet', href: swiperStyles },
+    { rel: 'stylesheet', href: swiperPaginationStyles },
+    { rel: 'stylesheet', href: swiperNavigationStyles },
+    { rel: 'stylesheet', href: swiperThumbsStyles },
+    { rel: 'stylesheet', href: swiperAutoPlayStyles },
+    { rel: 'stylesheet', href: swiperFreeModeStyles },
+    { rel: 'stylesheet', href: nProgressStyles },
+    { rel: 'stylesheet', href: photoSwipeStyles },
+    { rel: 'stylesheet', href: FontStyles100 },
+    { rel: 'stylesheet', href: FontStyles200 },
+    { rel: 'stylesheet', href: FontStyles300 },
+    { rel: 'stylesheet', href: FontStyles400 },
+    { rel: 'stylesheet', href: FontStyles500 },
+    { rel: 'stylesheet', href: FontStyles600 },
+    { rel: 'stylesheet', href: FontStyles700 },
+    { rel: 'stylesheet', href: FontStyles800 },
+    { rel: 'stylesheet', href: FontStyles900 },
+  ];
 };
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -302,6 +206,29 @@ export const loader = async ({ request }: LoaderArgs) => {
   );
 };
 
+export const meta: V2_MetaFunction<typeof loader> = () => [
+  { title: 'Sora' },
+  { name: 'description', content: 'Watching movies, series, anime and more in Sora' },
+  {
+    name: 'keywords',
+    content:
+      'Sora, Sora Movies, Sora Series, Sora Anime, Sora Chill, SoraChill, watch movies, watch series, watch anime, watch movies online, watch series online, watch anime online, free movies, free series, free anime, free movies online, free series online, free anime online, watch movies free, watch series free, watch anime free, watch movies online free, watch series online free, watch anime online free',
+  },
+  { property: 'og:url', content: 'https://sorachill.vercel.app' },
+  { property: 'og:title', content: 'Sora' },
+  { property: 'og:image', content: 'https://sorachill.vercel.app/api/ogimage?it=home' },
+  { property: 'og:description', content: 'Watching movies, series, anime and more in Sora' },
+  { property: 'og:type', content: 'website' },
+  { property: 'og:site_name', content: 'Sora' },
+  { property: 'og:image:width', content: '1200' },
+  { property: 'og:image:height', content: '630' },
+  { name: 'twitter:card', content: 'summary_large_image' },
+  { name: 'twitter:site', content: '@sora' },
+  { name: 'twitter:image', content: 'https://sorachill.vercel.app/api/ogimage?it=home' },
+  { name: 'twitter:title', content: 'Sora' },
+  { name: 'twitter:description', content: 'Watching movies, series, anime and more in Sora' },
+];
+
 export const handle = {
   breadcrumb: () => (
     <BreadcrumbItem to="/" key="home">
@@ -310,13 +237,126 @@ export const handle = {
   ),
 };
 
+function useLoadingIndicator() {
+  const navigation = useNavigation();
+
+  const fetchers = useFetchers();
+  /**
+   * This gets the state of every fetcher active on the app and combine it with
+   * the state of the global transition (Link and Form), then use them to
+   * determine if the app is idle or if it's loading.
+   * Here we consider both loading and submitting as loading.
+   */
+  const state = React.useMemo<'idle' | 'loading'>(() => {
+    const states = [navigation.state, ...fetchers.map((fetcher) => fetcher.state)];
+    if (states.every((item) => item === 'idle')) return 'idle';
+    return 'loading';
+  }, [navigation.state, fetchers]);
+
+  React.useEffect(() => {
+    // and when it's something else it means it's either submitting a form or
+    // waiting for the loaders of the next location so we start it
+    if (state === 'loading') NProgress.configure({ showSpinner: false }).start();
+    // when the state is idle then we can to complete the progress bar
+    if (state === 'idle') NProgress.configure({ showSpinner: false }).done();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigation.state]);
+}
+
+function ElementScrollRestoration({
+  elementQuery,
+  ...props
+}: { elementQuery: string } & React.HTMLProps<HTMLScriptElement>) {
+  const STORAGE_KEY = `position:${elementQuery}`;
+  const navigation = useNavigation();
+  const location = useLocation();
+
+  const updatePositions = React.useCallback(() => {
+    const element = document.querySelector(elementQuery);
+    if (!element) return;
+    let positions = {};
+    try {
+      const rawPositions = JSON.parse(sessionStorage.getItem(STORAGE_KEY) || '{}');
+      if (typeof rawPositions === 'object' && rawPositions !== null) {
+        positions = rawPositions;
+      }
+    } catch (error) {
+      console.warn(`Error parsing scroll positions from sessionStorage:`, error);
+    }
+    const newPositions = {
+      ...positions,
+      [location.key]: element.scrollTop,
+    };
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(newPositions));
+  }, [STORAGE_KEY, elementQuery, location.key]);
+
+  React.useEffect(() => {
+    if (navigation.state === 'idle') {
+      const element = document.querySelector(elementQuery);
+      if (!element) return;
+      try {
+        const positions = JSON.parse(sessionStorage.getItem(STORAGE_KEY) || '{}') as any;
+        const storedY = positions[window.history.state.key];
+        if (typeof storedY === 'number') {
+          element.scrollTop = storedY;
+        }
+      } catch (error: unknown) {
+        console.error(error);
+        sessionStorage.removeItem(STORAGE_KEY);
+      }
+    } else {
+      updatePositions();
+    }
+  }, [STORAGE_KEY, elementQuery, navigation.state, updatePositions]);
+
+  useBeforeUnload(() => {
+    updatePositions();
+  });
+
+  function restoreScroll(storageKey: string, elementQuery: string) {
+    const element = document.querySelector(elementQuery);
+    if (!element) {
+      console.warn(`Element not found: ${elementQuery}. Cannot restore scroll.`);
+      return;
+    }
+    if (!window.history.state || !window.history.state.key) {
+      const key = Math.random().toString(32).slice(2);
+      window.history.replaceState({ key }, '');
+    }
+    try {
+      const positions = JSON.parse(sessionStorage.getItem(storageKey) || '{}') as any;
+      const storedY = positions[window.history.state.key];
+      if (typeof storedY === 'number') {
+        element.scrollTop = storedY;
+      }
+    } catch (error: unknown) {
+      console.error(error);
+      sessionStorage.removeItem(storageKey);
+    }
+  }
+  return (
+    <script
+      {...props}
+      suppressHydrationWarning
+      dangerouslySetInnerHTML={{
+        __html: `(${restoreScroll})(${JSON.stringify(STORAGE_KEY)}, ${JSON.stringify(
+          elementQuery,
+        )})`,
+      }}
+    />
+  );
+}
+
 let isMount = true;
 
-const Document = ({ children, title, lang, dir, gaTrackingId, ENV }: DocumentProps) => {
+const Document = ({ children, title }: DocumentProps) => {
   const location = useLocation();
   const matches = useMatches();
+  const { locale, gaTrackingId, ENV } = useLoaderData<typeof loader>();
+  const { i18n } = useTranslation();
   const isBot = useIsBot();
   const isHydrated = useHydrated();
+  useLoadingIndicator();
   const color = React.useMemo(() => {
     if (isHydrated) {
       return getComputedStyle(document.documentElement).getPropertyValue(
@@ -332,11 +372,6 @@ const Document = ({ children, title, lang, dir, gaTrackingId, ENV }: DocumentPro
     }
   }, [location, gaTrackingId]);
 
-  /**
-   * It takes an object and returns a clone of that object, using for deleting handlers in matches.
-   * @param {T} obj - T - The object to be cloned.
-   * @returns A clone of the object.
-   */
   function cloneObject<T>(obj: T): T {
     const clone: T = {} as T;
     // eslint-disable-next-line no-restricted-syntax
@@ -394,7 +429,7 @@ const Document = ({ children, title, lang, dir, gaTrackingId, ENV }: DocumentPro
   }, [location]);
 
   return (
-    <html lang={lang} dir={dir} suppressHydrationWarning>
+    <html lang={locale} dir={i18n.dir()} suppressHydrationWarning>
       <head>
         {title ? <title>{title}</title> : null}
         <meta charSet="utf-8" />
@@ -434,6 +469,7 @@ const Document = ({ children, title, lang, dir, gaTrackingId, ENV }: DocumentPro
           }}
         />
         {children}
+        <ElementScrollRestoration elementQuery="[data-restore-scroll='true']" />
         {isBot ? null : <Scripts />}
         {process.env.NODE_ENV === 'development' ? <LiveReload /> : null}
       </body>
@@ -442,13 +478,10 @@ const Document = ({ children, title, lang, dir, gaTrackingId, ENV }: DocumentPro
 };
 
 const App = () => {
-  const fetchers = useFetchers();
-  const navigation = useNavigation();
-  const { user, locale, gaTrackingId, ENV } = useLoaderData<typeof loader>();
-  const { i18n } = useTranslation();
+  const isHydrated = useHydrated();
+  const { user, locale } = useLoaderData<typeof loader>();
   const isBot = useIsBot();
   useChangeLanguage(locale);
-  const [isLoading, setIsLoading] = React.useState(true);
   const [waitingWorker, setWaitingWorker] = React.useState<ServiceWorker | null>(null);
   const [isUpdateAvailable, setIsUpdateAvailable] = React.useState(false);
 
@@ -498,42 +531,8 @@ const App = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isUpdateAvailable]);
 
-  /**
-   * This gets the state of every fetcher active on the app and combine it with
-   * the state of the global transition (Link and Form), then use them to
-   * determine if the app is idle or if it's loading.
-   * Here we consider both loading and submitting as loading.
-   */
-  const state = React.useMemo<'idle' | 'loading'>(() => {
-    const states = [navigation.state, ...fetchers.map((fetcher) => fetcher.state)];
-    if (states.every((item) => item === 'idle')) return 'idle';
-    return 'loading';
-  }, [navigation.state, fetchers]);
-
-  React.useEffect(() => {
-    // and when it's something else it means it's either submitting a form or
-    // waiting for the loaders of the next location so we start it
-    if (state === 'loading') NProgress.configure({ showSpinner: false }).start();
-    // when the state is idle then we can to complete the progress bar
-    if (state === 'idle') NProgress.configure({ showSpinner: false }).done();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [navigation.state]);
-
-  React.useEffect(() => {
-    const theme = localStorage.getItem('theme');
-    const d = document.documentElement;
-    if (theme === 'synthwave' || theme === 'dracula' || theme === 'night') {
-      d.style.colorScheme = 'dark';
-    }
-  }, []);
-
-  React.useEffect(() => {
-    if (state === 'idle') setIsLoading(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
-    <Document lang={locale} dir={i18n.dir()} gaTrackingId={gaTrackingId} ENV={ENV}>
+    <Document>
       <WrapBalancerProvider>
         <RemixThemesProvider
           defaultTheme="system"
@@ -541,57 +540,16 @@ const App = () => {
           enableColorScheme
           enableSystem
           themes={listThemes}
-          value={{
-            light: 'light',
-            dark: 'dark',
-            'light-red': 'light-red',
-            'light-yellow': 'light-yellow',
-            'light-green': 'light-green',
-            'light-cyan': 'light-cyan',
-            'light-purple': 'light-purple',
-            'light-pink': 'light-pink',
-            'dark-red': 'dark-red',
-            'dark-yellow': 'dark-yellow',
-            'dark-green': 'dark-green',
-            'dark-cyan': 'dark-cyan',
-            'dark-purple': 'dark-purple',
-            'dark-pink': 'dark-pink',
-            cupcake: 'cupcake',
-            bumblebee: 'bumblebee',
-            emerald: 'emerald',
-            corporate: 'corporate',
-            synthwave: 'synthwave',
-            retro: 'retro',
-            cyberpunk: 'cyberpunk',
-            valentine: 'valentine',
-            halloween: 'halloween',
-            garden: 'garden',
-            forest: 'forest',
-            aqua: 'aqua',
-            lofi: 'lofi',
-            pastel: 'pastel',
-            fantasy: 'fantasy',
-            wireframe: 'wireframe',
-            luxury: 'luxury',
-            dracula: 'dracula',
-            cmyk: 'cmyk',
-            autumn: 'autumn',
-            business: 'business',
-            acid: 'acid',
-            lemonade: 'lemonade',
-            night: 'night',
-            coffee: 'coffee',
-            winter: 'winter',
-          }}
+          value={themeValues}
         >
           <AnimatePresence>
-            {isLoading && process.env.NODE_ENV !== 'development' && !isBot ? (
+            {!isHydrated && process.env.NODE_ENV !== 'development' && !isBot ? (
               <motion.div
                 initial={{ opacity: 1 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.5 }}
-                className="bg-background fixed left-0 top-0 z-[9999] block h-full w-full"
+                className="fixed left-0 top-0 z-[9999] block h-full w-full bg-background"
               >
                 <div className="relative top-1/2 m-auto mt-[-77px] block h-0 w-0">
                   <div className="mb-5 flex	items-center justify-center">
@@ -616,12 +574,12 @@ const App = () => {
                         contentType: MimeType.WEBP,
                       }}
                     />
-                    <h1 className="from-secondary to-primary bg-gradient-to-tr to-50% bg-clip-text !text-3xl font-bold tracking-normal text-transparent md:!text-5xl">
+                    <h1 className="bg-gradient-to-tr from-secondary to-primary to-50% bg-clip-text !text-3xl font-bold tracking-normal text-transparent md:!text-5xl">
                       SORA
                     </h1>
                   </div>
                   <div className="h-9 w-9 animate-spin">
-                    <div className="border-y-primary h-full w-full rounded-[50%] border-4" />
+                    <div className="h-full w-full rounded-[50%] border-4 border-y-primary" />
                   </div>
                 </div>
               </motion.div>
@@ -636,202 +594,163 @@ const App = () => {
   );
 };
 
-export const CatchBoundary = () => {
-  const caught = useCatch();
-
-  let message;
-  switch (caught.status) {
-    case 401:
-      message = <p>Oops! Looks like you tried to visit a page that you do not have access to.</p>;
-      break;
-    case 404:
-      message = <p>Oops! Looks like you tried to visit a page that does not exist.</p>;
-      break;
-
-    default:
-      throw new Error(caught.data || caught.statusText);
-  }
-
-  return (
-    <Document title={`${caught.status} ${caught.statusText}`}>
-      <RemixThemesProvider
-        defaultTheme="system"
-        attribute="class"
-        enableColorScheme
-        enableSystem
-        themes={listThemes}
-        value={{
-          light: 'light',
-          dark: 'dark',
-          'light-red': 'light-red',
-          'light-yellow': 'light-yellow',
-          'light-green': 'light-green',
-          'light-cyan': 'light-cyan',
-          'light-purple': 'light-purple',
-          'light-pink': 'light-pink',
-          'dark-red': 'dark-red',
-          'dark-yellow': 'dark-yellow',
-          'dark-green': 'dark-green',
-          'dark-cyan': 'dark-cyan',
-          'dark-purple': 'dark-purple',
-          'dark-pink': 'dark-pink',
-          cupcake: 'cupcake',
-          bumblebee: 'bumblebee',
-          emerald: 'emerald',
-          corporate: 'corporate',
-          synthwave: 'synthwave',
-          retro: 'retro',
-          cyberpunk: 'cyberpunk',
-          valentine: 'valentine',
-          halloween: 'halloween',
-          garden: 'garden',
-          forest: 'forest',
-          aqua: 'aqua',
-          lofi: 'lofi',
-          pastel: 'pastel',
-          fantasy: 'fantasy',
-          wireframe: 'wireframe',
-          luxury: 'luxury',
-          dracula: 'dracula',
-          cmyk: 'cmyk',
-          autumn: 'autumn',
-          business: 'business',
-          acid: 'acid',
-          lemonade: 'lemonade',
-          night: 'night',
-          coffee: 'coffee',
-          winter: 'winter',
-        }}
-      >
-        <div className="flex h-screen flex-col items-center justify-center gap-y-4">
-          <NextUIImage width={480} src={pageNotFound} alt="404" className="object-cover" />
-          <h1 className="text-warning text-center">
-            {caught.status} {caught.statusText} {message}
-          </h1>
-          <div className="flex w-full flex-row items-center justify-center gap-x-4">
-            <Button
-              size="md"
-              variant="ghost"
-              color="success"
-              startContent={<Home />}
-              type="button"
-              onPress={() => {
-                window.location.href = '/';
-              }}
-            >
-              Back to Home
-            </Button>
-            <Button
-              size="md"
-              variant="ghost"
-              color="warning"
-              startContent={<Refresh filled />}
-              type="button"
-              onPress={() => {
-                window.location.reload();
-              }}
-            >
-              Reload Page
-            </Button>
-          </div>
-        </div>
-      </RemixThemesProvider>
-    </Document>
-  );
-};
-
-export const ErrorBoundary = ({ error }: { error: Error }) => {
+export function ErrorBoundary() {
+  const error = useRouteError();
   const isProd = process.env.NODE_ENV === 'production';
-  // eslint-disable-next-line no-console
-  console.log(error);
-  return (
-    <Document title="Error!">
-      <RemixThemesProvider
-        defaultTheme="system"
-        attribute="class"
-        enableColorScheme
-        enableSystem
-        themes={listThemes}
-        value={{
-          light: 'light',
-          dark: 'dark',
-          'light-red': 'light-red',
-          'light-yellow': 'light-yellow',
-          'light-green': 'light-green',
-          'light-cyan': 'light-cyan',
-          'light-purple': 'light-purple',
-          'light-pink': 'light-pink',
-          'dark-red': 'dark-red',
-          'dark-yellow': 'dark-yellow',
-          'dark-green': 'dark-green',
-          'dark-cyan': 'dark-cyan',
-          'dark-purple': 'dark-purple',
-          'dark-pink': 'dark-pink',
-          cupcake: 'cupcake',
-          bumblebee: 'bumblebee',
-          emerald: 'emerald',
-          corporate: 'corporate',
-          synthwave: 'synthwave',
-          retro: 'retro',
-          cyberpunk: 'cyberpunk',
-          valentine: 'valentine',
-          halloween: 'halloween',
-          garden: 'garden',
-          forest: 'forest',
-          aqua: 'aqua',
-          lofi: 'lofi',
-          pastel: 'pastel',
-          fantasy: 'fantasy',
-          wireframe: 'wireframe',
-          luxury: 'luxury',
-          dracula: 'dracula',
-          cmyk: 'cmyk',
-          autumn: 'autumn',
-          business: 'business',
-          acid: 'acid',
-          lemonade: 'lemonade',
-          night: 'night',
-          coffee: 'coffee',
-          winter: 'winter',
-        }}
-      >
-        <div className="flex h-screen flex-col items-center justify-center gap-y-4">
-          <NextUIImage width={480} src={pageNotFound} alt="404" className="object-cover" />
-          <h1 className="text-danger text-center">
-            {isProd
-              ? 'Some thing went wrong'
-              : `[ErrorBoundary]: There was an error: ${error.message}`}
-          </h1>
-          <div className="flex w-full flex-row items-center justify-center gap-x-4">
-            <Button
-              size="md"
-              variant="ghost"
-              color="success"
-              startContent={<Home />}
-              type="button"
-              onPress={() => {
-                window.location.href = '/';
-              }}
-            >
-              Back to Home
-            </Button>
-            <Button
-              size="md"
-              variant="ghost"
-              color="warning"
-              startContent={<Refresh filled />}
-              type="button"
-              onPress={() => {
-                window.location.reload();
-              }}
-            >
-              Reload Page
-            </Button>
+
+  if (isRouteErrorResponse(error)) {
+    let message;
+    switch (error.status) {
+      case 401:
+        message = isProd
+          ? 'Oops! Looks like you tried to visit a page that you do not have access to.'
+          : error.data;
+        break;
+      case 404:
+        message = isProd
+          ? 'Oops! Looks like you tried to visit a page that does not exist.'
+          : error.data;
+        break;
+      default:
+        throw new Error(error.data || error.statusText);
+    }
+    return (
+      <Document title={`${error.status} ${error.statusText}`}>
+        <RemixThemesProvider
+          defaultTheme="system"
+          attribute="class"
+          enableColorScheme
+          enableSystem
+          themes={listThemes}
+          value={themeValues}
+        >
+          <div className="flex h-screen flex-col items-center justify-center gap-y-4">
+            <NextUIImage width={480} src={pageNotFound} alt="404" className="object-cover" />
+            <h1 className="text-center text-warning">
+              {error.status} {error.statusText}
+            </h1>
+            <p>{message}</p>
+            <div className="flex w-full flex-row items-center justify-center gap-x-4">
+              <Button
+                size="md"
+                variant="ghost"
+                color="success"
+                startContent={<Home />}
+                type="button"
+                onPress={() => {
+                  window.location.href = '/';
+                }}
+              >
+                Back to Home
+              </Button>
+              <Button
+                size="md"
+                variant="ghost"
+                color="warning"
+                startContent={<Refresh filled />}
+                type="button"
+                onPress={() => {
+                  window.location.reload();
+                }}
+              >
+                Reload Page
+              </Button>
+            </div>
           </div>
-        </div>
-      </RemixThemesProvider>
-    </Document>
-  );
-};
+        </RemixThemesProvider>
+      </Document>
+    );
+  } else if (error instanceof Error) {
+    console.log(error);
+    return (
+      <Document title="Error!">
+        <RemixThemesProvider
+          defaultTheme="system"
+          attribute="class"
+          enableColorScheme
+          enableSystem
+          themes={listThemes}
+          value={themeValues}
+        >
+          <div className="flex h-screen flex-col items-center justify-center gap-y-4">
+            <NextUIImage width={480} src={pageNotFound} alt="404" className="object-cover" />
+            <h1 className="text-center text-danger">There was an error</h1>
+            <p>{error.message}</p>
+            <div className="flex w-full flex-row items-center justify-center gap-x-4">
+              <Button
+                size="md"
+                variant="ghost"
+                color="success"
+                startContent={<Home />}
+                type="button"
+                onPress={() => {
+                  window.location.href = '/';
+                }}
+              >
+                Back to Home
+              </Button>
+              <Button
+                size="md"
+                variant="ghost"
+                color="warning"
+                startContent={<Refresh filled />}
+                type="button"
+                onPress={() => {
+                  window.location.reload();
+                }}
+              >
+                Reload Page
+              </Button>
+            </div>
+          </div>
+        </RemixThemesProvider>
+      </Document>
+    );
+  } else {
+    return (
+      <Document title="Error!">
+        <RemixThemesProvider
+          defaultTheme="system"
+          attribute="class"
+          enableColorScheme
+          enableSystem
+          themes={listThemes}
+          value={themeValues}
+        >
+          <div className="flex h-screen flex-col items-center justify-center gap-y-4">
+            <NextUIImage width={480} src={pageNotFound} alt="404" className="object-cover" />
+            <h1 className="text-center text-danger">Unknown error</h1>
+            <div className="flex w-full flex-row items-center justify-center gap-x-4">
+              <Button
+                size="md"
+                variant="ghost"
+                color="success"
+                startContent={<Home />}
+                type="button"
+                onPress={() => {
+                  window.location.href = '/';
+                }}
+              >
+                Back to Home
+              </Button>
+              <Button
+                size="md"
+                variant="ghost"
+                color="warning"
+                startContent={<Refresh filled />}
+                type="button"
+                onPress={() => {
+                  window.location.reload();
+                }}
+              >
+                Reload Page
+              </Button>
+            </div>
+          </div>
+        </RemixThemesProvider>
+      </Document>
+    );
+  }
+}
 
 export default App;

@@ -1,7 +1,7 @@
 const { withTV } = require('tailwind-variants/transformer');
 const plugin = require('tailwindcss/plugin');
 const { nextui } = require('@nextui-org/theme');
-const themesConfig = require('./styles/themes.config');
+const themesConfig = require('./app/styles/themes.config');
 const defaultTheme = require('tailwindcss/defaultTheme');
 
 /** @type {import('tailwindcss').Config} */

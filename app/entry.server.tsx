@@ -1,28 +1,22 @@
-/* eslint-disable no-await-in-loop */
-/* eslint-disable no-restricted-syntax */
-
 import { resolve } from 'node:path';
-import type { EntryContext } from '@remix-run/node';
 import { RemixServer } from '@remix-run/react';
+import { handleRequest as handleVercelRequest, type EntryContext } from '@vercel/remix';
 import { createInstance } from 'i18next';
 import Backend from 'i18next-fs-backend';
 import isbot from 'isbot';
-import { renderToString } from 'react-dom/server';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
-import { etag } from 'remix-etag';
 
 import { otherRootRouteHandlers } from '~/services/other-root-routes.server';
 import { IsBotProvider } from '~/context/isbot.context';
 
-import i18n from './i18n/i18n.config';
-import i18next from './i18n/i18next.server';
+import { i18n, i18next } from './services/i18n';
 
-export default async function handleRequest(
+const handleRequest = async (
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
   remixContext: EntryContext,
-) {
+) => {
   // First, we create a new instance of i18next so every request will have a
   // completely unique instance and not share any state
   const instance = createInstance();
@@ -43,9 +37,6 @@ export default async function handleRequest(
         loadPath: resolve('./public/locales/{{lng}}/{{ns}}.json'),
       },
     });
-
-  // Then you can render your app wrapped in the I18nextProvider as in the
-  // entry.client file
 
   for (const handler of otherRootRouteHandlers) {
     const otherRouteResponse = await handler(request, remixContext);
@@ -69,21 +60,14 @@ export default async function handleRequest(
     'Vercel/1.0 (https://vercel.com/docs/bots)',
   ]);
   isbotRender.extend(['chrome-lighthouse']);
-
-  const markup = renderToString(
+  const remixServer = (
     <IsBotProvider isBot={isbotRender(request.headers.get('User-Agent') ?? '')}>
       <I18nextProvider i18n={instance}>
         <RemixServer context={remixContext} url={request.url} />
       </I18nextProvider>
-    </IsBotProvider>,
+    </IsBotProvider>
   );
+  return handleVercelRequest(request, responseStatusCode, responseHeaders, remixServer);
+};
 
-  responseHeaders.set('Content-Type', 'text/html');
-
-  const response = new Response(`<!DOCTYPE html>${markup}`, {
-    status: responseStatusCode,
-    headers: responseHeaders,
-  });
-
-  return etag({ request, response });
-}
+export default handleRequest;

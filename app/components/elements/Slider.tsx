@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Badge } from '@nextui-org/badge';
-import { cn } from '@nextui-org/theme';
 import * as SliderPrimitive from '@radix-ui/react-slider';
 import { useHover } from '@react-aria/interactions';
+import { cn } from '~/utils';
 import { tv } from 'tailwind-variants';
 
 const sliderStyles = tv({
@@ -11,7 +11,7 @@ const sliderStyles = tv({
       'relative w-full grow overflow-hidden rounded-full data-[orientation=horizontal]:h-2 data-[orientation=vertical]:w-2',
     range: 'absolute data-[orientation=horizontal]:h-full data-[orientation=vertical]:w-full',
     thumb:
-      'focus-visible:ring-ring bg-background ring-offset-background block h-5 w-5 rounded-full border-2 transition-colors hover:cursor-grab focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+      'focus-visible:ring-ring block h-5 w-5 rounded-full border-2 bg-background ring-offset-background transition-colors hover:cursor-grab focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
   },
   variants: {
     color: {
@@ -47,7 +47,7 @@ const sliderStyles = tv({
       },
       gradient: {
         track: 'bg-default',
-        range: 'from-primary to-secondary bg-gradient-to-r',
+        range: 'bg-gradient-to-r from-primary to-secondary',
         thumb: 'border-foreground',
       },
     },

@@ -3,9 +3,10 @@ import { Button } from '@nextui-org/button';
 import { Pagination } from '@nextui-org/pagination';
 import { Spacer } from '@nextui-org/spacer';
 import { useIntersectionObserver, useMediaQuery } from '@react-hookz/web';
-import { Link, useFetcher, useLocation, useSearchParams } from '@remix-run/react';
+import { useFetcher, useLocation, useSearchParams } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import NProgress from 'nprogress';
+import { useGlobalLoadingState } from 'remix-utils';
 import { tv } from 'tailwind-variants';
 
 import type { IMedia } from '~/types/media';
@@ -31,16 +32,14 @@ interface IMediaListCardProps {
   totalPages?: number;
 }
 
-const MotionLink = motion(Link);
-
 const mediaListGridStyles = tv({
-  base: 'max-w-screen-4xl grid w-full items-stretch justify-items-center gap-5',
+  base: 'grid w-full max-w-screen-4xl items-stretch justify-items-center gap-5',
   variants: {
     listViewType: {
       table: 'grid-cols-1',
-      card: '2xs:grid-cols-2 3xl:grid-cols-5 4xl:grid-cols-6 grid-cols-1 md:grid-cols-3 2xl:grid-cols-4',
-      detail: '4xl:grid-cols-3 grid-cols-1 xl:grid-cols-2',
-      coverCard: '4xl:grid-cols-3 grid-cols-1 xl:grid-cols-2',
+      card: 'grid-cols-1 2xs:grid-cols-2 md:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6',
+      detail: 'grid-cols-1 xl:grid-cols-2 4xl:grid-cols-3',
+      coverCard: 'grid-cols-1 xl:grid-cols-2 4xl:grid-cols-3',
     },
   },
   defaultVariants: {
@@ -66,6 +65,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
   } = props;
   const fetcher = useFetcher();
   const location = useLocation();
+  const globalState = useGlobalLoadingState();
   const [searchParams, setSearchParams] = useSearchParams({});
   const { viewportRef } = useLayout((state) => state);
   const [listItems, setListItems] = useState<IMedia[]>(items || []);
@@ -157,13 +157,13 @@ const MediaListGrid = (props: IMediaListCardProps) => {
   }, [fetcher.data]);
 
   useEffect(() => {
-    if (fetcher.type === 'normalLoad') {
+    if (globalState === 'loading') {
       NProgress.configure({ showSpinner: false }).start();
     }
-    if (fetcher.type === 'done') {
+    if (globalState === 'idle') {
       NProgress.configure({ showSpinner: false }).done();
     }
-  }, [fetcher.type]);
+  }, [globalState]);
 
   const handlePageChange = ({
     direction,
@@ -237,8 +237,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
           coverItem.map((item, index) => {
             const href = `/collections/${item.id}`;
             return (
-              <MotionLink
-                to={href}
+              <motion.div
                 key={`${item.id}-${index}-covercard-grid`}
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -251,7 +250,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
                   type="card"
                   linkTo={href}
                 />
-              </MotionLink>
+              </motion.div>
             );
           })}
       </div>

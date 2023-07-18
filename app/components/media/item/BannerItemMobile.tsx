@@ -61,7 +61,7 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
           mediaType === 'movie' ? 'movies/' : mediaType === 'tv' ? 'tv-shows/' : 'anime/'
         }${id}/`}
       >
-        <CardBody className="after:to-background overflow-hidden p-0 after:absolute after:bottom-0 after:left-0 after:h-[calc(100%/2)] after:w-full after:bg-gradient-to-b after:from-transparent after:content-['']">
+        <CardBody className="overflow-hidden p-0 after:absolute after:bottom-0 after:left-0 after:h-[calc(100%/2)] after:w-full after:bg-gradient-to-b after:from-transparent after:to-background after:content-['']">
           <AnimatePresence>
             {size ? (
               <motion.div

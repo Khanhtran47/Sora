@@ -1,16 +1,18 @@
-import type { MetaFunction } from '@remix-run/node';
 import { Outlet, useLocation } from '@remix-run/react';
+import { mergeMeta } from '~/utils';
 import { motion } from 'framer-motion';
 
 import { designSystemPages } from '~/constants/tabLinks';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
-export const meta: MetaFunction = () => ({
-  title: 'Design System',
-  description: 'This page for testing the design system',
-  'og:title': 'Design System',
-  'og:description': 'This page for testing the design system',
-});
+export const meta = mergeMeta(() => [
+  { title: 'Design System' },
+  { name: 'description', content: 'This page for testing the design system' },
+  { 'og:title': 'Design System' },
+  { 'og:description': 'This page for testing the design system' },
+  { 'twitter:title': 'Design System' },
+  { 'twitter:description': 'This page for testing the design system' },
+]);
 
 export const handle = {
   breadcrumb: () => (

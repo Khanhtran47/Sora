@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
-import { cn } from '@nextui-org/theme';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
+import { cn } from '~/utils';
 
 const Popover = PopoverPrimitive.Root;
 

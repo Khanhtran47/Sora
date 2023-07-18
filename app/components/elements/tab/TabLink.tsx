@@ -43,7 +43,7 @@ const TabLink = (props: ITabProps) => {
     <ScrollArea
       type={isSm ? 'scroll' : 'hover'}
       scrollHideDelay={100}
-      className="border-default-200 z-[2] w-full border-b"
+      className="z-[2] w-full border-b border-default-200"
     >
       <ScrollViewport>
         <div className="flex focus:outline-none">
@@ -51,7 +51,7 @@ const TabLink = (props: ITabProps) => {
             <NavLink
               key={page.pageLink}
               to={`${linkTo}${page.pageLink}`}
-              className="relative z-10 flex h-12 shrink-0 items-center justify-center rounded-xl p-4 outline-none hover:opacity-80"
+              className="relative z-10 flex h-12 shrink-0 items-center justify-center rounded-xl p-4 outline-none hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
             >
               {({ isActive }) => (
                 <>
@@ -60,7 +60,7 @@ const TabLink = (props: ITabProps) => {
                     <motion.div
                       ref={underlineRef}
                       layoutId="underline"
-                      className="bg-default-foreground absolute bottom-0 h-1 w-1/2 overflow-hidden rounded-md"
+                      className="absolute bottom-0 h-1 w-1/2 overflow-hidden rounded-md bg-default-foreground"
                     />
                   ) : null}
                 </>

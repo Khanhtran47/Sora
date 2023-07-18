@@ -23,7 +23,7 @@ const swiperSlideStyles = tv({
   variants: {
     cardType: {
       coverCard: '!w-[280px] sm:!w-[480px]',
-      card: 'nextui-sm:!w-[244px] !w-[164px] sm:!w-[210px] 2xl:!w-[280px]',
+      card: '!w-[164px] sm:!w-[210px] nextui-sm:!w-[244px] 2xl:!w-[280px]',
       peopleCard: '!w-[160px]',
     },
   },
@@ -83,13 +83,12 @@ const MediaListCard = (props: IMediaListCardProps) => {
                     className={swiperSlideStyles({
                       cardType: 'coverCard',
                     })}
-                    key={`${item.id}-${index}-card`}
+                    key={`${item.id}-${index}-cover-card`}
                   >
                     <MediaItem
                       backdropPath={item?.backdropPath}
                       isCoverCard={isCoverCard}
                       isSliderCard
-                      key={item.id}
                       linkTo={href}
                       title={item?.name}
                       type="card"
@@ -152,7 +151,7 @@ const MediaListCard = (props: IMediaListCardProps) => {
 
               return (
                 <SwiperSlide
-                  key={`${item.id}-${index}-card`}
+                  key={`${item.id}-${index}-card-${itemsType}`}
                   className={swiperSlideStyles({
                     cardType: item?.mediaType === 'people' ? 'peopleCard' : 'card',
                   })}
@@ -170,7 +169,6 @@ const MediaListCard = (props: IMediaListCardProps) => {
                     id={item?.id}
                     isSliderCard
                     job={item?.job}
-                    key={item.id}
                     linkTo={href}
                     knownFor={item?.knownFor}
                     mediaType={item?.mediaType}

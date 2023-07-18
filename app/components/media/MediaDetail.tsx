@@ -7,7 +7,6 @@ import { Spacer } from '@nextui-org/spacer';
 import { Tooltip } from '@nextui-org/tooltip';
 import { useMeasure, useMediaQuery } from '@react-hookz/web';
 import { useFetcher, useLocation, useNavigate } from '@remix-run/react';
-import type { ColorPalette } from '~/routes/api/color-palette';
 import { motion, useTransform } from 'framer-motion';
 import { MimeType } from 'remix-image';
 import { useHydrated } from 'remix-utils';
@@ -15,6 +14,7 @@ import { useHydrated } from 'remix-utils';
 import { tv } from 'tailwind-variants';
 import tinycolor from 'tinycolor2';
 
+import type { ColorPalette } from '~/routes/api+/api.color-palette';
 import type { IAnimeInfo } from '~/services/consumet/anilist/anilist.types';
 import type { IMovieDetail, IMovieTranslations, ITvShowDetail } from '~/services/tmdb/tmdb.types';
 import { WebShareLink } from '~/utils/client/pwa-utils.client';
@@ -162,8 +162,8 @@ export const MediaDetail = (props: IMediaDetail) => {
           className="z-1 absolute bottom-0 flex grow flex-col items-center justify-center p-0"
         >
           <div className={backgroundStyles({ content: true })} />
-          <div className="grid-areas-small sm:grid-areas-wide grid w-full max-w-[1920px] grid-cols-[1fr_2fr] grid-rows-[1fr_auto_auto] items-stretch justify-center gap-x-4 gap-y-6 px-3 pt-5 sm:grid-rows-[auto_1fr_auto] sm:px-3.5 xl:px-4 2xl:px-5">
-            <div className="grid-in-image flex flex-col items-center justify-center" ref={imageRef}>
+          <div className="grid w-full max-w-[1920px] grid-cols-[1fr_2fr] grid-rows-[1fr_auto_auto] items-stretch justify-center gap-x-4 gap-y-6 px-3 pt-5 grid-areas-small sm:grid-rows-[auto_1fr_auto] sm:px-3.5 sm:grid-areas-wide xl:px-4 2xl:px-5">
+            <div className="flex flex-col items-center justify-center grid-in-image" ref={imageRef}>
               {posterPath ? (
                 <Image
                   src={posterPath}
@@ -209,13 +209,13 @@ export const MediaDetail = (props: IMediaDetail) => {
               )}
               {isSm ? null : <Spacer y={10} />}
             </div>
-            <div className="grid-in-title flex w-full flex-col items-start justify-start">
+            <div className="flex w-full flex-col items-start justify-start grid-in-title">
               <h1 className="!text-3xl md:!text-4xl">
                 {`${title}${isSm ? '' : ` (${releaseYear})`}`}
               </h1>
               {tagline ? <p className="italic">{tagline}</p> : null}
             </div>
-            <div className="grid-in-info flex flex-col gap-y-3 sm:gap-y-6">
+            <div className="flex flex-col gap-y-3 grid-in-info sm:gap-y-6">
               <div className="flex flex-row flex-wrap gap-3">
                 <Chip
                   size="xl"
@@ -254,7 +254,7 @@ export const MediaDetail = (props: IMediaDetail) => {
                   color="primary"
                   radius="full"
                   variant="flat"
-                  className="flex flex-row transition-all duration-200 ease-in-out"
+                  className="flex flex-row duration-200 ease-in-out transition-all"
                   style={
                     colorPalette
                       ? {
@@ -301,14 +301,14 @@ export const MediaDetail = (props: IMediaDetail) => {
                   ))}
               </div>
             </div>
-            <div className="grid-in-buttons mb-10 flex w-full flex-row flex-wrap items-center justify-between gap-4">
+            <div className="mb-10 flex w-full flex-row flex-wrap items-center justify-between gap-4 grid-in-buttons">
               {(status === 'Released' || status === 'Ended' || status === 'Returning Series') && (
                 <Dialog open={showProvidereDialog} onOpenChange={setShowProvidereDialog}>
                   <DialogTrigger asChild>
                     <Button
                       type="button"
                       // shadow
-                      className="from-secondary to-primary text-primary-foreground w-full bg-gradient-to-br to-50% text-lg font-bold sm:w-auto"
+                      className="w-full bg-gradient-to-br from-secondary to-primary to-50% text-lg font-bold text-primary-foreground sm:w-auto"
                       size="lg"
                     >
                       Watch now
@@ -425,8 +425,8 @@ export const AnimeDetail = (props: IAnimeDetail) => {
       >
         <CardBody ref={ref} className="z-1 absolute bottom-0 flex grow flex-col justify-center p-0">
           <div className={backgroundStyles({ content: true })} />
-          <div className="grid-areas-small sm:grid-areas-wide grid w-full max-w-[1920px] grid-cols-[1fr_2fr] grid-rows-[1fr_auto_auto] items-stretch justify-center gap-x-4 gap-y-6 px-3 pt-5 sm:grid-rows-[auto_1fr_auto] sm:px-3.5 xl:px-4 2xl:px-5">
-            <div className="grid-in-image flex flex-col items-center justify-center" ref={imageRef}>
+          <div className="grid w-full max-w-[1920px] grid-cols-[1fr_2fr] grid-rows-[1fr_auto_auto] items-stretch justify-center gap-x-4 gap-y-6 px-3 pt-5 grid-areas-small sm:grid-rows-[auto_1fr_auto] sm:px-3.5 sm:grid-areas-wide xl:px-4 2xl:px-5">
+            <div className="flex flex-col items-center justify-center grid-in-image" ref={imageRef}>
               {image ? (
                 <Image
                   src={image}
@@ -472,19 +472,19 @@ export const AnimeDetail = (props: IAnimeDetail) => {
               )}
               {isSm ? null : <Spacer y={10} />}
             </div>
-            <div className="grid-in-title flex w-full flex-col items-start justify-start">
+            <div className="flex w-full flex-col items-start justify-start grid-in-title">
               <h1 className="!text-3xl md:!text-4xl">
                 {`${title?.userPreferred || title?.english || title?.romaji || title?.native}`}
               </h1>
             </div>
-            <div className="grid-in-info flex flex-col gap-y-3 sm:gap-y-6">
+            <div className="flex flex-col gap-y-3 grid-in-info sm:gap-y-6">
               <div className="flex flex-row flex-wrap gap-3">
                 <Chip
                   size="xl"
                   color="primary"
                   radius="full"
                   variant="flat"
-                  className="transition-all duration-200 ease-in-out"
+                  className="duration-200 ease-in-out transition-all"
                   style={
                     colorPalette
                       ? {
@@ -505,7 +505,7 @@ export const AnimeDetail = (props: IAnimeDetail) => {
                   color="primary"
                   radius="full"
                   variant="flat"
-                  className="flex flex-row transition-all duration-200 ease-in-out"
+                  className="flex flex-row duration-200 ease-in-out transition-all"
                   style={
                     colorPalette
                       ? {
@@ -546,13 +546,13 @@ export const AnimeDetail = (props: IAnimeDetail) => {
                   ))}
               </div>
             </div>
-            <div className="grid-in-buttons mb-10 flex w-full flex-row flex-wrap items-center justify-between gap-4">
+            <div className="mb-10 flex w-full flex-row flex-wrap items-center justify-between gap-4 grid-in-buttons">
               <Dialog open={showProvidereDialog} onOpenChange={setShowProvidereDialog}>
                 <DialogTrigger asChild>
                   <Button
                     type="button"
                     size="lg"
-                    className="from-secondary to-primary text-primary-foreground w-full bg-gradient-to-br to-50% text-lg font-bold sm:w-auto"
+                    className="w-full bg-gradient-to-br from-secondary to-primary to-50% text-lg font-bold text-primary-foreground sm:w-auto"
                   >
                     Watch now
                   </Button>
@@ -596,7 +596,6 @@ export const AnimeDetail = (props: IAnimeDetail) => {
                     <ShareIcon />
                   </Button>
                 </Tooltip>
-                D
               </div>
             </div>
           </div>

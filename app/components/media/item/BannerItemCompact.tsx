@@ -17,7 +17,7 @@ interface IBannerItemCompactProps {
 }
 
 const bannerCompactStyles = tv({
-  base: "after:from-default after:duration-400 min-h-[135px] min-w-[240px] origin-center overflow-hidden border-0 after:absolute after:left-0 after:top-0 after:z-10 after:h-[135px] after:bg-gradient-to-r after:to-transparent after:transition-all after:ease-in-out after:content-['']",
+  base: "min-h-[135px] min-w-[240px] origin-center overflow-hidden border-0 after:absolute after:left-0 after:top-0 after:z-10 after:h-[135px] after:bg-gradient-to-r after:from-default after:to-transparent after:content-[''] after:duration-400 after:ease-in-out after:transition-all",
   variants: {
     active: {
       true: 'after:w-[200px] after:opacity-100',
@@ -93,7 +93,7 @@ const BannerItemCompact = forwardRef<HTMLDivElement, IBannerItemCompactProps>(
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.1, ease: 'easeOut' }}
-                  className="text-default-foreground m-0 line-clamp-3 text-left font-bold"
+                  className="m-0 line-clamp-3 text-left font-bold text-default-foreground"
                 >
                   {titleItem?.length && titleItem.length > 40
                     ? `${titleItem?.slice(0, 40)}...`
@@ -107,7 +107,7 @@ const BannerItemCompact = forwardRef<HTMLDivElement, IBannerItemCompactProps>(
           <div className="absolute bottom-0 z-20 h-[10px] w-full overflow-hidden">
             <div
               ref={forwardedRef}
-              className="animate-progressBarStripes bg-primary float-left h-full rounded-r-[3px] bg-[length:40px_40px]"
+              className="float-left h-full animate-progressBarStripes rounded-r-[3px] bg-primary bg-[length:40px_40px]"
               style={{
                 width: 0,
                 backgroundImage:

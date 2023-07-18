@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { cn } from '@nextui-org/theme';
 import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area';
+import { cn } from '~/utils';
 import { tv } from 'tailwind-variants';
 
 const ScrollArea = React.forwardRef<
@@ -50,7 +50,7 @@ const ScrollBar = React.forwardRef<
     className={scrollbarStyles({ orientation, className })}
     {...props}
   >
-    <ScrollAreaPrimitive.ScrollAreaThumb className="bg-default-800 transition-background hover:bg-default-600 relative flex-1 rounded-full duration-150 ease-out" />
+    <ScrollAreaPrimitive.ScrollAreaThumb className="relative flex-1 rounded-full bg-default-800 duration-150 ease-out transition-background hover:bg-default-600" />
   </ScrollAreaPrimitive.ScrollAreaScrollbar>
 ));
 ScrollBar.displayName = ScrollAreaPrimitive.ScrollAreaScrollbar.displayName;

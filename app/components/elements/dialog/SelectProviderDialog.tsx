@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Button } from '@nextui-org/button';
 import { useFetcher, useNavigate } from '@remix-run/react';
+import { useGlobalLoadingState } from 'remix-utils';
 
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { DialogHeader, DialogTitle } from '~/components/elements/Dialog';
@@ -35,6 +36,7 @@ const SelectProvider = (props: SelectProviderProps) => {
   } = props;
   const fetcher = useFetcher();
   const navigate = useNavigate();
+  const globalState = useGlobalLoadingState();
   const { isShowSkipOpEdButton } = useSoraSettings();
   const [provider, setProvider] = useState<
     {
@@ -102,7 +104,7 @@ const SelectProvider = (props: SelectProviderProps) => {
               </Button>
             ))
           : null}
-        {fetcher.type === 'normalLoad' ? (
+        {globalState === 'loading' ? (
           <div role="status" className="max-w-sm animate-pulse">
             <div className="mb-4 h-2.5 w-48 rounded-full bg-gray-200 dark:bg-gray-700" />
             <div className="mb-4 h-2.5 w-48 rounded-full bg-gray-200 dark:bg-gray-700" />
