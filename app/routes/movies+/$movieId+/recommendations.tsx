@@ -1,7 +1,8 @@
 import { json, type LoaderArgs } from '@remix-run/node';
-import { useLoaderData, type RouteMatch } from '@remix-run/react';
+import { useLoaderData } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 
+import type { Handle } from '~/types/handle';
 import type { loader as movieIdLoader } from '~/routes/movies+/$movieId';
 import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
@@ -61,8 +62,8 @@ export const meta = mergeMeta<typeof loader, { 'routes/movies+/$movieId': typeof
   },
 );
 
-export const handle = {
-  breadcrumb: (match: RouteMatch) => (
+export const handle: Handle = {
+  breadcrumb: ({ match }) => (
     <BreadcrumbItem
       to={`/movies/${match.params.movieId}/recommendations`}
       key={`movies-${match.params.movieId}-recommendations`}
@@ -70,11 +71,11 @@ export const handle = {
       Recommendations
     </BreadcrumbItem>
   ),
-  miniTitle: (_match: RouteMatch, parentMatch: RouteMatch) => ({
-    title: parentMatch.data?.detail?.title,
+  miniTitle: ({ parentMatch }) => ({
+    title: parentMatch?.data?.detail?.title,
     subtitle: 'Recommendations',
-    showImage: parentMatch.data?.detail?.poster_path !== undefined,
-    imageUrl: TMDB?.posterUrl(parentMatch.data?.detail?.poster_path || '', 'w92'),
+    showImage: parentMatch?.data?.detail?.poster_path !== undefined,
+    imageUrl: TMDB?.posterUrl(parentMatch?.data?.detail?.poster_path || '', 'w92'),
   }),
   showListViewChangeButton: true,
 };

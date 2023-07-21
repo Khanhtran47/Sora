@@ -1,8 +1,9 @@
 import { env } from 'process';
 import { json, type LoaderArgs } from '@remix-run/node';
-import { useLoaderData, type RouteMatch } from '@remix-run/react';
+import { useLoaderData } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 
+import type { Handle } from '~/types/handle';
 import type { IMedia } from '~/types/media';
 import { getAniskip, type IAniSkipResponse } from '~/services/aniskip/aniskip.server';
 import {
@@ -751,8 +752,8 @@ export const meta = mergeMeta<typeof loader>(({ data, params }) => {
   ];
 });
 
-export const handle = {
-  breadcrumb: (match: RouteMatch) => (
+export const handle: Handle = {
+  breadcrumb: ({ match }) => (
     <>
       <BreadcrumbItem
         to={`/anime/${match.params.animeId}/`}
@@ -768,7 +769,7 @@ export const handle = {
       </BreadcrumbItem>
     </>
   ),
-  miniTitle: (match: RouteMatch) => ({
+  miniTitle: ({ match }) => ({
     title:
       match.data?.detail?.title?.userPreferred ||
       match.data?.detail?.title?.english ||

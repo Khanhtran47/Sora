@@ -8,6 +8,7 @@ import { Spacer } from '@nextui-org/spacer';
 import { Form, Link, useLocation } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 
+import type { Handle } from '~/types/handle';
 import MailEdit from '~/assets/icons/MailEditIcon';
 import Password from '~/assets/icons/Password';
 
@@ -18,7 +19,7 @@ interface IAuthForm {
   code?: string | null;
 }
 
-export const handle = {
+export const handle: Handle = {
   i18n: 'auth',
 };
 

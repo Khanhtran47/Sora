@@ -7,6 +7,7 @@ import { isMobile } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
 import { useHydrated } from 'remix-utils';
 
+import type { Handle } from '~/types/handle';
 import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
 import { getListDiscover } from '~/services/tmdb/tmdb.server';
@@ -79,7 +80,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   );
 };
 
-export const handle = {
+export const handle: Handle = {
   breadcrumb: () => (
     <BreadcrumbItem to="/tv-shows/on-the-air" key="tv-shows-on-air">
       On the air Tv

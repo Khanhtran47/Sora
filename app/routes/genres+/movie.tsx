@@ -7,6 +7,7 @@ import { isMobile } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
 import { useHydrated } from 'remix-utils';
 
+import type { Handle } from '~/types/handle';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
@@ -22,7 +23,7 @@ export const meta = mergeMeta(() => [
   { name: 'twitter:image', content: 'https://sorachill.vercel.app/api/ogimage?it=movies' },
 ]);
 
-export const handle = {
+export const handle: Handle = {
   breadcrumb: () => (
     <BreadcrumbItem to="/genres/movie" key="genres-movie">
       Movie

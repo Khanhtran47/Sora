@@ -2,12 +2,13 @@ import { Link } from '@nextui-org/link';
 import { NavLink } from '@remix-run/react';
 import { MimeType } from 'remix-image';
 
+import type { Handle } from '~/types/handle';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '~/components/elements/HoverCard';
 import Image from '~/components/elements/Image';
 import LogoFooter from '~/assets/images/logo_footer.png';
 
-export const handle = {
+export const handle: Handle = {
   breadcrumb: () => (
     <BreadcrumbItem to="/design-system/hover-card" key="design-hover-card">
       Hover Card

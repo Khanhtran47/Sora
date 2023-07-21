@@ -1,9 +1,10 @@
 import { Link } from '@nextui-org/link';
 
+import type { Handle } from '~/types/handle';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/elements/tab/Tabs';
 
-export const handle = {
+export const handle: Handle = {
   breadcrumb: () => (
     <BreadcrumbItem to="/design-system/tabs" key="design-tabs">
       Tabs

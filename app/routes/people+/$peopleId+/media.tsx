@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { Spacer } from '@nextui-org/spacer';
 import { json, type LoaderArgs } from '@remix-run/node';
-import { useLoaderData, type RouteMatch } from '@remix-run/react';
+import { useLoaderData } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import { Gallery, Item, type GalleryProps } from 'react-photoswipe-gallery';
 import { MimeType } from 'remix-image';
 
+import type { Handle } from '~/types/handle';
 import type { loader as peopleIdLoader } from '~/routes/people+/$peopleId';
 import { i18next } from '~/services/i18n';
 import { getPeopleImages } from '~/services/tmdb/tmdb.server';
@@ -56,8 +57,8 @@ export const meta = mergeMeta<null, { 'routes/people+/$peopleId': typeof peopleI
   },
 );
 
-export const handle = {
-  breadcrumb: (match: RouteMatch) => (
+export const handle: Handle = {
+  breadcrumb: ({ match }) => (
     <BreadcrumbItem
       to={`/people/${match.params.peopleId}/media`}
       key={`people-${match.params.peopleId}-media`}
@@ -65,11 +66,11 @@ export const handle = {
       Media
     </BreadcrumbItem>
   ),
-  miniTitle: (_match: RouteMatch, parentMatch: RouteMatch) => ({
-    title: parentMatch.data?.detail?.name || 'People',
+  miniTitle: ({ parentMatch }) => ({
+    title: parentMatch?.data?.detail?.name || 'People',
     subtitle: 'Media',
-    showImage: parentMatch.data?.detail?.profile_path !== undefined,
-    imageUrl: TMDB.profileUrl(parentMatch.data?.detail?.profile_path, 'w45'),
+    showImage: parentMatch?.data?.detail?.profile_path !== undefined,
+    imageUrl: TMDB.profileUrl(parentMatch?.data?.detail?.profile_path, 'w45'),
   }),
 };
 

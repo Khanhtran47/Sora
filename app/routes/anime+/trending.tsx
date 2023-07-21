@@ -5,6 +5,7 @@ import { motion, type PanInfo } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
 import { useHydrated } from 'remix-utils';
 
+import type { Handle } from '~/types/handle';
 import type { IMedia } from '~/types/media';
 import { getAnimeTrending } from '~/services/consumet/anilist/anilist.server';
 import { authenticate } from '~/services/supabase';
@@ -39,7 +40,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   );
 };
 
-export const handle = {
+export const handle: Handle = {
   breadcrumb: () => (
     <BreadcrumbItem to="/anime/trending" key="anime-trending">
       Trending Anime

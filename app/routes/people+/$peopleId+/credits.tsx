@@ -1,8 +1,9 @@
 import { json, type LoaderArgs } from '@remix-run/node';
-import { useLoaderData, useLocation, type RouteMatch } from '@remix-run/react';
+import { useLoaderData, useLocation } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import { motion } from 'framer-motion';
 
+import type { Handle } from '~/types/handle';
 import type { loader as peopleIdLoader } from '~/routes/people+/$peopleId';
 import { i18next } from '~/services/i18n';
 import { getPeopleCredits } from '~/services/tmdb/tmdb.server';
@@ -52,8 +53,8 @@ export const meta = mergeMeta<null, { 'routes/people+/$peopleId': typeof peopleI
   },
 );
 
-export const handle = {
-  breadcrumb: (match: RouteMatch) => (
+export const handle: Handle = {
+  breadcrumb: ({ match }) => (
     <BreadcrumbItem
       to={`/people/${match.params.peopleId}/credits`}
       key={`people-${match.params.peopleId}-credits`}
@@ -61,11 +62,11 @@ export const handle = {
       Credits
     </BreadcrumbItem>
   ),
-  miniTitle: (_match: RouteMatch, parentMatch: RouteMatch) => ({
-    title: parentMatch.data?.detail?.name || 'People',
+  miniTitle: ({ parentMatch }) => ({
+    title: parentMatch?.data?.detail?.name || 'People',
     subtitle: 'Credits',
-    showImage: parentMatch.data?.detail?.profile_path !== undefined,
-    imageUrl: TMDB.profileUrl(parentMatch.data?.detail?.profile_path, 'w45'),
+    showImage: parentMatch?.data?.detail?.profile_path !== undefined,
+    imageUrl: TMDB.profileUrl(parentMatch?.data?.detail?.profile_path, 'w45'),
   }),
 };
 

@@ -6,6 +6,7 @@ import { isMobile } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
 import { useHydrated } from 'remix-utils';
 
+import type { Handle } from '~/types/handle';
 import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
 import { getListPeople } from '~/services/tmdb/tmdb.server';
@@ -44,7 +45,7 @@ export const meta = mergeMeta(() => [
   { name: 'twitter:description', content: 'Search People on Sora' },
 ]);
 
-export const handle = {
+export const handle: Handle = {
   breadcrumb: () => (
     <BreadcrumbItem to="/search/people" key="search-people">
       Search People

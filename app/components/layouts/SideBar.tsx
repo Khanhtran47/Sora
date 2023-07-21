@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { MimeType } from 'remix-image';
 import { tv } from 'tailwind-variants';
 
+import type { Handle } from '~/types/handle';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import Image from '~/components/elements/Image';
 import {
@@ -34,7 +35,7 @@ import Tv from '~/assets/icons/TvIcon';
 import TwoUsers from '~/assets/icons/TwoUsersIcon';
 import Logo from '~/assets/images/logo_loading.png';
 
-export const handle = {
+export const handle: Handle = {
   i18n: 'left-drawer',
 };
 
@@ -275,7 +276,7 @@ const SideBar = () => {
               >
                 <NavigationMenuLink asChild>
                   <NavLink
-                    to="/trending/today"
+                    to="/trending/"
                     className={navigationMenuTriggerStyle({
                       class: `${navigationItemWidthStyle} h-[56px] justify-start transition-[width] duration-200`,
                     })}

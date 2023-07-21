@@ -1,10 +1,9 @@
 import { Button } from '@nextui-org/button';
 import { Chip } from '@nextui-org/chip';
-import { useMatches, useNavigate } from '@remix-run/react';
+import { useMatches, useNavigate, useParams } from '@remix-run/react';
 import { motion, useTransform } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { useHydrated } from 'remix-utils';
-
-// import { useTranslation } from 'react-i18next';
 
 import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
 import { useHistoryStack } from '~/store/layout/useHistoryStack';
@@ -19,6 +18,8 @@ const ControlNavigation = () => {
   const navigate = useNavigate();
   const matches = useMatches();
   const isHydrated = useHydrated();
+  const params = useParams();
+  const { t } = useTranslation();
   const { isShowBreadcrumb } = useSoraSettings();
   const { scrollY } = useLayout((state) => state);
   const { startChangeScrollPosition } = useHeaderStyle((state) => state);
@@ -74,7 +75,7 @@ const ControlNavigation = () => {
                 // skip routes that don't have a breadcrumb
                 .filter((match) => match.handle && match.handle.breadcrumb)
                 // render breadcrumbs!
-                .map((match) => match?.handle?.breadcrumb(match))}
+                .map((match) => match?.handle?.breadcrumb({ match, t, params }))}
             </Breadcrumb>
           </Chip>
         ) : currentMiniTitle ? (

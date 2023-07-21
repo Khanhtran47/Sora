@@ -2,6 +2,7 @@ import { json, redirect, type ActionArgs, type LoaderArgs } from '@remix-run/nod
 import { useActionData } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 
+import type { Handle } from '~/types/handle';
 import sgConfigs from '~/services/configs.server';
 import {
   commitAuthCookie,
@@ -102,7 +103,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   return null;
 };
 
-export const handle = {
+export const handle: Handle = {
   breadcrumb: () => (
     <BreadcrumbItem to="/sign-up" key="sign-up">
       Sign Up

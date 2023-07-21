@@ -1,6 +1,7 @@
 import { Button } from '@nextui-org/button';
 import { Link } from '@nextui-org/link';
 
+import type { Handle } from '~/types/handle';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import {
   Dialog,
@@ -18,7 +19,7 @@ import {
   SheetTrigger,
 } from '~/components/elements/Sheet';
 
-export const handle = {
+export const handle: Handle = {
   breadcrumb: () => (
     <BreadcrumbItem to="/design-system/dialog" key="design-dialog">
       Dialog

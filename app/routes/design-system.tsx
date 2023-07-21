@@ -2,6 +2,7 @@ import { Outlet, useLocation } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import { motion } from 'framer-motion';
 
+import type { Handle } from '~/types/handle';
 import { designSystemPages } from '~/constants/tabLinks';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
@@ -14,7 +15,7 @@ export const meta = mergeMeta(() => [
   { 'twitter:description': 'This page for testing the design system' },
 ]);
 
-export const handle = {
+export const handle: Handle = {
   breadcrumb: () => (
     <BreadcrumbItem to="/design-system" key="design-system">
       Design System

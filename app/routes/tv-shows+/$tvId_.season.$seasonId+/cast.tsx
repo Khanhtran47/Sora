@@ -2,9 +2,10 @@ import { useRef } from 'react';
 import { Pagination } from '@nextui-org/pagination';
 import { useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs } from '@remix-run/node';
-import { useLoaderData, type RouteMatch } from '@remix-run/react';
+import { useLoaderData } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 
+import type { Handle } from '~/types/handle';
 import type { loader as tvSeasonIdLoader } from '~/routes/tv-shows+/$tvId_.season.$seasonId';
 import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
@@ -60,8 +61,8 @@ export const meta = mergeMeta<
   ];
 });
 
-export const handle = {
-  breadcrumb: (match: RouteMatch) => (
+export const handle: Handle = {
+  breadcrumb: ({ match }) => (
     <BreadcrumbItem
       to={`/tv-shows/${match.params.tvId}/season/${match.params.seasonId}/cast`}
       key={`tv-shows-${match.params.tvId}-season-${match.params.seasonId}-cast`}
@@ -69,13 +70,13 @@ export const handle = {
       Cast
     </BreadcrumbItem>
   ),
-  miniTitle: (_match: RouteMatch, parentMatch: RouteMatch) => ({
-    title: `${parentMatch.data?.detail?.name || parentMatch.data?.detail?.original_name} - ${
-      parentMatch.data?.seasonDetail?.name
+  miniTitle: ({ parentMatch }) => ({
+    title: `${parentMatch?.data?.detail?.name || parentMatch?.data?.detail?.original_name} - ${
+      parentMatch?.data?.seasonDetail?.name
     }`,
     subtitle: 'Cast',
-    showImage: parentMatch.data?.seasonDetail?.poster_path !== undefined,
-    imageUrl: TMDB.posterUrl(parentMatch.data?.seasonDetail?.poster_path || '', 'w92'),
+    showImage: parentMatch?.data?.seasonDetail?.poster_path !== undefined,
+    imageUrl: TMDB.posterUrl(parentMatch?.data?.seasonDetail?.poster_path || '', 'w92'),
   }),
 };
 

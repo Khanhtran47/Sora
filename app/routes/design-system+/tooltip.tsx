@@ -2,9 +2,10 @@ import { Button } from '@nextui-org/button';
 import { Link } from '@nextui-org/link';
 import { Tooltip } from '@nextui-org/tooltip';
 
+import type { Handle } from '~/types/handle';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
-export const handle = {
+export const handle: Handle = {
   breadcrumb: () => (
     <BreadcrumbItem to="/design-system/tooltip" key="design-tooltip">
       Tooltip

@@ -1,9 +1,10 @@
 import type { IMovieInfo, ISource } from '@consumet/extensions';
 import { json, type LoaderArgs } from '@remix-run/node';
-import { useLoaderData, type RouteMatch } from '@remix-run/react';
+import { useLoaderData } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import Vibrant from 'node-vibrant';
 
+import type { Handle } from '~/types/handle';
 import {
   getKissKhEpisodeStream,
   getKissKhEpisodeSubtitle,
@@ -417,8 +418,8 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   });
 };
 
-export const handle = {
-  breadcrumb: (match: RouteMatch) => (
+export const handle: Handle = {
+  breadcrumb: ({ match }) => (
     <>
       <BreadcrumbItem
         to={`/tv-shows/${match.params.tvId}/`}
@@ -444,7 +445,7 @@ export const handle = {
     isMini: false,
     shouldShowPlayer: true,
   },
-  miniTitle: (match: RouteMatch) => ({
+  miniTitle: ({ match }) => ({
     title: match.data?.detail?.name || match.data?.detail?.original_name,
     subtitle: `${match.data?.seasonDetail?.name} Episode ${match.params.episodeId}`,
     showImage: match.data?.seasonDetail?.poster_path !== undefined,

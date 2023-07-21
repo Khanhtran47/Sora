@@ -2,6 +2,7 @@ import { json, redirect, type ActionArgs, type LoaderArgs } from '@remix-run/nod
 import { useActionData, useLocation } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 
+import type { Handle } from '~/types/handle';
 import {
   commitAuthCookie,
   getSessionFromCookie,
@@ -88,7 +89,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   return null;
 };
 
-export const handle = {
+export const handle: Handle = {
   breadcrumb: () => (
     <BreadcrumbItem to="/sign-in" key="sign-in">
       Sign In

@@ -1,7 +1,8 @@
 import { json, type LoaderArgs } from '@remix-run/node';
-import { Link, useLoaderData, useNavigate, useParams, type RouteMatch } from '@remix-run/react';
+import { Link, useLoaderData, useNavigate, useParams } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 
+import type { Handle } from '~/types/handle';
 import type { loader as movieIdLoader } from '~/routes/movies+/$movieId';
 import { authenticate } from '~/services/supabase';
 import { getCredits, getRecommendation, getSimilar, getVideos } from '~/services/tmdb/tmdb.server';
@@ -66,8 +67,8 @@ export const meta = mergeMeta<typeof loader, { 'routes/movies+/$movieId': typeof
   },
 );
 
-export const handle = {
-  breadcrumb: (match: RouteMatch) => (
+export const handle: Handle = {
+  breadcrumb: ({ match }) => (
     <BreadcrumbItem
       to={`/movies/${match.params.movieId}/`}
       key={`movies-${match.params.movieId}-overview`}

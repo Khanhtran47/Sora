@@ -4,7 +4,7 @@ import { MimeType } from 'remix-image';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import Image from '~/components/elements/Image';
 
-export const handle = {
+export const handle: Handle = {
   breadcrumb: () => (
     <BreadcrumbItem to="/design-system/image" key="design-image">
       Image

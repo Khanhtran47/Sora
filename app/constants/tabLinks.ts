@@ -68,10 +68,24 @@ export const tvSeasonDetailPages = [
   { pageName: 'Photos', pageLink: '/photos' },
 ];
 
-export const trendingPages = [
-  { pageName: 'Trending Today', pageLink: '/today' },
-  { pageName: 'Trending This Week', pageLink: '/week' },
-];
+export const trendingPages = {
+  all: [
+    { pageName: 'Trending Today', pageLink: '/today' },
+    { pageName: 'Trending This Week', pageLink: '/week' },
+  ],
+  movie: [
+    { pageName: 'Trending Movies Today', pageLink: '/today' },
+    { pageName: 'Trending Movies This Week', pageLink: '/week' },
+  ],
+  tv: [
+    { pageName: 'Trending TV Shows Today', pageLink: '/today' },
+    { pageName: 'Trending TV Shows This Week', pageLink: '/week' },
+  ],
+  people: [
+    { pageName: 'Trending People Today', pageLink: '/today' },
+    { pageName: 'Trending People This Week', pageLink: '/week' },
+  ],
+};
 
 export const designSystemPages = [
   { pageName: 'Colors', pageLink: '/colors' },

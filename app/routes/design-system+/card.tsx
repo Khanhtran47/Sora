@@ -3,10 +3,11 @@ import { Card, CardBody, CardFooter, CardHeader } from '@nextui-org/card';
 import { Link } from '@nextui-org/link';
 import { MimeType } from 'remix-image';
 
+import type { Handle } from '~/types/handle';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import Image from '~/components/elements/Image';
 
-export const handle = {
+export const handle: Handle = {
   breadcrumb: () => (
     <BreadcrumbItem to="/design-system/card" key="design-card">
       Card

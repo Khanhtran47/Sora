@@ -1,9 +1,10 @@
 import { Accordion, AccordionItem } from '@nextui-org/accordion';
 import { Link } from '@nextui-org/link';
 
+import type { Handle } from '~/types/handle';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
-export const handle = {
+export const handle: Handle = {
   breadcrumb: () => (
     <BreadcrumbItem to="/design-system/accordion" key="design-accordion">
       Accordion

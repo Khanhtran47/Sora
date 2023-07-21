@@ -8,12 +8,13 @@ import { json, type LoaderArgs } from '@remix-run/node';
 import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 
+import type { Handle } from '~/types/handle';
 import { authenticate, getCountHistory, getHistory, type IHistory } from '~/services/supabase';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import HistoryItem from '~/components/media/item/HistoryItem';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
-export const handle = {
+export const handle: Handle = {
   breadcrumb: () => (
     <BreadcrumbItem to="/watch-history" key="watch-history">
       History

@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { Spacer } from '@nextui-org/spacer';
 import { json, type LoaderArgs } from '@remix-run/node';
-import { useLoaderData, type RouteMatch } from '@remix-run/react';
+import { useLoaderData } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import { Gallery, Item, type GalleryProps } from 'react-photoswipe-gallery';
 import { MimeType } from 'remix-image';
 
+import type { Handle } from '~/types/handle';
 import type { loader as tvIdLoader } from '~/routes/tv-shows+/$tvId';
 import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
@@ -60,8 +61,8 @@ export const meta = mergeMeta<typeof loader, { 'routes/tv-shows+/$tvId': typeof 
   },
 );
 
-export const handle = {
-  breadcrumb: (match: RouteMatch) => (
+export const handle: Handle = {
+  breadcrumb: ({ match }) => (
     <BreadcrumbItem
       to={`/tv-shows/${match.params.tvId}/photos`}
       key={`tv-shows-${match.params.tvId}-photos`}
@@ -69,11 +70,11 @@ export const handle = {
       Photos
     </BreadcrumbItem>
   ),
-  miniTitle: (_match: RouteMatch, parentMatch: RouteMatch) => ({
-    title: parentMatch.data?.detail?.name,
+  miniTitle: ({ parentMatch }) => ({
+    title: parentMatch?.data?.detail?.name,
     subtitle: 'Photos',
-    showImage: parentMatch.data?.detail?.poster_path !== undefined,
-    imageUrl: TMDB?.posterUrl(parentMatch.data?.detail?.poster_path || '', 'w92'),
+    showImage: parentMatch?.data?.detail?.poster_path !== undefined,
+    imageUrl: TMDB?.posterUrl(parentMatch?.data?.detail?.poster_path || '', 'w92'),
   }),
 };
 

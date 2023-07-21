@@ -1,12 +1,13 @@
 import { useEffect, useRef } from 'react';
 import { useIntersectionObserver } from '@react-hookz/web';
 import { json, type LoaderArgs } from '@remix-run/node';
-import { Outlet, useLoaderData, useLocation, type RouteMatch } from '@remix-run/react';
+import { Outlet, useLoaderData, useLocation } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import { motion, useTransform } from 'framer-motion';
 import Vibrant from 'node-vibrant';
 import { useHydrated } from 'remix-utils';
 
+import type { Handle } from '~/types/handle';
 import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
 import { getImdbRating, getMovieDetail } from '~/services/tmdb/tmdb.server';
@@ -143,13 +144,13 @@ export const meta = mergeMeta<typeof loader>(({ data, params }) => {
   ];
 });
 
-export const handle = {
-  breadcrumb: (match: RouteMatch) => (
+export const handle: Handle = {
+  breadcrumb: ({ match }) => (
     <BreadcrumbItem to={`/movies/${match.params.movieId}`} key={`movies-${match.params.movieId}`}>
       {match.data?.detail?.title || match.params.movieId}
     </BreadcrumbItem>
   ),
-  miniTitle: (match: RouteMatch) => ({
+  miniTitle: ({ match }) => ({
     title: match.data?.detail?.title,
     subtitle: 'Overview',
     showImage: match.data?.detail?.poster_path !== undefined,

@@ -2,10 +2,11 @@ import { useState } from 'react';
 import { Button } from '@nextui-org/button';
 import { Link } from '@nextui-org/link';
 
+import type { Handle } from '~/types/handle';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/elements/Popover';
 
-export const handle = {
+export const handle: Handle = {
   breadcrumb: () => (
     <BreadcrumbItem to="/design-system/popover" key="design-popover">
       Popover

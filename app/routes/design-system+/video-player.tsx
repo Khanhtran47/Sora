@@ -1,5 +1,6 @@
 import { json } from '@remix-run/node';
 
+import type { Handle } from '~/types/handle';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
 export const loader = async () =>
@@ -52,7 +53,7 @@ export const loader = async () =>
     posterPlayer: 'https://www.artplayer.org/assets/sample/poster.jpg',
   });
 
-export const handle = {
+export const handle: Handle = {
   breadcrumb: () => (
     <BreadcrumbItem to="/design-system/video-player" key="design-player">
       Player

@@ -2,10 +2,11 @@ import { Button } from '@nextui-org/button';
 import { Link } from '@nextui-org/link';
 import { toast } from 'sonner';
 
+import type { Handle } from '~/types/handle';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import Info from '~/assets/icons/InfoIcon';
 
-export const handle = {
+export const handle: Handle = {
   breadcrumb: () => (
     <BreadcrumbItem to="/design-system/toast" key="design-toast">
       Toast

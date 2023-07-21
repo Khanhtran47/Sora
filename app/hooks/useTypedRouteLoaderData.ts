@@ -39,8 +39,6 @@ import type { loader as RoutesSearchPeopleIndexLoader } from '~/routes/search+/p
 import type { loader as RoutesSearchPeopleLoader } from '~/routes/search+/people+/$peopleKeyword';
 import type { loader as RoutesSearchTvIndexLoader } from '~/routes/search+/tv+/_index';
 import type { loader as RoutesSearchTvLoader } from '~/routes/search+/tv+/$tvKeyword';
-import type { loader as RoutesTrendingTodayLoader } from '~/routes/trending+/today';
-import type { loader as RoutesTrendingThisWeekLoader } from '~/routes/trending+/week';
 import type { loader as RoutesTvsIndexLoader } from '~/routes/tv-shows+/_index';
 import type { loader as RoutesTvLoader } from '~/routes/tv-shows+/$tvId';
 import type { loader as RoutesTvSeasonLoader } from '~/routes/tv-shows+/$tvId_.season.$seasonId';
@@ -64,8 +62,6 @@ import type { loader as RoutesWatchHistoryLoader } from '~/routes/watch-history'
 type Loaders = {
   root: typeof RootLoader;
   'routes/_index': typeof RoutesIndexLoader;
-  'routes/trending+/today': typeof RoutesTrendingTodayLoader;
-  'routes/trending+/week': typeof RoutesTrendingThisWeekLoader;
   'routes/watch-history': typeof RoutesWatchHistoryLoader;
   'routes/anime+/$animeId_.episode.$episodeId.watch': typeof RoutesAnimeEpisodeWatchLoader;
   'routes/anime+/$animeId': typeof RoutesAnimeLoader;

@@ -3,6 +3,7 @@ import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
+import type { Handle } from '~/types/handle';
 import type { IMedia } from '~/types/media';
 import { getAnimePopular } from '~/services/consumet/anilist/anilist.server';
 import { i18next } from '~/services/i18n';
@@ -18,7 +19,7 @@ import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import featuredList from '~/constants/featuredList';
 import MediaList from '~/components/media/MediaList';
 
-export const handle = {
+export const handle: Handle = {
   i18n: 'home',
   disableLayoutPadding: true,
   miniTitle: () => ({

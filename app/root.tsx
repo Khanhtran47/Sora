@@ -66,6 +66,7 @@ import { i18nCookie, i18next } from './services/i18n';
 import { getUserFromCookie } from './services/supabase';
 import { getListGenre, getListLanguages } from './services/tmdb/tmdb.server';
 import tailwindStylesheetUrl from './styles/tailwind.css';
+import type { Handle } from './types/handle';
 import * as gtag from './utils/client/gtags.client';
 
 interface DocumentProps {
@@ -229,7 +230,7 @@ export const meta: V2_MetaFunction<typeof loader> = () => [
   { name: 'twitter:description', content: 'Watching movies, series, anime and more in Sora' },
 ];
 
-export const handle = {
+export const handle: Handle = {
   breadcrumb: () => (
     <BreadcrumbItem to="/" key="home">
       <Home width={16} height={16} />

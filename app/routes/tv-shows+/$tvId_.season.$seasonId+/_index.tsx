@@ -1,6 +1,6 @@
-import { type RouteMatch } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 
+import type { Handle } from '~/types/handle';
 import type { loader as tvSeasonIdLoader } from '~/routes/tv-shows+/$tvId_.season.$seasonId';
 import type { IEpisode } from '~/services/tmdb/tmdb.types';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
@@ -33,8 +33,8 @@ export const meta = mergeMeta<
   ];
 });
 
-export const handle = {
-  breadcrumb: (match: RouteMatch) => (
+export const handle: Handle = {
+  breadcrumb: ({ match }) => (
     <BreadcrumbItem
       to={`/tv-shows/${match.params.tvId}/season/${match.params.seasonId}/`}
       key={`tv-shows-${match.params.tvId}-season-${match.params.seasonId}-episodes`}

@@ -9,6 +9,7 @@ import NProgress from 'nprogress';
 // import { useTranslation } from 'react-i18next';
 import { useGlobalLoadingState } from 'remix-utils';
 
+import type { Handle } from '~/types/handle';
 import type { IMedia } from '~/types/media';
 import {
   getAnimePopular,
@@ -55,7 +56,7 @@ export const meta = mergeMeta(() => [
   { name: 'twitter:description', content: 'Discover anime in Sora' },
 ]);
 
-export const handle = {
+export const handle: Handle = {
   disableLayoutPadding: true,
   miniTitle: () => ({
     title: 'Anime',

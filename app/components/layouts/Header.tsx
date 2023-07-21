@@ -3,6 +3,7 @@ import { motion, useTransform } from 'framer-motion';
 import { useHydrated } from 'remix-utils';
 import { tv } from 'tailwind-variants';
 
+import type { Handle } from '~/types/handle';
 import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
 import { useLayout } from '~/store/layout/useLayout';
 import { useHeaderOptions } from '~/hooks/useHeader';
@@ -16,7 +17,7 @@ interface IHeaderProps {
   user?: User;
 }
 
-export const handle = {
+export const handle: Handle = {
   i18n: 'header',
 };
 

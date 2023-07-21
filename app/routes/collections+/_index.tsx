@@ -6,6 +6,7 @@ import { useLocation } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import { motion } from 'framer-motion';
 
+import type { Handle } from '~/types/handle';
 import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
 import featuredList from '~/constants/featuredList';
 import MediaList from '~/components/media/MediaList';
@@ -18,7 +19,7 @@ export const meta = mergeMeta(() => [
   { name: 'twitter:title', content: 'Sora - Collections' },
 ]);
 
-export const handle = {
+export const handle: Handle = {
   breadcrumb: () => (
     <BreadcrumbItem to="/collections" key="collections">
       Collections

@@ -86,7 +86,7 @@ export const getTrending = async (
   page?: number,
 ): Promise<IMediaList> => {
   const url = TMDB.trendingUrl(mediaType, timeWindow, language, page);
-  return getListFromTMDB(url);
+  return getListFromTMDB(url, mediaType === 'person' ? 'people' : undefined);
 };
 
 /* ======================================End of Trending Field======================================== */

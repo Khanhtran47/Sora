@@ -1,9 +1,10 @@
 import { Input } from '@nextui-org/input';
 import { Link } from '@nextui-org/link';
 
+import type { Handle } from '~/types/handle';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
-export const handle = {
+export const handle: Handle = {
   breadcrumb: () => (
     <BreadcrumbItem to="/design-system/input" key="design-input">
       Input

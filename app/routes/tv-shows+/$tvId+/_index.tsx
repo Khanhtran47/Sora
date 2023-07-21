@@ -2,10 +2,11 @@ import { Avatar } from '@nextui-org/avatar';
 import { Card, CardBody } from '@nextui-org/card';
 import { useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs } from '@remix-run/node';
-import { Link, useLoaderData, useNavigate, useParams, type RouteMatch } from '@remix-run/react';
+import { Link, useLoaderData, useNavigate, useParams } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import { MimeType } from 'remix-image';
 
+import type { Handle } from '~/types/handle';
 import type { loader as tvIdLoader } from '~/routes/tv-shows+/$tvId';
 import { authenticate } from '~/services/supabase';
 import { getCredits, getRecommendation, getSimilar } from '~/services/tmdb/tmdb.server';
@@ -69,8 +70,8 @@ export const meta = mergeMeta<typeof loader, { 'routes/tv-shows+/$tvId': typeof 
   },
 );
 
-export const handle = {
-  breadcrumb: (match: RouteMatch) => (
+export const handle: Handle = {
+  breadcrumb: ({ match }) => (
     <BreadcrumbItem
       to={`/tv-shows/${match.params.tvId}/`}
       key={`tv-shows-${match.params.tvId}-overview`}

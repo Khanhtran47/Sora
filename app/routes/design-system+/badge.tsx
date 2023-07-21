@@ -2,9 +2,10 @@ import { Avatar } from '@nextui-org/avatar';
 import { Badge } from '@nextui-org/badge';
 import { Link } from '@nextui-org/link';
 
+import type { Handle } from '~/types/handle';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
-export const handle = {
+export const handle: Handle = {
   breadcrumb: () => (
     <BreadcrumbItem to="/design-system/badge" key="design-badge">
       Badge

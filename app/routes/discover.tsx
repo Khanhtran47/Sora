@@ -1,6 +1,7 @@
 import { Outlet } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 
+import type { Handle } from '~/types/handle';
 import { discoverPages } from '~/constants/tabLinks';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
@@ -16,7 +17,7 @@ export const meta = mergeMeta(() => [
   { name: 'twitter:image', content: 'https://sorachill.vercel.app/api/ogimage?it=discover' },
 ]);
 
-export const handle = {
+export const handle: Handle = {
   breadcrumb: () => (
     <BreadcrumbItem to="/discover" key="discover">
       Discover

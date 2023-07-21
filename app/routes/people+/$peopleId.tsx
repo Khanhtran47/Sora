@@ -1,8 +1,9 @@
 import { Spacer } from '@nextui-org/spacer';
 import { json, type LoaderArgs } from '@remix-run/node';
-import { Outlet, useLoaderData, type RouteMatch } from '@remix-run/react';
+import { Outlet, useLoaderData } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 
+import type { Handle } from '~/types/handle';
 import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
 import { getPeopleDetail, getPeopleExternalIds } from '~/services/tmdb/tmdb.server';
@@ -71,8 +72,8 @@ export const meta = mergeMeta<typeof loader>(({ data, params }) => {
   ];
 });
 
-export const handle = {
-  breadcrumb: (match: RouteMatch) => (
+export const handle: Handle = {
+  breadcrumb: ({ match }) => (
     <>
       <BreadcrumbItem to="/people" key="people">
         Popular People
@@ -87,9 +88,8 @@ export const handle = {
   ),
   showTabLink: true,
   tabLinkPages: peopleDetailPages,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  tabLinkTo: (params: any) => `/people/${params.peopleId}`,
-  miniTitle: (match: RouteMatch) => ({
+  tabLinkTo: ({ params }) => `/people/${params.peopleId}`,
+  miniTitle: ({ match }) => ({
     title: match.data?.detail?.name || 'People',
     subtitle: 'Overview',
     showImage: match.data?.detail?.profile_path !== undefined,

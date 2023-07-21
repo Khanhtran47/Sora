@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Link } from '@nextui-org/link';
 
+import type { Handle } from '~/types/handle';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import Slider from '~/components/elements/Slider';
 
-export const handle = {
+export const handle: Handle = {
   breadcrumb: () => (
     <BreadcrumbItem to="/design-system/slider" key="design-slider">
       Slider

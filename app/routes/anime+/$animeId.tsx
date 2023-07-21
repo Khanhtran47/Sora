@@ -1,11 +1,12 @@
 import { useEffect, useRef } from 'react';
 import { useIntersectionObserver } from '@react-hookz/web';
 import { json, type LoaderArgs } from '@remix-run/node';
-import { Outlet, useLoaderData, useLocation, type RouteMatch } from '@remix-run/react';
+import { Outlet, useLoaderData, useLocation } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import { motion, useTransform } from 'framer-motion';
 import { useHydrated } from 'remix-utils';
 
+import type { Handle } from '~/types/handle';
 import { getAnimeInfo } from '~/services/consumet/anilist/anilist.server';
 import getProviderList from '~/services/provider.server';
 import { authenticate } from '~/services/supabase';
@@ -74,13 +75,13 @@ export const meta = mergeMeta<typeof loader>(({ data, params }) => {
   ];
 });
 
-export const handle = {
-  breadcrumb: (match: RouteMatch) => (
+export const handle: Handle = {
+  breadcrumb: ({ match }) => (
     <BreadcrumbItem to={`/anime/${match.params.animeId}`} key={`anime-${match.params.animeId}`}>
       {match.data?.detail?.title?.english || match.data?.detail?.title?.romaji}
     </BreadcrumbItem>
   ),
-  miniTitle: (match: RouteMatch) => ({
+  miniTitle: ({ match }) => ({
     title:
       match.data?.detail?.title?.userPreferred ||
       match.data?.detail?.title?.english ||

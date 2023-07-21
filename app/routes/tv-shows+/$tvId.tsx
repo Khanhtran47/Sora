@@ -1,12 +1,13 @@
 import { useEffect, useRef } from 'react';
 import { useIntersectionObserver } from '@react-hookz/web';
 import { json, type LoaderArgs } from '@remix-run/node';
-import { Outlet, useLoaderData, useLocation, type RouteMatch } from '@remix-run/react';
+import { Outlet, useLoaderData, useLocation } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import { motion, useTransform } from 'framer-motion';
 import Vibrant from 'node-vibrant';
 import { useHydrated } from 'remix-utils';
 
+import type { Handle } from '~/types/handle';
 import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
 import { getImdbRating, getTvShowDetail, getTvShowIMDBId } from '~/services/tmdb/tmdb.server';
@@ -135,13 +136,13 @@ export const meta = mergeMeta<typeof loader>(({ data, params }) => {
   ];
 });
 
-export const handle = {
-  breadcrumb: (match: RouteMatch) => (
+export const handle: Handle = {
+  breadcrumb: ({ match }) => (
     <BreadcrumbItem to={`/tv-shows/${match.params.tvId}`} key={`tv-shows-${match.params.tvId}`}>
       {match.data?.detail?.name || match.data?.detail?.original_name || match.params.tvId}
     </BreadcrumbItem>
   ),
-  miniTitle: (match: RouteMatch) => ({
+  miniTitle: ({ match }) => ({
     title: match.data?.detail?.name,
     subtitle: 'Overview',
     showImage: match.data?.detail?.poster_path !== undefined,

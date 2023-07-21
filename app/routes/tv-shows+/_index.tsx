@@ -9,6 +9,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import NProgress from 'nprogress';
 import { useGlobalLoadingState } from 'remix-utils';
 
+import type { Handle } from '~/types/handle';
 import type { IMedia } from '~/types/media';
 import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
@@ -98,7 +99,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   );
 };
 
-export const handle = {
+export const handle: Handle = {
   i18n: 'tv',
   disableLayoutPadding: true,
   miniTitle: () => ({

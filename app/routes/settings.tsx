@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { MimeType } from 'remix-image';
 import { ClientOnly, useHydrated } from 'remix-utils';
 
+import type { Handle } from '~/types/handle';
 import { getBackgroundTitleBarColor, setMetaThemeColor } from '~/utils/client/meta-tags.client';
 import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
@@ -64,7 +65,7 @@ export const meta = mergeMeta(() => [
   { name: 'twitter:description', content: 'Settings' },
 ]);
 
-export const handle = {
+export const handle: Handle = {
   breadcrumb: () => (
     <BreadcrumbItem to="/settings" key="settings">
       Settings

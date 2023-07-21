@@ -3,10 +3,11 @@ import { Pagination } from '@nextui-org/pagination';
 import { Spacer } from '@nextui-org/spacer';
 import { useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs } from '@remix-run/node';
-import { useLoaderData, useLocation, type RouteMatch } from '@remix-run/react';
+import { useLoaderData, useLocation } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import { motion } from 'framer-motion';
 
+import type { Handle } from '~/types/handle';
 import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
 import { getListDetail } from '~/services/tmdb/tmdb.server';
@@ -56,8 +57,8 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   );
 };
 
-export const handle = {
-  breadcrumb: (match: RouteMatch) => (
+export const handle: Handle = {
+  breadcrumb: ({ match }) => (
     <>
       <BreadcrumbItem to="/collections" key="collections">
         Collections
@@ -70,7 +71,7 @@ export const handle = {
       </BreadcrumbItem>
     </>
   ),
-  miniTitle: (match: RouteMatch) => ({
+  miniTitle: ({ match }) => ({
     title: match.data?.detail?.name || 'Collection',
     showImage: false,
   }),

@@ -2,9 +2,10 @@ import { useRef } from 'react';
 import { Pagination } from '@nextui-org/pagination';
 import { useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs } from '@remix-run/node';
-import { useLoaderData, type RouteMatch } from '@remix-run/react';
+import { useLoaderData } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 
+import type { Handle } from '~/types/handle';
 import type { loader as movieIdLoader } from '~/routes/movies+/$movieId';
 import { authenticate } from '~/services/supabase';
 import { getCredits } from '~/services/tmdb/tmdb.server';
@@ -56,8 +57,8 @@ export const meta = mergeMeta<typeof loader, { 'routes/movies+/$movieId': typeof
   },
 );
 
-export const handle = {
-  breadcrumb: (match: RouteMatch) => (
+export const handle: Handle = {
+  breadcrumb: ({ match }) => (
     <BreadcrumbItem
       to={`/movies/${match.params.movieId}/cast`}
       key={`movies-${match.params.movieId}-cast`}
@@ -65,11 +66,11 @@ export const handle = {
       Cast
     </BreadcrumbItem>
   ),
-  miniTitle: (_match: RouteMatch, parentMatch: RouteMatch) => ({
-    title: parentMatch.data?.detail?.title,
+  miniTitle: ({ parentMatch }) => ({
+    title: parentMatch?.data?.detail?.title,
     subtitle: 'Cast',
-    showImage: parentMatch.data?.detail?.poster_path !== undefined,
-    imageUrl: TMDB?.posterUrl(parentMatch.data?.detail?.poster_path || '', 'w92'),
+    showImage: parentMatch?.data?.detail?.poster_path !== undefined,
+    imageUrl: TMDB?.posterUrl(parentMatch?.data?.detail?.poster_path || '', 'w92'),
   }),
 };
 

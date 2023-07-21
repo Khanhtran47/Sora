@@ -2,9 +2,10 @@ import { useRef } from 'react';
 import { Pagination } from '@nextui-org/pagination';
 import { useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs } from '@remix-run/node';
-import { useLoaderData, type RouteMatch } from '@remix-run/react';
+import { useLoaderData } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 
+import type { Handle } from '~/types/handle';
 import type { loader as tvIdLoader } from '~/routes/tv-shows+/$tvId';
 import { authenticate } from '~/services/supabase';
 import { getCredits } from '~/services/tmdb/tmdb.server';
@@ -54,8 +55,8 @@ export const meta = mergeMeta<typeof loader, { 'routes/tv-shows+/$tvId': typeof 
   },
 );
 
-export const handle = {
-  breadcrumb: (match: RouteMatch) => (
+export const handle: Handle = {
+  breadcrumb: ({ match }) => (
     <BreadcrumbItem
       to={`/tv-shows/${match.params.tvId}/crew`}
       key={`tv-shows-${match.params.tvId}-crew`}
@@ -63,11 +64,11 @@ export const handle = {
       Crew
     </BreadcrumbItem>
   ),
-  miniTitle: (_match: RouteMatch, parentMatch: RouteMatch) => ({
-    title: parentMatch.data?.detail?.name,
+  miniTitle: ({ parentMatch }) => ({
+    title: parentMatch?.data?.detail?.name,
     subtitle: 'Crew',
-    showImage: parentMatch.data?.detail?.poster_path !== undefined,
-    imageUrl: TMDB?.posterUrl(parentMatch.data?.detail?.poster_path || '', 'w92'),
+    showImage: parentMatch?.data?.detail?.poster_path !== undefined,
+    imageUrl: TMDB?.posterUrl(parentMatch?.data?.detail?.poster_path || '', 'w92'),
   }),
 };
 

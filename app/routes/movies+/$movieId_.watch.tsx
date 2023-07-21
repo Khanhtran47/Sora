@@ -1,9 +1,10 @@
 import type { ISource } from '@consumet/extensions';
 import { json, type LoaderArgs } from '@remix-run/node';
-import { useLoaderData, type RouteMatch } from '@remix-run/react';
+import { useLoaderData } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import Vibrant from 'node-vibrant';
 
+import type { Handle } from '~/types/handle';
 import {
   getKissKhEpisodeStream,
   getKissKhEpisodeSubtitle,
@@ -297,8 +298,8 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   );
 };
 
-export const handle = {
-  breadcrumb: (match: RouteMatch) => (
+export const handle: Handle = {
+  breadcrumb: ({ match }) => (
     <>
       <BreadcrumbItem
         to={`/movies/${match.params.movieId}/`}
@@ -318,7 +319,7 @@ export const handle = {
     isMini: false,
     shouldShowPlayer: true,
   },
-  miniTitle: (match: RouteMatch) => ({
+  miniTitle: ({ match }) => ({
     title: match.data?.detail?.title,
     subtitle: 'Watch',
     showImage: match.data?.detail?.poster_path !== undefined,

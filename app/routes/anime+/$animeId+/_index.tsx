@@ -1,10 +1,11 @@
 import { useMemo } from 'react';
 import { Avatar } from '@nextui-org/avatar';
 import { Card, CardBody } from '@nextui-org/card';
-import { useParams, type RouteMatch } from '@remix-run/react';
+import { useParams } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import { MimeType } from 'remix-image';
 
+import type { Handle } from '~/types/handle';
 import type { IMedia } from '~/types/media';
 import type { loader as animeIdLoader } from '~/routes/anime+/$animeId';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
@@ -53,8 +54,8 @@ export const meta = mergeMeta<{}, { 'routes/anime+/$animeId': typeof animeIdLoad
   },
 );
 
-export const handle = {
-  breadcrumb: (match: RouteMatch) => (
+export const handle: Handle = {
+  breadcrumb: ({ match }) => (
     <BreadcrumbItem
       to={`/anime/${match.params.animeId}/`}
       key={`anime-${match.params.animeId}-overview`}

@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from 'react';
-import { useLocation, useMatches } from '@remix-run/react';
+import { useLocation, useMatches, useParams } from '@remix-run/react';
 import { isEdgeChromium } from 'react-device-detect';
+import { useTranslation } from 'react-i18next';
 
 import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
 import { useLayout } from '~/store/layout/useLayout';
@@ -8,6 +9,8 @@ import { useLayout } from '~/store/layout/useLayout';
 function useHeaderOptions() {
   const matches = useMatches();
   const location = useLocation();
+  const { t } = useTranslation();
+  const params = useParams();
   const { backgroundColor } = useHeaderStyle((state) => state);
 
   const isShowMobileHeader = useMemo(
@@ -40,18 +43,22 @@ function useHeaderOptions() {
   const currentMiniTitle = useMemo(() => {
     const currentMatch = matches.filter((match) => match.handle?.miniTitle);
     if (currentMatch?.length > 0 && currentMatch?.length < 2) {
-      return currentMatch[currentMatch.length - 1].handle?.miniTitle(
-        currentMatch[currentMatch.length - 1],
-      );
+      return currentMatch[currentMatch.length - 1].handle?.miniTitle({
+        match: currentMatch[currentMatch.length - 1],
+        t, // for translations
+        params,
+      });
     }
     if (currentMatch?.length > 1) {
-      return currentMatch[currentMatch.length - 1].handle?.miniTitle(
-        currentMatch[currentMatch.length - 1],
-        currentMatch[currentMatch.length - 2], // for titles that need from parent route
-      );
+      return currentMatch[currentMatch.length - 1].handle?.miniTitle({
+        match: currentMatch[currentMatch.length - 1],
+        parentMatch: currentMatch[currentMatch.length - 2], // for titles that need from parent route
+        t, // for translations
+        params,
+      });
     }
     return undefined;
-  }, [matches]);
+  }, [matches, params, t]);
 
   const headerBackgroundColor = useMemo(() => {
     if (customHeaderBackgroundColor) {

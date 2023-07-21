@@ -2,12 +2,13 @@ import { useEffect, useRef, useState } from 'react';
 import { Card, CardBody, CardFooter } from '@nextui-org/card';
 import { useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs } from '@remix-run/node';
-import { useFetcher, useLoaderData, type RouteMatch } from '@remix-run/react';
+import { useFetcher, useLoaderData } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import { AnimatePresence, motion, type PanInfo } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
 import { MimeType } from 'remix-image';
 
+import type { Handle } from '~/types/handle';
 import type { loader as movieIdLoader } from '~/routes/movies+/$movieId';
 import { authenticate } from '~/services/supabase';
 import { getVideos } from '~/services/tmdb/tmdb.server';
@@ -56,8 +57,8 @@ export const meta = mergeMeta<typeof loader, { 'routes/movies+/$movieId': typeof
   },
 );
 
-export const handle = {
-  breadcrumb: (match: RouteMatch) => (
+export const handle: Handle = {
+  breadcrumb: ({ match }) => (
     <BreadcrumbItem
       to={`/movies/${match.params.movieId}/videos`}
       key={`movies-${match.params.movieId}-videos`}
@@ -65,11 +66,11 @@ export const handle = {
       Videos
     </BreadcrumbItem>
   ),
-  miniTitle: (_match: RouteMatch, parentMatch: RouteMatch) => ({
-    title: parentMatch.data?.detail?.title,
+  miniTitle: ({ parentMatch }) => ({
+    title: parentMatch?.data?.detail?.title,
     subtitle: 'Videos',
-    showImage: parentMatch.data?.detail?.poster_path !== undefined,
-    imageUrl: TMDB?.posterUrl(parentMatch.data?.detail?.poster_path || '', 'w92'),
+    showImage: parentMatch?.data?.detail?.poster_path !== undefined,
+    imageUrl: TMDB?.posterUrl(parentMatch?.data?.detail?.poster_path || '', 'w92'),
   }),
 };
 

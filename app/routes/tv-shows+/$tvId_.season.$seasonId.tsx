@@ -3,13 +3,14 @@ import { Avatar } from '@nextui-org/avatar';
 import { Card, CardBody, CardHeader } from '@nextui-org/card';
 import { useIntersectionObserver, useMeasure, useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs } from '@remix-run/node';
-import { Outlet, useLoaderData, useParams, type RouteMatch } from '@remix-run/react';
+import { Outlet, useLoaderData, useParams } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import { motion, useTransform } from 'framer-motion';
 import Vibrant from 'node-vibrant';
 import { MimeType } from 'remix-image';
 import { useHydrated } from 'remix-utils';
 
+import type { Handle } from '~/types/handle';
 import { i18next } from '~/services/i18n';
 import getProviderList from '~/services/provider.server';
 import { authenticate } from '~/services/supabase';
@@ -130,8 +131,8 @@ export const meta = mergeMeta<typeof loader>(({ data, params }) => {
   ];
 });
 
-export const handle = {
-  breadcrumb: (match: RouteMatch) => (
+export const handle: Handle = {
+  breadcrumb: ({ match }) => (
     <>
       <BreadcrumbItem
         to={`/tv-shows/${match.params.tvId}/`}
@@ -147,7 +148,7 @@ export const handle = {
       </BreadcrumbItem>
     </>
   ),
-  miniTitle: (match: RouteMatch) => ({
+  miniTitle: ({ match }) => ({
     title: `${match.data?.detail?.name || match.data?.detail?.original_name} - ${
       match.data?.seasonDetail?.name
     }`,

@@ -3,6 +3,7 @@ import { Button } from '@nextui-org/button';
 import { Link } from '@nextui-org/link';
 import { Switch } from '@nextui-org/switch';
 
+import type { Handle } from '~/types/handle';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import {
   Select,
@@ -14,7 +15,7 @@ import {
 import Search from '~/assets/icons/SearchIcon';
 import Settings from '~/assets/icons/SettingsIcon';
 
-export const handle = {
+export const handle: Handle = {
   breadcrumb: () => (
     <BreadcrumbItem to="/design-system/button" key="design-button">
       Button

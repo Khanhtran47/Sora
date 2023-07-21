@@ -1,9 +1,10 @@
 import { Link } from '@nextui-org/link';
 import { Progress } from '@nextui-org/progress';
 
+import type { Handle } from '~/types/handle';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
-export const handle = {
+export const handle: Handle = {
   breadcrumb: () => (
     <BreadcrumbItem to="/design-system/progress" key="design-progress">
       Progress

@@ -6,6 +6,7 @@ import { isMobile } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
 import { useHydrated } from 'remix-utils';
 
+import type { Handle } from '~/types/handle';
 import type { IMedia } from '~/types/media';
 import { getAnimeTrending } from '~/services/consumet/anilist/anilist.server';
 import { authenticate } from '~/services/supabase';
@@ -41,7 +42,7 @@ export const meta = mergeMeta(() => [
   { name: 'twitter:description', content: 'Search Anime on Sora' },
 ]);
 
-export const handle = {
+export const handle: Handle = {
   breadcrumb: () => (
     <BreadcrumbItem to="/search/anime" aria-label="Search Anime">
       Search Anime

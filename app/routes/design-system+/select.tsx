@@ -1,5 +1,6 @@
 import { Link } from '@nextui-org/link';
 
+import type { Handle } from '~/types/handle';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import {
   Select,
@@ -9,7 +10,7 @@ import {
   SelectValue,
 } from '~/components/elements/Select';
 
-export const handle = {
+export const handle: Handle = {
   breadcrumb: () => (
     <BreadcrumbItem to="/design-system/select" key="design-select">
       Select

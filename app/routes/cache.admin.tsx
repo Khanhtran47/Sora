@@ -14,6 +14,7 @@ import type { CacheEntry } from 'cachified';
 import { motion } from 'framer-motion';
 import { badRequest } from 'remix-utils';
 
+import type { Handle } from '~/types/handle';
 import { getAllCacheKeys, lruCache, searchCacheKeys } from '~/services/lru-cache';
 import { getUserFromCookie } from '~/services/supabase';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
@@ -66,7 +67,7 @@ export const meta = mergeMeta(() => [
   { name: 'description', content: 'Cache Admin' },
 ]);
 
-export const handle = {
+export const handle: Handle = {
   breadcrumb: () => (
     <BreadcrumbItem to="/cache/admin" key="cache-admin">
       Cache Admin

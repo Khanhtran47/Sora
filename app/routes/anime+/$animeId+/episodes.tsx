@@ -1,7 +1,8 @@
 import { json, type LoaderArgs } from '@remix-run/node';
-import { useLoaderData, type RouteMatch } from '@remix-run/react';
+import { useLoaderData } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 
+import type { Handle } from '~/types/handle';
 import type { loader as animeIdLoader } from '~/routes/anime+/$animeId';
 import { getAnimeEpisodeInfo } from '~/services/consumet/anilist/anilist.server';
 import { authenticate } from '~/services/supabase';
@@ -69,8 +70,8 @@ export const meta = mergeMeta<{}, { 'routes/anime+/$animeId': typeof animeIdLoad
   },
 );
 
-export const handle = {
-  breadcrumb: (match: RouteMatch) => (
+export const handle: Handle = {
+  breadcrumb: ({ match }) => (
     <BreadcrumbItem
       to={`/anime/${match.params.animeId}/episodes`}
       key={`anime-${match.params.animeId}-episodes`}
@@ -78,7 +79,7 @@ export const handle = {
       Episodes
     </BreadcrumbItem>
   ),
-  miniTitle: (_match: RouteMatch, parentMatch?: RouteMatch) => ({
+  miniTitle: ({ parentMatch }) => ({
     title:
       parentMatch?.data?.detail?.title?.userPreferred ||
       parentMatch?.data?.detail?.title?.english ||

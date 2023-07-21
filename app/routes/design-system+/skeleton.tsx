@@ -2,9 +2,10 @@ import { Card } from '@nextui-org/card';
 import { Link } from '@nextui-org/link';
 import { Skeleton } from '@nextui-org/skeleton';
 
+import type { Handle } from '~/types/handle';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
-export const handle = {
+export const handle: Handle = {
   breadcrumb: () => (
     <BreadcrumbItem to="/design-system/skeleton" key="design-skeleton">
       Skeleton

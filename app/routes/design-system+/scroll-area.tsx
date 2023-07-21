@@ -1,5 +1,6 @@
 import { Link } from '@nextui-org/link';
 
+import type { Handle } from '~/types/handle';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import {
   ScrollArea,
@@ -8,7 +9,7 @@ import {
   ScrollViewport,
 } from '~/components/elements/ScrollArea';
 
-export const handle = {
+export const handle: Handle = {
   breadcrumb: () => (
     <BreadcrumbItem to="/design-system/scroll-area" key="design-scroll-area">
       Scroll Area

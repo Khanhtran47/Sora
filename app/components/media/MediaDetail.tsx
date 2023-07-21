@@ -14,7 +14,7 @@ import { useHydrated } from 'remix-utils';
 import { tv } from 'tailwind-variants';
 import tinycolor from 'tinycolor2';
 
-import type { ColorPalette } from '~/routes/api+/api.color-palette';
+import type { ColorPalette } from '~/routes/api+/color-palette';
 import type { IAnimeInfo } from '~/services/consumet/anilist/anilist.types';
 import type { IMovieDetail, IMovieTranslations, ITvShowDetail } from '~/services/tmdb/tmdb.types';
 import { WebShareLink } from '~/utils/client/pwa-utils.client';

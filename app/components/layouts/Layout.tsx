@@ -192,12 +192,14 @@ const Layout = (props: ILayout) => {
     () => matches.some((match) => match.handle?.disableLayoutPadding === true),
     [matches],
   );
-  const currentTabLinkPages = useMemo(
-    () => matches.find((match) => match.handle?.showTabLink)?.handle?.tabLinkPages,
-    [matches],
-  );
+  const currentTabLinkPages = useMemo(() => {
+    const currentMatch = matches.find((match) => match.handle?.showTabLink);
+    if (typeof currentMatch?.handle?.tabLinkPages === 'function')
+      return currentMatch?.handle?.tabLinkPages({ params });
+    return currentMatch?.handle?.tabLinkPages;
+  }, [matches]);
   const currentTabLinkTo = useMemo(
-    () => matches.find((match) => match.handle?.showTabLink)?.handle?.tabLinkTo(params),
+    () => matches.find((match) => match.handle?.showTabLink)?.handle?.tabLinkTo({ params }),
     [matches],
   );
   const customHeaderBackgroundColor = useMemo(
