@@ -56,17 +56,17 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const handle: Handle = {
-  breadcrumb: ({ params }) => {
+  breadcrumb: ({ params, t }) => {
     const { mediaType } = params;
     return (
       <BreadcrumbItem to={`/trending/${mediaType}/today`} key={`trending-${mediaType}-today`}>
-        Trending {mediaType} today
+        {t(`trending.${mediaType}.day`)}
       </BreadcrumbItem>
     );
   },
-  miniTitle: ({ params }) => ({
-    title: `Trending ${params.mediaType}`,
-    subtitle: 'Today',
+  miniTitle: ({ params, t }) => ({
+    title: t(`trending-${params.mediaType}`),
+    subtitle: t('today'),
     showImage: false,
   }),
   showListViewChangeButton: true,
@@ -111,7 +111,7 @@ const TrendingToday = () => {
         genresTv={rootData?.genresTv}
         items={todayTrending?.items}
         itemsType={mediaType === 'all' ? 'movie-tv' : (mediaType as 'movie' | 'tv' | 'people')}
-        listName={t(`trending-${mediaType}-today`)}
+        listName={t(`trending.${mediaType}.day`)}
         listType="grid"
         showListTypeChangeButton
         totalPages={todayTrending?.totalPages}

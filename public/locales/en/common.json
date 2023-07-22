@@ -1,10 +1,9 @@
 {
-  "title": "Remix App EN",
-  "viewMore": "View more",
-  "todayTrending": "Today Trending",
-  "weekTrending": "Trending this week",
-  "discoverMovies": "Discover Movies",
-  "discoverTv": "Discover Tv Shows",
+  "title": "Sora",
+  "view-more": "View more",
+  "discover-movies": "Discover Movies",
+  "discover-tv": "Discover Tv Shows",
+  "discover-anime": "Discover Anime",
   "popular-people": "Popular People",
   "popular-movies": "Popular Movies",
   "top-rated-movies": "Top Rated Movies",
@@ -14,6 +13,13 @@
   "top-rated-tv-shows": "Top rated - Tv shows",
   "on-the-air-tv-shows": "On the air - Tv shows",
   "airing-today-tv-shows": "Airing today - Tv shows",
+  "popular-anime": "Popular Anime",
+  "trending-all": "Trending",
+  "trending-anime": "Trending Anime",
+  "trending-movies": "Trending Movies",
+  "trending-tv-shows": "Trending Tv Shows",
+  "trending-people": "Trending People",
+  "recent-episodes": "Recent Episodes",
   "keywords": "Keywords",
   "show-hide-filter": "Show/Hide Filter",
   "keywords-helper": "Filter by keywords",
@@ -87,5 +93,42 @@
       "people": "Enter people name and search",
       "anime": "Enter anime name and search"
     }
-  }
+  },
+  "settings": "Settings",
+  "anime": "Anime",
+  "movies": "Movies",
+  "tv-shows": "TV Shows",
+  "overview": "Overview",
+  "cast": "Cast",
+  "crew": "Crew",
+  "videos": "Videos",
+  "photos": "Photos",
+  "recommendations": "Recommendations",
+  "similar": "Similar",
+  "episodes": "Episodes",
+  "character": "Character",
+  "staff": "Staff",
+  "credits": "Credits",
+  "media": "Media",
+  "trending": {
+    "title": "Trending",
+    "all": {
+      "day": "Trending All Today",
+      "week": "Trending All This Week"
+    },
+    "movie": {
+      "day": "Trending Movies Today",
+      "week": "Trending Movies This Week"
+    },
+    "tv": {
+      "day": "Trending TV Shows Today",
+      "week": "Trending TV Shows This Week"
+    },
+    "people": {
+      "day": "Trending People Today",
+      "week": "Trending People This Week"
+    }
+  },
+  "today": "Today",
+  "week": "This Week"
 }

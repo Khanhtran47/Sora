@@ -57,17 +57,17 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const handle: Handle = {
-  breadcrumb: ({ params }) => {
+  breadcrumb: ({ params, t }) => {
     const { mediaType } = params;
     return (
       <BreadcrumbItem to={`/trending/${mediaType}/week`} key={`trending-${mediaType}-week`}>
-        Trending {mediaType} this week
+        {t(`trending.${mediaType}.week`)}
       </BreadcrumbItem>
     );
   },
-  miniTitle: ({ params }) => ({
-    title: `Trending ${params.mediaType}`,
-    subtitle: 'This Week',
+  miniTitle: ({ params, t }) => ({
+    title: t(`trending-${params.mediaType}`),
+    subtitle: t('week'),
     showImage: false,
   }),
   showListViewChangeButton: true,
@@ -112,7 +112,7 @@ const TrendingWeek = () => {
         genresTv={rootData?.genresTv}
         items={weekTrending?.items}
         itemsType={mediaType === 'all' ? 'movie-tv' : (mediaType as 'movie' | 'tv' | 'people')}
-        listName={t(`trending-${mediaType}-week`)}
+        listName={t(`trending.${mediaType}.week`)}
         listType="grid"
         showListTypeChangeButton
         totalPages={weekTrending?.totalPages}

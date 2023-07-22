@@ -84,7 +84,7 @@ const TrendingRoute = () => {
         items={todayTrending}
         itemsType="movie-tv"
         key="slider-card-trending-today-all"
-        listName={t('trending-today-all')}
+        listName={t('trending.all.day')}
         listType="slider-card"
         navigationButtons
         onClickViewMore={() => onClickViewMore('all')}
@@ -96,7 +96,7 @@ const TrendingRoute = () => {
         items={todayMoviesTrending}
         itemsType="movie"
         key="slider-card-trending-today-movies"
-        listName={t('trending-today-movies')}
+        listName={t('trending.movie.day')}
         listType="slider-card"
         navigationButtons
         onClickViewMore={() => onClickViewMore('movie')}
@@ -108,7 +108,7 @@ const TrendingRoute = () => {
         items={todayShowsTrending}
         itemsType="tv"
         key="slider-card-trending-today-tv"
-        listName={t('trending-today-tv')}
+        listName={t('trending.tv.day')}
         listType="slider-card"
         navigationButtons
         onClickViewMore={() => onClickViewMore('tv')}
@@ -118,7 +118,7 @@ const TrendingRoute = () => {
         items={todayAnimeTrending}
         itemsType="anime"
         key="slider-card-trending-today-anime"
-        listName={t('trending-today-anime')}
+        listName={t('trending-anime')}
         listType="slider-card"
         navigationButtons
         onClickViewMore={() => onClickViewMore('anime')}
@@ -128,7 +128,7 @@ const TrendingRoute = () => {
         items={todayPeopleTrending}
         itemsType="people"
         key="slider-card-trending-today-people"
-        listName={t('trending-today-people')}
+        listName={t('trending.people.day')}
         listType="slider-card"
         navigationButtons
         onClickViewMore={() => onClickViewMore('people')}

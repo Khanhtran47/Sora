@@ -100,7 +100,6 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export const handle: Handle = {
-  i18n: 'tv',
   disableLayoutPadding: true,
   miniTitle: () => ({
     title: 'TV Shows',

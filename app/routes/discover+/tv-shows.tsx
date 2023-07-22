@@ -140,7 +140,7 @@ const DiscoverTvShows = () => {
         items={shows.items}
         itemsType="tv"
         languages={rootData?.languages}
-        listName={t('discoverTv')}
+        listName={t('discover-tv')}
         listType="grid"
         showFilterButton
         showListTypeChangeButton

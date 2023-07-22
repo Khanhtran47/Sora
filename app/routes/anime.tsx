@@ -16,9 +16,9 @@ export const meta = mergeMeta(() => [
 ]);
 
 export const handle: Handle = {
-  breadcrumb: () => (
+  breadcrumb: ({ t }) => (
     <BreadcrumbItem to="/anime" key="anime-index">
-      Anime
+      {t('anime')}
     </BreadcrumbItem>
   ),
   showTabLink: true,

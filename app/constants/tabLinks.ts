@@ -1,27 +1,27 @@
 export const moviePages = [
-  { pageName: 'Popular Movies', pageLink: '/popular' },
-  { pageName: 'Now Playing Movies', pageLink: '/now-playing' },
-  { pageName: 'Upcoming Movies', pageLink: '/upcoming' },
-  { pageName: 'Top Rated Movies', pageLink: '/top-rated' },
+  { pageName: 'popular-movies', pageLink: '/popular' },
+  { pageName: 'now-playing-movies', pageLink: '/now-playing' },
+  { pageName: 'upcoming-movies', pageLink: '/upcoming' },
+  { pageName: 'top-rated-movies', pageLink: '/top-rated' },
 ];
 
 export const tvPages = [
-  { pageName: 'Popular Tv Shows', pageLink: '/popular' },
-  { pageName: 'Airing Today Tv Shows', pageLink: '/airing-today' },
-  { pageName: 'On the air Tv Shows', pageLink: '/on-the-air' },
-  { pageName: 'Top Rated Tv Shows', pageLink: '/top-rated' },
+  { pageName: 'popular-tv-shows', pageLink: '/popular' },
+  { pageName: 'airing-today-tv-shows', pageLink: '/airing-today' },
+  { pageName: 'on-the-air-tv-shows', pageLink: '/on-the-air' },
+  { pageName: 'top-rated-tv-shows', pageLink: '/top-rated' },
 ];
 
 export const animePages = [
-  { pageName: 'Popular Anime', pageLink: '/popular' },
-  { pageName: 'Trending Anime', pageLink: '/trending' },
-  { pageName: 'Recent Episodes', pageLink: '/recent-episodes' },
+  { pageName: 'popular-anime', pageLink: '/popular' },
+  { pageName: 'trending-anime', pageLink: '/trending' },
+  { pageName: 'recent-episodes', pageLink: '/recent-episodes' },
 ];
 
 export const discoverPages = [
-  { pageName: 'Discover Movies', pageLink: '/movies' },
-  { pageName: 'Discover TV Shows', pageLink: '/tv-shows' },
-  { pageName: 'Discover Anime', pageLink: '/anime' },
+  { pageName: 'discover-movies', pageLink: '/movies' },
+  { pageName: 'discover-tv', pageLink: '/tv-shows' },
+  { pageName: 'discover-anime', pageLink: '/anime' },
 ];
 
 export const searchPages = [
@@ -38,52 +38,52 @@ export const genrePages = [
 ];
 
 export const movieTvDetailsPages = [
-  { pageName: 'Overview', pageLink: '/' },
-  { pageName: 'Cast', pageLink: '/cast' },
-  { pageName: 'Crew', pageLink: '/crew' },
-  { pageName: 'Videos', pageLink: '/videos' },
-  { pageName: 'Photos', pageLink: '/photos' },
-  { pageName: 'Recommendations', pageLink: '/recommendations' },
-  { pageName: 'Similar', pageLink: '/similar' },
+  { pageName: 'overview', pageLink: '/' },
+  { pageName: 'cast', pageLink: '/cast' },
+  { pageName: 'crew', pageLink: '/crew' },
+  { pageName: 'videos', pageLink: '/videos' },
+  { pageName: 'photos', pageLink: '/photos' },
+  { pageName: 'recommendations', pageLink: '/recommendations' },
+  { pageName: 'similar', pageLink: '/similar' },
 ];
 
 export const animeDetailsPages = [
-  { pageName: 'Overview', pageLink: '/' },
-  { pageName: 'Episodes', pageLink: '/episodes' },
-  { pageName: 'Character', pageLink: '/characters' },
-  { pageName: 'Staff', pageLink: '/staff' },
+  { pageName: 'overview', pageLink: '/' },
+  { pageName: 'episodes', pageLink: '/episodes' },
+  { pageName: 'character', pageLink: '/characters' },
+  { pageName: 'staff', pageLink: '/staff' },
 ];
 
 export const peopleDetailPages = [
-  { pageName: 'Overview', pageLink: '/' },
-  { pageName: 'Credits', pageLink: '/credits' },
-  { pageName: 'Media', pageLink: '/media' },
+  { pageName: 'overview', pageLink: '/' },
+  { pageName: 'credits', pageLink: '/credits' },
+  { pageName: 'media', pageLink: '/media' },
 ];
 
 export const tvSeasonDetailPages = [
-  { pageName: 'Episodes', pageLink: '/' },
-  { pageName: 'Cast', pageLink: '/cast' },
-  { pageName: 'Crew', pageLink: '/crew' },
-  { pageName: 'Videos', pageLink: '/videos' },
-  { pageName: 'Photos', pageLink: '/photos' },
+  { pageName: 'episodes', pageLink: '/' },
+  { pageName: 'cast', pageLink: '/cast' },
+  { pageName: 'crew', pageLink: '/crew' },
+  { pageName: 'videos', pageLink: '/videos' },
+  { pageName: 'photos', pageLink: '/photos' },
 ];
 
 export const trendingPages = {
   all: [
-    { pageName: 'Trending Today', pageLink: '/today' },
-    { pageName: 'Trending This Week', pageLink: '/week' },
+    { pageName: 'trending.all.day', pageLink: '/today' },
+    { pageName: 'trending.all.week', pageLink: '/week' },
   ],
   movie: [
-    { pageName: 'Trending Movies Today', pageLink: '/today' },
-    { pageName: 'Trending Movies This Week', pageLink: '/week' },
+    { pageName: 'trending.movie.day', pageLink: '/today' },
+    { pageName: 'trending.movie.week', pageLink: '/week' },
   ],
   tv: [
-    { pageName: 'Trending TV Shows Today', pageLink: '/today' },
-    { pageName: 'Trending TV Shows This Week', pageLink: '/week' },
+    { pageName: 'trending.tv.day', pageLink: '/today' },
+    { pageName: 'trending.tv.week', pageLink: '/week' },
   ],
   people: [
-    { pageName: 'Trending People Today', pageLink: '/today' },
-    { pageName: 'Trending People This Week', pageLink: '/week' },
+    { pageName: 'trending.people.day', pageLink: '/today' },
+    { pageName: 'trending.people.week', pageLink: '/week' },
   ],
 };
 

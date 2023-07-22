@@ -445,7 +445,7 @@ const MediaList = (props: IMediaListProps) => {
             variant="solid"
             onPress={onClickViewMore}
           >
-            {t('viewMore')}
+            {t('view-more')}
           </Button>
           {navigationButtons ? (
             <div className="flex flex-row gap-x-2">

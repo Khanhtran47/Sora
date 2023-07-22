@@ -20,7 +20,6 @@ import featuredList from '~/constants/featuredList';
 import MediaList from '~/components/media/MediaList';
 
 export const handle: Handle = {
-  i18n: 'home',
   disableLayoutPadding: true,
   miniTitle: () => ({
     title: 'Home',
@@ -79,7 +78,7 @@ const RootIndex = () => {
   const rootData = useTypedRouteLoaderData('root');
   const location = useLocation();
   const navigate = useNavigate();
-  const { t } = useTranslation('home');
+  const { t } = useTranslation();
 
   const onClickViewMore = (type: 'movies' | 'tv-shows' | 'people') => {
     if (type === 'people') navigate(`/${type}`);
@@ -131,7 +130,7 @@ const RootIndex = () => {
           items={popularAnime}
           itemsType="anime"
           key="slider-card-popular-anime"
-          listName="Popular Anime"
+          listName={t('popular-anime')}
           listType="slider-card"
           navigationButtons
           onClickViewMore={() => navigate('/anime/popular')}
@@ -141,7 +140,7 @@ const RootIndex = () => {
           coverItem={featuredList}
           isCoverCard
           key="slider-card-featured-collections"
-          listName="Featured Collections"
+          listName={t('featured-collections')}
           listType="slider-card"
           navigationButtons
           onClickViewMore={() => navigate('/collections')}

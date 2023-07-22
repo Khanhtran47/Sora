@@ -1,17 +1,25 @@
 {
-  "title": "Remix App FR",
-  "viewMore": "Voir plus",
-  "todayTrending": "Tendance du jour",
-  "weekTrending": "Tendance de la semaine",
-  "discoverMovies": "Découvrir les films",
-  "discoverTv": "Découvrir les séries TV",
+  "title": "Sora",
+  "view-more": "Voir plus",
+  "today-trending": "Tendance du jour",
+  "week-trending": "Tendance de la semaine",
+  "discover-movies": "Découvrir les films",
+  "discover-tv": "Découvrir les séries TV",
+  "discover-anime": "Découvrir les animes",
   "popular-people": "Personnes populaires",
   "popular-movies": "Films populaires",
   "top-rated-movies": "Les films les mieux notés",
   "upcoming-movies": "Films à venir",
   "popular-tv-shows": "Séries TV populaires",
   "top-rated-tv-shows": "Séries TV  - Les mieux notés",
-  "on-the-air-tv-shows": "Séries TV - On the air",
+  "on-the-air-tv-shows": "Séries TV - En cours de diffusion",
+  "popular-anime": "Anime populaire",
+  "trending-all": "Tendance",
+  "trending-anime": "Anime tendance",
+  "trending-movies": "Films tendance",
+  "trending-tv-shows": "Séries TV tendance",
+  "trending-people": "Personnes tendance",
+  "recent-episodes": "Épisodes récents",
   "keywords": "Mots-clés",
   "show-hide-filter": "Afficher / Masquer le filtre",
   "keywords-helper": "Filtrer par mots clés",
@@ -85,5 +93,42 @@
       "people": "Entrez le nom de la personne et recherchez",
       "anime": "Entrez le nom de l'animé et recherchez"
     }
-  }
+  },
+  "settings": "Paramètres",
+  "anime": "Anime",
+  "movies": "Films",
+  "tv-shows": "Séries TV",
+  "overview": "Aperçu",
+  "cast": "Casting",
+  "crew": "Équipe",
+  "videos": "Vidéos",
+  "photos": "Photos",
+  "recommendations": "Recommandations",
+  "similar": "Similaire",
+  "episodes": "Épisodes",
+  "character": "Personnage",
+  "staff": "Personnel",
+  "credits": "Crédits",
+  "media": "Médias",
+  "trending": {
+    "title": "Tendance",
+    "all": {
+      "day": "Tendance du jour",
+      "week": "Tendance de la semaine"
+    },
+    "movie": {
+      "day": "Tendance des films aujourd'hui",
+      "week": "Tendance des films cette semaine"
+    },
+    "tv": {
+      "day": "Tendance des séries TV aujourd'hui",
+      "week": "Tendance des séries TV cette semaine"
+    },
+    "people": {
+      "day": "Tendance des personnes aujourd'hui",
+      "week": "Tendance des personnes cette semaine"
+    }
+  },
+  "today": "Aujourd'hui",
+  "week": "Cette semaine"
 }

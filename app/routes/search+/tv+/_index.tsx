@@ -108,7 +108,7 @@ const SearchRoute = () => {
         genresTv={rootData?.genresTv}
         items={todayTrending?.items}
         itemsType="movie-tv"
-        listName={t('todayTrending')}
+        listName={t('today-trending')}
         listType="grid"
         showListTypeChangeButton
         totalPages={todayTrending?.totalPages}

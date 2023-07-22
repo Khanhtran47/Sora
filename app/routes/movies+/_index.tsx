@@ -56,7 +56,6 @@ export const meta = mergeMeta(() => [
 ]);
 
 export const handle: Handle = {
-  i18n: 'movies',
   disableLayoutPadding: true,
   miniTitle: () => ({
     title: 'Movies',

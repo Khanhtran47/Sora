@@ -66,13 +66,13 @@ export const meta = mergeMeta(() => [
 ]);
 
 export const handle: Handle = {
-  breadcrumb: () => (
+  breadcrumb: ({ t }) => (
     <BreadcrumbItem to="/settings" key="settings">
-      Settings
+      {t('settings')}
     </BreadcrumbItem>
   ),
-  miniTitle: () => ({
-    title: 'Settings',
+  miniTitle: ({ t }) => ({
+    title: t('settings'),
     showImage: false,
   }),
 };

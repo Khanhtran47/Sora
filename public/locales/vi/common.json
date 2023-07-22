@@ -1,10 +1,11 @@
 {
-  "title": "Remix App VN",
-  "viewMore": "Xem thêm",
-  "todayTrending": "Xu hướng hôm nay",
-  "weekTrending": "Xu hướng tuần này",
-  "discoverMovies": "Khám phá phim lẻ",
-  "discoverTv": "Khám phá phim bộ",
+  "title": "Sora",
+  "view-more": "Xem thêm",
+  "today-trending": "Xu hướng hôm nay",
+  "week-trending": "Xu hướng tuần này",
+  "discover-movies": "Khám phá phim lẻ",
+  "discover-tv": "Khám phá phim bộ",
+  "discover-anime": "Khám phá anime",
   "popular-people": "Diễn viên nổi tiếng",
   "popular-movies": "Phim lẻ được yêu thích",
   "top-rated-movies": "Phim lẻ được xếp hạng cao nhất",
@@ -12,6 +13,13 @@
   "popular-tv-shows": "Phim bộ được yêu thích",
   "top-rated-tv-shows": "Phim bộ được xếp hạng cao nhất",
   "on-the-air-tv-shows": "Phim bộ đang chiếu",
+  "popular-anime": "Anime được yêu thích",
+  "trending-all": "Xu hướng",
+  "trending-anime": "Anime xu hướng",
+  "trending-movies": "Phim lẻ xu hướng",
+  "trending-tv-shows": "Phim bộ xu hướng",
+  "trending-people": "Người nổi tiếng xu hướng",
+  "recent-episodes": "Tập mới nhất",
   "keywords": "Từ khóa",
   "show-hide-filter": "Hiển thị / Ẩn bộ lọc",
   "keywords-helper": "Lọc theo từ khóa",
@@ -85,5 +93,42 @@
       "people": "Nhập tên diễn viên và tìm kiếm",
       "anime": "Nhập tên anime và tìm kiếm"
     }
-  }
+  },
+  "settings": "Cài đặt",
+  "anime": "Anime",
+  "movies": "Phim lẻ",
+  "tv-shows": "Phim bộ",
+  "overview": "Tổng quan",
+  "cast": "Diễn viên",
+  "crew": "Nhân viên",
+  "videos": "Video",
+  "photos": "Ảnh",
+  "recommendations": "Gợi ý",
+  "similar": "Tương tự",
+  "episodes": "Tập",
+  "character": "Nhân vật",
+  "staff": "Nhân viên",
+  "credits": "Tác giả",
+  "media": "Phương tiện",
+  "trending": {
+    "title": "Xu hướng",
+    "all": {
+      "day": "Xu hướng trong ngày",
+      "week": "Xu hướng trong tuần"
+    },
+    "movie": {
+      "day": "Xu hướng phim lẻ trong ngày",
+      "week": "Xu hướng phim lẻ trong tuần"
+    },
+    "tv": {
+      "day": "Xu hướng phim bộ trong ngày",
+      "week": "Xu hướng phim bộ trong tuần"
+    },
+    "people": {
+      "day": "Người nổi tiếng trong ngày",
+      "week": "Người nổi tiếng trong tuần"
+    }
+  },
+  "today": "Hôm nay",
+  "week": "Tuần này"
 }

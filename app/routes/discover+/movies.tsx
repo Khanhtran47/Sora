@@ -138,7 +138,7 @@ const DiscoverMovies = () => {
         items={movies.items}
         itemsType="movie"
         languages={rootData?.languages}
-        listName={t('discoverMovies')}
+        listName={t('discover-movies')}
         listType="grid"
         showFilterButton
         showListTypeChangeButton

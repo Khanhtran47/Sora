@@ -16,9 +16,9 @@ export const meta = mergeMeta(() => [
 ]);
 
 export const handle: Handle = {
-  breadcrumb: () => (
+  breadcrumb: ({ t }) => (
     <BreadcrumbItem to="/trending/" key="trending">
-      Trending
+      {t('trending.title')}
     </BreadcrumbItem>
   ),
 };
