@@ -299,7 +299,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const handle: Handle = {
-  breadcrumb: ({ match }) => (
+  breadcrumb: ({ match, t }) => (
     <>
       <BreadcrumbItem
         to={`/movies/${match.params.movieId}/`}
@@ -311,7 +311,7 @@ export const handle: Handle = {
         to={`/movies/${match.params.movieId}/watch`}
         key={`movies-${match.params.movieId}-watch`}
       >
-        Watch
+        {t('watch')}
       </BreadcrumbItem>
     </>
   ),
@@ -319,9 +319,9 @@ export const handle: Handle = {
     isMini: false,
     shouldShowPlayer: true,
   },
-  miniTitle: ({ match }) => ({
+  miniTitle: ({ match, t }) => ({
     title: match.data?.detail?.title,
-    subtitle: 'Watch',
+    subtitle: t('watch'),
     showImage: match.data?.detail?.poster_path !== undefined,
     imageUrl: TMDB.posterUrl(match.data?.detail?.poster_path || '', 'w92'),
   }),

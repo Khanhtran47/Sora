@@ -3,6 +3,7 @@ import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import { motion, type PanInfo } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
+import { useTranslation } from 'react-i18next';
 import { useHydrated } from 'remix-utils';
 
 import type { Handle } from '~/types/handle';
@@ -44,14 +45,14 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export const handle: Handle = {
-  breadcrumb: () => (
+  breadcrumb: ({ t }) => (
     <BreadcrumbItem to="/anime/recent-episodes" key="anime-recent-episodes">
-      Recent Episodes
+      {t('recent-episodes')}
     </BreadcrumbItem>
   ),
-  miniTitle: () => ({
-    title: 'Anime',
-    subtitle: 'Recent Episodes',
+  miniTitle: ({ t }) => ({
+    title: t('anime'),
+    subtitle: t('recent-episodes'),
     showImage: false,
   }),
 };
@@ -61,6 +62,7 @@ const RecentEpisodes = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const isHydrated = useHydrated();
+  const { t } = useTranslation();
 
   const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     if (info.offset?.x > 100) {
@@ -91,7 +93,7 @@ const RecentEpisodes = () => {
         hasNextPage={items?.hasNextPage || false}
         items={items?.results as IMedia[]}
         itemsType="episode"
-        listName="Recent Episodes"
+        listName={t('recent-episodes')}
         listType="grid"
         provider={provider}
       />

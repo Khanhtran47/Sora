@@ -1,16 +1,16 @@
 {
-  "discover": "Discover",
-  "search": "Search",
-  "filter": "Filter",
-  "categories": "Categories",
-  "movies": "Movies",
-  "tv-shows": "TV Shows",
   "anime": "Anime",
-  "people": "People",
-  "trending": "Trending",
+  "anime-genres": "Anime Genres",
+  "categories": "Categories",
+  "collections": "Collections",
+  "discover": "Discover",
+  "filter": "Filter",
   "general": "General",
   "movie-genres": "Movies Genres",
+  "movies": "Movies",
+  "people": "People",
+  "search": "Search",
+  "trending": "Trending",
   "tv-show-genres": "TV Shows Genres",
-  "anime-genres": "Anime Genres",
-  "collections": "Collections"
+  "tv-shows": "TV Shows"
 }

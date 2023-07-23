@@ -6,6 +6,7 @@ import { useFetcher, useLoaderData, useLocation, useNavigate } from '@remix-run/
 import { mergeMeta } from '~/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import NProgress from 'nprogress';
+import { useTranslation } from 'react-i18next';
 import { useGlobalLoadingState } from 'remix-utils';
 
 import type { Handle } from '~/types/handle';
@@ -57,8 +58,8 @@ export const meta = mergeMeta(() => [
 
 export const handle: Handle = {
   disableLayoutPadding: true,
-  miniTitle: () => ({
-    title: 'Movies',
+  miniTitle: ({ t }) => ({
+    title: t('movies'),
     showImage: false,
   }),
 };
@@ -70,6 +71,7 @@ const MoviesIndexPage = () => {
   const navigate = useNavigate();
   const fetcher = useFetcher();
   const globalState = useGlobalLoadingState();
+  const { t } = useTranslation();
 
   const listGenresMovie = Object.entries(rootData?.genresMovie || {}).map((entry) => ({
     [entry[0]]: entry[1],
@@ -171,7 +173,7 @@ const MoviesIndexPage = () => {
             genresTv={rootData?.genresTv}
             items={topRated.items}
             itemsType="movie"
-            listName="Top Rated Movies"
+            listName={t('top-rated-movies')}
             listType="slider-card"
             navigationButtons
             onClickViewMore={() => navigate('/movies/top-rated')}
@@ -184,7 +186,7 @@ const MoviesIndexPage = () => {
             genresTv={rootData?.genresTv}
             items={nowPlaying.items}
             itemsType="movie"
-            listName="Now Playing Movies"
+            listName={t('now-playing-movies')}
             listType="slider-card"
             navigationButtons
             onClickViewMore={() => navigate('/movies/now-playing')}
@@ -197,7 +199,7 @@ const MoviesIndexPage = () => {
             genresTv={rootData?.genresTv}
             items={upcoming.items}
             itemsType="movie"
-            listName="Upcoming Movies"
+            listName={t('upcoming-movies')}
             listType="slider-card"
             navigationButtons
             onClickViewMore={() => navigate('/movies/upcoming')}

@@ -16,9 +16,9 @@ export const meta = mergeMeta(() => [
 ]);
 
 export const handle: Handle = {
-  breadcrumb: () => (
+  breadcrumb: ({ t }) => (
     <BreadcrumbItem to="/tv-shows" key="tv-shows">
-      Tv Shows
+      {t('tv-shows')}
     </BreadcrumbItem>
   ),
   showTabLink: true,

@@ -3,6 +3,7 @@ import { Spacer } from '@nextui-org/spacer';
 import { json, type LoaderArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
+import { useTranslation } from 'react-i18next';
 import { Gallery, Item, type GalleryProps } from 'react-photoswipe-gallery';
 import { MimeType } from 'remix-image';
 
@@ -60,19 +61,19 @@ export const meta = mergeMeta<
 });
 
 export const handle: Handle = {
-  breadcrumb: ({ match }) => (
+  breadcrumb: ({ match, t }) => (
     <BreadcrumbItem
       to={`/tv-shows/${match.params.tvId}/season/${match.params.seasonId}/photos`}
       key={`tv-shows-${match.params.tvId}-season-${match.params.seasonId}-photos`}
     >
-      Photos
+      {t('photos')}
     </BreadcrumbItem>
   ),
-  miniTitle: ({ parentMatch }) => ({
+  miniTitle: ({ parentMatch, t }) => ({
     title: `${parentMatch?.data?.detail?.name || parentMatch?.data?.detail?.original_name} - ${
       parentMatch?.data?.seasonDetail?.name
     }`,
-    subtitle: 'Photos',
+    subtitle: t('photos'),
     showImage: parentMatch?.data?.seasonDetail?.poster_path !== undefined,
     imageUrl: TMDB.posterUrl(parentMatch?.data?.seasonDetail?.poster_path || '', 'w92'),
   }),
@@ -80,6 +81,7 @@ export const handle: Handle = {
 
 const PhotosPage = () => {
   const { images } = useLoaderData<typeof loader>();
+  const { t } = useTranslation();
   const tvData = useTypedRouteLoaderData('routes/tv-shows+/$tvId_.season.$seasonId');
 
   const uiElements: GalleryProps['uiElements'] = [
@@ -130,7 +132,7 @@ const PhotosPage = () => {
     <div className="flex w-full flex-col items-center justify-center px-3 sm:px-0">
       <Spacer y={5} />
       <h5 className="flex w-full justify-center">
-        <strong>Posters</strong>
+        <strong>{t('posters')}</strong>
       </h5>
       <Spacer y={2.5} />
       <Gallery withCaption withDownloadButton uiElements={uiElements}>

@@ -3,6 +3,7 @@ import { Spacer } from '@nextui-org/spacer';
 import { json, type LoaderArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
+import { useTranslation } from 'react-i18next';
 import { Gallery, Item, type GalleryProps } from 'react-photoswipe-gallery';
 import { MimeType } from 'remix-image';
 
@@ -57,17 +58,17 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   return json({ images }, { headers: { 'Cache-Control': CACHE_CONTROL.detail } });
 };
 export const handle: Handle = {
-  breadcrumb: ({ match }) => (
+  breadcrumb: ({ match, t }) => (
     <BreadcrumbItem
       to={`/movies/${match.params.movieId}/photos`}
       key={`movies-${match.params.movieId}-photos`}
     >
-      Photos
+      {t('photos')}
     </BreadcrumbItem>
   ),
-  miniTitle: ({ parentMatch }) => ({
+  miniTitle: ({ parentMatch, t }) => ({
     title: parentMatch?.data?.detail?.title,
-    subtitle: 'Photos',
+    subtitle: t('photos'),
     showImage: parentMatch?.data?.detail?.poster_path !== undefined,
     imageUrl: TMDB?.posterUrl(parentMatch?.data?.detail?.poster_path || '', 'w92'),
   }),
@@ -120,6 +121,7 @@ const uiElements: GalleryProps['uiElements'] = [
 
 const MoviePhotosPage = () => {
   const { images } = useLoaderData<typeof loader>();
+  const { t } = useTranslation();
   const movieData = useTypedRouteLoaderData('routes/movies+/$movieId');
   return (
     <div className="flex w-full flex-col items-center justify-center px-3 sm:px-0">
@@ -127,7 +129,7 @@ const MoviePhotosPage = () => {
       {images?.backdrops && images.backdrops.length > 0 && (
         <>
           <h5 className="flex w-full justify-center">
-            <strong>Backdrops</strong>
+            <strong>{t('backdrops')}</strong>
           </h5>
           <Spacer y={2.5} />
           <Gallery withCaption withDownloadButton uiElements={uiElements}>
@@ -170,7 +172,7 @@ const MoviePhotosPage = () => {
       {images?.logos && images.logos.length > 0 && (
         <>
           <h5 className="flex w-full justify-center">
-            <strong>Logos</strong>
+            <strong>{t('logos')}</strong>
           </h5>
           <Spacer y={2.5} />
           <Gallery withCaption withDownloadButton uiElements={uiElements}>
@@ -213,7 +215,7 @@ const MoviePhotosPage = () => {
       {images?.posters && images.posters.length > 0 && (
         <>
           <h5 className="flex w-full justify-center">
-            <strong>Posters</strong>
+            <strong>{t('posters')}</strong>
           </h5>
           <Spacer y={2.5} />
           <Gallery withCaption withDownloadButton uiElements={uiElements}>

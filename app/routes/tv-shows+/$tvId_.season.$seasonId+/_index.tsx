@@ -34,12 +34,12 @@ export const meta = mergeMeta<
 });
 
 export const handle: Handle = {
-  breadcrumb: ({ match }) => (
+  breadcrumb: ({ match, t }) => (
     <BreadcrumbItem
       to={`/tv-shows/${match.params.tvId}/season/${match.params.seasonId}/`}
       key={`tv-shows-${match.params.tvId}-season-${match.params.seasonId}-episodes`}
     >
-      Episodes
+      {t('episodes')}
     </BreadcrumbItem>
   ),
 };

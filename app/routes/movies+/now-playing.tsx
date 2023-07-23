@@ -48,14 +48,14 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export const handle: Handle = {
-  breadcrumb: () => (
+  breadcrumb: ({ t }) => (
     <BreadcrumbItem to="/movies/now-playing" key={`movies-now-playing`}>
-      Now Playing Movies
+      {t('now-playing-movies')}
     </BreadcrumbItem>
   ),
-  miniTitle: () => ({
-    title: 'Movies',
-    subtitle: 'Now Playing',
+  miniTitle: ({ t }) => ({
+    title: t('movies'),
+    subtitle: t('now-playing'),
     showImage: false,
   }),
   showListViewChangeButton: true,

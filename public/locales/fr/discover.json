@@ -1,16 +1,16 @@
 {
-  "discover": "Découvrir",
-  "search": "Rechercher",
-  "filter": "Filtrer",
-  "categories": "Catégories",
-  "movies": "Films",
-  "tv-shows": "Séries TV",
   "anime": "Anime",
-  "people": "Célébrités",
-  "trending": "Tendances",
+  "anime-genres": "Genres d'anime",
+  "categories": "Catégories",
+  "collections": "Collections",
+  "discover": "Découvrir",
+  "filter": "Filtrer",
   "general": "Général",
   "movie-genres": "Genres de films",
+  "movies": "Films",
+  "people": "Célébrités",
+  "search": "Rechercher",
+  "trending": "Tendances",
   "tv-show-genres": "Genres de séries TV",
-  "anime-genres": "Genres d'anime",
-  "collections": "Collections"
+  "tv-shows": "Séries TV"
 }

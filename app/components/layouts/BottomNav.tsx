@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { NavLink, useLocation, useSearchParams } from '@remix-run/react';
 import type { User } from '@supabase/supabase-js';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { tv } from 'tailwind-variants';
 
 import { useLayout } from '~/store/layout/useLayout';
@@ -22,6 +23,7 @@ interface IBottomNavProps {
 
 const BottomNav = (props: IBottomNavProps) => {
   const { user } = props;
+  const { t } = useTranslation();
   const [openMore, setOpenMore] = useState(false);
   const location = useLocation();
   const [search] = useSearchParams();
@@ -41,32 +43,32 @@ const BottomNav = (props: IBottomNavProps) => {
 
   const moreNavItems = [
     {
-      name: 'Collections',
+      name: 'lists',
       icon: Category,
-      path: '/collections',
+      path: '/lists',
     },
     {
-      name: 'History',
+      name: 'watch-history',
       icon: History,
       path: '/watch-history',
     },
     ...(user
       ? [
           {
-            name: 'Logout',
+            name: 'logout',
             icon: LogOut,
             path: `/sign-out?ref=${ref}`,
           },
         ]
       : [
           {
-            name: 'Login',
+            name: 'login',
             icon: LogIn,
             path: `/sign-in?ref=${ref}`,
           },
         ]),
     {
-      name: 'Settings',
+      name: 'settings',
       icon: Settings,
       path: '/settings',
     },
@@ -90,7 +92,7 @@ const BottomNav = (props: IBottomNavProps) => {
         {({ isActive }) => (
           <>
             <Home filled={isActive} />
-            Home
+            {t('home')}
           </>
         )}
       </NavLink>
@@ -105,7 +107,7 @@ const BottomNav = (props: IBottomNavProps) => {
         {({ isActive }) => (
           <>
             <Discover filled={isActive} />
-            Discover
+            {t('discover')}
           </>
         )}
       </NavLink>
@@ -113,7 +115,7 @@ const BottomNav = (props: IBottomNavProps) => {
         <SheetTrigger asChild>
           <button type="button" className={bottomNavItemStyles()}>
             <Menu />
-            More
+            {t('more')}
           </button>
         </SheetTrigger>
         <SheetContent
@@ -139,7 +141,7 @@ const BottomNav = (props: IBottomNavProps) => {
                 {({ isActive }) => (
                   <>
                     <item.icon filled={isActive} />
-                    {item.name}
+                    {t(item.name)}
                   </>
                 )}
               </NavLink>

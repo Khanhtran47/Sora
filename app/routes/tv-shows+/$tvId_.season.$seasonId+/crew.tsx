@@ -64,19 +64,19 @@ export const meta = mergeMeta<
 });
 
 export const handle: Handle = {
-  breadcrumb: ({ match }) => (
+  breadcrumb: ({ match, t }) => (
     <BreadcrumbItem
       to={`/tv-shows/${match.params.tvId}/season/${match.params.seasonId}/crew`}
       key={`tv-shows-${match.params.tvId}-season-${match.params.seasonId}-crew`}
     >
-      Crew
+      {t('crew')}
     </BreadcrumbItem>
   ),
-  miniTitle: ({ parentMatch }) => ({
+  miniTitle: ({ parentMatch, t }) => ({
     title: `${parentMatch?.data?.detail?.name || parentMatch?.data?.detail?.original_name} - ${
       parentMatch?.data?.seasonDetail?.name
     }`,
-    subtitle: 'Crew',
+    subtitle: t('crew'),
     showImage: parentMatch?.data?.seasonDetail?.poster_path !== undefined,
     imageUrl: TMDB.posterUrl(parentMatch?.data?.seasonDetail?.poster_path || '', 'w92'),
   }),

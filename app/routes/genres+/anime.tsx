@@ -24,14 +24,14 @@ export const meta = mergeMeta(() => [
 ]);
 
 export const handle: Handle = {
-  breadcrumb: () => (
+  breadcrumb: ({ t }) => (
     <BreadcrumbItem to="/genres/anime" key="genres-anime">
-      Anime
+      {t('anime')}
     </BreadcrumbItem>
   ),
-  miniTitle: () => ({
-    title: 'Genres',
-    subtitle: 'Anime',
+  miniTitle: ({ t }) => ({
+    title: t('genres'),
+    subtitle: t('anime'),
     showImage: false,
   }),
 };

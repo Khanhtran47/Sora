@@ -6,7 +6,7 @@ import { useFetcher, useLoaderData, useLocation, useNavigate } from '@remix-run/
 import { mergeMeta } from '~/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import NProgress from 'nprogress';
-// import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useGlobalLoadingState } from 'remix-utils';
 
 import type { Handle } from '~/types/handle';
@@ -58,8 +58,8 @@ export const meta = mergeMeta(() => [
 
 export const handle: Handle = {
   disableLayoutPadding: true,
-  miniTitle: () => ({
-    title: 'Anime',
+  miniTitle: ({ t }) => ({
+    title: t('anime'),
     showImage: false,
   }),
 };
@@ -70,6 +70,7 @@ const AnimePage = () => {
   const navigate = useNavigate();
   const fetcher = useFetcher();
   const globalState = useGlobalLoadingState();
+  const { t } = useTranslation();
 
   const [listItems, setListItems] = useState<IMedia[][] | undefined>([]);
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -162,7 +163,7 @@ const AnimePage = () => {
           <MediaList
             items={popular.results as IMedia[]}
             itemsType="anime"
-            listName="Popular Anime"
+            listName={t('popular-anime')}
             listType="slider-card"
             navigationButtons
             onClickViewMore={() => navigate('/anime/popular')}
@@ -173,7 +174,7 @@ const AnimePage = () => {
           <MediaList
             items={recentEpisodes.results as IMedia[]}
             itemsType="episode"
-            listName="Recent Episodes"
+            listName={t('recent-episodes')}
             listType="slider-card"
             navigationButtons
             onClickViewMore={() => navigate('/anime/recent-episodes')}

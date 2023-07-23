@@ -77,7 +77,7 @@ const MediaListCard = (props: IMediaListCardProps) => {
           >
             {coverItem &&
               coverItem.map((item, index) => {
-                const href = `/collections/${item.id}`;
+                const href = `/lists/${item.id}`;
                 return (
                   <SwiperSlide
                     className={swiperSlideStyles({

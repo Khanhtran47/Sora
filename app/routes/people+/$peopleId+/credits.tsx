@@ -54,17 +54,17 @@ export const meta = mergeMeta<null, { 'routes/people+/$peopleId': typeof peopleI
 );
 
 export const handle: Handle = {
-  breadcrumb: ({ match }) => (
+  breadcrumb: ({ match, t }) => (
     <BreadcrumbItem
       to={`/people/${match.params.peopleId}/credits`}
       key={`people-${match.params.peopleId}-credits`}
     >
-      Credits
+      {t('credits')}
     </BreadcrumbItem>
   ),
-  miniTitle: ({ parentMatch }) => ({
+  miniTitle: ({ parentMatch, t }) => ({
     title: parentMatch?.data?.detail?.name || 'People',
-    subtitle: 'Credits',
+    subtitle: t('credits'),
     showImage: parentMatch?.data?.detail?.profile_path !== undefined,
     imageUrl: TMDB.profileUrl(parentMatch?.data?.detail?.profile_path, 'w45'),
   }),

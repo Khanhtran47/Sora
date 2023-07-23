@@ -41,14 +41,14 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export const handle: Handle = {
-  breadcrumb: () => (
+  breadcrumb: ({ t }) => (
     <BreadcrumbItem to="/anime/trending" key="anime-trending">
-      Trending Anime
+      {t('trending-anime')}
     </BreadcrumbItem>
   ),
-  miniTitle: () => ({
-    title: 'Anime',
-    subtitle: 'Trending',
+  miniTitle: ({ t }) => ({
+    title: t('anime'),
+    subtitle: t('trending.title'),
     showImage: false,
   }),
   showListViewChangeButton: true,

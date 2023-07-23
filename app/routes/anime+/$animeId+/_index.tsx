@@ -3,6 +3,7 @@ import { Avatar } from '@nextui-org/avatar';
 import { Card, CardBody } from '@nextui-org/card';
 import { useParams } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
+import { useTranslation } from 'react-i18next';
 import { MimeType } from 'remix-image';
 
 import type { Handle } from '~/types/handle';
@@ -55,12 +56,12 @@ export const meta = mergeMeta<{}, { 'routes/anime+/$animeId': typeof animeIdLoad
 );
 
 export const handle: Handle = {
-  breadcrumb: ({ match }) => (
+  breadcrumb: ({ match, t }) => (
     <BreadcrumbItem
       to={`/anime/${match.params.animeId}/`}
       key={`anime-${match.params.animeId}-overview`}
     >
-      Overview
+      {t('overview')}
     </BreadcrumbItem>
   ),
 };
@@ -69,6 +70,7 @@ const AnimeOverview = () => {
   const animeData = useTypedRouteLoaderData('routes/anime+/$animeId');
   const detail = animeData && animeData.detail;
   const { animeId } = useParams();
+  const { t } = useTranslation();
   const listRelations = useMemo(() => {
     if (!detail?.relations || detail?.relations.length === 0) return [];
     const listFiltered = detail?.relations.filter(
@@ -89,7 +91,7 @@ const AnimeOverview = () => {
         <div className="flex w-full flex-col items-start justify-center gap-y-4 rounded-xl bg-content1 p-4 nextui-sm:w-3/4 xl:w-1/2">
           {detail?.nextAiringEpisode ? (
             <div className="flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-              <h6 className="grow-0 basis-1/3">Airing</h6>
+              <h6 className="grow-0 basis-1/3">{t('airing')}</h6>
               <p className="grow">
                 {`Ep${detail?.nextAiringEpisode?.episode}: ${detail?.nextAiringEpisode?.timeUntilAiring}`}
               </p>
@@ -97,25 +99,25 @@ const AnimeOverview = () => {
           ) : null}
           {detail?.totalEpisodes ? (
             <div className="flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-              <h6 className="grow-0 basis-1/3">Episodes</h6>
+              <h6 className="grow-0 basis-1/3">{t('episodes')}</h6>
               <p className="grow">{detail?.totalEpisodes}</p>
             </div>
           ) : null}
           {detail?.duration ? (
             <div className="flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-              <h6 className="grow-0 basis-1/3">Episode Duration</h6>
+              <h6 className="grow-0 basis-1/3">{t('episode-duration')}</h6>
               <p className="grow">{detail?.duration}</p>
             </div>
           ) : null}
           {detail?.status ? (
             <div className="flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-              <h6 className="grow-0 basis-1/3">Status</h6>
+              <h6 className="grow-0 basis-1/3">{t('status')}</h6>
               <p className="grow">{detail?.status}</p>
             </div>
           ) : null}
           {detail?.startDate ? (
             <div className="flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-              <h6 className="grow-0 basis-1/3">Start Date</h6>
+              <h6 className="grow-0 basis-1/3">{t('start-date')}</h6>
               <p className="grow">
                 {`${detail?.startDate?.day}/${detail?.startDate?.month}/${detail?.startDate?.year}`}
               </p>
@@ -123,7 +125,7 @@ const AnimeOverview = () => {
           ) : null}
           {detail?.endDate ? (
             <div className="flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-              <h6 className="grow-0 basis-1/3">End Date</h6>
+              <h6 className="grow-0 basis-1/3">{t('end-date')}</h6>
               <p className="grow">
                 {`${detail?.endDate?.day}/${detail?.endDate?.month}/${detail?.endDate?.year}`}
               </p>
@@ -131,19 +133,19 @@ const AnimeOverview = () => {
           ) : null}
           {detail?.countryOfOrigin ? (
             <div className="flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-              <h6 className="grow-0 basis-1/3">Country of Origin</h6>
+              <h6 className="grow-0 basis-1/3">{t('country-origin')}</h6>
               <p className="grow">{detail?.countryOfOrigin}</p>
             </div>
           ) : null}
           {detail?.popularity ? (
             <div className="flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-              <h6 className="grow-0 basis-1/3">Popularity</h6>
+              <h6 className="grow-0 basis-1/3">{t('popularity')}</h6>
               <p className="grow">{detail?.popularity}</p>
             </div>
           ) : null}
           {detail?.studios ? (
             <div className="flex w-full flex-row items-start justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-              <h6 className="grow-0 basis-1/3">Studios</h6>
+              <h6 className="grow-0 basis-1/3">{t('studios')}</h6>
               <div className="flex grow flex-col">
                 {detail.studios.length > 0 &&
                   detail.studios.map((studio) => <p key={studio}>{studio}</p>)}
@@ -152,7 +154,7 @@ const AnimeOverview = () => {
           ) : null}
           {detail?.synonyms ? (
             <div className="flex w-full flex-row items-start justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-              <h6 className="grow-0 basis-1/3">Synonyms</h6>
+              <h6 className="grow-0 basis-1/3">{t('synonyms')}</h6>
               <div className="flex grow flex-col">
                 {detail?.synonyms.length > 0 &&
                   detail?.synonyms.map((synonym) => <p key={synonym}>{synonym}</p>)}
@@ -173,14 +175,14 @@ const AnimeOverview = () => {
             items={listRelations as IMedia[]}
             itemsType="anime"
             key={`anime-relations-${animeId}`}
-            listName="Relations"
+            listName={t('relations')}
             listType="slider-card"
             navigationButtons
           />
         ) : null}
         {detail?.characters && detail.characters.length > 0 ? (
           <>
-            <h2 className="my-5">Characters</h2>
+            <h2 className="my-5">{t('characters')}</h2>
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
               {detail.characters.slice(0, 12).map((character) => (
                 <Card
@@ -229,7 +231,7 @@ const AnimeOverview = () => {
                       {character?.voiceActors && character?.voiceActors.length > 0 && (
                         <div className="flex flex-col items-end justify-center p-1">
                           <h5>{character.voiceActors[0].name?.full}</h5>
-                          <p className="opacity-80">Japanese</p>
+                          <p className="opacity-80">{t('japanese')}</p>
                         </div>
                       )}
                       {character?.voiceActors && character?.voiceActors[0]?.image ? (
@@ -273,7 +275,7 @@ const AnimeOverview = () => {
             items={detail?.recommendations as IMedia[]}
             itemsType="anime"
             key={`anime-recommendations-${animeId}`}
-            listName="Recommendations"
+            listName={t('recommendations')}
             listType="slider-card"
             navigationButtons
           />

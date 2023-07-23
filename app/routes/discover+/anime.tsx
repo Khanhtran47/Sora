@@ -3,6 +3,7 @@ import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import { motion, type PanInfo } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
+import { useTranslation } from 'react-i18next';
 import { useHydrated } from 'remix-utils';
 
 import type { Handle } from '~/types/handle';
@@ -73,14 +74,14 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export const handle: Handle = {
-  breadcrumb: () => (
+  breadcrumb: ({ t }) => (
     <BreadcrumbItem to="/discover/anime" key="discover-anime">
-      Anime
+      {t('anime')}
     </BreadcrumbItem>
   ),
-  miniTitle: () => ({
-    title: 'Discover',
-    subtitle: 'Anime',
+  miniTitle: ({ t }) => ({
+    title: t('discover'),
+    subtitle: t('anime'),
     showImage: false,
   }),
   showListViewChangeButton: true,
@@ -91,6 +92,7 @@ const DiscoverAnime = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const isHydrated = useHydrated();
+  const { t } = useTranslation();
 
   const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     if (info.offset?.x > 100) {
@@ -121,7 +123,7 @@ const DiscoverAnime = () => {
         hasNextPage={items?.hasNextPage || false}
         items={items?.results as IMedia[]}
         itemsType="anime"
-        listName="Discover Anime"
+        listName={t('discover-anime')}
         listType="grid"
         showFilterButton
         showListTypeChangeButton

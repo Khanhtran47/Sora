@@ -6,6 +6,7 @@ import { useIntersectionObserver, useMediaQuery } from '@react-hookz/web';
 import { useFetcher, useLocation, useSearchParams } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import NProgress from 'nprogress';
+import { useTranslation } from 'react-i18next';
 import { useGlobalLoadingState } from 'remix-utils';
 import { tv } from 'tailwind-variants';
 
@@ -63,6 +64,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
     scrollToTopListAfterChangePage = false,
     totalPages,
   } = props;
+  const { t } = useTranslation();
   const fetcher = useFetcher();
   const location = useLocation();
   const globalState = useGlobalLoadingState();
@@ -235,7 +237,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
         {coverItem &&
           coverItem?.length > 0 &&
           coverItem.map((item, index) => {
-            const href = `/collections/${item.id}`;
+            const href = `/lists/${item.id}`;
             return (
               <motion.div
                 key={`${item.id}-${index}-covercard-grid`}
@@ -343,7 +345,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
         </div>
       ) : (
         <div className="flex w-full items-center justify-center">
-          <h4 className="opacity-70">No results</h4>
+          <h4 className="opacity-70">{t('no-results')}</h4>
         </div>
       )}
       <Spacer y={5} />
@@ -365,7 +367,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
             setShowLoadMore(false);
           }}
         >
-          Load More
+          {t('load-more')}
         </Button>
       ) : null}
       {pagination}

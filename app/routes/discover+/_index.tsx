@@ -58,8 +58,8 @@ const generalPages = [
     icon: <Anime fill="currentColor" />,
   },
   {
-    name: 'collections',
-    path: '/collections',
+    name: 'featured-lists',
+    path: '/lists',
     icon: <Category fill="currentColor" />,
   },
 ];

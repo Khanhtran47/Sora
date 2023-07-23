@@ -60,13 +60,13 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export const handle: Handle = {
-  breadcrumb: () => (
+  breadcrumb: ({ t }) => (
     <BreadcrumbItem to="/tv-shows/popular" key="tv-shows-popular">
-      Popular Tv
+      {t('popular-tv-shows')}
     </BreadcrumbItem>
   ),
-  miniTitle: () => ({
-    title: 'Popular Tv',
+  miniTitle: ({ t }) => ({
+    title: t('popular-tv-shows'),
     showImage: false,
   }),
   showListViewChangeButton: true,

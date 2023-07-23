@@ -63,20 +63,21 @@ export const action = async ({ request }: ActionArgs) => {
 };
 
 export const meta = mergeMeta(() => [
-  { title: 'Cache Admin' },
-  { name: 'description', content: 'Cache Admin' },
+  { title: 'Cache Management' },
+  { name: 'description', content: 'Cache Management' },
 ]);
 
 export const handle: Handle = {
   breadcrumb: () => (
-    <BreadcrumbItem to="/cache/admin" key="cache-admin">
-      Cache Admin
+    <BreadcrumbItem to="/admin/cache" key="cache-admin">
+      Cache Management
     </BreadcrumbItem>
   ),
   miniTitle: () => ({
     title: 'Cache Management',
     showImage: false,
   }),
+  getSitemapEntries: () => null,
 };
 
 const CacheKeyRow = ({
@@ -92,7 +93,6 @@ const CacheKeyRow = ({
     <div className="flex items-center gap-2 font-mono">
       <fetcher.Form method="post">
         <input type="hidden" name="cacheKey" value={cacheKey} />
-        {/* @ts-ignore */}
         <Button
           variant="ghost"
           color="danger"
@@ -138,7 +138,7 @@ const CacheAdminRoute = () => {
     setShowDetailCache(false);
   };
   const onSubmit = (value: string) => {
-    navigate(`/cache/admin?query=${value}`);
+    navigate(`/admin/cache?query=${value}`);
   };
 
   return (
@@ -150,7 +150,7 @@ const CacheAdminRoute = () => {
       transition={{ duration: 0.3 }}
     >
       <div className="flex w-full max-w-screen-4xl flex-col justify-start px-3 sm:px-0">
-        <h2>Cache Admin</h2>
+        <h2>Cache Management</h2>
         <SearchForm
           onSubmit={onSubmit}
           textOnButton="Search"

@@ -5,6 +5,7 @@ import { useMediaQuery } from '@react-hookz/web';
 import { useLocation } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 import type { Handle } from '~/types/handle';
 import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
@@ -13,26 +14,27 @@ import MediaList from '~/components/media/MediaList';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
 export const meta = mergeMeta(() => [
-  { title: 'Sora - Collections' },
-  { property: 'og:url', content: 'https://sorachill.vercel.app/collections' },
-  { property: 'og:title', content: 'Sora - Collections' },
-  { name: 'twitter:title', content: 'Sora - Collections' },
+  { title: 'Sora - Featured Lists' },
+  { property: 'og:url', content: 'https://sorachill.vercel.app/lists/' },
+  { property: 'og:title', content: 'Sora - Featured Lists' },
+  { name: 'twitter:title', content: 'Sora - Featured Lists' },
 ]);
 
 export const handle: Handle = {
-  breadcrumb: () => (
-    <BreadcrumbItem to="/collections" key="collections">
-      Collections
+  breadcrumb: ({ t }) => (
+    <BreadcrumbItem to="/lists/" key="lists">
+      {t('featured-lists')}
     </BreadcrumbItem>
   ),
-  miniTitle: () => ({
-    title: 'Featured Collections',
+  miniTitle: ({ t }) => ({
+    title: t('featured-lists'),
     showImage: false,
   }),
 };
 
-const Collections = () => {
+const FeaturedLists = () => {
   const location = useLocation();
+  const { t } = useTranslation();
   const ref = useRef<HTMLDivElement>(null);
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const { gotoPage, currentPage, maxPage, currentData } = useSplitArrayIntoPage(featuredList, 12);
@@ -48,7 +50,7 @@ const Collections = () => {
       <div ref={ref} />
       <MediaList
         listType="grid"
-        listName="Featured Collections"
+        listName={t('featured-lists')}
         isCoverCard
         coverItem={currentData}
       />
@@ -76,4 +78,4 @@ const Collections = () => {
   );
 };
 
-export default Collections;
+export default FeaturedLists;

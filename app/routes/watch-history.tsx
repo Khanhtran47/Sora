@@ -15,14 +15,14 @@ import HistoryItem from '~/components/media/item/HistoryItem';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
 export const handle: Handle = {
-  breadcrumb: () => (
+  breadcrumb: ({ t }) => (
     <BreadcrumbItem to="/watch-history" key="watch-history">
-      History
+      {t('watch-history')}
     </BreadcrumbItem>
   ),
   getSitemapEntries: () => null,
-  miniTitle: () => ({
-    title: 'History',
+  miniTitle: ({ t }) => ({
+    title: t('watch-history'),
     showImage: false,
   }),
 };

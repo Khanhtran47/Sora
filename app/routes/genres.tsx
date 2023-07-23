@@ -5,16 +5,16 @@ import { genrePages } from '~/constants/tabLinks';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
 export const handle: Handle = {
-  breadcrumb: () => (
+  breadcrumb: ({ t }) => (
     <BreadcrumbItem to="/genres" key="genres">
-      Genres
+      {t('genres')}
     </BreadcrumbItem>
   ),
   showTabLink: true,
   tabLinkPages: genrePages,
   tabLinkTo: () => '/genres',
-  miniTitle: () => ({
-    title: 'Genres',
+  miniTitle: ({ t }) => ({
+    title: t('genres'),
     showImage: false,
   }),
 };

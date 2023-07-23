@@ -3,6 +3,7 @@ import { Spacer } from '@nextui-org/spacer';
 import { json, type LoaderArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
+import { useTranslation } from 'react-i18next';
 import { Gallery, Item, type GalleryProps } from 'react-photoswipe-gallery';
 import { MimeType } from 'remix-image';
 
@@ -58,17 +59,17 @@ export const meta = mergeMeta<null, { 'routes/people+/$peopleId': typeof peopleI
 );
 
 export const handle: Handle = {
-  breadcrumb: ({ match }) => (
+  breadcrumb: ({ match, t }) => (
     <BreadcrumbItem
       to={`/people/${match.params.peopleId}/media`}
       key={`people-${match.params.peopleId}-media`}
     >
-      Media
+      {t('media')}
     </BreadcrumbItem>
   ),
-  miniTitle: ({ parentMatch }) => ({
+  miniTitle: ({ parentMatch, t }) => ({
     title: parentMatch?.data?.detail?.name || 'People',
-    subtitle: 'Media',
+    subtitle: t('media'),
     showImage: parentMatch?.data?.detail?.profile_path !== undefined,
     imageUrl: TMDB.profileUrl(parentMatch?.data?.detail?.profile_path, 'w45'),
   }),
@@ -76,6 +77,7 @@ export const handle: Handle = {
 
 const MediaPage = () => {
   const { images } = useLoaderData<typeof loader>();
+  const { t } = useTranslation();
   const peopleData = useTypedRouteLoaderData('routes/people+/$peopleId');
 
   const uiElements: GalleryProps['uiElements'] = [
@@ -125,7 +127,7 @@ const MediaPage = () => {
   return (
     <>
       <h5 className="w-full">
-        <strong>Profiles</strong>
+        <strong>{t('profiles')}</strong>
       </h5>
       <Spacer y={2.5} />
       <Gallery withCaption withDownloadButton uiElements={uiElements}>

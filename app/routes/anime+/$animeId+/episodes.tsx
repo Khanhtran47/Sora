@@ -71,22 +71,22 @@ export const meta = mergeMeta<{}, { 'routes/anime+/$animeId': typeof animeIdLoad
 );
 
 export const handle: Handle = {
-  breadcrumb: ({ match }) => (
+  breadcrumb: ({ match, t }) => (
     <BreadcrumbItem
       to={`/anime/${match.params.animeId}/episodes`}
       key={`anime-${match.params.animeId}-episodes`}
     >
-      Episodes
+      {t('episodes')}
     </BreadcrumbItem>
   ),
-  miniTitle: ({ parentMatch }) => ({
+  miniTitle: ({ parentMatch, t }) => ({
     title:
       parentMatch?.data?.detail?.title?.userPreferred ||
       parentMatch?.data?.detail?.title?.english ||
       parentMatch?.data?.detail?.title?.romaji ||
       parentMatch?.data?.detail?.title?.native ||
       '',
-    subtitle: 'Episodes',
+    subtitle: t('episodes'),
     showImage: parentMatch?.data?.detail?.image !== undefined,
     imageUrl: parentMatch?.data?.detail?.image,
   }),

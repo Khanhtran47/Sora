@@ -326,7 +326,7 @@ const Filter: React.FC<IFilterProps> = (props: IFilterProps) => {
                     description={t('search.helper.anime')}
                     type="text"
                     fullWidth
-                    labelPosition="outside"
+                    labelPlacement="outside"
                   />
                 </div>
                 <div className="flex w-full flex-col items-start justify-start gap-3">
