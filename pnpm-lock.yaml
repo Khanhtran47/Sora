@@ -9,8 +9,8 @@ dependencies:
     specifier: ^1.0.2
     version: 1.0.2(@remix-run/react@1.18.1)(@remix-run/server-runtime@1.18.1)
   '@consumet/extensions':
-    specifier: ^1.4.18
-    version: 1.4.18
+    specifier: https://github.com/consumet/consumet.ts
+    version: github.com/consumet/consumet.ts/a405367a8648d19b7ad8bff4fa13d3a30df1fa33
   '@fontsource/inter':
     specifier: ^5.0.5
     version: 5.0.5
@@ -1736,18 +1736,6 @@ packages:
     resolution: {integrity: sha512-MVbXLbTcAotOPUj0pAMhVtJ+3/kFkwJqc5qNOleOZTv6QkZZABDMS21dSrSlVswEHwrpWC03e4fWytjqKvuE2A==}
     dependencies:
       mime: 3.0.0
-    dev: false
-
-  /@consumet/extensions@1.4.18:
-    resolution: {integrity: sha512-kmrRsWopTnAJiqTUu0p+nZ1XLzD/lmdAk7NtlvvHYk9XuM6xm8NUrK3mhVHglYe1it2ffs24g7aMvjH3ekFRMQ==}
-    dependencies:
-      ascii-url-encoder: 1.2.0
-      axios: 0.27.2
-      cheerio: 1.0.0-rc.12
-      crypto-js: 4.1.1
-      form-data: 4.0.0
-    transitivePeerDependencies:
-      - debug
     dev: false
 
   /@emotion/hash@0.9.1:
@@ -12756,3 +12744,17 @@ packages:
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
     dev: true
+
+  github.com/consumet/consumet.ts/a405367a8648d19b7ad8bff4fa13d3a30df1fa33:
+    resolution: {tarball: https://codeload.github.com/consumet/consumet.ts/tar.gz/a405367a8648d19b7ad8bff4fa13d3a30df1fa33}
+    name: '@consumet/extensions'
+    version: 1.5.0
+    dependencies:
+      ascii-url-encoder: 1.2.0
+      axios: 0.27.2
+      cheerio: 1.0.0-rc.12
+      crypto-js: 4.1.1
+      form-data: 4.0.0
+    transitivePeerDependencies:
+      - debug
+    dev: false

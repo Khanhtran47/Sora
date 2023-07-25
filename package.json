@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@balavishnuvj/remix-seo": "^1.0.2",
-    "@consumet/extensions": "^1.4.18",
+    "@consumet/extensions": "https://github.com/consumet/consumet.ts",
     "@fontsource/inter": "^5.0.5",
     "@lottiefiles/react-lottie-player": "^3.5.3",
     "@next-boost/hybrid-disk-cache": "^0.3.0",
