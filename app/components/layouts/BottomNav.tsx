@@ -27,7 +27,7 @@ const BottomNav = (props: IBottomNavProps) => {
   const [search] = useSearchParams();
   const scrollDirection = useLayout((state) => state.scrollDirection);
   const bottomNavItemStyles = tv({
-    base: 'flex flex-col items-center justify-center gap-y-2 rounded-md bg-transparent text-xs font-medium text-foreground',
+    base: 'flex flex-col items-center justify-center gap-y-2 rounded-small bg-transparent text-xs font-medium text-foreground',
     variants: {
       active: {
         true: 'text-primary',

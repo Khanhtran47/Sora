@@ -66,42 +66,12 @@
     @apply bg-gradient-to-r from-primary via-default-600 to-secondary bg-clip-text text-transparent;
   }
 
-  .cupcake {
-    --theme-rounded-base: 0.5rem;
-  }
-
-  .corporate {
-    --theme-rounded-base: 0.05rem;
-  }
-
   .cyberpunk {
     @apply font-mono;
-    --theme-rounded-base: 0px;
-  }
-
-  .retro {
-    --theme-rounded-base: 0.15rem;
-  }
-
-  .valentine {
-    --theme-rounded-base: 0.5rem;
-  }
-
-  .forest {
-    --theme-rounded-base: 0.5rem;
-  }
-
-  .pastel {
-    --theme-rounded-base: 0.5rem;
   }
 
   .wireframe {
     font-family: Chalkboard, comic sans ms, sanssecondaryerif;
-    --theme-rounded-base: 0.1rem;
-  }
-
-  .business {
-    --theme-rounded-base: 0px;
   }
 }
 
@@ -118,7 +88,7 @@
     .art-video-player {
       .art-layers {
         .art-layer-auto-playback {
-          @apply !rounded-lg !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
+          @apply !rounded-medium !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
         }
       }
     }
@@ -127,7 +97,7 @@
   .custom-player-contextmenus {
     .art-video-player.art-contextmenu-show {
       .art-contextmenus {
-        @apply !rounded-lg !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
+        @apply !rounded-medium !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
       }
     }
   }
@@ -135,14 +105,14 @@
   .custom-player-info {
     .art-video-player.art-info-show {
       .art-info {
-        @apply !rounded-lg !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
+        @apply !rounded-medium !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
       }
     }
   }
 
   .custom-player-notice-inner {
     .art-notice-inner {
-      @apply !rounded-lg !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
+      @apply !rounded-medium !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
     }
   }
 
@@ -156,7 +126,7 @@
     .art-video-player {
       .art-volume-panel {
         .art-volume-inner {
-          @apply !rounded-lg !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
+          @apply !rounded-medium !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
         }
       }
     }
@@ -164,7 +134,7 @@
 
   .custom-player-icon-after {
     .art-icon::after {
-      @apply !rounded-lg !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !text-default-foreground !font-sans !bg-default/[0.6];
+      @apply !rounded-medium !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !text-default-foreground !font-sans !bg-default/[0.6];
     }
   }
 
@@ -176,7 +146,7 @@
 
   .custom-player-control-after {
     .art-control::after {
-      @apply !rounded-lg !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !text-default-foreground !font-sans !bg-default/[0.6];
+      @apply !rounded-medium !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !text-default-foreground !font-sans !bg-default/[0.6];
     }
   }
 
@@ -203,7 +173,7 @@
         .art-control-progress
         .art-control-progress-inner
         .art-progress-tip {
-        @apply !rounded-lg !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
+        @apply !rounded-medium !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
       }
     }
   }

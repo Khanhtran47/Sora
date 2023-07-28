@@ -24,7 +24,7 @@ const HistoryItem = ({ item }: IHistoryItem) => {
       <Card
         isPressable
         isHoverable
-        className="hover:ring-2 hover:ring-primary sm:!max-h-[171px] sm:w-full"
+        className="data-[hover=true]:ring-2 data-[hover=true]:ring-focus sm:!max-h-[171px] sm:w-full"
       >
         <CardBody className="flex flex-col flex-nowrap justify-start overflow-hidden p-0 sm:flex-row">
           <Image
@@ -49,7 +49,7 @@ const HistoryItem = ({ item }: IHistoryItem) => {
           </div>
           {watched > 5 ? (
             <Progress
-              size="xs"
+              size="sm"
               value={watched}
               color="primary"
               className="!absolute bottom-0 w-full"

@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { Avatar } from '@nextui-org/avatar';
 import { Card, CardBody } from '@nextui-org/card';
 import { useParams } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
@@ -86,7 +85,7 @@ const AnimeOverview = () => {
   return (
     <div className="mt-3 flex w-full max-w-[1920px] flex-col gap-x-0 gap-y-4 px-3 sm:flex-row sm:items-stretch sm:justify-center sm:gap-x-4 sm:gap-y-0 sm:px-3.5 xl:px-4 2xl:px-5">
       <div className="flex w-full grow-0 flex-col sm:w-1/3 sm:items-center sm:justify-start">
-        <div className="flex w-full flex-col items-start justify-center gap-y-4 rounded-xl bg-content1 p-4 nextui-sm:w-3/4 xl:w-1/2">
+        <div className="flex w-full flex-col items-start justify-center gap-y-4 rounded-large bg-content1 p-4 nextui-sm:w-3/4 xl:w-1/2">
           {detail?.nextAiringEpisode ? (
             <div className="flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
               <h6 className="grow-0 basis-1/3">Airing</h6>
@@ -162,7 +161,7 @@ const AnimeOverview = () => {
         </div>
       </div>
       <div className="flex w-full flex-col sm:w-2/3">
-        <div className="flex flex-col items-start justify-start gap-y-4 rounded-xl bg-content1 p-4">
+        <div className="flex flex-col items-start justify-start gap-y-4 rounded-large bg-content1 p-4">
           <p
             className="text-justify"
             dangerouslySetInnerHTML={{ __html: detail?.description || '' }}
@@ -187,18 +186,22 @@ const AnimeOverview = () => {
                   key={character.id}
                   isHoverable
                   isPressable
-                  className="max-h-[80px] hover:ring-2 hover:ring-primary"
+                  className="max-h-[80px] data-[hover=true]:ring-2 data-[hover=true]:ring-focus"
                 >
-                  <CardBody className="flex flex-row flex-nowrap items-center justify-start overflow-hidden p-0">
-                    <div className="flex grow justify-start gap-x-2">
+                  <CardBody className="flex h-full flex-row flex-nowrap items-center justify-start overflow-hidden p-0">
+                    <div className="flex h-full grow justify-start gap-x-2">
                       {character?.image ? (
                         <Image
+                          radius="lg"
                           src={character.image}
                           width="60px"
-                          height="100%"
+                          height="80px"
                           alt={character?.name?.full}
                           title={character?.name?.full}
                           placeholder="empty"
+                          classNames={{
+                            img: 'max-h-[80px]',
+                          }}
                           options={{
                             contentType: MimeType.WEBP,
                           }}
@@ -212,20 +215,16 @@ const AnimeOverview = () => {
                           ]}
                         />
                       ) : (
-                        <Avatar
-                          icon={<PhotoIcon width={24} height={24} />}
-                          radius="xl"
-                          classNames={{
-                            base: 'min-h-[80px] min-w-[60px] basis-[60px]',
-                          }}
-                        />
+                        <div className="z-0 flex min-h-[80px] min-w-[60px] basis-[60px] items-center justify-center rounded-large bg-default">
+                          <PhotoIcon width={36} height={36} />
+                        </div>
                       )}
                       <div className="flex flex-col items-start justify-center p-1">
                         <h5>{character.name?.full}</h5>
                         <p className="opacity-80">{character.role}</p>
                       </div>
                     </div>
-                    <div className="flex grow flex-row justify-end gap-x-2">
+                    <div className="flex h-full grow flex-row justify-end gap-x-2">
                       {character?.voiceActors && character?.voiceActors.length > 0 && (
                         <div className="flex flex-col items-end justify-center p-1">
                           <h5>{character.voiceActors[0].name?.full}</h5>
@@ -236,10 +235,13 @@ const AnimeOverview = () => {
                         <Image
                           src={character.voiceActors[0]?.image}
                           width="60px"
-                          height="100%"
+                          height="80px"
                           alt={character.voiceActors[0].name?.full}
                           title={character.voiceActors[0].name?.full}
                           placeholder="empty"
+                          classNames={{
+                            img: 'max-h-[80px]',
+                          }}
                           options={{
                             contentType: MimeType.WEBP,
                           }}
@@ -253,13 +255,9 @@ const AnimeOverview = () => {
                           ]}
                         />
                       ) : (
-                        <Avatar
-                          icon={<PhotoIcon width={24} height={24} />}
-                          radius="xl"
-                          classNames={{
-                            base: 'min-h-[80px] min-w-[60px] basis-[60px]',
-                          }}
-                        />
+                        <div className="z-0 flex min-h-[80px] min-w-[60px] basis-[60px] items-center justify-center rounded-large bg-default">
+                          <PhotoIcon width={36} height={36} />
+                        </div>
                       )}
                     </div>
                   </CardBody>

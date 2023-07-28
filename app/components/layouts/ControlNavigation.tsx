@@ -69,7 +69,7 @@ const ControlNavigation = () => {
       </Button>
       {isHydrated ? (
         isShowBreadcrumb.value ? (
-          <Chip color="default" variant="faded" size="xl">
+          <Chip color="default" variant="faded" size="lg">
             <Breadcrumb>
               {matches
                 // skip routes that don't have a breadcrumb
@@ -91,7 +91,7 @@ const ControlNavigation = () => {
                 width={36}
                 height={54}
                 loading="lazy"
-                className="rounded-md"
+                className="rounded-small"
               />
             ) : null}
             <div className="flex flex-col items-start justify-center">

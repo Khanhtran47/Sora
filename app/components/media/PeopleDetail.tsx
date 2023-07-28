@@ -1,5 +1,4 @@
 import { Player } from '@lottiefiles/react-lottie-player';
-import { Avatar } from '@nextui-org/avatar';
 import { Link } from '@nextui-org/link';
 import { Spacer } from '@nextui-org/spacer';
 import { useMeasure } from '@react-hookz/web';
@@ -81,13 +80,9 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
         />
       ) : (
         <div className="flex w-full items-center justify-center">
-          <Avatar
-            icon={<PhotoIcon width={48} height={48} />}
-            radius="xl"
-            classNames={{
-              base: 'w-1/2 h-auto aspect-[2/3]',
-            }}
-          />
+          <div className="z-0 flex aspect-[2/3] h-auto w-1/2 items-center justify-center rounded-large bg-default">
+            <PhotoIcon width={36} height={36} />
+          </div>
         </div>
       )}
       <Spacer y={5} />

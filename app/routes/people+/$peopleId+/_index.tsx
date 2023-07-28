@@ -43,7 +43,8 @@ const OverviewPage = () => {
     if (peopleData?.detail?.name) {
       fetcher.load(`/search/people/${peopleData?.detail?.name}`);
     }
-  }, [peopleData, fetcher]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   useEffect(() => {
     if (fetcher.data && fetcher.data.searchResults) {
       const { items } = fetcher.data.searchResults;

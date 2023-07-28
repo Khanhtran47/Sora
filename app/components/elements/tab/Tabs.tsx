@@ -28,13 +28,13 @@ const TabsList = React.forwardRef<
   <ScrollArea
     type="scroll"
     scrollHideDelay={100}
-    className="h-[61px] w-full rounded-bl-none sm:h-auto sm:w-[200px] sm:min-w-[200px] sm:rounded-l-sm sm:rounded-r-none"
+    className="h-[61px] w-full rounded-bl-none sm:h-auto sm:w-[200px] sm:min-w-[200px] sm:rounded-l-small sm:rounded-r-none"
   >
     <ScrollViewport>
       <TabsPrimitive.List
         ref={ref}
         className={cnBase(
-          'inline-flex w-full shrink-0 gap-y-3 rounded-lg bg-content1 p-[5px] focus:outline-none data-[orientation=vertical]:flex-col',
+          'inline-flex w-full shrink-0 gap-y-3 rounded-medium bg-content1 p-[5px] focus:outline-none data-[orientation=vertical]:flex-col',
           className,
         )}
         {...props}
@@ -53,7 +53,7 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cnBase(
-      'z-10 inline-flex h-[50px] shrink-0 select-none items-center justify-center rounded-md p-3 text-default-500 outline-none hover:opacity-70 data-[disabled]:cursor-not-allowed data-[orientation=vertical]:justify-start data-[state=active]:bg-default data-[disabled]:text-gray-500 data-[state=active]:text-default-foreground data-[disabled]:opacity-70',
+      'z-10 inline-flex h-[50px] shrink-0 select-none items-center justify-center rounded-small p-3 text-default-500 outline-none hover:opacity-70 data-[disabled]:cursor-not-allowed data-[orientation=vertical]:justify-start data-[state=active]:bg-default data-[disabled]:text-gray-500 data-[state=active]:text-default-foreground data-[disabled]:opacity-70',
       className,
     )}
     {...props}
@@ -68,7 +68,7 @@ const TabsContent = React.forwardRef<
   <TabsPrimitive.Content
     ref={ref}
     className={cnBase(
-      'min-h-[75vh] grow rounded-md outline-none sm:rounded-bl-none sm:rounded-tr-md sm:px-[10px] xl:px-5',
+      'min-h-[75vh] grow rounded-small outline-none sm:rounded-bl-none sm:rounded-tr-medium sm:px-[10px] xl:px-5',
       className,
     )}
     {...props}

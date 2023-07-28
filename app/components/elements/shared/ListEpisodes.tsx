@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react';
-import { Avatar } from '@nextui-org/avatar';
 import { Button, ButtonGroup } from '@nextui-org/button';
 import { Card, CardBody } from '@nextui-org/card';
 import { Pagination } from '@nextui-org/pagination';
@@ -163,7 +162,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                 <Card
                   isHoverable
                   isPressable
-                  className="!max-h-[127px] w-full hover:ring-2 hover:ring-primary"
+                  className="!max-h-[127px] w-full data-[hover=true]:ring-2 data-[hover=true]:ring-focus"
                   onClick={() => handleSelectEpisode(index)}
                 >
                   <CardBody className="flex flex-row flex-nowrap justify-start p-0">
@@ -174,13 +173,13 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                           width={227}
                           height="100%"
                           isZoomed
-                          radius="xl"
+                          radius="lg"
                           loading="lazy"
                           disableSkeleton={false}
                           alt={episode?.name || ''}
                           title={episode?.name || ''}
                           classNames={{
-                            wrapper: 'm-0 min-w-[227px] max-h-[125px] overflow-hidden',
+                            wrapper: 'm-0 min-w-[227px] max-h-[127px] overflow-hidden',
                           }}
                           placeholder="empty"
                           options={{ contentType: MimeType.WEBP }}
@@ -194,13 +193,9 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                           ]}
                         />
                       ) : (
-                        <Avatar
-                          icon={<PhotoIcon width={48} height={48} />}
-                          radius="xl"
-                          classNames={{
-                            base: 'z-0 aspect-[16/9] min-w-[227px] min-h-[125px] overflow-hidden',
-                          }}
-                        />
+                        <div className="z-0 flex aspect-[16/9] min-h-[125px] min-w-[227px] items-center justify-center rounded-large bg-default">
+                          <PhotoIcon width={36} height={36} />
+                        </div>
                       ))}
                     {type === 'anime' &&
                       (episode?.image ? (
@@ -211,7 +206,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                           alt={episode?.title || ''}
                           title={episode?.title || ''}
                           loading="lazy"
-                          radius="xl"
+                          radius="lg"
                           isZoomed
                           disableSkeleton={false}
                           classNames={{
@@ -229,13 +224,9 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                           ]}
                         />
                       ) : (
-                        <Avatar
-                          icon={<PhotoIcon width={48} height={48} />}
-                          radius="xl"
-                          classNames={{
-                            base: 'z-0 aspect-[16/9] min-w-[227px] min-h-[125px] overflow-hidden',
-                          }}
-                        />
+                        <div className="z-0 flex aspect-[16/9] min-h-[125px] min-w-[227px] items-center justify-center rounded-large bg-default">
+                          <PhotoIcon width={48} height={48} />
+                        </div>
                       ))}
                     <div className="flex flex-col justify-start gap-y-1 p-4">
                       <h5 className="line-clamp-1">
@@ -283,7 +274,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
             initialPage={currentPage}
             // shadow
             onChange={(page) => gotoPage(page)}
-            {...(isSm && { size: 'xs' })}
+            {...(isSm && { size: 'sm' })}
           />
         </div>
       ) : null}

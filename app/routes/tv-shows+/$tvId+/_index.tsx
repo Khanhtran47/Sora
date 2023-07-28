@@ -1,4 +1,3 @@
-import { Avatar } from '@nextui-org/avatar';
 import { Card, CardBody } from '@nextui-org/card';
 import { useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs } from '@remix-run/node';
@@ -96,7 +95,7 @@ const TvOverview = () => {
   return (
     <div className="mt-3 flex w-full max-w-[1920px] flex-col gap-x-0 gap-y-4 px-3 sm:flex-row sm:items-stretch sm:justify-center sm:gap-x-4 sm:gap-y-0 sm:px-3.5 xl:px-4 2xl:px-5">
       <div className="flex w-full grow-0 flex-col sm:w-1/3 sm:items-center sm:justify-start">
-        <div className="flex w-full flex-col items-start justify-center gap-y-4 rounded-xl bg-content1 p-4 nextui-sm:w-3/4 xl:w-1/2">
+        <div className="flex w-full flex-col items-start justify-center gap-y-4 rounded-large bg-content1 p-4 nextui-sm:w-3/4 xl:w-1/2">
           <div className="flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
             <h6 className="grow-0 basis-1/3">Status</h6>
             <p className="grow">{detail?.status}</p>
@@ -124,7 +123,7 @@ const TvOverview = () => {
         </div>
       </div>
       <div className="flex w-full flex-col sm:w-2/3">
-        <div className="flex flex-col items-start justify-start gap-y-4 rounded-xl bg-content1 p-4">
+        <div className="flex flex-col items-start justify-start gap-y-4 rounded-large bg-content1 p-4">
           <p className="text-justify">{detail?.overview}</p>
           <div className="flex flex-col flex-wrap gap-x-0 gap-y-4 sm:flex-row sm:gap-x-8">
             {detail?.created_by && detail?.created_by.length > 0 ? (
@@ -136,7 +135,7 @@ const TvOverview = () => {
                       key={`director-item-${creator.id}}`}
                       to={`/people/${creator.id}/`}
                       style={{ lineHeight: '1.75rem' }}
-                      className="text-foreground hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                      className="text-foreground hover:text-primary focus:outline-none focus:ring-2 focus:ring-focus"
                     >
                       {creator.name}
                     </Link>
@@ -186,13 +185,14 @@ const TvOverview = () => {
                 .filter((season) => !season.name?.includes('Specials'))
                 .map((season) => (
                   <Card
-                    as={Link}
+                    role="button"
                     key={season.id}
-                    to={`/tv-shows/${detail.id}/season/${season.season_number}/`}
                     isHoverable
                     isPressable
-                    className="hover:ring-2 hover:ring-primary"
-                    role="figure"
+                    className="data-[hover=true]:ring-2 data-[hover=true]:ring-focus"
+                    onPress={() =>
+                      navigate(`/tv-shows/${detail.id}/season/${season.season_number}/`)
+                    }
                   >
                     <CardBody className="flex flex-row flex-nowrap justify-start p-0">
                       {season.poster_path ? (
@@ -220,13 +220,9 @@ const TvOverview = () => {
                           ]}
                         />
                       ) : (
-                        <Avatar
-                          icon={<PhotoIcon width={48} height={48} />}
-                          radius="xl"
-                          classNames={{
-                            base: 'z-0 aspect-[2/3] max-h-[193px] min-w-[130px]',
-                          }}
-                        />
+                        <div className="z-0 flex  aspect-[2/3] max-h-[193px] min-w-[130px] items-center justify-center rounded-large bg-default">
+                          <PhotoIcon width={36} height={36} />
+                        </div>
                       )}
                       <div className="flex flex-col justify-start p-5">
                         <h4>{season.name}</h4>

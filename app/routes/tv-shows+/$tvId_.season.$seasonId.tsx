@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import { Avatar } from '@nextui-org/avatar';
 import { Card, CardBody, CardHeader } from '@nextui-org/card';
 import { useIntersectionObserver, useMeasure, useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs } from '@remix-run/node';
@@ -202,14 +201,13 @@ const TvSeasonDetail = () => {
   return (
     <>
       <Card
-        as="section"
         radius="none"
         className="flex w-full flex-col border-0"
         style={{ height: `calc(${size?.height}px + 72px)` }}
       >
         <CardHeader
           ref={ref}
-          className="rounded-b-0 absolute bottom-0 z-10 flex grow flex-col justify-center p-0"
+          className="absolute bottom-0 z-10 flex grow flex-col justify-center rounded-b-none p-0"
         >
           <div className={backgroundStyles({ content: true })} />
           <div className="grid w-full max-w-[1920px] grid-cols-[1fr_2fr] grid-rows-[1fr_auto_auto] items-stretch justify-center gap-x-4 gap-y-6 px-3 pb-8 pt-5 grid-areas-small sm:grid-rows-[auto_1fr_auto] sm:px-3.5 sm:grid-areas-wide xl:px-4 2xl:px-5">
@@ -246,13 +244,9 @@ const TvSeasonDetail = () => {
                 />
               ) : (
                 <div className="flex w-full items-center justify-center">
-                  <Avatar
-                    icon={<PhotoIcon width={48} height={48} />}
-                    radius="xl"
-                    classNames={{
-                      base: 'w-full h-auto aspect-[2/3] sm:w-3/4 xl:w-1/2 shadow-xl shadow-default',
-                    }}
-                  />
+                  <div className="z-0 flex aspect-[2/3] h-auto w-full items-center justify-center rounded-large bg-default sm:w-3/4 xl:w-1/2">
+                    <PhotoIcon width={36} height={36} />
+                  </div>
                 </div>
               )}
             </div>

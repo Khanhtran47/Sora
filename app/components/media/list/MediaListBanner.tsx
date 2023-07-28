@@ -113,7 +113,7 @@ const CustomNavigationThumbs = ({ slot }: { slot: 'container-end' }) => {
         type="button"
         color="default"
         variant="flat"
-        className="absolute left-[2px] top-[60px] z-[90] m-0 h-11 w-min min-w-0 cursor-pointer rounded-md bg-background/60 p-0 backdrop-blur-md"
+        className="absolute left-[2px] top-[60px] z-[90] m-0 h-11 w-min min-w-0 cursor-pointer rounded-small bg-background/60 p-0 backdrop-blur-md"
         isIconOnly
         onPress={() => swiper.slidePrev()}
         aria-label="Previous"
@@ -121,14 +121,14 @@ const CustomNavigationThumbs = ({ slot }: { slot: 'container-end' }) => {
         <ChevronLeftIcon
           fill="currentColor"
           filled
-          className="scale-75 opacity-80 duration-200 ease-linear transition-all hover:scale-100 hover:opacity-100"
+          className="scale-75 opacity-80 transition-all duration-200 ease-linear hover:scale-100 hover:opacity-100"
         />
       </Button>
       <Button
         type="button"
         color="default"
         variant="flat"
-        className="absolute right-[2px] top-[60px] z-[90] m-0 h-11 w-min min-w-0 cursor-pointer rounded-md bg-background/60 p-0 backdrop-blur-md"
+        className="absolute right-[2px] top-[60px] z-[90] m-0 h-11 w-min min-w-0 cursor-pointer rounded-small bg-background/60 p-0 backdrop-blur-md"
         isIconOnly
         onPress={() => swiper.slideNext()}
         aria-label="Next"
@@ -136,7 +136,7 @@ const CustomNavigationThumbs = ({ slot }: { slot: 'container-end' }) => {
         <ChevronRightIcon
           fill="currentColor"
           filled
-          className="scale-75 opacity-80 duration-200 ease-linear transition-all hover:scale-100 hover:opacity-100"
+          className="scale-75 opacity-80 transition-all duration-200 ease-linear hover:scale-100 hover:opacity-100"
         />
       </Button>
     </div>
@@ -279,8 +279,7 @@ const MediaListBanner = (props: IMediaListBannerProps) => {
             {items.map((item, index) => (
               <SwiperSlide
                 key={`${item.id}-${index}-banner-thumb`}
-                tag="button"
-                className={`mx-1 my-2 !h-[135px] !w-[240px] overflow-hidden rounded-xl border-4 duration-300 ease-out transition-opacity ${
+                className={`mx-1 my-2 !h-[135px] !w-[240px] overflow-hidden rounded-large border-4 transition-opacity duration-300 ease-out ${
                   isPlayTrailer.value
                     ? `opacity-20 hover:opacity-70 ${activeIndex === index ? 'opacity-90' : ''}`
                     : 'opacity-100'

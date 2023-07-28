@@ -39,7 +39,7 @@ const ImagePage = () => {
         alt="Image"
         width={400}
         height={300}
-        radius="xl"
+        radius="lg"
         loading="lazy"
         disableSkeleton
       />
@@ -50,7 +50,7 @@ const ImagePage = () => {
         width={400}
         height={300}
         isZoomed
-        radius="xl"
+        radius="lg"
         loading="lazy"
         disableSkeleton={false}
       />
@@ -60,7 +60,7 @@ const ImagePage = () => {
         alt="Image"
         width={400}
         height={300}
-        radius="xl"
+        radius="lg"
         loading="lazy"
         disableSkeleton={false}
       />
@@ -70,7 +70,7 @@ const ImagePage = () => {
         alt="Image"
         width={400}
         height={300}
-        radius="xl"
+        radius="lg"
         loading="lazy"
         disableSkeleton={false}
         placeholder="empty"

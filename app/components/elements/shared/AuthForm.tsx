@@ -136,7 +136,7 @@ const AuthForm = ({ type, error, code, errorCode }: IAuthForm) => {
               <>
                 <Link
                   to="/sign-up"
-                  className="font-semibold text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="font-semibold text-primary focus:outline-none focus:ring-2 focus:ring-focus"
                 >
                   {t('signUp')}
                 </Link>
@@ -147,7 +147,7 @@ const AuthForm = ({ type, error, code, errorCode }: IAuthForm) => {
             ) : (
               <Link
                 to="/sign-in"
-                className="font-semibold text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                className="font-semibold text-primary focus:outline-none focus:ring-2 focus:ring-focus"
               >
                 {t('signIn')}
               </Link>

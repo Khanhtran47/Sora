@@ -152,7 +152,7 @@ const PhotosPage = () => {
                   ref={ref as React.MutableRefObject<HTMLImageElement>}
                   onClick={open}
                   alt={`Photo of ${tvData?.detail?.name} image size ${image.width}x${image.height}`}
-                  radius="xl"
+                  radius="lg"
                   classNames={{
                     img: 'h-auto min-w-[120px] cursor-pointer object-cover 2xs:min-w-[185px]',
                   }}

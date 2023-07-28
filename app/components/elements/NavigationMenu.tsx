@@ -66,7 +66,7 @@ const NavigationMenuItem = NavigationMenuPrimitive.Item;
 
 const navigationMenuTriggerStyle = tv({
   base: `text-md group inline-flex h-10 w-max items-center justify-center
-  rounded-md bg-transparent px-4 py-2 font-medium text-foreground transition-colors hover:bg-default hover:text-default-foreground hover:opacity-80 focus:bg-default focus:text-default-foreground focus:outline-none disabled:pointer-events-none
+  rounded-small bg-transparent px-4 py-2 font-medium text-foreground transition-colors hover:bg-default hover:text-default-foreground hover:opacity-80 focus:bg-default focus:text-default-foreground focus:outline-none disabled:pointer-events-none
   disabled:opacity-50 data-[active]:bg-default data-[state=open]:bg-default data-[active]:text-default-foreground data-[state=open]:text-default-foreground`,
   variants: {
     active: {
@@ -90,7 +90,7 @@ const NavigationMenuTrigger = forwardRef<
     {children}{' '}
     {showArrow ? (
       <ChevronRight
-        className="relative top-[1px] ml-auto h-5 w-5 duration-400 transition group-data-[state=open]:rotate-180"
+        className="relative top-[1px] ml-auto h-5 w-5 transition duration-400 group-data-[state=open]:rotate-180"
         aria-hidden="true"
       />
     ) : null}
@@ -130,7 +130,7 @@ const NavigationMenuIndicator = forwardRef<
     className={navigationMenuIndicatorStyle({ class: className })}
     {...props}
   >
-    <div className="relative top-[60%] h-2 w-2 rotate-45 rounded-tl-sm bg-slate-200 shadow-md dark:bg-slate-800" />
+    <div className="relative top-[60%] h-2 w-2 rotate-45 rounded-tl-small bg-slate-200 shadow-md dark:bg-slate-800" />
   </NavigationMenuPrimitive.Indicator>
 ));
 NavigationMenuIndicator.displayName = NavigationMenuPrimitive.Indicator.displayName;

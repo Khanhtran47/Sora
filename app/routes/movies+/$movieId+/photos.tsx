@@ -149,7 +149,7 @@ const MoviePhotosPage = () => {
                       ref={ref as React.MutableRefObject<HTMLImageElement>}
                       onClick={open}
                       alt={`Backdrop of ${movieData?.detail?.title} image size ${image.width}x${image.height}`}
-                      radius="xl"
+                      radius="lg"
                       classNames={{
                         img: 'h-auto min-w-[120px] cursor-pointer object-cover 2xs:min-w-[185px]',
                       }}
@@ -192,7 +192,7 @@ const MoviePhotosPage = () => {
                       ref={ref as React.MutableRefObject<HTMLImageElement>}
                       onClick={open}
                       alt={`Logo of ${movieData?.detail?.title} image size ${image.width}x${image.height}`}
-                      radius="xl"
+                      radius="lg"
                       classNames={{
                         img: 'h-auto min-w-[120px] cursor-pointer object-cover 2xs:min-w-[185px]',
                       }}
@@ -235,7 +235,7 @@ const MoviePhotosPage = () => {
                       ref={ref as React.MutableRefObject<HTMLImageElement>}
                       onClick={open}
                       alt={`Poster of ${movieData?.detail?.title} image size ${image.width}x${image.height}`}
-                      radius="xl"
+                      radius="lg"
                       classNames={{
                         img: 'h-auto min-w-[120px] cursor-pointer object-cover 2xs:min-w-[185px]',
                       }}

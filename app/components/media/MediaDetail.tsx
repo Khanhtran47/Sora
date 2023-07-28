@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Avatar } from '@nextui-org/avatar';
 import { Button } from '@nextui-org/button';
 import { Card, CardBody } from '@nextui-org/card';
 import { Chip } from '@nextui-org/chip';
@@ -154,7 +153,7 @@ export const MediaDetail = (props: IMediaDetail) => {
           '--theme-movie-brand': isHydrated ? backgroundColor : 'transparent',
         }}
         classNames={{
-          base: 'flex flex-col w-full !bg-transparent bg-gradient-to-b !from-transparent from-[80px] !to-movie-brand-color border-0 to-[80px] sm:from-[200px] sm:to-[200px]',
+          base: 'flex flex-col w-full !bg-transparent bg-gradient-to-b !from-transparent from-[80px] !to-movie-brand-color border-0 to-[80px] sm:from-[200px] sm:to-[200px] shadow-none',
         }}
       >
         <CardBody
@@ -168,8 +167,8 @@ export const MediaDetail = (props: IMediaDetail) => {
                 <Image
                   src={posterPath}
                   alt={title}
-                  radius="xl"
-                  shadow="xl"
+                  radius="lg"
+                  shadow="sm"
                   classNames={{
                     wrapper: 'w-full sm:w-3/4 xl:w-1/2',
                     img: 'aspect-[2/3] !min-h-[auto] !min-w-[auto]',
@@ -197,14 +196,8 @@ export const MediaDetail = (props: IMediaDetail) => {
                   }}
                 />
               ) : (
-                <div className="flex w-full items-center justify-center">
-                  <Avatar
-                    icon={<PhotoIcon width={48} height={48} />}
-                    radius="xl"
-                    classNames={{
-                      base: 'w-full h-auto aspect-[2/3] sm:w-3/4 xl:w-1/2',
-                    }}
-                  />
+                <div className="z-0 flex aspect-[2/3] h-auto w-full items-center justify-center rounded-large bg-default sm:w-3/4 xl:w-1/2">
+                  <PhotoIcon width={36} height={36} />
                 </div>
               )}
               {isSm ? null : <Spacer y={10} />}
@@ -218,7 +211,7 @@ export const MediaDetail = (props: IMediaDetail) => {
             <div className="flex flex-col gap-y-3 grid-in-info sm:gap-y-6">
               <div className="flex flex-row flex-wrap gap-3">
                 <Chip
-                  size="xl"
+                  size="lg"
                   color="primary"
                   radius="full"
                   variant="flat"
@@ -242,7 +235,7 @@ export const MediaDetail = (props: IMediaDetail) => {
                   />
                   {imdbRating ? (
                     <div className="ml-3 flex flex-row items-center gap-x-2">
-                      <h6 className="rounded-xl bg-[#ddb600] px-1 text-black">IMDb</h6>
+                      <h6 className="rounded-large bg-[#ddb600] px-1 text-black">IMDb</h6>
                       <h6 style={colorPalette ? { color: colorPalette[600] } : {}}>
                         {imdbRating?.star}
                       </h6>
@@ -250,11 +243,11 @@ export const MediaDetail = (props: IMediaDetail) => {
                   ) : null}
                 </Chip>
                 <Chip
-                  size="xl"
+                  size="lg"
                   color="primary"
                   radius="full"
                   variant="flat"
-                  className="flex flex-row duration-200 ease-in-out transition-all"
+                  className="flex flex-row transition-all duration-200 ease-in-out"
                   style={
                     colorPalette
                       ? {
@@ -420,7 +413,7 @@ export const AnimeDetail = (props: IAnimeDetail) => {
           '--theme-movie-brand': isHydrated ? backgroundColor : 'transparent',
         }}
         classNames={{
-          base: 'flex flex-col w-full !bg-transparent bg-gradient-to-b !from-transparent from-[80px] !to-movie-brand-color border-0 to-[80px] sm:from-[200px] sm:to-[200px]',
+          base: 'flex flex-col w-full !bg-transparent bg-gradient-to-b !from-transparent from-[80px] !to-movie-brand-color border-0 to-[80px] sm:from-[200px] sm:to-[200px] shadow-none',
         }}
       >
         <CardBody ref={ref} className="z-1 absolute bottom-0 flex grow flex-col justify-center p-0">
@@ -432,7 +425,8 @@ export const AnimeDetail = (props: IAnimeDetail) => {
                   src={image}
                   title={title?.userPreferred || title?.english || title?.romaji || title?.native}
                   alt={title?.userPreferred || title?.english || title?.romaji || title?.native}
-                  radius="xl"
+                  radius="lg"
+                  shadow="sm"
                   classNames={{
                     wrapper: 'w-full sm:w-3/4 xl:w-1/2',
                     img: 'aspect-[2/3] !min-h-[auto] !min-w-[auto]',
@@ -460,14 +454,8 @@ export const AnimeDetail = (props: IAnimeDetail) => {
                   }}
                 />
               ) : (
-                <div className="flex w-full items-center justify-center">
-                  <Avatar
-                    icon={<PhotoIcon width={48} height={48} />}
-                    radius="xl"
-                    classNames={{
-                      base: 'w-full h-auto aspect-[2/3] sm:w-3/4 xl:w-1/2',
-                    }}
-                  />
+                <div className="z-0 flex aspect-[2/3] h-auto w-full items-center justify-center rounded-large bg-default sm:w-3/4 xl:w-1/2">
+                  <PhotoIcon width={36} height={36} />
                 </div>
               )}
               {isSm ? null : <Spacer y={10} />}
@@ -480,11 +468,11 @@ export const AnimeDetail = (props: IAnimeDetail) => {
             <div className="flex flex-col gap-y-3 grid-in-info sm:gap-y-6">
               <div className="flex flex-row flex-wrap gap-3">
                 <Chip
-                  size="xl"
+                  size="lg"
                   color="primary"
                   radius="full"
                   variant="flat"
-                  className="duration-200 ease-in-out transition-all"
+                  className="transition-all duration-200 ease-in-out"
                   style={
                     colorPalette
                       ? {
@@ -501,11 +489,11 @@ export const AnimeDetail = (props: IAnimeDetail) => {
                   />
                 </Chip>
                 <Chip
-                  size="xl"
+                  size="lg"
                   color="primary"
                   radius="full"
                   variant="flat"
-                  className="flex flex-row duration-200 ease-in-out transition-all"
+                  className="flex flex-row transition-all duration-200 ease-in-out"
                   style={
                     colorPalette
                       ? {
