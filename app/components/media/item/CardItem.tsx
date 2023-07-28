@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Avatar } from '@nextui-org/avatar';
 import { Button } from '@nextui-org/button';
 import { Card, CardBody, CardFooter } from '@nextui-org/card';
 // import { Tooltip } from '@nextui-org/react';
@@ -56,7 +55,7 @@ interface ICardItemProps {
 
 const cardItemStyles = tv({
   slots: {
-    base: '!w-[164px] data-[hover=true]:ring-2 data-[hover=true]:ring-primary',
+    base: '!w-[164px] data-[hover=true]:ring-2 data-[hover=true]:ring-focus',
     body: 'aspect-[2/3]',
     imageContainer: '',
     image: 'aspect-[2/3]',
@@ -71,7 +70,7 @@ const cardItemStyles = tv({
         imageContainer: 'h-full w-full focus:outline-none',
         image: 'z-0 aspect-[2/3] !min-h-[auto] !min-w-[auto] !transition-[transform,_opacity]',
         footer:
-          'flex min-h-[4.875rem] max-w-[164px] flex-col items-start justify-start focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary sm:max-w-[210px] md:max-w-[200px] lg:max-w-[244px] xl:max-w-[264px]',
+          'flex min-h-[4.875rem] max-w-[164px] flex-col items-start justify-start focus:outline-none focus:ring-2 focus:ring-inset focus:ring-focus sm:max-w-[210px] md:max-w-[200px] lg:max-w-[244px] xl:max-w-[264px]',
       },
       detail: {
         base: '!w-full sm:!w-[480px]',
@@ -80,7 +79,7 @@ const cardItemStyles = tv({
         image: 'z-0 !h-[174px] !min-h-[auto] !min-w-[116px] sm:aspect-[2/3] sm:!h-[auto]',
         content: 'flex grow flex-col gap-y-4 p-3 sm:w-3/5',
         footer:
-          'absolute bottom-0 flex !w-[116px] justify-center border-t border-default-200 bg-background/[0.6] backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary sm:!w-2/5',
+          'absolute bottom-0 flex !w-[116px] justify-center border-t border-default-200 bg-background/[0.6] backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-inset focus:ring-focus sm:!w-2/5',
       },
       table: {
         base: '!w-full',
@@ -104,7 +103,8 @@ const cardItemStyles = tv({
         imageContainer: 'h-full w-full focus:outline-none',
         image:
           'z-0 aspect-[2/3] !min-h-[auto] !min-w-[auto] overflow-hidden !transition-[transform,_opacity]',
-        footer: 'flex min-h-[5.25rem] max-w-[164px] flex-col items-start justify-start',
+        footer:
+          'flex min-h-[5.25rem] max-w-[164px] flex-col items-start justify-start focus:outline-none focus:ring-2 focus:ring-inset focus:ring-focus',
       },
     },
   },
@@ -190,14 +190,12 @@ const CardItem = (props: ICardItemProps) => {
   if (isCoverCard) {
     return (
       <Card
-        as={Link}
-        to={linkTo || '/'}
         isHoverable
         isPressable
         className={`${base()} ${isSliderCard ? 'my-4' : ''}`}
-        role="figure"
-        // @ts-ignore
+        role="button"
         ref={cardRef}
+        onPress={() => navigate(linkTo || '/')}
       >
         <CardBody className={body()} ref={imageRef}>
           {size ? (
@@ -287,13 +285,9 @@ const CardItem = (props: ICardItemProps) => {
                 ]}
               />
             ) : (
-              <Avatar
-                radius="xl"
-                icon={<PhotoIcon width={48} height={48} />}
-                classNames={{
-                  base: 'z-0 w-full h-full aspect-[2/3]',
-                }}
-              />
+              <div className="z-0 flex aspect-[2/3] h-full w-full items-center justify-center rounded-large bg-default">
+                <PhotoIcon width={48} height={48} />
+              </div>
             )
           ) : null}
         </Link>
@@ -335,7 +329,7 @@ const CardItem = (props: ICardItemProps) => {
                       type="button"
                       color="default"
                       variant="solid"
-                      size="xs"
+                      size="sm"
                       onPress={() => navigate(`/discover/anime?genres=${genre}`)}
                     >
                       {genre}
@@ -349,7 +343,7 @@ const CardItem = (props: ICardItemProps) => {
                           type="button"
                           color="default"
                           variant="solid"
-                          size="xs"
+                          size="sm"
                           onPress={() =>
                             navigate(`/discover/movies?with_genres=${genresMovie?.[genreId]}`)
                           }
@@ -364,7 +358,7 @@ const CardItem = (props: ICardItemProps) => {
                         type="button"
                         color="default"
                         variant="solid"
-                        size="xs"
+                        size="sm"
                         onPress={() =>
                           navigate(`/discover/tv-shows?with_genres=${genresTv?.[genreId]}`)
                         }
@@ -383,7 +377,7 @@ const CardItem = (props: ICardItemProps) => {
           <div className={content()}>
             <Link
               to={linkTo || '/'}
-              className="line-clamp-1 text-lg font-bold text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+              className="line-clamp-1 text-lg font-bold text-foreground focus:outline-none focus:ring-2 focus:ring-focus"
             >
               {titleItem}
             </Link>
@@ -396,7 +390,7 @@ const CardItem = (props: ICardItemProps) => {
                         type="button"
                         color="default"
                         variant="solid"
-                        size="xs"
+                        size="sm"
                         onPress={() => navigate(`/discover/anime?genres=${genre}`)}
                         className={index === 1 ? '!hidden sm:!flex' : ''}
                       >
@@ -411,7 +405,7 @@ const CardItem = (props: ICardItemProps) => {
                             type="button"
                             color="default"
                             variant="solid"
-                            size="xs"
+                            size="sm"
                             onPress={() =>
                               navigate(`/discover/movies?with_genres=${genresMovie?.[genreId]}`)
                             }
@@ -427,7 +421,7 @@ const CardItem = (props: ICardItemProps) => {
                           type="button"
                           color="default"
                           variant="solid"
-                          size="xs"
+                          size="sm"
                           onPress={() =>
                             navigate(`/discover/tv-shows?with_genres=${genresTv?.[genreId]}`)
                           }
@@ -472,7 +466,7 @@ const CardItem = (props: ICardItemProps) => {
       inView ? (
         <CardFooter className={footer()} as={Link} to={linkTo || '/'}>
           <h5
-            className="!line-clamp-2 w-full font-semibold"
+            className="!line-clamp-2 w-full text-left font-semibold"
             style={{
               ...(color ? { color } : null),
               minWidth: `${mediaType === 'people' ? '100px' : '150px'}`,

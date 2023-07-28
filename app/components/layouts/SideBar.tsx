@@ -4,7 +4,7 @@ import { Link } from '@nextui-org/link';
 import { Spinner } from '@nextui-org/spinner';
 import { Tooltip } from '@nextui-org/tooltip';
 import { useHover } from '@react-aria/interactions';
-import { NavLink } from '@remix-run/react';
+import { NavLink, useNavigate } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 import { MimeType } from 'remix-image';
 import { tv } from 'tailwind-variants';
@@ -42,11 +42,11 @@ const sidebarStyles = tv({
       false: 'w-full max-w-[250px] basis-[250px]',
     },
     sidebarBoxedMode: {
-      true: 'left-[15px] top-[15px] h-[calc(100vh_-_30px)] rounded-xl bg-background/60',
+      true: 'left-[15px] top-[15px] h-[calc(100vh_-_30px)] rounded-large bg-background/60',
       false: 'left-0 top-0 h-screen',
     },
     sidebarHoverMode: {
-      true: 'w-full max-w-[250px] basis-[250px] rounded-r-xl border border-default-200 bg-background shadow-2xl',
+      true: 'w-full max-w-[250px] basis-[250px] rounded-r-large border border-default-200 bg-background shadow-2xl',
     },
   },
   compoundVariants: [{}],
@@ -67,8 +67,8 @@ const sidebarActiveStyles = tv({
       true: 'w-[215px]',
     },
     sidebarRoundedAll: {
-      true: 'rounded-md',
-      false: 'rounded-r-md',
+      true: 'rounded-small',
+      false: 'rounded-r-small',
     },
     sidebarPillAll: {
       true: 'rounded-[56px]',
@@ -136,6 +136,7 @@ const navigationPartStyles = tv({
 
 const SideBar = () => {
   const { t } = useTranslation('sidebar');
+  const navigate = useNavigate();
   const { sidebarMiniMode, sidebarHoverMode, sidebarBoxedMode } = useSoraSettings();
   const { hoverProps: sidebarHoverProps, isHovered } = useHover({
     isDisabled: !sidebarHoverMode.value,
@@ -190,7 +191,7 @@ const SideBar = () => {
             <NavLink
               to="/"
               arial-label="home-page"
-              className="bg-gradient-to-tr from-secondary to-primary to-50% bg-clip-text text-3xl font-bold tracking-normal text-transparent focus:outline-none focus:ring-2 focus:ring-primary md:text-4xl"
+              className="bg-gradient-to-tr from-secondary to-primary to-50% bg-clip-text text-3xl font-bold tracking-normal text-transparent focus:outline-none focus:ring-2 focus:ring-focus md:text-4xl"
             >
               SORA
             </NavLink>
@@ -496,7 +497,7 @@ const SideBar = () => {
                   <li className="m-0 shrink-0 grow-0 basis-[215px]">
                     <Link
                       as={NavLink}
-                      className="absolute top-4 z-20 mx-[10px] w-[198px] justify-between text-white after:rounded-md hover:after:bg-white/10"
+                      className="absolute top-4 z-20 mx-[10px] w-[198px] justify-between text-white after:rounded-small hover:after:bg-white/10 data-[focus-visible=true]:z-20"
                       isBlock
                       showAnchorIcon
                       color="foreground"
@@ -505,15 +506,14 @@ const SideBar = () => {
                       {t('movies-discover')}
                     </Link>
                     <Card
-                      as={NavLink}
                       radius="md"
                       isPressable
                       isFooterBlurred
                       classNames={{
                         base: 'w-full border-default-200',
                       }}
-                      to="/movies"
-                      role="link"
+                      role="button"
+                      onPress={() => navigate('/movies')}
                     >
                       <CardBody className="aspect-[2/3] w-full p-0">
                         <Image
@@ -694,7 +694,7 @@ const SideBar = () => {
                   <li className="m-0 shrink-0 grow-0 basis-[215px]">
                     <Link
                       as={NavLink}
-                      className="absolute top-4 z-20 mx-[10px] w-[198px] justify-between text-white after:rounded-md hover:after:bg-white/10"
+                      className="absolute top-4 z-20 mx-[10px] w-[198px] justify-between text-white after:rounded-small hover:after:bg-white/10 data-[focus-visible=true]:z-20"
                       isBlock
                       showAnchorIcon
                       color="foreground"
@@ -703,15 +703,14 @@ const SideBar = () => {
                       {t('tv-shows-discover')}
                     </Link>
                     <Card
-                      as={NavLink}
-                      role="link"
-                      to="/tv-shows"
+                      role="button"
                       radius="md"
                       isPressable
                       isFooterBlurred
                       classNames={{
                         base: 'w-full border-default-200',
                       }}
+                      onPress={() => navigate('/tv-shows')}
                     >
                       <CardBody className="aspect-[2/3] w-full p-0">
                         <Image
@@ -892,7 +891,7 @@ const SideBar = () => {
                   <li className="m-0 shrink-0 grow-0 basis-[215px]">
                     <Link
                       as={NavLink}
-                      className="absolute top-4 z-20 mx-[10px] w-[198px] justify-between text-white after:rounded-md hover:after:bg-white/10"
+                      className="absolute top-4 z-20 mx-[10px] w-[198px] justify-between text-white after:rounded-small hover:after:bg-white/10 data-[focus-visible=true]:z-20"
                       isBlock
                       showAnchorIcon
                       color="foreground"
@@ -901,15 +900,14 @@ const SideBar = () => {
                       {t('anime-discover')}
                     </Link>
                     <Card
-                      as={NavLink}
-                      role="link"
-                      to="/anime"
+                      role="button"
                       radius="md"
                       isPressable
                       isFooterBlurred
                       classNames={{
                         base: 'w-full border-default-200',
                       }}
+                      onPress={() => navigate('/anime')}
                     >
                       <CardBody className="aspect-[2/3] w-full p-0">
                         <Image

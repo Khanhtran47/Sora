@@ -76,7 +76,7 @@ const TrendingRoute = () => {
       animate={{ x: '0', opacity: 1 }}
       exit={{ y: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="mt-[72px] flex w-full flex-col items-center justify-center px-3 sm:mt-0 sm:px-5"
+      className="flex w-full flex-col items-center justify-center px-3 sm:px-5"
     >
       <MediaList
         genresMovie={rootData?.genresMovie}

@@ -76,7 +76,7 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
   return (
     <AspectRatio
       ratio={isMini ? undefined : isMobile ? 16 / 9 : 7 / 3}
-      className={isMini ? 'overflow-hidden rounded-lg' : ''}
+      className={isMini ? 'overflow-hidden rounded-medium' : ''}
     >
       <div
         ref={artRef}
@@ -91,10 +91,10 @@ const Player: React.FC<IPlayerProps> = (props: IPlayerProps) => {
         {...rest}
       />
       {isMini ? (
-        <div className="inset-x-0 bottom-[-64px] flex h-16 flex-row items-center justify-between rounded-b-lg bg-default p-3">
+        <div className="inset-x-0 bottom-[-64px] flex h-16 flex-row items-center justify-between rounded-b-medium bg-default p-3">
           <Link
             to={routePlayer}
-            className="line-clamp-1 !text-default-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+            className="line-clamp-1 !text-default-foreground focus:outline-none focus:ring-2 focus:ring-focus"
             title={titlePlayer}
           >
             {titlePlayer}

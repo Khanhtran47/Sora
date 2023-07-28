@@ -51,7 +51,7 @@ const TabLink = (props: ITabProps) => {
             <NavLink
               key={page.pageLink}
               to={`${linkTo}${page.pageLink}`}
-              className="relative z-10 flex h-12 shrink-0 items-center justify-center rounded-xl p-4 outline-none hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
+              className="relative z-10 flex h-12 shrink-0 items-center justify-center rounded-large p-4 outline-none hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-focus"
             >
               {({ isActive }) => (
                 <>
@@ -60,7 +60,7 @@ const TabLink = (props: ITabProps) => {
                     <motion.div
                       ref={underlineRef}
                       layoutId="underline"
-                      className="absolute bottom-0 h-1 w-1/2 overflow-hidden rounded-md bg-default-foreground"
+                      className="absolute bottom-0 h-1 w-1/2 overflow-hidden rounded-small bg-default-foreground"
                     />
                   ) : null}
                 </>

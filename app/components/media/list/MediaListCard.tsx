@@ -22,9 +22,9 @@ interface IMediaListCardProps {
 const swiperSlideStyles = tv({
   variants: {
     cardType: {
-      coverCard: '!w-[280px] sm:!w-[480px]',
-      card: '!w-[164px] sm:!w-[210px] nextui-sm:!w-[244px] 2xl:!w-[280px]',
-      peopleCard: '!w-[160px]',
+      coverCard: '!w-[290px] sm:!w-[490px]',
+      card: '!w-[168px] sm:!w-[190px] md:!w-[210px] lg:!w-[250px] xl:!w-[270px]',
+      peopleCard: '!w-[168px]',
     },
   },
 });

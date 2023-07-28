@@ -202,9 +202,9 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
           <div className="flex w-full flex-col items-center justify-start gap-4 sm:flex-row sm:flex-wrap">
             <Input
               value={value}
-              onValueChange={setValue}
+              onValueChange={(value) => setValue(value || '')}
               onClear={() => setValue('')}
-              size="xs"
+              size="sm"
               placeholder="Search Subtitle"
               variant="faded"
               color="default"
@@ -275,7 +275,7 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
               initialPage={page}
               // shadow
               onChange={handlePageChange}
-              {...(isSm && { size: 'xs' })}
+              {...(isSm && { size: 'sm' })}
               className="[&>*]:!mx-[0.125rem] sm:[&>*]:!mx-1"
             />
           </div>

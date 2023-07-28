@@ -111,17 +111,6 @@ module.exports = withTV({
         sans: ['Inter', ...defaultTheme.fontFamily.sans],
         system: 'system-ui',
       },
-      borderRadius: {
-        none: '0px',
-        sm: 'calc(var(--theme-rounded-base) / 2)',
-        DEFAULT: 'var(--theme-rounded-base)',
-        md: 'calc(var(--theme-rounded-base) * 1.5)',
-        lg: 'calc(var(--theme-rounded-base) * 2)',
-        xl: 'calc(var(--theme-rounded-base) * 3)',
-        '2xl': 'calc(var(--theme-rounded-base) * 4)',
-        '3xl': 'calc(var(--theme-rounded-base) * 5)',
-        full: '9999px',
-      },
       fontSize: {
         xs: ['0.75rem', { lineHeight: '1rem', letterSpacing: '-0.05em' }],
         sm: ['0.875rem', { lineHeight: '1.25rem', letterSpacing: '-0.05em' }],

@@ -50,7 +50,7 @@ const layoutStyles = tv({
 });
 
 const contentAreaStyles = tv({
-  base: 'ml-0 flex w-full grow flex-col justify-end overflow-hidden !rounded-none bg-background shadow-xl shadow-foreground/10 transition-[margin] duration-200 sm:!rounded-tl-xl',
+  base: 'ml-0 flex w-full grow flex-col justify-end overflow-hidden !rounded-none bg-background shadow-xl shadow-foreground/10 transition-[margin] duration-200 sm:!rounded-tl-medium',
   variants: {
     mini: {
       true: 'sm:ml-[80px]',

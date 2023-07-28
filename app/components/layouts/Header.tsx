@@ -17,7 +17,7 @@ interface IHeaderProps {
 }
 
 const headerStyles = tv({
-  base: 'fixed z-[1000] hidden h-[64px] w-[100vw] flex-row items-center justify-between gap-x-4 rounded-tl-xl px-5 py-3 sm:flex',
+  base: 'fixed z-[1000] hidden h-[64px] w-[100vw] flex-row items-center justify-between gap-x-4 rounded-tl-large px-5 py-3 sm:flex',
   variants: {
     miniSidebar: {
       true: 'top-0 sm:w-[calc(100vw_-_80px)]',
@@ -77,7 +77,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       })}
     >
       <motion.div
-        className="pointer-events-none absolute left-0 top-0 z-[-1] w-full rounded-tl-xl backdrop-blur-2xl backdrop-contrast-125 backdrop-saturate-200"
+        className="pointer-events-none absolute left-0 top-0 z-[-1] w-full rounded-tl-medium backdrop-blur-2xl backdrop-contrast-125 backdrop-saturate-200"
         style={{
           opacity: isHydrated ? opacity : 0,
           height: isShowTabLink && !hideTabLinkWithLocation ? 112 : 64,

@@ -1,5 +1,4 @@
 import { memo } from 'react';
-import { Avatar } from '@nextui-org/avatar';
 import { Button } from '@nextui-org/button';
 import { Spacer } from '@nextui-org/spacer';
 import { useMediaQuery } from '@react-hookz/web';
@@ -94,7 +93,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
           <Spacer y={10} />
         </>
       ) : null}
-      <div className="flex w-full flex-row items-start justify-start gap-3 rounded-xl bg-content1 p-2 sm:p-4">
+      <div className="flex w-full flex-row items-start justify-start gap-3 rounded-large bg-content1 p-2 sm:p-4">
         {!isMd &&
           (posterPath ? (
             <Image
@@ -102,7 +101,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
               alt={title}
               title={title}
               disableSkeleton={false}
-              radius="lg"
+              radius="md"
               classNames={{
                 wrapper:
                   'w-full h-auto aspect-[2/3] min-w-[auto] min-h-[auto] !max-w-[137px] lg:!max-w-[158px] xl:!max-w-[173px] 2xl:!max-w-[239px]',
@@ -143,14 +142,8 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
               }}
             />
           ) : (
-            <div className="flex items-center justify-center">
-              <Avatar
-                icon={<PhotoIcon width={48} height={48} />}
-                radius="xl"
-                classNames={{
-                  base: 'z-0 w-[137px] h-auto aspect-[2/3] lg:w-[158px] xl:w-[173px] 2xl:w-[239px]',
-                }}
-              />
+            <div className="z-0 flex aspect-[2/3] h-auto w-[137px] items-center justify-center rounded-medium bg-default lg:w-[158px] xl:w-[173px] 2xl:w-[239px]">
+              <PhotoIcon width={36} height={36} />
             </div>
           ))}
         <div className="flex w-full flex-col items-start justify-start gap-y-4">
@@ -160,7 +153,7 @@ const WatchDetail: React.FC<IWatchDetailProps> = (props: IWatchDetailProps) => {
               <Rating rating={tmdbRating?.toFixed(1)} ratingType="movie" />
               {imdbRating && (
                 <div className="flex flex-row items-center gap-x-2">
-                  <p className="rounded-xl bg-[#ddb600] px-1 text-black">IMDb</p>
+                  <p className="rounded-large bg-[#ddb600] px-1 text-black">IMDb</p>
                   <p>{imdbRating}</p>
                 </div>
               )}

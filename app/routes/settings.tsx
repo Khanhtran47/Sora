@@ -141,7 +141,7 @@ const SettingBlock = (props: SettingBlockProps) => {
   if (type === 'switch') {
     const { title, description, ...rest } = props;
     return (
-      <div className="flex flex-row items-center justify-between gap-x-2 rounded-md bg-content2 p-3">
+      <div className="flex flex-row items-center justify-between gap-x-2 rounded-small bg-content2 p-3">
         {description ? (
           <div className="flex flex-col items-start justify-center">
             <h6>{title}</h6>
@@ -157,7 +157,7 @@ const SettingBlock = (props: SettingBlockProps) => {
   if (type === 'select') {
     const { title, selectedValue, onSelectionChange, selectItems } = props;
     return (
-      <div className="flex flex-row items-center justify-between rounded-md bg-content2 p-3">
+      <div className="flex flex-row items-center justify-between rounded-small bg-content2 p-3">
         <h6>{title}</h6>
         {selectItems && selectItems.length > 0 ? (
           <Select value={selectedValue} onValueChange={(value) => onSelectionChange(value)}>
@@ -179,7 +179,7 @@ const SettingBlock = (props: SettingBlockProps) => {
   if (type === 'kbd') {
     const { keys, kbd, title, betweenKeys } = props;
     return (
-      <div className="flex flex-row items-center justify-between gap-x-2 rounded-md bg-content2 p-3">
+      <div className="flex flex-row items-center justify-between gap-x-2 rounded-small bg-content2 p-3">
         <h6>{title}</h6>
         {keys ? (
           Array.isArray(
@@ -459,7 +459,7 @@ const Settings = () => {
                   <h6 className="ml-2">{t(tab.title)}</h6>
                   {activeTab === tab.id ? (
                     <motion.div
-                      className="absolute overflow-hidden rounded-md bg-default-foreground data-[orientation=horizontal]:bottom-0 data-[orientation=vertical]:left-0 data-[orientation=horizontal]:h-1 data-[orientation=vertical]:h-1/2 data-[orientation=horizontal]:w-1/2 data-[orientation=vertical]:w-1"
+                      className="absolute overflow-hidden rounded-small bg-default-foreground data-[orientation=horizontal]:bottom-0 data-[orientation=vertical]:left-0 data-[orientation=horizontal]:h-1 data-[orientation=vertical]:h-1/2 data-[orientation=horizontal]:w-1/2 data-[orientation=vertical]:w-1"
                       layoutId="underline"
                       data-orientation={isSm ? 'horizontal' : 'vertical'}
                       ref={underlineRef}
@@ -481,7 +481,7 @@ const Settings = () => {
                   onDragEnd={handleDragEnd}
                   dragDirectionLock
                 >
-                  <div className="flex w-full flex-col justify-start rounded-xl bg-content1 p-5 shadow-lg">
+                  <div className="flex w-full flex-col justify-start rounded-large bg-content1 p-5 shadow-lg">
                     <SettingBlock
                       type="select"
                       title={t('language')}
@@ -593,7 +593,7 @@ const Settings = () => {
                           content: 'pb-4',
                         }}
                       >
-                        <div className="flex flex-col items-start justify-center gap-y-4 rounded-md bg-content2 p-3">
+                        <div className="flex flex-col items-start justify-center gap-y-4 rounded-small bg-content2 p-3">
                           <h5 className="my-1">{t('sidebar-mode')}</h5>
                           {isMd ? null : (
                             <>
@@ -1041,7 +1041,7 @@ const Settings = () => {
                   onDragEnd={handleDragEnd}
                   className="w-full"
                 >
-                  <div className="w-full rounded-xl bg-content1 p-5 shadow-lg">
+                  <div className="w-full rounded-large bg-content1 p-5 shadow-lg">
                     <div className="flex flex-col items-center justify-center">
                       <Image
                         alt="About Logo"
@@ -1067,7 +1067,7 @@ const Settings = () => {
                       <NavLink
                         to="/"
                         arial-label="home-page"
-                        className="bg-gradient-to-tr from-secondary to-primary to-50% bg-clip-text text-3xl font-bold tracking-normal text-transparent focus:outline-none focus:ring-2 focus:ring-primary md:text-4xl"
+                        className="bg-gradient-to-tr from-secondary to-primary to-50% bg-clip-text text-3xl font-bold tracking-normal text-transparent focus:outline-none focus:ring-2 focus:ring-focus md:text-4xl"
                       >
                         SORA
                       </NavLink>

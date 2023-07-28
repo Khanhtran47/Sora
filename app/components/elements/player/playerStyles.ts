@@ -58,7 +58,7 @@ export const playerStyles = tv({
         'custom-mini-player-hover',
         'h-[14.0625rem]',
         'w-[25rem]',
-        'rounded-t-lg',
+        'rounded-t-medium',
         '[&_.art-bottom]:!visible',
         '[&_.art-bottom]:!overflow-visible',
         '[&_.art-bottom]:!bg-none',

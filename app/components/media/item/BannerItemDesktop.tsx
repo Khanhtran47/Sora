@@ -209,7 +209,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
         onMouseMove={isShowSpotlight.value ? handleMouseMove : undefined}
       >
         <motion.div
-          className="pointer-events-none absolute -inset-px rounded-xl duration-300 transition group-hover:opacity-100"
+          className="pointer-events-none absolute -inset-px rounded-large transition duration-300 group-hover:opacity-100"
           style={{
             background: useMotionTemplate`
               radial-gradient(
@@ -420,7 +420,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
                 disableSkeleton={false}
                 classNames={{
                   wrapper:
-                    'rounded-xl shadow-xl shadow-default aspect-[2/3] w-full h-auto min-h-[auto] min-w-[auto] !max-h-[390px] !max-w-[270px] 2xl:!max-h-[477px] 2xl:!max-w-[318px]',
+                    'rounded-large shadow-xl shadow-default aspect-[2/3] w-full h-auto min-h-[auto] min-w-[auto] !max-h-[390px] !max-w-[270px] 2xl:!max-h-[477px] 2xl:!max-w-[318px]',
                   img: 'h-full object-cover',
                 }}
                 loading="eager"

@@ -670,7 +670,7 @@ const GlobalPlayer = () => {
                       },
                     ],
                     icons: {
-                      loading: `<div class="w-12 h-12 !m-auto relative before:content-[''] before:w-12 before:h-[5px] before:bg-primary-700 before:absolute before:top-[60px] before:left-0 before:rounded-[50%] before:animate-shadow after:content-[''] after:w-full after:h-full after:bg-primary after:absolute after:top-0 after:left-0 after:rounded-md after:animate-jump"></div>`,
+                      loading: `<div class="w-12 h-12 !m-auto relative before:content-[''] before:w-12 before:h-[5px] before:bg-primary-700 before:absolute before:top-[60px] before:left-0 before:rounded-[50%] before:animate-shadow after:content-[''] after:w-full after:h-full after:bg-primary after:absolute after:top-0 after:left-0 after:rounded-small after:animate-jump"></div>`,
                       play: `
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                           <path d="M17.49 9.59965L5.6 16.7696C4.9 17.1896 4 16.6896 4 15.8696V7.86965C4 4.37965 7.77 2.19965 10.8 3.93965L15.39 6.57965L17.48 7.77965C18.17 8.18965 18.18 9.18965 17.49 9.59965Z" fill="currentColor"/>

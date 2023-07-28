@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { Card, CardBody, CardFooter } from '@nextui-org/card';
 import { Chip } from '@nextui-org/chip';
 import { useIntersectionObserver, useMeasure } from '@react-hookz/web';
-import { Link } from '@remix-run/react';
+import { useNavigate } from '@remix-run/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Balancer from 'react-wrap-balancer';
 import Image, { MimeType } from 'remix-image';
@@ -42,6 +42,7 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
   const cardRef = useRef<HTMLAnchorElement>(null);
   const cardIntersection = useIntersectionObserver(cardRef, { root: viewportRef });
   const [size, bannerRef] = useMeasure<HTMLDivElement>();
+  const navigate = useNavigate();
   const titleItem =
     typeof title === 'string'
       ? title
@@ -50,16 +51,19 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
   return (
     <AspectRatio ratio={4 / 5} ref={bannerRef} className="mt-8">
       <Card
-        as={Link}
         // @ts-ignore
         ref={cardRef}
         isPressable
         className={`h-full w-full rounded-b-none border-0 !transition-[margin,_transform,_background] !duration-300 !ease-in ${
           !active ? 'mt-6' : ''
         }`}
-        to={`/${
-          mediaType === 'movie' ? 'movies/' : mediaType === 'tv' ? 'tv-shows/' : 'anime/'
-        }${id}/`}
+        onPress={() =>
+          navigate(
+            `/${
+              mediaType === 'movie' ? 'movies/' : mediaType === 'tv' ? 'tv-shows/' : 'anime/'
+            }${id}/`,
+          )
+        }
       >
         <CardBody className="overflow-hidden p-0 after:absolute after:bottom-0 after:left-0 after:h-[calc(100%/2)] after:w-full after:bg-gradient-to-b after:from-transparent after:to-background after:content-['']">
           <AnimatePresence>
