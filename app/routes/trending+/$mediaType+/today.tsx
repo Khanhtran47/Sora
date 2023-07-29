@@ -113,7 +113,7 @@ const TrendingToday = () => {
         itemsType={mediaType === 'all' ? 'movie-tv' : (mediaType as 'movie' | 'tv' | 'people')}
         listName={t(`trending.${mediaType}.day`)}
         listType="grid"
-        showListTypeChangeButton
+        showListTypeChangeButton={mediaType !== 'people'}
         totalPages={todayTrending?.totalPages}
       />
     </motion.div>

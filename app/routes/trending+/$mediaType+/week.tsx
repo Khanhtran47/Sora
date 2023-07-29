@@ -114,7 +114,7 @@ const TrendingWeek = () => {
         itemsType={mediaType === 'all' ? 'movie-tv' : (mediaType as 'movie' | 'tv' | 'people')}
         listName={t(`trending.${mediaType}.week`)}
         listType="grid"
-        showListTypeChangeButton
+        showListTypeChangeButton={mediaType !== 'people'}
         totalPages={weekTrending?.totalPages}
       />
     </motion.div>
