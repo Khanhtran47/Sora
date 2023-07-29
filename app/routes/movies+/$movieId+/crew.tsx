@@ -58,17 +58,17 @@ export const meta = mergeMeta<typeof loader, { 'routes/movies+/$movieId': typeof
 );
 
 export const handle: Handle = {
-  breadcrumb: ({ match }) => (
+  breadcrumb: ({ match, t }) => (
     <BreadcrumbItem
       to={`/movies/${match.params.movieId}/crew`}
       key={`movies-${match.params.movieId}-crew`}
     >
-      Crew
+      {t('crew')}
     </BreadcrumbItem>
   ),
-  miniTitle: ({ parentMatch }) => ({
+  miniTitle: ({ parentMatch, t }) => ({
     title: parentMatch?.data?.detail?.title,
-    subtitle: 'Crew',
+    subtitle: t('crew'),
     showImage: parentMatch?.data?.detail?.poster_path !== undefined,
     imageUrl: TMDB?.posterUrl(parentMatch?.data?.detail?.poster_path || '', 'w92'),
   }),

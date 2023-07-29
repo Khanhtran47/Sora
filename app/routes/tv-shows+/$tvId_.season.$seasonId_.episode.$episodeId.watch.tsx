@@ -419,7 +419,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const handle: Handle = {
-  breadcrumb: ({ match }) => (
+  breadcrumb: ({ match, t }) => (
     <>
       <BreadcrumbItem
         to={`/tv-shows/${match.params.tvId}/`}
@@ -431,13 +431,13 @@ export const handle: Handle = {
         to={`/tv-shows/${match.params.tvId}/season/${match.params.seasonId}/`}
         key={`tv-shows-${match.params.tvId}-season-${match.params.seasonId}-episodes`}
       >
-        Season {match.params.seasonId}
+        {t('season')} {match.params.seasonId}
       </BreadcrumbItem>
       <BreadcrumbItem
         to={`/tv-shows/${match.params.tvId}/season/${match.params.seasonId}/episode/${match.params.episodeId}`}
         key={`tv-shows-${match.params.tvId}-season-${match.params.seasonId}-episode-${match.params.episodeId}`}
       >
-        Episode {match.params.episodeId}
+        {t('episode')} {match.params.episodeId}
       </BreadcrumbItem>
     </>
   ),
@@ -445,9 +445,9 @@ export const handle: Handle = {
     isMini: false,
     shouldShowPlayer: true,
   },
-  miniTitle: ({ match }) => ({
+  miniTitle: ({ match, t }) => ({
     title: match.data?.detail?.name || match.data?.detail?.original_name,
-    subtitle: `${match.data?.seasonDetail?.name} Episode ${match.params.episodeId}`,
+    subtitle: `${match.data?.seasonDetail?.name} ${t('episode')} ${match.params.episodeId}`,
     showImage: match.data?.seasonDetail?.poster_path !== undefined,
     imageUrl: TMDB.posterUrl(match.data?.seasonDetail?.poster_path || '', 'w92'),
   }),

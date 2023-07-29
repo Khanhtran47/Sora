@@ -7,6 +7,7 @@ import { mergeMeta } from '~/utils';
 import dayjs from 'dayjs';
 import { AnimatePresence, motion } from 'framer-motion';
 import NProgress from 'nprogress';
+import { useTranslation } from 'react-i18next';
 import { useGlobalLoadingState } from 'remix-utils';
 
 import type { Handle } from '~/types/handle';
@@ -101,8 +102,8 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export const handle: Handle = {
   disableLayoutPadding: true,
-  miniTitle: () => ({
-    title: 'TV Shows',
+  miniTitle: ({ t }) => ({
+    title: t('tv-shows'),
     showImage: false,
   }),
 };
@@ -114,6 +115,7 @@ const TvIndexPage = () => {
   const navigate = useNavigate();
   const fetcher = useFetcher();
   const globalState = useGlobalLoadingState();
+  const { t } = useTranslation();
 
   const listGenresTv = Object.entries(rootData?.genresTv || {}).map((entry) => ({
     [entry[0]]: entry[1],
@@ -215,7 +217,7 @@ const TvIndexPage = () => {
             genresTv={rootData?.genresTv}
             items={airingToday.items}
             itemsType="tv"
-            listName="Airing today Tv"
+            listName={t('airing-today-tv-shows')}
             listType="slider-card"
             navigationButtons
             onClickViewMore={() => navigate('/tv-shows/airing-today')}
@@ -228,7 +230,7 @@ const TvIndexPage = () => {
             genresTv={rootData?.genresTv}
             items={onTheAir.items}
             itemsType="tv"
-            listName="On the air Tv"
+            listName={t('on-the-air-tv-shows')}
             listType="slider-card"
             navigationButtons
             onClickViewMore={() => navigate('/tv-shows/on-the-air')}
@@ -241,7 +243,7 @@ const TvIndexPage = () => {
             genresTv={rootData?.genresTv}
             items={topRated.items}
             itemsType="tv"
-            listName="Top Rated Tv"
+            listName={t('top-rated-tv-shows')}
             listType="slider-card"
             navigationButtons
             onClickViewMore={() => navigate('/tv-shows/top-rated')}

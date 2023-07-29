@@ -7,6 +7,7 @@ import { Tooltip } from '@nextui-org/tooltip';
 import { useMeasure, useMediaQuery } from '@react-hookz/web';
 import { useFetcher, useLocation, useNavigate } from '@remix-run/react';
 import { motion, useTransform } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { MimeType } from 'remix-image';
 import { useHydrated } from 'remix-utils';
 // import { useTranslation } from 'react-i18next';
@@ -74,7 +75,6 @@ const backgroundImageStyles = tv({
 });
 
 export const MediaDetail = (props: IMediaDetail) => {
-  // const { t } = useTranslation();
   const { type, item, imdbRating, color, trailerTime } = props;
   const [size, ref] = useMeasure<HTMLDivElement>();
   const [imageSize, imageRef] = useMeasure<HTMLDivElement>();
@@ -82,6 +82,7 @@ export const MediaDetail = (props: IMediaDetail) => {
   const location = useLocation();
   const isHydrated = useHydrated();
   const fetcher = useFetcher();
+  const { t } = useTranslation();
   const { backgroundColor } = useColorDarkenLighten(color);
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const isXl = useMediaQuery('(max-width: 1280px)', { initializeWithValue: false });
@@ -304,7 +305,7 @@ export const MediaDetail = (props: IMediaDetail) => {
                       className="w-full bg-gradient-to-br from-secondary to-primary to-50% text-lg font-bold text-primary-foreground sm:w-auto"
                       size="lg"
                     >
-                      Watch now
+                      {t('watch-now')}
                     </Button>
                   </DialogTrigger>
                   <DialogContent>
@@ -329,7 +330,7 @@ export const MediaDetail = (props: IMediaDetail) => {
                 >
                   <DialogTrigger asChild>
                     <Button type="button" size={isSm ? 'sm' : 'md'}>
-                      Watch Trailer
+                      {t('watch-trailer')}
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="overflow-hidden !p-0">
@@ -356,7 +357,7 @@ export const MediaDetail = (props: IMediaDetail) => {
 };
 
 export const AnimeDetail = (props: IAnimeDetail) => {
-  // const { t } = useTranslation();
+  const { t } = useTranslation();
   const { item, trailerTime } = props;
   const {
     id,
@@ -542,7 +543,7 @@ export const AnimeDetail = (props: IAnimeDetail) => {
                     size="lg"
                     className="w-full bg-gradient-to-br from-secondary to-primary to-50% text-lg font-bold text-primary-foreground sm:w-auto"
                   >
-                    Watch now
+                    {t('watch-now')}
                   </Button>
                 </DialogTrigger>
                 <DialogContent>
@@ -566,7 +567,7 @@ export const AnimeDetail = (props: IAnimeDetail) => {
                   <Dialog open={showTrailerDialog} onOpenChange={setShowTrailerDialog}>
                     <DialogTrigger asChild>
                       <Button type="button" size={isSm ? 'sm' : 'md'}>
-                        Watch Trailer
+                        {t('watch-trailer')}
                       </Button>
                     </DialogTrigger>
                     <DialogContent className="overflow-hidden !p-0">

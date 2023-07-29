@@ -1,16 +1,16 @@
 {
-  "discover": "Khám phá",
-  "search": "Tìm kiếm",
-  "filter": "Lọc",
-  "categories": "Danh mục",
-  "movies": "Phim lẻ",
-  "tv-shows": "Phim bộ",
   "anime": "Anime",
-  "people": "Người nổi tiếng",
-  "trending": "Xu hướng",
+  "anime-genres": "Thể loại anime",
+  "categories": "Danh mục",
+  "collections": "Bộ sưu tập",
+  "discover": "Khám phá",
+  "filter": "Lọc",
   "general": "Tổng quan",
   "movie-genres": "Thể loại phim lẻ",
+  "movies": "Phim lẻ",
+  "people": "Người nổi tiếng",
+  "search": "Tìm kiếm",
+  "trending": "Xu hướng",
   "tv-show-genres": "Thể loại phim bộ",
-  "anime-genres": "Thể loại anime",
-  "collections": "Bộ sưu tập"
+  "tv-shows": "Phim bộ"
 }

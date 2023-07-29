@@ -142,9 +142,9 @@ export const handle: Handle = {
       {match.data?.detail?.name || match.data?.detail?.original_name || match.params.tvId}
     </BreadcrumbItem>
   ),
-  miniTitle: ({ match }) => ({
+  miniTitle: ({ match, t }) => ({
     title: match.data?.detail?.name,
-    subtitle: 'Overview',
+    subtitle: t('overview'),
     showImage: match.data?.detail?.poster_path !== undefined,
     imageUrl: TMDB?.posterUrl(match.data?.detail?.poster_path || '', 'w92'),
   }),

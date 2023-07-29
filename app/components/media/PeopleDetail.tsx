@@ -2,6 +2,7 @@ import { Player } from '@lottiefiles/react-lottie-player';
 import { Link } from '@nextui-org/link';
 import { Spacer } from '@nextui-org/spacer';
 import { useMeasure } from '@react-hookz/web';
+import { useTranslation } from 'react-i18next';
 import { MimeType } from 'remix-image';
 
 import type { IPeopleDetail } from '~/services/tmdb/tmdb.types';
@@ -29,6 +30,7 @@ interface IPeopleDetailProps {
 
 const PeopleDetail = (props: IPeopleDetailProps) => {
   const { detail, externalIds } = props;
+  const { t } = useTranslation();
   const { isDark } = useColorDarkenLighten();
   const [size, imageRef] = useMeasure<HTMLImageElement>();
   const profilePath = detail?.profile_path
@@ -150,29 +152,29 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
         )}
       <div className="flex w-full justify-start sm:justify-center">
         <h4 className="w-full sm:w-[70%]">
-          <strong>Personal Info</strong>
+          <strong>{t('personal-info')}</strong>
         </h4>
       </div>
       <Spacer y={5} />
       <div className="flex flex-col flex-wrap items-start justify-start gap-y-4 sm:items-center">
         <div className="mb-2 flex flex-row items-center justify-start gap-x-6 sm:m-0 sm:w-[70%] sm:flex-col sm:items-start">
-          <h5>Known For</h5>
+          <h5>{'known-for'}</h5>
           <p>{detail?.known_for_department}</p>
         </div>
         <div className="mb-2 flex flex-row items-center justify-start gap-x-6 sm:m-0 sm:w-[70%] sm:flex-col sm:items-start">
-          <h5>Gender</h5>
+          <h5>{t('gender')}</h5>
           <p>{gender}</p>
         </div>
         <div className="mb-2 flex flex-row items-center justify-start gap-x-6 sm:m-0 sm:w-[70%] sm:flex-col sm:items-start">
-          <h5>Birthday</h5>
+          <h5>{t('birthday')}</h5>
           <p>{detail?.birthday}</p>
         </div>
         <div className="mb-2 flex flex-row items-center justify-start gap-x-6 sm:m-0 sm:w-[70%] sm:flex-col sm:items-start">
-          <h5>Place of Birth</h5>
+          <h5>{t('place-of-birth')}</h5>
           <p>{detail?.place_of_birth}</p>
         </div>
         <div className="mb-2 flex flex-row items-start justify-start gap-x-6 sm:m-0 sm:w-[70%] sm:flex-col">
-          <h5>Also Known As</h5>
+          <h5>{'also-known-as'}</h5>
           <p>
             {detail?.also_known_as?.map((name) => (
               <>

@@ -6,6 +6,7 @@ import { Outlet, useLoaderData, useParams } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import { motion, useTransform } from 'framer-motion';
 import Vibrant from 'node-vibrant';
+import { useTranslation } from 'react-i18next';
 import { MimeType } from 'remix-image';
 import { useHydrated } from 'remix-utils';
 
@@ -131,7 +132,7 @@ export const meta = mergeMeta<typeof loader>(({ data, params }) => {
 });
 
 export const handle: Handle = {
-  breadcrumb: ({ match }) => (
+  breadcrumb: ({ match, t }) => (
     <>
       <BreadcrumbItem
         to={`/tv-shows/${match.params.tvId}/`}
@@ -143,15 +144,15 @@ export const handle: Handle = {
         to={`/tv-shows/${match.params.tvId}/season/${match.params.seasonId}`}
         key={`tv-shows-${match.params.tvId}-season-${match.params.seasonId}`}
       >
-        Season {match.params.seasonId}
+        {t('season')} {match.params.seasonId}
       </BreadcrumbItem>
     </>
   ),
-  miniTitle: ({ match }) => ({
+  miniTitle: ({ match, t }) => ({
     title: `${match.data?.detail?.name || match.data?.detail?.original_name} - ${
       match.data?.seasonDetail?.name
     }`,
-    subtitle: 'Episodes',
+    subtitle: t('episodes'),
     showImage: match.data?.seasonDetail?.poster_path !== undefined,
     imageUrl: TMDB.posterUrl(match.data?.seasonDetail?.poster_path || '', 'w92'),
   }),
@@ -164,6 +165,7 @@ const TvSeasonDetail = () => {
   const { detail, seasonDetail, color } = useLoaderData<typeof loader>();
   const { tvId, seasonId } = useParams();
   const isHydrated = useHydrated();
+  const { t } = useTranslation();
   const [size, ref] = useMeasure<HTMLDivElement>();
   const [imageSize, imageRef] = useMeasure<HTMLDivElement>();
   const { backgroundColor } = useColorDarkenLighten(color);
@@ -255,7 +257,8 @@ const TvSeasonDetail = () => {
                 {detail?.name} {seasonDetail?.name}
               </h2>
               <h5>
-                {seasonDetail?.episodes?.length || 0} episodes &middot; {seasonDetail?.air_date}{' '}
+                {seasonDetail?.episodes?.length || 0} {t('episodes')} &middot;{' '}
+                {seasonDetail?.air_date}{' '}
               </h5>
             </div>
             {seasonDetail?.overview ? (

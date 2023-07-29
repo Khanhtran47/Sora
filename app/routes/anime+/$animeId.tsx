@@ -81,14 +81,14 @@ export const handle: Handle = {
       {match.data?.detail?.title?.english || match.data?.detail?.title?.romaji}
     </BreadcrumbItem>
   ),
-  miniTitle: ({ match }) => ({
+  miniTitle: ({ match, t }) => ({
     title:
       match.data?.detail?.title?.userPreferred ||
       match.data?.detail?.title?.english ||
       match.data?.detail?.title?.romaji ||
       match.data?.detail?.title?.native ||
       '',
-    subtitle: 'Overview',
+    subtitle: t('overview'),
     showImage: match.data?.detail?.image !== undefined,
     imageUrl: match.data?.detail?.image,
   }),

@@ -73,10 +73,10 @@ export const meta = mergeMeta<typeof loader>(({ data, params }) => {
 });
 
 export const handle: Handle = {
-  breadcrumb: ({ match }) => (
+  breadcrumb: ({ match, t }) => (
     <>
       <BreadcrumbItem to="/people" key="people">
-        Popular People
+        {t('popular-people')}
       </BreadcrumbItem>
       <BreadcrumbItem
         to={`/people/${match.params.peopleId}`}
@@ -89,9 +89,9 @@ export const handle: Handle = {
   showTabLink: true,
   tabLinkPages: peopleDetailPages,
   tabLinkTo: ({ params }) => `/people/${params.peopleId}`,
-  miniTitle: ({ match }) => ({
-    title: match.data?.detail?.name || 'People',
-    subtitle: 'Overview',
+  miniTitle: ({ match, t }) => ({
+    title: match.data?.detail?.name || t('people'),
+    subtitle: t('overview'),
     showImage: match.data?.detail?.profile_path !== undefined,
     imageUrl: TMDB.profileUrl(match.data?.detail?.profile_path, 'w45'),
   }),

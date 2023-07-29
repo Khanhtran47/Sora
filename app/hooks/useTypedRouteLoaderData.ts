@@ -10,10 +10,10 @@ import type { loader as RoutesAnimeEpisodesLoader } from '~/routes/anime+/$anime
 import type { loader as RoutesPopularAnimeLoader } from '~/routes/anime+/popular';
 import type { loader as RoutesRecentAnimeLoader } from '~/routes/anime+/recent-episodes';
 import type { loader as RoutesTrendingAnimeLoader } from '~/routes/anime+/trending';
-import type { loader as RoutesCollectionLoader } from '~/routes/collections+/$collectionsId';
 import type { loader as RoutesDiscoverLoader } from '~/routes/discover+/anime';
 import type { loader as RoutesDiscoverMoviesLoader } from '~/routes/discover+/movies';
 import type { loader as RoutesDiscoverTvsLoader } from '~/routes/discover+/tv-shows';
+import type { loader as RoutesListLoader } from '~/routes/lists+/$listId';
 import type { loader as RoutesMoviesIndexLoader } from '~/routes/movies+/_index';
 import type { loader as RoutesMovieLoader } from '~/routes/movies+/$movieId';
 import type { loader as RoutesMovieWatchLoader } from '~/routes/movies+/$movieId_.watch';
@@ -70,7 +70,7 @@ type Loaders = {
   'routes/anime+/recent-episodes': typeof RoutesRecentAnimeLoader;
   'routes/anime+/trending': typeof RoutesTrendingAnimeLoader;
   'routes/anime+/$animeId+/episodes': typeof RoutesAnimeEpisodesLoader;
-  'routes/collections+/$collectionsId': typeof RoutesCollectionLoader;
+  'routes/lists+/$listId': typeof RoutesListLoader;
   'routes/discover+/anime': typeof RoutesDiscoverLoader;
   'routes/discover+/movies': typeof RoutesDiscoverMoviesLoader;
   'routes/discover+/tv-shows': typeof RoutesDiscoverTvsLoader;

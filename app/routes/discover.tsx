@@ -18,9 +18,9 @@ export const meta = mergeMeta(() => [
 ]);
 
 export const handle: Handle = {
-  breadcrumb: () => (
+  breadcrumb: ({ t }) => (
     <BreadcrumbItem to="/discover" key="discover">
-      Discover
+      {t('discover')}
     </BreadcrumbItem>
   ),
   showTabLink: true,
@@ -32,8 +32,8 @@ export const handle: Handle = {
     }
     return false;
   },
-  miniTitle: () => ({
-    title: 'Discover',
+  miniTitle: ({ t }) => ({
+    title: t('discover'),
     showImage: false,
   }),
 };

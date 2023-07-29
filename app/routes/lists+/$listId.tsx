@@ -20,22 +20,22 @@ import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 export const meta = mergeMeta<typeof loader>(({ data, params }) => {
   if (!data) {
     return [
-      { title: 'Missing Collection' },
-      { name: 'description', content: `There is no collection with id ${params.collectionsId}` },
+      { title: 'Missing List' },
+      { name: 'description', content: `There is no list with id ${params.listId}` },
     ];
   }
   const { detail } = data;
   return [
-    { title: `Sora Collection - ${detail?.name || ''}` },
+    { title: `Sora - ${detail?.name || ''}` },
     { name: 'description', content: `${detail?.description || ''}` },
     { name: 'keywords', content: `${detail?.name || ''}` },
     {
       property: 'og:url',
-      content: `https://sorachill.vercel.app/collections/${params.collectionsId}`,
+      content: `https://sorachill.vercel.app/lists/${params.listId}`,
     },
-    { property: 'og:title', content: `Sora Collection - ${detail?.name || ''}` },
+    { property: 'og:title', content: `Sora - ${detail?.name || ''}` },
     { property: 'og:description', content: `${detail?.description || ''}` },
-    { name: 'twitter:title', content: `Sora Collection - ${detail?.name || ''}` },
+    { name: 'twitter:title', content: `Sora - ${detail?.name || ''}` },
     { name: 'twitter:description', content: `${detail?.description || ''}` },
   ];
 });
@@ -46,8 +46,8 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     i18next.getLocale(request),
   ]);
 
-  const { collectionsId } = params;
-  const cid = Number(collectionsId);
+  const { listId } = params;
+  const cid = Number(listId);
 
   return json(
     {
@@ -58,21 +58,18 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const handle: Handle = {
-  breadcrumb: ({ match }) => (
+  breadcrumb: ({ match, t }) => (
     <>
-      <BreadcrumbItem to="/collections" key="collections">
-        Collections
+      <BreadcrumbItem to="/lists/" key="lists">
+        {t('featured-lists')}
       </BreadcrumbItem>
-      <BreadcrumbItem
-        to={`/collections/${match.params.collectionsId}`}
-        key={`collections-${match.params.collectionsId}`}
-      >
-        {match.data?.detail?.name || match.params.collectionsId}
+      <BreadcrumbItem to={`/lists/${match.params.listId}`} key={`lists-${match.params.listId}`}>
+        {match.data?.detail?.name || match.params.listId}
       </BreadcrumbItem>
     </>
   ),
-  miniTitle: ({ match }) => ({
-    title: match.data?.detail?.name || 'Collection',
+  miniTitle: ({ match, t }) => ({
+    title: match.data?.detail?.name || t('featured-lists'),
     showImage: false,
   }),
   showListViewChangeButton: true,

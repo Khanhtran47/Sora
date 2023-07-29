@@ -3,6 +3,7 @@ import { useMediaQuery } from '@react-hookz/web';
 import { json, type LoaderArgs } from '@remix-run/node';
 import { Link, useLoaderData, useNavigate, useParams } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
+import { useTranslation } from 'react-i18next';
 import { MimeType } from 'remix-image';
 
 import type { Handle } from '~/types/handle';
@@ -70,12 +71,12 @@ export const meta = mergeMeta<typeof loader, { 'routes/tv-shows+/$tvId': typeof 
 );
 
 export const handle: Handle = {
-  breadcrumb: ({ match }) => (
+  breadcrumb: ({ match, t }) => (
     <BreadcrumbItem
       to={`/tv-shows/${match.params.tvId}/`}
       key={`tv-shows-${match.params.tvId}-overview`}
     >
-      Overview
+      {t('overview')}
     </BreadcrumbItem>
   ),
 };
@@ -87,6 +88,7 @@ const TvOverview = () => {
   const detail = tvData && tvData.detail;
   const navigate = useNavigate();
   const { tvId } = useParams();
+  const { t } = useTranslation();
 
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const onClickViewMore = (type: 'cast' | 'similar' | 'recommendations') => {
@@ -97,11 +99,11 @@ const TvOverview = () => {
       <div className="flex w-full grow-0 flex-col sm:w-1/3 sm:items-center sm:justify-start">
         <div className="flex w-full flex-col items-start justify-center gap-y-4 rounded-large bg-content1 p-4 nextui-sm:w-3/4 xl:w-1/2">
           <div className="flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-            <h6 className="grow-0 basis-1/3">Status</h6>
+            <h6 className="grow-0 basis-1/3">{t('status')}</h6>
             <p className="grow">{detail?.status}</p>
           </div>
           <div className="flex w-full flex-row items-start justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-            <h6 className="grow-0 basis-1/3">Network</h6>
+            <h6 className="grow-0 basis-1/3">{t('network')}</h6>
             <div className="flex grow flex-col">
               {detail?.networks &&
                 detail.networks.map((network, index) => (
@@ -110,11 +112,11 @@ const TvOverview = () => {
             </div>
           </div>
           <div className="flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-            <h6 className="grow-0 basis-1/3">Type</h6>
+            <h6 className="grow-0 basis-1/3">{t('type')}</h6>
             <p className="grow">{detail?.type}</p>
           </div>
           <div className="flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-            <h6 className="grow-0 basis-1/3">Original Language</h6>
+            <h6 className="grow-0 basis-1/3">{t('original-language')}</h6>
             <p className="grow">
               {rootData?.languages?.find((lang) => lang.iso_639_1 === detail?.original_language)
                 ?.english_name || detail?.original_language}
@@ -128,7 +130,7 @@ const TvOverview = () => {
           <div className="flex flex-col flex-wrap gap-x-0 gap-y-4 sm:flex-row sm:gap-x-8">
             {detail?.created_by && detail?.created_by.length > 0 ? (
               <div className="flex w-full flex-row items-start justify-start gap-x-4 sm:w-fit sm:flex-col">
-                <h6 className="grow-0 basis-1/3 sm:basis-auto">Creators</h6>
+                <h6 className="grow-0 basis-1/3 sm:basis-auto">{t('creators')}</h6>
                 <div className="flex grow flex-col">
                   {detail.created_by.map((creator) => (
                     <Link
@@ -145,7 +147,7 @@ const TvOverview = () => {
             ) : null}
             {detail?.production_countries && detail.production_countries.length > 0 ? (
               <div className="flex w-full flex-row items-start justify-start gap-x-4 sm:w-fit sm:flex-col">
-                <h6 className="grow-0 basis-1/3 sm:basis-auto">Production Countries</h6>
+                <h6 className="grow-0 basis-1/3 sm:basis-auto">{t('production-countries')}</h6>
                 <div className="flex grow flex-col">
                   {detail?.production_countries.map((country, index) => (
                     <p key={`country-item-${index}`}>{country.name}</p>
@@ -155,7 +157,7 @@ const TvOverview = () => {
             ) : null}
             {detail?.spoken_languages && detail.spoken_languages.length > 0 ? (
               <div className="flex w-full flex-row items-start justify-start gap-x-4 sm:w-fit sm:flex-col">
-                <h6 className="grow-0 basis-1/3 sm:basis-auto">Spoken Languages</h6>
+                <h6 className="grow-0 basis-1/3 sm:basis-auto">{t('spoken-languages')}</h6>
                 <div className="flex grow flex-col">
                   {detail?.spoken_languages.map((language, index) => (
                     <p key={`language-item-${index}`}>{language.english_name}</p>
@@ -170,7 +172,7 @@ const TvOverview = () => {
             items={topBilledCast}
             itemsType="people"
             key={`tv-top-cast-${tvId}`}
-            listName="Top Cast"
+            listName={t('top-cast')}
             listType="slider-card"
             navigationButtons
             onClickViewMore={() => onClickViewMore('cast')}
@@ -179,7 +181,7 @@ const TvOverview = () => {
         ) : null}
         {detail?.seasons && detail?.seasons.length > 0 ? (
           <>
-            <h2 style={{ margin: '20px 0 5px 0' }}>Seasons</h2>
+            <h2 style={{ margin: '20px 0 5px 0' }}>{t('seasons')}</h2>
             <div className="flex w-full flex-col gap-4">
               {detail.seasons
                 .filter((season) => !season.name?.includes('Specials'))
@@ -227,7 +229,7 @@ const TvOverview = () => {
                       <div className="flex flex-col justify-start p-5">
                         <h4>{season.name}</h4>
                         <h5>
-                          {season.air_date} | {season.episode_count} episodes
+                          {season.air_date} | {season.episode_count} {t('episodes')}
                         </h5>
                         {!isSm ? <h6 className="!line-clamp-3">{season.overview}</h6> : null}
                       </div>
@@ -244,7 +246,7 @@ const TvOverview = () => {
             items={recommendations.items}
             itemsType="tv"
             key={`tv-recommendations-${tvId}`}
-            listName="Recommendations"
+            listName={t('recommendations')}
             listType="slider-card"
             navigationButtons
             onClickViewMore={() => onClickViewMore('recommendations')}
@@ -258,7 +260,7 @@ const TvOverview = () => {
             items={similar.items}
             itemsType="tv"
             key={`tv-similar-${tvId}`}
-            listName="Similar Tv-Shows"
+            listName={t('similar-tv-shows')}
             listType="slider-card"
             navigationButtons
             onClickViewMore={() => onClickViewMore('similar')}

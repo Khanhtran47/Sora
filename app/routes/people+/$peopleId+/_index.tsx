@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Spacer } from '@nextui-org/spacer';
 import { useFetcher } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
+import { useTranslation } from 'react-i18next';
 
 import type { IMedia } from '~/types/media';
 import type { loader as peopleIdLoader } from '~/routes/people+/$peopleId';
@@ -38,6 +39,7 @@ const OverviewPage = () => {
   const peopleData = useTypedRouteLoaderData('routes/people+/$peopleId');
   const rootData = useTypedRouteLoaderData('root');
   const fetcher = useFetcher();
+  const { t } = useTranslation();
   const [knownFor, setKnownFor] = useState<IMedia[]>();
   useEffect(() => {
     if (peopleData?.detail?.name) {
@@ -57,7 +59,7 @@ const OverviewPage = () => {
       {peopleData?.detail?.biography ? (
         <>
           <div className="flex flex-col gap-y-2">
-            <h4>Biography</h4>
+            <h4>{t('biography')}</h4>
             <p style={{ whiteSpace: 'pre-line', textAlign: 'justify' }}>
               {/* TODO: add a read more button */}
               {peopleData?.detail?.biography}
@@ -68,7 +70,7 @@ const OverviewPage = () => {
       ) : null}
       {knownFor && knownFor.length > 0 ? (
         <>
-          <h4>Known For</h4>
+          <h4>{t('known-for')}</h4>
           <Spacer y={2.5} />
           <MediaList
             genresMovie={rootData?.genresMovie}

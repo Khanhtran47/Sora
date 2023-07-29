@@ -139,11 +139,11 @@ const RootIndex = () => {
         <MediaList
           coverItem={featuredList}
           isCoverCard
-          key="slider-card-featured-collections"
-          listName={t('featured-collections')}
+          key="slider-card-featured-lists"
+          listName={t('featured-lists')}
           listType="slider-card"
           navigationButtons
-          onClickViewMore={() => navigate('/collections')}
+          onClickViewMore={() => navigate('/lists')}
           showMoreList
         />
         <MediaList

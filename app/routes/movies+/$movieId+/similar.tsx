@@ -1,6 +1,7 @@
 import { json, type LoaderArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
+import { useTranslation } from 'react-i18next';
 
 import type { Handle } from '~/types/handle';
 import type { loader as movieIdLoader } from '~/routes/movies+/$movieId';
@@ -63,17 +64,17 @@ export const meta = mergeMeta<typeof loader, { 'routes/movies+/$movieId': typeof
 );
 
 export const handle: Handle = {
-  breadcrumb: ({ match }) => (
+  breadcrumb: ({ match, t }) => (
     <BreadcrumbItem
       to={`/movies/${match.params.movieId}/similar`}
       key={`movies-${match.params.movieId}-similar`}
     >
-      Similar
+      {t('similar')}
     </BreadcrumbItem>
   ),
-  miniTitle: ({ parentMatch }) => ({
+  miniTitle: ({ parentMatch, t }) => ({
     title: parentMatch?.data?.detail?.title,
-    subtitle: 'Similar',
+    subtitle: t('similar'),
     showImage: parentMatch?.data?.detail?.poster_path !== undefined,
     imageUrl: TMDB?.posterUrl(parentMatch?.data?.detail?.poster_path || '', 'w92'),
   }),
@@ -83,6 +84,7 @@ export const handle: Handle = {
 const MovieSimilarPage = () => {
   const { similar } = useLoaderData<typeof loader>();
   const rootData = useTypedRouteLoaderData('root');
+  const { t } = useTranslation();
 
   return (
     <div className="mt-3 flex w-full max-w-[1920px] flex-col gap-y-4 px-3 sm:px-3.5 xl:px-4 2xl:px-5">
@@ -92,7 +94,7 @@ const MovieSimilarPage = () => {
         genresTv={rootData?.genresTv}
         items={similar?.items}
         itemsType="movie"
-        listName="Similar Movies"
+        listName={t('similar-movies')}
         listType="grid"
         scrollToTopListAfterChangePage
         showListTypeChangeButton

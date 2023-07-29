@@ -9,7 +9,6 @@ import { useTranslation } from 'react-i18next';
 import { MimeType } from 'remix-image';
 import { tv } from 'tailwind-variants';
 
-import type { Handle } from '~/types/handle';
 import { useSoraSettings } from '~/hooks/useLocalStorage';
 import Image from '~/components/elements/Image';
 import {
@@ -34,10 +33,6 @@ import TrendingUp from '~/assets/icons/TrendingUpIcon';
 import Tv from '~/assets/icons/TvIcon';
 import TwoUsers from '~/assets/icons/TwoUsersIcon';
 import Logo from '~/assets/images/logo_loading.png';
-
-export const handle: Handle = {
-  i18n: 'left-drawer',
-};
 
 const sidebarStyles = tv({
   base: 'fixed z-[1999] box-border hidden shrink-0 grow-0 transition-[max-width] duration-400 sm:block',
@@ -1072,53 +1067,6 @@ const SideBar = () => {
             </NavigationMenuItem>
             <NavigationMenuItem
               className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
-              value="collections"
-            >
-              <Tooltip
-                content={t('collections')}
-                isDisabled={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
-                placement="right"
-                showArrow
-                offset={10}
-              >
-                <NavigationMenuLink asChild>
-                  <NavLink
-                    to="/collections"
-                    className={navigationMenuTriggerStyle({
-                      class: `${navigationItemWidthStyle} h-[56px] justify-start transition-[width] duration-200`,
-                    })}
-                  >
-                    {({ isActive, isPending }) => (
-                      <>
-                        <CategoryIcon
-                          className={
-                            !sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'mr-4' : ''
-                          }
-                          filled={isActive}
-                        />
-                        {!sidebarMiniMode.value || (sidebarHoverMode && isHovered)
-                          ? t('collections')
-                          : null}
-                        <Spinner
-                          size="sm"
-                          classNames={{
-                            base:
-                              isPending &&
-                              (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))
-                                ? 'ml-auto'
-                                : '!hidden',
-                            circle1: 'border-b-default-foreground',
-                            circle2: 'border-b-default-foreground',
-                          }}
-                        />
-                      </>
-                    )}
-                  </NavLink>
-                </NavigationMenuLink>
-              </Tooltip>
-            </NavigationMenuItem>
-            <NavigationMenuItem
-              className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
               value="people"
             >
               <Tooltip
@@ -1145,6 +1093,53 @@ const SideBar = () => {
                         />
                         {!sidebarMiniMode.value || (sidebarHoverMode && isHovered)
                           ? t('people')
+                          : null}
+                        <Spinner
+                          size="sm"
+                          classNames={{
+                            base:
+                              isPending &&
+                              (!sidebarMiniMode.value || (sidebarHoverMode && isHovered))
+                                ? 'ml-auto'
+                                : '!hidden',
+                            circle1: 'border-b-default-foreground',
+                            circle2: 'border-b-default-foreground',
+                          }}
+                        />
+                      </>
+                    )}
+                  </NavLink>
+                </NavigationMenuLink>
+              </Tooltip>
+            </NavigationMenuItem>
+            <NavigationMenuItem
+              className={`${navigationItemWidthStyle} text-left transition-[width] duration-200`}
+              value="featured-lists"
+            >
+              <Tooltip
+                content={t('featured-lists')}
+                isDisabled={!sidebarMiniMode.value || (sidebarHoverMode && isHovered)}
+                placement="right"
+                showArrow
+                offset={10}
+              >
+                <NavigationMenuLink asChild>
+                  <NavLink
+                    to="/lists"
+                    className={navigationMenuTriggerStyle({
+                      class: `${navigationItemWidthStyle} h-[56px] justify-start transition-[width] duration-200`,
+                    })}
+                  >
+                    {({ isActive, isPending }) => (
+                      <>
+                        <CategoryIcon
+                          className={
+                            !sidebarMiniMode.value || (sidebarHoverMode && isHovered) ? 'mr-4' : ''
+                          }
+                          filled={isActive}
+                        />
+                        {!sidebarMiniMode.value || (sidebarHoverMode && isHovered)
+                          ? t('featured-lists')
                           : null}
                         <Spinner
                           size="sm"

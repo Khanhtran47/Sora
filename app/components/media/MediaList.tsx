@@ -404,7 +404,7 @@ const MediaList = (props: IMediaListProps) => {
                     onOpenChange={() => setShowFilter(!showFilter)}
                     className="!px-0 md:!px-0"
                   >
-                    <SheetTitle className="px-0 md:px-6">Filters</SheetTitle>
+                    <SheetTitle className="px-0 md:px-6">{t('filters')}</SheetTitle>
                     <Spacer y={2.5} />
                     <Filter
                       genres={itemsType === 'movie' ? genresMovie : genresTv}
@@ -420,7 +420,7 @@ const MediaList = (props: IMediaListProps) => {
                   onValueChange={(value: string) => handleSelectChange(value)}
                 >
                   <SelectTrigger aria-label="Select Sort">
-                    <SelectValue placeholder="Sort by" />
+                    <SelectValue placeholder={t('sort-by')} />
                   </SelectTrigger>
                   <SelectContent position="popper">
                     {sortItems.map((sort) => (

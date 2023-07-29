@@ -3,7 +3,6 @@ import { motion, useTransform } from 'framer-motion';
 import { useHydrated } from 'remix-utils';
 import { tv } from 'tailwind-variants';
 
-import type { Handle } from '~/types/handle';
 import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
 import { useLayout } from '~/store/layout/useLayout';
 import { useHeaderOptions } from '~/hooks/useHeader';
@@ -16,10 +15,6 @@ import ControlNavigation from './ControlNavigation';
 interface IHeaderProps {
   user?: User;
 }
-
-export const handle: Handle = {
-  i18n: 'header',
-};
 
 const headerStyles = tv({
   base: 'fixed z-[1000] hidden h-[64px] w-[100vw] flex-row items-center justify-between gap-x-4 rounded-tl-large px-5 py-3 sm:flex',

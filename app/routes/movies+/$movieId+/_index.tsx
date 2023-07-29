@@ -1,6 +1,7 @@
 import { json, type LoaderArgs } from '@remix-run/node';
 import { Link, useLoaderData, useNavigate, useParams } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
+import { useTranslation } from 'react-i18next';
 
 import type { Handle } from '~/types/handle';
 import type { loader as movieIdLoader } from '~/routes/movies+/$movieId';
@@ -68,12 +69,12 @@ export const meta = mergeMeta<typeof loader, { 'routes/movies+/$movieId': typeof
 );
 
 export const handle: Handle = {
-  breadcrumb: ({ match }) => (
+  breadcrumb: ({ match, t }) => (
     <BreadcrumbItem
       to={`/movies/${match.params.movieId}/`}
       key={`movies-${match.params.movieId}-overview`}
     >
-      Overview
+      {t('overview')}
     </BreadcrumbItem>
   ),
 };
@@ -85,6 +86,7 @@ const MovieOverview = () => {
   const detail = movieData && movieData.detail;
   const navigate = useNavigate();
   const { movieId } = useParams();
+  const { t } = useTranslation();
   const onClickViewMore = (type: 'cast' | 'similar' | 'recommendations') => {
     navigate(`/movies/${detail?.id}/${type}`);
   };
@@ -93,15 +95,15 @@ const MovieOverview = () => {
       <div className="flex w-full grow-0 flex-col sm:w-1/3 sm:items-center sm:justify-start">
         <div className="flex w-full flex-col items-start justify-center gap-y-4 rounded-large bg-content1 p-4 nextui-sm:w-3/4 xl:w-1/2">
           <div className="flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-            <h6 className="grow-0 basis-1/3">Original Title</h6>
+            <h6 className="grow-0 basis-1/3">{t('original-title')}</h6>
             <p className="grow">{detail?.original_title}</p>
           </div>
           <div className="flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-            <h6 className="grow-0 basis-1/3">Status</h6>
+            <h6 className="grow-0 basis-1/3">{t('status')}</h6>
             <p className="grow">{detail?.status}</p>
           </div>
           <div className="flex w-full flex-row items-start justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-            <h6 className="grow-0 basis-1/3">Production Companies</h6>
+            <h6 className="grow-0 basis-1/3">{t('production-companies')}</h6>
             <div className="flex grow flex-col">
               {detail?.production_companies &&
                 detail.production_companies.map((company) => (
@@ -110,14 +112,14 @@ const MovieOverview = () => {
             </div>
           </div>
           <div className="flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-            <h6 className="grow-0 basis-1/3">Original Language</h6>
+            <h6 className="grow-0 basis-1/3">{t('original-language')}</h6>
             <p className="grow">
               {rootData?.languages?.find((lang) => lang.iso_639_1 === detail?.original_language)
                 ?.english_name || detail?.original_language}
             </p>
           </div>
           <div className="flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-            <h6 className="grow-0 basis-1/3">Budget</h6>
+            <h6 className="grow-0 basis-1/3">{t('budget')}</h6>
             <p className="grow">
               {detail?.budget
                 ? `$${detail?.budget?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
@@ -125,7 +127,7 @@ const MovieOverview = () => {
             </p>
           </div>
           <div className=" flex w-full flex-row items-center justify-start gap-x-4 sm:flex-col sm:items-start sm:justify-center">
-            <h6 className="grow-0 basis-1/3">Revenue</h6>
+            <h6 className="grow-0 basis-1/3">{t('revenue')}</h6>
             <p className="grow">
               {detail?.revenue
                 ? `$${detail?.revenue?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
@@ -140,7 +142,7 @@ const MovieOverview = () => {
           <div className="flex flex-col flex-wrap gap-x-0 gap-y-4 sm:flex-row sm:gap-x-8">
             {directors && directors.length > 0 ? (
               <div className="flex w-full flex-row items-start justify-start gap-x-4 sm:w-fit sm:flex-col">
-                <h6 className="grow-0 basis-1/3 sm:basis-auto">Director</h6>
+                <h6 className="grow-0 basis-1/3 sm:basis-auto">{t('director')}</h6>
                 <div className="flex grow flex-col">
                   {directors.map((director) => (
                     <Link
@@ -157,7 +159,7 @@ const MovieOverview = () => {
             ) : null}
             {detail?.production_countries && detail.production_countries.length > 0 ? (
               <div className="flex w-full flex-row items-start justify-start gap-x-4 sm:w-fit sm:flex-col">
-                <h6 className="grow-0 basis-1/3 sm:basis-auto">Production Countries</h6>
+                <h6 className="grow-0 basis-1/3 sm:basis-auto">{t('production-countries')}</h6>
                 <div className="flex grow flex-col">
                   {detail?.production_countries.map((country, index) => (
                     <p key={`country-item-${index}`}>{country.name}</p>
@@ -167,7 +169,7 @@ const MovieOverview = () => {
             ) : null}
             {detail?.spoken_languages && detail.spoken_languages.length > 0 ? (
               <div className="flex w-full flex-row items-start justify-start gap-x-4 sm:w-fit sm:flex-col">
-                <h6 className="grow-0 basis-1/3 sm:basis-auto">Spoken Languages</h6>
+                <h6 className="grow-0 basis-1/3 sm:basis-auto">{t('spoken-languages')}</h6>
                 <div className="flex grow flex-col">
                   {detail?.spoken_languages.map((language, index) => (
                     <p key={`language-item-${index}`}>{language.english_name}</p>
@@ -182,7 +184,7 @@ const MovieOverview = () => {
             items={topBilledCast}
             itemsType="people"
             key={`movie-top-cast-${movieId}`}
-            listName="Top Cast"
+            listName={t('top-cast')}
             listType="slider-card"
             navigationButtons
             onClickViewMore={() => onClickViewMore('cast')}
@@ -196,7 +198,7 @@ const MovieOverview = () => {
             items={recommendations.items}
             itemsType="movie"
             key={`movie-recommendations-${movieId}`}
-            listName="Recommendations"
+            listName={t('recommendations')}
             listType="slider-card"
             navigationButtons
             onClickViewMore={() => onClickViewMore('recommendations')}
@@ -210,7 +212,7 @@ const MovieOverview = () => {
             items={similar.items}
             itemsType="movie"
             key={`movie-similar-${movieId}`}
-            listName="Similar Movies"
+            listName={t('similar-movies')}
             listType="slider-card"
             navigationButtons
             onClickViewMore={() => onClickViewMore('similar')}

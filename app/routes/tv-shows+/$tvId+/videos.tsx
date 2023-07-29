@@ -6,6 +6,7 @@ import { useFetcher, useLoaderData } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import { AnimatePresence, motion, type PanInfo } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
+import { useTranslation } from 'react-i18next';
 import { MimeType } from 'remix-image';
 
 import type { Handle } from '~/types/handle';
@@ -62,17 +63,17 @@ export const meta = mergeMeta<typeof loader, { 'routes/tv-shows+/$tvId': typeof 
 );
 
 export const handle: Handle = {
-  breadcrumb: ({ match }) => (
+  breadcrumb: ({ match, t }) => (
     <BreadcrumbItem
       to={`/tv-shows/${match.params.tvId}/videos`}
       key={`tv-shows-${match.params.tvId}-videos`}
     >
-      Videos
+      {t('videos')}
     </BreadcrumbItem>
   ),
-  miniTitle: ({ parentMatch }) => ({
+  miniTitle: ({ parentMatch, t }) => ({
     title: parentMatch?.data?.detail?.name,
-    subtitle: 'Videos',
+    subtitle: t('videos'),
     showImage: parentMatch?.data?.detail?.poster_path !== undefined,
     imageUrl: TMDB?.posterUrl(parentMatch?.data?.detail?.poster_path || '', 'w92'),
   }),
@@ -81,6 +82,7 @@ export const handle: Handle = {
 const TvVideosPage = () => {
   const { videos } = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
+  const { t } = useTranslation();
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const [activeType, setActiveType] = useState('trailer');
   const [activeTypeVideos, setActiveTypeVideos] = useState<Item[] | []>([]);
@@ -90,31 +92,31 @@ const TvVideosPage = () => {
   const typesVideo = [
     {
       id: 'trailer',
-      activeVideo: 'Trailer',
+      activeVideo: 'trailer',
     },
     {
       id: 'teaser',
-      activeVideo: 'Teaser',
+      activeVideo: 'teaser',
     },
     {
       id: 'clip',
-      activeVideo: 'Clip',
+      activeVideo: 'clip',
     },
     {
       id: 'behind_the_scenes',
-      activeVideo: 'Behind the Scenes',
+      activeVideo: 'behind-the-scenes',
     },
     {
       id: 'bloopers',
-      activeVideo: 'Bloopers',
+      activeVideo: 'bloopers',
     },
     {
       id: 'featurette',
-      activeVideo: 'Featurette',
+      activeVideo: 'featurette',
     },
     {
       id: 'opening_credits',
-      activeVideo: 'Opening Credits',
+      activeVideo: 'opening-credits',
     },
   ];
   useEffect(() => {
@@ -169,7 +171,7 @@ const TvVideosPage = () => {
         <TabsList>
           {typesVideo.map((type) => (
             <TabsTrigger key={type.id} value={type.id} className="relative">
-              <h6 className="!m-0">{type.activeVideo}</h6>
+              <h6 className="!m-0">{t(type.activeVideo)}</h6>
               {activeType === type.id ? (
                 <motion.div
                   className="absolute overflow-hidden rounded-small bg-default-foreground data-[orientation=horizontal]:bottom-0 data-[orientation=vertical]:left-0 data-[orientation=horizontal]:h-1 data-[orientation=vertical]:h-1/2 data-[orientation=horizontal]:w-1/2 data-[orientation=vertical]:w-1"

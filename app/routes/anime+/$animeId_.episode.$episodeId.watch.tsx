@@ -769,14 +769,14 @@ export const handle: Handle = {
       </BreadcrumbItem>
     </>
   ),
-  miniTitle: ({ match }) => ({
+  miniTitle: ({ match, t }) => ({
     title:
       match.data?.detail?.title?.userPreferred ||
       match.data?.detail?.title?.english ||
       match.data?.detail?.title?.romaji ||
       match.data?.detail?.title?.native ||
       '',
-    subtitle: `Episode ${match.params.episodeId}`,
+    subtitle: `${t('episode')} ${match.params.episodeId}`,
     showImage: match.data?.detail?.image !== undefined,
     imageUrl: match.data?.detail?.image,
   }),

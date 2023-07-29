@@ -5,6 +5,7 @@ import { Pagination } from '@nextui-org/pagination';
 import { Spacer } from '@nextui-org/spacer';
 import { useMediaQuery } from '@react-hookz/web';
 import { useNavigate } from '@remix-run/react';
+import { useTranslation } from 'react-i18next';
 import { MimeType } from 'remix-image';
 
 import type { IEpisodeInfo } from '~/services/consumet/anilist/anilist.types';
@@ -41,6 +42,7 @@ interface IListEpisodesProps {
 const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) => {
   const { type, id, episodes, season, providers } = props;
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { isShowSkipOpEdButton } = useSoraSettings();
   const episodesCountAvailable = useMemo(() => episodes && episodes.length, [episodes]);
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
@@ -101,7 +103,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
   return (
     <>
       <div className="my-5 flex w-full flex-row flex-wrap items-center justify-between gap-4">
-        <h3>Episodes</h3>
+        <h3>{t('episodes')}</h3>
         <div className="flex flex-row items-center justify-end gap-2">
           {providers ? (
             <Select value={selectedProvider} onValueChange={(value) => handleProviderChange(value)}>
@@ -230,7 +232,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                       ))}
                     <div className="flex flex-col justify-start gap-y-1 p-4">
                       <h5 className="line-clamp-1">
-                        Episode{' '}
+                        {t('episode')}{' '}
                         {type === 'tv'
                           ? isSm
                             ? `${episode?.episode_number}`
@@ -247,7 +249,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                           <div className="flex items-center gap-x-4">
                             <Rating rating={episode?.vote_average.toFixed(1)} ratingType="tv" />
                             <h5>
-                              {episode.air_date} | {episode?.runtime} min
+                              {episode.air_date} | {episode?.runtime} {t('min')}
                             </h5>
                           </div>
                           <h6 className="!line-clamp-1">{episode.overview}</h6>

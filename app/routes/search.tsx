@@ -18,16 +18,16 @@ export const meta = mergeMeta(() => [
 ]);
 
 export const handle: Handle = {
-  breadcrumb: () => (
+  breadcrumb: ({ t }) => (
     <BreadcrumbItem to="/search" key="search">
-      Search
+      {t('search.action')}
     </BreadcrumbItem>
   ),
   showTabLink: true,
   tabLinkPages: searchPages,
   tabLinkTo: () => '/search/',
-  miniTitle: () => ({
-    title: 'Search',
+  miniTitle: ({ t }) => ({
+    title: t('search.action'),
     showImage: false,
   }),
 };
