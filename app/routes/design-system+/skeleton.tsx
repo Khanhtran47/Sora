@@ -31,7 +31,7 @@ const SkeletonPage = () => {
       >
         API Reference
       </Link>
-      <Card className="w-[200px] space-y-5 p-4" radius="2xl">
+      <Card className="w-[200px] space-y-5 p-4" radius="lg">
         <Skeleton className="rounded-medium">
           <div className="h-24 rounded-medium bg-default-300"></div>
         </Skeleton>

@@ -165,7 +165,7 @@ const ListEpisodes: React.FC<IListEpisodesProps> = (props: IListEpisodesProps) =
                   isHoverable
                   isPressable
                   className="!max-h-[127px] w-full data-[hover=true]:ring-2 data-[hover=true]:ring-focus"
-                  onClick={() => handleSelectEpisode(index)}
+                  onPress={() => handleSelectEpisode(index)}
                 >
                   <CardBody className="flex flex-row flex-nowrap justify-start p-0">
                     {type === 'tv' &&

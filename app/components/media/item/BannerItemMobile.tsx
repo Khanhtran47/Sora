@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { Card, CardBody, CardFooter } from '@nextui-org/card';
 import { Chip } from '@nextui-org/chip';
 import { useIntersectionObserver, useMeasure } from '@react-hookz/web';
-import { useNavigate } from '@remix-run/react';
+import { Link } from '@remix-run/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Balancer from 'react-wrap-balancer';
 import Image, { MimeType } from 'remix-image';
@@ -42,7 +42,6 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
   const cardRef = useRef<HTMLAnchorElement>(null);
   const cardIntersection = useIntersectionObserver(cardRef, { root: viewportRef });
   const [size, bannerRef] = useMeasure<HTMLDivElement>();
-  const navigate = useNavigate();
   const titleItem =
     typeof title === 'string'
       ? title
@@ -53,19 +52,19 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
       <Card
         // @ts-ignore
         ref={cardRef}
+        shadow="none"
         isPressable
         className={`h-full w-full rounded-b-none border-0 !transition-[margin,_transform,_background] !duration-300 !ease-in ${
           !active ? 'mt-6' : ''
         }`}
-        onPress={() =>
-          navigate(
-            `/${
-              mediaType === 'movie' ? 'movies/' : mediaType === 'tv' ? 'tv-shows/' : 'anime/'
-            }${id}/`,
-          )
-        }
       >
-        <CardBody className="overflow-hidden p-0 after:absolute after:bottom-0 after:left-0 after:h-[calc(100%/2)] after:w-full after:bg-gradient-to-b after:from-transparent after:to-background after:content-['']">
+        <CardBody
+          as={Link}
+          to={`/${
+            mediaType === 'movie' ? 'movies/' : mediaType === 'tv' ? 'tv-shows/' : 'anime/'
+          }${id}/`}
+          className="overflow-hidden p-0 after:absolute after:bottom-0 after:left-0 after:h-[calc(100%/2)] after:w-full after:bg-gradient-to-b after:from-transparent after:to-background after:content-['']"
+        >
           <AnimatePresence>
             {size ? (
               <motion.div
@@ -103,7 +102,13 @@ const BannerItemMobile = (props: IBannerItemMobileProps) => {
             ) : null}
           </AnimatePresence>
         </CardBody>
-        <CardFooter className="absolute bottom-6 z-[1]">
+        <CardFooter
+          as={Link}
+          to={`/${
+            mediaType === 'movie' ? 'movies/' : mediaType === 'tv' ? 'tv-shows/' : 'anime/'
+          }${id}/`}
+          className="absolute bottom-6 z-[1]"
+        >
           <div className="flex w-full flex-col items-center justify-center gap-4 py-3">
             <h2 className="mb-0 text-center font-semibold">
               <Balancer>{titleItem}</Balancer>

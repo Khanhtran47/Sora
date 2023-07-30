@@ -54,7 +54,7 @@ const BannerItemCompact = forwardRef<HTMLDivElement, IBannerItemCompactProps>(
             role="figure"
             isPressable
             isHoverable
-            style={{ position: 'unset', originX: 1, originY: 0.5 }}
+            style={{ position: 'unset' }}
           >
             <CardBody className="p-0">
               <Image

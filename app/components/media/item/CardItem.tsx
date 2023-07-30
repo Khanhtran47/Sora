@@ -144,7 +144,7 @@ const CardItem = (props: ICardItemProps) => {
   const [_trailerCard, setTrailerCard] = useState<Trailer>({});
   const [isTooltipVisible] = useState(false);
   const { listViewType } = useSoraSettings();
-  const [size, imageRef] = useMeasure<HTMLDivElement>();
+  const [size, imageRef] = useMeasure<HTMLAnchorElement>();
   const { viewportRef } = useLayout((scrollState) => scrollState);
   useEffect(() => {
     if (fetcher.data && fetcher.data.videos) {
@@ -195,9 +195,19 @@ const CardItem = (props: ICardItemProps) => {
         className={`${base()} ${isSliderCard ? 'my-4' : ''}`}
         role="button"
         ref={cardRef}
-        onPress={() => navigate(linkTo || '/')}
+        onPress={(e) => {
+          if (e.pointerType === 'keyboard') {
+            navigate(linkTo || '/');
+          }
+        }}
       >
-        <CardBody className={body()} ref={imageRef}>
+        <CardBody
+          className={body()}
+          // @ts-ignore
+          ref={imageRef}
+          as={Link}
+          to={linkTo || '/'}
+        >
           {size ? (
             <Image
               src={backdropPath}
@@ -224,7 +234,7 @@ const CardItem = (props: ICardItemProps) => {
             />
           ) : null}
         </CardBody>
-        <CardFooter className={footer()}>
+        <CardFooter className={footer()} as={Link} to={linkTo || '/'}>
           <h5 className="text-center font-semibold">
             <Balancer>{titleItem}</Balancer>
           </h5>
@@ -249,12 +259,7 @@ const CardItem = (props: ICardItemProps) => {
       }}
     >
       <CardBody className={body()}>
-        <Link
-          className={imageContainer()}
-          to={linkTo || '/'}
-          // @ts-ignore
-          ref={imageRef}
-        >
+        <Link className={imageContainer()} to={linkTo || '/'} ref={imageRef}>
           {size && !isTooltipVisible && inView ? (
             posterPath ? (
               <Image
