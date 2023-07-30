@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import * as React from 'react';
+import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from 'react';
 import FontStyles100 from '@fontsource/inter/100.css';
 import FontStyles200 from '@fontsource/inter/200.css';
 import FontStyles300 from '@fontsource/inter/300.css';
@@ -36,6 +36,7 @@ import photoSwipeStyles from 'photoswipe/dist/photoswipe.css';
 import { getSelectorsByUserAgent } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
 import { Provider as WrapBalancerProvider } from 'react-wrap-balancer';
+import rdtStylesheet from 'remix-development-tools/stylesheet.css';
 import { useChangeLanguage } from 'remix-i18next';
 import Image, { MimeType } from 'remix-image';
 import { getClientIPAddress, getClientLocales, useHydrated } from 'remix-utils';
@@ -73,6 +74,11 @@ interface DocumentProps {
   children: React.ReactNode;
   title?: string;
 }
+
+const RemixDevTools =
+  process.env.NODE_ENV === 'development'
+    ? lazy(() => import('remix-development-tools'))
+    : undefined;
 
 const themeValues = {
   light: 'light',
@@ -124,6 +130,7 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({ nextUrl }) => {
   return Boolean(lang);
 };
 
+// @ts-ignore
 export const links: LinksFunction = () => {
   return [
     { rel: 'manifest', href: '/resources/manifest-v0.0.1.json' },
@@ -134,7 +141,10 @@ export const links: LinksFunction = () => {
       as: 'style',
       href: tailwindStylesheetUrl,
     },
-    ...(cssBundleHref ? [{ rel: 'preload', as: 'style', href: cssBundleHref }] : []),
+    cssBundleHref ? { rel: 'preload', as: 'style', href: cssBundleHref } : null,
+    rdtStylesheet && process.env.NODE_ENV === 'development'
+      ? { rel: 'preload', href: rdtStylesheet, as: 'style' }
+      : null,
     { rel: 'preload', as: 'style', href: FontStyles100 },
     { rel: 'preload', as: 'style', href: FontStyles200 },
     { rel: 'preload', as: 'style', href: FontStyles300 },
@@ -144,8 +154,11 @@ export const links: LinksFunction = () => {
     { rel: 'preload', as: 'style', href: FontStyles700 },
     { rel: 'preload', as: 'style', href: FontStyles800 },
     { rel: 'preload', as: 'style', href: FontStyles900 },
+    cssBundleHref ? { rel: 'stylesheet', href: cssBundleHref } : null,
+    rdtStylesheet && process.env.NODE_ENV === 'development'
+      ? { rel: 'stylesheet', href: rdtStylesheet }
+      : null,
     { rel: 'stylesheet', href: tailwindStylesheetUrl },
-    ...(cssBundleHref ? [{ rel: 'stylesheet', href: cssBundleHref }] : []),
     { rel: 'stylesheet', href: swiperStyles },
     { rel: 'stylesheet', href: swiperPaginationStyles },
     { rel: 'stylesheet', href: swiperNavigationStyles },
@@ -163,7 +176,7 @@ export const links: LinksFunction = () => {
     { rel: 'stylesheet', href: FontStyles700 },
     { rel: 'stylesheet', href: FontStyles800 },
     { rel: 'stylesheet', href: FontStyles900 },
-  ];
+  ].filter(Boolean);
 };
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -248,13 +261,13 @@ function useLoadingIndicator() {
    * determine if the app is idle or if it's loading.
    * Here we consider both loading and submitting as loading.
    */
-  const state = React.useMemo<'idle' | 'loading'>(() => {
+  const state = useMemo<'idle' | 'loading'>(() => {
     const states = [navigation.state, ...fetchers.map((fetcher) => fetcher.state)];
     if (states.every((item) => item === 'idle')) return 'idle';
     return 'loading';
   }, [navigation.state, fetchers]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     // and when it's something else it means it's either submitting a form or
     // waiting for the loaders of the next location so we start it
     if (state === 'loading') NProgress.configure({ showSpinner: false }).start();
@@ -272,7 +285,7 @@ function ElementScrollRestoration({
   const navigation = useNavigation();
   const location = useLocation();
 
-  const updatePositions = React.useCallback(() => {
+  const updatePositions = useCallback(() => {
     const element = document.querySelector(elementQuery);
     if (!element) return;
     let positions = {};
@@ -291,7 +304,7 @@ function ElementScrollRestoration({
     sessionStorage.setItem(STORAGE_KEY, JSON.stringify(newPositions));
   }, [STORAGE_KEY, elementQuery, location.key]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (navigation.state === 'idle') {
       const element = document.querySelector(elementQuery);
       if (!element) return;
@@ -358,7 +371,7 @@ const Document = ({ children, title }: DocumentProps) => {
   const isBot = useIsBot();
   const isHydrated = useHydrated();
   useLoadingIndicator();
-  const color = React.useMemo(() => {
+  const color = useMemo(() => {
     if (isHydrated) {
       return getComputedStyle(document.documentElement).getPropertyValue(
         '--theme-background-title-bar',
@@ -367,7 +380,7 @@ const Document = ({ children, title }: DocumentProps) => {
     return '0 0 0';
   }, [isHydrated]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (gaTrackingId?.length) {
       gtag.pageview(location.pathname, gaTrackingId);
     }
@@ -389,7 +402,7 @@ const Document = ({ children, title }: DocumentProps) => {
     return clone;
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     const mounted = isMount;
     isMount = false;
     if ('serviceWorker' in navigator) {
@@ -473,6 +486,11 @@ const Document = ({ children, title }: DocumentProps) => {
         <ElementScrollRestoration elementQuery="[data-restore-scroll='true']" />
         {isBot ? null : <Scripts />}
         {process.env.NODE_ENV === 'development' ? <LiveReload /> : null}
+        {RemixDevTools && (
+          <Suspense>
+            <RemixDevTools hideUntilHover />
+          </Suspense>
+        )}
       </body>
     </html>
   );
@@ -483,8 +501,8 @@ const App = () => {
   const { user, locale } = useLoaderData<typeof loader>();
   const isBot = useIsBot();
   useChangeLanguage(locale);
-  const [waitingWorker, setWaitingWorker] = React.useState<ServiceWorker | null>(null);
-  const [isUpdateAvailable, setIsUpdateAvailable] = React.useState(false);
+  const [waitingWorker, setWaitingWorker] = useState<ServiceWorker | null>(null);
+  const [isUpdateAvailable, setIsUpdateAvailable] = useState(false);
 
   const reloadPage = () => {
     waitingWorker?.postMessage({ type: 'SKIP_WAITING' });
@@ -514,11 +532,11 @@ const App = () => {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     detectSWUpdate();
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isUpdateAvailable) {
       toast.success('Update Available', {
         description: 'A new version of Sora is available.',

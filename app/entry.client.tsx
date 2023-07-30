@@ -30,19 +30,33 @@ i18next
       caches: [],
     },
   })
-  .then(() =>
-    startTransition(() => {
-      // After i18next has been initialized, we can hydrate the app
-      // We need to wait to ensure translations are loaded before the hydration
-      // Here wrap RemixBrowser in I18nextProvider from react-i18next
-      hydrateRoot(
-        document,
-        <I18nextProvider i18n={i18next}>
-          <RemixBrowser />
-        </I18nextProvider>,
-      );
-    }),
-  )
+  .then(() => {
+    if (process.env.NODE_ENV === 'development') {
+      import('remix-development-tools').then(({ initRouteBoundariesClient }) => {
+        initRouteBoundariesClient();
+        startTransition(() => {
+          hydrateRoot(
+            document,
+            <I18nextProvider i18n={i18next}>
+              <RemixBrowser />
+            </I18nextProvider>,
+          );
+        });
+      });
+    } else {
+      startTransition(() => {
+        // After i18next has been initialized, we can hydrate the app
+        // We need to wait to ensure translations are loaded before the hydration
+        // Here wrap RemixBrowser in I18nextProvider from react-i18next
+        hydrateRoot(
+          document,
+          <I18nextProvider i18n={i18next}>
+            <RemixBrowser />
+          </I18nextProvider>,
+        );
+      });
+    }
+  })
   .catch((err) => {
     // eslint-disable-next-line no-console
     console.error(err);

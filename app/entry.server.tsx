@@ -60,10 +60,17 @@ const handleRequest = async (
     'Vercel/1.0 (https://vercel.com/docs/bots)',
   ]);
   isbotRender.extend(['chrome-lighthouse']);
+  const context =
+    process.env.NODE_ENV === 'development'
+      ? await import('remix-development-tools').then(({ initRouteBoundariesServer }) =>
+          initRouteBoundariesServer(remixContext),
+        )
+      : remixContext;
+
   const remixServer = (
     <IsBotProvider isBot={isbotRender(request.headers.get('User-Agent') ?? '')}>
       <I18nextProvider i18n={instance}>
-        <RemixServer context={remixContext} url={request.url} />
+        <RemixServer context={context} url={request.url} />
       </I18nextProvider>
     </IsBotProvider>
   );
