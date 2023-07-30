@@ -275,6 +275,9 @@ dependencies:
   tinycolor2:
     specifier: ^1.6.0
     version: 1.6.0
+  vaul:
+    specifier: ^0.1.1
+    version: 0.1.1(@types/react-dom@18.2.6)(@types/react@18.2.14)(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)
   web-push:
     specifier: ^3.6.3
     version: 3.6.3
@@ -12341,6 +12344,20 @@ packages:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
     dev: true
+
+  /vaul@0.1.1(@types/react-dom@18.2.6)(@types/react@18.2.14)(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525):
+    resolution: {integrity: sha512-cXh5GOAxSE4yJUahdlwkzexCfJMEbAzs1HPS43tmmwuRMLXG1Z+4HQMu/xF31hX72Yj8P22HAW71jBXtV5CQyQ==}
+    peerDependencies:
+      react: ^18.0.0
+      react-dom: ^18.0.0
+    dependencies:
+      '@radix-ui/react-dialog': 1.0.4(@types/react-dom@18.2.6)(@types/react@18.2.14)(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)
+      react: 18.3.0-canary-0210f0b08-20230525
+      react-dom: 18.3.0-canary-0210f0b08-20230525(react@18.3.0-canary-0210f0b08-20230525)
+    transitivePeerDependencies:
+      - '@types/react'
+      - '@types/react-dom'
+    dev: false
 
   /vfile-location@4.0.1:
     resolution: {integrity: sha512-JDxPlTbZrZCQXogGheBHjbRWjESSPEak770XwWPfw5mTc1v1nWGLB/apzZxsx8a0SJVfF8HK8ql8RD308vXRUw==}

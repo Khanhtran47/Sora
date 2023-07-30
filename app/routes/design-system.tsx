@@ -29,6 +29,7 @@ export const handle: Handle = {
     showImage: false,
   }),
   getSitemapEntries: () => null,
+  hideSidebar: true,
 };
 
 const DesignSystem = () => {

@@ -40,8 +40,8 @@ const layoutStyles = tv({
   base: 'flex max-h-full min-h-screen max-w-full flex-nowrap justify-start bg-content1/[0.3] transition-[padding] duration-200',
   variants: {
     boxed: {
-      true: 'min-h-[calc(100vh_-_115px)] pt-[15px]',
-      false: 'p-0',
+      true: 'min-h-[calc(100vh_-_115px)] py-[15px]',
+      false: ' p-0',
     },
   },
   defaultVariants: {
@@ -50,41 +50,52 @@ const layoutStyles = tv({
 });
 
 const contentAreaStyles = tv({
-  base: 'ml-0 flex w-full grow flex-col justify-end overflow-hidden !rounded-none bg-background shadow-xl shadow-foreground/10 transition-[margin] duration-200 sm:!rounded-tl-medium',
+  base: 'ml-0 flex w-full grow flex-col justify-end overflow-hidden !rounded-none bg-background shadow-xl shadow-foreground/10 transition-[margin] duration-200',
   variants: {
     mini: {
-      true: 'sm:ml-[80px]',
+      true: 'sm:ml-[80px] sm:!rounded-tl-medium',
     },
     boxed: {
-      true: 'sm:ml-[280px]',
+      true: 'sm:ml-[280px] sm:!rounded-medium',
+    },
+    hideSidebar: {
+      true: 'sm:ml-0',
     },
   },
   compoundVariants: [
     {
       mini: true,
       boxed: true,
-      class: 'sm:ml-[110px]',
+      hideSidebar: false,
+      class: 'sm:ml-[110px] sm:!rounded-medium',
     },
     {
       mini: false,
       boxed: false,
-      class: 'sm:ml-[250px]',
+      hideSidebar: false,
+      class: 'sm:ml-[250px] sm:!rounded-tl-medium',
+    },
+    {
+      boxed: true,
+      hideSidebar: true,
+      class: 'sm:ml-[15px] sm:!rounded-medium',
     },
   ],
   defaultVariants: {
     mini: false,
     boxed: false,
+    hideSidebar: false,
   },
 });
 
 const scrollAreaViewportStyles = tv({
-  base: 'flex min-h-screen w-[100vw] flex-col items-center justify-start transition-[width,_height] duration-200',
+  base: 'flex w-[100vw] flex-col items-center justify-start transition-[width,_height] duration-200',
   variants: {
     mini: {
-      true: 'sm:w-[calc(100vw_-_80px)]',
+      true: 'min-h-screen sm:w-[calc(100vw_-_80px)]',
     },
     boxed: {
-      true: 'sm:w-[calc(100vw_-_280px)]',
+      true: 'min-h-[calc(100vh_-_30px)] sm:w-[calc(100vw_-_280px)]',
     },
     layoutPadding: {
       true: 'mb-[70px] p-0 sm:px-5',
@@ -94,26 +105,38 @@ const scrollAreaViewportStyles = tv({
       true: 'mt-[128px]',
       false: 'mt-[72px]',
     },
+    hideSidebar: {
+      true: 'min-h-screen sm:w-[100vw]',
+    },
   },
   compoundVariants: [
     {
       mini: true,
       boxed: true,
-      class: 'sm:w-[calc(100vw_-_110px)]',
+      hideSidebar: false,
+      class: 'min-h-[calc(100vh_-_30px)] sm:w-[calc(100vw_-_110px)]',
     },
     {
       mini: false,
       boxed: false,
-      class: 'sm:w-[calc(100vw_-_250px)]',
+      hideSidebar: false,
+      class: 'min-h-screen sm:w-[calc(100vw_-_250px)]',
+    },
+    {
+      boxed: true,
+      hideSidebar: true,
+      class: 'min-h-[calc(100vh_-_30px)] sm:w-[calc(100vw_-_15px)]',
     },
     {
       layoutPadding: false,
       isShowTabLink: false,
+      hideSidebar: false,
       class: 'mt-0',
     },
     {
       layoutPadding: true,
       isShowTabLink: false,
+      hideSidebar: false,
       class: 'mt-[72px]',
     },
   ],
@@ -122,6 +145,7 @@ const scrollAreaViewportStyles = tv({
     boxed: false,
     layoutPadding: true,
     isShowTabLink: false,
+    hideSidebar: false,
   },
 });
 
@@ -134,22 +158,33 @@ const tabLinkWrapperStyles = tv({
     boxedSidebar: {
       true: 'top-[71px] sm:w-[calc(100vw_-_280px)]',
     },
+    hideSidebar: {
+      true: 'top-[56px] sm:w-[100vw]',
+    },
   },
   compoundVariants: [
     {
       miniSidebar: true,
       boxedSidebar: true,
+      hideSidebar: false,
       class: 'top-[79px] sm:w-[calc(100vw_-_110px)]',
     },
     {
       miniSidebar: false,
       boxedSidebar: false,
+      hideSidebar: false,
       class: 'top-[56px] sm:w-[calc(100vw_-_250px)]',
+    },
+    {
+      boxedSidebar: true,
+      hideSidebar: true,
+      class: 'top-[79px] sm:w-[calc(100vw_-_15px)]',
     },
   ],
   defaultVariants: {
     miniSidebar: false,
     boxedSidebar: false,
+    hideSidebar: false,
   },
 });
 
@@ -190,6 +225,10 @@ const Layout = (props: ILayout) => {
   );
   const disableLayoutPadding = useMemo(
     () => matches.some((match) => match.handle?.disableLayoutPadding === true),
+    [matches],
+  );
+  const isHideSidebar = useMemo(
+    () => matches.some((match) => match.handle?.hideSidebar === true),
     [matches],
   );
   const currentTabLinkPages = useMemo(() => {
@@ -297,7 +336,7 @@ const Layout = (props: ILayout) => {
 
   return (
     <div className={layoutStyles({ boxed: sidebarBoxedMode.value })}>
-      {isSm ? null : <SideBar />}
+      {isSm || isHideSidebar ? null : <SideBar />}
       {isShowOverlay ? (
         <motion.div
           initial={{ opacity: 0 }}
@@ -310,6 +349,7 @@ const Layout = (props: ILayout) => {
         className={contentAreaStyles({
           mini: sidebarMiniMode.value,
           boxed: sidebarBoxedMode.value,
+          hideSidebar: isHideSidebar,
         })}
       >
         {isSm ? <MobileHeader /> : <Header user={user} />}
@@ -319,6 +359,7 @@ const Layout = (props: ILayout) => {
             className={tabLinkWrapperStyles({
               miniSidebar: sidebarMiniMode.value,
               boxedSidebar: sidebarBoxedMode.value,
+              hideSidebar: isHideSidebar,
             })}
           >
             <TabLink pages={currentTabLinkPages} linkTo={currentTabLinkTo} />
@@ -328,7 +369,7 @@ const Layout = (props: ILayout) => {
         <ScrollArea
           type={isSm ? 'scroll' : 'always'}
           scrollHideDelay={500}
-          className={`w-full ${sidebarBoxedMode.value ? 'h-[calc(100vh-15px)]' : 'h-screen'}`}
+          className={`w-full ${sidebarBoxedMode.value ? 'h-[calc(100vh-30px)]' : 'h-screen'}`}
           key="scroll-area-main"
         >
           <ScrollViewport ref={viewportRef} data-restore-scroll="true">
@@ -338,6 +379,7 @@ const Layout = (props: ILayout) => {
                 boxed: sidebarBoxedMode.value,
                 layoutPadding: !disableLayoutPadding,
                 isShowTabLink: isShowTabLink && !hideTabLinkWithLocation,
+                hideSidebar: isHideSidebar,
               })}
             >
               <GlobalPlayer />

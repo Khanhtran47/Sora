@@ -41,4 +41,5 @@ export declare type Handle = {
   customHeaderBackgroundColor?: boolean;
   customHeaderChangeColorOnScroll?: boolean;
   showListViewChangeButton?: boolean;
+  hideSidebar?: boolean;
 } & SEOHandle;

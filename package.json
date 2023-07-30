@@ -113,6 +113,7 @@
     "tailwindcss": "^3.3.3",
     "tailwindcss-animate": "^1.0.6",
     "tinycolor2": "^1.6.0",
+    "vaul": "^0.1.1",
     "web-push": "^3.6.3",
     "zustand": "^4.3.9"
   },

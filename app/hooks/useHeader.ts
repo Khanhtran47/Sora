@@ -22,6 +22,10 @@ function useHeaderOptions() {
     () => matches.some((match) => match.handle?.showTabLink === true),
     [matches],
   );
+  const isHideSidebar = useMemo(
+    () => matches.some((match) => match.handle?.hideSidebar === true),
+    [matches],
+  );
 
   const hideTabLinkWithLocation: boolean = useMemo(() => {
     const currentMatch = matches.find((match) => match.handle?.showTabLink);
@@ -81,6 +85,7 @@ function useHeaderOptions() {
     isShowListViewChangeButton,
     isShowMobileHeader,
     isShowTabLink,
+    isHideSidebar,
   };
 }
 

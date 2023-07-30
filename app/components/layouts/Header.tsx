@@ -25,22 +25,33 @@ const headerStyles = tv({
     boxedSidebar: {
       true: 'top-[15px] sm:w-[calc(100vw_-_280px)]',
     },
+    hideSidebar: {
+      true: 'top-0 sm:w-[100vw]',
+    },
   },
   compoundVariants: [
     {
       miniSidebar: true,
       boxedSidebar: true,
+      hideSidebar: false,
       class: 'top-[15px] sm:w-[calc(100vw_-_110px)]',
     },
     {
       miniSidebar: false,
       boxedSidebar: false,
+      hideSidebar: false,
       class: 'top-0 sm:w-[calc(100vw_-_250px)]',
+    },
+    {
+      boxedSidebar: true,
+      hideSidebar: true,
+      class: 'top-[15px] sm:w-[calc(100vw_-_15px)]',
     },
   ],
   defaultVariants: {
     miniSidebar: false,
     boxedSidebar: false,
+    hideSidebar: false,
   },
 });
 
@@ -57,6 +68,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
     hideTabLinkWithLocation,
     isShowListViewChangeButton,
     isShowTabLink,
+    isHideSidebar,
   } = useHeaderOptions();
   const opacity = useTransform(
     scrollY,
@@ -74,6 +86,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       className={headerStyles({
         miniSidebar: sidebarMiniMode.value,
         boxedSidebar: sidebarBoxedMode.value,
+        hideSidebar: isHideSidebar,
       })}
     >
       <motion.div
