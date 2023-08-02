@@ -106,7 +106,7 @@ const TvSeasonCastPage = () => {
                 inline: 'nearest',
               });
             }}
-            {...(isSm && { size: 'xs' })}
+            {...(isSm && { size: 'sm' })}
           />
         </div>
       ) : null}

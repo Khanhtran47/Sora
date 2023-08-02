@@ -13,11 +13,11 @@ interface ISearchForm {
 
 const SearchForm = (props: ISearchForm) => {
   const { onSubmit, textOnButton, textHelper, textPlaceHolder, defaultValue } = props;
-  const [value, setValue] = useState(defaultValue ?? '');
+  const [value, setValue] = useState<string | undefined>(defaultValue ?? '');
 
   const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    onSubmit(value);
+    onSubmit(value ?? '');
   };
 
   return (

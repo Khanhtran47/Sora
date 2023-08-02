@@ -224,7 +224,7 @@ const MediaListGrid = (props: IMediaListCardProps) => {
             initialPage={currentPage}
             // shadow
             onChange={(page) => handlePageChange({ page })}
-            {...(isSm && !is2Xs ? { size: 'sm' } : isSm && is2Xs ? { size: 'xs' } : {})}
+            {...(isSm && !is2Xs ? { size: 'md' } : isSm && is2Xs ? { size: 'sm' } : {})}
           />
           <Spacer y={2.5} />
         </>

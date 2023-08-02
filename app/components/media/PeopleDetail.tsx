@@ -158,7 +158,7 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
       <Spacer y={5} />
       <div className="flex flex-col flex-wrap items-start justify-start gap-y-4 sm:items-center">
         <div className="mb-2 flex flex-row items-center justify-start gap-x-6 sm:m-0 sm:w-[70%] sm:flex-col sm:items-start">
-          <h5>{'known-for'}</h5>
+          <h5>{t('known-for')}</h5>
           <p>{detail?.known_for_department}</p>
         </div>
         <div className="mb-2 flex flex-row items-center justify-start gap-x-6 sm:m-0 sm:w-[70%] sm:flex-col sm:items-start">
@@ -174,7 +174,7 @@ const PeopleDetail = (props: IPeopleDetailProps) => {
           <p>{detail?.place_of_birth}</p>
         </div>
         <div className="mb-2 flex flex-row items-start justify-start gap-x-6 sm:m-0 sm:w-[70%] sm:flex-col">
-          <h5>{'also-known-as'}</h5>
+          <h5>{t('also-known-as')}</h5>
           <p>
             {detail?.also_known_as?.map((name) => (
               <>

@@ -26,13 +26,13 @@ const AuthForm = ({ type, error, code, errorCode }: IAuthForm) => {
   const inviteCode = new URLSearchParams(location.search).get('code') ?? '';
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isRePasswordVisible, setIsRePasswordVisible] = useState(false);
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState<string | undefined>('');
 
   const validateEmail = (text: string) => text.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i);
   const validationState = useMemo(() => {
     if (value === '') return undefined;
 
-    return validateEmail(value) ? 'valid' : 'invalid';
+    return validateEmail(value ?? '') ? 'valid' : 'invalid';
   }, [value]);
   const togglePasswordVisibility = () => setIsPasswordVisible(!isPasswordVisible);
   const toggleRePasswordVisibility = () => setIsRePasswordVisible(!isRePasswordVisible);

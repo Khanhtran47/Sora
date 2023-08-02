@@ -107,7 +107,7 @@ const TvSeasonCrewPage = () => {
                 inline: 'center',
               });
             }}
-            {...(isSm && { size: 'xs' })}
+            {...(isSm && { size: 'sm' })}
           />
         </div>
       ) : null}

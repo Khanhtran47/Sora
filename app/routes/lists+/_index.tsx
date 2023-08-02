@@ -70,7 +70,7 @@ const FeaturedLists = () => {
                 inline: 'center',
               });
             }}
-            {...(isSm && { size: 'xs' })}
+            {...(isSm && { size: 'sm' })}
           />
         </div>
       )}
