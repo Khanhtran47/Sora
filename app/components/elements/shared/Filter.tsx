@@ -114,7 +114,9 @@ const Filter: React.FC<IFilterProps> = (props: IFilterProps) => {
   const [animeAiringStatusSelected, setAnimeAiringStatusSelected] = useState<string>(
     currentSearchParams?.status || t('all'),
   );
-  const [animeQueryInput, setAnimeQueryInput] = useState<string>(currentSearchParams?.query || '');
+  const [animeQueryInput, setAnimeQueryInput] = useState<string | undefined>(
+    currentSearchParams?.query || '',
+  );
 
   const handleGenrePress = (genreId: string) => {
     setGenresSelected((prev) => {

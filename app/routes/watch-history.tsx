@@ -67,9 +67,9 @@ const History = () => {
 
   const sParams = new URLSearchParams(location.search);
 
-  const [types, setTypes] = useState(sParams.get('types')?.split(',') || []);
-  const [from, setFrom] = useState(sParams.get('from'));
-  const [to, setTo] = useState(sParams.get('to'));
+  const [types, setTypes] = useState<string[]>(sParams.get('types')?.split(',') || []);
+  const [from, setFrom] = useState<string | undefined>(sParams.get('from') || '');
+  const [to, setTo] = useState<string | undefined>(sParams.get('to') || '');
 
   const searchHistoryHandler = () => {
     const params = new URLSearchParams();
@@ -94,7 +94,7 @@ const History = () => {
           orientation="horizontal"
           color="primary"
           defaultValue={types}
-          onChange={(values) => setTypes(values)}
+          onValueChange={setTypes}
         >
           <Checkbox value="movie">Movie</Checkbox>
           <Checkbox value="tv">TV Show</Checkbox>
@@ -139,7 +139,7 @@ const History = () => {
             initialPage={page}
             // shadow
             onChange={paginationChangeHandler}
-            {...(isSm && { size: 'xs' })}
+            {...(isSm && { size: 'sm' })}
           />
         </div>
       ) : null}

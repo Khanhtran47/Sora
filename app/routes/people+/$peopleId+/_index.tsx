@@ -51,7 +51,9 @@ const OverviewPage = () => {
     if (fetcher.data && fetcher.data.searchResults) {
       const { items } = fetcher.data.searchResults;
       const peopleFound = items.find((result: IPeople) => result.id === peopleData?.detail?.id);
-      setKnownFor(TMDB.postFetchDataHandler(peopleFound?.knownFor));
+      if (peopleFound) {
+        setKnownFor(TMDB.postFetchDataHandler(peopleFound?.knownFor));
+      }
     }
   }, [fetcher.data, peopleData?.detail?.id]);
   return (
