@@ -6,8 +6,8 @@ import Arrow from '~/assets/icons/ArrowIcon';
 
 const ActionButtons = () => {
   const { scrollY, viewportRef } = useLayout((state) => state);
-  const opacity = useTransform(scrollY, [0, 200], [0, 1]);
-  const y = useTransform(scrollY, [0, 200], [100, 0]);
+  const opacity = useTransform(scrollY, [0, 80], [0, 1]);
+  const y = useTransform(scrollY, [0, 80], [100, 0]);
   const handleButtonPress = () => {
     viewportRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
   };

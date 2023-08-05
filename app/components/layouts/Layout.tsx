@@ -6,7 +6,7 @@ import {
 } from '@react-hookz/web';
 import { useLocation, useMatches, useNavigationType, useOutlet, useParams } from '@remix-run/react';
 import type { User } from '@supabase/supabase-js';
-import { AnimatePresence, motion, useScroll } from 'framer-motion';
+import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'framer-motion';
 import { useTheme } from 'next-themes';
 import { useHydrated } from 'remix-utils';
 import { Toaster } from 'sonner';
@@ -205,11 +205,23 @@ const Layout = (props: ILayout) => {
     setViewportRef,
     setScrollY,
     setScrollYProgress,
-    // scrollDirection,
-    // setScrollDirection,
+    scrollDirection,
+    setScrollDirection,
     isShowOverlay,
   } = useLayout((state) => state);
   const { scrollY, scrollYProgress } = useScroll({ container: viewportRef });
+  useMotionValueEvent(scrollY, 'change', (latest) => {
+    const lastScrollY = scrollY.getPrevious();
+    if (isSm) {
+      const direction = latest > lastScrollY ? 'down' : 'up';
+      if (
+        direction !== scrollDirection &&
+        (latest - lastScrollY > 20 || latest - lastScrollY < -20)
+      ) {
+        setScrollDirection(direction);
+      }
+    }
+  });
   const { historyBack, historyForward, setHistoryBack, setHistoryForward } = useHistoryStack(
     (state) => state,
   );
@@ -313,27 +325,6 @@ const Layout = (props: ILayout) => {
     }
   }, [isMd, isSm, sidebarMiniMode.value, sidebarHoverMode.value, sidebarBoxedMode.value]);
 
-  // let lastScrollY = viewportRef.current?.scrollTop || 0;
-
-  // const handleScroll = useThrottledCallback(
-  //   (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
-  //     if (isSm) {
-  //       // @ts-ignore
-  //       const scrollY = e?.target?.scrollTop || 0;
-  //       const direction = scrollY > lastScrollY ? 'down' : 'up';
-  //       if (
-  //         direction !== scrollDirection &&
-  //         (scrollY - lastScrollY > 10 || scrollY - lastScrollY < -10)
-  //       ) {
-  //         setScrollDirection(direction);
-  //       }
-  //       lastScrollY = scrollY > 0 ? scrollY : 0;
-  //     }
-  //   },
-  //   [scrollDirection, isSm, viewportRef],
-  //   50,
-  // );
-
   return (
     <div className={layoutStyles({ boxed: sidebarBoxedMode.value })}>
       {isSm || isHideSidebar ? null : <SideBar />}
@@ -342,7 +333,7 @@ const Layout = (props: ILayout) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3, ease: 'easeInOut' }}
-          className="fixed inset-0 z-[9998] bg-[rgba(0,_0,_0,_.85)]"
+          className="fixed inset-0 z-[9998] bg-[rgba(0,_0,_0,_.90)]"
         />
       ) : null}
       <div

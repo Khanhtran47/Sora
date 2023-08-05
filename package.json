@@ -75,7 +75,7 @@
     "clsx": "^1.2.1",
     "dashjs": "^4.7.0",
     "dayjs": "^1.11.8",
-    "framer-motion": "^10.12.20",
+    "framer-motion": "^10.15.0",
     "hls.js": "^1.4.6",
     "i18next": "^23.2.6",
     "i18next-browser-languagedetector": "^7.1.0",
@@ -113,9 +113,8 @@
     "tailwindcss": "^3.3.3",
     "tailwindcss-animate": "^1.0.6",
     "tinycolor2": "^1.6.0",
-    "vaul": "^0.1.1",
     "web-push": "^3.6.3",
-    "zustand": "^4.3.9"
+    "zustand": "^4.4.0"
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.1.0",
