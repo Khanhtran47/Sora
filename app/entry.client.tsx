@@ -31,19 +31,7 @@ i18next
     },
   })
   .then(() => {
-    if (process.env.NODE_ENV === 'development') {
-      import('remix-development-tools').then(({ initRouteBoundariesClient }) => {
-        initRouteBoundariesClient();
-        startTransition(() => {
-          hydrateRoot(
-            document,
-            <I18nextProvider i18n={i18next}>
-              <RemixBrowser />
-            </I18nextProvider>,
-          );
-        });
-      });
-    } else {
+    const callback = () =>
       startTransition(() => {
         // After i18next has been initialized, we can hydrate the app
         // We need to wait to ensure translations are loaded before the hydration
@@ -55,6 +43,13 @@ i18next
           </I18nextProvider>,
         );
       });
+    if (process.env.NODE_ENV === 'development') {
+      import('remix-development-tools').then(({ initClient }) => {
+        initClient();
+        callback();
+      });
+    } else {
+      callback();
     }
   })
   .catch((err) => {
@@ -129,6 +124,7 @@ async function loadSW() {
       console.error('Service worker registration failed', error);
     });
 }
+
 if ('serviceWorker' in navigator) {
   if (document.readyState === 'complete' || document.readyState === 'interactive') {
     loadSW();

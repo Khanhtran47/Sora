@@ -17,6 +17,10 @@ const handleRequest = async (
   responseHeaders: Headers,
   remixContext: EntryContext,
 ) => {
+  const context =
+    process.env.NODE_ENV === 'development'
+      ? await import('remix-development-tools').then(({ initServer }) => initServer(remixContext))
+      : remixContext;
   // First, we create a new instance of i18next so every request will have a
   // completely unique instance and not share any state
   const instance = createInstance();
@@ -24,7 +28,7 @@ const handleRequest = async (
   // Then we could detect locale from the request
   const lng = await i18next.getLocale(request);
   // And here we detect what namespaces the routes about to render want to use
-  const ns = i18next.getRouteNamespaces(remixContext);
+  const ns = i18next.getRouteNamespaces(context);
 
   await instance
     .use(initReactI18next) // Tell our instance to use react-i18next
@@ -39,7 +43,7 @@ const handleRequest = async (
     });
 
   for (const handler of otherRootRouteHandlers) {
-    const otherRouteResponse = await handler(request, remixContext);
+    const otherRouteResponse = await handler(request, context);
     if (otherRouteResponse) return otherRouteResponse;
   }
 
@@ -60,12 +64,6 @@ const handleRequest = async (
     'Vercel/1.0 (https://vercel.com/docs/bots)',
   ]);
   isbotRender.extend(['chrome-lighthouse']);
-  const context =
-    process.env.NODE_ENV === 'development'
-      ? await import('remix-development-tools').then(({ initRouteBoundariesServer }) =>
-          initRouteBoundariesServer(remixContext),
-        )
-      : remixContext;
 
   const remixServer = (
     <IsBotProvider isBot={isbotRender(request.headers.get('User-Agent') ?? '')}>

@@ -36,7 +36,6 @@ import photoSwipeStyles from 'photoswipe/dist/photoswipe.css';
 import { getSelectorsByUserAgent } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
 import { Provider as WrapBalancerProvider } from 'react-wrap-balancer';
-import rdtStylesheet from 'remix-development-tools/stylesheet.css';
 import { useChangeLanguage } from 'remix-i18next';
 import Image, { MimeType } from 'remix-image';
 import { getClientIPAddress, getClientLocales, useHydrated } from 'remix-utils';
@@ -76,9 +75,7 @@ interface DocumentProps {
 }
 
 const RemixDevTools =
-  process.env.NODE_ENV === 'development'
-    ? lazy(() => import('remix-development-tools'))
-    : undefined;
+  process.env.NODE_ENV === 'development' ? lazy(() => import('remix-development-tools')) : null;
 
 const themeValues = {
   light: 'light',
@@ -142,9 +139,6 @@ export const links: LinksFunction = () => {
       href: tailwindStylesheetUrl,
     },
     cssBundleHref ? { rel: 'preload', as: 'style', href: cssBundleHref } : null,
-    rdtStylesheet && process.env.NODE_ENV === 'development'
-      ? { rel: 'preload', href: rdtStylesheet, as: 'style' }
-      : null,
     { rel: 'preload', as: 'style', href: FontStyles100 },
     { rel: 'preload', as: 'style', href: FontStyles200 },
     { rel: 'preload', as: 'style', href: FontStyles300 },
@@ -155,9 +149,6 @@ export const links: LinksFunction = () => {
     { rel: 'preload', as: 'style', href: FontStyles800 },
     { rel: 'preload', as: 'style', href: FontStyles900 },
     cssBundleHref ? { rel: 'stylesheet', href: cssBundleHref } : null,
-    rdtStylesheet && process.env.NODE_ENV === 'development'
-      ? { rel: 'stylesheet', href: rdtStylesheet }
-      : null,
     { rel: 'stylesheet', href: tailwindStylesheetUrl },
     { rel: 'stylesheet', href: swiperStyles },
     { rel: 'stylesheet', href: swiperPaginationStyles },
@@ -486,11 +477,11 @@ const Document = ({ children, title }: DocumentProps) => {
         <ElementScrollRestoration elementQuery="[data-restore-scroll='true']" />
         {isBot ? null : <Scripts />}
         {process.env.NODE_ENV === 'development' ? <LiveReload /> : null}
-        {RemixDevTools && (
+        {RemixDevTools ? (
           <Suspense>
-            <RemixDevTools hideUntilHover />
+            <RemixDevTools />
           </Suspense>
-        )}
+        ) : null}
       </body>
     </html>
   );
