@@ -51,7 +51,7 @@ export const loader = async ({ request }: LoaderArgs) => {
       undefined,
       undefined,
       undefined,
-      50,
+      100,
     ),
     getAnimePopular(page, 16),
     getListPeople('popular', locale, page),

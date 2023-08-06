@@ -1,20 +1,14 @@
-import * as React from 'react';
-import { Spinner } from '@nextui-org/spinner';
-import { useMeasure } from '@react-hookz/web';
 import { json, type LoaderArgs } from '@remix-run/node';
-import { useFetcher, useLoaderData, useLocation, useNavigate } from '@remix-run/react';
+import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import dayjs from 'dayjs';
-import { AnimatePresence, motion } from 'framer-motion';
-import NProgress from 'nprogress';
+import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { useGlobalLoadingState } from 'remix-utils';
 
 import type { Handle } from '~/types/handle';
-import type { IMedia } from '~/types/media';
 import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
-import { getListDiscover, getListTvShows } from '~/services/tmdb/tmdb.server';
+import { getListDiscover, getListTvShows, getTrending } from '~/services/tmdb/tmdb.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
@@ -41,7 +35,8 @@ export const loader = async ({ request }: LoaderArgs) => {
   const next7Days = today.add(7, 'day');
   const formattedToday = today.format('YYYY-MM-DD');
   const formattedNext7Days = next7Days.format('YYYY-MM-DD');
-  const [popular, airingToday, onTheAir, topRated] = await Promise.all([
+  const [trending, popular, airingToday, onTheAir, topRated] = await Promise.all([
+    getTrending('tv', 'day', locale, page),
     getListDiscover(
       'tv',
       undefined,
@@ -53,7 +48,7 @@ export const loader = async ({ request }: LoaderArgs) => {
       undefined,
       undefined,
       undefined,
-      50,
+      100,
     ),
     getListTvShows('airing_today', locale, page),
     getListDiscover(
@@ -67,7 +62,7 @@ export const loader = async ({ request }: LoaderArgs) => {
       undefined,
       undefined,
       undefined,
-      50,
+      100,
       undefined,
       undefined,
       undefined,
@@ -87,6 +82,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   ]);
   return json(
     {
+      trending,
       popular,
       airingToday,
       onTheAir,
@@ -109,84 +105,11 @@ export const handle: Handle = {
 };
 
 const TvIndexPage = () => {
-  const { popular, airingToday, onTheAir, topRated } = useLoaderData<typeof loader>();
+  const { trending, popular, airingToday, onTheAir, topRated } = useLoaderData<typeof loader>();
   const rootData = useTypedRouteLoaderData('root');
   const location = useLocation();
   const navigate = useNavigate();
-  const fetcher = useFetcher();
-  const globalState = useGlobalLoadingState();
   const { t } = useTranslation();
-
-  const listGenresTv = Object.entries(rootData?.genresTv || {}).map((entry) => ({
-    [entry[0]]: entry[1],
-  }));
-
-  const [listItems, setListItems] = React.useState<IMedia[][] | undefined>([]);
-  const [scrollPosition, setScrollPosition] = React.useState(0);
-  const [clientHeight, setClientHeight] = React.useState(0);
-  const [shouldFetch, setShouldFetch] = React.useState(true);
-  const [order, setOrder] = React.useState(0);
-  const [size, parentRef] = useMeasure<HTMLDivElement>();
-
-  React.useEffect(() => {
-    const scrollListener = () => {
-      setClientHeight(window.innerHeight);
-      setScrollPosition(window.scrollY);
-    };
-
-    // Avoid running during SSR
-    if (typeof window !== 'undefined') {
-      window.addEventListener('scroll', scrollListener);
-    }
-
-    // Clean up
-    return () => {
-      if (typeof window !== 'undefined') {
-        window.removeEventListener('scroll', scrollListener);
-      }
-    };
-  }, []);
-
-  // Listen on scrolls. Fire on some self-described breakpoint
-  React.useEffect(() => {
-    if (!shouldFetch || !size?.height) return;
-    if (clientHeight + scrollPosition - 200 < size?.height) return;
-
-    fetcher.load(`/discover/tv-shows?with_genres=${Object.keys(listGenresTv[order])[0]}`);
-    setShouldFetch(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scrollPosition, clientHeight, size?.height]);
-
-  React.useEffect(() => {
-    if (fetcher.data && fetcher.data.length === 0) {
-      setShouldFetch(false);
-      return;
-    }
-
-    if (fetcher.data) {
-      if (fetcher.data.shows) {
-        setListItems((prevItems) =>
-          prevItems ? [...prevItems, fetcher.data.shows.items] : [fetcher.data.shows.items],
-        );
-        if (order < listGenresTv.length - 1) {
-          setOrder(order + 1);
-          setShouldFetch(true);
-        } else {
-          setShouldFetch(false);
-        }
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetcher.data]);
-
-  React.useEffect(() => {
-    if (globalState === 'loading') {
-      NProgress.configure({ showSpinner: false }).start();
-    }
-    if (globalState === 'idle') {
-      NProgress.configure({ showSpinner: false }).done();
-    }
-  }, [globalState]);
 
   return (
     <motion.div
@@ -195,7 +118,6 @@ const TvIndexPage = () => {
       animate={{ x: '0', opacity: 1 }}
       exit={{ y: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
-      ref={parentRef}
       style={{
         width: '100%',
         display: 'flex',
@@ -206,11 +128,24 @@ const TvIndexPage = () => {
     >
       <MediaList
         listType="slider-banner"
-        items={popular.items}
+        items={trending.items}
         genresMovie={rootData?.genresMovie}
         genresTv={rootData?.genresTv}
       />
       <div className="mt-9 flex w-full flex-col items-center justify-start px-3 sm:px-5">
+        {popular?.items && popular.items.length > 0 && (
+          <MediaList
+            genresMovie={rootData?.genresMovie}
+            genresTv={rootData?.genresTv}
+            items={popular.items}
+            itemsType="tv"
+            listName={t('popular-tv-shows')}
+            listType="slider-card"
+            navigationButtons
+            onClickViewMore={() => navigate('/tv-shows/popular')}
+            showMoreList
+          />
+        )}
         {airingToday?.items && airingToday.items.length > 0 && (
           <MediaList
             genresMovie={rootData?.genresMovie}
@@ -250,43 +185,6 @@ const TvIndexPage = () => {
             showMoreList
           />
         )}
-        {listItems &&
-          listItems.length > 0 &&
-          listItems.map((items, index) => {
-            if (items && items.length > 0)
-              return (
-                <MediaList
-                  genresMovie={rootData?.genresMovie}
-                  genresTv={rootData?.genresTv}
-                  items={items}
-                  itemsType="tv"
-                  listName={Object.values(listGenresTv[index])[0]}
-                  listType="slider-card"
-                  navigationButtons
-                  onClickViewMore={() =>
-                    navigate(
-                      `/discover/tv-shows?with_genres=${Object.keys(listGenresTv[index])[0]}`,
-                    )
-                  }
-                  showMoreList
-                />
-              );
-            return null;
-          })}
-        <AnimatePresence>
-          {globalState === 'loading' ? (
-            <Spinner
-              as={motion.div}
-              size="lg"
-              className="mt-10"
-              initial={{ y: -40, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -40, opacity: 0 }}
-              // @ts-ignore
-              transition={{ duration: 0.3 }}
-            />
-          ) : null}
-        </AnimatePresence>
       </div>
     </motion.div>
   );

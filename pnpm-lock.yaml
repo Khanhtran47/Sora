@@ -21,71 +21,71 @@ dependencies:
     specifier: ^0.3.0
     version: 0.3.0
   '@nextui-org/accordion':
-    specifier: ^2.0.1
-    version: 2.0.1(framer-motion@10.15.0)(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+    specifier: ^2.0.4
+    version: 2.0.4(framer-motion@10.15.0)(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
   '@nextui-org/avatar':
-    specifier: ^2.0.1
-    version: 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+    specifier: ^2.0.4
+    version: 2.0.4(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
   '@nextui-org/badge':
-    specifier: ^2.0.1
-    version: 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+    specifier: ^2.0.4
+    version: 2.0.4(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
   '@nextui-org/button':
-    specifier: ^2.0.1
-    version: 2.0.1(framer-motion@10.15.0)(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+    specifier: ^2.0.4
+    version: 2.0.4(framer-motion@10.15.0)(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
   '@nextui-org/card':
-    specifier: ^2.0.1
-    version: 2.0.1(framer-motion@10.15.0)(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+    specifier: ^2.0.4
+    version: 2.0.4(framer-motion@10.15.0)(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
   '@nextui-org/checkbox':
-    specifier: ^2.0.1
-    version: 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+    specifier: ^2.0.4
+    version: 2.0.4(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
   '@nextui-org/chip':
-    specifier: ^2.0.1
-    version: 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+    specifier: ^2.0.4
+    version: 2.0.4(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
   '@nextui-org/divider':
-    specifier: ^2.0.1
-    version: 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+    specifier: ^2.0.4
+    version: 2.0.4(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
   '@nextui-org/image':
-    specifier: ^2.0.1
-    version: 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+    specifier: ^2.0.4
+    version: 2.0.4(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
   '@nextui-org/input':
-    specifier: ^2.0.1
-    version: 2.0.1(@types/react@18.2.14)(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+    specifier: ^2.0.4
+    version: 2.0.4(@types/react@18.2.14)(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
   '@nextui-org/kbd':
-    specifier: ^2.0.1
-    version: 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+    specifier: ^2.0.4
+    version: 2.0.4(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
   '@nextui-org/link':
-    specifier: ^2.0.1
-    version: 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+    specifier: ^2.0.4
+    version: 2.0.4(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
   '@nextui-org/pagination':
-    specifier: ^2.0.1
-    version: 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+    specifier: ^2.0.4
+    version: 2.0.4(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
   '@nextui-org/progress':
-    specifier: ^2.0.1
-    version: 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+    specifier: ^2.0.4
+    version: 2.0.4(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
   '@nextui-org/shared-icons':
-    specifier: ^2.0.1
-    version: 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
+    specifier: ^2.0.2
+    version: 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
   '@nextui-org/skeleton':
-    specifier: ^2.0.1
-    version: 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+    specifier: ^2.0.4
+    version: 2.0.4(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
   '@nextui-org/spacer':
-    specifier: ^2.0.1
-    version: 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+    specifier: ^2.0.4
+    version: 2.0.4(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
   '@nextui-org/spinner':
-    specifier: ^2.0.1
-    version: 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+    specifier: ^2.0.4
+    version: 2.0.4(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
   '@nextui-org/switch':
-    specifier: ^2.0.1
-    version: 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+    specifier: ^2.0.4
+    version: 2.0.4(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
   '@nextui-org/system':
-    specifier: ^2.0.1
-    version: 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+    specifier: ^2.0.3
+    version: 2.0.3(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
   '@nextui-org/theme':
-    specifier: ^2.0.1
-    version: 2.0.1(tailwindcss@3.3.3)
+    specifier: ^2.0.4
+    version: 2.0.4(tailwindcss@3.3.3)
   '@nextui-org/tooltip':
-    specifier: ^2.0.1
-    version: 2.0.1(framer-motion@10.15.0)(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+    specifier: ^2.0.5
+    version: 2.0.5(framer-motion@10.15.0)(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
   '@radix-ui/react-aspect-ratio':
     specifier: ^1.0.3
     version: 1.0.3(@types/react-dom@18.2.6)(@types/react@18.2.14)(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)
@@ -2569,21 +2569,21 @@ packages:
     dev: false
     optional: true
 
-  /@nextui-org/accordion@2.0.1(framer-motion@10.15.0)(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
-    resolution: {integrity: sha512-nwFFkAiIPJnOO33+1yMHQDN+XbWVF61Su0TW9pWkt8Am9Bhv10i3cizxY0o704kdQ2EuroPGT+KSN1DH9tYvRg==}
+  /@nextui-org/accordion@2.0.4(framer-motion@10.15.0)(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
+    resolution: {integrity: sha512-xCQXQxr7h6C0/s1SDSbA3C6TDnz3S9lVcVexD6VUAR9DY8jrgeLulLGYTUXwBwOivzvivfu8wMUBB9LVSGZiXg==}
     peerDependencies:
       framer-motion: '>=4.0.0'
       react: '>=18'
     dependencies:
-      '@nextui-org/aria-utils': 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
-      '@nextui-org/divider': 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
-      '@nextui-org/framer-transitions': 2.0.1(framer-motion@10.15.0)(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
-      '@nextui-org/react-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/shared-icons': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/shared-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/system': 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
-      '@nextui-org/theme': 2.0.1(tailwindcss@3.3.3)
-      '@nextui-org/use-aria-accordion-item': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/aria-utils': 2.0.3(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+      '@nextui-org/divider': 2.0.4(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+      '@nextui-org/framer-transitions': 2.0.3(framer-motion@10.15.0)(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+      '@nextui-org/react-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/shared-icons': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/shared-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/system': 2.0.3(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+      '@nextui-org/theme': 2.0.4(tailwindcss@3.3.3)
+      '@nextui-org/use-aria-accordion-item': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
       '@react-aria/accordion': 3.0.0-alpha.19(react@18.3.0-canary-0210f0b08-20230525)
       '@react-aria/focus': 3.13.0(react@18.3.0-canary-0210f0b08-20230525)
       '@react-aria/interactions': 3.16.0(react@18.3.0-canary-0210f0b08-20230525)
@@ -2596,12 +2596,12 @@ packages:
       - tailwindcss
     dev: false
 
-  /@nextui-org/aria-utils@2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
-    resolution: {integrity: sha512-s8ty6s1y/EjNH5Yqv9gmur7WRtErY1nsNak+qS1PzcLFyMHvy/kA/rpoP3AW8nIcL+NcU0Jwd9vFdcCy1yZcyg==}
+  /@nextui-org/aria-utils@2.0.3(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
+    resolution: {integrity: sha512-b6WP1kyXKIHWejopLP7cCjW8RcOb1rltSbte49a5TPnHhHQwdYuPkInhuPiOM1sIggE2nnipJ2BbiQvB3nJ7Rw==}
     peerDependencies:
       react: '>=18'
     dependencies:
-      '@nextui-org/system': 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+      '@nextui-org/system': 2.0.3(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
       '@react-aria/utils': 3.18.0(react@18.3.0-canary-0210f0b08-20230525)
       '@react-stately/collections': 3.9.0(react@18.3.0-canary-0210f0b08-20230525)
       '@react-types/overlays': 3.8.0(react@18.3.0-canary-0210f0b08-20230525)
@@ -2612,16 +2612,16 @@ packages:
       - tailwindcss
     dev: false
 
-  /@nextui-org/avatar@2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
-    resolution: {integrity: sha512-aj/zOM5FcVS10GbnxfW9CyDCFbuVo+EKaghM3PfekXWXgnGjIkcSc4LJkMBFxHPcVieQ6SitYOsSO+/HZbC56A==}
+  /@nextui-org/avatar@2.0.4(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
+    resolution: {integrity: sha512-TSM4G2AAuIPir/Y608xLSN4cqBsn93ZHUNTKCKLaR4aoPBraJXAxocYYF0wt87/WnDk6mea6+CCP1if+MTS+ZA==}
     peerDependencies:
       react: '>=18'
     dependencies:
-      '@nextui-org/react-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/shared-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/system': 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
-      '@nextui-org/theme': 2.0.1(tailwindcss@3.3.3)
-      '@nextui-org/use-image': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/react-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/shared-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/system': 2.0.3(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+      '@nextui-org/theme': 2.0.4(tailwindcss@3.3.3)
+      '@nextui-org/use-image': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
       '@react-aria/focus': 3.13.0(react@18.3.0-canary-0210f0b08-20230525)
       '@react-aria/interactions': 3.16.0(react@18.3.0-canary-0210f0b08-20230525)
       '@react-aria/utils': 3.18.0(react@18.3.0-canary-0210f0b08-20230525)
@@ -2631,33 +2631,32 @@ packages:
       - tailwindcss
     dev: false
 
-  /@nextui-org/badge@2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
-    resolution: {integrity: sha512-huX9VmtLjbyCcbMkjAbAJ4WR8kqyDRFa66MuADatIj863OAZQIGAyoYnm0WHgO6Vqyikx0iube1MB2lcdNK7xg==}
+  /@nextui-org/badge@2.0.4(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
+    resolution: {integrity: sha512-nVsDzQPOH1PZJlgD4VM+BfPASAbim7qalUtzv4f6lSKr9buaShJ1KXiJEWFbogeJzRmKiZMWJ2FMrnMrh5yaWw==}
     peerDependencies:
       react: '>=18'
     dependencies:
-      '@nextui-org/react-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/shared-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/system': 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
-      '@nextui-org/theme': 2.0.1(tailwindcss@3.3.3)
+      '@nextui-org/react-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/shared-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/system-rsc': 2.0.3(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+      '@nextui-org/theme': 2.0.4(tailwindcss@3.3.3)
       react: 18.3.0-canary-0210f0b08-20230525
     transitivePeerDependencies:
-      - react-dom
       - tailwindcss
     dev: false
 
-  /@nextui-org/button@2.0.1(framer-motion@10.15.0)(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
-    resolution: {integrity: sha512-yVwl4E5CHS4dlCd6SGtOLhaVgvRJekgNhfSswj6ieZfz6Osq5i418SANEQod2KImdK4UgOfjSr4sS78975zaqw==}
+  /@nextui-org/button@2.0.4(framer-motion@10.15.0)(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
+    resolution: {integrity: sha512-chfgyp/T3nIj9kA1RP5pHkI3nJJDuY6TM+B4mX/ghk7bLxA/Cg6Sp9WSjHHwH55GoF8/J7eVYTtgnvx/M3XaCA==}
     peerDependencies:
       react: '>=18'
     dependencies:
-      '@nextui-org/react-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/ripple': 2.0.1(framer-motion@10.15.0)(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
-      '@nextui-org/shared-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/spinner': 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
-      '@nextui-org/system': 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
-      '@nextui-org/theme': 2.0.1(tailwindcss@3.3.3)
-      '@nextui-org/use-aria-button': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/react-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/ripple': 2.0.4(framer-motion@10.15.0)(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+      '@nextui-org/shared-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/spinner': 2.0.4(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+      '@nextui-org/system': 2.0.3(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+      '@nextui-org/theme': 2.0.4(tailwindcss@3.3.3)
+      '@nextui-org/use-aria-button': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
       '@react-aria/button': 3.8.0(react@18.3.0-canary-0210f0b08-20230525)
       '@react-aria/focus': 3.13.0(react@18.3.0-canary-0210f0b08-20230525)
       '@react-aria/interactions': 3.16.0(react@18.3.0-canary-0210f0b08-20230525)
@@ -2671,17 +2670,17 @@ packages:
       - tailwindcss
     dev: false
 
-  /@nextui-org/card@2.0.1(framer-motion@10.15.0)(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
-    resolution: {integrity: sha512-ccH1qWdkDoCKdRmplqdr5NFjyC4Wxr2GpNlkEZmhubBenVYWjrOQD3s5SJ00cKvTTxWHVRVzNBHLub+WHldnJQ==}
+  /@nextui-org/card@2.0.4(framer-motion@10.15.0)(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
+    resolution: {integrity: sha512-gEJVqmVAtxGerNL6G+PX6Z8VnofOmAq2pnY+5SggVzJA0BD4Q+qbqtodk18RLsSiwWmQzShPe0E4H3o6ivna3A==}
     peerDependencies:
       react: '>=18'
     dependencies:
-      '@nextui-org/react-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/ripple': 2.0.1(framer-motion@10.15.0)(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
-      '@nextui-org/shared-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/system': 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
-      '@nextui-org/theme': 2.0.1(tailwindcss@3.3.3)
-      '@nextui-org/use-aria-button': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/react-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/ripple': 2.0.4(framer-motion@10.15.0)(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+      '@nextui-org/shared-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/system': 2.0.3(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+      '@nextui-org/theme': 2.0.4(tailwindcss@3.3.3)
+      '@nextui-org/use-aria-button': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
       '@react-aria/button': 3.8.0(react@18.3.0-canary-0210f0b08-20230525)
       '@react-aria/focus': 3.13.0(react@18.3.0-canary-0210f0b08-20230525)
       '@react-aria/interactions': 3.16.0(react@18.3.0-canary-0210f0b08-20230525)
@@ -2694,15 +2693,15 @@ packages:
       - tailwindcss
     dev: false
 
-  /@nextui-org/checkbox@2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
-    resolution: {integrity: sha512-6TDFkhSsOAHk+2Z0GctdJTCZzPaO0jQHoOrnNmtHDgQIjfCU9d1wEJFau/T6HGMYZAi5/ZvbW0GR3A9lZxxbLw==}
+  /@nextui-org/checkbox@2.0.4(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
+    resolution: {integrity: sha512-oFGuZUJNE2tbP5qCCUa9ANmbuelw2AcYjsCauXb0TZrVBstMX4qJLtKpUw7kmpE89R65wVirtlBTI1HA5Y2i4Q==}
     peerDependencies:
       react: '>=18'
     dependencies:
-      '@nextui-org/react-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/shared-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/system': 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
-      '@nextui-org/theme': 2.0.1(tailwindcss@3.3.3)
+      '@nextui-org/react-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/shared-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/system': 2.0.3(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+      '@nextui-org/theme': 2.0.4(tailwindcss@3.3.3)
       '@react-aria/checkbox': 3.9.2(react@18.3.0-canary-0210f0b08-20230525)
       '@react-aria/focus': 3.13.0(react@18.3.0-canary-0210f0b08-20230525)
       '@react-aria/interactions': 3.16.0(react@18.3.0-canary-0210f0b08-20230525)
@@ -2718,16 +2717,16 @@ packages:
       - tailwindcss
     dev: false
 
-  /@nextui-org/chip@2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
-    resolution: {integrity: sha512-yoxWcNIXdTJV4B98j35UUidGDv6UoJc3mBeWE/8G8SckmRFp5gL1K0/AUIcOLJHMhJxfKBGLaAek4aPTYdCkxA==}
+  /@nextui-org/chip@2.0.4(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
+    resolution: {integrity: sha512-RrHwWge7rS2cf9FjoiOtll3VpcXVuJg84FX9FRmvA6BPY9rDQCtnjPKToUTAgYaEqkmDWZRjGdGT+lmkOyFOsA==}
     peerDependencies:
       react: '>=18'
     dependencies:
-      '@nextui-org/react-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/shared-icons': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/shared-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/system': 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
-      '@nextui-org/theme': 2.0.1(tailwindcss@3.3.3)
+      '@nextui-org/react-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/shared-icons': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/shared-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/system': 2.0.3(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+      '@nextui-org/theme': 2.0.4(tailwindcss@3.3.3)
       '@react-aria/focus': 3.13.0(react@18.3.0-canary-0210f0b08-20230525)
       '@react-aria/interactions': 3.16.0(react@18.3.0-canary-0210f0b08-20230525)
       '@react-aria/utils': 3.18.0(react@18.3.0-canary-0210f0b08-20230525)
@@ -2738,31 +2737,29 @@ packages:
       - tailwindcss
     dev: false
 
-  /@nextui-org/divider@2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
-    resolution: {integrity: sha512-Tv8RKduPufWwYpdYh8L6bESM7TpGE72P0wytXcWzEMkYfup+aVH0rqRCd1J7XE7kLuqIzeKUdkS9DxvoNZSpww==}
+  /@nextui-org/divider@2.0.4(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
+    resolution: {integrity: sha512-nXvgd+a2/5n+mlax4DsnyaKW/qAE291zqA3iUo11/1Kw1uWgnzp/8RElA/tE2AY2fzue4A+jJUOGk+ExMe2X1A==}
     peerDependencies:
       react: '>=18'
     dependencies:
-      '@nextui-org/react-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/shared-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/system': 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
-      '@nextui-org/theme': 2.0.1(tailwindcss@3.3.3)
-      '@react-aria/separator': 3.3.3(react@18.3.0-canary-0210f0b08-20230525)
-      '@react-aria/utils': 3.18.0(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/react-rsc-utils': 2.0.2
+      '@nextui-org/shared-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/system-rsc': 2.0.3(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+      '@nextui-org/theme': 2.0.4(tailwindcss@3.3.3)
+      '@react-types/shared': 3.18.1(react@18.3.0-canary-0210f0b08-20230525)
       react: 18.3.0-canary-0210f0b08-20230525
     transitivePeerDependencies:
-      - react-dom
       - tailwindcss
     dev: false
 
-  /@nextui-org/framer-transitions@2.0.1(framer-motion@10.15.0)(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
-    resolution: {integrity: sha512-bTnk+lBjMI7ksoB0dVJzCt658TsM6GwJVQifg0CeajWJHT0qz71/7gKoQy28AvVcHP3kKjek0f5nNaDsYwSo6Q==}
+  /@nextui-org/framer-transitions@2.0.3(framer-motion@10.15.0)(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
+    resolution: {integrity: sha512-1MPtP8MSmeMQ2fmZjr7EUKzIGH6BmexYNmJ+U+c/AYd1OrEetrJwEVV09a36SKVhaOinWeW8ZSgF0csmdaRzLQ==}
     peerDependencies:
       framer-motion: '>=4.0.0'
       react: '>=18'
     dependencies:
-      '@nextui-org/shared-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/system': 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+      '@nextui-org/shared-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/system': 2.0.3(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
       framer-motion: 10.15.0(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)
       react: 18.3.0-canary-0210f0b08-20230525
     transitivePeerDependencies:
@@ -2770,32 +2767,32 @@ packages:
       - tailwindcss
     dev: false
 
-  /@nextui-org/image@2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
-    resolution: {integrity: sha512-JExCFuMUxiSK1m7QK3zu+3M0quix0KPUuUHeyCYfWzOpGhpZJMvl3PJwm8yKwofW1yhDNvbiSDX2pCSLyQbceQ==}
+  /@nextui-org/image@2.0.4(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
+    resolution: {integrity: sha512-ZENLtoNLBIRE7aLYThWP0wmTg7GucRaoaLAUY6HxTaGhApZhoT2MBarRGKP3JeyNI8CkuunNTGB9qqgy55lNaw==}
     peerDependencies:
       react: '>=18'
     dependencies:
-      '@nextui-org/react-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/shared-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/system': 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
-      '@nextui-org/theme': 2.0.1(tailwindcss@3.3.3)
-      '@nextui-org/use-image': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/react-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/shared-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/system': 2.0.3(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+      '@nextui-org/theme': 2.0.4(tailwindcss@3.3.3)
+      '@nextui-org/use-image': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
       react: 18.3.0-canary-0210f0b08-20230525
     transitivePeerDependencies:
       - react-dom
       - tailwindcss
     dev: false
 
-  /@nextui-org/input@2.0.1(@types/react@18.2.14)(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
-    resolution: {integrity: sha512-Qp0r13yrNkwU6u/2tK/VplaYKe4MEQ2hu3TIds+OvbySOav8NbvUbRzIoW7GQWR3WRvJgdF7Wp8N+KS+zp/LNA==}
+  /@nextui-org/input@2.0.4(@types/react@18.2.14)(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
+    resolution: {integrity: sha512-0PpsyOCkm2hM+3uLvOtV3C3WWKia7chtf64iHk8+E2Tx17wdOFLZleLqslKedIJb2gQVK/0lx6CPYTcd7tP08Q==}
     peerDependencies:
       react: '>=18'
     dependencies:
-      '@nextui-org/react-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/shared-icons': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/shared-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/system': 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
-      '@nextui-org/theme': 2.0.1(tailwindcss@3.3.3)
+      '@nextui-org/react-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/shared-icons': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/shared-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/system': 2.0.3(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+      '@nextui-org/theme': 2.0.4(tailwindcss@3.3.3)
       '@react-aria/focus': 3.13.0(react@18.3.0-canary-0210f0b08-20230525)
       '@react-aria/interactions': 3.16.0(react@18.3.0-canary-0210f0b08-20230525)
       '@react-aria/textfield': 3.10.0(react@18.3.0-canary-0210f0b08-20230525)
@@ -2811,32 +2808,31 @@ packages:
       - tailwindcss
     dev: false
 
-  /@nextui-org/kbd@2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
-    resolution: {integrity: sha512-v4btdW2X3XMqMs+Rzy8L1QxjHLmNdQYTZwtBESlVDoBjM1Jyq9jNHPHvLpZq6oCpiHgfF+iHahHfnv5mcvhSgQ==}
+  /@nextui-org/kbd@2.0.4(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
+    resolution: {integrity: sha512-61Sqelo5lYH7onz9ImjGKVyX75M2Ru3TAWkN8XPhYuNtPiU8Ixn7BHqqr/eCtT7ePlmqErig/ERyOMo2fL0a3Q==}
     peerDependencies:
       react: '>=18'
     dependencies:
-      '@nextui-org/react-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/shared-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/system': 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
-      '@nextui-org/theme': 2.0.1(tailwindcss@3.3.3)
+      '@nextui-org/react-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/shared-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/system-rsc': 2.0.3(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+      '@nextui-org/theme': 2.0.4(tailwindcss@3.3.3)
       '@react-aria/utils': 3.18.0(react@18.3.0-canary-0210f0b08-20230525)
       react: 18.3.0-canary-0210f0b08-20230525
     transitivePeerDependencies:
-      - react-dom
       - tailwindcss
     dev: false
 
-  /@nextui-org/link@2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
-    resolution: {integrity: sha512-H93JyR7ZJoJWDrNm46UhTCAIpqAfnWWwodYBS534uziOjRkEBuMT5TT81UZfFG9ZnBXrOOFrOmUEiGUC089seA==}
+  /@nextui-org/link@2.0.4(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
+    resolution: {integrity: sha512-zLqxL18SVb6bRGQbZLlaDb0Sl8TEkSXxhZ6Vr1e67WEzJJ1s4w85+x59TuJZBf/QgToX1uc4+xAe+PwvxflSwg==}
     peerDependencies:
       react: '>=18'
     dependencies:
-      '@nextui-org/react-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/shared-icons': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/shared-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/system': 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
-      '@nextui-org/theme': 2.0.1(tailwindcss@3.3.3)
+      '@nextui-org/react-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/shared-icons': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/shared-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/system': 2.0.3(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+      '@nextui-org/theme': 2.0.4(tailwindcss@3.3.3)
       '@react-aria/focus': 3.13.0(react@18.3.0-canary-0210f0b08-20230525)
       '@react-aria/link': 3.5.2(react@18.3.0-canary-0210f0b08-20230525)
       '@react-aria/utils': 3.18.0(react@18.3.0-canary-0210f0b08-20230525)
@@ -2847,17 +2843,17 @@ packages:
       - tailwindcss
     dev: false
 
-  /@nextui-org/pagination@2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
-    resolution: {integrity: sha512-Mggy3T93bpuOmZJvgHazl+eLn12kcjtCtbH3Ey4bFL9hp9qYBIXY3iMFqm6ig581uqbsSstZCAFKukrKUfaX4Q==}
+  /@nextui-org/pagination@2.0.4(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
+    resolution: {integrity: sha512-jU0Om1fpmgTAwtWFKWJZuOX5r+w3lHnyTzSRs4i9/UxIBqLwIvPcXEgwGA3vfwEAq5cDYSdD0fMWudJ3Als56Q==}
     peerDependencies:
       react: '>=18'
     dependencies:
-      '@nextui-org/react-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/shared-icons': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/shared-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/system': 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
-      '@nextui-org/theme': 2.0.1(tailwindcss@3.3.3)
-      '@nextui-org/use-pagination': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/react-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/shared-icons': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/shared-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/system': 2.0.3(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+      '@nextui-org/theme': 2.0.4(tailwindcss@3.3.3)
+      '@nextui-org/use-pagination': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
       '@react-aria/focus': 3.13.0(react@18.3.0-canary-0210f0b08-20230525)
       '@react-aria/interactions': 3.16.0(react@18.3.0-canary-0210f0b08-20230525)
       '@react-aria/utils': 3.18.0(react@18.3.0-canary-0210f0b08-20230525)
@@ -2868,16 +2864,16 @@ packages:
       - tailwindcss
     dev: false
 
-  /@nextui-org/progress@2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
-    resolution: {integrity: sha512-E2CQgKfqzuas+tGY59tgZlvMiGRGhBckuwA+kR1WznH3WAurPlcbtJKxbFz+/xCFlh/A93WMLetQZz9dtSieTQ==}
+  /@nextui-org/progress@2.0.4(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
+    resolution: {integrity: sha512-q6UziJCoy70JM8YZwo9NjIIFBnjtK06jPGb4SzgpElaLSzNiCx27dCBc/0lub8vZqpY0mgsjnH0YD9Bqu0ObFg==}
     peerDependencies:
       react: '>=18'
     dependencies:
-      '@nextui-org/react-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/shared-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/system': 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
-      '@nextui-org/theme': 2.0.1(tailwindcss@3.3.3)
-      '@nextui-org/use-is-mounted': 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/react-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/shared-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/system': 2.0.3(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+      '@nextui-org/theme': 2.0.4(tailwindcss@3.3.3)
+      '@nextui-org/use-is-mounted': 2.0.2(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)
       '@react-aria/i18n': 3.8.0(react@18.3.0-canary-0210f0b08-20230525)
       '@react-aria/progress': 3.4.3(react@18.3.0-canary-0210f0b08-20230525)
       '@react-aria/utils': 3.18.0(react@18.3.0-canary-0210f0b08-20230525)
@@ -2888,26 +2884,30 @@ packages:
       - tailwindcss
     dev: false
 
-  /@nextui-org/react-utils@2.0.1(react@18.3.0-canary-0210f0b08-20230525):
-    resolution: {integrity: sha512-EArnt2Lq/hUC6j61362BrD8AteZ9DkACloygQnjFX1ZHSATzRTAFVyIDSf7PmowNXhIMil2z9fRzrjQPJnuFwQ==}
+  /@nextui-org/react-rsc-utils@2.0.2:
+    resolution: {integrity: sha512-cg/qrqXjr8inifW7qdhV90dWEVzbrgkg+2yajpVKRKWdg7LqwGendisA1j/UU6fuClXM91vC9sfUGrgSKXcc4Q==}
+    dev: false
+
+  /@nextui-org/react-utils@2.0.2(react@18.3.0-canary-0210f0b08-20230525):
+    resolution: {integrity: sha512-rAw5glvJZ3xbAITPkrFk68EOb5lwPFDGZBv8aOpmHt/5VCLVcCjwI6m9mMKOIIJ/iwS2NfLi744djlxRkt2COg==}
     peerDependencies:
       react: '>=18'
     dependencies:
-      '@nextui-org/shared-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@react-aria/utils': 3.18.0(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/react-rsc-utils': 2.0.2
+      '@nextui-org/shared-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
       react: 18.3.0-canary-0210f0b08-20230525
     dev: false
 
-  /@nextui-org/ripple@2.0.1(framer-motion@10.15.0)(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
-    resolution: {integrity: sha512-dp4Qx4eQVYsYuFiXQ1kTMQZ3Tv1lW7qfyJ5DKtwlo5jQZb9TH4Fo++mDYBOpv3nVHOZWbq6K4o/1STK7cqPKuQ==}
+  /@nextui-org/ripple@2.0.4(framer-motion@10.15.0)(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
+    resolution: {integrity: sha512-YHq0EUviZ+4jCbrpP6+UqTug+nlWkDAj7eVK/JhkpEGzMQvGwkh9W6+VUl/ezj73wDhpY3KlII69SDEGqaxaMQ==}
     peerDependencies:
       framer-motion: '>=4.0.0'
       react: '>=18'
     dependencies:
-      '@nextui-org/react-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/shared-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/system': 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
-      '@nextui-org/theme': 2.0.1(tailwindcss@3.3.3)
+      '@nextui-org/react-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/shared-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/system': 2.0.3(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+      '@nextui-org/theme': 2.0.4(tailwindcss@3.3.3)
       framer-motion: 10.15.0(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)
       react: 18.3.0-canary-0210f0b08-20230525
     transitivePeerDependencies:
@@ -2915,76 +2915,73 @@ packages:
       - tailwindcss
     dev: false
 
-  /@nextui-org/shared-icons@2.0.1(react@18.3.0-canary-0210f0b08-20230525):
-    resolution: {integrity: sha512-j/P5vhrIvNHOxl2qVdJT6ueESR2LWhlWJ0QKX+6CXeHbBwrRZhqumIPImQMfhTB8YXezbdXcEflq+GtV8ESquw==}
+  /@nextui-org/shared-icons@2.0.2(react@18.3.0-canary-0210f0b08-20230525):
+    resolution: {integrity: sha512-TtGFRY4ihRg8HuaFmwIx83LgCZ5bf2FOs407v23Bb0RDrum+3qZOeuClC8bcvivWZz/KUz9ZugGJdGYYSkMcbA==}
     peerDependencies:
       react: '>=18'
     dependencies:
       react: 18.3.0-canary-0210f0b08-20230525
     dev: false
 
-  /@nextui-org/shared-utils@2.0.1(react@18.3.0-canary-0210f0b08-20230525):
-    resolution: {integrity: sha512-URwNpkJ5sA4Jwp90Jnwoe6yDvocBCpVB879HKcVBojWSGe5CTF4BufmuLO7lvCiY7H+5Mz5rpG70vLDPvtnQVg==}
+  /@nextui-org/shared-utils@2.0.2(react@18.3.0-canary-0210f0b08-20230525):
+    resolution: {integrity: sha512-tqWVoJtxYbd/hd/laHE85GaXP+b3HeE1tXYjnObbwM+JIh4uu2/Do7Av7mzzyXwS7sZvyHxhi3zW12oank2ykA==}
     peerDependencies:
       react: '>=18'
     dependencies:
       react: 18.3.0-canary-0210f0b08-20230525
     dev: false
 
-  /@nextui-org/skeleton@2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
-    resolution: {integrity: sha512-OM1i5Scu/xhrMq7N1PArwEOAtAiUScz4BE1px/WHgsD353JZ2BGwTFvVy6OFNsZER5LhkenZU+3K9z7ghwL3gQ==}
+  /@nextui-org/skeleton@2.0.4(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
+    resolution: {integrity: sha512-VQhuWuS3jc6RfxaIlCpdBg37xJz47r9IRZnVAhnrnunG+H8VWzDvsarrPnZAfwzI9i1blZfXESNQKUkwm20wbw==}
     peerDependencies:
       react: '>=18'
     dependencies:
-      '@nextui-org/react-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/shared-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/system': 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
-      '@nextui-org/theme': 2.0.1(tailwindcss@3.3.3)
+      '@nextui-org/react-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/shared-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/system-rsc': 2.0.3(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+      '@nextui-org/theme': 2.0.4(tailwindcss@3.3.3)
       react: 18.3.0-canary-0210f0b08-20230525
     transitivePeerDependencies:
-      - react-dom
       - tailwindcss
     dev: false
 
-  /@nextui-org/spacer@2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
-    resolution: {integrity: sha512-9G+dE4fZgrmocqKGp8ZbWVL0e2P476jG6IpEfdfgqb2kBKm1LMq6qhaGIlk3furEGg/4SSseVEehHDBH9j8RiQ==}
+  /@nextui-org/spacer@2.0.4(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
+    resolution: {integrity: sha512-JnaD7HpQ8FcsZmpGBpAfwmd5f60Jme67AF9Y33sgPZYesbdwKQCqOAbGEQcJJ18SWr5Jj3yl88lDzS/adZGPHQ==}
     peerDependencies:
       react: '>=18'
     dependencies:
-      '@nextui-org/react-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/shared-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/system': 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
-      '@nextui-org/theme': 2.0.1(tailwindcss@3.3.3)
+      '@nextui-org/react-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/shared-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/system-rsc': 2.0.3(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+      '@nextui-org/theme': 2.0.4(tailwindcss@3.3.3)
       react: 18.3.0-canary-0210f0b08-20230525
     transitivePeerDependencies:
-      - react-dom
       - tailwindcss
     dev: false
 
-  /@nextui-org/spinner@2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
-    resolution: {integrity: sha512-ZA5aN/oHXojl6QHWj9p1+TgbJH91d67Vg4PnquEJm7C79U+Au1r6DosvzDihM/4IUPWpUYKF+wP7TlbAC6lUdQ==}
+  /@nextui-org/spinner@2.0.4(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
+    resolution: {integrity: sha512-kIPl2xBCU/3CI634y74LmGZRxqQcB1Na+UMznu3fDdtWfhXMo/l0j1B6u62kDWOPyBRNYItNQEcDacx4yq/bZQ==}
     peerDependencies:
       react: '>=18'
     dependencies:
-      '@nextui-org/react-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/shared-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/system': 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
-      '@nextui-org/theme': 2.0.1(tailwindcss@3.3.3)
+      '@nextui-org/react-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/shared-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/system-rsc': 2.0.3(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+      '@nextui-org/theme': 2.0.4(tailwindcss@3.3.3)
       react: 18.3.0-canary-0210f0b08-20230525
     transitivePeerDependencies:
-      - react-dom
       - tailwindcss
     dev: false
 
-  /@nextui-org/switch@2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
-    resolution: {integrity: sha512-/M1uUCv12UiUAzzm/f1++RphGklCpqKCJuy3vVvC0jJsBc5NXKOrDvbhepxBm5s8F9bSpoJJQ2slyeaeeR0LPg==}
+  /@nextui-org/switch@2.0.4(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
+    resolution: {integrity: sha512-ddJSZ9NmvLHikoMTln0FICWYZcZIAfuV70l3KV8sr3d+emu7FYvzgatby+Kg69tHloFaJ/3mDWtyvxQcnEZWBw==}
     peerDependencies:
       react: '>=18'
     dependencies:
-      '@nextui-org/react-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/shared-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/system': 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
-      '@nextui-org/theme': 2.0.1(tailwindcss@3.3.3)
+      '@nextui-org/react-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/shared-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/system': 2.0.3(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+      '@nextui-org/theme': 2.0.4(tailwindcss@3.3.3)
       '@react-aria/focus': 3.13.0(react@18.3.0-canary-0210f0b08-20230525)
       '@react-aria/interactions': 3.16.0(react@18.3.0-canary-0210f0b08-20230525)
       '@react-aria/switch': 3.5.2(react@18.3.0-canary-0210f0b08-20230525)
@@ -2998,24 +2995,34 @@ packages:
       - tailwindcss
     dev: false
 
-  /@nextui-org/system@2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
-    resolution: {integrity: sha512-86nN1bIhAx279QhKyrbIsGhbsY37gddjWIOMNKy0r4TSAm9DtgAqRNeylk+o/S4NCdE8VySnNPCqSkNAc6G9dQ==}
+  /@nextui-org/system-rsc@2.0.3(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
+    resolution: {integrity: sha512-CfWl1JkHPtgSvq/Szz4oWQAg7b6L7wxxHEFzKcvNdhbX61IfE5PvnQMl5z8T9UTSIIwFv4P0ntP5kpKE895w2w==}
     peerDependencies:
       react: '>=18'
     dependencies:
-      '@nextui-org/theme': 2.0.1(tailwindcss@3.3.3)
-      '@react-aria/i18n': 3.8.0(react@18.3.0-canary-0210f0b08-20230525)
-      '@react-aria/overlays': 3.15.0(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)
       clsx: 1.2.1
       react: 18.3.0-canary-0210f0b08-20230525
       tailwind-variants: 0.1.13(tailwindcss@3.3.3)
+    transitivePeerDependencies:
+      - tailwindcss
+    dev: false
+
+  /@nextui-org/system@2.0.3(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
+    resolution: {integrity: sha512-Q6Rf4OM5zm5sYQ4dU1UDzqFIvcTb3GxmikxUb+3Lxxy1h+FLDMozzRVn5G5Ir0+w3vjINrD0FvH8SnAXt1x0HA==}
+    peerDependencies:
+      react: '>=18'
+    dependencies:
+      '@nextui-org/system-rsc': 2.0.3(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+      '@react-aria/i18n': 3.8.0(react@18.3.0-canary-0210f0b08-20230525)
+      '@react-aria/overlays': 3.15.0(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)
+      react: 18.3.0-canary-0210f0b08-20230525
     transitivePeerDependencies:
       - react-dom
       - tailwindcss
     dev: false
 
-  /@nextui-org/theme@2.0.1(tailwindcss@3.3.3):
-    resolution: {integrity: sha512-hVS+/5V8nJuEdMP+onLmMvNMOK3SCOeZutB+ga76k8ewZakkWI/F704GFLF/kDJGbAkx3LF925KtRgLJsXXPKA==}
+  /@nextui-org/theme@2.0.4(tailwindcss@3.3.3):
+    resolution: {integrity: sha512-hTOMnvb58FnlRG27S6w7ruIdflZs0D9gVaUOxf9ct8YPHr4ZEzgURi6z5ir9V9ZOP/r3Yi6PqqROzJ708TIvgg==}
     peerDependencies:
       tailwindcss: '*'
     dependencies:
@@ -3032,18 +3039,18 @@ packages:
       tailwindcss: 3.3.3
     dev: false
 
-  /@nextui-org/tooltip@2.0.1(framer-motion@10.15.0)(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
-    resolution: {integrity: sha512-+bOK/dsab7s01jEmWQ5jtvnuM6dM+IItY/TATMpGGPBEdo74i6TxoSycrjt7QyKQxtFxp9fotrbK8CTfQhrOXQ==}
+  /@nextui-org/tooltip@2.0.5(framer-motion@10.15.0)(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3):
+    resolution: {integrity: sha512-hhb5I0BBdbcngr1PSXXYr8BJXZ4pgwUlEuSczAkJvmcFWj5QYVml1IchCFgN8U7W36nvsuBPRhSLcEFJ/fJZCg==}
     peerDependencies:
       framer-motion: '>=4.0.0'
       react: '>=18'
     dependencies:
-      '@nextui-org/aria-utils': 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
-      '@nextui-org/framer-transitions': 2.0.1(framer-motion@10.15.0)(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
-      '@nextui-org/react-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/shared-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@nextui-org/system': 2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
-      '@nextui-org/theme': 2.0.1(tailwindcss@3.3.3)
+      '@nextui-org/aria-utils': 2.0.3(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+      '@nextui-org/framer-transitions': 2.0.3(framer-motion@10.15.0)(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+      '@nextui-org/react-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/shared-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/system': 2.0.3(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)(tailwindcss@3.3.3)
+      '@nextui-org/theme': 2.0.4(tailwindcss@3.3.3)
       '@react-aria/interactions': 3.16.0(react@18.3.0-canary-0210f0b08-20230525)
       '@react-aria/overlays': 3.15.0(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525)
       '@react-aria/tooltip': 3.6.0(react@18.3.0-canary-0210f0b08-20230525)
@@ -3058,8 +3065,8 @@ packages:
       - tailwindcss
     dev: false
 
-  /@nextui-org/use-aria-accordion-item@2.0.1(react@18.3.0-canary-0210f0b08-20230525):
-    resolution: {integrity: sha512-o7yFe8DAV+hkZpSdCaH1dYQ4PhRyIslQJ2+AvCIGhPtSiYPXnJ1D2TgmtNk3uQwNqA2374/0KUVMN+AXYMfjzA==}
+  /@nextui-org/use-aria-accordion-item@2.0.2(react@18.3.0-canary-0210f0b08-20230525):
+    resolution: {integrity: sha512-Nj+H4kWbl2OxYX9wfh0SUGaJwtRlhCRhf1qbR92CVGnI6kCaHWduuil6Ut2Rn+6LwVn1j+QgkKB98eZ6ux2VIw==}
     peerDependencies:
       react: '>=18'
     dependencies:
@@ -3070,8 +3077,8 @@ packages:
       react: 18.3.0-canary-0210f0b08-20230525
     dev: false
 
-  /@nextui-org/use-aria-button@2.0.1(react@18.3.0-canary-0210f0b08-20230525):
-    resolution: {integrity: sha512-n2bAREvUrW07vHzOXAMLZ34ftMxbmjQgMy9VhCwl6aMqgBWpNpyE8f52o8czGoXnp8AFcdT0AjE7stoo00412Q==}
+  /@nextui-org/use-aria-button@2.0.2(react@18.3.0-canary-0210f0b08-20230525):
+    resolution: {integrity: sha512-rTqdrFLPJD6AbbymdnFenJREdc4JRN/hXog1cwicJscqR3FE3TIJGXDoAdj/v3K6cwKzaXGEbtHp62P+MU6dCQ==}
     peerDependencies:
       react: '>=18'
     dependencies:
@@ -3083,17 +3090,17 @@ packages:
       react: 18.3.0-canary-0210f0b08-20230525
     dev: false
 
-  /@nextui-org/use-image@2.0.1(react@18.3.0-canary-0210f0b08-20230525):
-    resolution: {integrity: sha512-9ChyQQkFqKh2Zr283iB4h5oV1xLT7Re/vWncQP0k9pu94AuSyTYjwo+x7udbaP1kufv2/Hm4Y3b+8X1V3eAq1A==}
+  /@nextui-org/use-image@2.0.2(react@18.3.0-canary-0210f0b08-20230525):
+    resolution: {integrity: sha512-geCUHp2P/2und98/Ka12dyrw78D9F2qG1a8WN/iB0BQWwaEm8km8YH13zlV0GOFHCwlA5gsXqrUvzxPjfZytZQ==}
     peerDependencies:
       react: '>=18'
     dependencies:
-      '@nextui-org/use-safe-layout-effect': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/use-safe-layout-effect': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
       react: 18.3.0-canary-0210f0b08-20230525
     dev: false
 
-  /@nextui-org/use-is-mounted@2.0.1(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525):
-    resolution: {integrity: sha512-o5pokoQoYIKdkoP8MfOcM+Co0Yohtw2BY3z2hzKn8ERpZ3cf5NKuSGmlzUZoVRcEc6rWFt9s1McR7KwNyW0M3Q==}
+  /@nextui-org/use-is-mounted@2.0.2(react-dom@18.3.0-canary-0210f0b08-20230525)(react@18.3.0-canary-0210f0b08-20230525):
+    resolution: {integrity: sha512-PjwpTkl5f+bTVU9l5GzgZDHd+uOwCZ3bhuYzbbamw1J5kBWruVnKUqZihS3zrLtJxKNxk/f7RT0UWK2a4wGpDw==}
     peerDependencies:
       react: '>=18'
       react-dom: '>=16.8.0'
@@ -3102,17 +3109,17 @@ packages:
       react-dom: 18.3.0-canary-0210f0b08-20230525(react@18.3.0-canary-0210f0b08-20230525)
     dev: false
 
-  /@nextui-org/use-pagination@2.0.1(react@18.3.0-canary-0210f0b08-20230525):
-    resolution: {integrity: sha512-s6cjg2w9IUkYmy2952rd9W4HdOBZCdc/6YXc4OSPUbPEIbdiJ/l2BANtaje+GV0TNT0H1vO5hSXrBzuc/AjfMA==}
+  /@nextui-org/use-pagination@2.0.2(react@18.3.0-canary-0210f0b08-20230525):
+    resolution: {integrity: sha512-wQAmKMXzb0DhhXHx3K/LppaP2n5ZknjOYQpm+TAjOaIPJYIbyNIRa2FFAP/lf8vZCHjHB7+KUVLhkIwAzrZ0dw==}
     peerDependencies:
       react: '>=18'
     dependencies:
-      '@nextui-org/shared-utils': 2.0.1(react@18.3.0-canary-0210f0b08-20230525)
+      '@nextui-org/shared-utils': 2.0.2(react@18.3.0-canary-0210f0b08-20230525)
       react: 18.3.0-canary-0210f0b08-20230525
     dev: false
 
-  /@nextui-org/use-safe-layout-effect@2.0.1(react@18.3.0-canary-0210f0b08-20230525):
-    resolution: {integrity: sha512-EglpG+g1p9yj2umccfm5L3N7O/9bLJ9KsiyO1CEYl7wZXoVQ9NPkfug1ah8fgkc7uE0V7qazDQ1o9LUuqAArIQ==}
+  /@nextui-org/use-safe-layout-effect@2.0.2(react@18.3.0-canary-0210f0b08-20230525):
+    resolution: {integrity: sha512-HsFP2e+o2eSiQyAXdiicPBj6qj1naHuiNqqeTPqeJBsr0aUZI8l+7vZ5OXjLc8Qou4AOyNyJBBGFNhwsraxdpw==}
     peerDependencies:
       react: '>=18'
     dependencies:
@@ -4041,17 +4048,6 @@ packages:
       '@react-aria/utils': 3.18.0(react@18.3.0-canary-0210f0b08-20230525)
       '@react-stately/collections': 3.9.0(react@18.3.0-canary-0210f0b08-20230525)
       '@react-stately/selection': 3.13.2(react@18.3.0-canary-0210f0b08-20230525)
-      '@react-types/shared': 3.18.1(react@18.3.0-canary-0210f0b08-20230525)
-      '@swc/helpers': 0.5.1
-      react: 18.3.0-canary-0210f0b08-20230525
-    dev: false
-
-  /@react-aria/separator@3.3.3(react@18.3.0-canary-0210f0b08-20230525):
-    resolution: {integrity: sha512-kBGEXSSUiJLPS9foS5/7jgzpdp3/Yb1aMvVuvRGuNxDUsPAmvaYUT3qZ44Zf3hoxKfRFb4452KcoZ03w3Jfcvg==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
-    dependencies:
-      '@react-aria/utils': 3.18.0(react@18.3.0-canary-0210f0b08-20230525)
       '@react-types/shared': 3.18.1(react@18.3.0-canary-0210f0b08-20230525)
       '@swc/helpers': 0.5.1
       react: 18.3.0-canary-0210f0b08-20230525

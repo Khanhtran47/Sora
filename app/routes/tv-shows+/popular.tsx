@@ -48,7 +48,7 @@ export const loader = async ({ request }: LoaderArgs) => {
         undefined,
         undefined,
         undefined,
-        50,
+        100,
       ),
     },
     {
