@@ -50,8 +50,8 @@ const ResizablePanel = ({
     <motion.div
       className="relative overflow-hidden"
       animate={{
-        height: panelHeight,
-        width: size?.width || 'auto',
+        height: (panelHeight as number) + 16,
+        width: size?.width ? size?.width + 16 : 'auto',
       }}
       transition={{ duration: 0.3 }}
     >
@@ -67,11 +67,11 @@ const ResizablePanel = ({
           <ScrollArea
             type="hover"
             style={{
-              height: panelHeight,
-              width: size?.width || 'auto',
+              height: (panelHeight as number) + 16,
+              width: size?.width ? size?.width + 16 : 'auto',
             }}
           >
-            <ScrollViewport>
+            <ScrollViewport className="p-2">
               <div
                 ref={ref}
                 className={`${

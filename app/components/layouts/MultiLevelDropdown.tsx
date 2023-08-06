@@ -388,7 +388,6 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
                     type="button"
                     isIconOnly
                     fullWidth
-                    size="md"
                     variant="light"
                     onPress={
                       currentDropdownLevel?.isTitleClickable

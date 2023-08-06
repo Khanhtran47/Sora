@@ -1537,32 +1537,26 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                   {currentDropdownLevel?.showBackButton || currentDropdownLevel?.showTitle ? (
                     <>
                       <div className="flex w-full flex-row items-center justify-between">
-                        <div className="justify-star flex flex-row items-center">
-                          {currentDropdownLevel?.showBackButton ? (
-                            <Button
-                              type="button"
-                              isIconOnly
-                              size="md"
-                              variant="light"
-                              onPress={currentDropdownLevel?.backButtonAction}
-                            >
-                              <Arrow direction="left" />
-                            </Button>
-                          ) : null}
-                          {currentDropdownLevel?.showTitle ? (
-                            <h6 className="!text-default-foreground">
-                              {currentDropdownLevel?.title}
-                            </h6>
-                          ) : null}
-                        </div>
+                        {currentDropdownLevel?.showBackButton ? (
+                          <Button
+                            type="button"
+                            variant="light"
+                            onPress={currentDropdownLevel?.backButtonAction}
+                            startContent={<Arrow direction="left" />}
+                          >
+                            {currentDropdownLevel?.showTitle ? (
+                              <h6 className="!text-default-foreground">
+                                {currentDropdownLevel?.title}
+                              </h6>
+                            ) : null}
+                          </Button>
+                        ) : null}
                         {currentDropdownLevel?.showExtraButton ? (
                           <Button
                             type="button"
-                            size="md"
                             variant="light"
                             onPress={currentDropdownLevel?.extraButtonAction}
-                            // css={{ fontWeight: '$bold', textDecoration: 'underline', p: 0, m: 0 }}
-                            className="m-0 p-0 font-bold underline"
+                            className="m-0 p-2 font-bold underline"
                           >
                             {currentDropdownLevel?.extraButtonTitle}
                           </Button>
@@ -1636,33 +1630,28 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
               <div className="flex w-max flex-col items-start justify-start gap-y-2">
                 {currentDropdownLevel?.showBackButton || currentDropdownLevel?.showTitle ? (
                   <>
-                    <div className="flex w-full flex-row items-center justify-between gap-x-4 !p-2">
-                      <div className="flex flex-row items-center justify-start">
-                        {currentDropdownLevel?.showBackButton ? (
-                          <Button
-                            type="button"
-                            isIconOnly
-                            size="md"
-                            variant="light"
-                            onPress={currentDropdownLevel?.backButtonAction}
-                          >
-                            <Arrow direction="left" />
-                          </Button>
-                        ) : null}
-                        {currentDropdownLevel?.showTitle ? (
-                          <h6 className="!text-default-foreground">
-                            {currentDropdownLevel?.title}
-                          </h6>
-                        ) : null}
-                      </div>
+                    <div className="flex w-full flex-row items-center justify-between gap-x-4">
+                      {currentDropdownLevel?.showBackButton ? (
+                        <Button
+                          type="button"
+                          variant="light"
+                          onPress={currentDropdownLevel?.backButtonAction}
+                          startContent={<Arrow direction="left" />}
+                        >
+                          {currentDropdownLevel?.showTitle ? (
+                            <h6 className="!text-default-foreground">
+                              {currentDropdownLevel?.title}
+                            </h6>
+                          ) : null}
+                        </Button>
+                      ) : null}
                       {currentDropdownLevel?.showExtraButton ? (
                         <Button
                           type="button"
                           size="md"
                           variant="light"
                           onPress={currentDropdownLevel?.extraButtonAction}
-                          // css={{ fontWeight: '$bold', textDecoration: 'underline', p: 0, m: 0 }}
-                          className="m-0 p-0 font-bold underline"
+                          className="m-0 p-2 font-bold underline"
                         >
                           {currentDropdownLevel?.extraButtonTitle}
                         </Button>

@@ -481,7 +481,7 @@ const Settings = () => {
                   onDragEnd={handleDragEnd}
                   dragDirectionLock
                 >
-                  <div className="flex w-full flex-col justify-start rounded-large bg-content1 p-5 shadow-lg">
+                  <div className="flex w-full flex-col justify-start rounded-medium bg-content1 p-5 shadow-medium">
                     <SettingBlock
                       type="select"
                       title={t('language')}
