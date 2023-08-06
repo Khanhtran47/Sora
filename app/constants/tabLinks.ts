@@ -98,7 +98,6 @@ export const designSystemPages = [
   { pageName: 'Card', pageLink: '/card' },
   { pageName: 'Dialog', pageLink: '/dialog' },
   { pageName: 'Divider', pageLink: '/divider' },
-  { pageName: 'Hover Card', pageLink: '/hover-card' },
   { pageName: 'Image', pageLink: '/image' },
   { pageName: 'Input', pageLink: '/input' },
   { pageName: 'Pagination', pageLink: '/pagination' },

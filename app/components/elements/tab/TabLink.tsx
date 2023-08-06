@@ -69,7 +69,7 @@ const TabLink = (props: ITabProps) => {
           ))}
         </div>
       </ScrollViewport>
-      <ScrollBar orientation="horizontal" />
+      <ScrollBar orientation="horizontal" className="opacity-30" />
       <ScrollCorner />
     </ScrollArea>
   );

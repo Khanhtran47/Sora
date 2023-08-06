@@ -37,7 +37,7 @@ const categoryPages = [
   {
     name: 'trending',
     icon: <TrendingUp fill="currentColor" />,
-    path: '/trending/today',
+    path: '/trending/',
   },
 ];
 

@@ -102,7 +102,6 @@ const Slider = React.forwardRef<
                 content={value}
                 variant="flat"
                 size="sm"
-                radius="md"
                 color={color === 'gradient' ? 'default' : color}
                 isInvisible={index === 0 ? isFirstThumbInvisible : isSecondThumbInvisible}
                 disableOutline
