@@ -23,6 +23,7 @@ import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '~/components/elem
 import ChevronLeftIcon from '~/assets/icons/ChevronLeftIcon';
 import ChevronRightIcon from '~/assets/icons/ChevronRightIcon';
 import FilterIcon from '~/assets/icons/FilterIcon';
+import Sort from '~/assets/icons/SortIcon';
 
 import { MediaListBanner, MediaListCard, MediaListGrid } from './list';
 
@@ -390,6 +391,7 @@ const MediaList = (props: IMediaListProps) => {
                         radius="lg"
                         isIconOnly
                         className="h-10 min-w-[2.5rem]"
+                        variant="ghost"
                       >
                         <FilterIcon />
                       </Button>
@@ -419,7 +421,10 @@ const MediaList = (props: IMediaListProps) => {
                   value={sortBySelected}
                   onValueChange={(value: string) => handleSelectChange(value)}
                 >
-                  <SelectTrigger aria-label="Select Sort">
+                  <SelectTrigger
+                    aria-label="Select Sort"
+                    selectIcon={<Sort className="h-4 w-4 opacity-50" />}
+                  >
                     <SelectValue placeholder={t('sort-by')} />
                   </SelectTrigger>
                   <SelectContent position="popper">
