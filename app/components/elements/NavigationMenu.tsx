@@ -11,7 +11,7 @@ const NavigationMenuViewport = forwardRef<
 >(({ className = '', ...props }, ref) => (
   <NavigationMenuPrimitive.Viewport
     className={cn(
-      'data-[state=open]:fadeIn data-[state=closed]:fadeOut relative h-[var(--radix-navigation-menu-viewport-height)] w-full origin-[top_center] overflow-hidden rounded-[12px] border border-default-200 bg-default/60 shadow-lg backdrop-blur-2xl backdrop-contrast-125 backdrop-saturate-200 transition-[width,_height] duration-300 data-[orientation=horizontal]:mt-1.5 data-[orientation=vertical]:ml-[-8px] data-[state=closed]:animate-scaleOut data-[state=open]:animate-scaleIn sm:w-[var(--radix-navigation-menu-viewport-width)]',
+      'relative h-[var(--radix-navigation-menu-viewport-height)] w-full origin-[top_center] overflow-hidden rounded-[12px] border border-default-200 bg-default/60 shadow-lg backdrop-blur-2xl backdrop-contrast-125 backdrop-saturate-200 transition-[width,_height] duration-300 data-[orientation=horizontal]:mt-1.5 data-[orientation=vertical]:ml-[-8px] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=open]:fade-in data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-90 sm:w-[var(--radix-navigation-menu-viewport-width)]',
       className,
     )}
     ref={ref}
@@ -99,9 +99,15 @@ const NavigationMenuTrigger = forwardRef<
 NavigationMenuTrigger.displayName = NavigationMenuPrimitive.Trigger.displayName;
 
 const navigationMenuContentStyle = tv({
-  base: `absolute left-0
-  top-0 w-full data-[motion=from-end]:animate-enterFromRight data-[motion=from-start]:animate-enterFromLeft data-[motion=to-end]:animate-exitToRight
-  data-[motion=to-start]:animate-exitToLeft sm:w-auto`,
+  base: [
+    'absolute left-0 top-0 w-full sm:w-auto',
+    'data-[motion^=from-]:animate-in data-[motion^=from-]:fade-in',
+    'data-[motion^=to-]:animate-out data-[motion^=to-]:fade-out',
+    'data-[motion=from-end]:slide-in-from-bottom-52',
+    'data-[motion=from-start]:slide-in-from-top-52',
+    'data-[motion=to-end]:slide-out-to-bottom-52',
+    'data-[motion=to-start]:slide-out-to-top-52',
+  ],
 });
 const NavigationMenuContent = forwardRef<
   ElementRef<typeof NavigationMenuPrimitive.Content>,
