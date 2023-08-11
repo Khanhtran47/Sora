@@ -13,7 +13,13 @@ import { Button } from '@nextui-org/button';
 import { Image as NextUIImage } from '@nextui-org/image';
 import { NextUIProvider as NextUIv2Provider } from '@nextui-org/system';
 import { cssBundleHref } from '@remix-run/css-bundle';
-import { json, type LinksFunction, type LoaderArgs, type V2_MetaFunction } from '@remix-run/node';
+import {
+  json,
+  type LinkDescriptor,
+  type LinksFunction,
+  type LoaderArgs,
+  type V2_MetaFunction,
+} from '@remix-run/node';
 import {
   isRouteErrorResponse,
   Links,
@@ -27,7 +33,6 @@ import {
   useMatches,
   useNavigation,
   useRouteError,
-  type ShouldRevalidateFunction,
 } from '@remix-run/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ThemeProvider as RemixThemesProvider } from 'next-themes';
@@ -62,12 +67,15 @@ import Layout from './components/layouts/Layout';
 import nProgressStyles from './components/styles/nprogress.css';
 import { listThemes } from './constants/settings';
 import { useIsBot } from './context/isbot.context';
+import { useToast } from './hooks/useToast';
 import { i18nCookie, i18next } from './services/i18n';
 import { getUserFromCookie } from './services/supabase';
 import { getListGenre, getListLanguages } from './services/tmdb/tmdb.server';
 import tailwindStylesheetUrl from './styles/tailwind.css';
 import type { Handle } from './types/handle';
+import { combineHeaders } from './utils';
 import * as gtag from './utils/client/gtags.client';
+import { getToastSession } from './utils/server/toast-session.server';
 
 interface DocumentProps {
   children: React.ReactNode;
@@ -117,24 +125,13 @@ const themeValues = {
   winter: 'winter',
 };
 
-export const shouldRevalidate: ShouldRevalidateFunction = ({ nextUrl }) => {
-  // reload on language change so the selected language gets set into the cookie
-  const lang = nextUrl.searchParams.get('lng');
-
-  return Boolean(lang);
-};
-
 export const links: LinksFunction = () => {
   return [
     { rel: 'manifest', href: '/resources/manifest-v0.0.1.json' },
     { rel: 'icon', href: '/favicon.ico', type: 'image/x-icon' },
     // Preload CSS as a resource to avoid render blocking
-    {
-      rel: 'preload',
-      as: 'style',
-      href: tailwindStylesheetUrl,
-    },
-    ...(cssBundleHref ? [{ rel: 'preload', as: 'style', href: cssBundleHref }] : []),
+    { rel: 'preload', as: 'style', href: tailwindStylesheetUrl },
+    cssBundleHref ? { rel: 'preload', as: 'style', href: cssBundleHref } : null,
     { rel: 'preload', as: 'style', href: FontStyles100 },
     { rel: 'preload', as: 'style', href: FontStyles200 },
     { rel: 'preload', as: 'style', href: FontStyles300 },
@@ -144,16 +141,9 @@ export const links: LinksFunction = () => {
     { rel: 'preload', as: 'style', href: FontStyles700 },
     { rel: 'preload', as: 'style', href: FontStyles800 },
     { rel: 'preload', as: 'style', href: FontStyles900 },
+    //These should match the css preloads above to avoid css as render blocking resource
     { rel: 'stylesheet', href: tailwindStylesheetUrl },
-    ...(cssBundleHref ? [{ rel: 'stylesheet', href: cssBundleHref }] : []),
-    { rel: 'stylesheet', href: swiperStyles },
-    { rel: 'stylesheet', href: swiperPaginationStyles },
-    { rel: 'stylesheet', href: swiperNavigationStyles },
-    { rel: 'stylesheet', href: swiperThumbsStyles },
-    { rel: 'stylesheet', href: swiperAutoPlayStyles },
-    { rel: 'stylesheet', href: swiperFreeModeStyles },
-    { rel: 'stylesheet', href: nProgressStyles },
-    { rel: 'stylesheet', href: photoSwipeStyles },
+    cssBundleHref ? { rel: 'stylesheet', href: cssBundleHref } : null,
     { rel: 'stylesheet', href: FontStyles100 },
     { rel: 'stylesheet', href: FontStyles200 },
     { rel: 'stylesheet', href: FontStyles300 },
@@ -163,7 +153,15 @@ export const links: LinksFunction = () => {
     { rel: 'stylesheet', href: FontStyles700 },
     { rel: 'stylesheet', href: FontStyles800 },
     { rel: 'stylesheet', href: FontStyles900 },
-  ];
+    { rel: 'stylesheet', href: swiperStyles },
+    { rel: 'stylesheet', href: swiperPaginationStyles },
+    { rel: 'stylesheet', href: swiperNavigationStyles },
+    { rel: 'stylesheet', href: swiperThumbsStyles },
+    { rel: 'stylesheet', href: swiperAutoPlayStyles },
+    { rel: 'stylesheet', href: swiperFreeModeStyles },
+    { rel: 'stylesheet', href: nProgressStyles },
+    { rel: 'stylesheet', href: photoSwipeStyles },
+  ].filter(Boolean) as LinkDescriptor[];
 };
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -179,10 +177,8 @@ export const loader = async ({ request }: LoaderArgs) => {
     month: 'long',
     day: 'numeric',
   });
-
-  const headers = new Headers({
-    'Set-Cookie': await i18nCookie.serialize(locale),
-  });
+  const toast = getToastSession(request);
+  const message = await toast.getMessage();
 
   return json(
     {
@@ -202,8 +198,18 @@ export const loader = async ({ request }: LoaderArgs) => {
       ipAddress,
       locales,
       nowDate: formatter.format(nowDate),
+      message,
     },
-    { headers },
+    {
+      headers: combineHeaders(
+        new Headers({
+          'Set-Cookie': await i18nCookie.serialize(locale),
+        }),
+        new Headers({
+          'Set-Cookie': await toast.commit(),
+        }),
+      ),
+    },
   );
 };
 
@@ -480,9 +486,10 @@ const Document = ({ children, title }: DocumentProps) => {
 
 const App = () => {
   const isHydrated = useHydrated();
-  const { user, locale } = useLoaderData<typeof loader>();
+  const { user, locale, message } = useLoaderData<typeof loader>();
   const isBot = useIsBot();
   useChangeLanguage(locale);
+  useToast(message);
   const [waitingWorker, setWaitingWorker] = React.useState<ServiceWorker | null>(null);
   const [isUpdateAvailable, setIsUpdateAvailable] = React.useState(false);
 

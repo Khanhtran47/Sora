@@ -54,9 +54,13 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDropdownOpen]);
 
-  const ref = (search.get('ref') || location.pathname + location.search)
-    .replace('?', '_0x3F_')
-    .replace('&', '_0x26');
+  const ref = useMemo(
+    () =>
+      (search.get('ref') || location.pathname + location.search)
+        .replace('?', '_0x3F_')
+        .replace('&', '_0x26'),
+    [location.pathname, location.search, search],
+  );
   const parts = user?.email?.split('@');
   const username = parts?.shift();
 
@@ -269,6 +273,7 @@ const MultiLevelDropdown = (props: IMultiLevelDropdownProps) => {
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
+    ref,
     currentTheme,
     locale,
     user,

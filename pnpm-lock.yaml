@@ -10,7 +10,7 @@ dependencies:
     version: 1.0.2(@remix-run/react@1.19.2)(@remix-run/server-runtime@1.19.2)
   '@consumet/extensions':
     specifier: https://github.com/consumet/consumet.ts
-    version: github.com/consumet/consumet.ts/e8fb779b8d586553d964f085d170f5897052bf8b
+    version: github.com/consumet/consumet.ts/6bb609f559a845589850aa4613342cf7b1412107
   '@fontsource/inter':
     specifier: ^5.0.5
     version: 5.0.5
@@ -12595,8 +12595,8 @@ packages:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
     dev: true
 
-  github.com/consumet/consumet.ts/e8fb779b8d586553d964f085d170f5897052bf8b:
-    resolution: {tarball: https://codeload.github.com/consumet/consumet.ts/tar.gz/e8fb779b8d586553d964f085d170f5897052bf8b}
+  github.com/consumet/consumet.ts/6bb609f559a845589850aa4613342cf7b1412107:
+    resolution: {tarball: https://codeload.github.com/consumet/consumet.ts/tar.gz/6bb609f559a845589850aa4613342cf7b1412107}
     name: '@consumet/extensions'
     version: 1.5.0
     dependencies:

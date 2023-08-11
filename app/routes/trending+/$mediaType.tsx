@@ -1,7 +1,8 @@
-import { redirect, type LoaderArgs } from '@remix-run/node';
+import { type LoaderArgs } from '@remix-run/node';
 import { Outlet } from '@remix-run/react';
 
 import type { Handle } from '~/types/handle';
+import { redirectWithToast } from '~/utils/server/toast-session.server';
 import { trendingPages } from '~/constants/tabLinks';
 
 export const handle: Handle = {
@@ -13,10 +14,14 @@ export const handle: Handle = {
   },
   tabLinkTo: ({ params }) => `/trending/${params.mediaType}`,
 };
-export const loader = async ({ params }: LoaderArgs) => {
+export const loader = async ({ params, request }: LoaderArgs) => {
   const { mediaType } = params;
   if (!mediaType || !['all', 'movie', 'tv', 'people'].includes(mediaType))
-    return redirect(`/trending/all/today`);
+    return redirectWithToast(request, `/trending/all/today`, {
+      type: 'error',
+      title: 'Error',
+      description: 'Invalid media type',
+    });
   return null;
 };
 
