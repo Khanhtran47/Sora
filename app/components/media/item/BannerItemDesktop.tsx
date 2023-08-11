@@ -123,7 +123,7 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
   }, [isPlayTrailer.value]);
 
   useEffect(() => {
-    if (!player) return;
+    if (!player || !isPlayTrailer.value) return;
     if (
       bannerIntersection?.isIntersecting &&
       active &&
@@ -137,7 +137,14 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
     } else if (active && isCardPlaying && isPlayed) {
       pause();
     }
-  }, [bannerIntersection?.isIntersecting, isPlayed, player, active, isCardPlaying]);
+  }, [
+    bannerIntersection?.isIntersecting,
+    isPlayed,
+    player,
+    active,
+    isCardPlaying,
+    isPlayTrailer.value,
+  ]);
 
   useEffect(() => {
     const handleVisibility = () => {
