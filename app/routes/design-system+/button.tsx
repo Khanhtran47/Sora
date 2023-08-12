@@ -61,7 +61,7 @@ const ButtonPage = () => {
           <SelectItem value="xl">xl</SelectItem>
         </SelectContent>
       </Select>
-      <Button size={size as 'xs' | 'sm' | 'md' | 'lg' | 'xl' | undefined}>{size}</Button>
+      <Button size={size as 'sm' | 'md' | 'lg' | undefined}>{size}</Button>
       <p className="text-base tracking-wide md:text-lg">Radius</p>
       <Select defaultValue="xl" value={radius} onValueChange={(value) => setRadius(value)}>
         <SelectTrigger className="w-[80px]">
@@ -79,13 +79,7 @@ const ButtonPage = () => {
           <SelectItem value="full">full</SelectItem>
         </SelectContent>
       </Select>
-      <Button
-        radius={
-          radius as 'base' | 'md' | 'xl' | 'sm' | 'lg' | '2xl' | '3xl' | 'none' | 'full' | undefined
-        }
-      >
-        {radius}
-      </Button>
+      <Button radius={radius as 'md' | 'sm' | 'lg' | 'none' | 'full' | undefined}>{radius}</Button>
       <p className="text-base tracking-wide md:text-lg">Icons</p>
       <Button startContent={<Search />} endContent={<Settings />}>
         Button

@@ -1,4 +1,4 @@
-import { json, redirect, type ActionArgs, type LoaderArgs } from '@remix-run/node';
+import { json, type ActionArgs, type LoaderArgs } from '@remix-run/node';
 import { useActionData } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 
@@ -11,6 +11,7 @@ import {
   signUp,
 } from '~/services/supabase';
 import encode from '~/utils/encode';
+import { addToast, redirectWithToast } from '~/utils/server/toast-session.server';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import AuthForm from '~/components/elements/shared/AuthForm';
 
@@ -48,11 +49,24 @@ export const action = async ({ request }: ActionArgs) => {
   }
 
   if (!email || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i.test(email)) {
-    return json<ActionData>({ errorCode: 'invalidEmail' });
+    const cookie = await addToast(request, {
+      type: 'error',
+      title: 'Invalid Email',
+      description: 'Please enter a valid email address.',
+    });
+    return json<ActionData>({ errorCode: 'invalidEmail' }, { headers: { 'Set-Cookie': cookie } });
   }
 
   if (!password || !rePassword || password !== rePassword) {
-    return json<ActionData>({ errorCode: 'unmatchedPassword' });
+    const cookie = await addToast(request, {
+      type: 'error',
+      title: 'Unmatched Password',
+      description: 'Please enter the same password.',
+    });
+    return json<ActionData>(
+      { errorCode: 'unmatchedPassword' },
+      { headers: { 'Set-Cookie': cookie } },
+    );
   }
 
   const {
@@ -61,17 +75,34 @@ export const action = async ({ request }: ActionArgs) => {
   } = await signUp(email, password);
 
   if (error) {
-    return json<ActionData>({ error: error.message });
+    const cookie = await addToast(request, {
+      type: 'error',
+      title: 'Sign Up Failed',
+      description: error.message,
+    });
+    return json<ActionData>({ error: error.message }, { headers: { 'Set-Cookie': cookie } });
   }
 
   if (!session) {
-    return redirect(`/sign-in?ref=${searchParams.get('ref') || '/'}&code=201-email`);
+    return redirectWithToast(
+      request,
+      `/sign-in?ref=${searchParams.get('ref') || '/'}&code=201-email`,
+      {
+        type: 'success',
+        title: 'Sign Up Successfully',
+        description: 'Please confirm your email before log in',
+      },
+    );
   }
 
   const authCookie = await getSessionFromCookie(request.headers.get('Cookie'));
 
   if (authCookie.has('auth_token')) {
-    return redirect(searchParams.get('ref') || '/');
+    return redirectWithToast(request, searchParams.get('ref') || '/', {
+      type: 'error',
+      title: 'Sign Up Failed',
+      description: 'You are already signed in.',
+    });
   }
 
   const payload = process.env.NODE_ENV === 'production' ? await requestPayload(request) : undefined;
@@ -84,11 +115,16 @@ export const action = async ({ request }: ActionArgs) => {
 
   const ref = (searchParams.get('ref') || '/').replace('_0x3F_', '?').replace('_0x26', '&');
 
-  return redirect(ref, {
-    headers: {
-      'Set-Cookie': await commitAuthCookie(authCookie),
+  return redirectWithToast(
+    request,
+    ref,
+    {
+      type: 'success',
+      title: 'Sign Up Successfully',
+      description: 'Welcome to Sora!',
     },
-  });
+    { headers: { 'Set-Cookie': await commitAuthCookie(authCookie) } },
+  );
 };
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -97,7 +133,11 @@ export const loader = async ({ request }: LoaderArgs) => {
   const ref = (searchParams.get('ref') || '/').replace('_0x3F_', '?').replace('_0x26', '&');
 
   if (session.has('auth_token')) {
-    return redirect(ref);
+    return redirectWithToast(request, ref, {
+      type: 'error',
+      title: 'Sign Up Failed',
+      description: 'You are already signed in.',
+    });
   }
 
   return null;

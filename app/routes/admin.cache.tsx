@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Button } from '@nextui-org/button';
 import { Spacer } from '@nextui-org/spacer';
-import { json, redirect, type ActionArgs, type LoaderArgs } from '@remix-run/node';
+import { json, type ActionArgs, type LoaderArgs } from '@remix-run/node';
 import {
   useFetcher,
   useLoaderData,
@@ -17,6 +17,7 @@ import { badRequest } from 'remix-utils';
 import type { Handle } from '~/types/handle';
 import { getAllCacheKeys, lruCache, searchCacheKeys } from '~/services/lru-cache';
 import { getUserFromCookie } from '~/services/supabase';
+import { redirectWithToast } from '~/utils/server/toast-session.server';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import {
   Dialog,
@@ -31,15 +32,27 @@ import SearchForm from '~/components/elements/SearchForm';
 export const loader = async ({ request }: LoaderArgs) => {
   const cookie = request.headers.get('Cookie');
   if (!cookie) {
-    throw redirect('/sign-in');
+    return redirectWithToast(request, '/sign-in', {
+      title: 'Access Denied',
+      type: 'error',
+      description: 'You need to login to access this page',
+    });
   }
   const user = await getUserFromCookie(cookie as string);
   if (!user) {
-    throw redirect('/sign-in');
+    return redirectWithToast(request, '/sign-in', {
+      title: 'Access Denied',
+      type: 'error',
+      description: 'You need to login to access this page',
+    });
   }
   const admin = process.env.ADMIN_ID?.split(',');
   if (user && !admin?.includes(user.id)) {
-    throw redirect('/');
+    return redirectWithToast(request, '/', {
+      title: 'Access Denied',
+      type: 'error',
+      description: "You don't have permission to access this page.",
+    });
   }
   const url = new URL(request.url);
   const query = url.searchParams.get('query');

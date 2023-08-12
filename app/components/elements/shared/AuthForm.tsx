@@ -3,9 +3,10 @@ import { Button } from '@nextui-org/button';
 import { Card, CardBody, CardFooter, CardHeader } from '@nextui-org/card';
 import { Checkbox } from '@nextui-org/checkbox';
 import { Input } from '@nextui-org/input';
+import { Link } from '@nextui-org/link';
 import { EyeFilledIcon, EyeSlashFilledIcon } from '@nextui-org/shared-icons';
 import { Spacer } from '@nextui-org/spacer';
-import { Form, Link, useLocation } from '@remix-run/react';
+import { Form, Link as RemixLink, useLocation } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 
 import MailEdit from '~/assets/icons/MailEditIcon';
@@ -123,25 +124,29 @@ const AuthForm = ({ type, error, code, errorCode }: IAuthForm) => {
               <input type="hidden" name="invite-code" hidden value={inviteCode} />
             </>
           ) : null}
-          {error ? <h4 className="text-danger">{error}</h4> : null}
-          {errorCode ? <h4 className="text-danger">{t(errorCode)}</h4> : null}
-          {!error && hasMessage ? <h4 className="text-success">{t(code)}</h4> : null}
+          {error ? <h6 className="text-danger">{error}</h6> : null}
+          {errorCode ? <h6 className="text-danger">{t(errorCode)}</h6> : null}
+          {!error && hasMessage ? <h6 className="text-success">{t(code)}</h6> : null}
           <div className="flex items-center justify-between">
             {type === 'sign-in' ? (
               <>
                 <Link
+                  as={RemixLink}
                   to="/sign-up"
+                  underline="hover"
+                  size="lg"
                   className="font-semibold text-primary focus:outline-none focus:ring-2 focus:ring-focus"
                 >
                   {t('signUp')}
                 </Link>
-                <Checkbox>
-                  <h6 className="!m-0">{t('rememberMe')}</h6>
-                </Checkbox>
+                <Checkbox size="lg">{t('rememberMe')}</Checkbox>
               </>
             ) : (
               <Link
+                as={RemixLink}
                 to="/sign-in"
+                underline="hover"
+                size="lg"
                 className="font-semibold text-primary focus:outline-none focus:ring-2 focus:ring-focus"
               >
                 {t('signIn')}

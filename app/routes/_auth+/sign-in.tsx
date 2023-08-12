@@ -1,4 +1,4 @@
-import { json, redirect, type ActionArgs, type LoaderArgs } from '@remix-run/node';
+import { json, type ActionArgs, type LoaderArgs } from '@remix-run/node';
 import { useActionData, useLocation } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 
@@ -9,6 +9,7 @@ import {
   requestPayload,
   signInWithPassword,
 } from '~/services/supabase';
+import { addToast, redirectWithToast } from '~/utils/server/toast-session.server';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import AuthForm from '~/components/elements/shared/AuthForm';
 
@@ -34,11 +35,27 @@ export const action = async ({ request }: ActionArgs) => {
   const password = data.get('password')?.toString();
 
   if (!email || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i.test(email)) {
-    return json<ActionData>({ error: 'Please enter a valid email!' });
+    const cookie = await addToast(request, {
+      type: 'error',
+      title: 'Invalid Email!',
+      description: 'Please enter a valid email!',
+    });
+    return json<ActionData>(
+      { error: 'Please enter a valid email!' },
+      { headers: { 'Set-Cookie': cookie } },
+    );
   }
 
   if (!password) {
-    return json<ActionData>({ error: 'Password is required!' });
+    const cookie = await addToast(request, {
+      type: 'error',
+      title: 'Password is required!',
+      description: 'Please enter your password!',
+    });
+    return json<ActionData>(
+      { error: 'Password is required!' },
+      { headers: { 'Set-Cookie': cookie } },
+    );
   }
 
   const {
@@ -47,17 +64,34 @@ export const action = async ({ request }: ActionArgs) => {
   } = await signInWithPassword(email, password);
 
   if (error) {
-    return json<ActionData>({ error: error.message });
+    const cookie = await addToast(request, {
+      type: 'error',
+      title: 'Invalid Credentials!',
+      description: 'Please enter valid credentials!',
+    });
+    return json<ActionData>({ error: error.message }, { headers: { 'Set-Cookie': cookie } });
   }
 
   if (!session) {
-    return json<ActionData>({ error: 'Something went wrong. Please sign in again!' });
+    const cookie = await addToast(request, {
+      type: 'error',
+      title: 'Something went wrong!',
+      description: 'Please sign in again!',
+    });
+    return json<ActionData>(
+      { error: 'Something went wrong. Please sign in again!' },
+      { headers: { 'Set-Cookie': cookie } },
+    );
   }
 
   const authCookie = await getSessionFromCookie(request.headers.get('Cookie'));
 
   if (authCookie.has('auth_token')) {
-    return redirect(searchParams.get('ref') || '/');
+    return redirectWithToast(request, searchParams.get('ref') || '/', {
+      type: 'default',
+      title: 'Already Signed In!',
+      description: 'You are already signed in!',
+    });
   }
   const payload = process.env.NODE_ENV === 'production' ? await requestPayload(request) : undefined;
 
@@ -70,11 +104,16 @@ export const action = async ({ request }: ActionArgs) => {
 
   const ref = (searchParams.get('ref') || '/').replace('_0x3F_', '?').replace('_0x26', '&');
 
-  return redirect(ref, {
-    headers: {
-      'Set-Cookie': await commitAuthCookie(authCookie),
+  return redirectWithToast(
+    request,
+    ref,
+    {
+      type: 'success',
+      title: 'Signed In!',
+      description: 'You have successfully signed in!',
     },
-  });
+    { headers: { 'Set-Cookie': await commitAuthCookie(authCookie) } },
+  );
 };
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -83,7 +122,11 @@ export const loader = async ({ request }: LoaderArgs) => {
   const ref = (searchParams.get('ref') || '/').replace('_0x3F_', '?').replace('_0x26', '&');
 
   if (session.has('auth_token')) {
-    return redirect(ref);
+    return redirectWithToast(request, ref, {
+      type: 'default',
+      title: 'Already Signed In!',
+      description: 'You are already signed in!',
+    });
   }
 
   return null;
