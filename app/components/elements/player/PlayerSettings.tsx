@@ -1556,7 +1556,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                             type="button"
                             variant="light"
                             onPress={currentDropdownLevel?.extraButtonAction}
-                            className="m-0 p-2 font-bold underline"
+                            className="m-0 !p-2 font-bold underline"
                           >
                             {currentDropdownLevel?.extraButtonTitle}
                           </Button>
@@ -1651,7 +1651,7 @@ const PlayerSettings = (props: IPlayerSettingsProps) => {
                           size="md"
                           variant="light"
                           onPress={currentDropdownLevel?.extraButtonAction}
-                          className="m-0 p-2 font-bold underline"
+                          className="m-0 !p-2 font-bold underline"
                         >
                           {currentDropdownLevel?.extraButtonTitle}
                         </Button>
