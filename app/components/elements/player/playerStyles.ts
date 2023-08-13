@@ -16,7 +16,7 @@ export const playerStyles = tv({
     'custom-player-control-before',
     '[&_.art-bottom]:via-default/60',
     '[&_.art-bottom]:to-default',
-    '[&_.art-contextmenu]:!border-default-200',
+    '[&_.art-contextmenu]:!border-divider',
     '[&_.art-contextmenu]:!text-shadow-none',
     '[&_.art-control-topControlButtons]:before:via-default/[0.6]',
     '[&_.art-control-topControlButtons]:before:to-default',

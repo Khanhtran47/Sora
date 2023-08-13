@@ -41,13 +41,13 @@ const CardPage = () => {
       </Card>
       <p className="text-base tracking-wide md:text-lg">With Divider</p>
       <Card className="max-w-md">
-        <CardHeader className="border-b border-default-200">
+        <CardHeader className="border-b border-divider">
           <strong>Description</strong>
         </CardHeader>
         <CardBody className="py-8">
           <p>The Object constructor creates an object wrapper for the given value.</p>
         </CardBody>
-        <CardFooter className="border-t border-default-200">
+        <CardFooter className="border-t border-divider">
           <p>
             When called in a non-constructor context, Object behaves identically to{' '}
             {/* <Code color="primary">new Object()</Code>. */}

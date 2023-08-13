@@ -88,7 +88,7 @@
     .art-video-player {
       .art-layers {
         .art-layer-auto-playback {
-          @apply !rounded-medium !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
+          @apply !rounded-medium !border !border-solid !border-divider !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
         }
       }
     }
@@ -97,7 +97,7 @@
   .custom-player-contextmenus {
     .art-video-player.art-contextmenu-show {
       .art-contextmenus {
-        @apply !rounded-medium !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
+        @apply !rounded-medium !border !border-solid !border-divider !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
       }
     }
   }
@@ -105,14 +105,14 @@
   .custom-player-info {
     .art-video-player.art-info-show {
       .art-info {
-        @apply !rounded-medium !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
+        @apply !rounded-medium !border !border-solid !border-divider !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
       }
     }
   }
 
   .custom-player-notice-inner {
     .art-notice-inner {
-      @apply !rounded-medium !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
+      @apply !rounded-medium !border !border-solid !border-divider !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
     }
   }
 
@@ -126,7 +126,7 @@
     .art-video-player {
       .art-volume-panel {
         .art-volume-inner {
-          @apply !rounded-medium !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
+          @apply !rounded-medium !border !border-solid !border-divider !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
         }
       }
     }
@@ -134,7 +134,7 @@
 
   .custom-player-icon-after {
     .art-icon::after {
-      @apply !rounded-medium !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !text-default-foreground !font-sans !bg-default/[0.6];
+      @apply !rounded-medium !border !border-solid !border-divider !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !text-default-foreground !font-sans !bg-default/[0.6];
     }
   }
 
@@ -146,7 +146,7 @@
 
   .custom-player-control-after {
     .art-control::after {
-      @apply !rounded-medium !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !text-default-foreground !font-sans !bg-default/[0.6];
+      @apply !rounded-medium !border !border-solid !border-divider !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !text-default-foreground !font-sans !bg-default/[0.6];
     }
   }
 
@@ -160,7 +160,7 @@
     .art-video-player {
       .art-layers {
         .art-layer-lock {
-          @apply !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
+          @apply !border !border-solid !border-divider !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
         }
       }
     }
@@ -173,7 +173,7 @@
         .art-control-progress
         .art-control-progress-inner
         .art-progress-tip {
-        @apply !rounded-medium !border !border-solid !border-default-200 !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
+        @apply !rounded-medium !border !border-solid !border-divider !shadow-lg !backdrop-blur-2xl !backdrop-contrast-125 !backdrop-saturate-200 !bg-default/[0.6];
       }
     }
   }

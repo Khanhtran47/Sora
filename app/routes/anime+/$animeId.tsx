@@ -112,7 +112,7 @@ const AnimeDetailPage = () => {
   const tablinkIntersection = useIntersectionObserver(tabLinkRef, {
     root: viewportRef,
     rootMargin: sidebarBoxedMode ? '-180px 0px 0px 0px' : '-165px 0px 0px 0px',
-    threshold: [1],
+    threshold: [0.5],
   });
   const paddingTop = useTransform(
     scrollY,
@@ -142,7 +142,7 @@ const AnimeDetailPage = () => {
         <AnimeDetail item={detail} trailerTime={currentTime} />
         <div className="flex w-full flex-col items-center justify-center">
           <motion.div
-            className="sticky top-[63px] z-[1000] flex w-full justify-center transition-[padding] duration-100 ease-in-out"
+            className="sticky top-[61px] z-[1000] flex w-full justify-center transition-[padding] duration-100 ease-in-out"
             style={{
               backgroundColor: isHydrated ? backgroundColor : 'transparent',
               paddingTop,

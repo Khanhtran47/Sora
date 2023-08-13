@@ -79,7 +79,7 @@ const cardItemStyles = tv({
         image: 'z-0 !h-[174px] !min-h-[auto] !min-w-[116px] sm:aspect-[2/3] sm:!h-[auto]',
         content: 'flex grow flex-col gap-y-4 p-3 sm:w-3/5',
         footer:
-          'absolute bottom-0 flex !w-[116px] justify-center border-t border-default-200 bg-background/[0.6] backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-inset focus:ring-focus sm:!w-2/5',
+          'absolute bottom-0 flex !w-[116px] justify-center border-t border-divider bg-background/[0.6] backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-inset focus:ring-focus sm:!w-2/5',
       },
       table: {
         base: '!w-full',
@@ -95,7 +95,7 @@ const cardItemStyles = tv({
         image:
           'z-0 aspect-[16/9] !min-h-[auto] !min-w-[auto] overflow-hidden !transition-[transform,_opacity]',
         footer:
-          'absolute bottom-0 flex justify-center border-t border-default-200 bg-background/[0.6] backdrop-blur-md',
+          'absolute bottom-0 flex justify-center border-t border-divider bg-background/[0.6] backdrop-blur-md',
       },
       people: {
         base: '!w-[164px]',

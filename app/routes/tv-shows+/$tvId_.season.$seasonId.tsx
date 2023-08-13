@@ -180,7 +180,7 @@ const TvSeasonDetail = () => {
   const tablinkIntersection = useIntersectionObserver(tabLinkRef, {
     root: viewportRef,
     rootMargin: sidebarBoxedMode ? '-180px 0px 0px 0px' : '-165px 0px 0px 0px',
-    threshold: [1],
+    threshold: [0.5],
   });
   const paddingTop = useTransform(
     scrollY,
@@ -208,6 +208,7 @@ const TvSeasonDetail = () => {
         style={{ height: `calc(${size?.height}px + 72px)` }}
       >
         <CardHeader
+          // @ts-ignore
           ref={ref}
           className="absolute bottom-0 z-10 flex grow flex-col justify-center rounded-b-none p-0"
         >
@@ -312,7 +313,7 @@ const TvSeasonDetail = () => {
       </Card>
       <div className="flex w-full flex-col items-center justify-center">
         <motion.div
-          className="sticky top-[63px] z-[1000] flex w-full justify-center transition-[padding] duration-100 ease-in-out"
+          className="sticky top-[61px] z-[1000] flex w-full justify-center transition-[padding] duration-100 ease-in-out"
           style={{
             backgroundColor: isHydrated ? backgroundColor : 'transparent',
             paddingTop,

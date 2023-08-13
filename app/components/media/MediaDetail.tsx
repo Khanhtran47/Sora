@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
 import { Button } from '@nextui-org/button';
 import { Card, CardBody } from '@nextui-org/card';
 import { Chip } from '@nextui-org/chip';
@@ -10,7 +10,6 @@ import { motion, useTransform } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { MimeType } from 'remix-image';
 import { useHydrated } from 'remix-utils';
-// import { useTranslation } from 'react-i18next';
 import { tv } from 'tailwind-variants';
 import tinycolor from 'tinycolor2';
 
@@ -148,16 +147,18 @@ export const MediaDetail = (props: IMediaDetail) => {
     <>
       <Card
         radius="none"
-        style={{
-          height: `calc(${size?.height}px)`,
-          // @ts-ignore
-          '--theme-movie-brand': isHydrated ? backgroundColor : 'transparent',
-        }}
+        style={
+          {
+            height: `calc(${size?.height}px)`,
+            '--theme-movie-brand': isHydrated ? backgroundColor : 'transparent',
+          } as CSSProperties
+        }
         classNames={{
           base: 'flex flex-col w-full !bg-transparent bg-gradient-to-b !from-transparent from-[80px] !to-movie-brand-color border-0 to-[80px] sm:from-[200px] sm:to-[200px] shadow-none',
         }}
       >
         <CardBody
+          // @ts-ignore
           ref={ref}
           className="z-1 absolute bottom-0 flex grow flex-col items-center justify-center p-0"
         >
@@ -408,16 +409,21 @@ export const AnimeDetail = (props: IAnimeDetail) => {
     <>
       <Card
         radius="none"
-        style={{
-          height: `calc(${size?.height}px)`,
-          // @ts-ignore
-          '--theme-movie-brand': isHydrated ? backgroundColor : 'transparent',
-        }}
+        style={
+          {
+            height: `calc(${size?.height}px)`,
+            '--theme-movie-brand': isHydrated ? backgroundColor : 'transparent',
+          } as CSSProperties
+        }
         classNames={{
           base: 'flex flex-col w-full !bg-transparent bg-gradient-to-b !from-transparent from-[80px] !to-movie-brand-color border-0 to-[80px] sm:from-[200px] sm:to-[200px] shadow-none',
         }}
       >
-        <CardBody ref={ref} className="z-1 absolute bottom-0 flex grow flex-col justify-center p-0">
+        <CardBody
+          // @ts-ignore
+          ref={ref}
+          className="z-1 absolute bottom-0 flex grow flex-col justify-center p-0"
+        >
           <div className={backgroundStyles({ content: true })} />
           <div className="grid w-full max-w-[1920px] grid-cols-[1fr_2fr] grid-rows-[1fr_auto_auto] items-stretch justify-center gap-x-4 gap-y-6 px-3 pt-5 grid-areas-small sm:grid-rows-[auto_1fr_auto] sm:px-3.5 sm:grid-areas-wide xl:px-4 2xl:px-5">
             <div className="flex flex-col items-center justify-center grid-in-image" ref={imageRef}>

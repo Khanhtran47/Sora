@@ -55,6 +55,62 @@ const headerStyles = tv({
   },
 });
 
+const backgroundColorStyles = tv({
+  base: 'pointer-events-none absolute left-0 top-px z-[-1] w-full rounded-tl-medium backdrop-blur-2xl backdrop-contrast-125 backdrop-saturate-200',
+  variants: {
+    isShowTablink: {
+      true: 'h-[112px]',
+      false: 'h-[64px] border-b border-divider',
+    },
+    customBackgroundColor: {
+      true: 'h-[64px]',
+    },
+    boxedSidebar: {
+      true: 'h-[64px] border-b border-divider',
+    },
+    miniSidebar: {
+      true: 'h-[64px] border-b border-divider',
+    },
+  },
+  compoundVariants: [
+    {
+      isShowTablink: true,
+      boxedSidebar: true,
+      miniSidebar: true,
+      class: 'h-[120px]',
+    },
+    {
+      isShowTablink: true,
+      boxedSidebar: true,
+      miniSidebar: false,
+      class: 'h-[112px]',
+    },
+    {
+      isShowTablink: true,
+      boxedSidebar: false,
+      miniSidebar: false,
+      class: 'h-[112px]',
+    },
+    {
+      isShowTablink: true,
+      boxedSidebar: false,
+      miniSidebar: true,
+      class: 'h-[112px]',
+    },
+    {
+      isShowTablink: false,
+      customBackgroundColor: true,
+      class: 'h-[64px] border-0',
+    },
+  ],
+  defaultVariants: {
+    isShowTablink: false,
+    boxedSidebar: false,
+    miniSidebar: false,
+    customBackgroundColor: false,
+  },
+});
+
 const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
   const { user } = props;
   const { sidebarMiniMode, sidebarBoxedMode } = useSoraSettings();
@@ -90,10 +146,14 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       })}
     >
       <motion.div
-        className="pointer-events-none absolute left-0 top-0 z-[-1] w-full rounded-tl-medium backdrop-blur-2xl backdrop-contrast-125 backdrop-saturate-200"
+        className={backgroundColorStyles({
+          boxedSidebar: sidebarBoxedMode.value,
+          isShowTablink: isShowTabLink && !hideTabLinkWithLocation,
+          miniSidebar: sidebarMiniMode.value,
+          customBackgroundColor: customHeaderBackgroundColor,
+        })}
         style={{
           opacity: isHydrated ? opacity : 0,
-          height: isShowTabLink && !hideTabLinkWithLocation ? 112 : 64,
           backgroundColor: headerBackgroundColor,
         }}
       >

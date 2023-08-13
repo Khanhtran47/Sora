@@ -1,6 +1,5 @@
 import { useEffect, useMemo } from 'react';
 import { useLocation, useMatches, useParams } from '@remix-run/react';
-import { isEdgeChromium } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
 
 import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
@@ -98,15 +97,11 @@ function useCustomHeaderChangePosition(intersection?: IntersectionObserverEntry)
       intersection?.intersectionRatio !== undefined &&
       intersection?.intersectionRatio < 1
     ) {
-      if (isEdgeChromium) {
-        // smooth scrolling on edge chromium breaks the getBoundingClientRect() method here, don't know why
-        setStartChangeScrollPosition(viewportRef?.current?.scrollTop);
-      } else if (!isEdgeChromium && intersection?.boundingClientRect?.top < 200) {
-        setStartChangeScrollPosition(viewportRef?.current?.scrollTop);
+      if (intersection?.boundingClientRect?.top < 150) {
+        setStartChangeScrollPosition(viewportRef?.current?.scrollTop - 64);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [intersection]);
+  }, [intersection, viewportRef, setStartChangeScrollPosition]);
 }
 
 export { useCustomHeaderChangePosition, useHeaderOptions };

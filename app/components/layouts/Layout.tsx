@@ -50,13 +50,13 @@ const layoutStyles = tv({
 });
 
 const contentAreaStyles = tv({
-  base: 'ml-0 flex w-full grow flex-col justify-end overflow-hidden !rounded-none bg-background shadow-xl shadow-foreground/10 transition-[margin] duration-200',
+  base: 'ml-0 flex w-full grow flex-col justify-end overflow-hidden !rounded-none border-divider bg-background shadow-medium transition-[margin] duration-200',
   variants: {
     mini: {
-      true: 'sm:ml-[80px] sm:!rounded-tl-medium',
+      true: 'border-l border-t sm:ml-[80px] sm:!rounded-tl-medium',
     },
     boxed: {
-      true: 'sm:ml-[280px] sm:!rounded-medium',
+      true: 'border sm:ml-[280px] sm:!rounded-medium',
     },
     hideSidebar: {
       true: 'sm:ml-0',
@@ -67,18 +67,18 @@ const contentAreaStyles = tv({
       mini: true,
       boxed: true,
       hideSidebar: false,
-      class: 'sm:ml-[110px] sm:!rounded-medium',
+      class: 'border sm:ml-[110px] sm:!rounded-medium',
     },
     {
       mini: false,
       boxed: false,
       hideSidebar: false,
-      class: 'sm:ml-[250px] sm:!rounded-tl-medium',
+      class: 'border-l border-t sm:ml-[250px] sm:!rounded-tl-medium',
     },
     {
       boxed: true,
       hideSidebar: true,
-      class: 'sm:ml-[15px] sm:!rounded-medium',
+      class: 'border sm:ml-[15px] sm:!rounded-medium',
     },
   ],
   defaultVariants: {
@@ -92,10 +92,10 @@ const scrollAreaViewportStyles = tv({
   base: 'flex w-[100vw] flex-col items-center justify-start transition-[width,_height] duration-200',
   variants: {
     mini: {
-      true: 'min-h-screen sm:w-[calc(100vw_-_80px)]',
+      true: 'min-h-[calc(100vh_-_1px)] sm:w-[calc(100vw_-_80px)]',
     },
     boxed: {
-      true: 'min-h-[calc(100vh_-_30px)] sm:w-[calc(100vw_-_280px)]',
+      true: 'min-h-[calc(100vh_-_32px)] sm:w-[calc(100vw_-_280px)]',
     },
     layoutPadding: {
       true: 'mb-[70px] p-0 sm:px-5',
@@ -106,7 +106,7 @@ const scrollAreaViewportStyles = tv({
       false: 'mt-[72px]',
     },
     hideSidebar: {
-      true: 'min-h-screen sm:w-[100vw]',
+      true: 'min-h-[calc(100vh_-_1px)] sm:w-[100vw]',
     },
   },
   compoundVariants: [
@@ -114,18 +114,18 @@ const scrollAreaViewportStyles = tv({
       mini: true,
       boxed: true,
       hideSidebar: false,
-      class: 'min-h-[calc(100vh_-_30px)] sm:w-[calc(100vw_-_110px)]',
+      class: 'min-h-[calc(100vh_-_32px)] sm:w-[calc(100vw_-_110px)]',
     },
     {
       mini: false,
       boxed: false,
       hideSidebar: false,
-      class: 'min-h-screen sm:w-[calc(100vw_-_250px)]',
+      class: 'min-h-[calc(100vh_-_1px)] sm:w-[calc(100vw_-_250px)]',
     },
     {
       boxed: true,
       hideSidebar: true,
-      class: 'min-h-[calc(100vh_-_30px)] sm:w-[calc(100vw_-_15px)]',
+      class: 'min-h-[calc(100vh_-_32px)] sm:w-[calc(100vw_-_15px)]',
     },
     {
       layoutPadding: false,
@@ -360,7 +360,9 @@ const Layout = (props: ILayout) => {
         <ScrollArea
           type={isSm ? 'scroll' : 'always'}
           scrollHideDelay={500}
-          className={`w-full ${sidebarBoxedMode.value ? 'h-[calc(100vh-30px)]' : 'h-screen'}`}
+          className={`w-full ${
+            sidebarBoxedMode.value ? 'h-[calc(100vh-32px)]' : 'h-[calc(100vh-1px)]'
+          }`}
           key="scroll-area-main"
         >
           <ScrollViewport ref={viewportRef} data-restore-scroll="true">

@@ -42,11 +42,11 @@ const sidebarStyles = tv({
       false: 'w-full max-w-[250px] basis-[250px]',
     },
     sidebarBoxedMode: {
-      true: 'left-[15px] top-[15px] h-[calc(100vh_-_30px)] rounded-large bg-background/60',
+      true: 'left-[15px] top-[15px] h-[calc(100vh_-_30px)] rounded-large border border-divider bg-background shadow-medium',
       false: 'left-0 top-0 h-screen',
     },
     sidebarHoverMode: {
-      true: 'w-full max-w-[250px] basis-[250px] rounded-r-large border border-default-200 bg-background shadow-2xl',
+      true: 'w-full max-w-[250px] basis-[250px] rounded-r-large border border-divider bg-background shadow-2xl',
     },
   },
   compoundVariants: [{}],
@@ -510,7 +510,7 @@ const SideBar = () => {
                       isPressable
                       isFooterBlurred
                       classNames={{
-                        base: 'w-full border-default-200',
+                        base: 'w-full border-divider',
                       }}
                       role="button"
                       onPress={() => navigate('/movies')}
@@ -708,7 +708,7 @@ const SideBar = () => {
                       isPressable
                       isFooterBlurred
                       classNames={{
-                        base: 'w-full border-default-200',
+                        base: 'w-full border-divider',
                       }}
                       onPress={() => navigate('/tv-shows')}
                     >
@@ -905,7 +905,7 @@ const SideBar = () => {
                       isPressable
                       isFooterBlurred
                       classNames={{
-                        base: 'w-full border-default-200',
+                        base: 'w-full border-divider',
                       }}
                       onPress={() => navigate('/anime')}
                     >

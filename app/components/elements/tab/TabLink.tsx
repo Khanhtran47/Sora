@@ -43,7 +43,7 @@ const TabLink = (props: ITabProps) => {
     <ScrollArea
       type={isSm ? 'scroll' : 'hover'}
       scrollHideDelay={100}
-      className="z-[2] w-full border-b border-default-200"
+      className="z-[2] w-full border-b border-divider"
     >
       <ScrollViewport>
         <div className="flex focus:outline-none">

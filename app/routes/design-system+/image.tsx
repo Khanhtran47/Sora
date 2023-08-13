@@ -1,6 +1,7 @@
 import { Link } from '@nextui-org/link';
 import { MimeType } from 'remix-image';
 
+import type { Handle } from '~/types/handle';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import Image from '~/components/elements/Image';
 
