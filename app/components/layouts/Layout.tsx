@@ -50,13 +50,13 @@ const layoutStyles = tv({
 });
 
 const contentAreaStyles = tv({
-  base: 'ml-0 flex w-full grow flex-col justify-end overflow-hidden !rounded-none border-divider bg-background shadow-medium transition-[margin] duration-200',
+  base: 'ml-0 flex w-full grow flex-col justify-end overflow-hidden !rounded-none bg-background shadow-medium transition-[margin] duration-200 sm:border-divider',
   variants: {
     mini: {
-      true: 'border-l border-t sm:ml-[80px] sm:!rounded-tl-medium',
+      true: 'sm:ml-[80px] sm:!rounded-tl-medium sm:border-l sm:border-t',
     },
     boxed: {
-      true: 'border sm:ml-[280px] sm:!rounded-medium',
+      true: 'sm:ml-[280px] sm:!rounded-medium sm:border',
     },
     hideSidebar: {
       true: 'sm:ml-0',
@@ -67,18 +67,18 @@ const contentAreaStyles = tv({
       mini: true,
       boxed: true,
       hideSidebar: false,
-      class: 'border sm:ml-[110px] sm:!rounded-medium',
+      class: 'sm:ml-[110px] sm:!rounded-medium sm:border',
     },
     {
       mini: false,
       boxed: false,
       hideSidebar: false,
-      class: 'border-l border-t sm:ml-[250px] sm:!rounded-tl-medium',
+      class: 'sm:ml-[250px] sm:!rounded-tl-medium sm:border-l sm:border-t',
     },
     {
       boxed: true,
       hideSidebar: true,
-      class: 'border sm:ml-[15px] sm:!rounded-medium',
+      class: 'sm:ml-[15px] sm:!rounded-medium sm:border',
     },
   ],
   defaultVariants: {

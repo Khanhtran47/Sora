@@ -17,13 +17,13 @@ interface IHeaderProps {
 }
 
 const headerStyles = tv({
-  base: 'fixed z-[1000] hidden h-[64px] w-[100vw] flex-row items-center justify-between gap-x-4 rounded-tl-large px-5 py-3 sm:flex',
+  base: 'fixed z-[1000] hidden h-[64px] w-[100vw] flex-row items-center justify-between gap-x-4 px-5 py-3 sm:flex',
   variants: {
     miniSidebar: {
       true: 'top-0 sm:w-[calc(100vw_-_80px)]',
     },
     boxedSidebar: {
-      true: 'top-[15px] sm:w-[calc(100vw_-_280px)]',
+      true: 'top-[15px] sm:w-[calc(100vw_-_282px)]',
     },
     hideSidebar: {
       true: 'top-0 sm:w-[100vw]',
@@ -34,7 +34,7 @@ const headerStyles = tv({
       miniSidebar: true,
       boxedSidebar: true,
       hideSidebar: false,
-      class: 'top-[15px] sm:w-[calc(100vw_-_110px)]',
+      class: 'top-[15px] sm:w-[calc(100vw_-_112px)]',
     },
     {
       miniSidebar: false,
@@ -45,7 +45,7 @@ const headerStyles = tv({
     {
       boxedSidebar: true,
       hideSidebar: true,
-      class: 'top-[15px] sm:w-[calc(100vw_-_15px)]',
+      class: 'top-[15px] sm:w-[calc(100vw_-_17px)]',
     },
   ],
   defaultVariants: {
@@ -56,19 +56,23 @@ const headerStyles = tv({
 });
 
 const backgroundColorStyles = tv({
-  base: 'pointer-events-none absolute left-0 top-px z-[-1] w-full rounded-tl-medium backdrop-blur-2xl backdrop-contrast-125 backdrop-saturate-200',
+  base: 'pointer-events-none absolute left-0 top-px z-[-1] w-full backdrop-blur-2xl backdrop-contrast-125 backdrop-saturate-200',
   variants: {
     isShowTablink: {
-      true: 'h-[112px]',
-      false: 'h-[64px] border-b border-divider',
+      true: 'h-[111px]',
+      false: 'h-[64px]',
     },
     customBackgroundColor: {
       true: 'h-[64px]',
     },
     boxedSidebar: {
-      true: 'h-[64px] border-b border-divider',
+      true: 'h-[64px] border-b border-divider sm:rounded-t-medium',
+      false: 'h-[64px] border-b border-divider sm:rounded-tl-medium',
     },
     miniSidebar: {
+      true: 'h-[64px] border-b border-divider',
+    },
+    hideSidebar: {
       true: 'h-[64px] border-b border-divider',
     },
   },
@@ -77,25 +81,33 @@ const backgroundColorStyles = tv({
       isShowTablink: true,
       boxedSidebar: true,
       miniSidebar: true,
-      class: 'h-[120px]',
+      hideSidebar: false,
+      class: 'h-[119px] border-0',
     },
     {
       isShowTablink: true,
       boxedSidebar: true,
       miniSidebar: false,
-      class: 'h-[112px]',
+      hideSidebar: false,
+      class: 'h-[111px] border-0',
     },
     {
       isShowTablink: true,
       boxedSidebar: false,
-      miniSidebar: false,
-      class: 'h-[112px]',
+      hideSidebar: true,
+      class: 'h-[111px] border-0 sm:rounded-none',
+    },
+    {
+      isShowTablink: true,
+      boxedSidebar: true,
+      hideSidebar: true,
+      class: 'h-[119px] border-0',
     },
     {
       isShowTablink: true,
       boxedSidebar: false,
-      miniSidebar: true,
-      class: 'h-[112px]',
+      hideSidebar: false,
+      class: 'h-[111px] border-0',
     },
     {
       isShowTablink: false,
@@ -107,6 +119,7 @@ const backgroundColorStyles = tv({
     isShowTablink: false,
     boxedSidebar: false,
     miniSidebar: false,
+    hideSidebar: false,
     customBackgroundColor: false,
   },
 });
@@ -151,6 +164,7 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
           isShowTablink: isShowTabLink && !hideTabLinkWithLocation,
           miniSidebar: sidebarMiniMode.value,
           customBackgroundColor: customHeaderBackgroundColor,
+          hideSidebar: isHideSidebar,
         })}
         style={{
           opacity: isHydrated ? opacity : 0,
