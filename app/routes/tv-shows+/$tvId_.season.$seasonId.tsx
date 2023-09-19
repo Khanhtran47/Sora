@@ -54,9 +54,12 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const orgTitle = detail?.original_name || '';
   const year = new Date(seasonDetail?.air_date || '').getFullYear();
   const season = seasonDetail?.season_number;
-  const extractColorImage = `https://corsproxy.io/?${encodeURIComponent(
-    TMDB.backdropUrl(seasonDetail?.poster_path || '', 'w300'),
-  )}`;
+  const extractColorImageUrl =
+    process.env.NODE_ENV === 'development'
+      ? TMDB.backdropUrl(seasonDetail?.poster_path || '', 'w300')
+      : `https://corsproxy.io/?${encodeURIComponent(
+          TMDB.backdropUrl(seasonDetail?.poster_path || '', 'w300'),
+        )}`;
   const isEnded = detail?.status === 'Ended' || detail?.status === 'Canceled';
 
   const [providers, fimg] = await Promise.all([
@@ -71,11 +74,12 @@ export const loader = async ({ request, params }: LoaderArgs) => {
       isEnded,
       tmdbId: tid,
     }),
-    fetch(extractColorImage),
+    fetch(extractColorImageUrl),
   ]);
 
   const fimgb = Buffer.from(await fimg.arrayBuffer());
-  const palette = seasonDetail?.poster_path ? await Vibrant.from(fimgb).getPalette() : undefined;
+  const palette =
+    seasonDetail?.poster_path && fimgb ? await Vibrant.from(fimgb).getPalette() : undefined;
 
   if (providers && providers.length > 0)
     return json(

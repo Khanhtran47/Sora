@@ -136,9 +136,12 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     sub_format: provider === 'KissKh' ? 'srt' : 'webvtt',
   };
   const overview = detail?.overview || undefined;
-  const extractColorImage = `https://corsproxy.io/?${encodeURIComponent(
-    TMDB.backdropUrl(detail?.backdrop_path || detail?.poster_path || '', 'w300'),
-  )}`;
+  const extractColorImageUrl =
+    process.env.NODE_ENV === 'development'
+      ? TMDB.backdropUrl(detail?.backdrop_path || detail?.poster_path || '', 'w300')
+      : `https://corsproxy.io/?${encodeURIComponent(
+          TMDB.backdropUrl(detail?.backdrop_path || detail?.poster_path || '', 'w300'),
+        )}`;
   const isEnded = detail?.status === 'Ended' || detail?.status === 'Canceled';
 
   if (user) {
@@ -174,13 +177,13 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         isEnded,
         tmdbId: detail?.id,
       }),
-      fetch(extractColorImage),
+      fetch(extractColorImageUrl),
     ]);
     const totalProviderEpisodes = Number(tvDetail?.data?.episodeCount);
     const hasNextEpisode = checkHasNextEpisode(eid, totalEpisodes, totalProviderEpisodes);
     const fimgb = Buffer.from(await fimg.arrayBuffer());
     const palette =
-      detail?.backdrop_path || detail?.poster_path
+      (detail?.backdrop_path || detail?.poster_path) && fimgb
         ? await Vibrant.from(fimgb).getPalette()
         : undefined;
     return json(
@@ -239,7 +242,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         isEnded,
         tmdbId: detail?.id,
       }),
-      fetch(extractColorImage),
+      fetch(extractColorImageUrl),
     ]);
     const findTvSeason = (tvDetail as IMovieInfo)?.seasons?.find(
       (s) => s.season === Number(season),
@@ -313,7 +316,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
         isEnded,
         tmdbId: detail?.id,
       }),
-      fetch(extractColorImage),
+      fetch(extractColorImageUrl),
     ]);
     const totalProviderEpisodes = Number(episodeDetail?.episodes?.length);
     const hasNextEpisode = checkHasNextEpisode(eid, totalEpisodes, totalProviderEpisodes);
@@ -383,7 +386,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
       isEnded,
       tmdbId: detail?.id,
     }),
-    fetch(extractColorImage),
+    fetch(extractColorImageUrl),
   ]);
 
   const fimgb = Buffer.from(await fimg.arrayBuffer());

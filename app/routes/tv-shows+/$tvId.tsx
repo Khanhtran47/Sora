@@ -37,9 +37,12 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
   const [detail, imdbId] = await Promise.all([getTvShowDetail(tid, locale), getTvShowIMDBId(tid)]);
   if (!detail) throw new Response('Not Found', { status: 404 });
-  const extractColorImage = `https://corsproxy.io/?${encodeURIComponent(
-    TMDB.backdropUrl(detail?.backdrop_path || detail?.poster_path || '', 'w300'),
-  )}`;
+  const extractColorImageUrl =
+    process.env.NODE_ENV === 'development'
+      ? TMDB.backdropUrl(detail?.backdrop_path || detail?.poster_path || '', 'w300')
+      : `https://corsproxy.io/?${encodeURIComponent(
+          TMDB.backdropUrl(detail?.backdrop_path || detail?.poster_path || '', 'w300'),
+        )}`;
   let nameEng =
     detail?.original_language === 'en'
       ? detail?.original_name
@@ -50,12 +53,12 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     const [detailEng, imdbRating, fimg] = await Promise.all([
       getTvShowDetail(tid, 'en-US'),
       imdbId && process.env.IMDB_API_URL !== undefined ? getImdbRating(imdbId) : undefined,
-      fetch(extractColorImage),
+      fetch(extractColorImageUrl),
     ]);
     nameEng = detailEng?.name || '';
     const fimgb = Buffer.from(await fimg.arrayBuffer());
     const palette =
-      detail?.backdrop_path || detail?.poster_path
+      (detail?.backdrop_path || detail?.poster_path) && fimgb
         ? await Vibrant.from(fimgb).getPalette()
         : undefined;
     return json(
@@ -81,7 +84,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
   const [imdbRating, fimg] = await Promise.all([
     imdbId && process.env.IMDB_API_URL !== undefined ? getImdbRating(imdbId) : undefined,
-    fetch(extractColorImage),
+    fetch(extractColorImageUrl),
   ]);
   const fimgb = Buffer.from(await fimg.arrayBuffer());
   const palette =

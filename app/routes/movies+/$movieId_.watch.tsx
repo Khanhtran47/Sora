@@ -86,9 +86,12 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     sub_format: provider === 'KissKh' ? 'srt' : 'webvtt',
   };
   const overview = detail?.overview || undefined;
-  const extractColorImage = `https://corsproxy.io/?${encodeURIComponent(
-    TMDB.backdropUrl(detail?.backdrop_path || detail?.poster_path || '', 'w300'),
-  )}`;
+  const extractColorImageUrl =
+    process.env.NODE_ENV === 'development'
+      ? TMDB.backdropUrl(detail?.backdrop_path || detail?.poster_path || '', 'w300')
+      : `https://corsproxy.io/?${encodeURIComponent(
+          TMDB.backdropUrl(detail?.backdrop_path || detail?.poster_path || '', 'w300'),
+        )}`;
 
   if (user) {
     insertHistory({
@@ -111,11 +114,11 @@ export const loader = async ({ request, params }: LoaderArgs) => {
       detail?.imdb_id && process.env.IMDB_API_URL !== undefined
         ? getImdbRating(detail?.imdb_id)
         : undefined,
-      fetch(extractColorImage),
+      fetch(extractColorImageUrl),
     ]);
     const fimgb = Buffer.from(await fimg.arrayBuffer());
     const palette =
-      detail?.backdrop_path || detail?.poster_path
+      (detail?.backdrop_path || detail?.poster_path) && fimgb
         ? await Vibrant.from(fimgb).getPalette()
         : undefined;
     return json(
@@ -164,7 +167,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
       detail?.imdb_id && process.env.IMDB_API_URL !== undefined
         ? getImdbRating(detail?.imdb_id)
         : undefined,
-      fetch(extractColorImage),
+      fetch(extractColorImageUrl),
     ]);
     const fimgb = Buffer.from(await fimg.arrayBuffer());
     const palette =
@@ -210,7 +213,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
       detail?.imdb_id && process.env.IMDB_API_URL !== undefined
         ? getImdbRating(detail?.imdb_id)
         : undefined,
-      fetch(extractColorImage),
+      fetch(extractColorImageUrl),
     ]);
     const fimgb = Buffer.from(await fimg.arrayBuffer());
     const [episodeStream, episodeSubtitle, palette] = await Promise.all([
@@ -262,7 +265,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     detail?.imdb_id && process.env.IMDB_API_URL !== undefined
       ? getImdbRating(detail?.imdb_id)
       : undefined,
-    fetch(extractColorImage),
+    fetch(extractColorImageUrl),
   ]);
   const fimgb = Buffer.from(await fimg.arrayBuffer());
   const palette =
