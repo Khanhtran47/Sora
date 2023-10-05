@@ -1,4 +1,4 @@
-import { json, type LoaderArgs } from '@remix-run/node';
+import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import { motion } from 'framer-motion';
@@ -8,11 +8,11 @@ import type { Handle } from '~/types/handle';
 import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
 import { getListMovies, getTrending } from '~/services/tmdb/tmdb.server';
+import { useTypedRouteLoaderData } from '~/utils/react/hooks/useTypedRouteLoaderData';
 import { CACHE_CONTROL } from '~/utils/server/http';
-import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const [, locale] = await Promise.all([
     authenticate(request, undefined, true),
     i18next.getLocale(request),
@@ -84,6 +84,7 @@ const MoviesIndexPage = () => {
     >
       <MediaList
         listType="slider-banner"
+        // @ts-expect-error
         items={trending.items}
         genresMovie={rootData?.genresMovie}
         genresTv={rootData?.genresTv}
@@ -93,6 +94,7 @@ const MoviesIndexPage = () => {
           <MediaList
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
+            // @ts-expect-error
             items={popular.items}
             itemsType="movie"
             listName={t('popular-movies')}
@@ -106,6 +108,7 @@ const MoviesIndexPage = () => {
           <MediaList
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
+            // @ts-expect-error
             items={topRated.items}
             itemsType="movie"
             listName={t('top-rated-movies')}
@@ -119,6 +122,7 @@ const MoviesIndexPage = () => {
           <MediaList
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
+            // @ts-expect-error
             items={nowPlaying.items}
             itemsType="movie"
             listName={t('now-playing-movies')}
@@ -132,6 +136,7 @@ const MoviesIndexPage = () => {
           <MediaList
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
+            // @ts-expect-error
             items={upcoming.items}
             itemsType="movie"
             listName={t('upcoming-movies')}

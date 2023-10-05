@@ -1,10 +1,10 @@
 /* eslint-disable no-console */
-import type { ActionArgs } from '@remix-run/node';
+import type { ActionFunctionArgs } from '@remix-run/node';
 import webPush from 'web-push';
 
 import { SaveSubscription } from '~/utils/server/pwa-utils.server';
 
-export const action = async ({ request }: ActionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   const data = await request.json();
   const { subscription } = data;
 

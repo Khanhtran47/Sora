@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Spacer } from '@nextui-org/spacer';
-import { json, type LoaderArgs } from '@remix-run/node';
+import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import { useTranslation } from 'react-i18next';
@@ -11,13 +11,14 @@ import type { Handle } from '~/types/handle';
 import type { loader as peopleIdLoader } from '~/routes/people+/$peopleId';
 import { i18next } from '~/services/i18n';
 import { getPeopleImages } from '~/services/tmdb/tmdb.server';
+import type { IPeopleDetail } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
+import { useTypedRouteLoaderData } from '~/utils/react/hooks/useTypedRouteLoaderData';
 import { CACHE_CONTROL } from '~/utils/server/http';
-import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import Image from '~/components/elements/Image';
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const locale = await i18next.getLocale(request);
   const { peopleId } = params;
   const pid = Number(peopleId);
@@ -68,10 +69,19 @@ export const handle: Handle = {
     </BreadcrumbItem>
   ),
   miniTitle: ({ parentMatch, t }) => ({
-    title: parentMatch?.data?.detail?.name || 'People',
+    title: parentMatch
+      ? (parentMatch?.data as { detail: IPeopleDetail })?.detail?.name || 'People'
+      : 'People',
     subtitle: t('media'),
-    showImage: parentMatch?.data?.detail?.profile_path !== undefined,
-    imageUrl: TMDB.profileUrl(parentMatch?.data?.detail?.profile_path, 'w45'),
+    showImage: parentMatch
+      ? (parentMatch?.data as { detail: IPeopleDetail })?.detail?.profile_path !== undefined
+      : false,
+    imageUrl: parentMatch
+      ? TMDB.profileUrl(
+          (parentMatch?.data as { detail: IPeopleDetail })?.detail?.profile_path,
+          'w45',
+        )
+      : undefined,
   }),
 };
 
@@ -140,7 +150,9 @@ const MediaPage = () => {
               thumbnail={TMDB.profileUrl(image?.file_path, 'w185')}
               alt={`Photo of ${peopleData?.detail?.name} size ${image.width}x${image.height}`}
               caption={`Photo of ${peopleData?.detail?.name} size ${image.width}x${image.height}`}
+              // @ts-expect-error
               width={image.width}
+              // @ts-expect-error
               height={image.height}
             >
               {({ ref, open }) => (

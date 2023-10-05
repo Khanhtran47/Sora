@@ -3,7 +3,7 @@ import { mergeMeta } from '~/utils';
 import type { Handle } from '~/types/handle';
 import type { loader as tvSeasonIdLoader } from '~/routes/tv-shows+/$tvId_.season.$seasonId';
 import type { IEpisode } from '~/services/tmdb/tmdb.types';
-import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
+import { useTypedRouteLoaderData } from '~/utils/react/hooks/useTypedRouteLoaderData';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import ListEpisodes from '~/components/elements/shared/ListEpisodes';
 
@@ -52,9 +52,12 @@ const Episodes = () => {
     <div className="flex w-full flex-col items-center justify-center px-3 sm:w-2/3 sm:px-5">
       <ListEpisodes
         type="tv"
+        // @ts-expect-error
         id={detail?.id}
         episodes={seasonDetail?.episodes as unknown as IEpisode[]}
+        // @ts-expect-error
         season={seasonDetail?.season_number}
+        // @ts-expect-error
         providers={seasonData?.providers || []}
       />
     </div>

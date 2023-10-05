@@ -1,23 +1,24 @@
 import { useEffect, useRef } from 'react';
 import { useIntersectionObserver } from '@react-hookz/web';
-import { json, type LoaderArgs } from '@remix-run/node';
+import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { Outlet, useLoaderData, useLocation } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import { motion, useTransform } from 'framer-motion';
 import Vibrant from 'node-vibrant';
-import { useHydrated } from 'remix-utils';
 
 import type { Handle } from '~/types/handle';
 import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
 import { getImdbRating, getTvShowDetail, getTvShowIMDBId } from '~/services/tmdb/tmdb.server';
+import type { ITvShowDetail } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
+import useColorDarkenLighten from '~/utils/react/hooks/useColorDarkenLighten';
+import { useCustomHeaderChangePosition } from '~/utils/react/hooks/useHeader';
+import { useHydrated } from '~/utils/react/hooks/useHydrated';
+import { useSoraSettings } from '~/utils/react/hooks/useLocalStorage';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
 import { useLayout } from '~/store/layout/useLayout';
-import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
-import { useCustomHeaderChangePosition } from '~/hooks/useHeader';
-import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { movieTvDetailsPages } from '~/constants/tabLinks';
 import { MediaBackgroundImage, MediaDetail } from '~/components/media/MediaDetail';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
@@ -25,7 +26,7 @@ import ErrorBoundaryView from '~/components/elements/shared/ErrorBoundaryView';
 import TabLink from '~/components/elements/tab/TabLink';
 import { backgroundStyles } from '~/components/styles/primitives';
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const [, locale] = await Promise.all([
     authenticate(request, undefined, true),
     i18next.getLocale(request),
@@ -142,14 +143,19 @@ export const meta = mergeMeta<typeof loader>(({ data, params }) => {
 export const handle: Handle = {
   breadcrumb: ({ match }) => (
     <BreadcrumbItem to={`/tv-shows/${match.params.tvId}`} key={`tv-shows-${match.params.tvId}`}>
-      {match.data?.detail?.name || match.data?.detail?.original_name || match.params.tvId}
+      {(match.data as { detail: ITvShowDetail })?.detail?.name ||
+        (match.data as { detail: ITvShowDetail })?.detail?.original_name ||
+        match.params.tvId}
     </BreadcrumbItem>
   ),
   miniTitle: ({ match, t }) => ({
-    title: match.data?.detail?.name,
+    title: (match.data as { detail: ITvShowDetail })?.detail?.name || '',
     subtitle: t('overview'),
-    showImage: match.data?.detail?.poster_path !== undefined,
-    imageUrl: TMDB?.posterUrl(match.data?.detail?.poster_path || '', 'w92'),
+    showImage: (match.data as { detail: ITvShowDetail })?.detail?.poster_path !== undefined,
+    imageUrl: TMDB?.posterUrl(
+      (match.data as { detail: ITvShowDetail })?.detail?.poster_path || '',
+      'w92',
+    ),
   }),
   preventScrollToTop: true,
   disableLayoutPadding: true,
@@ -204,7 +210,9 @@ const TvShowDetail = () => {
       <div className="relative top-[-80px] w-full sm:top-[-200px]">
         <MediaDetail
           type="tv"
+          // @ts-expect-error
           item={detail}
+          // @ts-expect-error
           imdbRating={imdbRating}
           color={detail.color}
           trailerTime={currentTime}

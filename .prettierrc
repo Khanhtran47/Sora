@@ -15,7 +15,6 @@
     "^~/utils/(.*)$",
     "^~/context/(.*)$",
     "^~/store/(.*)$",
-    "^~/hooks/(.*)$",
     "^~/constants/(.*)$",
     "^~/components/layouts/(.*)$",
     "^~/components/media/(.*)$",

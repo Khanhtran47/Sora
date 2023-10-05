@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import Youtube from './utils.server';
-import type { Item, IYoutubeVideo } from './youtube.types';
+import type { IYoutubeItem, IYoutubeVideoList } from './youtube.types';
 
 const fetcher = async <T = any>(url: URL): Promise<T> => {
   const res = await fetch(url);
@@ -11,9 +10,9 @@ export const getYoutubeVideo = async (
   id: string,
   contentDetails?: boolean,
   snippet?: boolean,
-): Promise<Item[] | undefined> => {
+): Promise<IYoutubeItem[] | undefined> => {
   try {
-    const fetched = await fetcher<IYoutubeVideo>(
+    const fetched = await fetcher<IYoutubeVideoList>(
       Youtube.videoDetailUrl(id, contentDetails, snippet),
     );
     return fetched.items;

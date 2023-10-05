@@ -1,4 +1,4 @@
-import { json, type LoaderArgs } from '@remix-run/node';
+import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { Link, useLoaderData, useNavigate, useParams } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import { useTranslation } from 'react-i18next';
@@ -8,12 +8,12 @@ import type { loader as movieIdLoader } from '~/routes/movies+/$movieId';
 import { authenticate } from '~/services/supabase';
 import { getCredits, getRecommendation, getSimilar, getVideos } from '~/services/tmdb/tmdb.server';
 import { postFetchDataHandler } from '~/services/tmdb/utils.server';
+import { useTypedRouteLoaderData } from '~/utils/react/hooks/useTypedRouteLoaderData';
 import { CACHE_CONTROL } from '~/utils/server/http';
-import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   await authenticate(request, undefined, true);
 
   const { movieId } = params;
@@ -122,7 +122,8 @@ const MovieOverview = () => {
             <h6 className="grow-0 basis-1/3">{t('budget')}</h6>
             <p className="grow">
               {detail?.budget
-                ? `$${detail?.budget?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
+                ? // @ts-expect-error
+                  `$${detail?.budget?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
                 : '-'}
             </p>
           </div>
@@ -130,7 +131,8 @@ const MovieOverview = () => {
             <h6 className="grow-0 basis-1/3">{t('revenue')}</h6>
             <p className="grow">
               {detail?.revenue
-                ? `$${detail?.revenue?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
+                ? // @ts-expect-error
+                  `$${detail?.revenue?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
                 : '-'}
             </p>
           </div>
@@ -181,6 +183,7 @@ const MovieOverview = () => {
         </div>
         {topBilledCast && topBilledCast.length > 0 ? (
           <MediaList
+            // @ts-expect-error
             items={topBilledCast}
             itemsType="people"
             key={`movie-top-cast-${movieId}`}
@@ -195,6 +198,7 @@ const MovieOverview = () => {
           <MediaList
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
+            // @ts-expect-error
             items={recommendations.items}
             itemsType="movie"
             key={`movie-recommendations-${movieId}`}
@@ -209,6 +213,7 @@ const MovieOverview = () => {
           <MediaList
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
+            // @ts-expect-error
             items={similar.items}
             itemsType="movie"
             key={`movie-similar-${movieId}`}

@@ -1,17 +1,17 @@
-import { json, redirect, type LoaderArgs } from '@remix-run/node';
+import { json, redirect, type LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData, useLocation, useNavigate, useParams } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import { motion, type PanInfo } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
-import { useHydrated } from 'remix-utils';
 
 import type { Handle } from '~/types/handle';
 import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
 import { getTrending } from '~/services/tmdb/tmdb.server';
+import { useHydrated } from '~/utils/react/hooks/useHydrated';
+import { useTypedRouteLoaderData } from '~/utils/react/hooks/useTypedRouteLoaderData';
 import { CACHE_CONTROL } from '~/utils/server/http';
-import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
@@ -32,7 +32,7 @@ export const meta = mergeMeta(({ params }) => {
   ];
 });
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   if (
     !['all', 'movie', 'tv', 'people'].includes(
       params.mediaType as 'all' | 'movie' | 'tv' | 'people',
@@ -107,14 +107,17 @@ const TrendingWeek = () => {
       draggable={isMobile && isHydrated}
     >
       <MediaList
+        // @ts-expect-error
         currentPage={weekTrending?.page}
         genresMovie={rootData?.genresMovie}
         genresTv={rootData?.genresTv}
+        // @ts-expect-error
         items={weekTrending?.items}
         itemsType={mediaType === 'all' ? 'movie-tv' : (mediaType as 'movie' | 'tv' | 'people')}
         listName={t(`trending.${mediaType}.week`)}
         listType="grid"
         showListTypeChangeButton={mediaType !== 'people'}
+        // @ts-expect-error
         totalPages={weekTrending?.totalPages}
       />
     </motion.div>

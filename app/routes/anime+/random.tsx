@@ -1,10 +1,10 @@
-import { redirect, type LoaderArgs } from '@remix-run/node';
+import { redirect, type LoaderFunctionArgs } from '@remix-run/node';
 
 import { getAnimeRandom } from '~/services/consumet/anilist/anilist.server';
 import { authenticate } from '~/services/supabase';
 import { redirectWithToast } from '~/utils/server/toast-session.server';
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   await authenticate(request, undefined, true);
 
   const randomAnime = await getAnimeRandom();

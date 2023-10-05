@@ -1,4 +1,4 @@
-import { type LoaderArgs } from '@remix-run/node';
+import { type LoaderFunctionArgs } from '@remix-run/node';
 import { Outlet } from '@remix-run/react';
 
 import type { Handle } from '~/types/handle';
@@ -14,7 +14,7 @@ export const handle: Handle = {
   },
   tabLinkTo: ({ params }) => `/trending/${params.mediaType}`,
 };
-export const loader = async ({ params, request }: LoaderArgs) => {
+export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const { mediaType } = params;
   if (!mediaType || !['all', 'movie', 'tv', 'people'].includes(mediaType))
     return redirectWithToast(request, `/trending/all/today`, {

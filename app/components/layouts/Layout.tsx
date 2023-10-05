@@ -1,21 +1,26 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useMemo, useRef, type CSSProperties } from 'react';
+import { useMediaQuery } from '@react-hookz/web';
 import {
-  useMediaQuery,
-  // useThrottledCallback
-} from '@react-hookz/web';
-import { useLocation, useMatches, useNavigationType, useOutlet, useParams } from '@remix-run/react';
+  useLocation,
+  useMatches,
+  useNavigationType,
+  useOutlet,
+  useParams,
+  type UIMatch,
+} from '@remix-run/react';
 import type { User } from '@supabase/supabase-js';
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'framer-motion';
 import { useTheme } from 'next-themes';
-import { useHydrated } from 'remix-utils';
 import { Toaster } from 'sonner';
 import { tv } from 'tailwind-variants';
 
+import type { Handle } from '~/types/handle';
+import { useHydrated } from '~/utils/react/hooks/useHydrated';
+import { useSoraSettings } from '~/utils/react/hooks/useLocalStorage';
 import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
 import { useHistoryStack } from '~/store/layout/useHistoryStack';
 import { useLayout } from '~/store/layout/useLayout';
-import { useSoraSettings } from '~/hooks/useLocalStorage';
 import {
   ScrollArea,
   ScrollBar,
@@ -191,7 +196,7 @@ const tabLinkWrapperStyles = tv({
 const Layout = (props: ILayout) => {
   const { user } = props;
   const location = useLocation();
-  const matches = useMatches();
+  const matches = useMatches() as UIMatch<unknown, Handle>[];
   const outlet = useOutlet();
   const params = useParams();
   const isHydrated = useHydrated();
@@ -232,27 +237,30 @@ const Layout = (props: ILayout) => {
     startChangeScrollPosition,
   } = useHeaderStyle((headerState) => headerState);
   const isShowTabLink = useMemo(
-    () => matches.some((match) => match.handle?.showTabLink === true),
+    () => matches.some((match) => match?.handle?.showTabLink === true),
     [matches],
   );
   const disableLayoutPadding = useMemo(
-    () => matches.some((match) => match.handle?.disableLayoutPadding === true),
+    () => matches.some((match) => match?.handle?.disableLayoutPadding === true),
     [matches],
   );
   const isHideSidebar = useMemo(
-    () => matches.some((match) => match.handle?.hideSidebar === true),
+    () => matches.some((match) => match?.handle?.hideSidebar === true),
     [matches],
   );
   const currentTabLinkPages = useMemo(() => {
-    const currentMatch = matches.find((match) => match.handle?.showTabLink);
+    const currentMatch = matches.find((match) => match?.handle?.showTabLink);
     if (typeof currentMatch?.handle?.tabLinkPages === 'function')
-      return currentMatch?.handle?.tabLinkPages({ params });
+      // @ts-ignore
+      return currentMatch?.handle?.tabLinkPages?.({ params });
     return currentMatch?.handle?.tabLinkPages;
   }, [matches]);
-  const currentTabLinkTo = useMemo(
-    () => matches.find((match) => match.handle?.showTabLink)?.handle?.tabLinkTo({ params }),
-    [matches],
-  );
+  const currentTabLinkTo = useMemo(() => {
+    const currentMatch = matches.find((match) => match?.handle?.showTabLink);
+    if (typeof currentMatch?.handle?.tabLinkTo === 'function')
+      return currentMatch?.handle?.tabLinkTo?.({ params });
+    return undefined;
+  }, [matches]);
   const customHeaderBackgroundColor = useMemo(
     () => matches.some((match) => match?.handle?.customHeaderBackgroundColor === true),
     [matches],
@@ -262,9 +270,9 @@ const Layout = (props: ILayout) => {
     [matches],
   );
   const hideTabLinkWithLocation: boolean = useMemo(() => {
-    const currentMatch = matches.find((match) => match.handle?.showTabLink);
+    const currentMatch = matches.find((match) => match?.handle?.showTabLink);
     if (currentMatch?.handle?.hideTabLinkWithLocation)
-      return currentMatch?.handle?.hideTabLinkWithLocation(location.pathname);
+      return currentMatch?.handle?.hideTabLinkWithLocation?.(location.pathname) ?? true;
     return false;
   }, [matches, location.pathname]);
 
@@ -278,7 +286,7 @@ const Layout = (props: ILayout) => {
 
   useEffect(() => {
     const preventScrollToTopRoute = matches.some(
-      (match) => match.handle && match.handle.preventScrollToTop === true,
+      (match) => match.handle && (match.handle as Handle).preventScrollToTop === true,
     );
     if (!preventScrollToTopRoute) {
       viewportRef.current?.scrollTo(0, 0);

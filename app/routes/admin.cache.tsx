@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Button } from '@nextui-org/button';
 import { Spacer } from '@nextui-org/spacer';
-import { json, type ActionArgs, type LoaderArgs } from '@remix-run/node';
+import { json, type ActionFunctionArgs, type LoaderFunctionArgs } from '@remix-run/node';
 import {
   useFetcher,
   useLoaderData,
@@ -12,7 +12,6 @@ import {
 import { mergeMeta } from '~/utils';
 import type { CacheEntry } from 'cachified';
 import { motion } from 'framer-motion';
-import { badRequest } from 'remix-utils';
 
 import type { Handle } from '~/types/handle';
 import { getAllCacheKeys, lruCache, searchCacheKeys } from '~/services/lru-cache';
@@ -29,7 +28,7 @@ import {
 } from '~/components/elements/Dialog';
 import SearchForm from '~/components/elements/SearchForm';
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const cookie = request.headers.get('Cookie');
   if (!cookie) {
     return redirectWithToast(request, '/sign-in', {
@@ -65,11 +64,11 @@ export const loader = async ({ request }: LoaderArgs) => {
   return json({ cacheKeys });
 };
 
-export const action = async ({ request }: ActionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const cacheKey = formData.get('cacheKey') as string;
   if (typeof cacheKey !== 'string') {
-    throw badRequest({ message: 'Invalid cache key' });
+    return json({ message: 'Invalid cache key' }, { status: 400 });
   }
   lruCache.delete(cacheKey);
   return json({ success: true });
@@ -201,6 +200,7 @@ const CacheAdminRoute = () => {
                   Cache Created At: <span>{currentCache.data.metadata.createdTime}</span>
                 </h5>
                 <h5>
+                  {/* @ts-expect-error */}
                   Cache Data: <span>{JSON.stringify(currentCache.data.value)}</span>
                 </h5>
               </div>

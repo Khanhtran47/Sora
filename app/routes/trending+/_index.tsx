@@ -1,4 +1,4 @@
-import { json, type LoaderArgs } from '@remix-run/node';
+import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -8,11 +8,11 @@ import { getAnimeTrending } from '~/services/consumet/anilist/anilist.server';
 import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
 import { getTrending } from '~/services/tmdb/tmdb.server';
+import { useTypedRouteLoaderData } from '~/utils/react/hooks/useTypedRouteLoaderData';
 import { CACHE_CONTROL } from '~/utils/server/http';
-import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const [, locale] = await Promise.all([
     authenticate(request, undefined, true),
     i18next.getLocale(request),
@@ -81,6 +81,7 @@ const TrendingRoute = () => {
       <MediaList
         genresMovie={rootData?.genresMovie}
         genresTv={rootData?.genresTv}
+        // @ts-expect-error
         items={todayTrending}
         itemsType="movie-tv"
         key="slider-card-trending-today-all"
@@ -93,6 +94,7 @@ const TrendingRoute = () => {
       <MediaList
         genresMovie={rootData?.genresMovie}
         genresTv={rootData?.genresTv}
+        // @ts-expect-error
         items={todayMoviesTrending}
         itemsType="movie"
         key="slider-card-trending-today-movies"
@@ -105,6 +107,7 @@ const TrendingRoute = () => {
       <MediaList
         genresMovie={rootData?.genresMovie}
         genresTv={rootData?.genresTv}
+        // @ts-expect-error
         items={todayShowsTrending}
         itemsType="tv"
         key="slider-card-trending-today-tv"
@@ -115,6 +118,7 @@ const TrendingRoute = () => {
         showMoreList
       />
       <MediaList
+        // @ts-expect-error
         items={todayAnimeTrending}
         itemsType="anime"
         key="slider-card-trending-today-anime"
@@ -125,6 +129,7 @@ const TrendingRoute = () => {
         showMoreList
       />
       <MediaList
+        // @ts-expect-error
         items={todayPeopleTrending}
         itemsType="people"
         key="slider-card-trending-today-people"

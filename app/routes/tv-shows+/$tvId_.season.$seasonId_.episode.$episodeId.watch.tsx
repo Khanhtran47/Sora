@@ -1,5 +1,5 @@
 import type { IMovieInfo, ISource } from '@consumet/extensions';
-import { json, type LoaderArgs } from '@remix-run/node';
+import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import Vibrant from 'node-vibrant';
@@ -23,10 +23,11 @@ import {
   getTvShowIMDBId,
   getWatchEpisode,
 } from '~/services/tmdb/tmdb.server';
+import type { ISeasonDetail, ITvShowDetail } from '~/services/tmdb/tmdb.types';
 import { TMDB as TmdbUtils } from '~/services/tmdb/utils.server';
 import TMDB from '~/utils/media';
+import { useTypedRouteLoaderData } from '~/utils/react/hooks/useTypedRouteLoaderData';
 import { CACHE_CONTROL } from '~/utils/server/http';
-import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import ErrorBoundaryView from '~/components/elements/shared/ErrorBoundaryView';
 import WatchDetail from '~/components/elements/shared/WatchDetail';
@@ -99,7 +100,7 @@ const checkHasNextEpisode = (
   }
 };
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const user = await authenticate(request, true, true, true);
 
   const url = new URL(request.url);
@@ -428,7 +429,9 @@ export const handle: Handle = {
         to={`/tv-shows/${match.params.tvId}/`}
         key={`tv-shows-${match.params.tvId}-overview`}
       >
-        {match.data?.detail?.name || match.data?.detail?.original_name || match.params.tvId}
+        {(match.data as { detail: ITvShowDetail })?.detail?.name ||
+          (match.data as { detail: ITvShowDetail })?.detail?.original_name ||
+          match.params.tvId}
       </BreadcrumbItem>
       <BreadcrumbItem
         to={`/tv-shows/${match.params.tvId}/season/${match.params.seasonId}/`}
@@ -449,10 +452,19 @@ export const handle: Handle = {
     shouldShowPlayer: true,
   },
   miniTitle: ({ match, t }) => ({
-    title: match.data?.detail?.name || match.data?.detail?.original_name,
-    subtitle: `${match.data?.seasonDetail?.name} ${t('episode')} ${match.params.episodeId}`,
-    showImage: match.data?.seasonDetail?.poster_path !== undefined,
-    imageUrl: TMDB.posterUrl(match.data?.seasonDetail?.poster_path || '', 'w92'),
+    title:
+      (match.data as { detail: ITvShowDetail })?.detail?.name ||
+      (match.data as { detail: ITvShowDetail })?.detail?.original_name ||
+      '',
+    subtitle: `${(match.data as { seasonDetail: ISeasonDetail })?.seasonDetail?.name} ${t(
+      'episode',
+    )} ${match.params.episodeId}`,
+    showImage:
+      (match.data as { seasonDetail: ISeasonDetail })?.seasonDetail?.poster_path !== undefined,
+    imageUrl: TMDB.posterUrl(
+      (match.data as { seasonDetail: ISeasonDetail })?.seasonDetail?.poster_path || '',
+      'w92',
+    ),
   }),
 };
 
@@ -471,13 +483,19 @@ const TvEpisodeWatch = () => {
         episodes={seasonDetail?.episodes}
         overview={detail?.overview || ''}
         posterPath={detail?.poster_path ? TMDB.posterUrl(detail?.poster_path, 'w342') : undefined}
+        // @ts-expect-error
         tmdbRating={detail?.vote_average}
+        // @ts-expect-error
         imdbRating={imdbRating?.star}
+        // @ts-expect-error
         genresMedia={detail?.genres}
         genresMovie={rootData?.genresMovie}
         genresTv={rootData?.genresTv}
+        // @ts-expect-error
         recommendationsMovies={recommendations?.items}
+        // @ts-expect-error
         season={seasonDetail?.season_number}
+        // @ts-expect-error
         providers={providers}
         color={color}
       />

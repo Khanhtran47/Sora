@@ -1,9 +1,9 @@
-import { type ActionArgs } from '@remix-run/node';
+import { type ActionFunctionArgs } from '@remix-run/node';
 
 import { destroyAuthCookie, getSessionFromCookie } from '~/services/supabase';
 import { redirectWithToast } from '~/utils/server/toast-session.server';
 
-export const loader = async ({ request }: ActionArgs) => {
+export const loader = async ({ request }: ActionFunctionArgs) => {
   const { searchParams } = new URL(request.url);
   const session = await getSessionFromCookie(request.headers.get('Cookie'));
   const ref = (searchParams.get('ref') || '/').replace('_0x3F_', '?').replace('_0x26', '&');

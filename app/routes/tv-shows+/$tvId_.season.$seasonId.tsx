@@ -1,27 +1,28 @@
 import { useEffect, useRef } from 'react';
 import { Card, CardBody, CardHeader } from '@nextui-org/card';
 import { useIntersectionObserver, useMeasure, useMediaQuery } from '@react-hookz/web';
-import { json, type LoaderArgs } from '@remix-run/node';
+import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { Outlet, useLoaderData, useParams } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import { motion, useTransform } from 'framer-motion';
 import Vibrant from 'node-vibrant';
 import { useTranslation } from 'react-i18next';
 import { MimeType } from 'remix-image';
-import { useHydrated } from 'remix-utils';
 
 import type { Handle } from '~/types/handle';
 import { i18next } from '~/services/i18n';
 import getProviderList from '~/services/provider.server';
 import { authenticate } from '~/services/supabase';
 import { getTvSeasonDetail, getTvShowDetail } from '~/services/tmdb/tmdb.server';
+import type { ISeasonDetail, ITvShowDetail } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
+import useColorDarkenLighten from '~/utils/react/hooks/useColorDarkenLighten';
+import { useCustomHeaderChangePosition } from '~/utils/react/hooks/useHeader';
+import { useHydrated } from '~/utils/react/hooks/useHydrated';
+import { useSoraSettings } from '~/utils/react/hooks/useLocalStorage';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
 import { useLayout } from '~/store/layout/useLayout';
-import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
-import { useCustomHeaderChangePosition } from '~/hooks/useHeader';
-import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { tvSeasonDetailPages } from '~/constants/tabLinks';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import Image from '~/components/elements/Image';
@@ -31,7 +32,7 @@ import { backgroundStyles } from '~/components/styles/primitives';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 import BackgroundDefault from '~/assets/images/background-default.jpg';
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const [, locale] = await Promise.all([
     authenticate(request, undefined, true),
     i18next.getLocale(request),
@@ -142,7 +143,9 @@ export const handle: Handle = {
         to={`/tv-shows/${match.params.tvId}/`}
         key={`tv-show-${match.params.tvId}-overview`}
       >
-        {match.data?.detail?.name || match.data?.detail?.original_name || match.params.tvId}
+        {(match.data as { detail: ITvShowDetail })?.detail?.name ||
+          (match.data as { detail: ITvShowDetail })?.detail?.original_name ||
+          match.params.tvId}
       </BreadcrumbItem>
       <BreadcrumbItem
         to={`/tv-shows/${match.params.tvId}/season/${match.params.seasonId}`}
@@ -153,12 +156,17 @@ export const handle: Handle = {
     </>
   ),
   miniTitle: ({ match, t }) => ({
-    title: `${match.data?.detail?.name || match.data?.detail?.original_name} - ${
-      match.data?.seasonDetail?.name
-    }`,
+    title: `${
+      (match.data as { detail: ITvShowDetail })?.detail?.name ||
+      (match.data as { detail: ITvShowDetail })?.detail?.original_name
+    } - ${(match.data as { seasonDetail: ISeasonDetail })?.seasonDetail?.name}`,
     subtitle: t('episodes'),
-    showImage: match.data?.seasonDetail?.poster_path !== undefined,
-    imageUrl: TMDB.posterUrl(match.data?.seasonDetail?.poster_path || '', 'w92'),
+    showImage:
+      (match.data as { seasonDetail: ISeasonDetail })?.seasonDetail?.poster_path !== undefined,
+    imageUrl: TMDB.posterUrl(
+      (match.data as { seasonDetail: ISeasonDetail })?.seasonDetail?.poster_path || '',
+      'w92',
+    ),
   }),
   disableLayoutPadding: true,
   customHeaderBackgroundColor: true,

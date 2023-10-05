@@ -2,10 +2,10 @@ import { Button } from '@nextui-org/button';
 import { NavLink, useLocation, useNavigate } from '@remix-run/react';
 import { motion, useTransform } from 'framer-motion';
 
+import { useHeaderOptions } from '~/utils/react/hooks/useHeader';
 import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
 import { useHistoryStack } from '~/store/layout/useHistoryStack';
 import { useLayout } from '~/store/layout/useLayout';
-import { useHeaderOptions } from '~/hooks/useHeader';
 import Arrow from '~/assets/icons/ArrowIcon';
 import Search from '~/assets/icons/SearchIcon';
 

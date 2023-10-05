@@ -4,13 +4,17 @@ import { Input } from '@nextui-org/input';
 import { Pagination } from '@nextui-org/pagination';
 import { useMediaQuery } from '@react-hookz/web';
 import { useFetcher } from '@remix-run/react';
-import { useGlobalLoadingState } from 'remix-utils';
 import { toast } from 'sonner';
 
-import type { ISubtitle, ISubtitlesSearch } from '~/services/open-subtitles/open-subtitles.types';
+import type {
+  ISubtitle,
+  ISubtitleDownload,
+  ISubtitlesSearch,
+} from '~/services/open-subtitles/open-subtitles.types';
+import { useGlobalLoadingState } from '~/utils/react/hooks/useGlobalNavigationState';
+import { useSoraSettings } from '~/utils/react/hooks/useLocalStorage';
+import { useTypedRouteLoaderData } from '~/utils/react/hooks/useTypedRouteLoaderData';
 import usePlayerState from '~/store/player/usePlayerState';
-import { useSoraSettings } from '~/hooks/useLocalStorage';
-import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import { DialogHeader, DialogTitle } from '~/components/elements/Dialog';
 import {
   Select,
@@ -152,12 +156,14 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
   };
 
   useEffect(() => {
-    if (fetcher.data && fetcher.data.subtitlesSearch) {
-      setSubtitlesSearch(fetcher.data.subtitlesSearch);
-      setPage(fetcher.data.subtitlesSearch.page);
-      setTotalPages(fetcher.data.subtitlesSearch.total_pages);
+    if (fetcher.data && (fetcher.data as { subtitlesSearch: ISubtitlesSearch }).subtitlesSearch) {
+      setSubtitlesSearch((fetcher.data as { subtitlesSearch: ISubtitlesSearch }).subtitlesSearch);
+      setPage((fetcher.data as { subtitlesSearch: ISubtitlesSearch }).subtitlesSearch.page);
+      setTotalPages(
+        (fetcher.data as { subtitlesSearch: ISubtitlesSearch }).subtitlesSearch.total_pages,
+      );
     }
-    if (fetcher.data && fetcher.data.subtitle) {
+    if (fetcher.data && (fetcher.data as { subtitle: ISubtitleDownload }).subtitle) {
       setIsGetSubtitleLink(false);
       const subtitleName = subtitle?.attributes?.release || '';
       const subtitleHtml =
@@ -167,7 +173,7 @@ const SearchSubtitles = (props: ISearchSubtitlesProps) => {
               subtitleName.length,
             )}`
           : subtitleName;
-      const url = fetcher.data.subtitle.link;
+      const url = (fetcher.data as { subtitle: ISubtitleDownload }).subtitle.link;
       const newSubtitle = [
         {
           html: subtitleHtml,

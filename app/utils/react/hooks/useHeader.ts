@@ -1,12 +1,13 @@
 import { useEffect, useMemo } from 'react';
-import { useLocation, useMatches, useParams } from '@remix-run/react';
+import { useLocation, useMatches, useParams, type UIMatch } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 
+import type { Handle } from '~/types/handle';
 import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
 import { useLayout } from '~/store/layout/useLayout';
 
 function useHeaderOptions() {
-  const matches = useMatches();
+  const matches = useMatches() as UIMatch<unknown, Handle>[];
   const location = useLocation();
   const { t } = useTranslation();
   const params = useParams();
@@ -26,7 +27,7 @@ function useHeaderOptions() {
     [matches],
   );
 
-  const hideTabLinkWithLocation: boolean = useMemo(() => {
+  const hideTabLinkWithLocation = useMemo(() => {
     const currentMatch = matches.find((match) => match.handle?.showTabLink);
     if (currentMatch?.handle?.hideTabLinkWithLocation)
       return currentMatch?.handle?.hideTabLinkWithLocation(location.pathname);
@@ -34,26 +35,26 @@ function useHeaderOptions() {
   }, [matches, location.pathname]);
 
   const customHeaderBackgroundColor = useMemo(
-    () => matches.some((match) => match?.handle?.customHeaderBackgroundColor === true),
+    () => matches.some((match) => match.handle?.customHeaderBackgroundColor === true),
     [matches],
   );
 
   const customHeaderChangeColorOnScroll = useMemo(
-    () => matches.some((match) => match?.handle?.customHeaderChangeColorOnScroll === true),
+    () => matches.some((match) => match.handle?.customHeaderChangeColorOnScroll === true),
     [matches],
   );
 
   const currentMiniTitle = useMemo(() => {
     const currentMatch = matches.filter((match) => match.handle?.miniTitle);
     if (currentMatch?.length > 0 && currentMatch?.length < 2) {
-      return currentMatch[currentMatch.length - 1].handle?.miniTitle({
+      return currentMatch[currentMatch.length - 1].handle?.miniTitle?.({
         match: currentMatch[currentMatch.length - 1],
         t, // for translations
         params,
       });
     }
     if (currentMatch?.length > 1) {
-      return currentMatch[currentMatch.length - 1].handle?.miniTitle({
+      return currentMatch[currentMatch.length - 1].handle?.miniTitle?.({
         match: currentMatch[currentMatch.length - 1],
         parentMatch: currentMatch[currentMatch.length - 2], // for titles that need from parent route
         t, // for translations

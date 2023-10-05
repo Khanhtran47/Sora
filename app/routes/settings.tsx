@@ -13,13 +13,14 @@ import { useTheme } from 'next-themes';
 import { isMobileOnly } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
 import { MimeType } from 'remix-image';
-import { ClientOnly, useHydrated } from 'remix-utils';
 
 import type { Handle } from '~/types/handle';
 import { getBackgroundTitleBarColor, setMetaThemeColor } from '~/utils/client/meta-tags.client';
-import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
-import { useSoraSettings } from '~/hooks/useLocalStorage';
-import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
+import { ClientOnly } from '~/utils/react/ClientOnly';
+import useColorDarkenLighten from '~/utils/react/hooks/useColorDarkenLighten';
+import { useHydrated } from '~/utils/react/hooks/useHydrated';
+import { useSoraSettings } from '~/utils/react/hooks/useLocalStorage';
+import { useTypedRouteLoaderData } from '~/utils/react/hooks/useTypedRouteLoaderData';
 import languages from '~/constants/languages';
 import {
   listCustomThemeColors,

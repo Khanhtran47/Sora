@@ -6,9 +6,9 @@ import { useTranslation } from 'react-i18next';
 
 import type { IMedia } from '~/types/media';
 import type { loader as peopleIdLoader } from '~/routes/people+/$peopleId';
-import type { IPeople } from '~/services/tmdb/tmdb.types';
+import type { IMediaList } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
-import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
+import { useTypedRouteLoaderData } from '~/utils/react/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
 
 export const meta = mergeMeta<null, { 'routes/people+/$peopleId': typeof peopleIdLoader }>(
@@ -38,7 +38,7 @@ export const meta = mergeMeta<null, { 'routes/people+/$peopleId': typeof peopleI
 const OverviewPage = () => {
   const peopleData = useTypedRouteLoaderData('routes/people+/$peopleId');
   const rootData = useTypedRouteLoaderData('root');
-  const fetcher = useFetcher();
+  const fetcher = useFetcher<{ searchResults: IMediaList }>();
   const { t } = useTranslation();
   const [knownFor, setKnownFor] = useState<IMedia[]>();
   useEffect(() => {
@@ -50,9 +50,12 @@ const OverviewPage = () => {
   useEffect(() => {
     if (fetcher.data && fetcher.data.searchResults) {
       const { items } = fetcher.data.searchResults;
-      const peopleFound = items.find((result: IPeople) => result.id === peopleData?.detail?.id);
-      if (peopleFound) {
-        setKnownFor(TMDB.postFetchDataHandler(peopleFound?.knownFor));
+      if (items) {
+        // @ts-expect-error
+        const peopleFound = items.find((result: IMedia) => result.id === peopleData?.detail?.id);
+        if (peopleFound) {
+          setKnownFor(TMDB.postFetchDataHandler(peopleFound?.knownFor));
+        }
       }
     }
   }, [fetcher.data, peopleData?.detail?.id]);

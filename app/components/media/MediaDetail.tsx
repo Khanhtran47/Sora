@@ -9,18 +9,23 @@ import { useFetcher, useLocation, useNavigate } from '@remix-run/react';
 import { motion, useTransform } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { MimeType } from 'remix-image';
-import { useHydrated } from 'remix-utils';
 import { tv } from 'tailwind-variants';
 import tinycolor from 'tinycolor2';
 
 import type { ColorPalette } from '~/routes/api+/color-palette';
 import type { IAnimeInfo } from '~/services/consumet/anilist/anilist.types';
-import type { IMovieDetail, IMovieTranslations, ITvShowDetail } from '~/services/tmdb/tmdb.types';
+import type {
+  IMovieDetail,
+  IMovieTranslations,
+  ITvShowDetail,
+  IVideos,
+} from '~/services/tmdb/tmdb.types';
 import { WebShareLink } from '~/utils/client/pwa-utils.client';
 import TMDB from '~/utils/media';
+import useColorDarkenLighten from '~/utils/react/hooks/useColorDarkenLighten';
+import { useHydrated } from '~/utils/react/hooks/useHydrated';
+import { useSoraSettings } from '~/utils/react/hooks/useLocalStorage';
 import { useLayout } from '~/store/layout/useLayout';
-import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
-import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { Dialog, DialogContent, DialogTrigger } from '~/components/elements/Dialog';
 import SelectProvider from '~/components/elements/dialog/SelectProviderDialog';
 import WatchTrailer, { type Trailer } from '~/components/elements/dialog/WatchTrailerDialog';
@@ -126,13 +131,13 @@ export const MediaDetail = (props: IMediaDetail) => {
   }, [color]);
 
   useEffect(() => {
-    if (fetcher.data && fetcher.data.color) {
-      setColorPalette(fetcher.data.color);
+    if (fetcher.data && (fetcher.data as { color: ColorPalette }).color) {
+      setColorPalette((fetcher.data as { color: ColorPalette }).color);
     }
-    if (fetcher.data && fetcher.data.videos) {
-      const { results } = fetcher.data.videos;
+    if (fetcher.data && (fetcher.data as { videos: IVideos }).videos) {
+      const { results } = (fetcher.data as { videos: IVideos }).videos;
       const officialTrailer = results.find((result: Trailer) => result.type === 'Trailer');
-      setTrailer(officialTrailer);
+      setTrailer(officialTrailer || {});
     }
   }, [fetcher.data]);
 
@@ -400,8 +405,8 @@ export const AnimeDetail = (props: IAnimeDetail) => {
   }, [color]);
 
   useEffect(() => {
-    if (fetcher.data && fetcher.data.color) {
-      setColorPalette(fetcher.data.color);
+    if (fetcher.data && (fetcher.data as { color: ColorPalette }).color) {
+      setColorPalette((fetcher.data as { color: ColorPalette }).color);
     }
   }, [fetcher.data]);
 

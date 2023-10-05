@@ -1,22 +1,22 @@
-import { json, type LoaderArgs } from '@remix-run/node';
+import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import { motion, type PanInfo } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
-import { useHydrated } from 'remix-utils';
 
 import type { Handle } from '~/types/handle';
 import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
 import { getTrending } from '~/services/tmdb/tmdb.server';
+import { useHydrated } from '~/utils/react/hooks/useHydrated';
+import { useTypedRouteLoaderData } from '~/utils/react/hooks/useTypedRouteLoaderData';
 import { CACHE_CONTROL } from '~/utils/server/http';
-import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import SearchForm from '~/components/elements/SearchForm';
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const [, locale] = await Promise.all([
     authenticate(request, undefined, true),
     i18next.getLocale(request),
@@ -103,14 +103,17 @@ const SearchRoute = () => {
         textPlaceHolder={t('search.placeHolder.tv')}
       />
       <MediaList
+        // @ts-expect-error
         currentPage={todayTrending?.page}
         genresMovie={rootData?.genresMovie}
         genresTv={rootData?.genresTv}
+        // @ts-expect-error
         items={todayTrending?.items}
         itemsType="movie-tv"
         listName={t('today-trending')}
         listType="grid"
         showListTypeChangeButton
+        // @ts-expect-error
         totalPages={todayTrending?.totalPages}
       />
     </motion.div>

@@ -1,4 +1,4 @@
-import { json, type LoaderArgs } from '@remix-run/node';
+import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import { useTranslation } from 'react-i18next';
@@ -8,13 +8,14 @@ import type { loader as tvIdLoader } from '~/routes/tv-shows+/$tvId';
 import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
 import { getSimilar } from '~/services/tmdb/tmdb.server';
+import type { ITvShowDetail } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
+import { useTypedRouteLoaderData } from '~/utils/react/hooks/useTypedRouteLoaderData';
 import { CACHE_CONTROL } from '~/utils/server/http';
-import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const [, locale] = await Promise.all([
     authenticate(request, undefined, true),
     i18next.getLocale(request),
@@ -74,10 +75,17 @@ export const handle: Handle = {
     </BreadcrumbItem>
   ),
   miniTitle: ({ parentMatch, t }) => ({
-    title: parentMatch?.data?.detail?.name,
+    title: parentMatch ? (parentMatch?.data as { detail: ITvShowDetail })?.detail?.name || '' : '',
     subtitle: t('similar'),
-    showImage: parentMatch?.data?.detail?.poster_path !== undefined,
-    imageUrl: TMDB?.posterUrl(parentMatch?.data?.detail?.poster_path || '', 'w92'),
+    showImage: parentMatch
+      ? (parentMatch?.data as { detail: ITvShowDetail })?.detail?.poster_path !== undefined
+      : false,
+    imageUrl: TMDB?.posterUrl(
+      parentMatch
+        ? (parentMatch?.data as { detail: ITvShowDetail })?.detail?.poster_path || ''
+        : '',
+      'w92',
+    ),
   }),
   showListViewChangeButton: true,
 };
@@ -90,15 +98,18 @@ const TvSimilarPage = () => {
   return (
     <div className="mt-3 flex w-full max-w-[1920px] flex-col gap-y-4 px-3 sm:px-3.5 xl:px-4 2xl:px-5">
       <MediaList
+        // @ts-expect-error
         currentPage={similar?.page}
         genresMovie={rootData?.genresMovie}
         genresTv={rootData?.genresTv}
+        // @ts-expect-error
         items={similar?.items}
         itemsType="tv"
         listName={t('similar-tv-shows')}
         listType="grid"
         scrollToTopListAfterChangePage
         showListTypeChangeButton
+        // @ts-expect-error
         totalPages={similar?.totalPages}
       />
     </div>

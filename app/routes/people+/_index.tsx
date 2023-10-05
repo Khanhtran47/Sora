@@ -1,4 +1,4 @@
-import { json, type LoaderArgs } from '@remix-run/node';
+import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData, useLocation } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import { motion } from 'framer-motion';
@@ -29,7 +29,7 @@ export const meta = mergeMeta(() => [
   { name: 'twitter:image', content: 'https://sorachill.vercel.app/api/ogimage?it=people' },
 ]);
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const [, locale] = await Promise.all([
     authenticate(request, undefined, true),
     i18next.getLocale(request),
@@ -77,11 +77,14 @@ const ListPeoplePopular = () => {
       className="flex w-full flex-col items-center justify-center px-3 sm:px-0"
     >
       <MediaList
+        // @ts-expect-error
         currentPage={people?.page}
+        // @ts-expect-error
         items={people?.items}
         itemsType="people"
         listName={t('popular-people')}
         listType="grid"
+        // @ts-expect-error
         totalPages={people?.totalPages}
       />
     </motion.div>

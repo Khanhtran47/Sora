@@ -1,13 +1,8 @@
-import { useEffect, useState } from 'react';
-import { Spinner } from '@nextui-org/spinner';
-import { useMeasure } from '@react-hookz/web';
-import { json, type LoaderArgs } from '@remix-run/node';
-import { useFetcher, useLoaderData, useLocation, useNavigate } from '@remix-run/react';
+import { json, type LoaderFunctionArgs } from '@remix-run/node';
+import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
-import { AnimatePresence, motion } from 'framer-motion';
-import NProgress from 'nprogress';
+import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { useGlobalLoadingState } from 'remix-utils';
 
 import type { Handle } from '~/types/handle';
 import type { IMedia } from '~/types/media';
@@ -18,10 +13,9 @@ import {
 } from '~/services/consumet/anilist/anilist.server';
 import { authenticate } from '~/services/supabase';
 import { CACHE_CONTROL } from '~/utils/server/http';
-import { animeGenres } from '~/constants/filterItems';
 import MediaList from '~/components/media/MediaList';
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   await authenticate(request, undefined, true);
 
   const url = new URL(request.url);
@@ -68,76 +62,7 @@ const AnimePage = () => {
   const { trending, popular, recentEpisodes } = useLoaderData<typeof loader>() || {};
   const location = useLocation();
   const navigate = useNavigate();
-  const fetcher = useFetcher();
-  const globalState = useGlobalLoadingState();
   const { t } = useTranslation();
-
-  const [listItems, setListItems] = useState<IMedia[][] | undefined>([]);
-  const [scrollPosition, setScrollPosition] = useState(0);
-  const [clientHeight, setClientHeight] = useState(0);
-  const [shouldFetch, setShouldFetch] = useState(true);
-  const [order, setOrder] = useState(0);
-  const [size, parentRef] = useMeasure<HTMLDivElement>();
-
-  useEffect(() => {
-    const scrollListener = () => {
-      setClientHeight(window.innerHeight);
-      setScrollPosition(window.scrollY);
-    };
-
-    // Avoid running during SSR
-    if (typeof window !== 'undefined') {
-      window.addEventListener('scroll', scrollListener);
-    }
-
-    // Clean up
-    return () => {
-      if (typeof window !== 'undefined') {
-        window.removeEventListener('scroll', scrollListener);
-      }
-    };
-  }, []);
-
-  // Listen on scrolls. Fire on some self-described breakpoint
-  useEffect(() => {
-    if (!shouldFetch || !size?.height) return;
-    if (clientHeight + scrollPosition - 200 < size?.height) return;
-
-    fetcher.load(`/discover/anime?genres=${animeGenres[order]}`);
-    setShouldFetch(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scrollPosition, clientHeight, size?.height]);
-
-  useEffect(() => {
-    if (fetcher.data && fetcher.data.length === 0) {
-      setShouldFetch(false);
-      return;
-    }
-
-    if (fetcher.data) {
-      if (fetcher.data.items) {
-        setListItems((prevItems) =>
-          prevItems ? [...prevItems, fetcher.data.items.results] : [fetcher.data.items.results],
-        );
-        if (order < animeGenres.length - 1) {
-          setOrder(order + 1);
-          setShouldFetch(true);
-        } else {
-          setShouldFetch(false);
-        }
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetcher.data]);
-
-  useEffect(() => {
-    if (globalState === 'loading') {
-      NProgress.configure({ showSpinner: false }).start();
-    }
-    if (globalState === 'idle') {
-      NProgress.configure({ showSpinner: false }).done();
-    }
-  }, [globalState]);
 
   return (
     <motion.div
@@ -146,7 +71,6 @@ const AnimePage = () => {
       animate={{ x: '0', opacity: 1 }}
       exit={{ y: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
-      ref={parentRef}
       style={{
         width: '100%',
         display: 'flex',
@@ -182,39 +106,6 @@ const AnimePage = () => {
             showMoreList
           />
         )}
-        {listItems &&
-          listItems.length > 0 &&
-          listItems.map((items, index) => {
-            if (items && items.length > 0)
-              return (
-                <MediaList
-                  items={items}
-                  itemsType="anime"
-                  key={index}
-                  listName={animeGenres[index]}
-                  listType="slider-card"
-                  navigationButtons
-                  onClickViewMore={() => navigate(`/discover/anime?genres=${animeGenres[index]}`)}
-                  showMoreList
-                />
-              );
-            return null;
-          })}
-        <AnimatePresence>
-          {globalState === 'loading' ? (
-            <Spinner
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              as={motion.div}
-              size="lg"
-              className="mt-10"
-              initial={{ y: -40, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -40, opacity: 0 }}
-              // @ts-ignore
-              transition={{ duration: 0.3 }}
-            />
-          ) : null}
-        </AnimatePresence>
       </div>
     </motion.div>
   );

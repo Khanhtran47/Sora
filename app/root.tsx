@@ -17,8 +17,8 @@ import {
   json,
   type LinkDescriptor,
   type LinksFunction,
-  type LoaderArgs,
-  type V2_MetaFunction,
+  type LoaderFunctionArgs,
+  type MetaFunction,
 } from '@remix-run/node';
 import {
   isRouteErrorResponse,
@@ -34,6 +34,7 @@ import {
   useNavigation,
   useRouteError,
 } from '@remix-run/react';
+import type { User } from '@supabase/supabase-js';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ThemeProvider as RemixThemesProvider } from 'next-themes';
 import NProgress from 'nprogress';
@@ -43,7 +44,8 @@ import { useTranslation } from 'react-i18next';
 import { Provider as WrapBalancerProvider } from 'react-wrap-balancer';
 import { useChangeLanguage } from 'remix-i18next';
 import Image, { MimeType } from 'remix-image';
-import { getClientIPAddress, getClientLocales, useHydrated } from 'remix-utils';
+import { getClientIPAddress } from 'remix-utils/get-client-ip-address';
+import { getClientLocales } from 'remix-utils/locales/server';
 import { toast } from 'sonner';
 // @ts-ignore
 import swiperStyles from 'swiper/css';
@@ -67,7 +69,6 @@ import Layout from './components/layouts/Layout';
 import nProgressStyles from './components/styles/nprogress.css';
 import { listThemes } from './constants/settings';
 import { useIsBot } from './context/isbot.context';
-import { useToast } from './hooks/useToast';
 import { i18nCookie, i18next } from './services/i18n';
 import { getUserFromCookie } from './services/supabase';
 import { getListGenre, getListLanguages } from './services/tmdb/tmdb.server';
@@ -75,6 +76,8 @@ import tailwindStylesheetUrl from './styles/tailwind.css';
 import type { Handle } from './types/handle';
 import { combineHeaders } from './utils';
 import * as gtag from './utils/client/gtags.client';
+import { useHydrated } from './utils/react/hooks/useHydrated';
+import { useToast } from './utils/react/hooks/useToast';
 import { getToastSession } from './utils/server/toast-session.server';
 
 interface DocumentProps {
@@ -164,7 +167,7 @@ export const links: LinksFunction = () => {
   ].filter(Boolean) as LinkDescriptor[];
 };
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const locale = await i18next.getLocale(request);
   const gaTrackingId = process.env.GA_TRACKING_ID;
   const user = await getUserFromCookie(request.headers.get('Cookie') || '');
@@ -213,7 +216,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   );
 };
 
-export const meta: V2_MetaFunction<typeof loader> = () => [
+export const meta: MetaFunction<typeof loader> = () => [
   { title: 'Sora' },
   { name: 'description', content: 'Watching movies, series, anime and more in Sora' },
   {
@@ -489,6 +492,7 @@ const App = () => {
   const { user, locale, message } = useLoaderData<typeof loader>();
   const isBot = useIsBot();
   useChangeLanguage(locale);
+  // @ts-expect-error
   useToast(message);
   const [waitingWorker, setWaitingWorker] = React.useState<ServiceWorker | null>(null);
   const [isUpdateAvailable, setIsUpdateAvailable] = React.useState(false);
@@ -594,7 +598,7 @@ const App = () => {
             ) : null}
           </AnimatePresence>
           <NextUIv2Provider>
-            <Layout user={user} />
+            <Layout user={user as User | undefined} />
           </NextUIv2Provider>
         </RemixThemesProvider>
       </WrapBalancerProvider>

@@ -1,5 +1,5 @@
 import { Spacer } from '@nextui-org/spacer';
-import { json, type LoaderArgs } from '@remix-run/node';
+import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { Outlet, useLoaderData } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 
@@ -7,6 +7,7 @@ import type { Handle } from '~/types/handle';
 import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
 import { getPeopleDetail, getPeopleExternalIds } from '~/services/tmdb/tmdb.server';
+import type { IPeopleDetail } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { peopleDetailPages } from '~/constants/tabLinks';
@@ -14,7 +15,7 @@ import PeopleDetail from '~/components/media/PeopleDetail';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import ErrorBoundaryView from '~/components/elements/shared/ErrorBoundaryView';
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const [, locale] = await Promise.all([
     authenticate(request, undefined, true),
     i18next.getLocale(request),
@@ -82,7 +83,7 @@ export const handle: Handle = {
         to={`/people/${match.params.peopleId}`}
         key={`people-${match.params.peopleId}`}
       >
-        {match.data?.detail?.name || match.params.peopleId}
+        {(match.data as { detail: IPeopleDetail })?.detail?.name || match.params.peopleId}
       </BreadcrumbItem>
     </>
   ),
@@ -90,10 +91,13 @@ export const handle: Handle = {
   tabLinkPages: peopleDetailPages,
   tabLinkTo: ({ params }) => `/people/${params.peopleId}`,
   miniTitle: ({ match, t }) => ({
-    title: match.data?.detail?.name || t('people'),
+    title: (match.data as { detail: IPeopleDetail })?.detail?.name || t('people'),
     subtitle: t('overview'),
-    showImage: match.data?.detail?.profile_path !== undefined,
-    imageUrl: TMDB.profileUrl(match.data?.detail?.profile_path, 'w45'),
+    showImage: (match.data as { detail: IPeopleDetail })?.detail?.profile_path !== undefined,
+    imageUrl: TMDB.profileUrl(
+      (match.data as { detail: IPeopleDetail })?.detail?.profile_path,
+      'w45',
+    ),
   }),
 };
 
@@ -102,7 +106,11 @@ const PeopleDetailPage = () => {
   return (
     <div className="mt-9 flex w-full flex-row flex-wrap items-stretch justify-center px-3 sm:px-5">
       <div className="w-full sm:w-1/3">
-        <PeopleDetail detail={detail} externalIds={externalIds} />
+        <PeopleDetail
+          // @ts-expect-error
+          detail={detail}
+          externalIds={externalIds}
+        />
         <Spacer y={5} />
       </div>
       <div className="w-full sm:w-2/3">

@@ -1,5 +1,5 @@
 import { env } from 'process';
-import { json, type LoaderArgs } from '@remix-run/node';
+import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 
@@ -11,7 +11,7 @@ import {
   getAnimeEpisodeStream,
   getAnimeInfo,
 } from '~/services/consumet/anilist/anilist.server';
-import type { IEpisodeInfo } from '~/services/consumet/anilist/anilist.types';
+import type { IAnimeInfo, IEpisodeInfo } from '~/services/consumet/anilist/anilist.types';
 import { getBilibiliEpisode, getBilibiliInfo } from '~/services/consumet/bilibili/bilibili.server';
 import {
   getKissKhEpisodeStream,
@@ -41,7 +41,7 @@ const checkHasNextEpisode = (
   }
 };
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const user = await authenticate(request, true, true, true);
 
   const url = new URL(request.url);
@@ -712,6 +712,7 @@ export const meta = mergeMeta<typeof loader>(({ data, params }) => {
   const { title, description } = detail || {};
   const animeTitle = title?.userPreferred || title?.english || title?.romaji || title?.native || '';
   return [
+    // @ts-expect-error
     { title: `Sora - Watch ${animeTitle} episode ${episodeInfo?.number || ''}` },
     {
       name: 'description',
@@ -725,6 +726,7 @@ export const meta = mergeMeta<typeof loader>(({ data, params }) => {
     },
     {
       property: 'og:title',
+      // @ts-expect-error
       content: `Sora - Watch ${animeTitle} episode ${episodeInfo?.number || ''}`,
     },
     {
@@ -741,6 +743,7 @@ export const meta = mergeMeta<typeof loader>(({ data, params }) => {
     { name: 'twitter:image', content: `https://img.anili.st/media/${params.animeId}` },
     {
       name: 'twitter:title',
+      // @ts-expect-error
       content: `Sora - Watch ${animeTitle} episode ${episodeInfo?.number || ''}`,
     },
     {
@@ -759,26 +762,28 @@ export const handle: Handle = {
         to={`/anime/${match.params.animeId}/`}
         key={`anime-${match.params.animeId}-overview`}
       >
-        {match.data?.detail?.title?.english || match.data?.detail?.title?.romaji}
+        {(match.data as { detail: IAnimeInfo })?.detail?.title?.english ||
+          (match.data as { detail: IAnimeInfo })?.detail?.title?.romaji}
       </BreadcrumbItem>
       <BreadcrumbItem
         to={`/anime/${match.params.animeId}/episode/${match.params.episodeId}`}
         key={`anime-${match.params.animeId}-episode-${match.params.episodeId}`}
       >
-        {match?.data?.episodeInfo?.title || match.params.episodeId}
+        {(match?.data as { episodeInfo: IEpisodeInfo })?.episodeInfo?.title ||
+          match.params.episodeId}
       </BreadcrumbItem>
     </>
   ),
   miniTitle: ({ match, t }) => ({
     title:
-      match.data?.detail?.title?.userPreferred ||
-      match.data?.detail?.title?.english ||
-      match.data?.detail?.title?.romaji ||
-      match.data?.detail?.title?.native ||
+      (match.data as { detail: IAnimeInfo })?.detail?.title?.userPreferred ||
+      (match.data as { detail: IAnimeInfo })?.detail?.title?.english ||
+      (match.data as { detail: IAnimeInfo })?.detail?.title?.romaji ||
+      (match.data as { detail: IAnimeInfo })?.detail?.title?.native ||
       '',
     subtitle: `${t('episode')} ${match.params.episodeId}`,
-    showImage: match.data?.detail?.image !== undefined,
-    imageUrl: match.data?.detail?.image,
+    showImage: (match.data as { detail: IAnimeInfo })?.detail?.image !== undefined,
+    imageUrl: (match.data as { detail: IAnimeInfo })?.detail?.image,
   }),
   playerSettings: {
     isMini: false,
@@ -793,14 +798,17 @@ const AnimeEpisodeWatch = () => {
       <WatchDetail
         type="anime"
         id={detail?.id}
+        // @ts-expect-error
         episodes={episodes}
         title={detail?.title?.english || ''}
         overview={detail?.description || ''}
         posterPath={detail?.image}
+        // @ts-expect-error
         anilistRating={detail?.rating}
         genresAnime={detail?.genres}
         recommendationsAnime={detail?.recommendations as IMedia[]}
         color={detail?.color}
+        // @ts-expect-error
         providers={providers}
       />
     </div>

@@ -1,5 +1,5 @@
 import type { ISource } from '@consumet/extensions';
-import { json, type LoaderArgs } from '@remix-run/node';
+import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import Vibrant from 'node-vibrant';
@@ -20,11 +20,12 @@ import {
   getRecommendation,
   getWatchEpisode,
 } from '~/services/tmdb/tmdb.server';
+import type { IMovieDetail } from '~/services/tmdb/tmdb.types';
 import { TMDB as TmdbUtils } from '~/services/tmdb/utils.server';
 // import i18next from '~/i18n/i18next.server';
 import TMDB from '~/utils/media';
+import { useTypedRouteLoaderData } from '~/utils/react/hooks/useTypedRouteLoaderData';
 import { CACHE_CONTROL } from '~/utils/server/http';
-import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import ErrorBoundaryView from '~/components/elements/shared/ErrorBoundaryView';
 import WatchDetail from '~/components/elements/shared/WatchDetail';
@@ -62,7 +63,7 @@ export const meta = mergeMeta<typeof loader>(({ data, params }) => {
   ];
 });
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const user = await authenticate(request, true, true, true);
 
   const url = new URL(request.url);
@@ -308,7 +309,7 @@ export const handle: Handle = {
         to={`/movies/${match.params.movieId}/`}
         key={`movies-${match.params.movieId}-overview`}
       >
-        {match.data?.detail?.title || match.params.movieId}
+        {(match.data as { detail: IMovieDetail })?.detail?.title || match.params.movieId}
       </BreadcrumbItem>
       <BreadcrumbItem
         to={`/movies/${match.params.movieId}/watch`}
@@ -323,10 +324,13 @@ export const handle: Handle = {
     shouldShowPlayer: true,
   },
   miniTitle: ({ match, t }) => ({
-    title: match.data?.detail?.title,
+    title: (match.data as { detail: IMovieDetail })?.detail?.title || '',
     subtitle: t('watch'),
-    showImage: match.data?.detail?.poster_path !== undefined,
-    imageUrl: TMDB.posterUrl(match.data?.detail?.poster_path || '', 'w92'),
+    showImage: (match.data as { detail: IMovieDetail })?.detail?.poster_path !== undefined,
+    imageUrl: TMDB.posterUrl(
+      (match.data as { detail: IMovieDetail })?.detail?.poster_path || '',
+      'w92',
+    ),
   }),
 };
 
@@ -343,11 +347,15 @@ const MovieWatch = () => {
         title={`${detail?.title} (${releaseYear})`}
         overview={detail?.overview || ''}
         posterPath={detail?.poster_path ? TMDB.posterUrl(detail?.poster_path, 'w342') : undefined}
+        // @ts-expect-error
         tmdbRating={detail?.vote_average}
+        // @ts-expect-error
         imdbRating={imdbRating?.star}
+        // @ts-expect-error
         genresMedia={detail?.genres}
         genresMovie={rootData?.genresMovie}
         genresTv={rootData?.genresTv}
+        // @ts-expect-error
         recommendationsMovies={recommendations?.items}
         color={color}
       />

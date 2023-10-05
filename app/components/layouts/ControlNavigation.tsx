@@ -1,22 +1,23 @@
 import { Button } from '@nextui-org/button';
 import { Chip } from '@nextui-org/chip';
-import { useMatches, useNavigate, useParams } from '@remix-run/react';
+import { useMatches, useNavigate, useParams, type UIMatch } from '@remix-run/react';
 import { motion, useTransform } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { useHydrated } from 'remix-utils';
 
+import type { Handle } from '~/types/handle';
+import { useHeaderOptions } from '~/utils/react/hooks/useHeader';
+import { useHydrated } from '~/utils/react/hooks/useHydrated';
+import { useSoraSettings } from '~/utils/react/hooks/useLocalStorage';
 import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
 import { useHistoryStack } from '~/store/layout/useHistoryStack';
 import { useLayout } from '~/store/layout/useLayout';
-import { useHeaderOptions } from '~/hooks/useHeader';
-import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { Breadcrumb } from '~/components/elements/Breadcrumb';
 import ChevronLeft from '~/assets/icons/ChevronLeftIcon';
 import ChevronRight from '~/assets/icons/ChevronRightIcon';
 
 const ControlNavigation = () => {
   const navigate = useNavigate();
-  const matches = useMatches();
+  const matches = useMatches() as UIMatch<unknown, Handle>[];
   const isHydrated = useHydrated();
   const params = useParams();
   const { t } = useTranslation();
@@ -75,7 +76,7 @@ const ControlNavigation = () => {
                 // skip routes that don't have a breadcrumb
                 .filter((match) => match.handle && match.handle.breadcrumb)
                 // render breadcrumbs!
-                .map((match) => match?.handle?.breadcrumb({ match, t, params }))}
+                .map((match) => match.handle?.breadcrumb?.({ match, t, params }))}
             </Breadcrumb>
           </Chip>
         ) : currentMiniTitle ? (
