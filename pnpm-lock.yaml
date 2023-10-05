@@ -155,6 +155,9 @@ dependencies:
   clsx:
     specifier: ^2.0.0
     version: 2.0.0
+  crypto-js:
+    specifier: ^4.1.1
+    version: 4.1.1
   dashjs:
     specifier: ^4.7.2
     version: 4.7.2
@@ -179,6 +182,9 @@ dependencies:
   i18next-http-backend:
     specifier: ^2.2.2
     version: 2.2.2
+  intl-parse-accept-language:
+    specifier: ^1.0.0
+    version: 1.0.0
   is-ip:
     specifier: ^5.0.1
     version: 5.0.1
@@ -284,6 +290,9 @@ dependencies:
   web-push:
     specifier: ^3.6.6
     version: 3.6.6
+  zod:
+    specifier: ^3.22.4
+    version: 3.22.4
   zustand:
     specifier: ^4.4.2
     version: 4.4.2(@types/react@18.2.25)(react@18.3.0-canary-db69f95e4-20231002)
@@ -10270,7 +10279,7 @@ packages:
       intl-parse-accept-language: 1.0.0
       is-ip: 3.1.0
       react: 18.2.0
-      zod: 3.21.4
+      zod: 3.22.4
     transitivePeerDependencies:
       - '@cloudflare/workers-types'
       - react-dom
@@ -11832,6 +11841,10 @@ packages:
 
   /zod@3.21.4:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
+    dev: false
+
+  /zod@3.22.4:
+    resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
     dev: false
 
   /zustand@4.4.2(@types/react@18.2.25)(react@18.3.0-canary-db69f95e4-20231002):

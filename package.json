@@ -72,6 +72,7 @@
     "autoprefixer": "^10.4.16",
     "cachified": "^3.1.0",
     "clsx": "^2.0.0",
+    "crypto-js": "^4.1.1",
     "dashjs": "^4.7.2",
     "dayjs": "^1.11.10",
     "framer-motion": "^10.16.4",
@@ -80,6 +81,7 @@
     "i18next-browser-languagedetector": "^7.1.0",
     "i18next-fs-backend": "^2.2.0",
     "i18next-http-backend": "^2.2.2",
+    "intl-parse-accept-language": "^1.0.0",
     "is-ip": "^5.0.1",
     "isbot": "^3.7.0",
     "lottie-web": "^5.12.2",
@@ -115,6 +117,7 @@
     "tinycolor2": "^1.6.0",
     "vaul": "^0.7.0",
     "web-push": "^3.6.6",
+    "zod": "^3.22.4",
     "zustand": "^4.4.2"
   },
   "devDependencies": {
