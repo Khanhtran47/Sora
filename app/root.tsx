@@ -42,6 +42,7 @@ import photoSwipeStyles from 'photoswipe/dist/photoswipe.css';
 import { getSelectorsByUserAgent } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
 import { Provider as WrapBalancerProvider } from 'react-wrap-balancer';
+import rdtStylesheet from 'remix-development-tools/index.css';
 import { useChangeLanguage } from 'remix-i18next';
 import Image, { MimeType } from 'remix-image';
 import { getClientIPAddress } from 'remix-utils/get-client-ip-address';
@@ -147,6 +148,7 @@ export const links: LinksFunction = () => {
     //These should match the css preloads above to avoid css as render blocking resource
     { rel: 'stylesheet', href: tailwindStylesheetUrl },
     cssBundleHref ? { rel: 'stylesheet', href: cssBundleHref } : null,
+    process.env.NODE_ENV === 'development' ? { rel: 'stylesheet', href: rdtStylesheet } : null,
     { rel: 'stylesheet', href: FontStyles100 },
     { rel: 'stylesheet', href: FontStyles200 },
     { rel: 'stylesheet', href: FontStyles300 },
@@ -765,4 +767,11 @@ export function ErrorBoundary() {
   }
 }
 
-export default App;
+let AppExport = App;
+
+if (process.env.NODE_ENV === 'development') {
+  const { withDevTools } = require('remix-development-tools');
+  AppExport = withDevTools(AppExport);
+}
+
+export default AppExport;
