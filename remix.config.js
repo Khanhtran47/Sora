@@ -16,7 +16,16 @@ module.exports = {
     return flatRoutes('routes', defineRoutes)
   },
   // serverBuildPath: "build/index.js",
-	serverDependenciesToBundle: [/^swiper.*/, /^ssr-window.*/, /^dom7.*/, /^react-photoswipe-gallery.*/, /^photoswipe.*/, /^remix-utils.*/],
+  serverDependenciesToBundle: [
+    /^swiper.*/,
+    /^ssr-window.*/,
+    /^dom7.*/,
+    /^react-photoswipe-gallery.*/,
+    /^photoswipe.*/,
+    /^remix-utils.*/,
+    /^is-ip.*/,
+    /^ip-regex.*/,
+  ],
   serverModuleFormat: 'cjs',
 	tailwind: true,
 };

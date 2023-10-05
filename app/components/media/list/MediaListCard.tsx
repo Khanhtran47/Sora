@@ -1,5 +1,5 @@
 import { isMobile } from 'react-device-detect';
-import { FreeMode, Navigation } from 'swiper';
+import { FreeMode, Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { tv } from 'tailwind-variants';
 

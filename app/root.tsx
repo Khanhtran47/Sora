@@ -494,7 +494,6 @@ const App = () => {
   const { user, locale, message } = useLoaderData<typeof loader>();
   const isBot = useIsBot();
   useChangeLanguage(locale);
-  // @ts-expect-error
   useToast(message);
   const [waitingWorker, setWaitingWorker] = React.useState<ServiceWorker | null>(null);
   const [isUpdateAvailable, setIsUpdateAvailable] = React.useState(false);
