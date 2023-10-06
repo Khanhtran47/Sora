@@ -60,7 +60,7 @@ module.exports = withTV({
         small: ['image title', 'info info', 'buttons buttons'],
       },
       fontFamily: {
-        sans: ['Inter', ...defaultTheme.fontFamily.sans],
+        sans: ['Sora', ...defaultTheme.fontFamily.sans],
         system: 'system-ui',
       },
       fontSize: {

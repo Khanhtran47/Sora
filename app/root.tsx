@@ -1,14 +1,13 @@
 /* eslint-disable no-console */
 import * as React from 'react';
-import FontStyles100 from '@fontsource/inter/100.css';
-import FontStyles200 from '@fontsource/inter/200.css';
-import FontStyles300 from '@fontsource/inter/300.css';
-import FontStyles400 from '@fontsource/inter/400.css';
-import FontStyles500 from '@fontsource/inter/500.css';
-import FontStyles600 from '@fontsource/inter/600.css';
-import FontStyles700 from '@fontsource/inter/700.css';
-import FontStyles800 from '@fontsource/inter/800.css';
-import FontStyles900 from '@fontsource/inter/900.css';
+import FontStyles100 from '@fontsource/sora/100.css';
+import FontStyles200 from '@fontsource/sora/200.css';
+import FontStyles300 from '@fontsource/sora/300.css';
+import FontStyles400 from '@fontsource/sora/400.css';
+import FontStyles500 from '@fontsource/sora/500.css';
+import FontStyles600 from '@fontsource/sora/600.css';
+import FontStyles700 from '@fontsource/sora/700.css';
+import FontStyles800 from '@fontsource/sora/800.css';
 import { Button } from '@nextui-org/button';
 import { Image as NextUIImage } from '@nextui-org/image';
 import { NextUIProvider as NextUIv2Provider } from '@nextui-org/system';
@@ -144,7 +143,6 @@ export const links: LinksFunction = () => {
     { rel: 'preload', as: 'style', href: FontStyles600 },
     { rel: 'preload', as: 'style', href: FontStyles700 },
     { rel: 'preload', as: 'style', href: FontStyles800 },
-    { rel: 'preload', as: 'style', href: FontStyles900 },
     //These should match the css preloads above to avoid css as render blocking resource
     { rel: 'stylesheet', href: tailwindStylesheetUrl },
     cssBundleHref ? { rel: 'stylesheet', href: cssBundleHref } : null,
@@ -157,7 +155,6 @@ export const links: LinksFunction = () => {
     { rel: 'stylesheet', href: FontStyles600 },
     { rel: 'stylesheet', href: FontStyles700 },
     { rel: 'stylesheet', href: FontStyles800 },
-    { rel: 'stylesheet', href: FontStyles900 },
     { rel: 'stylesheet', href: swiperStyles },
     { rel: 'stylesheet', href: swiperPaginationStyles },
     { rel: 'stylesheet', href: swiperNavigationStyles },
