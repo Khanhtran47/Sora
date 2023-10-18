@@ -310,6 +310,7 @@ const CardItem = (props: ICardItemProps) => {
               <Rating
                 ratingType={mediaType}
                 rating={mediaType === 'anime' ? voteAverage : voteAverage.toFixed(1)}
+                showStarIcon
               />
             </div>
             <ScrollArea
