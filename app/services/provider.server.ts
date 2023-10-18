@@ -7,8 +7,8 @@ import type { IBilibiliResult } from '~/services/consumet/bilibili/bilibili.type
 import { getKissKhInfo, getKissKhSearch } from '~/services/kisskh/kisskh.server';
 import type { ISearchItem } from '~/services/kisskh/kisskh.types';
 import { getLoklokOrgDetail, loklokSearchMovie, loklokSearchOneTv } from '~/services/loklok';
-import { cachified, lruCache } from '~/services/lru-cache';
 import { getInfoWithProvider } from '~/services/tmdb/tmdb.server';
+import { cachified, lruCache } from '~/utils/server/cache.server';
 
 export type Provider = {
   id?: string | number | null;

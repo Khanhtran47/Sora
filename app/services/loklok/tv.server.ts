@@ -1,4 +1,5 @@
-import { fetcher, lruCache } from '../lru-cache';
+import { fetcher, lruCache } from '~/utils/server/cache.server';
+
 import type { ILoklokInfoData, ILoklokMediaInfo, ILoklokSearchData } from './loklok.type';
 import { LOKLOK_URL } from './utils.server';
 

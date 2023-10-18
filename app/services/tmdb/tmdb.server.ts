@@ -1,8 +1,8 @@
 import { META, PROVIDERS_LIST } from '@consumet/extensions';
 
 import type { IMedia } from '~/types/media';
+import { cachified, fetcher, lruCache } from '~/utils/server/cache.server';
 
-import { cachified, fetcher, lruCache } from '../lru-cache';
 import type {
   ICredit,
   IDetailImages,
@@ -33,6 +33,7 @@ const getListFromTMDB = async (
   type?: 'movie' | 'tv' | 'people',
 ): Promise<IMediaList> => {
   try {
+    const urlBase = new URL(url);
     const fetched = await fetcher<{
       items?: IMedia[];
       page: number;
@@ -40,7 +41,10 @@ const getListFromTMDB = async (
       total_results: number;
     }>({
       url,
-      key: `tmdb-list-${url}-${type}`,
+      key: `tmdb${type ? `-${type}` : ''}${urlBase.pathname.replace(/\//g, '-')}${urlBase.search
+        .replace(/\?/g, '-')
+        .replace(/=/g, '_')
+        .replace(/&/g, '-')}`,
       ttl: 1000 * 60 * 60 * 24,
       staleWhileRevalidate: 1000 * 60 * 60 * 24 * 7,
       cache: lruCache,
