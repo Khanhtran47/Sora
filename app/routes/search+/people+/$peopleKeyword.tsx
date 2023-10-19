@@ -120,14 +120,11 @@ const SearchRoute = () => {
         textPlaceHolder={t('search.placeHolder.people')}
       />
       <MediaList
-        // @ts-expect-error
         currentPage={searchResults?.page}
-        // @ts-expect-error
         items={searchResults?.items}
         itemsType="people"
         listName={t('search.searchResults')}
         listType="grid"
-        // @ts-expect-error
         totalPages={searchResults?.totalPages}
       />
     </motion.div>

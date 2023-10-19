@@ -156,9 +156,7 @@ const TvPhotosPage = () => {
                   thumbnail={TMDB.profileUrl(image?.file_path, 'w185')}
                   alt={`Backdrop of ${tvData?.detail?.name} image size ${image.width}x${image.height}`}
                   caption={`Backdrop of ${tvData?.detail?.name} size ${image.width}x${image.height}`}
-                  // @ts-expect-error
                   width={image.width}
-                  // @ts-expect-error
                   height={image.height}
                 >
                   {({ ref, open }) => (
@@ -201,9 +199,7 @@ const TvPhotosPage = () => {
                   thumbnail={TMDB.logoUrl(image?.file_path, 'w185')}
                   alt={`Logo of ${tvData?.detail?.name} image size ${image.width}x${image.height}`}
                   caption={`Logo of ${tvData?.detail?.name} size ${image.width}x${image.height}`}
-                  // @ts-expect-error
                   width={image.width}
-                  // @ts-expect-error
                   height={image.height}
                 >
                   {({ ref, open }) => (
@@ -246,9 +242,7 @@ const TvPhotosPage = () => {
                   thumbnail={TMDB.profileUrl(image?.file_path, 'w185')}
                   alt={`Poster of ${tvData?.detail?.name} image size ${image.width}x${image.height}`}
                   caption={`Poster of ${tvData?.detail?.name} size ${image.width}x${image.height}`}
-                  // @ts-expect-error
                   width={image.width}
-                  // @ts-expect-error
                   height={image.height}
                 >
                   {({ ref, open }) => (

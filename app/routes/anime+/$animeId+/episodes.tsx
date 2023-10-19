@@ -110,9 +110,7 @@ const EpisodesPage = () => {
       <ListEpisodes
         type="anime"
         id={detail?.id}
-        // @ts-expect-error
         episodes={episodes}
-        // @ts-expect-error
         providers={animeData?.providers || []}
       />
     </div>

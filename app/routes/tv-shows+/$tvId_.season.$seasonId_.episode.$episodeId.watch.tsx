@@ -483,19 +483,13 @@ const TvEpisodeWatch = () => {
         episodes={seasonDetail?.episodes}
         overview={detail?.overview || ''}
         posterPath={detail?.poster_path ? TMDB.posterUrl(detail?.poster_path, 'w342') : undefined}
-        // @ts-expect-error
         tmdbRating={detail?.vote_average}
-        // @ts-expect-error
         imdbRating={imdbRating?.star}
-        // @ts-expect-error
         genresMedia={detail?.genres}
         genresMovie={rootData?.genresMovie}
         genresTv={rootData?.genresTv}
-        // @ts-expect-error
         recommendationsMovies={recommendations?.items}
-        // @ts-expect-error
         season={seasonDetail?.season_number}
-        // @ts-expect-error
         providers={providers}
         color={color}
       />

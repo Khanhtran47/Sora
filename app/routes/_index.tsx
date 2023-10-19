@@ -97,7 +97,6 @@ const RootIndex = () => {
       <MediaList
         genresMovie={rootData?.genresMovie}
         genresTv={rootData?.genresTv}
-        // @ts-expect-error
         items={todayTrending}
         key="slider-banner-home"
         listType="slider-banner"
@@ -106,7 +105,6 @@ const RootIndex = () => {
         <MediaList
           genresMovie={rootData?.genresMovie}
           genresTv={rootData?.genresTv}
-          // @ts-expect-error
           items={movies}
           itemsType="movie"
           key="slider-card-popular-movies"
@@ -119,7 +117,6 @@ const RootIndex = () => {
         <MediaList
           genresMovie={rootData?.genresMovie}
           genresTv={rootData?.genresTv}
-          // @ts-expect-error
           items={shows}
           itemsType="tv"
           key="slider-card-popular-tv"
@@ -130,7 +127,6 @@ const RootIndex = () => {
           showMoreList
         />
         <MediaList
-          // @ts-expect-error
           items={popularAnime}
           itemsType="anime"
           key="slider-card-popular-anime"
@@ -151,7 +147,6 @@ const RootIndex = () => {
           showMoreList
         />
         <MediaList
-          // @ts-expect-error
           items={people}
           itemsType="people"
           key="slider-card-popular-people"

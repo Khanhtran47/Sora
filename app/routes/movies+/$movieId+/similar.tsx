@@ -97,18 +97,15 @@ const MovieSimilarPage = () => {
   return (
     <div className="mt-3 flex w-full max-w-[1920px] flex-col gap-y-4 px-3 sm:px-3.5 xl:px-4 2xl:px-5">
       <MediaList
-        // @ts-expect-error
         currentPage={similar?.page}
         genresMovie={rootData?.genresMovie}
         genresTv={rootData?.genresTv}
-        // @ts-expect-error
         items={similar?.items}
         itemsType="movie"
         listName={t('similar-movies')}
         listType="grid"
         scrollToTopListAfterChangePage
         showListTypeChangeButton
-        // @ts-expect-error
         totalPages={similar?.totalPages}
       />
     </div>

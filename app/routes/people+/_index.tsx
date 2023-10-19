@@ -77,14 +77,11 @@ const ListPeoplePopular = () => {
       className="flex w-full flex-col items-center justify-center px-3 sm:px-0"
     >
       <MediaList
-        // @ts-expect-error
         currentPage={people?.page}
-        // @ts-expect-error
         items={people?.items}
         itemsType="people"
         listName={t('popular-people')}
         listType="grid"
-        // @ts-expect-error
         totalPages={people?.totalPages}
       />
     </motion.div>

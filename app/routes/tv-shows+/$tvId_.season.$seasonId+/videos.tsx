@@ -231,7 +231,6 @@ const VideosPage = () => {
                                 (item) => item.key === video.id,
                               );
                               if (videoPlay) {
-                                // @ts-expect-error
                                 setTrailer(videoPlay);
                               }
                             }}

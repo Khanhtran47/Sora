@@ -133,7 +133,7 @@ const MovieVideosPage = () => {
   useEffect(() => {
     if (fetcher.data && fetcher.data.youtubeVideo) {
       // @ts-expect-error
-      setActiveTypeVideos(fetcher.data.youtubeVideo);
+      setActiveTypeVideos(fetcher?.data?.youtubeVideo as IYoutubeItem[]);
     }
   }, [fetcher.data]);
 
@@ -212,7 +212,6 @@ const MovieVideosPage = () => {
                                 (item) => item.key === video.id,
                               );
                               if (videoPlay) {
-                                // @ts-expect-error
                                 setTrailer(videoPlay);
                               }
                             }}

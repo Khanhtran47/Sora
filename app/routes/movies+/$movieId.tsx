@@ -216,9 +216,7 @@ const MovieDetail = () => {
       <div className="relative top-[-80px] w-full sm:top-[-200px]">
         <MediaDetail
           type="movie"
-          // @ts-expect-error
           item={detail}
-          // @ts-expect-error
           imdbRating={imdbRating}
           color={detail.color}
           trailerTime={currentTime}

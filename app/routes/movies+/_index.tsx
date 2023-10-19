@@ -84,7 +84,6 @@ const MoviesIndexPage = () => {
     >
       <MediaList
         listType="slider-banner"
-        // @ts-expect-error
         items={trending.items}
         genresMovie={rootData?.genresMovie}
         genresTv={rootData?.genresTv}
@@ -94,7 +93,6 @@ const MoviesIndexPage = () => {
           <MediaList
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
-            // @ts-expect-error
             items={popular.items}
             itemsType="movie"
             listName={t('popular-movies')}
@@ -108,7 +106,6 @@ const MoviesIndexPage = () => {
           <MediaList
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
-            // @ts-expect-error
             items={topRated.items}
             itemsType="movie"
             listName={t('top-rated-movies')}
@@ -122,7 +119,6 @@ const MoviesIndexPage = () => {
           <MediaList
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
-            // @ts-expect-error
             items={nowPlaying.items}
             itemsType="movie"
             listName={t('now-playing-movies')}
@@ -136,7 +132,6 @@ const MoviesIndexPage = () => {
           <MediaList
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
-            // @ts-expect-error
             items={upcoming.items}
             itemsType="movie"
             listName={t('upcoming-movies')}

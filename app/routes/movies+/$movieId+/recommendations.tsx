@@ -97,18 +97,15 @@ const MovieRecommendationsPage = () => {
   return (
     <div className="mt-3 flex w-full max-w-[1920px] flex-col gap-y-4 px-3 sm:px-3.5 xl:px-4 2xl:px-5">
       <MediaList
-        // @ts-expect-error
         currentPage={recommendations?.page}
         genresMovie={rootData?.genresMovie}
         genresTv={rootData?.genresTv}
         itemsType="movie"
-        // @ts-expect-error
         items={recommendations?.items}
         listName={t('recommendations')}
         listType="grid"
         scrollToTopListAfterChangePage
         showListTypeChangeButton
-        // @ts-expect-error
         totalPages={recommendations?.totalPages}
       />
     </div>

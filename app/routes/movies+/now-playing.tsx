@@ -94,17 +94,14 @@ const ListNowPlayingMovies = () => {
       draggable={isMobile && isHydrated}
     >
       <MediaList
-        // @ts-expect-error
         currentPage={movies?.page}
         genresMovie={rootData?.genresMovie}
         genresTv={rootData?.genresTv}
-        // @ts-expect-error
         items={movies?.items}
         itemsType="movie"
         listName={t('now-playing-movies')}
         listType="grid"
         showListTypeChangeButton
-        // @ts-expect-error
         totalPages={movies?.totalPages}
       />
     </motion.div>

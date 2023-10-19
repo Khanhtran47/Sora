@@ -150,9 +150,7 @@ const MoviePhotosPage = () => {
                   thumbnail={TMDB.profileUrl(image?.file_path, 'w185')}
                   alt={`Backdrop of ${movieData?.detail?.title} image size ${image.width}x${image.height}`}
                   caption={`Backdrop of ${movieData?.detail?.title} size ${image.width}x${image.height}`}
-                  // @ts-expect-error
                   width={image.width}
-                  // @ts-expect-error
                   height={image.height}
                 >
                   {({ ref, open }) => (
@@ -195,9 +193,7 @@ const MoviePhotosPage = () => {
                   thumbnail={TMDB.logoUrl(image?.file_path, 'w185')}
                   alt={`Logo of ${movieData?.detail?.title} image size ${image.width}x${image.height}`}
                   caption={`Logo of ${movieData?.detail?.title} size ${image.width}x${image.height}`}
-                  // @ts-expect-error
                   width={image.width}
-                  // @ts-expect-error
                   height={image.height}
                 >
                   {({ ref, open }) => (
@@ -240,9 +236,7 @@ const MoviePhotosPage = () => {
                   thumbnail={TMDB.profileUrl(image?.file_path, 'w185')}
                   alt={`Poster of ${movieData?.detail?.title} image size ${image.width}x${image.height}`}
                   caption={`Poster of ${movieData?.detail?.title} size ${image.width}x${image.height}`}
-                  // @ts-expect-error
                   width={image.width}
-                  // @ts-expect-error
                   height={image.height}
                 >
                   {({ ref, open }) => (

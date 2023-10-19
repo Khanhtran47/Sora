@@ -712,7 +712,6 @@ export const meta = mergeMeta<typeof loader>(({ data, params }) => {
   const { title, description } = detail || {};
   const animeTitle = title?.userPreferred || title?.english || title?.romaji || title?.native || '';
   return [
-    // @ts-expect-error
     { title: `Sora - Watch ${animeTitle} episode ${episodeInfo?.number || ''}` },
     {
       name: 'description',
@@ -726,7 +725,7 @@ export const meta = mergeMeta<typeof loader>(({ data, params }) => {
     },
     {
       property: 'og:title',
-      // @ts-expect-error
+
       content: `Sora - Watch ${animeTitle} episode ${episodeInfo?.number || ''}`,
     },
     {
@@ -743,7 +742,7 @@ export const meta = mergeMeta<typeof loader>(({ data, params }) => {
     { name: 'twitter:image', content: `https://img.anili.st/media/${params.animeId}` },
     {
       name: 'twitter:title',
-      // @ts-expect-error
+
       content: `Sora - Watch ${animeTitle} episode ${episodeInfo?.number || ''}`,
     },
     {
@@ -798,17 +797,14 @@ const AnimeEpisodeWatch = () => {
       <WatchDetail
         type="anime"
         id={detail?.id}
-        // @ts-expect-error
         episodes={episodes}
         title={detail?.title?.english || ''}
         overview={detail?.description || ''}
         posterPath={detail?.image}
-        // @ts-expect-error
         anilistRating={detail?.rating}
         genresAnime={detail?.genres}
         recommendationsAnime={detail?.recommendations as IMedia[]}
         color={detail?.color}
-        // @ts-expect-error
         providers={providers}
       />
     </div>

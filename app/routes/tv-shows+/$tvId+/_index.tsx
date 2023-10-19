@@ -169,7 +169,6 @@ const TvOverview = () => {
         </div>
         {topBilledCast && topBilledCast.length > 0 ? (
           <MediaList
-            // @ts-expect-error
             items={topBilledCast}
             itemsType="people"
             key={`tv-top-cast-${tvId}`}
@@ -244,7 +243,6 @@ const TvOverview = () => {
           <MediaList
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
-            // @ts-expect-error
             items={recommendations.items}
             itemsType="tv"
             key={`tv-recommendations-${tvId}`}
@@ -259,7 +257,6 @@ const TvOverview = () => {
           <MediaList
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
-            // @ts-expect-error
             items={similar.items}
             itemsType="tv"
             key={`tv-similar-${tvId}`}

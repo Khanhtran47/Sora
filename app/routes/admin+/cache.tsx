@@ -113,8 +113,7 @@ const CacheKeyRow = ({ cacheKey }: { cacheKey: string }) => {
   };
   useEffect(() => {
     if (fetchCacheData.data && fetchCacheData.data.cacheKey) {
-      // @ts-expect-error
-      setCacheValue(fetchCacheData.data.value);
+      setCacheValue(fetchCacheData.data.value as CacheEntry<unknown>);
     }
   }, [fetchCacheData.data]);
   return (

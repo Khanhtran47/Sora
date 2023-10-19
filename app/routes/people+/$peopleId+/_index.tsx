@@ -51,7 +51,6 @@ const OverviewPage = () => {
     if (fetcher.data && fetcher.data.searchResults) {
       const { items } = fetcher.data.searchResults;
       if (items) {
-        // @ts-expect-error
         const peopleFound = items.find((result: IMedia) => result.id === peopleData?.detail?.id);
         if (peopleFound) {
           setKnownFor(TMDB.postFetchDataHandler(peopleFound?.knownFor));

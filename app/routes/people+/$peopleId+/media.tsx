@@ -150,9 +150,7 @@ const MediaPage = () => {
               thumbnail={TMDB.profileUrl(image?.file_path, 'w185')}
               alt={`Photo of ${peopleData?.detail?.name} size ${image.width}x${image.height}`}
               caption={`Photo of ${peopleData?.detail?.name} size ${image.width}x${image.height}`}
-              // @ts-expect-error
               width={image.width}
-              // @ts-expect-error
               height={image.height}
             >
               {({ ref, open }) => (

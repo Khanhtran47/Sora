@@ -106,17 +106,14 @@ const TrendingToday = () => {
       draggable={isMobile && isHydrated}
     >
       <MediaList
-        // @ts-expect-error
         currentPage={todayTrending?.page}
         genresMovie={rootData?.genresMovie}
         genresTv={rootData?.genresTv}
-        // @ts-expect-error
         items={todayTrending?.items}
         itemsType={mediaType === 'all' ? 'movie-tv' : (mediaType as 'movie' | 'tv' | 'people')}
         listName={t(`trending.${mediaType}.day`)}
         listType="grid"
         showListTypeChangeButton={mediaType !== 'people'}
-        // @ts-expect-error
         totalPages={todayTrending?.totalPages}
       />
     </motion.div>

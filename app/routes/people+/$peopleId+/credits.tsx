@@ -98,7 +98,6 @@ const CreditsPage = () => {
         genresMovie={rootData?.genresMovie}
         genresTv={rootData?.genresTv}
         isCreditsCard
-        // @ts-expect-error
         items={credits?.cast}
         itemsType="movie-tv"
         listType="grid"

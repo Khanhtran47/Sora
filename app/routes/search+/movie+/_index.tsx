@@ -106,17 +106,14 @@ const SearchRoute = () => {
         textPlaceHolder={t('search.placeHolder.movie')}
       />
       <MediaList
-        // @ts-expect-error
         currentPage={todayTrending?.page}
         genresMovie={rootData?.genresMovie}
         genresTv={rootData?.genresTv}
-        // @ts-expect-error
         items={todayTrending?.items}
         itemsType="movie-tv"
         listName={t('today-trending')}
         listType="grid"
         showListTypeChangeButton
-        // @ts-expect-error
         totalPages={todayTrending?.totalPages}
       />
     </motion.div>

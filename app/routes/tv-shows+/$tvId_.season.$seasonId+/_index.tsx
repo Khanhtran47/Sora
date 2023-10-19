@@ -52,12 +52,9 @@ const Episodes = () => {
     <div className="flex w-full flex-col items-center justify-center px-3 sm:w-2/3 sm:px-5">
       <ListEpisodes
         type="tv"
-        // @ts-expect-error
         id={detail?.id}
         episodes={seasonDetail?.episodes as unknown as IEpisode[]}
-        // @ts-expect-error
         season={seasonDetail?.season_number}
-        // @ts-expect-error
         providers={seasonData?.providers || []}
       />
     </div>

@@ -107,17 +107,14 @@ const TrendingWeek = () => {
       draggable={isMobile && isHydrated}
     >
       <MediaList
-        // @ts-expect-error
         currentPage={weekTrending?.page}
         genresMovie={rootData?.genresMovie}
         genresTv={rootData?.genresTv}
-        // @ts-expect-error
         items={weekTrending?.items}
         itemsType={mediaType === 'all' ? 'movie-tv' : (mediaType as 'movie' | 'tv' | 'people')}
         listName={t(`trending.${mediaType}.week`)}
         listType="grid"
         showListTypeChangeButton={mediaType !== 'people'}
-        // @ts-expect-error
         totalPages={weekTrending?.totalPages}
       />
     </motion.div>

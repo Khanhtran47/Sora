@@ -141,7 +141,6 @@ const AnimeDetailPage = () => {
     <>
       <MediaBackgroundImage backdropPath={detail?.cover} backgroundColor={backgroundColor} />
       <div className="relative top-[-80px] w-full sm:top-[-200px]">
-        {/* @ts-expect-error */}
         <AnimeDetail item={detail} trailerTime={currentTime} />
         <div className="flex w-full flex-col items-center justify-center">
           <motion.div

@@ -81,7 +81,6 @@ const TrendingRoute = () => {
       <MediaList
         genresMovie={rootData?.genresMovie}
         genresTv={rootData?.genresTv}
-        // @ts-expect-error
         items={todayTrending}
         itemsType="movie-tv"
         key="slider-card-trending-today-all"
@@ -94,7 +93,6 @@ const TrendingRoute = () => {
       <MediaList
         genresMovie={rootData?.genresMovie}
         genresTv={rootData?.genresTv}
-        // @ts-expect-error
         items={todayMoviesTrending}
         itemsType="movie"
         key="slider-card-trending-today-movies"
@@ -107,7 +105,6 @@ const TrendingRoute = () => {
       <MediaList
         genresMovie={rootData?.genresMovie}
         genresTv={rootData?.genresTv}
-        // @ts-expect-error
         items={todayShowsTrending}
         itemsType="tv"
         key="slider-card-trending-today-tv"
@@ -118,7 +115,6 @@ const TrendingRoute = () => {
         showMoreList
       />
       <MediaList
-        // @ts-expect-error
         items={todayAnimeTrending}
         itemsType="anime"
         key="slider-card-trending-today-anime"
@@ -129,7 +125,6 @@ const TrendingRoute = () => {
         showMoreList
       />
       <MediaList
-        // @ts-expect-error
         items={todayPeopleTrending}
         itemsType="people"
         key="slider-card-trending-today-people"

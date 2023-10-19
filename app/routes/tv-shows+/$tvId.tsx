@@ -210,9 +210,7 @@ const TvShowDetail = () => {
       <div className="relative top-[-80px] w-full sm:top-[-200px]">
         <MediaDetail
           type="tv"
-          // @ts-expect-error
           item={detail}
-          // @ts-expect-error
           imdbRating={imdbRating}
           color={detail.color}
           trailerTime={currentTime}

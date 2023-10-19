@@ -106,11 +106,7 @@ const PeopleDetailPage = () => {
   return (
     <div className="mt-9 flex w-full flex-row flex-wrap items-stretch justify-center px-3 sm:px-5">
       <div className="w-full sm:w-1/3">
-        <PeopleDetail
-          // @ts-expect-error
-          detail={detail}
-          externalIds={externalIds}
-        />
+        <PeopleDetail detail={detail} externalIds={externalIds} />
         <Spacer y={5} />
       </div>
       <div className="w-full sm:w-2/3">

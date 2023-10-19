@@ -122,8 +122,7 @@ const MovieOverview = () => {
             <h6 className="grow-0 basis-1/3">{t('budget')}</h6>
             <p className="grow">
               {detail?.budget
-                ? // @ts-expect-error
-                  `$${detail?.budget?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
+                ? `$${detail?.budget?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
                 : '-'}
             </p>
           </div>
@@ -131,8 +130,7 @@ const MovieOverview = () => {
             <h6 className="grow-0 basis-1/3">{t('revenue')}</h6>
             <p className="grow">
               {detail?.revenue
-                ? // @ts-expect-error
-                  `$${detail?.revenue?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
+                ? `$${detail?.revenue?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
                 : '-'}
             </p>
           </div>
@@ -183,7 +181,6 @@ const MovieOverview = () => {
         </div>
         {topBilledCast && topBilledCast.length > 0 ? (
           <MediaList
-            // @ts-expect-error
             items={topBilledCast}
             itemsType="people"
             key={`movie-top-cast-${movieId}`}
@@ -198,7 +195,6 @@ const MovieOverview = () => {
           <MediaList
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
-            // @ts-expect-error
             items={recommendations.items}
             itemsType="movie"
             key={`movie-recommendations-${movieId}`}
@@ -213,7 +209,6 @@ const MovieOverview = () => {
           <MediaList
             genresMovie={rootData?.genresMovie}
             genresTv={rootData?.genresTv}
-            // @ts-expect-error
             items={similar.items}
             itemsType="movie"
             key={`movie-similar-${movieId}`}
