@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/indent */
 import { type IMovieInfo } from '@consumet/extensions';
 
 import sgConfigs from '~/services/configs.server';
@@ -8,8 +7,14 @@ import type { IBilibiliResult } from '~/services/consumet/bilibili/bilibili.type
 import { getKissKhInfo, getKissKhSearch } from '~/services/kisskh/kisskh.server';
 import type { ISearchItem } from '~/services/kisskh/kisskh.types';
 import { getLoklokOrgDetail, loklokSearchMovie, loklokSearchOneTv } from '~/services/loklok';
-import { cachified, lruCache } from '~/services/lru-cache';
 import { getInfoWithProvider } from '~/services/tmdb/tmdb.server';
+import { cachified, lruCache } from '~/utils/server/cache.server';
+
+export type Provider = {
+  id?: string | number | null;
+  provider: string;
+  episodesCount?: number;
+};
 
 const getProviderList = async ({
   type,
@@ -62,14 +67,7 @@ const getProviderList = async ({
    * @default undefined
    */
   tmdbId?: number;
-}): Promise<
-  | {
-      id?: string | number | null;
-      provider: string;
-      episodesCount?: number;
-    }[]
-  | undefined
-> => {
+}): Promise<Provider[] | undefined> => {
   const getProviders = async () => {
     if (type === 'movie') {
       const [infoWithProvider, loklokSearch, kisskhSearch] = await Promise.all([
@@ -79,11 +77,7 @@ const getProviderList = async ({
           : undefined,
         sgConfigs.__kisskhProvider ? getKissKhSearch(title) : undefined,
       ]);
-      const provider: {
-        id?: string | number | null;
-        provider: string;
-        episodesCount?: number;
-      }[] = (infoWithProvider as IMovieInfo)?.episodeId
+      const provider: Provider[] = (infoWithProvider as IMovieInfo)?.episodeId
         ? [
             {
               id: (infoWithProvider as IMovieInfo).id,
@@ -124,11 +118,7 @@ const getProviderList = async ({
       const findTvSeason = (infoWithProvider as IMovieInfo)?.seasons?.find(
         (s) => s.season === Number(season),
       );
-      const provider: {
-        id?: string | number | null;
-        provider: string;
-        episodesCount?: number;
-      }[] = findTvSeason?.episodes.some((e) => e.id)
+      const provider: Provider[] = findTvSeason?.episodes.some((e) => e.id)
         ? [
             {
               id: (infoWithProvider as IMovieInfo).id,
@@ -178,11 +168,7 @@ const getProviderList = async ({
           getAnimeEpisodeInfo(animeId?.toString() || '', undefined, 'gogoanime'),
           getAnimeEpisodeInfo(animeId?.toString() || '', undefined, 'zoro'),
         ]);
-      const provider: {
-        id?: string | number | null;
-        provider: string;
-        episodesCount?: number;
-      }[] = [];
+      const provider: Provider[] = [];
       if (gogoEpisodes && gogoEpisodes.length > 0) {
         provider.push({
           id: animeId,

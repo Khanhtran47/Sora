@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Button } from '@nextui-org/button';
 import { Card, CardBody, CardFooter } from '@nextui-org/card';
 // import { Tooltip } from '@nextui-org/react';
 import { useIntersectionObserver, useMeasure } from '@react-hookz/web';
-import { Link, useFetcher, useNavigate } from '@remix-run/react';
+import { Link, useNavigate } from '@remix-run/react';
 // import { motion } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
 import Balancer from 'react-wrap-balancer';
@@ -12,10 +12,10 @@ import { tv } from 'tailwind-variants';
 
 import type { IMedia, Title } from '~/types/media';
 import type { ITrailer } from '~/services/consumet/anilist/anilist.types';
+import { useSoraSettings } from '~/utils/react/hooks/useLocalStorage';
 // import useCardHoverStore from '~/store/card/useCardHoverStore';
 import { useLayout } from '~/store/layout/useLayout';
-import { useSoraSettings } from '~/hooks/useLocalStorage';
-import type { Trailer } from '~/components/elements/dialog/WatchTrailerDialog';
+// import type { Trailer } from '~/components/elements/dialog/WatchTrailerDialog';
 import Image from '~/components/elements/Image';
 import {
   ScrollArea,
@@ -139,20 +139,20 @@ const CardItem = (props: ICardItemProps) => {
     // trailer,
     voteAverage,
   } = props;
-  const fetcher = useFetcher();
+  // const fetcher = useFetcher();
   const navigate = useNavigate();
-  const [_trailerCard, setTrailerCard] = useState<Trailer>({});
+  // const [_trailerCard, setTrailerCard] = useState<Trailer>({});
   const [isTooltipVisible] = useState(false);
   const { listViewType } = useSoraSettings();
   const [size, imageRef] = useMeasure<HTMLAnchorElement>();
   const { viewportRef } = useLayout((scrollState) => scrollState);
-  useEffect(() => {
-    if (fetcher.data && fetcher.data.videos) {
-      const { results } = fetcher.data.videos;
-      const officialTrailer = results.find((result: Trailer) => result.type === 'Trailer');
-      setTrailerCard(officialTrailer);
-    }
-  }, [fetcher.data]);
+  // useEffect(() => {
+  //   if (fetcher.data && fetcher.data.videos) {
+  //     const { results } = fetcher.data.videos;
+  //     const officialTrailer = results.find((result: Trailer) => result.type === 'Trailer');
+  //     setTrailerCard(officialTrailer);
+  //   }
+  // }, [fetcher.data]);
   const cardRef = useRef<HTMLDivElement>(null);
   const cardIntersection = useIntersectionObserver(cardRef, {
     root: viewportRef,
@@ -310,6 +310,7 @@ const CardItem = (props: ICardItemProps) => {
               <Rating
                 ratingType={mediaType}
                 rating={mediaType === 'anime' ? voteAverage : voteAverage.toFixed(1)}
+                showStarIcon
               />
             </div>
             <ScrollArea

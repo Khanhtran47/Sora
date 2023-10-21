@@ -1,6 +1,6 @@
 import { Card, CardBody } from '@nextui-org/card';
 import { useMediaQuery } from '@react-hookz/web';
-import { json, type LoaderArgs } from '@remix-run/node';
+import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { Link, useLoaderData, useNavigate, useParams } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import { useTranslation } from 'react-i18next';
@@ -12,14 +12,14 @@ import { authenticate } from '~/services/supabase';
 import { getCredits, getRecommendation, getSimilar } from '~/services/tmdb/tmdb.server';
 import { postFetchDataHandler } from '~/services/tmdb/utils.server';
 import TMDB from '~/utils/media';
+import { useTypedRouteLoaderData } from '~/utils/react/hooks/useTypedRouteLoaderData';
 import { CACHE_CONTROL } from '~/utils/server/http';
-import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import Image from '~/components/elements/Image';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   await authenticate(request, undefined, true);
 
   const { tvId } = params;

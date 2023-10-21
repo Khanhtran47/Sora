@@ -1,4 +1,4 @@
-import { json, type LoaderArgs } from '@remix-run/node';
+import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import { useTranslation } from 'react-i18next';
@@ -8,13 +8,14 @@ import type { loader as movieIdLoader } from '~/routes/movies+/$movieId';
 import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
 import { getRecommendation } from '~/services/tmdb/tmdb.server';
+import type { IMovieDetail } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
+import { useTypedRouteLoaderData } from '~/utils/react/hooks/useTypedRouteLoaderData';
 import { CACHE_CONTROL } from '~/utils/server/http';
-import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const [, locale] = await Promise.all([
     authenticate(request, undefined, true),
     i18next.getLocale(request),
@@ -73,10 +74,17 @@ export const handle: Handle = {
     </BreadcrumbItem>
   ),
   miniTitle: ({ parentMatch, t }) => ({
-    title: parentMatch?.data?.detail?.title,
+    title: parentMatch ? (parentMatch.data as { detail: IMovieDetail })?.detail?.title || '' : '',
     subtitle: t('recommendations'),
-    showImage: parentMatch?.data?.detail?.poster_path !== undefined,
-    imageUrl: TMDB?.posterUrl(parentMatch?.data?.detail?.poster_path || '', 'w92'),
+    showImage: parentMatch
+      ? (parentMatch.data as { detail: IMovieDetail })?.detail?.poster_path !== undefined
+      : false,
+    imageUrl: parentMatch
+      ? TMDB?.posterUrl(
+          (parentMatch.data as { detail: IMovieDetail })?.detail?.poster_path || '',
+          'w92',
+        )
+      : undefined,
   }),
   showListViewChangeButton: true,
 };

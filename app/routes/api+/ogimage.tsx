@@ -1,5 +1,4 @@
-import type { HeadersFunction, LoaderArgs } from '@remix-run/node';
-import { badRequest } from 'remix-utils';
+import { json, type HeadersFunction, type LoaderFunctionArgs } from '@remix-run/node';
 
 import { getMovieDetail, getTvShowDetail } from '~/services/tmdb/tmdb.server';
 import type { IMovieDetail, ITvShowDetail } from '~/services/tmdb/tmdb.types';
@@ -10,7 +9,7 @@ export const headers: HeadersFunction = () => {
   return { 'Cache-Control': 'public, max-age=31536000, immutable' };
 };
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
 
   const mid = url.searchParams.get('m') ?? null;
@@ -96,5 +95,5 @@ export async function loader({ request }: LoaderArgs) {
     });
     return generatePng(svg);
   }
-  throw badRequest({ message: 'Invalid request' });
+  return json({ message: 'Invalid request' }, { status: 400 });
 }

@@ -1,11 +1,11 @@
-import { json, type LoaderArgs } from '@remix-run/node';
+import { json, type LoaderFunctionArgs } from '@remix-run/node';
 
 import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
 import { getImages, getVideos } from '~/services/tmdb/tmdb.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const [, locale] = await Promise.all([
     authenticate(request, undefined, true),
     i18next.getLocale(request),

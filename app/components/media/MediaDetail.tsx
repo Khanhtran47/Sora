@@ -5,22 +5,29 @@ import { Chip } from '@nextui-org/chip';
 import { Spacer } from '@nextui-org/spacer';
 import { Tooltip } from '@nextui-org/tooltip';
 import { useMeasure, useMediaQuery } from '@react-hookz/web';
+import { clipboardSupported, copyTextToClipboard, shareData } from '@remix-pwa/client';
 import { useFetcher, useLocation, useNavigate } from '@remix-run/react';
+import { shareSupported } from '~/utils';
 import { motion, useTransform } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { MimeType } from 'remix-image';
-import { useHydrated } from 'remix-utils';
+import { toast } from 'sonner';
 import { tv } from 'tailwind-variants';
 import tinycolor from 'tinycolor2';
 
 import type { ColorPalette } from '~/routes/api+/color-palette';
 import type { IAnimeInfo } from '~/services/consumet/anilist/anilist.types';
-import type { IMovieDetail, IMovieTranslations, ITvShowDetail } from '~/services/tmdb/tmdb.types';
-import { WebShareLink } from '~/utils/client/pwa-utils.client';
+import type {
+  IMovieDetail,
+  IMovieTranslations,
+  ITvShowDetail,
+  IVideos,
+} from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
+import useColorDarkenLighten from '~/utils/react/hooks/useColorDarkenLighten';
+import { useHydrated } from '~/utils/react/hooks/useHydrated';
+import { useSoraSettings } from '~/utils/react/hooks/useLocalStorage';
 import { useLayout } from '~/store/layout/useLayout';
-import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
-import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { Dialog, DialogContent, DialogTrigger } from '~/components/elements/Dialog';
 import SelectProvider from '~/components/elements/dialog/SelectProviderDialog';
 import WatchTrailer, { type Trailer } from '~/components/elements/dialog/WatchTrailerDialog';
@@ -89,6 +96,7 @@ export const MediaDetail = (props: IMediaDetail) => {
   const [showTrailerDialog, setShowTrailerDialog] = useState(false);
   const [trailer, setTrailer] = useState<Trailer>({});
   const [colorPalette, setColorPalette] = useState<ColorPalette>();
+
   const { id, tagline, genres, status } = item || {};
   const title = (item as IMovieDetail)?.title || (item as ITvShowDetail)?.name || '';
   const titleEng = (item as IMovieDetail)?.titleEng || (item as ITvShowDetail)?.nameEng || '';
@@ -126,13 +134,13 @@ export const MediaDetail = (props: IMediaDetail) => {
   }, [color]);
 
   useEffect(() => {
-    if (fetcher.data && fetcher.data.color) {
-      setColorPalette(fetcher.data.color);
+    if (fetcher.data && (fetcher.data as { color: ColorPalette }).color) {
+      setColorPalette((fetcher.data as { color: ColorPalette }).color);
     }
-    if (fetcher.data && fetcher.data.videos) {
-      const { results } = fetcher.data.videos;
+    if (fetcher.data && (fetcher.data as { videos: IVideos }).videos) {
+      const { results } = (fetcher.data as { videos: IVideos }).videos;
       const officialTrailer = results.find((result: Trailer) => result.type === 'Trailer');
-      setTrailer(officialTrailer);
+      setTrailer(officialTrailer || {});
     }
   }, [fetcher.data]);
 
@@ -140,6 +148,25 @@ export const MediaDetail = (props: IMediaDetail) => {
     setShowTrailerDialog(value);
     if (value === true) {
       fetcher.load(`/${type === 'movie' ? 'movies' : 'tv-shows'}/${id}/videos`);
+    }
+  };
+
+  const handleShare = async () => {
+    const isShareSupported = await shareSupported();
+    if (isShareSupported) {
+      await shareData({
+        title,
+        text: description,
+        url: window.location.href,
+      });
+    } else {
+      const isClipboardSupported = await clipboardSupported();
+      if (isClipboardSupported) {
+        copyTextToClipboard(window.location.href);
+        toast.success('Link copied to clipboard');
+      } else {
+        toast.error('Browser not supported');
+      }
     }
   };
 
@@ -214,7 +241,6 @@ export const MediaDetail = (props: IMediaDetail) => {
               <div className="flex flex-row flex-wrap gap-3">
                 <Chip
                   size="lg"
-                  color="primary"
                   radius="full"
                   variant="flat"
                   style={
@@ -246,7 +272,6 @@ export const MediaDetail = (props: IMediaDetail) => {
                 </Chip>
                 <Chip
                   size="lg"
-                  color="primary"
                   radius="full"
                   variant="flat"
                   className="flex flex-row transition-all duration-200 ease-in-out"
@@ -339,12 +364,7 @@ export const MediaDetail = (props: IMediaDetail) => {
                   </DialogContent>
                 </Dialog>
                 <Tooltip content="Share" placement="top" isDisabled={isSm} showArrow closeDelay={0}>
-                  <Button
-                    type="button"
-                    size={isSm ? 'sm' : 'md'}
-                    onPress={() => WebShareLink(window.location.href, `${title}`, `${description}`)}
-                    isIconOnly
-                  >
+                  <Button type="button" size={isSm ? 'sm' : 'md'} onPress={handleShare} isIconOnly>
                     <ShareIcon />
                   </Button>
                 </Tooltip>
@@ -400,10 +420,29 @@ export const AnimeDetail = (props: IAnimeDetail) => {
   }, [color]);
 
   useEffect(() => {
-    if (fetcher.data && fetcher.data.color) {
-      setColorPalette(fetcher.data.color);
+    if (fetcher.data && (fetcher.data as { color: ColorPalette }).color) {
+      setColorPalette((fetcher.data as { color: ColorPalette }).color);
     }
   }, [fetcher.data]);
+
+  const handleShare = async () => {
+    const isShareSupported = await shareSupported();
+    if (isShareSupported) {
+      await shareData({
+        title: title?.userPreferred,
+        text: description,
+        url: window.location.href,
+      });
+    } else {
+      const isClipboardSupported = await clipboardSupported();
+      if (isClipboardSupported) {
+        copyTextToClipboard(window.location.href);
+        toast.success('Link copied to clipboard');
+      } else {
+        toast.error('Browser not supported');
+      }
+    }
+  };
 
   return (
     <>
@@ -476,7 +515,6 @@ export const AnimeDetail = (props: IAnimeDetail) => {
               <div className="flex flex-row flex-wrap gap-3">
                 <Chip
                   size="lg"
-                  color="primary"
                   radius="full"
                   variant="flat"
                   className="transition-all duration-200 ease-in-out"
@@ -497,7 +535,6 @@ export const AnimeDetail = (props: IAnimeDetail) => {
                 </Chip>
                 <Chip
                   size="lg"
-                  color="primary"
                   radius="full"
                   variant="flat"
                   className="flex flex-row transition-all duration-200 ease-in-out"
@@ -582,12 +619,7 @@ export const AnimeDetail = (props: IAnimeDetail) => {
                   </Dialog>
                 ) : null}
                 <Tooltip content="Share" placement="top" isDisabled={isSm}>
-                  <Button
-                    type="button"
-                    size={isSm ? 'sm' : 'md'}
-                    onPress={() => WebShareLink(window.location.href, `${title}`, `${description}`)}
-                    isIconOnly
-                  >
+                  <Button type="button" size={isSm ? 'sm' : 'md'} onPress={handleShare} isIconOnly>
                     <ShareIcon />
                   </Button>
                 </Tooltip>

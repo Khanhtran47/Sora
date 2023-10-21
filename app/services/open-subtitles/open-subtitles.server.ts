@@ -1,6 +1,7 @@
 import type * as C from 'cachified';
 
-import { cachified, lruCache } from '../lru-cache';
+import { cachified, lruCache } from '~/utils/server/cache.server';
+
 import type { ISubtitleDownload, ISubtitlesSearch } from './open-subtitles.types';
 import Opensubtitles from './utils.server';
 

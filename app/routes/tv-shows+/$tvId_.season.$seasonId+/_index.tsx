@@ -3,7 +3,7 @@ import { mergeMeta } from '~/utils';
 import type { Handle } from '~/types/handle';
 import type { loader as tvSeasonIdLoader } from '~/routes/tv-shows+/$tvId_.season.$seasonId';
 import type { IEpisode } from '~/services/tmdb/tmdb.types';
-import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
+import { useTypedRouteLoaderData } from '~/utils/react/hooks/useTypedRouteLoaderData';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import ListEpisodes from '~/components/elements/shared/ListEpisodes';
 

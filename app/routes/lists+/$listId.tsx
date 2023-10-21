@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { Pagination } from '@nextui-org/pagination';
 import { Spacer } from '@nextui-org/spacer';
 import { useMediaQuery } from '@react-hookz/web';
-import { json, type LoaderArgs } from '@remix-run/node';
+import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData, useLocation } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import { motion } from 'framer-motion';
@@ -11,9 +11,10 @@ import type { Handle } from '~/types/handle';
 import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
 import { getListDetail } from '~/services/tmdb/tmdb.server';
+import type { IList } from '~/services/tmdb/tmdb.types';
+import useSplitArrayIntoPage from '~/utils/react/hooks/useSplitArrayIntoPage';
+import { useTypedRouteLoaderData } from '~/utils/react/hooks/useTypedRouteLoaderData';
 import { CACHE_CONTROL } from '~/utils/server/http';
-import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
-import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
@@ -40,7 +41,7 @@ export const meta = mergeMeta<typeof loader>(({ data, params }) => {
   ];
 });
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const [, locale] = await Promise.all([
     authenticate(request, undefined, true),
     i18next.getLocale(request),
@@ -64,12 +65,12 @@ export const handle: Handle = {
         {t('featured-lists')}
       </BreadcrumbItem>
       <BreadcrumbItem to={`/lists/${match.params.listId}`} key={`lists-${match.params.listId}`}>
-        {match.data?.detail?.name || match.params.listId}
+        {(match.data as { detail: IList })?.detail?.name || match.params.listId}
       </BreadcrumbItem>
     </>
   ),
   miniTitle: ({ match, t }) => ({
-    title: match.data?.detail?.name || t('featured-lists'),
+    title: (match.data as { detail: IList })?.detail?.name || t('featured-lists'),
     showImage: false,
   }),
   showListViewChangeButton: true,

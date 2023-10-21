@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Spacer } from '@nextui-org/spacer';
-import { json, type LoaderArgs } from '@remix-run/node';
+import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import { useTranslation } from 'react-i18next';
@@ -12,13 +12,14 @@ import type { loader as tvIdLoader } from '~/routes/tv-shows+/$tvId';
 import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
 import { getImages } from '~/services/tmdb/tmdb.server';
+import type { ITvShowDetail } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
+import { useTypedRouteLoaderData } from '~/utils/react/hooks/useTypedRouteLoaderData';
 import { CACHE_CONTROL } from '~/utils/server/http';
-import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import Image from '~/components/elements/Image';
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const [, locale] = await Promise.all([
     authenticate(request, undefined, true),
     i18next.getLocale(request),
@@ -72,10 +73,17 @@ export const handle: Handle = {
     </BreadcrumbItem>
   ),
   miniTitle: ({ parentMatch, t }) => ({
-    title: parentMatch?.data?.detail?.name,
+    title: parentMatch ? (parentMatch?.data as { detail: ITvShowDetail })?.detail?.name || '' : '',
     subtitle: t('photos'),
-    showImage: parentMatch?.data?.detail?.poster_path !== undefined,
-    imageUrl: TMDB?.posterUrl(parentMatch?.data?.detail?.poster_path || '', 'w92'),
+    showImage: parentMatch
+      ? (parentMatch?.data as { detail: ITvShowDetail })?.detail?.poster_path !== undefined
+      : false,
+    imageUrl: TMDB?.posterUrl(
+      parentMatch
+        ? (parentMatch?.data as { detail: ITvShowDetail })?.detail?.poster_path || ''
+        : '',
+      'w92',
+    ),
   }),
 };
 

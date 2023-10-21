@@ -1,8 +1,8 @@
-import type { LoaderArgs } from '@remix-run/node';
+import type { LoaderFunctionArgs } from '@remix-run/node';
 
 import { redirectWithToast } from '~/utils/server/toast-session.server';
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   return redirectWithToast(request, '/', {
     title: 'Access Denied',
     type: 'error',

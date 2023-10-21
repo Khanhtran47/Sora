@@ -11,8 +11,8 @@ import { MimeType } from 'remix-image';
 import type { IEpisodeInfo } from '~/services/consumet/anilist/anilist.types';
 import type { IEpisode } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
-import { useSoraSettings } from '~/hooks/useLocalStorage';
-import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
+import { useSoraSettings } from '~/utils/react/hooks/useLocalStorage';
+import useSplitArrayIntoPage from '~/utils/react/hooks/useSplitArrayIntoPage';
 import episodeTypes from '~/constants/episodeTypes';
 import {
   Select,

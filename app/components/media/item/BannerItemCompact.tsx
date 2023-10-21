@@ -4,11 +4,11 @@ import { Skeleton } from '@nextui-org/skeleton';
 import { useHover } from '@react-aria/interactions';
 import { AnimatePresence, motion } from 'framer-motion';
 import { MimeType } from 'remix-image';
-import { useHydrated } from 'remix-utils';
 import { tv } from 'tailwind-variants';
 
 import type { Title } from '~/types/media';
-import { useSoraSettings } from '~/hooks/useLocalStorage';
+import { useHydrated } from '~/utils/react/hooks/useHydrated';
+import { useSoraSettings } from '~/utils/react/hooks/useLocalStorage';
 import AspectRatio from '~/components/elements/AspectRatio';
 import Image from '~/components/elements/Image';
 

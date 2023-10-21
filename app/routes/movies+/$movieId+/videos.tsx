@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Card, CardBody, CardFooter } from '@nextui-org/card';
 import { useMediaQuery } from '@react-hookz/web';
-import { json, type LoaderArgs } from '@remix-run/node';
+import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { useFetcher, useLoaderData } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import { AnimatePresence, motion, type PanInfo } from 'framer-motion';
@@ -13,7 +13,8 @@ import type { Handle } from '~/types/handle';
 import type { loader as movieIdLoader } from '~/routes/movies+/$movieId';
 import { authenticate } from '~/services/supabase';
 import { getVideos } from '~/services/tmdb/tmdb.server';
-import type { Item } from '~/services/youtube/youtube.types';
+import type { IMovieDetail } from '~/services/tmdb/tmdb.types';
+import type { IYoutubeItem } from '~/services/youtube/youtube.types';
 import TMDB from '~/utils/media';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
@@ -22,7 +23,7 @@ import WatchTrailer, { type Trailer } from '~/components/elements/dialog/WatchTr
 import Image from '~/components/elements/Image';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/elements/tab/Tabs';
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   await authenticate(request, undefined, true);
 
   const { movieId } = params;
@@ -68,20 +69,27 @@ export const handle: Handle = {
     </BreadcrumbItem>
   ),
   miniTitle: ({ parentMatch, t }) => ({
-    title: parentMatch?.data?.detail?.title,
+    title: parentMatch ? (parentMatch.data as { detail: IMovieDetail })?.detail?.title || '' : '',
     subtitle: t('videos'),
-    showImage: parentMatch?.data?.detail?.poster_path !== undefined,
-    imageUrl: TMDB?.posterUrl(parentMatch?.data?.detail?.poster_path || '', 'w92'),
+    showImage: parentMatch
+      ? (parentMatch.data as { detail: IMovieDetail })?.detail?.poster_path !== undefined
+      : false,
+    imageUrl: parentMatch
+      ? TMDB?.posterUrl(
+          (parentMatch.data as { detail: IMovieDetail })?.detail?.poster_path || '',
+          'w92',
+        )
+      : undefined,
   }),
 };
 
 const MovieVideosPage = () => {
   const { videos } = useLoaderData<typeof loader>();
-  const fetcher = useFetcher();
+  const fetcher = useFetcher<{ youtubeVideo: IYoutubeItem[] }>();
   const { t } = useTranslation();
   const isSm = useMediaQuery('(max-width: 650px)', { initializeWithValue: false });
   const [activeType, setActiveType] = useState('trailer');
-  const [activeTypeVideos, setActiveTypeVideos] = useState<Item[] | []>([]);
+  const [activeTypeVideos, setActiveTypeVideos] = useState<IYoutubeItem[] | []>([]);
   const [visible, setVisible] = useState(false);
   const [trailer, setTrailer] = useState<Trailer>({});
   const underlineRef = useRef<HTMLDivElement>(null);
@@ -124,7 +132,8 @@ const MovieVideosPage = () => {
   }, [activeType, videos]);
   useEffect(() => {
     if (fetcher.data && fetcher.data.youtubeVideo) {
-      setActiveTypeVideos(fetcher.data.youtubeVideo);
+      // @ts-expect-error
+      setActiveTypeVideos(fetcher?.data?.youtubeVideo as IYoutubeItem[]);
     }
   }, [fetcher.data]);
 

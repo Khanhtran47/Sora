@@ -1,4 +1,4 @@
-import { json, type LoaderArgs } from '@remix-run/node';
+import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -14,8 +14,8 @@ import {
   getListPeople,
   getTrending,
 } from '~/services/tmdb/tmdb.server';
+import { useTypedRouteLoaderData } from '~/utils/react/hooks/useTypedRouteLoaderData';
 import { CACHE_CONTROL } from '~/utils/server/http';
-import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import featuredList from '~/constants/featuredList';
 import MediaList from '~/components/media/MediaList';
 
@@ -27,7 +27,7 @@ export const handle: Handle = {
   }),
 };
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const [, locale] = await Promise.all([
     authenticate(request, undefined, true),
     i18next.getLocale(request),

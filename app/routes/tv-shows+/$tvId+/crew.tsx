@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { Pagination } from '@nextui-org/pagination';
 import { useMediaQuery } from '@react-hookz/web';
-import { json, type LoaderArgs } from '@remix-run/node';
+import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 
@@ -9,14 +9,15 @@ import type { Handle } from '~/types/handle';
 import type { loader as tvIdLoader } from '~/routes/tv-shows+/$tvId';
 import { authenticate } from '~/services/supabase';
 import { getCredits } from '~/services/tmdb/tmdb.server';
+import type { ITvShowDetail } from '~/services/tmdb/tmdb.types';
 import { postFetchDataHandler } from '~/services/tmdb/utils.server';
 import TMDB from '~/utils/media';
+import useSplitArrayIntoPage from '~/utils/react/hooks/useSplitArrayIntoPage';
 import { CACHE_CONTROL } from '~/utils/server/http';
-import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
 import MediaList from '~/components/media/MediaList';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   await authenticate(request, undefined, true);
 
   const { tvId } = params;
@@ -65,10 +66,17 @@ export const handle: Handle = {
     </BreadcrumbItem>
   ),
   miniTitle: ({ parentMatch, t }) => ({
-    title: parentMatch?.data?.detail?.name,
+    title: parentMatch ? (parentMatch?.data as { detail: ITvShowDetail })?.detail?.name || '' : '',
     subtitle: t('crew'),
-    showImage: parentMatch?.data?.detail?.poster_path !== undefined,
-    imageUrl: TMDB?.posterUrl(parentMatch?.data?.detail?.poster_path || '', 'w92'),
+    showImage: parentMatch
+      ? (parentMatch?.data as { detail: ITvShowDetail })?.detail?.poster_path !== undefined
+      : false,
+    imageUrl: TMDB?.posterUrl(
+      parentMatch
+        ? (parentMatch?.data as { detail: ITvShowDetail })?.detail?.poster_path || ''
+        : '',
+      'w92',
+    ),
   }),
 };
 

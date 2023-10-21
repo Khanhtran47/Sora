@@ -1,9 +1,9 @@
-import { json, type LoaderArgs } from '@remix-run/node';
+import { json, type LoaderFunctionArgs } from '@remix-run/node';
 
 import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const [, locale] = await Promise.all([
     authenticate(request, undefined, true),
     i18next.getLocale(request),
@@ -650,7 +650,7 @@ export const loader = async ({ request }: LoaderArgs) => {
     },
     {
       headers: {
-        'Cache-Control': 'public, max-age=31536000, immutable',
+        'Cache-Control': 'public, max-age=600',
         'Content-Type': 'application/manifest+json',
       },
     },

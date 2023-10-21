@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Button } from '@nextui-org/button';
 import { useFetcher, useNavigate } from '@remix-run/react';
-import { useGlobalLoadingState } from 'remix-utils';
 
-import { useSoraSettings } from '~/hooks/useLocalStorage';
+import type { Provider } from '~/services/provider.server';
+import { useGlobalLoadingState } from '~/utils/react/hooks/useGlobalNavigationState';
+import { useSoraSettings } from '~/utils/react/hooks/useLocalStorage';
 import { DialogHeader, DialogTitle } from '~/components/elements/Dialog';
 
 type SelectProviderProps = {
@@ -38,18 +39,8 @@ const SelectProvider = (props: SelectProviderProps) => {
   const navigate = useNavigate();
   const globalState = useGlobalLoadingState();
   const { isShowSkipOpEdButton } = useSoraSettings();
-  const [provider, setProvider] = useState<
-    {
-      id?: string | number | null;
-      provider: string;
-      episodesCount?: number;
-    }[]
-  >();
-  const handleProvider = (item: {
-    id?: string | number | null;
-    provider: string;
-    episodesCount?: number;
-  }) => {
+  const [provider, setProvider] = useState<Provider[]>();
+  const handleProvider = (item: Provider) => {
     closeHandler();
     if (type === 'movie') navigate(`/movies/${id}/watch?provider=${item.provider}&id=${item.id}`);
     else if (type === 'tv')
@@ -81,8 +72,8 @@ const SelectProvider = (props: SelectProviderProps) => {
   }, [visible]);
 
   useEffect(() => {
-    if (fetcher.data && fetcher.data.provider) {
-      setProvider(fetcher.data.provider);
+    if (fetcher.data && (fetcher.data as { provider: Provider[] | undefined }).provider) {
+      setProvider((fetcher.data as { provider: Provider[] | undefined }).provider);
     }
   }, [fetcher.data]);
 

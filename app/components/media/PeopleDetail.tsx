@@ -7,7 +7,7 @@ import { MimeType } from 'remix-image';
 
 import type { IPeopleDetail } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
-import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
+import useColorDarkenLighten from '~/utils/react/hooks/useColorDarkenLighten';
 import Image from '~/components/elements/Image';
 import PhotoIcon from '~/assets/icons/PhotoIcon';
 import ExternalLinkBlack from '~/assets/lotties/external-link-black.json';

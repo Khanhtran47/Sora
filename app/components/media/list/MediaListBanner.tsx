@@ -1,11 +1,12 @@
 import { forwardRef, useEffect, useRef, useState } from 'react';
 import { Button } from '@nextui-org/button';
 import { useMediaQuery } from '@react-hookz/web';
-import { Autoplay, Pagination, Thumbs, type Swiper } from 'swiper';
+import type Swiper from 'swiper';
+import { Autoplay, Pagination, Thumbs } from 'swiper/modules';
 import { Swiper as SwiperReact, SwiperSlide, useSwiper } from 'swiper/react';
 
 import type { IMedia } from '~/types/media';
-import { useSoraSettings } from '~/hooks/useLocalStorage';
+import { useSoraSettings } from '~/utils/react/hooks/useLocalStorage';
 import ChevronLeftIcon from '~/assets/icons/ChevronLeftIcon';
 import ChevronRightIcon from '~/assets/icons/ChevronRightIcon';
 import PlayIcon from '~/assets/icons/PlayIcon';

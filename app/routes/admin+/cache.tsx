@@ -1,7 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@nextui-org/button';
 import { Spacer } from '@nextui-org/spacer';
-import { json, type ActionArgs, type LoaderArgs } from '@remix-run/node';
+import type { PressEvent } from '@react-aria/interactions';
+import { json, type ActionFunctionArgs, type LoaderFunctionArgs } from '@remix-run/node';
 import {
   useFetcher,
   useLoaderData,
@@ -12,11 +13,10 @@ import {
 import { mergeMeta } from '~/utils';
 import type { CacheEntry } from 'cachified';
 import { motion } from 'framer-motion';
-import { badRequest } from 'remix-utils';
 
 import type { Handle } from '~/types/handle';
-import { getAllCacheKeys, lruCache, searchCacheKeys } from '~/services/lru-cache';
 import { getUserFromCookie } from '~/services/supabase';
+import { getAllCacheKeys, lruCache, searchCacheKeys } from '~/utils/server/cache.server';
 import { redirectWithToast } from '~/utils/server/toast-session.server';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import {
@@ -29,7 +29,7 @@ import {
 } from '~/components/elements/Dialog';
 import SearchForm from '~/components/elements/SearchForm';
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const cookie = request.headers.get('Cookie');
   if (!cookie) {
     return redirectWithToast(request, '/sign-in', {
@@ -56,7 +56,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   }
   const url = new URL(request.url);
   const query = url.searchParams.get('query');
-  let cacheKeys: { key: string; data: CacheEntry<unknown> }[];
+  let cacheKeys: Array<string>;
   if (typeof query === 'string') {
     cacheKeys = await searchCacheKeys(query);
   } else {
@@ -65,11 +65,11 @@ export const loader = async ({ request }: LoaderArgs) => {
   return json({ cacheKeys });
 };
 
-export const action = async ({ request }: ActionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const cacheKey = formData.get('cacheKey') as string;
   if (typeof cacheKey !== 'string') {
-    throw badRequest({ message: 'Invalid cache key' });
+    return json({ message: 'Invalid cache key' }, { status: 400 });
   }
   lruCache.delete(cacheKey);
   return json({ success: true });
@@ -93,15 +93,29 @@ export const handle: Handle = {
   getSitemapEntries: () => null,
 };
 
-const CacheKeyRow = ({
-  cacheKey,
-  handleOpenDetailCache,
-}: {
-  cacheKey: string;
-  handleOpenDetailCache: (cacheKey: string) => void;
-}) => {
+const CacheKeyRow = ({ cacheKey }: { cacheKey: string }) => {
   const fetcher = useFetcher();
+  const fetchCacheData = useFetcher<{
+    cacheKey: string;
+    value: CacheEntry<unknown>;
+  }>();
   const [doubleCheck, setDoubleCheck] = useState(false);
+  const [IsShowDetailCache, setIsShowDetailCache] = useState(false);
+  const [cacheValue, setCacheValue] = useState<CacheEntry<unknown> | null>(null);
+  const closeHandler = () => {
+    setIsShowDetailCache(false);
+  };
+  const handleOpenDetailCache = (cacheKey: string, e: PressEvent) => {
+    if (e.pointerType === 'keyboard') {
+      setIsShowDetailCache(true);
+    }
+    fetchCacheData.load(`/admin/cache/${cacheKey}`);
+  };
+  useEffect(() => {
+    if (fetchCacheData.data && fetchCacheData.data.cacheKey) {
+      setCacheValue(fetchCacheData.data.value as CacheEntry<unknown>);
+    }
+  }, [fetchCacheData.data]);
   return (
     <div className="flex items-center gap-2 font-mono">
       <fetcher.Form method="post">
@@ -122,34 +136,52 @@ const CacheKeyRow = ({
           {fetcher.state === 'idle' ? (doubleCheck ? 'You sure?' : 'Delete') : 'Deleting...'}
         </Button>
       </fetcher.Form>
-      <Button variant="light" color="primary" onPress={() => handleOpenDetailCache(cacheKey)}>
-        {cacheKey}
-      </Button>
+      <Dialog open={IsShowDetailCache} onOpenChange={setIsShowDetailCache}>
+        <DialogTrigger asChild>
+          <Button variant="light" onPress={(e) => handleOpenDetailCache(cacheKey, e)}>
+            {cacheKey}
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle id="modal-title">Cache detail</DialogTitle>
+          </DialogHeader>
+          {cacheValue && cacheKey ? (
+            <div className="flex flex-col gap-4" id="modal-description">
+              <h5>
+                Cache Key: <span>{cacheKey}</span>
+              </h5>
+              <h5>
+                Cache TTL: <span>{cacheValue.metadata.ttl}</span>
+              </h5>
+              <h5>
+                Cache Stale While Revalidate: <span>{cacheValue.metadata.swr}</span>
+              </h5>
+              <h5>
+                Cache Created At: <span>{cacheValue.metadata.createdTime}</span>
+              </h5>
+              <h5>
+                Cache Data: <span>{JSON.stringify(cacheValue.value)}</span>
+              </h5>
+            </div>
+          ) : null}
+          <DialogFooter>
+            <Button variant="flat" color="danger" onPress={closeHandler}>
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
 
 const CacheAdminRoute = () => {
   const { cacheKeys } = useLoaderData<typeof loader>();
-  const [showDetailCache, setShowDetailCache] = useState(false);
-  const [currentCacheKey, setCurrentCacheKey] = useState<string | null>(null);
   const [searchParams] = useSearchParams();
   const location = useLocation();
   const navigate = useNavigate();
   const query = searchParams.get('query') ?? '';
-  const currentCache = useMemo(() => {
-    if (currentCacheKey) {
-      return cacheKeys.find((cacheKey) => cacheKey.key === currentCacheKey);
-    }
-    return null;
-  }, [currentCacheKey, cacheKeys]);
-  const handleShowDetailCache = (cacheKey: string) => {
-    setCurrentCacheKey(cacheKey);
-    setShowDetailCache(true);
-  };
-  const closeHandler = () => {
-    setShowDetailCache(false);
-  };
   const onSubmit = (value: string) => {
     navigate(`/admin/cache?query=${value}`);
   };
@@ -161,60 +193,30 @@ const CacheAdminRoute = () => {
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: '-10%', opacity: 0 }}
       transition={{ duration: 0.3 }}
+      className="flex w-full flex-col items-center justify-center px-3 sm:px-5"
     >
-      <div className="flex w-full max-w-screen-4xl flex-col justify-start px-3 sm:px-0">
-        <h2>Cache Management</h2>
-        <SearchForm
-          onSubmit={onSubmit}
-          textOnButton="Search"
-          textPlaceHolder="Search cache key"
-          defaultValue={query}
-        />
-        <Spacer x={5} />
-        <Dialog open={showDetailCache} onOpenChange={setShowDetailCache}>
-          <div className="flex flex-col gap-4">
-            {cacheKeys.map((cacheKey) => (
-              <DialogTrigger key={cacheKey.key}>
-                <CacheKeyRow
-                  cacheKey={cacheKey.key}
-                  handleOpenDetailCache={(key) => handleShowDetailCache(key)}
-                />
-              </DialogTrigger>
-            ))}
-          </div>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle id="modal-title">Cache detail</DialogTitle>
-            </DialogHeader>
-            {currentCache ? (
-              <div className="flex flex-col gap-4" id="modal-description">
-                <h5>
-                  Cache Key: <span>{currentCache.key}</span>
-                </h5>
-                <h5>
-                  Cache TTL: <span>{currentCache.data.metadata.ttl}</span>
-                </h5>
-                <h5>
-                  Cache Stale While Revalidate: <span>{currentCache.data.metadata.swr}</span>
-                </h5>
-                <h5>
-                  Cache Created At: <span>{currentCache.data.metadata.createdTime}</span>
-                </h5>
-                <h5>
-                  Cache Data: <span>{JSON.stringify(currentCache.data.value)}</span>
-                </h5>
-              </div>
-            ) : null}
-            <DialogFooter>
-              <Button variant="flat" color="danger" onPress={closeHandler}>
-                Close
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+      <h2>Cache Management</h2>
+      <SearchForm
+        onSubmit={onSubmit}
+        textOnButton="Search"
+        textPlaceHolder="Search cache key"
+        defaultValue={query}
+      />
+      <Spacer x={5} />
+      <div className="flex w-full flex-col gap-4">
+        {cacheKeys.map((cacheKey) => (
+          <CacheKeyRow key={cacheKey} cacheKey={cacheKey} />
+        ))}
       </div>
     </motion.div>
   );
 };
+
+export function ErrorBoundary({ error }: { error: Error }) {
+  // eslint-disable-next-line no-console
+  console.error(error);
+
+  return <div>An unexpected error occurred: {error.message}</div>;
+}
 
 export default CacheAdminRoute;

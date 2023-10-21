@@ -1,8 +1,8 @@
-import { redirect, type ActionArgs } from '@remix-run/node';
+import { redirect, type ActionFunctionArgs } from '@remix-run/node';
 
 import { authenticate, insertHistory } from '~/services/supabase';
 
-export const action = async ({ request }: ActionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   const headers = new Headers();
   const user = await authenticate(request, true, true);
 

@@ -1,6 +1,5 @@
-/* eslint-disable import/prefer-default-export */
+import { fetcher, lruCache } from '~/utils/server/cache.server';
 
-import { fetcher, lruCache } from '../lru-cache';
 import { LOKLOK_URL } from './utils.server';
 
 export const loklokGetMedia = async (contentId: string, episodeIndex: string, category: 0 | 1) => {

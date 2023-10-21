@@ -13,11 +13,11 @@ import { useSwiper } from 'swiper/react';
 
 import type { Title } from '~/types/media';
 import type { ITrailer } from '~/services/consumet/anilist/anilist.types';
-import type { IImage } from '~/services/tmdb/tmdb.types';
+import type { IDetailImages, IImage, IVideos } from '~/services/tmdb/tmdb.types';
 import TMDB from '~/utils/media';
+import { useSoraSettings } from '~/utils/react/hooks/useLocalStorage';
 import useCardHoverStore from '~/store/card/useCardHoverStore';
 import { useLayout } from '~/store/layout/useLayout';
-import { useSoraSettings } from '~/hooks/useLocalStorage';
 import AspectRatio from '~/components/elements/AspectRatio';
 import type { Trailer } from '~/components/elements/dialog/WatchTrailerDialog';
 import Image from '~/components/elements/Image';
@@ -178,22 +178,22 @@ const BannerItemDesktop = (props: IBannerItemDesktopProps) => {
     if (
       active === true &&
       fetcher.data &&
-      fetcher.data.videos &&
+      (fetcher.data as { videos: IVideos }).videos &&
       bannerIntersection?.isIntersecting &&
       mediaType !== 'anime'
     ) {
-      const { results } = fetcher.data.videos;
-      const officialTrailer = results.find((result: Trailer) => result.type === 'Trailer');
+      const { results } = (fetcher.data as { videos: IVideos }).videos;
+      const officialTrailer = results.find((result: Trailer) => result.type === 'Trailer') || {};
       setTrailerBanner(officialTrailer);
     }
     if (
       active === true &&
       fetcher.data &&
-      fetcher.data.images &&
+      (fetcher.data as { images: IDetailImages }).images &&
       bannerIntersection?.isIntersecting &&
       mediaType !== 'anime'
     ) {
-      const { logos } = fetcher.data.images;
+      const { logos } = (fetcher.data as { images: IDetailImages }).images;
       if (logos && logos.length > 0) setLogo(logos[0]);
     }
   }, [fetcher.data]);

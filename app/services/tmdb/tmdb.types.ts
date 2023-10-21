@@ -187,8 +187,8 @@ export interface IPeople {
   known_for?: IMedia[];
   name?: string;
   popularity?: number;
-  profile_path?: string | null;
-  gender?: number | null;
+  profile_path?: string;
+  gender?: number;
   known_for_department?: string;
   character?: string;
   credit_id?: string;
@@ -207,7 +207,7 @@ export interface IListPeople {
 }
 
 export interface IPeopleDetail {
-  birthday?: string | null;
+  birthday?: string;
   known_for_department?: string;
   deathday?: null | string;
   id?: number;
@@ -216,22 +216,22 @@ export interface IPeopleDetail {
   gender?: number;
   biography?: string;
   popularity?: number;
-  place_of_birth?: string | null;
-  profile_path?: string | null;
+  place_of_birth?: string;
+  profile_path?: string;
   adult?: boolean;
   imdb_id?: string;
-  homepage?: undefined | string;
+  homepage?: string;
 }
 
 export interface IPeopleExternalIds {
-  imdb_id?: string | null;
-  facebook_id?: null | string;
-  freebase_mid?: string | null;
-  freebase_id?: null | string;
-  tvrage_id?: number | null;
-  twitter_id?: null | string;
+  imdb_id?: string;
+  facebook_id?: string;
+  freebase_mid?: string;
+  freebase_id?: string;
+  tvrage_id?: number;
+  twitter_id?: string;
   id?: number;
-  instagram_id?: string | null;
+  instagram_id?: string;
 }
 
 export interface IPeopleImages {

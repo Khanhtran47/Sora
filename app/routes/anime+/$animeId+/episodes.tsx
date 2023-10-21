@@ -1,17 +1,18 @@
-import { json, type LoaderArgs } from '@remix-run/node';
+import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 
 import type { Handle } from '~/types/handle';
 import type { loader as animeIdLoader } from '~/routes/anime+/$animeId';
 import { getAnimeEpisodeInfo } from '~/services/consumet/anilist/anilist.server';
+import type { IAnimeInfo } from '~/services/consumet/anilist/anilist.types';
 import { authenticate } from '~/services/supabase';
+import { useTypedRouteLoaderData } from '~/utils/react/hooks/useTypedRouteLoaderData';
 import { CACHE_CONTROL } from '~/utils/server/http';
-import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import ListEpisodes from '~/components/elements/shared/ListEpisodes';
 
-export const loader = async ({ params, request }: LoaderArgs) => {
+export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   await authenticate(request, undefined, true);
 
   const { animeId } = params;
@@ -80,15 +81,18 @@ export const handle: Handle = {
     </BreadcrumbItem>
   ),
   miniTitle: ({ parentMatch, t }) => ({
-    title:
-      parentMatch?.data?.detail?.title?.userPreferred ||
-      parentMatch?.data?.detail?.title?.english ||
-      parentMatch?.data?.detail?.title?.romaji ||
-      parentMatch?.data?.detail?.title?.native ||
-      '',
+    title: parentMatch
+      ? (parentMatch.data as { detail: IAnimeInfo })?.detail?.title?.userPreferred ||
+        (parentMatch.data as { detail: IAnimeInfo })?.detail?.title?.english ||
+        (parentMatch.data as { detail: IAnimeInfo })?.detail?.title?.romaji ||
+        (parentMatch.data as { detail: IAnimeInfo })?.detail?.title?.native ||
+        ''
+      : '',
     subtitle: t('episodes'),
-    showImage: parentMatch?.data?.detail?.image !== undefined,
-    imageUrl: parentMatch?.data?.detail?.image,
+    showImage: parentMatch
+      ? (parentMatch.data as { detail: IAnimeInfo })?.detail?.image !== undefined
+      : false,
+    imageUrl: parentMatch ? (parentMatch.data as { detail: IAnimeInfo })?.detail?.image : undefined,
   }),
   preventScrollToTop: true,
   disableLayoutPadding: true,

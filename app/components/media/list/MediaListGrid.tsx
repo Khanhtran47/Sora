@@ -7,12 +7,13 @@ import { useFetcher, useLocation, useSearchParams } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import NProgress from 'nprogress';
 import { useTranslation } from 'react-i18next';
-import { useGlobalLoadingState } from 'remix-utils';
 import { tv } from 'tailwind-variants';
 
 import type { IMedia } from '~/types/media';
+import type { IAnimeList } from '~/services/consumet/anilist/anilist.types';
+import { useGlobalLoadingState } from '~/utils/react/hooks/useGlobalNavigationState';
+import { useSoraSettings } from '~/utils/react/hooks/useLocalStorage';
 import { useLayout } from '~/store/layout/useLayout';
-import { useSoraSettings } from '~/hooks/useLocalStorage';
 import Arrow from '~/assets/icons/ArrowIcon';
 
 import MediaItem from '../item';
@@ -32,6 +33,8 @@ interface IMediaListCardProps {
   scrollToTopListAfterChangePage?: boolean;
   totalPages?: number;
 }
+
+type AnimeListItems = Omit<IAnimeList, 'results'> & { results: IMedia[] };
 
 const mediaListGridStyles = tv({
   base: 'grid w-full max-w-screen-4xl items-stretch justify-items-center gap-5',
@@ -115,24 +118,32 @@ const MediaListGrid = (props: IMediaListCardProps) => {
   // Merge items, increment page, and allow fetching again
   useEffect(() => {
     // Discontinue API calls if the last page has been reached
-    if (fetcher.data && fetcher.data.length === 0) {
+    if (fetcher.data && (fetcher.data as { length: number }).length === 0) {
       setShouldFetch(false);
       return;
     }
 
     // Items contain data, merge them and allow the possibility of another fetch
     if (fetcher.data) {
-      if (fetcher.data.items) {
-        setListItems((prevItems) => [...prevItems, ...fetcher.data.items.results]);
-        if (fetcher.data.items.hasNextPage === true) {
+      if ((fetcher.data as { items: AnimeListItems }).items) {
+        setListItems((prevItems) => [
+          ...prevItems,
+          ...(fetcher.data as unknown as { items: AnimeListItems }).items.results,
+        ]);
+        if ((fetcher.data as { items: IAnimeList }).items.hasNextPage === true) {
           setPage(page + 1);
           setShouldFetch(true);
         } else {
           setShouldFetch(false);
         }
-      } else if (fetcher.data.searchResults) {
-        setListItems((prevItems) => [...prevItems, ...fetcher.data.searchResults.results]);
-        if (fetcher.data.searchResults.hasNextPage === true) {
+      } else if ((fetcher.data as { searchResults: AnimeListItems }).searchResults) {
+        setListItems((prevItems) => [
+          ...prevItems,
+          ...(fetcher.data as unknown as { searchResults: AnimeListItems }).searchResults.results,
+        ]);
+        if (
+          (fetcher.data as { searchResults: AnimeListItems }).searchResults.hasNextPage === true
+        ) {
           setPage(page + 1);
           setShouldFetch(true);
         } else {

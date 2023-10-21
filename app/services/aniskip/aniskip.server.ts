@@ -1,5 +1,4 @@
-/* eslint-disable import/prefer-default-export */
-import { fetcher, lruCache } from '~/services/lru-cache';
+import { fetcher, lruCache } from '~/utils/server/cache.server';
 
 export interface IAniSkipResponse {
   found: boolean;

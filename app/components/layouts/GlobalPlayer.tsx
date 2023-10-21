@@ -11,6 +11,7 @@ import {
   useNavigate,
   useParams,
   useRouteLoaderData,
+  type UIMatch,
 } from '@remix-run/react';
 import type Artplayer from 'artplayer';
 import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
@@ -20,10 +21,12 @@ import { createPortal } from 'react-dom';
 import { toast } from 'sonner';
 import tinycolor from 'tinycolor2';
 
+import type { Handle } from '~/types/handle';
+import type { IVideos } from '~/services/tmdb/tmdb.types';
 import updateHistory from '~/utils/client/update-history';
+import { useSoraSettings } from '~/utils/react/hooks/useLocalStorage';
 import { useLayout } from '~/store/layout/useLayout';
 import usePlayerState, { type PlayerData } from '~/store/player/usePlayerState';
-import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { Dialog, DialogContent, DialogTrigger } from '~/components/elements/Dialog';
 import WatchTrailer, { type Trailer } from '~/components/elements/dialog/WatchTrailerDialog';
 import Player from '~/components/elements/player/ArtPlayer';
@@ -47,7 +50,7 @@ const GlobalPlayer = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const fetcher = useFetcher();
-  const matches = useMatches();
+  const matches = useMatches() as UIMatch<unknown, Handle>[];
   const { seasonId, episodeId } = useParams();
   const {
     isMini,
@@ -410,10 +413,10 @@ const GlobalPlayer = () => {
   const [isWatchTrailerDialogVisible, setWatchTrailerDialogVisible] = useState(false);
   const [trailer, setTrailer] = useState<Trailer>({});
   useEffect(() => {
-    if (fetcher.data && fetcher.data.videos) {
-      const { results } = fetcher.data.videos;
+    if (fetcher.data && (fetcher.data as { videos: IVideos }).videos) {
+      const { results } = (fetcher.data as { videos: IVideos }).videos;
       const officialTrailer = results.find((result: Trailer) => result.type === 'Trailer');
-      setTrailer(officialTrailer);
+      setTrailer(officialTrailer || {});
     }
   }, [fetcher.data]);
 

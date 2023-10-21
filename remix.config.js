@@ -1,30 +1,51 @@
 const { flatRoutes } = require('remix-flat-routes')
 
 /**
- * @type {import('@remix-run/dev/config').AppConfig}
+ * @type {import('@remix-pwa/dev').WorkerConfig}
  */
 module.exports = {
-	ignoredRouteFiles: ['**/.*'],
-	tailwind: true,
-	postcss: true,
+  //
+  // Remix Settings
+  //
 	// appDirectory: "app",
   // assetsBuildDirectory: "public/build",
-  // serverBuildPath: "build/index.js",
-  // publicPath: "/build/",
-	serverModuleFormat: 'cjs',
-	future: {
-		v2_dev: true,
-		v2_errorBoundary: true,
-		v2_headers: true,
-		v2_meta: true,
-		v2_normalizeFormMethod: true,
-		v2_routeConvention: true,
-	},
+  browserNodeBuiltinsPolyfill: { modules: { url: true } },
 	// ignore all files in routes folder to prevent
   // default remix convention from picking up routes
-  ignoredRouteFiles: ['**/*'],
+  ignoredRouteFiles: ['**/.*'],
+  // publicPath: "/build/",
+	postcss: true,
   routes: async defineRoutes => {
     return flatRoutes('routes', defineRoutes)
   },
-	serverDependenciesToBundle: [/^swiper.*/, /^ssr-window.*/, /^dom7.*/, /^react-photoswipe-gallery.*/, /^photoswipe.*/],
+  // serverBuildPath: "build/index.js",
+  serverDependenciesToBundle: [
+    /^swiper.*/,
+    /^ssr-window.*/,
+    /^dom7.*/,
+    /^react-photoswipe-gallery.*/,
+    /^photoswipe.*/,
+    /^remix-utils.*/,
+    /^is-ip.*/,
+    /^ip-regex.*/,
+    /^super-regex.*/,
+    /^clone-regex.*/,
+    /^function-timeout.*/,
+    /^time-span.*/,
+    /^convert-hrtime.*/,
+    /^is-regexp.*/,
+    /@remix-pwa\/.*/,
+    /@font-source\/.*/
+  ],
+  serverModuleFormat: 'cjs',
+  tailwind: true,
+  //
+  // Remix PWA Settings
+  //
+  // entryWorkerFile: '<appDir>/entry.worker.ts',
+  // worker: '@remix-pwa/runtime',
+  workerName: 'sw',
+  workerMinify: true,
+  // workerBuildDirectory: './build',
+  // workerSourcemap: false,
 };

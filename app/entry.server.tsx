@@ -6,7 +6,6 @@ import Backend from 'i18next-fs-backend';
 import isbot from 'isbot';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 
-import { otherRootRouteHandlers } from '~/services/other-root-routes.server';
 import { IsBotProvider } from '~/context/isbot.context';
 
 import { i18n, i18next } from './services/i18n';
@@ -37,11 +36,6 @@ const handleRequest = async (
         loadPath: resolve('./public/locales/{{lng}}/{{ns}}.json'),
       },
     });
-
-  for (const handler of otherRootRouteHandlers) {
-    const otherRouteResponse = await handler(request, remixContext);
-    if (otherRouteResponse) return otherRouteResponse;
-  }
 
   const isbotRender = isbot.spawn();
   isbotRender.exclude([

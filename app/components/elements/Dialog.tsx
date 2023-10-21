@@ -7,8 +7,8 @@ import Close from '~/assets/icons/CloseIcon';
 const Dialog = DialogPrimitive.Root;
 const DialogTrigger = DialogPrimitive.Trigger;
 
-const DialogPortal = ({ className, ...props }: DialogPrimitive.DialogPortalProps) => (
-  <DialogPrimitive.DialogPortal className={cn(className)} {...props} />
+const DialogPortal = ({ ...props }: DialogPrimitive.DialogPortalProps) => (
+  <DialogPrimitive.DialogPortal {...props} />
 );
 
 const DialogOverlay = React.forwardRef<
@@ -32,14 +32,13 @@ const DialogContent = React.forwardRef<
     hideCloseButton?: boolean;
     container?: HTMLElement;
     classNames?: {
-      portal?: string;
       overlay?: string;
       content?: string;
       closeButton?: string;
     };
   }
 >(({ className, classNames, children, hideCloseButton, container, ...props }, ref) => (
-  <DialogPortal container={container} className={cn(classNames?.portal)}>
+  <DialogPortal container={container}>
     <DialogOverlay className={cn(classNames?.overlay)} />
     <DialogPrimitive.Content
       ref={ref}

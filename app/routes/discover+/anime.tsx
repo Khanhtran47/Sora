@@ -1,15 +1,15 @@
-import { json, type LoaderArgs } from '@remix-run/node';
+import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import { motion, type PanInfo } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
-import { useHydrated } from 'remix-utils';
 
 import type { Handle } from '~/types/handle';
 import type { IMedia } from '~/types/media';
 import { getAnimeAdvancedSearch } from '~/services/consumet/anilist/anilist.server';
 import { authenticate } from '~/services/supabase';
+import { useHydrated } from '~/utils/react/hooks/useHydrated';
 import MediaList from '~/components/media/MediaList';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
@@ -25,7 +25,7 @@ export const meta = mergeMeta(() => [
   { name: 'twitter:image', content: 'https://sorachill.vercel.app/api/ogimage?it=anime' },
 ]);
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   await authenticate(request, undefined, true);
 
   const url = new URL(request.url);

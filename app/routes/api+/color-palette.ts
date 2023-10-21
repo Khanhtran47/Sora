@@ -1,7 +1,7 @@
-import { json, type LoaderArgs } from '@remix-run/node';
+import { json, type LoaderFunctionArgs } from '@remix-run/node';
 
-import { cachified, lruCache } from '~/services/lru-cache';
 import { authenticate } from '~/services/supabase';
+import { cachified, lruCache } from '~/utils/server/cache.server';
 
 interface Result {
   color: ColorPalette;
@@ -20,7 +20,7 @@ export interface ColorPalette {
   '900': string;
 }
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   await authenticate(request, undefined, true);
   const url = new URL(request.url);
   const color = url.searchParams.get('color');

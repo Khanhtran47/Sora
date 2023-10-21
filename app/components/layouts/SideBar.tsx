@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { MimeType } from 'remix-image';
 import { tv } from 'tailwind-variants';
 
-import { useSoraSettings } from '~/hooks/useLocalStorage';
+import { useSoraSettings } from '~/utils/react/hooks/useLocalStorage';
 import Image from '~/components/elements/Image';
 import {
   NavigationMenu,

@@ -1,6 +1,6 @@
 import { Button, ButtonGroup } from '@nextui-org/button';
 
-import { useSoraSettings } from '~/hooks/useLocalStorage';
+import { useSoraSettings } from '~/utils/react/hooks/useLocalStorage';
 import ViewGridCard from '~/assets/icons/ViewGridCardIcon';
 import ViewGridDetail from '~/assets/icons/ViewGridDetailIcon';
 import ViewGridTable from '~/assets/icons/ViewGridTableIcon';

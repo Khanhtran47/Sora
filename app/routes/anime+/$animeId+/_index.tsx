@@ -8,7 +8,7 @@ import { MimeType } from 'remix-image';
 import type { Handle } from '~/types/handle';
 import type { IMedia } from '~/types/media';
 import type { loader as animeIdLoader } from '~/routes/anime+/$animeId';
-import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
+import { useTypedRouteLoaderData } from '~/utils/react/hooks/useTypedRouteLoaderData';
 import MediaList from '~/components/media/MediaList';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 import Image from '~/components/elements/Image';

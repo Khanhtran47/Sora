@@ -1,19 +1,19 @@
 // Meta merging helper for overriding and appending meta tags
 // https://gist.github.com/ryanflorence/ec1849c6d690cfbffcb408ecd633e069
 
-import type { LoaderFunction, V2_HtmlMetaDescriptor, V2_MetaFunction } from '@remix-run/node';
+import type { LoaderFunction, MetaDescriptor, MetaFunction } from '@remix-run/node';
 
 export function mergeMeta<
   Loader extends LoaderFunction | unknown = unknown,
   ParentsLoaders extends Record<string, LoaderFunction> = {},
 >(
-  overrideFn: V2_MetaFunction<Loader, ParentsLoaders>,
-  appendFn?: V2_MetaFunction<Loader, ParentsLoaders>,
-): V2_MetaFunction<Loader, ParentsLoaders> {
+  overrideFn: MetaFunction<Loader, ParentsLoaders>,
+  appendFn?: MetaFunction<Loader, ParentsLoaders>,
+): MetaFunction<Loader, ParentsLoaders> {
   return (arg) => {
     // get meta and overwrite meta title, name, property from parent routes
-    let mergedMeta = arg.matches.reduce<V2_HtmlMetaDescriptor[]>((acc, match) => {
-      (match as { meta?: V2_HtmlMetaDescriptor[] }).meta?.forEach((meta) => {
+    let mergedMeta = arg.matches.reduce<MetaDescriptor[]>((acc, match) => {
+      (match as { meta?: MetaDescriptor[] }).meta?.forEach((meta) => {
         const index = acc.findIndex((m) => {
           return (
             ('name' in m && 'name' in meta && m.name === meta.name) ||

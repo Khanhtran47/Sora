@@ -9,12 +9,12 @@ import type { User } from '@supabase/supabase-js';
 import type { AnimationItem } from 'lottie-web';
 import { useTheme } from 'next-themes';
 import { useTranslation } from 'react-i18next';
-import { useHydrated } from 'remix-utils';
 
 import { getBackgroundTitleBarColor, setMetaThemeColor } from '~/utils/client/meta-tags.client';
-import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
-import { useSoraSettings } from '~/hooks/useLocalStorage';
-import { useTypedRouteLoaderData } from '~/hooks/useTypedRouteLoaderData';
+import useColorDarkenLighten from '~/utils/react/hooks/useColorDarkenLighten';
+import { useHydrated } from '~/utils/react/hooks/useHydrated';
+import { useSoraSettings } from '~/utils/react/hooks/useLocalStorage';
+import { useTypedRouteLoaderData } from '~/utils/react/hooks/useTypedRouteLoaderData';
 import languages from '~/constants/languages';
 import { listCustomThemeColors, listDefaultThemeColors } from '~/constants/settings';
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/elements/Popover';

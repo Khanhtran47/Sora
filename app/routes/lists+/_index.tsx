@@ -8,7 +8,7 @@ import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
 import type { Handle } from '~/types/handle';
-import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
+import useSplitArrayIntoPage from '~/utils/react/hooks/useSplitArrayIntoPage';
 import featuredList from '~/constants/featuredList';
 import MediaList from '~/components/media/MediaList';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';

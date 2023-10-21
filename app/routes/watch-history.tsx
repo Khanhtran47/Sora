@@ -4,7 +4,7 @@ import { Checkbox, CheckboxGroup } from '@nextui-org/checkbox';
 import { Input } from '@nextui-org/input';
 import { Pagination } from '@nextui-org/pagination';
 import { useMediaQuery } from '@react-hookz/web';
-import { json, type LoaderArgs } from '@remix-run/node';
+import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 
@@ -36,7 +36,7 @@ export const meta = mergeMeta(() => [
   { name: 'twitter:description', content: 'Watch History' },
 ]);
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await authenticate(request, true, true);
 
   const { searchParams } = new URL(request.url);

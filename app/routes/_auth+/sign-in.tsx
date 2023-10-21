@@ -1,4 +1,4 @@
-import { json, type ActionArgs, type LoaderArgs } from '@remix-run/node';
+import { json, type ActionFunctionArgs, type LoaderFunctionArgs } from '@remix-run/node';
 import { useActionData, useLocation } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 
@@ -27,7 +27,7 @@ export const meta = mergeMeta(() => [
   { property: 'twitter:description', content: 'Sign in to your Sora account.' },
 ]);
 
-export const action = async ({ request }: ActionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   const { searchParams } = new URL(request.url);
   const data = await request.clone().formData();
 
@@ -116,7 +116,7 @@ export const action = async ({ request }: ActionArgs) => {
   );
 };
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const session = await getSessionFromCookie(request.headers.get('Cookie'));
   const { searchParams } = new URL(request.url);
   const ref = (searchParams.get('ref') || '/').replace('_0x3F_', '?').replace('_0x26', '&');

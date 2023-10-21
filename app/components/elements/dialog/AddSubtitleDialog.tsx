@@ -3,8 +3,8 @@ import { Button } from '@nextui-org/button';
 import { toast } from 'sonner';
 
 import { getExt } from '~/utils/file';
+import { useSoraSettings } from '~/utils/react/hooks/useLocalStorage';
 import usePlayerState from '~/store/player/usePlayerState';
-import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { DialogFooter, DialogHeader, DialogTitle } from '~/components/elements/Dialog';
 
 interface IAddSubtitlesProps {

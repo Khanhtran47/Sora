@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { Pagination } from '@nextui-org/pagination';
 import { useMediaQuery } from '@react-hookz/web';
-import { json, type LoaderArgs } from '@remix-run/node';
+import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 
@@ -10,14 +10,15 @@ import type { loader as tvSeasonIdLoader } from '~/routes/tv-shows+/$tvId_.seaso
 import { i18next } from '~/services/i18n';
 import { authenticate } from '~/services/supabase';
 import { getTvSeasonCredits } from '~/services/tmdb/tmdb.server';
+import type { ISeasonDetail, ITvShowDetail } from '~/services/tmdb/tmdb.types';
 import { postFetchDataHandler } from '~/services/tmdb/utils.server';
 import TMDB from '~/utils/media';
+import useSplitArrayIntoPage from '~/utils/react/hooks/useSplitArrayIntoPage';
 import { CACHE_CONTROL } from '~/utils/server/http';
-import useSplitArrayIntoPage from '~/hooks/useSplitArrayIntoPage';
 import MediaList from '~/components/media/MediaList';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   await authenticate(request, undefined, true);
 
   const locale = await i18next.getLocale(request);
@@ -71,12 +72,23 @@ export const handle: Handle = {
     </BreadcrumbItem>
   ),
   miniTitle: ({ parentMatch, t }) => ({
-    title: `${parentMatch?.data?.detail?.name || parentMatch?.data?.detail?.original_name} - ${
-      parentMatch?.data?.seasonDetail?.name
-    }`,
+    title: parentMatch
+      ? `${
+          (parentMatch?.data as { detail: ITvShowDetail })?.detail?.name ||
+          (parentMatch?.data as { detail: ITvShowDetail })?.detail?.original_name
+        } - ${(parentMatch?.data as { seasonDetail: ISeasonDetail })?.seasonDetail?.name}`
+      : '',
     subtitle: t('cast'),
-    showImage: parentMatch?.data?.seasonDetail?.poster_path !== undefined,
-    imageUrl: TMDB.posterUrl(parentMatch?.data?.seasonDetail?.poster_path || '', 'w92'),
+    showImage: parentMatch
+      ? (parentMatch?.data as { seasonDetail: ISeasonDetail })?.seasonDetail?.poster_path !==
+        undefined
+      : false,
+    imageUrl: TMDB.posterUrl(
+      parentMatch
+        ? (parentMatch?.data as { seasonDetail: ISeasonDetail })?.seasonDetail?.poster_path || ''
+        : '',
+      'w92',
+    ),
   }),
 };
 

@@ -1,4 +1,4 @@
-import { fetcher, lruCache } from '~/services/lru-cache';
+import { fetcher, lruCache } from '~/utils/server/cache.server';
 
 import type { IEpisodeVideo, IItemInfo, ISearchItem, IVideoSubtitle } from './kisskh.types';
 import KissKh from './utils.server';

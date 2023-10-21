@@ -1,11 +1,11 @@
-export interface IYoutubeVideo {
+export interface IYoutubeVideoList {
   etag: string;
-  items: Item[];
+  items: IYoutubeItem[];
   kind: string;
   pageInfo: PageInfo;
 }
 
-export interface Item {
+export interface IYoutubeItem {
   contentDetails: ContentDetails;
   etag: string;
   id: string;

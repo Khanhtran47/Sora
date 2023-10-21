@@ -1,4 +1,4 @@
-import { fetcher, lruCache } from '~/services/lru-cache';
+import { fetcher, lruCache } from '~/utils/server/cache.server';
 
 import type { IBilibiliEpisode, IBilibiliInfo, IBilibiliSearch } from './bilibili.types';
 import Bilibili from './utils.server';

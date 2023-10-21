@@ -1,13 +1,8 @@
 import { lruCacheAdapter, verboseReporter, type CacheEntry } from 'cachified';
 import * as C from 'cachified';
-import LRU from 'lru-cache';
+import { LRUCache } from 'lru-cache';
 
-// https://www.npmjs.com/package/lru-cache
-
-declare global {
-  // eslint-disable-next-line vars-on-top, no-var
-  var cache: LRU<string, CacheEntry<unknown>> | undefined;
-}
+import { singleton } from './singleton.server';
 
 const lruOptions = {
   // let just say 1kb is an object which after being stringified having length of 1000
@@ -22,15 +17,13 @@ const lruOptions = {
   max: 640,
 };
 
-// eslint-disable-next-line no-multi-assign
-const lru = (global.cache = global.cache
-  ? global.cache
-  : new LRU<string, CacheEntry<unknown>>(lruOptions));
+const lru = singleton('lru-cache', () => new LRUCache<string, CacheEntry<unknown>>(lruOptions));
+
 const lruCache = lruCacheAdapter(lru);
 
-const getAllCacheKeys = async () => [...lru.entries()].map(([key, data]) => ({ key, data }));
+const getAllCacheKeys = async () => [...lru.keys()];
 const searchCacheKeys = async (search: string) =>
-  [...lru.entries()].filter(([key]) => key.includes(search)).map(([key, data]) => ({ key, data }));
+  [...lru.keys()].filter((key) => key.includes(search));
 
 async function shouldForceFresh({
   forceFresh,

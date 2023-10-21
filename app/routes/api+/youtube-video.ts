@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-throw-literal */
-import { json, type LoaderArgs } from '@remix-run/node';
+import { json, type LoaderFunctionArgs } from '@remix-run/node';
 
 import { authenticate } from '~/services/supabase';
 import { getYoutubeVideo } from '~/services/youtube/youtube.server';
 import { CACHE_CONTROL } from '~/utils/server/http';
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   await authenticate(request, undefined, true);
   const url = new URL(request.url);
   const id = url.searchParams.get('id');

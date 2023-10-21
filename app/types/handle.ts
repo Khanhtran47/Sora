@@ -1,21 +1,21 @@
-import type { SEOHandle } from '@balavishnuvj/remix-seo';
-import type { Params, RouteMatch } from '@remix-run/react';
+import type { SEOHandle } from '@nasa-gcn/remix-seo';
+import type { Params, UIMatch } from '@remix-run/react';
 import type { TFunction } from 'i18next';
 
 export declare type Handle = {
   breadcrumb?: (options: {
-    match: RouteMatch;
+    match: UIMatch<any>;
     t: TFunction<'translation', undefined>;
     params: Readonly<Params<string>>;
   }) => React.ReactNode;
   miniTitle?: (options: {
-    match: RouteMatch;
-    parentMatch?: RouteMatch;
+    match: UIMatch;
+    parentMatch?: UIMatch;
     t: TFunction<'translation', undefined>;
     params: Readonly<Params<string>>;
   }) => {
     title: string;
-    subTitle?: string;
+    subtitle?: string;
     showImage?: boolean;
     imageUrl?: string;
   };
@@ -42,4 +42,5 @@ export declare type Handle = {
   customHeaderChangeColorOnScroll?: boolean;
   showListViewChangeButton?: boolean;
   hideSidebar?: boolean;
+  hideMobileHeader?: boolean;
 } & SEOHandle;

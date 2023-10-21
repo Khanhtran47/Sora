@@ -1,21 +1,22 @@
 import { useEffect, useRef } from 'react';
 import { useIntersectionObserver } from '@react-hookz/web';
-import { json, type LoaderArgs } from '@remix-run/node';
+import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { Outlet, useLoaderData, useLocation } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
 import { motion, useTransform } from 'framer-motion';
-import { useHydrated } from 'remix-utils';
 
 import type { Handle } from '~/types/handle';
 import { getAnimeInfo } from '~/services/consumet/anilist/anilist.server';
+import type { IAnimeInfo } from '~/services/consumet/anilist/anilist.types';
 import getProviderList from '~/services/provider.server';
 import { authenticate } from '~/services/supabase';
+import useColorDarkenLighten from '~/utils/react/hooks/useColorDarkenLighten';
+import { useCustomHeaderChangePosition } from '~/utils/react/hooks/useHeader';
+import { useHydrated } from '~/utils/react/hooks/useHydrated';
+import { useSoraSettings } from '~/utils/react/hooks/useLocalStorage';
 import { CACHE_CONTROL } from '~/utils/server/http';
 import { useHeaderStyle } from '~/store/layout/useHeaderStyle';
 import { useLayout } from '~/store/layout/useLayout';
-import useColorDarkenLighten from '~/hooks/useColorDarkenLighten';
-import { useCustomHeaderChangePosition } from '~/hooks/useHeader';
-import { useSoraSettings } from '~/hooks/useLocalStorage';
 import { animeDetailsPages } from '~/constants/tabLinks';
 import { AnimeDetail, MediaBackgroundImage } from '~/components/media/MediaDetail';
 import { BreadcrumbItem } from '~/components/elements/Breadcrumb';
@@ -23,7 +24,7 @@ import ErrorBoundaryView from '~/components/elements/shared/ErrorBoundaryView';
 import TabLink from '~/components/elements/tab/TabLink';
 import { backgroundStyles } from '~/components/styles/primitives';
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { animeId } = params;
   const aid = Number(animeId);
   if (!animeId) throw new Response('Not Found', { status: 404 });
@@ -78,19 +79,20 @@ export const meta = mergeMeta<typeof loader>(({ data, params }) => {
 export const handle: Handle = {
   breadcrumb: ({ match }) => (
     <BreadcrumbItem to={`/anime/${match.params.animeId}`} key={`anime-${match.params.animeId}`}>
-      {match.data?.detail?.title?.english || match.data?.detail?.title?.romaji}
+      {(match.data as { detail: IAnimeInfo })?.detail?.title?.english ||
+        (match.data as { detail: IAnimeInfo })?.detail?.title?.romaji}
     </BreadcrumbItem>
   ),
   miniTitle: ({ match, t }) => ({
     title:
-      match.data?.detail?.title?.userPreferred ||
-      match.data?.detail?.title?.english ||
-      match.data?.detail?.title?.romaji ||
-      match.data?.detail?.title?.native ||
+      (match.data as { detail: IAnimeInfo })?.detail?.title?.userPreferred ||
+      (match.data as { detail: IAnimeInfo })?.detail?.title?.english ||
+      (match.data as { detail: IAnimeInfo })?.detail?.title?.romaji ||
+      (match.data as { detail: IAnimeInfo })?.detail?.title?.native ||
       '',
     subtitle: t('overview'),
-    showImage: match.data?.detail?.image !== undefined,
-    imageUrl: match.data?.detail?.image,
+    showImage: (match.data as { detail: IAnimeInfo })?.detail?.image !== undefined,
+    imageUrl: (match.data as { detail: IAnimeInfo })?.detail?.image,
   }),
   preventScrollToTop: true,
   disableLayoutPadding: true,

@@ -10,8 +10,8 @@ const Sheet = SheetPrimitive.Root;
 
 const SheetTrigger = SheetPrimitive.Trigger;
 
-const SheetPortal = ({ className, ...props }: SheetPrimitive.DialogPortalProps) => (
-  <SheetPrimitive.Portal className={cn(className)} {...props} />
+const SheetPortal = ({ ...props }: SheetPrimitive.DialogPortalProps) => (
+  <SheetPrimitive.Portal {...props} />
 );
 SheetPortal.displayName = SheetPrimitive.Portal.displayName;
 
@@ -127,7 +127,6 @@ export interface SheetContentProps
   onOpenChange?: () => void;
   container?: HTMLElement;
   classNames?: {
-    portal?: string;
     overlay?: string;
     content?: string;
     closeButton?: string;
@@ -160,7 +159,7 @@ const SheetContent = React.forwardRef<
       }
     };
     return (
-      <SheetPortal container={container} className={cn(classNames?.portal)}>
+      <SheetPortal container={container}>
         <SheetOverlay className={classNames?.overlay} />
         <SheetPrimitive.Content
           className={cn(

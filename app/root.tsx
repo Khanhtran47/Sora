@@ -1,39 +1,38 @@
 /* eslint-disable no-console */
 import * as React from 'react';
-import FontStyles100 from '@fontsource/inter/100.css';
-import FontStyles200 from '@fontsource/inter/200.css';
-import FontStyles300 from '@fontsource/inter/300.css';
-import FontStyles400 from '@fontsource/inter/400.css';
-import FontStyles500 from '@fontsource/inter/500.css';
-import FontStyles600 from '@fontsource/inter/600.css';
-import FontStyles700 from '@fontsource/inter/700.css';
-import FontStyles800 from '@fontsource/inter/800.css';
-import FontStyles900 from '@fontsource/inter/900.css';
+import FontStyles100 from '@fontsource/sora/100.css';
+import FontStyles200 from '@fontsource/sora/200.css';
+import FontStyles300 from '@fontsource/sora/300.css';
+import FontStyles400 from '@fontsource/sora/400.css';
+import FontStyles500 from '@fontsource/sora/500.css';
+import FontStyles600 from '@fontsource/sora/600.css';
+import FontStyles700 from '@fontsource/sora/700.css';
+import FontStyles800 from '@fontsource/sora/800.css';
 import { Button } from '@nextui-org/button';
 import { Image as NextUIImage } from '@nextui-org/image';
 import { NextUIProvider as NextUIv2Provider } from '@nextui-org/system';
+import { LiveReload, logger, useSWEffect } from '@remix-pwa/sw';
 import { cssBundleHref } from '@remix-run/css-bundle';
 import {
   json,
   type LinkDescriptor,
   type LinksFunction,
-  type LoaderArgs,
-  type V2_MetaFunction,
+  type LoaderFunctionArgs,
+  type MetaFunction,
 } from '@remix-run/node';
 import {
   isRouteErrorResponse,
   Links,
-  LiveReload,
   Meta,
   Scripts,
   useBeforeUnload,
   useFetchers,
   useLoaderData,
   useLocation,
-  useMatches,
   useNavigation,
   useRouteError,
 } from '@remix-run/react';
+import type { User } from '@supabase/supabase-js';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ThemeProvider as RemixThemesProvider } from 'next-themes';
 import NProgress from 'nprogress';
@@ -41,9 +40,11 @@ import photoSwipeStyles from 'photoswipe/dist/photoswipe.css';
 import { getSelectorsByUserAgent } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
 import { Provider as WrapBalancerProvider } from 'react-wrap-balancer';
+import rdtStylesheet from 'remix-development-tools/index.css';
 import { useChangeLanguage } from 'remix-i18next';
 import Image, { MimeType } from 'remix-image';
-import { getClientIPAddress, getClientLocales, useHydrated } from 'remix-utils';
+import { getClientIPAddress } from 'remix-utils/get-client-ip-address';
+import { getClientLocales } from 'remix-utils/locales/server';
 import { toast } from 'sonner';
 // @ts-ignore
 import swiperStyles from 'swiper/css';
@@ -67,7 +68,6 @@ import Layout from './components/layouts/Layout';
 import nProgressStyles from './components/styles/nprogress.css';
 import { listThemes } from './constants/settings';
 import { useIsBot } from './context/isbot.context';
-import { useToast } from './hooks/useToast';
 import { i18nCookie, i18next } from './services/i18n';
 import { getUserFromCookie } from './services/supabase';
 import { getListGenre, getListLanguages } from './services/tmdb/tmdb.server';
@@ -75,6 +75,8 @@ import tailwindStylesheetUrl from './styles/tailwind.css';
 import type { Handle } from './types/handle';
 import { combineHeaders } from './utils';
 import * as gtag from './utils/client/gtags.client';
+import { useHydrated } from './utils/react/hooks/useHydrated';
+import { useToast } from './utils/react/hooks/useToast';
 import { getToastSession } from './utils/server/toast-session.server';
 
 interface DocumentProps {
@@ -127,7 +129,7 @@ const themeValues = {
 
 export const links: LinksFunction = () => {
   return [
-    { rel: 'manifest', href: '/resources/manifest-v0.0.1.json' },
+    { rel: 'manifest', href: '/manifest.webmanifest' },
     { rel: 'icon', href: '/favicon.ico', type: 'image/x-icon' },
     // Preload CSS as a resource to avoid render blocking
     { rel: 'preload', as: 'style', href: tailwindStylesheetUrl },
@@ -140,10 +142,10 @@ export const links: LinksFunction = () => {
     { rel: 'preload', as: 'style', href: FontStyles600 },
     { rel: 'preload', as: 'style', href: FontStyles700 },
     { rel: 'preload', as: 'style', href: FontStyles800 },
-    { rel: 'preload', as: 'style', href: FontStyles900 },
     //These should match the css preloads above to avoid css as render blocking resource
     { rel: 'stylesheet', href: tailwindStylesheetUrl },
     cssBundleHref ? { rel: 'stylesheet', href: cssBundleHref } : null,
+    process.env.NODE_ENV === 'development' ? { rel: 'stylesheet', href: rdtStylesheet } : null,
     { rel: 'stylesheet', href: FontStyles100 },
     { rel: 'stylesheet', href: FontStyles200 },
     { rel: 'stylesheet', href: FontStyles300 },
@@ -152,7 +154,6 @@ export const links: LinksFunction = () => {
     { rel: 'stylesheet', href: FontStyles600 },
     { rel: 'stylesheet', href: FontStyles700 },
     { rel: 'stylesheet', href: FontStyles800 },
-    { rel: 'stylesheet', href: FontStyles900 },
     { rel: 'stylesheet', href: swiperStyles },
     { rel: 'stylesheet', href: swiperPaginationStyles },
     { rel: 'stylesheet', href: swiperNavigationStyles },
@@ -164,7 +165,7 @@ export const links: LinksFunction = () => {
   ].filter(Boolean) as LinkDescriptor[];
 };
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const locale = await i18next.getLocale(request);
   const gaTrackingId = process.env.GA_TRACKING_ID;
   const user = await getUserFromCookie(request.headers.get('Cookie') || '');
@@ -213,7 +214,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   );
 };
 
-export const meta: V2_MetaFunction<typeof loader> = () => [
+export const meta: MetaFunction<typeof loader> = () => [
   { title: 'Sora' },
   { name: 'description', content: 'Watching movies, series, anime and more in Sora' },
   {
@@ -354,11 +355,47 @@ function ElementScrollRestoration({
   );
 }
 
-let isMount = true;
+function useDetectSWUpdate() {
+  const [waitingWorker, setWaitingWorker] = React.useState<ServiceWorker | null>(null);
+  const [isUpdateAvailable, setIsUpdateAvailable] = React.useState(false);
+  React.useEffect(() => {
+    const detectSWUpdate = async () => {
+      if ('serviceWorker' in navigator) {
+        const registration = await navigator.serviceWorker.ready;
+        if (registration) {
+          registration.addEventListener('updatefound', () => {
+            const newWorker = registration.installing;
+            if (newWorker) {
+              console.log(
+                '🚀 ~ file: root.tsx:369 ~ registration.addEventListener ~ newWorker:',
+                newWorker,
+              );
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed') {
+                  logger.log('Service worker update found');
+                  setWaitingWorker(newWorker);
+                  setIsUpdateAvailable(true);
+                }
+              });
+            }
+          });
+          if (registration.waiting) {
+            setWaitingWorker(registration.waiting);
+            setIsUpdateAvailable(true);
+          }
+        }
+      }
+    };
+    detectSWUpdate();
+  }, []);
+  return {
+    waitingWorker,
+    isUpdateAvailable,
+  };
+}
 
 const Document = ({ children, title }: DocumentProps) => {
   const location = useLocation();
-  const matches = useMatches();
   const { locale, gaTrackingId, ENV } = useLoaderData<typeof loader>();
   const { i18n } = useTranslation();
   const isBot = useIsBot();
@@ -379,61 +416,7 @@ const Document = ({ children, title }: DocumentProps) => {
     }
   }, [location, gaTrackingId]);
 
-  function cloneObject<T>(obj: T): T {
-    const clone: T = {} as T;
-    // eslint-disable-next-line no-restricted-syntax
-    for (const key in obj) {
-      if (typeof obj[key] === 'object' && obj[key] != null) {
-        if (`${obj[key]}` === '[object Window]') {
-          delete obj[key];
-          // eslint-disable-next-line no-continue
-          continue;
-        }
-        clone[key] = cloneObject(obj[key]);
-      } else clone[key] = obj[key];
-    }
-    return clone;
-  }
-
-  React.useEffect(() => {
-    const mounted = isMount;
-    isMount = false;
-    if ('serviceWorker' in navigator) {
-      if (navigator.serviceWorker.controller) {
-        navigator.serviceWorker.controller?.postMessage(
-          JSON.stringify(
-            cloneObject({
-              type: 'REMIX_NAVIGATION',
-              isMount: mounted,
-              location,
-              matches,
-              manifest: window.__remixManifest,
-            }),
-          ),
-        );
-      } else {
-        const listener = async () => {
-          await navigator.serviceWorker.ready;
-          navigator.serviceWorker.controller?.postMessage(
-            JSON.stringify(
-              cloneObject({
-                type: 'REMIX_NAVIGATION',
-                isMount: mounted,
-                location,
-                matches,
-                manifest: window.__remixManifest,
-              }),
-            ),
-          );
-        };
-        navigator.serviceWorker.addEventListener('controllerchange', listener);
-        return () => {
-          navigator.serviceWorker.removeEventListener('controllerchange', listener);
-        };
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location]);
+  useSWEffect();
 
   return (
     <html lang={locale} dir={i18n.dir()} suppressHydrationWarning>
@@ -490,42 +473,14 @@ const App = () => {
   const isBot = useIsBot();
   useChangeLanguage(locale);
   useToast(message);
-  const [waitingWorker, setWaitingWorker] = React.useState<ServiceWorker | null>(null);
-  const [isUpdateAvailable, setIsUpdateAvailable] = React.useState(false);
-
-  const reloadPage = () => {
-    waitingWorker?.postMessage({ type: 'SKIP_WAITING' });
-    setIsUpdateAvailable(false);
-    window.location.reload();
-  };
-  const detectSWUpdate = async () => {
-    if ('serviceWorker' in navigator) {
-      const registration = await navigator.serviceWorker.ready;
-      if (registration) {
-        registration.addEventListener('updatefound', () => {
-          const newWorker = registration.installing;
-          if (newWorker) {
-            newWorker.addEventListener('statechange', () => {
-              if (newWorker.state === 'installed') {
-                setWaitingWorker(newWorker);
-                setIsUpdateAvailable(true);
-              }
-            });
-          }
-        });
-        if (registration.waiting) {
-          setWaitingWorker(registration.waiting);
-          setIsUpdateAvailable(true);
-        }
-      }
-    }
-  };
+  const { waitingWorker, isUpdateAvailable } = useDetectSWUpdate();
 
   React.useEffect(() => {
-    detectSWUpdate();
-  }, []);
-
-  React.useEffect(() => {
+    const reloadPage = () => {
+      logger.log('Service worker updated');
+      waitingWorker?.postMessage('skipWaiting');
+      window.location.reload();
+    };
     if (isUpdateAvailable) {
       toast.success('Update Available', {
         description: 'A new version of Sora is available.',
@@ -536,8 +491,7 @@ const App = () => {
         duration: Infinity,
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isUpdateAvailable]);
+  }, [isUpdateAvailable, waitingWorker]);
 
   return (
     <Document>
@@ -594,7 +548,7 @@ const App = () => {
             ) : null}
           </AnimatePresence>
           <NextUIv2Provider>
-            <Layout user={user} />
+            <Layout user={user as User | undefined} />
           </NextUIv2Provider>
         </RemixThemesProvider>
       </WrapBalancerProvider>
@@ -761,4 +715,11 @@ export function ErrorBoundary() {
   }
 }
 
-export default App;
+let AppExport = App;
+
+if (process.env.NODE_ENV === 'development') {
+  const { withDevTools } = require('remix-development-tools');
+  AppExport = withDevTools(AppExport);
+}
+
+export default AppExport;
