@@ -11,6 +11,7 @@ import FontStyles800 from '@fontsource/sora/800.css';
 import { Button } from '@nextui-org/button';
 import { Image as NextUIImage } from '@nextui-org/image';
 import { NextUIProvider as NextUIv2Provider } from '@nextui-org/system';
+import { LiveReload, logger, useSWEffect } from '@remix-pwa/sw';
 import { cssBundleHref } from '@remix-run/css-bundle';
 import {
   json,
@@ -22,14 +23,12 @@ import {
 import {
   isRouteErrorResponse,
   Links,
-  LiveReload,
   Meta,
   Scripts,
   useBeforeUnload,
   useFetchers,
   useLoaderData,
   useLocation,
-  useMatches,
   useNavigation,
   useRouteError,
 } from '@remix-run/react';
@@ -130,7 +129,7 @@ const themeValues = {
 
 export const links: LinksFunction = () => {
   return [
-    { rel: 'manifest', href: '/resources/manifest-v0.0.1.json' },
+    { rel: 'manifest', href: '/manifest.webmanifest' },
     { rel: 'icon', href: '/favicon.ico', type: 'image/x-icon' },
     // Preload CSS as a resource to avoid render blocking
     { rel: 'preload', as: 'style', href: tailwindStylesheetUrl },
@@ -356,11 +355,47 @@ function ElementScrollRestoration({
   );
 }
 
-let isMount = true;
+function useDetectSWUpdate() {
+  const [waitingWorker, setWaitingWorker] = React.useState<ServiceWorker | null>(null);
+  const [isUpdateAvailable, setIsUpdateAvailable] = React.useState(false);
+  React.useEffect(() => {
+    const detectSWUpdate = async () => {
+      if ('serviceWorker' in navigator) {
+        const registration = await navigator.serviceWorker.ready;
+        if (registration) {
+          registration.addEventListener('updatefound', () => {
+            const newWorker = registration.installing;
+            if (newWorker) {
+              console.log(
+                '🚀 ~ file: root.tsx:369 ~ registration.addEventListener ~ newWorker:',
+                newWorker,
+              );
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed') {
+                  logger.log('Service worker update found');
+                  setWaitingWorker(newWorker);
+                  setIsUpdateAvailable(true);
+                }
+              });
+            }
+          });
+          if (registration.waiting) {
+            setWaitingWorker(registration.waiting);
+            setIsUpdateAvailable(true);
+          }
+        }
+      }
+    };
+    detectSWUpdate();
+  }, []);
+  return {
+    waitingWorker,
+    isUpdateAvailable,
+  };
+}
 
 const Document = ({ children, title }: DocumentProps) => {
   const location = useLocation();
-  const matches = useMatches();
   const { locale, gaTrackingId, ENV } = useLoaderData<typeof loader>();
   const { i18n } = useTranslation();
   const isBot = useIsBot();
@@ -381,61 +416,7 @@ const Document = ({ children, title }: DocumentProps) => {
     }
   }, [location, gaTrackingId]);
 
-  function cloneObject<T>(obj: T): T {
-    const clone: T = {} as T;
-    // eslint-disable-next-line no-restricted-syntax
-    for (const key in obj) {
-      if (typeof obj[key] === 'object' && obj[key] != null) {
-        if (`${obj[key]}` === '[object Window]') {
-          delete obj[key];
-          // eslint-disable-next-line no-continue
-          continue;
-        }
-        clone[key] = cloneObject(obj[key]);
-      } else clone[key] = obj[key];
-    }
-    return clone;
-  }
-
-  React.useEffect(() => {
-    const mounted = isMount;
-    isMount = false;
-    if ('serviceWorker' in navigator) {
-      if (navigator.serviceWorker.controller) {
-        navigator.serviceWorker.controller?.postMessage(
-          JSON.stringify(
-            cloneObject({
-              type: 'REMIX_NAVIGATION',
-              isMount: mounted,
-              location,
-              matches,
-              manifest: window.__remixManifest,
-            }),
-          ),
-        );
-      } else {
-        const listener = async () => {
-          await navigator.serviceWorker.ready;
-          navigator.serviceWorker.controller?.postMessage(
-            JSON.stringify(
-              cloneObject({
-                type: 'REMIX_NAVIGATION',
-                isMount: mounted,
-                location,
-                matches,
-                manifest: window.__remixManifest,
-              }),
-            ),
-          );
-        };
-        navigator.serviceWorker.addEventListener('controllerchange', listener);
-        return () => {
-          navigator.serviceWorker.removeEventListener('controllerchange', listener);
-        };
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location]);
+  useSWEffect();
 
   return (
     <html lang={locale} dir={i18n.dir()} suppressHydrationWarning>
@@ -492,42 +473,14 @@ const App = () => {
   const isBot = useIsBot();
   useChangeLanguage(locale);
   useToast(message);
-  const [waitingWorker, setWaitingWorker] = React.useState<ServiceWorker | null>(null);
-  const [isUpdateAvailable, setIsUpdateAvailable] = React.useState(false);
-
-  const reloadPage = () => {
-    waitingWorker?.postMessage({ type: 'SKIP_WAITING' });
-    setIsUpdateAvailable(false);
-    window.location.reload();
-  };
-  const detectSWUpdate = async () => {
-    if ('serviceWorker' in navigator) {
-      const registration = await navigator.serviceWorker.ready;
-      if (registration) {
-        registration.addEventListener('updatefound', () => {
-          const newWorker = registration.installing;
-          if (newWorker) {
-            newWorker.addEventListener('statechange', () => {
-              if (newWorker.state === 'installed') {
-                setWaitingWorker(newWorker);
-                setIsUpdateAvailable(true);
-              }
-            });
-          }
-        });
-        if (registration.waiting) {
-          setWaitingWorker(registration.waiting);
-          setIsUpdateAvailable(true);
-        }
-      }
-    }
-  };
+  const { waitingWorker, isUpdateAvailable } = useDetectSWUpdate();
 
   React.useEffect(() => {
-    detectSWUpdate();
-  }, []);
-
-  React.useEffect(() => {
+    const reloadPage = () => {
+      logger.log('Service worker updated');
+      waitingWorker?.postMessage('skipWaiting');
+      window.location.reload();
+    };
     if (isUpdateAvailable) {
       toast.success('Update Available', {
         description: 'A new version of Sora is available.',
@@ -538,8 +491,7 @@ const App = () => {
         duration: Infinity,
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isUpdateAvailable]);
+  }, [isUpdateAvailable, waitingWorker]);
 
   return (
     <Document>

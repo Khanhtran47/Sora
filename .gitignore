@@ -7,8 +7,7 @@ node_modules
 .vscode
 .node-persist
 
-/server/index.js
 public/build
-public/entry.worker.js
+public/sw.js
 /api
 build

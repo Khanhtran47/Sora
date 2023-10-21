@@ -650,7 +650,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     },
     {
       headers: {
-        'Cache-Control': 'public, max-age=31536000, immutable',
+        'Cache-Control': 'public, max-age=600',
         'Content-Type': 'application/manifest+json',
       },
     },

@@ -1,4 +1,5 @@
 import { startTransition } from 'react';
+import { loadServiceWorker } from '@remix-pwa/sw';
 import { RemixBrowser } from '@remix-run/react';
 import i18next from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
@@ -48,106 +49,10 @@ i18next
     console.error(err);
   });
 
-const urlBase64ToUint8Array = (base64String: string): Uint8Array => {
-  const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
-  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-
-  const rawData = window.atob(base64);
-  const outputArray = new Uint8Array(rawData.length);
-
-  for (let i = 0; i < rawData.length; i += 1) {
-    outputArray[i] = rawData.charCodeAt(i);
-  }
-  return outputArray;
-};
-
-function cloneObject<T>(obj: T): T {
-  const clone: T = {} as T;
-  // eslint-disable-next-line no-restricted-syntax
-  for (const key in obj) {
-    if (typeof obj[key] === 'object' && obj[key] != null) {
-      if (`${obj[key]}` === '[object Window]') {
-        delete obj[key];
-        // eslint-disable-next-line no-continue
-        continue;
-      }
-      clone[key] = cloneObject(obj[key]);
-    } else clone[key] = obj[key];
-  }
-  return clone;
-}
-
-// Use the window load event to keep the page load performant
-async function loadSW() {
-  return navigator.serviceWorker
-    .register(
-      `/entry.worker.js${
-        window.process.env.NODE_ENV === 'production'
-          ? `?version=${window.process.env.VERCEL_GIT_COMMIT_SHA}`
-          : ''
-      }`,
-    )
-    .then(() => navigator.serviceWorker.ready)
-    .then(() => {
-      if (navigator.serviceWorker.controller) {
-        navigator.serviceWorker.controller.postMessage(
-          JSON.stringify(
-            cloneObject({
-              type: 'SYNC_REMIX_MANIFEST',
-              manifest: window.__remixManifest,
-            }),
-          ),
-        );
-      } else {
-        navigator.serviceWorker.addEventListener('controllerchange', () => {
-          navigator.serviceWorker.controller?.postMessage(
-            JSON.stringify(
-              cloneObject({
-                type: 'SYNC_REMIX_MANIFEST',
-                manifest: window.__remixManifest,
-              }),
-            ),
-          );
-        });
-      }
-    })
-    .catch((error) => {
-      console.error('Service worker registration failed', error);
-    });
-}
-if ('serviceWorker' in navigator) {
-  if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    loadSW();
-  } else {
-    window.addEventListener('load', loadSW);
-  }
-}
-
-navigator.serviceWorker.ready
-  .then((registration) => {
-    const subscription = registration.pushManager.getSubscription();
-    return { subscription, registration };
-  })
-  .then(async (sub) => {
-    if (await sub.subscription) {
-      return sub.subscription;
-    }
-
-    const subInfo = await fetch('/resources/subscribe');
-    const returnedSubscription = await subInfo.text();
-
-    const convertedVapidKey = urlBase64ToUint8Array(returnedSubscription);
-    return sub.registration.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: convertedVapidKey,
-    });
-  })
-  .then(async (subscription) => {
-    await fetch('./resources/subscribe', {
-      method: 'POST',
-      body: JSON.stringify({
-        subscription,
-        type: 'POST_SUBSCRIPTION',
-      }),
-    });
-  });
+loadServiceWorker({
+  serviceWorkerUrl: `/sw.js${
+    window.process.env.NODE_ENV === 'production'
+      ? `?version=${window.process.env.VERCEL_GIT_COMMIT_SHA}`
+      : ''
+  }`,
+});

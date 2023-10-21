@@ -1,4 +1,3 @@
-import { env } from 'process';
 import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { mergeMeta } from '~/utils';
@@ -254,9 +253,9 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
           sources: episodeDetail?.sources.map((source) => ({
             ...source,
             url: `${
-              env.CORS_PROXY_URL === undefined
+              process.env.CORS_PROXY_URL === undefined
                 ? source.url
-                : `${env.CORS_PROXY_URL}?url=${encodeURIComponent(source.url)}`
+                : `${process.env.CORS_PROXY_URL}?url=${encodeURIComponent(source.url)}`
             }`,
           })),
           userId: user?.id,
@@ -289,9 +288,9 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
         sources: episodeDetail?.sources.map((source) => ({
           ...source,
           url: `${
-            env.CORS_PROXY_URL === undefined
+            process.env.CORS_PROXY_URL === undefined
               ? source.url
-              : `${env.CORS_PROXY_URL}?url=${encodeURIComponent(source.url)}`
+              : `${process.env.CORS_PROXY_URL}?url=${encodeURIComponent(source.url)}`
           }`,
         })),
         userId: user?.id,
@@ -351,9 +350,9 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
           sources: episodeDetail?.sources.map((source) => ({
             ...source,
             url: `${
-              env.CORS_PROXY_URL === undefined
+              process.env.CORS_PROXY_URL === undefined
                 ? source.url
-                : `${env.CORS_PROXY_URL}?url=${encodeURIComponent(source.url)}`
+                : `${process.env.CORS_PROXY_URL}?url=${encodeURIComponent(source.url)}`
             }`,
           })),
           userId: user?.id,
@@ -387,9 +386,9 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
         sources: episodeDetail?.sources.map((source) => ({
           ...source,
           url: `${
-            env.CORS_PROXY_URL === undefined
+            process.env.CORS_PROXY_URL === undefined
               ? source.url
-              : `${env.CORS_PROXY_URL}?url=${encodeURIComponent(source.url)}`
+              : `${process.env.CORS_PROXY_URL}?url=${encodeURIComponent(source.url)}`
           }`,
         })),
         userId: user?.id,
@@ -643,9 +642,9 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
         sources: sources?.sources.map((source) => ({
           ...source,
           url: `${
-            env.CORS_PROXY_URL === undefined
+            process.env.CORS_PROXY_URL === undefined
               ? source.url
-              : `${env.CORS_PROXY_URL}?url=${encodeURIComponent(source.url)}`
+              : `${process.env.CORS_PROXY_URL}?url=${encodeURIComponent(source.url)}`
           }`,
         })),
         userId: user?.id,
@@ -676,9 +675,9 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
       sources: sources?.sources.map((source) => ({
         ...source,
         url: `${
-          env.CORS_PROXY_URL === undefined
+          process.env.CORS_PROXY_URL === undefined
             ? source.url
-            : `${env.CORS_PROXY_URL}?url=${encodeURIComponent(source.url)}`
+            : `${process.env.CORS_PROXY_URL}?url=${encodeURIComponent(source.url)}`
         }`,
       })),
       userId: user?.id,

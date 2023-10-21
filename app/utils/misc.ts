@@ -53,3 +53,30 @@ export function combineHeaders(...headers: Array<Headers>) {
   }
   return combined;
 }
+
+export function errorBlock(err: unknown) {
+  if (typeof err === 'string') {
+    return {
+      ok: false,
+      message: err,
+    };
+  } else if (err instanceof Error) {
+    return {
+      ok: false,
+      message: err.message,
+    };
+  } else {
+    return {
+      ok: false,
+      message: 'Unknown error',
+    };
+  }
+}
+
+export const shareSupported = () => {
+  try {
+    return 'share' in navigator;
+  } catch (error) {
+    return errorBlock(error);
+  }
+};

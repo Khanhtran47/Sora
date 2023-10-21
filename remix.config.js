@@ -1,9 +1,12 @@
 const { flatRoutes } = require('remix-flat-routes')
 
 /**
- * @type {import('@remix-run/dev/config').AppConfig}
+ * @type {import('@remix-pwa/dev').WorkerConfig}
  */
 module.exports = {
+  //
+  // Remix Settings
+  //
 	// appDirectory: "app",
   // assetsBuildDirectory: "public/build",
   browserNodeBuiltinsPolyfill: { modules: { url: true } },
@@ -31,7 +34,18 @@ module.exports = {
     /^time-span.*/,
     /^convert-hrtime.*/,
     /^is-regexp.*/,
+    /@remix-pwa\/.*/,
+    /@font-source\/.*/
   ],
   serverModuleFormat: 'cjs',
-	tailwind: true,
+  tailwind: true,
+  //
+  // Remix PWA Settings
+  //
+  // entryWorkerFile: '<appDir>/entry.worker.ts',
+  // worker: '@remix-pwa/runtime',
+  workerName: 'sw',
+  workerMinify: true,
+  // workerBuildDirectory: './build',
+  // workerSourcemap: false,
 };
